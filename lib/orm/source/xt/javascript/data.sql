@@ -607,7 +607,7 @@
 
       if (sql.statement) {
 	      plv8.execute(sql.statement, sql.values);
-	    } 
+	    }
         }
       }
 
@@ -689,14 +689,14 @@
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
         prop = ormp.name;
-        
+
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
-          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];  
-          
+          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
+
         /* Handle fixed values. */
         if (attr.value !== undefined) {
           params.columns.push("%" + count + "$I");
@@ -705,7 +705,7 @@
           params.identifiers.push(attr.column);
           isValidSql = true;
           count++;
-        
+
         /* Handle passed values. */
         } else if (val !== undefined && val !== null && !ormp.toMany) {
           if (attr.isEncrypted) {
@@ -765,7 +765,7 @@
           }
         }
       }
-	
+
       if (!isValidSql) {
 	      return false;
       }
@@ -892,7 +892,7 @@
 
           if (sql.statement) {
 	          plv8.execute(sql.statement, sql.values);
-	        }	
+	        }
         }
       }
 
@@ -940,7 +940,7 @@
         type,
         val,
         isValidSql = false;
-        
+
       params = params || {
         table: "",
         expressions: [],
@@ -959,7 +959,7 @@
         pkey = XT.Orm.primaryKey(orm);
         columnKey = XT.Orm.primaryKey(orm, true);
       }
-      
+
       /* Build up the content for update of this record. */
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
@@ -970,7 +970,7 @@
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
-          
+
         if (val !== undefined && !ormp.toMany) {
           /* Handle encryption if applicable. */
           if (attr.isEncrypted) {
@@ -1028,13 +1028,13 @@
         }
       }
 
-      /* Build the update statement */     
+      /* Build the update statement */
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
 
       // do not send an invalid sql statement
       if (!isValidSql) { return params; }
-       	
+
       if (params.table.indexOf(".") > 0) {
         namespace = params.table.beforeDot();
         table = params.table.afterDot();
@@ -1060,7 +1060,8 @@
      * @param {String} [options.nameSpace] Namespace. Required.
      * @param {String} [options.type] Type. Required.
      * @param {Object} [options.data] The data payload to be processed. Required.
-     * @param {Number} [options.etag] Record id version for optimistic locking.
+     * @param {Number} [options.etag] Optional record id version for optimistic locking.
+     *  If set and version does not match, delete will fail.
      * @param {Number} [options.lock] Lock information for pessemistic locking.
      */
     deleteRecord: function (options) {
@@ -1085,39 +1086,32 @@
 
       /* Set variables or return false with message. */
       if (!orm) {
-        // TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
       pkey = XT.Orm.primaryKey(orm);
       nkey = XT.Orm.naturalKey(orm);
       lockTable = orm.lockTable || orm.table;
       if (!pkey || !nkey) {
-        // TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
       id = nkey ? this.getId(orm, data[nkey]) : data[pkey];
       if (!id) {
-        // TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
-      /* Test for optimistic lock. */
+      /* Test for optional optimistic lock. */
       etag = this.getVersion(orm, id);
-      if (etag && etag !== options.etag) {
-        // TODO - Send not found message back.
-        return false;
-        //plv8.elog(ERROR, "The version being patched is not current.");
+      if (etag && options.etag && etag !== options.etag) {
+        throw new handleError("Precondition Required", 428);
       }
 
       /* Test for pessemistic lock. */
       if (orm.lockable) {
         lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
-          // TODO - Send not found message back.
-          return false;
-          //plv8.elog(ERROR, "Can not obtain a lock on the record.");
+          throw new handleError("Conflict", 409);
         }
       }
 
@@ -1294,7 +1288,7 @@
       if(ret.length) {
         return ret[0].id;
       } else {
-        throw new handleError("Natural Key Not Found", 400);
+        throw new handleError("Not Found", 404);
       }
     },
 
@@ -1387,7 +1381,7 @@
         ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
       }
 
-      this.removeKeys(nameSpace, type, ret.data);
+      this.sanitize(nameSpace, type, ret.data, options);
 
       return ret;
     },
@@ -1513,49 +1507,67 @@
         ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
 
-      if (!options.includeKeys) {
-        this.removeKeys(nameSpace, type, ret.data);
-      }
+      this.sanitize(nameSpace, type, ret.data, options);
 
       /* Return the results. */
       return ret || {};
     },
 
     /**
-     *  Remove primary and foreign keys from the data so it is represented as a pure JavaScript object.
-     * Only removes the primary key if a natural key has been specified in the ORM.
+     *  Remove unprivileged attributes, primary and foreign keys from the data. 
+     *  Only removes the primary key if a natural key has been specified in the ORM.
      *
      * @param {String} Namespace
      * @param {String} Type
      * @param {Object|Array} Data
+     * @param {Object} Options
+     * @param {Boolean} [options.includeKeys=false] Do not remove primary and foreign keys.
+     * @param {Boolean} [options.superUser=false] Do not remove unprivileged attributes.
      */
-    removeKeys: function (nameSpace, type, data) {
+    sanitize: function (nameSpace, type, data, options) {
+      options = options || {};
+      if (options.includeKeys && !options.superUser) { return; }
       if (XT.typeOf(data) !== "array") { data = [data]; }
       var orm = XT.Orm.fetch(nameSpace, type),
+        pkey = XT.Orm.primaryKey(orm),
+        nkey = XT.Orm.naturalKey(orm),
+        props = orm.properties,
+        viewPriv = orm.privileges && orm.privileges.attribute && orm.privileges.attribute.view ?
+          orm.privileges.attribute.view : false,
+        inclKeys = options.inclKeys,
+        superUser = options.superUser,
         c,
         i,
         item,
         n,
-        pkey = XT.Orm.primaryKey(orm),
-        props = orm.properties,
-        nkey = XT.Orm.naturalKey(orm),
         prop,
         val;
-
       for (var c = 0; c < data.length; c++) {
         item = data[c];
-        if (nkey && nkey !== pkey) { delete item[pkey]; }
+
+        /* Remove primary key if applicable */
+        if (!inclKeys && nkey && nkey !== pkey) { delete item[pkey]; }
 
         for (var i = 0; i < props.length; i++) {
           prop = props[i];
 
+          /* Remove unprivileged attribute if applicable */
+          if (!superUser && viewPriv && viewPriv.properties &&
+            viewPriv.properties.indexOf(prop.name) != -1 &&
+            !this.checkPrivilege(viewPriv.privilege)) {
+            delete item[prop.name];
+          }
+
+          /* Handle composite types */
           if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
-            this.removeKeys(nameSpace, prop.toOne.type, item[prop.name]);
+            this.sanitize(nameSpace, prop.toOne.type, item[prop.name], options);
           } else if (prop.toMany && prop.toMany.isNested && item[prop.name]) {
             for (var n = 0; n < item[prop.name].length; n++) {
               val = item[prop.name][n];
-              delete val[prop.toMany.inverse];
-              this.removeKeys(nameSpace, prop.toMany.type, val);
+                
+              /* Remove foreign key if applicable */
+              if (!inclKeys) { delete val[prop.toMany.inverse]; }
+              this.sanitize(nameSpace, prop.toMany.type, val, options);
             }
           }
         }

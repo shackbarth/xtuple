@@ -33,7 +33,7 @@ var connected = function (query, options, id, err, client, done, ranInit) {
     // Register error handler to log errors.
     // TODO - Not sure if setting that.activeQuery below is getting the right query here.
     client.connection.on('error', function (msg) {
-      if (msg.message === "unhandledError") {
+      if (msg.message !== "handledError") {
         console.log("Database Error! ", msg.message + " Please fix this!!!");
         _.each(client.debug, function (message) {
           console.log("Database Error! DB message was: ", message);
@@ -134,7 +134,7 @@ var connected = function (query, options, id, err, client, done, ranInit) {
 process.on('message', function (message) {
   "use strict";
 
-  var conString = message.conString,
+  var creds = message.creds,
       id = message.id,
       options = message.options,
       poolSize = message.poolSize,
@@ -142,5 +142,5 @@ process.on('message', function (message) {
 
   pg.defaults.poolSize = poolSize;
 
-  pg.connect(conString, _.bind(connected, this, query, options, id));
+  pg.connect(creds, _.bind(connected, this, query, options, id));
 });

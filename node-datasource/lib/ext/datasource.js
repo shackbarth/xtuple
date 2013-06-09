@@ -100,7 +100,13 @@ Backbone:true, _:true, X:true, __dirname:true */
       @param {Function} callback
      */
     query: function (query, options, callback) {
-      var str = this.conString(_.clone(options));
+      var creds = {
+            "user": options.user,
+            "port": options.port,
+            "host": options.hostname,
+            "database": options.database,
+            "password": options.password
+          };
 
       if (X.options && X.options.datasource && X.options.datasource.pgWorker) {
         this.requestNum += 1;
@@ -108,7 +114,7 @@ Backbone:true, _:true, X:true, __dirname:true */
         this.callbacks[this.requestNum] = callback;
         // Single worker version.
         options.debugDatabase = X.options.datasource.debugDatabase;
-        this.worker.send({id: this.requestNum, query: query, options: options, conString: str, poolSize: this.poolSize});
+        this.worker.send({id: this.requestNum, query: query, options: options, creds: creds, poolSize: this.poolSize});
 
         // NOTE: Round robin benchmarks are slower then the above single pgworker code.
         // Round robin workers version. This might be useful in the future.
@@ -118,12 +124,12 @@ Backbone:true, _:true, X:true, __dirname:true */
         //   this.nextWorker = 0;
         // }
         // options.debugDatabase = X.options.datasource.debugDatabase;
-        // worker.send({id: this.requestNum, query: query, options: options, conString: str});
+        // worker.send({id: this.requestNum, query: query, options: options, creds: creds});
       } else {
         if (X.options.datasource.debugging) {
           X.log(query);
         }
-        X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
+        X.pg.connect(creds, _.bind(this.connected, this, query, options, callback));
       }
     },
 
@@ -157,7 +163,7 @@ Backbone:true, _:true, X:true, __dirname:true */
         // Register error handler to log errors.
         // TODO - Not sure if setting that.activeQuery below is getting the right query here.
         client.connection.on('error', function (msg) {
-          if (msg.message === "unhandledError") {
+          if (msg.message !== "handledError") {
             X.err("Database Error! ", msg.message + " Please fix this!!!");
             _.each(client.debug, function (message) {
               X.err("Database Error! DB message was: ", message);

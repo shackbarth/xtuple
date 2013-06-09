@@ -14,6 +14,14 @@
         "read": "ViewQuotes",
         "update": "MaintainQuotes",
         "delete": "MaintainQuotes"
+      },
+      "attribute": {
+        "view": {
+          "privilege": "ShowMarginsOnSalesOrder",
+          "properties": [
+            "margin"
+          ]
+        }
       }
     },
     "properties": [
@@ -952,6 +960,15 @@
         "read": "ViewQuotes",
         "update": "MaintainQuotes",
         "delete": "MaintainQuotes"
+      },
+      "attribute": {
+        "edit": {
+          "privilege": "OverridePrice",
+          "properties": [
+            "customerPrice",
+            "price"
+          ]
+        }
       }
     },
     "properties": [
