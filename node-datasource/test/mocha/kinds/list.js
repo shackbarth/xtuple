@@ -23,8 +23,8 @@
       zombieAuth.loadApp(appLoaded);
     });
 
-    describe('Enyo lists', function () {
-      it('should be backed by a collection', function () {
+    describe('XV lists', function () {
+      it('should have their attrs set up right', function () {
         var child,
           collName,
           Coll,
@@ -43,9 +43,6 @@
               // these ones doesn't need to be backed by a collection
               return;
             }
-            //if (!_.contains(['TaxAssignmentList'], key)) {
-            //  return;
-            //}
 
             // create the list
             child = master.createComponent({
@@ -73,29 +70,45 @@
             // the query attribute counts as an attribute
             attrs.push(child.getQuery().orderBy[0].attribute);
 
-
-
             // make sure that attrs with paths are for nested relations
             _.each(attrs, function (attr) {
               var prefix, relation, cacheName;
 
+              prefix = XT.String.prefix(attr) || attr;
+              relation = _.find(relations, function (rel) {
+                return rel.key === prefix;
+              });
+              if (relation) {
+                cacheName = XV.getCache(relation.relatedModel);
+              }
+
               if (attr.indexOf('.') >= 0) {
+                // there's a dot in the attribute: we're recursing down another model
+
                 // TODO: we could do more checking if there are two dots
-                prefix = XT.String.prefix(attr);
 
-                console.log(key, prefix);
-
-                relation = _.find(relations, function (rel) {
-                  return rel.key === prefix;
-                });
                 assert.isDefined(relation, "The " + recordType +
                   " schema needs the relation " + prefix);
 
-                cacheName = XV.getCache(relation.relatedModel);
                 if (!cacheName && !relation.isNested) {
                   assert.fail(1, 0, "The " + recordType +
                     " schema needs the relation " + prefix + " to be nested or the model " +
                     relation.relatedModel + " needs to be cached");
+                }
+
+                if (attr === child.getQuery().orderBy[0].attribute && !relation.isNested) {
+                  assert.fail(1, 0, "The " + recordType +
+                    " schema needs the relation " + prefix + " to be nested to be used in the XV." +
+                    key + " list query");
+                }
+
+
+              } else if (attr !== child.getQuery().orderBy[0].attribute) {
+                // there is no dot in the attribute: we're not recursing down another model
+                if ((relation && relation.isNested) || cacheName) {
+                  assert.fail(1, 0, "The nested/cached relation " + prefix +
+                    " will render unhelpfully as [Object object] in the XV." +
+                    key + " list without specifying a particular field");
                 }
               }
             });

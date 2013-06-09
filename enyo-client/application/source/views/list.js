@@ -1565,7 +1565,7 @@ trailing:true, white:true*/
     collection: "XM.TaxAssignmentCollection",
     parameterWidget: "XV.TaxAssignmentListParameters",
     query: {orderBy: [
-      {attribute: 'tax.code'}
+      {attribute: 'tax'}
     ]},
     components: [
       {kind: "XV.ListItem", components: [
