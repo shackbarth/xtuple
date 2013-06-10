@@ -4,11 +4,11 @@
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
 var crud = require('../lib/crud'),
-assert = require('chai').assert,
-expect = require('chai').expect,
-zombieAuth = require('../lib/zombie_auth'),
+  assert = require('chai').assert,
+  expect = require('chai').expect,
+  zombieAuth = require('../lib/zombie_auth'),
 
-data = {
+  data = {
     recordType : "XM.ClassCode",
     autoTestAttributes : true,
     createHash : {
@@ -30,36 +30,38 @@ describe.skip('Class Code CRUD Test', function () {
   });
 
 describe('Class Code CRUD Test', function () {
-	  before(function (done){
+    before(function (done) {
         this.timeout(timeout);
-			  zombieAuth.loadApp(done);
-			});
+        zombieAuth.loadApp(done);
+      });
 
-			it('should be able to Initialize an XM.ClassCode Model', function (){
-				data.model = new XM.ClassCode();
-				expect(data.model).to.exist;
-				assert.equal(data.model.recordType, 'XM.ClassCode', 'INIT Value should be XM.ClassCode');
-			});
+    it('should be able to Initialize an XM.ClassCode Model', function () {
+      data.model = new XM.ClassCode();
+      expect(data.model).to.exist;
+      assert.equal(data.model.recordType, 'XM.ClassCode', 'INIT Value should be XM.ClassCode');
+    });
 
-			it('should create an XM.ClassCode Model', function (){
-				data.model.set(data.createHash);
-				crud.save(data)
-			});
+    it('should create an XM.ClassCode Model', function (done) {
+      data.model.set(data.createHash);
+      crud.save(data);
+      done();
+    });
 
-			it('should read an XM.ClassCode Model', function (){
-				assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal')
-			});
+    it('should read an XM.ClassCode Model', function () {
+      assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal');
+    });
 
-			it('should update an XM.ClassCode Model', function (){
-				data.model.set(data.updateHash);
-				crud.save(data)
-				assert.equal(data.model.get('description'), data.updateHash.description, 'Model Code UPDATE Value is equal')
-			});
+    it('should update an XM.ClassCode Model', function (done) {
+      data.model.set(data.updateHash);
+      crud.save(data);
+      assert.equal(data.model.get('description'), data.updateHash.description, 'Model Code UPDATE Value is equal');
+      done();
+    });
 
-			it('should delete an XM.ClassCode Model', function (){
-				crud.destroy(data)
-			});
+    it('should delete an XM.ClassCode Model', function (done) {
+      crud.destroy(data);
+      done();
+    });
 
-
-});
+  });
 

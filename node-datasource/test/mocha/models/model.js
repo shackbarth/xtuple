@@ -9,7 +9,7 @@
   var zombieAuth = require("../lib/zombie_auth"),
     assert = require("chai").assert;
 
-  describe('Model read-only recursion', function (){
+  describe('Model read-only recursion', function () {
     this.timeout(20 * 1000);
     it('should know to stop if an attribute is null', function (done) {
       var testReadOnly = function () {
@@ -22,11 +22,11 @@
         assert.isNull(status);
 
         done();
-      }
+      };
 
 
       zombieAuth.loadApp(testReadOnly);
     });
-  })
+  });
 }());
 
