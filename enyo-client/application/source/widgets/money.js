@@ -49,9 +49,9 @@ regexp:true, undef:true, trailing:true, white:true */
           components: [
           {name: "baseAmountLabel", classes: "xv-money-label"}
         ]},
-        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+        {kind: "onyx.InputDecorator", classes: "xv-input-decorator, xv-currency-label",
           components: [
-          {name: "baseCurrencyLabel", classes: "xv-currency-label"}
+          {name: "baseCurrencyLabel"}
         ]}
       ]}
     ],
@@ -129,7 +129,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.input.setDisabled(disabled);
       this.$.picker.setDisabled(disabled || currencyDisabled);
     },
-    
+
     /**
     @todo Document the labelChanged method.
     */

@@ -144,7 +144,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // EMPLOYEE GROUP EMPLOYEE
   //
@@ -169,7 +169,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // EMPLOYEE GROUP GROUP
   //
