@@ -1514,10 +1514,10 @@
       },
       {
         "name": "salesRep",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "SalesRep",
           "column": "cohead_salesrep_id"
-         }
+        }
       },
       {
         "name": "shiptoName",
