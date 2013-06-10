@@ -325,14 +325,7 @@
         "read": true,
         "update": false,
         "delete": false
-      },
-      "attribute": {
-        "view": {
-          "privilege": "ViewCosts MaintainCosts",
-          "properties": [
-            "averageCost"
-          ]
-       }
+      }
     },
     "properties": [
       {
