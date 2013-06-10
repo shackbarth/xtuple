@@ -1038,12 +1038,10 @@
         "delete": false
       },
       "attribute": {
-        "view": {
-          "privilege": "ViewCosts MaintainCosts",
-          "properties": [
-            "standardCost"
-          ]
-       }
+        "standardCost": {
+          "view": "ViewCosts MaintainCosts"
+        }
+      }
     },
     "properties": [
       {

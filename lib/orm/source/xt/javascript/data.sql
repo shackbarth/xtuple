@@ -1538,8 +1538,8 @@
         pkey = XT.Orm.primaryKey(orm),
         nkey = XT.Orm.naturalKey(orm),
         props = orm.properties,
-        viewPriv = orm.privileges && orm.privileges.attribute && orm.privileges.attribute.view ?
-          orm.privileges.attribute.view : false,
+        attrPriv = orm.privileges && orm.privileges.attribute ?
+          orm.privileges.attribute : false,
         inclKeys = options.inclKeys,
         superUser = options.superUser,
         c,
@@ -1558,9 +1558,9 @@
           prop = props[i];
 
           /* Remove unprivileged attribute if applicable */
-          if (!superUser && viewPriv && viewPriv.properties &&
-            viewPriv.properties.indexOf(prop.name) != -1 &&
-            !this.checkPrivilege(viewPriv.privilege)) {
+          if (!superUser && attrPriv && attrPriv[prop.name] &&
+            attrPriv[prop.name].view &&
+            !this.checkPrivilege(attrPriv[prop.name].view)) {
             delete item[prop.name];
           }
 

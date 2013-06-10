@@ -17,11 +17,8 @@
         "delete": "MaintainSalesOrders"
       },
       "attribute": {
-        "view": {
-          "privilege": "ShowMarginsOnSalesOrder",
-          "properties": [
-            "margin"
-          ]
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
         }
       }
     },
@@ -1000,12 +997,11 @@
         "delete": "MaintainSalesOrders"
       },
       "attribute": {
-        "edit": {
-          "privilege": "OverridePrice",
-          "properties": [
-            "customerPrice",
-            "price"
-          ]
+        "customerPrice": {
+          "edit": "OverridePrice"
+        },
+        "price": {
+          "edit": "OverridePrice"
         }
       }
     },
