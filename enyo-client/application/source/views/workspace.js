@@ -1538,8 +1538,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
 
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
-      // re-render the summary panel
-      this.renderLineItemsPanel();
     },
     controlValueChanged: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -1549,17 +1547,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     },
     copyBilltoToShipto: function () {
       this.getValue().copyBilltoToShipto();
-    },
-    /**
-      Renders the entire lineItemsPanel, including the
-      editorbox and the summary panel.
-    */
-    renderLineItemsPanel: function () {
-      // var list = this.$.lineItemsPanel.$ ,
-      //   index = list.getFirstSelected(),
-      //   selection = list.getSelection();
-      //this.$.lineItemsPanel.render();
-      // selection.select(index);
     }
   });
 
