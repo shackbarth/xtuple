@@ -1539,7 +1539,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
       // re-render the summary panel
-      this.$.lineItemsPanel.render();
+      this.renderLineItemsPanel();
     },
     controlValueChanged: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -1549,6 +1549,17 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     },
     copyBilltoToShipto: function () {
       this.getValue().copyBilltoToShipto();
+    },
+    /**
+      Renders the entire lineItemsPanel, including the
+      editorbox and the summary panel.
+    */
+    renderLineItemsPanel: function () {
+      // var list = this.$.lineItemsPanel.$ ,
+      //   index = list.getFirstSelected(),
+      //   selection = list.getSelection();
+      //this.$.lineItemsPanel.render();
+      // selection.select(index);
     }
   });
 
@@ -1575,39 +1586,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.QuoteDocumentsBox", attr: "documents"}
         ], {owner: this});
       this.$.lineItemsPanel.createComponents([
-         // Line Item Box
-        {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
-        // Summary Panel
-        {kind: "FittableRows", fit: true, name: "totalGroup", components: [
-          {kind: "XV.Groupbox", components: [
-            {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
-              {kind: "FittableRows", name: "summaryColumnOne", components: [
-                {kind: "XV.CurrencyPicker", attr: "currency"},
-                {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
-                 label: "_margin".loc(), currencyShowing: false},
-                {kind: "XV.WeightWidget", attr: "freightWeight"}
-              ]},
-              {kind: "FittableRows", name: "summaryColumnTwo", components: [
-                {kind: "XV.MoneyWidget",
-                 attr: {localValue: "subtotal", currency: "currency"},
-                 label: "_subtotal".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget",
-                  attr: {localValue: "miscCharge", currency: "currency"},
-                 label: "_miscCharge".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget",
-                  attr: {localValue: "freight", currency: "currency"},
-                 label: "_freight".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget",
-                 attr: {localValue: "taxTotal", currency: "currency"},
-                 label: "_tax".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget",
-                 attr: {localValue: "total", currency: "currency"},
-                 label: "_total".loc(), currencyShowing: false}
-              ]}
-            ]}
-          ]}
-        ]}
+        // Line Item Box
+        {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true}
       ], {owner: this});
     }
   });
@@ -1769,40 +1749,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         ], {owner: this});
       this.$.lineItemsPanel.createComponents([
         // Line Item Box
-        {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true},
-        // Summary Panel
-        {kind: "FittableRows", fit: true, name: "totalGroup", components: [
-          {kind: "XV.Groupbox", components: [
-            {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel",
-              components: [
-              {kind: "FittableRows", name: "summaryColumnOne", components: [
-                {kind: "XV.CurrencyPicker", attr: "currency"},
-                {kind: "XV.MoneyWidget",
-                  attr: {localValue: "margin", currency: "currency"},
-                  label: "_margin".loc(), currencyShowing: false},
-                {kind: "XV.WeightWidget", attr: "freightWeight"}
-              ]},
-              {kind: "FittableRows", name: "summaryColumnTwo", components: [
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "subtotal", currency: "currency"},
-                 label: "_subtotal".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "miscCharge", currency: "currency"},
-                 label: "_miscCharge".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "freight", currency: "currency"},
-                 label: "_freight".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "taxTotal", currency: "currency"},
-                 label: "_tax".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "total", currency: "currency"},
-                 label: "_total".loc(), currencyShowing: false}
-              ]}
-            ]}
-          ]}
-        ]}
+        {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
       ], {owner: this});
     }
   });

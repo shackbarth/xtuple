@@ -351,7 +351,7 @@ body {
   width: 15.56em;
 }
 .xv-list .xv-list-item.item-selected {
-  background: #226b9a url(../../../../../../assets/item-hilite.png) repeat-x bottom;
+  background: #226b9a url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr {
   color: #ffffff;
@@ -669,7 +669,7 @@ body {
   width: 100%;
   text-align: right;
 }
-.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-currency-label {
+.xv-groupbox .xv-moneywidget .onyx-input-decorator.xv-currency-label {
   width: 65px;
 }
 .xv-groupbox .xv-moneywidget .xv-picker {
