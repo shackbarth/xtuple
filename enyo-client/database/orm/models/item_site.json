@@ -8,21 +8,21 @@
     "lockable": true,
     "comment": "Cost Category Map",
     "privileges": {
-          "all": {
-            "create": false,
-            "read": true,
-            "update": false,
-            "delete": false
-          },
-          "attribute": {
-            "view": {
-              "privilege": "ViewCosts MaintainCosts",
-              "properties": [
-                "averageCost"
-              ]
-            }
-          }
-        },
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      },
+      "attribute": {
+        "view": {
+          "privilege": "ViewCosts MaintainCosts",
+          "properties": [
+            "standardCost"
+          ]
+        }
+      }
+    },
     "properties": [
       {
         "name": "id",
