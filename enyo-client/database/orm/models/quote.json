@@ -1446,10 +1446,10 @@
       },
       {
         "name": "salesRep",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "SalesRep",
           "column": "quhead_salesrep_id"
-         }
+        }
       },
       {
         "name": "shiptoName",
