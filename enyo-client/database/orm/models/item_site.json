@@ -9,18 +9,10 @@
     "comment": "Cost Category Map",
     "privileges": {
       "all": {
-        "create": false,
+        "create": "MaintainCostCategories",
         "read": true,
-        "update": false,
-        "delete": false
-      },
-      "attribute": {
-        "view": {
-          "privilege": "ViewCosts MaintainCosts",
-          "properties": [
-            "standardCost"
-          ]
-        }
+        "update": "MaintainCostCategories",
+        "delete": "MaintainCostCategories"
       }
     },
     "properties": [
