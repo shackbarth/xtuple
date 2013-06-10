@@ -108,7 +108,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             var biUrl = X.options.datasource.biUrl || "",
               redirectUrl = biUrl + "&name=" + fileName +
                 "&org=" + req.session.passport.user.organization +
-                "&datakey=" + randomKey;
+				"&datasource=" + req.headers.host + "&datakey=" + randomKey;
 
             if (requestDetails.locale && requestDetails.locale.culture) {
               res.set("Accept-Language", requestDetails.locale.culture);
