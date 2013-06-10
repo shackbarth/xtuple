@@ -35,9 +35,10 @@ describe('OpportunityStage CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.OpportunityStage', 'INIT Value should be XM.OpportunityStage');
   });
 
-  it('should create an XM.OpportunityStage Model', function () {
+  it('should create an XM.OpportunityStage Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.OpportunityStage Model', function () {
@@ -46,14 +47,16 @@ describe('OpportunityStage CRUD Test', function () {
     assert.equal(data.model.get('deactivate'), data.createHash.deactivate, 'Model Deactivate READ Value is equal');
   });
 
-  it('should update an XM.OpportunityStage Model', function () {
+  it('should update an XM.OpportunityStage Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('description'), data.updateHash.description, 'Model Description UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.OpportunityStage Model', function () {
+  it('should delete an XM.OpportunityStage Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

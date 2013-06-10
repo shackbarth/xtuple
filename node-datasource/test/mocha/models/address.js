@@ -47,23 +47,26 @@ describe('Address CRUD Test', function () {
       assert.equal(data.model.recordType, 'XM.Address', 'INIT Value should be XM.Address');
     });
 
-    it.skip('should create an XM.Address Model', function () {
+    it.skip('should create an XM.Address Model', function (done) {
       data.model.set(data.createHash);
       crud.save(data);
+      done();
     });
 
     it.skip('should read an XM.Address Model', function () {
       assert.equal(data.model.get('line1'), data.createHash.line1, 'Model Code READ Value is equal');
     });
 
-    it.skip('should update an XM.Address Model', function () {
+    it.skip('should update an XM.Address Model', function (done) {
       data.model.set(data.updateHash);
       crud.save(data);
       assert.equal(data.model.get('line1'), data.updateHash.line1, 'Model Code UPDATE Value is equal');
+      done();
     });
 
-    it('should delete an XM.Address Model', function () {
+    it('should delete an XM.Address Model', function (done) {
       crud.destroy(data);
+      done();
     });
 
   });

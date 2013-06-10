@@ -47,23 +47,26 @@ describe('Contact CRUD Test', function () {
       assert.equal(data.model.recordType, 'XM.Contact', 'INIT Value should be XM.Contact');
     });
 
-    it.skip('should create an XM.Contact Model', function () {
+    it.skip('should create an XM.Contact Model', function (done) {
       data.model.set(data.createHash);
       crud.save(data);
+      done();
     });
 
     it.skip('should read an XM.Contact Model', function () {
       assert.equal(data.model.get('firstName'), data.createHash.firstName, 'Model Code READ Value is equal');
     });
 
-    it.skip('should update an XM.Contact Model', function () {
+    it.skip('should update an XM.Contact Model', function (done) {
       data.model.set(data.updateHash);
       crud.save(data);
       assert.equal(data.model.get('firstName'), data.updateHash.firstName, 'Model Code UPDATE Value is equal');
+      done();
     });
 
-    it('should delete an XM.Contact Model', function () {
+    it('should delete an XM.Contact Model', function (done) {
       crud.destroy(data);
+      done();
     });
 
   });

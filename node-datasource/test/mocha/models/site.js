@@ -35,10 +35,12 @@ describe('Site CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.Site', 'INIT Value should be XM.Site');
   });
 
-  it('should create an XM.Site Model', function () {
+  it('should create an XM.Site Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done()
   });
+
 // Site will not be working until the patch to the database code is in place
   it.skip('should read an XM.Site Model', function () {
     assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal');
@@ -46,14 +48,16 @@ describe('Site CRUD Test', function () {
     assert.equal(data.model.get('siteType'), data.createHash.siteType, 'Model SiteType READ Value is equal');
   });
 
-  it('should update an XM.Site Model', function () {
+  it('should update an XM.Site Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('description'), data.updateHash.description, 'Model Description UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.Site Model', function () {
+  it('should delete an XM.Site Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

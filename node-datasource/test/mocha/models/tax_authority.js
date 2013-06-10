@@ -25,33 +25,42 @@ describe('TaxAuthority CRUD Test', function () {
       this.timeout(timeout);
       zombieAuth.loadApp(done);
     });
+
   it('Should be able to initialize XM.TaxAuthority Model', function () {
     data.model = new XM.TaxAuthority();
     expect(data.model).to.exist;
     assert.equal(data.model.recordType, 'XM.TaxAuthority', 'INIT Value should be XM.TaxAuthority');
   });
-  it('should create an XM.TaxAuthority Model', function () {
+
+  it('should create an XM.TaxAuthority Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done()
   });
+
   it('should have required Attributes', function () {
     expect(data.model.requiredAttributes).to.contain('code');
     expect(data.model.requiredAttributes).to.contain('name');
   });
+
   it('should read XM.TaxAuthority Model', function () {
     assert.equal(data.model.get('code'), data.createHash.code, 'TaxAuthority code is equal');
     assert.equal(data.model.get('name'), data.createHash.name, 'TaxAuthority name is equal');
   });
-  it('should update an XM.TaxAuthority Model', function () {
+
+  it('should update an XM.TaxAuthority Model', function (done) {
     deleteData.accntId = data.model.get("account");
     deleteData.accountModel = new XM.Account();
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('name'), data.updateHash.name, 'UPDATE Value is equal');
+    done();
   });
+
   describe('DELETE THE TaxAuthority AND ACCOUNT', function () {
-    it('Should delete the TaxAuthority', function () {
+    it('Should delete the TaxAuthority', function (done) {
       crud.destroy(data);
+      done();
     });
     it('Should delete the Account', function () {
       var account = deleteData.accountModel,

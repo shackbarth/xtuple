@@ -34,9 +34,10 @@ describe('OpportunityType CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.OpportunityType', 'INIT Value should be XM.OpportunityType');
   });
 
-  it('should create an XM.OpportunityType Model', function () {
+  it('should create an XM.OpportunityType Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.OpportunityType Model', function () {
@@ -44,14 +45,16 @@ describe('OpportunityType CRUD Test', function () {
     assert.equal(data.model.get('description'), data.createHash.description, 'Model Description READ Value is equal');
   });
 
-  it('should update an XM.OpportunityType Model', function () {
+  it('should update an XM.OpportunityType Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('description'), data.updateHash.description, 'Model Description UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.OpportunityType Model', function () {
+  it('should delete an XM.OpportunityType Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

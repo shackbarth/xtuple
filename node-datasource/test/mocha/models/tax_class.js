@@ -49,23 +49,26 @@ describe('Tax Class CRUD Test', function () {
       assert.equal(data.model.recordType, 'XM.TaxClass', 'INIT Value should be XM.Address');
     });
 
-    it.skip('should create an XM.TaxClass Model', function () {
+    it.skip('should create an XM.TaxClass Model', function (done) {
       data.model.set(data.createHash);
       crud.save(data);
+      done();
     });
 
     it.skip('should read an XM.TaxClass Model', function () {
       assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal');
     });
 
-    it.skip('should update an XM.TaxClass Model', function () {
+    it.skip('should update an XM.TaxClass Model', function (done) {
       data.model.set(data.updateHash);
       crud.save(data);
       assert.equal(data.model.get('description'), data.updateHash.description, 'Model Code UPDATE Value is equal');
+      done();
     });
 
-    it('should delete an XM.TaxClass Model', function () {
+    it('should delete an XM.TaxClass Model', function (done) {
       crud.destroy(data);
+      done();
     });
 
   });

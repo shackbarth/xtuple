@@ -41,23 +41,26 @@ describe('Class Code CRUD Test', function () {
       assert.equal(data.model.recordType, 'XM.ClassCode', 'INIT Value should be XM.ClassCode');
     });
 
-    it('should create an XM.ClassCode Model', function () {
+    it('should create an XM.ClassCode Model', function (done) {
       data.model.set(data.createHash);
       crud.save(data);
+      done();
     });
 
     it('should read an XM.ClassCode Model', function () {
       assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal');
     });
 
-    it('should update an XM.ClassCode Model', function () {
+    it('should update an XM.ClassCode Model', function (done) {
       data.model.set(data.updateHash);
       crud.save(data);
       assert.equal(data.model.get('description'), data.updateHash.description, 'Model Code UPDATE Value is equal');
+      done();
     });
 
-    it('should delete an XM.ClassCode Model', function () {
+    it('should delete an XM.ClassCode Model', function (done) {
       crud.destroy(data);
+      done();
     });
 
   });

@@ -41,23 +41,26 @@ describe('Customer Group CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.CustomerGroup', 'INIT Value should be XM.CustomerGroup');
   });
 
-  it('should create an XM.Customer Group Model', function () {
+  it('should create an XM.Customer Group Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.CustomerGroup Model', function () {
     assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal');
   });
 
-  it('should update an XM.CustomerGroup Model', function () {
+  it('should update an XM.CustomerGroup Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('name'), data.updateHash.name, 'Model Code UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.CustomerGroup Model', function () {
+  it('should delete an XM.CustomerGroup Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 });

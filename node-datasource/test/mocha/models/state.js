@@ -35,9 +35,10 @@ describe('State CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.State', 'INIT Value should be XM.State');
   });
 
-  it.skip('should create an XM.State Model', function () {
+  it.skip('should create an XM.State Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it.skip('should read an XM.State Model', function () {
@@ -47,14 +48,16 @@ describe('State CRUD Test', function () {
 //    assert.equal(data.model.get('country'), data.createHash.country, 'Model Country READ Value is equal');
   });
 
-  it.skip('should update an XM.State Model', function () {
+  it.skip('should update an XM.State Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('abbreviation'), data.updateHash.abbreviation, 'Model Abbreviation UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.State Model', function () {
+  it('should delete an XM.State Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

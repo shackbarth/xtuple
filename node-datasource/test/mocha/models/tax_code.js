@@ -46,23 +46,26 @@ describe('Tax Code CRUD Test', function () {
       assert.equal(data.model.recordType, 'XM.TaxCode', 'INIT Value should be XM.TaxCode');
     });
 
-    it('should create an XM.TaxCode Model', function () {
+    it('should create an XM.TaxCode Model', function (done) {
       data.model.set(data.createHash);
       crud.save(data);
+      done();
     });
 
     it('should read an XM.TaxCode Model', function () {
       assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal');
     });
 
-    it('should update an XM.TaxCode Model', function () {
+    it('should update an XM.TaxCode Model', function (done) {
       data.model.set(data.updateHash);
       crud.save(data);
       assert.equal(data.model.get('number'), data.updateHash.number, 'Model Code UPDATE Value is equal');
+      done();
     });
 
-    it('should delete an XM.TaxCode Model', function () {
+    it('should delete an XM.TaxCode Model', function (done) {
       crud.destroy(data);
+      done();
     });
 
   });

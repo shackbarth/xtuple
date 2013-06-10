@@ -33,23 +33,26 @@ describe('Priority CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.Priority', 'INIT Value should be XM.Priority');
   });
 
-  it('should create an XM.Priority Model', function () {
+  it('should create an XM.Priority Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.Priority Model', function () {
     assert.equal(data.model.get('name'), data.createHash.name, 'Model Name READ Value is equal');
   });
 
-  it('should update an XM.Priority Model', function () {
+  it('should update an XM.Priority Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('name'), data.updateHash.name, 'Model Name UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.Priority Model', function () {
+  it('should delete an XM.Priority Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

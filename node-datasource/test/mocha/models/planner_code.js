@@ -34,9 +34,10 @@ describe('PlannerCode CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.PlannerCode', 'INIT Value should be XM.PlannerCode');
   });
 
-  it('should create an XM.PlannerCode Model', function () {
+  it('should create an XM.PlannerCode Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.PlannerCode Model', function () {
@@ -44,14 +45,16 @@ describe('PlannerCode CRUD Test', function () {
     assert.equal(data.model.get('name'), data.createHash.name, 'Model Name READ Value is equal');
   });
 
-  it('should update an XM.PlannerCode Model', function () {
+  it('should update an XM.PlannerCode Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('name'), data.updateHash.name, 'Model Name UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.PlannerCode Model', function () {
+  it('should delete an XM.PlannerCode Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

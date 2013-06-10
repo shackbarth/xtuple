@@ -43,23 +43,26 @@ describe('Currency CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.Currency', 'INIT Value should be XM.Currency');
   });
 
-  it('should create an XM.Currency Model', function () {
+  it('should create an XM.Currency Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.Currency Model', function () {
     assert.equal(data.model.get('abbreviation'), data.createHash.abbreviation, 'Model Code READ Value is equal');
   });
 
-  it('should update an XM.Currency Model', function () {
+  it('should update an XM.Currency Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('name'), data.updateHash.name, 'Model Code UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.Currency Model', function () {
+  it('should delete an XM.Currency Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 });

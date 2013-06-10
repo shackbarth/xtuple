@@ -36,9 +36,10 @@ describe('ShipCharge CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.ShipCharge', 'INIT Value should be XM.ShipCharge');
   });
 
-  it('should create an XM.ShipCharge Model', function () {
+  it('should create an XM.ShipCharge Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.ShipCharge Model', function () {
@@ -47,15 +48,17 @@ describe('ShipCharge CRUD Test', function () {
     assert.equal(data.model.get('isCustomerPay'), data.createHash.isCustomerPay, 'Model isCustomerPay READ Value is equal');
   });
 
-  it('should update an XM.ShipCharge Model', function () {
+  it('should update an XM.ShipCharge Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('name'), data.updateHash.name, 'Model Name UPDATE Value is equal');
     assert.equal(data.model.get('isCustomerPay'), data.updateHash.isCustomerPay, 'Model isCustomerPay UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.ShipCharge Model', function () {
+  it('should delete an XM.ShipCharge Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

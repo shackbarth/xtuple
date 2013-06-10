@@ -44,23 +44,26 @@ describe('Country CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.Country', 'INIT Value should be XM.Country');
   });
 
-  it('should create an XM.Country Model', function () {
+  it('should create an XM.Country Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.Country Model', function () {
     assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal');
   });
 
-  it('should update an XM.Country Model', function () {
+  it('should update an XM.Country Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('abbreviation'), data.updateHash.abbreviation, 'Model Code UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.Country Model', function () {
+  it('should delete an XM.Country Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 });

@@ -47,23 +47,26 @@ describe('ToDo CRUD Test', function () {
       assert.equal(data.model.recordType, 'XM.ToDo', 'INIT Value should be XM.ToDo');
     });
 
-    it.skip('should create an XM.ToDo Model', function () {
+    it.skip('should create an XM.ToDo Model', function (done) {
       data.model.set(data.createHash);
       crud.save(data);
+      done();
     });
 
     it.skip('should read an XM.ToDo Model', function () {
       assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal');
     });
 
-    it.skip('should update an XM.ToDo Model', function () {
+    it.skip('should update an XM.ToDo Model', function (done) {
       data.model.set(data.updateHash);
       crud.save(data);
       assert.equal(data.model.get('name'), data.updateHash.name, 'Model Code UPDATE Value is equal');
+      done();
     });
 
-    it('should delete an XM.ToDo Model', function () {
+    it('should delete an XM.ToDo Model', function (done) {
       crud.destroy(data);
+      done();
     });
 
   });

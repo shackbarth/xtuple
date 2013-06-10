@@ -34,9 +34,10 @@ describe('Unit CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.Unit', 'INIT Value should be XM.Unit');
   });
 
-  it('should create an XM.Unit Model', function () {
+  it('should create an XM.Unit Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.Unit Model', function () {
@@ -44,14 +45,16 @@ describe('Unit CRUD Test', function () {
     assert.equal(data.model.get('description'), data.createHash.description, 'Model Description READ Value is equal');
   });
 
-  it('should update an XM.Unit Model', function () {
+  it('should update an XM.Unit Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('description'), data.updateHash.description, 'Model Description UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.Unit Model', function () {
+  it('should delete an XM.Unit Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

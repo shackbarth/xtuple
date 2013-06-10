@@ -33,9 +33,10 @@ describe('TaxType CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.TaxType', 'INIT Value should be XM.TaxType');
   });
 
-  it('should create an XM.TaxType Model', function () {
+  it('should create an XM.TaxType Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.TaxType Model', function () {
@@ -43,14 +44,16 @@ describe('TaxType CRUD Test', function () {
 
   });
 
-  it('should update an XM.TaxType Model', function () {
+  it('should update an XM.TaxType Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('name'), data.updateHash.name, 'Model Name UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.TaxType Model', function () {
+  it('should delete an XM.TaxType Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

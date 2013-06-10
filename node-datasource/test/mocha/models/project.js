@@ -41,10 +41,12 @@ describe('Project CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.Project', 'INIT Value should be XM.Project');
   });
 
-  it('should create an XM.Project Model', function () {
+  it('should create an XM.Project Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
+
   it('should have required Attributes', function () {
     expect(data.model.requiredAttributes).to.contain('name');
     expect(data.model.requiredAttributes).to.contain('dueDate');
@@ -56,10 +58,11 @@ describe('Project CRUD Test', function () {
     assert.equal(data.model.get('dueDate'), data.createHash.dueDate, 'Project Due date is equal');
   });
 
-  it('should update an XM.Project Model', function () {
+  it('should update an XM.Project Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('name'), data.updateHash.name, 'Model Code UPDATE Value is equal');
+    done();
   });
   
   describe('When adding a comment to a project', function () {
@@ -137,7 +140,8 @@ describe('Project CRUD Test', function () {
       model.save();
     });
   });
-  it('should delete an XM.Project Model', function () {
+  it('should delete an XM.Project Model', function (done) {
     crud.destroy(data);
+    done();
   });
 });

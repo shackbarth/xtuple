@@ -25,34 +25,44 @@ describe('Prospect CRUD Test', function () {
       this.timeout(timeout);
       zombieAuth.loadApp(done);
     });
+
   it('Should be able to initialize XM.Prospect Model', function () {
     data.model = new XM.Prospect();
     expect(data.model).to.exist;
     assert.equal(data.model.recordType, 'XM.Prospect', 'INIT Value should be XM.Prospect');
   });
-  it('should create an XM.Prospect Model', function () {
+
+  it('should create an XM.Prospect Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
+
   it('should have required Attributes', function () {
     expect(data.model.requiredAttributes).to.contain('number');
     expect(data.model.requiredAttributes).to.contain('name');
   });
+
   it('should read XM.Prospect Model', function () {
     assert.equal(data.model.get('number'), data.createHash.number, 'Prospect number is equal');
     assert.equal(data.model.get('name'), data.createHash.name, 'Prospect name is equal');
   });
-  it('should update an XM.Prospect Model', function () {
+
+  it('should update an XM.Prospect Model', function (done) {
     deleteData.accntId = data.model.get("account");
     deleteData.accountModel = new XM.Account();
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('name'), data.updateHash.name, 'UPDATE Value is equal');
+    done();
   });
+
   describe('DELETE THE PROSPECT AND ACCOUNT', function () {
-    it('Should delete the prospect', function () {
+    it('Should delete the prospect', function (done) {
       crud.destroy(data);
+      done();
     });
+    
     it('Should delete the Account', function () {
       var account = deleteData.accountModel,
         fetchOptionsAccnt = {},

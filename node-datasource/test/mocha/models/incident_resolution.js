@@ -48,23 +48,26 @@ describe('IncidentResolution CRUD Test', function () {
       assert.equal(data.model.recordType, 'XM.IncidentResolution', 'INIT Value should be XM.IncidentResolution');
     });
 
-    it('should create an XM.IncidentResolution Model', function () {
+    it('should create an XM.IncidentResolution Model', function (done) {
       data.model.set(data.createHash);
       crud.save(data);
+      done();
     });
 
     it('should read an XM.IncidentResolution Model', function () {
       assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal');
     });
 
-    it('should update an XM.IncidentResolution Model', function () {
+    it('should update an XM.IncidentResolution Model', function (done) {
       data.model.set(data.updateHash);
       crud.save(data);
       assert.equal(data.model.get('order'), data.updateHash.order, 'Model Code UPDATE Value is equal');
+      done();
     });
 
-    it('should delete an XM.IncidentResolution Model', function () {
+    it('should delete an XM.IncidentResolution Model', function (done) {
       crud.destroy(data);
+      done();
     });
 
   });

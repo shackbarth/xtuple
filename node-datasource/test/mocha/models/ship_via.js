@@ -34,9 +34,10 @@ describe('ShipVia CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.ShipVia', 'INIT Value should be XM.ShipVia');
   });
 
-  it('should create an XM.ShipVia Model', function () {
+  it('should create an XM.ShipVia Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.ShipVia Model', function () {
@@ -44,14 +45,16 @@ describe('ShipVia CRUD Test', function () {
     assert.equal(data.model.get('description'), data.createHash.description, 'Model Description READ Value is equal');
   });
 
-  it('should update an XM.ShipVia Model', function () {
+  it('should update an XM.ShipVia Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('code'), data.updateHash.code, 'Model Code UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.ShipVia Model', function () {
+  it('should delete an XM.ShipVia Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

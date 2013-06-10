@@ -33,23 +33,26 @@ describe('FreightClass CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.FreightClass', 'INIT Value should be XM.FreightClass');
   });
 
-  it('should create an XM.FreightClass Model', function () {
+  it('should create an XM.FreightClass Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.FreightClass Model', function () {
     assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal');
   });
 
-  it('should update an XM.FreightClass Model', function () {
+  it('should update an XM.FreightClass Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('code'), data.updateHash.code, 'Model Code UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.FreightClass Model', function () {
+  it('should delete an XM.FreightClass Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

@@ -34,9 +34,10 @@ describe('ShipZone CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.ShipZone', 'INIT Value should be XM.ShipZone');
   });
 
-  it('should create an XM.ShipZone Model', function () {
+  it('should create an XM.ShipZone Model', function (done) {
     data.model.set(data.createHash);
     crud.save(data);
+    done();
   });
 
   it('should read an XM.ShipZone Model', function () {
@@ -44,14 +45,16 @@ describe('ShipZone CRUD Test', function () {
     assert.equal(data.model.get('description'), data.createHash.description, 'Model Description READ Value is equal');
   });
 
-  it('should update an XM.ShipZone Model', function () {
+  it('should update an XM.ShipZone Model', function (done) {
     data.model.set(data.updateHash);
     crud.save(data);
     assert.equal(data.model.get('name'), data.updateHash.name, 'Model Name UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.ShipZone Model', function () {
+  it('should delete an XM.ShipZone Model', function (done) {
     crud.destroy(data);
+    done();
   });
 
 

@@ -47,23 +47,26 @@ describe('Characteristic CRUD Test', function () {
       assert.equal(data.model.recordType, 'XM.Characteristic', 'INIT Value should be XM.Characteristic');
     });
 
-    it('should create an XM.Characteristic Model', function () {
+    it('should create an XM.Characteristic Model', function (done) {
       data.model.set(data.createHash);
       crud.save(data);
+      done();
     });
 
     it('should read an XM.Characteristic Model', function () {
       assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal');
     });
 
-    it('should update an XM.Characteristic Model', function () {
+    it('should update an XM.Characteristic Model', function (done) {
       data.model.set(data.updateHash);
       crud.save(data);
       assert.equal(data.model.get('name'), data.updateHash.name, 'Model Code UPDATE Value is equal');
+      done();
     });
 
-    it('should delete an XM.Characteristic Model', function () {
+    it('should delete an XM.Characteristic Model', function (done) {
       crud.destroy(data);
+      done();
     });
 
   });
