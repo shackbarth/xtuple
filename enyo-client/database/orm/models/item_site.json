@@ -13,6 +13,14 @@
         "read": true,
         "update": "MaintainCostCategories",
         "delete": "MaintainCostCategories"
+      },
+      "attribute": {
+        "view": {
+          "privilege": "ViewCosts MaintainCosts",
+          "properties": [
+            "averageCost"
+          ]
+        }
       }
     },
     "properties": [
