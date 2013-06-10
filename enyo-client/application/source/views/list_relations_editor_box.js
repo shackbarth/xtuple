@@ -399,14 +399,19 @@ trailing:true, white:true*/
 
     create: function () {
       this.inherited(arguments);
-      this.createComponent({
-        kind: "onyx.Button",
-        content: "_expand".loc(),
-        name: "expandButton",
-        ontap: "launchWorkspace",
-        classes: "xv-groupbox-button-right",
-        container: this.$.navigationButtonPanel
-      });
+      // create extra "expand" button for sales line items
+      this.$.navigationButtonPanel.createComponents([
+        {kind: "onyx.Button", content: "_expand".loc(),
+            name: "expandButton", ontap: "launchWorkspace",
+            classes: "xv-groupbox-button-right",
+            container: this.$.navigationButtonPanel
+        }
+      ], {owner: this});
+
+      // create summary panel with totals
+      this.createComponents([
+        {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
+      ], {owner: this});
     },
 
     disabledChanged: function () {
@@ -414,10 +419,12 @@ trailing:true, white:true*/
       this.$.expandButton.setDisabled(this.getDisabled());
     },
     /**
-    Set the current model into the List Relation and the Summary Editor Panel
+      Set the current model into Summary Panel and set styling for done button
     */
     valueChanged: function () {
       this.inherited(arguments);
+      var model = this.value.quote || this.value.salesOrder;
+      this.$.summaryPanel.setValue(model);
       // change the styling of the last button to make room for the new button
       this.$.doneButton.setClasses("xv-groupbox-button-center");
     },
@@ -451,6 +458,42 @@ trailing:true, white:true*/
       });
       return true;
     }
+  });
+
+  enyo.kind({
+    name: "XV.SalesSummaryPanel",
+    kind: "XV.RelationsEditor",
+    style: "margin-top: 10px;",
+    components: [
+      {kind: "XV.Groupbox", name: "totalGroup", components: [
+        {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+        {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+          {kind: "FittableRows", name: "summaryColumnOne", components: [
+            {kind: "XV.CurrencyPicker", attr: "currency"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
+             label: "_margin".loc(), currencyShowing: false},
+            {kind: "XV.WeightWidget", attr: "freightWeight"}
+          ]},
+          {kind: "FittableRows", name: "summaryColumnTwo", components: [
+            {kind: "XV.MoneyWidget",
+             attr: {localValue: "subtotal", currency: "currency"},
+             label: "_subtotal".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "miscCharge", currency: "currency"},
+             label: "_miscCharge".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "freight", currency: "currency"},
+             label: "_freight".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget",
+             attr: {localValue: "taxTotal", currency: "currency"},
+             label: "_tax".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget",
+             attr: {localValue: "total", currency: "currency"},
+             label: "_total".loc(), currencyShowing: false}
+          ]}
+        ]}
+      ]}
+    ]
   });
 
 }());
