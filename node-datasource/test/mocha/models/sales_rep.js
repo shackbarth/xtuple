@@ -4,9 +4,9 @@
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
 var crud = require('../lib/crud'),
-    assert = require('chai').assert,
-    expect = require('chai').expect,
-    zombieAuth = require('../lib/zombie_auth'),
+  assert = require('chai').assert,
+  expect = require('chai').expect,
+  zombieAuth = require('../lib/zombie_auth'),
   data = {
     recordType: "XM.SalesRep",
     autoTestAttributes: true,

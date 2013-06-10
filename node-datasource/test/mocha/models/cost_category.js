@@ -4,22 +4,22 @@
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
 var crud = require('../lib/crud'),
-assert = require('chai').assert,
-expect = require('chai').expect,
-zombieAuth = require('../lib/zombie_auth'),
+  assert = require('chai').assert,
+  expect = require('chai').expect,
+  zombieAuth = require('../lib/zombie_auth'),
 
-    data = {
-      recordType: "XM.CostCategory",
-      autoTestAttributes: true,
-      enforceUpperKey: false,
-      createHash: {
-        code: "HERE",
-        description: "Costs her"
-      },
-      updateHash: {
-        description: "Costs here"
-      }
-};
+  data = {
+    recordType: "XM.CostCategory",
+    autoTestAttributes: true,
+    enforceUpperKey: false,
+    createHash: {
+      code: "HERE",
+      description: "Costs her"
+    },
+    updateHash: {
+      description: "Costs here"
+    }
+  };
 
 var timeout = 20 * 1000;
 
@@ -31,7 +31,7 @@ describe.skip('Cost Category CRUD Test', function () {
 });
 
 describe('Cost Category CRUD Test', function () {
-  before(function (done){
+  before(function (done) {
     this.timeout(timeout);
     zombieAuth.loadApp(done);
   });
@@ -44,21 +44,21 @@ describe('Cost Category CRUD Test', function () {
 
   it('should create an XM.CostCategory Model', function () {
     data.model.set(data.createHash);
-    crud.save(data)
+    crud.save(data);
   });
 
   it('should read an XM.CostCategory Model', function () {
-    assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal')
+    assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal');
   });
 
   it('should update an XM.CostCategory Model', function () {
     data.model.set(data.updateHash);
-    crud.save(data)
-    assert.equal(data.model.get('description'), data.updateHash.description, 'Model Code UPDATE Value is equal')
+    crud.save(data);
+    assert.equal(data.model.get('description'), data.updateHash.description, 'Model Code UPDATE Value is equal');
   });
 
   it('should delete an XM.CostCategory Model', function () {
-    crud.destroy(data)
+    crud.destroy(data);
   });
 
 });

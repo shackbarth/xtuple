@@ -4,30 +4,32 @@
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
 var crud = require('../lib/crud'),
-    assert = require('chai').assert,
-    expect = require('chai').expect,
-    _ = require("underscore"),
-    zombieAuth = require('../lib/zombie_auth'),
-    dueDate = new Date(),
-    commentType,
-    model,
-    comment,
-    task;
+  assert = require('chai').assert,
+  expect = require('chai').expect,
+  _ = require("underscore"),
+  zombieAuth = require('../lib/zombie_auth'),
+  dueDate = new Date(),
+  commentType,
+  model,
+  comment,
+  task;
 
 dueDate.setDate(dueDate.getDate() + 30);
+
 var data = {
-    recordType: "XM.Project",
-    autoTestAttributes: true,
-    createHash : {
-      number: 'crud_project',
-      name: 'Test CRUD Project operations',
-      dueDate: dueDate
-    },     
-    updateHash: {
-      name: 'Test Update Project operation'
-    }
+  recordType: "XM.Project",
+  autoTestAttributes: true,
+  createHash : {
+    number: 'crud_project',
+    name: 'Test CRUD Project operations',
+    dueDate: dueDate
   },
+  updateHash: {
+    name: 'Test Update Project operation'
+  }
+},
   timeout = 120 * 1000;
+
 describe('Project CRUD Test', function () {
   before(function (done) {
     this.timeout(timeout);
