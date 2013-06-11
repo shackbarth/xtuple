@@ -6,20 +6,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 var fs = require('fs'),
   exec = require('child_process').exec,
-  _ = require('underscore');
+  _ = require('underscore'),
+  pg = require('pg'),
+  config = require(__dirname + "/../node-datasource/config.js");
 
 (function () {
   "use strict";
 
-  var argv, specifiedDir, extensions,
+  var argv = process.argv,
+    specifiedExtension,
+    creds = config.databaseServer,
     databases = [],
     buildSpecs = {};
+
+  creds.host = creds.hostname;
 
   //
   // Determine which extensions we want to build. If there is no -e flag,
   // then build the core and the core extensions
   //
-  argv = process.argv;
   if (argv.indexOf("-h") >= 0) {
     console.log("Usage:");
     console.log("sudo ./build_database.js");
@@ -40,24 +45,24 @@ var fs = require('fs'),
     databases.push(argv[argv.indexOf("-d") + 1]);
   } else {
     // build all the databases in node-datasource/config.js
-    var config = require(__dirname + "/../node-datasource/config.js");
     databases = config.datasource.databases;
   }
 
 
 
   console.log(databases);
+  console.log(creds);
 
 
 
-
-  /*
   if (argv.indexOf("-e") >= 0) {
     // the user has specified a particular extension
     // regex: remove trailing slash if present
-    specifiedDir = argv[argv.indexOf("-e") + 1].replace(/\/$/, "");
-    extensions = [specifiedDir];
-  } else {
+    specifiedExtension = argv[argv.indexOf("-e") + 1].replace(/\/$/, "");
+  }
+
+  /*
+  else {
     // add the core extensions
     // get the core extension directory names
     extensions = fs.readdirSync(coreExtDir);
@@ -68,7 +73,48 @@ var fs = require('fs'),
   }
 */
 
+  var getRegisteredExtensions = function (database) {
+    creds.database = database;
+    var client = new pg.Client(creds);
+    client.connect();
+
+    //queries are queued and executed one after another once the connection becomes available
+    var result = client.query("SELECT * FROM xt.ext", function (err, res) {
+      _.each(res.rows, function (row) {
+        var location = row.ext_location,
+          name = row.ext_name,
+          path;
+
+        if (location === '/core-extensions') {
+          path = __dirname + "/../enyo-client/extensions/" + name;
+        } else if (location === '/xtuple-extensions') {
+          path = __dirname + "/../../xtuple-extensions/source/" + name;
+        } else if (location === '/private-extensions') {
+          path = __dirname + "/../../private-extensions/source/" + name;
+        }
+
+        buildSpecs[database].push(path);
+
+      });
+      console.log(buildSpecs);
+      client.end();
+    });
+
+  };
 
 
+  _.each(databases, function (database) {
+    if (specifiedExtension) {
+      // the user has specified an extension to build
+      buildSpecs[database] = [specifiedExtension];
+    } else {
+      // build all registered extensions for the database
+      buildSpecs[database] = [];
+      getRegisteredExtensions(database);
+    }
+
+  });
+
+  console.log(buildSpecs);
 
 }());
