@@ -327,11 +327,8 @@
         "delete": false
       },
       "attribute": {
-        "view": {
-          "privilege": "ViewCosts MaintainCosts",
-          "properties": [
-            "averageCost"
-          ]
+        "averageCost": {
+          "view": "ViewCosts MaintainCosts"
         }
       }
     },

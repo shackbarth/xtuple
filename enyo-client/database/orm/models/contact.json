@@ -24,6 +24,11 @@
         "properties": [
           "owner.username"
         ]
+      },
+      "attribute": {
+        "owner": {
+          "edit": "EditOwner"
+        }
       }
     },
     "properties": [
