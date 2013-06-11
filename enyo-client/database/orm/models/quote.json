@@ -16,11 +16,8 @@
         "delete": "MaintainQuotes"
       },
       "attribute": {
-        "view": {
-          "privilege": "ShowMarginsOnSalesOrder",
-          "properties": [
-            "margin"
-          ]
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
         }
       }
     },
@@ -962,12 +959,11 @@
         "delete": "MaintainQuotes"
       },
       "attribute": {
-        "edit": {
-          "privilege": "OverridePrice",
-          "properties": [
-            "customerPrice",
-            "price"
-          ]
+        "customerPrice": {
+          "edit": "OverridePrice"
+        },
+        "price": {
+          "edit": "OverridePrice"
         }
       }
     },

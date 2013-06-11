@@ -591,7 +591,7 @@
       }
 
       if (sql.statement) {
-	      plv8.execute(sql.statement, sql.values);
+	plv8.execute(sql.statement, sql.values);
       }
 
       /* Handle extensions on other tables. */
@@ -605,9 +605,9 @@
             XT.debug('createRecord values =', sql.values);
           }
 
-      if (sql.statement) {
-	      plv8.execute(sql.statement, sql.values);
-	    }
+          if (sql.statement) {
+	    plv8.execute(sql.statement, sql.values);
+	  } 
         }
       }
 
@@ -650,7 +650,8 @@
         toOneSql,
         type,
         val,
-        isValidSql = false;
+        isValidSql = params && params.statement ? true : false,
+        canEdit;
 
       params = params || {
         table: "",
@@ -697,6 +698,12 @@
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
+        canEdit = orm.privileges &&
+                  orm.privileges.attribute &&
+                  orm.privileges.attribute[prop] &&
+                  orm.privileges.attribute[prop].edit ?
+                  this.checkPrivilege(orm.privileges.attribute[prop].edit) : true;
+
         /* Handle fixed values. */
         if (attr.value !== undefined) {
           params.columns.push("%" + count + "$I");
@@ -707,7 +714,7 @@
           count++;
 
         /* Handle passed values. */
-        } else if (val !== undefined && val !== null && !ormp.toMany) {
+        } else if (canEdit && val !== undefined && val !== null && !ormp.toMany) {
           if (attr.isEncrypted) {
             if (encryptionKey) {
               encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
@@ -752,7 +759,7 @@
             count++;
           }
         /* Handle null value if applicable. */
-        } else if (val === undefined || val === null) {
+        } else if (canEdit && val === undefined || val === null) {
           if (attr.nullValue) {
             params.columns.push("%" + count + "$I");
             params.values.push(ormp.nullValue);
@@ -767,7 +774,7 @@
       }
 
       if (!isValidSql) {
-	      return false;
+        return false;
       }
 
       /* Build the insert statement */
@@ -939,7 +946,8 @@
         toOneSql,
         type,
         val,
-        isValidSql = false;
+        isValidSql = false,
+        canEdit;
 
       params = params || {
         table: "",
@@ -969,9 +977,15 @@
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false;
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
-          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
+          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop],
+        canEdit = orm.privileges &&
+                  orm.privileges.attribute &&
+                  orm.privileges.attribute[prop] &&
+                  orm.privileges.attribute[prop].edit ?
+                  this.checkPrivilege(orm.privileges.attribute[prop].edit) : true;
+          
+        if (canEdit && val !== undefined && !ormp.toMany) {
 
-        if (val !== undefined && !ormp.toMany) {
           /* Handle encryption if applicable. */
           if (attr.isEncrypted) {
             if (encryptionKey) {
@@ -1288,7 +1302,7 @@
       if(ret.length) {
         return ret[0].id;
       } else {
-        throw new handleError("Not Found", 404);
+        throw new handleError("Primary Key Not Found", 400);
       }
     },
 
@@ -1532,8 +1546,8 @@
         pkey = XT.Orm.primaryKey(orm),
         nkey = XT.Orm.naturalKey(orm),
         props = orm.properties,
-        viewPriv = orm.privileges && orm.privileges.attribute && orm.privileges.attribute.view ?
-          orm.privileges.attribute.view : false,
+        attrPriv = orm.privileges && orm.privileges.attribute ?
+          orm.privileges.attribute : false,
         inclKeys = options.inclKeys,
         superUser = options.superUser,
         c,
@@ -1552,9 +1566,9 @@
           prop = props[i];
 
           /* Remove unprivileged attribute if applicable */
-          if (!superUser && viewPriv && viewPriv.properties &&
-            viewPriv.properties.indexOf(prop.name) != -1 &&
-            !this.checkPrivilege(viewPriv.privilege)) {
+          if (!superUser && attrPriv && attrPriv[prop.name] &&
+            attrPriv[prop.name].view &&
+            !this.checkPrivilege(attrPriv[prop.name].view)) {
             delete item[prop.name];
           }
 

@@ -24,6 +24,11 @@
           "owner.username",
           "assignedTo.username"
         ]
+      },
+      "attribute": {
+        "owner": {
+          "edit": "EditOwner"
+        }
       }
     },
     "properties": [
@@ -1184,6 +1189,11 @@
           "projectOwner.username",
           "projectAssignedTo.username"
         ]
+      },
+      "attribute": {
+        "owner": {
+          "edit": "EditOwner"
+        }
       }
     },
     "properties": [
@@ -1398,6 +1408,11 @@
           "projectOwner.username",
           "projectAssignedTo.username"
         ]
+      },
+      "attribute": {
+        "owner": {
+          "edit": "EditOwner"
+        }
       }
     },
     "properties": [

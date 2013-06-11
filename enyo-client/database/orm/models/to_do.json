@@ -26,11 +26,11 @@
         ]
       },
       "attribute": {
-        "edit": {
-          "privilege": "ReassignToDoItems",
-          "properties": [
-            "assignedTo"
-          ]
+        "owner": {
+          "edit": "EditOwner"
+        },
+        "assignedTo": {
+          "edit": "ReassignToDoItems"
         }
       }
     },
