@@ -112,11 +112,13 @@ var fs = require('fs'),
       returnObj[database] = [specifiedExtension];
       return returnObj;
     });
+    // synchronous...
     buildDatabase(buildSpecs);
 
   } else {
     // build all registered extensions for the database
     async.map(databases, getRegisteredExtensions, function (err, results) {
+      // asynchronous...
       buildDatabase(results);
     });
   }
