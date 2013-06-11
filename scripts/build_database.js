@@ -8,6 +8,7 @@ var fs = require('fs'),
   exec = require('child_process').exec,
   _ = require('underscore'),
   pg = require('pg'),
+  async = require('async'),
   config = require(__dirname + "/../node-datasource/config.js");
 
 (function () {
@@ -59,6 +60,10 @@ var fs = require('fs'),
     // the user has specified a particular extension
     // regex: remove trailing slash if present
     specifiedExtension = argv[argv.indexOf("-e") + 1].replace(/\/$/, "");
+    _.each(databases, function (database) {
+      // the user has specified an extension to build
+      buildSpecs[database] = [specifiedExtension];
+    });
   }
 
   /*
@@ -73,14 +78,14 @@ var fs = require('fs'),
   }
 */
 
-  var getRegisteredExtensions = function (database) {
+  var getRegisteredExtensions = function (database, callback) {
     creds.database = database;
     var client = new pg.Client(creds);
     client.connect();
 
     //queries are queued and executed one after another once the connection becomes available
     var result = client.query("SELECT * FROM xt.ext", function (err, res) {
-      _.each(res.rows, function (row) {
+      var paths = _.map(res.rows, function (row) {
         var location = row.ext_location,
           name = row.ext_name,
           path;
@@ -93,27 +98,22 @@ var fs = require('fs'),
           path = __dirname + "/../../private-extensions/source/" + name;
         }
 
-        buildSpecs[database].push(path);
-
+        return path;
       });
-      console.log(buildSpecs);
+      console.log(paths);
       client.end();
+      callback(null, paths);
     });
 
   };
 
+  if (!specifiedExtension) {
+    // build all registered extensions for the database
+    async.map(databases, getRegisteredExtensions, function (err, results) {
+      console.log(arguments);
+    });
+  }
 
-  _.each(databases, function (database) {
-    if (specifiedExtension) {
-      // the user has specified an extension to build
-      buildSpecs[database] = [specifiedExtension];
-    } else {
-      // build all registered extensions for the database
-      buildSpecs[database] = [];
-      getRegisteredExtensions(database);
-    }
-
-  });
 
   console.log(buildSpecs);
 
