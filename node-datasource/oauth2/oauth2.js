@@ -273,7 +273,8 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 // application issues an access token on behalf of the user in the JWT `prn`
 // proptery.
 
-server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(function (client, header, claimSet, signature, done) {
+//server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(function (client, header, claimSet, signature, done) {
+server.exchange('assertion', jwtBearer(function (client, header, claimSet, signature, done) {
   "use strict";
 
   var data = header + "." + claimSet,
@@ -338,7 +339,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
 
           // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
           scope = url.parse(scopeValue, true);
-          scopeOrg = scope.path.match(/\/auth\/(.*)/)[1] || null;
+          scopeOrg = scope.path.split("/")[1];
 
           if (user.get("organization") === scopeOrg) {
             scopes[scopeKey] = scopeOrg;
@@ -372,6 +373,8 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
           return done && done(err);
         };
 
+        saveOptions.database = scopes[0];
+
         initCallback = function (model, value) {
           if (model.id) {
             // Now that model is ready, set attributes and save.
@@ -399,7 +402,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
         token.on('change:id', initCallback);
 
         // Set model values and save.
-        token.initialize(null, {isNew: true});
+        token.initialize(null, {isNew: true, database: scopes[0]});
       });
     } else {
       // No prn, throw error for now.
