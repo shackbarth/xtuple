@@ -8,17 +8,17 @@
 //  "use strict";
 
 var crud = require('../lib/crud'),
-		assert = require('chai').assert,
-		expect = require('chai').expect,
-		zombieAuth = require('../lib/zombie_auth'),
+  assert = require('chai').assert,
+  expect = require('chai').expect,
+  zombieAuth = require('../lib/zombie_auth'),
 
-    data = {
+  data = {
     recordType: "XM.TaxClass",
     autoTestAttributes: true,
     createHash: {
       code: "TC Code",
-			description: "Tax Class Code",
-			sequence: "998"
+      description: "Tax Class Code",
+      sequence: "998"
     },
     updateHash: {
       description: "updated descrip"
@@ -38,34 +38,37 @@ describe.skip('Tax Class CRUD Test', function () {
   });
 
 describe('Tax Class CRUD Test', function () {
-	  before(function (done){
+    before(function (done) {
         this.timeout(timeout);
-			  zombieAuth.loadApp(done);
-			});
+        zombieAuth.loadApp(done);
+      });
 
-			it('should be able to Initialize an XM.TaxClass Model', function (){
-				data.model = new XM.TaxClass();
-				expect(data.model).to.exist;
-				assert.equal(data.model.recordType, 'XM.TaxClass', 'INIT Value should be XM.Address');
-			});
+    it('should be able to Initialize an XM.TaxClass Model', function () {
+      data.model = new XM.TaxClass();
+      expect(data.model).to.exist;
+      assert.equal(data.model.recordType, 'XM.TaxClass', 'INIT Value should be XM.Address');
+    });
 
-			it.skip('should create an XM.TaxClass Model', function (){
-				data.model.set(data.createHash);
-				crud.save(data)
-			});
+    it.skip('should create an XM.TaxClass Model', function (done) {
+      data.model.set(data.createHash);
+      crud.save(data);
+      done();
+    });
 
-			it.skip('should read an XM.TaxClass Model', function (){
-				assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal')
-			});
+    it.skip('should read an XM.TaxClass Model', function () {
+      assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal');
+    });
 
-			it.skip('should update an XM.TaxClass Model', function (){
-				data.model.set(data.updateHash);
-				crud.save(data)
-				assert.equal(data.model.get('description'), data.updateHash.description, 'Model Code UPDATE Value is equal')
-			});
+    it.skip('should update an XM.TaxClass Model', function (done) {
+      data.model.set(data.updateHash);
+      crud.save(data);
+      assert.equal(data.model.get('description'), data.updateHash.description, 'Model Code UPDATE Value is equal');
+      done();
+    });
 
-			it('should delete an XM.TaxClass Model', function (){
-				crud.destroy(data)
-			});
+    it('should delete an XM.TaxClass Model', function (done) {
+      crud.destroy(data);
+      done();
+    });
 
-});
+  });

@@ -1,4 +1,4 @@
-/*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+/*jshint node:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XV:true, XM:true, Globalize:true, enyo:true, _:true */
 
@@ -25,7 +25,8 @@ regexp:true, undef:true, trailing:true, white:true */
       currencyDisabled: false,
       currencyShowing: true,
       disabled: false,
-      localMode: true
+      localMode: true,
+      isEditableProperty: "localValue" // The property mapped to an attribute that checks whether editbale
     },
     handlers: {
       onValueChange: "pickerChanged" // intercept picker events
@@ -48,9 +49,9 @@ regexp:true, undef:true, trailing:true, white:true */
           components: [
           {name: "baseAmountLabel", classes: "xv-money-label"}
         ]},
-        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+        {kind: "onyx.InputDecorator", classes: "xv-input-decorator, xv-currency-label",
           components: [
-          {name: "baseCurrencyLabel", classes: "xv-currency-label"}
+          {name: "baseCurrencyLabel"}
         ]}
       ]}
     ],
@@ -128,7 +129,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.input.setDisabled(disabled);
       this.$.picker.setDisabled(disabled || currencyDisabled);
     },
-    
+
     /**
     @todo Document the labelChanged method.
     */

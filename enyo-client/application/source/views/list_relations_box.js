@@ -31,7 +31,7 @@ trailing:true white:true*/
     searchList: "XV.CustomerList",
     listRelations: "XV.CustomerGroupCustomerListRelations"
   });
-  
+
   // ..........................................................
   // EMPLOYEE GROUP EMPLOYEE
   //
@@ -45,7 +45,7 @@ trailing:true white:true*/
     searchList: "XV.EmployeeList",
     listRelations: "XV.EmployeeGroupEmployeeListRelations"
   });
-  
+
   // ..........................................................
   // EMPLOYEE GROUP GROUP
   //

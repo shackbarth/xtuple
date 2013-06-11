@@ -6,6 +6,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   /**
+    @name Extensions
+    @class Extensions
     Returns a list of extensions associated with an organization.
    */
   exports.extensions = function (req, res) {

@@ -14,6 +14,14 @@
         "read": "ViewQuotes",
         "update": "MaintainQuotes",
         "delete": "MaintainQuotes"
+      },
+      "attribute": {
+        "view": {
+          "privilege": "ShowMarginsOnSalesOrder",
+          "properties": [
+            "margin"
+          ]
+        }
       }
     },
     "properties": [
@@ -952,6 +960,15 @@
         "read": "ViewQuotes",
         "update": "MaintainQuotes",
         "delete": "MaintainQuotes"
+      },
+      "attribute": {
+        "edit": {
+          "privilege": "OverridePrice",
+          "properties": [
+            "customerPrice",
+            "price"
+          ]
+        }
       }
     },
     "properties": [
@@ -1429,10 +1446,10 @@
       },
       {
         "name": "salesRep",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "SalesRep",
           "column": "quhead_salesrep_id"
-         }
+        }
       },
       {
         "name": "shiptoName",

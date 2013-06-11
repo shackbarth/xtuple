@@ -13,34 +13,31 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var queryForData = function (session, query, callback) {
 
-    // Enforcement of disableExport was scrapped during issue #20254.
-    // Bringing it back is issue #20373.
-
-
-    //var userId = session.passport.user.username,
-    //  userQueryPayload = '{"nameSpace":"XM","type":"UserAccountRelation","id":"%@"}'.f(userId),
-    //  userQuery = "select xt.get('%@')".f(userQueryPayload);
+    var userId = session.passport.user.username,
+      adminUser = X.options.databaseServer.user, // execute this query as admin
+      userQueryPayload = '{"nameSpace":"SYS","type":"User","id":"%@","username":"%@"}'
+        .f(userId, adminUser),
+      userQuery = "select xt.get('%@')".f(userQueryPayload),
+      queryOptions = XT.dataSource.getAdminCredentials(session.passport.user.organization);
 
     // first make sure that the user has permissions to export to CSV
     // (can't trust the client)
-    //var queryOptions = XT.dataSource.getAdminCredentials(session.passport.user.organization);
-    //XT.dataSource.query(userQuery, queryOptions, function (err, res) {
-    //  var retrievedRecord;
+    XT.dataSource.query(userQuery, queryOptions, function (err, res) {
+      var retrievedRecord;
+      if (err || !res || res.rowCount < 1) {
+        callback({isError: true, message: "Error verifying user permissions"});
+        return;
+      }
 
-    //  if (err || !res || res.rowCount < 1) {
-    //    callback("Error verifying user permissions", null);
-    //    return;
-    //  }
-
-    //  retrievedRecord = JSON.parse(res.rows[0].get);
-    //  if (retrievedRecord.disableExport) {
+      retrievedRecord = JSON.parse(res.rows[0].get);
+      if (retrievedRecord.data.disableExport) {
         // nice try, asshole.
-    //    callback("Stop trying to hack into our database", null);
-    //    return;
-    //  }
+        callback({isError: true, message: "Stop trying to hack into our database"});
+        return;
+      }
 
-    data.queryDatabase("get", query, session, callback);
-    //});
+      data.queryDatabase("get", query, session, callback);
+    });
   };
   exports.queryForData = queryForData;
 
@@ -81,7 +78,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         queryOptions,
         fileName;
 
-      if (!type) {
+      if (result.isError) {
+        res.send(result);
+        return;
+
+      } else if (!type) {
         res.send({isError: true, message: "You must pass a type"});
         return;
       }
@@ -111,7 +112,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             var biUrl = X.options.datasource.biUrl || "",
               redirectUrl = biUrl + "&name=" + fileName +
                 "&org=" + req.session.passport.user.organization +
-                "&datakey=" + randomKey;
+				"&datasource=" + req.headers.host + "&datakey=" + randomKey;
 
             if (requestDetails.locale && requestDetails.locale.culture) {
               res.set("Accept-Language", requestDetails.locale.culture);

@@ -4,22 +4,22 @@
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
 var crud = require('../lib/crud'),
-assert = require('chai').assert,
-expect = require('chai').expect,
-zombieAuth = require('../lib/zombie_auth'),
+  assert = require('chai').assert,
+  expect = require('chai').expect,
+  zombieAuth = require('../lib/zombie_auth'),
 
-    data = {
-      recordType: "XM.CustomerType",
-      autoTestAttributes: true,
-      enforceUpperKey: false,
-      createHash: {
-        name: "CupGrp",
-					description:"normal description"
-      },
-      updateHash: {
-        name: "group"
-      }
-};
+  data = {
+    recordType: "XM.CustomerType",
+    autoTestAttributes: true,
+    enforceUpperKey: false,
+    createHash: {
+      name: "CupGrp",
+      description: "normal description"
+    },
+    updateHash: {
+      name: "group"
+    }
+  };
 
 var timeout = 20 * 1000;
 
@@ -31,7 +31,7 @@ describe.skip('Customer Type CRUD Test', function () {
 });
 
 describe('Customer Type CRUD Test', function () {
-  before(function (done){
+  before(function (done) {
     this.timeout(timeout);
     zombieAuth.loadApp(done);
   });
@@ -42,23 +42,26 @@ describe('Customer Type CRUD Test', function () {
     assert.equal(data.model.recordType, 'XM.CustomerType', 'INIT Value should be XM.CustomerType');
   });
 
-  it.skip('should create an XM.CustomerType Model', function () {
+  it.skip('should create an XM.CustomerType Model', function (done) {
     data.model.set(data.createHash);
-    crud.save(data)
+    crud.save(data);
+    done();
   });
 
   it.skip('should read an XM.CustomerType Model', function () {
-    assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal')
+    assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal');
   });
 
-  it.skip('should update an XM.CustomerType Model', function () {
+  it.skip('should update an XM.CustomerType Model', function (done) {
     data.model.set(data.updateHash);
-    crud.save(data)
-    assert.equal(data.model.get('name'), data.updateHash.name, 'Model Code UPDATE Value is equal')
+    crud.save(data);
+    assert.equal(data.model.get('name'), data.updateHash.name, 'Model Code UPDATE Value is equal');
+    done();
   });
 
-  it('should delete an XM.CustomerType Model', function () {
-    crud.destroy(data)
+  it('should delete an XM.CustomerType Model', function (done) {
+    crud.destroy(data);
+    done();
   });
 
 });

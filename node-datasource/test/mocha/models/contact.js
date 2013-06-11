@@ -8,22 +8,21 @@
 //  "use strict";
 
 var crud = require('../lib/crud'),
-		assert = require('chai').assert,
-		expect = require('chai').expect,
-		zombieAuth = require('../lib/zombie_auth'),
+  assert = require('chai').assert,
+  expect = require('chai').expect,
+  zombieAuth = require('../lib/zombie_auth'),
 
-   data = {
-      recordType: "XM.Contact",
-      autoTestAttributes: true,
-      createHash: {
-    firstName: "Michael",
-    primaryEmail: "modonnell@xtuple.com"
-
-      },
-      updateHash: {
-           firstName: "Mike"
-      }
-    };
+  data = {
+    recordType: "XM.Contact",
+    autoTestAttributes: true,
+    createHash: {
+      firstName: "Michael",
+      primaryEmail: "modonnell@xtuple.com"
+    },
+    updateHash: {
+      firstName: "Mike"
+    }
+  };
 
 
 
@@ -37,34 +36,37 @@ describe.skip('Contact CRUD Test', function () {
   });
 
 describe('Contact CRUD Test', function () {
-	  before(function (done){
+    before(function (done) {
         this.timeout(timeout);
-			  zombieAuth.loadApp(done);
-			});
+        zombieAuth.loadApp(done);
+      });
 
-			it('should be able to Initialize an XM.Contact Model', function (){
-				data.model = new XM.Contact();
-				expect(data.model).to.exist;
-				assert.equal(data.model.recordType, 'XM.Contact', 'INIT Value should be XM.Contact');
-			});
+    it('should be able to Initialize an XM.Contact Model', function () {
+      data.model = new XM.Contact();
+      expect(data.model).to.exist;
+      assert.equal(data.model.recordType, 'XM.Contact', 'INIT Value should be XM.Contact');
+    });
 
-			it.skip('should create an XM.Contact Model', function (){
-				data.model.set(data.createHash);
-				crud.save(data)
-			});
+    it.skip('should create an XM.Contact Model', function (done) {
+      data.model.set(data.createHash);
+      crud.save(data);
+      done();
+    });
 
-			it.skip('should read an XM.Contact Model', function (){
-				assert.equal(data.model.get('firstName'), data.createHash.firstName, 'Model Code READ Value is equal')
-			});
+    it.skip('should read an XM.Contact Model', function () {
+      assert.equal(data.model.get('firstName'), data.createHash.firstName, 'Model Code READ Value is equal');
+    });
 
-			it.skip('should update an XM.Contact Model', function (){
-				data.model.set(data.updateHash);
-				crud.save(data)
-				assert.equal(data.model.get('firstName'), data.updateHash.firstName, 'Model Code UPDATE Value is equal')
-			});
+    it.skip('should update an XM.Contact Model', function (done) {
+      data.model.set(data.updateHash);
+      crud.save(data);
+      assert.equal(data.model.get('firstName'), data.updateHash.firstName, 'Model Code UPDATE Value is equal');
+      done();
+    });
 
-			it('should delete an XM.Contact Model', function (){
-				crud.destroy(data)
-			});
+    it('should delete an XM.Contact Model', function (done) {
+      crud.destroy(data);
+      done();
+    });
 
-});
+  });
