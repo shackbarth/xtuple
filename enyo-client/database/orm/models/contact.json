@@ -245,7 +245,9 @@
       }
     ],
     "isSystem": true,
-    "sourceCode": "T"
+    "triggers": [
+      "xt.owner_record_did_change"
+    ]
   },
   {
     "context": "xtuple",

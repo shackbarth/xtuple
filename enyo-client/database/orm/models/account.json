@@ -244,9 +244,8 @@
       }
     ],
     "isSystem":true,
-    "sourceCode":"CRMA",
-    "extensions":[
-
+    "triggers": [
+      "xt.owner_record_did_change"
     ]
   },
   {

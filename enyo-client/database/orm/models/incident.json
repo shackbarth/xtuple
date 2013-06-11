@@ -267,9 +267,10 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "INCDT",
-    "extensions": []
+    "triggers": [
+      "xt.owner_record_did_change"
+    ],
+    "isSystem": true
   },
   {
     "context": "xtuple",

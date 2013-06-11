@@ -217,9 +217,10 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "J",
-    "extensions": []
+    "triggers": [
+      "xt.owner_record_did_change"
+    ],
+    "isSystem": true
   },
   {
     "context": "crm",
@@ -1379,6 +1380,9 @@
         "nameSpace": "XM"
       }
     ],
+    "triggers": [
+      "xt.owner_record_did_change"
+    ],
     "isNestedOnly": true,
     "isSystem": true
   },
@@ -1556,6 +1560,9 @@
           "inverse": "task"
         }
       }
+    ],
+    "triggers": [
+      "xt.owner_record_did_change"
     ],
     "isSystem": true
   },

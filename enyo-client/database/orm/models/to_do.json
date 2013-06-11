@@ -237,9 +237,10 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "TODO",
-    "extensions": []
+    "triggers": [
+      "xt.owner_record_did_change"
+    ],
+    "isSystem": true
   },
   {
     "context": "crm",
