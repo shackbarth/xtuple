@@ -101,6 +101,12 @@ white:true*/
 
     recordType: 'XM.Customer',
 
+    conversionMap: {
+      name: "name",
+      primaryContact: "contact",
+      secondaryContact: "correspondenceContact"
+    },
+
     defaults: function () {
       var settings = XT.session.getSettings();
       return {
@@ -130,27 +136,6 @@ white:true*/
     readOnlyAttributes: [
       "partialShip",
       "blanketPurchaseOrders"
-    ],
-
-    requiredAttributes: [
-      "isActive",
-      "name",
-      "number",
-      "customerType",
-      "terms",
-      "salesRep",
-      "backorder",
-      "partialShip",
-      "discount",
-      "balanceMethod",
-      "isFreeFormShipto",
-      "blanketPurchaseOrders",
-      "shipCharge",
-      "creditStatus",
-      "isFreeFormBillto",
-      "usesPurchaseOrders",
-      "autoUpdateStatus",
-      "autoHoldOrders"
     ],
 
     // ..........................................................
@@ -219,31 +204,6 @@ white:true*/
     },
 
     /**
-      Creates a new account model and fetches based on the given ID.
-      Takes attributes from the account model and gives them to this customer model.
-    */
-    convertFromAccount: function (id) {
-      var account = new XM.Account(),
-          fetchOptions = {},
-          that = this;
-
-      fetchOptions.id = id;
-
-      fetchOptions.success = function (resp) {
-        that.set("name", account.get("name"));
-        that.set("billingContact", account.get("primaryContact"));
-        that.set("correspondenceContact", account.get("secondaryContact"));
-        that.revertStatus();
-        that._checkConflicts = false;
-      };
-      fetchOptions.error = function (resp) {
-        XT.log("Fetch failed in convertFromAccount");
-      };
-      this.setStatus(XM.Model.BUSY_FETCHING);
-      account.fetch(fetchOptions);
-    },
-
-    /**
       Creates a new prospect model and fetches based on the given ID.
       Takes attributes from the prospect model and gives them to this customer model.
       The prospect model will be destroyed by the save function.
@@ -262,7 +222,7 @@ white:true*/
         that.set("preferredSite", prospect.get("site"));
         that.set("taxZone", prospect.get("taxZone"));
         that.setReadOnly("id", false);
-        that.set("id", prospect.get("id"));
+        that.set("id", prospect.id);
         that.setReadOnly("id", true);
         that.revertStatus();
         that.checkConflicts = false;
@@ -278,6 +238,31 @@ white:true*/
       var salesRep = this.get('salesRep');
       if (!salesRep) { return; }
       this.set('commission', salesRep.get('commission'));
+    },
+
+    /**
+      In the Customer Tax Registrations, the effective date
+      cannot be prior to the expires date.
+    */
+    validate: function () {
+      var error, params = {},
+        taxReg = this.get("taxRegistration");
+
+      error = XM.AccountDocument.prototype.validate.apply(this, arguments);
+      if (error) { return error; }
+
+      if (taxReg.length) {
+        _.each(taxReg.models, function (t) {
+          if (XT.date.compareDate(t.get("effective"), t.get("expires")) === 1) {
+            params.start = "_effective".loc();
+            params.end = "_expires".loc();
+            error = XT.Error.clone('xt2015', { params: params });
+            return false;
+          }
+        });
+      }
+
+      return error;
     }
 
   });
@@ -407,7 +392,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Document
   */
   XM.CustomerGroup = XM.Document.extend({
     /** @scope XM.CustomerGroup.prototype */
@@ -439,16 +424,10 @@ white:true*/
     /** @scope XM.CustomerShipto.prototype */
 
     recordType: 'XM.CustomerShipto',
-    
+
     defaults: {
       isActive: true
     },
-
-    requiredAttributes: [
-      "isActive",
-      "name",
-      "number"
-    ],
 
     // ..........................................................
     // METHODS
@@ -498,7 +477,7 @@ white:true*/
         this.set("shipCharge", customer.get("shipCharge"));
       }
     },
-    
+
     isDefaultDidChange: function () {
       if (!this.get("isDefault")) { return; }
       var customer = this.get("customer"),

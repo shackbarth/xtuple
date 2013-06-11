@@ -35,8 +35,8 @@ exports.caps = [
     "screen-resolution": "1024x768"
   },
   {
-    browserName: 'firefox',
-    version: '11',
+    browserName: 'chrome',
+    version: ' ',
     platform: 'Linux',
     tags: ["selenium test"],
     name: "CRUD contact on Chrome-Linux",

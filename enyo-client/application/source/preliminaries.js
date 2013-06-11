@@ -1,11 +1,15 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
+/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
+trailing:true, white:true*/
 /*global XT:true, enyo:true, window:true */
 
 XT = typeof XT !== 'undefined' ? XT : {};
 
 (function () {
+
+  XT.getOrganizationPath = function () {
+    return "/" + window.location.pathname.split("/")[1];
+  };
 
   XT.logout = function () {
     if (window.onbeforeunload) {
@@ -14,7 +18,7 @@ XT = typeof XT !== 'undefined' ? XT : {};
       // delete window.onbeforeunload; // doesn't work
       window.onbeforeunload = undefined;
     }
-    window.location = "/logout";
+    window.location = XT.getOrganizationPath() + "/logout";
   };
 
   XT.setVersion = function (version) {

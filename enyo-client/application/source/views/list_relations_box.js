@@ -17,66 +17,47 @@ trailing:true white:true*/
     listRelations: "XV.ContactListRelations",
     searchList: "XV.ContactList"
   });
-  
+
   // ..........................................................
   // CUSTOMER GROUP CUSTOMER
   //
 
   enyo.kind({
     name: "XV.CustomerGroupCustomerBox",
-    kind: "XV.ListRelationsBox",
+    kind: "XV.ListGroupRelationsBox",
     title: "_customers".loc(),
     parentKey: "customerGroup",
-    canOpen: false,
+    groupItemKey: "customer",
     searchList: "XV.CustomerList",
-    listRelations: "XV.CustomerGroupCustomerListRelations",
-    updateButtons: function () {
-      this.$.attachButton.setDisabled(false);
-    },
-    attachItem: function () {
-      var list = this.$.list,
-        parent = list.getParent(),
-        searchList = this.getSearchList(),
-        ids = [],
-        inEvent,
+    listRelations: "XV.CustomerGroupCustomerListRelations"
+  });
+  
+  // ..........................................................
+  // EMPLOYEE GROUP EMPLOYEE
+  //
 
-        // Callback to handle selection...
-        callback = function (selectedModel) {
-          var model = new XM.CustomerGroupCustomer(null, {isNew: true});
-          model.set("customer", selectedModel);
-          parent.get("customers").add(model);
-        };
-        
-      _.each(parent.get("customers").models, function (customer) {
-        ids.push(customer.getValue("customer.id"));
-      });
+  enyo.kind({
+    name: "XV.EmployeeGroupEmployeeBox",
+    kind: "XV.ListGroupRelationsBox",
+    title: "_employees".loc(),
+    parentKey: "employeeGroup",
+    groupItemKey: "employee",
+    searchList: "XV.EmployeeList",
+    listRelations: "XV.EmployeeGroupEmployeeListRelations"
+  });
+  
+  // ..........................................................
+  // EMPLOYEE GROUP GROUP
+  //
 
-      // Open a customer search screen excluding customers already selected
-      inEvent = {
-        list: searchList,
-        callback: callback
-      };
-      if (ids.length) {
-        inEvent.conditions = [{
-          attribute: "id",
-          operator: "NOT ANY",
-          value: ids
-        }];
-      }
-      this.doSearch(inEvent);
-    },
-    detachItem: function () {
-      var list = this.$.list,
-        index = list.getFirstSelected(),
-        model = list.getModel(index);
-
-      model.destroy();
-      list.lengthChanged();
-    },
-    selectionChanged: function (inSender, inEvent) {
-      var index = this.$.list.getFirstSelected();
-      this.$.detachButton.setDisabled(!index);
-    }
+  enyo.kind({
+    name: "XV.EmployeeGroupGroupBox",
+    kind: "XV.ListGroupRelationsBox",
+    title: "_groups".loc(),
+    parentKey: "employee",
+    groupItemKey: "employeeGroup",
+    searchList: "XV.EmployeeGroupList",
+    listRelations: "XV.EmployeeGroupGroupListRelations"
   });
 
   // ..........................................................
@@ -87,7 +68,6 @@ trailing:true white:true*/
     name: "XV.IncidentHistoryRelationsBox",
     kind: "XV.ListRelationsBox",
     title: "_history".loc(),
-    parentKey: "history",
     listRelations: "XV.IncidentHistoryListRelations",
     canOpen: false
   });
@@ -106,6 +86,19 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // OPPORTUNITY SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.OpportunitySalesOrderListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_salesOrders".loc(),
+    parentKey: "opportunity",
+    listRelations: "XV.OpportunityQuoteListRelations", // not a bug
+    searchList: "XV.SalesOrderList"
+  });
+
+  // ..........................................................
   // CUSTOMER QUOTE
   //
 
@@ -119,6 +112,19 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // CUSTOMER SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerSalesOrderListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_salesOrders".loc(),
+    parentKey: "customer",
+    listRelations: "XV.CustomerQuoteListRelations", // not a bug
+    searchList: "XV.SalesOrderList"
+  });
+
+  // ..........................................................
   // PROSPECT QUOTE
   //
 
@@ -126,8 +132,8 @@ trailing:true white:true*/
     name: "XV.ProspectQuoteListRelationsBox",
     kind: "XV.ListRelationsBox",
     title: "_quotes".loc(),
-    parentKey: "customer",
-    listRelations: "XV.ProspectQuoteListRelations",
+    parentKey: "customer", // not a bug
+    listRelations: "XV.CustomerQuoteListRelations", // not a bug
     searchList: "XV.QuoteList"
   });
 

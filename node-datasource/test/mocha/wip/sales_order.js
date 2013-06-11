@@ -1,4 +1,4 @@
-var zombieAuth = require("../../vows/lib/zombie_auth"),
+var zombieAuth = require("../lib/zombie_auth"),
     assert = require("chai").assert;
 
   describe('Sales order', function (){
@@ -24,4 +24,4 @@ var zombieAuth = require("../../vows/lib/zombie_auth"),
       salesOrder.on('change:id', initCallback);
       salesOrder.initialize(null, {isNew: true});
     });
-  }) 
+  })

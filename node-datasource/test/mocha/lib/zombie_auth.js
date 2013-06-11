@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, XM:true, XV: true */
+/*global XT:true, XM:true, XV:true, XZ:true, enyo:true */
 
 // global objects
 enyo = {};
@@ -22,7 +22,7 @@ Simplest possible usage:
 (function () {
   "use strict";
 
-  var secondsToWait = 20;
+  var secondsToWait = 40;
 
   /**
     Loads up the xTuple environment and makes the global variables globally available.
@@ -30,10 +30,8 @@ Simplest possible usage:
     The first three options are optional, but if omitted then the login data should be
     available in the /test/shared/loginData.js file.
 
-    There are two important limitations to this code at the moment. First, the client-side
-    app must be built. (Going in through debug.html won't work). Second, you have to
-    use a user who is only associated with one organization. Both of these limitations
-    should be fixed when we get a chance.
+    There is one important limitation to this code at the moment: the client-side
+    app must be built. (Going in through debug.html won't work).
 
     @param {Object} options
     @param {String} options.username
@@ -53,6 +51,7 @@ Simplest possible usage:
 
     var username = options.username,
       password = options.password,
+      database = options.database,
       host = options.host,
       callback = options.callback,
       verboseMode = options.verbose,
@@ -68,14 +67,15 @@ Simplest possible usage:
 
     if (!username || !password) {
       try {
-        loginData = require('../../shared/loginData');
+        loginData = require('../../shared/login_data');
       } catch (err) {
-        console.log("Make sure you put your login credentials in the /test/shared/loginData.js file");
+        console.log("Make sure you put your login credentials in the /test/shared/login_data.js file");
         process.exit(1);
       }
 
       username = loginData.data.username;
       password = loginData.data.pwd;
+      database = loginData.data.org;
       host = loginData.data.webaddress;
     }
     host = host || "https://localhost:443";
@@ -89,21 +89,19 @@ Simplest possible usage:
       return;
     }
 
-    zombie.visit(host, {debug: false}, function (e, browser) {
+    zombie.visit(host, {debug: verboseMode}, function (e, browser) {
       //
       // This is the login screen
       //
       browser
         .fill('id', username)
         .fill('password', password)
+        .select('database', database)
         .pressButton('submit', function () {
-
-          //
-          // We skip the scope screen because we're using a user that only has one org
-          // XXX this limitation should be fixed, to allow a test on users with >1 org
 
           // Note: make sure the app is built
           // XXX this limitation should be fixed, to allow testing off of debug.html
+          // it's possible that Zombie 2.0 will get this right.
 
           //
           // Plan to give up after a set time
@@ -127,6 +125,7 @@ Simplest possible usage:
               XV = browser.window.XV;
               XZ.browser = browser;
               XZ.host = host;
+              XZ.database = database;
 
               XT.log = function (message) {
                 // log if verbose mode or if the log is an error

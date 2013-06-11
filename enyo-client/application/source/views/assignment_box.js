@@ -1,11 +1,46 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XM:true, XV:true, _:true */
+/*global enyo:true, XM:true, XV:true, XT:true, _:true */
 
 /** @module XV */
 
 (function () {
+
+  //
+  // USER ACCOUNT EXTENSION
+  //
+
+  /**
+   * Manages the assignment of extensions to user accounts.
+   *
+   * @class
+   * @alias XV.UserAccountExtensionAssignmentBox
+   * @extends XV.AssignmentBox
+   */
+  enyo.kind(/* @lends XV.UserAccountExtensionAssignmentBox */{
+    name: "XV.UserAccountExtensionAssignmentBox",
+    kind: "XV.AssignmentBox",
+    segments: ["Extensions"],
+    translateLabels: false,
+    totalCollectionName: "XM.ExtensionCollection",
+    type: "extension",
+    /**
+     * Returns a model specific to this AssignmentBox.
+     *
+     * @override
+     * @return {XM.UserAccountExtension}
+     */
+    getAssignmentModel: function (extension) {
+      return new XM.UserAccountExtension({
+        extension: extension
+      }, {isNew: true});
+    }
+  });
+
+  //
+  // USER ACCOUNT ROLE
+  //
 
   /**
    * Manages the assignment of roles to user accounts.
@@ -49,6 +84,10 @@ white:true*/
     }
   };
   enyo.kind(userAccountRoleAssignmentBox);
+
+  //
+  // USER ACCOUNT PRIVILEGE
+  //
 
   /**
    * Manages the assignment of privileges to user accounts. This is a complicated case
@@ -115,6 +154,7 @@ white:true*/
 
       if ((!roles || roles.length === 0) && this.getAssignedCollection().models.length === 0) {
         // if there are no models in this collection then there are no IDs to map
+        this.setIdsFromRoles([]);
         return;
       }
       var grantedRoles = roles && roles.length > 0 ? roles :
@@ -132,7 +172,7 @@ white:true*/
 
             var privilege = model.get("privilege");
             if (privilege) {
-              return privilege.get("id");
+              return privilege.id;
             } else {
               return null;
             }
@@ -163,7 +203,7 @@ white:true*/
     },
     applyPostCheckFormatting: function (checkbox, model) {
       // we support the model coming in as the privilege itself or as the privilege assignment
-      var id = model.get("privilege") ? model.get("privilege").get("id") : model.get("id");
+      var id = model.get("privilege") ? model.get("privilege").id : model.id;
       this.undercheckCheckbox(checkbox, _.indexOf(this.getIdsFromRoles(), id) >= 0);
     },
 
@@ -184,6 +224,11 @@ white:true*/
     }
   };
   enyo.kind(userAccountPrivilegeAssignmentBox);
+
+
+  //
+  // USER ACCOUNT ROLE PRIVILEGE
+  //
 
   /**
    * Manages the assignment of privileges to roles.
@@ -221,7 +266,7 @@ white:true*/
         privilege: privilegeModel,
         // XXX bad practice to use this field
         // we could get it by having the workspace inject it into us
-        userAccountRole: this.getAssignedCollection().user_account_role
+        userAccountRole: this.getAssignedCollection().userAccountRole
       }, {isNew: true});
     }
   };

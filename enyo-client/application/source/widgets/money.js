@@ -30,12 +30,15 @@ regexp:true, undef:true, trailing:true, white:true */
     handlers: {
       onValueChange: "pickerChanged" // intercept picker events
     },
+    maxlength: 12,
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-label"},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-          components: [{name: "input", kind: "onyx.Input",
-            onchange: "inputChanged", onkeydown: "keyDown"}]},
+          components: [
+          {name: "input", kind: "onyx.Input",
+            onchange: "inputChanged", onkeydown: "keyDown"}
+        ]},
         {name: "picker", kind: "XV.CurrencyPicker", showLabel: false}
       ]},
       {kind: "FittableColumns", name: "basePanel", showing: false,
@@ -47,7 +50,7 @@ regexp:true, undef:true, trailing:true, white:true */
         ]},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
-          {name: "baseCurrencyLabel", classes: "xv-money-label, currency"}
+          {name: "baseCurrencyLabel", classes: "xv-currency-label"}
         ]}
       ]}
     ],
@@ -125,6 +128,16 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.input.setDisabled(disabled);
       this.$.picker.setDisabled(disabled || currencyDisabled);
     },
+    
+    /**
+    @todo Document the labelChanged method.
+    */
+    labelChanged: function () {
+      var attr = this.getAttr(),
+        valueAttr = attr.localValue || attr.baseValue;
+      var label = (this.getLabel() || ("_" + valueAttr || "").loc());
+      this.$.label.setContent(label + ":");
+    },
 
     effectiveChanged: function () {
       this.recalculate();
@@ -134,7 +147,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.valueChanged(this.getLocalValue()); // forward to XV.Number default for formatting
       this.recalculate();
     },
-    
+
     recalculate: function () {
       var localMode = this.getLocalMode(),
         value = localMode ? this.getLocalValue() : this.getBaseValue(),
@@ -149,7 +162,7 @@ regexp:true, undef:true, trailing:true, white:true */
         i;
 
       if (!currency || !effective) { return; }
-      
+
       // Keep track of requests, we'll ignore stale ones
       this._counter = _.isNumber(this._counter) ? this._counter + 1 : 0;
       i = this._counter;
@@ -210,7 +223,7 @@ regexp:true, undef:true, trailing:true, white:true */
         this.doValueChange({value: changed});
       }
     },
-    
+
     inputChanged: function (inSender, inEvent) {
       var input = this.$.input.getValue(),
         value = this.validate(input);

@@ -17,7 +17,7 @@
         "name": "quoteRelations",
         "toMany": {
           "type": "QuoteRelation",
-          "column": "prospect_id",
+          "column": "prospect_number",
           "inverse": "customer"
         }
       }

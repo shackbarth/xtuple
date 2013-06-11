@@ -1,6 +1,6 @@
 /* LESS version of screen.scss file previously in client
 
-  To compile to .css: 
+  To compile to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 
@@ -266,6 +266,11 @@ body {
   bottom: 0;
   width: 320px;
   background: @smoke;
+  .xv-groupbox {
+    min-width: 300px;
+    padding: 8px 0 8px 5px;
+    margin: 0;
+  }
 }
 
 .pullout-shadow {
@@ -275,7 +280,7 @@ body {
   right: -20px;
   /** this is weird and indicates the REAL need to change the
       whatever the css system is...this relative path is different... **/
-  background: url("../../assets/sliding-shadow.png") repeat-y;
+  background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
   background-size: 20px 2px;
 }
 
@@ -356,7 +361,7 @@ body {
       }
     }
     &.item-selected {
-      background: @slate-blue url(../../assets/item-hilite.png) repeat-x bottom;
+      background: @slate-blue url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
       .xv-list-attr {
         color: @white;
         background: none;
@@ -593,8 +598,13 @@ body {
   &.panel {
     min-width: 330px;
   }
-  .onyx-input-decorator > input {
-    width: 80%;
+  .onyx-input-decorator {
+    border: 0;
+  }
+  .xv-relationwidget, .xv-datewidget {
+    input {
+      width: 75%;
+    }
   }
 }
 
@@ -650,11 +660,6 @@ body {
   background: @charcoal url(../../images/gradient.png) repeat-x 0 10px;
 }
 
-.xv-groupbox .onyx-input-decorator {
-  /* This resets the border for this element */
-  border: 0;
-}
-
 .xv-groupbox > .onyx-input-decorator {
   border-color: @silver;
   border-width: 0 1px 1px 1px;
@@ -671,10 +676,21 @@ body {
   padding-bottom: 2px;
 
   .onyx-input-decorator {
-    width: 95px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+    width: 120px;
+    padding: 6px 10px 8px 6px;
+    input, .xv-money-label {
+      width: 100%;
+      text-align: right;
+    }
+    .xv-currency-label {
+      width: 65px;
+    }
   }
   .xv-picker {
-    width: 95px;
+    width: 65px;
+    text-align: center;
+    padding: 10px;
   }
 }
 
@@ -711,7 +727,6 @@ body {
   XV Widgets
 */
 
-/* AddressWidget.scss */
 .xv-addresswidget {
   background-color: @white;
   padding: 4px;
@@ -950,7 +965,7 @@ body {
 .xv-half-check {
   background:
     transparent
-    url("../../assets/checkbox.png")
+    url(../../../../../../assets/checkbox.png)
     no-repeat
     0 -96px
     scroll;
@@ -999,13 +1014,5 @@ body {
   }
   .xv-label, .xv-picker-label {
     width: 110px;
-  }
-}
-
-/* This is to style the base currency labels to look like the inputs */
-.xv-money-label {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-  .currency {
-    text-align: center;
   }
 }

@@ -28,6 +28,7 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: "name",
     nameAttribute: "jobTitle",
     descripAttribute: "phone",
+    classes: "xv-relationwidget",
     published: {
       showAddress: false
     },
@@ -41,7 +42,7 @@ regexp:true, undef:true, trailing:true, white:true */
             onfocus: "receiveFocus"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-            {kind: "onyx.IconButton", src: "/client/lib/enyo-x/assets/triangle-down-large.png",
+            {kind: "onyx.IconButton", src: "/assets/triangle-down-large.png",
               classes: "xv-relationwidget-icon"},
             {name: 'popupMenu', floating: true, kind: "onyx.Menu",
               components: [
@@ -264,8 +265,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.CustomerShiptoWidget",
     kind: "XV.RelationWidget",
     collection: "XM.CustomerShiptoRelationCollection",
-    list: "XV.CustomerShiptoList",
-    filterRestrictionType: ["customer"]
+    list: "XV.CustomerShiptoList"
   });
 
 
@@ -277,7 +277,8 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.EmployeeWidget",
     kind: "XV.RelationWidget",
     collection: "XM.EmployeeRelationCollection",
-    list: "XV.EmployeeList"
+    list: "XV.EmployeeList",
+    keyAttribute: "code"
   });
 
   // ..........................................................

@@ -60,13 +60,6 @@ white:true*/
       return result;
     },
 
-    requiredAttributes: [
-      "number",
-      "status",
-      "name",
-      "dueDate"
-    ],
-
     // ..........................................................
     // METHODS
     //
@@ -88,15 +81,11 @@ white:true*/
     */
     projectStatusDidChange: function () {
       var status = this.get('status'),
-        date,
-        K = XM.Project;
-      if (this.isDirty()) {
-        date = new Date().toISOString();
-        if (status === K.IN_PROCESS && !this.get('assignDate')) {
-          this.set('assignDate', date);
-        } else if (status === K.COMPLETED && !this.get('completeDate')) {
-          this.set('completeDate', date);
-        }
+	date = new Date(), K = XM.Project;
+      if (status === K.IN_PROCESS && !this.get('assignDate')) {
+      	this.set('assignDate', date);
+      } else if (status === K.COMPLETED && !this.get('completeDate')) {
+        this.set('completeDate', date);
       }
     }
 
@@ -132,7 +121,7 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-    
+
     bindEvents: function () {
       XM.ProjectBase.prototype.bindEvents.apply(this, arguments);
       this.on('add:tasks remove:tasks', this.tasksDidChange);
@@ -526,11 +515,11 @@ white:true*/
   */
   XM.ProjectTaskRelation = XM.Info.extend({
     /** @scope XM.Task.prototype */
-    
+
     recordType: 'XM.ProjectTaskRelation',
-    
+
     editableModel: 'XM.ProjectTask'
-    
+
   });
 
   /**
@@ -550,7 +539,7 @@ white:true*/
 
   XM.ProjectListItem = XM.ProjectListItem.extend(XM.ProjectStatus);
 
-    
+
   /**
     @class
 
@@ -558,16 +547,30 @@ white:true*/
   */
   XM.Task = XM.ProjectTask.extend({
     /** @scope XM.Task.prototype */
-    
+
     recordType: 'XM.Task',
-    
+
     statusDidChange: function () {
       XM.ProjectTask.prototype.statusDidChange.apply(this, arguments);
       if (this.getStatus() === XM.Model.READY_CLEAN) {
         this.setReadOnly("project");
       }
     }
-    
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Comment
+  */
+  XM.TaskComment = XM.Comment.extend({
+    /** @scope XM.ProjectTaskComment.prototype */
+
+    recordType: 'XM.TaskComment',
+
+    sourceName: 'TA'
+
   });
 
   /**
