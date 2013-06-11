@@ -37,15 +37,16 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.clickElement(el7, function () {
   browser.waitForElementByXPath(contactObj.Obj.addressLine1_xpath, 4000, function () {
   browser.elementByXPath(contactObj.Obj.addressLine1_xpath, function (err, el8) {
-  browser.type(el8,contactData.VARIABLES.contact_addressLine1, function () {
+  //browser.type(el8,contactData.VARIABLES.contact_addressLine1, function () {
+  browser.type(el8, fname, function () {
   browser.elementByXPath(contactObj.Obj.addressLine2_xpath, function (err, addrLine2) {
   browser.type(addrLine2, ' ', function () {
   browser.elementByXPath(contactObj.Obj.addressDoneButton_xpath, function (err, doneEl) {
   browser.clickElement(doneEl, function () {
   browser.elementByXPath(contactObj.Obj.jobtitle_xpath, function (err,el9) {
   browser.type(el9,contactData.VARIABLES.contact_jobtitle, function () {
-  browser.elementByXPath(contactObj.Obj.email_xpath, function (err, el10) {
-  browser.type(el10, contactData.VARIABLES.contact_email, function () {
+ // browser.elementByXPath(contactObj.Obj.email_xpath, function (err, el10) {
+ // browser.type(el10, contactData.VARIABLES.contact_email, function () {
   browser.elementByXPath(contactObj.Obj.phone_xpath, function (err, el11) {
   browser.type(el11, contactData.VARIABLES.contact_phone, function () {
   browser.elementByXPath(contactObj.Obj.charecnew_xpath, function (err,el12) {
@@ -98,7 +99,8 @@ regexp:true, strict:true, trailing:true, white:false*/
   },2000);
   },2000);
   }
-  });});});});});});});});});});});});
+  //});});
+  });});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});};
 }());

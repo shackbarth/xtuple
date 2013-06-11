@@ -22,6 +22,12 @@ white:true*/
     kind: "XV.CommentBox",
     model: "XM.CustomerComment"
   });
+  
+  enyo.kind({
+    name: "XV.EmployeeCommentBox",
+    kind: "XV.CommentBox",
+    model: "XM.EmployeeComment"
+  });
 
   enyo.kind({
     name: "XV.IncidentCommentBox",
@@ -69,6 +75,12 @@ white:true*/
     name: "XV.SiteCommentBox",
     kind: "XV.CommentBox",
     model: "XM.SiteComment"
+  });
+  
+  enyo.kind({
+    name: "XV.TaskCommentBox",
+    kind: "XV.CommentBox",
+    model: "XM.TaskComment"
   });
 
   enyo.kind({

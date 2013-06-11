@@ -29,6 +29,14 @@
           "column": "ophead_number",
           "inverse": "opportunity"
         }
+      },
+      {
+        "name": "salesOrderRelations",
+        "toMany": {
+          "type": "SalesOrderRelation",
+          "column": "ophead_number",
+          "inverse": "opportunity"
+        }
       }
     ],
     "sequence": 0,

@@ -16,7 +16,11 @@ select xt.install_js('XM','Account','xtuple', $$
     var res,
       retVal,
       row,
-      sql = "select * from crmacct where crmacct_number = $1";
+      sql = "select crmacct_number, cust_number, prospect_number " +
+            "from crmacct " +
+            "left join custinfo on cust_id = crmacct_cust_id " +
+            "left join prospect on prospect_id = crmacct_prospect_id " +
+            " where crmacct_number = $1";
         
     res = XM.Model.findExisting("XM.Account", key, value, id);
     
@@ -26,14 +30,14 @@ select xt.install_js('XM','Account','xtuple', $$
     } else {
       row = plv8.execute(sql, [res])[0];
       retVal = {};
-      if (row.crmacct_cust_id) {
-        retVal.id = row.crmacct_cust_id;
+      if (row.cust_number) {
+        retVal.id = row.cust_number;
         retVal.type = "C";
-      } else if (row.crmacct_prospect_id) {
-        retVal.id = row.crmacct_prospect_id;
+      } else if (row.prospect_number) {
+        retVal.id = row.prospect_number;
         retVal.type = "P";
       } else {
-        retVal.id = row.crmacct_id;
+        retVal.id = row.crmacct_number;
         retVal.type = "A";
       }
     }

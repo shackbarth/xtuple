@@ -160,6 +160,7 @@ white:true*/
   }
 
   // Project Status
+  K = XM.Project;
   var projectStatusJson = [
     { id: K.CONCEPT, name: "_concept".loc() },
     { id: K.IN_PROCESS, name: "_inProcess".loc() },
@@ -226,6 +227,41 @@ white:true*/
   for (i = 0; i < holdTypeJson.length; i++) {
     var holdType = new XM.HoldTypeModel(holdTypeJson[i]);
     XM.holdTypes.add(holdType);
+  }
+  
+  // Wage types
+  K = XM.Wage;
+  var wageTypeJson = [
+    { id: K.HOURLY, name: "_hourly".loc() },
+    { id: K.SALARIED, name: "_salaried".loc() }
+  ];
+  XM.WageTypeModel = Backbone.Model.extend();
+  XM.WageTypeCollection = Backbone.Collection.extend({
+    model: XM.WageTypeModel
+  });
+  XM.wageTypes = new XM.WageTypeCollection();
+  for (i = 0; i < wageTypeJson.length; i++) {
+    var wageType = new XM.WageTypeModel(wageTypeJson[i]);
+    XM.wageTypes.add(wageType);
+  }
+  
+  // Wage periods
+  var wagePeriodJson = [
+    { id: K.HOURLY, name: "_hourly".loc() },
+    { id: K.DAILY, name: "_daily".loc() },
+    { id: K.WEEKLY, name: "_weekly".loc() },
+    { id: K.BI_WEEKLY, name: "_biWeekly".loc() },
+    { id: K.MONTHLY, name: "_monthly".loc() },
+    { id: K.ANNULY, name: "_annualy".loc() }
+  ];
+  XM.WagePeriodModel = Backbone.Model.extend();
+  XM.WagePeriodCollection = Backbone.Collection.extend({
+    model: XM.WagePeriodModel
+  });
+  XM.wagePeriods = new XM.WagePeriodCollection();
+  for (i = 0; i < wagePeriodJson.length; i++) {
+    var wagePeriod = new XM.WagePeriodModel(wagePeriodJson[i]);
+    XM.wagePeriods.add(wagePeriod);
   }
 
 }());

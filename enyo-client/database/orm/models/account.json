@@ -40,7 +40,8 @@
         "attr":{
           "type":"String",
           "column":"crmacct_number",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
@@ -125,6 +126,14 @@
           "type":"UserAccountRelation",
           "column":"crmacct_usr_username",
           "inverse":"username"
+        }
+      },
+      {
+        "name":"employee",
+        "toOne":{
+          "isNested": true,
+          "type":"EmployeeRelation",
+          "column":"crmacct_emp_id"
         }
       },
       {

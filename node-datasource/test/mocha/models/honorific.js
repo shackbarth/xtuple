@@ -3,55 +3,51 @@
   newcap:true, noarg:true, undef:true */
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
-var crud = require('../lib/crud'),
-assert = require('chai').assert,
-expect = require('chai').expect,
-zombieAuth = require('../lib/zombie_auth'),
+(function () {
+  "use strict";
 
-data = {
-  recordType: "XM.Honorific",
-  autoTestAttributes: true,
-  createHash:{
-    code:"Jedi"
-  },
-  updateHash: {
-    code: "Sith"
-  }	
-};
+  /**
+    Usage:
+    cd node-datasource/test/mocha
+    mocha -R spec
+  */
 
-timeout = 20*1000;
+  var crud = require("../lib/crud"),
+    assert = require("chai").assert,
+    data = {
+      recordType: "XM.Honorific",
+      autoTestAttributes: true,
+      createHash: {
+        code: "Herr" + Math.random()
+      },
+      updateHash: {
+        code: "Dame" + Math.random()
+      }
+    };
 
-describe('Honorific CRUD Test', function(){
-  before(function (done){
-    this.timeout(timeout);
-    zombieAuth.loadApp(done);
+  describe('Honorific crud test', function (){
+    this.timeout(20 * 1000);
+    it('should perform all the crud operations', function (done) {
+      crud.runAllCrud(data, done);
+    });
+  })
+/*
+
+  Proof-of-concept: you *could* run this as many times as you want.
+
+  describe('Honorific crud test', function (){
+    this.timeout(20 * 1000);
+    it('should perform all the crud operations', function (done) {
+      crud.runAllCrud(data, done);
+    });
   });
 
-  it('should be able to Initialize an XM.Honorific Model', function(){
-    data.model = new XM.Honorific();
-    expect(data.model).to.exist;
-    assert.equal(data.model.recordType, 'XM.Honorific', 'INIT Value should be XM.Honorific');
+  describe('Honorific crud test', function (){
+    this.timeout(20 * 1000);
+    it('should perform all the crud operations', function (done) {
+      crud.runAllCrud(data, done);
+    });
   });
 
-  it('should create an XM.Honorific Model', function(){
-    data.model.set(data.createHash);
-    crud.save(data)
-  });
-
-  it('should read an XM.Honorific Model', function(){
-    assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal')
-  });
-
-  it('should update an XM.Honorific Model', function(){
-    data.model.set(data.updateHash);
-    crud.save(data)
-    assert.equal(data.model.get('code'), data.updateHash.code, 'Model Code UPDATE Value is equal')
-  });
-
-  it('should delete an XM.Honorific Model', function(){
-    crud.destroy(data)
-  });
-
-
-});
-
+*/
+}());

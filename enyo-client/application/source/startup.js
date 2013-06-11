@@ -20,9 +20,12 @@ white:true*/
     taskName: "loadSessionPrivileges",
     task: function () {
       var options = {
-        success: _.bind(this.didComplete, this),
-        databaseTypes: ["global", undefined]
+        success: _.bind(this.didComplete, this)
       };
+      var relevantPrivileges = [
+        "MaintainUsers"
+      ];
+      XT.session.addRelevantPrivileges("core", relevantPrivileges);
       XT.session.loadSessionObjects(XT.session.PRIVILEGES, options);
     }
   });
