@@ -20,11 +20,11 @@ var fs = require('fs'),
     databases = [],
     buildSpecs = {};
 
+  // adapt our lingo to node-postgres lingo
   creds.host = creds.hostname;
 
   //
-  // Determine which extensions we want to build. If there is no -e flag,
-  // then build the core and the core extensions
+  // Help documentation
   //
   if (argv.indexOf("-h") >= 0) {
     console.log("Usage:");
@@ -40,6 +40,55 @@ var fs = require('fs'),
     return;
   }
 
+  //
+  // Do all the work
+  //
+  var buildDatabase = function (specs) {
+    console.log(specs);
+    // TODO
+  };
+
+  //
+  // Looks in a database to see which extensions are registered.
+  // API conforms to async expectations.
+  // Also tacks on the core directory.
+  //
+  var getRegisteredExtensions = function (database, callback) {
+    creds.database = database;
+    var client = new pg.Client(creds);
+    client.connect();
+
+    //queries are queued and executed one after another once the connection becomes available
+    var result = client.query("SELECT * FROM xt.ext ORDER BY ext_load_order", function (err, res) {
+      var paths = _.map(res.rows, function (row) {
+        var location = row.ext_location,
+          name = row.ext_name,
+          path;
+
+        if (location === '/core-extensions') {
+          path = __dirname + "/../enyo-client/extensions/source/" + name;
+        } else if (location === '/xtuple-extensions') {
+          path = __dirname + "/../../xtuple-extensions/source/" + name;
+        } else if (location === '/private-extensions') {
+          path = __dirname + "/../../private-extensions/source/" + name;
+        }
+        return path;
+      }),
+        corePath = __dirname + "/../enyo-client",
+        returnObj = {};
+
+      client.end();
+
+      paths.unshift(corePath);
+      returnObj[database] = paths;
+      callback(null, returnObj);
+    });
+
+  };
+
+  //
+  // Parse optional database argument
+  //
   if (argv.indexOf("-d") >= 0) {
     // the user has specified a particular database
     // regex: remove trailing slash if present
@@ -49,72 +98,27 @@ var fs = require('fs'),
     databases = config.datasource.databases;
   }
 
-
-
-  console.log(databases);
-  console.log(creds);
-
-
-
+  //
+  // Parse optional extension argument
+  // and call buildDatabase
+  //
   if (argv.indexOf("-e") >= 0) {
     // the user has specified a particular extension
     // regex: remove trailing slash if present
     specifiedExtension = argv[argv.indexOf("-e") + 1].replace(/\/$/, "");
-    _.each(databases, function (database) {
+    buildSpecs = _.map(databases, function (database) {
       // the user has specified an extension to build
-      buildSpecs[database] = [specifiedExtension];
+      var returnObj = {};
+      returnObj[database] = [specifiedExtension];
+      return returnObj;
     });
-  }
+    buildDatabase(buildSpecs);
 
-  /*
-  else {
-    // add the core extensions
-    // get the core extension directory names
-    extensions = fs.readdirSync(coreExtDir);
-    // actually we want these with a full path
-    extensions = _.map(extensions, function (name) {
-      return coreExtDir + name;
-    });
-  }
-*/
-
-  var getRegisteredExtensions = function (database, callback) {
-    creds.database = database;
-    var client = new pg.Client(creds);
-    client.connect();
-
-    //queries are queued and executed one after another once the connection becomes available
-    var result = client.query("SELECT * FROM xt.ext", function (err, res) {
-      var paths = _.map(res.rows, function (row) {
-        var location = row.ext_location,
-          name = row.ext_name,
-          path;
-
-        if (location === '/core-extensions') {
-          path = __dirname + "/../enyo-client/extensions/" + name;
-        } else if (location === '/xtuple-extensions') {
-          path = __dirname + "/../../xtuple-extensions/source/" + name;
-        } else if (location === '/private-extensions') {
-          path = __dirname + "/../../private-extensions/source/" + name;
-        }
-
-        return path;
-      });
-      console.log(paths);
-      client.end();
-      callback(null, paths);
-    });
-
-  };
-
-  if (!specifiedExtension) {
+  } else {
     // build all registered extensions for the database
     async.map(databases, getRegisteredExtensions, function (err, results) {
-      console.log(arguments);
+      buildDatabase(results);
     });
   }
-
-
-  console.log(buildSpecs);
 
 }());
