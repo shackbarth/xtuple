@@ -8,21 +8,20 @@
 //  "use strict";
 
 var crud = require('../lib/crud'),
-		assert = require('chai').assert,
-		expect = require('chai').expect,
-		zombieAuth = require('../lib/zombie_auth'),
+  assert = require('chai').assert,
+  expect = require('chai').expect,
+  zombieAuth = require('../lib/zombie_auth'),
 
-   data = {
-      recordType: "XM.TaxCode",
-      autoTestAttributes: true,
-      createHash: {
-        code: "asdf"
-      },
-      updateHash: {
-        code: "fdsa"
-      }
-
-    };
+  data = {
+    recordType: "XM.TaxCode",
+    autoTestAttributes: true,
+    createHash: {
+      code: "asdf"
+    },
+    updateHash: {
+      code: "fdsa"
+    }
+  };
 
 
 
@@ -36,34 +35,37 @@ describe.skip('Tax Code CRUD Test', function () {
   });
 
 describe('Tax Code CRUD Test', function () {
-	  before(function (done){
+    before(function (done) {
         this.timeout(timeout);
-			  zombieAuth.loadApp(done);
-			});
+        zombieAuth.loadApp(done);
+      });
 
-			it('should be able to Initialize an XM.TaxCode Model', function (){
-				data.model = new XM.TaxCode();
-				expect(data.model).to.exist;
-				assert.equal(data.model.recordType, 'XM.TaxCode', 'INIT Value should be XM.TaxCode');
-			});
+    it('should be able to Initialize an XM.TaxCode Model', function () {
+      data.model = new XM.TaxCode();
+      expect(data.model).to.exist;
+      assert.equal(data.model.recordType, 'XM.TaxCode', 'INIT Value should be XM.TaxCode');
+    });
 
-			it('should create an XM.TaxCode Model', function (){
-				data.model.set(data.createHash);
-				crud.save(data)
-			});
+    it('should create an XM.TaxCode Model', function (done) {
+      data.model.set(data.createHash);
+      crud.save(data);
+      done();
+    });
 
-			it('should read an XM.TaxCode Model', function (){
-				assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal')
-			});
+    it('should read an XM.TaxCode Model', function () {
+      assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal');
+    });
 
-			it('should update an XM.TaxCode Model', function (){
-				data.model.set(data.updateHash);
-				crud.save(data)
-				assert.equal(data.model.get('number'), data.updateHash.number, 'Model Code UPDATE Value is equal')
-			});
+    it('should update an XM.TaxCode Model', function (done) {
+      data.model.set(data.updateHash);
+      crud.save(data);
+      assert.equal(data.model.get('number'), data.updateHash.number, 'Model Code UPDATE Value is equal');
+      done();
+    });
 
-			it('should delete an XM.TaxCode Model', function (){
-				crud.destroy(data)
-			});
+    it('should delete an XM.TaxCode Model', function (done) {
+      crud.destroy(data);
+      done();
+    });
 
-});
+  });

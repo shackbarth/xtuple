@@ -75,19 +75,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var routeCall = function (req, res, next, orms, resources) {
     var id,
+        error = {error: {}},
         model,
         payload = {},
         session = {},
-        callback = function (resp, err) {
-          if (err) {
-            // TODO - Better error handling.
-            return res.send(500, {data: err});
-          } else if (resp.error) {
-            // TODO - Better error handling.
-            return res.send(500, {data: resp.error});
+        callback = function (resp) {
+          if (resp.isError) {
+            // Google style error object.
+            error.error.errors = [{message: resp.status.message}];
+            error.error.code = resp.status.code;
+            error.error.message = resp.status.message;
+            return res.json(resp.status.code, error);
           } else {
-            //return res.send(resp.data.data);
-            return res.json(resp);
+            return res.json(resp.status.code, resp.data);
           }
         };
 
@@ -95,6 +95,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (req.params.model && req.params.id) {
       id = req.params.id;
     }
+
+    // Dummy up session.
+    session.passport = {
+      "user": {
+        "id": req.user.get("username"),
+        "username": req.user.get("username"),
+        "organization": req.user.get("organization")
+      }
+    };
 
     _.each(orms, function (value, key, list) {
       // Find the matching model from this req URI.
@@ -106,25 +115,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
 
     if (!model) {
-      return next(new Error("Invalid REST Request."));
+      return res.send(404, "Not Found");
     } else {
       switch (req.method) {
-      case "DELETE":
-        // Deletes the specified resource.
-        // TODO - call delete method.
-        return res.send('REST API DELETE call to model: ' + model);
-      case "GET":
-        // Requests a representation of the specified resource.
+      case "DELETE": // Deletes the specified resource.
+        if (!id) {
+          return res.send(404, "Not Found");
+        }
 
-        // Dummy up session.
-        session.passport = {
-          "user": {
-            "id": req.user.get("username"),
-            "username": req.user.get("username"),
-            "organization": req.user.get("organization")
-          }
-        };
+        payload.nameSpace = "XM";
+        payload.type = model;
+        payload.id = id + "";
 
+        routes.queryDatabase("delete", payload, session, callback);
+
+        break;
+      case "GET": // Requests a representation of the specified resource.
         payload.nameSpace = "XM";
 
         if (req.params.id) { // This is a single resource request.
@@ -150,20 +156,38 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // This can be used to check the functionality of a web server by requesting '*' instead of a specific resource.
         // TODO - call options method.
         return res.send('REST API OPTIONS call to model: ' + model);
-      case "PATCH":
-        // Is used to apply partial modifications to a resource.
-        // TODO - call patch method.
-        return res.send('REST API PATCH call to model: ' + model);
-      case "POST":
-        // Requests that the server accept the entity enclosed in the request as a new subordinate of the web resource identified by the URI.
-        // TODO - call post method.
-        return res.send('REST API POST call to model: ' + model);
+      case "PATCH": // Is used to apply partial modifications to a resource.
+        if (!id || !req.body || !req.body.etag || !req.body.patches) {
+          return res.send(404, "Not Found");
+        }
+
+        payload.nameSpace = "XM";
+        payload.type = model;
+        payload.id = id + "";
+        payload.etag = req.body.etag;
+        payload.patches = req.body.patches;
+
+        routes.queryDatabase("patch", payload, session, callback);
+
+        break;
+      case "POST": // Requests that the server accept the entity enclosed in the request as a new subordinate of the web resource identified by the URI.
+        if (id || !req.body) {
+          return res.send(404, "Not Found");
+        }
+        // TODO - POST method can also call dispatch functions for "service" endpoints.
+        payload.nameSpace = "XM";
+        payload.type = model;
+        payload.data = req.body;
+
+        routes.queryDatabase("post", payload, session, callback);
+
+        break;
       case "PUT":
         // Requests that the enclosed entity be stored under the supplied URI.
         // TODO - call put method.
         return res.send('REST API does not support PUT calls at this time.');
       default:
-        return next(new Error("Invalid REST Request."));
+        return res.send(404, "Not Found");
       }
     }
   };
