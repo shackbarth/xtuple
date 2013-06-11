@@ -1,12 +1,12 @@
 1.3.7 (2013/06/11)
-==================_
+==================
 
 Features and bugs
 ----------------
 * Fix problem where user names that are email addresses could not log in.
 
 1.3.6 (2013/06/06)
-==================_
+==================
 
 Features and bugs
 ----------------
