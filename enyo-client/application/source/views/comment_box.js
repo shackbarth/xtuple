@@ -52,6 +52,9 @@ white:true*/
     },
     openEditableArea: function () {
       this.inherited(arguments);
+      if (this.getValue().isReadOnly()) {
+        return;
+      }
       this.$.isPublic.show();
     }
   });
@@ -82,8 +85,7 @@ white:true*/
         {kind: "onyx.Button", name: "newButton", onclick: "newItem",
           content: "_new".loc(), classes: "xv-groupbox-button-single"}
       ]}
-    ],
-
+    ]
   });
 
   enyo.kind({
