@@ -32,7 +32,7 @@ It is worth noting that except for the login screen the datasource does not serv
 
 ##Modular Design
 
-The base client application is designed in such a way that almost nothing is in it by default except User Accounts. All end user functionaly is added by *Extensions*. However, the base application includes a base set of *core* data models and an expanding set of standard *business objects* that can be used by extensions to build useful modules. Over time, all the business objects available in the Postbooks desktop application will be mirrored in the web client.
+The base client application is designed in such a way that almost nothing is in it by default except User Accounts. All end user functionaly is added by *Extensions*. However, the base application includes a set of *core* data models and an expanding set of standard *business objects* that can be used by extensions to build useful modules. Over time, all the business objects available in the Postbooks desktop application will be mirrored in the web client.
 
 ![Business Objects](/images/xbo.png "xTuple Business Objects")
 
