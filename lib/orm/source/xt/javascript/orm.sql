@@ -1,4 +1,4 @@
-select xt.install_js('XT','Orm','xtuple', $$
+﻿select xt.install_js('XT','Orm','xtuple', $$
 
   /**
    @class
@@ -665,5 +665,6 @@ select xt.install_js('XT','Orm','xtuple', $$
         plv8.execute(query);
       }
     }
+ 
   };
 $$ );
