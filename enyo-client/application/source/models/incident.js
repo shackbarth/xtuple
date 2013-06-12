@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global Globalize:true, XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -383,7 +383,15 @@ white:true*/
 
     recordType: 'XM.IncidentComment',
 
-    sourceName: 'INCDT'
+    sourceName: 'INCDT',
+
+    defaults: function () {
+      var result = XM.Comment.prototype.defaults.apply(this, arguments),
+        publicDefault = XT.session.getSettings().get('IncidentPublicDefault');
+
+      result.isPublic = publicDefault || false;
+      return result;
+    }
 
   });
 
