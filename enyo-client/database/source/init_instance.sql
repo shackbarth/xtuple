@@ -13,17 +13,27 @@ select xt.js_init();
 -- [ END ] initdb
 \i delete_system_orms.sql;
 
+-- xt trigger functions
+\i xt/trigger_functions/comment_did_change.sql
+\i xt/trigger_functions/owner_record_did_change.sql
+\i xt/trigger_functions/usr_did_change.sql
+
 -- [ START ] public
 
 -- public
 \i public/functions/geteffectivextuser.sql
 
 \i public/tables/comment.sql
+\i public/tables/cntct.sql
 \i public/tables/coitem.sql
+\i public/tables/crmacct.sql
 \i public/tables/docass.sql
 \i public/tables/grppriv.sql
 \i public/tables/incdt.sql
 \i public/tables/itemsite.sql;
+\i public/tables/prj.sql
+\i public/tables/prjtask.sql
+\i public/tables/ophead.sql
 \i public/tables/quitem.sql
 \i public/tables/todoitem.sql
 \i public/tables/usrpriv.sql
@@ -73,10 +83,6 @@ select xt.js_init();
 \i xt/functions/register_extension.sql;
 \i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
-
--- xt trigger functions
-\i xt/trigger_functions/comment_did_change.sql
-\i xt/trigger_functions/usr_did_change.sql
 
 -- xt tables
 \i xt/tables/emlprofile.sql
