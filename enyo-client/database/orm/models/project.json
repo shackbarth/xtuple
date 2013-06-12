@@ -217,9 +217,6 @@
         }
       }
     ],
-    "triggers": [
-      "xt.owner_record_did_change"
-    ],
     "isSystem": true
   },
   {
@@ -1380,9 +1377,6 @@
         "nameSpace": "XM"
       }
     ],
-    "triggers": [
-      "xt.owner_record_did_change"
-    ],
     "isNestedOnly": true,
     "isSystem": true
   },
@@ -1560,9 +1554,6 @@
           "inverse": "task"
         }
       }
-    ],
-    "triggers": [
-      "xt.owner_record_did_change"
     ],
     "isSystem": true
   },
