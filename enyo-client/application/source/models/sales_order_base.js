@@ -802,8 +802,8 @@ white:true*/
 
     lineItemsDidChange: function () {
       var lineItems = this.get("lineItems");
-      this.setReadOnly("currency", lineItems.length);
-      this.setReadOnly("customer", lineItems.length);
+      this.setReadOnly("currency", lineItems.length > 0);
+      this.setReadOnly("customer", lineItems.length > 0);
     },
 
     /**
