@@ -13,7 +13,7 @@ white:true*/
   // PRIVATE
   //
 
-  /** 
+  /**
     Function that actually does the calculation work
     @private
   */
