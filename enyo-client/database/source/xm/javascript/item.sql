@@ -1,8 +1,10 @@
-select xt.install_js('XM','item','xtuple', $$
+﻿select xt.install_js('XM','item','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  XM.Item = {};
+(function () {
+
+  if (!XM.Item) { XM.Item = {}; }
   
   XM.Item.isDispatchable = true;
   
@@ -24,7 +26,7 @@ select xt.install_js('XM','item','xtuple', $$
    @returns {Array}
   */
   XM.Item.sellingUnits = function(itemId) {
-     return XM.Item._units(itemId, 'Selling');
+     return _units(itemId, 'Selling');
   }
 
   /** 
@@ -34,7 +36,7 @@ select xt.install_js('XM','item','xtuple', $$
    @returns {Array}
   */
   XM.Item.materialIssueUnits = function(itemId) {
-     return XM.Item._units(itemId, '"MaterialIssue"');
+     return _units(itemId, '"MaterialIssue"');
   }
 
   /**
@@ -86,30 +88,34 @@ select xt.install_js('XM','item','xtuple', $$
    @param {Number} item id
    @returns {Array}
   */
-  XM.Item._units = function(itemId, type) {
-    var sql = "select array("
-            + "select uom_id "
-            + "from item "
-            + "  join uom on item_inv_uom_id=uom_id "
-            + "where item_number=$1 "
-            + "union "
-            + "select itemuomconv_from_uom_id "
-            + "from itemuomconv "
-            + "  join itemuom on itemuom_itemuomconv_id=itemuomconv_id "
-            + "  join uomtype on uomtype_id=itemuom_uomtype_id "
-            + "  join item on itemuomconv_item_id=item_id "
-            + "where item_number=$1 "
-            + "  and uomtype_name=$2 "
-            + "union "
-            + "select itemuomconv_to_uom_id "
-            + "from itemuomconv "
-            + "  join itemuom on itemuom_itemuomconv_id=itemuomconv_id "
-            + "  join uomtype on uomtype_id=itemuom_uomtype_id "
-            + "  join item on itemuomconv_item_id=item_id "
-            + "where uomtype_name=$2 "
-            + " and item_number=$1) as units ";
+  var _units = function(itemId, type) {
+    var sql = "select array(" +
+	    "select uom_name " +
+            "from item " +
+            "  join uom on item_inv_uom_id=uom_id " +
+            "where item_number=$1 " +
+            "union " +
+            "select uom_name " +
+            "from uom " +
+            "  join itemuomconv on uom_id = itemuomconv_from_uom_id " +
+            "  join itemuom on itemuom_itemuomconv_id=itemuomconv_id " +
+            "  join uomtype on uomtype_id=itemuom_uomtype_id " +
+            "  join item on itemuomconv_item_id=item_id " +
+            "where item_number=$1 " +
+            "  and uomtype_name=$2 " +
+            "union " +
+            "select uom_name " +
+            "from uom " +
+            "  join itemuomconv on uom_id = itemuomconv_to_uom_id " +
+            "  join itemuom on itemuom_itemuomconv_id=itemuomconv_id " +
+            "  join uomtype on uomtype_id=itemuom_uomtype_id " +
+            "  join item on itemuomconv_item_id=item_id " +
+            "where uomtype_name=$2 " +
+            " and item_number=$1) as units ";
 
      return JSON.stringify(plv8.execute(sql, [itemId, type])[0].units);
   }
+
+}());
 
 $$ );
