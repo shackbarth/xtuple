@@ -17,6 +17,7 @@ var lang = XT.stringsFor("en_US", {
   // Models
   // ********
 
+  "_analysis": "Analysis",
   "_annualy": "Annually",
   "_asset": "Asset",
   "_assigned": "Assigned",
