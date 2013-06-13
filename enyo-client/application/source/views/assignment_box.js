@@ -40,6 +40,38 @@ white:true*/
   });
 
   //
+  // USER ACCOUNT ROLE EXTENSION
+  //
+
+  /**
+   * Manages the assignment of extensions to user accounts roles.
+   *
+   * @class
+   * @alias XV.UserAccountRoleExtensionAssignmentBox
+   * @extends XV.AssignmentBox
+   */
+  enyo.kind(
+    /* @lends XV.UserAccountRoleExtensionAssignmentBox */{
+    name: "XV.UserAccountRoleExtensionAssignmentBox",
+    kind: "XV.AssignmentBox",
+    segments: ["Extensions"],
+    translateLabels: false,
+    totalCollectionName: "XM.ExtensionCollection",
+    type: "extension",
+    /**
+     * Returns a model specific to this AssignmentBox.
+     *
+     * @override
+     * @return {XM.UserAccountExtension}
+     */
+    getAssignmentModel: function (extension) {
+      return new XM.UserAccountRoleExtension({
+        extension: extension
+      }, {isNew: true});
+    }
+  });
+
+  //
   // USER ACCOUNT ROLE
   //
 
