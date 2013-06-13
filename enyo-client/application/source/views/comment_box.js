@@ -29,7 +29,9 @@ white:true*/
     model: "XM.EmployeeComment"
   });
 
-  // Adds isPublic checkbox
+  //
+  // Adds isPublic checkbox to default functionality
+  //
   enyo.kind({
     name: "XV.IncidentCommentBoxItem",
     kind: "XV.CommentBoxItem",
@@ -46,6 +48,13 @@ white:true*/
       {kind: "XV.TextArea", name: 'textArea', attr: "text",
         showing: false, showBorder: true}
     ],
+    formatHeader: function (value, view, model) {
+      var header = this.inherited(arguments);
+      if (!model.get("isPublic")) {
+        header = header + " (private)";
+      }
+      return header;
+    },
     hideEditableArea: function () {
       this.inherited(arguments);
       this.$.isPublic.hide();
@@ -59,6 +68,10 @@ white:true*/
     }
   });
 
+  //
+  // Just like the superkind, except the XV.CommentBoxItem is
+  // an XV.IncidentCommentBoxItem
+  //
   enyo.kind({
     name: "XV.IncidentCommentBox",
     kind: "XV.CommentBox",
