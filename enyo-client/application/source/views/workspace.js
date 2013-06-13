@@ -1613,13 +1613,14 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.UnitPicker", name: "quantityUnitPicker",
               attr: "quantityUnit"},
             {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
-            {kind: "XV.MoneyWidget",
-              attr: {localValue: "price"},
+            {kind: "XV.MoneyWidget", attr:
+              {localValue: "price", currency: ""},
               label: "_price".loc(), currencyDisabled: true,
               scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.UnitPicker", name: "priceUnitPicker",
               attr: "priceUnit"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "extendedPrice"},
+            {kind: "XV.MoneyWidget", attr:
+              {localValue: "extendedPrice", currency: ""},
               label: "_extendedPrice".loc(), currencyDisabled: true,
               scale: XT.EXTENDED_PRICE_SCALE},
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
@@ -1658,7 +1659,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     create: function () {
       this.inherited(arguments);
       var effectiveKey = this.getEffectiveKey(),
-        currencyKey = this.getCurrencyKey,
+        currencyKey = this.getCurrencyKey(),
         comments = this.getCommentBox();
 
       // Show/Hide promise date
@@ -1667,8 +1668,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       // Set currency and effective attributes on money widgets
       this.getComponents().forEach(function (ctl) {
         if (ctl.kind === "XV.MoneyWidget") {
-          ctl.setAttr(currencyKey);
-          ctl.setAttr(effectiveKey);
+          ctl.setCurrency(currencyKey);
+          ctl.setEffective(effectiveKey);
         }
       });
 

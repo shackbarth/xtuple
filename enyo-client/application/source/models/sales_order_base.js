@@ -1101,14 +1101,14 @@ white:true*/
       var settings = XT.session.settings,
         privileges = XT.session.privileges;
       this.taxDetail = [];
-      this._updatePrice = true; // TODO: This probably is un-needed.
+      this._updatePrice = true;
       this._unitIsFractional = false;
 
       //  Disable the Discount Percent stuff if we don't allow them
       if (!settings.get("AllowDiscounts") &&
         !privileges.get("OverridePrice")) {
         this.setReadOnly('price');
-        this.setReadyOnl('discount');
+        this.setReadOnly('discount');
       }
 
       if (settings.get("DisableSalesOrderPriceOverride") ||
@@ -1256,8 +1256,8 @@ white:true*/
           } else if (updatePolicy !== K.ALWAYS_UPDATE) {
             this.notify("_updatePrice?".loc(), {
               type: K.QUESTION,
-              callback: function (answer) {
-                that._updatePrice = answer;
+              callback: function (response) {
+                that._updatePrice = response.answer;
                 _calculatePrice(that);
               }
             });
