@@ -1,6 +1,6 @@
 ##xTuple Web-Mobile client
 
-The xTuple web client is an alternative to the traditinal Qt C++ based [desktop client](http://github.com/xtuple/qt-client) used for Postbooks opensource and commercial software. It is designed so that both the desktop client and web client can work on the same database simultaneously. The web client is built using JavaScript in all layers including the database, the web service and application layers. This platform is designed to be fully extensible and customizable without changing any core code. Below is a short overview of the major technologies used in the xTuple web-mobile stack:
+The xTuple web client is an alternative to the traditional Qt C++ based [desktop client](http://github.com/xtuple/qt-client) used for Postbooks opensource and commercial software. It is designed so that both the desktop client and web client can work on the same database simultaneously. The web client is built using JavaScript in all layers including the database, the web service and application layers. This platform is designed to be fully extensible and customizable without changing any core code. Below is a short overview of the major technologies used in the xTuple web-mobile stack:
 
 ![xTuple Stack](/images/js_arch.png "xTuple Architecture")
 
