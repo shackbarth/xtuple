@@ -121,7 +121,7 @@ var fs = require('fs'),
     Symlink the enyo directories if they're not there
    */
   if (!fs.existsSync(rootDir + '/enyo')) {
-    fs.symlinkSync(rootDir + "/xtuple/enyo-client/application/enyo", rootDir + '/enyo');
+    fs.symlinkSync(__dirname + "/../enyo-client/application/enyo", rootDir + '/enyo');
   }
 
   //
