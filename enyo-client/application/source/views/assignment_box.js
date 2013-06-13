@@ -15,7 +15,6 @@ white:true*/
    * Manages the assignment of extensions to user accounts.
    *
    * @class
-   * @alias XV.UserAccountExtensionAssignmentBox
    * @extends XV.AssignmentBox
    */
   enyo.kind(
@@ -47,7 +46,6 @@ white:true*/
    * Manages the assignment of extensions to user accounts roles.
    *
    * @class
-   * @alias XV.UserAccountRoleExtensionAssignmentBox
    * @extends XV.AssignmentBox
    */
   enyo.kind(
@@ -79,10 +77,10 @@ white:true*/
    * Manages the assignment of roles to user accounts.
    *
    * @class
-   * @alias XV.UserAccountRoleAssignmentBox
    * @extends XV.AssignmentBox
    */
-  var userAccountRoleAssignmentBox = {
+  enyo.kind(
+    /** @lends XV.UserAccountRoleAssignmentBox */{
     name: "XV.UserAccountRoleAssignmentBox",
     kind: "XV.AssignmentBox",
     events: {
@@ -115,8 +113,7 @@ white:true*/
       model.set("userAccountRole", roleModel);
       return model;
     }
-  };
-  enyo.kind(userAccountRoleAssignmentBox);
+  });
 
   //
   // USER ACCOUNT PRIVILEGE
@@ -129,10 +126,10 @@ white:true*/
    * to.
    *
    * @class
-   * @alias XV.UserAccountPrivilegeAssignmentBox
    * @extends XV.AssignmentBox
    */
-  var userAccountPrivilegeAssignmentBox = {
+  enyo.kind(
+    /** @lends XV.UserAccountPrivilegeAssignmentBox */{
     name: "XV.UserAccountPrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
       /**
@@ -277,8 +274,7 @@ white:true*/
         checkbox.$.input.removeClass("xv-half-check");
       }
     }
-  };
-  enyo.kind(userAccountPrivilegeAssignmentBox);
+  });
 
 
   //
@@ -289,10 +285,10 @@ white:true*/
    * Manages the assignment of privileges to roles.
    *
    * @class
-   * @alias XV.UserAccountRolePrivilegeAssignmentBox
    * @extends XV.AssignmentBox
    */
-  var userAccountRolePrivilegeAssignmentBox = {
+  enyo.kind(
+    /** @lends XV.UserAccountRolePrivilegeAssignmentBox */{
     name: "XV.UserAccountRolePrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
     segments: [],
@@ -313,18 +309,14 @@ white:true*/
      * Returns a model specific to this AssignmentBox.
      *
      * @override
-     * @methodOf userAccountRolePrivilegeAssignmentBox#
      * @return {XM.UserAccountRolePrivilegeAssignment}
      */
     getAssignmentModel: function (privilegeModel) {
       return new XM.UserAccountRolePrivilegeAssignment({
         privilege: privilegeModel,
-        // XXX bad practice to use this field
-        // we could get it by having the workspace inject it into us
         userAccountRole: this.getAssignedCollection().userAccountRole
       }, {isNew: true});
     }
-  };
-  enyo.kind(userAccountRolePrivilegeAssignmentBox);
+  });
 
 }());
