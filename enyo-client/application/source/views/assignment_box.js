@@ -66,7 +66,7 @@ white:true*/
         return;
       }
       var grantedRoles = roles && roles.length > 0 ? roles :
-          this.getAssignedCollection().models[0].get("extension").get("grantedUserAccountRoles"),
+          this.getAssignedCollection().models[0].get("userAccount").get("grantedUserAccountRoles"),
         extsFromRoles = grantedRoles.map(function (model) {
           return model.getStatus() & XM.Model.DESTROYED ? [] : model.get("userAccountRole").get("grantedExtensions");
         }),
