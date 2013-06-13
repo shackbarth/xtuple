@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global SYS:true, XM:true, Backbone:true, _:true */
 
@@ -75,6 +75,18 @@ white:true*/
     /** @scope SYS.User.prototype */
 
     recordType: 'SYS.User'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  SYS.UserAccountRole = XM.SimpleModel.extend({
+    /** @scope SYS.UserAccountRole.prototype */
+
+    recordType: 'SYS.UserAccountRole'
 
   });
 
