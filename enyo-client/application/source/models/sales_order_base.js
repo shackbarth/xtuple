@@ -1108,7 +1108,7 @@ white:true*/
       if (!settings.get("AllowDiscounts") &&
         !privileges.get("OverridePrice")) {
         this.setReadOnly('price');
-        this.setReadyOnl('discount');
+        this.setReadOnly('discount');
       }
 
       if (settings.get("DisableSalesOrderPriceOverride") ||
