@@ -11,24 +11,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   X.applyEnhancedAuth = function (username, password) {
     var md5, salt;
 
-    salt = X.options.datasource.enhancedAuthKey || "xTuple",
-    md5 = X.crypto.createHash('md5'),
+    salt = X.options.datasource.enhancedAuthKey || "xTuple";
+    md5 = X.crypto.createHash('md5');
     md5.update(password + salt + username, 'utf8');
     return md5.digest('hex');
   };
 
   var setPassword = function (username, password, organization, useEnhancedAuth, callback) {
-    var query, sql;
+    var query, queryArg, queryOptions;
 
     if (useEnhancedAuth) {
       password = X.applyEnhancedAuth(username, password);
     }
+    queryArg = {
+      username: username,
+      password: password
+    };
+    query = "select xt.change_password($$%@$$);".f(JSON.stringify(queryArg));
 
-    sql = 'alter user "{username}" with password \'{password}\';';
-
-    query = sql.replace("{username}", username)
-               .replace("{password}", password);
-    X.database.query(organization, query, callback);
+    queryOptions = XT.dataSource.getAdminCredentials(organization);
+    XT.dataSource.query(query, queryOptions, callback);
   };
 
   // https://localhost/changePassword?oldPassword=password1&newPassword=password2
@@ -46,7 +48,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       error: error,
       username: X.options.databaseServer.user,
       database: organization,
-      success: function (model, results, options) {
+      success: function (model, results, successOptions) {
         var testSql = "select relname from pg_class limit 1;",
           useEnhancedAuth = model.get("useEnhancedAuth"),
           password = req.query.oldPassword,

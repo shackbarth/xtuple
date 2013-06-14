@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true */
 
@@ -13,9 +13,9 @@ white:true*/
   // PRIVATE
   //
 
-  /** @private
-
+  /**
     Function that actually does the calculation work
+    @private
   */
   var _calculateTotals = function (model) {
     var miscCharge = model.get("miscCharge") || 0.0,
@@ -98,8 +98,9 @@ white:true*/
   };
 
 
-  /** @private
+  /**
     This should only be called by `calculatePrice`.
+    @private
   */
   var _calculatePrice = function (model) {
     var K = model.getClass(),
@@ -801,8 +802,8 @@ white:true*/
 
     lineItemsDidChange: function () {
       var lineItems = this.get("lineItems");
-      this.setReadOnly("currency", lineItems.length);
-      this.setReadOnly("customer", lineItems.length);
+      this.setReadOnly("currency", lineItems.length > 0);
+      this.setReadOnly("customer", lineItems.length > 0);
     },
 
     /**
@@ -986,6 +987,7 @@ white:true*/
       var status = this.getStatus();
       if (status === XM.Model.READY_CLEAN) {
         this.setReadOnly(["number", "customer"], true);
+        this.lineItemsDidChange();
         this.applyCustomerSettings();
       }
     },
@@ -1099,14 +1101,14 @@ white:true*/
       var settings = XT.session.settings,
         privileges = XT.session.privileges;
       this.taxDetail = [];
-      this._updatePrice = true; // TODO: This probably is un-needed.
+      this._updatePrice = true;
       this._unitIsFractional = false;
 
       //  Disable the Discount Percent stuff if we don't allow them
       if (!settings.get("AllowDiscounts") &&
         !privileges.get("OverridePrice")) {
         this.setReadOnly('price');
-        this.setReadyOnl('discount');
+        this.setReadOnly('discount');
       }
 
       if (settings.get("DisableSalesOrderPriceOverride") ||
@@ -1254,8 +1256,8 @@ white:true*/
           } else if (updatePolicy !== K.ALWAYS_UPDATE) {
             this.notify("_updatePrice?".loc(), {
               type: K.QUESTION,
-              callback: function (answer) {
-                that._updatePrice = answer;
+              callback: function (response) {
+                that._updatePrice = response.answer;
                 _calculatePrice(that);
               }
             });

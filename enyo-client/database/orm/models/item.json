@@ -1036,6 +1036,11 @@
         "read": true,
         "update": false,
         "delete": false
+      },
+      "attribute": {
+        "standardCost": {
+          "view": "ViewCosts MaintainCosts"
+        }
       }
     },
     "properties": [

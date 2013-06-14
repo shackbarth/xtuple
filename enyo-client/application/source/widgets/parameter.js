@@ -176,6 +176,7 @@ trailing:true, white:true*/
       },
       {name: "number", label: "_number".loc(), attr: "number"},
       {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "customerType", attr: "customerType", label: "_customerType".loc(), defaultKind: "XV.CustomerTypePicker"},
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
       {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "billingContact.primaryEmail"},
       {name: "phone", label: "_phone".loc(), attr: ["billingContact.phone", "billingContact.alternate", "billingContact.fax"]},

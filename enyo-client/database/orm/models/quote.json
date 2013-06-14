@@ -14,6 +14,17 @@
         "read": "ViewQuotes",
         "update": "MaintainQuotes",
         "delete": "MaintainQuotes"
+      },
+      "attribute": {
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "quoteDate": {
+          "edit": "OverrideSODate"
+        },
+        "packDate": {
+          "edit": "AlterPackDate"
+        }
       }
     },
     "properties": [
@@ -952,6 +963,11 @@
         "read": "ViewQuotes",
         "update": "MaintainQuotes",
         "delete": "MaintainQuotes"
+      },
+      "attribute": {
+        "taxType": {
+          "edit": "OverrideTax"
+        }
       }
     },
     "properties": [
@@ -1429,10 +1445,10 @@
       },
       {
         "name": "salesRep",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "SalesRep",
           "column": "quhead_salesrep_id"
-         }
+        }
       },
       {
         "name": "shiptoName",

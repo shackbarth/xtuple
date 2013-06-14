@@ -64,7 +64,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
     @extends XM.Model
   */
-  XM.Extension = XM.Model.extend(/** @lends XM.UserAccountExtension.prototype */{
+  XM.Extension = XM.Model.extend(/** @lends XM.Extension.prototype */{
 
     recordType: 'XM.Extension'
 
@@ -138,6 +138,17 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
   /**
     @class
 
+    @extends XM.Model
+  */
+  XM.UserAccountRoleExtension = XM.Model.extend(/** @lends XM.UserAccountRoleExtension.prototype */{
+
+    recordType: 'XM.UserAccountRoleExtension'
+
+  });
+
+  /**
+    @class
+
     @extends XM.Document
   */
   XM.UserAccount = XM.AccountDocument.extend({
@@ -156,7 +167,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
     autoFetchId: false,
 
     defaults: {
-      // disableExport: false,
+      disableExport: false,
       isActive: true
     },
 
@@ -404,6 +415,17 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
    /** @scope XM.UserAccountRoleRelationCollection.prototype */
 
     model: XM.UserAccountRoleRelation
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.UserAccountRoleExtensionCollection = XM.Collection.extend(/** @lends XM.UserAccountRoleExtensionCollection.prototype */{
+
+    model: XM.UserAccountRoleExtension
 
   });
 

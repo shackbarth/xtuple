@@ -15,6 +15,17 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
+      },
+      "attribute": {
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "orderDate": {
+          "edit": "OverrideSODate"
+        },
+        "packDate": {
+          "edit": "AlterPackDate"
+        }
       }
     },
     "properties": [
@@ -990,6 +1001,14 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
+      },
+      "attribute": {
+        "firm": {
+          "edit": "FirmSalesOrder"
+        },
+        "taxType": {
+          "edit": "OverrideTax"
+        }
       }
     },
     "properties": [
@@ -1028,6 +1047,7 @@
       {
         "name": "itemSite",
         "toOne": {
+          "isNested": true,
           "type": "ItemSiteRelation",
           "column": "coitem_itemsite_id",
           "required": true
@@ -1496,10 +1516,10 @@
       },
       {
         "name": "salesRep",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "SalesRep",
           "column": "cohead_salesrep_id"
-         }
+        }
       },
       {
         "name": "shiptoName",

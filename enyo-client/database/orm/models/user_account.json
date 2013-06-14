@@ -329,6 +329,13 @@
         }
       },
       {
+        "name": "disableExport",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_disable_export"
+        }
+      },
+      {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
@@ -406,7 +413,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccountRelation",
-    "table": "usr",
+    "table": "xt.usrinfo",
     "comment": "User Account Relation Map",
     "privileges": {
       "all": {
@@ -438,6 +445,13 @@
         "attr": {
           "type": "Boolean",
           "column": "usr_active"
+        }
+      },
+      {
+        "name": "disableExport",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_disable_export"
         }
       },
       {
@@ -546,6 +560,15 @@
         "toMany": {
           "type": "UserAccountRolePrivilegeAssignment",
           "column": "grp_id",
+          "inverse": "userAccountRole",
+          "isNested": true
+        }
+      },
+      {
+        "name": "grantedExtensions",
+        "toMany": {
+          "column": "grp_id",
+          "type": "UserAccountRoleExtension",
           "inverse": "userAccountRole",
           "isNested": true
         }

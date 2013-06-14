@@ -15,6 +15,11 @@
         "read": "ViewCustomerMasters",
         "update": "MaintainCustomerMasters",
         "delete": "MaintainCustomerMasters"
+      },
+      "attribute": {
+        "creditStatus": {
+          "edit": "UpdateCustomerCreditStatus"
+        }
       }
     },
     "properties": [
@@ -1418,6 +1423,13 @@
         }
       },
       {
+        "name": "customerType",
+        "toOne": {
+          "type": "CustomerType",
+          "column": "cust_custtype_id"
+        }
+      },
+      {
         "name": "commission",
         "attr": {
           "type": "Percent",
@@ -1888,8 +1900,8 @@
       },
       {
         "name": "customerType",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "CustomerType",
           "column": "type"
         }
       },
@@ -1966,8 +1978,8 @@
       },
       {
         "name": "customerType",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "CustomerType",
           "column": "type"
         }
       }

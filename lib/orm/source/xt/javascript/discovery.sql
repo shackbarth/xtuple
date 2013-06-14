@@ -209,13 +209,16 @@ select xt.install_js('XT','Discovery','xtuple', $$
     /* Loop through resources and add JSON-Schema primKeyProp for methods that need it. */
     for (var i = 0; i < orms.length; i++) {
       var ormType = orms[i].orm_type,
-          ormTypeHyphen = ormType.camelToHyphen(),
           primKeyProp = XT.Discovery.getPrimaryKeyProps(discovery.schemas[ormType]);
 
-      discovery.resources[ormType].methods.delete.parameters[ormTypeHyphen + "-id"] = primKeyProp;
-      discovery.resources[ormType].methods.get.parameters[ormTypeHyphen + "-id"] = primKeyProp;
-      discovery.resources[ormType].methods.head.parameters[ormTypeHyphen + "-id"] = primKeyProp;
-      discovery.resources[ormType].methods.patch.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      discovery.resources[ormType].methods.delete.parameters["id"] = primKeyProp;
+      discovery.resources[ormType].methods.delete.parameters["id"].location = 'path';
+      discovery.resources[ormType].methods.get.parameters["id"] = primKeyProp;
+      discovery.resources[ormType].methods.get.parameters["id"].location = 'path';
+      discovery.resources[ormType].methods.head.parameters["id"] = primKeyProp;
+      discovery.resources[ormType].methods.head.parameters["id"].location = 'path';
+      discovery.resources[ormType].methods.patch.parameters["id"] = primKeyProp;
+      discovery.resources[ormType].methods.patch.parameters["id"].location = 'path';
     }
 
 
@@ -324,16 +327,16 @@ select xt.install_js('XT','Discovery','xtuple', $$
        * delete
        */
       resources[ormType].methods.delete = {
-        "id": ormTypeHyphen + "-id.delete",
-        "path": ormTypeHyphen + "/{" + ormTypeHyphen + "-id}",
+        "id": ormType + ".delete",
+        "path": ormTypeHyphen + "/{id}",
         "httpMethod": "DELETE",
         "description": "Deletes a single " + ormType + " record.",
       };
 
       resources[ormType].methods.delete.parameters = {};
-      resources[ormType].methods.delete.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      resources[ormType].methods.delete.parameters["id"] = primKeyProp;
 
-      resources[ormType].methods.delete.parameterOrder = [ormTypeHyphen + "-id"];
+      resources[ormType].methods.delete.parameterOrder = ["id"];
 
       resources[ormType].methods.delete.scopes = [
         rootUrl + "auth/" + org,
@@ -344,16 +347,16 @@ select xt.install_js('XT','Discovery','xtuple', $$
        * get
        */
       resources[ormType].methods.get = {
-        "id": ormTypeHyphen + "-id.get",
-        "path": ormTypeHyphen + "/{" + ormTypeHyphen + "-id}",
+        "id": ormType + ".get",
+        "path": ormTypeHyphen + "/{id}",
         "httpMethod": "GET",
         "description": "Gets a single " + ormType + " record.",
       };
 
       resources[ormType].methods.get.parameters = {};
-      resources[ormType].methods.get.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      resources[ormType].methods.get.parameters["id"] = primKeyProp;
 
-      resources[ormType].methods.get.parameterOrder = [ormTypeHyphen + "-id"];
+      resources[ormType].methods.get.parameterOrder = ["id"];
 
       resources[ormType].methods.get.response = {
         "$ref": ormType
@@ -369,16 +372,16 @@ select xt.install_js('XT','Discovery','xtuple', $$
        * head
        */
       resources[ormType].methods.head = {
-        "id": ormTypeHyphen + "-id.head",
-        "path": ormTypeHyphen + "/{" + ormTypeHyphen + "-id}",
+        "id": ormType + ".head",
+        "path": ormTypeHyphen + "/{id}",
         "httpMethod": "HEAD",
         "description": "Returns the HTTP Header as if you made a GET request for a single " + ormType + " record, but will not return any response body.",
       };
 
       resources[ormType].methods.head.parameters = {};
-      resources[ormType].methods.head.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      resources[ormType].methods.head.parameters["id"] = primKeyProp;
 
-      resources[ormType].methods.head.parameterOrder = [ormTypeHyphen + "-id"];
+      resources[ormType].methods.head.parameterOrder = ["id"];
 
       resources[ormType].methods.head.scopes = [
         rootUrl + "auth/" + org,
@@ -390,7 +393,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
        * insert
        */
       resources[ormType].methods.insert = {
-        "id": ormTypeHyphen + "-id.insert",
+        "id": ormType + ".insert",
         "path": ormTypeHyphen,
         "httpMethod": "POST",
         "description": "Add a single " + ormType + " record.",
@@ -413,7 +416,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
        * list
        */
       resources[ormType].methods.list = {
-        "id": ormTypeHyphen + "-id.list",
+        "id": ormType + ".list",
         "path": ormTypeHyphen,
         "httpMethod": "GET",
         "description": "Returns a list of " + ormType + " records.",
@@ -453,7 +456,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
        * listhead
        */
       resources[ormType].methods.listhead = {
-        "id": ormTypeHyphen + "-id.listhead",
+        "id": ormType + ".listhead",
         "path": ormTypeHyphen,
         "httpMethod": "HEAD",
         "description": "Returns the HTTP Header as if you made a GET request for a list of " + ormType + " records, but will not return any response body.",
@@ -489,16 +492,16 @@ select xt.install_js('XT','Discovery','xtuple', $$
        * patch
        */
       resources[ormType].methods.patch = {
-        "id": ormTypeHyphen + "-id.patch",
-        "path": ormTypeHyphen + "/{" + ormTypeHyphen + "-id}",
+        "id": ormType + ".patch",
+        "path": ormTypeHyphen + "/{id}",
         "httpMethod": "PATCH",
         "description": "Modifies a single " + ormType + " record. This method supports JSON-Patch semantics.",
       };
 
       resources[ormType].methods.patch.parameters = {};
-      resources[ormType].methods.patch.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      resources[ormType].methods.patch.parameters["id"] = primKeyProp;
 
-      resources[ormType].methods.patch.parameterOrder = [ormTypeHyphen + "-id"];
+      resources[ormType].methods.patch.parameterOrder = ["id"];
 
       resources[ormType].methods.patch.request = {
         "$ref": ormType

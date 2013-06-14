@@ -1538,8 +1538,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
 
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
-      // re-render the summary panel
-      this.$.lineItemsPanel.render();
     },
     controlValueChanged: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -1575,39 +1573,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.QuoteDocumentsBox", attr: "documents"}
         ], {owner: this});
       this.$.lineItemsPanel.createComponents([
-         // Line Item Box
-        {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
-        // Summary Panel
-        {kind: "FittableRows", fit: true, name: "totalGroup", components: [
-          {kind: "XV.Groupbox", components: [
-            {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
-              {kind: "FittableRows", name: "summaryColumnOne", components: [
-                {kind: "XV.CurrencyPicker", attr: "currency"},
-                {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
-                 label: "_margin".loc(), currencyShowing: false},
-                {kind: "XV.WeightWidget", attr: "freightWeight"}
-              ]},
-              {kind: "FittableRows", name: "summaryColumnTwo", components: [
-                {kind: "XV.MoneyWidget",
-                 attr: {localValue: "subtotal", currency: "currency"},
-                 label: "_subtotal".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget",
-                  attr: {localValue: "miscCharge", currency: "currency"},
-                 label: "_miscCharge".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget",
-                  attr: {localValue: "freight", currency: "currency"},
-                 label: "_freight".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget",
-                 attr: {localValue: "taxTotal", currency: "currency"},
-                 label: "_tax".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget",
-                 attr: {localValue: "total", currency: "currency"},
-                 label: "_total".loc(), currencyShowing: false}
-              ]}
-            ]}
-          ]}
-        ]}
+        // Line Item Box
+        {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true}
       ], {owner: this});
     }
   });
@@ -1646,13 +1613,14 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.UnitPicker", name: "quantityUnitPicker",
               attr: "quantityUnit"},
             {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
-            {kind: "XV.MoneyWidget",
-              attr: {localValue: "price"},
+            {kind: "XV.MoneyWidget", attr:
+              {localValue: "price", currency: ""},
               label: "_price".loc(), currencyDisabled: true,
               scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.UnitPicker", name: "priceUnitPicker",
               attr: "priceUnit"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "extendedPrice"},
+            {kind: "XV.MoneyWidget", attr:
+              {localValue: "extendedPrice", currency: ""},
               label: "_extendedPrice".loc(), currencyDisabled: true,
               scale: XT.EXTENDED_PRICE_SCALE},
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
@@ -1669,11 +1637,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
             {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.standardCost"},
-              label: "_standardCost".loc()},
+              label: "_standardCost".loc(), isEditableProperty: "baseValue"},
             {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.averageCost"},
-              label: "_averageCost".loc()},
+              label: "_averageCost".loc(), isEditableProperty: "baseValue"},
             {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.wholesalePrice"},
-              label: "_wholesalePrice".loc()},
+              label: "_wholesalePrice".loc(), isEditableProperty: "baseValue"},
             {kind: "XV.PercentWidget", attr: "markup"},
             {kind: "XV.MoneyWidget", attr: {baseValue: "item.listPrice"},
               label: "_listPrice".loc(), scale: XT.SALES_PRICE_SCALE},
@@ -1691,7 +1659,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     create: function () {
       this.inherited(arguments);
       var effectiveKey = this.getEffectiveKey(),
-        currencyKey = this.getCurrencyKey,
+        currencyKey = this.getCurrencyKey(),
         comments = this.getCommentBox();
 
       // Show/Hide promise date
@@ -1700,8 +1668,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       // Set currency and effective attributes on money widgets
       this.getComponents().forEach(function (ctl) {
         if (ctl.kind === "XV.MoneyWidget") {
-          ctl.setAttr(currencyKey);
-          ctl.setAttr(effectiveKey);
+          ctl.setCurrency(currencyKey);
+          ctl.setEffective(effectiveKey);
         }
       });
 
@@ -1769,40 +1737,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         ], {owner: this});
       this.$.lineItemsPanel.createComponents([
         // Line Item Box
-        {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true},
-        // Summary Panel
-        {kind: "FittableRows", fit: true, name: "totalGroup", components: [
-          {kind: "XV.Groupbox", components: [
-            {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel",
-              components: [
-              {kind: "FittableRows", name: "summaryColumnOne", components: [
-                {kind: "XV.CurrencyPicker", attr: "currency"},
-                {kind: "XV.MoneyWidget",
-                  attr: {localValue: "margin", currency: "currency"},
-                  label: "_margin".loc(), currencyShowing: false},
-                {kind: "XV.WeightWidget", attr: "freightWeight"}
-              ]},
-              {kind: "FittableRows", name: "summaryColumnTwo", components: [
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "subtotal", currency: "currency"},
-                 label: "_subtotal".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "miscCharge", currency: "currency"},
-                 label: "_miscCharge".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "freight", currency: "currency"},
-                 label: "_freight".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "taxTotal", currency: "currency"},
-                 label: "_tax".loc(), currencyShowing: false},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "total", currency: "currency"},
-                 label: "_total".loc(), currencyShowing: false}
-              ]}
-            ]}
-          ]}
-        ]}
+        {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
       ], {owner: this});
     }
   });
@@ -2271,6 +2206,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.PriorityPicker", attr: "priority"},
+            {kind: "XV.ToDoStatusPicker", label: "_status".loc(), attr: "statusProxy"},
             {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
             {kind: "XV.DateWidget", attr: "dueDate"},
             {kind: "XV.DateWidget", attr: "startDate"},
@@ -2291,10 +2227,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       ]}
     ]
   };
-
   toDoHash = enyo.mixin(toDoHash, XV.accountNotifyContactMixin);
   enyo.kind(toDoHash);
-
   XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
 
@@ -2368,7 +2302,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         fit: true, classes: "xv-top-panel", components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
             {kind: "XV.InputWidget", type: "password", attr: "password"},
@@ -2380,7 +2314,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "initials"},
             {kind: "XV.InputWidget", attr: "email"},
             {kind: "XV.CheckboxWidget", attr: "useEnhancedAuth"},
-            //{kind: "XV.CheckboxWidget", attr: "disableExport"},
+            {kind: "XV.CheckboxWidget", attr: "disableExport"},
             // normally I'd put classes: "xv-assignment-box" into the container of the assignmentbox,
             // but there is no such container here. Maybe some CSS work to be done now that assignmentbox
             // is the thing inside the thing instead of the thing and the container all together.
@@ -2414,6 +2348,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     refreshPrivileges: function (inSender, inEvent) {
       this.$.grantedPrivileges.mapIds(this.$.grantedRoles.getAssignedCollection().models);
       this.$.grantedPrivileges.tryToRender();
+      this.$.grantedExtensions.mapIds(this.$.grantedRoles.getAssignedCollection().models);
+      this.$.grantedExtensions.tryToRender();
     },
 
     /**
@@ -2424,6 +2360,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       if (model.getStatus() & XM.Model.READY) {
         this.$.grantedPrivileges.mapIds(this.getValue().get("grantedUserAccountRoles").models);
         this.$.grantedPrivileges.tryToRender();
+        this.$.grantedExtensions.mapIds(this.getValue().get("grantedUserAccountRoles").models);
+        this.$.grantedExtensions.tryToRender();
       }
     }
   });
@@ -2448,7 +2386,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"}
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
+            {kind: "XV.UserAccountRoleExtensionAssignmentBox", attr: "grantedExtensions", name: "grantedExtensions" }
           ]}
         ]},
         {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",

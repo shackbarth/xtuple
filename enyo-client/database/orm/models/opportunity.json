@@ -24,6 +24,11 @@
           "owner.username",
           "assignedTo.username"
         ]
+      },
+      "attribute": {
+        "owner": {
+          "edit": "EditOwner"
+        }
       }
     },
     "properties": [
@@ -255,9 +260,7 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "OPP",
-    "extensions": []
+    "isSystem": true
   },
   {
     "context": "xtuple",

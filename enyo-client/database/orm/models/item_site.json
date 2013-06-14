@@ -325,6 +325,11 @@
         "read": true,
         "update": false,
         "delete": false
+      },
+      "attribute": {
+        "averageCost": {
+          "view": "ViewCosts MaintainCosts"
+        }
       }
     },
     "properties": [

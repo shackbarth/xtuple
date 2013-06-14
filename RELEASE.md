@@ -11,6 +11,16 @@ Features and bugs
 Features and bugs
 ----------------
 * Fix critical user login problem
+=======
+1.3.6 (2013/06/06)
+===============
+
+Critical deployment changes
+---------------------------
+* Fix critical user login problem
+
+Features and bugs
+----------------
 * issue #[20505](http://www.xtuple.org/xtincident/view/bugs/20505)
   Remove print menus and buttons until Pentaho service available on cloud deployment.
 

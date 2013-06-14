@@ -24,6 +24,11 @@
         "properties": [
           "owner.username"
         ]
+      },
+      "attribute": {
+        "owner": {
+          "edit": "EditOwner"
+        }
       }
     },
     "properties": [
@@ -239,8 +244,7 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "T"
+    "isSystem": true
   },
   {
     "context": "xtuple",

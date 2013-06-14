@@ -8,6 +8,7 @@
     "url": "https://github.com/xtuple/xtuple.git"
   },
   "dependencies": {
+    "async":"0.2.x",
     "backbone":"0.9.10",
     "backbone-relational": "0.8.0",
     "bcrypt": "0.7.x",
