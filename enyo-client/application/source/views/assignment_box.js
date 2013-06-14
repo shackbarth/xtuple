@@ -354,7 +354,7 @@ white:true*/
     name: "XV.UserAccountRolePrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
     segments: [],
-    translateLabels: false,
+    translateLabels: true,
     totalCollectionName: "XM.PrivilegeCollection",
     type: "privilege",
     /**
@@ -378,6 +378,26 @@ white:true*/
         privilege: privilegeModel,
         userAccountRole: this.getAssignedCollection().userAccountRole
       }, {isNew: true});
+    },
+    /**
+      Look in XT.session.privilegeSegments to see how to group the models.
+      If no match is found, return the group instead.
+     */
+    getModelSegment: function (name, group) {
+      var returnVal;
+      _.each(XT.session.privilegeSegments, function (obj, key) {
+        _.each(obj, function (title) {
+          if (title === name) {
+            returnVal = key;
+            return;
+          }
+        });
+        if (returnVal) {
+          // we've found it. No need to continue.
+          return;
+        }
+      });
+      return returnVal || group;
     }
   });
 
