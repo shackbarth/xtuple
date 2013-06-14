@@ -217,9 +217,7 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "J",
-    "extensions": []
+    "isSystem": true
   },
   {
     "context": "crm",

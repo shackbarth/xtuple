@@ -19,6 +19,12 @@
       "attribute": {
         "margin": {
           "view": "ShowMarginsOnSalesOrder"
+        },
+        "orderDate": {
+          "edit": "OverrideSODate"
+        },
+        "packDate": {
+          "edit": "AlterPackDate"
         }
       }
     },
@@ -998,11 +1004,11 @@
         "delete": "MaintainSalesOrders"
       },
       "attribute": {
-        "customerPrice": {
-          "edit": "OverridePrice"
+        "firm": {
+          "edit": "FirmSalesOrder"
         },
-        "price": {
-          "edit": "OverridePrice"
+        "taxType": {
+          "edit": "OverrideTax"
         }
       }
     },

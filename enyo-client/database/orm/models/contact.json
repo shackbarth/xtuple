@@ -244,8 +244,7 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "T"
+    "isSystem": true
   },
   {
     "context": "xtuple",

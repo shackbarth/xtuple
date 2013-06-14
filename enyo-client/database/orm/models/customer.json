@@ -15,6 +15,11 @@
         "read": "ViewCustomerMasters",
         "update": "MaintainCustomerMasters",
         "delete": "MaintainCustomerMasters"
+      },
+      "attribute": {
+        "creditStatus": {
+          "edit": "UpdateCustomerCreditStatus"
+        }
       }
     },
     "properties": [
