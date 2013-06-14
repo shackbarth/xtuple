@@ -10,7 +10,8 @@ trailing:true, white:true*/
       panels,
       relevantPrivileges,
       configurationJson,
-      configuration;
+      configuration,
+      analysisSrc;
 
     // ..........................................................
     // APPLICATION
@@ -47,6 +48,14 @@ trailing:true, white:true*/
     };
     configuration = new XM.ConfigurationModel(configurationJson);
     XM.configurations.add(configuration);
+
+    //analysisSrc = XT.getOrganizationPath() +
+      //   '/%@?details={"nameSpace":"%@","type":"%@","query":%@,"locale":%@}'
+      //   .f(routeName,
+      //     recordType.prefix(),
+      //     recordType.suffix(),
+      //     JSON.stringify(query),
+      //     JSON.stringify(XT.session.locale.toJSON()));
 
     module = {
       name: "sales",

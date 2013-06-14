@@ -37,7 +37,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       smtpPassword: "_smtp_password_",
 
       // URL of BI server
-      biUrl: "http://xtuple.com", // "http://your.bi.solution/report.html?args=sample",
+      // Leave this empty unless reports are installed
+      biUrl: "", // "http://your.bi.solution/report.html?args=sample",
 
       // these properties are dynamically registered with the
       // node discovery service

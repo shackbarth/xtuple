@@ -537,6 +537,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
         data: session.passport.user,
         code: 1,
         debugging: X.options.datasource.debugging,
+        biUrl: X.options.datasource.biUrl,
         version: X.version
       });
     }, data && data.payload);
