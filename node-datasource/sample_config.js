@@ -57,6 +57,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       databases: ["dev"],
       testDatabase: "" // this must remain empty for production datasources
     },
+    extensionRoutes: [],
     databaseServer: {
       hostname: "localhost",
       port: 5432,

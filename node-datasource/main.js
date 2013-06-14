@@ -344,12 +344,32 @@ app.get('/:org/reset-password', routes.resetPassword);
 
 
 //
-// Load all extension-defined routes
+// Load all extension-defined routes. By convention the paths,
+// filenames, and functions to be used
+// for the routes should be described in a file called describe.json
+// in the routes directory.
 //
 if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
   _.each(X.options.extensionRoutes, function (route) {
     "use strict";
-    console.log(route);
+    var routeDescriptions,
+      routeDir = __dirname + "/" + route,
+      describeFile = routeDir + "/describe.json";
+
+    if (X.fs.existsSync(describeFile)) {
+      routeDescriptions = X.fs.readFileSync(__dirname + "/" + route + "/describe.json", "utf8");
+      try {
+        routeDescriptions = JSON.parse(routeDescriptions);
+      } catch (error) {
+        X.warn("Invalid syntax of route description " + describeFile);
+      }
+      _.each(routeDescriptions, function (route) {
+        var path = route.path,
+          func = require(routeDir + "/" + route.file)[route.function];
+
+        app.get('/:org/' + path, func);
+      });
+    }
   });
 }
 
