@@ -98,6 +98,7 @@ select xt.js_init();
 \i xt/tables/pkguiform.sql
 
 \i xt/tables/ext.sql
+\i xt/tables/grpext.sql
 \i xt/tables/usrext.sql
 \i xt/tables/sessionstore.sql
 \i xt/tables/oa2client.sql
