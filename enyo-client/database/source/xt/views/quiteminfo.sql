@@ -1,4 +1,4 @@
-﻿select xt.create_view('xt.quiteminfo', $$
+select xt.create_view('xt.quiteminfo', $$
   select quitem.*,  
     xt.quote_line_base_price(quitem) as base_price,  
     xt.quote_line_markup(quitem) as markup,  

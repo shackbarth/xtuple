@@ -1,4 +1,4 @@
-﻿select xt.install_js('XT','Orm','xtuple', $$
+select xt.install_js('XT','Orm','xtuple', $$
 
   /**
    @class
