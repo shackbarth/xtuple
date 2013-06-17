@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global Globalize:true, XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -326,17 +326,19 @@ white:true*/
 
     getLastCommentString: function () {
       var comments = this.get('comments'),
+        // public comments is an array even though comments is a collection
+        publicComments = comments.filter(function (comment) {
+          return comment.get("isPublic");
+        }),
         comment,
         ret = "";
-      if (comments.length) {
+
+      if (publicComments.length) {
         // Sort by date descending and take first
-        comments.comparator = function (a, b) {
-          var aval = a.get('created'),
-            bval = b.get('created');
-          return XT.date.compare(bval, aval);
-        };
-        comments.sort();
-        comment = comments.models[0];
+        publicComments = _.sortBy(publicComments, function (comment) {
+          return -1 * comment.get('created').getTime();
+        });
+        comment = publicComments[0];
         ret = "_latestComment".loc() +
               " (" + comment.get('createdBy') + ")" +
               "\n\n" +
@@ -383,7 +385,15 @@ white:true*/
 
     recordType: 'XM.IncidentComment',
 
-    sourceName: 'INCDT'
+    sourceName: 'INCDT',
+
+    defaults: function () {
+      var result = XM.Comment.prototype.defaults.apply(this, arguments),
+        publicDefault = XT.session.getSettings().get('IncidentPublicDefault');
+
+      result.isPublic = publicDefault || false;
+      return result;
+    }
 
   });
 
