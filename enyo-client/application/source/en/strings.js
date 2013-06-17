@@ -597,7 +597,7 @@ var lang = XT.stringsFor("en_US", {
   // ********
   // Permissions
   // ********
-  "_alterPackDate": "Edit Pack Date",
+  "_alterPackDate": "Alter Pack Date",
   "_configureCRM": "Configure CRM",
   "_configureImportExport": "Configure Import Export",
   "_configurePM": "Configure Project",
@@ -655,9 +655,9 @@ var lang = XT.stringsFor("en_US", {
   "_maintainTaxZones": "Maintain Tax Zones",
   "_maintainTerms": "Maintain Terms ",
   "_maintainTitles": "Maintain Titles",
-  "_overridePrice": "Edit Price",
-  "_overrideSODate": "Edit Order Date",
-  "_overrideTax": "Edit Tax Type",
+  "_overridePrice": "Override Price",
+  "_overrideSODate": "Override Order Date",
+  "_overrideTax": "Override Tax Type",
   "_reassignToDoItems": "Edit Assign To",
   "_showMarginsOnSalesOrder": "Show Margins",
   "_viewAddresses": "View Addresses",

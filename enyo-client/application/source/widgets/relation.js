@@ -457,7 +457,8 @@ regexp:true, undef:true, trailing:true, white:true */
       Pass through attributes intended for onyx input inside.
       XXX is this necessary given disabledChanged function above?
     */
-    setDisabled: function (isDisabled) {
+    disabledChanged: function () {
+      var isDisabled = this.getDisabled();
       this.$.privateItemSiteWidget.setDisabled(isDisabled);
       this.$.sitePicker.setDisabled(isDisabled);
     },
