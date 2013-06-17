@@ -1,4 +1,4 @@
-﻿drop function if exists xt.js_init();
+drop function if exists xt.js_init();
 
 create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
 

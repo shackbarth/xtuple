@@ -1,4 +1,4 @@
-﻿-- trigger
+-- trigger
 drop trigger if exists incdt_owner_change on incdt;
 create trigger indct_owner_change after insert on incdt for each row execute procedure xt.owner_record_did_change();
 

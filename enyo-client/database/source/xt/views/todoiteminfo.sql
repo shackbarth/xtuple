@@ -1,4 +1,4 @@
-﻿select xt.create_view('xt.todoiteminfo', $$
+select xt.create_view('xt.todoiteminfo', $$
 
    select todoitem.*, coalesce(incdtpriority_order, 99999) as priority_order,
      crmacct_number, cntct_number, incdt_number, ophead_number,

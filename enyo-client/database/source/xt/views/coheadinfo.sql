@@ -1,4 +1,4 @@
-﻿select xt.create_view('xt.coheadinfo', $$
+select xt.create_view('xt.coheadinfo', $$
 
 select cohead.*, 
   xt.co_schedule_date(cohead) as schedule_date,
