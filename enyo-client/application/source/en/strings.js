@@ -660,6 +660,7 @@ var lang = XT.stringsFor("en_US", {
   "_overrideTax": "Override Tax Type",
   "_reassignToDoItems": "Edit Assign To",
   "_showMarginsOnSalesOrder": "Show Margins",
+  "_updateCustomerCreditStatus": "Update Credit Status",
   "_viewAddresses": "View Addresses",
   "_viewAllCRMAccounts": "View All Accounts",
   "_viewAllContacts": "View All Contacts",
