@@ -18,9 +18,10 @@ var lang = XT.stringsFor("en_US", {
   // ********
 
   "_crm": "CRM",
-  "_maintainEmailProfiles": "Maintain Email Profiles",
-  "_viewEmailProfiles": "View Email Profiles",
   "_crmDescription": "Corporate Relationship Management",
-  "_incidentStatusColors": "Incident Status Colors"
+  "_incidentDefaultPublic": "Comment Default Public",
+  "_incidentStatusColors": "Incident Status Colors",
+  "_maintainEmailProfiles": "Maintain Email Profiles",
+  "_viewEmailProfiles": "View Email Profiles"
 
 });

@@ -1,4 +1,4 @@
-select xt.create_view('xt.quheadinfo', $$
+﻿select xt.create_view('xt.quheadinfo', $$
   select quhead.*,  
     xt.quote_schedule_date(quhead) as schedule_date,  
     xt.quote_freight_weight(quhead) as freight_weight,  
@@ -122,7 +122,7 @@ insert into quhead (
   new.quhead_billtocountry,
   new.quhead_shiptocountry,
   new.quhead_curr_id,
-  new.quhead_imported,
+  coalesce(new.quhead_imported, false),
   new.quhead_expire,
   new.quhead_calcfreight,
   new.quhead_shipto_cntct_id,

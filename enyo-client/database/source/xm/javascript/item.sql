@@ -47,11 +47,14 @@
     @returns {Number} tax type id
   */
   XM.Item.taxType = function(itemId, taxZoneId) {
-    var sql = 'select getItemTaxType(item_id, $2::integer) as "taxType" from item where item_number = $1;';
+    var sql = 'select getitemtaxtype(item_id, $2::integer) as "taxType" from item where item_number = $1;',
+      id;
     if (taxZoneId) {
       taxZoneId = XT.Data.getId(XT.Orm.fetch('XM','TaxZone'), taxZoneId);
     }
-    return plv8.execute(sql, [itemId, taxZoneId])[0].taxType || 0;
+    id = plv8.execute(sql, [itemId, taxZoneId])[0].taxType || 0;
+    sql = "select taxtype_name from taxtype where taxtype_id = $1";
+    return id ? plv8.execute(sql, [id])[0].taxtype_name : "";
   }
 
   /**
