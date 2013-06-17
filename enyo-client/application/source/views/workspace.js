@@ -2302,7 +2302,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         fit: true, classes: "xv-top-panel", components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
             {kind: "XV.InputWidget", type: "password", attr: "password"},
@@ -2348,6 +2348,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     refreshPrivileges: function (inSender, inEvent) {
       this.$.grantedPrivileges.mapIds(this.$.grantedRoles.getAssignedCollection().models);
       this.$.grantedPrivileges.tryToRender();
+      this.$.grantedExtensions.mapIds(this.$.grantedRoles.getAssignedCollection().models);
+      this.$.grantedExtensions.tryToRender();
     },
 
     /**
@@ -2358,6 +2360,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       if (model.getStatus() & XM.Model.READY) {
         this.$.grantedPrivileges.mapIds(this.getValue().get("grantedUserAccountRoles").models);
         this.$.grantedPrivileges.tryToRender();
+        this.$.grantedExtensions.mapIds(this.getValue().get("grantedUserAccountRoles").models);
+        this.$.grantedExtensions.tryToRender();
       }
     }
   });
@@ -2382,7 +2386,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"}
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
+            {kind: "XV.UserAccountRoleExtensionAssignmentBox", attr: "grantedExtensions", name: "grantedExtensions" }
           ]}
         ]},
         {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",

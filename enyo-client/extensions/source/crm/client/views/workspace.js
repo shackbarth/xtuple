@@ -1,18 +1,18 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
+/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
+trailing:true, white:true*/
 /*global XT:true, XM:true, XV:true, enyo:true*/
 
 (function () {
 
   XT.extensions.crm.initWorkspaces = function () {
     var extensions;
-    
- 
+
+
     // ..........................................................
     // ACCOUNT
     //
-  
+
     extensions = [
       {kind: "XV.AccountToDosBox", container: "panels",
         attr: "toDoRelations"},
@@ -23,11 +23,11 @@ trailing:true white:true*/
     ];
 
     XV.appendExtension("XV.AccountWorkspace", extensions);
-   
+
     // ..........................................................
     // CONFIGURE
     //
-     
+
     enyo.kind({
       name: "XV.CrmWorkspace",
       kind: "XV.Workspace",
@@ -58,7 +58,7 @@ trailing:true white:true*/
               {kind: "XV.ToggleButtonWidget", attr: "IncidentsPublicPrivate",
                 label: "_public".loc() + " " + "_flag".loc()},
               {kind: "XV.CheckboxWidget", attr: "IncidentPublicDefault",
-                label: "_default".loc() + " " + "_public".loc()},
+                label: "_incidentDefaultPublic".loc()},
               {kind: "onyx.GroupboxHeader",
                 content: "_incidentStatusColors".loc()},
               {kind: "XV.InputWidget", attr: "IncidentNewColor",
@@ -81,11 +81,11 @@ trailing:true white:true*/
         ]}
       ]
     });
-  
+
     // ..........................................................
     // CONTACT
     //
-  
+
     extensions = [
       {kind: "XV.AccountContactsBox", container: "panels",
         attr: "contactRelations"},
@@ -98,11 +98,11 @@ trailing:true white:true*/
     ];
 
     XV.appendExtension("XV.ContactWorkspace", extensions);
-    
+
     // ..........................................................
     // CUSTOMER
     //
-  
+
     extensions = [
       {kind: "XV.AccountContactsBox", container: "panels",
         attr: "contactRelations", parentAttr: "account"},
@@ -115,7 +115,7 @@ trailing:true white:true*/
     ];
 
     XV.appendExtension("XV.CustomerWorkspace", extensions);
-    
+
     XV.registerModelWorkspace("XM.CustomerContactRelation", "XV.ContactWorkspace");
     XV.registerModelWorkspace("XM.CustomerIncidentRelation", "XV.IncidentWorkspace");
     XV.registerModelWorkspace("XM.CustomerOpportunityRelation", "XV.OpportunityWorkspace");
@@ -124,13 +124,13 @@ trailing:true white:true*/
     // ..........................................................
     // INCIDENT
     //
-  
+
     extensions = [
       {kind: "XV.IncidentToDosBox", container: "panels", attr: "toDoRelations"}
     ];
 
     XV.appendExtension("XV.IncidentWorkspace", extensions);
-  
+
     // ..........................................................
     // OPPORTUNITY
     //

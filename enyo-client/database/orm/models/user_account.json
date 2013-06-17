@@ -563,6 +563,15 @@
           "inverse": "userAccountRole",
           "isNested": true
         }
+      },
+      {
+        "name": "grantedExtensions",
+        "toMany": {
+          "column": "grp_id",
+          "type": "UserAccountRoleExtension",
+          "inverse": "userAccountRole",
+          "isNested": true
+        }
       }
     ],
     "isSystem": true
