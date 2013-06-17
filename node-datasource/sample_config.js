@@ -38,7 +38,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // URL of BI server
       // Leave this empty unless reports are installed
-      biUrl: "", // "http://your.bi.solution/report.html?args=sample",
+      biUrl: "", // "http://yourserver.com:8080/pentaho/content/reporting/reportviewer/report.html?",
+      biServerUrl: "", // "http://yourserver.com:8080/pentaho"
+
 
       // these properties are dynamically registered with the
       // node discovery service
