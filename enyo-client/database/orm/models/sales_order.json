@@ -1055,6 +1055,13 @@
         }
       },
       {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "coitem_unitcost"
+        }
+      },
+      {
         "name": "quantity",
         "attr": {
           "type": "Quantity",

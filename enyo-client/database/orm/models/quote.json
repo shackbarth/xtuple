@@ -968,7 +968,13 @@
       "attribute": {
         "taxType": {
           "edit": "OverrideTax"
-        }
+        },
+        "unitCost": {
+          "view": "ViewCosts"
+        },
+        "markup": {
+          "view": "ViewCosts"
+        },  
       }
     },
     "properties": [
@@ -1011,6 +1017,13 @@
           "column": "quitem_itemsite_id",
           "isNested": true,
           "required": true
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "quitem_unitcost"
         }
       },
       {
