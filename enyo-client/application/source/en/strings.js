@@ -597,6 +597,7 @@ var lang = XT.stringsFor("en_US", {
   // ********
   // Permissions
   // ********
+  "_alterPackDate": "Alter Pack Date",
   "_configureCRM": "Configure CRM",
   "_configureImportExport": "Configure Import Export",
   "_configurePM": "Configure Project",
@@ -605,6 +606,7 @@ var lang = XT.stringsFor("en_US", {
   "_editOthersComments": "Edit Others Comments",
   "_editOwnComments": "Edit Own Comments",
   "_editOwner": "Edit Owner",
+  "_firmSalesOrder": "Firm Sales Order Line",
   "_maintainAddresses": "Maintain Addresses",
   "_maintainAllCRMAccounts": "Maintain All Accounts",
   "_maintainAllContacts": "Maintain All Contacts",
@@ -654,7 +656,9 @@ var lang = XT.stringsFor("en_US", {
   "_maintainTerms": "Maintain Terms ",
   "_maintainTitles": "Maintain Titles",
   "_overridePrice": "Override Price",
-  "_reassignToDoItems": "Reassign To-Do Items",
+  "_overrideSODate": "Override Order Date",
+  "_overrideTax": "Override Tax Type",
+  "_reassignToDoItems": "Edit Assign To",
   "_showMarginsOnSalesOrder": "Show Margins",
   "_viewAddresses": "View Addresses",
   "_viewAllCRMAccounts": "View All Accounts",

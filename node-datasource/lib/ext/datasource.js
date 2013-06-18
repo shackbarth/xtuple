@@ -101,12 +101,12 @@ Backbone:true, _:true, X:true, __dirname:true */
      */
     query: function (query, options, callback) {
       var creds = {
-            "user": options.user,
-            "port": options.port,
-            "host": options.hostname,
-            "database": options.database,
-            "password": options.password
-          };
+        "user": options.user,
+        "port": options.port,
+        "host": options.hostname,
+        "database": options.database,
+        "password": options.password
+      };
 
       if (X.options && X.options.datasource && X.options.datasource.pgWorker) {
         this.requestNum += 1;
@@ -126,7 +126,9 @@ Backbone:true, _:true, X:true, __dirname:true */
         // options.debugDatabase = X.options.datasource.debugDatabase;
         // worker.send({id: this.requestNum, query: query, options: options, creds: creds});
       } else {
-        if (X.options.datasource.debugging) {
+        if (X.options.datasource.debugging &&
+            query.indexOf('select xt.delete($${"nameSpace":"SYS","type":"SessionStore"') < 0 &&
+            query.indexOf('select xt.get($${"nameSpace":"SYS","type":"SessionStore"') < 0) {
           X.log(query);
         }
         X.pg.connect(creds, _.bind(this.connected, this, query, options, callback));

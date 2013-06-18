@@ -1,22 +1,20 @@
-<<<<<<< HEAD
-1.3.6 (2013/06/06)
-=======
-<<<<<<< HEAD
-1.3.6 (2013/05)
->>>>>>> dev-1-3-6
-===============
-
-Critical deployment changes
----------------------------
-* Fix critical user login problem
+1.3.7 (2013/06/11)
+==================
 
 Features and bugs
 ----------------
+* Fix problem where user names that are email addresses could not log in.
+
+1.3.6 (2013/06/06)
+==================
+
+Features and bugs
+----------------
+* Fix critical user login problem
 * issue #[20505](http://www.xtuple.org/xtincident/view/bugs/20505)
   Remove print menus and buttons until Pentaho service available on cloud deployment.
 
 1.3.5 (2013/05/31)
->>>>>>> xtuple
 ===============
 
 Critical deployment changes

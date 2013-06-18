@@ -197,7 +197,7 @@ Follow the same steps as installing the JSHint package:
 
 If you are interested in building xTuple's [Qt](http://qt-project.org) C++ based desktop client you'll need to install the Qt development tools:
 
-    sudo apt-get install libxtst-dev libqt4-qmake libqt4-sql-psql libqt4-sql-odbc
+    sudo apt-get install libxtst-dev qt4-qmake libqt4-sql-psql libqt4-sql-odbc
 
 Fork the xTuple repository [qt-client](https://github.com/xtuple/qt-client). Next clone and build the application:
 
