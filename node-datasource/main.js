@@ -336,6 +336,7 @@ app.all('/:org/export', routes.exxport);
 app.all('/:org/extensions', routes.extensions);
 app.get('/:org/file', routes.file);
 app.get('/:org/report', routes.report);
+app.get('/:org/analysis', routes.analysis);
 app.get('/:org/reset-password', routes.resetPassword);
 
 // Set up the other servers we run on different ports.
