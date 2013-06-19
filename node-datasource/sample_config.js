@@ -41,7 +41,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       biUrl: "", // "http://yourserver.com:8080/pentaho/content/reporting/reportviewer/report.html?",
       biServerUrl: "", // "http://yourserver.com:8080/pentaho"
 
-
       // these properties are dynamically registered with the
       // node discovery service
 

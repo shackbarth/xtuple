@@ -10,9 +10,7 @@ trailing:true, white:true*/
       panels,
       relevantPrivileges,
       configurationJson,
-      configuration,
-      ajax,
-      getResponse;
+      configuration
 
     // ..........................................................
     // APPLICATION
@@ -50,15 +48,15 @@ trailing:true, white:true*/
     configuration = new XM.ConfigurationModel(configurationJson);
     XM.configurations.add(configuration);
 
-    // ajax = new enyo.Ajax({
-    //   url: XT.getOrganizationPath() + "/analysis",
-    // });
-    // ajax.response(this, this.getResponse);
-    // ajax.go();
-
-    getResponse = function (inSender, inResponse) {
+    // TODO: move this to the menu ontap
+    var url, ajax = new enyo.Ajax({
+      url: XT.getOrganizationPath() + "/analysis",
+    });
+    ajax.response(function (inSender, inResponse) {
       console.log(JSON.stringify(inResponse));
-    };
+    });
+    // param for the report name
+    ajax.go({reportName: "salesAnalysis.html"});
 
     module = {
       name: "sales",
@@ -68,6 +66,8 @@ trailing:true, white:true*/
         {name: "prospectList", kind: "XV.ProspectList"},
         {name: "quoteList", kind: "XV.QuoteList"},
         {name: "salesOrderList", kind: "XV.SalesOrderList"},
+        // the url for the iframe will be contructed and set
+        // on menu tap
         {name: "salesAnalysisPage",
           label: "_analysis".loc(),
           tag: "iframe",
