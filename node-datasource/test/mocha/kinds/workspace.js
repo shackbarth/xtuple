@@ -42,11 +42,6 @@
               typeof value === 'function' &&
               endsWith(key, 'Workspace')) {
 
-            if (key === 'EmployeeWorkspace') {
-              // temp
-              return;
-            }
-
             // create the workspace
             try {
               child = master.createComponent({
