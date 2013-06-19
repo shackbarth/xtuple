@@ -53,8 +53,7 @@
                 name: key
               });
             } catch (error) {
-              // TODO: uncomment
-              //assert.fail(1, 0, "XV." + key + " cannot be created");
+              assert.fail(1, 0, "XV." + key + " cannot be created");
             }
             assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
             recordType = child.getModel();
@@ -64,9 +63,7 @@
                 // There must be a way to get the superkind name of a kind. We want all instances
                 // of listrelationseditorbox
 
-                //console.log(component.attr);
                 var modelSchema = XT.session.schemas[XT.String.prefix(recordType)].attributes[XT.String.suffix(recordType)];
-                //console.log(JSON.stringify(modelSchema.relations));
                 var boxRelation = _.find(modelSchema.relations, function (relation) {
                   return relation.key === component.attr;
                 });
@@ -74,14 +71,10 @@
                   console.log(key + " " + component.attr + " aren't mapped to an object with a reverse relation");
                 }
                 assert.isDefined(boxRelation, key + " " + component.attr + " isn't mapped to an object");
-                // TODO: uncomment
-                //assert.isDefined(boxRelation.reverseRelation.key, key + " " + component.attr + " isn't mapped to an object with a reverse relation");
-                console.log(boxRelation.relatedModel);
+                assert.isDefined(boxRelation.reverseRelation.key, key + " " + component.attr + " isn't mapped to an object with a reverse relation");
                 var relatedModel = boxRelation.relatedModel.replace("Relation", "");
-                console.log(relatedModel);
                 var relatedModelSchema = XT.session.schemas[XT.String.prefix(relatedModel)]
                   .attributes[XT.String.suffix(relatedModel)];
-                console.log(JSON.stringify(relatedModelSchema.relations));
                 var reverseModel = _.find(relatedModelSchema.relations, function (reverseRelation) {
                   var originalModel = reverseRelation.relatedModel;
                   return originalModel === recordType || originalModel === recordType + 'Relation';
