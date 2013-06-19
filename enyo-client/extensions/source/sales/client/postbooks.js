@@ -11,7 +11,8 @@ trailing:true, white:true*/
       relevantPrivileges,
       configurationJson,
       configuration,
-      analysisSrc;
+      ajax,
+      getResponse;
 
     // ..........................................................
     // APPLICATION
@@ -49,13 +50,15 @@ trailing:true, white:true*/
     configuration = new XM.ConfigurationModel(configurationJson);
     XM.configurations.add(configuration);
 
-    //analysisSrc = XT.getOrganizationPath() +
-      //   '/%@?details={"nameSpace":"%@","type":"%@","query":%@,"locale":%@}'
-      //   .f(routeName,
-      //     recordType.prefix(),
-      //     recordType.suffix(),
-      //     JSON.stringify(query),
-      //     JSON.stringify(XT.session.locale.toJSON()));
+    // ajax = new enyo.Ajax({
+    //   url: XT.getOrganizationPath() + "/analysis",
+    // });
+    // ajax.response(this, this.getResponse);
+    // ajax.go();
+
+    getResponse = function (inSender, inResponse) {
+      console.log(JSON.stringify(inResponse));
+    };
 
     module = {
       name: "sales",
