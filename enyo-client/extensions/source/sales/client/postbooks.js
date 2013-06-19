@@ -56,7 +56,7 @@ trailing:true, white:true*/
       console.log(JSON.stringify(inResponse));
     });
     // param for the report name
-    ajax.go({reportName: "salesAnalysis.html"});
+    ajax.go({reportUrl: "content/saiku-ui/index.html?biplugin=true"});
 
     module = {
       name: "sales",

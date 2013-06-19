@@ -10,7 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     BI Server URL so that it may authenticate the current user.
   */
   exports.analysis = function (req, res) {
-    var url, reportName = req.query.reportName,
+    var url, reportUrl = req.query.reportUrl,
       username = req.user.id,
       biServerUrl = X.options.datasource.biServerUrl,
       today = new Date(),
@@ -26,9 +26,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         "iat": Math.round(today.getTime() / 1000)  // created date in millis
       };
     // TODO: sign and encode this JWT
-    //claimset = encode(claimset);
+    claimSet = JSON.stringify(claimSet);
 
-    url = biServerUrl + reportName + "?assertion=" + claimSet;
+    url = biServerUrl + reportUrl + "&assertion=" + claimSet;
     res.send(url);
   };
 
