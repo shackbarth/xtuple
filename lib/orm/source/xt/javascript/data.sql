@@ -1,4 +1,4 @@
-﻿select xt.install_js('XT','Data','xtuple', $$
+select xt.install_js('XT','Data','xtuple', $$
 
   /**
    * @class
@@ -10,13 +10,13 @@
 
   XT.Data = {
 
-    ARRAY_TYPE: "A",
-    COMPOSITE_TYPE: "C",
-    DATE_TYPE: "D",
-    STRING_TYPE: "S",
+    ARRAY_TYPE: 'A',
+    COMPOSITE_TYPE: 'C',
+    DATE_TYPE: 'D',
+    STRING_TYPE: 'S',
 
     CREATED_STATE: 'create',
-    READ_STATE: "read",
+    READ_STATE: 'read',
     UPDATED_STATE: 'update',
     DELETED_STATE: 'delete',
 
@@ -1398,6 +1398,22 @@
       this.sanitize(nameSpace, type, ret.data, options);
 
       return ret;
+    },
+
+    /**
+    Fetch a metric value.
+
+    @param {String} Metric name
+    @param {String} Return type 'text', 'boolean' or 'number' (default 'text')
+    */
+    fetchMetric: function (name, type) {
+      var fn = 'fetchmetrictext';
+      if (type === 'boolean') {
+        fn = 'fetchmetricbool';
+      } else if (type === 'number') {
+        fn = 'fetchmetricvalue';
+      }
+      return plv8.execute("select " + fn + "($1) as resp", [name])[0].resp;
     },
 
     /**

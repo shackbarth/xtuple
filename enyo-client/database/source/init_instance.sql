@@ -16,6 +16,7 @@ select xt.js_init();
 -- xt trigger functions
 \i xt/trigger_functions/comment_did_change.sql
 \i xt/trigger_functions/owner_record_did_change.sql
+\i xt/trigger_functions/taxtype_record_did_change.sql
 \i xt/trigger_functions/usr_did_change.sql
 
 -- [ START ] public
@@ -98,6 +99,7 @@ select xt.js_init();
 \i xt/tables/pkguiform.sql
 
 \i xt/tables/ext.sql
+\i xt/tables/grpext.sql
 \i xt/tables/usrext.sql
 \i xt/tables/sessionstore.sql
 \i xt/tables/oa2client.sql

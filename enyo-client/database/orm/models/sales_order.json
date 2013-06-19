@@ -19,6 +19,12 @@
       "attribute": {
         "margin": {
           "view": "ShowMarginsOnSalesOrder"
+        },
+        "orderDate": {
+          "edit": "OverrideSODate"
+        },
+        "packDate": {
+          "edit": "AlterPackDate"
         }
       }
     },
@@ -739,7 +745,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -997,11 +1004,11 @@
         "delete": "MaintainSalesOrders"
       },
       "attribute": {
-        "customerPrice": {
-          "edit": "OverridePrice"
+        "firm": {
+          "edit": "FirmSalesOrder"
         },
-        "price": {
-          "edit": "OverridePrice"
+        "taxType": {
+          "edit": "OverrideTax"
         }
       }
     },
@@ -1399,7 +1406,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {

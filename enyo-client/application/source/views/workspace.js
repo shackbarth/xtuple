@@ -1613,13 +1613,14 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.UnitPicker", name: "quantityUnitPicker",
               attr: "quantityUnit"},
             {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
-            {kind: "XV.MoneyWidget",
-              attr: {localValue: "price"},
+            {kind: "XV.MoneyWidget", attr:
+              {localValue: "price", currency: ""},
               label: "_price".loc(), currencyDisabled: true,
               scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.UnitPicker", name: "priceUnitPicker",
               attr: "priceUnit"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "extendedPrice"},
+            {kind: "XV.MoneyWidget", attr:
+              {localValue: "extendedPrice", currency: ""},
               label: "_extendedPrice".loc(), currencyDisabled: true,
               scale: XT.EXTENDED_PRICE_SCALE},
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
@@ -1658,7 +1659,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     create: function () {
       this.inherited(arguments);
       var effectiveKey = this.getEffectiveKey(),
-        currencyKey = this.getCurrencyKey,
+        currencyKey = this.getCurrencyKey(),
         comments = this.getCommentBox();
 
       // Show/Hide promise date
@@ -1667,8 +1668,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       // Set currency and effective attributes on money widgets
       this.getComponents().forEach(function (ctl) {
         if (ctl.kind === "XV.MoneyWidget") {
-          ctl.setAttr(currencyKey);
-          ctl.setAttr(effectiveKey);
+          ctl.setCurrency(currencyKey);
+          ctl.setEffective(effectiveKey);
         }
       });
 
@@ -2301,7 +2302,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         fit: true, classes: "xv-top-panel", components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
             {kind: "XV.InputWidget", type: "password", attr: "password"},
@@ -2347,6 +2348,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     refreshPrivileges: function (inSender, inEvent) {
       this.$.grantedPrivileges.mapIds(this.$.grantedRoles.getAssignedCollection().models);
       this.$.grantedPrivileges.tryToRender();
+      this.$.grantedExtensions.mapIds(this.$.grantedRoles.getAssignedCollection().models);
+      this.$.grantedExtensions.tryToRender();
     },
 
     /**
@@ -2357,6 +2360,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       if (model.getStatus() & XM.Model.READY) {
         this.$.grantedPrivileges.mapIds(this.getValue().get("grantedUserAccountRoles").models);
         this.$.grantedPrivileges.tryToRender();
+        this.$.grantedExtensions.mapIds(this.getValue().get("grantedUserAccountRoles").models);
+        this.$.grantedExtensions.tryToRender();
       }
     }
   });
@@ -2381,7 +2386,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"}
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
+            {kind: "XV.UserAccountRoleExtensionAssignmentBox", attr: "grantedExtensions", name: "grantedExtensions" }
           ]}
         ]},
         {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",

@@ -2,7 +2,9 @@ select xt.install_js('XM','Sales','xtuple', $$
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xtuple.com/CPAL for the full text of the software license. */
 
-  XM.Sales = {};
+(function () {
+
+  if (!XM.Sales) { XM.Sales = {}; }
 
   XM.Sales.isDispatchable = true;
 
@@ -213,5 +215,7 @@ select xt.install_js('XM','Sales','xtuple', $$
  
     return data.commitMetrics(metrics);
   }
+
+}());
   
 $$ );

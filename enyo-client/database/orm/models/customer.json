@@ -15,6 +15,11 @@
         "read": "ViewCustomerMasters",
         "update": "MaintainCustomerMasters",
         "delete": "MaintainCustomerMasters"
+      },
+      "attribute": {
+        "creditStatus": {
+          "edit": "UpdateCustomerCreditStatus"
+        }
       }
     },
     "properties": [
@@ -494,7 +499,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {

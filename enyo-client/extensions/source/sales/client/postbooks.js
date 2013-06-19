@@ -93,6 +93,7 @@ trailing:true, white:true*/
       "MaintainTerms",
       "MaintainSaleTypes",
       "OverridePrice",
+      "OverrideTax",
       "ShowMarginsOnSalesOrder",
       "ViewFreightClasses",
       "ViewCustomerGroups",
