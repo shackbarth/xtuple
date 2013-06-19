@@ -48,16 +48,6 @@ trailing:true, white:true*/
     configuration = new XM.ConfigurationModel(configurationJson);
     XM.configurations.add(configuration);
 
-    // TODO: move this to the menu ontap
-    var url, ajax = new enyo.Ajax({
-      url: XT.getOrganizationPath() + "/analysis",
-    });
-    ajax.response(function (inSender, inResponse) {
-      console.log(JSON.stringify(inResponse));
-    });
-    // param for the report name
-    ajax.go({reportUrl: "content/saiku-ui/index.html?biplugin=true"});
-
     module = {
       name: "sales",
       label: "_sales".loc(),
@@ -66,15 +56,46 @@ trailing:true, white:true*/
         {name: "prospectList", kind: "XV.ProspectList"},
         {name: "quoteList", kind: "XV.QuoteList"},
         {name: "salesOrderList", kind: "XV.SalesOrderList"},
-        // the url for the iframe will be contructed and set
-        // on menu tap
-        {name: "salesAnalysisPage",
-          label: "_analysis".loc(),
-          tag: "iframe",
-          style: "border: none;",
-          attributes: {src: ""}}
+        {name: "salesAnalysisPage", kind: "analysisFrame"}
       ]
     };
+
+    /**
+      This iFrame is to show the Sales Analysis report from Pentaho.
+      On creation, it uses the analysis route to generate a signed,
+      encoded JWT which it sends to Pentaho to get the report.
+    */
+    enyo.kind({
+      name: "analysisFrame",
+      label: "_analysis".loc(),
+      tag: "iframe",
+      style: "border: none;",
+      attributes: {src: ""},
+      published: {
+        source: ""
+      },
+
+      create: function () {
+        this.inherited(arguments);
+        // generate the web tooken and render
+        // the iFrame
+        var url, ajax = new enyo.Ajax({
+          url: XT.getOrganizationPath() + "/analysis",
+        });
+        ajax.response(function (inSender, inResponse) {
+          console.log(JSON.stringify(inResponse));
+        });
+        // param for the report name
+        ajax.go({reportUrl: "content/saiku-ui/index.html?biplugin=true"});
+        this.sourceChanged();
+      },
+
+      sourceChanged: function () {
+        this.inherited(arguments);
+        this.setAttributes({src: this.source});
+      }
+    });
+
     XT.app.$.postbooks.insertModule(module, 2);
 
     relevantPrivileges = [

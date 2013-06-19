@@ -10,26 +10,31 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     BI Server URL so that it may authenticate the current user.
   */
   exports.analysis = function (req, res) {
-    var url, reportUrl = req.query.reportUrl,
+    var reportUrl = req.query.reportUrl,
+      privKey = "",
       username = req.user.id,
       biServerUrl = X.options.datasource.biServerUrl,
       today = new Date(),
       expires = new Date(today.getTime() + (10 * 60 * 1000)), // 10 minutes from now
+      datasource = req.headers.host,
+      scope = "/auth/toytruck.user-account.read-only",
+      audience = "/oauth/token",
       claimSet = {
-        //"iss": "", // client-identifier
-        //"jti": "" // unique JWT ID
+        //"iss": "", // client-identifier, not needed?
         "prn": username, // username
-        "scope": "",
-        "aud": "",
-        "datasource": "", // rest api url
+        "scope": scope,
+        "aud": audience,
+        "datasource": datasource, // rest api url
         "exp": Math.round(expires.getTime() / 1000), // expiration date in millis
         "iat": Math.round(today.getTime() / 1000)  // created date in millis
       };
+
+
     // TODO: sign and encode this JWT
     claimSet = JSON.stringify(claimSet);
 
-    url = biServerUrl + reportUrl + "&assertion=" + claimSet;
-    res.send(url);
+    // send newly formed BI url back to the client
+    res.send(biServerUrl + reportUrl + "&assertion=" + claimSet);
   };
 
 }());
