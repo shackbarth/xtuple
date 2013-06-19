@@ -42,11 +42,7 @@
               typeof value === 'function' &&
               endsWith(key, 'Workspace')) {
 
-            if (!_.contains(['OpportunityWorkspace'], key)) {
-              // temp
-              return;
-            }
-            // create the list
+            // create the workspace
             try {
               child = master.createComponent({
                 kind: "XV." + key,
@@ -67,17 +63,22 @@
                 var boxRelation = _.find(modelSchema.relations, function (relation) {
                   return relation.key === component.attr;
                 });
-                if (!boxRelation || !boxRelation.reverseRelation.key) {
-                  console.log(key + " " + component.attr + " aren't mapped to an object with a reverse relation");
-                }
                 assert.isDefined(boxRelation, key + " " + component.attr + " isn't mapped to an object");
                 assert.isDefined(boxRelation.reverseRelation.key, key + " " + component.attr + " isn't mapped to an object with a reverse relation");
-                var relatedModel = boxRelation.relatedModel.replace("Relation", "");
+                var relatedModel = boxRelation.relatedModel;
+                // actually we want the editableModel
+                relatedModel = XT.getObjectByName(relatedModel).prototype.editableModel || relatedModel;
+                console.log(relatedModel);
                 var relatedModelSchema = XT.session.schemas[XT.String.prefix(relatedModel)]
                   .attributes[XT.String.suffix(relatedModel)];
+                console.log("find", recordType, "on XV.", key, component.attr, "from", relatedModel);
+                console.log(JSON.stringify(boxRelation));
                 var reverseModel = _.find(relatedModelSchema.relations, function (reverseRelation) {
                   var originalModel = reverseRelation.relatedModel;
-                  return originalModel === recordType || originalModel === recordType + 'Relation';
+                  console.log("against", originalModel);
+                  console.log("or", XT.getObjectByName(originalModel).prototype.editableModel);
+                  return originalModel === recordType ||
+                    XT.getObjectByName(originalModel).prototype.editableModel === recordType;
                 });
                 assert.isDefined(reverseModel, key + " " + component.attr + " isn't mapped to an object with a reverse relation");
               }
