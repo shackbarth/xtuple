@@ -42,7 +42,7 @@
               typeof value === 'function' &&
               endsWith(key, 'Workspace')) {
 
-            if (key === 'CustomerWorkspace' || key === 'EmployeeWorkspace' || key === 'ProspectWorkspace') {
+            if (key === 'EmployeeWorkspace') {
               // temp
               return;
             }
@@ -75,17 +75,16 @@
                 var relatedModel = boxRelation.relatedModel; // the recordType of the model backing the ListRelationsBox
                 // actually we want the editableModel
                 relatedModel = XT.getObjectByName(relatedModel).prototype.editableModel || relatedModel;
-                console.log(relatedModel);
                 var relatedModelSchema = XT.session.schemas[XT.String.prefix(relatedModel)]
                   .attributes[XT.String.suffix(relatedModel)];
-                console.log("find", recordType, "on XV.", key, component.attr, "from", relatedModel);
-                console.log(JSON.stringify(boxRelation));
                 var reverseModel = _.find(relatedModelSchema.relations, function (reverseRelation) {
-                  var originalModel = reverseRelation.relatedModel;
-                  console.log("against", originalModel);
-                  console.log("or", XT.getObjectByName(originalModel).prototype.editableModel);
-                  return originalModel === recordType ||
-                    XT.getObjectByName(originalModel).prototype.editableModel === recordType;
+                  var originalModel = reverseRelation.relatedModel,
+                    editableModel = XT.getObjectByName(originalModel).prototype.editableModel || originalModel,
+                    accountModels = ['XM.Account', 'XM.Customer', 'XM.Prospect'];
+
+                  return recordType === originalModel ||
+                     recordType === editableModel ||
+                     _.contains(accountModels, editableModel) && _.contains(accountModels, recordType);
                 });
                 assert.isDefined(reverseModel, key + " " + component.attr + " isn't mapped to an object with a reverse relation");
               }

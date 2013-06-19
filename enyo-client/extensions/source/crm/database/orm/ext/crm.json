@@ -101,14 +101,6 @@
         }
       },
       {
-        "name": "customerRelations",
-        "toMany": {
-          "type": "CustomerRelation",
-          "column": "cntct_id",
-          "inverse": "billingContact"
-        }
-      },
-      {
         "name": "incidentRelations",
         "toMany": {
           "type": "IncidentRelation",
