@@ -28,6 +28,7 @@ select xt.js_init();
 \i public/tables/cntct.sql
 \i public/tables/coitem.sql
 \i public/tables/crmacct.sql
+\i public/tables/custinfo.sql
 \i public/tables/docass.sql
 \i public/tables/grppriv.sql
 \i public/tables/incdt.sql
