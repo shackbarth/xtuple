@@ -14,7 +14,7 @@
       return s.indexOf(key, s.length - key.length) !== -1;
     };
 
-  describe('Lists', function () {
+  describe('XV', function () {
     this.timeout(45 * 1000);
 
     before(function (done) {
@@ -25,9 +25,9 @@
       zombieAuth.loadApp(appLoaded);
     });
 
-    describe('XV Workspace', function () {
+    describe('ListRelationsBox', function () {
       // XXX This test works best on an app with all the extensions!
-      it('should have its ListRelationBoxes on attributes that point backwards appropriately', function () {
+      it('should have attributes that point backwards appropriately', function () {
         var child,
           collName,
           Coll,
@@ -42,10 +42,10 @@
               typeof value === 'function' &&
               endsWith(key, 'Workspace')) {
 
-            if (key !== 'OpportunityWorkspace') {
+            //if (key !== 'OpportunityWorkspace') {
               // FIXME temp
-              return;
-            }
+              //return;
+            //}
 
             // create the workspace
             try {
@@ -98,8 +98,12 @@
                 // the original model as an attribute
                 //
                 var relatedListName = component.getSearchList();
+                var relatedModelReqAttrs = XT.getObjectByName(editableRelatedModelName).prototype.requiredAttributes;
+                var parentModelIsRequired = _.contains(relatedModelReqAttrs, component.getParentKey());
                 if (!relatedListName) {
-                  console.log(component.kind + " has no searchList, which is maybe on purpose");
+                  assert.isTrue(parentModelIsRequired, "The only reason for " + component.kind +
+                    " to be missing a searchList is if " + component.getParentKey() + " were required on " +
+                    editableRelatedModelName + ", which it is not");
                   /*
                     TODO: verify that the search list has been properly included, or omitted
                   shackbarth 04:23:29 PM
@@ -126,6 +130,10 @@
                   // for now, we just don't worry about the ones that have so search capability
                   return;
                 }
+                // I have doubts about this requirement:
+                //assert.isFalse(parentModelIsRequired, "The only reason for " + component.kind +
+                //  " to have a searchList is if " + component.getParentKey() + " were not required on " +
+                //  editableRelatedModelName + ", but it is required!");
                 var listChild;
                 try {
                   listChild = master.createComponent({
