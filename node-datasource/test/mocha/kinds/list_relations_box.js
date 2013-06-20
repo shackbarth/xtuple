@@ -38,14 +38,12 @@
 
         // look at all the workspaces in XV
         _.each(XV, function (value, key) {
-          if (key.substring(0, 1) === key.toUpperCase().substring(0, 1) &&
-              typeof value === 'function' &&
-              endsWith(key, 'Workspace')) {
+          if (XV.inheritsFrom(value.prototype, "XV.Workspace")) {
 
-            //if (key !== 'OpportunityWorkspace') {
-              // FIXME temp
-              //return;
-            //}
+            if (key === 'SalesOrderBase') {
+              // exclude abstract classes
+              return;
+            }
 
             // create the workspace
             try {
@@ -60,9 +58,12 @@
             recordType = child.getModel(); // the recordType of the model backing the workspace
 
             _.each(child.$, function (component) {
-              if (typeof component.attr === 'string' && endsWith(component.attr, 'Relations')) {
-                // There must be a way to get the superkind name of a kind. We want all instances
-                // of ListRelationsBox
+              if (XV.inheritsFrom(component, 'XV.ListRelationsBox') &&
+                  !XV.inheritsFrom(component, 'XV.DocumentsBox')) {
+                if (!component.canOpen) {
+                  //we're not testing these corner-case objects
+                  return;
+                }
 
                 var modelSchema = XT.session.schemas[XT.String.prefix(recordType)].attributes[XT.String.suffix(recordType)];
                 var boxRelation = _.find(modelSchema.relations, function (relation) {
