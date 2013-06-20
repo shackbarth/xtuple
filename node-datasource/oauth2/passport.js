@@ -73,8 +73,8 @@ passport.use(new LocalStrategy(
 
         XT.dataSource.query(query, options, function (error, res) {
           if (error) {
-              // authentication failure
-              return done(null, false);
+            // authentication failure
+            return done(null, false);
 
           } else if (res && res.rows && res.rows.length > 0) {
               // the data comes back in an awkward res.rows[0].request form,
@@ -85,13 +85,13 @@ passport.use(new LocalStrategy(
 
                   if ( data == true)
                   {// authentication success
-                      model = new Backbone.Model();
-                      model.set({id: username, organization: database, singleTenant: true});
+                    model = new Backbone.Model();
+                    model.set({id: username, organization: database, singleTenant: true});
                   }
                   return done(null, model);
 
               } catch (error) {
-                  return done(null, false);
+                return done(null, false);
               }
           }
           return done(null, false);
