@@ -6,6 +6,7 @@ var _ = require('underscore'),
   async = require('async'),
   exec = require('child_process').exec,
   fs = require('fs'),
+  path = require('path'),
   pg = require('pg'),
   winston = require('winston');
 
@@ -34,28 +35,30 @@ var _ = require('underscore'),
         database: 'dev2' }
   */
   exports.buildDatabase = function (specs, creds) {
+    //winston.info("Building with specs", JSON.stringify(specs));
     console.log(specs);
-    console.log(creds);
-    return;
     _.each(specs, function (extensions, databaseName) {
       _.each(extensions, function (extension) {
-        var manifestFilename = extension + "/database/source/manifest.js",
+        var manifestFilename = path.join(extension, "database/source/manifest.js"),
           manifestString,
           manifest;
 
         if (!fs.existsSync(manifestFilename)) {
           winston.error("Cannot find manifest", manifestFilename);
-          process.exit(1); // TODO: winston
+          process.exit(1);
         }
         manifestString = fs.readFileSync(manifestFilename, "utf8");
         try {
           manifest = JSON.parse(manifestString);
         } catch (error) {
           winston.error("Manifest is not valid JSON", manifestFilename);
-          process.exit(1); // TODO: winston
-
+          process.exit(1);
         }
         console.log(manifest);
+
+
+
+
       });
     });
 

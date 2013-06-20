@@ -7,6 +7,7 @@ var _ = require('underscore'),
   buildDatabase = require("./build_database_engine").buildDatabase,
   exec = require('child_process').exec,
   fs = require('fs'),
+  path = require('path'),
   pg = require('pg'),
   winston = require('winston');
 
@@ -30,18 +31,18 @@ var _ = require('underscore'),
       var paths = _.map(res.rows, function (row) {
         var location = row.ext_location,
           name = row.ext_name,
-          path;
+          extPath;
 
         if (location === '/core-extensions') {
-          path = __dirname + "/../enyo-client/extensions/source/" + name;
+          extPath = path.join(__dirname, "/../../enyo-client/extensions/source/", name);
         } else if (location === '/xtuple-extensions') {
-          path = __dirname + "/../../xtuple-extensions/source/" + name;
+          extPath = path.join(__dirname, "../../../xtuple-extensions/source", name);
         } else if (location === '/private-extensions') {
-          path = __dirname + "/../../private-extensions/source/" + name;
+          extPath = path.join(__dirname, "../../../private-extensions/source", name);
         }
-        return path;
+        return extPath;
       }),
-        corePath = __dirname + "/../enyo-client",
+        corePath = path.join(__dirname, "../../enyo-client"),
         returnObj = {};
 
       client.end();
@@ -56,7 +57,7 @@ var _ = require('underscore'),
   exports.build = function (database, extension) {
     var buildSpecs = {},
       databases = [],
-      config = require(__dirname + "/../../node-datasource/config.js"),
+      config = require(path.join(__dirname, "../../node-datasource/config.js")),
       //
       // The arg parser returns the spec as an array of objects with one key each.
       // This is awkward. We want the specs to be an object whose keys are the
@@ -87,6 +88,8 @@ var _ = require('underscore'),
     }
 
     if (extension) {
+      // extensions are assumed to be specified relative to the cwd
+      extension = path.join(process.cwd(), extension);
       buildSpecs = _.map(databases, function (database) {
         // the user has specified an extension to build
         var returnObj = {};
