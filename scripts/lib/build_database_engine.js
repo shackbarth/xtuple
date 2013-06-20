@@ -60,6 +60,10 @@ var _ = require('underscore'),
           manifestString,
           manifest;
 
+
+        //
+        // Read the manifest file
+        //
         if (!fs.existsSync(manifestFilename)) {
           winston.error("Cannot find manifest", manifestFilename);
           errorInDb = true;
@@ -75,6 +79,9 @@ var _ = require('underscore'),
         }
 
 
+        //
+        // Install all the scripts in the manifest file, in series.
+        //
         var installScript = function (filename, callback) {
           var scriptContents = fs.readFileSync(path.join(dbSourceRoot, filename), "utf8");
 
@@ -82,7 +89,6 @@ var _ = require('underscore'),
             callback(err, res);
           });
         };
-
         async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
           if (err) {
             winston.error("Error installing scripts", err);
@@ -94,7 +100,6 @@ var _ = require('underscore'),
           // TODO: commit
           winston.info(databaseName, extension, "scripts installed successfully");
           pgClient.end();
-
         });
 
       });
