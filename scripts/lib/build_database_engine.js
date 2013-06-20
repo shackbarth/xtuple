@@ -56,12 +56,10 @@ var _ = require('underscore'),
       // Start a connection to the database
       //
       var createConnection = function (createCallback) {
-        console.log("create connection");
         creds.database = databaseName;
         pgClient = new pg.Client(creds);
         pgClient.connect();
         pgClient.query("BEGIN;", function (err, res) {
-          console.log("begin", arguments);
           createCallback(err, res);
         });
       };
@@ -71,13 +69,16 @@ var _ = require('underscore'),
       // Install all the extensions of the database, in series.
       //
       var installExtension = function (extension, extensionCallback) {
-        // I believe async makes the errorInDb convention unnecessary
+        // TODO: I believe async makes the errorInDb convention unnecessary
         if (errorInDb) {
           winston.error("Not installing extension", extension, "due to earlier error in db", databaseName);
           return;
         }
         winston.log("Installing extension", databaseName, extension);
-        var dbSourceRoot = path.join(extension, "database/source"),
+        var isLibOrm = extension.indexOf("lib/orm") >= 0, // TODO: do better
+          dbSourceRoot = isLibOrm ?
+            path.join(extension, "source") :
+            path.join(extension, "database/source"),
           manifestFilename = path.join(dbSourceRoot, "manifest.js"),
           manifestString,
           manifest;
@@ -88,7 +89,6 @@ var _ = require('underscore'),
         //
         if (!fs.existsSync(manifestFilename)) {
           errorInDb = true;
-          console.log("Cannot find manifest " + manifestFilename);
           winston.log("Cannot find manifest " + manifestFilename);
           extensionCallback("Cannot find manifest " + manifestFilename);
           return;
@@ -98,12 +98,10 @@ var _ = require('underscore'),
           manifest = JSON.parse(manifestString);
         } catch (error) {
           errorInDb = true;
-          console.log("Manifest is not valid JSON" + manifestFilename);
           winston.log("Manifest is not valid JSON" + manifestFilename);
           extensionCallback("Manifest is not valid JSON" + manifestFilename);
           return;
         }
-
 
         //
         // Step 2 in installing extension scripts
@@ -112,7 +110,6 @@ var _ = require('underscore'),
         var installScript = function (filename, scriptCallback) {
           var scriptContents = fs.readFileSync(path.join(dbSourceRoot, filename), "utf8");
 
-          console.log("install");
           pgClient.query(scriptContents, function (err, res) {
             scriptCallback(err, res);
           });
@@ -130,32 +127,32 @@ var _ = require('underscore'),
       //
       async.series([
         createConnection,
-        function (callback) {
-          console.log("installing all extensions");
+        function () { // don't need to use the callback parameter here
           async.mapSeries(extensions, installExtension, function (err, res) {
+            //
+            // All of the extensions have just been installed. Now is the time
+            // to commit or rollback, depending on the success.
+            //
             if (err) {
               pgClient.query("ROLLBACK;", function (rollbackErr, rollbackRes) {
-                console.log("rollback", arguments);
                 // TODO: deal with a rollbackErr
                 pgClient.end();
                 errorInDb = true;
+                winston.log("rollback on error", err);
 
-                callback(err);
+                databaseCallback(err);
               });
             } else {
               pgClient.query("COMMIT;", function (commitErr, commitRes) {
-                console.log("commit", arguments);
                 pgClient.end();
                 // TODO: deal with a commitErr
-                winston.log(res);
-                callback(null, res);
+                winston.log("commit on success", res);
+                databaseCallback(err, res);
               });
             }
           });
         }
-      ], function (err, res) {
-        databaseCallback(err, res);
-      });
+      ]);
       //
       // End extension installation code
       //

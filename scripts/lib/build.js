@@ -42,12 +42,12 @@ var _ = require('underscore'),
         }
         return extPath;
       }),
-        corePath = path.join(__dirname, "../../enyo-client"),
         returnObj;
 
       client.end();
 
-      paths.unshift(corePath);
+      paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
+      paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
       returnObj = {
         extensions: paths,
         database: database
