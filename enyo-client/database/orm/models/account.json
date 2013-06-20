@@ -24,6 +24,11 @@
         "properties":[
           "owner.username"
         ]
+      },
+      "attribute": {
+        "owner": {
+          "edit": "EditOwner"
+        }
       }
     },
     "properties":[
@@ -238,11 +243,7 @@
         }
       }
     ],
-    "isSystem":true,
-    "sourceCode":"CRMA",
-    "extensions":[
-
-    ]
+    "isSystem":true
   },
   {
     "context":"xtuple",
@@ -610,7 +611,8 @@
         "name":"isPublic",
         "attr":{
           "type":"Boolean",
-          "column":"comment_public"
+          "column":"comment_public",
+          "value": true
         }
       },
       {

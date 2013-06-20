@@ -214,7 +214,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -325,6 +326,11 @@
         "read": true,
         "update": false,
         "delete": false
+      },
+      "attribute": {
+        "averageCost": {
+          "view": "ViewCosts MaintainCosts"
+        }
       }
     },
     "properties": [

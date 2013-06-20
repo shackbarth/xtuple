@@ -1,4 +1,4 @@
-/*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+/*jshint node:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XV:true, XM:true, Backbone:true, window:true, enyo:true, _:true */
 
@@ -365,9 +365,10 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     controlValueChanged: function (inSender, inEvent) {
       var value = inEvent.value,
-        disabledCache = this.$.sitePicker.getDisabled(),
         sitePicker = this.$.sitePicker,
+        disabledCache = sitePicker.getDisabled(),
         isNull = _.isNull(value),
+        that = this,
         itemSite,
         options = {},
         site,
@@ -387,7 +388,7 @@ regexp:true, undef:true, trailing:true, white:true */
           options.query = { parameters: [{attribute: "item", value: item}]};
           options.success = function () {
             sitePicker.buildList();
-            sitePicker.setDisabled(disabledCache);
+            sitePicker.setDisabled(disabledCache || that.getDisabled());
           };
           sitePicker.itemSites.fetch(options);
         }
@@ -456,7 +457,8 @@ regexp:true, undef:true, trailing:true, white:true */
       Pass through attributes intended for onyx input inside.
       XXX is this necessary given disabledChanged function above?
     */
-    setDisabled: function (isDisabled) {
+    disabledChanged: function () {
+      var isDisabled = this.getDisabled();
       this.$.privateItemSiteWidget.setDisabled(isDisabled);
       this.$.sitePicker.setDisabled(isDisabled);
     },

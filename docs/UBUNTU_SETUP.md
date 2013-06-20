@@ -1,7 +1,7 @@
 Setting up an Ubuntu virtual machine
 ====================================
 
-These are instructions for creating a baseline Ubuntu machine with software loaded that is helpful for doing xTuple mobile-web development work directly on the machine. It assumes you are starting with no experience with Linux or github. If you plan on using the Ubuntu desktop to do file editing and other work, it is recommended you allocate at least 2GB of RAM (the more the better). If you only plan on using it as a server, you can get away with as little as 1GB.
+These are instructions for creating a baseline 64 bit Ubuntu machine with software loaded that is helpful for doing xTuple mobile-web development work directly on the machine. It assumes you are starting with no experience with Linux or github. If you plan on using the Ubuntu desktop to do file editing and other work, it is recommended you allocate at least 2GB of RAM (the more the better). If you only plan on using it as a server, you can get away with as little as 1GB.
 
 ##Download and install VirtualBox.
 
@@ -16,12 +16,12 @@ If you already run Linux on your workstation, your distribution may have Virtual
 
  - Go to www.ubuntu.com/download
  - Click on Ubuntu Desktop
- - For "Choose your flavour", select 64 bit unless your workstation has a 32 bit CPU
+ - For "Choose your flavour", select 64 bit
  - Click on Get Ubuntu 12.04 LTS
  - If the website asks for a donation, decide whether to contribute or not now, take me to the download
  - Remember where the download process puts the Ubuntu .iso file
 
-##Installl Ubuntu
+##Install Ubuntu
 
  Start VirtualBox to create the new VM. You'll need to mount the Ubuntu .iso file as the boot device when the VM first starts up. Along the way, VirtualBox will ask you to set some basic parameters for the VM. Make sure to allocate enough disk space, as this is harder to adjust later than some of the other features of the VM. Take the following steps after VirtualBox starts:
 
@@ -29,7 +29,7 @@ If you already run Linux on your workstation, your distribution may have Virtual
  - Go through the Create Virtual Machine wizard and use the following settings:
   * Name: Pick a name that will help you distinguish this VM from others like it
   * Type: Linux
-  * Version: Ubuntu
+  * Version: Ubuntu 64 bit
   * Memory: 2064 MB (if your workstation can't spare that much, better consider buying more memory)
  - Create a virtual hard drive
   * Select the VDI file type and make it Dynamically allocated
@@ -45,7 +45,9 @@ If you already run Linux on your workstation, your distribution may have Virtual
 
 ##Get xTuple code base
 
-First install git from the terminal:
+You'll want to set up quick access to the terminal. Click on the Dash Home icon in the upper left. Search for "Terminal" and drag the terminal icon to the left launch bar. Click it to open the terminal.
+
+Now install git from the terminal:
 
     sudo git apt-install git
 
@@ -68,13 +70,17 @@ The cat command shows the public key that was just generated. Copy this text, st
 
 In your web browser, navigate to your home page on GitHub. Click on Edit Your Profile. Select SSH Keys from the list on the left. Click Add SSH Key. Give this SSH key a title, such as "xTuple Mobile Dev VM", then paste the public key into the Key field. Finally click the Add key button. GitHub will verify your password just to make sure it's you at the keyboard.
 
-You can run the install script as described on the main project [README](https://github.com/xtuple/xtuple/blob/master/README.md).
+Now clone the code from your fork into a local directory:
+
+    mkdir src
+    cd src
+    git clone git@github.com:{yourusername}/xtuple.git
+
+You can now run the install script as described on the main project [README](https://github.com/xtuple/xtuple/blob/master/README.md).
 
 #Optimizing your virtual machine
 
 Below are _optional_ instructions to optimize the VM for actually doing development. Yes, we could have made a VM that has all this for you, but this is much more fun. Plus you can pick and choose what you want and you'll know what you have when you're done.
-
-First you'll want to set up quick access to the terminal. Click on the Dash Home icon in the upper left. Search for "Terminal" and drag the terminal icon to the left launch bar. Click it to open the terminal.
 
 ##Update Ubuntu
 
@@ -85,9 +91,8 @@ From the terminal:
 	sudo apt-get update
 	sudo apt-get upgrade
 	sudo apt-get install dkms
-	sudo apt-get install build-essentials
 
-From the VirtualBox menu system, select Devices > Install Guest Additions. Inside the Ubuntu VM, click Run in the dialog box that appears. When the process is done, eject the VirtualBox Additions disk image.
+From the VirtualBox menu system, select Devices > Install Guest Additions. Inside the Ubuntu VM, click Run in the dialog box that appears. When the process is done, eject the VirtualBox Additions disk image and reboot the machine.
 
 ##User Settings
 
@@ -107,11 +112,11 @@ Chrome is our preferred web browser because it has excellent built-in debugging 
 
 https://www.google.com/intl/en/chrome
 
-Follow the website instructions for downloading and installing Chrome. From Dash Home search for and drag the Chrome icon to your launch bar. 
+Follow the website instructions for downloading and installing Chrome. From Dash Home search for and drag the Chrome icon to your launch bar.
 
 ##Sublime with JSHint installed
 
-This is a nice text editor for coding. It's free, but also also badgerware that will prompt you to pay a nominal purchase fee that is worthwhile for the feature set it offers. What is most important here is installing the [JSHint](http://www.jshint.com/about/) add-on package which is an enormous help for debugging JavaScript and conforming to xTuple style guidelines. You can get JSHint for a number of other popular editors as well including VIM for those of you who are command line junkies. Follow these instructions to get Sublime set up with a shortcut on the desktop and JS Hint installed.
+This is a nice text editor for coding. It's free, but also badgerware that will prompt you to pay a nominal purchase fee that is worthwhile for the feature set it offers. What is most important here is installing the [JSHint](http://www.jshint.com/about/) add-on package which is an enormous help for debugging JavaScript and conforming to xTuple style guidelines. You can get JSHint for a number of other popular editors as well including VIM for those of you who are command line junkies. Follow these instructions to get Sublime set up with a shortcut on the desktop and JS Hint installed.
 
 Go to the [Sublime website](http://www.sublimetext.com/) and download the application. From the terminal where Sublime is downloaded we'll extract the file and get it setup to launch from the command line:
 
@@ -123,6 +128,8 @@ Go to the [Sublime website](http://www.sublimetext.com/) and download the applic
 You'll probably also want to be able to launch it from the desktop. The following command will launch sublime with a new desktop configuration file:
 
     sudo sublime /usr/share/applications/sublime.desktop
+
+This will start sublime with a new desktop configuration file. Paste the contents below in the file and save.
 
     [Desktop Entry]
     Version=1.0
@@ -143,11 +150,11 @@ You'll probably also want to be able to launch it from the desktop. The followin
     Exec=sublime -n
     TargetEnvironment=Unity
 
-Save the file, right click on the Sublime icon in the launcher and select "Lock to Launcher."
+Right click on the Sublime icon in the launcher and select "Lock to Launcher."
 
 If you want to make Sublime the default editor for your files:
 
-  sudo sublime /usr/share/applications/defaults.list
+    sudo sublime /usr/share/applications/defaults.list
 
 Find and replace all occurences of *gedit.desktop* with *sublime.desktop*.
 
@@ -166,12 +173,46 @@ Next, install the JSHint for node from the Terminal:
 
     npm install -g jshint
 
-Install the packgae from Sublime:
+Install the package from Sublime:
 
   * `control`-`shift`-`p`
   * type `install p`, select `Package Control: Install Package`
   * type `jshint`, select `JSHint`
 
+###Other Helpful Sublime Packages
 
+* AllAutocomplete - Allows autocompletion across all open files. Default Sublime autocomplete is only within the current file
 
+* TrailingSpaces - Strips annoying trailing whitespace from files
+
+* Git - Git blame/branch/diff support
+
+Follow the same steps as installing the JSHint package:
+
+  * `control`-`shift`-`p`
+  * type `install p`, select `Package Control: Install Package`
+  * type the name of the package and select from the list
+
+## Qt Client
+
+If you are interested in building xTuple's [Qt](http://qt-project.org) C++ based desktop client you'll need to install the Qt development tools:
+
+    sudo apt-get install libxtst-dev qt4-qmake libqt4-sql-psql libqt4-sql-odbc
+
+Fork the xTuple repository [qt-client](https://github.com/xtuple/qt-client). Next clone and build the application:
+
+    cd /home/xtuple/src
+    git clone git@github.com:{yourname}/qt-client
+    cd qt-client
+    git submodule update --init
+    cd openrpt
+    qmake
+    make
+    cd ..
+    qmake
+    make
+
+Now you can run the Qt client.
+
+    ./bin/xtuple
 

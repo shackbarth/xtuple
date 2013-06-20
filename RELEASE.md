@@ -1,4 +1,20 @@
-1.3.5 (2013/05)
+1.3.7 (2013/06/11)
+==================
+
+Features and bugs
+----------------
+* Fix problem where user names that are email addresses could not log in.
+
+1.3.6 (2013/06/06)
+==================
+
+Features and bugs
+----------------
+* Fix critical user login problem
+* issue #[20505](http://www.xtuple.org/xtincident/view/bugs/20505)
+  Remove print menus and buttons until Pentaho service available on cloud deployment.
+
+1.3.5 (2013/05/31)
 ===============
 
 Critical deployment changes
@@ -38,15 +54,154 @@ Critical deployment changes
 Features and bugs
 ----------------
 
-- Implemented
-  issue #[20295](http://www.xtuple.org/xtincident/view/bugs/20295)
-  move all ports into config.js, added redirectPort and maintenancePort to sample_config.js
-- Fixed
-  issue #[20266](http://www.xtuple.org/xtincident/view/bugs/20266)
-  SQL Injection exploit in XT.Data
 - Implemented parts of
   issue #[20264](http://www.xtuple.org/xtincident/view/bugs/20264)
   REST - Refactor error handling in the database layer
+- Fixed
+  issue #[20448](http://www.xtuple.org/xtincident/view/bugs/20448)
+  _Entering wrong password on mobile client does not return error_
+- Fixed
+  issue #[20441](http://www.xtuple.org/xtincident/view/bugs/20441)
+  _Redirect Port other than 80 does not work_
+- Fixed
+  issue #[20347](http://www.xtuple.org/xtincident/view/bugs/20347)
+  _Default country not working on CRM configuration_
+- Fixed
+  issue #[20319](http://www.xtuple.org/xtincident/view/bugs/20319)
+  _Unable to select first menu after selecting a different menu option_
+- Fixed
+  issue #[20310](http://www.xtuple.org/xtincident/view/bugs/20310)
+  _Next number is a formatted number in sales config_
+- Fixed
+  issue #[20307](http://www.xtuple.org/xtincident/view/bugs/20307)
+  _Can't attach multiple customers to group_
+- Fixed
+  issue #[20297](http://www.xtuple.org/xtincident/view/bugs/20297)
+  _JSON-Patch needs to point to http, not git_
+- Implemented
+  issue #[20295](http://www.xtuple.org/xtincident/view/bugs/20295)
+  _move all ports into config.js_
+- Fixed
+  issue #[20270](http://www.xtuple.org/xtincident/view/bugs/20270)
+  _*Omnibus :Description label is displayed incorrectly_
+- Fixed
+  issue #[20266](http://www.xtuple.org/xtincident/view/bugs/20266)
+  _SQL Injection exploit in XT.Data_
+- Implemented
+  issue #[20254](http://www.xtuple.org/xtincident/view/bugs/20254)
+  _Integrate web-mobile user management into the application database_
+- Fixed
+  issue #[20240](http://www.xtuple.org/xtincident/view/bugs/20240)
+  _Updating ORM uses Username instead of specified -u user_
+- Implemented
+  issue #[20212](http://www.xtuple.org/xtincident/view/bugs/20212)
+  _Build out time and expense portion of "PPM"_
+- Fixed
+  issue #[20208](http://www.xtuple.org/xtincident/view/bugs/20208)
+  _User account assignment box is broken_
+- Fixed
+  issue #[20199](http://www.xtuple.org/xtincident/view/bugs/20199)
+  _Unable to select line item for a quote_
+- Fixed
+  issue #[20180](http://www.xtuple.org/xtincident/view/bugs/20180)
+  _*It is not possible to filter the Customers screen using Advanced Search window_
+- Fixed
+  issue #[20177](http://www.xtuple.org/xtincident/view/bugs/20177)
+  _* It is not possible to assign 'Tax Authority' role to a CRM Account_
+- Fixed
+  issue #[20162](http://www.xtuple.org/xtincident/view/bugs/20162)
+  _*Text box is displayed irrelevantly for the Currency field in the Tax Rate screen_
+- Fixed
+  issue #[20157](http://www.xtuple.org/xtincident/view/bugs/20157)
+  _Incident relations not showing_
+- Fixed
+  issue #[20078](http://www.xtuple.org/xtincident/view/bugs/20078)
+  _Priv Error when trying to add a custom command_
+- Implemented
+  issue #[20052](http://www.xtuple.org/xtincident/view/bugs/20052)
+  _Tax rate ORM, model, and views need to be added_
+- Implemented
+  issue #[20041](http://www.xtuple.org/xtincident/view/bugs/20041)
+  _build extensions dynamically through node_
+- Implemented
+  issue #[20040](http://www.xtuple.org/xtincident/view/bugs/20040)
+  _Add support for Sales Orders_
+- Fixed
+  issue #[20026](http://www.xtuple.org/xtincident/view/bugs/20026)
+  _*Irrelevant behavior is observed on selecting to assign Tax Authority/Sales Rep role to a CRM account_
+- Fixed
+  issue #[20024](http://www.xtuple.org/xtincident/view/bugs/20024)
+  _*Omnibus : Records data  grayed out on editing and refreshing to save the changes made_
+- Fixed
+  issue #[20011](http://www.xtuple.org/xtincident/view/bugs/20011)
+  _*Chrome : Omnibus :Irrelavant dates are displayed on selecting to enter Date starting with special character_
+- Fixed
+  issue #[19976](http://www.xtuple.org/xtincident/view/bugs/19976)
+  _Quote for prospect requires ship-to_
+- Fixed
+  issue #[19970](http://www.xtuple.org/xtincident/view/bugs/19970)
+  _Cannot open an Opportunity from a To Do_
+- Fixed
+  issue #[19932](http://www.xtuple.org/xtincident/view/bugs/19932)
+  _Characteristics not completely working on quote_
+- Fixed
+  issue #[19889](http://www.xtuple.org/xtincident/view/bugs/19889)
+  _*Omnibus: Selecting to enter a number with more than 10 digits in 'Order' field shows irrelevant behavior_
+- Fixed
+  issue #[19888](http://www.xtuple.org/xtincident/view/bugs/19888)
+  _Unable to enter a number with more than 12 digits in the 'Expenses' section under the 'Project Tasks' widget of a Project screen_
+- Fixed
+  issue #[19871](http://www.xtuple.org/xtincident/view/bugs/19871)
+  _*Tab out from an Items 'Extended Description' field displays an irrelevant dialog_
+- Fixed
+  issue #[19844](http://www.xtuple.org/xtincident/view/bugs/19844)
+  _Clicking in Blank Space causes error_
+- Fixed
+  issue #[19833](http://www.xtuple.org/xtincident/view/bugs/19833)
+  _New privileges installed by packages do not appear_
+- Fixed
+  issue #[19830](http://www.xtuple.org/xtincident/view/bugs/19830)
+  _The advanced search box is wider than the panel_
+- Implemented
+  issue #[19795](http://www.xtuple.org/xtincident/view/bugs/19795)
+  _Numbers on number widgets should be right justified_
+- Fixed
+  issue #[19677](http://www.xtuple.org/xtincident/view/bugs/19677)
+  _*It is possible to enter 'End Date'  prior to 'Start Date' for a Tax Registration Number under 'Tax Registration Numbers' widget_
+- Fixed
+  issue #[19676](http://www.xtuple.org/xtincident/view/bugs/19676)
+  _* Omnibus: Discarding the changes made in a Project Task shows unexpected behaviour_
+- Fixed
+  issue #[19658](http://www.xtuple.org/xtincident/view/bugs/19658)
+  _* Omnibus :'To Do' associated to the 'Customer' is displayed as locked on selecting to open_
+- Fixed
+  issue #[19632](http://www.xtuple.org/xtincident/view/bugs/19632)
+  _*Unable to attach a new file to a record_
+- Fixed
+  issue #[19616](http://www.xtuple.org/xtincident/view/bugs/19616)
+  _*Back button is not working on selecting to discard the changes made in a CRM Account's Role_
+- Fixed
+  issue #[19599](http://www.xtuple.org/xtincident/view/bugs/19599)
+  _Maxhammer Mobile Users created with improper SUPERUSER roles and overview of proper db creation process._
+- Fixed
+  issue #[19542](http://www.xtuple.org/xtincident/view/bugs/19542)
+  _Shipping charges prevent customer edit_
+- Fixed
+  issue #[19471](http://www.xtuple.org/xtincident/view/bugs/19471)
+  _Unable to create custom commands in dogfood_
+- Fixed
+  issue #[19045](http://www.xtuple.org/xtincident/view/bugs/19045)
+  _ Omnibus : Database error is displayed on selecting to duplicate existing records_
+- Fixed
+  issue #[19033](http://www.xtuple.org/xtincident/view/bugs/19033)
+  _Irrelavant behaviour is observed in Project task screen_
+- Fixed
+  issue #[18958](http://www.xtuple.org/xtincident/view/bugs/18958)
+  _Errors preventing creation of new item_
+- Implemented
+  issue #[18757](http://www.xtuple.org/xtincident/view/bugs/18757)
+  _REST - Modify the XT.Data commit code to enforce the new requiredAttributes driven by db NOT NULL and ORM override_
+
 
 1.3.4 (2013/05/06)
 ===============

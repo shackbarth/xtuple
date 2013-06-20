@@ -10,13 +10,13 @@ select xt.install_js('XT','Data','xtuple', $$
 
   XT.Data = {
 
-    ARRAY_TYPE: "A",
-    COMPOSITE_TYPE: "C",
-    DATE_TYPE: "D",
-    STRING_TYPE: "S",
+    ARRAY_TYPE: 'A',
+    COMPOSITE_TYPE: 'C',
+    DATE_TYPE: 'D',
+    STRING_TYPE: 'S',
 
     CREATED_STATE: 'create',
-    READ_STATE: "read",
+    READ_STATE: 'read',
     UPDATED_STATE: 'update',
     DELETED_STATE: 'delete',
 
@@ -589,7 +589,10 @@ select xt.install_js('XT','Data','xtuple', $$
         XT.debug('createRecord sql =', sql.statement);
         XT.debug('createRecord values =', sql.values);
       }
-      plv8.execute(sql.statement, sql.values);
+
+      if (sql.statement) {
+	plv8.execute(sql.statement, sql.values);
+      }
 
       /* Handle extensions on other tables. */
       for (var i = 0; i < orm.extensions.length; i++) {
@@ -601,7 +604,10 @@ select xt.install_js('XT','Data','xtuple', $$
             XT.debug('createRecord sql =', sql.statement);
             XT.debug('createRecord values =', sql.values);
           }
-          plv8.execute(sql.statement, sql.values);
+
+          if (sql.statement) {
+	    plv8.execute(sql.statement, sql.values);
+	  } 
         }
       }
 
@@ -643,7 +649,9 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneQuery,
         toOneSql,
         type,
-        val;
+        val,
+        isValidSql = params && params.statement ? true : false,
+        canEdit;
 
       params = params || {
         table: "",
@@ -682,6 +690,7 @@ select xt.install_js('XT','Data','xtuple', $$
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
         prop = ormp.name;
+
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
@@ -689,26 +698,32 @@ select xt.install_js('XT','Data','xtuple', $$
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
+        canEdit = orm.privileges &&
+                  orm.privileges.attribute &&
+                  orm.privileges.attribute[prop] &&
+                  orm.privileges.attribute[prop].edit ?
+                  this.checkPrivilege(orm.privileges.attribute[prop].edit) : true;
+
         /* Handle fixed values. */
         if (attr.value !== undefined) {
           params.columns.push("%" + count + "$I");
           params.expressions.push('$' + count);
           params.values.push(attr.value);
           params.identifiers.push(attr.column);
+          isValidSql = true;
           count++;
 
         /* Handle passed values. */
-        } else if (val !== undefined && val !== null && !ormp.toMany) {
+        } else if (canEdit && val !== undefined && val !== null && !ormp.toMany) {
           if (attr.isEncrypted) {
             if (encryptionKey) {
-
               encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
               encryptSql = XT.format(encryptQuery, [record[prop], encryptionKey, 'bf']);
               val = "(" + encryptSql + ")";
-
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("$" + count);
+              isValidSql = true;
               count++;
             } else {
               throw new Error("No encryption key provided.");
@@ -731,7 +746,6 @@ select xt.install_js('XT','Data','xtuple', $$
                     nkey
                   ]);
               }
-
               exp = "(" + toOneSql + ")";
               params.expressions.push(exp);
             } else {
@@ -741,20 +755,26 @@ select xt.install_js('XT','Data','xtuple', $$
             params.columns.push("%" + count + "$I");
             params.values.push(val);
             params.identifiers.push(attr.column);
+            isValidSql = true;
             count++;
           }
         /* Handle null value if applicable. */
-        } else if (val === undefined || val === null) {
+        } else if (canEdit && val === undefined || val === null) {
           if (attr.nullValue) {
             params.columns.push("%" + count + "$I");
-            params.values.push(ormp.nullValue);
+            params.values.push(attr.nullValue);
             params.identifiers.push(attr.column);
             params.expressions.push('$' + count);
+            isValidSql = true;
             count++;
           } else if (attr.required) {
             plv8.elog(ERROR, "Attribute " + ormp.name + " is required.");
           }
         }
+      }
+
+      if (!isValidSql) {
+        return false;
       }
 
       /* Build the insert statement */
@@ -811,7 +831,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* Test for optimistic lock. */
       if (etag && options.etag !== etag) {
-// TODO - Improve error handling.
+      // TODO - Improve error handling.
         plv8.elog(ERROR, "The version being updated is not current.");
       }
 
@@ -819,7 +839,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (orm.lockable) {
         lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
-// TODO - Improve error handling.
+          // TODO - Improve error handling.
           plv8.elog(ERROR, "Can not obtain a lock on the record.");
         }
       }
@@ -876,7 +896,10 @@ select xt.install_js('XT','Data','xtuple', $$
             XT.debug('updateRecord sql =', sql.statement);
             XT.debug('updateRecord values =', sql.values);
           }
-          plv8.execute(sql.statement, sql.values);
+
+          if (sql.statement) {
+	          plv8.execute(sql.statement, sql.values);
+	        }
         }
       }
 
@@ -922,7 +945,9 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneQuery,
         toOneSql,
         type,
-        val;
+        val,
+        isValidSql = false,
+        canEdit;
 
       params = params || {
         table: "",
@@ -952,9 +977,15 @@ select xt.install_js('XT','Data','xtuple', $$
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false;
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
-          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
+          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop],
+        canEdit = orm.privileges &&
+                  orm.privileges.attribute &&
+                  orm.privileges.attribute[prop] &&
+                  orm.privileges.attribute[prop].edit ?
+                  this.checkPrivilege(orm.privileges.attribute[prop].edit) : true;
+          
+        if (canEdit && val !== undefined && !ormp.toMany) {
 
-        if (val !== undefined && !ormp.toMany) {
           /* Handle encryption if applicable. */
           if (attr.isEncrypted) {
             if (encryptionKey) {
@@ -965,9 +996,10 @@ select xt.install_js('XT','Data','xtuple', $$
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("%" + count + "$I = $" + count);
+              isValidSql = true;
               count++;
             } else {
-// TODO - Improve error handling.
+	            // TODO - Improve error handling.
               throw new Error("No encryption key provided.");
             }
           } else if (ormp.name !== pkey) {
@@ -1003,8 +1035,8 @@ select xt.install_js('XT','Data','xtuple', $$
               params.values.push(val);
               params.expressions.push("%" + count + "$I = $" + count);
             }
-
             params.identifiers.push(attr.column);
+            isValidSql = true;
             count++;
           }
         }
@@ -1013,6 +1045,9 @@ select xt.install_js('XT','Data','xtuple', $$
       /* Build the update statement */
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
+
+      // do not send an invalid sql statement
+      if (!isValidSql) { return params; }
 
       if (params.table.indexOf(".") > 0) {
         namespace = params.table.beforeDot();
@@ -1039,7 +1074,8 @@ select xt.install_js('XT','Data','xtuple', $$
      * @param {String} [options.nameSpace] Namespace. Required.
      * @param {String} [options.type] Type. Required.
      * @param {Object} [options.data] The data payload to be processed. Required.
-     * @param {Number} [options.etag] Record id version for optimistic locking.
+     * @param {Number} [options.etag] Optional record id version for optimistic locking.
+     *  If set and version does not match, delete will fail.
      * @param {Number} [options.lock] Lock information for pessemistic locking.
      */
     deleteRecord: function (options) {
@@ -1064,39 +1100,32 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* Set variables or return false with message. */
       if (!orm) {
-// TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
       pkey = XT.Orm.primaryKey(orm);
       nkey = XT.Orm.naturalKey(orm);
       lockTable = orm.lockTable || orm.table;
       if (!pkey || !nkey) {
-// TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
       id = nkey ? this.getId(orm, data[nkey]) : data[pkey];
       if (!id) {
-// TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
-      /* Test for optimistic lock. */
+      /* Test for optional optimistic lock. */
       etag = this.getVersion(orm, id);
-      if (etag && etag !== options.etag) {
-// TODO - Send not found message back.
-        return false;
-        //plv8.elog(ERROR, "The version being patched is not current.");
+      if (etag && options.etag && etag !== options.etag) {
+        throw new handleError("Precondition Required", 428);
       }
 
       /* Test for pessemistic lock. */
       if (orm.lockable) {
         lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
-// TODO - Send not found message back.
-          return false;
-          //plv8.elog(ERROR, "Can not obtain a lock on the record.");
+          throw new handleError("Conflict", 409);
         }
       }
 
@@ -1189,7 +1218,7 @@ select xt.install_js('XT','Data','xtuple', $$
         if (ormp && ormp.attr && ormp.attr.isEncrypted) {
           if (encryptionKey) {
             sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
-// TODO - Handle not found error.
+            // TODO - Handle not found error.
 
             if (DEBUG) {
               XT.debug('decrypt sql =', sql);
@@ -1234,7 +1263,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
       ret = plv8.execute(sql, [table, namespace])[0].oid - 0;
 
-// TODO - Handle not found error.
+      // TODO - Handle not found error.
 
       return ret;
     },
@@ -1273,7 +1302,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if(ret.length) {
         return ret[0].id;
       } else {
-        throw new handleError("Not Found", 400);
+        throw new handleError("Primary Key Not Found", 400);
       }
     },
 
@@ -1301,7 +1330,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (!etag) {
         etag = XT.generateUUID();
         sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);';
-// TODO - Handle insert error.
+        // TODO - Handle insert error.
 
         if (DEBUG) {
           XT.debug('getVersion sql = ', sql);
@@ -1366,9 +1395,25 @@ select xt.install_js('XT','Data','xtuple', $$
         ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
       }
 
-      this.removeKeys(nameSpace, type, ret.data);
+      this.sanitize(nameSpace, type, ret.data, options);
 
       return ret;
+    },
+
+    /**
+    Fetch a metric value.
+
+    @param {String} Metric name
+    @param {String} Return type 'text', 'boolean' or 'number' (default 'text')
+    */
+    fetchMetric: function (name, type) {
+      var fn = 'fetchmetrictext';
+      if (type === 'boolean') {
+        fn = 'fetchmetricbool';
+      } else if (type === 'number') {
+        fn = 'fetchmetricvalue';
+      }
+      return plv8.execute("select " + fn + "($1) as resp", [name])[0].resp;
     },
 
     /**
@@ -1492,49 +1537,67 @@ select xt.install_js('XT','Data','xtuple', $$
         ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
 
-      if (!options.includeKeys) {
-        this.removeKeys(nameSpace, type, ret.data);
-      }
+      this.sanitize(nameSpace, type, ret.data, options);
 
       /* Return the results. */
       return ret || {};
     },
 
     /**
-     *  Remove primary and foreign keys from the data so it is represented as a pure JavaScript object.
-     * Only removes the primary key if a natural key has been specified in the ORM.
+     *  Remove unprivileged attributes, primary and foreign keys from the data. 
+     *  Only removes the primary key if a natural key has been specified in the ORM.
      *
      * @param {String} Namespace
      * @param {String} Type
      * @param {Object|Array} Data
+     * @param {Object} Options
+     * @param {Boolean} [options.includeKeys=false] Do not remove primary and foreign keys.
+     * @param {Boolean} [options.superUser=false] Do not remove unprivileged attributes.
      */
-    removeKeys: function (nameSpace, type, data) {
+    sanitize: function (nameSpace, type, data, options) {
+      options = options || {};
+      if (options.includeKeys && !options.superUser) { return; }
       if (XT.typeOf(data) !== "array") { data = [data]; }
       var orm = XT.Orm.fetch(nameSpace, type),
+        pkey = XT.Orm.primaryKey(orm),
+        nkey = XT.Orm.naturalKey(orm),
+        props = orm.properties,
+        attrPriv = orm.privileges && orm.privileges.attribute ?
+          orm.privileges.attribute : false,
+        inclKeys = options.inclKeys,
+        superUser = options.superUser,
         c,
         i,
         item,
         n,
-        pkey = XT.Orm.primaryKey(orm),
-        props = orm.properties,
-        nkey = XT.Orm.naturalKey(orm),
         prop,
         val;
-
       for (var c = 0; c < data.length; c++) {
         item = data[c];
-        if (nkey && nkey !== pkey) { delete item[pkey]; }
+
+        /* Remove primary key if applicable */
+        if (!inclKeys && nkey && nkey !== pkey) { delete item[pkey]; }
 
         for (var i = 0; i < props.length; i++) {
           prop = props[i];
 
+          /* Remove unprivileged attribute if applicable */
+          if (!superUser && attrPriv && attrPriv[prop.name] &&
+            attrPriv[prop.name].view &&
+            !this.checkPrivilege(attrPriv[prop.name].view)) {
+            delete item[prop.name];
+          }
+
+          /* Handle composite types */
           if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
-            this.removeKeys(nameSpace, prop.toOne.type, item[prop.name]);
+            this.sanitize(nameSpace, prop.toOne.type, item[prop.name], options);
           } else if (prop.toMany && prop.toMany.isNested && item[prop.name]) {
             for (var n = 0; n < item[prop.name].length; n++) {
               val = item[prop.name][n];
-              delete val[prop.toMany.inverse];
-              this.removeKeys(nameSpace, prop.toMany.type, val);
+                
+              /* Remove foreign key if applicable */
+              if (!inclKeys) { delete val[prop.toMany.inverse]; }
+              this.sanitize(nameSpace, prop.toMany.type, val, options);
             }
           }
         }

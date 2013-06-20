@@ -30,7 +30,7 @@ else
 	log "Must run with sudo, not as root."
 	exit -1
 fi
-XTUPLE_REPO='mobile-repo.xtuple.com'
+XTUPLE_REPO='http://sourceforge.net/projects/postbooks/files/mobile-debian'
 varlog XTUPLE_REPO
 
 while getopts ":icbpgnh-:" opt; do
@@ -218,8 +218,8 @@ build_deps() {
 		log "Looking for nodejs_$NODE_VERSION.deb in $(pwd)"
 		if [ ! -f nodejs_$NODE_VERSION.deb ]
 		then
-			log "File not found. Attempting to download http://$XTUPLE_REPO/nodejs_$NODE_VERSION.deb"
-			wget -q http://$XTUPLE_REPO/nodejs_$NODE_VERSION.deb && wait
+			log "File not found. Attempting to download $XTUPLE_REPO/nodejs_$NODE_VERSION.deb"
+			wget -q $XTUPLE_REPO/nodejs_$NODE_VERSION.deb && wait
 
 			if [ $? -ne 0 ]
 			then
@@ -248,103 +248,79 @@ build_deps() {
 	fi
 	
 	cdir $RUN_DIR
-	log "Checking if v8 or xtuple-mobileweb-lib is installed."
-	dpkg -s xtuple-mobileweb-lib 2>1 > /dev/null
+	log "Checking if libv8 is installed"
+	dpkg -s libv8 2>1 > /dev/null
 	if [ $? -eq 0 ]
 	then
-		log "xtuple-mobileweb-lib is installed."
+		log "libv8 is installed"
 	else
-		log "Looking for xtuple-mobileweb-lib in $(pwd)"
-		XTUPLE_LIB_DEB=$(ls | grep xtuple-mobileweb-lib | head -1)
-		if [ $XTUPLE_LIB_DEB ]
+		log "libv8 is not installed."
+		
+		log "Looking for libv8-3.16.5_3.16.5-1_amd64.deb in $(pwd)"
+		if [ -f libv8-3.16.5_3.16.5-1_amd64.deb ]
 		then
-			log "Installing xtuple-mobileweb-lib"
-			dpkg -i $XTUPLE_LIB_DEB 2>1 | tee -a $LOG_FILE
+			log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
+			dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
 		else
-			log "Package not found."
+			log "File not found."
+			log "Attempting to download $XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb"
 			
-			log "Attempting to download http://$XTUPLE_REPO/xtuple-mobileweb-lib_1.3.4-0_amd64.deb"
-			wget -q http://$XTUPLE_REPO/xtuple-mobileweb-lib_1.3.4-0_amd64.deb && wait
+			wget -q $XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb && wait
 			if [ $? -ne 0 ]
 			then
 				log "Error occured while downloading ($?)"
-			
-				log "Checking if libv8 is installed"
-				dpkg -s libv8 2>1 > /dev/null
-				if [ $? -eq 0 ]
-				then
-					log "libv8 is installed"
-				else
-					log "libv8 is not installed."
-					
-					log "Looking for libv8-3.16.5_3.16.5-1_amd64.deb in $(pwd)"
-					if [ -f libv8-3.16.5_3.16.5-1_amd64.deb ]
-					then
-						log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
-						dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
-					else
-						log "File not found."
-						log "Attempting to download http://$XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb"
-						
-						wget -q http://$XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb && wait
-						if [ $? -ne 0 ]
-						then
-							log "Error occured while downloading ($?)"
-							log "Compiling from source."
-			
-							cdir $BASEDIR/v8
-							git checkout 3.16.5 2>1 | tee -a $LOG_FILE
-			
-							make dependencies 2>1 | tee -a $LOG_FILE
-			
-							make library=shared native 2>1 | tee -a $LOG_FILE
-							log "Installing library."
-							cp $BASEDIR/v8/out/native/lib.target/libv8.so /usr/lib/ #root
-						else
-							log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
-							dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
-						fi
-					fi
-				fi
-				
-				cdir $RUN_DIR
-				log "Checking if plv8js is installed."
-				dpkg -s postgresql-9.1-plv8 2>1 > /dev/null
-				if [ $? -eq 0 ]
-				then
-					log "plv8js is installed"
-				else
-					log "plv8js is not installed"
-					
-					log "Looking for postgresql-9.1-plv8_1.4.0-1_amd64.deb in $(pwd)"
-					if [ ! -f postgresql-9.1-plv8_1.4.0-1_amd64.deb ]
-					then
-						log "File not found."
-						log "Attempting to download http://$XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-						wget -q http://$XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb && wait
+				log "Compiling from source."
 
-						if [ $? -ne 0 ]
-						then
-							log "Error occured while downloading ($?)"
-							log "Compiling from source"
-							cdir $BASEDIR/plv8
-							make V8_SRCDIR=../v8 CPLUS_INCLUDE_PATH=../v8/include 2>1 | tee -a $LOG_FILE
-							if [ $? -ne 0 ]
-							then
-								return 1
-							fi
-							log "Installing plv8js."
-							make install 2>1 | tee -a $LOG_FILE
-						else
-							log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-							dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
-						fi
-					else
-						log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-						dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
-					fi
-				fi
+				cdir $BASEDIR/v8
+				git checkout 3.16.5 2>1 | tee -a $LOG_FILE
+
+				make dependencies 2>1 | tee -a $LOG_FILE
+
+				make library=shared native 2>1 | tee -a $LOG_FILE
+				log "Installing library."
+				cp $BASEDIR/v8/out/native/lib.target/libv8.so /usr/lib/ #root
+			else
+				log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
+				dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
 			fi
+		fi
+	fi
+	
+	cdir $RUN_DIR
+	log "Checking if plv8js is installed."
+	dpkg -s postgresql-9.1-plv8 2>1 > /dev/null
+	if [ $? -eq 0 ]
+	then
+		log "plv8js is installed"
+	else
+		log "plv8js is not installed"
+		
+		log "Looking for postgresql-9.1-plv8_1.4.0-1_amd64.deb in $(pwd)"
+		if [ ! -f postgresql-9.1-plv8_1.4.0-1_amd64.deb ]
+		then
+			log "File not found."
+			log "Attempting to download $XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb"
+			wget -q $XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb && wait
+
+			if [ $? -ne 0 ]
+			then
+				log "Error occured while downloading ($?)"
+				log "Compiling from source"
+				cdir $BASEDIR/plv8
+				make V8_SRCDIR=../v8 CPLUS_INCLUDE_PATH=../v8/include 2>1 | tee -a $LOG_FILE
+				if [ $? -ne 0 ]
+				then
+					return 1
+				fi
+				log "Installing plv8js."
+				make install 2>1 | tee -a $LOG_FILE
+			else
+				log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
+				dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
+			fi
+		else
+			log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
+			dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
 		fi
 	fi
 }
@@ -507,7 +483,7 @@ init_everythings() {
   
 	cdir $XT_DIR/node-datasource
 
-	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: "dev" // this must remain empty for production datasources/testDatabase: "dev" // this must remain empty for production datasources/' > config.js
+	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: ""/testDatabase: "dev"/' > config.js
 	log "Configured node-datasource"
 
 	log ""

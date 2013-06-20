@@ -122,7 +122,7 @@ insert into quhead (
   new.quhead_billtocountry,
   new.quhead_shiptocountry,
   new.quhead_curr_id,
-  new.quhead_imported,
+  coalesce(new.quhead_imported, false),
   new.quhead_expire,
   new.quhead_calcfreight,
   new.quhead_shipto_cntct_id,

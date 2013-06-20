@@ -665,5 +665,6 @@ select xt.install_js('XT','Orm','xtuple', $$
         plv8.execute(query);
       }
     }
+ 
   };
 $$ );

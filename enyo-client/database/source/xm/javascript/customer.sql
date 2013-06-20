@@ -2,7 +2,9 @@ select xt.install_js('XM','Customer','xtuple', $$
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xtuple.com/CPAL for the full text of the software license. */
 
-  XM.Customer = {};
+(function () {
+
+  if (!XM.Customer) { XM.Customer = {}; }
 
   XM.Customer.isDispatchable = true;
 
@@ -36,7 +38,7 @@ select xt.install_js('XM','Customer','xtuple', $$
     var sql = "select itemipsprice(item_id, cust_id, $3, $4, $5, $6, $7, $8::date, $9::date, null) as result " +
               "from custinfo, item where item_number = $1 and cust_number = $2",
       today = new Date(),
-      shiptoId = options.shiptoId || -1,
+      shiptoId,
       quantityUnitId,
       currencyId,
       priceUnitId,
@@ -55,6 +57,8 @@ select xt.install_js('XM','Customer','xtuple', $$
     };
     if(err) { plv8.elog(ERROR, err + " is required.") }
 
+    shiptoId = options.shiptoId ?
+       XT.Data.getId(XT.Orm.fetch('XM', 'CustomerShipto'), options.shiptoId) : -1; 
     quantityUnitId = options.quantityUnitId ?
        XT.Data.getId(XT.Orm.fetch('XM', 'Unit'), options.quantityUnitId) :
        plv8.execute("select item_inv_uom_id as result from item where item_id = $1;", [itemId])[0].result; 
@@ -116,5 +120,7 @@ select xt.install_js('XM','Customer','xtuple', $$
 
     return result; 
   }
+
+}());
   
 $$ );

@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ToDo",
-    "table": "todoitem",
+    "table": "xt.todoiteminfo",
     "idSequenceName": "todoitem_todoitem_id_seq",
     "isRest": true,
     "lockable": true,
@@ -24,6 +24,14 @@
           "owner.username",
           "assignedTo.username"
         ]
+      },
+      "attribute": {
+        "owner": {
+          "edit": "EditOwner"
+        },
+        "assignedTo": {
+          "edit": "ReassignToDoItems"
+        }
       }
     },
     "properties": [
@@ -79,6 +87,13 @@
         "attr": {
           "type": "String",
           "column": "todoitem_status"
+        }
+      },
+      {
+        "name": "statusProxy",
+        "attr": {
+          "type": "String",
+          "column": "status_proxy"
         }
       },
       {
@@ -222,9 +237,7 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "TODO",
-    "extensions": []
+    "isSystem": true
   },
   {
     "context": "crm",
@@ -487,7 +500,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {

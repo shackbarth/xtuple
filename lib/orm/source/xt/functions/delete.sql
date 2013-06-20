@@ -5,7 +5,7 @@
     @param {String} [dataHash.username] Username. Required.
     @param {String} [dataHash.nameSpace] Namespace. Required.
     @param {String} [dataHash.type] Type. Required.
-    @param {Number} [dataHash.etag] Record version for optimistic locking. Required.
+    @param {Number} [dataHash.etag] Optional record id version for optimistic locking.
     @param {Object} [dataHash.lock] Lock information for pessemistic locking.
     @param {Number} [dataHash.lock.key] Lock key for pessemistic locking.
     @param {String} [dataHash.encryptionKey] Encryption key.
