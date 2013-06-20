@@ -15,6 +15,17 @@ var _ = require('underscore'),
 
   /**
     @param {Object} specs look like this:
+      [ { extensions:
+           [ '/home/user/git/xtuple/enyo-client',
+             '/home/user/git/xtuple/enyo-client/extensions/source/crm',
+             '/home/user/git/xtuple/enyo-client/extensions/source/sales',
+             '/home/user/git/private-extensions/source/incident_plus' ],
+          database: 'dev' },
+        { extensions:
+           [ '/home/shackbarth/git/xtuple/enyo-client',
+             '/home/shackbarth/git/xtuple/enyo-client/extensions/source/sales',
+             '/home/shackbarth/git/xtuple/enyo-client/extensions/source/project' ],
+          database: 'dev2' } ]
 
     @param {Object} creds look like this:
       { hostname: 'localhost',
@@ -27,15 +38,16 @@ var _ = require('underscore'),
   exports.buildDatabase = function (specs, creds) {
 
     console.log(specs);
-    //winston.info("Building with specs", JSON.stringify(specs));
+    // TODO: log to file
+    winston.log("Building with specs", JSON.stringify(specs));
 
     // TODO: we probably need to use async at every level here to "know" when we're totally done
-    _.each(specs, function (spec) {
+    var installDatabase = function (spec, databaseCallback) {
       var extensions = spec.extensions;
       var databaseName = spec.database;
       var errorInDb = false;
 
-      winston.info("Installing on database", databaseName);
+      winston.log("Installing on database", databaseName);
 
       //
       // Step 1 in installing all scripts for a database:
@@ -51,12 +63,12 @@ var _ = require('underscore'),
       // Step 2 in installing all scripts for a database:
       // Install all the extensions of the database, in series.
       //
-      var installExtension = function (extension, callback) {
+      var installExtension = function (extension, extensionCallback) {
         if (errorInDb) {
           winston.error("Not installing extension", extension, "due to earlier error in db", databaseName);
           return;
         }
-        winston.info("Installing extension", extension);
+        winston.log("Installing extension", extension);
         var dbSourceRoot = path.join(extension, "database/source"),
           manifestFilename = path.join(dbSourceRoot, "manifest.js"),
           manifestString,
@@ -69,7 +81,8 @@ var _ = require('underscore'),
         //
         if (!fs.existsSync(manifestFilename)) {
           errorInDb = true;
-          callback("Cannot find manifest " + manifestFilename);
+          winston.log("Cannot find manifest " + manifestFilename);
+          extensionCallback("Cannot find manifest " + manifestFilename);
           return;
         }
         manifestString = fs.readFileSync(manifestFilename, "utf8");
@@ -77,7 +90,8 @@ var _ = require('underscore'),
           manifest = JSON.parse(manifestString);
         } catch (error) {
           errorInDb = true;
-          callback("Manifest is not valid JSON" + manifestFilename);
+          winston.log("Manifest is not valid JSON" + manifestFilename);
+          extensionCallback("Manifest is not valid JSON" + manifestFilename);
           return;
         }
 
@@ -86,11 +100,11 @@ var _ = require('underscore'),
         // Step 2 in installing extension scripts
         // Install all the scripts in the manifest file, in series.
         //
-        var installScript = function (filename, callback) {
+        var installScript = function (filename, scriptCallback) {
           var scriptContents = fs.readFileSync(path.join(dbSourceRoot, filename), "utf8");
 
           pgClient.query(scriptContents, function (err, res) {
-            callback(err, res);
+            scriptCallback(err, res);
           });
         };
         async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
@@ -99,27 +113,40 @@ var _ = require('underscore'),
             pgClient.end();
             errorInDb = true;
 
-            callback(err);
+            extensionCallback(err);
             return;
           }
           // TODO: commit
-          callback(null, databaseName + " " + extension + " scripts installed successfully");
-          pgClient.end();
+          winston.log(null, databaseName + " " + extension + " scripts installed successfully");
+          extensionCallback(null, databaseName + " " + extension);
         });
         //
         // End script installation code
         //
       };
       async.mapSeries(extensions, installExtension, function (err, res) {
+        pgClient.end();
         if (err) {
-          winston.error(err);
+          databaseCallback(err);
           return;
         }
-        winston.info(JSON.stringify(res));
+        databaseCallback(null, res);
       });
       //
       // End extension installation code
       //
+
+    };
+    async.map(specs, installDatabase, function (err, res) {
+      if (err) {
+        winston.error(err);
+        return {isError: true, error: err};
+      }
+      winston.info("Success installing all scripts: " + JSON.stringify(res));
+      return {
+        message: "Success installing all scripts",
+        data: res
+      };
     });
   };
 }());
