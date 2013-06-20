@@ -118,23 +118,7 @@ var _ = require('underscore'),
           });
         };
         async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
-          if (err) {
-            pgClient.query("ROLLBACK;", function (rollbackErr, rollbackRes) {
-              console.log("rollback", arguments);
-              // TODO: deal with a rollbackErr
-              pgClient.end();
-              errorInDb = true;
-
-              extensionCallback(err);
-            });
-          } else {
-            pgClient.query("COMMIT;", function (commitErr, commitRes) {
-              console.log("commit", arguments);
-              // TODO: deal with a commitErr
-              winston.log(null, databaseName + " " + extension + " scripts installed successfully");
-              extensionCallback(null, databaseName + " " + extension);
-            });
-          }
+          extensionCallback(err, res);
         });
         //
         // End script installation code
@@ -149,12 +133,24 @@ var _ = require('underscore'),
         function (callback) {
           console.log("installing all extensions");
           async.mapSeries(extensions, installExtension, function (err, res) {
-            pgClient.end();
             if (err) {
-              callback(err);
-              return;
+              pgClient.query("ROLLBACK;", function (rollbackErr, rollbackRes) {
+                console.log("rollback", arguments);
+                // TODO: deal with a rollbackErr
+                pgClient.end();
+                errorInDb = true;
+
+                callback(err);
+              });
+            } else {
+              pgClient.query("COMMIT;", function (commitErr, commitRes) {
+                console.log("commit", arguments);
+                pgClient.end();
+                // TODO: deal with a commitErr
+                winston.log(res);
+                callback(null, res);
+              });
             }
-            callback(null, res);
           });
         }
       ], function (err, res) {
