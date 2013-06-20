@@ -64,6 +64,7 @@ var _ = require('underscore'),
 
     creds = config.databaseServer;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
+    creds.username = creds.user; // adapt our lingo to orm installer lingo
 
     if (database) {
       // the user has specified a particular database

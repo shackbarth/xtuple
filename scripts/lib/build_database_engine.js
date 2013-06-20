@@ -6,6 +6,7 @@ var _ = require('underscore'),
   async = require('async'),
   exec = require('child_process').exec,
   fs = require('fs'),
+  ormInstaller = require('../../node-datasource/installer/orm'),
   path = require('path'),
   pg = require('pg'),
   winston = require('winston');
@@ -36,7 +37,6 @@ var _ = require('underscore'),
         database: 'dev2' }
   */
   exports.buildDatabase = function (specs, creds) {
-
     // TODO: set up winston file transport
     winston.log("Building databases with specs", JSON.stringify(specs));
 
@@ -57,6 +57,7 @@ var _ = require('underscore'),
       //
       var createConnection = function (createCallback) {
         creds.database = databaseName;
+        creds.organization = creds.database; // adapt our lingo to orm installer lingo
         pgClient = new pg.Client(creds);
         pgClient.connect();
         pgClient.query("BEGIN;", function (err, res) {
@@ -180,7 +181,7 @@ var _ = require('underscore'),
         winston.error(err);
         return {isError: true, error: err};
       }
-      winston.info("Success installing all scripts: " + JSON.stringify(res));
+      winston.info("Success installing all scripts");
       return {
         message: "Success installing all scripts",
         data: res
