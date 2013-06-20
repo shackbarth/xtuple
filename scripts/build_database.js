@@ -49,6 +49,24 @@ var fs = require('fs'),
   };
 
   //
+  // The arg parser returns the spec as an array of objects with one key each.
+  // This is awkward. We want the specs to be an object whose keys are the
+  // databases and whose values are arrays of paths.
+  //
+  var flattenSpecs = function (specs) {
+    var obj = {};
+
+    _.each(specs, function (spec) {
+      var keys = Object.keys(spec);
+      _.each(keys, function (key) {
+        obj[key] = spec[key];
+      });
+    });
+    return obj;
+  };
+
+
+  //
   // Looks in a database to see which extensions are registered.
   // API conforms to async expectations.
   // Also tacks on the core directory.
@@ -113,13 +131,13 @@ var fs = require('fs'),
       return returnObj;
     });
     // synchronous...
-    buildDatabase(buildSpecs);
+    buildDatabase(flattenSpecs(buildSpecs));
 
   } else {
     // build all registered extensions for the database
     async.map(databases, getRegisteredExtensions, function (err, results) {
       // asynchronous...
-      buildDatabase(results);
+      buildDatabase(flattenSpecs(results));
     });
   }
 
