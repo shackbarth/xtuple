@@ -38,18 +38,27 @@ var _ = require('underscore'),
 
     //winston.info("Building with specs", JSON.stringify(specs));
 
+    // TODO: we probably need to use async at every level here to "know" when we're totally done
     _.each(specs, function (extensions, databaseName) {
       var errorInDb = false;
 
       winston.info("Installing on database", databaseName);
+
+      //
+      // Step 1 in installing all scripts for a database:
+      // Start a connection to the database
+      //
       creds.database = databaseName;
       var pgClient = new pg.Client(creds);
       pgClient.connect();
-      // TODO: begin transaction
       // queries are queued and executed one after another once the connection becomes available
+      // TODO: begin transaction
 
-      // TODO: we probably need to use async at every level here to "know" when we're totally done
-      _.each(extensions, function (extension) {
+      //
+      // Step 2 in installing all scripts for a database:
+      // Install all the extensions of the database, in series.
+      //
+      var installExtension = function (extension, callback) {
         if (errorInDb) {
           winston.error("Not installing extension", extension, "due to earlier error in db", databaseName);
           return;
@@ -62,24 +71,26 @@ var _ = require('underscore'),
 
 
         //
+        // Step 1 in installing extension scripts:
         // Read the manifest file
         //
         if (!fs.existsSync(manifestFilename)) {
-          winston.error("Cannot find manifest", manifestFilename);
           errorInDb = true;
+          callback("Cannot find manifest " + manifestFilename);
           return;
         }
         manifestString = fs.readFileSync(manifestFilename, "utf8");
         try {
           manifest = JSON.parse(manifestString);
         } catch (error) {
-          winston.error("Manifest is not valid JSON", manifestFilename);
           errorInDb = true;
+          callback("Manifest is not valid JSON" + manifestFilename);
           return;
         }
 
 
         //
+        // Step 2 in installing extension scripts
         // Install all the scripts in the manifest file, in series.
         //
         var installScript = function (filename, callback) {
@@ -91,20 +102,31 @@ var _ = require('underscore'),
         };
         async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
           if (err) {
-            winston.error("Error installing scripts", err);
             // TODO: rollback
             pgClient.end();
             errorInDb = true;
+
+            callback(err);
             return;
           }
           // TODO: commit
-          winston.info(databaseName, extension, "scripts installed successfully");
+          callback(null, databaseName + " " + extension + " scripts installed successfully");
           pgClient.end();
         });
-
+        //
+        // End script installation code
+        //
+      };
+      async.mapSeries(extensions, installExtension, function (err, res) {
+        if (err) {
+          winston.error(err);
+          return;
+        }
+        winston.info(JSON.stringify(res));
       });
+      //
+      // End extension installation code
+      //
     });
-
   };
-
 }());
