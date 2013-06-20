@@ -11,14 +11,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   */
   exports.analysis = function (req, res) {
     var reportUrl = req.query.reportUrl,
-      privKey = "",
-      username = req.user.id,
+      username = req.session.passport.user.username,
       biServerUrl = X.options.datasource.biServerUrl,
       today = new Date(),
       expires = new Date(today.getTime() + (10 * 60 * 1000)), // 10 minutes from now
       datasource = req.headers.host,
-      scope = "/auth/toytruck.user-account.read-only",
+      database = req.session.passport.user.organization,
+      scope = "/auth/" + database,
       audience = "/oauth/token",
+      privKey = X.fs.readFileSync(X.options.datasource.biKeyFile),
       claimSet = {
         //"iss": "", // client-identifier, not needed?
         "prn": username, // username
@@ -29,12 +30,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         "iat": Math.round(today.getTime() / 1000)  // created date in millis
       };
 
-
-    // TODO: sign and encode this JWT
     claimSet = JSON.stringify(claimSet);
 
     // send newly formed BI url back to the client
+    res.setHeader("Content-Type", "application/json");
     res.send(biServerUrl + reportUrl + "&assertion=" + claimSet);
   };
-
 }());

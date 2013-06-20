@@ -81,6 +81,7 @@ trailing:true, white:true*/
         // the iFrame
         var url, ajax = new enyo.Ajax({
           url: XT.getOrganizationPath() + "/analysis",
+          contentType: "application/json"
         });
         ajax.response(this, function (inSender, inResponse) {
           this.setSource(inResponse);
