@@ -4,6 +4,13 @@
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true,
   describe:true, before:true, enyo:true, it:true, _:true, console:true */
 
+
+// NOTE! This test will fail in an extensionless build. This failure represents
+// a low-burning bug in the app, that many kinds are defined but not instantiable
+// in the core itself, usually because they rely on pickers that rely on caches
+// that don't exist. We don't see this problem in the app because those kinds
+// are hidden without the pertinent extension.
+
 (function () {
   "use strict";
 
@@ -32,17 +39,11 @@
           recordType,
           relations,
           master = new enyo.Control();
-
         // look at all the lists in XV
         _.each(XV, function (value, key) {
-          if (key.substring(0, 1) === key.toUpperCase().substring(0, 1) &&
-              typeof value === 'function' &&
-              key.indexOf('List', key.length - 4) !== -1) {
-
-            if (_.contains(['List', 'ConfigurationsList', 'AbbreviationList', 'NameDescriptionList'], key)) {
-              // these ones doesn't need to be backed by a collection
-              return;
-            }
+          if (XV.inheritsFrom(value.prototype, "XV.List") &&
+              // don't test abstract kinds
+              !_.contains(['List', 'ConfigurationsList', 'AbbreviationList', 'NameDescriptionList'], key)) {
 
             // create the list
             child = master.createComponent({
