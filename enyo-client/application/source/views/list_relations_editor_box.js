@@ -357,13 +357,13 @@ trailing:true, white:true*/
         {kind: "XV.MoneyWidget", attr:
           {localValue: "price", currency: ""},
           label: "_price".loc(), currencyDisabled: true,
-          effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
+          scale: XT.SALES_PRICE_SCALE},
         {kind: "XV.UnitPicker", attr: "priceUnit",
           name: "priceUnitPicker"},
         {kind: "XV.MoneyWidget", attr:
           {localValue: "extendedPrice", currency: ""},
           label: "_extendedPrice".loc(), currencyDisabled: true,
-          effective: "quote.quoteDate", scale: XT.EXTENDED_PRICE_SCALE},
+          scale: XT.EXTENDED_PRICE_SCALE},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
         {kind: "XV.DateWidget", name: "promiseDate", attr: "promiseDate",
           showing: false},

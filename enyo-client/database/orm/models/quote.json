@@ -16,11 +16,14 @@
         "delete": "MaintainQuotes"
       },
       "attribute": {
-        "view": {
-          "privilege": "ShowMarginsOnSalesOrder",
-          "properties": [
-            "margin"
-          ]
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "quoteDate": {
+          "edit": "OverrideSODate"
+        },
+        "packDate": {
+          "edit": "AlterPackDate"
         }
       }
     },
@@ -704,7 +707,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -962,12 +966,8 @@
         "delete": "MaintainQuotes"
       },
       "attribute": {
-        "edit": {
-          "privilege": "OverridePrice",
-          "properties": [
-            "customerPrice",
-            "price"
-          ]
+        "taxType": {
+          "edit": "OverrideTax"
         }
       }
     },
@@ -1335,7 +1335,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {

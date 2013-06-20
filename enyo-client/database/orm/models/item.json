@@ -649,7 +649,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -1038,11 +1039,8 @@
         "delete": false
       },
       "attribute": {
-        "view": {
-          "privilege": "ViewCosts MaintainCosts",
-          "properties": [
-            "standardCost"
-          ]
+        "standardCost": {
+          "view": "ViewCosts MaintainCosts"
         }
       }
     },

@@ -62,6 +62,12 @@ trailing:true, white:true*/
 
     relevantPrivileges = [
       "ConfigureSO",
+      "MaintainFreightClasses",
+      "MaintainCustomerGroups",
+      "MaintainQuotes",
+      "MaintainSalesOrders",
+      "MaintainSalesReps",
+      "MaintainShipZones",
       "MaintainTaxAssignments",
       "MaintainTaxClasses",
       "MaintainTaxCodes",
@@ -70,6 +76,15 @@ trailing:true, white:true*/
       "MaintainTaxRegistrations",
       "MaintainTaxTypes",
       "MaintainTaxZones",
+      "MaintainTerms",
+      "MaintainSaleTypes",
+      "OverridePrice",
+      "OverrideTax",
+      "ShowMarginsOnSalesOrder",
+      "UpdateCustomerCreditStatus",
+      "ViewFreightClasses",
+      "ViewCustomerGroups",
+      "ViewQuotes",
       "ViewTaxAssignments",
       "ViewTaxClasses",
       "ViewTaxCodes",
@@ -78,20 +93,11 @@ trailing:true, white:true*/
       "ViewTaxRegistrations",
       "ViewTaxTypes",
       "ViewTaxZones",
-      "MaintainFreightClasses",
-      "MaintainCustomerGroups",
-      "MaintainSalesReps",
-      "MaintainShipZones",
-      "MaintainTerms",
-      "MaintainSaleTypes",
-      "OverridePrice",
-      "ShowMarginsOnSalesOrder",
-      "ViewFreightClasses",
-      "ViewCustomerGroups",
+      "ViewSalesOrders",
       "ViewSalesReps",
+      "ViewSaleTypes",
       "ViewShipZones",
-      "ViewTerms",
-      "ViewSaleTypes"
+      "ViewTerms"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
 

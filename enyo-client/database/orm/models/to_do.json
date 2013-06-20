@@ -26,11 +26,11 @@
         ]
       },
       "attribute": {
-        "edit": {
-          "privilege": "ReassignToDoItems",
-          "properties": [
-            "assignedTo"
-          ]
+        "owner": {
+          "edit": "EditOwner"
+        },
+        "assignedTo": {
+          "edit": "ReassignToDoItems"
         }
       }
     },
@@ -237,9 +237,7 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "TODO",
-    "extensions": []
+    "isSystem": true
   },
   {
     "context": "crm",
@@ -502,7 +500,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {

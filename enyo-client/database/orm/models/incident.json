@@ -25,6 +25,11 @@
           "owner.username",
           "assignedTo.username"
         ]
+      },
+      "attribute": {
+        "owner": {
+          "edit": "EditOwner"
+        }
       }
     },
     "properties": [
@@ -262,9 +267,7 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "INCDT",
-    "extensions": []
+    "isSystem": true
   },
   {
     "context": "xtuple",
