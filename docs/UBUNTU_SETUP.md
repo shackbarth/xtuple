@@ -49,7 +49,7 @@ You'll want to set up quick access to the terminal. Click on the Dash Home icon 
 
 Now install git from the terminal:
 
-    sudo git apt-install git
+    sudo apt-get install git
 
 The xTuple mobile web client files are maintained on github.com. You will need an account there to execute the following steps:
 
