@@ -65,6 +65,15 @@
                   return;
                 }
 
+                //
+                // By now we're looking at every ListRelationsBox in any Workspace, to make
+                // sure that they're hooked up right. Most of the problems we're guarding against
+                // here are problems with the ORMs, so this should be considered an integration
+                // test. We'll be looking extensively at the schemas (i.e. XT.session.schemas.XM)
+                // of the model that backs the workspace, as well as the model that backs the box.
+                //
+
+
                 var modelSchema = XT.session.schemas[XT.String.prefix(recordType)].attributes[XT.String.suffix(recordType)];
                 var boxRelation = _.find(modelSchema.relations, function (relation) {
                   return relation.key === component.attr;
@@ -105,30 +114,8 @@
                   assert.isTrue(parentModelIsRequired, "The only reason for " + component.kind +
                     " to be missing a searchList is if " + component.getParentKey() + " were required on " +
                     editableRelatedModelName + ", which it is not");
-                  /*
-                    TODO: verify that the search list has been properly included, or omitted
-                  shackbarth 04:23:29 PM
-                  johnrogelstad: what logic governs which ListRelationsBoxes have New/Attach/Open/Detatch buttons and which have only New/Open buttons?
-                  It doesn't look like we're mimicking qt exactly. 04:23:40 PM
-                  and why wouldn't we allow you to attach an object if you can create one? 04:23:59 PM
-                  e.g. Contact->ToDo has 4 buttons, but Contact->Opportunities has 2. 04:24:35 PM
-                  Which is just driven by the fact that some of these kinds have to searchList defined. 04:24:52 PM
-                  https://github.com/xtuple/xtuple/blob/master/enyo-client/extensions/source/crm/client/views/list_relations_box.js#L51-L65 04:26:10 PM
-                  is this on purpose or an oversight? 04:26:16 PM
 
-                  johnrogelstad 04:28:42 PM
-                  Both.
-                  In the case of Contact -> Incidents, you can not create an incident without a contact 04:30:36 PM
-                  So if you pulled up a list of eligible incidents to attach to a contact, you would get no results every time. 04:30:52 PM
-                  I believe I was thinking the same was true for opportunity, but is not 04:31:48 PM
-                  On opportunity Account is required, but contact is not. 04:31:57 PM
-                  So you should be able to attach an opportunity to a contact, but not an incident
-                  neither account nor contact is required on to do, so you can attach a to do from a contact or from an account 04:32:58 PM
-                  In the Qt client you can not do any of these things from contact. In that sense, the mobile client offers improvements. 04:33:33 PM
-                  Anyway, there is some flag on the relations box you can flip to switch between canAttach or not. 04:34:32 PM
-                  */
-
-                  // for now, we just don't worry about the ones that have so search capability
+                  // for now, we just don't worry about the ones that have no search capability
                   return;
                 }
                 // I have doubts about this requirement:
