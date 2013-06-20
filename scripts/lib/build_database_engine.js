@@ -33,8 +33,29 @@ var fs = require('fs'),
         database: 'dev2' }
   */
   exports.buildDatabase = function (specs, creds) {
-    // TODO
-    console.log(creds, specs);
+
+    _.each(specs, function (extensions, databaseName) {
+      _.each(extensions, function (extension) {
+        var manifestFilename = extension + "/database/source/manifest.js",
+          manifestString,
+          manifest;
+
+        if (!fs.existsSync(manifestFilename)) {
+          console.log("Cannot find manifest", manifestFilename);
+          process.exit(1); // TODO: winston
+        }
+        manifestString = fs.readFileSync(manifestFilename, "utf8");
+        try {
+          manifest = JSON.parse(manifestString);
+        } catch (error) {
+          console.log("Manifest is not valid JSON", manifestFilename);
+          process.exit(1); // TODO: winston
+
+        }
+        console.log(manifest);
+      });
+    });
+
   };
 
 }());
