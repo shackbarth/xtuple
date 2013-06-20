@@ -147,6 +147,10 @@ var _ = require('underscore'),
             // All of the extensions have just been installed. Now is the time
             // to commit or rollback, depending on the success.
             //
+
+            // TODO: now would be an excellent time to run the orms for all of the
+            // extensions on this database
+
             if (err) {
               pgClient.query("ROLLBACK;", function (rollbackErr, rollbackRes) {
                 // TODO: deal with a rollbackErr
