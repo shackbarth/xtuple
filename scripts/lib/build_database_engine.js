@@ -37,11 +37,6 @@ var _ = require('underscore'),
   exports.buildDatabase = function (specs, creds) {
 
     //winston.info("Building with specs", JSON.stringify(specs));
-    console.log(creds);
-    console.log(specs);
-
-
-
 
     _.each(specs, function (extensions, databaseName) {
       var errorInDb = false;
@@ -80,23 +75,24 @@ var _ = require('underscore'),
         }
 
 
-        var installFile = function (filename, callback) {
-          var fileContents = fs.readFileSync(path.join(dbSourceRoot, filename), "utf8");
-          var result = pgClient.query(fileContents, function (err, res) {
+        var installScript = function (filename, callback) {
+          var scriptContents = fs.readFileSync(path.join(dbSourceRoot, filename), "utf8");
+
+          pgClient.query(scriptContents, function (err, res) {
             callback(err, res);
           });
         };
 
-        async.map(manifest.databaseFiles, installFile, function (err, res) {
+        async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
           if (err) {
-            winston.error("Error installing file", err);
+            winston.error("Error installing scripts", err);
             // TODO: rollback
             pgClient.end();
             errorInDb = true;
             return;
           }
           // TODO: commit
-          winston.info(databaseName, extension, "files installed successfully");
+          winston.info(databaseName, extension, "scripts installed successfully");
           pgClient.end();
 
         });
