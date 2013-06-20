@@ -43,12 +43,15 @@ var _ = require('underscore'),
         return extPath;
       }),
         corePath = path.join(__dirname, "../../enyo-client"),
-        returnObj = {};
+        returnObj;
 
       client.end();
 
       paths.unshift(corePath);
-      returnObj[database] = paths;
+      returnObj = {
+        extensions: paths,
+        database: database
+      };
       callback(null, returnObj);
     });
 
@@ -57,23 +60,7 @@ var _ = require('underscore'),
   exports.build = function (database, extension) {
     var buildSpecs = {},
       databases = [],
-      config = require(path.join(__dirname, "../../node-datasource/config.js")),
-      //
-      // The arg parser returns the spec as an array of objects with one key each.
-      // This is awkward. We want the specs to be an object whose keys are the
-      // databases and whose values are arrays of paths.
-      //
-      flattenSpecs = function (specs) {
-        var obj = {};
-
-        _.each(specs, function (spec) {
-          var keys = Object.keys(spec);
-          _.each(keys, function (key) {
-            obj[key] = spec[key];
-          });
-        });
-        return obj;
-      };
+      config = require(path.join(__dirname, "../../node-datasource/config.js"));
 
     creds = config.databaseServer;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
@@ -92,18 +79,19 @@ var _ = require('underscore'),
       extension = path.join(process.cwd(), extension);
       buildSpecs = _.map(databases, function (database) {
         // the user has specified an extension to build
-        var returnObj = {};
-        returnObj[database] = [extension];
-        return returnObj;
+        return {
+          database: database,
+          extensions: [extension]
+        };
       });
       // synchronous...
-      buildDatabase(flattenSpecs(buildSpecs), creds);
+      buildDatabase(buildSpecs, creds);
 
     } else {
       // build all registered extensions for the database
       async.map(databases, getRegisteredExtensions, function (err, results) {
         // asynchronous...
-        buildDatabase(flattenSpecs(results), creds);
+        buildDatabase(results, creds);
       });
     }
   };

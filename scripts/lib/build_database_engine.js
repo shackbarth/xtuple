@@ -15,17 +15,7 @@ var _ = require('underscore'),
 
   /**
     @param {Object} specs look like this:
-      { dev:
-       [ '/home/user/git/xtuple/scripts/../enyo-client',
-         '/home/user/git/xtuple/scripts/../enyo-client/extensions/source/crm',
-         '/home/user/git/xtuple/scripts/../enyo-client/extensions/source/project',
-         '/home/user/git/xtuple/scripts/../../private-extensions/source/incident_plus' ],
-      dev2:
-       [ '/home/user/git/xtuple/scripts/../enyo-client',
-         '/home/user/git/xtuple/scripts/../enyo-client/extensions/source/crm',
-         '/home/user/git/xtuple/scripts/../../private-extensions/source/incident_plus',
-       ]
-      }
+
     @param {Object} creds look like this:
       { hostname: 'localhost',
         port: 5432,
@@ -36,10 +26,13 @@ var _ = require('underscore'),
   */
   exports.buildDatabase = function (specs, creds) {
 
+    console.log(specs);
     //winston.info("Building with specs", JSON.stringify(specs));
 
     // TODO: we probably need to use async at every level here to "know" when we're totally done
-    _.each(specs, function (extensions, databaseName) {
+    _.each(specs, function (spec) {
+      var extensions = spec.extensions;
+      var databaseName = spec.database;
       var errorInDb = false;
 
       winston.info("Installing on database", databaseName);
