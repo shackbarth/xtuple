@@ -68,6 +68,7 @@ passport.use(new LocalStrategy(
             password: password
         };
 
+				// note this function must be owned by a superuser or it will fail
         query = "select check_password($$%@$$);".f(JSON.stringify(queryArg));
 
         XT.dataSource.query(query, options, function (error, res) {
