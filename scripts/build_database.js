@@ -4,19 +4,23 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true*/
 
-var fs = require('fs'),
-  exec = require('child_process').exec,
-  _ = require('underscore'),
-  pg = require('pg'),
-  async = require('async'),
-  config = require(__dirname + "/../node-datasource/config.js");
+
+//
+// This file really just parses the arguments, and sends the real work
+// off to lib/build_database_engine.js.
+//
 
 (function () {
   "use strict";
 
-  var argv = process.argv,
+  var _ = require('underscore'),
+    pg = require('pg'),
+    async = require('async'),
+    config = require(__dirname + "/../node-datasource/config.js"),
+    argv = process.argv,
     specifiedExtension,
     creds = config.databaseServer,
+    buildDatabase = require("./lib/build_database_engine").buildDatabase,
     databases = [],
     buildSpecs = {};
 
@@ -39,14 +43,6 @@ var fs = require('fs'),
     console.log("  will register and build the extension at that path against specified database");
     return;
   }
-
-  //
-  // Do all the work
-  //
-  var buildDatabase = function (specs) {
-    console.log(specs);
-    // TODO
-  };
 
   //
   // The arg parser returns the spec as an array of objects with one key each.
@@ -131,13 +127,13 @@ var fs = require('fs'),
       return returnObj;
     });
     // synchronous...
-    buildDatabase(flattenSpecs(buildSpecs));
+    buildDatabase(flattenSpecs(buildSpecs), creds);
 
   } else {
     // build all registered extensions for the database
     async.map(databases, getRegisteredExtensions, function (err, results) {
       // asynchronous...
-      buildDatabase(flattenSpecs(results));
+      buildDatabase(flattenSpecs(results), creds);
     });
   }
 
