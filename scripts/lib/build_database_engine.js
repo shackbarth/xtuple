@@ -14,20 +14,16 @@ var fs = require('fs'),
   /**
     @param {Object} specs look like this:
       { dev:
-       [ '/home/shackbarth/git/xtuple/scripts/../enyo-client',
-         '/home/shackbarth/git/xtuple/scripts/../enyo-client/extensions/source/crm',
-         '/home/shackbarth/git/xtuple/scripts/../enyo-client/extensions/source/sales',
-         '/home/shackbarth/git/xtuple/scripts/../enyo-client/extensions/source/project',
-         '/home/shackbarth/git/xtuple/scripts/../../xtuple-extensions/source/oauth2',
-         '/home/shackbarth/git/xtuple/scripts/../../private-extensions/source/incident_plus' ],
+       [ '/home/user/git/xtuple/scripts/../enyo-client',
+         '/home/user/git/xtuple/scripts/../enyo-client/extensions/source/crm',
+         '/home/user/git/xtuple/scripts/../enyo-client/extensions/source/project',
+         '/home/user/git/xtuple/scripts/../../private-extensions/source/incident_plus' ],
       dev2:
-       [ '/home/shackbarth/git/xtuple/scripts/../enyo-client',
-         '/home/shackbarth/git/xtuple/scripts/../enyo-client/extensions/source/crm',
-         '/home/shackbarth/git/xtuple/scripts/../enyo-client/extensions/source/sales',
-         '/home/shackbarth/git/xtuple/scripts/../enyo-client/extensions/source/project',
-         '/home/shackbarth/git/xtuple/scripts/../../xtuple-extensions/source/oauth2',
-         '/home/shackbarth/git/xtuple/scripts/../../private-extensions/source/incident_plus',
-         '/home/shackbarth/git/xtuple/scripts/../../xtuple-extensions/source/icecream' ] }
+       [ '/home/user/git/xtuple/scripts/../enyo-client',
+         '/home/user/git/xtuple/scripts/../enyo-client/extensions/source/crm',
+         '/home/user/git/xtuple/scripts/../../private-extensions/source/incident_plus',
+       ]
+      }
     @param {Object} creds look like this:
       { hostname: 'localhost',
         port: 5432,
