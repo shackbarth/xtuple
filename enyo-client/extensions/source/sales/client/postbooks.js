@@ -10,7 +10,7 @@ trailing:true, white:true*/
       panels,
       relevantPrivileges,
       configurationJson,
-      configuration
+      configuration;
 
     // ..........................................................
     // APPLICATION
@@ -82,17 +82,19 @@ trailing:true, white:true*/
         var url, ajax = new enyo.Ajax({
           url: XT.getOrganizationPath() + "/analysis",
         });
-        ajax.response(function (inSender, inResponse) {
-          console.log(JSON.stringify(inResponse));
+        ajax.response(this, function (inSender, inResponse) {
+          this.setSource(inResponse);
         });
         // param for the report name
         ajax.go({reportUrl: "content/saiku-ui/index.html?biplugin=true"});
-        this.sourceChanged();
       },
-
+      /**
+        When the published source value is set, this sets the src
+        attribute on the iFrame.
+      */
       sourceChanged: function () {
         this.inherited(arguments);
-        this.setAttributes({src: this.source});
+        this.setAttributes({src: this.getSource()});
       }
     });
 
