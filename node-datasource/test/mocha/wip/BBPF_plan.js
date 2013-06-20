@@ -18,7 +18,7 @@ describe('Basic Business Process flow', function () {
     it('User navigates to QOH screen to verify the QOH of "TINSERT1"');
   });
   describe('User selects to create a sales order', function () {
-    it("User navigates to Sales Order-New and selects to create a new Sales order with 7 line items with items whose control methods are 'None', 'Regular', 'Regular/MLC', 'Lot', 'Lot/MLC', 'Serial' and 'Serial/MLC respectively");
+    it('User navigates to Sales Order-New and selects to create a new Sales order with 7 line items with items whose control methods are "None", "Regular", "Regular/MLC", "Lot", "Lot/MLC", "Serial" and "Serial/MLC" respectively');
     it('User navigates to Sales-Quote-List and selects to convert an existing Quote to a sales order');
   describe('User navigates to Sales-Quote-List and selects to convert an existing Quote which has Prospect as the customer #', function () {
     it('Should create a new sales order');
@@ -33,10 +33,10 @@ describe('Basic Business Process flow', function () {
     it('Planned orders for the items of the selected planner code and site will be created');
     it('User selects a Planner code pattern, All sites and Runs MRP');
     it('Planned Orders for the matched planner code patterns and sites will be created');
-    it("User selects 'All Planner Codes', selects the preferred site, enters a valid Cutoff date, enables delete existing Firmed Orders option  and Runs MRP");
+    it('User selects "All Planner Codes", selects the preferred site, enters a valid Cutoff date, enables delete existing Firmed Orders option  and Runs MRP');
     it('Planned orders for all planner codes and preferred site will be created');
     it('Existing Planned Orders will be deleted');
-    it("User selects 'All Planner Codes', selects the preferred site, enters a valid Cutoff date, enables create MRP Exceptions and Runs MRP");
+    it('User selects "All Planner Codes", selects the preferred site, enters a valid Cutoff date, enables create MRP Exceptions and Runs MRP');
     it('Planned orders for all planner codes and preferred site will be created');
     it('MRP exceptions will be created and considered while creating planned orders');
     it('User navigates to Schedule-Scheduling-run MRP-by item and schedules the MRP by planner code by selecting the item, selecting the site andentering the cut-off date');
