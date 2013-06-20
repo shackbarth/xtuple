@@ -108,14 +108,24 @@ var _ = require('underscore'),
         // Install all the scripts in the manifest file, in series.
         //
         var installScript = function (filename, scriptCallback) {
-          if (!fs.existsSync(path.join(dbSourceRoot, filename))) {
+          var fullFilename = path.join(dbSourceRoot, filename);
+          if (!fs.existsSync(fullFilename)) {
             scriptCallback(path.join(dbSourceRoot, filename) + " does not exist");
             return;
           }
-          var scriptContents = fs.readFileSync(path.join(dbSourceRoot, filename), "utf8");
+          var scriptContents = fs.readFileSync(fullFilename, "utf8");
 
           pgClient.query(scriptContents, function (err, res) {
-            scriptCallback(err, filename); // TODO: do anything with res?
+            if (err) {
+              scriptCallback({
+                filename: fullFilename,
+                message: err.message,
+                stack: err.stack,
+                details: err
+              });
+              return;
+            }
+            scriptCallback(err, fullFilename); // TODO: do anything with res?
           });
         };
         async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
