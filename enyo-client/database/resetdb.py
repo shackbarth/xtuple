@@ -4,7 +4,6 @@ import argparse
 import subprocess
 import os
 import sys
-import time
 
 print "All output is saved in a file called output.txt in the current directory"
 
