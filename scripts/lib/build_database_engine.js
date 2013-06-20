@@ -2,11 +2,12 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true*/
 
-var fs = require('fs'),
+var _ = require('underscore'),
+  async = require('async'),
   exec = require('child_process').exec,
-  _ = require('underscore'),
+  fs = require('fs'),
   pg = require('pg'),
-  async = require('async');
+  winston = require('winston');
 
 (function () {
   "use strict";
@@ -33,7 +34,9 @@ var fs = require('fs'),
         database: 'dev2' }
   */
   exports.buildDatabase = function (specs, creds) {
-
+    console.log(specs);
+    console.log(creds);
+    return;
     _.each(specs, function (extensions, databaseName) {
       _.each(extensions, function (extension) {
         var manifestFilename = extension + "/database/source/manifest.js",
@@ -41,14 +44,14 @@ var fs = require('fs'),
           manifest;
 
         if (!fs.existsSync(manifestFilename)) {
-          console.log("Cannot find manifest", manifestFilename);
+          winston.error("Cannot find manifest", manifestFilename);
           process.exit(1); // TODO: winston
         }
         manifestString = fs.readFileSync(manifestFilename, "utf8");
         try {
           manifest = JSON.parse(manifestString);
         } catch (error) {
-          console.log("Manifest is not valid JSON", manifestFilename);
+          winston.error("Manifest is not valid JSON", manifestFilename);
           process.exit(1); // TODO: winston
 
         }

@@ -1,0 +1,109 @@
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+regexp:true, undef:true, strict:true, trailing:true, white:true */
+/*global X:true, Backbone:true, _:true, XM:true, XT:true*/
+
+var _ = require('underscore'),
+  async = require('async'),
+  buildDatabase = require("./build_database_engine").buildDatabase,
+  exec = require('child_process').exec,
+  fs = require('fs'),
+  pg = require('pg'),
+  winston = require('winston');
+
+(function () {
+  "use strict";
+
+  var creds;
+
+  //
+  // Looks in a database to see which extensions are registered.
+  // API conforms to async expectations.
+  // Also tacks on the core directory.
+  //
+  var getRegisteredExtensions = function (database, callback) {
+    creds.database = database;
+    var client = new pg.Client(creds);
+    client.connect();
+
+    //queries are queued and executed one after another once the connection becomes available
+    var result = client.query("SELECT * FROM xt.ext ORDER BY ext_load_order", function (err, res) {
+      var paths = _.map(res.rows, function (row) {
+        var location = row.ext_location,
+          name = row.ext_name,
+          path;
+
+        if (location === '/core-extensions') {
+          path = __dirname + "/../enyo-client/extensions/source/" + name;
+        } else if (location === '/xtuple-extensions') {
+          path = __dirname + "/../../xtuple-extensions/source/" + name;
+        } else if (location === '/private-extensions') {
+          path = __dirname + "/../../private-extensions/source/" + name;
+        }
+        return path;
+      }),
+        corePath = __dirname + "/../enyo-client",
+        returnObj = {};
+
+      client.end();
+
+      paths.unshift(corePath);
+      returnObj[database] = paths;
+      callback(null, returnObj);
+    });
+
+  };
+
+  exports.build = function (database, extension) {
+    var buildSpecs = {},
+      databases = [],
+      config = require(__dirname + "/../../node-datasource/config.js"),
+      //
+      // The arg parser returns the spec as an array of objects with one key each.
+      // This is awkward. We want the specs to be an object whose keys are the
+      // databases and whose values are arrays of paths.
+      //
+      flattenSpecs = function (specs) {
+        var obj = {};
+
+        _.each(specs, function (spec) {
+          var keys = Object.keys(spec);
+          _.each(keys, function (key) {
+            obj[key] = spec[key];
+          });
+        });
+        return obj;
+      };
+
+    creds = config.databaseServer;
+    creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
+
+    if (database) {
+      // the user has specified a particular database
+      // regex: remove trailing slash if present
+      databases.push(database);
+    } else {
+      // build all the databases in node-datasource/config.js
+      databases = config.datasource.databases;
+    }
+
+    if (extension) {
+      buildSpecs = _.map(databases, function (database) {
+        // the user has specified an extension to build
+        var returnObj = {};
+        returnObj[database] = [extension];
+        return returnObj;
+      });
+      // synchronous...
+      buildDatabase(flattenSpecs(buildSpecs), creds);
+
+    } else {
+      // build all registered extensions for the database
+      async.map(databases, getRegisteredExtensions, function (err, results) {
+        // asynchronous...
+        buildDatabase(flattenSpecs(results), creds);
+      });
+    }
+  };
+
+}());
+
