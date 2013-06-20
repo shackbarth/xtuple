@@ -5,12 +5,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
+  var utils = require('../oauth2/utils');
+
   /**
     Generates a JSON Web Token (JWT) to be appended to the
     BI Server URL so that it may authenticate the current user.
   */
   exports.analysis = function (req, res) {
-    var reportUrl = req.query.reportUrl,
+    var privKey = X.fs.readFileSync(X.options.datasource.biKeyFile),
+      reportUrl = req.query.reportUrl,
       username = req.session.passport.user.username,
       biServerUrl = X.options.datasource.biServerUrl,
       today = new Date(),
@@ -19,8 +22,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       database = req.session.passport.user.organization,
       scope = "/auth/" + database,
       audience = "/oauth/token",
-      privKey = X.fs.readFileSync(X.options.datasource.biKeyFile),
-      claimSet = {
+      claimset = {
         //"iss": "", // client-identifier, not needed?
         "prn": username, // username
         "scope": scope,
@@ -28,12 +30,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         "datasource": datasource, // rest api url
         "exp": Math.round(expires.getTime() / 1000), // expiration date in millis
         "iat": Math.round(today.getTime() / 1000)  // created date in millis
-      };
+      },
+      jwt;
 
-    claimSet = JSON.stringify(claimSet);
+    jwt = encodeJWT(claimset, privKey);
 
     // send newly formed BI url back to the client
-    res.setHeader("Content-Type", "application/json");
-    res.send(biServerUrl + reportUrl + "&assertion=" + claimSet);
+    res.send(biServerUrl + reportUrl + "&assertion=" + jwt);
   };
+
+  var encodeJWT = function (claimset, key) {
+    var encodeClaimset = utils.base64urlEncode(JSON.stringify(claimset)),
+      signer = X.crypto.createSign("RSA-SHA256"),
+      signature;
+
+    signer.update(encodeClaimset);
+    signature = utils.base64urlEscape(signer.sign(key, "base64"));
+
+    return signature;
+  };
+
 }());
