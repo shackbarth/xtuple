@@ -22,9 +22,9 @@ var _ = require('underscore'),
              '/home/user/git/private-extensions/source/incident_plus' ],
           database: 'dev' },
         { extensions:
-           [ '/home/shackbarth/git/xtuple/enyo-client',
-             '/home/shackbarth/git/xtuple/enyo-client/extensions/source/sales',
-             '/home/shackbarth/git/xtuple/enyo-client/extensions/source/project' ],
+           [ '/home/user/git/xtuple/enyo-client',
+             '/home/user/git/xtuple/enyo-client/extensions/source/sales',
+             '/home/user/git/xtuple/enyo-client/extensions/source/project' ],
           database: 'dev2' } ]
 
     @param {Object} creds look like this:
@@ -37,7 +37,6 @@ var _ = require('underscore'),
   */
   exports.buildDatabase = function (specs, creds) {
 
-    console.log(specs);
     // TODO: log to file
     winston.log("Building with specs", JSON.stringify(specs));
 
