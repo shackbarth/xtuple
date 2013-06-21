@@ -2,29 +2,12 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, XT:true, _:true */
 
-
-// TODO: hopefully this is temp
-_ = require("underscore");
-
-require('../xt/foundation/foundation');
-require('../xt/database/database');
-
-if (typeof XT === 'undefined') {
-  XT = {};
-}
-
-if (!X.options) {
-  X.options = {};
-  X.options.datasource = {};
-}
-
-
 (function () {
   "use strict";
 
-  var _path = X.path,
-    _ = X._,
-    _fs = X.fs,
+  var _ = require("underscore"),
+    _path = require("path"),
+    _fs = require("fs"),
     calculateDependencies,
     checkDependencies,
     cleanse,
@@ -41,13 +24,8 @@ if (!X.options) {
     submit,
     monsterString = "";
 
-  // When ran from the maintenance route, we already have XT.dataSource.
-  // When ran from the installer, we need to included it after X.options is set.
-  if (typeof XT.dataSource === 'undefined') {
-    require('../lib/ext/datasource');
-  }
-
-  X.db = XT.dataSource;
+  // still required for the X functions
+  require('../xt/foundation/foundation');
 
   /**
     Prepares the orm for insertion into the database by cleaning out all the junk
