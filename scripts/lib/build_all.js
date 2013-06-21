@@ -19,9 +19,9 @@ var _ = require('underscore'),
   var creds,
     buildAll = function (specs, creds) {
       buildDatabase(specs, creds, driver, function (databaseErr, databaseRes) {
-        console.log(arguments);
+        //console.log(typeof databaseErr);
         if (databaseErr) {
-          console.log("Not bothering to build the client");
+          console.log("Database error. Not bothering to build the client");
           return;
         }
         //buildClient(specs, creds, function (clientErr, clientRes) {

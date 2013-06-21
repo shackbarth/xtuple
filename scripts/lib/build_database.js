@@ -94,7 +94,10 @@ var _ = require('underscore'),
             return;
           }
           fs.readFile(fullFilename, "utf8", function (err, data) {
-            monsterSql += data;
+            var noticeSql = 'do $$ plv8.elog(NOTICE, "Running file ' + fullFilename + '"); $$ language plv8;\n';
+            // TODO: worry about SQLi?
+            monsterSql += noticeSql += data;
+
             scriptCallback(err, data);
           });
 
