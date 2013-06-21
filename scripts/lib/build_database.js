@@ -6,7 +6,7 @@ var _ = require('underscore'),
   async = require('async'),
   exec = require('child_process').exec,
   fs = require('fs'),
-  ormInstaller = require('../../node-datasource/installer/orm'),
+  //ormInstaller = require('../../node-datasource/installer/orm'),
   path = require('path'),
   pg = require('pg'),
   winston = require('winston');
@@ -33,8 +33,7 @@ var _ = require('underscore'),
         port: 5432,
         user: 'admin',
         password: 'admin',
-        host: 'localhost',
-        database: 'dev2' }
+        host: 'localhost' }
   */
   exports.buildDatabase = function (specs, creds) {
     // TODO: set up winston file transport
@@ -148,11 +147,7 @@ var _ = require('underscore'),
             // All of the extensions have just been installed. Now is the time
             // to commit or rollback, depending on the success.
             //
-
-            // TODO: now would be an excellent time to run the orms for all of the
-            // extensions on this database
-
-            if (err) {
+            var rollback = function () {
               pgClient.query("ROLLBACK;", function (rollbackErr, rollbackRes) {
                 // TODO: deal with a rollbackErr
                 pgClient.end();
@@ -161,12 +156,40 @@ var _ = require('underscore'),
 
                 databaseCallback(err);
               });
+            };
+
+            if (err) {
+              rollback();
             } else {
-              pgClient.query("COMMIT;", function (commitErr, commitRes) {
-                pgClient.end();
-                // TODO: deal with a commitErr
-                winston.log("commit on success", res);
-                databaseCallback(err, res);
+
+              // Now would be an excellent time to run the orms for all of the
+              // extensions on this database
+              var runOrmInstaller = function (extension, callback) {
+                var ormDir = path.join(extension, "database/orm");
+
+                callback();
+                /*
+                TODO: get the orm installer to work
+                if (fs.existsSync(ormDir)) {
+                  ormInstaller.run(creds, ormDir, callback);
+                } else {
+                  callback(null, "No ORM dir, no problem.");
+                }
+                */
+              };
+
+              async.mapSeries(extensions, runOrmInstaller, function (ormErr, ormRes) {
+                if (ormErr) {
+                  rollback();
+                } else {
+                  // commit everything for this database
+                  pgClient.query("COMMIT;", function (commitErr, commitRes) {
+                    pgClient.end();
+                    // TODO: deal with a commitErr
+                    winston.log("commit on success", res);
+                    databaseCallback(err, res);
+                  });
+                }
               });
             }
           });
