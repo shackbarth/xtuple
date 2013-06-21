@@ -38,7 +38,8 @@ if (!X.options) {
     refresh,
     runOrmInstaller,
     select,
-    submit;
+    submit,
+    monsterString = "";
 
   // When ran from the maintenance route, we already have XT.dataSource.
   // When ran from the installer, we need to included it after X.options is set.
@@ -73,7 +74,6 @@ if (!X.options) {
     Here is the function that actually installs the ORM!
    */
   submit = function (data, orm, queue, ack, isExtension) {
-    //console.log("submit", arguments);
     var query, extensions, context, extensionList = [], namespace, type;
     context = orm.context;
     namespace = orm.nameSpace;
@@ -109,36 +109,23 @@ if (!X.options) {
     console.log("installing %@%@.%@".f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
 
     query = "select xt.install_orm('%@')".f(X.json(cleanse(orm)));
+    monsterString += query;
 
-    X.db.query(query, data.databaseOptions, _.bind(function (err, res) {
-      var c = extensionList.length;
-      if (err) {
-        console.log("Error: " + err.message);
-        if (isExtension) {
-          console.log("skipping ahead");
-        } else {
-          console.log("unable to continue");
-          ack(err.message);
-          //X.log("Critical error. Unable to continue. Killing process. ", err.message);
-          //process.emit("SIGKILL");
-          return;
-        }
-      }
+    var c = extensionList.length;
 
-      if (!isExtension) data.installed.push(orm);
-      if (c > 0) {
-        submit.call(this, data, extensionList.shift(), queue, ack, true);
-      } else if (isExtension) {
-        --c;
-        if (!extensionList.length) {
-          installQueue.call(this, data, ack, queue);
-        } else {
-          submit.call(this, data, extensionList.shift(), queue, ack, true);
-        }
-      } else {
+    if (!isExtension) data.installed.push(orm);
+    if (c > 0) {
+      submit.call(this, data, extensionList.shift(), queue, ack, true);
+    } else if (isExtension) {
+      --c;
+      if (!extensionList.length) {
         installQueue.call(this, data, ack, queue);
+      } else {
+        submit.call(this, data, extensionList.shift(), queue, ack, true);
       }
-    }, this));
+    } else {
+      installQueue.call(this, data, ack, queue);
+    }
   };
 
 
@@ -160,9 +147,15 @@ if (!X.options) {
       // this is the actual callback! The first arg is an error, which is null if
       // we've made it this far. The second arg is an array of all the orm names
       // that have been installed.
-      return ack(null, _.map(data.installed, function (orm) {
-        return orm.type;
-      }));
+      return ack(null, {
+        query: monsterString,
+        orms: _.map(data.installed, function (orm) {
+          return {
+            namespace: orm.nameSpace || orm.namespace,
+            type: orm.type
+          };
+        })
+      });
     }
     orm = queue.shift();
 
@@ -207,7 +200,6 @@ if (!X.options) {
     Recurse into the file structure to parse the json files.
    */
   dive = function (path, root) {
-    console.log("dive", path, root);
     var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
     isTop = root ? false: true;
     _.each(files, function (file) {
@@ -362,12 +354,7 @@ if (!X.options) {
         "where nspname in (select distinct lower(orm_namespace) from xt.orm) " +
         ") views on lower(orm_type) = viewName " +
         "where viewName is null " +
-        ")",
-      testConnection = function (data, ack, options, err, res) {
-        if (err) return ack(false);
-        data.databaseOptions = options;
-        ack(true);
-      };
+        ")";
 
     for (key in options) {
       if (!options.hasOwnProperty(key)) continue;
@@ -380,9 +367,9 @@ if (!X.options) {
     creds.password = options.password;
     creds.database = options.organization;
 
-    callback = _.bind(testConnection, this, data, ack, creds);
-
-    X.db.query(clearingSql, creds, callback);
+    monsterString += clearingSql;
+    data.databaseOptions = creds;
+    ack(true);
   };
 
   /**
@@ -429,58 +416,47 @@ if (!X.options) {
       });
     });
 
-    // Get a list of existing orms
-    sql = "select orm_namespace as namespace, " +
-          " orm_type as type " +
-          "from xt.orm " +
-          "where not orm_ext;";
-    callback = function (err, resp) {
-      console.log(JSON.stringify(resp));
-      if (err) {
-        console.log("Error in xt.orm query callback", err);
-      }
-      existing = resp ? resp.rows : [];
+    // the pre-existing ORMs are passed in to us from whoever calls the ORM installer
+    // This is necessary to keep the ORM installer write-only.
+    existing = options.orms ? options.orms : [];
 
-      // organize and associate the extensions
-      _.each(extensions, function (context) {
-        _.each(context, function (namespace) {
-          _.each(_.keys(namespace), function (name) {
-            var ext, ns, type, orm;
-            ext = namespace[name];
-            ns = ext.nameSpace;
-            type = ext.type;
-            try {
-              orm = orms[ns][type];
-            } catch (err) { return; }
-            if (orm) {
-              if (!orm.extensions) { orm.extensions = []; }
-              orm.extensions.push(ext);
-            } else if (findExisting(ns, type)) {
-              orms = X.addProperties(orms, ns, type, ext);
-            } else {
-              console.log("no base orm for extension %@.%@".f(ns, type));
-            }
-          });
+    // organize and associate the extensions
+    _.each(extensions, function (context) {
+      _.each(context, function (namespace) {
+        _.each(_.keys(namespace), function (name) {
+          var ext, ns, type, orm;
+          ext = namespace[name];
+          ns = ext.nameSpace;
+          type = ext.type;
+          try {
+            orm = orms[ns][type];
+          } catch (err) { return; }
+          if (orm) {
+            if (!orm.extensions) { orm.extensions = []; }
+            orm.extensions.push(ext);
+          } else if (findExisting(ns, type)) {
+            orms = X.addProperties(orms, ns, type, ext);
+          } else {
+            console.log("no base orm for extension %@.%@".f(ns, type));
+          }
         });
       });
+    });
 
-      data.orms = orms;
-      data.extensions = extensions;
+    data.orms = orms;
+    data.extensions = extensions;
 
-      calculateDependencies.call(this, data);
-      ack(orms);
-    };
-    _.bind(callback, this);
-    X.db.query(sql, data.databaseOptions, callback);
+    calculateDependencies.call(this, data);
+    ack(orms);
   };
 
   /**
     Entry point for installer. Chains together call to select, then refresh, then install.
    */
-  exports.run = runOrmInstaller = function (creds, path, callback) {
+  exports.run = runOrmInstaller = function (creds, path, options, callback) {
     if (!callback) {
       callback = function () {
-// TODO - Call stored procedure to generate cached REST API Discovery Document.
+        // TODO - Call stored procedure to generate cached REST API Discovery Document.
         console.log("all done");
         process.exit(0);
       };
@@ -488,7 +464,7 @@ if (!X.options) {
 
     var data = {databaseOptions: creds};
     select(data, creds, function () {
-      refresh(data, {path: path}, function () {
+      refresh(data, {path: path, orms: options.orms}, function () {
         install(data, callback);
       });
     });

@@ -3,11 +3,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true*/
 
 
-
-
-
-
-
 var _ = require('underscore'),
   async = require('async'),
   exec = require('child_process').exec,
@@ -51,7 +46,6 @@ var _ = require('underscore'),
     var installDatabase = function (spec, databaseCallback) {
       var extensions = spec.extensions,
         databaseName = spec.database,
-        errorInDb = false,
         monsterString = "";
 
       winston.log("Installing on database", databaseName);
@@ -62,11 +56,6 @@ var _ = require('underscore'),
       // Install all the extensions of the database, in series.
       //
       var installExtension = function (extension, extensionCallback) {
-        // TODO: I believe async makes the errorInDb convention unnecessary
-        if (errorInDb) {
-          winston.error("Not installing extension", extension, "due to earlier error in db", databaseName);
-          return;
-        }
         winston.log("Installing extension", databaseName, extension);
         var isLibOrm = extension.indexOf("lib/orm") >= 0, // TODO: do better
           dbSourceRoot = isLibOrm ?
@@ -81,7 +70,6 @@ var _ = require('underscore'),
         // Read the manifest file
         //
         if (!fs.existsSync(manifestFilename)) {
-          errorInDb = true;
           winston.log("Cannot find manifest " + manifestFilename);
           extensionCallback("Cannot find manifest " + manifestFilename);
           return;
@@ -90,7 +78,6 @@ var _ = require('underscore'),
         try {
           manifest = JSON.parse(manifestString);
         } catch (error) {
-          errorInDb = true;
           winston.log("Manifest is not valid JSON" + manifestFilename);
           extensionCallback("Manifest is not valid JSON" + manifestFilename);
           return;
@@ -146,19 +133,38 @@ var _ = require('underscore'),
             var ormDir = path.join(extension, "database/orm");
 
             if (fs.existsSync(ormDir)) {
-              console.log(ormDir);
-              ormInstaller.run(creds, ormDir, callback);
+              // TODO: update spec.orms as more ORMs get added
+              /*
+     { namespace: 'XM', type: 'ToDoProject' },
+     { namespace: 'XM', type: 'QuoteProject' },
+     { namespace: 'XM', type: 'CustomerProject' },
+     { namespace: 'XM', type: 'OpportunityProject' },
+     { namespace: 'XM', type: 'ProjectCustomer' },
+     { namespace: 'XM', type: 'IncidentCustomer' },
+     { namespace: 'XM', type: 'ContactCustomer' },
+              */
+              console.log("installing", ormDir);
+              var updateSpecs = function (err, res) {
+                console.log(res.orms.length);
+                console.log(spec.orms.length);
+                var combined = spec.orms;
+
+                callback(err, res);
+
+              };
+              ormInstaller.run(creds, ormDir, spec, updateSpecs);
             } else {
               callback(null, "No ORM dir, no problem.");
             }
           };
 
           async.mapSeries(extensions, runOrmInstaller, function (ormErr, ormRes) {
+            process.exit(); // TODO: temp
             if (ormErr) {
               databaseCallback(ormErr);
             } else {
               // TODO: run this through
-              console.log(monsterString);
+              //console.log(monsterString);
               databaseCallback(ormRes);
             }
           });
@@ -186,7 +192,8 @@ var _ = require('underscore'),
         }
 
         pgClient.end();
-        spec.orms = res;
+
+        spec.orms = res.rows;
         installDatabase(spec, callback);
       });
     };
@@ -196,7 +203,7 @@ var _ = require('underscore'),
     //
     async.map(specs, preInstallDatabase, function (err, res) {
       if (err) {
-        winston.error(err);
+        winston.error("err");
         if (masterCallback) {
           masterCallback(err);
         }
