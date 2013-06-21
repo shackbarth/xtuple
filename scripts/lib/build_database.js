@@ -5,6 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 var _ = require('underscore'),
   async = require('async'),
+  dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
   ormInstaller = require('../../node-datasource/installer/orm'),
@@ -36,7 +37,7 @@ var _ = require('underscore'),
         password: 'admin',
         host: 'localhost' }
   */
-  exports.buildDatabase = function (specs, creds, driver, masterCallback) {
+  exports.buildDatabase = function (specs, creds, masterCallback) {
     // TODO: set up winston file transport
     winston.log("Building databases with specs", JSON.stringify(specs));
 
@@ -158,9 +159,8 @@ var _ = require('underscore'),
             if (ormErr) {
               databaseCallback(ormErr);
             } else {
-              driver.runQuery(monsterSql, creds, function (err, res) {
-                // TODO: use driverRes?
-                databaseCallback(null, ormRes);
+              dataSource.query(monsterSql, creds, function (err, res) {
+                databaseCallback(err, res);
               });
             }
           });
