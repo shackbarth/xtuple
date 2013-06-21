@@ -6,8 +6,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   var _ = require("underscore"),
-    _path = require("path"),
-    _fs = require("fs"),
+    fs = require("fs"),
     calculateDependencies,
     checkDependencies,
     cleanse,
@@ -170,7 +169,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   parseFile = function (path) {
     try {
-      return X.json(_fs.readFileSync(path, "utf8"), true);
+      return X.json(fs.readFileSync(path, "utf8"), true);
     } catch (err) { return {isError: true, message: err.message, file: path}; }
   };
 
@@ -181,7 +180,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
     isTop = root ? false: true;
     _.each(files, function (file) {
-      stat = _fs.statSync(file);
+      stat = fs.statSync(file);
       if (stat.isDirectory()) dive(file, root ? root: (root = {}));
       else if (X.ext(file) === "json") root[file] = "";
     });
