@@ -106,7 +106,7 @@ if (!X.options) {
       });
     }
 
-    console.log("installing %@%@.%@".f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
+    //console.log("installing %@%@.%@".f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
 
     query = "select xt.install_orm('%@')".f(X.json(cleanse(orm)));
     monsterString += query;
@@ -354,7 +354,7 @@ if (!X.options) {
         "where nspname in (select distinct lower(orm_namespace) from xt.orm) " +
         ") views on lower(orm_type) = viewName " +
         "where viewName is null " +
-        ")";
+        ");";
 
     for (key in options) {
       if (!options.hasOwnProperty(key)) continue;
@@ -454,6 +454,8 @@ if (!X.options) {
     Entry point for installer. Chains together call to select, then refresh, then install.
    */
   exports.run = runOrmInstaller = function (creds, path, options, callback) {
+    options = options || {};
+
     if (!callback) {
       callback = function () {
         // TODO - Call stored procedure to generate cached REST API Discovery Document.

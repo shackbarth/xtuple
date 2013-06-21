@@ -133,24 +133,17 @@ var _ = require('underscore'),
             var ormDir = path.join(extension, "database/orm");
 
             if (fs.existsSync(ormDir)) {
-              // TODO: update spec.orms as more ORMs get added
-              /*
-     { namespace: 'XM', type: 'ToDoProject' },
-     { namespace: 'XM', type: 'QuoteProject' },
-     { namespace: 'XM', type: 'CustomerProject' },
-     { namespace: 'XM', type: 'OpportunityProject' },
-     { namespace: 'XM', type: 'ProjectCustomer' },
-     { namespace: 'XM', type: 'IncidentCustomer' },
-     { namespace: 'XM', type: 'ContactCustomer' },
-              */
-              console.log("installing", ormDir);
               var updateSpecs = function (err, res) {
-                console.log(res.orms.length);
-                console.log(spec.orms.length);
-                var combined = spec.orms;
-
+                if (err) {
+                  callback(err);
+                }
+                monsterString += res.query;
+                // if the orm installer has added any new orms we want to know about them
+                // so we can inform the next call to the installer.
+                spec.orms = _.unique(_.union(spec.orms, res.orms), function (orm) {
+                  return orm.namespace + orm.type;
+                });
                 callback(err, res);
-
               };
               ormInstaller.run(creds, ormDir, spec, updateSpecs);
             } else {
@@ -159,11 +152,10 @@ var _ = require('underscore'),
           };
 
           async.mapSeries(extensions, runOrmInstaller, function (ormErr, ormRes) {
-            process.exit(); // TODO: temp
             if (ormErr) {
               databaseCallback(ormErr);
             } else {
-              // TODO: run this through
+              // TODO: query db
               //console.log(monsterString);
               databaseCallback(ormRes);
             }
