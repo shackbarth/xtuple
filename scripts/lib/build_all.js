@@ -23,13 +23,13 @@ var _ = require('underscore'),
           console.log("Not bothering to build the client");
           return;
         }
-        buildClient(specs, creds, function (clientErr, clientRes) {
-          if (clientErr) {
-            console.log("Client build failed");
-            return;
-          }
-          console.log("All is good!");
-        });
+        //buildClient(specs, creds, function (clientErr, clientRes) {
+        //  if (clientErr) {
+        //    console.log("Client build failed");
+        //    return;
+        //  }
+        //  console.log("All is good!");
+        //});
       });
     };
 

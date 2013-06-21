@@ -2,6 +2,23 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, XT:true, _:true */
 
+
+// TODO: hopefully this is temp
+_ = require("underscore");
+
+require('../xt/foundation/foundation');
+require('../xt/database/database');
+
+if (typeof XT === 'undefined') {
+  XT = {};
+}
+
+if (!X.options) {
+  X.options = {};
+  X.options.datasource = {};
+}
+
+
 (function () {
   "use strict";
 
@@ -190,6 +207,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Recurse into the file structure to parse the json files.
    */
   dive = function (path, root) {
+    console.log("dive", path, root);
     var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
     isTop = root ? false: true;
     _.each(files, function (file) {
@@ -375,7 +393,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   refresh = function (data, options, ack) {
     options = options || {};
     if (typeof options === 'function') { ack = options; }
-    var path = _path.join(X.basePath, options.path || X.options.orm.defaultPath),
+    var path = options.path,
       files,
       orms,
       extensions,
@@ -417,6 +435,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           "from xt.orm " +
           "where not orm_ext;";
     callback = function (err, resp) {
+      console.log(JSON.stringify(resp));
       if (err) {
         console.log("Error in xt.orm query callback", err);
       }

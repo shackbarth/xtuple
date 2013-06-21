@@ -2,11 +2,17 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true*/
 
+
+
+
+
+
+
 var _ = require('underscore'),
   async = require('async'),
   exec = require('child_process').exec,
   fs = require('fs'),
-  //ormInstaller = require('../../node-datasource/installer/orm'),
+  ormInstaller = require('../../node-datasource/installer/orm'),
   path = require('path'),
   pg = require('pg'),
   winston = require('winston');
@@ -40,29 +46,16 @@ var _ = require('underscore'),
     winston.log("Building databases with specs", JSON.stringify(specs));
 
     //
-    // Install all extension scripts into a database
+    // The function to install all extension scripts into a database
     //
     var installDatabase = function (spec, databaseCallback) {
       var extensions = spec.extensions,
         databaseName = spec.database,
         errorInDb = false,
-        pgClient;
+        monsterString = "";
 
       winston.log("Installing on database", databaseName);
 
-      //
-      // Step 1 in installing all scripts for a database:
-      // Start a connection to the database
-      //
-      var createConnection = function (createCallback) {
-        creds.database = databaseName;
-        creds.organization = creds.database; // adapt our lingo to orm installer lingo
-        pgClient = new pg.Client(creds);
-        pgClient.connect();
-        pgClient.query("BEGIN;", function (err, res) {
-          createCallback(err, res);
-        });
-      };
 
       //
       // Step 2 in installing all scripts for a database:
@@ -113,8 +106,12 @@ var _ = require('underscore'),
             scriptCallback(path.join(dbSourceRoot, filename) + " does not exist");
             return;
           }
-          var scriptContents = fs.readFileSync(fullFilename, "utf8");
+          fs.readFile(fullFilename, "utf8", function (err, data) {
+            monsterString += data;
+            scriptCallback(err, data);
+          });
 
+          /*
           pgClient.query(scriptContents, function (err, res) {
             if (err) {
               scriptCallback({
@@ -127,6 +124,7 @@ var _ = require('underscore'),
             }
             scriptCallback(err, fullFilename); // TODO: do anything with res?
           });
+          */
         };
         async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
           extensionCallback(err, res);
@@ -136,70 +134,67 @@ var _ = require('underscore'),
         //
       };
 
-      //
-      // Use async to make sure that the tranaction is started before we try to do anything else
-      //
-      async.series([
-        createConnection,
-        function () { // don't need to use the callback parameter here
-          async.mapSeries(extensions, installExtension, function (err, res) {
-            //
-            // All of the extensions have just been installed. Now is the time
-            // to commit or rollback, depending on the success.
-            //
-            var rollback = function () {
-              pgClient.query("ROLLBACK;", function (rollbackErr, rollbackRes) {
-                // TODO: deal with a rollbackErr
-                pgClient.end();
-                errorInDb = true;
-                winston.log("rollback on error", err);
+      async.mapSeries(extensions, installExtension, function (err, res) {
 
-                databaseCallback(err);
-              });
-            };
+        if (err) {
+          databaseCallback(err);
+        } else {
 
-            if (err) {
-              rollback();
+          // Now would be an excellent time to run the orms for all of the
+          // extensions on this database
+          var runOrmInstaller = function (extension, callback) {
+            var ormDir = path.join(extension, "database/orm");
+
+            if (fs.existsSync(ormDir)) {
+              console.log(ormDir);
+              ormInstaller.run(creds, ormDir, callback);
             } else {
+              callback(null, "No ORM dir, no problem.");
+            }
+          };
 
-              // Now would be an excellent time to run the orms for all of the
-              // extensions on this database
-              var runOrmInstaller = function (extension, callback) {
-                var ormDir = path.join(extension, "database/orm");
-
-                callback();
-                /*
-                TODO: get the orm installer to work
-                if (fs.existsSync(ormDir)) {
-                  ormInstaller.run(creds, ormDir, callback);
-                } else {
-                  callback(null, "No ORM dir, no problem.");
-                }
-                */
-              };
-
-              async.mapSeries(extensions, runOrmInstaller, function (ormErr, ormRes) {
-                if (ormErr) {
-                  rollback();
-                } else {
-                  // commit everything for this database
-                  pgClient.query("COMMIT;", function (commitErr, commitRes) {
-                    pgClient.end();
-                    // TODO: deal with a commitErr
-                    winston.log("commit on success", res);
-                    databaseCallback(err, res);
-                  });
-                }
-              });
+          async.mapSeries(extensions, runOrmInstaller, function (ormErr, ormRes) {
+            if (ormErr) {
+              databaseCallback(ormErr);
+            } else {
+              // TODO: run this through
+              console.log(monsterString);
+              databaseCallback(ormRes);
             }
           });
         }
-      ]);
-      //
-      // End extension installation code
-      //
+      });
     };
-    async.map(specs, installDatabase, function (err, res) {
+
+    //
+    // Okay, before we install the database there is ONE thing we need to check,
+    // which is the pre-installed ORMs. Check that now.
+    //
+    var preInstallDatabase = function (spec, callback) {
+      var pgClient = new pg.Client(creds),
+        sql = "select orm_namespace as namespace, " +
+          " orm_type as type " +
+          "from xt.orm " +
+          "where not orm_ext;";
+
+      pgClient.connect();
+      pgClient.query(sql, function (err, res) {
+        if (err) {
+          pgClient.end();
+          callback(err);
+          return;
+        }
+
+        pgClient.end();
+        spec.orms = res;
+        installDatabase(spec, callback);
+      });
+    };
+
+    //
+    // Install all the databases
+    //
+    async.map(specs, preInstallDatabase, function (err, res) {
       if (err) {
         winston.error(err);
         if (masterCallback) {
