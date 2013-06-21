@@ -6,6 +6,7 @@ var _ = require('underscore'),
   async = require('async'),
   buildDatabase = require("./build_database").buildDatabase,
   buildClient = require("./build_client").buildClient,
+  driver = require("./build_database_driver"),
   exec = require('child_process').exec,
   fs = require('fs'),
   path = require('path'),
@@ -17,7 +18,7 @@ var _ = require('underscore'),
 
   var creds,
     buildAll = function (specs, creds) {
-      buildDatabase(specs, creds, function (databaseErr, databaseRes) {
+      buildDatabase(specs, creds, driver, function (databaseErr, databaseRes) {
         console.log(arguments);
         if (databaseErr) {
           console.log("Not bothering to build the client");

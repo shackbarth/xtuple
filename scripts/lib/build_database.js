@@ -36,7 +36,7 @@ var _ = require('underscore'),
         password: 'admin',
         host: 'localhost' }
   */
-  exports.buildDatabase = function (specs, creds, masterCallback) {
+  exports.buildDatabase = function (specs, creds, driver, masterCallback) {
     // TODO: set up winston file transport
     winston.log("Building databases with specs", JSON.stringify(specs));
 
@@ -46,7 +46,7 @@ var _ = require('underscore'),
     var installDatabase = function (spec, databaseCallback) {
       var extensions = spec.extensions,
         databaseName = spec.database,
-        monsterString = "";
+        monsterSql = "";
 
       winston.log("Installing on database", databaseName);
 
@@ -94,7 +94,7 @@ var _ = require('underscore'),
             return;
           }
           fs.readFile(fullFilename, "utf8", function (err, data) {
-            monsterString += data;
+            monsterSql += data;
             scriptCallback(err, data);
           });
 
@@ -137,7 +137,7 @@ var _ = require('underscore'),
                 if (err) {
                   callback(err);
                 }
-                monsterString += res.query;
+                monsterSql += res.query;
                 // if the orm installer has added any new orms we want to know about them
                 // so we can inform the next call to the installer.
                 spec.orms = _.unique(_.union(spec.orms, res.orms), function (orm) {
@@ -155,9 +155,10 @@ var _ = require('underscore'),
             if (ormErr) {
               databaseCallback(ormErr);
             } else {
-              // TODO: query db
-              //console.log(monsterString);
-              databaseCallback(null, ormRes);
+              driver.runQuery(monsterSql, creds, function (err, res) {
+                // TODO: use driverRes?
+                databaseCallback(null, ormRes);
+              });
             }
           });
         }

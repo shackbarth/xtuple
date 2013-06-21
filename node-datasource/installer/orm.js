@@ -21,7 +21,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     runOrmInstaller,
     select,
     submit,
-    monsterString = "";
+    monsterSql = "";
 
   // still required for the X functions
   require('../xt/foundation/foundation');
@@ -85,8 +85,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     //console.log("installing %@%@.%@".f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
 
-    query = "select xt.install_orm('%@')".f(X.json(cleanse(orm)));
-    monsterString += query;
+    query = "select xt.install_orm('%@');".f(X.json(cleanse(orm)));
+    monsterSql += query;
 
     var c = extensionList.length;
 
@@ -125,7 +125,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // we've made it this far. The second arg is an array of all the orm names
       // that have been installed.
       return ack(null, {
-        query: monsterString,
+        query: monsterSql,
         orms: _.map(data.installed, function (orm) {
           return {
             namespace: orm.nameSpace || orm.namespace,
@@ -344,7 +344,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     creds.password = options.password;
     creds.database = options.organization;
 
-    monsterString += clearingSql;
+    monsterSql += clearingSql;
     data.databaseOptions = creds;
     ack(true);
   };
