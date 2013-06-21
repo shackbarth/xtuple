@@ -157,7 +157,7 @@ var _ = require('underscore'),
             } else {
               // TODO: query db
               //console.log(monsterString);
-              databaseCallback(ormRes);
+              databaseCallback(null, ormRes);
             }
           });
         }
