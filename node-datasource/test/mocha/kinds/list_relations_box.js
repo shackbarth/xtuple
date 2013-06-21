@@ -120,10 +120,9 @@
                   // for now, we just don't worry about the ones that have no search capability
                   return;
                 }
-                // I have doubts about this requirement:
-                //assert.isFalse(parentModelIsRequired, "The only reason for " + component.kind +
-                //  " to have a searchList is if " + component.getParentKey() + " were not required on " +
-                //  editableRelatedModelName + ", but it is required!");
+                assert.isFalse(parentModelIsRequired, component.kind +
+                  " has a searchList, which should mean that " + component.getParentKey() + " is not required on " +
+                  editableRelatedModelName + ", but it is required!");
                 var listChild;
                 try {
                   listChild = master.createComponent({
