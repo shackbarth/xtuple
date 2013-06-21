@@ -1190,10 +1190,10 @@
         }
       },
       {
-        "name": "profit",
+        "name": "margin",
         "attr": {
           "type": "String",
-          "column": "profit"
+          "column": "margin"
         }
       },
       {

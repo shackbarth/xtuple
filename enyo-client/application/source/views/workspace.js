@@ -1644,7 +1644,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.MoneyWidget", attr: {baseValue: "item.listPrice"},
               label: "_listPrice".loc(), scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
-            {kind: "XV.PercentWidget", attr: "profit"},
+            {kind: "XV.PercentWidget", attr: "margin"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
             {kind: "XV.NumberWidget", attr: "tax"},
