@@ -1145,13 +1145,6 @@
         }
       },
       {
-        "name": "listPriceDiscount",
-        "attr": {
-          "type": "Percent",
-          "column": "list_price_discount"
-        }
-      },
-      {
         "name": "customerPartNumber",
         "attr": {
           "type": "String",
@@ -1171,14 +1164,6 @@
         "attr": {
           "type": "UnitRatio",
           "column": "coitem_price_invuomratio",
-          "required": true
-        }
-      },
-      {
-        "name": "priceMode",
-        "attr": {
-          "type": "String",
-          "column": "coitem_pricemode",
           "required": true
         }
       },

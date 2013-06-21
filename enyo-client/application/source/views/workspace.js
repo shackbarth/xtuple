@@ -1637,7 +1637,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
             {kind: "XV.MoneyWidget", attr: {baseValue: "unitCost"},
-              label: "_standardCost".loc(), isEditableProperty: "baseValue"},
+              label: "_unitCost".loc(), isEditableProperty: "baseValue"},
             {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.wholesalePrice"},
               label: "_wholesalePrice".loc(), isEditableProperty: "baseValue"},
             {kind: "XV.PercentWidget", attr: "markup"},

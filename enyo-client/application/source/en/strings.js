@@ -541,6 +541,7 @@ var lang = XT.stringsFor("en_US", {
   "_type": "Type",
   "_unit": "Unit",
   "_unitPrice": "Net Unit Price",
+  "_unitCosts": "Unit Costs",
   "_units": "Units",
   "_unitType": "Unit Type",
   "_unknown": "(unknown)",

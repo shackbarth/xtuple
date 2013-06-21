@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true,eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -140,7 +140,19 @@ white:true*/
         // edits to existing ItemSites don't need to go through the duplicate pair check
         XM.Model.prototype.save.call(this, key, value, options);
       }
+    },
+
+    /**
+      Retrieve the Item Site's cost.
+
+      @returns {Object} Receiver
+    */
+    cost: function (options) {
+      var params = [this.id];
+      this.dispatch("XM.Customer", "itemPrice", params, options);
+      return this;
     }
+
   });
 
   /**
