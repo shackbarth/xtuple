@@ -12,7 +12,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     BI Server URL so that it may authenticate the current user.
   */
   exports.analysis = function (req, res) {
-    var privKey = "",
+    var jwt,
+      privKey = "",
       claimSet = {},
       header = {},
       reportUrl = req.query.reportUrl,
