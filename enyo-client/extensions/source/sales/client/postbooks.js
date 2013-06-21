@@ -81,10 +81,15 @@ trailing:true, white:true*/
         // the iFrame
         var url, ajax = new enyo.Ajax({
           url: XT.getOrganizationPath() + "/analysis",
-          contentType: "application/json"
+          handleAs: "text"
         });
         ajax.response(this, function (inSender, inResponse) {
           this.setSource(inResponse);
+        });
+        // uh oh. HTTP error
+        ajax.error(this, function (inSender, inResponse) {
+          // TODO: trigger some kind of error here
+          console.log("There was a problem generating the iFrame");
         });
         // param for the report name
         ajax.go({reportUrl: "content/saiku-ui/index.html?biplugin=true"});

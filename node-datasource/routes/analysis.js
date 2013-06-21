@@ -12,7 +12,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     BI Server URL so that it may authenticate the current user.
   */
   exports.analysis = function (req, res) {
-    var privKey = X.fs.readFileSync(X.options.datasource.biKeyFile),
+    var privKey = "",
+      claimSet = {},
+      header = {},
       reportUrl = req.query.reportUrl,
       username = req.session.passport.user.username,
       biServerUrl = X.options.datasource.biServerUrl,
@@ -21,33 +23,61 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       datasource = req.headers.host,
       database = req.session.passport.user.organization,
       scope = "/auth/" + database,
-      audience = "/oauth/token",
-      claimset = {
-        //"iss": "", // client-identifier, not needed?
-        "prn": username, // username
-        "scope": scope,
-        "aud": audience,
-        "datasource": datasource, // rest api url
-        "exp": Math.round(expires.getTime() / 1000), // expiration date in millis
-        "iat": Math.round(today.getTime() / 1000)  // created date in millis
-      },
-      jwt;
+      audience = "/oauth/token";
 
-    jwt = encodeJWT(claimset, privKey);
+    // get private key from path in config
+    privKey = X.fs.readFileSync(X.options.datasource.biKeyFile);
 
+    // create header for JWT
+    header = {
+      "alg": "RS256",
+      "type": "JWT"
+    };
+
+    // create claimSet for JWT
+    claimSet = {
+      "prn": username, // username
+      "scope": scope,
+      "aud": audience,
+      "datasource": datasource, // rest api url
+      "exp": Math.round(expires.getTime() / 1000), // expiration date in millis
+      "iat": Math.round(today.getTime() / 1000)  // created date in millis
+    };
+
+    // encode and sign JWT with private key
+    jwt = encodeJWT(JSON.stringify(header), JSON.stringify(claimSet), privKey);
     // send newly formed BI url back to the client
     res.send(biServerUrl + reportUrl + "&assertion=" + jwt);
   };
 
-  var encodeJWT = function (claimset, key) {
-    var encodeClaimset = utils.base64urlEncode(JSON.stringify(claimset)),
-      signer = X.crypto.createSign("RSA-SHA256"),
-      signature;
+  var encodeJWT = function (header, claimSet, key) {
+    var encodeHeader,
+      encodeClaimSet,
+      signer,
+      signature,
+      data,
+      jwt;
 
-    signer.update(encodeClaimset);
-    signature = utils.base64urlEscape(signer.sign(key, "base64"));
+    // if there is a problem encoding/signing the JWT, then return invalid
+    //try {
+      encodeHeader = utils.base64urlEncode(JSON.stringify(JSON.parse(header)));
+      encodeClaimSet = utils.base64urlEncode(JSON.stringify(JSON.parse(claimSet)));
+      data = encodeHeader + "." + encodeClaimSet;
 
-    return signature;
+      signer = X.crypto.createSign("RSA-SHA256");
+      signer.update(data);
+      signature = utils.base64urlEscape(signer.sign(key, "base64"));
+      jwt = {
+        jwt: data + "." + signature
+      };
+
+    // } catch (error) {
+    //   jwt = {
+    //     jwt: "invalid"
+    //   };
+    // }
+
+    return jwt;
   };
 
 }());
