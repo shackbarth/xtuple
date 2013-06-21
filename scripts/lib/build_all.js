@@ -5,6 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 var _ = require('underscore'),
   async = require('async'),
   buildDatabase = require("./build_database").buildDatabase,
+  buildClient = require("./build_client").buildClient,
   exec = require('child_process').exec,
   fs = require('fs'),
   path = require('path'),
@@ -14,7 +15,23 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
-  var creds;
+  var creds,
+    buildAll = function (specs, creds) {
+      buildDatabase(specs, creds, function (databaseErr, databaseRes) {
+        console.log(arguments);
+        if (databaseErr) {
+          console.log("Not bothering to build the client");
+          return;
+        }
+        buildClient(specs, creds, function (clientErr, clientRes) {
+          if (clientErr) {
+            console.log("Client build failed");
+            return;
+          }
+          console.log("All is good!");
+        });
+      });
+    };
 
   //
   // Looks in a database to see which extensions are registered.
@@ -46,8 +63,8 @@ var _ = require('underscore'),
 
       client.end();
 
-      paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
       paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
+      paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
       returnObj = {
         extensions: paths,
         database: database
@@ -86,13 +103,13 @@ var _ = require('underscore'),
         };
       });
       // synchronous...
-      buildDatabase(buildSpecs, creds);
+      buildAll(buildSpecs, creds);
 
     } else {
       // build all registered extensions for the database
       async.map(databases, getRegisteredExtensions, function (err, results) {
         // asynchronous...
-        buildDatabase(results, creds);
+        buildAll(results, creds);
       });
     }
   };

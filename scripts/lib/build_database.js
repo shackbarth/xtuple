@@ -35,7 +35,7 @@ var _ = require('underscore'),
         password: 'admin',
         host: 'localhost' }
   */
-  exports.buildDatabase = function (specs, creds) {
+  exports.buildDatabase = function (specs, creds, masterCallback) {
     // TODO: set up winston file transport
     winston.log("Building databases with specs", JSON.stringify(specs));
 
@@ -202,13 +202,15 @@ var _ = require('underscore'),
     async.map(specs, installDatabase, function (err, res) {
       if (err) {
         winston.error(err);
-        return {isError: true, error: err};
+        if (masterCallback) {
+          masterCallback(err);
+        }
+        return;
       }
       winston.info("Success installing all scripts");
-      return {
-        message: "Success installing all scripts",
-        data: res
-      };
+      if (masterCallback) {
+        masterCallback(null, res);
+      }
     });
     //
     // End database installation code
