@@ -36,6 +36,7 @@ select xt.js_init();
 \i public/tables/prj.sql
 \i public/tables/prjtask.sql
 \i public/tables/ophead.sql
+\i public/tables/metric.sql;
 \i public/tables/quitem.sql
 \i public/tables/todoitem.sql
 \i public/tables/usrpriv.sql

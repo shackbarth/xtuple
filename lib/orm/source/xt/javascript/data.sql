@@ -1,4 +1,4 @@
-﻿select xt.install_js('XT','Data','xtuple', $$
+select xt.install_js('XT','Data','xtuple', $$
 
   /**
    * @class

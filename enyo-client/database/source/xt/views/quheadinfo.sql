@@ -1,4 +1,4 @@
-﻿select xt.create_view('xt.quheadinfo', $$
+select xt.create_view('xt.quheadinfo', $$
   select quhead.*,  
     xt.quote_schedule_date(quhead) as schedule_date,  
     xt.quote_freight_weight(quhead) as freight_weight,  

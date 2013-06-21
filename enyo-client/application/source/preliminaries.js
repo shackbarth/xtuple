@@ -21,9 +21,16 @@ XT = typeof XT !== 'undefined' ? XT : {};
     window.location = XT.getOrganizationPath() + "/logout";
   };
 
-  XT.setVersion = function (version) {
+  XT.setVersion = function (version, qualifier) {
     var aboutVersionLabel = XT.app.$.postbooks.$.navigator.$.aboutVersion,
       versionText = "_version".loc() + " " + version;
+
+    if (qualifier) {
+      versionText = ("_" + qualifier).loc() + " " + versionText;
+    }
+    if (aboutVersionLabel.getContent()) {
+      versionText = aboutVersionLabel.getContent() + "<br>" + versionText;
+    }
 
     aboutVersionLabel.setContent(versionText);
   };

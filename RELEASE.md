@@ -1,3 +1,10 @@
+1.3.8 (2013/06/19)
+==================
+
+Features and bugs
+----------------
+* issue #[20605] Web client does not use metric to determine welcome page URL path
+
 1.3.7 (2013/06/11)
 ==================
 
