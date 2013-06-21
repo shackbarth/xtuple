@@ -47,29 +47,54 @@ passport.use(new LocalStrategy(
         if (!model.get("isActive")) {
           return done(null, false);
         }
-
+        var query = null;
+        var data = null;
         var options = {
-          user: username,
+          user: X.options.databaseServer.user,
           port: X.options.databaseServer.port,
           hostname: X.options.databaseServer.hostname,
-          database: database
+          database: database,
+          password: X.options.databaseServer.password
+
         };
 
         if (model.get("useEnhancedAuth")) {
           password = X.applyEnhancedAuth(username, password);
         }
-        options.password = password;
 
-        XT.dataSource.query("select relname from pg_class limit 1;", options, function (error, res) {
+
+        var queryArg = {
+            username: username,
+            password: password
+        };
+
+				// note this function must be owned by a superuser or it will fail
+        query = "select xt.check_password($$%@$$);".f(JSON.stringify(queryArg));
+
+        XT.dataSource.query(query, options, function (error, res) {
           if (error) {
             // authentication failure
             return done(null, false);
-          } else {
-            // authentication success
-            model = new Backbone.Model();
-            model.set({id: username, organization: database, singleTenant: true});
-            return done(null, model);
+
+          } else if (res && res.rows && res.rows.length > 0) {
+              // the data comes back in an awkward res.rows[0].request form,
+              // and we want to normalize that here so that the data is in response.data
+              try {
+                  data = JSON.parse(res.rows[0]['check_password']);
+                  model = false;
+
+                  if ( data == true)
+                  {// authentication success
+                    model = new Backbone.Model();
+                    model.set({id: username, organization: database, singleTenant: true});
+                  }
+                  return done(null, model);
+
+              } catch (error) {
+                return done(null, false);
+              }
           }
+          return done(null, false);
         });
       }
     });

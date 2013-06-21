@@ -87,8 +87,6 @@ trailing:true, white:true*/
     //
 
     extensions = [
-      {kind: "XV.AccountContactsBox", container: "panels",
-        attr: "contactRelations"},
       {kind: "XV.ContactToDosBox", container: "panels",
         attr: "toDoRelations"},
       {kind: "XV.ContactOpportunitiesBox", container: "panels",
