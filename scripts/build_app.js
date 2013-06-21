@@ -14,7 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   var argv = process.argv,
-    build = require("./lib/build").build,
+    build = require("./lib/build_all").build,
     specifiedDatabase,
     specifiedExtension;
 

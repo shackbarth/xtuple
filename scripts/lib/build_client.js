@@ -12,7 +12,7 @@ var fs = require('fs'),
   "use strict";
 
   var argv, buildExtension, rootDir, specifiedDir, extensions, finish,
-    coreExtDir = __dirname + "/../enyo-client/extensions/source/",
+    coreExtDir = __dirname + "/../../enyo-client/extensions/source/",
     buildCore = false;
 
   //
@@ -129,7 +129,7 @@ var fs = require('fs'),
   //
   if (buildCore) {
     // if we want to build the core extensions, then first build the core itself
-    exec(__dirname + "/../enyo-client/application/tools/deploy.sh", function () {
+    exec(__dirname + "/../../enyo-client/application/tools/deploy.sh", function () {
       console.log("xTuple core has been built");
       buildExtension(extensions, finish);
     });

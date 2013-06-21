@@ -4,7 +4,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 var _ = require('underscore'),
   async = require('async'),
-  buildDatabase = require("./build_database_engine").buildDatabase,
+  buildDatabase = require("./build_database").buildDatabase,
   exec = require('child_process').exec,
   fs = require('fs'),
   path = require('path'),
