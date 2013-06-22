@@ -21,30 +21,43 @@ var _ = require('underscore'),
   // one from a backup file.
   //
   var initDatabase = function (spec, creds, callback) {
-    var databaseName = spec.database;
-    // XXX are these command-line calls the best way to do this?
-    exec("dropdb -U " + creds.username + " -h " + creds.hostname + " -p " +
-        creds.port + " " + databaseName, function (err, res) {
+    // run this command against the postgres database because the one we're
+    // creating might not exist yet.
+    creds = JSON.parse(JSON.stringify(creds)); // clone
+    creds.database = "postgres";
+
+    var databaseName = spec.database,
+      dropSql = "drop database if exists " + databaseName + ";",
+      createSql = "create database " + databaseName + " template template1;",
+      pgClient = new pg.Client(creds);
+
+    console.log(spec);
+    pgClient.connect();
+    pgClient.query(dropSql, function (err, res) {
       if (err) {
-        // no prob
-        console.log("drop db error", err);
-        //callback(err);
-        //return;
+        console.log(err);
+        callback(err);
       }
-      exec("createdb -U " + creds.username + " -h " + creds.hostname + " -p " +
-          creds.port + " -T template1 " + databaseName, function (err, res) {
+      pgClient.query(createSql, function (err, res) {
         if (err) {
-          console.log("create db error", err);
+          console.log(err);
           callback(err);
-          return;
         }
-        exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
-            creds.port + " -d " + databaseName + " " + spec.backup, function (err, res) {
+        pgClient.end();
+        fs.readFile(spec.backup, "utf8", function (err, backupContents) {
           if (err) {
-            console.log("restore db error", err);
+            console.log(err);
+            callback(err);
           }
-          console.log("restore db", res);
-          callback(err, res);
+          console.log("contents are", backupContents);
+          creds.database = databaseName;
+          pgClient = new pg.Client(creds);
+          pgClient.connect();
+          pgClient.query(backupContents, function (err, res) {
+            pgClient.end();
+            console.log(err);
+            callback(err, res);
+          });
         });
       });
     });
@@ -83,6 +96,7 @@ var _ = require('underscore'),
 
       initDatabase(specs[0], creds, function (err, res) {
         if (err) {
+          winston.error("init database error", err);
           masterCallback(err);
           return;
         }
