@@ -20,8 +20,15 @@ var _ = require('underscore'),
   // If requested, we can wipe out the database and load up a fresh
   // one from a backup file.
   //
-  var initDatabase = function (specs, callback) {
-    console.log("init db");
+  var initDatabase = function (spec, callback) {
+    var databaseName = spec.databaseName,
+      sql = "dropdb " + databaseName +
+        ";createdb -T template1 " + databaseName +
+        ";pg_restore -d " + databaseName + " -b " + spec.backup + ";";
+
+
+    console.log(sql);
+
     callback();
   };
 
@@ -48,9 +55,6 @@ var _ = require('underscore'),
         host: 'localhost' }
   */
   var buildDatabase = exports.buildDatabase = function (specs, creds, masterCallback) {
-    var initDatabase = false;
-    /*
-    This can be synchronous!
     var backupFile;
     console.log(specs);
     if (specs.length === 1 &&
@@ -72,7 +76,6 @@ var _ = require('underscore'),
       });
 
     }
-    */
 
     // TODO: set up winston file transport
     winston.log("Building databases with specs", JSON.stringify(specs));
@@ -86,22 +89,6 @@ var _ = require('underscore'),
         monsterSql = "";
 
       winston.log("Installing on database", databaseName);
-
-
-
-      //
-      // If the user wants to init the database, we tack on some additional commands
-      //
-      if (specs.length === 1 &&
-          spec.initialize &&
-          spec.backup) {
-
-        winston.log("Initializing database", databaseName);
-        monsterSql += "dropdb " + databaseName + ";";
-        monsterSql += "createdb -T template1 " + databaseName + ";";
-        monsterSql += "pg_restore -d " + databaseName + " -b " + spec.backup + ";";
-      }
-
 
       //
       // Step 2 in installing all scripts for a database:
@@ -225,15 +212,6 @@ var _ = require('underscore'),
     // which is the pre-installed ORMs. Check that now.
     //
     var preInstallDatabase = function (spec, callback) {
-      if (spec.initialize) {
-        // initializing a DB will start from 0 orms, and the DB might not
-        // even exist, so don't try opening up a connection to it.
-        spec.orms = [];
-        installDatabase(spec, callback);
-        return;
-      }
-
-
       var pgClient = new pg.Client(creds),
         sql = "select orm_namespace as namespace, " +
           " orm_type as type " +
