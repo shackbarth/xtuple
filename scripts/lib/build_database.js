@@ -20,16 +20,34 @@ var _ = require('underscore'),
   // If requested, we can wipe out the database and load up a fresh
   // one from a backup file.
   //
-  var initDatabase = function (spec, callback) {
-    var databaseName = spec.databaseName,
-      sql = "dropdb " + databaseName +
-        ";createdb -T template1 " + databaseName +
-        ";pg_restore -d " + databaseName + " -b " + spec.backup + ";";
-
-
-    console.log(sql);
-
-    callback();
+  var initDatabase = function (spec, creds, callback) {
+    var databaseName = spec.database;
+    // XXX are these command-line calls the best way to do this?
+    exec("dropdb -U " + creds.username + " -h " + creds.hostname + " -p " +
+        creds.port + " " + databaseName, function (err, res) {
+      if (err) {
+        // no prob
+        console.log("drop db error", err);
+        //callback(err);
+        //return;
+      }
+      exec("createdb -U " + creds.username + " -h " + creds.hostname + " -p " +
+          creds.port + " -T template1 " + databaseName, function (err, res) {
+        if (err) {
+          console.log("create db error", err);
+          callback(err);
+          return;
+        }
+        exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
+            creds.port + " -d " + databaseName + " " + spec.backup, function (err, res) {
+          if (err) {
+            console.log("restore db error", err);
+          }
+          console.log("restore db", res);
+          callback(err, res);
+        });
+      });
+    });
   };
 
 
@@ -63,7 +81,7 @@ var _ = require('underscore'),
       // the user wants to initialize the database first. Do that, then call this function
       // again
 
-      initDatabase(specs[0], function (err, res) {
+      initDatabase(specs[0], creds, function (err, res) {
         if (err) {
           masterCallback(err);
           return;
