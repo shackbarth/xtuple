@@ -1,9 +1,10 @@
 {
   "version": "1.3.9",
-  "todo": "select xt.js_init();, and worry about dropping the views BEFORE lib/orm",
+  "todo": "worry about dropping the views BEFORE lib/orm",
   "databaseScripts": [
     "delete_system_orms.sql",
     "drop_deprecated.sql",
+    "select_xt_js_init.sql",
     "xt/trigger_functions/comment_did_change.sql",
     "xt/trigger_functions/owner_record_did_change.sql",
     "xt/trigger_functions/taxtype_record_did_change.sql",
