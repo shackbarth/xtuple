@@ -88,32 +88,32 @@ var _ = require('underscore'),
 
   };
 
-  exports.build = function (database, extension) {
+  exports.build = function (options) {
     var buildSpecs = {},
       databases = [],
+      extension,
       config = require(path.join(__dirname, "../../node-datasource/config.js"));
 
     creds = config.databaseServer;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
 
-    if (database) {
+    if (options.database) {
       // the user has specified a particular database
       // regex: remove trailing slash if present
-      databases.push(database);
+      databases.push(options.database);
     } else {
       // build all the databases in node-datasource/config.js
       databases = config.datasource.databases;
     }
 
-    if (extension) {
+    if (options.extension) {
       // extensions are assumed to be specified relative to the cwd
-      extension = path.join(process.cwd(), extension);
       buildSpecs = _.map(databases, function (database) {
         // the user has specified an extension to build
         return {
           database: database,
-          extensions: [extension]
+          extensions: [path.join(process.cwd(), options.extension)]
         };
       });
       // synchronous...
