@@ -95,7 +95,7 @@ var _ = require('underscore'),
             return;
           }
           fs.readFile(fullFilename, "utf8", function (err, data) {
-            var noticeSql = 'do $$ plv8.elog(NOTICE, "Running file ' + fullFilename + '"); $$ language plv8;\n',
+            var noticeSql = 'do $$ plv8.elog(NOTICE, "Just ran file ' + fullFilename + '"); $$ language plv8;\n',
               formattingError,
               lastChar;
 
@@ -111,7 +111,9 @@ var _ = require('underscore'),
               scriptCallback(formattingError);
             }
 
-            monsterSql += noticeSql += data;
+            // can't put noticeSql before without accounting for the very first script, which is
+            // create_plv8, and which must not have any plv8 functions before it, such as a notice.
+            monsterSql += data += noticeSql;
 
             scriptCallback(err, data);
           });
@@ -181,13 +183,13 @@ var _ = require('underscore'),
       pgClient.connect();
       pgClient.query(sql, function (err, res) {
         if (err) {
-          pgClient.end();
-          callback(err);
-          return;
+          // xt.orm probably doesn't exist, because this is probably a brand-new DB.
+          // No problem! That just means that there are no pre-existing ORMs.
+          res = {
+            rows: []
+          };
         }
-
         pgClient.end();
-
         spec.orms = res.rows;
         installDatabase(spec, callback);
       });
@@ -198,7 +200,7 @@ var _ = require('underscore'),
     //
     async.map(specs, preInstallDatabase, function (err, res) {
       if (err) {
-        winston.error("err");
+        winston.error(err.message, err.stack, err);
         if (masterCallback) {
           masterCallback(err);
         }

@@ -46,6 +46,19 @@ var _ = require('underscore'),
 
     //queries are queued and executed one after another once the connection becomes available
     var result = client.query("SELECT * FROM xt.ext ORDER BY ext_load_order", function (err, res) {
+      if (err) {
+        // xt.ext probably doesn't exist, because this is probably a brand-new DB.
+        // No problem! Give them the core extensions.
+        // TODO: we could get these extensions dynamically by looking at the filesystem.
+        res = {
+          rows: [
+            { ext_location: '/core-extensions', ext_name: 'crm' },
+            { ext_location: '/core-extensions', ext_name: 'sales' },
+            { ext_location: '/core-extensions', ext_name: 'project' }
+          ]
+        };
+      }
+
       var paths = _.map(res.rows, function (row) {
         var location = row.ext_location,
           name = row.ext_name,
