@@ -23,6 +23,7 @@ var _ = require('underscore'),
           console.log("Database error. Not bothering to build the client");
           return;
         }
+        console.log("Success!");
         //buildClient(specs, creds, function (clientErr, clientRes) {
         //  if (clientErr) {
         //    console.log("Client build failed");

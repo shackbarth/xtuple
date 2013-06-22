@@ -99,6 +99,10 @@ var _ = require('underscore'),
               formattingError,
               lastChar;
 
+            //
+            // Incorrectly-ended sql files (i.e. no semicolon) make for unhelpful error messages
+            // when we concatenate 100's of them together. Guard against these.
+            //
             data = data.trim();
             lastChar = data.charAt(data.length - 1);
             if (lastChar !== ';' && lastChar !== '/') { // slash might be the end of a comment; we'll let that slide.
@@ -107,26 +111,10 @@ var _ = require('underscore'),
               scriptCallback(formattingError);
             }
 
-            // TODO: worry about SQLi?
             monsterSql += noticeSql += data;
 
             scriptCallback(err, data);
           });
-
-          /*
-          pgClient.query(scriptContents, function (err, res) {
-            if (err) {
-              scriptCallback({
-                filename: fullFilename,
-                message: err.message,
-                stack: err.stack,
-                details: err
-              });
-              return;
-            }
-            scriptCallback(err, fullFilename); // TODO: do anything with res?
-          });
-          */
         };
         async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
           extensionCallback(err, res);
@@ -216,7 +204,7 @@ var _ = require('underscore'),
         }
         return;
       }
-      winston.info("Success installing all scripts");
+      //winston.info("Success installing all scripts");
       if (masterCallback) {
         masterCallback(null, res);
       }
