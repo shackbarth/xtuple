@@ -24,7 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     monsterSql = "";
 
   // still required for the X functions
-  require('../xt/foundation/foundation');
+  require('../../node-datasource/xt/foundation/foundation');
 
   /**
     Prepares the orm for insertion into the database by cleaning out all the junk
