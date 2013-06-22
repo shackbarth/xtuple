@@ -15,24 +15,7 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
-  var creds,
-    buildAll = function (specs, creds) {
-      buildDatabase(specs, creds, function (databaseErr, databaseRes) {
-        //console.log(typeof databaseErr);
-        if (databaseErr) {
-          console.log("Database error. Not bothering to build the client");
-          return;
-        }
-        console.log("Success!");
-        //buildClient(specs, creds, function (clientErr, clientRes) {
-        //  if (clientErr) {
-        //    console.log("Client build failed");
-        //    return;
-        //  }
-        //  console.log("All is good!");
-        //});
-      });
-    };
+  var creds;
 
   //
   // Looks in a database to see which extensions are registered.
@@ -88,10 +71,26 @@ var _ = require('underscore'),
 
   };
 
-  exports.build = function (options) {
+  exports.build = function (options, callback) {
     var buildSpecs = {},
       databases = [],
       extension,
+      buildAll = function (specs, creds, buildAllCallback) {
+        buildDatabase(specs, creds, function (databaseErr, databaseRes) {
+          if (databaseErr) {
+            buildAllCallback("Database error. Not bothering to build the client");
+            return;
+          }
+          buildAllCallback(null, "Success!");
+          //buildClient(specs, creds, function (clientErr, clientRes) {
+          //  if (clientErr) {
+          //    console.log("Client build failed");
+          //    return;
+          //  }
+          //  console.log("All is good!");
+          //});
+        });
+      },
       config = require(path.join(__dirname, "../../node-datasource/config.js"));
 
     creds = config.databaseServer;
@@ -107,7 +106,33 @@ var _ = require('underscore'),
       databases = config.datasource.databases;
     }
 
-    if (options.extension) {
+    if (options.initialize &&
+        options.backup &&
+        options.database &&
+        !options.extension) {
+      // Initialize the database. This is serious business, and we only do it if
+      // the user does all the arguments correctly. It must be on one database only,
+      // with no extensions, with the initialize flag, and with a backup file.
+
+      buildSpecs.database = options.database;
+      buildSpecs.backup = path.join(process.cwd(), options.backup);
+      buildSpecs.initialize = true;
+      // TODO: as above, the extensions could be found dynamically
+      buildSpecs.extensions = [
+        path.join(__dirname, '../../enyo-client'),
+        path.join(__dirname, '../../lib/orm'),
+        path.join(__dirname, '../../enyo-client/extensions/source/crm'),
+        path.join(__dirname, '../../enyo-client/extensions/source/sales'),
+        path.join(__dirname, '../../enyo-client/extensions/source/project')
+      ];
+      buildAll([buildSpecs], creds, callback);
+
+    } else if (options.initialize || options.backup) {
+      // The user has not been sufficiently serious.
+      callback("If you want to initialize the database, you must specifify " +
+        " a database, and use no extensions, and use both the init and the backup flags");
+
+    } else if (options.extension) {
       // extensions are assumed to be specified relative to the cwd
       buildSpecs = _.map(databases, function (database) {
         // the user has specified an extension to build
@@ -117,13 +142,13 @@ var _ = require('underscore'),
         };
       });
       // synchronous...
-      buildAll(buildSpecs, creds);
+      buildAll(buildSpecs, creds, callback);
 
     } else {
       // build all registered extensions for the database
       async.map(databases, getRegisteredExtensions, function (err, results) {
         // asynchronous...
-        buildAll(results, creds);
+        buildAll(results, creds, callback);
       });
     }
   };

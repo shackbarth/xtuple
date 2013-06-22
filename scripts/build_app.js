@@ -29,6 +29,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     extension: program.extension && program.extension.replace(/\/$/, ""),
     initialize: program.initialize,
     backup: program.backup
+  }, function (err, res) {
+    if (err) {
+      console.log("Error", err);
+      return;
+    }
+    console.log("Success!", res);
   });
 
 }());
