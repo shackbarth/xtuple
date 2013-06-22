@@ -45,7 +45,6 @@ create or replace function xt.delete(data_hash text) returns boolean as $$
   }
 
 $$ language plv8;
-
 /*
 select xt.js_init();
 select xt.delete('{

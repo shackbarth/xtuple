@@ -95,7 +95,18 @@ var _ = require('underscore'),
             return;
           }
           fs.readFile(fullFilename, "utf8", function (err, data) {
-            var noticeSql = 'do $$ plv8.elog(NOTICE, "Running file ' + fullFilename + '"); $$ language plv8;\n';
+            var noticeSql = 'do $$ plv8.elog(NOTICE, "Running file ' + fullFilename + '"); $$ language plv8;\n',
+              formattingError,
+              lastChar;
+
+            data = data.trim();
+            lastChar = data.charAt(data.length - 1);
+            if (lastChar !== ';' && lastChar !== '/') { // slash might be the end of a comment; we'll let that slide.
+              formattingError = "Error: " + fullFilename + " contents do not end in a semicolon.";
+              winston.warn(formattingError);
+              scriptCallback(formattingError);
+            }
+
             // TODO: worry about SQLi?
             monsterSql += noticeSql += data;
 
