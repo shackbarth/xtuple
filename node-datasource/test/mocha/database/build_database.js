@@ -5,26 +5,26 @@
 
 var buildAll = require('../../../../scripts/lib/build_all'),
   assert = require('chai').assert,
-  pg = require('pg'),
+  datasource = require('../../../lib/ext/datasource').dataSource,
   path = require('path'),
   expect = require('chai').expect,
   zombieAuth = require('../lib/zombie_auth');
 
 (function () {
   "use strict";
-  describe.skip('The database build tool', function () {
+  describe('The database build tool', function () {
     this.timeout(10 * 60 * 1000);
 
-    var config = require(path.join(__dirname, "../../../node-datasource/config.js"));
+    var config = require(path.join(__dirname, "../../../config.js"));
     var creds = config.databaseServer;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
-
+    creds.username = creds.user; // adapt our lingo to orm installer lingo
+/*
     it('should build without error on a brand-new database', function (done) {
       buildAll.build({
         database: "build_db_test_10",
         initialize: true,
-        // TODO: use path.join and __dirname
-        backup: "../../../../../../usr/local/xtuple/databases/demo-current.backup"
+        backup: path.join(__dirname, "../lib/demo-test.backup")
       }, function (err, res) {
         assert.isNull(err);
         done();
@@ -45,28 +45,37 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     it('should not have non-core extensions built', function (done) {
       done(); // TODO
     });
-
+*/
     it('should rebuild without error on an existing database', function (done) {
       buildAll.build({
-        database: "build_db_test_10"
+        database: "dev3" // TODO
       }, function (err, res) {
         assert.isNull(err);
         done();
       });
     });
-
     it('should have core extensions built', function (done) {
-      done(); // TODO
+      var sql = "select * from xm.contact_project;";
+
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNull(err);
+        done();
+      });
     });
 
     it('should not have non-core extensions built', function (done) {
-      done(); // TODO
+      var sql = "select * from xm.project_version;";
+
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNotNull(err);
+        done();
+      });
     });
 
     it('should be able to build an extension', function (done) {
       buildAll.build({
-        database: "build_db_test_10",
-        extension: '../private-extensions/source/incident_plus'
+        database: "dev3",
+        extension: path.join(__dirname + '../../../../../../private-extensions/source/incident_plus')
       }, function (err, res) {
         assert.isNull(err);
         done();
@@ -74,13 +83,22 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     });
 
     it('should have core extensions built', function (done) {
-      done(); // TODO
+      var sql = "select * from xm.contact_project;";
+
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNull(err);
+        done();
+      });
     });
 
     it('should have the new extension built', function (done) {
-      done(); // TODO
-    });
+      var sql = "select * from xm.project_version;";
 
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNull(err);
+        done();
+      });
+    });
   });
 }());
 

@@ -25,14 +25,18 @@ var _ = require('underscore'),
     var databaseName = spec.database;
     exec("dropdb -U " + creds.username + " -h " + creds.hostname + " -p " +
         creds.port + " " + databaseName, function (err, res) {
-      if (err) {
-        // No problem. The database probably just doesn't exist yet.
-        //winston.error("drop db error", err);
+      if (err && err.message.indexOf('does not exist' > 0)) {
+        // Database doesn't exist yet? No problem.
+        winston.error("ignoring drop db error", err.message, err.stack, err);
+      } else if (err) {
+        winston.error("not ignoring drop db error", err.message, err.stack, err);
+        callback(err);
+        return;
       }
       exec("createdb -U " + creds.username + " -h " + creds.hostname + " -p " +
           creds.port + " -T template1 " + databaseName, function (err, res) {
         if (err) {
-          winston.error("create db error", err);
+          winston.error("create db error", err.message, err.stack, err);
           callback(err);
           return;
         }
@@ -41,54 +45,7 @@ var _ = require('underscore'),
           if (err) {
             //console.log("ignoring restore db error", err);
           }
-          console.log("restore db", res);
           callback(null, res);
-        });
-      });
-    });
-  };
-
-  //
-  // If requested, we can wipe out the database and load up a fresh
-  // one from a backup file.
-  //
-  var initDatabaseAlt = function (spec, creds, callback) {
-    // run this command against the postgres database because the one we're
-    // creating might not exist yet.
-    creds = JSON.parse(JSON.stringify(creds)); // clone
-    creds.database = "postgres";
-
-    var databaseName = spec.database,
-      dropSql = "drop database if exists " + databaseName + ";",
-      createSql = "create database " + databaseName + " template template1;",
-      pgClient = new pg.Client(creds);
-
-    console.log(spec);
-    pgClient.connect();
-    pgClient.query(dropSql, function (err, res) {
-      if (err) {
-        console.log(err);
-        callback(err);
-      }
-      pgClient.query(createSql, function (err, res) {
-        if (err) {
-          console.log(err);
-          callback(err);
-        }
-        pgClient.end();
-        fs.readFile(spec.backup, "utf8", function (err, backupContents) {
-          if (err) {
-            console.log(err);
-            callback(err);
-          }
-          creds.database = databaseName;
-          pgClient = new pg.Client(creds);
-          pgClient.connect();
-          pgClient.query(backupContents, function (err, res) {
-            pgClient.end();
-            console.log(err);
-            callback(err, res);
-          });
         });
       });
     });

@@ -135,12 +135,16 @@ var _ = require('underscore'),
     } else if (options.extension) {
       // extensions are assumed to be specified relative to the cwd
       buildSpecs = _.map(databases, function (database) {
+        // the extension is not relative if it starts with a slash
+        var extension = options.extension.substring(0, 1) === '/' ?
+          options.extension :
+          path.join(process.cwd(), options.extension);
         // the user has specified an extension to build
         return {
           database: database,
           // TODO: here and in other places, path.join doesn't do what
           // you'd want if the extension starts with a slash (i.e. is intended to be from the root)
-          extensions: [path.join(process.cwd(), options.extension)]
+          extensions: [extension]
         };
       });
       // synchronous...
