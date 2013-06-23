@@ -16,11 +16,43 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
+
   //
   // If requested, we can wipe out the database and load up a fresh
   // one from a backup file.
   //
   var initDatabase = function (spec, creds, callback) {
+    var databaseName = spec.database;
+    exec("dropdb -U " + creds.username + " -h " + creds.hostname + " -p " +
+        creds.port + " " + databaseName, function (err, res) {
+      if (err) {
+        // No problem. The database probably just doesn't exist yet.
+        //winston.error("drop db error", err);
+      }
+      exec("createdb -U " + creds.username + " -h " + creds.hostname + " -p " +
+          creds.port + " -T template1 " + databaseName, function (err, res) {
+        if (err) {
+          winston.error("create db error", err);
+          callback(err);
+          return;
+        }
+        exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
+            creds.port + " -d " + databaseName + " " + spec.backup, function (err, res) {
+          if (err) {
+            //console.log("ignoring restore db error", err);
+          }
+          console.log("restore db", res);
+          callback(null, res);
+        });
+      });
+    });
+  };
+
+  //
+  // If requested, we can wipe out the database and load up a fresh
+  // one from a backup file.
+  //
+  var initDatabaseAlt = function (spec, creds, callback) {
     // run this command against the postgres database because the one we're
     // creating might not exist yet.
     creds = JSON.parse(JSON.stringify(creds)); // clone
@@ -49,7 +81,6 @@ var _ = require('underscore'),
             console.log(err);
             callback(err);
           }
-          console.log("contents are", backupContents);
           creds.database = databaseName;
           pgClient = new pg.Client(creds);
           pgClient.connect();
@@ -87,7 +118,6 @@ var _ = require('underscore'),
   */
   var buildDatabase = exports.buildDatabase = function (specs, creds, masterCallback) {
     var backupFile;
-    console.log(specs);
     if (specs.length === 1 &&
         specs[0].initialize &&
         specs[0].backup) {
@@ -106,7 +136,7 @@ var _ = require('underscore'),
         specs[0].backup = undefined;
         buildDatabase(specs, creds, masterCallback);
       });
-
+      return;
     }
 
     // TODO: set up winston file transport
