@@ -2,13 +2,13 @@
   {
     "context": "sales",
     "nameSpace": "XM",
-    "type": "Quote",
-    "table": "xt.quheadinfo",
+    "type": "SalesOrder",
+    "table": "xt.coheadinfo",
     "isExtension": true,
     "comment": "Extended by Sales",
     "relations": [ 
       {
-        "column": "quhead_id",
+        "column": "cohead_id",
         "inverse": "id"
       }
     ],
@@ -17,8 +17,8 @@
         "name": "customers",
         "toMany": {
           "isNested": true,
-          "type": "QuoteCustomer",
-          "column": "quhead_id",
+          "type": "SalesOrderCustomer",
+          "column": "cohead_id",
           "inverse": "source"
         }
       },
@@ -27,7 +27,7 @@
         "toOne": {
           "isNested": true,
           "type": "OpportunityRelation",
-          "column": "quhead_ophead_id"
+          "column": "cohead_ophead_id"
         }
       }
     ],
@@ -37,13 +37,13 @@
   {
     "context": "sales",
     "nameSpace": "XM",
-    "type": "QuoteListItem",
-    "table": "xt.quheadinfo",
+    "type": "SalesOrderListItem",
+    "table": "xt.coheadinfo",
     "isExtension": true,
     "comment": "Extended by Sales",
     "relations": [ 
       {
-        "column": "quhead_id",
+        "column": "cohead_id",
         "inverse": "id"
       }
     ],
@@ -53,7 +53,7 @@
         "toOne": {
           "isNested": true,
           "type": "OpportunityRelation",
-          "column": "quhead_ophead_id"
+          "column": "cohead_ophead_id"
         }
       }
     ],

@@ -762,7 +762,7 @@ select xt.install_js('XT','Data','xtuple', $$
         } else if (canEdit && val === undefined || val === null) {
           if (attr.nullValue) {
             params.columns.push("%" + count + "$I");
-            params.values.push(ormp.nullValue);
+            params.values.push(attr.nullValue);
             params.identifiers.push(attr.column);
             params.expressions.push('$' + count);
             isValidSql = true;

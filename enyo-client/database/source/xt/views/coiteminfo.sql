@@ -1,4 +1,4 @@
-﻿select xt.create_view('xt.coiteminfo', $$
+select xt.create_view('xt.coiteminfo', $$
 
 select coitem.*,
   xt.co_line_base_price(coitem) as base_price,

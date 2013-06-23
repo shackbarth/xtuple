@@ -298,11 +298,19 @@ require('./oauth2/passport');
 var that = this;
 app.get('/:org/app', function (req, res, next) {
   "use strict";
-  res.render('app', { org: req.session.passport.user.organization });
+  if (!req.session.passport.user) {
+    routes.logout(req, res);
+  } else {
+    res.render('app', { org: req.session.passport.user.organization });
+  }
 });
 app.get('/:org/debug', function (req, res, next) {
   "use strict";
-  res.render('debug', { org: req.session.passport.user.organization });
+  if (!req.session.passport.user) {
+    routes.logout(req, res);
+  } else {
+    res.render('debug', { org: req.session.passport.user.organization });
+  }
 });
 _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
   "use strict";
