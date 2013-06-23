@@ -191,16 +191,16 @@ if (typeof X === 'undefined') {
           if (msg && msg.message) {
             if (msg.severity === 'NOTICE') {
               client.status.push(msg.message);
-              //console.log("Database notice Message: ", msg.message);
+              console.log("Database notice Message: ", msg.message);
             } else if (msg.severity === 'INFO') {
               client.status.push(msg.message);
-              //console.log("Database info Message: ", msg.message);
+              console.log("Database info Message: ", msg.message);
             } else if (msg.severity === 'WARNING') {
               client.debug.push(msg.message);
-              //console.log("Database warning Message: ", msg.message);
+              console.log("Database warning Message: ", msg.message);
             } else if (msg.severity === 'DEBUG') {
               client.debug.push(msg.message);
-              //console.log("Database debug Message: ", msg.message);
+              console.log("Database debug Message: ", msg.message);
             }
           }
         });

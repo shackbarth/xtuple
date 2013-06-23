@@ -15,14 +15,17 @@ var buildAll = require('../../../../scripts/lib/build_all'),
   describe('The database build tool', function () {
     this.timeout(10 * 60 * 1000);
 
-    var config = require(path.join(__dirname, "../../../config.js"));
-    var creds = config.databaseServer;
+    var config = require(path.join(__dirname, "../../../config.js")),
+      creds = config.databaseServer,
+      databaseName = "build_db_test_10";
+
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
-/*
+    creds.databaseName = databaseName;
+
     it('should build without error on a brand-new database', function (done) {
       buildAll.build({
-        database: "build_db_test_10",
+        database: databaseName,
         initialize: true,
         // TODO: use postbooks backup
         backup: path.join(__dirname, "../lib/demo-test.backup")
@@ -51,10 +54,10 @@ var buildAll = require('../../../../scripts/lib/build_all'),
         done();
       });
     });
-*/
+
     it('should rebuild without error on an existing database', function (done) {
       buildAll.build({
-        database: "dev3" // TODO
+        database: databaseName
       }, function (err, res) {
         assert.isNull(err);
         done();
@@ -83,7 +86,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
 
     it('should be able to build an extension', function (done) {
       buildAll.build({
-        database: "dev3",
+        database: databaseName,
         extension: path.join(__dirname + '../../../../../../xtuple-extensions/source/oauth2')
       }, function (err, res) {
         assert.isNull(err);

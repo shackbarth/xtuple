@@ -76,6 +76,7 @@ var _ = require('underscore'),
     var buildSpecs = {},
       databases = [],
       extension,
+      backup,
       buildAll = function (specs, creds, buildAllCallback) {
         buildDatabase(specs, creds, function (databaseErr, databaseRes) {
           if (databaseErr) {
@@ -116,12 +117,17 @@ var _ = require('underscore'),
       // with no extensions, with the initialize flag, and with a backup file.
 
       buildSpecs.database = options.database;
-      buildSpecs.backup = path.join(process.cwd(), options.backup);
+      console.log("options.backup is", options.backup);
+      // the backup path is not relative if it starts with a slash
+      backup = options.backup.substring(0, 1) === '/' ?
+        options.backup :
+        path.join(process.cwd(), backup);
+      buildSpecs.backup = path.join(backup);
       buildSpecs.initialize = true;
       // TODO: as above, the extensions could be found dynamically
       buildSpecs.extensions = [
-        path.join(__dirname, '../../enyo-client'),
         path.join(__dirname, '../../lib/orm'),
+        path.join(__dirname, '../../enyo-client'),
         path.join(__dirname, '../../enyo-client/extensions/source/crm'),
         path.join(__dirname, '../../enyo-client/extensions/source/sales'),
         path.join(__dirname, '../../enyo-client/extensions/source/project')

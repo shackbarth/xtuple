@@ -16,6 +16,7 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
+  // TODO: get rid of all sync functions
 
   //
   // If requested, we can wipe out the database and load up a fresh
@@ -26,6 +27,7 @@ var _ = require('underscore'),
     exec("dropdb -U " + creds.username + " -h " + creds.hostname + " -p " +
         creds.port + " " + databaseName, function (err, res) {
       if (err && err.message.indexOf('does not exist' > 0)) {
+        console.log(err);
         // Database doesn't exist yet? No problem.
         winston.error("ignoring drop db error", err.message, err.stack, err);
       } else if (err) {
@@ -43,7 +45,7 @@ var _ = require('underscore'),
         exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
             creds.port + " -d " + databaseName + " " + spec.backup, function (err, res) {
           if (err) {
-            //console.log("ignoring restore db error", err);
+            console.log("ignoring restore db error", err);
           }
           callback(null, res);
         });
@@ -74,6 +76,7 @@ var _ = require('underscore'),
         host: 'localhost' }
   */
   var buildDatabase = exports.buildDatabase = function (specs, creds, masterCallback) {
+    console.log("builddb", JSON.stringify(specs));
     var backupFile;
     if (specs.length === 1 &&
         specs[0].initialize &&
