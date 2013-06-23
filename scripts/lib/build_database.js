@@ -76,8 +76,6 @@ var _ = require('underscore'),
         host: 'localhost' }
   */
   var buildDatabase = exports.buildDatabase = function (specs, creds, masterCallback) {
-    console.log("builddb", JSON.stringify(specs));
-    var backupFile;
     if (specs.length === 1 &&
         specs[0].initialize &&
         specs[0].backup) {
@@ -113,11 +111,9 @@ var _ = require('underscore'),
       winston.log("Installing on database", databaseName);
 
       //
-      // Step 2 in installing all scripts for a database:
-      // Install all the extensions of the database, in series.
+      // The function to install all the extensions of the database
       //
       var installExtension = function (extension, extensionCallback) {
-        console.log("Installing extension", databaseName, extension);
         winston.info("Installing extension", databaseName, extension);
         var isLibOrm = extension.indexOf("lib/orm") >= 0, // TODO: do better
           dbSourceRoot = isLibOrm ?
@@ -155,7 +151,7 @@ var _ = require('underscore'),
             scriptCallback(path.join(dbSourceRoot, filename) + " does not exist");
             return;
           }
-          fs.readFile(fullFilename, "utf8", function (err, data) {
+          fs.readFile(fullFilename, "utf8", function (err, scriptContents) {
             var noticeSql = 'do $$ plv8.elog(NOTICE, "Just ran file ' + fullFilename + '"); $$ language plv8;\n',
               formattingError,
               lastChar;
@@ -164,19 +160,19 @@ var _ = require('underscore'),
             // Incorrectly-ended sql files (i.e. no semicolon) make for unhelpful error messages
             // when we concatenate 100's of them together. Guard against these.
             //
-            data = data.trim();
-            lastChar = data.charAt(data.length - 1);
+            scriptContents = scriptContents.trim();
+            lastChar = scriptContents.charAt(scriptContents.length - 1);
             if (lastChar !== ';' && lastChar !== '/') { // slash might be the end of a comment; we'll let that slide.
               formattingError = "Error: " + fullFilename + " contents do not end in a semicolon.";
               winston.warn(formattingError);
               scriptCallback(formattingError);
             }
 
-            // can't put noticeSql before without accounting for the very first script, which is
+            // can't put noticeSql before scriptContents without accounting for the very first script, which is
             // create_plv8, and which must not have any plv8 functions before it, such as a notice.
-            monsterSql += data += noticeSql;
+            monsterSql += scriptContents += noticeSql;
 
-            scriptCallback(err, data);
+            scriptCallback(err, scriptContents += noticeSql);
           });
         };
         async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
@@ -187,14 +183,23 @@ var _ = require('underscore'),
         //
       };
 
-      async.mapSeries(extensions, installExtension, function (err, res) {
-
+      //
+      // Run the function to install all the extensions of the database, in series
+      //
+      async.mapSeries(extensions, installExtension, function (err, scriptContentsArray) {
+        // each String of the scriptContentsArray is the concetenated SQL for the extension.
+        // join these all together into a single string.
+        // TODO: monsterSql is a bit global-variablish for taste.
+        //var allSql = _.reduce(scriptContentsArray, function (memo, script) {
+        //  return memo + script;
+        //}, "");
+        //console.log(allSql);
         if (err) {
           databaseCallback(err);
         } else {
 
-          // Now would be an excellent time to run the orms for all of the
-          // extensions on this database
+          // Now would be an excellent to to generate the orm-install
+          // commands for all the extensions on this database.
           var runOrmInstaller = function (extension, callback) {
             var ormDir = path.join(extension, "database/orm");
 
@@ -237,22 +242,30 @@ var _ = require('underscore'),
     var preInstallDatabase = function (spec, callback) {
       // this is where we do the very important step of putting the db name in the creds
       creds.database = spec.database;
-      var sql = "select orm_namespace as namespace, " +
+      var existsSql = "select relname from pg_class where relname = 'orm'",
+        ormSql = "select orm_namespace as namespace, " +
           " orm_type as type " +
           "from xt.orm " +
           "where not orm_ext;";
 
-      dataSource.query(sql, creds, function (err, res) {
+      dataSource.query(existsSql, creds, function (err, res) {
         if (err) {
+          callback(err);
+        }
+        if (res.rowCount === 0) {
           // xt.orm probably doesn't exist, because this is probably a brand-new DB.
           // No problem! That just means that there are no pre-existing ORMs.
-          // TODO: redo this in a way that doesn't throw an error (query pg_class first)
-          res = {
-            rows: []
-          };
+          spec.orms = [];
+          installDatabase(spec, callback);
+        } else {
+          dataSource.query(ormSql, creds, function (err, res) {
+            if (err) {
+              callback(err);
+            }
+            spec.orms = res.rows;
+            installDatabase(spec, callback);
+          });
         }
-        spec.orms = res.rows;
-        installDatabase(spec, callback);
       });
     };
 

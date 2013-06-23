@@ -6,10 +6,10 @@ var _ = require('underscore'),
   async = require('async'),
   buildDatabase = require("./build_database").buildDatabase,
   buildClient = require("./build_client").buildClient,
+  dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
   path = require('path'),
-  pg = require('pg'),
   winston = require('winston');
 
 (function () {
@@ -19,17 +19,13 @@ var _ = require('underscore'),
 
   //
   // Looks in a database to see which extensions are registered.
-  // API conforms to async expectations.
-  // Also tacks on the core directory.
+  // Also tacks on the core directories.
   //
   var getRegisteredExtensions = function (database, callback) {
     creds.database = database;
-    // TODO: use datasource instead
-    var client = new pg.Client(creds);
-    client.connect();
 
     //queries are queued and executed one after another once the connection becomes available
-    var result = client.query("SELECT * FROM xt.ext ORDER BY ext_load_order", function (err, res) {
+    var result = dataSource.query("SELECT * FROM xt.ext ORDER BY ext_load_order", creds, function (err, res) {
       if (err) {
         // xt.ext probably doesn't exist, because this is probably a brand-new DB.
         // No problem! Give them the core extensions.
@@ -56,18 +52,14 @@ var _ = require('underscore'),
           extPath = path.join(__dirname, "../../../private-extensions/source", name);
         }
         return extPath;
-      }),
-        returnObj;
-
-      client.end();
+      });
 
       paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
       paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
-      returnObj = {
+      callback(null, {
         extensions: paths,
         database: database
-      };
-      callback(null, returnObj);
+      });
     });
 
   };
@@ -117,7 +109,6 @@ var _ = require('underscore'),
       // with no extensions, with the initialize flag, and with a backup file.
 
       buildSpecs.database = options.database;
-      console.log("options.backup is", options.backup);
       // the backup path is not relative if it starts with a slash
       backup = options.backup.substring(0, 1) === '/' ?
         options.backup :

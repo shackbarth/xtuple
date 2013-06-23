@@ -17,19 +17,20 @@ var buildAll = require('../../../../scripts/lib/build_all'),
 
     var config = require(path.join(__dirname, "../../../config.js")),
       creds = config.databaseServer,
-      databaseName = "dev";//"build_db_test"; TODO: don't use dev
+      testInit = false, // false is faster, true is more thorough
+      databaseName = testInit ? "build_db_test" : "dev";
 
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
     creds.databaseName = databaseName;
 
-    // TODO: uncomment this for a more thorough but slower test
+    // TODO:
+    //  uhoh:
+    //  <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! cannot drop the currently open database Please fix this!!!
+    //  <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! Last query was: drop database build_db_test;
+    //  <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! DB name = build_db_test
     /*
     after(function (done) {
-      uhoh:
-      <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! cannot drop the currently open database Please fix this!!!
-      <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! Last query was: drop database build_db_test;
-      <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! DB name = build_db_test
       // delete the test database
       var sql = "drop database " + databaseName + ";";
 
@@ -37,39 +38,41 @@ var buildAll = require('../../../../scripts/lib/build_all'),
         done();
       });
     });
-
-    it('should build without error on a brand-new database', function (done) {
-      buildAll.build({
-        database: databaseName,
-        initialize: true,
-        // TODO: use postbooks backup
-        backup: path.join(__dirname, "../lib/demo-test.backup")
-      }, function (err, res) {
-        assert.isNull(err);
-        done();
-      });
-    });
-
-    it('should have core extensions built', function (done) {
-      var sql = "select * from pg_class where relname = 'contact_project';";
-
-      datasource.query(sql, creds, function (err, res) {
-        assert.isNull(err);
-        assert.equal(res.rowCount, 1);
-        done();
-      });
-    });
-
-    it('should not have non-core extensions built', function (done) {
-      var sql = "select * from pg_class where relname = 'oauth2client';";
-
-      datasource.query(sql, creds, function (err, res) {
-        assert.isNull(err);
-        assert.equal(res.rowCount, 1); // SYS only
-        done();
-      });
-    });
     */
+
+    if (testInit) {
+      it('should build without error on a brand-new database', function (done) {
+        buildAll.build({
+          database: databaseName,
+          initialize: true,
+          // TODO: use postbooks backup
+          backup: path.join(__dirname, "../lib/demo-test.backup")
+        }, function (err, res) {
+          assert.isNull(err);
+          done();
+        });
+      });
+
+      it('should have core extensions built', function (done) {
+        var sql = "select * from pg_class where relname = 'contact_project';";
+
+        datasource.query(sql, creds, function (err, res) {
+          assert.isNull(err);
+          assert.equal(res.rowCount, 1);
+          done();
+        });
+      });
+
+      it('should not have non-core extensions built', function (done) {
+        var sql = "select * from pg_class where relname = 'oauth2client';";
+
+        datasource.query(sql, creds, function (err, res) {
+          assert.isNull(err);
+          assert.equal(res.rowCount, 1); // SYS only
+          done();
+        });
+      });
+    }
     it('should rebuild without error on an existing database', function (done) {
       buildAll.build({
         database: databaseName
@@ -89,15 +92,17 @@ var buildAll = require('../../../../scripts/lib/build_all'),
       });
     });
 
-    it('should not have non-core extensions built', function (done) {
-      var sql = "select * from pg_class where relname = 'oauth2client';";
+    if (testInit) {
+      it('should not have non-core extensions built', function (done) {
+        var sql = "select * from pg_class where relname = 'oauth2client';";
 
-      datasource.query(sql, creds, function (err, res) {
-        assert.isNull(err);
-        assert.equal(res.rowCount, 1); // SYS only
-        done();
+        datasource.query(sql, creds, function (err, res) {
+          assert.isNull(err);
+          assert.equal(res.rowCount, 1); // SYS only
+          done();
+        });
       });
-    });
+    }
 
     it('should be able to build an extension', function (done) {
       buildAll.build({
