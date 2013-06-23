@@ -24,6 +24,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
       buildAll.build({
         database: "build_db_test_10",
         initialize: true,
+        // TODO: use postbooks backup
         backup: path.join(__dirname, "../lib/demo-test.backup")
       }, function (err, res) {
         assert.isNull(err);
@@ -32,18 +33,23 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     });
 
     it('should have core extensions built', function (done) {
-      var pgClient = new pg.Client(creds),
-        sql = "select * from xm.contact_project;";
+      var sql = "select * from pg_class where relname = 'contact_project';";
 
-      pgClient.connect();
-      pgClient.query(sql, function (err, res) {
+      datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
+        assert.equal(res.rowCount, 1);
         done();
       });
     });
 
     it('should not have non-core extensions built', function (done) {
-      done(); // TODO
+      var sql = "select * from pg_class where relname = 'oauth2client';";
+
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNull(err);
+        assert.equal(res.rowCount, 1); // SYS only
+        done();
+      });
     });
 */
     it('should rebuild without error on an existing database', function (done) {
@@ -54,20 +60,23 @@ var buildAll = require('../../../../scripts/lib/build_all'),
         done();
       });
     });
+
     it('should have core extensions built', function (done) {
-      var sql = "select * from xm.contact_project;";
+      var sql = "select * from pg_class where relname = 'contact_project';";
 
       datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
+        assert.equal(res.rowCount, 1);
         done();
       });
     });
 
     it('should not have non-core extensions built', function (done) {
-      var sql = "select * from xm.project_version;";
+      var sql = "select * from pg_class where relname = 'oauth2client';";
 
       datasource.query(sql, creds, function (err, res) {
-        assert.isNotNull(err);
+        assert.isNull(err);
+        assert.equal(res.rowCount, 1); // SYS only
         done();
       });
     });
@@ -75,7 +84,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     it('should be able to build an extension', function (done) {
       buildAll.build({
         database: "dev3",
-        extension: path.join(__dirname + '../../../../../../private-extensions/source/incident_plus')
+        extension: path.join(__dirname + '../../../../../../xtuple-extensions/source/oauth2')
       }, function (err, res) {
         assert.isNull(err);
         done();
@@ -83,19 +92,21 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     });
 
     it('should have core extensions built', function (done) {
-      var sql = "select * from xm.contact_project;";
+      var sql = "select * from pg_class where relname = 'contact_project';";
 
       datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
+        assert.equal(res.rowCount, 1);
         done();
       });
     });
 
     it('should have the new extension built', function (done) {
-      var sql = "select * from xm.project_version;";
+      var sql = "select * from pg_class where relname = 'oauth2client';";
 
       datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
+        assert.equal(res.rowCount, 2); // SYS and XM
         done();
       });
     });

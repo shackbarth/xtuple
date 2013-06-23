@@ -114,7 +114,8 @@ var _ = require('underscore'),
       // Install all the extensions of the database, in series.
       //
       var installExtension = function (extension, extensionCallback) {
-        winston.log("Installing extension", databaseName, extension);
+        console.log("Installing extension", databaseName, extension);
+        winston.info("Installing extension", databaseName, extension);
         var isLibOrm = extension.indexOf("lib/orm") >= 0, // TODO: do better
           dbSourceRoot = isLibOrm ?
             path.join(extension, "source") :
@@ -231,22 +232,22 @@ var _ = require('underscore'),
     // which is the pre-installed ORMs. Check that now.
     //
     var preInstallDatabase = function (spec, callback) {
-      var pgClient = new pg.Client(creds),
-        sql = "select orm_namespace as namespace, " +
+      // this is where we do the very important step of putting the db name in the creds
+      creds.database = spec.database;
+      var sql = "select orm_namespace as namespace, " +
           " orm_type as type " +
           "from xt.orm " +
           "where not orm_ext;";
 
-      pgClient.connect();
-      pgClient.query(sql, function (err, res) {
+      dataSource.query(sql, creds, function (err, res) {
         if (err) {
           // xt.orm probably doesn't exist, because this is probably a brand-new DB.
           // No problem! That just means that there are no pre-existing ORMs.
+          // TODO: redo this in a way that doesn't throw an error (query pg_class first)
           res = {
             rows: []
           };
         }
-        pgClient.end();
         spec.orms = res.rows;
         installDatabase(spec, callback);
       });

@@ -24,6 +24,7 @@ var _ = require('underscore'),
   //
   var getRegisteredExtensions = function (database, callback) {
     creds.database = database;
+    // TODO: use datasource instead
     var client = new pg.Client(creds);
     client.connect();
 
@@ -142,8 +143,6 @@ var _ = require('underscore'),
         // the user has specified an extension to build
         return {
           database: database,
-          // TODO: here and in other places, path.join doesn't do what
-          // you'd want if the extension starts with a slash (i.e. is intended to be from the root)
           extensions: [extension]
         };
       });
