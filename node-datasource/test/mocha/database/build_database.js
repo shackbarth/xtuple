@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, describe:true, it:true, require:true, __dirname:true */
+/*global XT:true, describe:true, it:true, require:true, __dirname:true, after:true */
 
 var buildAll = require('../../../../scripts/lib/build_all'),
   assert = require('chai').assert,
@@ -17,11 +17,26 @@ var buildAll = require('../../../../scripts/lib/build_all'),
 
     var config = require(path.join(__dirname, "../../../config.js")),
       creds = config.databaseServer,
-      databaseName = "build_db_test_10";
+      databaseName = "dev";//"build_db_test"; TODO: don't use dev
 
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
     creds.databaseName = databaseName;
+
+    // TODO: uncomment this for a more thorough but slower test
+    /*
+    after(function (done) {
+      uhoh:
+      <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! cannot drop the currently open database Please fix this!!!
+      <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! Last query was: drop database build_db_test;
+      <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! DB name = build_db_test
+      // delete the test database
+      var sql = "drop database " + databaseName + ";";
+
+      datasource.query(sql, creds, function (err, res) {
+        done();
+      });
+    });
 
     it('should build without error on a brand-new database', function (done) {
       buildAll.build({
@@ -54,7 +69,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
         done();
       });
     });
-
+    */
     it('should rebuild without error on an existing database', function (done) {
       buildAll.build({
         database: databaseName

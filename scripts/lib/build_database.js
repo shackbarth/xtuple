@@ -24,24 +24,24 @@ var _ = require('underscore'),
   //
   var initDatabase = function (spec, creds, callback) {
     var databaseName = spec.database;
-    exec("dropdb -U " + creds.username + " -h " + creds.hostname + " -p " +
-        creds.port + " " + databaseName, function (err, res) {
-      if (err && err.message.indexOf('does not exist' > 0)) {
-        console.log(err);
-        // Database doesn't exist yet? No problem.
-        winston.error("ignoring drop db error", err.message, err.stack, err);
-      } else if (err) {
-        winston.error("not ignoring drop db error", err.message, err.stack, err);
+    // the calls to drop and create the database need to be run against the database "postgres"
+    creds.database = "postgres";
+    dataSource.query("drop database if exists " + databaseName + ";", creds, function (err, res) {
+      if (err) {
+        winston.error("drop db error", err.message, err.stack, err);
         callback(err);
         return;
       }
-      exec("createdb -U " + creds.username + " -h " + creds.hostname + " -p " +
-          creds.port + " -T template1 " + databaseName, function (err, res) {
+      dataSource.query("create database " + databaseName + " template template1", creds, function (err, res) {
         if (err) {
           winston.error("create db error", err.message, err.stack, err);
           callback(err);
           return;
         }
+        // that's it for calls against the database "postgres"
+        creds.database = databaseName;
+        // use exec to restore the backup. The alternative, reading the backup file into a string to query
+        // isn't working because the backup file is binary.
         exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
             creds.port + " -d " + databaseName + " " + spec.backup, function (err, res) {
           if (err) {
