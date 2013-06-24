@@ -16,11 +16,9 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
-  // TODO: get rid of all sync functions
   // TODO: get rid of monsterSql
   // TODO: work out logging
   // TODO: comment code
-  // TODO: work out test details
 
   //
   // If requested, we can wipe out the database and load up a fresh
@@ -45,7 +43,7 @@ var _ = require('underscore'),
         // that's it for calls against the database "postgres"
         creds.database = databaseName;
         // use exec to restore the backup. The alternative, reading the backup file into a string to query
-        // isn't working because the backup file is binary.
+        // doesn't work because the backup file is binary.
         exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
             creds.port + " -d " + databaseName + " " + spec.backup, function (err, res) {
           if (err) {
@@ -59,7 +57,7 @@ var _ = require('underscore'),
 
 
   /**
-    @param {Object} specs look like this:
+    @param {Object} specs Specification for the build process, in the form:
       [ { extensions:
            [ '/home/user/git/xtuple/enyo-client',
              '/home/user/git/xtuple/enyo-client/extensions/source/crm',
@@ -72,7 +70,7 @@ var _ = require('underscore'),
              '/home/user/git/xtuple/enyo-client/extensions/source/project' ],
           database: 'dev2' } ]
 
-    @param {Object} creds look like this:
+    @param {Object} creds Database credentials, in the form:
       { hostname: 'localhost',
         port: 5432,
         user: 'admin',
@@ -83,8 +81,8 @@ var _ = require('underscore'),
     if (specs.length === 1 &&
         specs[0].initialize &&
         specs[0].backup) {
-      // the user wants to initialize the database first. Do that, then call this function
-      // again
+      // the user wants to initialize the database first.
+      // Do that, then call this function again
 
       initDatabase(specs[0], creds, function (err, res) {
         if (err) {
@@ -105,7 +103,7 @@ var _ = require('underscore'),
     winston.log("Building databases with specs", JSON.stringify(specs));
 
     //
-    // The function to install all extension scripts into a database
+    // The function to install all of an extension's scripts into a database
     //
     var installDatabase = function (spec, databaseCallback) {
       var extensions = spec.extensions,
@@ -119,16 +117,15 @@ var _ = require('underscore'),
       //
       var installExtension = function (extension, extensionCallback) {
         winston.info("Installing extension", databaseName, extension);
-        var isLibOrm = extension.indexOf("lib/orm") >= 0, // TODO: do better
+        // deal with directory structure quirk
+        var isLibOrm = extension.indexOf("lib/orm") >= 0,
           dbSourceRoot = isLibOrm ?
             path.join(extension, "source") :
             path.join(extension, "database/source"),
-          manifestFilename = path.join(dbSourceRoot, "manifest.js"),
-          manifestString,
-          manifest;
+          manifestFilename = path.join(dbSourceRoot, "manifest.js");
 
         //
-        // Step 1 in installing extension scripts:
+        // Step 1 in installing scripts:
         // Read the manifest file
         //
         if (!fs.existsSync(manifestFilename)) {
@@ -137,6 +134,7 @@ var _ = require('underscore'),
           return;
         }
         fs.readFile(manifestFilename, "utf8", function (err, manifestString) {
+          var manifest;
           try {
             manifest = JSON.parse(manifestString);
           } catch (error) {
@@ -146,8 +144,8 @@ var _ = require('underscore'),
           }
 
           //
-          // Step 2 in installing extension scripts
-          // Install all the scripts in the manifest file, in series.
+          // Step 2 in installing scripts
+          // Concatenate together all the files referenced in the manifest.
           //
           var installScript = function (filename, scriptCallback) {
             var fullFilename = path.join(dbSourceRoot, filename);
@@ -269,7 +267,7 @@ var _ = require('underscore'),
           callback(err);
         }
         if (res.rowCount === 0) {
-          // xt.orm probably doesn't exist, because this is probably a brand-new DB.
+          // xt.orm doesn't exist, because this is probably a brand-new DB.
           // No problem! That just means that there are no pre-existing ORMs.
           spec.orms = [];
           installDatabase(spec, callback);

@@ -17,28 +17,12 @@ var buildAll = require('../../../../scripts/lib/build_all'),
 
     var config = require(path.join(__dirname, "../../../config.js")),
       creds = config.databaseServer,
-      testInit = false, // false is faster, true is more thorough
-      databaseName = testInit ? "build_db_test" : "dev"; // TODO: get the dbname from config testDatabase?
+      testInit = true, // false is faster, true is more thorough
+      databaseName = config.datasource.testDatabase;
 
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
     creds.databaseName = databaseName;
-
-    // TODO:
-    //  uhoh:
-    //  <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! cannot drop the currently open database Please fix this!!!
-    //  <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! Last query was: drop database build_db_test;
-    //  <<ERROR 2013-06-23T19:40:34.211Z>> Database Error! DB name = build_db_test
-    /*
-    after(function (done) {
-      // delete the test database
-      var sql = "drop database " + databaseName + ";";
-
-      datasource.query(sql, creds, function (err, res) {
-        done();
-      });
-    });
-    */
 
     if (testInit) {
       it('should build without error on a brand-new database', function (done) {
