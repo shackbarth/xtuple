@@ -21,6 +21,9 @@ var _ = require('underscore'),
   // TODO: comment code
 
   //
+  // Step 0 (optional, triggered by flags), reset the db from
+  // scratch using pg_restore.
+  //
   // If requested, we can wipe out the database and load up a fresh
   // one from a backup file.
   //
@@ -83,7 +86,7 @@ var _ = require('underscore'),
     if (specs.length === 1 &&
         specs[0].initialize &&
         specs[0].backup) {
-      // the user wants to initialize the database first.
+      // The user wants to initialize the database first (i.e. Step 0)
       // Do that, then call this function again
 
       initDatabase(specs[0], creds, function (err, res) {
@@ -127,8 +130,8 @@ var _ = require('underscore'),
           manifestFilename = path.join(dbSourceRoot, "manifest.js");
 
         //
-        // Step 1 in installing scripts:
-        // Read the manifest file
+        // Step 2:
+        // Read the manifest files.
         //
         if (!fs.existsSync(manifestFilename)) {
           winston.log("Cannot find manifest " + manifestFilename);
@@ -146,7 +149,7 @@ var _ = require('underscore'),
           }
 
           //
-          // Step 2 in installing scripts
+          // Step 3:
           // Concatenate together all the files referenced in the manifest.
           //
           var installScript = function (filename, scriptCallback) {
@@ -177,7 +180,7 @@ var _ = require('underscore'),
               //
               scriptContents = scriptContents.trim();
               lastChar = scriptContents.charAt(scriptContents.length - 1);
-              if (lastChar !== ';' && lastChar !== '/') { // slash might be the end of a comment; we'll let that slide.
+              if (lastChar !== ';') {
                 formattingError = "Error: " + fullFilename + " contents do not end in a semicolon.";
                 winston.warn(formattingError);
                 scriptCallback(formattingError);
@@ -252,6 +255,7 @@ var _ = require('underscore'),
     };
 
     //
+    // Step 1:
     // Okay, before we install the database there is ONE thing we need to check,
     // which is the pre-installed ORMs. Check that now.
     //
