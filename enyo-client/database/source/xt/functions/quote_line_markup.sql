@@ -3,8 +3,8 @@ create or replace function xt.quote_line_markup(quitem) returns numeric stable a
     case
       when $1.quitem_unitcost = 0 then null
       when fetchmetricbool('Long30Markups') then
-        round((1.0 - (currtobase(quhead_curr_id, $1.quitem_price, quhead_quotedate) / $1.quitem_unitcost)) * 100.0, 6)
-      else round(((currtobase(quhead_curr_id, $1.quitem_price, quhead_quotedate) / $1.quitem_unitcost) - 1.0) * 100, 6)
+        round((1.0 - (currtobase(quhead_curr_id, $1.quitem_price, quhead_quotedate) / $1.quitem_unitcost)), 6)
+      else round(((currtobase(quhead_curr_id, $1.quitem_price, quhead_quotedate) / $1.quitem_unitcost) - 1.0), 6)
     end
   from item, quhead
   where item_id=$1.quitem_item_id

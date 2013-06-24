@@ -1119,6 +1119,8 @@ white:true*/
       "extendedPrice",
       "inventoryQuantityUnitRatio",
       "lineNumber",
+      "listPrice",
+      "listPriceDiscount",
       "priceUnitRatio",
       "margin",
       "site",
@@ -1371,7 +1373,7 @@ white:true*/
         };
         currency.toBase(price, effective, options);
       }
-      
+
       return this;
     },
 

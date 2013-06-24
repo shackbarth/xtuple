@@ -1145,6 +1145,13 @@
         }
       },
       {
+        "name": "listPriceDiscount",
+        "attr": {
+          "type": "Percent",
+          "column": "list_price_discount"
+        }
+      },
+      {
         "name": "customerPartNumber",
         "attr": {
           "type": "String",
