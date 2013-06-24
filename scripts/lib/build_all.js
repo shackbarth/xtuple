@@ -26,6 +26,8 @@ var _ = require('underscore'),
 
     //queries are queued and executed one after another once the connection becomes available
     var result = dataSource.query("SELECT * FROM xt.ext ORDER BY ext_load_order", creds, function (err, res) {
+      // TODO: better if we didn't plan for an error. use something like:
+      // var existsSql = "select relname from pg_class where relname = 'ext'",
       if (err) {
         // xt.ext probably doesn't exist, because this is probably a brand-new DB.
         // No problem! Give them the core extensions.

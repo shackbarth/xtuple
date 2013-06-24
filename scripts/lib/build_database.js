@@ -157,6 +157,17 @@ var _ = require('underscore'),
               lastChar;
 
             //
+            // Allow inclusion of js files in manifest. If it is a js file,
+            // use plv8 to execute it.
+            //
+            //if (fullFilename.substring(fullFilename.length - 2) === 'js') {
+              // this isn't quite working yet
+              // http://adpgtech.blogspot.com/2013/03/loading-useful-modules-in-plv8.html
+              // put in lib/orm's manifest.js: "../../tools/lib/underscore/underscore-min.js",
+            //  scriptContents = "do $$ " + scriptContents + " $$ language plv8;";
+            //}
+
+            //
             // Incorrectly-ended sql files (i.e. no semicolon) make for unhelpful error messages
             // when we concatenate 100's of them together. Guard against these.
             //
