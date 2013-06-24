@@ -48,7 +48,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // encode and sign JWT with private key
     jwt = encodeJWT(JSON.stringify(header), JSON.stringify(claimSet), privKey);
     // send newly formed BI url back to the client
-    res.send(biServerUrl + reportUrl + "&assertion=" + jwt);
+    res.send(biServerUrl + reportUrl + "&assertion=" + jwt.jwt);
   };
 
   var encodeJWT = function (header, claimSet, key) {
