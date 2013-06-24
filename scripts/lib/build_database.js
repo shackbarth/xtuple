@@ -63,12 +63,14 @@ var _ = require('underscore'),
              '/home/user/git/xtuple/enyo-client/extensions/source/crm',
              '/home/user/git/xtuple/enyo-client/extensions/source/sales',
              '/home/user/git/private-extensions/source/incident_plus' ],
-          database: 'dev' },
+          database: 'dev',
+          specs: [] },
         { extensions:
            [ '/home/user/git/xtuple/enyo-client',
              '/home/user/git/xtuple/enyo-client/extensions/source/sales',
              '/home/user/git/xtuple/enyo-client/extensions/source/project' ],
-          database: 'dev2' } ]
+          database: 'dev2',
+          specs: [] }]
 
     @param {Object} creds Database credentials, in the form:
       { hostname: 'localhost',
