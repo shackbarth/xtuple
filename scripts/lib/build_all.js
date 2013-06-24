@@ -18,13 +18,12 @@ var _ = require('underscore'),
   var creds;
 
   //
-  // Looks in a database to see which extensions are registered.
-  // Also tacks on the core directories.
+  // Looks in a database to see which extensions are registered, and
+  // tacks onto that list the core directories.
   //
   var getRegisteredExtensions = function (database, callback) {
     creds.database = database;
 
-    //queries are queued and executed one after another once the connection becomes available
     var result = dataSource.query("SELECT * FROM xt.ext ORDER BY ext_load_order", creds, function (err, res) {
       // TODO: better if we didn't plan for an error. use something like:
       // var existsSql = "select relname from pg_class where relname = 'ext'",
@@ -79,9 +78,11 @@ var _ = require('underscore'),
           buildAllCallback(null, true);
           //buildClient(specs, creds, function (clientErr, clientRes) {
           //  if (clientErr) {
+          //    buildAllCallback(clientErr);
           //    console.log("Client build failed");
           //    return;
           //  }
+          //  buildAllCallback(null, true);
           //  console.log("All is good!");
           //});
         });
@@ -94,7 +95,6 @@ var _ = require('underscore'),
 
     if (options.database) {
       // the user has specified a particular database
-      // regex: remove trailing slash if present
       databases.push(options.database);
     } else {
       // build all the databases in node-datasource/config.js
@@ -131,13 +131,13 @@ var _ = require('underscore'),
         " a database, and use no extensions, and use both the init and the backup flags");
 
     } else if (options.extension) {
+      // the user has specified an extension to build
       // extensions are assumed to be specified relative to the cwd
       buildSpecs = _.map(databases, function (database) {
         // the extension is not relative if it starts with a slash
         var extension = options.extension.substring(0, 1) === '/' ?
           options.extension :
           path.join(process.cwd(), options.extension);
-        // the user has specified an extension to build
         return {
           database: database,
           extensions: [extension]
@@ -154,6 +154,5 @@ var _ = require('underscore'),
       });
     }
   };
-
 }());
 
