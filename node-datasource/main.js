@@ -61,9 +61,6 @@ SYS = {};
   // Another hack: quiet the logs here.
   XT.log = function () {};
 
-  // Make absolutely sure we're going to start.
-  options.autoStart = true;
-
   // Set the options.
   X.setup(options);
 
@@ -104,7 +101,8 @@ var express = require('express'),
     socketio = require('socket.io'),
     url = require('url'),
     utils = require('./oauth2/utils'),
-    user = require('./oauth2/user');
+    user = require('./oauth2/user'),
+    destroySession;
 
 // TODO - for testing. remove...
 //http://stackoverflow.com/questions/13091037/node-js-heap-snapshots-and-google-chrome-snapshot-viewer
@@ -155,7 +153,10 @@ require('express/node_modules/cookie').serialize = require('./stomps/cookie').se
 
 // Stomp on Connect's session.
 // https://github.com/senchalabs/connect/issues/641
-function stompSessionLoad() { return require('./stomps/session'); }
+function stompSessionLoad() {
+  "use strict";
+  return require('./stomps/session');
+}
 require('express/node_modules/connect').middleware.__defineGetter__('session', stompSessionLoad);
 require('express/node_modules/connect').__defineGetter__('session', stompSessionLoad);
 require('express').__defineGetter__('session', stompSessionLoad);
@@ -296,6 +297,7 @@ require('./oauth2/passport');
  */
 var that = this;
 app.get('/:org/app', function (req, res, next) {
+  "use strict";
   if (!req.session.passport.user) {
     routes.logout(req, res);
   } else {
@@ -303,6 +305,7 @@ app.get('/:org/app', function (req, res, next) {
   }
 });
 app.get('/:org/debug', function (req, res, next) {
+  "use strict";
   if (!req.session.passport.user) {
     routes.logout(req, res);
   } else {
@@ -310,6 +313,7 @@ app.get('/:org/debug', function (req, res, next) {
   }
 });
 _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
+  "use strict";
   app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
   app.use("/" + orgValue + '/core-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
   app.use("/" + orgValue + '/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
@@ -346,6 +350,26 @@ app.get('/:org/file', routes.file);
 app.get('/:org/report', routes.report);
 app.get('/:org/reset-password', routes.resetPassword);
 
+
+//
+// Load all extension-defined routes. By convention the paths,
+// filenames, and functions to be used
+// for the routes should be described in a file called routes.js
+// in the routes directory.
+//
+if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
+  _.each(X.options.extensionRoutes, function (route) {
+    "use strict";
+    var routes = require(__dirname + "/" + route + "/routes");
+
+    _.each(routes, function (routeDetails) {
+      app.get('/:org/' + routeDetails.path, routeDetails.function);
+    });
+  });
+}
+
+
+
 // Set up the other servers we run on different ports.
 //var unexposedServer = express();
 //unexposedServer.listen(X.options.datasource.maintenancePort);
@@ -372,7 +396,7 @@ X.log("Databases accessible from this server: \n", JSON.stringify(X.options.data
  * @param {Object} val - Session object.
  * @param {String} key - Session id.
  */
-var destroySession = function (key, val) {
+destroySession = function (key, val) {
   "use strict";
 
   var sessionID;
