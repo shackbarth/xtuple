@@ -24,17 +24,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   build({
     database: program.database,
-    // regex: remove trailing slash if present
-    // TODO: regex probably unnecessary now that I'm using path.join
-    extension: program.extension && program.extension.replace(/\/$/, ""),
+    extension: program.extension,
     initialize: program.initialize,
     backup: program.backup
   }, function (err, res) {
-    if (err) {
-      console.log("Error", err);
-      return;
-    }
-    console.log("Success!", res);
+    console.log(err ? "Error!" : "Success!", err, res);
   });
 
 }());

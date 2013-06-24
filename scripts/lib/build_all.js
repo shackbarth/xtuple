@@ -12,6 +12,17 @@ var _ = require('underscore'),
   path = require('path'),
   winston = require('winston');
 
+/*
+  This is the point of entry for both the lightweight CLI entry-point and
+  programmatic calls to build, such as from mocha. Most of the work in this
+  file is in determining what the defaults mean. For example, if the
+  user does not specify an extension, we install the core and all registered
+  extensions, which requires a call to xt.ext.
+
+  We delegate the work of actually building the database and building the
+  client to build_database.js and build_client.js.
+*/
+
 (function () {
   "use strict";
 
@@ -76,6 +87,7 @@ var _ = require('underscore'),
             return;
           }
           buildAllCallback(null, true);
+          // TODO: build the client
           //buildClient(specs, creds, function (clientErr, clientRes) {
           //  if (clientErr) {
           //    buildAllCallback(clientErr);

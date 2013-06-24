@@ -16,16 +16,12 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
-  // TODO: get rid of monsterSql
+  // TODO: test rollback
   // TODO: work out logging
-  // TODO: comment code
 
   //
-  // Step 0 (optional, triggered by flags), reset the db from
-  // scratch using pg_restore.
-  //
-  // If requested, we can wipe out the database and load up a fresh
-  // one from a backup file.
+  // Step 0 (optional, triggered by flags), wipe out the database
+  // and load it from scratch using pg_restore something.backup
   //
   var initDatabase = function (spec, creds, callback) {
     var databaseName = spec.database;
@@ -86,9 +82,9 @@ var _ = require('underscore'),
     if (specs.length === 1 &&
         specs[0].initialize &&
         specs[0].backup) {
+
       // The user wants to initialize the database first (i.e. Step 0)
       // Do that, then call this function again
-
       initDatabase(specs[0], creds, function (err, res) {
         if (err) {
           winston.error("init database error", err);
@@ -108,21 +104,20 @@ var _ = require('underscore'),
     winston.log("Building databases with specs", JSON.stringify(specs));
 
     //
-    // The function to install all of an extension's scripts into a database
+    // The function to generate all the scripts for a database
     //
     var installDatabase = function (spec, databaseCallback) {
       var extensions = spec.extensions,
-        databaseName = spec.database,
-        monsterSql = "";
+        databaseName = spec.database;
 
       winston.log("Installing on database", databaseName);
 
       //
-      // The function to install all the extensions of the database
+      // The function to install all the scripts for an extension
       //
       var getExtensionSql = function (extension, extensionCallback) {
         //winston.info("Installing extension", databaseName, extension);
-        // deal with directory structure quirk
+        // deal with directory structure quirks
         var isLibOrm = extension.indexOf("lib/orm") >= 0,
           dbSourceRoot = isLibOrm ?
             path.join(extension, "source") :
@@ -134,6 +129,7 @@ var _ = require('underscore'),
         // Read the manifest files.
         //
         if (!fs.existsSync(manifestFilename)) {
+          // error condition: no manifest file
           winston.log("Cannot find manifest " + manifestFilename);
           extensionCallback("Cannot find manifest " + manifestFilename);
           return;
@@ -143,6 +139,7 @@ var _ = require('underscore'),
           try {
             manifest = JSON.parse(manifestString);
           } catch (error) {
+            // error condition: manifest file is not properly formatted
             winston.log("Manifest is not valid JSON" + manifestFilename);
             extensionCallback("Manifest is not valid JSON" + manifestFilename);
             return;
@@ -155,10 +152,12 @@ var _ = require('underscore'),
           var getScriptSql = function (filename, scriptCallback) {
             var fullFilename = path.join(dbSourceRoot, filename);
             if (!fs.existsSync(fullFilename)) {
+              // error condition: script referenced in manifest.js isn't there
               scriptCallback(path.join(dbSourceRoot, filename) + " does not exist");
               return;
             }
             fs.readFile(fullFilename, "utf8", function (err, scriptContents) {
+              // error condition: can't read script
               if (err) {
                 scriptCallback(err);
                 return;
@@ -185,24 +184,26 @@ var _ = require('underscore'),
               scriptContents = scriptContents.trim();
               lastChar = scriptContents.charAt(scriptContents.length - 1);
               if (lastChar !== ';') {
+                // error condition: script is improperly formatted
                 formattingError = "Error: " + fullFilename + " contents do not end in a semicolon.";
                 winston.warn(formattingError);
                 scriptCallback(formattingError);
               }
 
-              // can't put noticeSql before scriptContents without accounting for the very first script, which is
-              // create_plv8, and which must not have any plv8 functions before it, such as a notice.
+              // we can't put noticeSql *before* scriptContents without accounting for the very first
+              // script, which is create_plv8, and which must not have any plv8 functions before it,
+              // such as a noticeSql.
               scriptCallback(null, scriptContents += noticeSql);
             });
           };
-          async.mapSeries(manifest.databaseScripts, getScriptSql, function (err, scriptContents) {
+          async.mapSeries(manifest.databaseScripts, getScriptSql, function (err, scriptSql) {
             if (err) {
               extensionCallback(err);
               return;
             }
-            // each String of the scriptContents is the concetenated SQL for the script.
+            // each String of the scriptContents is the concatenated SQL for the script.
             // join these all together into a single string for the whole extension.
-            var extensionSql = _.reduce(scriptContents, function (memo, script) {
+            var extensionSql = _.reduce(scriptSql, function (memo, script) {
               return memo + script;
             }, "");
             extensionCallback(null, extensionSql);
@@ -213,55 +214,74 @@ var _ = require('underscore'),
         });
       };
 
-      //
-      // Run the function to install all the extensions of the database, in series
-      //
-      async.mapSeries(extensions, getExtensionSql, function (err, scriptContents) {
-        // each String of the scriptContents is the concetenated SQL for the extension.
-        // join these all together into a single string for the whole database.
+      // We also need to get the sql that represents the queries to generate
+      // the XM views from the ORMs. We use the old ORM installer for this,
+      // which has been retooled to return the queryString instead of running
+      // it itself.
+      var getOrmSql = function (extension, callback) {
+        var ormDir = path.join(extension, "database/orm");
 
-        var allSql = _.reduce(scriptContents, function (memo, script) {
-          return memo + script;
-        }, "");
-        monsterSql = allSql;
+        if (fs.existsSync(ormDir)) {
+          var updateSpecs = function (err, res) {
+            if (err) {
+              callback(err);
+            }
+            // if the orm installer has added any new orms we want to know about them
+            // so we can inform the next call to the installer.
+            spec.orms = _.unique(_.union(spec.orms, res.orms), function (orm) {
+              return orm.namespace + orm.type;
+            });
+            callback(err, res.query);
+          };
+          ormInstaller.run(ormDir, spec, updateSpecs);
+        } else {
+          // No ORM dir? No problem! Nothing to install.
+          callback(null, "");
+        }
+      };
+
+      /**
+        The sql for each extension comprises the sql in the the source directory
+        with the orm sql tacked on to the end. Note that an alternate methodology
+        dictates that *all* source for all extensions should be run before *any*
+        orm queries for any extensions, but that is not the way it works here.
+       */
+      var getExtensionSqlPlusOrmSql = function (extension, callback) {
+        getExtensionSql(extension, function (err, sql) {
+          if (err) {
+            callback(err);
+            return;
+          }
+          getOrmSql(extension, function (err, ormSql) {
+            if (err) {
+              callback(err);
+              return;
+            }
+            callback(null, sql + ormSql);
+          });
+        });
+      };
+
+
+      //
+      // Asyncronously run all the functions to all the extension sql for the database,
+      // in series, and execute the query when they all have come back.
+      //
+      async.mapSeries(extensions, getExtensionSqlPlusOrmSql, function (err, extensionSql) {
         if (err) {
           databaseCallback(err);
-        } else {
-
-          // Now would be an excellent to to generate the orm-install
-          // commands for all the extensions on this database.
-          var getOrmQuery = function (extension, callback) {
-            var ormDir = path.join(extension, "database/orm");
-
-            if (fs.existsSync(ormDir)) {
-              var updateSpecs = function (err, res) {
-                if (err) {
-                  callback(err);
-                }
-                monsterSql += res.query;
-                // if the orm installer has added any new orms we want to know about them
-                // so we can inform the next call to the installer.
-                spec.orms = _.unique(_.union(spec.orms, res.orms), function (orm) {
-                  return orm.namespace + orm.type;
-                });
-                callback(err, res);
-              };
-              ormInstaller.run(ormDir, spec, updateSpecs);
-            } else {
-              callback(null, "No ORM dir, no problem.");
-            }
-          };
-
-          async.mapSeries(extensions, getOrmQuery, function (ormErr, ormRes) {
-            if (ormErr) {
-              databaseCallback(ormErr);
-            } else {
-              dataSource.query(monsterSql, creds, function (err, res) {
-                databaseCallback(err, res);
-              });
-            }
-          });
+          return;
         }
+        // each String of the scriptContents is the concatenated SQL for the extension.
+        // join these all together into a single string for the whole database.
+        var allSql = _.reduce(extensionSql, function (memo, script) {
+          return memo + script;
+        }, "");
+
+        dataSource.query(allSql, creds, function (err, res) {
+          creds.database = undefined; // safest to strip out the db name once we're done with it
+          databaseCallback(err, res);
+        });
       });
     };
 
@@ -274,7 +294,7 @@ var _ = require('underscore'),
       // this is where we do the very important step of putting the db name in the creds
       creds.database = spec.database;
       var existsSql = "select relname from pg_class where relname = 'orm'",
-        ormSql = "select orm_namespace as namespace, " +
+        ormTestSql = "select orm_namespace as namespace, " +
           " orm_type as type " +
           "from xt.orm " +
           "where not orm_ext;";
@@ -289,7 +309,7 @@ var _ = require('underscore'),
           spec.orms = [];
           installDatabase(spec, callback);
         } else {
-          dataSource.query(ormSql, creds, function (err, res) {
+          dataSource.query(ormTestSql, creds, function (err, res) {
             if (err) {
               callback(err);
             }
@@ -316,8 +336,5 @@ var _ = require('underscore'),
         masterCallback(null, res);
       }
     });
-    //
-    // End database installation code
-    //
   };
 }());

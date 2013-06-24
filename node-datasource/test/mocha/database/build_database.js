@@ -17,7 +17,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
 
     var config = require(path.join(__dirname, "../../../config.js")),
       creds = config.databaseServer,
-      testInit = false, // false is faster, true is more thorough
+      testInit = true, // false is faster, true is more thorough
       databaseName = config.datasource.testDatabase;
 
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
