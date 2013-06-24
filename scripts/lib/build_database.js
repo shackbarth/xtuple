@@ -230,7 +230,7 @@ var _ = require('underscore'),
                 });
                 callback(err, res);
               };
-              ormInstaller.run(creds, ormDir, spec, updateSpecs);
+              ormInstaller.run(ormDir, spec, updateSpecs);
             } else {
               callback(null, "No ORM dir, no problem.");
             }
