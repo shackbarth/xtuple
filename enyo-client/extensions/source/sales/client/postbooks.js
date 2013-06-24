@@ -10,7 +10,8 @@ trailing:true, white:true*/
       panels,
       relevantPrivileges,
       configurationJson,
-      configuration;
+      configuration,
+      isBiAvailable;
 
     // ..........................................................
     // APPLICATION
@@ -59,7 +60,8 @@ trailing:true, white:true*/
       ]
     };
 
-    if (XT.reporting) {
+    isBiAvailable = XT.reporting && XT.session.privileges.get("ViewSalesHistory");
+    if (isBiAvailable) {
       module.panels.push({name: "salesAnalysisPage", kind: "analysisFrame"});
     }
 
