@@ -16,7 +16,6 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
-  // TODO: make sure all the extensions work
   // TODO: get rid of all sync functions
   // TODO: get rid of monsterSql
   // TODO: work out logging
@@ -137,66 +136,67 @@ var _ = require('underscore'),
           extensionCallback("Cannot find manifest " + manifestFilename);
           return;
         }
-        manifestString = fs.readFileSync(manifestFilename, "utf8");
-        try {
-          manifest = JSON.parse(manifestString);
-        } catch (error) {
-          winston.log("Manifest is not valid JSON" + manifestFilename);
-          extensionCallback("Manifest is not valid JSON" + manifestFilename);
-          return;
-        }
-
-        //
-        // Step 2 in installing extension scripts
-        // Install all the scripts in the manifest file, in series.
-        //
-        var installScript = function (filename, scriptCallback) {
-          var fullFilename = path.join(dbSourceRoot, filename);
-          if (!fs.existsSync(fullFilename)) {
-            scriptCallback(path.join(dbSourceRoot, filename) + " does not exist");
+        fs.readFile(manifestFilename, "utf8", function (err, manifestString) {
+          try {
+            manifest = JSON.parse(manifestString);
+          } catch (error) {
+            winston.log("Manifest is not valid JSON" + manifestFilename);
+            extensionCallback("Manifest is not valid JSON" + manifestFilename);
             return;
           }
-          fs.readFile(fullFilename, "utf8", function (err, scriptContents) {
-            var noticeSql = 'do $$ plv8.elog(NOTICE, "Just ran file ' + fullFilename + '"); $$ language plv8;\n',
-              formattingError,
-              lastChar;
 
-            //
-            // Allow inclusion of js files in manifest. If it is a js file,
-            // use plv8 to execute it.
-            //
-            //if (fullFilename.substring(fullFilename.length - 2) === 'js') {
-              // this isn't quite working yet
-              // http://adpgtech.blogspot.com/2013/03/loading-useful-modules-in-plv8.html
-              // put in lib/orm's manifest.js: "../../tools/lib/underscore/underscore-min.js",
-            //  scriptContents = "do $$ " + scriptContents + " $$ language plv8;";
-            //}
-
-            //
-            // Incorrectly-ended sql files (i.e. no semicolon) make for unhelpful error messages
-            // when we concatenate 100's of them together. Guard against these.
-            //
-            scriptContents = scriptContents.trim();
-            lastChar = scriptContents.charAt(scriptContents.length - 1);
-            if (lastChar !== ';' && lastChar !== '/') { // slash might be the end of a comment; we'll let that slide.
-              formattingError = "Error: " + fullFilename + " contents do not end in a semicolon.";
-              winston.warn(formattingError);
-              scriptCallback(formattingError);
+          //
+          // Step 2 in installing extension scripts
+          // Install all the scripts in the manifest file, in series.
+          //
+          var installScript = function (filename, scriptCallback) {
+            var fullFilename = path.join(dbSourceRoot, filename);
+            if (!fs.existsSync(fullFilename)) {
+              scriptCallback(path.join(dbSourceRoot, filename) + " does not exist");
+              return;
             }
+            fs.readFile(fullFilename, "utf8", function (err, scriptContents) {
+              var noticeSql = 'do $$ plv8.elog(NOTICE, "Just ran file ' + fullFilename + '"); $$ language plv8;\n',
+                formattingError,
+                lastChar;
 
-            // can't put noticeSql before scriptContents without accounting for the very first script, which is
-            // create_plv8, and which must not have any plv8 functions before it, such as a notice.
-            monsterSql += scriptContents += noticeSql;
+              //
+              // Allow inclusion of js files in manifest. If it is a js file,
+              // use plv8 to execute it.
+              //
+              //if (fullFilename.substring(fullFilename.length - 2) === 'js') {
+                // this isn't quite working yet
+                // http://adpgtech.blogspot.com/2013/03/loading-useful-modules-in-plv8.html
+                // put in lib/orm's manifest.js: "../../tools/lib/underscore/underscore-min.js",
+              //  scriptContents = "do $$ " + scriptContents + " $$ language plv8;";
+              //}
 
-            scriptCallback(err, scriptContents += noticeSql);
+              //
+              // Incorrectly-ended sql files (i.e. no semicolon) make for unhelpful error messages
+              // when we concatenate 100's of them together. Guard against these.
+              //
+              scriptContents = scriptContents.trim();
+              lastChar = scriptContents.charAt(scriptContents.length - 1);
+              if (lastChar !== ';' && lastChar !== '/') { // slash might be the end of a comment; we'll let that slide.
+                formattingError = "Error: " + fullFilename + " contents do not end in a semicolon.";
+                winston.warn(formattingError);
+                scriptCallback(formattingError);
+              }
+
+              // can't put noticeSql before scriptContents without accounting for the very first script, which is
+              // create_plv8, and which must not have any plv8 functions before it, such as a notice.
+              monsterSql += scriptContents += noticeSql;
+
+              scriptCallback(err, scriptContents += noticeSql);
+            });
+          };
+          async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
+            extensionCallback(err, res);
           });
-        };
-        async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
-          extensionCallback(err, res);
+          //
+          // End script installation code
+          //
         });
-        //
-        // End script installation code
-        //
       };
 
       //
