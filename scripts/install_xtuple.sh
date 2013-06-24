@@ -396,15 +396,8 @@ setup_postgres() {
 
 	psql -U postgres dev -c "CREATE EXTENSION plv8" 2>1 | tee -a $LOG_FILE
 	
-	cdir $XT_DIR/enyo-client/database/source/
-	psql -U admin -d dev -p 5432 -h localhost -f "init_instance.sql" 2>1 | tee -a $LOG_FILE
-
-	cdir $XT_DIR/enyo-client/extensions/source/crm/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql" 2>1 | tee -a $LOG_FILE
-	cdir $XT_DIR/enyo-client/extensions/source/project/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql" 2>1 | tee -a $LOG_FILE
-	cdir $XT_DIR/enyo-client/extensions/source/sales/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql" 2>1 | tee -a $LOG_FILE
+	cdir $XT_DIR
+	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
 }
 
 # Pull submodules

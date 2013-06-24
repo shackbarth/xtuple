@@ -18,7 +18,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     var config = require(path.join(__dirname, "../../../config.js")),
       creds = config.databaseServer,
       testInit = false, // false is faster, true is more thorough
-      databaseName = testInit ? "build_db_test" : "dev";
+      databaseName = testInit ? "build_db_test" : "dev"; // TODO: get the dbname from config testDatabase?
 
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
