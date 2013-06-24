@@ -22,10 +22,10 @@ enyo.depends(
   "sales_rep.js",
   "sale_type.js",
   "site.js",
-  "static.js",
   "tax.js",
   "terms.js",
   "to_do.js",
   "url.js",
-  "user_account.js"
+  "user_account.js",
+  "static.js"
 );

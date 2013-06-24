@@ -29,7 +29,7 @@ $$, false);
 
 -- insert rules
 
-create or replace rule _CREATE as on insert to xt.doc
+create or replace rule "_CREATE" as on insert to xt.doc
   do instead 
 
 insert into public.docass (
@@ -38,23 +38,25 @@ insert into public.docass (
   docass_source_type,
   docass_target_id,
   docass_target_type,
-  docass_purpose )
+  docass_purpose,
+  obj_uuid )
 values (
   new.id,
   new.source_id,
   new.source_type,
   new.target_id,
   new.target_type,
-  new.purpose );
+  new.purpose,
+  new.obj_uuid );
   
 -- update rule
 
-create or replace rule _UPDATE as on update to xt.doc
+create or replace rule "_UPDATE" as on update to xt.doc
   do instead nothing;
 
 -- delete rules
 
-create or replace rule _DELETE as on delete to xt.doc
+create or replace rule "_DELETE" as on delete to xt.doc
   do instead 
 
 delete from public.docass 

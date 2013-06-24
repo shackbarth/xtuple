@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X: true, XM:true */
+/*global X:true, XT:true, XM:true, SYS:true */
 
 (function () {
   "use strict";
@@ -12,24 +12,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var data = require("./data");
 
   var queryForData = function (session, query, callback) {
+
     var userId = session.passport.user.username,
-      userQueryPayload = '{"nameSpace":"XM","type":"UserAccountRelation","id":"%@"}'.f(userId),
-      userQuery = "select xt.get('%@')".f(userQueryPayload);
+      adminUser = X.options.databaseServer.user, // execute this query as admin
+      userQueryPayload = '{"nameSpace":"SYS","type":"User","id":"%@","username":"%@"}'
+        .f(userId, adminUser),
+      userQuery = "select xt.get('%@')".f(userQueryPayload),
+      queryOptions = XT.dataSource.getAdminCredentials(session.passport.user.organization);
 
     // first make sure that the user has permissions to export to CSV
     // (can't trust the client)
-    X.database.query(session.passport.user.organization, userQuery, function (err, res) {
+    XT.dataSource.query(userQuery, queryOptions, function (err, res) {
       var retrievedRecord;
-
       if (err || !res || res.rowCount < 1) {
-        callback("Error verifying user permissions", null);
+        callback({isError: true, message: "Error verifying user permissions"});
         return;
       }
 
       retrievedRecord = JSON.parse(res.rows[0].get);
-      if (retrievedRecord.disableExport) {
+      if (retrievedRecord.data.disableExport) {
         // nice try, asshole.
-        callback("Stop trying to hack into our database", null);
+        callback({isError: true, message: "Stop trying to hack into our database"});
         return;
       }
 
@@ -41,7 +44,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.report = function (req, res) {
     var requestDetails = JSON.parse(req.query.details);
 
-    var bicacheCollection = new XM.BiCacheCollection(),
+    var bicacheCollection = new SYS.BiCacheCollection(),
         fetchOptions = {},
         date,
         hourLifespan = 24,
@@ -66,13 +69,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     fetchOptions.error = function () {
       console.log("Couldn't fetch the BiCacheCollection");
     };
+    fetchOptions.database = req.session.passport.user.organization;
     bicacheCollection.fetch(fetchOptions);
 
     var queryForDataCallback = function (result) {
       var type = requestDetails.type,
-        modelName, fileName;
+        modelName,
+        queryOptions,
+        fileName;
 
-      if (!type) {
+      if (result.isError) {
+        res.send(result);
+        return;
+
+      } else if (!type) {
         res.send({isError: true, message: "You must pass a type"});
         return;
       }
@@ -89,12 +99,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
         var randomKey = Math.random().toString(36).substr(2, 15),
-          tempDataModel = new XM.BiCache(null, {isNew: true}),
+          tempDataModel = new SYS.BiCache(null, {isNew: true, database: req.session.passport.user.organization}),
           attrs = {
             key: randomKey,
-            // TODO: this will be null for a single-record request. Then again, I don't know if we
-            // need to describe the query on such requests, or how we should describe them.
-            // requestDetails.recordType and requestDetails.id are the two pieces of information
             query: JSON.stringify(requestDetails.query),
             locale: JSON.stringify(requestDetails.locale),
             data: JSON.stringify(result.data),
@@ -103,7 +110,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           success = function () {
             var biUrl = X.options.datasource.biUrl || "",
-              redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
+              redirectUrl = biUrl + "&name=" + fileName +
+                "&org=" + req.session.passport.user.organization +
+				"&datasource=" + req.headers.host + "&datakey=" + randomKey;
 
             if (requestDetails.locale && requestDetails.locale.culture) {
               res.set("Accept-Language", requestDetails.locale.culture);
@@ -123,13 +132,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         tempDataModel.save(attrs, {
           success: success,
           error: error,
-          username: X.options.globalDatabase.nodeUsername
+          database: req.session.passport.user.organization,
+          username: X.options.databaseServer.user
         });
-      }
+      };
 
       // step 2: get the schema
-      X.database.query(req.session.passport.user.organization,
-        "select xt.getSchema('%@', '%@');".f(requestDetails.nameSpace, modelName), saveBiCache);
+      queryOptions = XT.dataSource.getAdminCredentials(req.session.passport.user.organization);
+      XT.dataSource.query("select xt.getSchema('%@', '%@');".f(requestDetails.nameSpace, modelName),
+        queryOptions,
+        saveBiCache);
     };
 
     // step 1: get the data

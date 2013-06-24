@@ -1,6 +1,13 @@
-create or replace function xt.js_init() returns void as $$
+drop function if exists xt.js_init();
 
-  DEBUG = false;
+create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
+
+  DEBUG = debug ? debug : false;
+
+  if (plv8.version < '1.3.0'){
+    plv8.elog(ERROR, 'plv8 version 1.3.0 or greater required. This version is = ', plv8.version);
+  }
+
 
   // ..........................................................
   // METHODS
@@ -70,16 +77,27 @@ create or replace function xt.js_init() returns void as $$
   /**
     Curry function
   */
-  Function.prototype.curry = function() {
+  Function.prototype.curry = function () {
     if (arguments.length < 1) {
         return this; /* nothing to curry with - return function */
     }
+
     var __method = this,
       args = arguments[0];
+
     return function () {
       return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
     }
   }
+
+  handleError = function (message, code) {
+    var err = new Error();
+    this.stack = err.stack;
+    this.name = "handleError";
+    this.message = (message || "");
+    this.code = code || null;
+  }
+  handleError.prototype = new Error();
 
   /**
     Return the text after the first dot.
@@ -204,6 +222,31 @@ create or replace function xt.js_init() returns void as $$
   }
 
   /**
+   * Wrap plv8's elog DEBUG1.
+   *
+   * For debug messages to show up, you need to set your postgresql.conf to:
+   * client_min_messages = debug1
+   *
+   * @param {String} Debug message of where you are at, what you are doing or what's in args.
+   * @param {Object|Array} The data you want logged.
+   */
+  XT.debug = function(msg, args) {
+    var message = '';
+
+    msg = typeof msg === 'string' ? msg || 'debug data = ' : 'debug data = ';
+    args = args || null;
+
+    if (args) {
+      message = JSON.stringify(args, null, 2);
+    }
+
+    // TODO, this could be changed to "LOG" and you would need to set: client_min_messages = log
+    // Then you would not get any of the "RAISE DEBUG;" messages from the PL/pgSQL code.
+    /* Do a hard trim to 900 so something prints. */
+    plv8.elog(DEBUG1, (msg + message).substring(0, 900));
+  }
+
+  /**
     Change camel case property names in an object to snake case.
      Only changes immediate properties, it is not recursive.
 
@@ -218,6 +261,77 @@ create or replace function xt.js_init() returns void as $$
     else if(typeof obj === "string") return obj.decamelize();
     return ret;
   }
+
+  /**
+   * Wrap plv8's elog ERROR to include a stack trace and function arguments when debugging.
+   *
+   * @param {Object} The caught error object from a try/catch.
+   * @param {Array} Javascript's arguments array for the function throwing the error.
+   * @param {Boolean|String} Set flag to indicate the error was handled.
+   */
+  XT.error = function (error) {
+    var message = error.stack + "\n";
+
+    if (error.name === "handleError") {
+      /* This error was handled and a message sent to the client. Those massages are*/
+      /* generic HTTP codes. Send the stack trace with detailed info on what happened. */
+      XT.debug(message);
+      XT.message(error.code, error.message)
+      throw "handledError";
+    } else {
+      /* Some times the stack trace can eat up the full 1000 char message. */
+      /* Do a hard trim to 900 so something prints. */
+      XT.message(500, "Internal Server Error");
+      plv8.elog(WARNING, message.substring(0, 900));
+      throw "unhandledError";
+    }
+  }
+
+  /**
+   * Wrap PostgreSQL's format() function to format SQL Injection safe queires or general strings.
+   * http://www.postgresql.org/docs/9.1/interactive/functions-string.html#FUNCTIONS-STRING-OTHER
+   *
+   * Example: var query = XT.format("select * from %I", ["cntct"]);
+   *  Returns: 'select * from cntct'
+   * Example: var query = XT.format("select %1$I.* from %2$I.%1$I {join} where %1$I.%3$I = $1", ["contact", "xm", "id"]);
+   *  Returns: 'select contact.* from xm.contact {join} where contact.number = $1'
+   *
+   * SQL Injection attemp:
+   * Example: var query = XT.format("SELECT * FROM %I", ["cntct; select * from pg_roles; --"]);
+   * Safely escaped/quoted query:
+   *  Returns: 'SELECT * FROM "cntct; select * from pg_roles; --"'
+   *
+   * @param {String} The string with format tokens to replace.
+   * @param {Array} An array of replacement strings.
+   * @returns {String} Safely escaped string with tokens replaced.
+   */
+  XT.format = function (string, args) {
+    if (typeof string !== 'string' || XT.typeOf(args) !== 'array' || !args.length) {
+      return false;
+    }
+
+    var query = "select format($1",
+        params = "";
+
+    for(var i = 0; i < args.length; i++) {
+      params = params + ", $" + (i + 2);
+    }
+    query = query + params + ")";
+
+    /* Pass 'string' to format() as the first parameter. */
+    args.unshift(string);
+
+    if (DEBUG) {
+      XT.debug('XT.format sql =', query);
+      XT.debug('XT.format args =', args);
+    }
+    string = plv8.execute(query, args)[0].format;
+
+    /* Remove 'string' from args to prevent reference errors. */
+    args.shift();
+
+    return string;
+  };
 
   /**
     Return a universally unique identifier.
@@ -239,6 +353,13 @@ create or replace function xt.js_init() returns void as $$
 
     return uuid;
   };
+
+  XT.message = function (code, message) {
+    var msg = {code: code, message: message};
+
+    plv8.elog(INFO, JSON.stringify(msg));
+    return 'Handled by XT.message';
+  }
 
   /**
     Extended version of javascript 'typeof' that also recognizes arrays
@@ -298,7 +419,7 @@ create or replace function xt.js_init() returns void as $$
     res = plv8.execute(sql);
     if(res.length) {
       for(var i = 0; i < res.length; i++) {
-        if(DEBUG) plv8.elog(NOTICE, 'loading javascript for type->', res[i].js_type);
+        if(DEBUG) XT.debug('loading javascript for type->', res[i].js_type);
 
         eval(res[i].javascript);
       }

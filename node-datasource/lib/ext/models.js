@@ -1,7 +1,7 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true */
+/*global SYS:true, XM:true, Backbone:true, _:true */
 
 (function () {
   "use strict";
@@ -11,16 +11,9 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.DatabaseServer = XM.SimpleModel.extend({
-    /** @scope XM.DatabaseServer.prototype */
+  SYS.Extension = XM.SimpleModel.extend({
 
-    recordType: 'XM.DatabaseServer',
-
-    idAttribute: 'name',
-
-    databaseType: 'global',
-
-    autoFetchId: false
+    recordType: 'SYS.Extension'
 
   });
 
@@ -29,16 +22,9 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.Datasource = XM.SimpleModel.extend({
-    /** @scope XM.Datasource.prototype */
+  SYS.Oauth2client = XM.SimpleModel.extend({
 
-    recordType: 'XM.Datasource',
-
-    idAttribute: 'name',
-
-    databaseType: 'global',
-
-    autoFetchId: false
+    recordType: 'SYS.Oauth2client'
 
   });
 
@@ -47,12 +33,9 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.Extension = XM.SimpleModel.extend({
-    /** @scope XM.Extension.prototype */
+  SYS.Oauth2clientRedirs = XM.SimpleModel.extend({
 
-    recordType: 'XM.Extension',
-
-    databaseType: 'global'
+    recordType: 'SYS.Oauth2clientRedirs'
 
   });
 
@@ -61,12 +44,9 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.Oauth2client = XM.SimpleModel.extend({
-    /** @scope XM.Organization.prototype */
+  SYS.Oauth2token = XM.SimpleModel.extend({
 
-    recordType: 'XM.Oauth2client',
-
-    databaseType: 'global'
+    recordType: 'SYS.Oauth2token'
 
   });
 
@@ -75,108 +55,13 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.Oauth2clientRedirs = XM.SimpleModel.extend({
-    /** @scope XM.Organization.prototype */
+  SYS.SessionStore = XM.SimpleModel.extend({
+    /** @scope SYS.SessionStore.prototype */
 
-    recordType: 'XM.Oauth2clientRedirs',
-
-    databaseType: 'global'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.Oauth2token = XM.SimpleModel.extend({
-    /** @scope XM.Organization.prototype */
-
-    recordType: 'XM.Oauth2token',
-
-    databaseType: 'global'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.Organization = XM.SimpleModel.extend({
-    /** @scope XM.Organization.prototype */
-
-    recordType: 'XM.Organization',
-
-    idAttribute: 'name',
-
-    databaseType: 'global',
-
-    autoFetchId: false
-
-  });
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.OrganizationExtension = XM.SimpleModel.extend({
-    /** @scope XM.OrganizationExtension.prototype */
-
-    recordType: 'XM.OrganizationExtension',
-
-    databaseType: 'global'
-
-  });
-
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.Session = XM.SimpleModel.extend({
-    /** @scope XM.Session.prototype */
-
-    recordType: 'XM.Session',
-
-    idAttribute: 'sid',
-
-    databaseType: 'global',
-
-    autoFetchId: false
-
-  });
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.SessionOrganization = XM.SimpleModel.extend({
-    /** @scope XM.SessionOrganization.prototype */
-
-    recordType: 'XM.SessionOrganization',
-
-    databaseType: 'global'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.SessionStore = XM.SimpleModel.extend({
-    /** @scope XM.SessionStore.prototype */
-
-    recordType: 'XM.SessionStore',
+    recordType: 'SYS.SessionStore',
 
     idAttribute: 'id',
 
-    databaseType: 'global',
-
     autoFetchId: false
 
   });
@@ -186,14 +71,10 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.User = XM.SimpleModel.extend({
-    /** @scope XM.User.prototype */
+  SYS.User = XM.SimpleModel.extend({
+    /** @scope SYS.User.prototype */
 
-    recordType: 'XM.User',
-
-    autoFetchId: false,
-
-    databaseType: 'global'
+    recordType: 'SYS.User'
 
   });
 
@@ -202,51 +83,22 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.UserOrganization = XM.SimpleModel.extend({
-    /** @scope XM.UserOrganization.prototype */
+  SYS.UserAccountRole = XM.SimpleModel.extend({
+    /** @scope SYS.UserAccountRole.prototype */
 
-    recordType: 'XM.UserOrganization',
-
-    databaseType: 'global'
+    recordType: 'SYS.UserAccountRole'
 
   });
+
 
   /**
     @class
 
     @extends XM.SimpleModel
   */
-  XM.GlobalPrivilege = XM.SimpleModel.extend(/** @lends XM.GlobalPrivilege.prototype */{
+  SYS.BiCache = XM.SimpleModel.extend(/** @lends SYS.BiCache.prototype */{
 
-    recordType: 'XM.GlobalPrivilege',
-
-    databaseType: 'global'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.UserGlobalPrivilegeAssignment = XM.SimpleModel.extend(/** @lends XM.UserGlobalPrivilegeAssignment.prototype */{
-
-    recordType: 'XM.UserGlobalPrivilegeAssignment',
-
-    databaseType: 'global'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.BiCache = XM.SimpleModel.extend(/** @lends XM.BiCache.prototype */{
-
-    recordType: 'XM.BiCache',
-
-    databaseType: 'global',
+    recordType: 'SYS.BiCache',
 
     idAttribute: 'key'
 
@@ -262,33 +114,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.DatabaseServerCollection = XM.Collection.extend({
-    /** @scope XM.DatabaseServerCollection.prototype */
+  SYS.Oauth2clientCollection = XM.Collection.extend({
 
-    model: XM.DatabaseServer
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  XM.DatasourceCollection = XM.Collection.extend({
-    /** @scope XM.DatasourceCollection.prototype */
-
-    model: XM.DatabaseServer
-  });
-
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  XM.Oauth2clientCollection = XM.Collection.extend({
-    /** @scope XM.OrganizationCollection.prototype */
-
-    model: XM.Oauth2client
+    model: SYS.Oauth2client
 
   });
 
@@ -297,10 +125,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.Oauth2clientRedirsCollection = XM.Collection.extend({
-    /** @scope XM.OrganizationCollection.prototype */
+  SYS.Oauth2clientRedirsCollection = XM.Collection.extend({
 
-    model: XM.Oauth2clientRedirs
+    model: SYS.Oauth2clientRedirs
 
   });
   /**
@@ -308,10 +135,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.Oauth2tokenCollection = XM.Collection.extend({
-    /** @scope XM.OrganizationCollection.prototype */
+  SYS.Oauth2tokenCollection = XM.Collection.extend({
 
-    model: XM.Oauth2token
+    model: SYS.Oauth2token
 
   });
 
@@ -320,22 +146,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.OrganizationCollection = XM.Collection.extend({
-    /** @scope XM.OrganizationCollection.prototype */
+  SYS.ExtensionCollection = XM.Collection.extend(/** @lends SYS.ExtensionCollection.prototype */{
 
-    model: XM.Organization
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  XM.UserOrganizationCollection = XM.Collection.extend({
-    /** @scope XM.UserOrganizationCollection.prototype */
-
-    model: XM.UserOrganization
+    model: SYS.Extension
 
   });
 
@@ -344,22 +157,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.SessionCollection = XM.Collection.extend({
-    /** @scope XM.SessionCollection.prototype */
+  SYS.UserCollection = XM.Collection.extend({
+    /** @scope SYS.UserCollection.prototype */
 
-    model: XM.Session
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  XM.SessionStoreCollection = XM.Collection.extend({
-    /** @scope XM.SessionStoreCollection.prototype */
-
-    model: XM.SessionStore
+    model: SYS.User
 
   });
 
@@ -368,21 +169,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.UserCollection = XM.Collection.extend({
-    /** @scope XM.UserCollection.prototype */
+  SYS.BiCacheCollection = XM.Collection.extend({
+    /** @scope SYS.BiCacheCollection.prototype */
 
-    model: XM.User
-
-  });
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  XM.BiCacheCollection = XM.Collection.extend({
-    /** @scope XM.BiCacheCollection.prototype */
-
-    model: XM.BiCache
+    model: SYS.BiCache
 
   });
 }());

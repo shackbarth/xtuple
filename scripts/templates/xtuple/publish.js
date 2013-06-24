@@ -8,7 +8,8 @@ var template = require('jsdoc/template'),
     hasOwnProp = Object.prototype.hasOwnProperty,
     data,
     view,
-    outdir = env.opts.destination;
+    outdir = env.opts.destination,
+    enc = "utf-8";
 
 
 function find(spec) {
@@ -71,7 +72,7 @@ function generate(title, docs, filename) {
     
     html = helper.resolveLinks(html); // turn {@link foo} into <a href="foodoc.html">foo</a>
     
-    fs.writeFileSync(outpath, html);
+    fs.writeFileSync(outpath, html, enc);
 }
 
 /**
@@ -361,7 +362,7 @@ exports.publish = function(taffyData, opts, tutorials) {
         // yes, you can use {@link} in tutorials too!
         html = helper.resolveLinks(html); // turn {@link foo} into <a href="foodoc.html">foo</a>
         
-        fs.writeFileSync(tutorialPath, html);
+        fs.writeFileSync(tutorialPath, html, enc);
     }
     
     // tutorials can have only one parent so there is no risk for loops
@@ -371,5 +372,5 @@ exports.publish = function(taffyData, opts, tutorials) {
             saveChildren(child);
         });
     }
-    saveChildren(tutorials);
+    saveChildren(tutorials); 
 };

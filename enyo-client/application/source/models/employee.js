@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true */
 
@@ -17,7 +17,7 @@ white:true*/
     recordType: 'XM.Department'
 
   });
-  
+
   /**
     @class
 
@@ -40,8 +40,10 @@ white:true*/
 
     recordType: 'XM.Employee',
 
+    idAttribute: "code",
+
     documentKey: "code",
-    
+
     conversionMap: {
       name: "name",
       primaryContact: "contact"
@@ -57,24 +59,14 @@ white:true*/
         billingPeriod: hourly,
         billingRate: 0
       };
-    },
-
-    requiredAttributes: [
-      "isActive",
-      "number",
-      "wage",
-      "wageType",
-      "wagePeriod",
-      "billingPeriod",
-      "billingRate"
-    ]
+    }
 
   });
 
   /** @class
-  
+
   A hash of constants related to wage types and periods.
-  
+
   */
   XM.Wage = {
     /** @scope XM.Wage */
@@ -209,8 +201,8 @@ white:true*/
     descriptionKey: "name"
 
   });
-  
-  
+
+
   /**
     @class
 
@@ -236,7 +228,7 @@ white:true*/
     recordType: 'XM.EmployeeGroupEmployee'
 
   });
-  
+
   /**
     @class
 
@@ -264,7 +256,7 @@ white:true*/
     model: XM.Department
 
   });
-  
+
   /**
     @class
 
@@ -288,7 +280,7 @@ white:true*/
     model: XM.EmployeeRelation
 
   });
-  
+
   /**
     @class
 

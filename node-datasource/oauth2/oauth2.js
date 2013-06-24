@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, _:true, console:true*/
+/*global X:true, SYS:true, _:true, console:true*/
 
 /**
  * Module dependencies.
@@ -34,15 +34,15 @@ var server = oauth2orize.createServer();
 server.serializeClient(function (client, done) {
   "use strict";
 
-  return done(null, client.id);
+  return done(null, client);
 });
 
-server.deserializeClient(function (id, done) {
+server.deserializeClient(function (client, done) {
   "use strict";
 
-  db.clients.find(id, function (err, client) {
+  db.clients.find(client, function (err, foundClient) {
     if (err) { return done(err); }
-    return done(null, client);
+    return done(null, foundClient);
   });
 });
 
@@ -114,7 +114,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
   var salt = '$2a$10$' + client.get("clientID").substring(0, 22),
       codehash = X.bcrypt.hashSync(code, salt);
 
-  db.authorizationCodes.find(codehash, function (err, authCode) {
+  db.authorizationCodes.find(codehash, client.get("organization"), function (err, authCode) {
     if (err) { return done(err); }
     if (!authCode) { return done(null, false); }
     if (client.get("clientID") !== authCode.get("clientID")) { return done(new Error("Invalid clientID.")); }
@@ -166,6 +166,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
     saveOptions.error = function (model, err) {
       return done && done(err);
     };
+    saveOptions.database = client.get("organization");
 
     // Set model values and save.
     authCode.set("state", "Token Issued");
@@ -210,7 +211,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
   var salt = '$2a$10$' + client.get("clientID").substring(0, 22),
       refreshhash = X.bcrypt.hashSync(refreshToken, salt);
 
-  db.accessTokens.findByRefreshToken(refreshhash, function (err, token) {
+  db.accessTokens.findByRefreshToken(refreshhash, client.get("organization"), function (err, token) {
     if (err) { return done(err); }
     if (!token) { return done(null, false); }
     if (client.get("clientID") !== token.get("clientID")) { return done(new Error("Invalid clientID.")); }
@@ -272,7 +273,8 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 // application issues an access token on behalf of the user in the JWT `prn`
 // proptery.
 
-server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(function (client, header, claimSet, signature, done) {
+//server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(function (client, header, claimSet, signature, done) {
+server.exchange('assertion', jwtBearer(function (client, header, claimSet, signature, done) {
   "use strict";
 
   var data = header + "." + claimSet,
@@ -290,7 +292,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
         saveOptions = {},
         today = new Date(),
         expires = new Date(today.getTime() + (60 * 60 * 1000)), // One hour from now.
-        token = new XM.Oauth2token();
+        token = new SYS.Oauth2token();
 
     // Verify JWT was formed correctly.
     if (!decodedHeader || !decodedHeader.alg || !decodedHeader.typ) {
@@ -320,27 +322,16 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
 
     // Validate decodedClaimSet.prn user and scopes.
     if (client.get("delegatedAccess") && decodedClaimSet.prn) {
-      db.users.findByUsername(decodedClaimSet.prn, function (err, user) {
+      db.users.findByUsername(decodedClaimSet.prn, client.get("organization"), function (err, user) {
         if (err) { return done(new Error("Invalid JWT delegate user.")); }
         if (!user) { return done(null, false); }
 
-        var organizations = [],
-            separator = ' ',
+        var separator = ' ',
             jwtScopes = decodedClaimSet.scope.split(separator),
             scope,
             scopes = [];
 
         if (!Array.isArray(jwtScopes)) { jwtScopes = [ jwtScopes ]; }
-
-        try {
-          // Get user's orgs.
-          organizations = _.map(user.get("organizations"), function (org) {
-            return org.name;
-          });
-        } catch (error) {
-          // Prevent unauthorized access.
-          return done(new Error("Invalid JWT delegate user."));
-        }
 
         // Loop through the scope URIs and convert them to org names.
         _.each(jwtScopes, function (scopeValue, scopeKey, scopeList) {
@@ -348,14 +339,11 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
 
           // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
           scope = url.parse(scopeValue, true);
-          scopeOrg = scope.path.match(/\/auth\/(.*)/)[1] || null;
+          scopeOrg = scope.path.split("/")[1];
 
-          // Loop through the user's org and make sure the requested scope is valid.
-          _.each(organizations, function (orgValue, orgKey, orgList) {
-            if (orgValue === scopeOrg) {
-              scopes[scopeKey] = scopeOrg;
-            }
-          });
+          if (user.get("organization") === scopeOrg) {
+            scopes[scopeKey] = scopeOrg;
+          }
         });
 
         if (scopes.length < 1) {
@@ -385,6 +373,8 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
           return done && done(err);
         };
 
+        saveOptions.database = scopes[0];
+
         initCallback = function (model, value) {
           if (model.id) {
             // Now that model is ready, set attributes and save.
@@ -398,7 +388,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
               accessExpires: expires,
               tokenType: "bearer",
               accessType: "offline",
-              delegate: user.get("id")
+              delegate: user.get("username")
             };
 
             // Try to save access token data to the database.
@@ -412,7 +402,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
         token.on('change:id', initCallback);
 
         // Set model values and save.
-        token.initialize(null, {isNew: true});
+        token.initialize(null, {isNew: true, database: scopes[0]});
       });
     } else {
       // No prn, throw error for now.
@@ -448,7 +438,11 @@ exports.authorization = [
   server.authorization(function (clientID, redirectURI, scope, type, done) {
     "use strict";
 
-    db.clients.findByClientId(clientID, function (err, client) {
+    // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
+    scope = url.parse(scope[0], true);
+    var scopeOrg = scope.path.match(/\/auth\/(.*)/)[1] || null;
+
+    db.clients.findByClientId(clientID, scopeOrg, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
 

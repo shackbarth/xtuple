@@ -62,15 +62,22 @@ select xt.install_js('XM','Model','xtuple', $$
        rec,
        pid;
 
-    /* if the model uses a natural key, get the primary key value */
+    /* If the model uses a natural key, get the primary key value. */
     rec = data.retrieveRecord({
       nameSpace: nameSpace,
       type: type,
       id: id
     });
+
     pid = nkey ? data.getId(orm, id) : id;
+    if (!pid) {
+// TODO - Send not found message back.
+      return false;
+    }
+
     if (!rec || !rec.data) { throw "Record for requested lock not found." }
     if (rec.etag !== etag) { return false; }
+
     return data.tryLock(lockTable, pid);
   }
 
@@ -131,10 +138,10 @@ select xt.install_js('XM','Model','xtuple', $$
         result;
         if (id) {
           sql += " and " + okey + " != $2";
-          if (DEBUG) { plv8.elog(NOTICE, sql); }
+          if (DEBUG) { XT.debug('XM.Model.findExisting sql = ', sql); }
           result = plv8.execute(sql, [value, id])[0];
         } else {
-          if (DEBUG) { plv8.elog(NOTICE, sql); }
+          if (DEBUG) { XT.debug('XM.Model.findExisting sql = ', sql); }
           result = plv8.execute(sql, [value])[0];
         }
 
@@ -158,9 +165,19 @@ select xt.install_js('XM','Model','xtuple', $$
       i,
       attr,
       seq,
-      tableName;
+      tableName,
+      fkIndex, 
+      fkey, 
+      propIndex, 
+      probObj;
 
-   if (nkey) { id = data.getId(map, id); }
+    if (nkey) {
+      id = data.getId(map, id);
+      if (!id) {
+        /* Throw an error here because returning false is a valid use case. */
+        plv8.elog(ERROR, "Can not find primary key.");
+      }
+    }
 
     /* Determine where this record is used by analyzing foreign key linkages */
     sql = "select pg_namespace.nspname AS schemaname, " +
@@ -173,7 +190,23 @@ select xt.install_js('XM','Model','xtuple', $$
           "and f.relname = $1 " +
           "and con.relnamespace=pg_namespace.oid; "
     fkeys = plv8.execute(sql, [tableSuffix]);
-    if (DEBUG) { plv8.elog(NOTICE, 'keys:' ,fkeys.length) }
+
+    /* isNested toMany relationships are irrelevant and should be counted */
+    for (fkIndex = fkeys.length - 1; fkIndex >= 0; fkIndex-=1) {
+      /* loop backwards because we might be deleting elements of the array */
+      fkey = fkeys[fkIndex];
+      for(propIndex = 0; propIndex < map.properties.length; propIndex++) {
+        propObj = map.properties[propIndex]; /* pining for underscore */
+        if(propObj.toMany && propObj.toMany.isNested) {
+          /* this fk is irrelevant and should not be counted against used */
+          fkeys.splice(fkIndex, 1);
+          break;
+        }
+      }
+    }
+
+    if (DEBUG) { XT.debug('XM.Model.used keys length:', fkeys.length) }
+    if (DEBUG) { XT.debug('XM.Model.used keys:', JSON.stringify(fkeys)) }
     for (i = 0; i < fkeys.length; i++) {
       /* Validate */
 
@@ -186,7 +219,7 @@ select xt.install_js('XM','Model','xtuple', $$
       classId = fkeys[i].class_id;
       seq =  fkeys[i].seq[0];
       tableName = fkeys[i].schemaname + '.' + fkeys[i].tablename;
-      if (DEBUG) { plv8.elog(NOTICE, 'vars:', classId, seq, tableName) }
+      if (DEBUG) { XT.debug('XM.Model.used vars:', [classId, seq, tableName]) }
       attr = plv8.execute(sql, [classId, seq])[0].attname;
 
       /* See if there are dependencies */
@@ -197,6 +230,5 @@ select xt.install_js('XM','Model','xtuple', $$
 
     return false
   }
-
 $$ );
 

@@ -1,11 +1,11 @@
 create or replace function xt.orm_did_change() returns trigger as $$
-
   var view,
     views = [],
     lockTable,
     tableName,
     i = 1,
     sql,
+    dropSql,
     res,
     n;
 
@@ -30,7 +30,12 @@ create or replace function xt.orm_did_change() returns trigger as $$
   while (n--) {
     nsp = views[n].beforeDot();
     rel = views[n].afterDot();
-    plv8.execute("drop view if exists " + nsp + "." + rel);
+    dropSql = "drop view if exists " + nsp + "." + rel;
+
+    if (DEBUG) {
+      XT.debug('xt.orm_did_change sql = ', dropSql);
+    }
+    plv8.execute(dropSql);
   }
 
   /* Determine whether to rebuild */
@@ -77,10 +82,14 @@ create or replace function xt.orm_did_change() returns trigger as $$
     sql = 'drop trigger if exists {tableName}_did_change on {table};'
           .replace(/{tableName}/, tableName)
           .replace(/{table}/, lockTable);
+
+    if (DEBUG) {
+      XT.debug('xt.orm_did_change sql = ', sql);
+    }
     plv8.execute(sql);
+
     return OLD;
   }
 
   return NEW;
-
 $$ language plv8;

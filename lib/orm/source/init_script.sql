@@ -6,6 +6,7 @@
 -- create schemas
 \i create_xt_schema.sql;
 \i create_xm_schema.sql;
+\i create_sys_schema.sql;
 
 -- [ END ] initdb
 
@@ -63,12 +64,6 @@
 \i xt/tables/js.sql
 \i xt/tables/lock.sql
 \i xt/tables/orm.sql
-\i xt/tables/priv.sql
-\i xt/tables/useracct.sql
-\i xt/tables/userpriv.sql
-\i xt/tables/userrole.sql
-\i xt/tables/userrolepriv.sql
-\i xt/tables/useruserrole.sql
 \i xt/tables/ver.sql
 
 -- xt javascript

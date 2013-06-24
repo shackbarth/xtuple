@@ -1,6 +1,6 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
+/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
+trailing:true, white:true*/
 /*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
 
 (function () {
@@ -50,6 +50,19 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
       {name: "username", label: "_username".loc(), attr: "username"},
       {name: "propername", label: "_propername".loc(), attr: "propername"},
       {name: "email", label: "_email".loc(), attr: "email"}
@@ -163,6 +176,7 @@ trailing:true white:true*/
       },
       {name: "number", label: "_number".loc(), attr: "number"},
       {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "customerType", attr: "customerType", label: "_customerType".loc(), defaultKind: "XV.CustomerTypePicker"},
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
       {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "billingContact.primaryEmail"},
       {name: "phone", label: "_phone".loc(), attr: ["billingContact.phone", "billingContact.alternate", "billingContact.fax"]},
@@ -188,7 +202,7 @@ trailing:true white:true*/
       {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // EMPLOYEE
   //
@@ -231,7 +245,7 @@ trailing:true white:true*/
       {name: "country", label: "_country".loc(), attr: "cntact.address.country"}
     ]
   });
-  
+
   // ..........................................................
   // EMPLOYEE GROUP
   //

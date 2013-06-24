@@ -1,7 +1,7 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
+/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
-/*global XT:true, XV:true, enyo:true*/
+trailing:true, white:true*/
+/*global XT:true, XV:true, XM:true, enyo:true*/
 
 (function () {
 
@@ -61,8 +61,13 @@ trailing:true white:true*/
     XT.app.$.postbooks.insertModule(module, 2);
 
     relevantPrivileges = [
-      "AccessSalesExtension",
       "ConfigureSO",
+      "MaintainFreightClasses",
+      "MaintainCustomerGroups",
+      "MaintainQuotes",
+      "MaintainSalesOrders",
+      "MaintainSalesReps",
+      "MaintainShipZones",
       "MaintainTaxAssignments",
       "MaintainTaxClasses",
       "MaintainTaxCodes",
@@ -71,6 +76,15 @@ trailing:true white:true*/
       "MaintainTaxRegistrations",
       "MaintainTaxTypes",
       "MaintainTaxZones",
+      "MaintainTerms",
+      "MaintainSaleTypes",
+      "OverridePrice",
+      "OverrideTax",
+      "ShowMarginsOnSalesOrder",
+      "UpdateCustomerCreditStatus",
+      "ViewFreightClasses",
+      "ViewCustomerGroups",
+      "ViewQuotes",
       "ViewTaxAssignments",
       "ViewTaxClasses",
       "ViewTaxCodes",
@@ -79,19 +93,13 @@ trailing:true white:true*/
       "ViewTaxRegistrations",
       "ViewTaxTypes",
       "ViewTaxZones",
-      "MaintainFreightClasses",
-      "MaintainCustomerGroups",
-      "MaintainSalesReps",
-      "MaintainShipZones",
-      "MaintainTerms",
-      "MaintainSaleTypes",
-      "ViewFreightClasses",
-      "ViewCustomerGroups",
+      "ViewSalesOrders",
       "ViewSalesReps",
+      "ViewSaleTypes",
       "ViewShipZones",
-      "ViewTerms",
-      "ViewSaleTypes"
+      "ViewTerms"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
+
   };
 }());

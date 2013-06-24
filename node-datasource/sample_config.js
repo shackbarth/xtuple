@@ -8,10 +8,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   module.exports = {
     processName: "node-datasource",
     allowMultipleInstances: true,
-    requireDatabase: true,
-    enhancedAuthKey: "xTuple",
     datasource: {
       debugging: false,
+      debugDatabase: false,
+      enhancedAuthKey: "xTuple",
       sessionTimeout: 60,
       requireCache: true,
       pgPoolSize: 15,
@@ -36,7 +36,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       smtpPassword: "_smtp_password_",
 
       // URL of BI server
-      biUrl: "http://your.bi.solution/report.html?args=sample",
+      biUrl: "http://xtuple.com", // "http://your.bi.solution/report.html?args=sample",
 
       // these properties are dynamically registered with the
       // node discovery service
@@ -52,21 +52,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // human-friendly location identifier for various cloud, physical
       // servers, etc.
-      location: "NA"
+      location: "NA",
+      // Add each database to the array.
+      databases: ["dev"],
+      testDatabase: "" // this must remain empty for production datasources
     },
-    globalDatabase: {
+    extensionRoutes: [],
+    databaseServer: {
       hostname: "localhost",
       port: 5432,
-      database: "global",
       user: "admin",
-      password: "admin",
-      nodeUsername: "node"
-    },
-    required: [
-      "lib/ext/database",
-      "lib/ext/datasource",
-      "lib/ext/smtpTransport",
-      "lib/ext/models"
-    ]
+      password: "admin"
+    }
   };
 }());

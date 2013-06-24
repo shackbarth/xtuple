@@ -15,6 +15,17 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
+      },
+      "attribute": {
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "orderDate": {
+          "edit": "OverrideSODate"
+        },
+        "packDate": {
+          "edit": "AlterPackDate"
+        }
       }
     },
     "properties": [
@@ -31,7 +42,8 @@
         "attr": {
           "type": "String",
           "column": "cohead_number",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
@@ -39,7 +51,8 @@
         "toOne": {
           "isNested": true,
           "type": "CustomerProspectRelation",
-          "column": "cohead_cust_id"
+          "column": "cohead_cust_id",
+          "required": true
         }
       },
       {
@@ -53,7 +66,8 @@
         "name": "orderDate",
         "attr": {
           "type": "Date",
-          "column": "cohead_orderdate"
+          "column": "cohead_orderdate",
+          "required": true
         }
       },
       {
@@ -74,14 +88,16 @@
         "name": "terms",
         "toOne": {
           "type": "Terms",
-          "column": "cohead_terms_id"
+          "column": "cohead_terms_id",
+          "required": true
         }
       },
       {
         "name": "salesRep",
         "toOne": {
           "type": "SalesRep",
-          "column": "cohead_salesrep_id"
+          "column": "cohead_salesrep_id",
+          "required": true
         }
       },
       {
@@ -413,14 +429,16 @@
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "cohead_curr_id"
+          "column": "cohead_curr_id",
+          "required": true
         }
       },
       {
         "name": "calculateFreight",
         "attr": {
           "type": "Boolean",
-          "column": "cohead_calcfreight"
+          "column": "cohead_calcfreight",
+          "required": true
         }
       },
       {
@@ -448,7 +466,8 @@
         "name": "wasQuote",
         "attr": {
           "type": "Boolean",
-          "column": "cohead_wasquote"
+          "column": "cohead_wasquote",
+          "required": true
         }
       },
       {
@@ -711,7 +730,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -725,7 +745,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -975,6 +996,25 @@
     "table": "xt.coiteminfo",
     "idSequenceName": "coitem_coitem_id_seq",
     "comment": "Sales Order Line Item Map",
+<<<<<<< HEAD
+=======
+    "privileges": {
+      "all": {
+        "create": "MaintainSalesOrders",
+        "read": "ViewSalesOrders",
+        "update": "MaintainSalesOrders",
+        "delete": "MaintainSalesOrders"
+      },
+      "attribute": {
+        "firm": {
+          "edit": "FirmSalesOrder"
+        },
+        "taxType": {
+          "edit": "OverrideTax"
+        }
+      }
+    },
+>>>>>>> XTUPLE/master
     "properties": [
       {
         "name": "id",
@@ -996,42 +1036,49 @@
         "name": "salesOrder",
         "attr": {
           "type": "Number",
-          "column": "coitem_cohead_id"
+          "column": "coitem_cohead_id",
+          "required": true
         }
       },
       {
         "name": "lineNumber",
         "attr": {
           "type": "Number",
-          "column": "coitem_linenumber"
+          "column": "coitem_linenumber",
+          "required": true
         }
       },
       {
         "name": "itemSite",
         "toOne": {
+          "isNested": true,
           "type": "ItemSiteRelation",
-          "column": "coitem_itemsite_id"
+          "column": "coitem_itemsite_id",
+          "required": true
         }
       },
       {
         "name": "quantity",
         "attr": {
           "type": "Quantity",
-          "column": "coitem_qtyord"
+          "column": "coitem_qtyord",
+          "required": true
         }
       },
       {
         "name": "quantityUnit",
         "toOne": {
           "type": "Unit",
-          "column": "coitem_qty_uom_id"
+          "column": "coitem_qty_uom_id",
+          "required": true
         }
       },
       {
         "name": "quantityUnitRatio",
         "attr": {
           "type": "UnitRatio",
-          "column": "coitem_qty_invuomratio"
+          "column": "coitem_qty_invuomratio",
+          "required": true
         }
       },
       {
@@ -1045,7 +1092,8 @@
         "name": "customerPrice",
         "attr": {
           "type": "SalesPrice",
-          "column": "coitem_custprice"
+          "column": "coitem_custprice",
+          "required": true
         }
       },
       {
@@ -1059,14 +1107,16 @@
         "name": "price",
         "attr": {
           "type": "SalesPrice",
-          "column": "coitem_price"
+          "column": "coitem_price",
+          "required": true
         }
       },
       {
         "name": "scheduleDate",
         "attr": {
           "type": "Date",
-          "column": "coitem_scheddate"
+          "column": "coitem_scheddate",
+          "required": true
         }
       },
       {
@@ -1077,10 +1127,10 @@
         }
       },
       {
-        "name": "listCostMarkup",
+        "name": "markup",
         "attr": {
           "type": "Percent",
-          "column": "list_cost_markup"
+          "column": "markup"
         }
       },
       {
@@ -1108,21 +1158,24 @@
         "name": "priceUnit",
         "toOne": {
           "type": "Unit",
-          "column": "coitem_price_uom_id"
+          "column": "coitem_price_uom_id",
+          "required": true
         }
       },
       {
         "name": "priceUnitRatio",
         "attr": {
           "type": "UnitRatio",
-          "column": "coitem_price_invuomratio"
+          "column": "coitem_price_invuomratio",
+          "required": true
         }
       },
       {
         "name": "priceMode",
         "attr": {
           "type": "String",
-          "column": "coitem_pricemode"
+          "column": "coitem_pricemode",
+          "required": true
         }
       },
       {
@@ -1171,14 +1224,16 @@
         "name": "subnumber",
         "attr": {
           "type": "Number",
-          "column": "coitem_subnumber"
+          "column": "coitem_subnumber",
+          "required": true
         }
       },
       {
         "name": "firm",
         "attr": {
           "type": "Boolean",
-          "column": "coitem_firm"
+          "column": "coitem_firm",
+          "required": true
         }
       },
       {
@@ -1355,7 +1410,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -1468,9 +1524,12 @@
         "name": "salesRep",
         "toOne": {
           "type": "SalesRep",
+<<<<<<< HEAD
           "column": "cohead_salesrep_id",
 	  "isNested": true
          }
+=======
+>>>>>>> XTUPLE/master
       },
       {
         "name": "shiptoName",

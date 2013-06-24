@@ -24,6 +24,11 @@
           "owner.username",
           "assignedTo.username"
         ]
+      },
+      "attribute": {
+        "owner": {
+          "edit": "EditOwner"
+        }
       }
     },
     "properties": [
@@ -40,14 +45,16 @@
         "attr": {
           "type": "String",
           "column": "ophead_number",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "ophead_name"
+          "column": "ophead_name",
+          "required": true
         }
       },
       {
@@ -253,9 +260,7 @@
         }
       }
     ],
-    "isSystem": true,
-    "sourceCode": "OPP",
-    "extensions": []
+    "isSystem": true
   },
   {
     "context": "xtuple",
@@ -527,7 +532,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {

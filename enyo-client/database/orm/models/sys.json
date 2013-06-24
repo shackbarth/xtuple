@@ -1,0 +1,198 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "User",
+    "table": "xt.usrinfo",
+    "comment": "User Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainUsers",
+        "read": "MaintainUsers",
+        "update": "MaintainUsers",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "usr_username",
+          "isPrimaryKey": true,
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "properName",
+        "attr": {
+          "type": "String",
+          "column": "usr_propername"
+        }
+      },
+      {
+        "name": "useEnhancedAuth",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_enhancedauth"
+        }
+      },
+      {
+        "name": "disableExport",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_disable_export"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_active"
+        }
+      },
+      {
+        "name": "initials",
+        "attr": {
+          "type": "String",
+          "column": "usr_initials"
+        }
+      },
+      {
+        "name": "email",
+        "attr": {
+          "type": "String",
+          "column": "usr_email"
+        }
+      },
+      {
+        "name": "organization",
+        "attr": {
+          "type": "String",
+          "column": "usr_org"
+        }
+      },
+      {
+        "name": "grantedUserAccountRoles",
+        "toMany": {
+          "column": "usr_username",
+          "type": "UserAccountUserAccountRoleAssignment",
+          "inverse": "userAccount",
+          "isNested": true
+        }
+      },
+      {
+        "name": "grantedExtensions",
+        "toMany": {
+          "column": "usr_username",
+          "type": "UserExtension",
+          "inverse": "user",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "U"
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "UserAccountRole",
+    "table": "grp",
+    "idSequenceName": "grp_grp_id_seq",
+    "comment": "User Account Role Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainGroups",
+        "read": "MaintainGroups",
+        "update": "MaintainGroups",
+        "delete": "MaintainGroups"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "grp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "grp_name",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "grp_descrip"
+        }
+      },
+      {
+        "name": "grantedExtensions",
+        "toMany": {
+          "column": "grp_id",
+          "type": "UserAccountRoleExtension",
+          "inverse": "userAccountRole",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "UserAccountUserAccountRoleAssignment",
+    "table": "usrgrp",
+    "idSequenceName": "usrgrp_usrgrp_id_seq",
+    "comment": "User User Role Assignment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "usrgrp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "userAccount",
+        "attr": {
+          "type": "String",
+          "column": "usrgrp_username"
+        }
+      },
+      {
+        "name": "userAccountRole",
+        "toOne": {
+          "type": "UserAccountRole",
+          "column": "usrgrp_grp_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]
