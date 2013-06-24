@@ -120,8 +120,8 @@ var _ = require('underscore'),
       //
       // The function to install all the extensions of the database
       //
-      var installExtension = function (extension, extensionCallback) {
-        winston.info("Installing extension", databaseName, extension);
+      var getExtensionSql = function (extension, extensionCallback) {
+        //winston.info("Installing extension", databaseName, extension);
         // deal with directory structure quirk
         var isLibOrm = extension.indexOf("lib/orm") >= 0,
           dbSourceRoot = isLibOrm ?
@@ -152,13 +152,17 @@ var _ = require('underscore'),
           // Step 3:
           // Concatenate together all the files referenced in the manifest.
           //
-          var installScript = function (filename, scriptCallback) {
+          var getScriptSql = function (filename, scriptCallback) {
             var fullFilename = path.join(dbSourceRoot, filename);
             if (!fs.existsSync(fullFilename)) {
               scriptCallback(path.join(dbSourceRoot, filename) + " does not exist");
               return;
             }
             fs.readFile(fullFilename, "utf8", function (err, scriptContents) {
+              if (err) {
+                scriptCallback(err);
+                return;
+              }
               var noticeSql = 'do $$ plv8.elog(NOTICE, "Just ran file ' + fullFilename + '"); $$ language plv8;\n',
                 formattingError,
                 lastChar;
@@ -188,13 +192,20 @@ var _ = require('underscore'),
 
               // can't put noticeSql before scriptContents without accounting for the very first script, which is
               // create_plv8, and which must not have any plv8 functions before it, such as a notice.
-              monsterSql += scriptContents += noticeSql;
-
-              scriptCallback(err, scriptContents += noticeSql);
+              scriptCallback(null, scriptContents += noticeSql);
             });
           };
-          async.mapSeries(manifest.databaseScripts, installScript, function (err, res) {
-            extensionCallback(err, res);
+          async.mapSeries(manifest.databaseScripts, getScriptSql, function (err, scriptContents) {
+            if (err) {
+              extensionCallback(err);
+              return;
+            }
+            // each String of the scriptContents is the concetenated SQL for the script.
+            // join these all together into a single string for the whole extension.
+            var extensionSql = _.reduce(scriptContents, function (memo, script) {
+              return memo + script;
+            }, "");
+            extensionCallback(null, extensionSql);
           });
           //
           // End script installation code
@@ -205,21 +216,21 @@ var _ = require('underscore'),
       //
       // Run the function to install all the extensions of the database, in series
       //
-      async.mapSeries(extensions, installExtension, function (err, scriptContentsArray) {
-        // each String of the scriptContentsArray is the concetenated SQL for the extension.
-        // join these all together into a single string.
-        // TODO: monsterSql is a bit global-variablish for taste.
-        //var allSql = _.reduce(scriptContentsArray, function (memo, script) {
-        //  return memo + script;
-        //}, "");
-        //console.log(allSql);
+      async.mapSeries(extensions, getExtensionSql, function (err, scriptContents) {
+        // each String of the scriptContents is the concetenated SQL for the extension.
+        // join these all together into a single string for the whole database.
+
+        var allSql = _.reduce(scriptContents, function (memo, script) {
+          return memo + script;
+        }, "");
+        monsterSql = allSql;
         if (err) {
           databaseCallback(err);
         } else {
 
           // Now would be an excellent to to generate the orm-install
           // commands for all the extensions on this database.
-          var runOrmInstaller = function (extension, callback) {
+          var getOrmQuery = function (extension, callback) {
             var ormDir = path.join(extension, "database/orm");
 
             if (fs.existsSync(ormDir)) {
@@ -241,7 +252,7 @@ var _ = require('underscore'),
             }
           };
 
-          async.mapSeries(extensions, runOrmInstaller, function (ormErr, ormRes) {
+          async.mapSeries(extensions, getOrmQuery, function (ormErr, ormRes) {
             if (ormErr) {
               databaseCallback(ormErr);
             } else {
