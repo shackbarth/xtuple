@@ -55,10 +55,57 @@ trailing:true, white:true*/
         {name: "customerList", kind: "XV.CustomerList"},
         {name: "prospectList", kind: "XV.ProspectList"},
         {name: "quoteList", kind: "XV.QuoteList"},
-        {name: "salesOrderList", kind: "XV.SalesOrderList"},
-        {name: "salesAnalysisPage", kind: "analysisFrame"}
+        {name: "salesOrderList", kind: "XV.SalesOrderList"}
       ]
     };
+
+    if (XT.reporting) {
+      module.panels.push({name: "salesAnalysisPage", kind: "analysisFrame"});
+    }
+
+    XT.app.$.postbooks.insertModule(module, 2);
+
+    relevantPrivileges = [
+      "ConfigureSO",
+      "MaintainFreightClasses",
+      "MaintainCustomerGroups",
+      "MaintainQuotes",
+      "MaintainSalesOrders",
+      "MaintainSalesReps",
+      "MaintainShipZones",
+      "MaintainTaxAssignments",
+      "MaintainTaxClasses",
+      "MaintainTaxCodes",
+      "MaintainTaxRates",
+      "MaintainTaxReconciliations",
+      "MaintainTaxRegistrations",
+      "MaintainTaxTypes",
+      "MaintainTaxZones",
+      "MaintainTerms",
+      "MaintainSaleTypes",
+      "OverridePrice",
+      "OverrideTax",
+      "ShowMarginsOnSalesOrder",
+      "UpdateCustomerCreditStatus",
+      "ViewFreightClasses",
+      "ViewCustomerGroups",
+      "ViewQuotes",
+      "ViewTaxAssignments",
+      "ViewTaxClasses",
+      "ViewTaxCodes",
+      "ViewTaxRates",
+      "ViewTaxReconciliations",
+      "ViewTaxRegistrations",
+      "ViewTaxTypes",
+      "ViewTaxZones",
+      "ViewSalesHistory",
+      "ViewSalesOrders",
+      "ViewSalesReps",
+      "ViewSaleTypes",
+      "ViewShipZones",
+      "ViewTerms"
+    ];
+    XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
 
     /**
       This iFrame is to show the Sales Analysis report from Pentaho.
@@ -103,49 +150,5 @@ trailing:true, white:true*/
         this.setAttributes({src: this.getSource()});
       }
     });
-
-    XT.app.$.postbooks.insertModule(module, 2);
-
-    relevantPrivileges = [
-      "ConfigureSO",
-      "MaintainFreightClasses",
-      "MaintainCustomerGroups",
-      "MaintainQuotes",
-      "MaintainSalesOrders",
-      "MaintainSalesReps",
-      "MaintainShipZones",
-      "MaintainTaxAssignments",
-      "MaintainTaxClasses",
-      "MaintainTaxCodes",
-      "MaintainTaxRates",
-      "MaintainTaxReconciliations",
-      "MaintainTaxRegistrations",
-      "MaintainTaxTypes",
-      "MaintainTaxZones",
-      "MaintainTerms",
-      "MaintainSaleTypes",
-      "OverridePrice",
-      "OverrideTax",
-      "ShowMarginsOnSalesOrder",
-      "UpdateCustomerCreditStatus",
-      "ViewFreightClasses",
-      "ViewCustomerGroups",
-      "ViewQuotes",
-      "ViewTaxAssignments",
-      "ViewTaxClasses",
-      "ViewTaxCodes",
-      "ViewTaxRates",
-      "ViewTaxReconciliations",
-      "ViewTaxRegistrations",
-      "ViewTaxTypes",
-      "ViewTaxZones",
-      "ViewSalesOrders",
-      "ViewSalesReps",
-      "ViewSaleTypes",
-      "ViewShipZones",
-      "ViewTerms"
-    ];
-    XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
-
   };
 }());

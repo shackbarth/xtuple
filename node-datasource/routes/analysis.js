@@ -60,7 +60,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       jwt;
 
     // if there is a problem encoding/signing the JWT, then return invalid
-    //try {
+    try {
       encodeHeader = utils.base64urlEncode(JSON.stringify(JSON.parse(header)));
       encodeClaimSet = utils.base64urlEncode(JSON.stringify(JSON.parse(claimSet)));
       data = encodeHeader + "." + encodeClaimSet;
@@ -72,11 +72,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         jwt: data + "." + signature
       };
 
-    // } catch (error) {
-    //   jwt = {
-    //     jwt: "invalid"
-    //   };
-    // }
+    } catch (error) {
+      jwt = {
+        jwt: "invalid"
+      };
+    }
 
     return jwt;
   };
