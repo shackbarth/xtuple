@@ -58,14 +58,15 @@ white:true*/
         isActive: true,
         owner: XM.currentUser,
         assignedTo: XM.currentUser,
-        status: XM.ToDo.NEITHER
+        status: XM.ToDo.NEITHER,
+        statusProxy: XM.ToDo.NEITHER
       };
     },
 
     // ..........................................................
     // METHODS
     //
-    
+
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:startDate change:completeDate change:statusProxy', this.toDoStatusDidChange);

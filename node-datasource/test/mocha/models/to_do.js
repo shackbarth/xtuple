@@ -24,8 +24,6 @@ var crud = require('../lib/crud'),
     }
   };
 
-
-
 var timeout = 20 * 1000;
 
 describe.skip('ToDo CRUD Test', function () {
@@ -40,6 +38,20 @@ describe('ToDo CRUD Test', function () {
         this.timeout(timeout);
         zombieAuth.loadApp(done);
       });
+
+    describe('ToDo Status Test', function () {
+
+      it('setting the proxy to DEFERRED or PENDING should set status', function (done) {
+        data.model = new XM.ToDo();
+
+        // set the statusProxy
+        data.model.set('statusProxy', XM.DEFERRED);
+
+        assert.equal(data.model.get('statusProxy'), XM.DEFERRED);
+        //assert.equal(data.model.get('status'), XM.DEFERRED);
+      });
+
+    });
 
     it('should be able to Initialize an XM.ToDo Model', function () {
       data.model = new XM.ToDo();
