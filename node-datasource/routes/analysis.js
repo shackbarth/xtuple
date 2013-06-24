@@ -21,10 +21,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       biServerUrl = X.options.datasource.biServerUrl,
       today = new Date(),
       expires = new Date(today.getTime() + (10 * 60 * 1000)), // 10 minutes from now
-      datasource = req.headers.host,
+      datasource = "https://" + req.headers.host + "/",
       database = req.session.passport.user.organization,
-      scope = "/auth/" + database,
-      audience = "/oauth/token";
+      scope = datasource + database + "/auth/" + database,
+      audience = datasource + database + "/oauth/token";
 
     // get private key from path in config
     privKey = X.fs.readFileSync(X.options.datasource.biKeyFile);
