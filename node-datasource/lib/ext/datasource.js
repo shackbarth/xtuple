@@ -175,14 +175,18 @@ if (typeof X === 'undefined') {
         client.hasRunInit = true;
 
         // Register error handler to log errors.
-        // TODO - Not sure if setting that.activeQuery below is getting the right query here.
         client.connection.on('error', function (msg) {
+          var lastQuery;
+
           if (msg.message !== "handledError") {
             X.err("Database Error! ", msg.message + " Please fix this!!!");
             _.each(client.debug, function (message) {
               X.err("Database Error! DB message was: ", message);
             });
-            X.err("Database Error! Last query was: ", that.activeQuery);
+            lastQuery = that.activeQuery && that.activeQuery.length > 10000 ?
+              "Too long to print (" + that.activeQuery.length + " chars)" :
+              that.activeQuery;
+            X.err("Database Error! Last query was: ", lastQuery);
             X.err("Database Error! DB name = ", options.database);
           }
         });

@@ -16,9 +16,6 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
-  // TODO: test rollback
-  // TODO: work out logging
-
   //
   // Step 0 (optional, triggered by flags), wipe out the database
   // and load it from scratch using pg_restore something.backup
@@ -278,7 +275,7 @@ var _ = require('underscore'),
           return memo + script;
         }, "");
 
-        dataSource.query(allSql, creds, function (err, res) {
+        dataSource.query(allSql, JSON.parse(JSON.stringify(creds)), function (err, res) {
           creds.database = undefined; // safest to strip out the db name once we're done with it
           databaseCallback(err, res);
         });
@@ -299,7 +296,7 @@ var _ = require('underscore'),
           "from xt.orm " +
           "where not orm_ext;";
 
-      dataSource.query(existsSql, creds, function (err, res) {
+      dataSource.query(existsSql, JSON.parse(JSON.stringify(creds)), function (err, res) {
         if (err) {
           callback(err);
         }
