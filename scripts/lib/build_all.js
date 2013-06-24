@@ -70,14 +70,13 @@ var _ = require('underscore'),
     var buildSpecs = {},
       databases = [],
       extension,
-      backup,
       buildAll = function (specs, creds, buildAllCallback) {
         buildDatabase(specs, creds, function (databaseErr, databaseRes) {
           if (databaseErr) {
             buildAllCallback("Database error. Not bothering to build the client");
             return;
           }
-          buildAllCallback(null, "Success!");
+          buildAllCallback(null, true);
           //buildClient(specs, creds, function (clientErr, clientRes) {
           //  if (clientErr) {
           //    console.log("Client build failed");
@@ -112,10 +111,9 @@ var _ = require('underscore'),
 
       buildSpecs.database = options.database;
       // the backup path is not relative if it starts with a slash
-      backup = options.backup.substring(0, 1) === '/' ?
+      buildSpecs.backup = options.backup.substring(0, 1) === '/' ?
         options.backup :
-        path.join(process.cwd(), backup);
-      buildSpecs.backup = path.join(backup);
+        path.join(process.cwd(), options.backup);
       buildSpecs.initialize = true;
       // TODO: as above, the extensions could be found dynamically
       buildSpecs.extensions = [

@@ -16,7 +16,12 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
+  // TODO: make sure all the extensions work
   // TODO: get rid of all sync functions
+  // TODO: get rid of monsterSql
+  // TODO: work out logging
+  // TODO: comment code
+  // TODO: work out test details
 
   //
   // If requested, we can wipe out the database and load up a fresh
