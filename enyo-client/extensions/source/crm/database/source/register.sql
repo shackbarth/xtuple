@@ -1,3 +1,3 @@
 -- register extension 
 
-select xt.egister_extension('crm', 'Corporate Relationship Management extension', '/core-extensions', '', 10);
+select xt.register_extension('crm', 'Corporate Relationship Management extension', '/core-extensions', '', 10);

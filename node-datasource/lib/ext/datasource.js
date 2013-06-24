@@ -184,7 +184,8 @@ if (typeof X === 'undefined') {
               X.err("Database Error! DB message was: ", message);
             });
             lastQuery = that.activeQuery && that.activeQuery.length > 10000 ?
-              "Too long to print (" + that.activeQuery.length + " chars)" :
+              "Too long to print (" + that.activeQuery.length + " chars) " +
+              "but starts with " + that.activeQuery.substring(0, 1000) :
               that.activeQuery;
             X.err("Database Error! Last query was: ", lastQuery);
             X.err("Database Error! DB name = ", options.database);
