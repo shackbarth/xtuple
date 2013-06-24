@@ -1106,7 +1106,7 @@ select xt.install_js('XT','Data','xtuple', $$
       pkey = XT.Orm.primaryKey(orm);
       nkey = XT.Orm.naturalKey(orm);
       lockTable = orm.lockTable || orm.table;
-      if (!pkey || !nkey) {
+      if (!pkey && !nkey) {
         throw new handleError("Not Found", 404);
       }
 

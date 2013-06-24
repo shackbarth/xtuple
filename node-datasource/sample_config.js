@@ -8,7 +8,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   module.exports = {
     processName: "node-datasource",
     allowMultipleInstances: true,
-    requireDatabase: true,
     datasource: {
       debugging: false,
       debugDatabase: false,
@@ -61,6 +60,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       databases: ["dev"],
       testDatabase: "" // this must remain empty for production datasources
     },
+    extensionRoutes: [],
     databaseServer: {
       hostname: "localhost",
       port: 5432,
