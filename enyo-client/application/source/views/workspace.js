@@ -1587,11 +1587,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   //
   var lineItem = {
     kind: "XV.Workspace",
-    published: {
-      effectiveKey: null,
-      currencyKey: null,
-      commentBox: null
-    },
     modelAmnesty: true,
     components: [
       {kind: "Panels", name: "salesLinePanels", arrangerKind: "CarouselArranger",
@@ -1641,7 +1636,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
               currencyDisabled: true},
             {kind: "XV.MoneyWidget", attr: {baseValue: "listPrice"},
               label: "_listPrice".loc(), scale: XT.SALES_PRICE_SCALE,
-              currencyDisabled: true},
+              isEditableProperty: "baseValue", currencyDisabled: true},
             {kind: "XV.MoneyWidget", attr: {localValue: "customerPrice"},
               label: "_customerPrice".loc(), scale: XT.SALES_PRICE_SCALE,
               currencyDisabled: true},
@@ -1671,8 +1666,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       // Set currency and effective attributes on money widgets
       this.getComponents().forEach(function (ctl) {
         if (ctl.kind === "XV.MoneyWidget") {
-          ctl.setCurrency(currencyKey);
-          ctl.setEffective(effectiveKey);
+          ctl.attr.currency = currencyKey;
+          ctl.attr.effective = effectiveKey;
         }
       });
 
@@ -1689,9 +1684,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     name: "XV.QuoteLineWorkspace",
     title: "_quoteLine".loc(),
     model: "XM.QuoteLine",
-    currencyKey: "quote.currency",
-    effectiveKey: "quote.quoteDate",
-    commentBox: {kind: "XV.QuoteLineCommentBox", attr: "comments"}
+    published: {
+      currencyKey: "quote.currency",
+      effectiveKey: "quote.quoteDate",
+      commentBox: {kind: "XV.QuoteLineCommentBox", attr: "comments"}
+    }
   };
   enyo.mixin(quoteLineItem, XV.QuoteLineMixin);
   enyo.mixin(quoteLineItem, lineItem);
@@ -1704,9 +1701,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     name: "XV.SalesOrderLineWorkspace",
     title: "_salesOrderLine".loc(),
     model: "XM.SalesOrderLine",
-    currencyKey: "salesOrder.currency",
-    effectiveKey: "salesOrder.orderDate",
-    commentBox: {kind: "XV.SalesOrderLineCommentBox", attr: "comments"}
+    published: {
+      currencyKey: "salesOrder.currency",
+      effectiveKey: "salesOrder.orderDate",
+      commentBox: {kind: "XV.SalesOrderLineCommentBox", attr: "comments"}
+    }
   };
   enyo.mixin(salesOrderLineItem, XV.SalesOrderLineMixin);
   enyo.mixin(salesOrderLineItem, lineItem);
