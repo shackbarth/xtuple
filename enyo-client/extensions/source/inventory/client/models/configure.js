@@ -16,30 +16,17 @@ white:true*/
 
       recordType: 'XM.Inventory',
 
-      privileges: 'ConfigureIN',
+      privileges: 'ConfigureIM',
 
-/*      validate: function (attributes, options) {
+      /*validate: function (attributes, options) {
         // XXX not sure if number widgets can fail in this way.
         var params = { type: "_number".loc() };
-        if (attributes.NextSalesOrderNumber !== undefined &&
-            isNaN(attributes.NextSalesOrderNumber)) {
-          params.attr = "_salesOrder".loc() + " " + "_number".loc();
+        if (attributes.NextShipmentNumber !== undefined &&
+            isNaN(attributes.NextShipmentNumber)) {
+          params.attr = "_shipment".loc() + " " + "_number".loc();
           return XT.Error.clone('xt1003', { params: params });
-        } else if (attributes.NextQuoteNumber &&
-            isNaN(attributes.NextQuoteNumber)) {
-          params.attr = "_quote".loc() + " " + "_number".loc();
-          return XT.Error.clone('xt1003', { params: params });
-        } else if (attributes.NextCreditMemoNumber &&
-            isNaN(attributes.NextCreditMemoNumber)) {
-          params.attr = "_creditMemo".loc() + " " + "_number".loc();
-          return XT.Error.clone('xt1003', { params: params });
-        } else if (attributes.NextInvoiceNumber &&
-            isNaN(attributes.NextInvoiceNumber)) {
-          params.attr = "_invoice".loc() + " " + "_number".loc();
-          return XT.Error.clone('xt1003', { params: params });
-        }
-      }
-*/ //from sales and I don't need it in Inventory - I will revisit this later
+        } 
+      } */
     });
 
     XM.inventory = new XM.Inventory();

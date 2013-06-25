@@ -6,6 +6,10 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.extensions.inventory = {};
+  XT.extensions.inventory = {
+    setVersion: function () {
+      XT.setVersion("1.3.8", "inventory");
+    }
+  };
 
 }());

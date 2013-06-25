@@ -38,8 +38,17 @@ trailing:true white:true*/
     XT.app.$.postbooks.appendPanels("setup", panels);
 */
 
+    configurationJson = {
+      model: "XM.inventory",
+      name: "_inventory".loc(),
+      description: "_inventoryDescription".loc(),
+      workspace: "XV.InventoryWorkspace"
+    };
+    configuration = new XM.ConfigurationModel(configurationJson);
+    XM.configurations.add(configuration);
+
     module = {
-      name: "inventory",
+      name: "Inventory",
       label: "_inventory".loc(),
       panels: [
 	{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
@@ -48,7 +57,7 @@ trailing:true white:true*/
     XT.app.$.postbooks.insertModule(module, 2);
 
     relevantPrivileges = [
-      "AccessInventoryExtension"  	 
+      "ConfigureIM"  	 
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };

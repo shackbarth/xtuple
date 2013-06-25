@@ -149,6 +149,7 @@ select xt.js_init();
 \i xm/javascript/customer.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
+\i xm/javascript/inventory.sql;
 \i xm/javascript/item.sql;
 \i xm/javascript/item_site.sql;
 \i xm/javascript/project.sql;
