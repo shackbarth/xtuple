@@ -41,7 +41,9 @@
       it('User navigates to Sales Order-New and selects to create a new Sales order', function (done) {
         var navigator = XT.app.$.postbooks.$.navigator,
           salesModuleIndex,
-          prospectIndex;
+          prospectIndex,
+          workspace,
+          lineItemEditor;
 
         //
         // Drill down into the sales module
@@ -70,7 +72,7 @@
         //
         navigator.newRecord();
         assert.isDefined(XT.app.$.postbooks.$.workspaceContainer);
-        var workspace = XT.app.$.postbooks.$.workspaceContainer.$.workspace;
+        workspace = XT.app.$.postbooks.$.workspaceContainer.$.workspace;
         assert.isDefined(workspace);
         assert.equal(workspace.value.recordType, "XM.SalesOrder");
 
@@ -80,11 +82,12 @@
         workspace.$.customerProspectWidget.doValueChange({value: customerModel});
         assert.equal(workspace.value.getValue("customer.number"), "TTOYS");
         assert.equal(workspace.value.get("shiptoCity"), "Walnut Hills");
-        workspace.$.salesOrderLineItemBox.newItem();
 
         // In sales order, setting the line item fields will set off a series
         // of asynchronous calls. Once the "total" field is computed, we
         // know that the workspace is ready to save.
+        // It's good practice to set this trigger *before* we change the line
+        // item fields, so that we're 100% sure we're ready for the responses.
         workspace.value.on("change:total", function () {
           workspace.save({success: function (model, resp, options) {
             assert.equal(model.get("total"), 58.84);
@@ -96,7 +99,8 @@
         //
         // Set the line item fields
         //
-        var lineItemEditor = workspace.$.salesOrderLineItemBox.$.editor;
+        workspace.$.salesOrderLineItemBox.newItem();
+        lineItemEditor = workspace.$.salesOrderLineItemBox.$.editor;
         lineItemEditor.$.itemSiteWidget.doValueChange({value: itemSiteModel});
         lineItemEditor.$.quantityWidget.doValueChange({value: 5});
       });
