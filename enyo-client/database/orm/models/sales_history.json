@@ -1,0 +1,58 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SalesHistory",
+    "table": "cohist",
+    "idSequenceName": "cohist_cohist_id_seq",
+    "comment": "Sales History Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cohist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "shipDate",
+        "attr": {
+          "type": "Date",
+          "column": "cohist_shipdate"
+        }
+      },
+      {
+        "name": "quantityShipped",
+        "attr": {
+          "type": "Number",
+          "column": "cohist_qtyshipped"
+        }
+      },
+      {
+        "name": "unitPrice",
+        "attr": {
+          "type": "Number",
+          "column": "cohist_unitprice"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
