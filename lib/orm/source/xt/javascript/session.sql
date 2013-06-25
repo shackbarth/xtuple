@@ -99,15 +99,33 @@ select xt.install_js('XT','Session','xtuple', $$
     var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
               '  typcategory as "category", ' +
-              '  n.nspname as "schema" ' +
+              '  n.nspname as "schema", attnum ' +
               'from pg_class c' +
               '  join pg_namespace n on n.oid = c.relnamespace' +
               '  join pg_attribute a on a.attrelid = c.oid ' +
               '  join pg_type t on a.atttypid = t.oid ' +
+              ' join xt.orm on lower(orm_namespace) = n.nspname and xt.decamelize(orm_type) = c.relname and not orm_ext ' +
               'where n.nspname = $1 ' +
               'and relkind = \'v\' ' +
-              'order by c.relname, attnum',
-      recs = plv8.execute(sql, [schema]),
+              'and orm_context = \'xtuple\' ' +
+              'union all ' + 
+              'select c.relname as "type", ' +
+              '  attname as "column", ' +
+              '  typcategory as "category", ' +
+              '  n.nspname as "schema", attnum ' +
+              'from pg_class c' +
+              '  join pg_namespace n on n.oid = c.relnamespace' +
+              '  join pg_attribute a on a.attrelid = c.oid ' +
+              '  join pg_type t on a.atttypid = t.oid ' +
+              '  join xt.orm on lower(orm_namespace) = n.nspname and xt.decamelize(orm_type) = c.relname and not orm_ext ' +
+              '  join xt.ext on ext_name = orm_context ' +
+              '  join xt.usrext on ext_id = usrext_ext_id ' +
+              'where n.nspname = $1 ' +
+              ' and relkind = \'v\' ' +
+              ' and orm_context != \'xtuple\' ' +
+              ' and usrext_usr_username = $2 ' +
+              'order by type, attnum',
+      recs,
       type,
       prev = '',
       name,
@@ -199,6 +217,8 @@ select xt.install_js('XT','Session','xtuple', $$
           result[type]['privileges'] = orm.privileges;
         }
       };
+
+    recs = plv8.execute(sql, [schema, XT.username]);
 
     /* Loop through each field and add to the object */
     for (i = 0; i < recs.length; i++) {
