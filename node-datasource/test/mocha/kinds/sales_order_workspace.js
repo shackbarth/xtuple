@@ -11,9 +11,10 @@
     _ = require("underscore"),
     customerModel,
     itemSiteModel,
+    smoke = require("../lib/smoke"),
     assert = require("chai").assert;
 
-  describe('Smoke test', function () {
+  describe('Sales Order Workspace', function () {
     this.timeout(30 * 1000);
 
     //
@@ -39,48 +40,18 @@
 
     describe('User selects to create a sales order', function () {
       it('User navigates to Sales Order-New and selects to create a new Sales order', function (done) {
-        var navigator = XT.app.$.postbooks.$.navigator,
-          salesModuleIndex,
-          prospectIndex,
-          workspace,
-          lineItemEditor;
+        var lineItemEditor;
 
-        //
-        // Drill down into the sales module
-        //
-        _.each(navigator.modules, function (module, index) {
-          if (module.name === 'sales') {
-            salesModuleIndex = index;
-          }
-        });
-        assert.isDefined(salesModuleIndex, "The sales extension has not been loaded.");
-        navigator.setModule(salesModuleIndex);
-
-        //
-        // Select the sales order list
-        //
-        _.each(navigator.modules[salesModuleIndex].panels, function (panel, index) {
-          if (panel.kind === 'XV.SalesOrderList') {
-            prospectIndex = index;
-          }
-        });
-        assert.isDefined(prospectIndex, "The sales order list is not here.");
-        navigator.setContentPanel(prospectIndex);
-
-        //
-        // Create a new record
-        //
-        navigator.newRecord();
-        assert.isDefined(XT.app.$.postbooks.$.workspaceContainer);
-        workspace = XT.app.$.postbooks.$.workspaceContainer.$.workspace;
-        assert.isDefined(workspace);
+        var workspace = smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList");
         assert.equal(workspace.value.recordType, "XM.SalesOrder");
 
         //
         // Set the customer from the appropriate workspace widget
         //
-        workspace.$.customerProspectWidget.doValueChange({value: customerModel});
-        assert.equal(workspace.value.getValue("customer.number"), "TTOYS");
+        var createHash = {
+          customer: customerModel
+        };
+        smoke.setWorkspaceAttributes(workspace, createHash);
         assert.equal(workspace.value.get("shiptoCity"), "Walnut Hills");
 
         // In sales order, setting the line item fields will set off a series
@@ -89,11 +60,7 @@
         // It's good practice to set this trigger *before* we change the line
         // item fields, so that we're 100% sure we're ready for the responses.
         workspace.value.on("change:total", function () {
-          workspace.save({success: function (model, resp, options) {
-            assert.equal(model.get("total"), 58.84);
-            assert.equal(model.getStatus(), XM.Model.READY_CLEAN);
-            done();
-          }});
+          smoke.saveAndVerify(workspace, done);
         });
 
         //
