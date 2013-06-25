@@ -670,6 +670,7 @@ var lang = XT.stringsFor("en_US", {
   "_viewAllOpportunities": "View All Opportunities",
   "_viewAllProjects": "View All Projects",
   "_viewAllToDoItems": "View All To-Do Items",
+  "_viewCosts": "View Costs",
   "_viewClassCodes": "View Class Codes",
   "_viewCurrencyRates": "View Currency Rates",
   "_viewCustomerGroups": "View Customer Groups",

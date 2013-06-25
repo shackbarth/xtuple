@@ -1007,8 +1007,17 @@
         "firm": {
           "edit": "FirmSalesOrder"
         },
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "unitCost": {
+          "view": "ViewCosts"
+        },
         "taxType": {
           "edit": "OverrideTax"
+        },
+        "markup": {
+          "view": "ViewCosts"
         }
       }
     },

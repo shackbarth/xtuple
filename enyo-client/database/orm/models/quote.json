@@ -969,12 +969,15 @@
         "taxType": {
           "edit": "OverrideTax"
         },
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
         "unitCost": {
           "view": "ViewCosts"
         },
         "markup": {
           "view": "ViewCosts"
-        },  
+        }
       }
     },
     "properties": [
