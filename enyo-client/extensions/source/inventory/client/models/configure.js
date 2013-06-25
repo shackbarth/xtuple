@@ -16,7 +16,7 @@ white:true*/
 
       recordType: 'XM.Inventory',
 
-      privileges: 'ConfigureIM',
+      privileges: 'ConfigureIM'
 
       /*validate: function (attributes, options) {
         // XXX not sure if number widgets can fail in this way.

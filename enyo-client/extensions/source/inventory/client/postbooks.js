@@ -54,7 +54,7 @@ trailing:true white:true*/
 	{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
       ]
     };
-    XT.app.$.postbooks.insertModule(module, 2);
+    XT.app.$.postbooks.insertModule(module, 4);
 
     relevantPrivileges = [
       "ConfigureIM"  	 
