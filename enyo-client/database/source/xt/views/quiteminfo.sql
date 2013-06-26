@@ -6,7 +6,7 @@ select xt.create_view('xt.quiteminfo', $$
     xt.quote_line_list_price_discount(quitem) as list_price_discount,  
     xt.quote_line_customer_discount(quitem) as cust_discount,  
     xt.quote_line_extended_price(quitem) as ext_price,  
-    xt.quote_line_profit(quitem) as profit,  
+    xt.quote_line_margin(quitem) as margin,  
     xt.quote_line_tax(quitem) as tax  
   from quitem  
     left join item on quitem_item_id=item_id; ;
@@ -47,7 +47,7 @@ insert into quitem (
   new.quitem_itemsite_id,
   new.quitem_scheddate,
   new.quitem_qtyord,
-  stdcost(item_id),
+  coalesce(new.quitem_unitcost, itemcost(itemsite_id)),
   new.quitem_price,
   new.quitem_custprice,
   new.quitem_memo,

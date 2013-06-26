@@ -968,6 +968,15 @@
       "attribute": {
         "taxType": {
           "edit": "OverrideTax"
+        },
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "unitCost": {
+          "view": "ViewCosts"
+        },
+        "markup": {
+          "view": "ViewCosts"
         }
       }
     },
@@ -1011,6 +1020,13 @@
           "column": "quitem_itemsite_id",
           "isNested": true,
           "required": true
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "quitem_unitcost"
         }
       },
       {
@@ -1127,14 +1143,6 @@
         }
       },
       {
-        "name": "priceMode",
-        "attr": {
-          "type": "String",
-          "column": "quitem_pricemode",
-          "required": true
-        }
-      },
-      {
         "name": "extendedPrice",
         "attr": {
           "type": "ExtendedPrice",
@@ -1142,10 +1150,10 @@
         }
       },
       {
-        "name": "profit",
+        "name": "margin",
         "attr": {
           "type": "String",
-          "column": "profit"
+          "column": "margin"
         }
       },
       {

@@ -165,7 +165,11 @@ select xt.install_js('XM','Model','xtuple', $$
       i,
       attr,
       seq,
-      tableName;
+      tableName,
+      fkIndex, 
+      fkey, 
+      propIndex, 
+      probObj;
 
     if (nkey) {
       id = data.getId(map, id);
@@ -186,7 +190,23 @@ select xt.install_js('XM','Model','xtuple', $$
           "and f.relname = $1 " +
           "and con.relnamespace=pg_namespace.oid; "
     fkeys = plv8.execute(sql, [tableSuffix]);
-    if (DEBUG) { XT.debug('XM.Model.used keys:' , fkeys.length) }
+
+    /* isNested toMany relationships are irrelevant and should be counted */
+    for (fkIndex = fkeys.length - 1; fkIndex >= 0; fkIndex-=1) {
+      /* loop backwards because we might be deleting elements of the array */
+      fkey = fkeys[fkIndex];
+      for(propIndex = 0; propIndex < map.properties.length; propIndex++) {
+        propObj = map.properties[propIndex]; /* pining for underscore */
+        if(propObj.toMany && propObj.toMany.isNested) {
+          /* this fk is irrelevant and should not be counted against used */
+          fkeys.splice(fkIndex, 1);
+          break;
+        }
+      }
+    }
+
+    if (DEBUG) { XT.debug('XM.Model.used keys length:', fkeys.length) }
+    if (DEBUG) { XT.debug('XM.Model.used keys:', JSON.stringify(fkeys)) }
     for (i = 0; i < fkeys.length; i++) {
       /* Validate */
 

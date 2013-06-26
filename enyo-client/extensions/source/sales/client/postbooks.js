@@ -82,6 +82,7 @@ trailing:true, white:true*/
       "OverrideTax",
       "ShowMarginsOnSalesOrder",
       "UpdateCustomerCreditStatus",
+      "ViewCosts",
       "ViewFreightClasses",
       "ViewCustomerGroups",
       "ViewQuotes",

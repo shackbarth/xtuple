@@ -104,7 +104,7 @@
      {
        "name": "delegatedAccess",
        "attr": {
-         "type": "String",
+         "type": "Boolean",
          "column": "oa2client_delegated_access"
        }
      },

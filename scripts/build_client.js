@@ -99,8 +99,7 @@ var fs = require('fs'),
   //
   finish = function () {
     fs.unlinkSync("package.js");
-
-    //fs.unlinkSync(rootDir + "/enyo"); // TODO
+    fs.unlinkSync(rootDir + "/enyo");
     rimraf("./build", function () {
       rimraf("./deploy", function () {
         console.log("all done");
@@ -121,7 +120,7 @@ var fs = require('fs'),
     Symlink the enyo directories if they're not there
    */
   if (!fs.existsSync(rootDir + '/enyo')) {
-    fs.symlinkSync(rootDir + "/xtuple/enyo-client/application/enyo", rootDir + '/enyo');
+    fs.symlinkSync(__dirname + "/../enyo-client/application/enyo", rootDir + '/enyo');
   }
 
   //
