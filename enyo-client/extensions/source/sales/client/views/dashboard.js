@@ -11,6 +11,7 @@ trailing:true, white:true*/
     published: {
       aggregatedData: null,
       collection: "XM.SalesHistoryCollection",
+      label: "_dashboard".loc(),
       groupByField: "",
       timeFrameField: "",
       rawData: null,
@@ -38,11 +39,16 @@ trailing:true, white:true*/
       ]}
     ],
     aggregateData: function () {
-      var that = this;
+      var that = this,
+        filteredData, groupedData, aggregatedData;
+
       // where would I be without underscore...
-      var filteredData = _.filter(this.getRawData(), function (datum) {
-        var timespan = 0,
+      filteredData = _.filter(this.getRawData(), function (datum) {
+        var shipDate = datum.shipDate.getTime(),
+          now = new Date().getTime(),
+          timespan = 0,
           oneDay = 1000 * 60 * 60 * 24;
+
         // XXX use YTD etc.?
         switch (that.getTimeFrameField()) {
         case "today":
@@ -58,17 +64,14 @@ trailing:true, white:true*/
           timespan = 365 * oneDay;
           break;
         }
-        console.log(timespan);
-        var shipDate = datum.shipDate.getTime();
-        console.log(shipDate);
-        var now = new Date().getTime();
-        console.log(now);
         return shipDate + timespan >= now;
       });
-      var groupedData = _.toArray(_.groupBy(filteredData, function (datum) {
+
+      groupedData = _.toArray(_.groupBy(filteredData, function (datum) {
         return datum[that.getGroupByField()];
       }));
-      var aggregatedData = _.map(groupedData, function (datum) {
+
+      aggregatedData = _.map(groupedData, function (datum) {
         return _.reduce(datum, function (memo, row) {
           return {key: row[that.getGroupByField()], total: memo.total + row.unitPrice * row.quantityShipped};
         }, {total: 0});
@@ -99,9 +102,6 @@ trailing:true, white:true*/
       this.getValue().fetch({
         success: function (collection, results) {
           that.setRawData(results);
-        },
-        error: function () {
-          console.log("error", arguments);
         }
       });
     },
@@ -112,13 +112,13 @@ trailing:true, white:true*/
       this.setGroupByField(inEvent.originator.name);
     },
     plot: function () {
-      var div = this.$.chart.hasNode();
-      var exampleData = [{
-        key: "Sales",
-        values: _.map(this.getAggregatedData(), function (datum) {
-          return {label: datum.key, value: datum.total};
-        })
-      }];
+      var div = this.$.chart.hasNode(),
+        chartData = [{
+          key: "Sales",
+          values: _.map(this.getAggregatedData(), function (datum) {
+            return {label: datum.key, value: datum.total};
+          })
+        }];
 
       nv.addGraph(function () {
         var chart = nv.models.discreteBarChart()
@@ -130,7 +130,7 @@ trailing:true, white:true*/
 
         d3.select(div)
           .append("svg")
-          .datum(exampleData)
+          .datum(chartData)
           .transition().duration(500)
           .call(chart);
 
