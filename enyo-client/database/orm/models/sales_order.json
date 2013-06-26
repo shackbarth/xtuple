@@ -1009,8 +1009,17 @@
         "firm": {
           "edit": "FirmSalesOrder"
         },
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "unitCost": {
+          "view": "ViewCosts"
+        },
         "taxType": {
           "edit": "OverrideTax"
+        },
+        "markup": {
+          "view": "ViewCosts"
         }
       }
     },
@@ -1055,6 +1064,13 @@
           "type": "ItemSiteRelation",
           "column": "coitem_itemsite_id",
           "required": true
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "coitem_unitcost"
         }
       },
       {
@@ -1171,14 +1187,6 @@
         }
       },
       {
-        "name": "priceMode",
-        "attr": {
-          "type": "String",
-          "column": "coitem_pricemode",
-          "required": true
-        }
-      },
-      {
         "name": "extendedPrice",
         "attr": {
           "type": "ExtendedPrice",
@@ -1186,10 +1194,10 @@
         }
       },
       {
-        "name": "profit",
+        "name": "margin",
         "attr": {
           "type": "String",
-          "column": "profit"
+          "column": "margin"
         }
       },
       {
