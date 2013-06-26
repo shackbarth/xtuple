@@ -1,15 +1,41 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
-/*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, nv:true, d3:true */
+/*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, nv:true, d3:true, console:true */
 
 (function () {
 
 
   enyo.kind({
     name: "XV.SalesDashboard",
-    content: "goo",
-    plot: function () {
+    published: {
+      collection: "XM.SalesHistoryCollection",
+      data: null,
+      value: null
+    },
+    create: function () {
+      this.inherited(arguments);
+
+      var that = this,
+        collection = this.getCollection(),
+        Klass = collection ? XT.getObjectByName(collection) : false;
+
+      if (!Klass) {
+        console.log("Error: cannot find collection", collection);
+        return;
+      }
+
+      this.setValue(new Klass());
+      this.getValue().fetch({
+        success: function (collection, results) {
+          that.setData(results);
+        },
+        error: function () {
+          console.log("error", arguments);
+        }
+      });
+    },
+    dataChanged: function () {
       var exampleData = function () {
         return  [{
           key: "Cumulative Return",
@@ -51,8 +77,25 @@ trailing:true, white:true*/
       };
       var div = this.hasNode();
 
-      console.log("div is", div);
+      var sampleSVG = d3.select(div)
+        .append("svg")
+        .attr("width", 100)
+        .attr("height", 100);
 
+      sampleSVG.append("circle")
+        .style("stroke", "gray")
+        .style("fill", "white")
+        .attr("r", 40)
+        .attr("cx", 50)
+        .attr("cy", 50)
+        .on("mouseover", function () {
+          d3.select(this).style("fill", "aliceblue");
+        })
+        .on("mouseout", function () {
+          d3.select(this).style("fill", "white");
+        });
+
+/*
       nv.addGraph(function () {
         var chart = nv.models.discreteBarChart()
           .x(function (d) { return d.label; })
@@ -70,7 +113,7 @@ trailing:true, white:true*/
 
         return chart;
       });
-
+*/
     }
     /*
     kind: "XV.List",
