@@ -36,6 +36,61 @@ trailing:true, white:true*/
       });
     },
     dataChanged: function () {
+      var div = this.hasNode();
+
+nv.addGraph(function () {
+   var chart = nv.models.lineChart();
+
+   chart.xAxis
+       .axisLabel('Time (ms)')
+       .tickFormat(d3.format(',r'));
+
+   chart.yAxis
+       .axisLabel('Voltage (v)')
+       .tickFormat(d3.format('.02f'));
+
+   d3.select(div)
+        .append("svg")
+       .datum(sinAndCos())
+     .transition().duration(500)
+       .call(chart);
+
+   nv.utils.windowResize(function () { d3.select(div).call(chart) });
+
+   return chart;
+ });
+
+
+
+
+ /**************************************
+  * Simple test data generator
+  */
+
+
+ function sinAndCos() {
+   var sin = [],
+       cos = [];
+
+   for (var i = 0; i < 100; i++) {
+     sin.push({x: i, y: Math.sin(i/10)});
+     cos.push({x: i, y: .5 * Math.cos(i/10)});
+   }
+
+   return [
+     {
+       values: sin,
+       key: 'Sine Wave',
+       color: '#ff7f0e'
+     },
+     {
+       values: cos,
+       key: 'Cosine Wave',
+       color: '#2ca02c'
+     }
+   ];
+ }
+      /*
       var exampleData = function () {
         return  [{
           key: "Cumulative Return",
@@ -75,7 +130,6 @@ trailing:true, white:true*/
           ]
         }];
       };
-      var div = this.hasNode();
 
       var sampleSVG = d3.select(div)
         .append("svg")
@@ -95,7 +149,6 @@ trailing:true, white:true*/
           d3.select(this).style("fill", "white");
         });
 
-/*
       nv.addGraph(function () {
         var chart = nv.models.discreteBarChart()
           .x(function (d) { return d.label; })
@@ -113,28 +166,8 @@ trailing:true, white:true*/
 
         return chart;
       });
-*/
+      */
     }
-    /*
-    kind: "XV.List",
-    label: "_salesHistory".loc(),
-    collection: "XM.SalesHistoryCollection",
-    query: {orderBy: [
-      {attribute: 'id'}
-    ]},
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short",
-            components: [
-            {kind: "XV.ListAttr", attr: "id", isKey: true}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "shipDate"}
-          ]}
-        ]}
-      ]}
-    ]*/
   });
 
 }());
