@@ -398,7 +398,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       /* process properties */
       for (i = 0; i < props.length; i++) {
         prop = props[i];
-        nkey = prop.toOne ? Orm.naturalKey(Orm.fetch(orm.nameSpace, prop.toOne.type)) : false,
+        nkey = prop.toOne ? Orm.naturalKey(Orm.fetch(orm.nameSpace, prop.toOne.type, {superUser: true})) : false,
         alias = prop.name;
         if(DEBUG) XT.debug('processing property ->', prop.name);
         if(prop.name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
@@ -512,7 +512,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           toMany = prop.toMany;
           table = base.nameSpace + '.' + toMany.type.decamelize();
           type = toMany.type.decamelize();
-          iorm = Orm.fetch(base.nameSpace, toMany.type);
+          iorm = Orm.fetch(base.nameSpace, toMany.type, {superUser: true});
           pkey = Orm.primaryKey(iorm);
           nkey = Orm.naturalKey(iorm);
           column = toMany.isNested ? type : nkey;
