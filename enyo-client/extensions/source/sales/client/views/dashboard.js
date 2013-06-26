@@ -17,10 +17,15 @@ trailing:true, white:true*/
       rawData: null,
       value: null
     },
+    style: "padding-left: 30px; padding-top: 30px; color: white;",
     components: [
-      {name: "chart"},
+      {content: "_salesHistory".loc(), style: "color: white; margin-left: 100px; " },
+      {name: "chart" },
       {kind: "enyo.FittableColumns", components: [
-        {kind: "onyx.PickerDecorator", onSelect: "timeFrameSelected", components: [
+        {content: "_timeFrame".loc() + ": ", classes: "xv-picker-label",
+          style: "color: white"},
+        {kind: "onyx.PickerDecorator", onSelect: "timeFrameSelected",
+            classes: "xv-input-decorator", components: [
           {content: "_timeFrame".loc()},
           {kind: "onyx.Picker", components: [
             {content: "_today".loc(), name: "today"},
@@ -29,10 +34,12 @@ trailing:true, white:true*/
             {content: "_thisYear".loc(), name: "thisYear", active: true}
           ]}
         ]},
+        {content: "_groupBy".loc() + ": ", classes: "xv-picker-label",
+          style: "color: white"},
         {kind: "onyx.PickerDecorator", onSelect: "groupBySelected", components: [
-          {content: "_groupBy".loc()},
+          {content: "_chooseOne".loc()},
           {kind: "onyx.Picker", components: [
-            {content: "_customer".loc(), name: "customer"},
+            {content: "_customer".loc(), name: "customer" },
             {content: "_salesRep".loc(), name: "salesRep" }
           ]}
         ]}
@@ -73,7 +80,10 @@ trailing:true, white:true*/
 
       aggregatedData = _.map(groupedData, function (datum) {
         return _.reduce(datum, function (memo, row) {
-          return {key: row[that.getGroupByField()], total: memo.total + row.unitPrice * row.quantityShipped};
+          return {
+            key: row[that.getGroupByField()],
+            total: memo.total + row.unitPrice * row.quantityShipped
+          };
         }, {total: 0});
       });
 
@@ -118,38 +128,44 @@ trailing:true, white:true*/
           key: "Sales",
           values: _.map(this.getAggregatedData(), function (datum) {
             return {
-              label: datum.key,
+              label: datum.key || "_none".loc(),
               value: datum.total
             };
           })
         }];
 
-      nv.addGraph(function () {
-        var chart = nv.models.discreteBarChart()
-          .x(function (d) { return d.label; })
-          .y(function (d) { return d.value; })
-          .staggerLabels(true)
-          .tooltips(false)
-          .showValues(true);
+      //nv.addGraph(function () {
+      var chart = nv.models.discreteBarChart()
+        .x(function (d) { return d.label; })
+        .y(function (d) { return d.value; })
+        .valueFormat(d3.format(',.0f'))
+        .staggerLabels(true)
+        .tooltips(false)
+        .showValues(true)
+        .width(400);
 
-        // prevent svg node proliferation
-        // XXX probably a better way to do this with d3
-        if (divHasChildren) {
-          d3.select(div)
-            .datum(chartData)
-            .transition().duration(500)
-            .call(chart);
-        } else {
-          d3.select(div)
-            .append("svg")
-            .datum(chartData)
-            .transition().duration(500)
-            .call(chart);
-        }
-        nv.utils.windowResize(chart.update);
+      chart.yAxis
+        .tickFormat(d3.format(',.0f'));
+      chart.margin({left: 80});
 
-        return chart;
-      });
+      // prevent svg node proliferation
+      // XXX probably a better way to do this with d3
+      if (divHasChildren) {
+        d3.select(div)
+          .datum(chartData)
+          .transition().duration(500)
+          .call(chart);
+      } else {
+        d3.select(div)
+          .append("svg")
+          .datum(chartData)
+          .transition().duration(500)
+          .call(chart);
+      }
+        //nv.utils.windowResize(chart.update);
+
+        //return chart;
+      //});
 
     },
     rawDataChanged: function () {
