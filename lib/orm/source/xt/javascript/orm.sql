@@ -162,18 +162,20 @@ select xt.install_js('XT','Orm','xtuple', $$
     @param {Object} options
     @param {Boolean} [options.refresh=false] Indicate whether to force a refresh of the orm cached result.
     @param {Boolean} [options.silentError=false] Silence errors and return false instead.
+    @param {Boolean} [options.superUser=false] Ignore privilege checking.
     @returns {Object}
   */
   XT.Orm.fetch = function(nameSpace, type, options) {
+    options = options || {};
     var db = XT.currentDb(),
       ext,
       i,
-      options = options || {},
       orm,
       ret,
       recordType = nameSpace + '.'+ type,
       res,
-      sql;
+      sql,
+      isSuper = options.superUser || false;
 
     if (!this._maps) {
       this._maps = {};
@@ -208,13 +210,13 @@ select xt.install_js('XT','Orm','xtuple', $$
             " and not orm_ext " +
             " and orm_active " +
             " and orm_context != 'xtuple'" +
-            " and usrext_usr_username=$3;";
+            " and (usrext_usr_username=$3 or $4);";
 
       if (DEBUG) {
         XT.debug('fetch sql = ', sql);
         XT.debug('fetch values = ', [nameSpace, type]);
       }
-      res = plv8.execute(sql, [nameSpace, type, XT.username]);
+      res = plv8.execute(sql, [nameSpace, type, XT.username, isSuper]);
 
       if(!res.length) {
         if (options.silentError) {
@@ -235,14 +237,14 @@ select xt.install_js('XT','Orm','xtuple', $$
             ' and orm_type=$2' +
             ' and orm_ext ' +
             ' and orm_active ' +
-            ' and usrext_usr_username=$3 ' +
+            ' and (usrext_usr_username=$3 or $4) ' +
             'order by orm_seq';
 
       if (DEBUG) {
         XT.debug('fetch sql = ', sql);
         XT.debug('fetch values = ', [nameSpace, type]);
       }
-      res = plv8.execute(sql, [nameSpace, type, XT.username]);
+      res = plv8.execute(sql, [nameSpace, type, XT.username, isSuper]);
 
       for (i = 0; i < res.length; i++) {
         orm = JSON.parse(res[i].json);
