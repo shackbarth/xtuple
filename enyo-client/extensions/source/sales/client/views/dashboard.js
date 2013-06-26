@@ -17,6 +17,10 @@ trailing:true, white:true*/
       rawData: null,
       value: null
     },
+    events: {
+      onSearch: "",
+      onWorkspace: ""
+    },
     style: "padding-left: 30px; padding-top: 30px; color: white;",
     components: [
       {content: "_salesHistory".loc(), style: "color: white; margin-left: 100px; " },
@@ -138,7 +142,24 @@ trailing:true, white:true*/
       });
     },
     drillDown: function (field, key) {
-      console.log(field, key);
+      var that = this,
+        params = [{
+          name: field,
+          value: key
+        }],
+        callback = function (value) {
+          var orderNumber = value.get("orderNumber");
+          that.doWorkspace({workspace: "XV.SalesOrderWorkspace", id: orderNumber});
+        };
+
+      this.doSearch({
+        list: "XV.SalesHistoryList",
+        searchText: "",
+        callback: callback,
+        parameterItemValues: params,
+        conditions: [],
+        query: null
+      });
     },
     groupByFieldChanged: function () {
       this.aggregateData();
