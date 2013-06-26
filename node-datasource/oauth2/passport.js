@@ -64,8 +64,8 @@ passport.use(new LocalStrategy(
 
 
         var queryArg = {
-            username: username,
-            password: password
+          username: username,
+          password: password
         };
 
 				// note this function must be owned by a superuser or it will fail
@@ -77,22 +77,21 @@ passport.use(new LocalStrategy(
             return done(null, false);
 
           } else if (res && res.rows && res.rows.length > 0) {
-              // the data comes back in an awkward res.rows[0].request form,
-              // and we want to normalize that here so that the data is in response.data
-              try {
-                  data = JSON.parse(res.rows[0]['check_password']);
-                  model = false;
+            // the data comes back in an awkward res.rows[0].request form,
+            // and we want to normalize that here so that the data is in response.data
+            try {
+              data = JSON.parse(res.rows[0].check_password);
+              model = false;
 
-                  if ( data == true)
-                  {// authentication success
-                    model = new Backbone.Model();
-                    model.set({id: username, organization: database, singleTenant: true});
-                  }
-                  return done(null, model);
-
-              } catch (error) {
-                return done(null, false);
+              if (data === true) {// authentication success
+                model = new Backbone.Model();
+                model.set({id: username, organization: database, singleTenant: true});
               }
+              return done(null, model);
+
+            } catch (error) {
+              return done(null, false);
+            }
           }
           return done(null, false);
         });

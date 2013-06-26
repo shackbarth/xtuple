@@ -2,9 +2,19 @@ select xt.install_js('XM','item_site','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  XM.ItemSite = {};
+(function () {
+
+  if (!XM.ItemSite) { XM.ItemSite = {}; }
   
   XM.ItemSite.isDispatchable = true;
+
+  /**
+    Return the current cost for a particular item site.
+  */
+  XM.ItemSite.cost = function (itemsiteId) {
+    if (!XT.Data.checkPrivilege('ViewCosts')) { return null };
+    return plv8.execute('select itemcost(itemsite_id) as cost from itemsite where obj_uuid = $1;', [itemsiteId])[0].cost;
+  },
 
   /**
     Runs what amounts to a fetch based on the query, with the extra
@@ -46,5 +56,8 @@ select xt.install_js('XM','item_site','xtuple', $$
     if (DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
     return JSON.stringify(plv8.execute(sql, clause.parameters));
   };
+
+}());
+
 $$ );
 

@@ -179,21 +179,6 @@ trailing:true, white:true*/
     This is the parent LineItem Mixin for both the Quote and SalesOrder.
   */
   XV.LineMixin = {
-    /**
-     When the model changes, check the priceMode field to see if it is in
-       Discount or Markup mode and change the label accordingly.
-    */
-    attributesChanged: function (model, options) {
-      XV.EditorMixin.attributesChanged.apply(this, arguments);
-      var pm = model.get("priceMode");
-      if (this.$.discount) {
-        if (pm === "N" || pm === "D" || pm === "P") { // discount
-          this.$.discount.setLabel("_discount".loc());
-        } else { // markup
-          this.$.discount.setLabel("_markup".loc());
-        }
-      }
-    },
     changeItemSiteParameter: function (attr, param, isParent) {
       param = param ? param : attr;
       isParent = _.isBoolean(isParent) ? isParent : true;
