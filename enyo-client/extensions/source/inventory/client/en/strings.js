@@ -12,6 +12,7 @@
 //
 
 var lang = XT.stringsFor("en_US", {
+	"_inventoryDescription": "Shipping and Receiving, Inventory and Cost Management",
   "_defaultEventFence": "Default Event Fence (Days)",
   "_enableAsOfQOH": "Enable As-Of QOH Reporting",
   "_postSiteChanges": "Post Site Changes",
@@ -35,7 +36,8 @@ var lang = XT.stringsFor("en_US", {
   "_physicalInventory": "Physical Inventory (Counting)",
   "_countSlipAuditing": "Count Slip # Auditing",
   "_number": "Number",
-  "_nextNumber": "Next Number",
+	"_shipmentNumberPolicy": "Shipment Number Policy",
+  "_nextShipmentNumber": "Next Shipment Number",
   "_kitComponentInheritCOS": "Kit Components Inherit COS from Kit Parent",
   "_disableReceiptExcessQty": "Disallow PO Receipt of Qty greater than ordered",
   "_warnIfReceiptQtyDiffers": "Warn if PO Receipt Qty differs from receivable Qty",

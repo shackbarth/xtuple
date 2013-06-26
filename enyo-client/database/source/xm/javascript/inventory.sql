@@ -9,9 +9,22 @@ select xt.install_js('XM','Inventory','xtuple', $$
   XM.Inventory.isDispatchable = true;
 
   XM.Inventory.options = [
-    "ShipmentNumberGeneration",
-    "ItemSiteChangeLog",
-    "SiteChangeLog"  
+		"DefaultEventFence",    
+		"ItemSiteChangeLog",
+    "WarehouseChangeLog",
+		"AllowAvgCostMethod",  
+		"AllowStdCostMethod",
+		"AllowJobCostMethod",
+		"CountAvgCostMethod",
+		"PostCountTagDefault",
+		"CountSlipAuditing",
+		"ShipmentNumberGeneration",
+		"NextShipmentNumber", 
+		"KitComponentInheritCOS",
+		"DisallowReceiptExcessQty",
+		"WarnIfReceiptQtyDiffers",
+		"ReceiptQtyTolerancePct",
+		"RecordPPVonReceipt" 
   ]
   
   /* 
@@ -27,12 +40,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
             + " where (orderseq_name=$1)",
         ret = {},
         qry;
-    
-/*    ret.NextSalesOrderNumber = plv8.execute(sql, ['SoNumber'])[0].value;
-    ret.NextQuoteNumber = plv8.execute(sql, ['QuNumber'])[0].value;
-    ret.NextCreditMemoNumber = plv8.execute(sql, ['CmNumber'])[0].value;
-    ret.NextInvoiceNumber = plv8.execute(sql, ['InvcNumber'])[0].value;
-*/    
+        
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
     return JSON.stringify(ret);
@@ -59,7 +67,13 @@ select xt.install_js('XM','Inventory','xtuple', $$
     if (!XT.jsonpatch.apply(settings, patches)) {
       plv8.elog(NOTICE, 'Malformed patch document');
     }
-  
+    
+		/* update numbers */
+    /*if(settings['NextShipmentNumber']) {
+      plv8.execute('select setNextShipmentNumber($1)', [settings['NextShipmentNumber'] - 0]);
+    }
+		options.remove('NextShipmentNumber'); */
+
   /* update remaining options as metrics
        first make sure we pass an object that only has valid metric options for this type */
     for(var i = 0; i < options.length; i++) {

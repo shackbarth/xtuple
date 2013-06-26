@@ -8,7 +8,9 @@ trailing:true white:true*/
   XT.extensions.inventory.initPostbooks = function () {
     var module,
       panels,
-      relevantPrivileges;
+      relevantPrivileges,
+			configurationJson,
+			configuration;
 
     // ..........................................................
     // APPLICATION
@@ -48,10 +50,10 @@ trailing:true white:true*/
     XM.configurations.add(configuration);
 
     module = {
-      name: "Inventory",
+      name: "inventory",
       label: "_inventory".loc(),
       panels: [
-	{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
+				{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
       ]
     };
     XT.app.$.postbooks.insertModule(module, 4);
