@@ -20,7 +20,9 @@ trailing:true, white:true*/
     style: "padding-left: 30px; padding-top: 30px; color: white;",
     components: [
       {content: "_salesHistory".loc(), style: "color: white; margin-left: 100px; " },
-      {name: "chart" },
+      {name: "chart", components: [
+        {name: "svg", tag: "svg"}
+      ]},
       {kind: "enyo.FittableColumns", components: [
         {content: "_timeFrame".loc() + ": ", classes: "xv-picker-label",
           style: "color: white"},
@@ -122,7 +124,7 @@ trailing:true, white:true*/
       this.setGroupByField(inEvent.originator.name);
     },
     plot: function () {
-      var div = this.$.chart.hasNode(),
+      var div = this.$.svg.hasNode(),
         divHasChildren = div && div.children && div.children.length > 0,
         chartData = [{
           key: "Sales",
@@ -148,20 +150,11 @@ trailing:true, white:true*/
         .tickFormat(d3.format(',.0f'));
       chart.margin({left: 80});
 
-      // prevent svg node proliferation
-      // XXX probably a better way to do this with d3
-      if (divHasChildren) {
-        d3.select(div)
-          .datum(chartData)
-          .transition().duration(500)
-          .call(chart);
-      } else {
-        d3.select(div)
-          .append("svg")
-          .datum(chartData)
-          .transition().duration(500)
-          .call(chart);
-      }
+      d3.select(div)
+        .datum(chartData)
+        .transition().duration(500)
+        .call(chart);
+
         //nv.utils.windowResize(chart.update);
 
         //return chart;
