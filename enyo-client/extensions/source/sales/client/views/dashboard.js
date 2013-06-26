@@ -11,8 +11,52 @@ trailing:true, white:true*/
     published: {
       aggregatedData: null,
       collection: "XM.SalesHistoryCollection",
+      groupByField: "",
+      timeFrameField: "",
       rawData: null,
       value: null
+    },
+    components: [
+      {name: "chart"},
+      {kind: "enyo.FittableColumns", components: [
+        {kind: "onyx.PickerDecorator", onSelect: "timeFrameSelected", components: [
+          {content: "_timeFrame".loc()},
+          {kind: "onyx.Picker", components: [
+            {content: "_today".loc(), name: "today"},
+            {content: "_thisWeek".loc(), name: "thisWeek"},
+            {content: "_thisMonth".loc(), name: "thisMonth"},
+            {content: "_thisYear".loc(), name: "thisYear"}
+          ]}
+        ]},
+        {kind: "onyx.PickerDecorator", onSelect: "groupBySelected", components: [
+          {content: "_groupBy".loc()},
+          {kind: "onyx.Picker", components: [
+            {content: "_customer".loc(), name: "customer"},
+            {content: "_salesRep".loc(), name: "salesRep" }
+          ]}
+        ]}
+      ]}
+    ],
+    aggregateData: function () {
+      var that = this;
+      // where would I be without underscore...
+      var groupedData = _.toArray(_.groupBy(this.getRawData(), function (datum) {
+        return datum[that.getGroupByField()];
+      }));
+      var aggregatedData = _.map(groupedData, function (datum) {
+        return _.reduce(datum, function (memo, row) {
+          return {key: row[that.getGroupByField()], total: memo.total + row.unitPrice * row.quantityShipped};
+        }, {total: 0});
+      });
+
+      this.setAggregatedData(aggregatedData);
+    },
+    aggregatedDataChanged: function () {
+      if (this.getAggregatedData() &&
+          this.getTimeFrameField() &&
+          this.getGroupByField()) {
+        this.plot();
+      }
     },
     create: function () {
       this.inherited(arguments);
@@ -36,8 +80,14 @@ trailing:true, white:true*/
         }
       });
     },
-    aggregatedDataChanged: function () {
-      var div = this.hasNode();
+    groupByFieldChanged: function () {
+      this.aggregateData();
+    },
+    groupBySelected: function (inSender, inEvent) {
+      this.setGroupByField(inEvent.originator.name);
+    },
+    plot: function () {
+      var div = this.$.chart.hasNode();
       var exampleData = [{
         key: "Sales",
         values: _.map(this.getAggregatedData(), function (datum) {
@@ -53,6 +103,7 @@ trailing:true, white:true*/
           .tooltips(false)
           .showValues(true);
 
+        console.log(div);
         d3.select(div)
           .append("svg")
           .datum(exampleData)
@@ -63,20 +114,17 @@ trailing:true, white:true*/
 
         return chart;
       });
+
     },
     rawDataChanged: function () {
-      // where would I be without underscore...
-      var groupedData = _.toArray(_.groupBy(this.getRawData(), function (datum) {
-        return datum.customer;
-      }));
-      var aggregatedData = _.map(groupedData, function (datum) {
-        return _.reduce(datum, function (memo, row) {
-          return {key: row.customer, total: memo.total + row.unitPrice * row.quantityShipped};
-        }, {total: 0});
-      });
-
-      this.setAggregatedData(aggregatedData);
-    }
+      this.aggregateData();
+    },
+    timeFrameFieldChanged: function () {
+      this.aggregateData();
+    },
+    timeFrameSelected: function (inSender, inEvent) {
+      this.setTimeFrameField(inEvent.originator.name);
+    },
   });
 
 }());

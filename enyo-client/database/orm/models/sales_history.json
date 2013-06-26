@@ -39,6 +39,21 @@
         }
       },
       {
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "cohist_salesrep_id"
+        }
+      },
+      {
+        "name": "itemSite",
+        "toOne": {
+          "type": "ItemSite",
+          "column": "cohist_itemsite_id",
+          "isNested": true
+        }
+      },
+      {
         "name": "orderNumber",
         "attr": {
           "type": "Number",
