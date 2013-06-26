@@ -40,6 +40,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       "prn": username, // username
       "scope": scope,
       "aud": audience,
+      "org": database,
       "datasource": datasource, // rest api url
       "exp": Math.round(expires.getTime() / 1000), // expiration date in millis
       "iat": Math.round(today.getTime() / 1000)  // created date in millis

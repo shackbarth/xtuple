@@ -287,7 +287,6 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccount",
-    "isRest": true,
     "table": "xt.usrinfo",
     "comment": "User Account Map",
     "privileges": {
