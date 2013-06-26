@@ -48,6 +48,7 @@ select xt.js_init();
 \i xt/functions/add_priv.sql;
 \i xt/functions/average_cost.sql;
 \i xt/functions/change_password.sql;
+\i xt/functions/check_password.sql;
 \i xt/functions/co_line_base_price.sql;
 \i xt/functions/co_line_customer_discount.sql;
 \i xt/functions/co_line_markup.sql;

@@ -1,5 +1,5 @@
 select xt.create_view('xt.itemsiteinfo', $$
    select *,  
-     xt.average_cost(itemsite_id) as avg_cost  
+     round(itemcost(itemsite_id), 6) as "unit_cost"
    from itemsite; ;
 $$);

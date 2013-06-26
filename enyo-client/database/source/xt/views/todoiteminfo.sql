@@ -53,7 +53,7 @@ insert into todoitem (
   new.todoitem_ophead_id,
   new.todoitem_owner_username,
   new.todoitem_priority_id,
-  new.todoitem_username,
+  coalesce(new.todoitem_username, geteffectivextuser()),
   new.todoitem_recurring_todoitem_id,
   new.todoitem_cntct_id,
   new.obj_uuid
