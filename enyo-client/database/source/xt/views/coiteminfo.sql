@@ -7,7 +7,7 @@ select coitem.*,
   xt.co_line_list_price_discount(coitem) as list_price_discount,
   xt.co_line_customer_discount(coitem) as cust_discount,
   xt.co_line_extended_price(coitem) as ext_price, 
-  xt.co_line_profit(coitem) as profit,
+  xt.co_line_margin(coitem) as margin,
   xt.co_line_tax(coitem) as tax
 from coitem
   left join itemsite on coitem_itemsite_id=itemsite_id 
@@ -62,7 +62,7 @@ insert into coitem (
   new.coitem_itemsite_id,
   new.coitem_scheddate,
   new.coitem_qtyord,
-  stdcost(itemsite_item_id),
+  coalesce(new.coitem_unitcost, itemcost(itemsite_id)),
   new.coitem_price,
   new.coitem_custprice,
   new.coitem_memo,
@@ -104,6 +104,7 @@ update coitem set
   coitem_linenumber=new.coitem_linenumber,
   coitem_scheddate=new.coitem_scheddate,
   coitem_qtyord=new.coitem_qtyord,
+  coitem_unitcost=new.coitem_unitcost,
   coitem_price=new.coitem_price,
   coitem_custprice=new.coitem_custprice,
   coitem_memo=new.coitem_memo,
