@@ -12,7 +12,7 @@ trailing:true, white:true*/
       aggregatedData: null,
       collection: "XM.SalesHistoryCollection",
       label: "_dashboard".loc(),
-      groupByField: "customer",
+      groupByField: "",
       timeFrameField: "thisYear",
       rawData: null,
       value: null
@@ -21,11 +21,11 @@ trailing:true, white:true*/
       onSearch: "",
       onWorkspace: ""
     },
-    style: "padding-left: 30px; padding-top: 30px; color: white;",
+    style: "padding-left: 30px; padding-top: 30px; color: white;", // TODO: put in LESS
     components: [
       {content: "_salesHistory".loc(), style: "color: white; margin-left: 100px; " },
       {name: "chart", components: [
-        {name: "svg", tag: "svg"}
+        {name: "svg", tag: "svg"} // this is the DOM element that d3 will take over
       ]},
       {kind: "enyo.FittableColumns", components: [
         {content: "_timeFrame".loc() + ": ", classes: "xv-picker-label",
@@ -51,6 +51,10 @@ trailing:true, white:true*/
         ]}
       ]}
     ],
+    /**
+      Take the raw data and aggregate it according to the speficiations
+      dictated by the pickers.
+     */
     aggregateData: function () {
       var that = this,
         filteredData, groupedData, aggregatedData;
@@ -115,6 +119,9 @@ trailing:true, white:true*/
 
       this.setAggregatedData(aggregatedData);
     },
+    /**
+      If the aggregated data and the pickers are set, render the chart.
+     */
     aggregatedDataChanged: function () {
       if (this.getAggregatedData() &&
           this.getTimeFrameField() &&
@@ -122,6 +129,9 @@ trailing:true, white:true*/
         this.plot();
       }
     },
+    /**
+      Kick off the fetch on the collection as soon as we start.
+     */
     create: function () {
       this.inherited(arguments);
 
@@ -141,6 +151,11 @@ trailing:true, white:true*/
         }
       });
     },
+    /**
+      If the user clicks on a bar we open up the SalesHistory list with the appropriate
+      filter. When the user clicks on an list item we drill down further into the sales
+      order.
+     */
     drillDown: function (field, key) {
       var that = this,
         params = [{
@@ -149,7 +164,10 @@ trailing:true, white:true*/
         }],
         callback = function (value) {
           var orderNumber = value.get("orderNumber");
-          that.doWorkspace({workspace: "XV.SalesOrderWorkspace", id: orderNumber});
+          if (orderNumber) {
+            that.doWorkspace({workspace: "XV.SalesOrderWorkspace", id: orderNumber});
+          }
+          // TODO: do anything if the history has no order number?
         };
 
       this.doSearch({
@@ -167,6 +185,9 @@ trailing:true, white:true*/
     groupBySelected: function (inSender, inEvent) {
       this.setGroupByField(inEvent.originator.name);
     },
+    /**
+      Make the chart using v3 and nv.d3, working off our this.aggregatedData.
+     */
     plot: function () {
       var that = this,
         div = this.$.svg.hasNode(),
@@ -204,12 +225,9 @@ trailing:true, white:true*/
         that.drillDown(that.getGroupByField(), bar.label);
       });
 
-
-
         //nv.utils.windowResize(chart.update);
         //return chart;
       //});
-
     },
     rawDataChanged: function () {
       this.aggregateData();
