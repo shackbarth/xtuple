@@ -77,16 +77,36 @@ trailing:true, white:true*/
       });
 
       groupedData = _.toArray(_.groupBy(filteredData, function (datum) {
-        return datum[that.getGroupByField()];
+        if (!datum[that.getGroupByField()]) {
+          return null;
+        } else if (typeof datum[that.getGroupByField()] === 'object') {
+          // TODO: generalize past customer for nested group-bys
+          return datum[that.getGroupByField()].number;
+        } else {
+          return datum[that.getGroupByField()];
+        }
       }));
 
       aggregatedData = _.map(groupedData, function (datum) {
-        return _.reduce(datum, function (memo, row) {
+        console.log(datum);
+        var debug = _.reduce(datum, function (memo, row) {
+          var key;
+
+          if (!row[that.getGroupByField()]) {
+            key = null;
+          } else if (typeof row[that.getGroupByField()] === 'object') {
+            // TODO: generalize past customer for nested group-bys
+            key = row[that.getGroupByField()].number;
+          } else {
+            key = row[that.getGroupByField()];
+          }
           return {
-            key: row[that.getGroupByField()],
+            key: memo.key || key,
             total: memo.total + row.unitPrice * row.quantityShipped
           };
         }, {total: 0});
+        console.log(debug);
+        return debug;
       });
 
       this.setAggregatedData(aggregatedData);

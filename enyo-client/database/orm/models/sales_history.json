@@ -34,8 +34,9 @@
       {
         "name": "customer",
         "toOne": {
-          "type": "Customer",
-          "column": "cohist_cust_id"
+          "type": "CustomerRelation",
+          "column": "cohist_cust_id",
+          "isNested": true
         }
       },
       {
