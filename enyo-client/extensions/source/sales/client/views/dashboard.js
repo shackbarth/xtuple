@@ -9,8 +9,9 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.SalesDashboard",
     published: {
+      aggregatedData: null,
       collection: "XM.SalesHistoryCollection",
-      data: null,
+      rawData: null,
       value: null
     },
     create: function () {
@@ -28,19 +29,19 @@ trailing:true, white:true*/
       this.setValue(new Klass());
       this.getValue().fetch({
         success: function (collection, results) {
-          that.setData(results);
+          that.setRawData(results);
         },
         error: function () {
           console.log("error", arguments);
         }
       });
     },
-    dataChanged: function () {
+    aggregatedDataChanged: function () {
       var div = this.hasNode();
       var exampleData = [{
-        key: "Unit costs",
-        values: _.map(this.getData().slice(0, 10), function (datum) {
-          return {label: datum.orderNumber, value: datum.unitPrice};
+        key: "Sales",
+        values: _.map(this.getAggregatedData(), function (datum) {
+          return {label: datum.key, value: datum.total};
         })
       }];
 
@@ -62,6 +63,19 @@ trailing:true, white:true*/
 
         return chart;
       });
+    },
+    rawDataChanged: function () {
+      // where would I be without underscore...
+      var groupedData = _.toArray(_.groupBy(this.getRawData(), function (datum) {
+        return datum.customer;
+      }));
+      var aggregatedData = _.map(groupedData, function (datum) {
+        return _.reduce(datum, function (memo, row) {
+          return {key: row.customer, total: memo.total + row.unitPrice * row.quantityShipped};
+        }, {total: 0});
+      });
+
+      this.setAggregatedData(aggregatedData);
     }
   });
 

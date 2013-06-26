@@ -32,6 +32,13 @@
         }
       },
       {
+        "name": "customer",
+        "toOne": {
+          "type": "Customer",
+          "column": "cohist_cust_id"
+        }
+      },
+      {
         "name": "orderNumber",
         "attr": {
           "type": "Number",
