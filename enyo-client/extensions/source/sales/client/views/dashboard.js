@@ -13,7 +13,7 @@ trailing:true, white:true*/
       collection: "XM.SalesHistoryCollection",
       label: "_dashboard".loc(),
       groupByField: "",
-      timeFrameField: "",
+      timeFrameField: "thisYear",
       rawData: null,
       value: null
     },
@@ -26,7 +26,7 @@ trailing:true, white:true*/
             {content: "_today".loc(), name: "today"},
             {content: "_thisWeek".loc(), name: "thisWeek"},
             {content: "_thisMonth".loc(), name: "thisMonth"},
-            {content: "_thisYear".loc(), name: "thisYear"}
+            {content: "_thisYear".loc(), name: "thisYear", active: true}
           ]}
         ]},
         {kind: "onyx.PickerDecorator", onSelect: "groupBySelected", components: [
@@ -117,7 +117,10 @@ trailing:true, white:true*/
         chartData = [{
           key: "Sales",
           values: _.map(this.getAggregatedData(), function (datum) {
-            return {label: datum.key, value: datum.total};
+            return {
+              label: datum.key,
+              value: datum.total
+            };
           })
         }];
 
