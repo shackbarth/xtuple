@@ -17,13 +17,19 @@ trailing:true, white:true*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short",
-            components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "XV.ListAttr", attr: "customer.number", isKey: true},
             {kind: "XV.ListAttr", attr: "salesRep.name"}
           ]},
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "XV.ListAttr", attr: "orderNumber"},
+            {kind: "XV.ListAttr", attr: "shipDate"}
+          ]}
+        ]},
+        {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "orderNumber"}
+            {kind: "XV.ListAttr", attr: "quantityShipped"},
+            {kind: "XV.ListAttr", attr: "unitPrice" }
           ]}
         ]}
       ]}
