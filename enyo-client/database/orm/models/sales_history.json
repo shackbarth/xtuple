@@ -32,6 +32,13 @@
         }
       },
       {
+        "name": "orderNumber",
+        "attr": {
+          "type": "Number",
+          "column": "cohist_ordernumber"
+        }
+      },
+      {
         "name": "shipDate",
         "attr": {
           "type": "Date",
