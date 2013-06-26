@@ -113,6 +113,7 @@ trailing:true, white:true*/
     },
     plot: function () {
       var div = this.$.chart.hasNode(),
+        divHasChildren = div && div.children && div.children.length > 0,
         chartData = [{
           key: "Sales",
           values: _.map(this.getAggregatedData(), function (datum) {
@@ -128,12 +129,20 @@ trailing:true, white:true*/
           .tooltips(false)
           .showValues(true);
 
-        d3.select(div)
-          .append("svg")
-          .datum(chartData)
-          .transition().duration(500)
-          .call(chart);
-
+        // prevent svg node proliferation
+        // XXX probably a better way to do this with d3
+        if (divHasChildren) {
+          d3.select(div)
+            .datum(chartData)
+            .transition().duration(500)
+            .call(chart);
+        } else {
+          d3.select(div)
+            .append("svg")
+            .datum(chartData)
+            .transition().duration(500)
+            .call(chart);
+        }
         nv.utils.windowResize(chart.update);
 
         return chart;
