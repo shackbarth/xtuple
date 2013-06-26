@@ -227,13 +227,17 @@ regexp:true, undef:true, trailing:true, white:true */
 
     inputChanged: function (inSender, inEvent) {
       var input = this.$.input.getValue(),
-        value = this.validate(input);
+        value = this.validate(input),
+        prop = this.getLocalMode() ? 'localValue' : 'baseValue',
+        obj = {};
       if (value !== false) {
         // is valid!
-        this.setValue({localValue: value});
+        obj[prop] = value;
+        this.setValue(obj);
       } else {
         // is invalid!
-        this.setValue({localValue: null});
+        obj[prop] = null;
+        this.setValue(obj);
         this.valueChanged("");
       }
     },

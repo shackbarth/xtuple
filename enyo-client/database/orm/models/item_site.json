@@ -328,7 +328,7 @@
         "delete": false
       },
       "attribute": {
-        "averageCost": {
+        "unitCost": {
           "view": "ViewCosts MaintainCosts"
         }
       }
@@ -395,10 +395,10 @@
         }
       },
       {
-        "name": "averageCost",
+        "name": "unitCost",
         "attr": {
           "type": "Number",
-          "column": "avg_cost"
+          "column": "unit_cost"
         }
       }
     ],
