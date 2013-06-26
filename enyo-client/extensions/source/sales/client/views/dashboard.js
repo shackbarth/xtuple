@@ -40,7 +40,32 @@ trailing:true, white:true*/
     aggregateData: function () {
       var that = this;
       // where would I be without underscore...
-      var groupedData = _.toArray(_.groupBy(this.getRawData(), function (datum) {
+      var filteredData = _.filter(this.getRawData(), function (datum) {
+        var timespan = 0,
+          oneDay = 1000 * 60 * 60 * 24;
+        // XXX use YTD etc.?
+        switch (that.getTimeFrameField()) {
+        case "today":
+          timespan = oneDay;
+          break;
+        case "thisWeek":
+          timespan = 7 * oneDay;
+          break;
+        case "thisMonth":
+          timespan = 30 * oneDay;
+          break;
+        case "thisYear":
+          timespan = 365 * oneDay;
+          break;
+        }
+        console.log(timespan);
+        var shipDate = datum.shipDate.getTime();
+        console.log(shipDate);
+        var now = new Date().getTime();
+        console.log(now);
+        return shipDate + timespan >= now;
+      });
+      var groupedData = _.toArray(_.groupBy(filteredData, function (datum) {
         return datum[that.getGroupByField()];
       }));
       var aggregatedData = _.map(groupedData, function (datum) {
@@ -103,7 +128,6 @@ trailing:true, white:true*/
           .tooltips(false)
           .showValues(true);
 
-        console.log(div);
         d3.select(div)
           .append("svg")
           .datum(exampleData)
