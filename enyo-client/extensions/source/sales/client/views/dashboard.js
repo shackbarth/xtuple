@@ -12,7 +12,7 @@ trailing:true, white:true*/
       aggregatedData: null,
       collection: "XM.SalesHistoryCollection",
       label: "_dashboard".loc(),
-      groupByField: "",
+      groupByField: "customer",
       timeFrameField: "thisYear",
       rawData: null,
       value: null
@@ -117,6 +117,9 @@ trailing:true, white:true*/
         }
       });
     },
+    drillDown: function (field, key) {
+      console.log(field, key);
+    },
     groupByFieldChanged: function () {
       this.aggregateData();
     },
@@ -124,7 +127,8 @@ trailing:true, white:true*/
       this.setGroupByField(inEvent.originator.name);
     },
     plot: function () {
-      var div = this.$.svg.hasNode(),
+      var that = this,
+        div = this.$.svg.hasNode(),
         divHasChildren = div && div.children && div.children.length > 0,
         chartData = [{
           key: "Sales",
@@ -155,8 +159,13 @@ trailing:true, white:true*/
         .transition().duration(500)
         .call(chart);
 
-        //nv.utils.windowResize(chart.update);
+      d3.selectAll(".nv-bar").on("click", function (bar, index) {
+        that.drillDown(that.getGroupByField(), bar.label);
+      });
 
+
+
+        //nv.utils.windowResize(chart.update);
         //return chart;
       //});
 
