@@ -53,6 +53,7 @@ trailing:true, white:true*/
       name: "sales",
       label: "_sales".loc(),
       panels: [
+        {name: "dashboard", kind: "XV.SalesDashboard"},
         {name: "customerList", kind: "XV.CustomerList"},
         {name: "prospectList", kind: "XV.ProspectList"},
         {name: "quoteList", kind: "XV.QuoteList"},

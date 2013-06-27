@@ -768,6 +768,7 @@ trailing:true, white:true*/
     }
   });
 
+  XV.registerModelList("XM.IncidentListItem", "XV.IncidentList");
   XV.registerModelList("XM.IncidentRelation", "XV.IncidentList");
 
   // ..........................................................
