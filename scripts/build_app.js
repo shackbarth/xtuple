@@ -20,12 +20,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-e, --extension [/path/to/extension]', 'Extension to build. [Core plus all extensions registered for the database.]')
     .option('-i, --initialize', 'Initialize database. Must be used with the -b flag.')
     .option('-b, --backup [/path/to/backup/file]', 'Location of database backup file. Must be used with the -i flag.')
+    .option('-q, --querydirect', 'Query the database directly, without delegating to psql.')
     .parse(process.argv);
 
   build({
     database: program.database,
     extension: program.extension,
     initialize: program.initialize,
+    queryDirect: program.querydirect,
     backup: program.backup
   }, function (err, res) {
     console.log(err ? "Error!" : "Success!", err, res);

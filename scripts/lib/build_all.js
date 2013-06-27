@@ -28,58 +28,58 @@ var _ = require('underscore'),
 
   var creds;
 
-  //
-  // Looks in a database to see which extensions are registered, and
-  // tacks onto that list the core directories.
-  //
-  var getRegisteredExtensions = function (database, callback) {
-    creds.database = database;
-
-    var result = dataSource.query("SELECT * FROM xt.ext ORDER BY ext_load_order", creds, function (err, res) {
-      // TODO: better if we didn't plan for an error. use something like:
-      // var existsSql = "select relname from pg_class where relname = 'ext'",
-      if (err) {
-        // xt.ext probably doesn't exist, because this is probably a brand-new DB.
-        // No problem! Give them the core extensions.
-        // TODO: we could get these extensions dynamically by looking at the filesystem.
-        res = {
-          rows: [
-            { ext_location: '/core-extensions', ext_name: 'crm' },
-            { ext_location: '/core-extensions', ext_name: 'sales' },
-            { ext_location: '/core-extensions', ext_name: 'project' }
-          ]
-        };
-      }
-
-      var paths = _.map(res.rows, function (row) {
-        var location = row.ext_location,
-          name = row.ext_name,
-          extPath;
-
-        if (location === '/core-extensions') {
-          extPath = path.join(__dirname, "/../../enyo-client/extensions/source/", name);
-        } else if (location === '/xtuple-extensions') {
-          extPath = path.join(__dirname, "../../../xtuple-extensions/source", name);
-        } else if (location === '/private-extensions') {
-          extPath = path.join(__dirname, "../../../private-extensions/source", name);
-        }
-        return extPath;
-      });
-
-      paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
-      paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
-      callback(null, {
-        extensions: paths,
-        database: database
-      });
-    });
-
-  };
 
   exports.build = function (options, callback) {
     var buildSpecs = {},
       databases = [],
       extension,
+      //
+      // Looks in a database to see which extensions are registered, and
+      // tacks onto that list the core directories.
+      //
+      getRegisteredExtensions = function (database, callback) {
+        creds.database = database;
+
+        var result = dataSource.query("SELECT * FROM xt.ext ORDER BY ext_load_order", creds, function (err, res) {
+          // TODO: better if we didn't plan for an error. use something like:
+          // var existsSql = "select relname from pg_class where relname = 'ext'",
+          if (err) {
+            // xt.ext probably doesn't exist, because this is probably a brand-new DB.
+            // No problem! Give them the core extensions.
+            // TODO: we could get these extensions dynamically by looking at the filesystem.
+            res = {
+              rows: [
+                { ext_location: '/core-extensions', ext_name: 'crm' },
+                { ext_location: '/core-extensions', ext_name: 'sales' },
+                { ext_location: '/core-extensions', ext_name: 'project' }
+              ]
+            };
+          }
+
+          var paths = _.map(res.rows, function (row) {
+            var location = row.ext_location,
+              name = row.ext_name,
+              extPath;
+
+            if (location === '/core-extensions') {
+              extPath = path.join(__dirname, "/../../enyo-client/extensions/source/", name);
+            } else if (location === '/xtuple-extensions') {
+              extPath = path.join(__dirname, "../../../xtuple-extensions/source", name);
+            } else if (location === '/private-extensions') {
+              extPath = path.join(__dirname, "../../../private-extensions/source", name);
+            }
+            return extPath;
+          });
+
+          paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
+          paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
+          callback(null, {
+            extensions: paths,
+            database: database,
+            queryDirect: options.queryDirect
+          });
+        });
+      },
       buildAll = function (specs, creds, buildAllCallback) {
         buildDatabase(specs, creds, function (databaseErr, databaseRes) {
           if (databaseErr) {
@@ -127,6 +127,7 @@ var _ = require('underscore'),
         options.backup :
         path.join(process.cwd(), options.backup);
       buildSpecs.initialize = true;
+      buildSpecs.queryDirect = options.queryDirect;
       // TODO: as above, the extensions could be found dynamically
       buildSpecs.extensions = [
         path.join(__dirname, '../../lib/orm'),
@@ -152,6 +153,7 @@ var _ = require('underscore'),
           path.join(process.cwd(), options.extension);
         return {
           database: database,
+          queryDirect: options.queryDirect,
           extensions: [extension]
         };
       });

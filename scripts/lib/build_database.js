@@ -19,11 +19,11 @@ var _ = require('underscore'),
   //
   // There are a few ways we could actually send our query to the database
   //
-  var sendToDatabaseAlt = function (query, creds, callback) {
+  var sendToDatabaseDatasource = function (query, creds, callback) {
     dataSource.query(query, JSON.parse(JSON.stringify(creds)), callback);
   };
 
-  var sendToDatabase = function (query, creds, callback) {
+  var sendToDatabasePsql = function (query, creds, callback) {
     var filename = path.join(__dirname, "temp_query.sql");
     fs.writeFile(filename, query, function (err) {
       if (err) {
@@ -96,13 +96,13 @@ var _ = require('underscore'),
              '/home/user/git/xtuple/enyo-client/extensions/source/sales',
              '/home/user/git/private-extensions/source/incident_plus' ],
           database: 'dev',
-          specs: [] },
+          orms: [] },
         { extensions:
            [ '/home/user/git/xtuple/enyo-client',
              '/home/user/git/xtuple/enyo-client/extensions/source/sales',
              '/home/user/git/xtuple/enyo-client/extensions/source/project' ],
           database: 'dev2',
-          specs: [] }]
+          orms: [] }]
 
     @param {Object} creds Database credentials, in the form:
       { hostname: 'localhost',
@@ -301,19 +301,29 @@ var _ = require('underscore'),
       // in series, and execute the query when they all have come back.
       //
       async.mapSeries(extensions, getExtensionSqlPlusOrmSql, function (err, extensionSql) {
+        var sendToDatabase, allSql;
+
         if (err) {
           databaseCallback(err);
           return;
         }
         // each String of the scriptContents is the concatenated SQL for the extension.
         // join these all together into a single string for the whole database.
-        var allSql = _.reduce(extensionSql, function (memo, script) {
+        allSql = _.reduce(extensionSql, function (memo, script) {
           return memo + script;
         }, "");
 
-        // Without this, when we delegate to exec psql the err var will not be set even
-        // on the case of error.
-        allSql = "\\set ON_ERROR_STOP TRUE;" + allSql;
+        if (spec.queryDirect) {
+          // but we can query the database directly if we want
+          sendToDatabase = sendToDatabaseDatasource;
+        } else {
+          // by default we delegate to psql
+          sendToDatabase = sendToDatabasePsql;
+
+          // Without this, when we delegate to exec psql the err var will not be set even
+          // on the case of error.
+          allSql = "\\set ON_ERROR_STOP TRUE;" + allSql;
+        }
 
         sendToDatabase(allSql, JSON.parse(JSON.stringify(creds)), function (err, res) {
           creds.database = undefined; // safest to strip out the db name once we're done with it
