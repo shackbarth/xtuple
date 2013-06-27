@@ -204,7 +204,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             "select orm_json as json " +
             "from xt.orm " +
             " join xt.ext on ext_name=orm_context " +
-            " join xt.usrext on ext_id=usrext_ext_id " +
+            " left join xt.usrext on ext_id=usrext_ext_id " +
             "where orm_namespace=$1 " +
             " and orm_type=$2 " +
             " and not orm_ext " +
@@ -232,7 +232,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       sql = 'select orm_json as json ' +
             'from xt.orm ' +
             '  join xt.ext on ext_name = orm_context ' +
-            '  join xt.usrext on ext_id = usrext_ext_id ' +
+            '  left join xt.usrext on ext_id = usrext_ext_id ' +
             'where orm_namespace=$1' +
             ' and orm_type=$2' +
             ' and orm_ext ' +
