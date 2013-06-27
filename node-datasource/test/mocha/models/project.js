@@ -41,7 +41,7 @@ describe('Project CRUD Test', function () {
 
   it('should create an XM.Project Model', function () {
     data.model.set(data.createHash);
-    crud.save(data);
+    crud.save(data, done);
   });
   it('should have required Attributes', function () {
     expect(data.model.requiredAttributes).to.contain('name');
@@ -56,7 +56,7 @@ describe('Project CRUD Test', function () {
 
   it('should update an XM.Project Model', function () {
     data.model.set(data.updateHash);
-    crud.save(data);
+    crud.save(data, done);
     assert.equal(data.model.get('name'), data.updateHash.name, 'Model Code UPDATE Value is equal');
   });
   
@@ -136,6 +136,6 @@ describe('Project CRUD Test', function () {
     });
   });
   it('should delete an XM.Project Model', function () {
-    crud.destroy(data);
+    crud.destroy(data, done);
   });
 });

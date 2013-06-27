@@ -27,7 +27,7 @@ var crud = require('../lib/crud'),
 
 
 
-var timeout = 20 * 1000;
+var timeout = 120 * 1000;
 
 describe.skip('Contact CRUD Test', function () {
     this.timeout(20 * 1000);
