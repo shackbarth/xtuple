@@ -99,15 +99,33 @@ select xt.install_js('XT','Session','xtuple', $$
     var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
               '  typcategory as "category", ' +
-              '  n.nspname as "schema" ' +
+              '  n.nspname as "schema", attnum ' +
               'from pg_class c' +
               '  join pg_namespace n on n.oid = c.relnamespace' +
               '  join pg_attribute a on a.attrelid = c.oid ' +
               '  join pg_type t on a.atttypid = t.oid ' +
+              ' join xt.orm on lower(orm_namespace) = n.nspname and xt.decamelize(orm_type) = c.relname and not orm_ext ' +
               'where n.nspname = $1 ' +
               'and relkind = \'v\' ' +
-              'order by c.relname, attnum',
-      recs = plv8.execute(sql, [schema]),
+              'and orm_context = \'xtuple\' ' +
+              'union all ' + 
+              'select c.relname as "type", ' +
+              '  attname as "column", ' +
+              '  typcategory as "category", ' +
+              '  n.nspname as "schema", attnum ' +
+              'from pg_class c' +
+              '  join pg_namespace n on n.oid = c.relnamespace' +
+              '  join pg_attribute a on a.attrelid = c.oid ' +
+              '  join pg_type t on a.atttypid = t.oid ' +
+              '  join xt.orm on lower(orm_namespace) = n.nspname and xt.decamelize(orm_type) = c.relname and not orm_ext ' +
+              '  join xt.ext on ext_name = orm_context ' +
+              '  join xt.usrext on ext_id = usrext_ext_id ' +
+              'where n.nspname = $1 ' +
+              ' and relkind = \'v\' ' +
+              ' and orm_context != \'xtuple\' ' +
+              ' and usrext_usr_username = $2 ' +
+              'order by type, attnum',
+      recs = plv8.execute(sql, [schema, XT.username]),
       type,
       prev = '',
       name,
@@ -118,10 +136,10 @@ select xt.install_js('XT','Session','xtuple', $$
       props,
       options,
       filterToOne = function (value) {
-        return value.toOne;
+        return  value.toOne && propertyIsValid(orm, value.name);
       },
       filterToMany = function (value) {
-        return value.toMany;
+        return value.toMany && propertyIsValid(orm, value.name);
       },
       addToOne = function (value, schema) {
         var relations = result[type]['relations'],
@@ -198,6 +216,15 @@ select xt.install_js('XT','Session','xtuple', $$
         if (orm.privileges) {
           result[type]['privileges'] = orm.privileges;
         }
+      },
+      propertyIsValid = function(orm, name) {
+        if (!XT.Orm.getProperty(orm, name)) { return false; }
+        if (orm.privilges && orm.privileges.attribute &&
+            orm.privileges.attribute[name] &&
+            orm.privileges.attribute[name].view) {
+          return XT.Data.checkPrivilige(orm.privileges.attribute[name].view);
+        }
+        return true;
       };
 
     /* Loop through each field and add to the object */
@@ -206,6 +233,7 @@ select xt.install_js('XT','Session','xtuple', $$
       name = recs[i].column;
       schema = recs[i].schema;
       if (type !== prev) {
+        orm = XT.Orm.fetch(schema.toUpperCase(), type);
         result[type] = {};
         result[type].columns = [];
         result[type].requiredAttributes = [];
@@ -214,18 +242,20 @@ select xt.install_js('XT','Session','xtuple', $$
         if (DEBUG) {
           XT.debug('Fetching schema ' + schema.toUpperCase() + '.' + type);
         }
-        orm = XT.Orm.fetch(schema.toUpperCase(), type);
         result[type]['idAttribute'] = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm);
         result[type]['lockable'] = orm.lockable || false;
         result[type]['relations'] = [];
         processProperties(orm, schema);
         processPrivileges(orm);
       }
-      column = {
-        name: name,
-        category: recs[i].category
+      /* Only add column if it's valid */
+      if (propertyIsValid(orm, name)) {
+        column = {
+          name: name,
+          category: recs[i].category
+        }
+        result[type]['columns'].push(column);
       }
-      result[type]['columns'].push(column);
       prev = type;
     }
 
