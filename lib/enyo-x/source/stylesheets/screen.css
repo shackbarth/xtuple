@@ -516,13 +516,15 @@ body {
 }
 /* CommentBox */
 .xv-comment-box {
-  max-width: 320px;
   /* Resets the margin/padding value for blockquote tag in comments */
 
 }
+.xv-comment-box .onxy-groupbox-header {
+  max-width: 320px;
+}
 .xv-comment-box .xv-comment-box-repeater {
   background: #ffffff;
-  max-width: 320px;
+  width: 320px;
 }
 .xv-comment-box .xv-comment-box-label {
   padding: 5px;
@@ -551,7 +553,8 @@ body {
   Styles relating to the groupbox
 */
 .xv-groupbox {
-  width: 320px;
+  /*min-width: 320px;*/
+
   padding: 8px 0 8px 8px;
   margin-right: 5px;
   /* Not sure about this */
@@ -715,7 +718,6 @@ body {
   border-radius: 4px;
 }
 .xv-groupbox-header {
-  width: 320px;
   padding: 5px 10px;
   color: #ffffff;
   font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
