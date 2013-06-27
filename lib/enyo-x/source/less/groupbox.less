@@ -3,7 +3,7 @@
 */
 
 .xv-groupbox {
-  min-width: 320px;
+  width: 320px;
   padding: 8px 0 8px 8px;
   margin-right: 5px;
 
@@ -18,16 +18,24 @@
     margin: 0;
   }
 
-  .in-panel > *:first-child {
-    border-top-color: @silver;
-    border-top: none;
-    border-width: 1px;
-    .border-radius(0);
+  .in-panel {
+    > *:first-child {
+      border-top-color: @silver;
+      border-top: none;
+      border-width: 1px;
+      .border-radius(0);
+    }
+
+    > *:last-child {
+      .border-radius(0);
+      border-bottom: none;
+    }
   }
 
-  .in-panel > *:last-child {
-    .border-radius(0);
-    border-bottom: none;
+  > .in-panel {
+    .editor {
+      border-right: none;
+    }
   }
 
   &.panel {
@@ -40,6 +48,12 @@
 
   .onyx-input-decorator {
     border: 0;
+  }
+
+  .onyx-picker-decorator {
+    .onyx-button {
+      width: 150px;
+    }
   }
 
   .xv-moneywidget {
@@ -73,7 +87,10 @@
   /* Not sure about this */
   .xv-relationwidget, .xv-datewidget {
     .onyx-input-decorator {
-      width: 140px;
+      width: 170px;
+    }
+    input {
+      width: 120px;
     }
   }
 
@@ -105,12 +122,6 @@
     margin: 0;
   }
 
-  > .in-panel {
-    .editor {
-      border-right: none;
-    }
-  }
-
   > *:first-child {
     border-top-color: @silver;
     border-width: 1px;
@@ -127,6 +138,7 @@
 }
 
 .xv-groupbox-header {
+  width: 320px;
   padding: 5px 10px;
   color: @white;
   font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;

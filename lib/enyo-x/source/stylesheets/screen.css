@@ -516,6 +516,7 @@ body {
 }
 /* CommentBox */
 .xv-comment-box {
+  max-width: 320px;
   /* Resets the margin/padding value for blockquote tag in comments */
 
 }
@@ -550,7 +551,7 @@ body {
   Styles relating to the groupbox
 */
 .xv-groupbox {
-  min-width: 320px;
+  width: 320px;
   padding: 8px 0 8px 8px;
   margin-right: 5px;
   /* Not sure about this */
@@ -579,6 +580,9 @@ body {
   border-radius: 0;
   border-bottom: none;
 }
+.xv-groupbox > .in-panel .editor {
+  border-right: none;
+}
 .xv-groupbox.panel {
   min-width: 330px;
 }
@@ -587,6 +591,9 @@ body {
 }
 .xv-groupbox .onyx-input-decorator {
   border: 0;
+}
+.xv-groupbox .onyx-picker-decorator .onyx-button {
+  width: 150px;
 }
 .xv-groupbox .xv-moneywidget {
   background-color: #ffffff;
@@ -614,7 +621,11 @@ body {
 }
 .xv-groupbox .xv-relationwidget .onyx-input-decorator,
 .xv-groupbox .xv-datewidget .onyx-input-decorator {
-  width: 140px;
+  width: 170px;
+}
+.xv-groupbox .xv-relationwidget input,
+.xv-groupbox .xv-datewidget input {
+  width: 120px;
 }
 .xv-groupbox > .onyx-input-decorator {
   border-color: #aaaaaa;
@@ -668,9 +679,6 @@ body {
   border-radius: 0;
   margin: 0;
 }
-.xv-groupbox > .in-panel .editor {
-  border-right: none;
-}
 .xv-groupbox > *:first-child {
   border-top-color: #aaaaaa;
   border-width: 1px;
@@ -707,6 +715,7 @@ body {
   border-radius: 4px;
 }
 .xv-groupbox-header {
+  width: 320px;
   padding: 5px 10px;
   color: #ffffff;
   font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
