@@ -1,7 +1,7 @@
 select xt.create_view('xt.cohistinfo', $$
 
 SELECT *,
-cohist_qtyshipped * cohist_unitprice AS cohist_totalprice
+round(cohist_qtyshipped * cohist_unitprice, 2) AS cohist_extprice
 FROM cohist;
 
 $$, false);
