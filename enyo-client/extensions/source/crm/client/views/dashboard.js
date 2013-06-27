@@ -5,7 +5,6 @@ trailing:true, white:true*/
 
 (function () {
 
-  // TODO query filter on collection
   enyo.kind({
     name: "XV.OpenIncidentBarChart",
     kind: "XV.BarChart",
