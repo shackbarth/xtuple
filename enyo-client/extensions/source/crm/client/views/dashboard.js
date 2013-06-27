@@ -11,8 +11,6 @@ trailing:true, white:true*/
     kind: "XV.BarChart",
     collection: "XM.IncidentListItemCollection",
     chartTitle: "_openIncidents".loc(),
-    //drillDownAttr: "orderNumber",
-    //drillDownRecordType: "XM.SalesOrderRelation",
     filterOptions: [
       { name: "all" },
       { name: "highPriority" }
