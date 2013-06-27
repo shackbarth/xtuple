@@ -996,8 +996,6 @@
     "table": "xt.coiteminfo",
     "idSequenceName": "coitem_coitem_id_seq",
     "comment": "Sales Order Line Item Map",
-<<<<<<< HEAD
-=======
     "privileges": {
       "all": {
         "create": "MaintainSalesOrders",
@@ -1023,7 +1021,6 @@
         }
       }
     },
->>>>>>> XTUPLE/master
     "properties": [
       {
         "name": "id",
@@ -1532,12 +1529,9 @@
         "name": "salesRep",
         "toOne": {
           "type": "SalesRep",
-<<<<<<< HEAD
           "column": "cohead_salesrep_id",
-	  "isNested": true
+	  			"isNested": true
          }
-=======
->>>>>>> XTUPLE/master
       },
       {
         "name": "shiptoName",
