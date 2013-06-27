@@ -54,9 +54,7 @@ trailing:true, white:true*/
 
   enyo.kind({
     name: "XV.CrmDashboard",
-    published: {
-      label: "_dashboard".loc(),
-    },
+    kind: "XV.Dashboard",
     components: [
       {kind: "XV.IncidentBarChart" }
     ]
