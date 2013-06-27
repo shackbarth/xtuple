@@ -11,14 +11,14 @@ trailing:true, white:true*/
     collection: "XM.SalesHistoryCollection",
     chartTitle: "_salesHistory".loc(),
     filterOptions: [
-      {content: "_today".loc(), name: "today"},
-      {content: "_thisWeek".loc(), name: "thisWeek"},
-      {content: "_thisMonth".loc(), name: "thisMonth"},
-      {content: "_thisYear".loc(), name: "thisYear"}
+      {name: "today" },
+      {name: "thisWeek" },
+      {name: "thisMonth" },
+      {name: "thisYear" }
     ],
     groupByOptions: [
-      {content: "_customer".loc(), name: "customer" },
-      {content: "_salesRep".loc(), name: "salesRep" }
+      {name: "customer" },
+      {name: "salesRep" }
     ]
   });
 
