@@ -2,7 +2,6 @@
   "version": "1.3.9",
   "todo": "worry about dropping the views BEFORE lib/orm",
   "databaseScripts": [
-    "delete_system_orms.sql",
     "drop_deprecated.sql",
     "select_xt_js_init.sql",
     "xt/trigger_functions/comment_did_change.sql",

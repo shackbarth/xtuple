@@ -76,6 +76,7 @@ var _ = require('underscore'),
           callback(null, {
             extensions: paths,
             database: database,
+            wipeViews: options.wipeViews,
             queryDirect: options.queryDirect
           });
         });
@@ -113,7 +114,11 @@ var _ = require('underscore'),
       databases = config.datasource.databases;
     }
 
-    if (options.initialize &&
+    if (options.wipeViews && options.extension) {
+      // Drop-all-views is only supported for a whole-db install.
+      callback("View dropping is only supported while installing the whole database.");
+
+    } else if (options.initialize &&
         options.backup &&
         options.database &&
         !options.extension) {
@@ -127,6 +132,7 @@ var _ = require('underscore'),
         options.backup :
         path.join(process.cwd(), options.backup);
       buildSpecs.initialize = true;
+      buildSpecs.wipeViews = options.wipeViews;
       buildSpecs.queryDirect = options.queryDirect;
       // TODO: as above, the extensions could be found dynamically
       buildSpecs.extensions = [
@@ -153,6 +159,7 @@ var _ = require('underscore'),
           path.join(process.cwd(), options.extension);
         return {
           database: database,
+          wipeViews: options.wipeViews,
           queryDirect: options.queryDirect,
           extensions: [extension]
         };

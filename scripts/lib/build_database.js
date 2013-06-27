@@ -152,6 +152,8 @@ var _ = require('underscore'),
         //winston.info("Installing extension", databaseName, extension);
         // deal with directory structure quirks
         var isLibOrm = extension.indexOf("lib/orm") >= 0,
+          isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
+            extension.indexOf("extension") < 0,
           dbSourceRoot = isLibOrm ?
             path.join(extension, "source") :
             path.join(extension, "database/source"),
@@ -239,7 +241,23 @@ var _ = require('underscore'),
             var extensionSql = _.reduce(scriptSql, function (memo, script) {
               return memo + script;
             }, "");
-            extensionCallback(null, extensionSql);
+
+            if (isApplicationCore && spec.wipeViews) {
+              // If we want to pre-emptively wipe out the views, the best place to do it
+              // is at the start of the core application code
+              fs.readFile(path.join(__dirname, "../../enyo-client/database/source/delete_system_orms.sql"),
+                  function (err, wipeSql) {
+                if (err) {
+                  extensionCallback(err);
+                  return;
+                }
+                extensionSql = wipeSql + extensionSql;
+                extensionCallback(null, extensionSql);
+              });
+            } else {
+              extensionCallback(null, extensionSql);
+            }
+
           });
           //
           // End script installation code
@@ -350,7 +368,7 @@ var _ = require('underscore'),
         if (err) {
           callback(err);
         }
-        if (res.rowCount === 0) {
+        if (spec.wipeViews || res.rowCount === 0) {
           // xt.orm doesn't exist, because this is probably a brand-new DB.
           // No problem! That just means that there are no pre-existing ORMs.
           spec.orms = [];

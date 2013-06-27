@@ -20,6 +20,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     refresh,
     runOrmInstaller,
     select,
+    raiseNotice = function (string) {
+      return "do $$ plv8.elog(NOTICE, '%@'); $$ language plv8;".f(string);
+    },
     submit,
     /*
       The clearing sql call: we get into trouble when there are orms "registered"
@@ -103,8 +106,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     }
 
-    //console.log("installing %@%@.%@".f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
-
+    ormSql += raiseNotice("installing %@%@.%@").f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type);
     ormSql += "select xt.install_orm('%@');".f(X.json(cleanse(orm)));
 
     var c = extensionList.length;

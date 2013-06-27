@@ -21,6 +21,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-i, --initialize', 'Initialize database. Must be used with the -b flag.')
     .option('-b, --backup [/path/to/backup/file]', 'Location of database backup file. Must be used with the -i flag.')
     .option('-q, --querydirect', 'Query the database directly, without delegating to psql.')
+    .option('-w, --wipeviews', 'Drop the views and the orm registrations pre-emptively.')
     .parse(process.argv);
 
   build({
@@ -28,6 +29,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     extension: program.extension,
     initialize: program.initialize,
     queryDirect: program.querydirect,
+    wipeViews: program.wipeviews,
     backup: program.backup
   }, function (err, res) {
     console.log(err ? "Error!" : "Success!", err, res);
