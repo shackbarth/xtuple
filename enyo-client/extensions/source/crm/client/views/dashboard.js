@@ -7,7 +7,7 @@ trailing:true, white:true*/
 
   // TODO query filter on collection
   enyo.kind({
-    name: "XV.IncidentBarChart",
+    name: "XV.OpenIncidentBarChart",
     kind: "XV.BarChart",
     collection: "XM.IncidentListItemCollection",
     chartTitle: "_openIncidents".loc(),
@@ -18,10 +18,19 @@ trailing:true, white:true*/
       { name: "highPriority" }
     ],
     groupByOptions: [
-      { name: "category" },
       { name: "assignedTo" },
-      { name: "priority" }
+      { name: "category" },
+      { name: "priority" },
+      { name: "project" }
     ],
+    // suppress closed incidents
+    query: {
+      parameters: [{
+        attribute: "status",
+        operator: "!=",
+        value: "L"
+      }],
+    },
     filterData: function (rawData) {
       var that = this;
 
@@ -40,7 +49,7 @@ trailing:true, white:true*/
     name: "XV.CrmDashboard",
     kind: "XV.Dashboard",
     components: [
-      {kind: "XV.IncidentBarChart" }
+      {kind: "XV.OpenIncidentBarChart" }
     ]
   });
 
