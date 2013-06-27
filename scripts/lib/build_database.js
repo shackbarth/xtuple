@@ -19,11 +19,11 @@ var _ = require('underscore'),
   //
   // There are a few ways we could actually send our query to the database
   //
-  var sendToDatabase = function (query, creds, callback) {
+  var sendToDatabaseAlt = function (query, creds, callback) {
     dataSource.query(query, JSON.parse(JSON.stringify(creds)), callback);
   };
 
-  var sendToDatabaseAlt = function (query, creds, callback) {
+  var sendToDatabase = function (query, creds, callback) {
     var filename = path.join(__dirname, "temp_query.sql");
     fs.writeFile(filename, query, function (err) {
       if (err) {
@@ -39,10 +39,6 @@ var _ = require('underscore'),
         if (err) {
           winston.error("Cannot install file ", filename);
           callback(err);
-          return;
-        } else if (stderr) {
-          winston.error("Cannot install file ", filename, ": ", stderr);
-          callback(stderr);
           return;
         }
         fs.unlink(filename, function (err) {
@@ -315,6 +311,9 @@ var _ = require('underscore'),
           return memo + script;
         }, "");
 
+        // Without this, when we delegate to exec psql the err var will not be set even
+        // on the case of error.
+        allSql = "\\set ON_ERROR_STOP TRUE;" + allSql;
 
         sendToDatabase(allSql, JSON.parse(JSON.stringify(creds)), function (err, res) {
           creds.database = undefined; // safest to strip out the db name once we're done with it
