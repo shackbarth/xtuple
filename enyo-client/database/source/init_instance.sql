@@ -115,6 +115,7 @@ select xt.js_init();
 
 -- xt views
 
+\i xt/views/cohistinfo.sql;
 \i xt/views/doc.sql;
 \i xt/views/cntctinfo.sql;
 \i xt/views/coheadinfo.sql;
