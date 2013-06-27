@@ -8,37 +8,17 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.SalesHistoryBarChart",
     kind: "XV.BarChart",
-    published: {
-      collection: "XM.SalesHistoryCollection"
-    },
-    components: [
-      {content: "_salesHistory".loc(), style: "color: white; margin-left: 100px; " },
-      {name: "chart", components: [
-        {name: "svg", tag: "svg"} // this is the DOM element that d3 will take over
-      ]},
-      {kind: "enyo.FittableColumns", components: [
-        {content: "_timeFrame".loc() + ": ", classes: "xv-picker-label",
-          style: "color: white"},
-        {kind: "onyx.PickerDecorator", onSelect: "timeFrameSelected",
-            classes: "xv-input-decorator", components: [
-          {content: "_timeFrame".loc()},
-          {kind: "onyx.Picker", components: [
-            {content: "_today".loc(), name: "today"},
-            {content: "_thisWeek".loc(), name: "thisWeek"},
-            {content: "_thisMonth".loc(), name: "thisMonth"},
-            {content: "_thisYear".loc(), name: "thisYear"}
-          ]}
-        ]},
-        {content: "_groupBy".loc() + ": ", classes: "xv-picker-label",
-          style: "color: white"},
-        {kind: "onyx.PickerDecorator", onSelect: "groupBySelected", components: [
-          {content: "_chooseOne".loc()},
-          {kind: "onyx.Picker", components: [
-            {content: "_customer".loc(), name: "customer" },
-            {content: "_salesRep".loc(), name: "salesRep" }
-          ]}
-        ]}
-      ]}
+    collection: "XM.SalesHistoryCollection",
+    chartTitle: "_salesHistory".loc(),
+    filterOptions: [
+      {content: "_today".loc(), name: "today"},
+      {content: "_thisWeek".loc(), name: "thisWeek"},
+      {content: "_thisMonth".loc(), name: "thisMonth"},
+      {content: "_thisYear".loc(), name: "thisYear"}
+    ],
+    groupByOptions: [
+      {content: "_customer".loc(), name: "customer" },
+      {content: "_salesRep".loc(), name: "salesRep" }
     ]
   });
 
