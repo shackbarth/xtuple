@@ -240,7 +240,7 @@
     "isSystem": true
   },
   {
-    "context": "crm",
+    "context": "xtuple",
     "nameSpace": "XM",
     "type": "ToDoAccount",
     "table": "xt.doc",

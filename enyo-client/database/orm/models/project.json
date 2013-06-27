@@ -220,7 +220,7 @@
     "isSystem": true
   },
   {
-    "context": "crm",
+    "context": "xtuple",
     "nameSpace": "XM",
     "type": "ProjectAccount",
     "table": "xt.doc",
