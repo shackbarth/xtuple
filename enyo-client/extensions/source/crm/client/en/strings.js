@@ -19,8 +19,10 @@ var lang = XT.stringsFor("en_US", {
 
   "_crm": "CRM",
   "_crmDescription": "Corporate Relationship Management",
+  "_highPriority": "High Priority",
   "_incidentDefaultPublic": "Comment Default Public",
   "_incidentStatusColors": "Incident Status Colors",
+  "_openIncidents": "Open Incidents",
   "_maintainEmailProfiles": "Maintain Email Profiles",
   "_viewEmailProfiles": "View Email Profiles"
 

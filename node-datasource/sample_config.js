@@ -24,6 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       certFile: "./lib/private/server.crt",
       caFile: null,
       saltFile: "./lib/private/salt.txt",
+      biKeyFile: "",
       xTupleDbDir: "/usr/local/xtuple/databases",
       psqlPath: "psql",
       nodePath: "node",
@@ -36,7 +37,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       smtpPassword: "_smtp_password_",
 
       // URL of BI server
-      biUrl: "http://xtuple.com", // "http://your.bi.solution/report.html?args=sample",
+      // Leave this empty unless reports are installed
+      biUrl: "", // "http://yourserver.com:8080/pentaho/content/reporting/reportviewer/report.html?",
+      biServerUrl: "", // "http://yourserver.com:8080/pentaho/"
 
       // these properties are dynamically registered with the
       // node discovery service

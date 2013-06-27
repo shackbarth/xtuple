@@ -27,6 +27,7 @@ select xt.js_init();
 \i public/tables/comment.sql
 \i public/tables/cntct.sql
 \i public/tables/coitem.sql
+\i public/tables/cohist.sql
 \i public/tables/crmacct.sql
 \i public/tables/custinfo.sql
 \i public/tables/docass.sql
@@ -115,6 +116,7 @@ select xt.js_init();
 
 -- xt views
 
+\i xt/views/cohistinfo.sql;
 \i xt/views/doc.sql;
 \i xt/views/cntctinfo.sql;
 \i xt/views/coheadinfo.sql;

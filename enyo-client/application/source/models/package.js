@@ -20,6 +20,7 @@ enyo.depends(
   "quote.js",
   "sales_order.js",
   "sales_rep.js",
+  "sales_history.js",
   "sale_type.js",
   "site.js",
   "tax.js",

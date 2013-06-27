@@ -162,44 +162,71 @@ select xt.install_js('XT','Orm','xtuple', $$
     @param {Object} options
     @param {Boolean} [options.refresh=false] Indicate whether to force a refresh of the orm cached result.
     @param {Boolean} [options.silentError=false] Silence errors and return false instead.
+    @param {Boolean} [options.superUser=false] Ignore privilege checking.
     @returns {Object}
   */
   XT.Orm.fetch = function(nameSpace, type, options) {
+    options = options || {};
     var db = XT.currentDb(),
       ext,
       i,
-      options = options || {},
       orm,
       ret,
       recordType = nameSpace + '.'+ type,
       res,
-      sql;
+      sql,
+      isSuper = options.superUser || false;
 
     if (!this._maps) {
       this._maps = {};
     }
     if (!this._maps[db]) {
-      this._maps[db] = [];
+      this._maps[db] = {};
+    }
+    if (!this._maps[db][XT.username]) {
+      this._maps[db][XT.username] = [];
     }
 
-    res = options.refresh ? null : this._maps[db].findProperty('recordType', recordType);
+    res = options.refresh ? null : this._maps[db][XT.username].findProperty('recordType', recordType);
 
     if (res) {
       ret = res.map;
     } else {
-     /* get base */
-      sql = 'select orm_json as json ' +
-                'from xt.orm ' +
-                'where orm_namespace=$1' +
-                ' and orm_type=$2' +
-                ' and not orm_ext ' +
-                ' and orm_active ';
+     /* get base, but only for types the user has been granted access */
+      sql = "select orm_json as json " +
+            "from xt.orm " +
+            "where orm_namespace=$1" +
+            " and orm_type=$2" +
+            " and not orm_ext " +
+            " and orm_active " +
+            " and orm_context='xtuple'  " +
+            "union all " +
+            "select orm_json as json " +
+            "from xt.orm " +
+            " join xt.ext on ext_name=orm_context " +
+            " join xt.usrext on ext_id=usrext_ext_id " +
+            "where orm_namespace=$1 " +
+            " and orm_type=$2 " +
+            " and not orm_ext " +
+            " and orm_active " +
+            " and orm_context != 'xtuple'" +
+            " and usrext_usr_username=$3;";
+      superSql = "select orm_json as json " +
+                 "from xt.orm " +
+                 "where orm_namespace=$1" +
+                 " and orm_type=$2" +
+                 " and not orm_ext " +
+                 " and orm_active; ";
 
       if (DEBUG) {
         XT.debug('fetch sql = ', sql);
         XT.debug('fetch values = ', [nameSpace, type]);
       }
-      res = plv8.execute(sql, [nameSpace, type]);
+      if (isSuper) {
+        res = plv8.execute(superSql, [nameSpace, type]);
+      } else {
+        res = plv8.execute(sql, [nameSpace, type, XT.username]);
+      }
 
       if(!res.length) {
         if (options.silentError) {
@@ -214,6 +241,16 @@ select xt.install_js('XT','Orm','xtuple', $$
       if (!ret.extensions) ret.extensions = [];
       sql = 'select orm_json as json ' +
             'from xt.orm ' +
+            '  join xt.ext on ext_name = orm_context ' +
+            '  left join xt.usrext on ext_id = usrext_ext_id ' +
+            'where orm_namespace=$1' +
+            ' and orm_type=$2' +
+            ' and orm_ext ' +
+            ' and orm_active ' +
+            ' and (usrext_usr_username=$3) ' +
+            'order by orm_seq';
+      superSql = 'select orm_json as json ' +
+            'from xt.orm ' +
             'where orm_namespace=$1' +
             ' and orm_type=$2' +
             ' and orm_ext ' +
@@ -224,7 +261,12 @@ select xt.install_js('XT','Orm','xtuple', $$
         XT.debug('fetch sql = ', sql);
         XT.debug('fetch values = ', [nameSpace, type]);
       }
-      res = plv8.execute(sql, [nameSpace, type]);
+
+      if (isSuper) {
+        res = plv8.execute(superSql, [nameSpace, type]);
+      } else {
+        res = plv8.execute(sql, [nameSpace, type, XT.username]);
+      }
 
       for (i = 0; i < res.length; i++) {
         orm = JSON.parse(res[i].json);
@@ -241,7 +283,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       }
 
       /* cache the result so we don't requery needlessly */
-      this._maps[db].push({ "recordType": recordType, "map": ret});
+      this._maps[db][XT.username].push({ "recordType": recordType, "map": ret});
     }
     return ret;
   };
@@ -378,7 +420,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       /* process properties */
       for (i = 0; i < props.length; i++) {
         prop = props[i];
-        nkey = prop.toOne ? Orm.naturalKey(Orm.fetch(orm.nameSpace, prop.toOne.type)) : false,
+        nkey = prop.toOne ? Orm.naturalKey(Orm.fetch(orm.nameSpace, prop.toOne.type, {superUser: true})) : false,
         alias = prop.name;
         if(DEBUG) XT.debug('processing property ->', prop.name);
         if(prop.name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
@@ -492,7 +534,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           toMany = prop.toMany;
           table = base.nameSpace + '.' + toMany.type.decamelize();
           type = toMany.type.decamelize();
-          iorm = Orm.fetch(base.nameSpace, toMany.type);
+          iorm = Orm.fetch(base.nameSpace, toMany.type, {superUser: true});
           pkey = Orm.primaryKey(iorm);
           nkey = Orm.naturalKey(iorm);
           column = toMany.isNested ? type : nkey;
