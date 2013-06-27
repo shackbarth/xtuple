@@ -17,6 +17,46 @@ var _ = require('underscore'),
   "use strict";
 
   //
+  // There are a few ways we could actually send our query to the database
+  //
+  var sendToDatabase = function (query, creds, callback) {
+    dataSource.query(query, JSON.parse(JSON.stringify(creds)), callback);
+  };
+
+  var sendToDatabaseAlt = function (query, creds, callback) {
+    var filename = path.join(__dirname, "temp_query.sql");
+    fs.writeFile(filename, query, function (err) {
+      if (err) {
+        winston.error("Cannot write query to file");
+        callback(err);
+        return;
+      }
+      var psqlCommand = 'psql -d ' + creds.database +
+        ' -U ' + creds.username +
+        ' -f ' + filename +
+        ' --single-transaction';
+      exec(psqlCommand, {maxBuffer: 2000 * 1024 /* 10x default */}, function (err, stdout, stderr) {
+        if (err) {
+          winston.error("Cannot install file ", filename);
+          callback(err);
+          return;
+        } else if (stderr) {
+          winston.error("Cannot install file ", filename, ": ", stderr);
+          callback(stderr);
+          return;
+        }
+        fs.unlink(filename, function (err) {
+          if (err) {
+            winston.error("Cannot delete written query file");
+            callback(err);
+          }
+          callback();
+        });
+      });
+    });
+  };
+
+  //
   // Step 0 (optional, triggered by flags), wipe out the database
   // and load it from scratch using pg_restore something.backup
   //
@@ -275,7 +315,8 @@ var _ = require('underscore'),
           return memo + script;
         }, "");
 
-        dataSource.query(allSql, JSON.parse(JSON.stringify(creds)), function (err, res) {
+
+        sendToDatabase(allSql, JSON.parse(JSON.stringify(creds)), function (err, res) {
           creds.database = undefined; // safest to strip out the db name once we're done with it
           databaseCallback(err, res);
         });
