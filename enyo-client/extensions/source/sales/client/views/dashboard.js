@@ -13,14 +13,14 @@ trailing:true, white:true*/
     drillDownAttr: "orderNumber",
     drillDownRecordType: "XM.SalesOrderRelation",
     filterOptions: [
-      {name: "today" },
-      {name: "thisWeek" },
-      {name: "thisMonth" },
-      {name: "thisYear" }
+      { name: "today" },
+      { name: "thisWeek" },
+      { name: "thisMonth" },
+      { name: "thisYear" }
     ],
     groupByOptions: [
-      {name: "customer" },
-      {name: "salesRep" }
+      { name: "customer" },
+      { name: "salesRep" }
     ],
     totalField: "totalPrice",
     filterData: function (rawData) {
