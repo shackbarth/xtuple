@@ -10,6 +10,8 @@ trailing:true, white:true*/
     kind: "XV.BarChart",
     collection: "XM.SalesHistoryCollection",
     chartTitle: "_salesHistory".loc(),
+    drillDownAttr: "orderNumber",
+    drillDownRecordType: "XM.SalesOrderRelation",
     filterOptions: [
       {name: "today" },
       {name: "thisWeek" },
@@ -19,7 +21,35 @@ trailing:true, white:true*/
     groupByOptions: [
       {name: "customer" },
       {name: "salesRep" }
-    ]
+    ],
+    totalField: "totalPrice",
+    filterData: function (rawData) {
+      var that = this;
+
+      return _.filter(rawData, function (datum) {
+        var shipDate = datum.shipDate.getTime(),
+          now = new Date().getTime(),
+          timespan = 0,
+          oneDay = 1000 * 60 * 60 * 24;
+
+        // XXX use YTD etc.?
+        switch (that.getFilterField()) {
+        case "today":
+          timespan = oneDay;
+          break;
+        case "thisWeek":
+          timespan = 7 * oneDay;
+          break;
+        case "thisMonth":
+          timespan = 30 * oneDay;
+          break;
+        case "thisYear":
+          timespan = 365 * oneDay;
+          break;
+        }
+        return shipDate + timespan >= now;
+      });
+    }
   });
 
   enyo.kind({
