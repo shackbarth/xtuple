@@ -17,6 +17,8 @@ var lang = XT.stringsFor("en_US", {
   // Models
   // ********
 
+  "_analysis": "Analysis",
+  "_all": "All",
   "_annualy": "Annually",
   "_asset": "Asset",
   "_assigned": "Assigned",
@@ -168,7 +170,6 @@ var lang = XT.stringsFor("en_US", {
   "_customerPrice": "Customer Price",
   "_customers": "Customers",
   "_customerProspect": "Customer / Prospect",
-  "_dashboard": "Dashboard",
   "_data": "Data",
   "_dataState": "Data State",
   "_date": "Date",
@@ -541,9 +542,11 @@ var lang = XT.stringsFor("en_US", {
   "_type": "Type",
   "_unit": "Unit",
   "_unitPrice": "Net Unit Price",
+  "_unitCosts": "Unit Costs",
   "_units": "Units",
   "_unitType": "Unit Type",
   "_unknown": "(unknown)",
+  "_unitCost": "Unit Cost",
   "_uom": "UOM",
   "_updated": "Updated",
   "_updatedBy": "Updated By",
@@ -668,6 +671,7 @@ var lang = XT.stringsFor("en_US", {
   "_viewAllOpportunities": "View All Opportunities",
   "_viewAllProjects": "View All Projects",
   "_viewAllToDoItems": "View All To-Do Items",
+  "_viewCosts": "View Costs",
   "_viewClassCodes": "View Class Codes",
   "_viewCurrencyRates": "View Currency Rates",
   "_viewCustomerGroups": "View Customer Groups",
