@@ -199,24 +199,34 @@ select xt.install_js('XT','Orm','xtuple', $$
             " and orm_type=$2" +
             " and not orm_ext " +
             " and orm_active " +
-            " and orm_context='xtuple' " +
+            " and orm_context='xtuple'  " +
             "union all " +
             "select orm_json as json " +
             "from xt.orm " +
             " join xt.ext on ext_name=orm_context " +
-            " left join xt.usrext on ext_id=usrext_ext_id " +
+            " join xt.usrext on ext_id=usrext_ext_id " +
             "where orm_namespace=$1 " +
             " and orm_type=$2 " +
             " and not orm_ext " +
             " and orm_active " +
             " and orm_context != 'xtuple'" +
-            " and (usrext_usr_username=$3 or $4);";
+            " and usrext_usr_username=$3;";
+      superSql = "select orm_json as json " +
+                 "from xt.orm " +
+                 "where orm_namespace=$1" +
+                 " and orm_type=$2" +
+                 " and not orm_ext " +
+                 " and orm_active; ";
 
       if (DEBUG) {
         XT.debug('fetch sql = ', sql);
         XT.debug('fetch values = ', [nameSpace, type]);
       }
-      res = plv8.execute(sql, [nameSpace, type, XT.username, isSuper]);
+      if (isSuper) {
+        res = plv8.execute(superSql, [nameSpace, type]);
+      } else {
+        res = plv8.execute(sql, [nameSpace, type, XT.username]);
+      }
 
       if(!res.length) {
         if (options.silentError) {
@@ -237,14 +247,26 @@ select xt.install_js('XT','Orm','xtuple', $$
             ' and orm_type=$2' +
             ' and orm_ext ' +
             ' and orm_active ' +
-            ' and (usrext_usr_username=$3 or $4) ' +
+            ' and (usrext_usr_username=$3) ' +
+            'order by orm_seq';
+      superSql = 'select orm_json as json ' +
+            'from xt.orm ' +
+            'where orm_namespace=$1' +
+            ' and orm_type=$2' +
+            ' and orm_ext ' +
+            ' and orm_active ' +
             'order by orm_seq';
 
       if (DEBUG) {
         XT.debug('fetch sql = ', sql);
         XT.debug('fetch values = ', [nameSpace, type]);
       }
-      res = plv8.execute(sql, [nameSpace, type, XT.username, isSuper]);
+
+      if (isSuper) {
+        res = plv8.execute(superSql, [nameSpace, type]);
+      } else {
+        res = plv8.execute(sql, [nameSpace, type, XT.username]);
+      }
 
       for (i = 0; i < res.length; i++) {
         orm = JSON.parse(res[i].json);
