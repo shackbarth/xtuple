@@ -326,7 +326,8 @@ trailing:true, white:true*/
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
         {kind: "XV.NumberWidget", attr: "lineNumber"},
-        {kind: "XV.ItemSiteWidget", attr: "itemSite",
+        {kind: "XV.ItemSiteWidget", attr:
+          {item: "item", site: "site"},
           name: "itemSiteWidget",
           query: {parameters: [
           {attribute: "item.isSold", value: true},

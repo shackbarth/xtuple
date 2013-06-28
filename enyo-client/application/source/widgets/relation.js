@@ -332,7 +332,8 @@ regexp:true, undef:true, trailing:true, white:true */
       value: null,
       placeholder: null,
       disabled: false,
-      query: null
+      query: null,
+      isEditableKey: "item"
     },
     handlers: {
       "onValueChange": "controlValueChanged"
@@ -378,14 +379,15 @@ regexp:true, undef:true, trailing:true, white:true */
         sitePicker.itemSites.reset();
         sitePicker.buildList();
         if (value && value.get) {
-          this.setValue(value); // In case an id was transformed to a model
-          // Select the matching site
+          item = value.get("item");
           site = value.get("site");
-          this.setSite(site);
+          this.setValue({
+            item: item,
+            site: site
+          }); // In case an id was transformed to a model
           // Don't allow another selection until we've fetch an updated list
           sitePicker.setDisabled(true);
           // Go fetch alternate sites for this item
-          item = value.get("item");
           options.query = { parameters: [{attribute: "item", value: item}]};
           options.success = function () {
             sitePicker.buildList();
@@ -395,7 +397,7 @@ regexp:true, undef:true, trailing:true, white:true */
         }
         return true;
       } else if (inEvent.originator.name === 'sitePicker') {
-        this.setSite(value);
+        this.setValue({site: value});
         this.$.privateItemSiteWidget.setDisabled(isNull);
         if (isNull) {
           this.$.privateItemSiteWidget.clear();
@@ -462,38 +464,36 @@ regexp:true, undef:true, trailing:true, white:true */
     },
 
     itemChanged: function () {
-      var item = this.get("item"),
-        site = this.get("site"),
+      var item = this.getItem(),
+        site = this.getSite(),
         options = {},
-        query = {},
         that = this;
       if (item && site) {
-        query = {
-          query: {
-            parameters: [
-              {
-                attribute: "item",
-                value: item
-              },
-              {
-                attribute: "site",
-                value: site
-              }
-            ]
-          }
+        options.query = {
+          parameters: [
+            {
+              attribute: "item",
+              value: item
+            },
+            {
+              attribute: "site",
+              value: site
+            }
+          ]
         };
         options.success = function () {
           if (that._itemSites.length) {
             that.$.privateItemSiteWidget.setValue(that._itemSites.at(0));
           }
         };
-        this._itemSites.fetch(query, options);
-      } else {
+        this._itemSites.fetch(options);
+      } else if (!item) {
         this.$.privateItemSiteWidget.clear();
       }
     },
     siteChanged: function () {
-      var site = this.getSite();
+      var site = this.getSite(),
+        item = this.getItem();
       this.$.sitePicker.setValue(site, {silent: true});
       if (site) {
         this.$.privateItemSiteWidget.addParameter({
@@ -503,6 +503,7 @@ regexp:true, undef:true, trailing:true, white:true */
       } else {
         this.$.privateItemSiteWidget.removeParameter("site");
       }
+      this.itemChanged();
     },
     validate: function (value) {
       return value;
