@@ -29,6 +29,7 @@
     "passport-oauth2-jwt-bearer": "0.1.x",
     "pg":"0.14.x",
     "request":"2.14.x",
+    "rimraf":"2.2.x",
     "socket.io":"0.9.x",
     "underscore":"1.4.x",
     "winston":"0.7.x"
