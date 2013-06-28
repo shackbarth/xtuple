@@ -1,6 +1,83 @@
-1.3.8 (2013/06/27)
+1.3.9 (2013/06/27)
 ==================
-
+- Fixed
+  issue #[18845](http://www.xtuple.org/xtincident/view/bugs/18845)
+  _Status is missing from To Do_
+- Fixed
+  issue #[19271](http://www.xtuple.org/xtincident/view/bugs/19271)
+  _Datasource does not enforce privilege extensions on fetch_
+- Fixed
+  issue #[19272](http://www.xtuple.org/xtincident/view/bugs/19272)
+  _Half-drilldown into deprivileged workspaces_
+- Fixed
+  issue #[19797](http://www.xtuple.org/xtincident/view/bugs/19797)
+  _Quote shows margin when user does not have show margin privilege_
+- Fixed
+  issue #[20074](http://www.xtuple.org/xtincident/view/bugs/20074)
+  _*Irrelevant behavior is observed in Quote line items_
+- Fixed
+  issue #[20204](http://www.xtuple.org/xtincident/view/bugs/20204)
+  _Mobile client unaware of public/private comments_
+- Fixed
+  issue #[20272](http://www.xtuple.org/xtincident/view/bugs/20272)
+  _Relation widget keeps appending parameters_
+- Fixed
+  issue #[20332](http://www.xtuple.org/xtincident/view/bugs/20332)
+  _Error Adding a Sales Order to an Opportunity_
+- Fixed
+  issue #[20333](http://www.xtuple.org/xtincident/view/bugs/20333)
+  _Advanced Seach of Sales Rep on Sales Order does not work correctly_
+- Fixed
+  issue #[20356](http://www.xtuple.org/xtincident/view/bugs/20356)
+  _Calendar still active after date is picked_
+- Implemented
+  issue #[20373](http://www.xtuple.org/xtincident/view/bugs/20373)
+  _Bring back DisableExport_
+- Implemented
+  issue #[20375](http://www.xtuple.org/xtincident/view/bugs/20375)
+  _Bring back priv_group_
+- Fixed
+  issue #[20440](http://www.xtuple.org/xtincident/view/bugs/20440)
+  _Incident Documents double when using Apply_
+- Fixed
+  issue #[20456](http://www.xtuple.org/xtincident/view/bugs/20456)
+  _Clicking on Locked Icon gives Console error_
+- Fixed
+  issue #[20476](http://www.xtuple.org/xtincident/view/bugs/20476)
+  _Tax Assignemnt gives Java Console Error_
+- Fixed
+  issue #[20501](http://www.xtuple.org/xtincident/view/bugs/20501)
+  _ToDo and Prospect form report routes_
+- Fixed
+  issue #[20506](http://www.xtuple.org/xtincident/view/bugs/20506)
+  _Add multi-tenant support for Pentaho reports_
+- Fixed
+  issue #[20540](http://www.xtuple.org/xtincident/view/bugs/20540)
+  _User Account Roles do not use groups_
+- Fixed
+  issue #[20549](http://www.xtuple.org/xtincident/view/bugs/20549)
+  _You should be able to assign extensions in user accunt roles as well as user accounts_
+- Fixed
+  issue #[20555](http://www.xtuple.org/xtincident/view/bugs/20555)
+  _new authentication does not work with pgbouncer_
+- Fixed
+  issue #[20563](http://www.xtuple.org/xtincident/view/bugs/20563)
+  _Action - Change Password requires 6 digits_
+- Fixed
+  issue #[20583](http://www.xtuple.org/xtincident/view/bugs/20583)
+  _Authentication not remembered_
+- Fixed
+  issue #[20601](http://www.xtuple.org/xtincident/view/bugs/20601)
+  _There is no tracking of version numbers in extensions_
+- Fixed
+  issue #[20609](http://www.xtuple.org/xtincident/view/bugs/20609)
+  _Incident plus broken_
+- Fixed
+  issue #[20637](http://www.xtuple.org/xtincident/view/bugs/20637)
+  _The attach button should not be available on Customer for Sales Orders and Quotes_
+- Fixed
+  issue #[20638](http://www.xtuple.org/xtincident/view/bugs/20638)
+  _Attach option on relation boxes should not display objects already attached to other objects_
 
 1.3.8 (2013/06/19)
 ==================
