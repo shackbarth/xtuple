@@ -16,29 +16,17 @@ trailing:true white:true*/
     // APPLICATION
     //
 
-/*    panels = [
+    panels = [
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
-      {name: "saleTypeList", kind: "XV.SaleTypeList"},
-      {name: "shipZoneList", kind: "XV.ShipZoneList"},
-      {name: "salesRepList", kind: "XV.SalesRepList"},
-      {name: "taxAssignmentList", kind: "XV.TaxAssignmentList"},
-      {name: "taxAuthorityList", kind: "XV.TaxAuthorityList"},
-      {name: "taxCodeList", kind: "XV.TaxCodeList"},
-      {name: "taxClassList", kind: "XV.TaxClassList"},
-      {name: "taxRateList", kind: "XV.TaxRateList"},
-      {name: "taxTypeList", kind: "XV.TaxTypeList"},
-      {name: "taxZoneList", kind: "XV.TaxZoneList"},
-      {name: "termsList", kind: "XV.TermsList"},
-      {name: "customerGroupList", kind: "XV.CustomerGroupList"},
-      {name: "freightClassList", kind: "XV.FreightClassList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
       {name: "plannerCodeList", kind: "XV.PlannerCodeList"},
-      {name: "customerTypeList", kind: "XV.CustomerTypeList"}
+      {name: "customerTypeList", kind: "XV.CustomerTypeList"},
+      {name: "expenseCategoryList", kind: "XV.ExpenseCategoryList"}
     ];
     XT.app.$.postbooks.appendPanels("setup", panels);
-*/
+
 
     configurationJson = {
       model: "XM.inventory",

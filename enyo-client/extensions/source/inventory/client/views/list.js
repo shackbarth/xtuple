@@ -15,67 +15,66 @@ trailing:true white:true*/
     label: "_backlog".loc(),
     collection: "XM.SalesOrderLineListItemCollection",
     query: {orderBy: [
-	{attribute: 'salesOrder.number'},
-	{attribute: 'lineNumber', formatter: "lineNumber"}
+			{attribute: 'salesOrder.number'},
+			{attribute: 'lineNumber', formatter: "lineNumber"}
       ]},
     components: [
       {kind: "XV.ListItem", components: [
-	{kind: "FittableRows", components: [
-	  {kind: "FittableColumns", name: "header", classes: "header", headerAttr: "salesOrder.number", components: [
-	    {kind: "XV.ListColumn", classes: "short", components: [		  
-	      {kind: "XV.ListAttr", attr: "salesOrder.number", isKey: true, classes: "header"}
-	    ]}, 
-	    {kind: "XV.ListColumn", classes: "first", components: [	
-	      {kind: "XV.ListAttr", attr: "salesOrder.customer.name", classes: "header"}  
-	    ]},
-	    {kind: "XV.ListColumn", classes: "second", components: [	
-	      {kind: "XV.ListAttr", attr: "salesOrder.shiptoName", classes: "header"}  
-	    ]},
-	    {kind: "XV.ListColumn", classes: "second", components: [	
-	      {kind: "XV.ListAttr", attr: "salesOrder.scheduleDate", classes: "header"}
-	    ]},  
-	    {kind: "XV.ListColumn", classes: "second", components: [
-	      {kind: "XV.ListAttr", attr: "salesOrder.salesRep.name", classes: "header"}
-	    ]},  	    
-	    {kind: "XV.ListColumn", classes: "second", components: [	
-	      {kind: "XV.ListAttr", attr: "salesOrder.total", formatter: "formatPrice", classes: "header"}
-	    ]},
-	    {kind: "XV.ListColumn", classes: "last", components: [
-	      {classes: "header"}
-	    ]}  
-	  ]},
-	  {kind: "FittableColumns", components: [
-	    {kind: "XV.ListColumn", classes: "short", components: [
-	      {kind: "XV.ListAttr", attr: "lineNumber",
-		formatter: "formatLineNumber"}
-	    ]},
-	    {kind: "XV.ListColumn", classes: "second", components: [
-	      {kind: "XV.ListAttr", attr: "itemSite.item.number", classes: "bold"},
-	      {kind: "XV.ListAttr", attr: "itemSite.item.description1"}
-	    ]},
-	    {kind: "XV.ListColumn", classes: "second", components: [
-	      {kind: "XV.ListAttr", attr: "salesOrder.orderDate"},
-	      {kind: "XV.ListAttr", attr: "scheduleDate"}
-	    ]},
-	    {kind: "XV.ListColumn", classes: "second", components: [
+				{kind: "FittableRows", components: [
+	  			{kind: "FittableColumns", name: "header", classes: "header", headerAttr: "salesOrder.number", components: [
+	    			{kind: "XV.ListColumn", classes: "short", components: [		  
+	      			{kind: "XV.ListAttr", attr: "salesOrder.number", isKey: true, classes: "header"}
+	    			]}, 
+	    			{kind: "XV.ListColumn", classes: "first", components: [	
+	      			{kind: "XV.ListAttr", attr: "salesOrder.customer.name", classes: "header"}  
+	    			]},
+	    			{kind: "XV.ListColumn", classes: "second", components: [	
+	      			{kind: "XV.ListAttr", attr: "salesOrder.shiptoName", classes: "header"}  
+	    			]},
+	    			{kind: "XV.ListColumn", classes: "second", components: [	
+	      			{kind: "XV.ListAttr", attr: "salesOrder.scheduleDate", classes: "header"}
+	    			]},  
+	    			{kind: "XV.ListColumn", classes: "second", components: [
+	      			{kind: "XV.ListAttr", attr: "salesOrder.salesRep.name", classes: "header"}
+	    			]},  	    
+	    			{kind: "XV.ListColumn", classes: "second", components: [	
+	      			{kind: "XV.ListAttr", attr: "salesOrder.total", formatter: "formatPrice", classes: "header"}
+	    			]},
+	    			{kind: "XV.ListColumn", classes: "last", components: [
+	      			{classes: "header"}
+	    			]}  
+	  			]},
+	  			{kind: "FittableColumns", components: [
+	    			{kind: "XV.ListColumn", classes: "short", components: [
+	      			{kind: "XV.ListAttr", attr: "lineNumber", formatter: "formatLineNumber"}
+	    			]},
+	    			{kind: "XV.ListColumn", classes: "second", components: [
+	      			{kind: "XV.ListAttr", attr: "itemSite.item.number", classes: "bold"},
+	      			{kind: "XV.ListAttr", attr: "itemSite.item.description1"}
+	    			]},
+	    			{kind: "XV.ListColumn", classes: "second", components: [
+	      			{kind: "XV.ListAttr", attr: "salesOrder.orderDate"},
+	      			{kind: "XV.ListAttr", attr: "scheduleDate"}
+	   			 	]},
+	    			{kind: "XV.ListColumn", classes: "second", components: [
       	      {kind: "XV.ListAttr", attr: "quantity"},
-	      {kind: "XV.ListAttr", attr: "quantityUnit.name"}
-	    ]},
-	    {kind: "XV.ListColumn", classes: "second", components: [
-	      {kind: "XV.ListAttr", attr: "quantityShipped"}
-	    ]},
-	    {kind: "XV.ListColumn", classes: "second", components: [
-	      {kind: "XV.ListAttr", attr: "shipBalance", classes: "bold"}
-	    ]},
-	    {kind: "XV.ListColumn", classes: "second", components: [
-	      {kind: "XV.ListAttr", attr: "price", formatter: "formatPrice"},
-	      {kind: "XV.ListAttr", attr: "priceUnit.name"}
-	    ]},
-	    {kind: "XV.ListColumn", components: [
-	      {kind: "XV.ListAttr", attr: "extendedPrice", formatter: "formatPrice", classes: "right"}
-	    ]}
-	  ]}  
-	]}
+	      			{kind: "XV.ListAttr", attr: "quantityUnit.name"}
+	    			]},
+	    			{kind: "XV.ListColumn", classes: "second", components: [
+	      			{kind: "XV.ListAttr", attr: "quantityShipped"}
+	    			]},
+	    			{kind: "XV.ListColumn", classes: "second", components: [
+	      			{kind: "XV.ListAttr", attr: "shipBalance", classes: "bold"}
+	    			]},
+	    			{kind: "XV.ListColumn", classes: "second", components: [
+	      			{kind: "XV.ListAttr", attr: "price", formatter: "formatPrice"},
+	      			{kind: "XV.ListAttr", attr: "priceUnit.name"}
+	    			]},
+	    			{kind: "XV.ListColumn", components: [
+	      			{kind: "XV.ListAttr", attr: "extendedPrice", formatter: "formatPrice", classes: "right"}
+	    			]}
+	  			]}  
+				]}
       ]}
     ],
     formatPrice: function (value, view, model) {

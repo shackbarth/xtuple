@@ -40,7 +40,9 @@ select xt.install_js('XM','Inventory','xtuple', $$
             + " where (orderseq_name=$1)",
         ret = {},
         qry;
-        
+
+		ret.NextShipmentNumber = plv8.execute("select fetchshipmentnumber();")[0].value;  
+      
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
     return JSON.stringify(ret);
@@ -69,10 +71,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
     }
     
 		/* update numbers */
-    /*if(settings['NextShipmentNumber']) {
+    if(settings['NextShipmentNumber']) {
       plv8.execute('select setNextShipmentNumber($1)', [settings['NextShipmentNumber'] - 0]);
     }
-		options.remove('NextShipmentNumber'); */
+		options.remove('NextShipmentNumber'); 
 
   /* update remaining options as metrics
        first make sure we pass an object that only has valid metric options for this type */

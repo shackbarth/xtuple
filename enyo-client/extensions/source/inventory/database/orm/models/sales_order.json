@@ -36,7 +36,7 @@
         "toOne": {
           "type": "SalesOrderListItem",
           "column": "coitem_cohead_id",
-	  "isNested": true
+	  			"isNested": true
         }
       },
       {
@@ -51,7 +51,7 @@
         "toOne": {
           "type": "ItemSiteRelation",
           "column": "coitem_itemsite_id",
-	  "isNested": true
+	  			"isNested": true
         }
       },
       {
@@ -174,24 +174,10 @@
         }
       },
       {
-        "name": "priceMode",
-        "attr": {
-          "type": "String",
-          "column": "coitem_pricemode"
-        }
-      },
-      {
         "name": "extendedPrice",
         "attr": {
           "type": "Number",
           "column": "ext_price"
-        }
-      },
-      {
-        "name": "profit",
-        "attr": {
-          "type": "String",
-          "column": "profit"
         }
       },
       {
@@ -241,24 +227,6 @@
         "attr": {
           "type": "String",
           "column": "coitem_memo"
-        }
-      },
-      {
-        "name": "comments",
-        "toMany": {
-          "type": "SalesOrderLineComment",
-          "column": "coitem_id",
-          "inverse": "salesOrderLine",
-          "isNested": true
-        }
-      },
-      {
-        "name": "characteristics",
-        "toMany": {
-          "type": "SalesOrderLineCharacteristic",
-          "column": "coitem_id",
-          "inverse": "salesOrderLine",
-          "isNested": true
         }
       }
     ],

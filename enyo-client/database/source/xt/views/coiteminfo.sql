@@ -7,8 +7,7 @@ select coitem.*,
   xt.co_line_list_price_discount(coitem) as list_price_discount,
   xt.co_line_customer_discount(coitem) as cust_discount,
   xt.co_line_extended_price(coitem) as ext_price, 
-  xt.co_line_profit(coitem) as profit,
-  xt.co_line_ship_balance(coitem) as ship_balance
+  xt.co_line_ship_balance(coitem) as ship_balance,
   xt.co_line_margin(coitem) as margin,
   xt.co_line_tax(coitem) as tax
 from coitem

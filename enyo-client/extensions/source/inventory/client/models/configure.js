@@ -16,9 +16,9 @@ white:true*/
 
       recordType: 'XM.Inventory',
 
-      privileges: 'ConfigureIM'
+      privileges: 'ConfigureIM',
 
-      /*validate: function (attributes, options) {
+      validate: function (attributes, options) {
         // XXX not sure if number widgets can fail in this way.
         var params = { type: "_number".loc() };
         if (attributes.NextShipmentNumber !== undefined &&
@@ -26,7 +26,7 @@ white:true*/
           params.attr = "_shipment".loc() + " " + "_number".loc();
           return XT.Error.clone('xt1003', { params: params });
         } 
-      } */
+      } 
     });
 
     XM.inventory = new XM.Inventory();
