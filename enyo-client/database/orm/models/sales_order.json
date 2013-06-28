@@ -1267,7 +1267,8 @@
         }
       }
     ],
-    "isSystem": true
+    "isSystem": true,
+    "isNestedOnly": true
   },
   {
     "context": "xtuple",
@@ -1528,8 +1529,9 @@
         "name": "salesRep",
         "toOne": {
           "type": "SalesRep",
-          "column": "cohead_salesrep_id"
-        }
+          "column": "cohead_salesrep_id",
+	  			"isNested": true
+         }
       },
       {
         "name": "shiptoName",
