@@ -63,7 +63,7 @@ insert into quitem (
   new.quitem_taxtype_id,
   coalesce(new.quitem_dropship, false),
   new.quitem_itemsrc_id,
-  new.quitem_pricemode,
+  coalesce(new.quitem_pricemode, 'D'),
   new.quitem_order_warehous_id,
   new.quitem_item_id
 from itemsite
