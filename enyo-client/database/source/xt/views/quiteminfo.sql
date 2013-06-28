@@ -44,7 +44,7 @@ insert into quitem (
   new.quitem_id,
   new.quitem_quhead_id,
   new.quitem_linenumber,
-  new.quitem_itemsite_id,
+  itemsite_id,
   new.quitem_scheddate,
   new.quitem_qtyord,
   coalesce(new.quitem_unitcost, itemcost(itemsite_id)),
@@ -63,13 +63,12 @@ insert into quitem (
   new.quitem_taxtype_id,
   coalesce(new.quitem_dropship, false),
   new.quitem_itemsrc_id,
-  new.quitem_pricemode,
-  warehous_id,
-  item_id
+  coalesce(new.quitem_pricemode, 'D'),
+  new.quitem_order_warehous_id,
+  new.quitem_item_id
 from itemsite
-  join item on item_id=itemsite_item_id
-  join whsinfo on warehous_id=itemsite_warehous_id
-where itemsite_id=new.quitem_itemsite_id;
+where itemsite_item_id=new.quitem_item_id
+  and itemsite_warehous_id=new.quitem_order_warehous_id;
 
 create or replace rule "_UPDATE" as on update to xt.quiteminfo do instead
 

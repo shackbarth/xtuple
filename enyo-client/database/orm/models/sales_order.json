@@ -1055,11 +1055,20 @@
         }
       },
       {
-        "name": "itemSite",
+        "name": "item",
         "toOne": {
           "isNested": true,
-          "type": "ItemSiteRelation",
-          "column": "coitem_itemsite_id",
+          "type": "ItemRelation",
+          "column": "coitem_item_id",
+          "required": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "coitem_warehous_id",
           "required": true
         }
       },

@@ -29,7 +29,8 @@
     "pg":"0.14.x",
     "request":"2.14.x",
     "socket.io":"0.9.x",
-    "underscore":"1.4.x"
+    "underscore":"1.4.x",
+    "rimraf":"2.2.x"
   },
   "devDependencies": {
     "chai":"1.5.x",
