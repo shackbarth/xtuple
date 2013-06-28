@@ -39,8 +39,8 @@ white:true*/
     var forEachCalcFunction = function (lineItem) {
       var extPrice = lineItem.get('extendedPrice') || 0,
         quantity = lineItem.get("quantity") || 0,
-        standardCost = lineItem.getValue("itemSite.item.standardCost") || 0,
-        item = lineItem.getValue("itemSite.item"),
+        unitCost = lineItem.get("unitCost") || 0,
+        item = lineItem.get("item"),
         prodWeight = item ? item.get("productWeight") : 0,
         packWeight = item ? item.get("packageWeight") : 0,
         itemWeight = item ? add(prodWeight, packWeight, XT.WEIGHT_SCALE) : 0,
@@ -49,7 +49,7 @@ white:true*/
 
       weights.push(grossWeight);
       subtotals.push(extPrice);
-      costs.push(quantity * standardCost);
+      costs.push(quantity * unitCost);
       taxDetails = taxDetails.concat(lineItem.taxDetail);
     };
 
@@ -104,7 +104,7 @@ white:true*/
   */
   var _calculatePrice = function (model) {
     var K = model.getClass(),
-      item = model.getValue("itemSite.item"),
+      item = model.get("item"),
       characteristics = model.get("characteristics"),
       isConfigured = item ? item.get("isConfigured") : false,
       counter = isConfigured ? characteristics.length + 1 : 1,
@@ -411,7 +411,6 @@ white:true*/
         counter,
         existing,
         line,
-        itemSite,
         quantity,
         quantityUnitRatio,
         weight,
@@ -425,13 +424,12 @@ white:true*/
         // Collect data needed for freight
         for (i = 0; i < lineItems.length; i++) {
           line = lineItems[i];
-          itemSite = line.get("itemSite");
-          if (!itemSite) {
+          if (!item || !site) {
             siteClass = [];
             break;
           }
-          site = itemSite.get("site");
-          item = itemSite.get("item");
+          site = line.get("site");
+          item = line.get("item");
           freightClass = item.getValue("freightClass");
           weight = item.get("productWeight");
           quantity = line.get("quantity");
@@ -908,7 +906,7 @@ white:true*/
           // Loop through each item and see if we can sell on
           // requested date
           _.each(lineItems.models, function (line) {
-            var item = line.getValue("itemSite.item");
+            var item = line.getValue("item");
             id = line.id;
             customer.canPurchase(item, scheduleDate, custOptions);
           });
@@ -1075,7 +1073,8 @@ white:true*/
       var settings = XT.session.settings;
       this.on('change:discount', this.discountDidChange);
       this.on('change:markup', this.calculateMarkupPrice);
-      this.on("change:itemSite", this.itemSiteDidChange);
+      this.on("change:item", this.itemDidChange);
+      this.on("change:site", this.siteDidChange);
       this.on("change:price", this.priceDidChange);
       this.on('change:quantity', this.quantityDidChange);
       this.on('change:unitCost', this.calculateMarkupPrice);
@@ -1200,7 +1199,7 @@ white:true*/
           var K = that.getClass(),
             unitCost = that.get("unitCost"),
             long30 = XT.session.settings.get("Long30Markups"),
-            listPrice = that.getValue("itemSite.item.listPrice"),
+            listPrice = that.getValue("item.listPrice"),
             attrs = {
               discount: undefined,
               listPriceDiscount: undefined,
@@ -1274,7 +1273,7 @@ white:true*/
         canUpdate = this.canUpdate(),
         discount = this.get("discount"),
         ignoreDiscount = settings.get("IgnoreCustDisc"),
-        item = this.getValue("itemSite.item"),
+        item = this.get("item"),
         editing = !this.isNew(),
         priceUnit = this.get("priceUnit"),
         priceUnitRatio = this.get("priceUnitRatio"),
@@ -1396,7 +1395,7 @@ white:true*/
     */
     discountDidChange: function () {
       var K = this.getClass(),
-        isConfigured = this.getValue("itemSite.item.isConfigured"),
+        isConfigured = this.getValue("item.isConfigured"),
         characteristics = this.get("characteristics").models,
         discount = this.get("discount"),
         customerPrice = this.get("customerPrice"),
@@ -1457,7 +1456,7 @@ white:true*/
     fetchSellingUnits: function (resetDefaults) {
       resetDefaults = _.isBoolean(resetDefaults) ? resetDefaults : true;
       var that = this,
-        item = this.getValue("itemSite.item"),
+        item = this.get("item"),
         options = {};
 
       if (resetDefaults) {
@@ -1489,14 +1488,14 @@ white:true*/
       return this;
     },
 
-    itemSiteDidChange: function () {
+    itemDidChange: function () {
       var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
-        itemSite = this.get("itemSite"),
-        item = itemSite.get("item"),
+        site = this.get("site"),
+        item = this.get("item"),
         characteristics = this.get("characteristics"),
-        isWholesaleCost = XT.session.settings("WholesalePriceCosting"),
-        unitCost = isWholesaleCost ? item.get("wholesalePrice") : itemSite.get("cost"),
+        isWholesaleCost = XT.session.settings.get("WholesalePriceCosting"),
+        unitCost = isWholesaleCost ? item.get("wholesalePrice") : item.get("standardCost"),
         that = this,
         options = {},
         itemCharAttrs,
@@ -1565,9 +1564,17 @@ white:true*/
         characteristics.add(quoteLineChar);
       });
 
-      this.calculatePrice();
-      this.calculateMargin();
-      this.recalculateParent();
+      if (site) { this.siteDidChange(); }
+    },
+
+    siteDidChange: function () {
+      var item = this.get("item"),
+        site = this.get("site");
+      if (item && site) {
+        this.calculatePrice();
+        this.calculateMargin();
+        this.recalculateParent();
+      }
     },
 
     parentDidChange: function () {
@@ -1613,7 +1620,7 @@ white:true*/
     priceUnitDidChange: function () {
       var quantityUnit = this.get("quantityUnit"),
         priceUnit = this.get("priceUnit"),
-        item = this.getValue("itemSite.item"),
+        item = this.getValue("item"),
         inventoryUnit = item ? item.getValue("inventoryUnit") : false,
         that = this,
         options = {};
@@ -1646,7 +1653,7 @@ white:true*/
     quantityUnitDidChange: function () {
       var quantity = this.get("quantity"),
         quantityUnit = this.get("quantityUnit"),
-        item = this.getValue("itemSite.item"),
+        item = this.getValue("item"),
         inventoryUnit = item ? item.get("inventoryUnit") : false,
         that = this,
         options = {},
@@ -1701,7 +1708,7 @@ white:true*/
     save: function () {
       var quantity = this.get("quantity"),
         quantityUnitRatio = this.get("quantityUnitRatio"),
-        itemIsNotFractional = !this.get("itemSite.item.isFractional"),
+        itemIsNotFractional = !this.get("item.isFractional"),
         scale = this._unitIsFractional ? 2 : 0;
 
       // Check inventory quantity against conversion fractional setting
@@ -1721,7 +1728,7 @@ white:true*/
     },
 
     scheduleDateDidChange: function () {
-      var item = this.getValue("itemSite.item"),
+      var item = this.getValue("item"),
         parent = this.getParent(),
         customer = parent.get("customer"),
         shipto = parent.get("shipto"),
@@ -1752,7 +1759,8 @@ white:true*/
     statusDidChange: function () {
       var status = this.getStatus();
       if (status === XM.Model.READY_CLEAN) {
-        this.setReadOnly("itemSite");
+        this.setReadOnly("item");
+        this.setReadOnly("site");
       }
     },
 

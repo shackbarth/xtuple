@@ -257,7 +257,7 @@ trailing:true, white:true*/
           this.changeItemSiteParameter("scheduleDate", "effectiveDate");
         }
         site = parent ? parent.get("site") : false;
-        if (site) { this.$.itemSiteWidget.setSelectedSite(site); }
+        if (site) { this.$.itemSiteWidget.setSite(site); }
       }
       this.changeItemSiteParameter("customer");
       this.changeItemSiteParameter("shipto");
@@ -308,7 +308,7 @@ trailing:true, white:true*/
         }
         site = parent ? parent.get("site") : false;
         if (site) {
-          this.$.itemSiteWidget.setSelectedSite(site);
+          this.$.itemSiteWidget.setSite(site);
         }
       }
       this.changeItemSiteParameter("customer");
@@ -326,7 +326,8 @@ trailing:true, white:true*/
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
         {kind: "XV.NumberWidget", attr: "lineNumber"},
-        {kind: "XV.ItemSiteWidget", attr: "itemSite",
+        {kind: "XV.ItemSiteWidget", attr:
+          {item: "item", site: "site"},
           name: "itemSiteWidget",
           query: {parameters: [
           {attribute: "item.isSold", value: true},
