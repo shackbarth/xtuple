@@ -15,6 +15,17 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
+      },
+      "attribute": {
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "orderDate": {
+          "edit": "OverrideSODate"
+        },
+        "packDate": {
+          "edit": "AlterPackDate"
+        }
       }
     },
     "properties": [
@@ -734,7 +745,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -990,6 +1002,23 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
+      },
+      "attribute": {
+        "firm": {
+          "edit": "FirmSalesOrder"
+        },
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "unitCost": {
+          "view": "ViewCosts"
+        },
+        "taxType": {
+          "edit": "OverrideTax"
+        },
+        "markup": {
+          "view": "ViewCosts"
+        }
       }
     },
     "properties": [
@@ -1028,9 +1057,17 @@
       {
         "name": "itemSite",
         "toOne": {
+          "isNested": true,
           "type": "ItemSiteRelation",
           "column": "coitem_itemsite_id",
           "required": true
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "coitem_unitcost"
         }
       },
       {
@@ -1147,14 +1184,6 @@
         }
       },
       {
-        "name": "priceMode",
-        "attr": {
-          "type": "String",
-          "column": "coitem_pricemode",
-          "required": true
-        }
-      },
-      {
         "name": "extendedPrice",
         "attr": {
           "type": "ExtendedPrice",
@@ -1162,10 +1191,10 @@
         }
       },
       {
-        "name": "profit",
+        "name": "margin",
         "attr": {
           "type": "String",
-          "column": "profit"
+          "column": "margin"
         }
       },
       {
@@ -1385,7 +1414,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -1496,10 +1526,10 @@
       },
       {
         "name": "salesRep",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "SalesRep",
           "column": "cohead_salesrep_id"
-         }
+        }
       },
       {
         "name": "shiptoName",

@@ -117,13 +117,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     queryForData(req.session, requestDetails, function (result) {
       if (result.isError) {
         res.send(result);
+        return;
       } else {
         var resultAsCsv,
           filename = "export",
           type;
         try {
           // try to name the file after the record type
-          type = requestDetails.query.type;
+          type = requestDetails.type;
           // suffix() would be better than substring() but doesn't exist here yet
           filename = type.replace("ListItem", "Export");
 

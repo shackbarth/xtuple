@@ -20,12 +20,13 @@ enyo.depends(
   "quote.js",
   "sales_order.js",
   "sales_rep.js",
+  "sales_history.js",
   "sale_type.js",
   "site.js",
-  "static.js",
   "tax.js",
   "terms.js",
   "to_do.js",
   "url.js",
-  "user_account.js"
+  "user_account.js",
+  "static.js"
 );

@@ -38,14 +38,16 @@ insert into public.docass (
   docass_source_type,
   docass_target_id,
   docass_target_type,
-  docass_purpose )
+  docass_purpose,
+  obj_uuid )
 values (
   new.id,
   new.source_id,
   new.source_type,
   new.target_id,
   new.target_type,
-  new.purpose );
+  new.purpose,
+  new.obj_uuid );
   
 -- update rule
 

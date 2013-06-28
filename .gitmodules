@@ -37,3 +37,6 @@
 [submodule "lib/backbone-x/lib/JSON-Patch"]
   path = lib/backbone-x/lib/JSON-Patch
   url = https://github.com/xtuple/JSON-Patch.git
+[submodule "lib/enyo-x/lib/nvd3"]
+	path = lib/enyo-x/lib/nvd3
+	url = https://github.com/novus/nvd3.git

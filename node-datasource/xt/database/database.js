@@ -17,17 +17,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     cleanupCompletedEvent: "cleanupCompleted",
 
     /**
-      Returns postgres connection string
-
-      @param {Object} options optional parameters
-      @param {String} options.password postgres password
-    */
-    conString: function (options) {
-      options.password = options.password ? options.password.pre(":"): "";
-      return "tcp://{user}{password}@{hostname}:{port}/{database}".f(options);
-    },
-
-    /**
       Waits for database pool to drain and finishes cleanup
      */
     cleanup: function () {

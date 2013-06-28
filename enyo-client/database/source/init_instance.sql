@@ -13,17 +13,31 @@ select xt.js_init();
 -- [ END ] initdb
 \i delete_system_orms.sql;
 
+-- xt trigger functions
+\i xt/trigger_functions/comment_did_change.sql
+\i xt/trigger_functions/owner_record_did_change.sql
+\i xt/trigger_functions/taxtype_record_did_change.sql
+\i xt/trigger_functions/usr_did_change.sql
+
 -- [ START ] public
 
 -- public
 \i public/functions/geteffectivextuser.sql
 
 \i public/tables/comment.sql
+\i public/tables/cntct.sql
 \i public/tables/coitem.sql
+\i public/tables/cohist.sql
+\i public/tables/crmacct.sql
+\i public/tables/custinfo.sql
 \i public/tables/docass.sql
 \i public/tables/grppriv.sql
 \i public/tables/incdt.sql
 \i public/tables/itemsite.sql;
+\i public/tables/prj.sql
+\i public/tables/prjtask.sql
+\i public/tables/ophead.sql
+\i public/tables/metric.sql;
 \i public/tables/quitem.sql
 \i public/tables/todoitem.sql
 \i public/tables/usrpriv.sql
@@ -34,6 +48,8 @@ select xt.js_init();
 -- xt functions
 \i xt/functions/add_priv.sql;
 \i xt/functions/average_cost.sql;
+\i xt/functions/change_password.sql;
+\i xt/functions/check_password.sql;
 \i xt/functions/co_line_base_price.sql;
 \i xt/functions/co_line_customer_discount.sql;
 \i xt/functions/co_line_markup.sql;
@@ -42,6 +58,7 @@ select xt.js_init();
 \i xt/functions/co_line_list_price.sql;
 \i xt/functions/co_line_list_price_discount.sql;
 \i xt/functions/co_line_tax.sql;
+\i xt/functions/co_line_margin.sql;
 \i xt/functions/co_freight_weight.sql;
 \i xt/functions/co_schedule_date.sql;
 \i xt/functions/co_subtotal.sql;
@@ -62,6 +79,7 @@ select xt.js_init();
 \i xt/functions/quote_line_list_price.sql;
 \i xt/functions/quote_line_list_price_discount.sql;
 \i xt/functions/quote_line_tax.sql;
+\i xt/functions/quote_line_margin.sql;
 \i xt/functions/quote_freight_weight.sql;
 \i xt/functions/quote_schedule_date.sql;
 \i xt/functions/quote_subtotal.sql;
@@ -72,10 +90,6 @@ select xt.js_init();
 \i xt/functions/register_extension.sql;
 \i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
-
--- xt trigger functions
-\i xt/trigger_functions/comment_did_change.sql
-\i xt/trigger_functions/usr_did_change.sql
 
 -- xt tables
 \i xt/tables/emlprofile.sql
@@ -91,6 +105,7 @@ select xt.js_init();
 \i xt/tables/pkguiform.sql
 
 \i xt/tables/ext.sql
+\i xt/tables/grpext.sql
 \i xt/tables/usrext.sql
 \i xt/tables/sessionstore.sql
 \i xt/tables/oa2client.sql
@@ -103,6 +118,7 @@ select xt.js_init();
 
 -- xt views
 
+\i xt/views/cohistinfo.sql;
 \i xt/views/doc.sql;
 \i xt/views/cntctinfo.sql;
 \i xt/views/coheadinfo.sql;

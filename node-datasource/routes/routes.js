@@ -36,6 +36,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     passport = require('passport'),
     redirector = require('./redirector'),
     report = require('./report'),
+    analysis = require('./analysis'),
     restDiscovery = require('./restDiscovery'),
     restRouter = require('./restRouter');
 
@@ -81,6 +82,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.file = [ensureLogin, file.file];
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];
+  exports.analysis = [ensureLogin, analysis.analysis];
   exports.resetPassword = [ensureLogin, changePassword.resetPassword];
 
 }());

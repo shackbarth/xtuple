@@ -1,7 +1,7 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, XV:true, Backbone:true, _:true, console:true, window:true */
 
 (function () {
   "use strict";
@@ -94,7 +94,7 @@ white:true*/
         var orderBy,
           options = {};
 
-        options.success = _.bind(this.didCompleteCache, this, cache);
+        options.success = _.bind(this.didCompleteCache, this, cache, cacheName);
         if (typeof orderAttribute === "string") {
           orderBy = _.map(orderAttribute.split(" "), function (s) {
             return {attribute: s};
@@ -124,11 +124,13 @@ white:true*/
   XT.cacheCollection("XM.commentTypes", "XM.CommentTypeCollection");
   XT.cacheCollection("XM.countries", "XM.CountryCollection", "name");
   XT.cacheCollection("XM.currencyRates", "XM.CurrencyRateCollection");
+  XT.cacheCollection("XM.departments", "XM.DepartmentCollection", "number");
   XT.cacheCollection("XM.honorifics", "XM.HonorificCollection", "code");
   XT.cacheCollection("XM.languages", "XM.LanguageCollection");
   XT.cacheCollection("XM.locales", "XM.LocaleCollection");
   XT.cacheCollection("XM.priorities", "XM.PriorityCollection");
   XT.cacheCollection("XM.privileges", "XM.PrivilegeCollection");
+  XT.cacheCollection("XM.shifts", "XM.ShiftCollection", "number");
   XT.cacheCollection("XM.sources", "XM.SourceCollection");
   XT.cacheCollection("XM.states", "XM.StateCollection", "abbreviation");
   XT.cacheCollection("XM.taxAuthorities", "XM.TaxAuthorityCollection");
@@ -161,6 +163,7 @@ white:true*/
           XM.baseCurrency = _.find(XM.currencies.models, function (currency) {
             return currency.get("isBase");
           });
+          XV.registerModelCache("XM.Currency", "XM.currencies");
           this.didComplete();
         }, this)
       };

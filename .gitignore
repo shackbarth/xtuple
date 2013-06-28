@@ -7,3 +7,5 @@ node_modules
 npm-debug.log
 scripts/private
 scripts/1
+scripts/build
+scripts/deploy
