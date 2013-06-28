@@ -22,7 +22,6 @@ var buildAll = require('../../../../scripts/lib/build_all'),
 
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
-    creds.databaseName = databaseName;
 
     if (testInit) {
       it('should build without error on a brand-new database', function (done) {
@@ -40,6 +39,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
       it('should have core extensions built', function (done) {
         var sql = "select * from pg_class where relname = 'contact_project';";
 
+        creds.database = databaseName;
         datasource.query(sql, creds, function (err, res) {
           assert.isNull(err);
           assert.equal(res.rowCount, 1);
@@ -50,6 +50,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
       it('should not have non-core extensions built', function (done) {
         var sql = "select * from pg_class where relname = 'oauth2client';";
 
+        creds.database = databaseName;
         datasource.query(sql, creds, function (err, res) {
           assert.isNull(err);
           assert.equal(res.rowCount, 1); // SYS only
@@ -69,6 +70,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     it('should have core extensions built', function (done) {
       var sql = "select * from pg_class where relname = 'contact_project';";
 
+      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
         assert.equal(res.rowCount, 1);
@@ -80,6 +82,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
       it('should not have non-core extensions built', function (done) {
         var sql = "select * from pg_class where relname = 'oauth2client';";
 
+        creds.database = databaseName;
         datasource.query(sql, creds, function (err, res) {
           assert.isNull(err);
           assert.equal(res.rowCount, 1); // SYS only
@@ -101,6 +104,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     it('should have core extensions built', function (done) {
       var sql = "select * from pg_class where relname = 'contact_project';";
 
+      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
         assert.equal(res.rowCount, 1);
@@ -111,6 +115,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     it('should have the new extension built', function (done) {
       var sql = "select * from pg_class where relname = 'oauth2client';";
 
+      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
         assert.equal(res.rowCount, 2); // SYS and XM

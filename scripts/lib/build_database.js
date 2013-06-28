@@ -242,6 +242,13 @@ var _ = require('underscore'),
               return memo + script;
             }, "");
 
+            if (!isLibOrm) {
+              // unless it it hasn't yet been defined (ie. lib/orm),
+              // running xt.js_init() is probably a good idea.
+              extensionSql = "select xt.js_init();" + extensionSql;
+            }
+
+
             if (isApplicationCore && spec.wipeViews) {
               // If we want to pre-emptively wipe out the views, the best place to do it
               // is at the start of the core application code
@@ -340,7 +347,7 @@ var _ = require('underscore'),
 
           // Without this, when we delegate to exec psql the err var will not be set even
           // on the case of error.
-          allSql = "\\set ON_ERROR_STOP TRUE;" + allSql;
+          allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
         }
 
         sendToDatabase(allSql, JSON.parse(JSON.stringify(creds)), function (err, res) {
