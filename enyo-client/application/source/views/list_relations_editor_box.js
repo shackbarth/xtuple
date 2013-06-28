@@ -257,7 +257,7 @@ trailing:true, white:true*/
           this.changeItemSiteParameter("scheduleDate", "effectiveDate");
         }
         site = parent ? parent.get("site") : false;
-        if (site) { this.$.itemSiteWidget.setSelectedSite(site); }
+        if (site) { this.$.itemSiteWidget.setSite(site); }
       }
       this.changeItemSiteParameter("customer");
       this.changeItemSiteParameter("shipto");
@@ -308,7 +308,7 @@ trailing:true, white:true*/
         }
         site = parent ? parent.get("site") : false;
         if (site) {
-          this.$.itemSiteWidget.setSelectedSite(site);
+          this.$.itemSiteWidget.setSite(site);
         }
       }
       this.changeItemSiteParameter("customer");
