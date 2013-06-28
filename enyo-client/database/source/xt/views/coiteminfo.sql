@@ -89,11 +89,11 @@ insert into coitem (
   coalesce(new.coitem_creator, geteffectivextuser()),
   new.coitem_warranty,
   new.coitem_cos_accnt_id,
-  COALESCE(new.coitem_qtyreserved, 0),
+  coalesce(new.coitem_qtyreserved, 0),
   new.coitem_subnumber,
   new.coitem_firm,
   new.coitem_rev_accnt_id,
-  new.coitem_pricemode
+  coalesce(new.coitem_pricemode, 'D')
 from itemsite
 where itemsite_item_id=new.coitem_item_id
   and itemsite_warehous_id=new.coitem_warehous_id;

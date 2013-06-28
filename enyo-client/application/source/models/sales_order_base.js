@@ -1494,7 +1494,7 @@ white:true*/
         site = this.get("site"),
         item = this.get("item"),
         characteristics = this.get("characteristics"),
-        isWholesaleCost = XT.session.settings("WholesalePriceCosting"),
+        isWholesaleCost = XT.session.settings.get("WholesalePriceCosting"),
         unitCost = isWholesaleCost ? item.get("wholesalePrice") : item.get("standardCost"),
         that = this,
         options = {},
