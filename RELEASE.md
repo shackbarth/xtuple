@@ -84,14 +84,16 @@
 
 Features and bugs
 ----------------
-* issue #[20605] Web client does not use metric to determine welcome page URL path
+- Fixed
+  issue #[20605](http://www.xtuple.org/xtincident/view/bugs/20605)
+  _Web client does not use the metric to determine the welcome page URL path_
 
 1.3.7 (2013/06/11)
 ==================
 
 Features and bugs
 ----------------
-* Fix problem where user names that are email addresses could not log in.
+- Fixed problem where user names that are email addresses could not log in.
 
 1.3.6 (2013/06/06)
 ==================
@@ -99,8 +101,9 @@ Features and bugs
 Features and bugs
 ----------------
 * Fix critical user login problem
-* issue #[20505](http://www.xtuple.org/xtincident/view/bugs/20505)
-  Remove print menus and buttons until Pentaho service available on cloud deployment.
+- Fixed 
+  issue #[20505](http://www.xtuple.org/xtincident/view/bugs/20505)
+  _Remove print menus and buttons until Pentaho service available on cloud deployment._
 
 1.3.5 (2013/05/31)
 ===============
