@@ -39,6 +39,7 @@ var _ = require('underscore'),
       //
       getRegisteredExtensions = function (database, callback) {
         var result,
+          credsClone = JSON.parse(JSON.stringify(creds)),
           existsSql = "select relname from pg_class where relname = 'ext'",
           extSql = "SELECT * FROM xt.ext ORDER BY ext_load_order",
           // TODO: we could get these extensions dynamically by looking at the filesystem.
@@ -78,8 +79,8 @@ var _ = require('underscore'),
             });
           };
 
-        creds.database = database;
-        dataSource.query(existsSql, creds, function (err, res) {
+        credsClone.database = database;
+        dataSource.query(existsSql, credsClone, function (err, res) {
           if (err) {
             callback(err);
             return;
@@ -89,20 +90,36 @@ var _ = require('underscore'),
             // No problem! Give them the core extensions.
             adaptExtensions(null, { rows: defaultExtensions });
           } else {
-            dataSource.query(extSql, creds, adaptExtensions);
+            dataSource.query(extSql, credsClone, adaptExtensions);
           }
         });
       },
       buildAll = function (specs, creds, buildAllCallback) {
         buildDatabase(specs, creds, function (databaseErr, databaseRes) {
           var returnMessage;
-          if (databaseErr) {
+          // XXX the reason this only works on one database is that async calls the
+          // callback on the first error, so if there are multiple databases
+          // those other processes are probably still chugging along and go haywire
+          // if you start running them again.
+          if (databaseErr && specs.length === 1 && !specs[0].wipeViews) {
+            console.log("Hit a roadblock! Going to try again right now, wiping out the views.");
+            _.each(specs, function (spec) {
+              spec.wipeViews = true;
+            });
+            buildAll(specs, creds, buildAllCallback);
+            return;
+
+          } else if (databaseErr && specs[0].wipeViews) {
+            buildAllCallback("Build failed.");
+            return;
+
+          } else if (databaseErr) {
             buildAllCallback("Build failed. Try wiping the views next time by running me with the -w flag.");
             return;
           }
           returnMessage = "\n";
           _.each(specs, function (spec) {
-            returnMessage += "database: " + spec.database + '\ndirectories:\n';
+            returnMessage += "Database: " + spec.database + '\nDirectories:\n';
             _.each(spec.extensions, function (ext) {
               returnMessage += '  ' + ext + '\n';
             });
