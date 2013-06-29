@@ -38,56 +38,68 @@ var _ = require('underscore'),
       // tacks onto that list the core directories.
       //
       getRegisteredExtensions = function (database, callback) {
-        creds.database = database;
-
-        var result = dataSource.query("SELECT * FROM xt.ext ORDER BY ext_load_order", creds, function (err, res) {
-          // TODO: better if we didn't plan for an error. use something like:
-          // var existsSql = "select relname from pg_class where relname = 'ext'",
-          if (err) {
-            // xt.ext probably doesn't exist, because this is probably a brand-new DB.
-            // No problem! Give them the core extensions.
-            // TODO: we could get these extensions dynamically by looking at the filesystem.
-            res = {
-              rows: [
-                { ext_location: '/core-extensions', ext_name: 'crm' },
-                { ext_location: '/core-extensions', ext_name: 'sales' },
-                { ext_location: '/core-extensions', ext_name: 'project' }
-              ]
-            };
-          }
-
-          var paths = _.map(res.rows, function (row) {
-            var location = row.ext_location,
-              name = row.ext_name,
-              extPath;
-
-            if (location === '/core-extensions') {
-              extPath = path.join(__dirname, "/../../enyo-client/extensions/source/", name);
-            } else if (location === '/xtuple-extensions') {
-              extPath = path.join(__dirname, "../../../xtuple-extensions/source", name);
-            } else if (location === '/private-extensions') {
-              extPath = path.join(__dirname, "../../../private-extensions/source", name);
+        var result,
+          existsSql = "select relname from pg_class where relname = 'ext'",
+          extSql = "SELECT * FROM xt.ext ORDER BY ext_load_order",
+          // TODO: we could get these extensions dynamically by looking at the filesystem.
+          defaultExtensions = [
+            { ext_location: '/core-extensions', ext_name: 'crm' },
+            { ext_location: '/core-extensions', ext_name: 'sales' },
+            { ext_location: '/core-extensions', ext_name: 'project' }
+          ],
+          adaptExtensions = function (err, res) {
+            if (err) {
+              callback(err);
+              return;
             }
-            return extPath;
-          });
 
-          paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
-          paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
-          callback(null, {
-            extensions: paths,
-            database: database,
-            wipeViews: options.wipeViews,
-            queryDirect: options.queryDirect
-          });
+            var paths = _.map(res.rows, function (row) {
+              var location = row.ext_location,
+                name = row.ext_name,
+                extPath;
+
+              if (location === '/core-extensions') {
+                extPath = path.join(__dirname, "/../../enyo-client/extensions/source/", name);
+              } else if (location === '/xtuple-extensions') {
+                extPath = path.join(__dirname, "../../../xtuple-extensions/source", name);
+              } else if (location === '/private-extensions') {
+                extPath = path.join(__dirname, "../../../private-extensions/source", name);
+              }
+              return extPath;
+            });
+
+            paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
+            paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
+            callback(null, {
+              extensions: paths,
+              database: database,
+              wipeViews: options.wipeViews,
+              queryDirect: options.queryDirect
+            });
+          };
+
+        creds.database = database;
+        dataSource.query(existsSql, creds, function (err, res) {
+          if (err) {
+            callback(err);
+            return;
+          }
+          if (res.rowCount === 0) {
+            // xt.ext doesn't exist, because this is probably a brand-new DB.
+            // No problem! Give them the core extensions.
+            adaptExtensions(null, { rows: defaultExtensions });
+          } else {
+            dataSource.query(extSql, creds, adaptExtensions);
+          }
         });
       },
       buildAll = function (specs, creds, buildAllCallback) {
         buildDatabase(specs, creds, function (databaseErr, databaseRes) {
           if (databaseErr) {
-            buildAllCallback("Database error. Not bothering to build the client");
+            buildAllCallback("Build failed. Try wiping the views next time by running me with the -w flag.");
             return;
           }
-          buildAllCallback(null, true);
+          buildAllCallback(null, "Build succeeded." + JSON.stringify(specs));
           // TODO: build the client
           //buildClient(specs, creds, function (clientErr, clientRes) {
           //  if (clientErr) {
