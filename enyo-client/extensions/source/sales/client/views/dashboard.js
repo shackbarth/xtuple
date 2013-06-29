@@ -5,7 +5,7 @@ trailing:true, white:true*/
 
 (function () {
 
-  enyo.kind({
+  var kindObj = {
     name: "XV.SalesHistoryBarChart",
     kind: "XV.BarChart",
     collection: "XM.SalesHistoryCollection",
@@ -50,13 +50,19 @@ trailing:true, white:true*/
         return shipDate + timespan >= now;
       });
     }
-  });
+  };
+
+  enyo.kind(kindObj);
+
+  kindObj.name = "XV.SalesHistoryTimeSeriesChart";
+  kindObj.kind = "XV.TimeSeriesChart";
+  enyo.kind(kindObj);
 
   enyo.kind({
     name: "XV.SalesDashboard",
     kind: "XV.Dashboard",
     components: [
-      {kind: "XV.SalesHistoryBarChart" }
+      {kind: "XV.SalesHistoryTimeSeriesChart" }
     ]
   });
 
