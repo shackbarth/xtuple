@@ -24,7 +24,7 @@ var _ = require('underscore'),
   };
 
   var sendToDatabasePsql = function (query, creds, callback) {
-    var filename = path.join(__dirname, "temp_query.sql");
+    var filename = path.join(__dirname, "temp_query_" + creds.database + ".sql");
     fs.writeFile(filename, query, function (err) {
       if (err) {
         winston.error("Cannot write query to file");
