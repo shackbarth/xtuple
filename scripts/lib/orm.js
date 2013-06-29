@@ -21,7 +21,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     runOrmInstaller,
     select,
     raiseNotice = function (string) {
-      return "do $$ plv8.elog(NOTICE, '%@'); $$ language plv8;".f(string);
+      return "do $$ plv8.elog(NOTICE, '%@'); $$ language plv8;\n".f(string);
     },
     submit,
     /*
@@ -107,7 +107,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     ormSql += raiseNotice("installing %@%@.%@").f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type);
-    ormSql += "select xt.install_orm('%@');".f(X.json(cleanse(orm)));
+    ormSql += "select xt.install_orm('%@');\n".f(X.json(cleanse(orm)));
 
     var c = extensionList.length;
 
