@@ -32,7 +32,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     wipeViews: program.wipeviews,
     backup: program.backup
   }, function (err, res) {
-    console.log(err ? "Error!" : "Success!", err, res);
+    console.log(err || res);
   });
 
 }());

@@ -95,11 +95,19 @@ var _ = require('underscore'),
       },
       buildAll = function (specs, creds, buildAllCallback) {
         buildDatabase(specs, creds, function (databaseErr, databaseRes) {
+          var returnMessage;
           if (databaseErr) {
             buildAllCallback("Build failed. Try wiping the views next time by running me with the -w flag.");
             return;
           }
-          buildAllCallback(null, "Build succeeded." + JSON.stringify(specs));
+          returnMessage = "\n";
+          _.each(specs, function (spec) {
+            returnMessage += "database: " + spec.database + '\ndirectories:\n';
+            _.each(spec.extensions, function (ext) {
+              returnMessage += '  ' + ext + '\n';
+            });
+          });
+          buildAllCallback(null, "Build succeeded." + returnMessage);
           // TODO: build the client
           //buildClient(specs, creds, function (clientErr, clientRes) {
           //  if (clientErr) {

@@ -19,20 +19,20 @@ var _ = require('underscore'),
   //
   // There are a few ways we could actually send our query to the database
   //
-  var sendToDatabaseDatasource = function (query, creds, callback) {
-    dataSource.query(query, JSON.parse(JSON.stringify(creds)), callback);
+  var sendToDatabaseDatasource = function (query, credsClone, callback) {
+    dataSource.query(query, credsClone, callback);
   };
 
-  var sendToDatabasePsql = function (query, creds, callback) {
-    var filename = path.join(__dirname, "temp_query_" + creds.database + ".sql");
+  var sendToDatabasePsql = function (query, credsClone, callback) {
+    var filename = path.join(__dirname, "temp_query_" + credsClone.database + ".sql");
     fs.writeFile(filename, query, function (err) {
       if (err) {
         winston.error("Cannot write query to file");
         callback(err);
         return;
       }
-      var psqlCommand = 'psql -d ' + creds.database +
-        ' -U ' + creds.username +
+      var psqlCommand = 'psql -d ' + credsClone.database +
+        ' -U ' + credsClone.username +
         ' -f ' + filename +
         ' --single-transaction';
       exec(psqlCommand, {maxBuffer: 2000 * 1024 /* 10x default */}, function (err, stdout, stderr) {
@@ -57,23 +57,22 @@ var _ = require('underscore'),
   // and load it from scratch using pg_restore something.backup
   //
   var initDatabase = function (spec, creds, callback) {
-    var databaseName = spec.database;
+    var databaseName = spec.database,
+      credsClone = JSON.parse(JSON.stringify(creds));
     // the calls to drop and create the database need to be run against the database "postgres"
-    creds.database = "postgres";
-    dataSource.query("drop database if exists " + databaseName + ";", creds, function (err, res) {
+    credsClone.database = "postgres";
+    dataSource.query("drop database if exists " + databaseName + ";", credsClone, function (err, res) {
       if (err) {
         winston.error("drop db error", err.message, err.stack, err);
         callback(err);
         return;
       }
-      dataSource.query("create database " + databaseName + " template template1", creds, function (err, res) {
+      dataSource.query("create database " + databaseName + " template template1", credsClone, function (err, res) {
         if (err) {
           winston.error("create db error", err.message, err.stack, err);
           callback(err);
           return;
         }
-        // that's it for calls against the database "postgres"
-        creds.database = databaseName;
         // use exec to restore the backup. The alternative, reading the backup file into a string to query
         // doesn't work because the backup file is binary.
         exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
@@ -326,7 +325,9 @@ var _ = require('underscore'),
       // in series, and execute the query when they all have come back.
       //
       async.mapSeries(extensions, getExtensionSqlPlusOrmSql, function (err, extensionSql) {
-        var sendToDatabase, allSql;
+        var sendToDatabase,
+          allSql,
+          credsClone = JSON.parse(JSON.stringify(creds));
 
         if (err) {
           databaseCallback(err);
@@ -349,9 +350,8 @@ var _ = require('underscore'),
           // on the case of error.
           allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
         }
-
-        sendToDatabase(allSql, JSON.parse(JSON.stringify(creds)), function (err, res) {
-          creds.database = undefined; // safest to strip out the db name once we're done with it
+        credsClone.database = spec.database;
+        sendToDatabase(allSql, credsClone, function (err, res) {
           databaseCallback(err, res);
         });
       });
@@ -363,15 +363,16 @@ var _ = require('underscore'),
     // which is the pre-installed ORMs. Check that now.
     //
     var preInstallDatabase = function (spec, callback) {
-      // this is where we do the very important step of putting the db name in the creds
-      creds.database = spec.database;
       var existsSql = "select relname from pg_class where relname = 'orm'",
+        credsClone = JSON.parse(JSON.stringify(creds)),
         ormTestSql = "select orm_namespace as namespace, " +
           " orm_type as type " +
           "from xt.orm " +
           "where not orm_ext;";
 
-      dataSource.query(existsSql, JSON.parse(JSON.stringify(creds)), function (err, res) {
+      credsClone.database = spec.database;
+
+      dataSource.query(existsSql, credsClone, function (err, res) {
         if (err) {
           callback(err);
         }
@@ -381,7 +382,7 @@ var _ = require('underscore'),
           spec.orms = [];
           installDatabase(spec, callback);
         } else {
-          dataSource.query(ormTestSql, creds, function (err, res) {
+          dataSource.query(ormTestSql, credsClone, function (err, res) {
             if (err) {
               callback(err);
             }
