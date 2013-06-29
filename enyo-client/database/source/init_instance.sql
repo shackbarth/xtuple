@@ -133,6 +133,7 @@ select xt.js_init();
 \i xt/views/iteminfo.sql;
 \i xt/views/itemsiteinfo.sql;
 \i xt/views/opheadinfo.sql;
+\i xt/views/pickordersinfo.sql;
 \i xt/views/prjinfo.sql;
 \i xt/views/quheadinfo.sql;
 \i xt/views/quiteminfo.sql;
