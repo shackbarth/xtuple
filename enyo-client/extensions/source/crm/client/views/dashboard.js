@@ -28,15 +28,15 @@ trailing:true, white:true*/
         value: "L"
       }],
     },
-    filterData: function (rawData) {
+    filterData: function (data) {
       var that = this;
 
-      return _.filter(rawData, function (datum) {
+      return _.filter(data, function (datum) {
         switch (that.getFilterField()) {
         case "all":
           return true;
         case "highPriority":
-          return datum.priorityOrder + 1 < (XM.priorities.length / 2); // XXX hack
+          return datum.get("priorityOrder") + 1 < (XM.priorities.length / 2); // XXX hack
         }
       });
     }

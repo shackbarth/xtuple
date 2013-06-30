@@ -23,11 +23,11 @@ trailing:true, white:true*/
       { name: "salesRep" }
     ],
     totalField: "totalPrice",
-    filterData: function (rawData) {
+    filterData: function (data) {
       var that = this;
 
-      return _.filter(rawData, function (datum) {
-        var shipDate = datum.shipDate.getTime(),
+      return _.filter(data, function (datum) {
+        var shipDate = datum.get("shipDate").getTime(),
           now = new Date().getTime(),
           timespan = 0,
           oneDay = 1000 * 60 * 60 * 24;
