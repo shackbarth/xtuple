@@ -54,6 +54,9 @@ trailing:true, white:true*/
 
   enyo.kind(kindObj);
 
+  // TODO: do this with mixins
+  // http://stackoverflow.com/questions/16113377/enyo-mixin-is-this-proper-usage
+
   kindObj.name = "XV.SalesHistoryTimeSeriesChart";
   kindObj.kind = "XV.TimeSeriesChart";
   kindObj.groupByOptions = [
