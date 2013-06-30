@@ -56,6 +56,11 @@ trailing:true, white:true*/
 
   kindObj.name = "XV.SalesHistoryTimeSeriesChart";
   kindObj.kind = "XV.TimeSeriesChart";
+  kindObj.groupByOptions = [
+    { name: "" },
+    { name: "customer" },
+    { name: "salesRep" }
+  ];
   enyo.kind(kindObj);
 
   enyo.kind({
