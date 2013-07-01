@@ -5,43 +5,13 @@ trailing:true, white:true*/
 
 (function () {
 
-  var filterData = function (data, callback) {
-    var that = this;
 
-    callback(_.filter(data, function (datum) {
-      var shipDate = datum.get("shipDate").getTime(),
-        now = new Date().getTime(),
-        timespan = 0,
-        oneDay = 1000 * 60 * 60 * 24;
-
-      // XXX use YTD etc.?
-      switch (that.getFilterField()) {
-      case "today":
-        timespan = oneDay;
-        break;
-      case "thisWeek":
-        timespan = 7 * oneDay;
-        break;
-      case "thisMonth":
-        timespan = 30 * oneDay;
-        break;
-      case "thisYear":
-        timespan = 365 * oneDay;
-        break;
-      case "twoYears":
-        timespan = 2 * 365 * oneDay;
-        break;
-      case "fiveYears":
-        timespan = 5 * 365 * oneDay;
-        break;
-      }
-      return shipDate + timespan >= now;
-    }));
-  };
-
+/*
+unused and out of date. if we want to use this, add correct parameters to
+filter options
   enyo.kind({
     name: "XV.SalesHistoryBarChart",
-    kind: "XV.BarChart",
+    kind: "XV.DrilldownBarChart",
     collection: "XM.SalesHistoryCollection",
     chartTitle: "_salesHistory".loc(),
     drillDownAttr: "orderNumber",
@@ -61,6 +31,7 @@ trailing:true, white:true*/
     totalField: "totalPrice",
     filterData: filterData
   });
+*/
 
   enyo.kind({
     name: "XV.SalesHistoryTimeSeriesChart",
@@ -82,7 +53,39 @@ trailing:true, white:true*/
     ],
     dateField: "shipDate",
     totalField: "totalPrice",
-    filterData: filterData
+    filterData: function (data, callback) {
+      var that = this;
+
+      callback(_.filter(data, function (datum) {
+        var shipDate = datum.get("shipDate").getTime(),
+          now = new Date().getTime(),
+          timespan = 0,
+          oneDay = 1000 * 60 * 60 * 24;
+
+        // XXX use YTD etc.?
+        switch (that.getFilterField()) {
+        case "today":
+          timespan = oneDay;
+          break;
+        case "thisWeek":
+          timespan = 7 * oneDay;
+          break;
+        case "thisMonth":
+          timespan = 30 * oneDay;
+          break;
+        case "thisYear":
+          timespan = 365 * oneDay;
+          break;
+        case "twoYears":
+          timespan = 2 * 365 * oneDay;
+          break;
+        case "fiveYears":
+          timespan = 5 * 365 * oneDay;
+          break;
+        }
+        return shipDate + timespan >= now;
+      }));
+    }
   });
 
   enyo.kind({

@@ -7,7 +7,7 @@ trailing:true, white:true*/
 
   enyo.kind({
     name: "XV.OpenIncidentBarChart",
-    kind: "XV.BarChart",
+    kind: "XV.DrilldownBarChart",
     collection: "XM.IncidentListItemCollection",
     chartTitle: "_openIncidents".loc(),
     filterOptions: [
