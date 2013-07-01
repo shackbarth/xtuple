@@ -11,8 +11,10 @@ trailing:true, white:true*/
     collection: "XM.IncidentListItemCollection",
     chartTitle: "_openIncidents".loc(),
     filterOptions: [
-      { name: "all" },
-      { name: "highPriority" }
+      { name: "all", parameters: [] },
+      { name: "highPriority", parameters: [
+        { attribute: "priorityOrder", operator: "<", value: 2 } // XXX magical 2
+      ]}
     ],
     groupByOptions: [
       { name: "assignedTo" },
@@ -27,18 +29,6 @@ trailing:true, white:true*/
         operator: "!=",
         value: "L"
       }],
-    },
-    filterData: function (data, callback) {
-      var that = this;
-
-      callback(_.filter(data, function (datum) {
-        switch (that.getFilterField()) {
-        case "all":
-          return true;
-        case "highPriority":
-          return datum.get("priorityOrder") + 1 < (XM.priorities.length / 2); // XXX hack
-        }
-      }));
     }
   });
 
