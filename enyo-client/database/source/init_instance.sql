@@ -71,6 +71,7 @@ select xt.js_init();
 \i xt/functions/cntctrestore.sql;
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
+\i xt/functions/order_total_qty_issue_remaining.sql;
 \i xt/functions/pg_advisory_unlock.sql;
 \i xt/functions/quote_line_base_price.sql;
 \i xt/functions/quote_line_customer_discount.sql;

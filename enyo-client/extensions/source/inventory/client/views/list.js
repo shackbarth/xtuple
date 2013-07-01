@@ -6,6 +6,49 @@ trailing:true white:true*/
 (function () {
 
   // ..........................................................
+  // PICK ORDERS LIST ITEM
+  //
+
+  enyo.kind({
+    name: "XV.PickOrdersListItem",
+    kind: "XV.List",
+    label: "_pickOrdersListItem".loc(),
+    collection: "XM.PickOrdersListItemCollection",
+    query: {orderBy: [
+			{attribute: 'scheduledDate'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+	  		{kind: "FittableColumns", components: [
+	    		{kind: "XV.ListColumn", classes: "first", components: [
+						{kind: "FittableColumns", components: [
+							{kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+	      			{kind: "XV.ListAttr", attr: "info", fit: true, classes: "right"}
+	    			]},
+	    			{kind: "FittableColumns", components: [
+	      			{kind: "XV.ListAttr", attr: "type"},
+							{kind: "XV.ListAttr", attr: "info2", classes: "right"}
+	    			]}
+					]},
+	    		{kind: "XV.ListColumn", classes: "second", components: [
+	      		{kind: "XV.ListAttr", attr: "scheduledDate"},
+						{kind: "XV.ListAttr", attr: "totalQtyRemaining"}
+	    		]},
+	    		{kind: "XV.ListColumn", classes: "second", components: [
+	      		{kind: "XV.ListAttr", attr: "comments"},
+						{kind: "XV.ListAttr", attr: "notes"}
+					]},
+	    		{kind: "XV.ListColumn", classes: "last", components: [
+	      		{kind: "XV.ListAttr", attr: "assignedTo"}
+					]}
+	  		]}  
+			]}
+    ]
+  });
+
+  XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
+
+  // ..........................................................
   // SALES ORDER
   //
 
