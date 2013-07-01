@@ -16,7 +16,8 @@ trailing:true, white:true*/
       { name: "today" },
       { name: "thisWeek" },
       { name: "thisMonth" },
-      { name: "thisYear" }
+      { name: "thisYear" },
+      { name: "twoYears" }
     ],
     groupByOptions: [
       { name: "customer" },
@@ -45,6 +46,9 @@ trailing:true, white:true*/
           break;
         case "thisYear":
           timespan = 365 * oneDay;
+          break;
+        case "twoYears":
+          timespan = 2 * 365 * oneDay;
           break;
         }
         return shipDate + timespan >= now;
