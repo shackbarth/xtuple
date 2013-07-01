@@ -5,10 +5,10 @@ trailing:true, white:true*/
 
 (function () {
 
-  var filterData = function (data) {
+  var filterData = function (data, callback) {
     var that = this;
 
-    return _.filter(data, function (datum) {
+    callback(_.filter(data, function (datum) {
       var shipDate = datum.get("shipDate").getTime(),
         now = new Date().getTime(),
         timespan = 0,
@@ -36,7 +36,7 @@ trailing:true, white:true*/
         break;
       }
       return shipDate + timespan >= now;
-    });
+    }));
   };
 
   enyo.kind({

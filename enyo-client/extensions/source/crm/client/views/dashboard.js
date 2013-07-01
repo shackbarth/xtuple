@@ -28,17 +28,17 @@ trailing:true, white:true*/
         value: "L"
       }],
     },
-    filterData: function (data) {
+    filterData: function (data, callback) {
       var that = this;
 
-      return _.filter(data, function (datum) {
+      callback(_.filter(data, function (datum) {
         switch (that.getFilterField()) {
         case "all":
           return true;
         case "highPriority":
           return datum.get("priorityOrder") + 1 < (XM.priorities.length / 2); // XXX hack
         }
-      });
+      }));
     }
   });
 
