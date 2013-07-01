@@ -58,8 +58,7 @@ white:true*/
         isActive: true,
         owner: XM.currentUser,
         assignedTo: XM.currentUser,
-        status: XM.ToDo.NEITHER,
-        statusProxy: XM.ToDo.NEITHER
+        status: XM.ToDo.NEITHER
       };
     },
 
