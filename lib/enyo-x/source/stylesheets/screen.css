@@ -406,6 +406,14 @@ body {
   text-transform: uppercase;
   color: #ffffff;
 }
+.xv-list-attr.footer {
+  padding: 4px;
+  background: #8d8d8d;
+  font-size: .7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: black;
+}
 .xv-list-attr.right {
   position: absolute;
   right: 0;

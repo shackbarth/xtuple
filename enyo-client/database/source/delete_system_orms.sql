@@ -44,3 +44,4 @@ DO $$
   }
 
 $$ language plv8;
+
