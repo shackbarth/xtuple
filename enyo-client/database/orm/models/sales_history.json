@@ -86,7 +86,7 @@
         "name": "totalPrice",
         "attr": {
           "type": "Number",
-          "column": "cohist_totalprice"
+          "column": "cohist_extprice"
         }
       }
     ],

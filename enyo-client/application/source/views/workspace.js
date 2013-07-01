@@ -1596,7 +1596,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {kind: "XV.ItemSiteWidget", attr: "itemSite",
+            {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"},
               name: "itemSiteWidget",
               query: {parameters: [
               {attribute: "item.isSold", value: true},

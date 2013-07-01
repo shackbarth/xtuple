@@ -33,6 +33,6 @@ View the [Release Notes](RELEASE.md) to see a change log.
 
 ### Additional Resources
 
-  * [Setting up an Ubuntu Virtual Machine](https://github.com/xtuple/xtuple/blob/master/docs/UBUNTU_SETUP.md)
-  * [Architectural Overview](https://github.com/xtuple/xtuple/blob/master/docs/OVERVIEW.md)
+  * [Setting up an Ubuntu Virtual Machine](https://github.com/xtuple/xtuple/wiki/Setting-up-an-Ubuntu-Virtual-Machine)
+  * [Architectural Overview](https://github.com/xtuple/xtuple/wiki/Overview)
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)

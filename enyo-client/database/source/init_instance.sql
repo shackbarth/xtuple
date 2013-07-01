@@ -27,6 +27,7 @@ select xt.js_init();
 \i public/tables/comment.sql
 \i public/tables/cntct.sql
 \i public/tables/coitem.sql
+\i public/tables/cohist.sql
 \i public/tables/crmacct.sql
 \i public/tables/custinfo.sql
 \i public/tables/docass.sql
@@ -57,6 +58,7 @@ select xt.js_init();
 \i xt/functions/co_line_list_price.sql;
 \i xt/functions/co_line_list_price_discount.sql;
 \i xt/functions/co_line_tax.sql;
+\i xt/functions/co_line_margin.sql;
 \i xt/functions/co_freight_weight.sql;
 \i xt/functions/co_schedule_date.sql;
 \i xt/functions/co_subtotal.sql;
@@ -77,6 +79,7 @@ select xt.js_init();
 \i xt/functions/quote_line_list_price.sql;
 \i xt/functions/quote_line_list_price_discount.sql;
 \i xt/functions/quote_line_tax.sql;
+\i xt/functions/quote_line_margin.sql;
 \i xt/functions/quote_freight_weight.sql;
 \i xt/functions/quote_schedule_date.sql;
 \i xt/functions/quote_subtotal.sql;

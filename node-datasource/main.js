@@ -348,6 +348,7 @@ app.all('/:org/export', routes.exxport);
 app.all('/:org/extensions', routes.extensions);
 app.get('/:org/file', routes.file);
 app.get('/:org/report', routes.report);
+app.get('/:org/analysis', routes.analysis);
 app.get('/:org/reset-password', routes.resetPassword);
 
 
@@ -569,6 +570,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
         data: session.passport.user,
         code: 1,
         debugging: X.options.datasource.debugging,
+        biUrl: X.options.datasource.biUrl,
         version: X.version
       });
     }, data && data.payload);
