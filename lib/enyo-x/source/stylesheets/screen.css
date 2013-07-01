@@ -481,7 +481,7 @@ body {
   border-bottom: 1px solid #aaaaaa;
 }
 .xv-characteristic-item .onyx-input-decorator > input {
-  width: 150px;
+  width: 115px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -553,12 +553,9 @@ body {
   Styles relating to the groupbox
 */
 .xv-groupbox {
-  /*min-width: 320px;*/
-
-  padding: 8px 0 8px 8px;
+  min-width: 320px;
+  padding: 8px;
   margin-right: 5px;
-  /* Not sure about this */
-
 }
 .xv-groupbox.editor {
   min-width: 250px;
@@ -606,7 +603,7 @@ body {
 .xv-groupbox .xv-moneywidget .onyx-input-decorator {
   border: 0;
   font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-  width: 120px;
+  width: 110px;
   padding: 6px 10px 8px 6px;
 }
 .xv-groupbox .xv-moneywidget .onyx-input-decorator input,
@@ -726,8 +723,6 @@ body {
   text-transform: uppercase;
   background-color: #333333;
   border: none;
-  /* This image doesn't exist */
-
   background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
 }
 .xv-groupbox-buttons {
@@ -783,6 +778,12 @@ body {
 /*
   XV Widgets
 */
+.xv-numberwidget .onyx-input-decorator {
+  width: 150px;
+}
+.xv-numberwidget input {
+  text-align: right;
+}
 .xv-addresswidget {
   background-color: #ffffff;
   padding: 4px;
@@ -913,7 +914,7 @@ body {
   padding-top: 8px;
   padding-right: 0;
   height: 24px;
-  width: 200px;
+  width: 170px;
   display: inline-block;
 }
 .xv-combobox-input {
@@ -921,7 +922,7 @@ body {
   border: 0;
   display: inline-block;
   outline: none;
-  width: 80%;
+  width: 125px;
 }
 .xv-combobox-icon {
   margin-left: 4px;
