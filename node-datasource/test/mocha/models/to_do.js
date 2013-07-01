@@ -24,8 +24,6 @@ var crud = require('../lib/crud'),
     }
   };
 
-
-
 var timeout = 20 * 1000;
 
 describe.skip('ToDo CRUD Test', function () {

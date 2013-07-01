@@ -65,7 +65,7 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-    
+
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:startDate change:completeDate change:statusProxy', this.toDoStatusDidChange);
