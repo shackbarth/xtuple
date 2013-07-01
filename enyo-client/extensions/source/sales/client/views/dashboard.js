@@ -38,14 +38,6 @@ filter options
     kind: "XV.TimeSeriesChart",
     collection: "XM.SalesHistoryCollection",
     chartTitle: "_salesHistory".loc(),
-    filterOptions: [
-      { name: "today" },
-      { name: "thisWeek" },
-      { name: "thisMonth" },
-      { name: "thisYear" },
-      { name: "twoYears" },
-      { name: "fiveYears" }
-    ],
     groupByOptions: [
       { name: "" },
       { name: "customer" },
@@ -53,46 +45,29 @@ filter options
     ],
     dateField: "shipDate",
     totalField: "totalPrice",
-    filterData: function (data, callback) {
-      var that = this;
+  });
 
-      callback(_.filter(data, function (datum) {
-        var shipDate = datum.get("shipDate").getTime(),
-          now = new Date().getTime(),
-          timespan = 0,
-          oneDay = 1000 * 60 * 60 * 24;
-
-        // XXX use YTD etc.?
-        switch (that.getFilterField()) {
-        case "today":
-          timespan = oneDay;
-          break;
-        case "thisWeek":
-          timespan = 7 * oneDay;
-          break;
-        case "thisMonth":
-          timespan = 30 * oneDay;
-          break;
-        case "thisYear":
-          timespan = 365 * oneDay;
-          break;
-        case "twoYears":
-          timespan = 2 * 365 * oneDay;
-          break;
-        case "fiveYears":
-          timespan = 5 * 365 * oneDay;
-          break;
-        }
-        return shipDate + timespan >= now;
-      }));
-    }
+  enyo.kind({
+    name: "XV.SalesOrderTimeSeriesChart",
+    kind: "XV.TimeSeriesChart",
+    collection: "XM.SalesOrderListItemCollection",
+    chartTitle: "_bookings".loc(),
+    groupByOptions: [
+      { name: "" },
+      { name: "customer" },
+      { name: "salesRep" },
+      { name: "saleType" },
+      { name: "site" }
+    ],
+    dateField: "orderDate",
+    totalField: "total",
   });
 
   enyo.kind({
     name: "XV.SalesDashboard",
     kind: "XV.Dashboard",
     components: [
-      {kind: "XV.SalesHistoryTimeSeriesChart" }
+      {kind: "XV.SalesOrderTimeSeriesChart" }
     ]
   });
 
