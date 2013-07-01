@@ -481,7 +481,7 @@ body {
   border-bottom: 1px solid #aaaaaa;
 }
 .xv-characteristic-item .onyx-input-decorator > input {
-  width: 150px;
+  width: 115px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -519,9 +519,12 @@ body {
   /* Resets the margin/padding value for blockquote tag in comments */
 
 }
+.xv-comment-box .onxy-groupbox-header {
+  max-width: 320px;
+}
 .xv-comment-box .xv-comment-box-repeater {
   background: #ffffff;
-  max-width: 320px;
+  width: 320px;
 }
 .xv-comment-box .xv-comment-box-label {
   padding: 5px;
@@ -543,10 +546,15 @@ body {
   margin: 0 15px 10px 15px;
   padding: 0;
 }
-/* Groupbox.css */
+/* Styles relating to the groupbox and widgets contained
+  by a groupbox
+*/
+/*
+  Styles relating to the groupbox
+*/
 .xv-groupbox {
   min-width: 320px;
-  padding: 8px 0 8px 8px;
+  padding: 8px;
   margin-right: 5px;
 }
 .xv-groupbox.editor {
@@ -558,17 +566,7 @@ body {
   padding: 0;
   margin: 0;
 }
-.xv-groupbox.panel {
-  min-width: 330px;
-}
-.xv-groupbox .onyx-input-decorator {
-  border: 0;
-}
-.xv-groupbox .xv-relationwidget input,
-.xv-groupbox .xv-datewidget input {
-  width: 75%;
-}
-.xv-groupbox.in-panel > *:first-child {
+.xv-groupbox .in-panel > *:first-child {
   border-top-color: #aaaaaa;
   border-top: none;
   border-width: 1px;
@@ -576,11 +574,99 @@ body {
   -moz-border-radius: 0;
   border-radius: 0;
 }
-.xv-groupbox.in-panel > *:last-child {
+.xv-groupbox .in-panel > *:last-child {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
   border-bottom: none;
+}
+.xv-groupbox > .in-panel .editor {
+  border-right: none;
+}
+.xv-groupbox.panel {
+  min-width: 330px;
+}
+.xv-groupbox .xv-inputwidget {
+  background-color: #ffffff;
+}
+.xv-groupbox .onyx-input-decorator {
+  border: 0;
+}
+.xv-groupbox .onyx-picker-decorator .onyx-button {
+  width: 150px;
+}
+.xv-groupbox .xv-moneywidget {
+  background-color: #ffffff;
+  padding-top: 6px;
+  padding-bottom: 2px;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator {
+  border: 0;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+  width: 110px;
+  padding: 6px 10px 8px 6px;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator input,
+.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-money-label {
+  width: 100%;
+  text-align: right;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator.xv-currency-label {
+  width: 65px;
+}
+.xv-groupbox .xv-moneywidget .xv-picker {
+  width: 65px;
+  text-align: center;
+  padding: 10px;
+}
+.xv-groupbox .xv-relationwidget .onyx-input-decorator,
+.xv-groupbox .xv-datewidget .onyx-input-decorator {
+  width: 170px;
+}
+.xv-groupbox .xv-relationwidget input,
+.xv-groupbox .xv-datewidget input {
+  width: 120px;
+}
+.xv-groupbox > .onyx-input-decorator {
+  border-color: #aaaaaa;
+  border-width: 0 1px 1px 1px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child {
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > .onyx-input-decorator:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 .xv-groupbox > * {
   display: block;
@@ -592,9 +678,6 @@ body {
   -moz-border-radius: 0;
   border-radius: 0;
   margin: 0;
-}
-.xv-groupbox > .in-panel .editor-field {
-  border-right: none;
 }
 .xv-groupbox > *:first-child {
   border-top-color: #aaaaaa;
@@ -640,76 +723,7 @@ body {
   text-transform: uppercase;
   background-color: #333333;
   border: none;
-  /* This image doesn't exist */
-
   background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
-}
-.xv-groupbox > .onyx-input-decorator {
-  border-color: #aaaaaa;
-  border-width: 0 1px 1px 1px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox .xv-inputwidget {
-  background-color: #ffffff;
-}
-.xv-groupbox .xv-moneywidget {
-  background-color: #ffffff;
-  padding-top: 6px;
-  padding-bottom: 2px;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-  width: 120px;
-  padding: 6px 10px 8px 6px;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator input,
-.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-money-label {
-  width: 100%;
-  text-align: right;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator.xv-currency-label {
-  width: 65px;
-}
-.xv-groupbox .xv-moneywidget .xv-picker {
-  width: 65px;
-  text-align: center;
-  padding: 10px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child {
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > .onyx-input-decorator:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
 }
 .xv-groupbox-buttons {
   border: none;
@@ -764,6 +778,12 @@ body {
 /*
   XV Widgets
 */
+.xv-numberwidget .onyx-input-decorator {
+  width: 150px;
+}
+.xv-numberwidget input {
+  text-align: right;
+}
 .xv-addresswidget {
   background-color: #ffffff;
   padding: 4px;
@@ -894,7 +914,7 @@ body {
   padding-top: 8px;
   padding-right: 0;
   height: 24px;
-  width: 200px;
+  width: 170px;
   display: inline-block;
 }
 .xv-combobox-input {
@@ -902,7 +922,7 @@ body {
   border: 0;
   display: inline-block;
   outline: none;
-  width: 80%;
+  width: 125px;
 }
 .xv-combobox-icon {
   margin-left: 4px;
