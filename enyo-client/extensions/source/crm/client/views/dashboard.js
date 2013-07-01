@@ -33,6 +33,19 @@ trailing:true, white:true*/
   });
 
   enyo.kind({
+    name: "XV.OpportunityBarChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.OpportunityListItemCollection",
+    chartTitle: "_opportunities".loc(),
+    groupByOptions: [
+      { name: "opportunityStage" },
+      { name: "opportunitySource" },
+      { name: "opportunityType" },
+      { name: "priority" }
+    ]
+  });
+
+  enyo.kind({
     name: "XV.CrmDashboard",
     kind: "XV.Dashboard",
     components: [
