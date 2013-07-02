@@ -183,13 +183,13 @@ var _ = require('underscore'),
   //
   // Define cleanup function
   //
-  finish = function () {
-    fs.unlinkSync("package.js");
+  exports.cleanup = function (callback) {
+    fs.unlinkSync(path.join(process.cwd(), "package.js"));
 
     //fs.unlinkSync(rootDir + "/enyo"); // TODO
-    rimraf("./build", function () {
-      rimraf("./deploy", function () {
-        console.log("all done");
+    rimraf(path.join(process.cwd(), "build"), function () {
+      rimraf(path.join(process.cwd(), "deploy"), function () {
+        callback("all done");
       });
     });
   };

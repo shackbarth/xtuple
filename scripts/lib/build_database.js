@@ -419,9 +419,11 @@ var _ = require('underscore'),
         return;
       }
       //winston.info("Success installing all scripts");
-      if (masterCallback) {
-        masterCallback(null, res);
-      }
+      clientBuilder.cleanup(function () {
+        if (masterCallback) {
+          masterCallback(null, res);
+        }
+      });
     });
   };
 }());
