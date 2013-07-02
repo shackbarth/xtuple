@@ -567,7 +567,45 @@ trailing:true, white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-
+/*
+  // ..........................................................
+  // PICK ORDERS LIST
+  //
+  enyo.kind({
+    name: "XV.PickOrdersListParameters",
+    kind: "XV.ParameterWidget",
+  //  characteristicsRole: 'isAccounts',
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_pickOrdersListItem".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+      {name: "primaryContact", label: "_primaryContact".loc(), attr: "primaryContact.name"},
+      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "primaryContact.primaryEmail"},
+      {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+      {name: "phone", label: "_phone".loc(), attr: ["primaryContact.phone", "primaryContact.alternate", "primaryContact.fax"]},
+      {name: "street", label: "_street".loc(), attr: ["primaryContact.address.line1", "primaryContact.address.line2", "primaryContact.address.line3"]},
+      {name: "city", label: "_city".loc(), attr: "primaryContact.address.city"},
+      {name: "postalCode", label: "_postalCode".loc(), attr: "primaryContact.address.postalCode"},
+      {name: "state", label: "_state".loc(), attr: "primaryContact.address.state"},
+      {name: "country", label: "_country".loc(), attr: "primaryContact.address.country"},
+      {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
+    ]
+  }); */
   // ..........................................................
   // PLANNER CODE
   //

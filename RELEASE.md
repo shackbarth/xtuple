@@ -1,3 +1,15 @@
+1.3.10 (2013/06)
+===============
+
+Critical deployment changes
+---------------------------
+* The init_scripts and the command-line ORM installer are gone.
+  You will have to use /scripts/build_app.js for your installation needs.
+  Run it with the -h flag to see the options.
+
+
+
+
 1.3.8 (2013/06/19)
 ==================
 

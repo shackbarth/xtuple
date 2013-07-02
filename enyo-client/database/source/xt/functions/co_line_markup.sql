@@ -11,4 +11,4 @@ create or replace function xt.co_line_markup(coitem) returns numeric stable as $
    and itemsite_id=$1.coitem_itemsite_id
    and cohead_id=$1.coitem_cohead_id;
 
-$$ language sql
+$$ language sql;
