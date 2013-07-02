@@ -19,7 +19,7 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
-  var rootDir, buildExtension, finish;
+  var buildExtension, finish;
 
 
   var enyoBuild = function (extPath, callback) {
@@ -30,8 +30,16 @@ var _ = require('underscore'),
     fs.writeFileSync("package.js", rootPackageContents);
 
     // run the enyo deployment method asyncronously
-    exec(path.join(rootDir, "tools/deploy.sh"), function (err, stdout) {
-      var code = fs.readFileSync("./build/app.js", "utf8"); // TODO: use async
+    var rootDir = path.join(extPath, "../..");
+    console.log(rootDir);
+    console.log(path.join(rootDir, "/tools/deploy.sh"));
+    exec(path.join(rootDir, "/tools/deploy.sh"), function (err, stdout) {
+      if (err) {
+        callback(err);
+        return;
+      }
+      // XXX does enyo really put this relative to cwd?
+      var code = fs.readFileSync(path.join(process.cwd(), "/build/app.js"), "utf8"); // TODO: use async
       console.log(code);
       // TODO: instead, write to DB
       callback(null, ""); // TODO: err, res
