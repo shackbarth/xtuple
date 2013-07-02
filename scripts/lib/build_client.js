@@ -23,10 +23,7 @@ var _ = require('underscore'),
 
 
   var enyoBuild = function (extPath, callback) {
-    var extName;
-
-    // TODO: a better node path function?
-    extName = extPath.substring(extPath.lastIndexOf('/source/') + 8);
+    var extName = path.basename(extPath); // the name of the extension
 
     // create the package file for enyo to use
     var rootPackageContents = 'enyo.depends("' + extPath + '/client");';
@@ -41,8 +38,9 @@ var _ = require('underscore'),
     });
   };
 
-  var constructQuery = function (contents, language) {
-    return "select xt.insert_client($$" + contents + "$$, " + language + ");";
+  var constructQuery = function (contents, version, language) {
+    // TODO: sqli guard, not that we distrust the payload
+    return "select xt.insert_client($$" + contents + "$$, " + version + ", " + language + ");";
   };
 
 
@@ -75,25 +73,25 @@ var _ = require('underscore'),
           };
           async.map(files, readFile, function (err, results) {
             var cssResults = _.filter(results, function (result) {
-                return result.name.indexOf(".css") >= 0;
+                return path.extname(result.name) === ".css";
               }),
               sortedCssResults = _.sortBy(cssResults, function (result) {
-                return result.name.indexOf("enyo.css") < 0;
+                return path.basename(result.name) === "app.css";
               }),
               cssString = _.reduce(sortedCssResults, function (memo, result) {
                 return memo + result.contents;
               }, ""),
-              cssQuery = constructQuery(cssString, "css"),
+              cssQuery = constructQuery(cssString, "TODO-version", "css"),
               jsResults = _.filter(results, function (result) {
-                return result.name.indexOf(".js") >= 0;
+                return path.extname(result.name) === ".js";
               }),
               sortedJsResults = _.sortBy(jsResults, function (result) {
-                return result.name.indexOf("enyo.js") < 0;
+                return path.basename(result.name) === "app.js";
               }),
               jsString = _.reduce(sortedJsResults, function (memo, result) {
                 return memo + result.contents;
               }, ""),
-              jsQuery = constructQuery(jsString, "js");
+              jsQuery = constructQuery(jsString, "TODO-version", "js");
 
             callback(null, cssQuery + jsQuery);
           });
@@ -102,8 +100,8 @@ var _ = require('underscore'),
       return;
     }
 
-    console.log(extPath);
-    var rootDir = extPath.substring(0, extPath.indexOf('/source/'));
+    // TODO async
+    var rootDir = path.join(extPath, "../..");
     if (!fs.existsSync(path.join(rootDir, 'builds'))) {
       fs.mkdirSync(path.join(rootDir, 'builds'));
     }
