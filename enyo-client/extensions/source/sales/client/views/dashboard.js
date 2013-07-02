@@ -55,9 +55,7 @@ filter options
     groupByOptions: [
       { name: "" },
       { name: "customer" },
-      { name: "salesRep" },
-      { name: "saleType" },
-      { name: "site" }
+      { name: "salesRep" }
     ],
     dateField: "orderDate",
     totalField: "total",
