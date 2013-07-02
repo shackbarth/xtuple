@@ -65,7 +65,7 @@ filter options
     name: "XV.SalesDashboard",
     kind: "XV.Dashboard",
     components: [
-      {kind: "XV.SalesOrderTimeSeriesChart" }
+      {kind: "XV.SalesHistoryTimeSeriesChart" }
     ]
   });
 

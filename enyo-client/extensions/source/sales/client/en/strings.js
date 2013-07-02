@@ -70,5 +70,6 @@ var lang = XT.stringsFor("en_US", {
   "_today": "Today",
   "_update": "Update",
   "_useCalculatedFreightPricing": "Use calculated Freight values by default",
-  "_usePromiseDates": "Enable Promise Dates"
+  "_usePromiseDates": "Enable Promise Dates",
+  "_viewSalesHistory": "View Sales History"
 });
