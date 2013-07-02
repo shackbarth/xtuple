@@ -472,7 +472,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                 }
                 res = plv8.execute(query, [tableName, schemaName]);
 
-                if (res[0].relkind !== 'r') {
+                if (!res[0] || res[0].relkind !== 'r') {
                   plv8.elog(ERROR, "Can not add obj_uuid field because {table} is not a table.".replace("{table}", orm.table));
                 }
 
