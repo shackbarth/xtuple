@@ -61,6 +61,22 @@ filter options
     totalField: "total",
   });
 
+  /*
+  enyo.kind({
+    name: "XV.QuoteTimeSeriesChart",
+    kind: "XV.TimeSeriesChart",
+    collection: "XM.QuoteListItemCollection",
+    chartTitle: "_quotes".loc(),
+    groupByOptions: [
+      { name: "" },
+      { name: "customer" },
+      { name: "salesRep" }
+    ],
+    dateField: "quoteDate",
+    totalField: "total",
+  });
+  */
+
   enyo.kind({
     name: "XV.SalesDashboard",
     kind: "XV.Dashboard",
