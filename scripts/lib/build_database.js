@@ -9,6 +9,7 @@ var _ = require('underscore'),
   exec = require('child_process').exec,
   fs = require('fs'),
   ormInstaller = require('./orm'),
+  clientBuilder = require('./build_client'),
   path = require('path'),
   pg = require('pg'),
   winston = require('winston');
@@ -297,13 +298,20 @@ var _ = require('underscore'),
         }
       };
 
+      // We also need to get the sql that represents the queries to put the
+      // client source in the database.
+      var getClientSql = function (extension, callback) {
+        clientBuilder.getClientSql(extension, callback);
+      };
+
       /**
         The sql for each extension comprises the sql in the the source directory
         with the orm sql tacked on to the end. Note that an alternate methodology
         dictates that *all* source for all extensions should be run before *any*
         orm queries for any extensions, but that is not the way it works here.
        */
-      var getExtensionSqlPlusOrmSql = function (extension, callback) {
+      // TODO: async.series would work nicely here
+      var getAllSql = function (extension, callback) {
         getExtensionSql(extension, function (err, sql) {
           if (err) {
             callback(err);
@@ -314,7 +322,13 @@ var _ = require('underscore'),
               callback(err);
               return;
             }
-            callback(null, sql + ormSql);
+            getClientSql(extension, function (err, clientSql) {
+              if (err) {
+                callback(err);
+                return;
+              }
+              callback(null, sql + ormSql + clientSql);
+            });
           });
         });
       };
@@ -324,7 +338,7 @@ var _ = require('underscore'),
       // Asyncronously run all the functions to all the extension sql for the database,
       // in series, and execute the query when they all have come back.
       //
-      async.mapSeries(extensions, getExtensionSqlPlusOrmSql, function (err, extensionSql) {
+      async.mapSeries(extensions, getAllSql, function (err, extensionSql) {
         var sendToDatabase,
           allSql,
           credsClone = JSON.parse(JSON.stringify(creds));

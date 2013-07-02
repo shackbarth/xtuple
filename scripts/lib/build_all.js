@@ -126,16 +126,6 @@ var _ = require('underscore'),
             });
           });
           buildAllCallback(null, "Build succeeded." + returnMessage);
-          // TODO: build the client
-          //buildClient(specs, creds, function (clientErr, clientRes) {
-          //  if (clientErr) {
-          //    buildAllCallback(clientErr);
-          //    console.log("Client build failed");
-          //    return;
-          //  }
-          //  buildAllCallback(null, true);
-          //  console.log("All is good!");
-          //});
         });
       },
       config = require(path.join(__dirname, "../../node-datasource/config.js"));
