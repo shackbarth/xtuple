@@ -24,18 +24,27 @@ var _ = require('underscore'),
 
     // create the package file for enyo to use
     var rootPackageContents = 'enyo.depends("' + extPath + '/client");';
-    fs.writeFileSync("package.js", rootPackageContents);
-
-    // run the enyo deployment method asyncronously
-    var rootDir = path.join(extPath, "../..");
-    exec(path.join(rootDir, "/tools/deploy.sh"), function (err, stdout) {
+    fs.writeFile("package.js", rootPackageContents, function (err) {
       if (err) {
         callback(err);
         return;
       }
-      // XXX does enyo really put this relative to cwd?
-      var code = fs.readFileSync(path.join(process.cwd(), "/build/app.js"), "utf8"); // TODO: use async
-      callback(null, constructQuery(code, extName, "1.0.0", "js"));
+      // run the enyo deployment method asyncronously
+      var rootDir = path.join(extPath, "../..");
+      exec(path.join(rootDir, "/tools/deploy.sh"), function (err, stdout) {
+        if (err) {
+          callback(err);
+          return;
+        }
+        // enyo really puts the build directory relative to the cwd.
+        var code = fs.readFile(path.join(process.cwd(), "/build/app.js"), "utf8", function (err, code) {
+          if (err) {
+            callback(err);
+            return;
+          }
+          callback(null, constructQuery(code, extName, "1.0.0", "js"));
+        });
+      });
     });
   };
 
