@@ -4,14 +4,95 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
 (function () {
 
-  if (!XM.Inventory) { XM.Inventory = {}; }
+  if (!XM.PrivateInventory) { XM.PrivateInventory = {}; }
+  
+  XM.PrivateInventory.isDispatchable = false; /* No access from client */
 
+  /**
+    Generic inventory transaction.
+    Example:
+
+        XM.Inventory.transact ('BTRUCK1', 'IM', 'AD', 10, {
+          asOf: '2013-07-01T21:02:57.266Z',
+          orderNumber: '55920',
+          docNumber: '8712',
+          debitAccount: '01-01-7891-565',
+          creditAccount: '01-01-8790-222',
+          notes: 'Making an adjustment',
+          value: '421.01',
+          detail: [
+            {
+              lot: 'A7891',
+              expiration: '2013-07-31T00:00:00.000Z',
+              locations: [
+                {
+                  uuid: '6dac30d3-aac3-4fc7-953d-465e190ff9cf',
+                  quantity: 6
+                },
+                {
+                  uuid: 'ea571dab-88fa-46c2-c92f-4a18e0ce7c1d',
+                  quantity: 2
+                }
+              ]
+            },
+            {
+              lot: 'A7892',
+              expiration: '2013-08-05T00:00:00.000Z'
+              locations: [
+                {
+                  uuid: '6dac30d3-aac3-4fc7-953d-465e190ff9cf',
+                  quantity: 2
+                }
+              ]
+            }
+          ]
+          
+        })
+    @private
+    @param {Number} Inventory History Id
+    @param {Object} Location, Lot/Serial Detail
+    
+  */
+  XM.PrivateInventory.distribute = function (histId, detail) {
+    options = options || {};
+    var sql = "select postitemlocseries(invhist_series) from invhist where invhist_id = $1;",
+      series;
+      
+    plv8.execute(sql, [histId]);
+    return result;
+  }
+
+
+  if (!XM.Inventory) { XM.Inventory = {}; }
+  
   XM.Inventory.isDispatchable = true;
+
+  /*
+    @param {String} Itemsite uuid
+    @param {Number} Quantity
+    @param {Object} Location, Lot/Serial detail
+    @param {Date}   [options.asOf=now()] Transaction Timestamp
+    @param {String} [options.docNumber] Document Number
+    @param {String} [options.notes] Notes
+    @param {String} [options.value] Value
+    @returns {String} Transaction uuid
+  */
+  XM.Inventory.adjustment = function (itemSite, quantity, options) {
+    options = options || {};
+    var postSql = "select invAdjustment(itemsite_id, $2, $3, $4, %I, $5) from itemsite where obj_uuid = $1;",
+      transSql = "select obj_uuid from invhist where invhist_id = $1);";
+
+    if (!XT.Data.checkPrivilege("CreateAdjustmentTrans")) { throw new handleError("Access Denied", 401) };
+    sql = XT.format(postSql, options.asOf ? ["cast('" + options.asOf + "' as timestamp with time zone)"] : ["null"]);
+    histId = plv8.execute(sql, [itemSite, quantity, options.docNumber, options.notes, options.value]);
+    XM.PrivateInventory.distribute(histId, options.detail);
+    return plv8.execute(transSql, [histId])[0].obj_uuid;
+  };
 
   XM.Inventory.options = [
 		"DefaultEventFence",    
 		"ItemSiteChangeLog",
-    "WarehouseChangeLog",
+                "WarehouseChangeLog",
 		"AllowAvgCostMethod",  
 		"AllowStdCostMethod",
 		"AllowJobCostMethod",

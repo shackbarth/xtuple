@@ -1,0 +1,267 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InventoryHistory",
+    "table": "invhist",
+    "isRest": true,
+    "comment": "Inventory History Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewInventoryHistory",
+        "update": false,
+        "delete": false
+      },
+      "attribute": {
+        "unitCost": {
+          "view": "ViewCosts"
+        }
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invhist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "itemSite",
+        "toOne": {
+          "type": "ItemSiteRelation",
+          "column": "invhist_itemsite_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "transactionDate",
+        "toOne": {
+          "type": "Date",
+          "column": "invhist_transdate"
+        }
+      },
+      {
+        "name": "transactionType",
+        "attr": {
+          "type": "String",
+          "column": "invhist_transtype"
+        }
+      },
+      {
+        "name": "quantity",
+        "toOne": {
+          "type": "Quantity",
+          "column": "invhist_invqty"
+        }
+      },
+      {
+        "name": "unit",
+        "attr": {
+          "type": "String",
+          "column": "invhist_invuom"
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "invhist_ordnumber"
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "invhist_docnumber"
+        }
+      },
+      {
+        "name": "quantityBefore",
+        "attr": {
+          "type": "Quantity",
+          "column": "invhist_qoh_before"
+        }
+      },
+      {
+        "name": "quantityAfter",
+        "attr": {
+          "type": "Quantity",
+          "column": "invhist_qoh_after"
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "invhist_unitcost"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "invhist_comments"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "incdt_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "incdt_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "incdt_descrip"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "incdt_item_id"
+        }
+      },
+      {
+        "name": "recurrences",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentRecurrence",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_timestamp",
+          "required": true
+        }
+      },
+      {
+        "name": "updated",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_updated"
+        }
+      },
+      {
+        "name": "alarms",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentAlarm",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      },
+      {
+        "name": "history",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentHistory",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentComment",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentCharacteristic",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentContact",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentItem",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "files",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentFile",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentUrl",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "accounts",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentAccount",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "incidents",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentIncident",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
