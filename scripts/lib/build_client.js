@@ -40,15 +40,16 @@ var _ = require('underscore'),
       }
       // XXX does enyo really put this relative to cwd?
       var code = fs.readFileSync(path.join(process.cwd(), "/build/app.js"), "utf8"); // TODO: use async
-      console.log(code);
-      // TODO: instead, write to DB
-      callback(null, ""); // TODO: err, res
+      callback(null, constructQuery(code, extName, "1.0.0", "js"));
     });
   };
 
-  var constructQuery = function (contents, version, language) {
+  var constructQuery = function (contents, extension, version, language) {
     // TODO: sqli guard, not that we distrust the payload
-    return "select xt.insert_client($$" + contents + "$$, " + version + ", " + language + ");";
+    return "select xt.insert_client($$" + contents +
+      "$$, '" + extension +
+      "', '" + version +
+      "', '" + language + "');";
   };
 
 
@@ -89,7 +90,7 @@ var _ = require('underscore'),
               cssString = _.reduce(sortedCssResults, function (memo, result) {
                 return memo + result.contents;
               }, ""),
-              cssQuery = constructQuery(cssString, "TODO-version", "css"),
+              cssQuery = constructQuery(cssString, "_core", "1.0.0", "css"),
               jsResults = _.filter(results, function (result) {
                 return path.extname(result.name) === ".js";
               }),
@@ -99,7 +100,7 @@ var _ = require('underscore'),
               jsString = _.reduce(sortedJsResults, function (memo, result) {
                 return memo + result.contents;
               }, ""),
-              jsQuery = constructQuery(jsString, "TODO-version", "js");
+              jsQuery = constructQuery(jsString, "_core", "1.0.0", "js");
 
             callback(null, cssQuery + jsQuery);
           });
