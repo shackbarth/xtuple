@@ -19,9 +19,6 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
-  var buildExtension, finish;
-
-
   var enyoBuild = function (extPath, callback) {
     var extName = path.basename(extPath); // the name of the extension
 
@@ -31,8 +28,6 @@ var _ = require('underscore'),
 
     // run the enyo deployment method asyncronously
     var rootDir = path.join(extPath, "../..");
-    console.log(rootDir);
-    console.log(path.join(rootDir, "/tools/deploy.sh"));
     exec(path.join(rootDir, "/tools/deploy.sh"), function (err, stdout) {
       if (err) {
         callback(err);
@@ -128,57 +123,6 @@ var _ = require('underscore'),
       callback(err, res);
     });
   };
-    // TODO: nice 0!
-    /*
-    async.mapSeries(specs[0].extensions, buildExtension, function (err, res) {
-      finish();
-      masterCallback(err, res);
-
-    });
-*/
-
-
-    /*
-    var buildExtension, rootDir, specifiedDir, extensions, finish,
-      coreExtDir = __dirname + "/../../enyo-client/extensions/source/",
-      buildCore = false;
-
-
-
-    // TODO: the core build script is a bit different
-
-    //
-    //  Make the builds directory if it's not there
-    //
-    // rootDir is the directory that contains the source directory
-    rootDir = extensions[0].substring(0, extensions[0].indexOf('/source/'));
-    if (!fs.existsSync(rootDir + '/builds')) {
-      fs.mkdirSync(rootDir + '/builds');
-    }
-
-    //
-    //Symlink the enyo directories if they're not there
-    //
-    if (!fs.existsSync(rootDir + '/enyo')) {
-      fs.symlinkSync(rootDir + "/xtuple/enyo-client/application/enyo", rootDir + '/enyo');
-    }
-
-    //
-    // Go do it.
-    //
-    if (buildCore) {
-      // if we want to build the core extensions, then first build the core itself
-      exec(__dirname + "/../../enyo-client/application/tools/deploy.sh", function () {
-        console.log("xTuple core has been built");
-        buildExtension(extensions, finish);
-      });
-
-    } else {
-      buildExtension(extensions, finish);
-    }
-    */
-
-
 
   //
   // Define cleanup function
