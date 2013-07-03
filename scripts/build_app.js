@@ -16,21 +16,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     build = require("./lib/build_all").build;
 
   program
+    .option('-b, --backup [/path/to/the.backup]', 'Location of database backup file. Must be used with the -i flag.')
+    .option('-c, --config [/path/to/alternate_config.js]', 'Location of datasource config file. [config.js]')
     .option('-d, --database [database name]', 'Use specific database. [All databases in config file.]')
     .option('-e, --extension [/path/to/extension]', 'Extension to build. [Core plus all extensions registered for the database.]')
     .option('-i, --initialize', 'Initialize database. Must be used with the -b flag.')
-    .option('-b, --backup [/path/to/backup/file]', 'Location of database backup file. Must be used with the -i flag.')
     .option('-q, --querydirect', 'Query the database directly, without delegating to psql.')
     .option('-w, --wipeviews', 'Drop the views and the orm registrations pre-emptively.')
     .parse(process.argv);
 
   build({
+    backup: program.backup,
     database: program.database,
+    config: program.config,
     extension: program.extension,
     initialize: program.initialize,
     queryDirect: program.querydirect,
-    wipeViews: program.wipeviews,
-    backup: program.backup
+    wipeViews: program.wipeviews
   }, function (err, res) {
     console.log(err || res);
   });

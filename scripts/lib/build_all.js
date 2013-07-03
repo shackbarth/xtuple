@@ -138,8 +138,13 @@ var _ = require('underscore'),
           //});
         });
       },
-      config = require(path.join(__dirname, "../../node-datasource/config.js"));
+      config;
 
+    if (options.config) {
+      config = require(path.join(process.cwd(), options.config));
+    } else {
+      config = require(path.join(__dirname, "../../node-datasource/config.js"));
+    }
     creds = config.databaseServer;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
