@@ -12,63 +12,30 @@ var _ = require('underscore'),
 
   // critical
   // TODO: get rid of xtuple-extensions/scripts/buildExtensions
-  // TODO: keep a copy of the scripts in case multiple databases want to use them
+  // TODO: version 1.0.0 must be a real number
+  // TODO: bypass the client build if the user only wants to build the db
 
   // noncritical
   // TODO: you need to sudo to save these files, but with sudo I have to type the admin password.
+  // TODO: relax the assumption that extension builds are js only (i.e. allow extension css)
 
 (function () {
   "use strict";
 
-  var enyoBuild = function (extPath, callback) {
-    // regex: remove trailing slash
-    var extName = path.basename(extPath).replace(/\/$/, ""), // the name of the extension
-      jsFilename = extName + ".js";
-
-    // create the package file for enyo to use
-    var rootPackageContents = 'enyo.depends("' + extPath + '/client");';
-    fs.writeFile(path.join(__dirname, "package.js"), rootPackageContents, function (err) {
-      if (err) {
-        callback(err);
-        return;
-      }
-      // run the enyo deployment method asyncronously
-      var rootDir = path.join(extPath, "../..");
-      // we run the command from /scripts/lib, so that is where build directories and other
-      // temp files are going to go.
-      console.log("building " + extName);
-      exec(path.join(rootDir, "/tools/deploy.sh"),
-        {
-          maxBuffer: 40000 * 1024, /* 200x default */
-          cwd: __dirname
-        },
-        function (err, stdout) {
-          if (err) {
-            callback(err);
-            return;
-          }
-          // rename the file with the name of the extension so that we won't need to recreate it
-          // in the case of multiple databases wanting the same client code
-          fs.rename(path.join(__dirname, "build/app.js"), path.join(__dirname, "build", jsFilename), function (err) {
-            callback(err);
-          });
-        }
-      );
-    });
-  };
-
-  var constructQuery = function (contents, extension, version, language) {
-    // TODO: sqli guard, not that we distrust the payload
-    return "select xt.insert_client($$" + contents +
-      "$$, '" + extension +
-      "', '" + version +
-      "', '" + language + "');";
-  };
-
-
+  /**
+    Get the sql to insert client-side code into the database. Presupposes that
+    the client code has already been built, and is in the build directory,
+    with the filename as the extension name.
+   */
   // TODO: version 1.0.0 must be a real number
   exports.getClientSql = function (extPath, callback) {
-    var extName;
+    var extName,
+      constructQuery = function (contents, extension, version, language) {
+        return "select xt.insert_client($$" + contents +
+          "$$, '" + extension +
+          "', '" + version +
+          "', '" + language + "');";
+      };
 
     if (extPath.indexOf("/lib/orm") >= 0) {
       // this is lib/orm. There is nothing here to install on the client.
@@ -106,7 +73,48 @@ var _ = require('underscore'),
     }
   };
 
+  /**
+    Builds an extension (as opposed to the core). Saves it by extension name in the builds folder.
+   */
   var buildExtension = function (extPath, callback) {
+    // regex: remove trailing slash
+    var extName = path.basename(extPath).replace(/\/$/, ""), // the name of the extension
+      jsFilename = extName + ".js";
+
+    // create the package file for enyo to use
+    var rootPackageContents = 'enyo.depends("' + extPath + '/client");';
+    fs.writeFile(path.join(__dirname, "package.js"), rootPackageContents, function (err) {
+      if (err) {
+        callback(err);
+        return;
+      }
+      // run the enyo deployment method asyncronously
+      var rootDir = path.join(extPath, "../..");
+      // we run the command from /scripts/lib, so that is where build directories and other
+      // temp files are going to go.
+      console.log("building " + extName);
+      exec(path.join(rootDir, "/tools/deploy.sh"),
+        {
+          maxBuffer: 40000 * 1024, /* 200x default */
+          cwd: __dirname
+        },
+        function (err, stdout) {
+          if (err) {
+            callback(err);
+            return;
+          }
+          // rename the file with the name of the extension so that we won't need to recreate it
+          // in the case of multiple databases wanting the same client code
+          fs.rename(path.join(__dirname, "build/app.js"), path.join(__dirname, "build", jsFilename), function (err) {
+            callback(err);
+          });
+        }
+      );
+    });
+  };
+
+
+  var build = function (extPath, callback) {
     if (extPath.indexOf("/lib/orm") >= 0) {
       // this is lib/orm. There is nothing here to install on the client.
       callback();
@@ -187,11 +195,11 @@ var _ = require('underscore'),
       fs.symlinkSync(path.join(__dirname, "../../enyo-client/application/enyo"), path.join(rootDir, 'enyo'));
     }
 
-    enyoBuild(extPath, callback);
+    buildExtension(extPath, callback);
   };
 
   //
-  // Define cleanup function
+  // Cleanup by deleting all the client files we've built
   //
   exports.cleanup = function (specs, callback) {
     // these are the unique extension root directories
@@ -256,7 +264,7 @@ var _ = require('underscore'),
         callback(err);
         return;
       }
-      async.mapSeries(extDirs, buildExtension, function (err, res) {
+      async.mapSeries(extDirs, build, function (err, res) {
         callback(err, res);
       });
     });
