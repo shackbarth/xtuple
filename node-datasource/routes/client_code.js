@@ -7,17 +7,16 @@ var async = require("async");
 (function () {
   "use strict";
 
-  // TODO: css vs js
-  // TODO: get the core
   // TODO: right now we just give the latest versions of everything
+  // TODO: cache the code
 
-  var bundleClientCode = function (req, res, extensions) {
-    var uuids = _.map(extensions, function (ext) {
-      _.sortBy(ext.codeInfo, function (codeInfo) {
-        return Number(codeInfo.version);
-      });
-      return ext.codeInfo[0].uuid;
-    });
+
+  /**
+    @name Extensions
+    @class Extensions
+    Returns a list of extensions associated with an organization.
+   */
+  exports.clientCode = function (req, res) {
 
     var getCodeFromUuid = function (uuid, callback) {
       var model = new SYS.ClientCode();
@@ -35,26 +34,59 @@ var async = require("async");
       });
     };
 
-    async.map(uuids, getCodeFromUuid, function (err, results) {
-      if (err) {
-        res.send({isError: true, error: err});
-        return;
-      }
-      var allCode = _.reduce(results, function (memo, result) {
-        return memo + result;
-      }, "");
-      res.send(allCode);
-    });
+    var getCoreCode = function (language, callback) {
+      var coll = new SYS.ClientCodeInfoCollection();
+      coll.fetch({
+        query: {
+          parameters: [{
+            attribute: "language",
+            value: language
+          }]
+        },
+        success: function (coll, res) {
+          _.sortBy(coll.models, function (model) {
+            return Number(model.get("version"));
+          });
+          getCodeFromUuid(coll.models[0].get("uuid"), callback);
+        }
+      });
+    };
 
 
-  };
+    var bundleClientCode = function (req, res, extensions) {
+      var uuids = _.map(extensions, function (ext) {
+        _.sortBy(ext.codeInfo, function (codeInfo) {
+          return Number(codeInfo.version);
+        });
+        return ext.codeInfo[0].uuid;
+      });
 
-  /**
-    @name Extensions
-    @class Extensions
-    Returns a list of extensions associated with an organization.
-   */
-  exports.clientCode = function (req, res) {
+      async.map(uuids, getCodeFromUuid, function (err, results) {
+        if (err) {
+          res.send({isError: true, error: err});
+          return;
+        }
+        var allCode = _.reduce(results, function (memo, result) {
+          return memo + result;
+        }, "");
+        getCoreCode("js", function (err, result) {
+          allCode = result + allCode;
+          res.send(allCode);
+        });
+      });
+    };
+
+
+    //
+    // Start the execution
+    //
+    if (req.query.language === "css") {
+      getCoreCode("css", function (err, result) {
+        res.send(result);
+      });
+      return;
+    }
+
     var userCollection = new SYS.UserCollection(),
       fetchError = function (err) {
         X.log("Extension fetch error", err);

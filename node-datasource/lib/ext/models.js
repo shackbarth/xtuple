@@ -136,6 +136,17 @@ white:true*/
 
     @extends XM.Collection
   */
+  SYS.ClientCodeInfoCollection = XM.Collection.extend({
+
+    model: SYS.ClientCodeInfo
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   SYS.Oauth2clientCollection = XM.Collection.extend({
 
     model: SYS.Oauth2client
