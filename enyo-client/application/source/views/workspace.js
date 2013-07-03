@@ -330,7 +330,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           ]}
         ]},
         {kind: "XV.ContactCommentBox", attr: "comments"},
-        {kind: "XV.ContactDocumentsBox", attr: "documents"} 
+        {kind: "XV.ContactDocumentsBox", attr: "documents"},
+        {kind: "XV.ContactEmailBox", attr: "email"}
       ]}
     ],
     /*
