@@ -46,10 +46,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       console.log('starting third test on Android');
       starttest(desiredcaps.caps[2], 'uname3', test3);
     },
-    'iPhone on Mac 10.6' : function (test4) {
+    //Commenting the iphone environment because of the security dialog
+    /*'iPhone on Mac 10.6' : function (test4) {
       console.log('starting test on iPhone');
       starttest(desiredcaps.caps[3], 'uname4', test4);
-    },/*
+    },
     'Safari on Mac 10.6' : function (test5) {
       console.log('starting test on Safari');
       starttest(desiredcaps.caps[4], 'uname5', test5);
