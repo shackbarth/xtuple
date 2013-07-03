@@ -324,12 +324,13 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "fax"},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes"}
+            {kind: "XV.TextArea", attr: "notes"},
+            {kind: "onyx.GroupboxHeader", content: "_export".loc()},
+            {kind: "onyx.Button", content: "_export".loc(), ontap: "exportContact"}
           ]}
         ]},
         {kind: "XV.ContactCommentBox", attr: "comments"},
-        {kind: "XV.ContactDocumentsBox", attr: "documents"},
-        {kind: "onyx.Button", content: "_export".loc(), ontap: "exportContact"} 
+        {kind: "XV.ContactDocumentsBox", attr: "documents"} 
       ]}
     ],
     /*
@@ -339,6 +340,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     */
     exportContact: function (inSender, inEvent) {
       var model = this.getValue(),
+          begin,
+          version,
           name,
           fullName,
           org,
@@ -346,37 +349,72 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           photo,
           phoneWork,
           phoneHome,
+          address = [],
           addressWork,
           addressHome,
           labelWork,
           labelHome,
           email,
           revision,
+          end,
+          stringToSave,
           file;
       if (model.get('lastName')) {
         name = model.get('lastName');
         fullName = model.get('lastName');
       }
       if (model.get('middleName')) {
-        name = name + ";" + model.get('middleName'));
+        name = name + ";" + model.get('middleName');
         fullName = model.get('middleName') + " " + fullName;
       }
       if (model.get('firstName')) {
-        name = name + ";" + model.get('firstName'));
+        name = name + ";" + model.get('firstName');
         fullName = model.get('firstName') + " " + fullName;
       }
 
+      begin = "VCARD";
+      version = "3.0";
       org = "?";
       title = model.get('jobTitle');
       photo = "";
       phoneWork = model.get('phone');
       phoneHome = model.get('alternate');
-      addressWork = model.get('address').toString();
+      address = model.get('address');
+      address[0] = address.get('line1');
+      address[1] = address.get('line2');
+      address[2] = address.get('line3');
+      address[3] = address.get('city');
+      address[4] = address.get('state');
+      address[5] = address.get('postalCode');
+      address[6] = address.get('country');
+      //for address, set address with semicolon delimiters
+      for (var i = 0; i < address.length; i++) {
+        addressWork = addressWork + address[0] + ";";
+      }
+      //for label, set address with ESCAPED newline delimiters
+      for (var i = 0; i < address.length; i++) {
+        labelWork = labelWork + address[0] + "\\n";
+      }
       addressHome = "";
-      labelWork = "";
       labelHome = "";
       email = model.get('email');
       revision = "";
+      end = "VCARD";
+
+      stringToSave = "BEGIN:" + begin + "\n" +
+        "VERSION:" + version + "\n" +
+        "N:" + name + "\n" +
+        "FN:" + fullName + "\n" +
+        "ORG:" + org + "\n" +
+        "TITLE:" + title + "\n" +
+        "TEL;TYPE=WORK,VOICE:" + phoneWork + "\n" +
+        "TEL;TYPE=HOME,VOICE:" + phoneHome + "\n" +
+        "ADR;TYPE=WORK:;;" + addressWork + "\n" +
+        "EMAIL;TYPE=PREF,INTERNET:" + email + "\n" +
+        "REV:" + revision + "\n" +
+        "END:" + end + "\n";
+
+      //actually save the file
     }
   };
 
