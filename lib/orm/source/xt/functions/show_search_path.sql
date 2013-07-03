@@ -9,4 +9,4 @@ begin
       return rec.search_path::text;
   end loop;
 end;
-$$ language plpgsql
+$$ language plpgsql;

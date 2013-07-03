@@ -1,0 +1,165 @@
+/*
+  Styles relating to the groupbox
+*/
+
+.xv-groupbox {
+  min-width: 320px;
+  padding: 8px;
+  margin-right: 5px;
+
+  &.editor {
+    min-width: 250px;
+    padding: 0;
+    margin: 0;
+  }
+
+  &.in-panel {
+    padding: 0;
+    margin: 0;
+  }
+
+  .in-panel {
+    > *:first-child {
+      border-top-color: @silver;
+      border-top: none;
+      border-width: 1px;
+      .border-radius(0);
+    }
+
+    > *:last-child {
+      .border-radius(0);
+      border-bottom: none;
+    }
+  }
+
+  > .in-panel {
+    .editor {
+      border-right: none;
+    }
+  }
+
+  &.panel {
+    min-width: 330px;
+  }
+
+  .xv-inputwidget {
+    background-color: @white;
+  }
+
+  .onyx-input-decorator {
+    border: 0;
+  }
+
+  .onyx-picker-decorator {
+    .onyx-button {
+      width: 150px;
+    }
+  }
+
+  .xv-moneywidget {
+    background-color: @white;
+    padding-top: 6px;
+    padding-bottom: 2px;
+
+    .onyx-input-decorator {
+      border: 0;
+      font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+      width: 110px;
+      padding: 6px 10px 8px 6px;
+
+      input, .xv-money-label {
+        width: 100%;
+        text-align: right;
+      }
+
+      &.xv-currency-label {
+        width: 65px;
+      }
+    }
+
+    .xv-picker {
+      width: 65px;
+      text-align: center;
+      padding: 10px;
+    }
+  }
+
+  .xv-relationwidget, .xv-datewidget {
+    .onyx-input-decorator {
+      width: 170px;
+    }
+    input {
+      width: 120px;
+    }
+  }
+
+  > .onyx-input-decorator {
+    border-color: @silver;
+    border-width: 0 1px 1px 1px;
+    .border-radius(4px);
+  }
+
+  > .onyx-input-decorator:first-child {
+    border-width: 1px;
+    .border-radius-all(4px, 4px, 0, 0);
+  }
+
+  > .onyx-input-decorator:last-child {
+    .border-radius-all(0, 0, 4px, 4px);
+  }
+
+  > .onyx-input-decorator:first-child:last-child {
+    .border-radius(4px);
+  }
+
+  > * {
+    display: block;
+    border: 1px @silver solid;
+    border-top-width: 0;
+    /* reset styles that make 'item' look bad if they happen to be there */
+    .border-radius(0);
+    margin: 0;
+  }
+
+  > *:first-child {
+    border-top-color: @silver;
+    border-width: 1px;
+    .border-radius-all(4px, 4px, 0, 0);
+  }
+
+  > *:last-child {
+    .border-radius-all(0, 0, 4px, 4px);
+  }
+
+  > *:first-child:last-child {
+    .border-radius(4px);
+  }
+}
+
+.xv-groupbox-header {
+  padding: 5px 10px;
+  color: @white;
+  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: @dark-gray;
+  border: none;
+  background: @charcoal url(../../images/gradient.png) repeat-x 0 10px;
+}
+
+.xv-groupbox-buttons {
+  border: none;
+  .xv-groupbox-button-single {
+    .border-radius-all(0, 0, 4px, 4px);
+  }
+  .xv-groupbox-button-center {
+    .border-radius(0);
+  }
+  .xv-groupbox-button-left {
+    .border-radius-all(0, 0, 0, 4px);
+  }
+  .xv-groupbox-button-right {
+    .border-radius-all(0, 0, 4px, 0);
+  }
+}

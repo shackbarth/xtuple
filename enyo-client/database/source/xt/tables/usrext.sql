@@ -5,4 +5,4 @@ select xt.add_column('usrext','obj_uuid', 'text', 'default xt.generate_uuid()', 
 select xt.add_column('usrext','usrext_usr_username', 'text');
 select xt.add_column('usrext','usrext_ext_id', 'integer', 'references xt.ext (ext_id)');
 
-comment on table xt.bicache is 'Associations of users with extensions';
+comment on table xt.usrext is 'Associations of users with extensions';

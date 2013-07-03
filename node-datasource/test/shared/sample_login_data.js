@@ -6,5 +6,4 @@ exports.data = {
   org: '', //------ enter the database name here
   suname: '', //-------enter the sauce labs username
   sakey: '' //------enter the sauce labs access key
-}
-
+};

@@ -5,8 +5,8 @@ select xt.add_column('comment','obj_uuid', 'text', 'default xt.generate_uuid()',
 -- force isPublic from null to true, but do it while triggers are disabled
 -- the ORMs now rely on this field being either true or false
 
-DROP TRIGGER comment_did_change ON comment;
-DROP TRIGGER commenttrigger ON comment;
+DROP TRIGGER IF EXISTS comment_did_change ON comment;
+DROP TRIGGER IF EXISTS commenttrigger ON comment;
 
 UPDATE comment SET comment_public = true WHERE comment_public IS NULL;
 

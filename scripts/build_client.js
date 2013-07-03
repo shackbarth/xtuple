@@ -99,7 +99,7 @@ var fs = require('fs'),
   //
   finish = function () {
     fs.unlinkSync("package.js");
-    fs.unlinkSync(rootDir + "/enyo");
+    //fs.unlinkSync(rootDir + "/enyo");
     rimraf("./build", function () {
       rimraf("./deploy", function () {
         console.log("all done");

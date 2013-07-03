@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
-/*global XT:true, XV:true, XM:true, enyo:true*/
+/*global XT:true, XV:true, XM:true, enyo:true, console:true */
 
 (function () {
 
@@ -53,7 +53,7 @@ trailing:true, white:true*/
       name: "sales",
       label: "_sales".loc(),
       panels: [
-        {name: "dashboard", kind: "XV.SalesDashboard"},
+        {name: "salesDashboard", kind: "XV.SalesDashboard"},
         {name: "customerList", kind: "XV.CustomerList"},
         {name: "prospectList", kind: "XV.ProspectList"},
         {name: "quoteList", kind: "XV.QuoteList"},
