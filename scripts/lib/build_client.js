@@ -244,14 +244,17 @@ var _ = require('underscore'),
           callback(err);
           return;
         }
-        rimraf(path.join(__dirname, "build"), function (err) {
-          if (err) {
-            callback(err);
-            return;
-          }
-          rimraf(path.join(__dirname, "deploy"), function (err) {
-            callback(err);
-          });
+        var buildDirs = [
+          path.join(__dirname, "build"),
+          path.join(__dirname, "deploy"),
+          path.join(__dirname, "../../enyo-client/application/build"),
+          path.join(__dirname, "../../enyo-client/application/deploy"),
+          path.join(__dirname, "../../enyo-client/extensions/build"),
+          path.join(__dirname, "../../enyo-client/extensions/builds"),
+          path.join(__dirname, "../../enyo-client/extensions/deploy")
+        ];
+        async.map(buildDirs, rimraf, function (err) {
+          callback(err);
         });
       });
     });
