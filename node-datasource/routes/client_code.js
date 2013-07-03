@@ -8,7 +8,6 @@ var async = require("async");
   "use strict";
 
   // TODO: right now we just give the latest versions of everything
-  // TODO: cache the code
   // TODO: cache in the browser?
   // TODO: paths to images
 
@@ -21,7 +20,8 @@ var async = require("async");
 
     //
     // We have the UUID of the code we want. Fetch it.
-    // TODO: great place to use the cache, here.
+    // TODO: more sophisticated way to cache than this?
+    // TODO: what if we update the row without changing the uuid?
     //
     var getCodeFromUuid = function (uuid, callback) {
       var code;
@@ -30,7 +30,6 @@ var async = require("async");
 
       code = X.clientCodeCache[uuid];
       if (code) {
-        console.log("Got code from cache: ", uuid);
         callback(null, code);
         return;
       }
