@@ -24,13 +24,27 @@ var async = require("async");
     // TODO: great place to use the cache, here.
     //
     var getCodeFromUuid = function (uuid, callback) {
+      var code;
+
+      X.clientCodeCache = X.clientCodeCache || {};
+
+      code = X.clientCodeCache[uuid];
+      if (code) {
+        console.log("Got code from cache: ", uuid);
+        callback(null, code);
+        return;
+      }
+
+
       var model = new SYS.ClientCode();
       model.fetch({
         id: uuid,
         username: X.options.databaseServer.user,
         database: req.session.passport.user.organization,
         success: function (res, model) {
-          callback(null, model.get("code"));
+          code = model.get("code");
+          X.clientCodeCache[uuid] = code;
+          callback(null, code);
         },
         error: function (err) {
           callback(err);
@@ -46,6 +60,8 @@ var async = require("async");
     var getCoreCode = function (language, callback) {
       var coll = new SYS.ClientCodeInfoCollection();
       coll.fetch({
+        username: X.options.databaseServer.user,
+        database: req.session.passport.user.organization,
         query: {
           parameters: [{
             attribute: "language",
