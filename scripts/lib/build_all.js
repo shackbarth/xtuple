@@ -98,20 +98,8 @@ var _ = require('underscore'),
       buildAll = function (specs, creds, buildAllCallback) {
         buildDatabase(specs, creds, function (databaseErr, databaseRes) {
           var returnMessage;
-          // XXX the reason this only works on one database is that async calls the
-          // callback on the first error, so if there are multiple databases
-          // those other processes are probably still chugging along and go haywire
-          // if you start running them again.
-          if (databaseErr && specs.length === 1 && !specs[0].wipeViews) {
-            console.log("Hit a roadblock! Going to try again right now, wiping out the views.");
-            _.each(specs, function (spec) {
-              spec.wipeViews = true;
-            });
-            buildAll(specs, creds, buildAllCallback);
-            return;
-
-          } else if (databaseErr && specs[0].wipeViews) {
-            buildAllCallback("Build failed.");
+          if (databaseErr && specs[0].wipeViews) {
+            buildAllCallback(databaseErr);
             return;
 
           } else if (databaseErr) {

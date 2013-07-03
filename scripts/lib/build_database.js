@@ -418,10 +418,11 @@ var _ = require('underscore'),
         }
         return;
       }
-      //winston.info("Success installing all scripts");
-      clientBuilder.cleanup(function () {
+      winston.info("Success installing all scripts.");
+      winston.info("Cleaning up.");
+      clientBuilder.cleanup(specs, function (err) {
         if (masterCallback) {
-          masterCallback(null, res);
+          masterCallback(err, res);
         }
       });
     });

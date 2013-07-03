@@ -10,6 +10,8 @@ var _ = require('underscore'),
   path = require('path'),
   rimraf = require('rimraf');
 
+  // TODO: you need to sudo to save these files, but with sudo I have to type the admin password.
+
       // TODO: get rid of xtuple-extensions/scripts/buildExtensions
 
       // TODO: once we move people off of enyo-client/extensions/buildExtensions.sh, we can:
@@ -27,27 +29,35 @@ var _ = require('underscore'),
 
     // create the package file for enyo to use
     var rootPackageContents = 'enyo.depends("' + extPath + '/client");';
-    fs.writeFile("package.js", rootPackageContents, function (err) {
+    fs.writeFile(path.join(__dirname, "package.js"), rootPackageContents, function (err) {
       if (err) {
         callback(err);
         return;
       }
       // run the enyo deployment method asyncronously
       var rootDir = path.join(extPath, "../..");
-      exec(path.join(rootDir, "/tools/deploy.sh"), function (err, stdout) {
-        if (err) {
-          callback(err);
-          return;
-        }
-        // enyo really puts the build directory relative to the cwd.
-        var code = fs.readFile(path.join(process.cwd(), "/build/app.js"), "utf8", function (err, code) {
+      // we run the command from /scripts/lib, so that is where build directories and other
+      // temp files are going to go.
+      console.log("building " + extName);
+      exec(path.join(rootDir, "/tools/deploy.sh"),
+        {
+          maxBuffer: 40000 * 1024, /* 200x default */
+          cwd: __dirname
+        },
+        function (err, stdout) {
           if (err) {
             callback(err);
             return;
           }
-          callback(null, constructQuery(code, extName, "1.0.0", "js"));
-        });
-      });
+          var code = fs.readFile(path.join(__dirname, "/build/app.js"), "utf8", function (err, code) {
+            if (err) {
+              callback(err);
+              return;
+            }
+            callback(null, constructQuery(code, extName, "1.0.0", "js"));
+          });
+        }
+      );
     });
   };
 
@@ -72,7 +82,12 @@ var _ = require('underscore'),
 
     if (extPath.indexOf("extensions") < 0) {
       // this is the core app, which has a different deploy process.
+      console.log("building client core");
       exec(path.join(__dirname, "../../enyo-client/application/tools/deploy.sh"), function (err, stdout) {
+        if (err) {
+          callback(err);
+          return;
+        }
         fs.readdir(path.join(__dirname, "../../enyo-client/application/build"), function (err, files) {
           var readFile;
           if (err) {
@@ -132,13 +147,50 @@ var _ = require('underscore'),
   //
   // Define cleanup function
   //
-  exports.cleanup = function (callback) {
-    fs.unlinkSync(path.join(process.cwd(), "package.js"));
+  exports.cleanup = function (specs, callback) {
+    // these are the unique extension root directories
+    var rootDirs = _.unique(_.compact(_.flatten(_.map(specs, function (spec) {
+      return _.map(spec.extensions, function (extension) {
+        return extension.indexOf("extensions") >= 0 ? path.join(extension, "../..") : null;
+      });
+    }))));
 
-    //fs.unlinkSync(rootDir + "/enyo"); // TODO
-    rimraf(path.join(process.cwd(), "build"), function () {
-      rimraf(path.join(process.cwd(), "deploy"), function () {
-        callback("all done");
+    var unlinkEnyo = function (rootDir, callback) {
+      var enyoDir = path.join(rootDir, "enyo");
+      fs.exists(enyoDir, function (exists) {
+        if (exists) {
+          fs.unlink(enyoDir, function (err) {
+            if (err) {
+              callback(err);
+              return;
+            }
+            callback();
+          });
+        } else {
+          // no symlink = no need to remove it
+          callback();
+        }
+      });
+    };
+    async.map(rootDirs, unlinkEnyo, function (err, res) {
+      if (err) {
+        callback(err);
+        return;
+      }
+      fs.unlink(path.join(__dirname, "package.js"), function (err) {
+        if (err) {
+          callback(err);
+          return;
+        }
+        rimraf(path.join(__dirname, "build"), function (err) {
+          if (err) {
+            callback(err);
+            return;
+          }
+          rimraf(path.join(__dirname, "deploy"), function (err) {
+            callback(err);
+          });
+        });
       });
     });
   };
