@@ -16,11 +16,14 @@ var _ = require('underscore'),
       //   -remove buildExtensions.sh and nodeBuildExtensions.js
       //   -remove the enyo submodule in that directory and use a temporary symlink
 
+      // TODO: keep a copy of the scripts in case multiple databases want to use them
+
 (function () {
   "use strict";
 
   var enyoBuild = function (extPath, callback) {
-    var extName = path.basename(extPath); // the name of the extension
+    // regex: remove trailing slash
+    var extName = path.basename(extPath).replace(/\/$/, ""); // the name of the extension
 
     // create the package file for enyo to use
     var rootPackageContents = 'enyo.depends("' + extPath + '/client");';
@@ -60,7 +63,7 @@ var _ = require('underscore'),
   //exports.buildClient = function (specs, creds, masterCallback) {
 
   exports.getClientSql = function (extPath, callback) {
-    if (extPath.indexOf("/lib/orm") >= 0) { // TODO: better way to determine what dirs these are
+    if (extPath.indexOf("/lib/orm") >= 0) {
       // this is lib/orm. There is nothing here to install on the client.
       callback(null, "");
       return;
@@ -70,7 +73,6 @@ var _ = require('underscore'),
     if (extPath.indexOf("extensions") < 0) {
       // this is the core app, which has a different deploy process.
       exec(path.join(__dirname, "../../enyo-client/application/tools/deploy.sh"), function (err, stdout) {
-        console.log("xTuple core client has been built");
         fs.readdir(path.join(__dirname, "../../enyo-client/application/build"), function (err, files) {
           var readFile;
           if (err) {
@@ -113,24 +115,18 @@ var _ = require('underscore'),
       return;
     }
 
-    // TODO async
     var rootDir = path.join(extPath, "../..");
-    if (!fs.existsSync(path.join(rootDir, 'builds'))) {
-      fs.mkdirSync(path.join(rootDir, 'builds'));
-    }
 
     //
     //Symlink the enyo directories if they're not there
     //
+    // TODO async
     if (!fs.existsSync(path.join(rootDir, 'enyo'))) {
       console.log("symlinking", path.join(rootDir, 'enyo'));
       fs.symlinkSync(path.join(__dirname, "../../enyo-client/application/enyo"), path.join(rootDir, 'enyo'));
     }
 
-    enyoBuild(extPath, function (err, res) {
-      // TODO: handle err
-      callback(err, res);
-    });
+    enyoBuild(extPath, callback);
   };
 
   //
