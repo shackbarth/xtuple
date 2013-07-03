@@ -212,8 +212,6 @@
     "nameSpace": "XM",
     "type": "SiteZoneRelation",
     "table": "whsezone",
-    "lockable": true,
-    "isRest": true,
     "comment": "Site Zone List Map",
     "privileges": {
       "all": {
@@ -228,7 +226,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "sitetype_id",
+          "column": "whsezone_id",
           "isPrimaryKey": true
         }
       },
@@ -270,7 +268,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "sitetype_id",
+          "column": "whsezone_id",
           "isPrimaryKey": true
         }
       },
@@ -475,7 +473,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "sitetype_id",
+          "column": "location_id",
           "isPrimaryKey": true
         }
       },
@@ -498,7 +496,7 @@
         "name": "siteZone",
         "toOne": {
           "isNested": true,
-          "type": "Number",
+          "type": "SiteZone",
           "column": "location_warehous_id"
         }
       },
@@ -565,7 +563,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "sitetype_id",
+          "column": "location_id",
           "isPrimaryKey": true
         }
       },

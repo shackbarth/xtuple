@@ -46,7 +46,7 @@
       },
       {
         "name": "transactionDate",
-        "toOne": {
+        "attr": {
           "type": "Date",
           "column": "invhist_transdate"
         }
@@ -60,7 +60,7 @@
       },
       {
         "name": "quantity",
-        "toOne": {
+        "attr": {
           "type": "Quantity",
           "column": "invhist_invqty"
         }
@@ -188,7 +188,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "indetail_id",
+          "column": "invdetail_id",
           "isPrimaryKey": true
         }
       },
@@ -204,7 +204,7 @@
         "name": "inventoryHistory",
         "attr": {
           "type": "Number",
-          "column": "invdetail_invhist_id",
+          "column": "invdetail_invhist_id"
         }
       },
       {
@@ -216,7 +216,7 @@
       },
       {
         "name": "quantity",
-        "toOne": {
+        "attr": {
           "type": "Quantity",
           "column": "invdetail_qty"
         }
