@@ -7,9 +7,6 @@ var async = require("async");
 (function () {
   "use strict";
 
-  // critical:
-  // TODO: paths to images
-
   // noncritical:
   // TODO: more sophisticated way to caching strategy?
   // TODO: right now we just give the latest versions of everything
