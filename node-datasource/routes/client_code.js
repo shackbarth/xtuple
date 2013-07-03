@@ -9,9 +9,8 @@ var async = require("async");
 
   // TODO: right now we just give the latest versions of everything
   // TODO: cache the code
-  // TODO: debug mode with core only
   // TODO: cache in the browser?
-
+  // TODO: paths to images
 
   /**
     @name Extensions
@@ -102,17 +101,6 @@ var async = require("async");
     if (req.query.language === "css") {
       getCoreCode("css", function (err, result) {
         res.set('Content-Type', 'text/css');
-        res.send(result);
-      });
-      return;
-    }
-
-    //
-    // Debug mode: just the core, please.
-    //
-    if (req.query.debug) {
-      getCoreCode("js", function (err, result) {
-        res.set('Content-Type', 'application/javascript');
         res.send(result);
       });
       return;
