@@ -7,9 +7,12 @@ var async = require("async");
 (function () {
   "use strict";
 
-  // TODO: right now we just give the latest versions of everything
-  // TODO: cache in the browser?
+  // critical:
   // TODO: paths to images
+
+  // noncritical:
+  // TODO: more sophisticated way to caching strategy?
+  // TODO: right now we just give the latest versions of everything
 
   /**
     @name Extensions
@@ -20,8 +23,6 @@ var async = require("async");
 
     //
     // We have the UUID of the code we want. Fetch it.
-    // TODO: more sophisticated way to cache than this?
-    // TODO: what if we update the row without changing the uuid?
     //
     var getCodeFromUuid = function (uuid, callback) {
       var code;
@@ -33,7 +34,6 @@ var async = require("async");
         callback(null, code);
         return;
       }
-
 
       var model = new SYS.ClientCode();
       model.fetch({
@@ -53,7 +53,7 @@ var async = require("async");
 
     //
     // Get the most recent version of the core code
-    // TODO: we'll need to sometimes give older versions
+    // XXX: we'll need to sometimes give older versions
     // @param {String} language Can be "js" or "css".
     //
     var getCoreCode = function (language, callback) {
@@ -111,7 +111,7 @@ var async = require("async");
 
     //
     // Send the client the most recent css.
-    // TODO: right now the only css is in the core, but that probably won't last forever
+    // XXX: right now the only css is in the core, but that probably won't last forever
     //
     if (req.query.language === "css") {
       getCoreCode("css", function (err, result) {
