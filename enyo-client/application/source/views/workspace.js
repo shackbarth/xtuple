@@ -329,9 +329,55 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         ]},
         {kind: "XV.ContactCommentBox", attr: "comments"},
         {kind: "XV.ContactDocumentsBox", attr: "documents"},
-        {kind: "XV.ContactEmailBox", attr: "email"}
+        {kind: "onyx.Button", content: "_export".loc(), ontap: "exportContact"} 
       ]}
-    ]
+    ],
+    /*
+    *@exportContact
+    *
+    *this function exports the contact as a vCard 3.0 file
+    */
+    exportContact: function (inSender, inEvent) {
+      var model = this.getValue(),
+          name,
+          fullName,
+          org,
+          title,
+          photo,
+          phoneWork,
+          phoneHome,
+          addressWork,
+          addressHome,
+          labelWork,
+          labelHome,
+          email,
+          revision,
+          file;
+      if (model.get('lastName')) {
+        name = model.get('lastName');
+        fullName = model.get('lastName');
+      }
+      if (model.get('middleName')) {
+        name = name + ";" + model.get('middleName'));
+        fullName = model.get('middleName') + " " + fullName;
+      }
+      if (model.get('firstName')) {
+        name = name + ";" + model.get('firstName'));
+        fullName = model.get('firstName') + " " + fullName;
+      }
+
+      org = "?";
+      title = model.get('jobTitle');
+      photo = "";
+      phoneWork = model.get('phone');
+      phoneHome = model.get('alternate');
+      addressWork = model.get('address').toString();
+      addressHome = "";
+      labelWork = "";
+      labelHome = "";
+      email = model.get('email');
+      revision = "";
+    }
   };
 
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
