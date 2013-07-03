@@ -96,24 +96,30 @@ var _ = require('underscore'),
         });
       },
       buildAll = function (specs, creds, buildAllCallback) {
-        buildDatabase(specs, creds, function (databaseErr, databaseRes) {
-          var returnMessage;
-          if (databaseErr && specs[0].wipeViews) {
-            buildAllCallback(databaseErr);
-            return;
-
-          } else if (databaseErr) {
-            buildAllCallback("Build failed. Try wiping the views next time by running me with the -w flag.");
+        buildClient(specs, function (err, res) {
+          if (err) {
+            buildAllCallback(err);
             return;
           }
-          returnMessage = "\n";
-          _.each(specs, function (spec) {
-            returnMessage += "Database: " + spec.database + '\nDirectories:\n';
-            _.each(spec.extensions, function (ext) {
-              returnMessage += '  ' + ext + '\n';
+          buildDatabase(specs, creds, function (databaseErr, databaseRes) {
+            var returnMessage;
+            if (databaseErr && specs[0].wipeViews) {
+              buildAllCallback(databaseErr);
+              return;
+
+            } else if (databaseErr) {
+              buildAllCallback("Build failed. Try wiping the views next time by running me with the -w flag.");
+              return;
+            }
+            returnMessage = "\n";
+            _.each(specs, function (spec) {
+              returnMessage += "Database: " + spec.database + '\nDirectories:\n';
+              _.each(spec.extensions, function (ext) {
+                returnMessage += '  ' + ext + '\n';
+              });
             });
+            buildAllCallback(null, "Build succeeded." + returnMessage);
           });
-          buildAllCallback(null, "Build succeeded." + returnMessage);
         });
       },
       config = require(path.join(__dirname, "../../node-datasource/config.js"));
