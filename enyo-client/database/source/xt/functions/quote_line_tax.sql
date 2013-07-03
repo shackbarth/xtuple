@@ -9,4 +9,4 @@ create or replace function xt.quote_line_tax(quitem) returns numeric stable as $
       xt.quote_line_extended_price($1))).taxdetail_tax as tax
     from quhead
     where quhead_id = $1.quitem_quhead_id) data;
-$$ language sql
+$$ language sql;

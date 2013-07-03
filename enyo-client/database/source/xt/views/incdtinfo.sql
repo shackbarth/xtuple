@@ -9,4 +9,4 @@ select xt.create_view('xt.incdtinfo', $$
      join crmacct on  crmacct_id=incdt_crmacct_id  
      join cntct on cntct_id=incdt_cntct_id  
      left join incdtpriority on (incdt_incdtpriority_id=incdtpriority_id);
-$$)
+$$);

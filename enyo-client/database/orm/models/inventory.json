@@ -73,6 +73,13 @@
         }
       },
       {
+        "name": "orderType",
+        "attr": {
+          "type": "String",
+          "column": "invhist_ordtype"
+        }
+      },
+      {
         "name": "orderNumber",
         "attr": {
           "type": "String",
@@ -108,6 +115,27 @@
         }
       },
       {
+        "name": "costMethod",
+        "attr": {
+          "type": "String",
+          "column": "invhist_costmethod"
+        }
+      },
+      {
+        "name": "valueBefore",
+        "attr": {
+          "type": "Money",
+          "column": "invhist_value_before"
+        }
+      },
+      {
+        "name": "valueAfter",
+        "attr": {
+          "type": "Money",
+          "column": "invhist_value_after"
+        }
+      },
+      {
         "name": "notes",
         "attr": {
           "type": "String",
@@ -115,153 +143,100 @@
         }
       },
       {
-        "name": "owner",
-        "toOne": {
-          "isNested": true,
-          "type": "UserAccountRelation",
-          "column": "incdt_owner_username",
-          "inverse": "username"
-        }
-      },
-      {
-        "name": "assignedTo",
-        "toOne": {
-          "isNested": true,
-          "type": "UserAccountRelation",
-          "column": "incdt_assigned_username",
-          "inverse": "username"
-        }
-      },
-      {
-        "name": "notes",
+        "name": "posted",
         "attr": {
           "type": "String",
-          "column": "incdt_descrip"
+          "column": "invhist_posted"
         }
       },
       {
-        "name": "item",
+        "name": "user",
         "toOne": {
           "isNested": true,
-          "type": "ItemRelation",
-          "column": "incdt_item_id"
-        }
-      },
-      {
-        "name": "recurrences",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentRecurrence",
-          "column": "incdt_id",
-          "inverse": "incident"
+          "type": "UserAccountRelation",
+          "column": "invhist_user",
+          "inverse": "username"
         }
       },
       {
         "name": "created",
         "attr": {
           "type": "Date",
-          "column": "incdt_timestamp",
-          "required": true
+          "column": "invhist_created"
         }
       },
       {
-        "name": "updated",
-        "attr": {
-          "type": "Date",
-          "column": "incdt_updated"
-        }
-      },
-      {
-        "name": "alarms",
+        "name": "detail",
         "toMany": {
           "isNested": true,
-          "type": "IncidentAlarm",
-          "column": "incdt_id",
-          "inverse": "incident"
-        }
-      },
-      {
-        "name": "history",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentHistory",
-          "column": "incdt_id",
-          "inverse": "incident"
-        }
-      },
-      {
-        "name": "comments",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentComment",
-          "column": "incdt_id",
-          "inverse": "incident"
-        }
-      },
-      {
-        "name": "characteristics",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentCharacteristic",
-          "column": "incdt_id",
-          "inverse": "incident"
-        }
-      },
-      {
-        "name": "contacts",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentContact",
-          "column": "incdt_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "items",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentItem",
-          "column": "incdt_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "files",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentFile",
-          "column": "incdt_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "urls",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentUrl",
-          "column": "incdt_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "accounts",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentAccount",
-          "column": "incdt_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "incidents",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentIncident",
-          "column": "incdt_id",
-          "inverse": "source"
+          "type": "InventoryDetail",
+          "column": "invhist_id",
+          "inverse": "inventoryHistory"
         }
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InventoryDetail",
+    "table": "invdetail",
+    "comment": "Inventory Detail Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "indetail_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "inventoryHistory",
+        "attr": {
+          "type": "Number",
+          "column": "invdetail_invhist_id",
+        }
+      },
+      {
+        "name": "location",
+        "toOne": {
+          "type": "LocationRelation",
+          "column": "invdetail_location_id"
+        }
+      },
+      {
+        "name": "quantity",
+        "toOne": {
+          "type": "Quantity",
+          "column": "invdetail_qty"
+        }
+      },
+      {
+        "name": "quantityBefore",
+        "attr": {
+          "type": "Quantity",
+          "column": "invdetail_qty_before"
+        }
+      },
+      {
+        "name": "quantityAfter",
+        "attr": {
+          "type": "Quantity",
+          "column": "invdetail_qty_after"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   }
 ]
