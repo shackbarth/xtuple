@@ -9,6 +9,7 @@ var async = require("async");
 
   // TODO: right now we just give the latest versions of everything
   // TODO: cache the code
+  // TODO: debug mode with core only
 
 
   /**
@@ -18,6 +19,10 @@ var async = require("async");
    */
   exports.clientCode = function (req, res) {
 
+    //
+    // We have the UUID of the code we want. Fetch it.
+    // TODO: great place to use the cache, here.
+    //
     var getCodeFromUuid = function (uuid, callback) {
       var model = new SYS.ClientCode();
       model.fetch({
@@ -25,7 +30,6 @@ var async = require("async");
         username: X.options.databaseServer.user,
         database: req.session.passport.user.organization,
         success: function (res, model) {
-          console.log(res);
           callback(null, model.get("code"));
         },
         error: function (err) {
@@ -34,6 +38,11 @@ var async = require("async");
       });
     };
 
+    //
+    // Get the most recent version of the core code
+    // TODO: we'll need to sometimes give older versions
+    // @param {String} language Can be "js" or "css".
+    //
     var getCoreCode = function (language, callback) {
       var coll = new SYS.ClientCodeInfoCollection();
       coll.fetch({
@@ -52,8 +61,11 @@ var async = require("async");
       });
     };
 
-
-    var bundleClientCode = function (req, res, extensions) {
+    //
+    // Given a list of extensions the user is granted, fetch the
+    // client code of those extension (and the core) and return it.
+    //
+    var bundleClientCode = function (extensions) {
       var uuids = _.map(extensions, function (ext) {
         _.sortBy(ext.codeInfo, function (codeInfo) {
           return Number(codeInfo.version);
@@ -80,6 +92,11 @@ var async = require("async");
     //
     // Start the execution
     //
+
+    //
+    // Send the client the most recent css.
+    // TODO: right now the only css is in the core, but that probably won't last forever
+    //
     if (req.query.language === "css") {
       getCoreCode("css", function (err, result) {
         res.send(result);
@@ -87,6 +104,20 @@ var async = require("async");
       return;
     }
 
+    //
+    // Debug mode: just the core, please.
+    //
+    if (req.query.debug) {
+      getCoreCode("js", function (err, result) {
+        res.send(result);
+      });
+      return;
+    }
+
+    //
+    // Typical execution: figure out what extensions the client is entitled to,
+    // and bundle and return those.
+    //
     var userCollection = new SYS.UserCollection(),
       fetchError = function (err) {
         X.log("Extension fetch error", err);
@@ -138,12 +169,12 @@ var async = require("async");
                 }
               });
             });
-            bundleClientCode(req, res, extensions);
+            bundleClientCode(extensions);
           });
 
         } else {
           // no second async call necessary
-          bundleClientCode(req, res, extensions);
+          bundleClientCode(extensions);
         }
 
       };
