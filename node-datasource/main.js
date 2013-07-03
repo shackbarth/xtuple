@@ -342,7 +342,7 @@ app.post('/login/scopeSubmit', routes.scope);
 app.get('/:org/logout', routes.logout);
 
 app.all('/:org/change-password', routes.changePassword);
-app.all('/:org/client-code', routes.clientCode);
+app.all('/:org/client/build/client-code', routes.clientCode);
 app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
