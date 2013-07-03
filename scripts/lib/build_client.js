@@ -27,7 +27,6 @@ var _ = require('underscore'),
     the client code has already been built, and is in the build directory,
     with the filename as the extension name.
    */
-  // TODO: version 1.0.0 must be a real number
   exports.getClientSql = function (extPath, callback) {
     var extName,
       constructQuery = function (contents, extension, version, language) {
@@ -43,7 +42,7 @@ var _ = require('underscore'),
       return;
 
     } else if (extPath.indexOf("extensions") < 0) {
-      // this is the core app, which has a different deploy process.
+      // this is the core app, which has a slightly different process.
       fs.readFile(path.join(__dirname, "build/core.js"), "utf8", function (err, jsCode) {
         if (err) {
           callback(err);
@@ -69,7 +68,6 @@ var _ = require('underscore'),
         }
         callback(null, constructQuery(code, extName, "1.0.0", "js"));
       });
-
     }
   };
 
@@ -113,6 +111,68 @@ var _ = require('underscore'),
     });
   };
 
+  /**
+    Builds the core. Saves it as core.js and core.css in the builds folder. Core is enyo + app smooshed together.
+   */
+  var buildCore = function (callback) {
+    console.log("building client core");
+    exec(path.join(__dirname, "../../enyo-client/application/tools/deploy.sh"), function (err, stdout) {
+      if (err) {
+        callback(err);
+        return;
+      }
+      fs.readdir(path.join(__dirname, "../../enyo-client/application/build"), function (err, files) {
+        var readFile;
+        if (err) {
+          callback(err);
+          return;
+        }
+        readFile = function (filename, callback) {
+          var callbackAdaptor = function (err, contents) {
+            callback(err, {name: filename, contents: contents});
+          };
+          filename = path.join(__dirname, "../../enyo-client/application/build", filename);
+          fs.readFile(filename, "utf8", callbackAdaptor);
+        };
+        async.map(files, readFile, function (err, results) {
+          var cssResults = _.filter(results, function (result) {
+              return path.extname(result.name) === ".css";
+            }),
+            sortedCssResults = _.sortBy(cssResults, function (result) {
+              return path.basename(result.name) === "app.css";
+            }),
+            cssString = _.reduce(sortedCssResults, function (memo, result) {
+              return memo + result.contents;
+            }, ""),
+            jsResults = _.filter(results, function (result) {
+              return path.extname(result.name) === ".js";
+            }),
+            sortedJsResults = _.sortBy(jsResults, function (result) {
+              return path.basename(result.name) === "app.js";
+            }),
+            jsString = _.reduce(sortedJsResults, function (memo, result) {
+              return memo + result.contents;
+            }, "");
+
+          fs.writeFile(path.join(__dirname, "build/core.js"), jsString, function (err) {
+            if (err) {
+              console.log("couldn't write core.js");
+              callback(err);
+              return;
+            }
+
+            fs.writeFile(path.join(__dirname, "build/core.css"), cssString, function (err) {
+              if (err) {
+                callback(err);
+                return;
+              }
+              callback();
+            });
+          });
+        });
+      });
+    });
+  };
 
   var build = function (extPath, callback) {
     if (extPath.indexOf("/lib/orm") >= 0) {
@@ -121,66 +181,9 @@ var _ = require('underscore'),
       return;
     }
 
-
     if (extPath.indexOf("extensions") < 0) {
       // this is the core app, which has a different deploy process.
-      console.log("building client core");
-      exec(path.join(__dirname, "../../enyo-client/application/tools/deploy.sh"), function (err, stdout) {
-        if (err) {
-          callback(err);
-          return;
-        }
-        fs.readdir(path.join(__dirname, "../../enyo-client/application/build"), function (err, files) {
-          var readFile;
-          if (err) {
-            callback(err);
-            return;
-          }
-          readFile = function (filename, callback) {
-            var callbackAdaptor = function (err, contents) {
-              callback(err, {name: filename, contents: contents});
-            };
-            filename = path.join(__dirname, "../../enyo-client/application/build", filename);
-            fs.readFile(filename, "utf8", callbackAdaptor);
-          };
-          async.map(files, readFile, function (err, results) {
-            var cssResults = _.filter(results, function (result) {
-                return path.extname(result.name) === ".css";
-              }),
-              sortedCssResults = _.sortBy(cssResults, function (result) {
-                return path.basename(result.name) === "app.css";
-              }),
-              cssString = _.reduce(sortedCssResults, function (memo, result) {
-                return memo + result.contents;
-              }, ""),
-              jsResults = _.filter(results, function (result) {
-                return path.extname(result.name) === ".js";
-              }),
-              sortedJsResults = _.sortBy(jsResults, function (result) {
-                return path.basename(result.name) === "app.js";
-              }),
-              jsString = _.reduce(sortedJsResults, function (memo, result) {
-                return memo + result.contents;
-              }, "");
-
-            fs.writeFile(path.join(__dirname, "build/core.js"), jsString, function (err) {
-              if (err) {
-                console.log("couldn't write core.js");
-                callback(err);
-                return;
-              }
-
-              fs.writeFile(path.join(__dirname, "build/core.css"), cssString, function (err) {
-                if (err) {
-                  callback(err);
-                  return;
-                }
-                callback();
-              });
-            });
-          });
-        });
-      });
+      buildCore(callback);
       return;
     }
 
@@ -189,13 +192,19 @@ var _ = require('underscore'),
     //
     //Symlink the enyo directories if they're not there
     //
-    // TODO async
-    if (!fs.existsSync(path.join(rootDir, 'enyo'))) {
-      console.log("symlinking", path.join(rootDir, 'enyo'));
-      fs.symlinkSync(path.join(__dirname, "../../enyo-client/application/enyo"), path.join(rootDir, 'enyo'));
-    }
-
-    buildExtension(extPath, callback);
+    fs.exists(path.join(rootDir, 'enyo'), function (exists) {
+      if (!exists) {
+        fs.symlink(path.join(__dirname, "../../enyo-client/application/enyo"), path.join(rootDir, 'enyo'), function (err) {
+          if (err) {
+            callback(err);
+            return;
+          }
+          buildExtension(extPath, callback);
+        });
+      } else {
+        buildExtension(extPath, callback);
+      }
+    });
   };
 
   //
@@ -258,14 +267,16 @@ var _ = require('underscore'),
     var extDirs = _.unique(_.flatten(_.map(specs, function (spec) {
       return spec.extensions;
     })));
-    // start by making the build directory, where all our built clientside code will go
-    fs.mkdir(path.join(__dirname, "build"), function (err, res) {
-      if (err) {
-        callback(err);
-        return;
-      }
-      async.mapSeries(extDirs, build, function (err, res) {
-        callback(err, res);
+    // start by clearing/making the build directory, where all our built clientside code will go
+    rimraf(path.join(__dirname, "build"), function (err) {
+      fs.mkdir(path.join(__dirname, "build"), function (err, res) {
+        if (err) {
+          callback(err);
+          return;
+        }
+        async.mapSeries(extDirs, build, function (err, res) {
+          callback(err, res);
+        });
       });
     });
   };
