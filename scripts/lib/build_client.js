@@ -135,6 +135,7 @@ var _ = require('underscore'),
           fs.readFile(filename, "utf8", callbackAdaptor);
         };
         async.map(files, readFile, function (err, results) {
+          // smash together enyo css and app css into core css
           var cssResults = _.filter(results, function (result) {
               return path.extname(result.name) === ".css";
             }),
@@ -144,6 +145,7 @@ var _ = require('underscore'),
             cssString = _.reduce(sortedCssResults, function (memo, result) {
               return memo + result.contents;
             }, ""),
+            // smash together enyo js and app js into core js
             jsResults = _.filter(results, function (result) {
               return path.extname(result.name) === ".js";
             }),
@@ -156,11 +158,9 @@ var _ = require('underscore'),
 
           fs.writeFile(path.join(__dirname, "build/core.js"), jsString, function (err) {
             if (err) {
-              console.log("couldn't write core.js");
               callback(err);
               return;
             }
-
             fs.writeFile(path.join(__dirname, "build/core.css"), cssString, function (err) {
               if (err) {
                 callback(err);
@@ -187,14 +187,13 @@ var _ = require('underscore'),
       return;
     }
 
-    var rootDir = path.join(extPath, "../..");
-
+    var enyoDir = path.join(extPath, "../../enyo");
     //
     //Symlink the enyo directories if they're not there
     //
-    fs.exists(path.join(rootDir, 'enyo'), function (exists) {
+    fs.exists(enyoDir, function (exists) {
       if (!exists) {
-        fs.symlink(path.join(__dirname, "../../enyo-client/application/enyo"), path.join(rootDir, 'enyo'), function (err) {
+        fs.symlink(path.join(__dirname, "../../enyo-client/application/enyo"), enyoDir, function (err) {
           if (err) {
             callback(err);
             return;
