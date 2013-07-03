@@ -84,6 +84,7 @@ var async = require("async");
         }, "");
         getCoreCode("js", function (err, result) {
           allCode = result + allCode;
+          res.set('Content-Type', 'application/javascript');
           res.send(allCode);
         });
       });
@@ -111,6 +112,7 @@ var async = require("async");
     //
     if (req.query.debug) {
       getCoreCode("js", function (err, result) {
+        res.set('Content-Type', 'application/javascript');
         res.send(result);
       });
       return;
