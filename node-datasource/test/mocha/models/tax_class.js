@@ -28,10 +28,10 @@ var crud = require('../lib/crud'),
 
 
 
-var timeout = 120 * 1000;
+var timeout = 20 * 1000;
 
 describe.skip('Tax Class CRUD Test', function () {
-    this.timeout(120 * 1000);
+    this.timeout(20 * 1000);
     it('should perform all the crud operations', function (done) {
       crud.runAllCrud(data, done);
     });
