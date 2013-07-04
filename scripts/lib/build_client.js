@@ -15,8 +15,9 @@ var _ = require('underscore'),
   // TODO: update tutorial
 
   // noncritical
-  // TODO: you need to sudo to save these files, but with sudo I have to type the admin password.
   // TODO: relax the assumption that extension builds are js only (i.e. allow extension css)
+  // TODO: more sophisticated node caching strategy?
+  // TODO: right now we just give the latest versions of everything
 
 (function () {
   "use strict";

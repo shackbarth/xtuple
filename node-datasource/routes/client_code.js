@@ -7,14 +7,11 @@ var async = require("async");
 (function () {
   "use strict";
 
-  // noncritical:
-  // TODO: more sophisticated way to caching strategy?
-  // TODO: right now we just give the latest versions of everything
-
-  //
-  // Just get a sense of how recent a version is without the dots.
-  // Higher version number string inputs will result in higher int outputs.
-  //
+  /**
+    Just get a sense of how recent a version is without the dots.
+    Higher version number string inputs will result in higher int outputs.
+    Works with three or four dot-separated numbers.
+  */
   var getVersionSize = function (version) {
     var versionSplit = version.split('.'),
       versionSize = 1000000 * versionSplit[0] +
@@ -24,14 +21,12 @@ var async = require("async");
     if (versionSplit.length > 3) {
       versionSize += versionSplit[3];
     }
-
     return versionSize;
   };
 
   /**
-    @name Extensions
-    @class Extensions
-    Returns a list of extensions associated with an organization.
+    Sends the bundled client code based on the user's extensions
+    @param req.query.language {String} Can be css or js (default js)
    */
   exports.clientCode = function (req, res) {
 

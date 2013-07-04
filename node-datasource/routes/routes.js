@@ -30,7 +30,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     clientCode = require('./client_code'),
     email = require('./email'),
     exxport = require('./export'),
-    extensions = require('./extensions'),
     data = require('./data'),
     dataFromKey = require('./data_from_key'),
     file = require('./file'),
@@ -80,7 +79,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.dataFromKey = dataFromKey.dataFromKey; // don't authenticate
   exports.email = [ensureLogin, email.email];
   exports.exxport = [ensureLogin, exxport.exxport];
-  exports.extensions = [ensureLogin, extensions.extensions];
   exports.file = [ensureLogin, file.file];
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];
