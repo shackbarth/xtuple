@@ -17,6 +17,7 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
+  var jsInit = "select xt.js_init();";
   //
   // There are a few ways we could actually send our query to the database
   //
@@ -149,6 +150,10 @@ var _ = require('underscore'),
       // The function to install all the scripts for an extension
       //
       var getExtensionSql = function (extension, extensionCallback) {
+        if (spec.clientOnly) {
+          extensionCallback(null, "");
+          return;
+        }
         //winston.info("Installing extension", databaseName, extension);
         // deal with directory structure quirks
         var isLibOrm = extension.indexOf("lib/orm") >= 0,
@@ -245,7 +250,7 @@ var _ = require('underscore'),
             if (!isLibOrm) {
               // unless it it hasn't yet been defined (ie. lib/orm),
               // running xt.js_init() is probably a good idea.
-              extensionSql = "select xt.js_init();" + extensionSql;
+              extensionSql = jsInit + extensionSql;
             }
 
 
@@ -277,6 +282,10 @@ var _ = require('underscore'),
       // which has been retooled to return the queryString instead of running
       // it itself.
       var getOrmSql = function (extension, callback) {
+        if (spec.clientOnly) {
+          callback(null, "");
+          return;
+        }
         var ormDir = path.join(extension, "database/orm");
 
         if (fs.existsSync(ormDir)) {
@@ -301,6 +310,10 @@ var _ = require('underscore'),
       // We also need to get the sql that represents the queries to put the
       // client source in the database.
       var getClientSql = function (extension, callback) {
+        if (spec.databaseOnly) {
+          callback(null, "");
+          return;
+        }
         clientBuilder.getClientSql(extension, callback);
       };
 
@@ -323,6 +336,7 @@ var _ = require('underscore'),
               return;
             }
             getClientSql(extension, function (err, clientSql) {
+              clientSql = jsInit + clientSql;
               if (err) {
                 callback(err);
                 return;

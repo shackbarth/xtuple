@@ -11,13 +11,13 @@ var _ = require('underscore'),
   rimraf = require('rimraf');
 
   // critical
-  // TODO: bypass the client build if the user only wants to build the db
   // TODO: update tutorial
+  // TODO: allow for build with no client-side code without crash
 
   // noncritical
   // TODO: relax the assumption that extension builds are js only (i.e. allow extension css)
   // TODO: more sophisticated node caching strategy?
-  // TODO: right now we just give the latest versions of everything
+  // TODO: right now we just give the latest versions available in the db. This might possibly change.
 
 (function () {
   "use strict";
@@ -225,6 +225,11 @@ var _ = require('underscore'),
   // Cleanup by deleting all the client files we've built
   //
   exports.cleanup = function (specs, callback) {
+    if (specs[0].databaseOnly) {
+      // actually, don't clean up
+      callback();
+      return;
+    }
     // these are the unique extension root directories
     var rootDirs = _.unique(_.compact(_.flatten(_.map(specs, function (spec) {
       return _.map(spec.extensions, function (extension) {
@@ -280,6 +285,11 @@ var _ = require('underscore'),
     Leave it sitting in the scripts/lib/build directory.
   */
   exports.buildClient = function (specs, callback) {
+    if (specs[0].databaseOnly) {
+      // actually, don't build the client!
+      callback();
+      return;
+    }
     // these are the unique extensions
     var extDirs = _.unique(_.flatten(_.map(specs, function (spec) {
       return spec.extensions;

@@ -23,6 +23,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-i, --initialize', 'Initialize database. Must be used with the -b flag.')
     .option('-q, --querydirect', 'Query the database directly, without delegating to psql.')
     .option('-w, --wipeviews', 'Drop the views and the orm registrations pre-emptively.')
+    .option('-y, --clientonly', 'Only rebuild the client.')
+    .option('-z, --databaseonly', 'Only rebuild the database.')
     .parse(process.argv);
 
   build({
@@ -32,7 +34,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     extension: program.extension,
     initialize: program.initialize,
     queryDirect: program.querydirect,
-    wipeViews: program.wipeviews
+    wipeViews: program.wipeviews,
+    clientOnly: program.clientonly,
+    databaseOnly: program.databaseonly
   }, function (err, res) {
     console.log(err || res);
   });
