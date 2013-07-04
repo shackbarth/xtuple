@@ -11,9 +11,8 @@ var _ = require('underscore'),
   rimraf = require('rimraf');
 
   // critical
-  // TODO: get rid of xtuple-extensions/scripts/buildExtensions
-  // TODO: version 1.0.0 must be a real number
   // TODO: bypass the client build if the user only wants to build the db
+  // TODO: update tutorial
 
   // noncritical
   // TODO: you need to sudo to save these files, but with sudo I have to type the admin password.
@@ -53,8 +52,15 @@ var _ = require('underscore'),
             callback(err);
             return;
           }
-          callback(null, constructQuery(cssCode, "_core", "1.0.0", "css") +
-            constructQuery(jsCode, "_core", "1.0.0", "js"));
+          fs.readFile(path.join(__dirname, "../../package.json"), "utf8", function (err, packageJson) {
+            if (err) {
+              callback(err);
+              return;
+            }
+            var packageDetails = JSON.parse(packageJson);
+            callback(null, constructQuery(cssCode, "_core", packageDetails.version, "css") +
+              constructQuery(jsCode, "_core", packageDetails.version, "js"));
+          });
         });
       });
 
@@ -66,7 +72,15 @@ var _ = require('underscore'),
           callback(err);
           return;
         }
-        callback(null, constructQuery(code, extName, "1.0.0", "js"));
+        // get the extension version from the database manifest file
+        fs.readFile(path.join(extPath, "database/source/manifest.js"), "utf8", function (err, manifestContents) {
+          if (err) {
+            callback(err);
+            return;
+          }
+          var manifestDetails = JSON.parse(manifestContents);
+          callback(null, constructQuery(code, extName, manifestDetails.version, "js"));
+        });
       });
     }
   };
