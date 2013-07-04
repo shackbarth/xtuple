@@ -11,6 +11,23 @@ var async = require("async");
   // TODO: more sophisticated way to caching strategy?
   // TODO: right now we just give the latest versions of everything
 
+  //
+  // Just get a sense of how recent a version is without the dots.
+  // Higher version number string inputs will result in higher int outputs.
+  //
+  var getVersionSize = function (version) {
+    var versionSplit = version.split('.'),
+      versionSize = 1000000 * versionSplit[0] +
+        10000 * versionSplit[1] +
+        100 * versionSplit[2];
+
+    if (versionSplit.length > 3) {
+      versionSize += versionSplit[3];
+    }
+
+    return versionSize;
+  };
+
   /**
     @name Extensions
     @class Extensions
@@ -59,16 +76,16 @@ var async = require("async");
         username: X.options.databaseServer.user,
         database: req.session.passport.user.organization,
         query: {
-          parameters: [{
-            attribute: "language",
-            value: language
-          }]
+          parameters: [
+            { attribute: "language", value: language },
+            { attribute: "extension", value: null, includeNull: true }
+          ]
         },
         success: function (coll, res) {
-          _.sortBy(coll.models, function (model) {
-            return Number(model.get("version"));
+          var sortedModels = _.sortBy(coll.models, function (model) {
+            return -1 * getVersionSize(model.get("version"));
           });
-          getCodeFromUuid(coll.models[0].get("uuid"), callback);
+          getCodeFromUuid(sortedModels[0].get("uuid"), callback);
         }
       });
     };
@@ -79,10 +96,10 @@ var async = require("async");
     //
     var bundleClientCode = function (extensions) {
       var uuids = _.map(extensions, function (ext) {
-        _.sortBy(ext.codeInfo, function (codeInfo) {
-          return Number(codeInfo.version);
+        var sortedModels = _.sortBy(ext.codeInfo, function (codeInfo) {
+          return -1 * getVersionSize(codeInfo.version);
         });
-        return ext.codeInfo[0].uuid;
+        return sortedModels[0].uuid;
       });
 
       async.map(uuids, getCodeFromUuid, function (err, results) {
