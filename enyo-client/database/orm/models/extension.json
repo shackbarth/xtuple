@@ -210,7 +210,7 @@
        "name": "codeInfo",
        "toMany": {
          "column": "ext_id",
-         "type": "ClientCodeInfo",
+         "type": "ClientCodeRelation",
          "inverse": "extension",
          "isNested": true
        }

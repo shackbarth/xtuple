@@ -11,9 +11,9 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  SYS.ClientCodeInfo = XM.SimpleModel.extend({
+  SYS.ClientCodeRelation = XM.SimpleModel.extend({
 
-    recordType: 'SYS.ClientCodeInfo'
+    recordType: 'SYS.ClientCodeRelation'
 
   });
 
@@ -136,9 +136,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  SYS.ClientCodeInfoCollection = XM.Collection.extend({
+  SYS.ClientCodeRelationCollection = XM.Collection.extend({
 
-    model: SYS.ClientCodeInfo
+    model: SYS.ClientCodeRelation
 
   });
 

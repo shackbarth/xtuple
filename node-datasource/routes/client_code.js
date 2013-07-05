@@ -66,7 +66,7 @@ var async = require("async");
     // @param {String} language Can be "js" or "css".
     //
     var getCoreCode = function (language, callback) {
-      var coll = new SYS.ClientCodeInfoCollection();
+      var coll = new SYS.ClientCodeRelationCollection();
       coll.fetch({
         username: X.options.databaseServer.user,
         database: req.session.passport.user.organization,
