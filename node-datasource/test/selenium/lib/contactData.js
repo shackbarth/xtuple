@@ -8,7 +8,7 @@ exports.VARIABLES = {
 	contact_phone : '000-111-222',
 	contact_bday : '12/01/1988',
 	contact_notes : 'notes for the contact',
-	contact_account : '1000',
+	contact_account : '2000',
 	contact_owner : 'admin',
 	contact_comment : 'General comment',
 	contact_addressLine1 : 'street1',

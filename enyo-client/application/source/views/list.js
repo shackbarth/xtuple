@@ -1013,6 +1013,7 @@ trailing:true, white:true*/
     }
   });
 
+  XV.registerModelList("XM.OpportunityListItem", "XV.OpportunityList");
   XV.registerModelList("XM.OpportunityRelation", "XV.OpportunityList");
 
   // ..........................................................

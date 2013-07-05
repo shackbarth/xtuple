@@ -26,10 +26,10 @@
 
 
 
-  var timeout = 20 * 1000;
+  var timeout = 300 * 1000;
 
   describe('Account CRUD Test', function () {
-      this.timeout(20 * 1000);
+      this.timeout(300 * 1000);
       it('should perform all the crud operations', function (done) {
         crud.runAllCrud(data, done);
       });
