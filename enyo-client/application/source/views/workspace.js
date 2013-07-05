@@ -415,8 +415,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         "REV:" + revision + "\n" +
         "END:" + end + "\n";
 
-      //actually save the file
-      console.log(stringToSave);
+        //actually save file
     }
   };
 
