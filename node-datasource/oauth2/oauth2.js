@@ -273,9 +273,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 // application issues an access token on behalf of the user in the JWT `prn`
 // property.
 
-// Not sure why this was changed in the last revision?
-//server.exchange('assertion', jwtBearer(function (client, header, claimSet, signature, done) {
-server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(function (client, header, claimSet, signature, done) {
+server.exchange('assertion', jwtBearer(function (client, header, claimSet, signature, done) {
   "use strict";
 
   var data = header + "." + claimSet,

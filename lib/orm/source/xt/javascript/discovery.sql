@@ -50,13 +50,13 @@ select xt.install_js('XT','Discovery','xtuple', $$
       item.version = version;
       item.title = "xTuple ERP REST API for " + ormType + " business objects.";
       item.description = "Lets you get and manipulate xTuple ERP " + ormType + " business objects.";
-      item.discoveryRestUrl = rootUrl + "discovery/" + version + "/apis/" + org + "/" + ormTypeHyphen + "/" + version + "/rest";
-      item.discoveryLink = "./apis/" + org + "/" + ormTypeHyphen + "/" + version + "/rest";
+      item.discoveryRestUrl = rootUrl + org + "/discovery/" + version + "/apis/" + ormTypeHyphen + "/" + version + "/rest";
+      item.discoveryLink = "./apis/" + ormTypeHyphen + "/" + version + "/rest";
       item.icons = {
-        "x16": rootUrl + "assets/api/" + ormTypeHyphen + "-16.png",
-        "x32": rootUrl + "assets/api/" + ormTypeHyphen + "-32.png"
+        "x16": rootUrl + org + "/assets/api/" + ormTypeHyphen + "-16.png",
+        "x32": rootUrl + org + "/assets/api/" + ormTypeHyphen + "-32.png"
       };
-      item.documentationLink = "https://dev.xtuple.com/" + ormTypeHyphen; /* TODO - What should this be? */
+      item.documentationLink = "https://dev.xtuple.com/api/" + ormTypeHyphen; /* TODO - What should this be? */
       item.preferred = true; /* TODO - Change this as we add new versions. */
 
       list.items[i] = item;
@@ -70,13 +70,13 @@ select xt.install_js('XT','Discovery','xtuple', $$
       master.version = version;
       master.title = "xTuple ERP REST API all business objects.";
       master.description = "Lets you get and manipulate all xTuple ERP business objects.";
-      master.discoveryRestUrl = rootUrl + "discovery/" + version + "/apis/" + org + "/" + version + "/rest";
-      master.discoveryLink = "./apis/" + org + "/" + version + "/rest";
+      master.discoveryRestUrl = rootUrl + org + "/discovery/" + version + "/apis/" + version + "/rest";
+      master.discoveryLink = "./apis/" + version + "/rest";
       master.icons = {
-        "x16": rootUrl + "assets/api/api-16.png",
-        "x32": rootUrl + "assets/api/api-32.png"
+        "x16": rootUrl + org + "/assets/api/api-16.png",
+        "x32": rootUrl + org + "/assets/api/api-32.png"
       };
-      master.documentationLink = "https://dev.xtuple.com/"; /* TODO - What should this be? */
+      master.documentationLink = "https://dev.xtuple.com/api/"; /* TODO - What should this be? */
       master.preferred = true; /* TODO - Change this as we add new versions. */
 
       list.items.unshift(master);
@@ -125,15 +125,15 @@ select xt.install_js('XT','Discovery','xtuple', $$
     discovery.title = "xTuple ERP REST API for " + (orm ? orm : "all") + " business objects.";
     discovery.description = "Lets you get and manipulate xTuple ERP " + (orm ? orm + " " : "") + "business objects.";
     discovery.icons = {
-      "x16": rootUrl + "assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-16.png",
-      "x32": rootUrl + "assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-32.png"
+      "x16": rootUrl + org + "/assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-16.png",
+      "x32": rootUrl + org + "/assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-32.png"
     };
     discovery.documentationLink = "https://dev.xtuple.com/" + (orm ? orm.camelToHyphen() : ""); /* TODO - What should this be? */
     discovery.protocol = "rest";
-    discovery.baseUrl = rootUrl + "api/" + version + "/";
-    discovery.basePath = "/api/" + version + "/";
+    discovery.baseUrl = rootUrl + org + "/api/" + version + "/";
+    discovery.basePath = "/" + org + "/api/" + version + "/";
     discovery.rootUrl = rootUrl;
-    discovery.servicePath = "api/" + version + "/";
+    discovery.servicePath = org + "/api/" + version + "/";
     discovery.batchPath = "batch"; /* TODO - Support batch requests? */
 
     /*
@@ -259,7 +259,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     };
 
     /* Set base full access scope. */
-    auth.oauth2.scopes[rootUrl + "auth/" + org] = {
+    auth.oauth2.scopes[rootUrl + org + "/auth"] = {
       "description": "Full access to all '" + org + "' resources"
     }
 
@@ -269,10 +269,10 @@ select xt.install_js('XT','Discovery','xtuple', $$
           ormTypeHyphen = ormType.camelToHyphen();
 
       /* TODO - Do we need to include "XM" in the name? */
-      auth.oauth2.scopes[rootUrl + "auth/" + org + "/" + ormTypeHyphen] = {
+      auth.oauth2.scopes[rootUrl + org + "/auth/" + ormTypeHyphen] = {
         "description": "Manage " + orms[i].orm_type + " resources"
       }
-      auth.oauth2.scopes[rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"] = {
+      auth.oauth2.scopes[rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"] = {
         "description": "View " + orms[i].orm_type + " resources"
       }
 
@@ -339,8 +339,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
       resources[ormType].methods.delete.parameterOrder = ["id"];
 
       resources[ormType].methods.delete.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen
+        rootUrl + org + "/auth",
+        rootUrl + org + "/auth/" + ormTypeHyphen
       ];
 
       /*
@@ -363,9 +363,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
       };
 
       resources[ormType].methods.get.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
+        rootUrl + org + "/auth",
+        rootUrl + org + "/auth/" + ormTypeHyphen,
+        rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"
       ];
 
       /*
@@ -384,9 +384,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
       resources[ormType].methods.head.parameterOrder = ["id"];
 
       resources[ormType].methods.head.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
+        rootUrl + org + "/auth",
+        rootUrl + org + "/auth/" + ormTypeHyphen,
+        rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"
       ];
 
       /*
@@ -408,8 +408,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
       };
 
       resources[ormType].methods.insert.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen
+        rootUrl + org + "/auth",
+        rootUrl + org + "/auth/" + ormTypeHyphen
       ];
 
       /*
@@ -447,9 +447,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
       };
 
       resources[ormType].methods.list.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
+        rootUrl + org + "/auth",
+        rootUrl + org + "/auth/" + ormTypeHyphen,
+        rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"
       ];
 
       /*
@@ -483,9 +483,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
       };
 
       resources[ormType].methods.listhead.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
+        rootUrl + org + "/auth",
+        rootUrl + org + "/auth/" + ormTypeHyphen,
+        rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"
       ];
 
       /*
@@ -512,8 +512,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
       };
 
       resources[ormType].methods.patch.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen
+        rootUrl + org + "/auth",
+        rootUrl + org + "/auth/" + ormTypeHyphen
       ];
     }
 
