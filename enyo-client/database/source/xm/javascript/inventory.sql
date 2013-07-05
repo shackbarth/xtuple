@@ -6,10 +6,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
   if (!XM.PrivateInventory) { XM.PrivateInventory = {}; }
   
-  XM.PrivateInventory.isDispatchable = false; /* No access from client */
+  XM.PrivateInventory.isDispatchable = false; /* No direct access from client */
 
   /**
-    Generic inventory transaction.
+    Distribute generic inventory transaction.
     Example:
 
         XM.Inventory.transact ('BTRUCK1', 'IM', 'AD', 10, {
@@ -53,13 +53,12 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {Object} Location, Lot/Serial Detail
     
   */
-  XM.PrivateInventory.distribute = function (histId, detail) {
-    options = options || {};
-    var sql = "select postitemlocseries(invhist_series) from invhist where invhist_id = $1;",
-      series;
+  XM.PrivateInventory.distribute = function (series, detail) {
+    detail = detail || {};
+    var sql = "select postitemlocseries($1);";
       
-    plv8.execute(sql, [histId]);
-    return result;
+    plv8.execute(sql, [series]);
+    return;
   }
 
 
@@ -67,10 +66,31 @@ select xt.install_js('XM','Inventory','xtuple', $$
   
   XM.Inventory.isDispatchable = true;
 
-  /*
+  /**
+    Perform Inventory Adjustments.
+    
+      select xt.post({
+        "username": "admin",
+        "nameSpace":"XM",
+        "type":"Inventory",
+        "dispatch":{
+          "functionName":"adjustment",
+          "parameters":[
+            "95c30aba-883a-41da-e780-1d844a1dc112",
+            1,
+            {
+              "asOf": "2013-07-03T13:52:55.964Z",
+              "value": 10,
+              "notes": "This is a test.",
+              "docNumber": "12345"
+            }
+          ]
+        }
+      });
+  
     @param {String} Itemsite uuid
     @param {Number} Quantity
-    @param {Object} Location, Lot/Serial detail
+    @param {Object} [options.detail] Distribution detail
     @param {Date}   [options.asOf=now()] Transaction Timestamp
     @param {String} [options.docNumber] Document Number
     @param {String} [options.notes] Notes
@@ -79,14 +99,24 @@ select xt.install_js('XM','Inventory','xtuple', $$
   */
   XM.Inventory.adjustment = function (itemSite, quantity, options) {
     options = options || {};
-    var postSql = "select invAdjustment(itemsite_id, $2, $3, $4, %I, $5) from itemsite where obj_uuid = $1;",
-      transSql = "select obj_uuid from invhist where invhist_id = $1);";
+    var  sql = "select invadjustment(itemsite_id, $2, $3, $4, $5::timestamptz, $6) as series from itemsite where obj_uuid = $1;",
+      asOf = options.asOf || null,
+      docNumber = options.docNumber || "",
+      notes =  options.notes || "",
+      value = options.value || null,
+      series;
 
+    /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("CreateAdjustmentTrans")) { throw new handleError("Access Denied", 401) };
-    sql = XT.format(postSql, options.asOf ? ["cast('" + options.asOf + "' as timestamp with time zone)"] : ["null"]);
-    histId = plv8.execute(sql, [itemSite, quantity, options.docNumber, options.notes, options.value]);
-    XM.PrivateInventory.distribute(histId, options.detail);
-    return plv8.execute(transSql, [histId])[0].obj_uuid;
+
+    /* Post the transaction */
+    plv8.elog(NOTICE, "sql-> ", sql);
+    series = plv8.execute(sql, [itemSite, quantity, docNumber, notes, asOf, value])[0].series;
+
+    /* Distribute detail */
+    XM.PrivateInventory.distribute(series, options.detail);
+
+    return;
   };
 
   XM.Inventory.options = [

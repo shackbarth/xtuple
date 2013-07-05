@@ -10,12 +10,78 @@
       "all": {
         "create": false,
         "read": "ViewInventoryHistory",
-        "update": false,
+        "update": "ViewInventoryHistory",
         "delete": false
       },
       "attribute": {
+        "id": {
+          "edit": false
+        },
+        "uuid": {
+          "edit": false
+        },
+        "itemSite": {
+          "edit": false
+        },
+        "transactionDate": {
+          "edit": false
+        },
+        "transactionType": {
+          "edit": false
+        },
+        "quantity": {
+          "edit": false
+        },
+        "unit": {
+          "edit": false
+        },
+        "orderType": {
+          "edit": false
+        },
+        "orderNumber": {
+          "edit": false
+        },
+        "documentNumber": {
+          "edit": false
+        },
+        "quantityBefore": {
+          "edit": false
+        },
+        "quantityAfter": {
+          "edit": false
+        },
         "unitCost": {
+          "edit": false,
+          "view": "viewCosts"
+        },
+        "costMethod": {
+          "edit": false
+        },
+        "valueBefore": {
+          "edit": false,
           "view": "ViewCosts"
+        },
+        "valueAfter": {
+          "edit": false,
+          "view": "ViewCosts"
+        },
+        "notes": {
+          "edit": true
+        },
+        "posted": {
+          "edit": false
+        },
+        "analyze": {
+          "edit": true
+        },
+        "user": {
+          "edit": false
+        },
+        "created": {
+          "edit": false
+        },
+        "detail": {
+          "edit": false
         }
       }
     },
