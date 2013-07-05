@@ -12,7 +12,6 @@ var _ = require('underscore'),
 
   // critical
   // TODO: update tutorial
-  // TODO: allow for build with no client-side code without crash
 
   // noncritical
   // TODO: relax the assumption that extension builds are js only (i.e. allow extension css)
@@ -65,11 +64,16 @@ var _ = require('underscore'),
         });
       });
 
-
     } else {
       extName = path.basename(extPath).replace(/\/$/, ""); // the name of the extension
       fs.readFile(path.join(__dirname, "build", extName + ".js"), "utf8", function (err, code) {
         if (err) {
+          if (err.code === 'ENOENT') {
+            // it's not necessarily an error if there's no code here.
+            console.log("No built client file for " + extName + ". There is probably no client-side code in the extension.");
+            callback(null, "");
+            return;
+          }
           callback(err);
           return;
         }
@@ -203,21 +207,28 @@ var _ = require('underscore'),
     }
 
     var enyoDir = path.join(extPath, "../../enyo");
-    //
-    //Symlink the enyo directories if they're not there
-    //
-    fs.exists(enyoDir, function (exists) {
+    fs.exists(path.join(extPath, "client"), function (exists) {
       if (!exists) {
-        fs.symlink(path.join(__dirname, "../../enyo-client/application/enyo"), enyoDir, function (err) {
-          if (err) {
-            callback(err);
-            return;
-          }
-          buildExtension(extPath, callback);
-        });
-      } else {
-        buildExtension(extPath, callback);
+        console.log(extPath + " has no client code. Not trying to build it.");
+        callback();
+        return;
       }
+      //
+      //Symlink the enyo directories if they're not there
+      //
+      fs.exists(enyoDir, function (exists) {
+        if (!exists) {
+          fs.symlink(path.join(__dirname, "../../enyo-client/application/enyo"), enyoDir, function (err) {
+            if (err) {
+              callback(err);
+              return;
+            }
+            buildExtension(extPath, callback);
+          });
+        } else {
+          buildExtension(extPath, callback);
+        }
+      });
     });
   };
 
