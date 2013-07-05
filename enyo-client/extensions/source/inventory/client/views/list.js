@@ -10,13 +10,14 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.PickOrdersList",
+    name: "XV.PickOrdersListItem",
     kind: "XV.List",
-    label: "_pickOrdersList".loc(),
-    collection: "XM.PickOrdersListCollection",
+    label: "_pickOrdersListItem".loc(),
+    collection: "XM.PickOrdersListItemCollection",
     query: {orderBy: [
 			{attribute: 'scheduledDate'}
     ]},
+		parameterWidget: "XV.PickOrdersListItemParameters",
     components: [
       {kind: "XV.ListItem", components: [
 	  		{kind: "FittableColumns", components: [
@@ -46,7 +47,7 @@ trailing:true white:true*/
     ]
   });
 
-  XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineList");
+  XV.registerModelList("XM.PickOrderRelation", "XV.PickOrderLineListItem");
 
   // ..........................................................
   // SALES ORDER

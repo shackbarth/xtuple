@@ -10,7 +10,7 @@ SELECT DISTINCT
   cohead_shiptoname AS order_info2,
   cohead_shipcomments AS order_comments,
   firstline(cohead_ordercomments) AS order_notes,
-	order_total_qty_issue_remaining('SO', cohead_id) AS order_totalqty_remaining,
+	order_qtyremaining_total('SO', cohead_id) AS order_totalqty_remaining,
 	'' AS order_assignedto 
 FROM cohead 
 WHERE  cohead_status = 'O'
@@ -27,7 +27,7 @@ SELECT  DISTINCT
   item_descrip1 AS order_info2,
   '' AS order_comments,
   wo_prodnotes AS order_notes,
-	wo_qtyord - wo_qtyrcv AS order_totalqty_remaining,
+	order_qtyremaining_total('WO', wo_id) AS order_totalqty_remaining,
 	'' AS order_assignedto
 FROM wo
   JOIN itemsite ON wo_itemsite_id = itemsite_id 
