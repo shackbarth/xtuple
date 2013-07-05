@@ -380,14 +380,13 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       photo = "";
       phoneWork = model.get('phone');
       phoneHome = model.get('alternate');
-      address = model.get('address');
-      address[0] = address.get('line1');
-      address[1] = address.get('line2');
-      address[2] = address.get('line3');
-      address[3] = address.get('city');
-      address[4] = address.get('state');
-      address[5] = address.get('postalCode');
-      address[6] = address.get('country');
+      address[0] = model.get('address.line1');
+      address[1] = model.get('address.line2');
+      address[2] = model.get('address.line3');
+      address[3] = model.get('address.city');
+      address[4] = model.get('address.state');
+      address[5] = model.get('address.postalCode');
+      address[6] = model.get('address.country');
       //for address, set address with semicolon delimiters
       for (var i = 0; i < address.length; i++) {
         addressWork = addressWork + address[0] + ";";
@@ -398,7 +397,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       }
       addressHome = "";
       labelHome = "";
-      email = model.get('email');
+      email = model.get('email.email');
       revision = "";
       end = "VCARD";
 
@@ -411,11 +410,13 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         "TEL;TYPE=WORK,VOICE:" + phoneWork + "\n" +
         "TEL;TYPE=HOME,VOICE:" + phoneHome + "\n" +
         "ADR;TYPE=WORK:;;" + addressWork + "\n" +
+        "LABEL;TYPE=WORK:;;" + labelWork + "\n" +
         "EMAIL;TYPE=PREF,INTERNET:" + email + "\n" +
         "REV:" + revision + "\n" +
         "END:" + end + "\n";
 
       //actually save the file
+      console.log(stringToSave);
     }
   };
 
