@@ -10,10 +10,6 @@ var _ = require('underscore'),
   path = require('path'),
   rimraf = require('rimraf');
 
-  // critical
-  // TODO: update tutorial
-
-  // noncritical
   // TODO: relax the assumption that extension builds are js only (i.e. allow extension css)
   // TODO: more sophisticated node caching strategy?
   // TODO: right now we just give the latest versions available in the db. This might possibly change.
