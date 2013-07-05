@@ -11,7 +11,7 @@ var _ = require("underscore"),
 (function () {
   "use strict";
 
-  var waitTime = exports.waitTime = 5000;
+  var waitTime = exports.waitTime = 20000;
 
   var testAttributes = function (data) {
     if (!data.autoTestAttributes) {
