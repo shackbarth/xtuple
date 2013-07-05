@@ -83,7 +83,8 @@ regexp:true, undef:true, trailing:true, white:true */
         ]},
         {name: "data", fit: true, components: [
           {name: "name", classes: "xv-relationwidget-description hasLabel"},
-          {name: "description", classes: "xv-relationwidget-description hasLabel"},
+          {name: "description", ontap: "callPhone",
+            classes: "xv-relationwidget-description hasLabel hyperlink"},
           {name: "alternate", classes: "xv-relationwidget-description hasLabel"},
           {name: "fax", classes: "xv-relationwidget-description hasLabel"},
           {name: "primaryEmail", ontap: "sendMail",
@@ -149,7 +150,7 @@ regexp:true, undef:true, trailing:true, white:true */
     callPhone: function () {
       var phoneNumber = this.value ? this.value.get('phone') : null,
         win;
-      if (email) {
+      if (phoneNumber) {
         win = window.open('tel://' + phoneNumber);
         win.close();
       }
