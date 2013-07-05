@@ -146,6 +146,15 @@ regexp:true, undef:true, trailing:true, white:true */
       if (address) { window.open('http://' + address); }
       return true;
     },
+    callPhone: function () {
+      var phoneNumber = this.value ? this.value.get('phone') : null,
+        win;
+      if (email) {
+        win = window.open('tel://' + phoneNumber);
+        win.close();
+      }
+      return true;
+    },
     sendMail: function () {
       var email = this.value ? this.value.get('primaryEmail') : null,
         win;
