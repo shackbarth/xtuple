@@ -380,24 +380,24 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       photo = "";
       phoneWork = model.get('phone');
       phoneHome = model.get('alternate');
-      address[0] = model.get('address.line1');
-      address[1] = model.get('address.line2');
-      address[2] = model.get('address.line3');
-      address[3] = model.get('address.city');
-      address[4] = model.get('address.state');
-      address[5] = model.get('address.postalCode');
-      address[6] = model.get('address.country');
+      address[0] = model.get('address').get('line1');
+      address[1] = model.get('address').get('line2');
+      address[2] = model.get('address').get('line3');
+      address[3] = model.get('address').get('city');
+      address[4] = model.get('address').get('state');
+      address[5] = model.get('address').get('postalCode');
+      address[6] = model.get('address').get('country');
       //for address, set address with semicolon delimiters
       for (var i = 0; i < address.length; i++) {
-        addressWork = addressWork + address[0] + ";";
+        addressWork = addressWork + address[i] + ";";
       }
       //for label, set address with ESCAPED newline delimiters
       for (var i = 0; i < address.length; i++) {
-        labelWork = labelWork + address[0] + "\\n";
+        labelWork = labelWork + address[i] + "\\n";
       }
       addressHome = "";
       labelHome = "";
-      email = model.get('email.email');
+      email = model.get('email').at(0).get('email');
       revision = "";
       end = "VCARD";
 
