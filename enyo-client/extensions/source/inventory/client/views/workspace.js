@@ -75,6 +75,88 @@ trailing:true, white:true*/
       ]
     });
 
+  // ..........................................................
+  // SHIPMENT LINE
+  //
+
+  enyo.kind({
+    name: "XV.ShipmentWorkspace",
+    kind: "XV.Workspace",
+    title: "_shipment".loc(),
+    headerAttrs: ["number", "-", "name"],
+    model: "XM.Shipment",
+    handlers: {
+      onSavePrompt: "savePrompt"
+    },
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true, classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "lineNumber"},
+            {kind: "XV.InputWidget", attr: "item.number"},
+            {kind: "XV.InputWidget", attr: "item.description1"},
+            {kind: "XV.InputWidget", attr: "site.code"}      
+					]}
+				]}
+			]},
+      {kind: "onyx.Popup", name: "savePromptPopup", centered: true,
+        modal: true, floating: true, scrim: true,
+        onHide: "popupHidden", components: [
+        {content: "_mustSave".loc() },
+        {content: "_saveYourWork?".loc() },
+        {tag: "br"},
+        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "savePromptCancel",
+          classes: "xv-popup-button"},
+        {kind: "onyx.Button", content: "_save".loc(), ontap: "savePromptSave",
+          classes: "onyx-blue xv-popup-button"}
+      ]}
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var K = XM.Shipment.prototype,
+        roles = K.roleAttributes.sort(),
+        that = this;
+
+      // Loop and add a role checkbox for each role attribute found on the model
+      _.each(roles, function (role) {
+        that.createComponent({
+          kind: XV.ShipmentRoleCheckboxWidget,
+          name: role + "Control",
+          label: ("_" + role).loc(),
+          attr: role,
+          container: that.$.rolesGroup,
+          owner: that
+        });
+      });
+
+    },
+    savePrompt: function (inSender, inEvent) {
+      this._popupDone = false;
+      this._inEvent = inEvent;
+      this.$.savePromptPopup.show();
+    },
+    savePromptCancel: function () {
+      this._popupDone = true;
+      this._inEvent.callback(false);
+      this.$.savePromptPopup.hide();
+    },
+    savePromptSave: function () {
+      var that = this,
+        options = {};
+      options.success = function () {
+        that._inEvent.callback(true);
+      };
+      this._popupDone = true;
+      this.$.savePromptPopup.hide();
+      this.save(options);
+    }
+  });
+
+  //XV.registerModelWorkspace("XM.AccountRelation", "XV.AccountWorkspace");
+  XV.registerModelWorkspace("XM.PickOrdersListItem", "XV.ShipmentWorkspace");
+
   };
 
 }());

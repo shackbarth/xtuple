@@ -272,12 +272,48 @@
         }
       },
       {
-        "name": "quantity",
+        "name": "lineNumber",
         "attr": {
           "type": "Number",
+          "column": "linenumber"
+        }
+      },      
+			{
+        "name": "item",
+        "toOne": {
+          "type": "ItemRelation",
+          "column": "item_id",
+					"isNested": true
+        }
+      },     
+      {			
+				"name": "quantityOrdered",
+				"attr": {
+					"type": "Quantity",
+					"column": "qtyord"
+				}
+			},
+			{
+        "name": "quantityShipped",
+        "attr": {
+          "type": "Quantity",
           "column": "shipitem_qty"
         }
       },
+			{
+				"name": "quantityUnit",
+				"toOne": {
+					"type": "Unit",
+					"column": "qty_uom_id"
+				}
+			},
+			{
+				"name": "quantityUnitRatio",
+				"attr": {
+					"type": "UnitRatio",
+					"column": "qty_invuomratio"
+				}
+			},
       {
         "name": "isShipped",
         "attr": {
@@ -285,6 +321,13 @@
           "column": "shipitem_shipped"
         }
       },
+			{
+				"name": "scheduledDate",
+				"attr": {
+					"type": "Date",
+					"column": "scheddate"
+				}
+			},
       {
         "name": "shipDate",
         "attr": {
@@ -319,7 +362,15 @@
 					"type": "Currency",
 					"column": "shipitem_value"
 				}
-			}     
+			},
+			{
+				"name": "site",
+				"toOne": {
+					"type": "SiteRelation",
+					"column": "warehous_id",
+					"isNested": true
+				}
+			}	     
 	],
     "isSystem": true
   }
