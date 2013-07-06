@@ -27,18 +27,22 @@
 .selectable-chart {
   margin: 10px;
   color: @white;
-  background-color: @charcoal;
-  border: 1px solid @bottom-border;
-  .border-radius(10px);
   overflow: hidden;
 
   .chart-title {
     padding: 2px 0 2px 0;
     background-color: @dark-gray;
-    border: none;
-    color: white;
+    color: @white;
     text-align: center;
     .border-top-radius(10px);
+  }
+
+  .chart-bottom {
+    padding-bottom: 5px;
+    background-color: @charcoal;
+    border: 1px solid @bottom-border;
+    border-top: none;
+    .border-bottom-radius(10px);
   }
 
   .xv-picker-label {
