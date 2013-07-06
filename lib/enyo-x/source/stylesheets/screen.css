@@ -272,16 +272,40 @@
 /*
   Styles relating to the dashboard
 */
-.chart-title {
-  margin-left: 100px;
-  color: white;
+/*
+  Variables for widths
+*/
+.dashboard-chart {
+  width: 530px;
+  height: 230px;
 }
-.chart {
-  margin: 10px;
+.dashboard-chart .chart-title {
+  width: 530px;
 }
 .selectable-chart {
-  padding: 30px 0 0 30px;
+  margin: 10px;
+  color: #ffffff;
+  background-color: #555555;
+  border: 1px solid #333333;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+.selectable-chart .chart-title {
+  padding: 2px 0 2px 0;
+  background-color: #333333;
   color: white;
+  text-align: center;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  border-top-left-radius: 10px;
+}
+.selectable-chart .xv-picker-label {
+  width: 100px;
+  color: #ffffff;
 }
 .split-menu {
   -webkit-border-top-left-radius: 3px;

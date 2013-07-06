@@ -80,12 +80,9 @@ filter options
   enyo.kind({
     name: "XV.SalesDashboard",
     kind: "XV.Dashboard",
-    // components: [
-    //   {kind: "XV.SalesHistoryTimeSeriesChart" }
-    // ]
-    create: function () {
-      this.inherited(arguments);
-    }
+    charts: [
+      {title: "Sales History", chart: "XV.SalesHistoryTimeSeriesChart"}
+    ]
   });
 
 }());
