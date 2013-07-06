@@ -6,9 +6,14 @@
 /*
   Variables for widths
 */
-@tile-width: 530px;
+@tile-width: 500px;
 @tile-height: 230px;
 @picker-label: 100px;
+@bottom-border: #444;
+
+.dashboard {
+  background-color: @gray;
+}
 
 .dashboard-chart {
   width: @tile-width;
@@ -23,12 +28,14 @@
   margin: 10px;
   color: @white;
   background-color: @charcoal;
-  border: 1px solid @dark-gray;
+  border: 1px solid @bottom-border;
   .border-radius(10px);
+  overflow: hidden;
 
   .chart-title {
     padding: 2px 0 2px 0;
     background-color: @dark-gray;
+    border: none;
     color: white;
     text-align: center;
     .border-top-radius(10px);

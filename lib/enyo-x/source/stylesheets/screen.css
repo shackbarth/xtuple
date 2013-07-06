@@ -275,25 +275,30 @@
 /*
   Variables for widths
 */
+.dashboard {
+  background-color: #8d8d8d;
+}
 .dashboard-chart {
-  width: 530px;
+  width: 500px;
   height: 230px;
 }
 .dashboard-chart .chart-title {
-  width: 530px;
+  width: 500px;
 }
 .selectable-chart {
   margin: 10px;
   color: #ffffff;
   background-color: #555555;
-  border: 1px solid #333333;
+  border: 1px solid #444444;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
+  overflow: hidden;
 }
 .selectable-chart .chart-title {
   padding: 2px 0 2px 0;
   background-color: #333333;
+  border: none;
   color: white;
   text-align: center;
   -webkit-border-top-right-radius: 10px;
