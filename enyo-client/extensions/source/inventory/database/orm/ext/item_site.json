@@ -181,6 +181,15 @@
           "type": "String",
           "column": "itemsite_location_comments"
         }
+      },
+      {
+        "name": "restrictedLoctionsAllowed",
+        "toMany": {
+          "isNested": true,
+          "type": "ItemSiteLocation",
+          "column": "itemsite_id",
+          "inverse": "itemSite"
+        }
       }
     ],
     "isSystem": true

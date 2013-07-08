@@ -1,6 +1,8 @@
 {
   "version": "1.3.9",
   "databaseScripts": [
-    "register.sql"
+    "register.sql",
+    "public/tables/locitem.sql",
+    "xt/views/locitemsite.sql"
   ]
 }

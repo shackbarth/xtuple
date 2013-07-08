@@ -96,7 +96,16 @@
           "type": "Boolean",
           "column": "location_netable"
         }
-      }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "iNested": true,
+          "type": "LocationItem",
+          "column": "location_id",
+          "inverse": "location"
+        }
+      }     
     ],
     "isSystem": true
   },
@@ -105,7 +114,7 @@
     "nameSpace": "XM",
     "type": "LocationRelation",
     "table": "location",
-    "comment": "Location Map",
+    "comment": "Location Relation Map",
     "properties": [
       {
         "name": "id",
@@ -156,6 +165,88 @@
         "attr": {
           "type": "String",
           "column": "location_descrip"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "inventory",
+    "nameSpace": "XM",
+    "type": "LocationItem",
+    "table": "locitem",
+    "comment": "Location Item Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "locitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "location",
+        "attr": {
+          "type": "Number",
+          "column": "locitem_location_id"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "type": "ItemRelation",
+          "column": "locitem_item_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "inventory",
+    "nameSpace": "XM",
+    "type": "ItemSiteLocation",
+    "table": "xt.locitemsite",
+    "comment": "Item Site Location Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "locitemsite_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "itemSite",
+        "attr": {
+          "type": "Number",
+          "column": "locitemsite_itemsite_id"
+        }
+      },
+      {
+        "name": "location",
+        "toOne": {
+          "type": "LocationRelation",
+          "column": "locitemsite_location_id"
         }
       }
     ],
