@@ -6,6 +6,12 @@ Critical deployment changes
 * The init_scripts and the command-line ORM installer are gone.
   You will have to use /scripts/build_app.js for your installation needs.
   Run it with the -h flag to see the options.
+* The old tools for building client code (deploy.sh, buildExtensions.sh, build_client.js)
+  are gone. Use /scripts/build_app.js for your client-building needs.
+  Run it with the -h flag to see the options.
+* When you merge from master git will complain that it is not able to delete
+  an enyo directory which has just be deinitialized as a submodule. You will
+  want to delete it by hand. This goes for the xtuple and the private-extensions repos.
 
 
 
