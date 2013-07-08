@@ -433,36 +433,15 @@ pull_modules() {
 	cdir ../../../enyo-client/extensions
     rm -f debug.js
     echo "enyo.depends(" > debug.js
-    echo "  '/dev/core-extensions/source/project/client/package.js'," >> debug.js
     echo "  '/dev/core-extensions/source/crm/client/package.js'," >> debug.js
+    echo "  '/dev/core-extensions/source/inventory/client/package.js'," >> debug.js
+    echo "  '/dev/core-extensions/source/project/client/package.js'," >> debug.js
     echo "  '/dev/core-extensions/source/sales/client/package.js'" >> debug.js
     echo ");" >> debug.js
 	log "Created debug.js"
 }
 
 init_everythings() {
-	cdir $XT_DIR/enyo-client/extensions
-	./tools/buildExtensions.sh 2>1 | tee -a $LOG_FILE
-	
-	# deploy enyo client
-	cdir ../application
-	rm -rf deploy
-	cdir tools
-	./deploy.sh 2>1 | tee -a $LOG_FILE
-	
-	log ""
-	log "######################################################"
-	log "######################################################"
-	log "Running the ORM installer on the database"
-	log "######################################################"
-	log "######################################################"
-	log ""
-	
-	cdir $XT_DIR/node-datasource/installer/
-	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/database/orm/ 2>1 | tee -a $LOG_FILE
-	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/crm/database/orm 2>1 | tee -a $LOG_FILE
-	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/project/database/orm 2>1 | tee -a $LOG_FILE
-	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/sales/database/orm 2>1 | tee -a $LOG_FILE
 
 	log ""
 	log "######################################################"

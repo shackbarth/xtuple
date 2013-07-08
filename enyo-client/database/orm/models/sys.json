@@ -194,5 +194,124 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "ClientCode",
+    "table": "xt.clientcode",
+    "idSequenceName": "clientcode_clientcode_id_seq",
+    "comment": "Client Code (with the code) Assignment Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "clientcode_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "clientcode_code"
+        }
+      },
+      {
+        "name": "extension",
+        "attr": {
+          "type": "Number",
+          "column": "clientcode_ext_id"
+        }
+      },
+      {
+        "name": "version",
+        "attr": {
+          "type": "String",
+          "column": "clientcode_version"
+        }
+      },
+      {
+        "name": "language",
+        "attr": {
+          "type": "String",
+          "column": "clientcode_language"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "ClientCodeRelation",
+    "table": "xt.clientcode",
+    "idSequenceName": "clientcode_clientcode_id_seq",
+    "comment": "Client Code Information (w/o the code) Assignment Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "clientcode_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "extension",
+        "attr": {
+          "type": "Number",
+          "column": "clientcode_ext_id"
+        }
+      },
+      {
+        "name": "version",
+        "attr": {
+          "type": "String",
+          "column": "clientcode_version"
+        }
+      },
+      {
+        "name": "language",
+        "attr": {
+          "type": "String",
+          "column": "clientcode_language"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]
