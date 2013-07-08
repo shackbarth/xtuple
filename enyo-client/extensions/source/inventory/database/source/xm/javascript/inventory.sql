@@ -46,18 +46,21 @@ select xt.install_js('XM','Inventory','xtuple', $$
   XM.PrivateInventory.distribute = function (series, detail) {
     detail = detail || [];
     var createTraceSql = "select createlotserial(itemlocdist_itemsite_id, " +
-        "$1, $2,'I', NULL, itemlocdist_id,$3, $4, $5) " +
+        "$1, $2,'I', NULL, itemlocdist_id,$3, $4, $5) as id " +
         "from itemlocdist " +
         "where (itemlocdist_id=$6);",
       assignTraceSql = "update itemlocdist " +
         "set itemlocdist_source_type='O' " +
-        "where (itemlocdist_series=$1);" +
-
-        "delete from itemlocdist " +
-        "where (itemlocdist_id=$2);",
-      updLocDistSql = "update itemlocdist " +
-        "set itemlocdist_source_type='L', itemlocdist_source_id=$1 " +
-        "where (itemlocdist_series=$2);",
+        "where itemlocdist_series=$1 " +
+        " and itemlocdist_source_type='D'; " +
+        "delete from itemlocdist where itemlocdist_id=$2;",
+      insTraceLocDistSql = "insert into itemlocdist " +
+        "( itemlocdist_itemlocdist_id," +
+        "  itemlocdist_source_type, itemlocdist_source_id," +
+        "  itemlocdist_qty, itemlocdist_ls_id, itemlocdist_expiration ) " +
+        "select itemlocdist_id, 'L', $1, $2, itemlocdist_ls_id, endOfTime() " +
+        "from itemlocdist " +
+        "where itemlocdist_id=$3;",
       insLocDistSql = "insert into itemlocdist " +
         "(itemlocdist_itemlocdist_id, itemlocdist_source_type, itemlocdist_source_id, " +
         " itemlocdist_itemsite_id, itemlocdist_expiration, " +
@@ -125,13 +128,13 @@ select xt.install_js('XM','Inventory','xtuple', $$
       }
       
       /* Loop through and handle each trace detail */
-      if (info.itemsite_controlmethod === 'L' || info.itemsite_cntrolmethod === 'S') {
+      if (info.itemsite_controlmethod === 'L' || info.itemsite_controlmethod === 'S') {
         for (i = 0; i < detail.length; i++) {
           d = detail[i];
           if (!d.trace) { throw new handleError("Itemsite requires lot or serial trace detail."); }
           distId = plv8.execute(createTraceSql, [
             d.trace, series, d.quantity, d.expiration, d.warranty, info.itemlocdist_id
-          ]);
+          ])[0].id;
           distIds.push(distIds);
 
           /* Determine location id if applicable */
@@ -141,12 +144,12 @@ select xt.install_js('XM','Inventory','xtuple', $$
             locId = getLocId(d.location);
           } else { 
             if (d.location) { throw new handleError("Itemsite does not support location detail."); }
-            
-            locId = -1 
+           
+            locId = -1;
           }
 
           /* Update for location distribution */
-          plv8.execute(updLocDistSql, [locId, distId]);
+          plv8.execute(insTraceLocDistSql, [locId, d.quantity, distId]);
         }
 
         /* Housekeeping */
@@ -157,9 +160,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
         for (i = 0; i < detail.length; i++) {
           d = detail[i];
           if (!d.location) { throw new handleError("Item Site requires location detail."); }
-          if (d.trace) { throw new handleError("Item Site does not support lot/serial trace detail."); }
+          if (d.trace) { throw new handleError("Item Site does not support lot or serial trace detail."); }
           locId = getLocId(d.location);
-          plv8.execute(insLocDistSql, [info.itemlocdist_id, locId, info.itemsite_id, d.quantity, series, info.invhist_id]);
+          plv8.execute(insLocDistSql, [
+            info.itemlocdist_id, locId, info.itemsite_id, d.quantity, series, info.invhist_id
+          ]);
         }
       }
 
