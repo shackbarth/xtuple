@@ -37,6 +37,3 @@
 [submodule "lib/enyo-x/lib/nvd3"]
 	path = lib/enyo-x/lib/nvd3
 	url = https://github.com/novus/nvd3.git
-[submodule "lib/enyo-x/lib/font-awesome"]
-	path = lib/enyo-x/lib/font-awesome
-	url = https://github.com/FortAwesome/Font-Awesome.git
