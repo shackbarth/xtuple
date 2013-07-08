@@ -9,55 +9,168 @@ select xt.install_js('XM','Inventory','xtuple', $$
   XM.PrivateInventory.isDispatchable = false; /* No direct access from client */
 
   /**
-    Distribute generic inventory transaction.
+    Distribute location and/or trace detail for one or many inventory transactions.
+    
     Example:
 
-        XM.Inventory.transact ('BTRUCK1', 'IM', 'AD', 10, {
-          asOf: '2013-07-01T21:02:57.266Z',
-          orderNumber: '55920',
-          docNumber: '8712',
-          debitAccount: '01-01-7891-565',
-          creditAccount: '01-01-8790-222',
-          notes: 'Making an adjustment',
-          value: '421.01',
-          detail: [
+        XM.Inventory.distribute (12345,[
             {
-              lot: 'A7891',
+              location: '6dac30d3-aac3-4fc7-953d-465e190ff9cf',
+              trace: 'A7891',
+              quantity: 6,
               expiration: '2013-07-31T00:00:00.000Z',
-              locations: [
-                {
-                  uuid: '6dac30d3-aac3-4fc7-953d-465e190ff9cf',
-                  quantity: 6
-                },
-                {
-                  uuid: 'ea571dab-88fa-46c2-c92f-4a18e0ce7c1d',
-                  quantity: 2
-                }
-              ]
+              warranty: '2013-08-05T00:00:00.000Z'
             },
             {
-              lot: 'A7892',
-              expiration: '2013-08-05T00:00:00.000Z'
-              locations: [
-                {
-                  uuid: '6dac30d3-aac3-4fc7-953d-465e190ff9cf',
-                  quantity: 2
-                }
-              ]
+              location: 'ea571dab-88fa-46c2-c92f-4a18e0ce7c1d',
+              trace: 'A7891',
+              quantity: 2,
+              expiration: '2013-07-31T00:00:00.000Z',
+              warranty: '2013-08-05T00:00:00.000Z'
+            },
+            {
+              location: '6dac30d3-aac3-4fc7-953d-465e190ff9cf',
+              quantity: 2,
+              trace: 'A7892',
+              expiration: '2013-08-05T00:00:00.000Z',
+              warranty: '2013-08-05T00:00:00.000Z'
             }
-          ]
-          
+          ]    
         })
+        
     @private
-    @param {Number} Inventory History Id
-    @param {Object} Location, Lot/Serial Detail
+    @param {Number} Series number
+    @param {Array} Detail
     
   */
   XM.PrivateInventory.distribute = function (series, detail) {
     detail = detail || {};
-    var sql = "select postitemlocseries($1);";
+    var createTraceSql = "select createlotserial(itemlocdist_itemsite_id, " +
+        "$1, $2,'I', NULL, itemlocdist_id,$3, $4, $5) " +
+        "from itemlocdist " +
+        "where (itemlocdist_id=$6);"
+      assignTraceSql = "update itemlocdist " +
+        "set itemlocdist_source_type='O' " +
+        "where (itemlocdist_series=$1);" +
+
+        "delete from itemlocdist " +
+        "where (itemlocdist_id=$2);",
+      updLocDistSql = "update itemlocdist " +
+        "set itemlocdist_source_type='L', itemlocdist_source_id=$1 " +
+        "where (itemlocdist_series=$2);",
+      insLocDistSql = "insert into itemlocdist " +
+        "(itemlocdist_itemlocdist_id, itemlocdist_source_type, itemlocdist_source_id, " +
+        " itemlocdist_itemsite_id, itemlocdist_expiration " +
+        " itemlocdist_qty, itemlocdist_series, itemlocdist_invhist_id ) " +
+        " values ($1, 'L', $2, $3, endoftime(), $6, $7); ",
+      distLocSql = "select distributeToLocations($1);",
+      distSeriesSql = "perform distributeitemlocseries($1)",
+      postSql = "select postitemlocseries($1);",
+      invHistSql = "select invhist_id " +
+        "from invhist joint itemsite on itemsite_id = invhist_id "
+        "where invhist_series = $1" +
+        " and (itemsite_loccntrl or itemsite_controlmethod in ('L','S')); ",
+      infoSql = "select itemlocdist_id " + 
+        " invhist_id, " +
+        " invhist_invqty " +
+        " itemsite_id, " +
+        " itemsite_controlmethod, " +
+        " itemsite_loccntrl, " +
+        "from itemlocdist, invhist" +
+        " join itemsite on itemsite_id = invhist_itemsite_id " +
+        "where itemlocdist_series = $1 " +
+        " and invhist_series = $1",
+      distIds = [],
+      distId,
+      locId = -1,
+      qty = 0,
+      info,
+      d,
+      i,
+
+      /* Helper funciton to resolve location id */
+      getLocId = function (uuid) {
+        var locSql = "select location_id from location where obj_uuid = $1;",
+          qry = plv8.execute(locSql, [uuid]);
+        if (!qry.length) {
+          throw new handleError("Location for " + uuid + " not found.")
+        }
+        return qry[0].location_id;
+      };
+
+    if (detail && detail.length) {
+      info = plv8.execute(infoSql,[series]);
+      if (info.length > 1) { 
+        throw new handleError("Only distribution for one transaction at a time is supported.")
+      }
+
+      /* Validate quantity */
+      for (i = 0; i < detail.length, i++) {
+        qty += detail[i].quantity; 
+      }
+      if (qty != info.invhist_invqty) {
+        throw new handleError("Distribution quantity does not match transaction quantity.")
+      }
       
-    plv8.execute(sql, [series]);
+      /* Loop through and handle each trace detail */
+      if (info.itemsite_controlmethod === 'L' || info.itemsite_cntrolmethod === 'S') {
+        for (i = 0; i < detail.length, i++) {
+          if (!d.trace) { throw new handleError("Itemsite requires lot or serial trace detail."); }
+          d = detail[i];
+          distId = plv8.execute(createTraceSql, [
+            d.trace, series, d.quantity, d.expiration, d.warranty, info.itemlocdist_id
+          ]);
+          distIds.push(distIds);
+
+          /* Determine location id if applicable */
+          if (info.itemsite_loccntrl) {
+            if (!d.location) { throw new handleError("Itemsite requires location detail."); }
+
+            locId = getLocId(d.location);
+          } else { 
+            if (d.location) { throw new handleError("Itemsite does not support location detail."); }
+            
+            locId = -1 
+          }
+
+          /* Update for location distribution */
+          plv8.execute(updLocDistSql, [locId, distId]);
+        }
+
+        /* Housekeeping */
+        plv8.execute(assignTraceSql, [series, info.itemlocdist]);
+
+      /* Location control w/o trace */
+      } else if (info.itemsite_loccntrl) {
+        for (i = 0; i < detail.length, i++) {
+          if (!d.location) { throw new handleError("Item Site requires location detail."); }
+          
+          d = detail[i];
+          locId = getLocId(d.location);
+          plv8.executec(insLocDistSql, [info.itemlocdist_id, locId, info.itemsite_id, d.quantity, series]);
+        }
+        
+
+      /* We shouldn't have detail if there are no detail control settings turned on */
+      } else {
+        throw new handleError("Item Site is not controlled.");
+      }
+
+    /* No half done transactions are permitted. */
+    } else {
+      invHist = plv8.execute(invhistSql,[series]);
+      if (invhist.length) { throw new handleError("Transaction requires distribution detail") }
+    }
+    
+    /* This mess of post processing functions is all to support legacy plaque build up. */
+    plv8.execute(distSeriesSql, [series]);
+
+    /* Distribute to locations */
+    for (i = 0; i < distIds; i++) {
+      plv8.execute(distLocSql, [distIds[i]]);
+    }
+    
+    plv8.execute(postSql, [series]);
     return;
   }
 
@@ -69,7 +182,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
   /**
     Perform Inventory Adjustments.
     
-      select xt.post({
+      select xt.post('{
         "username": "admin",
         "nameSpace":"XM",
         "type":"Inventory",
@@ -86,20 +199,20 @@ select xt.install_js('XM','Inventory','xtuple', $$
             }
           ]
         }
-      });
+      }');
   
     @param {String} Itemsite uuid
     @param {Number} Quantity
-    @param {Object} [options.detail] Distribution detail
+    @param {Array} [options.detail] Distribution detail
     @param {Date}   [options.asOf=now()] Transaction Timestamp
     @param {String} [options.docNumber] Document Number
     @param {String} [options.notes] Notes
     @param {String} [options.value] Value
-    @returns {String} Transaction uuid
   */
   XM.Inventory.adjustment = function (itemSite, quantity, options) {
     options = options || {};
-    var  sql = "select invadjustment(itemsite_id, $2, $3, $4, $5::timestamptz, $6) as series from itemsite where obj_uuid = $1;",
+    var sql = "select invadjustment(itemsite_id, $2, $3, $4, $5::timestamptz, $6) as series " +
+      "from itemsite where obj_uuid = $1;",
       asOf = options.asOf || null,
       docNumber = options.docNumber || "",
       notes =  options.notes || "",
@@ -110,8 +223,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     if (!XT.Data.checkPrivilege("CreateAdjustmentTrans")) { throw new handleError("Access Denied", 401) };
 
     /* Post the transaction */
-    plv8.elog(NOTICE, "sql-> ", sql);
-    series = plv8.execute(sql, [itemSite, quantity, docNumber, notes, asOf, value])[0].series;
+    series = plv8.execute(postSql, [itemSite, quantity, docNumber, notes, asOf, value])[0].series;
 
     /* Distribute detail */
     XM.PrivateInventory.distribute(series, options.detail);
@@ -152,7 +264,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
         ret = {},
         qry;
 
-		ret.NextShipmentNumber = plv8.execute("select fetchshipmentnumber();")[0].value;  
+    ret.NextShipmentNumber = plv8.execute("select fetchshipmentnumber();")[0].value;  
       
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
@@ -185,7 +297,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     if(settings['NextShipmentNumber']) {
       plv8.execute('select setNextShipmentNumber($1)', [settings['NextShipmentNumber'] - 0]);
     }
-		options.remove('NextShipmentNumber'); 
+    options.remove('NextShipmentNumber'); 
 
   /* update remaining options as metrics
        first make sure we pass an object that only has valid metric options for this type */
