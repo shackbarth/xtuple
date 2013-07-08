@@ -44,11 +44,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
     
   */
   XM.PrivateInventory.distribute = function (series, detail) {
-    detail = detail || {};
+    detail = detail || [];
     var createTraceSql = "select createlotserial(itemlocdist_itemsite_id, " +
         "$1, $2,'I', NULL, itemlocdist_id,$3, $4, $5) " +
         "from itemlocdist " +
-        "where (itemlocdist_id=$6);"
+        "where (itemlocdist_id=$6);",
       assignTraceSql = "update itemlocdist " +
         "set itemlocdist_source_type='O' " +
         "where (itemlocdist_series=$1);" +
@@ -64,10 +64,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
         " itemlocdist_qty, itemlocdist_series, itemlocdist_invhist_id ) " +
         " values ($1, 'L', $2, $3, endoftime(), $6, $7); ",
       distLocSql = "select distributeToLocations($1);",
-      distSeriesSql = "perform distributeitemlocseries($1)",
-      postSql = "select postitemlocseries($1);",
+      distSeriesSql = "select distributeitemlocseries($1);",
+      postSeriesSql = "select postitemlocseries($1);",
       invHistSql = "select invhist_id " +
-        "from invhist joint itemsite on itemsite_id = invhist_id "
+        "from invhist join itemsite on itemsite_id = invhist_id " +
         "where invhist_series = $1" +
         " and (itemsite_loccntrl or itemsite_controlmethod in ('L','S')); ",
       infoSql = "select itemlocdist_id " + 
@@ -82,7 +82,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
         " and invhist_series = $1",
       distIds = [],
       distId,
-      locId = -1,
+      locId,
       qty = 0,
       info,
       d,
@@ -105,7 +105,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       }
 
       /* Validate quantity */
-      for (i = 0; i < detail.length, i++) {
+      for (i = 0; i < detail.length; i++) {
         qty += detail[i].quantity; 
       }
       if (qty != info.invhist_invqty) {
@@ -114,7 +114,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       
       /* Loop through and handle each trace detail */
       if (info.itemsite_controlmethod === 'L' || info.itemsite_cntrolmethod === 'S') {
-        for (i = 0; i < detail.length, i++) {
+        for (i = 0; i < detail.length; i++) {
           if (!d.trace) { throw new handleError("Itemsite requires lot or serial trace detail."); }
           d = detail[i];
           distId = plv8.execute(createTraceSql, [
@@ -142,7 +142,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
       /* Location control w/o trace */
       } else if (info.itemsite_loccntrl) {
-        for (i = 0; i < detail.length, i++) {
+        for (i = 0; i < detail.length; i++) {
           if (!d.location) { throw new handleError("Item Site requires location detail."); }
           
           d = detail[i];
@@ -158,19 +158,18 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     /* No half done transactions are permitted. */
     } else {
-      invHist = plv8.execute(invhistSql,[series]);
-      if (invhist.length) { throw new handleError("Transaction requires distribution detail") }
+      invHist = plv8.execute(invHistSql,[series]);
+      if (invHist.length) { throw new handleError("Transaction requires distribution detail") }
     }
     
-    /* This mess of post processing functions is all to support legacy plaque build up. */
+    /* This set of post processing functions is to contend with legacy code plaque build up. */
     plv8.execute(distSeriesSql, [series]);
 
-    /* Distribute to locations */
     for (i = 0; i < distIds; i++) {
       plv8.execute(distLocSql, [distIds[i]]);
     }
     
-    plv8.execute(postSql, [series]);
+    plv8.execute(postSeriesSql, [series]);
     return;
   }
 
@@ -223,7 +222,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     if (!XT.Data.checkPrivilege("CreateAdjustmentTrans")) { throw new handleError("Access Denied", 401) };
 
     /* Post the transaction */
-    series = plv8.execute(postSql, [itemSite, quantity, docNumber, notes, asOf, value])[0].series;
+    series = plv8.execute(sql, [itemSite, quantity, docNumber, notes, asOf, value])[0].series;
 
     /* Distribute detail */
     XM.PrivateInventory.distribute(series, options.detail);
