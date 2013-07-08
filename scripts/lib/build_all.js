@@ -76,6 +76,8 @@ var _ = require('underscore'),
               extensions: paths,
               database: database,
               wipeViews: options.wipeViews,
+              clientOnly: options.clientOnly,
+              databaseOnly: options.databaseOnly,
               queryDirect: options.queryDirect
             });
           };
@@ -96,50 +98,39 @@ var _ = require('underscore'),
         });
       },
       buildAll = function (specs, creds, buildAllCallback) {
-        buildDatabase(specs, creds, function (databaseErr, databaseRes) {
-          var returnMessage;
-          // XXX the reason this only works on one database is that async calls the
-          // callback on the first error, so if there are multiple databases
-          // those other processes are probably still chugging along and go haywire
-          // if you start running them again.
-          if (databaseErr && specs.length === 1 && !specs[0].wipeViews) {
-            console.log("Hit a roadblock! Going to try again right now, wiping out the views.");
-            _.each(specs, function (spec) {
-              spec.wipeViews = true;
-            });
-            buildAll(specs, creds, buildAllCallback);
-            return;
-
-          } else if (databaseErr && specs[0].wipeViews) {
-            buildAllCallback("Build failed.");
-            return;
-
-          } else if (databaseErr) {
-            buildAllCallback("Build failed. Try wiping the views next time by running me with the -w flag.");
+        buildClient(specs, function (err, res) {
+          if (err) {
+            buildAllCallback(err);
             return;
           }
-          returnMessage = "\n";
-          _.each(specs, function (spec) {
-            returnMessage += "Database: " + spec.database + '\nDirectories:\n';
-            _.each(spec.extensions, function (ext) {
-              returnMessage += '  ' + ext + '\n';
+          buildDatabase(specs, creds, function (databaseErr, databaseRes) {
+            var returnMessage;
+            if (databaseErr && specs[0].wipeViews) {
+              buildAllCallback(databaseErr);
+              return;
+
+            } else if (databaseErr) {
+              buildAllCallback("Build failed. Try wiping the views next time by running me with the -w flag.");
+              return;
+            }
+            returnMessage = "\n";
+            _.each(specs, function (spec) {
+              returnMessage += "Database: " + spec.database + '\nDirectories:\n';
+              _.each(spec.extensions, function (ext) {
+                returnMessage += '  ' + ext + '\n';
+              });
             });
+            buildAllCallback(null, "Build succeeded." + returnMessage);
           });
-          buildAllCallback(null, "Build succeeded." + returnMessage);
-          // TODO: build the client
-          //buildClient(specs, creds, function (clientErr, clientRes) {
-          //  if (clientErr) {
-          //    buildAllCallback(clientErr);
-          //    console.log("Client build failed");
-          //    return;
-          //  }
-          //  buildAllCallback(null, true);
-          //  console.log("All is good!");
-          //});
         });
       },
-      config = require(path.join(__dirname, "../../node-datasource/config.js"));
+      config;
 
+    if (options.config) {
+      config = require(path.join(process.cwd(), options.config));
+    } else {
+      config = require(path.join(__dirname, "../../node-datasource/config.js"));
+    }
     creds = config.databaseServer;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
@@ -152,7 +143,11 @@ var _ = require('underscore'),
       databases = config.datasource.databases;
     }
 
-    if (options.wipeViews && options.extension) {
+    if (options.clientOnly && options.databaseOnly) {
+      // This request doesn't make any sense.
+      callback("Make up your mind.");
+
+    } else if (options.wipeViews && options.extension) {
       // Drop-all-views is only supported for a whole-db install.
       callback("View dropping is only supported while installing the whole database.");
 
@@ -171,6 +166,8 @@ var _ = require('underscore'),
         path.join(process.cwd(), options.backup);
       buildSpecs.initialize = true;
       buildSpecs.wipeViews = options.wipeViews;
+      buildSpecs.clientOnly = options.clientOnly;
+      buildSpecs.databaseOnly = options.databaseOnly;
       buildSpecs.queryDirect = options.queryDirect;
       // TODO: as above, the extensions could be found dynamically
       buildSpecs.extensions = [
@@ -199,6 +196,8 @@ var _ = require('underscore'),
         return {
           database: database,
           wipeViews: options.wipeViews,
+          clientOnly: options.clientOnly,
+          databaseOnly: options.databaseOnly,
           queryDirect: options.queryDirect,
           extensions: [extension]
         };

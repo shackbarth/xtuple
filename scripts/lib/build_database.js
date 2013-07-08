@@ -9,6 +9,7 @@ var _ = require('underscore'),
   exec = require('child_process').exec,
   fs = require('fs'),
   ormInstaller = require('./orm'),
+  clientBuilder = require('./build_client'),
   path = require('path'),
   pg = require('pg'),
   winston = require('winston');
@@ -16,6 +17,7 @@ var _ = require('underscore'),
 (function () {
   "use strict";
 
+  var jsInit = "select xt.js_init();";
   //
   // There are a few ways we could actually send our query to the database
   //
@@ -148,6 +150,10 @@ var _ = require('underscore'),
       // The function to install all the scripts for an extension
       //
       var getExtensionSql = function (extension, extensionCallback) {
+        if (spec.clientOnly) {
+          extensionCallback(null, "");
+          return;
+        }
         //winston.info("Installing extension", databaseName, extension);
         // deal with directory structure quirks
         var isLibOrm = extension.indexOf("lib/orm") >= 0,
@@ -244,7 +250,7 @@ var _ = require('underscore'),
             if (!isLibOrm) {
               // unless it it hasn't yet been defined (ie. lib/orm),
               // running xt.js_init() is probably a good idea.
-              extensionSql = "select xt.js_init();" + extensionSql;
+              extensionSql = jsInit + extensionSql;
             }
 
 
@@ -276,6 +282,10 @@ var _ = require('underscore'),
       // which has been retooled to return the queryString instead of running
       // it itself.
       var getOrmSql = function (extension, callback) {
+        if (spec.clientOnly) {
+          callback(null, "");
+          return;
+        }
         var ormDir = path.join(extension, "database/orm");
 
         if (fs.existsSync(ormDir)) {
@@ -297,13 +307,24 @@ var _ = require('underscore'),
         }
       };
 
+      // We also need to get the sql that represents the queries to put the
+      // client source in the database.
+      var getClientSql = function (extension, callback) {
+        if (spec.databaseOnly) {
+          callback(null, "");
+          return;
+        }
+        clientBuilder.getClientSql(extension, callback);
+      };
+
       /**
         The sql for each extension comprises the sql in the the source directory
         with the orm sql tacked on to the end. Note that an alternate methodology
         dictates that *all* source for all extensions should be run before *any*
         orm queries for any extensions, but that is not the way it works here.
        */
-      var getExtensionSqlPlusOrmSql = function (extension, callback) {
+      // TODO: async.series would work nicely here
+      var getAllSql = function (extension, callback) {
         getExtensionSql(extension, function (err, sql) {
           if (err) {
             callback(err);
@@ -314,7 +335,14 @@ var _ = require('underscore'),
               callback(err);
               return;
             }
-            callback(null, sql + ormSql);
+            getClientSql(extension, function (err, clientSql) {
+              clientSql = jsInit + clientSql;
+              if (err) {
+                callback(err);
+                return;
+              }
+              callback(null, sql + ormSql + clientSql);
+            });
           });
         });
       };
@@ -324,7 +352,7 @@ var _ = require('underscore'),
       // Asyncronously run all the functions to all the extension sql for the database,
       // in series, and execute the query when they all have come back.
       //
-      async.mapSeries(extensions, getExtensionSqlPlusOrmSql, function (err, extensionSql) {
+      async.mapSeries(extensions, getAllSql, function (err, extensionSql) {
         var sendToDatabase,
           allSql,
           credsClone = JSON.parse(JSON.stringify(creds));
@@ -404,10 +432,13 @@ var _ = require('underscore'),
         }
         return;
       }
-      //winston.info("Success installing all scripts");
-      if (masterCallback) {
-        masterCallback(null, res);
-      }
+      winston.info("Success installing all scripts.");
+      winston.info("Cleaning up.");
+      clientBuilder.cleanup(specs, function (err) {
+        if (masterCallback) {
+          masterCallback(err, res);
+        }
+      });
     });
   };
 }());
