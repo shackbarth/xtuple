@@ -205,6 +205,15 @@
          "type": "Number",
          "column": "ext_load_order"
        }
+     },
+     {
+       "name": "codeInfo",
+       "toMany": {
+         "column": "ext_id",
+         "type": "ClientCodeRelation",
+         "inverse": "extension",
+         "isNested": true
+       }
      }
     ],
     "isSystem": true

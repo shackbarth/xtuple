@@ -8,5 +8,6 @@ npm-debug.log
 scripts/private
 scripts/lib/temp_query*
 scripts/1
-scripts/build
-scripts/deploy
+scripts/lib/build
+scripts/lib/deploy
+scripts/lib/package.js
