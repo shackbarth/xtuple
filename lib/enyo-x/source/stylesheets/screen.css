@@ -273,16 +273,19 @@
   Styles relating to the dashboard
 */
 /*
-  Variables for widths
+  Variables for widths/colors
 */
 .dashboard {
   background-color: #8d8d8d;
 }
-.dashboard-chart {
+.dashboard .charts-panels {
+  overflow-y: auto;
+}
+.dashboard .selectable-chart {
   width: 500px;
   height: 230px;
 }
-.dashboard-chart .chart-title {
+.dashboard .selectable-chart .chart-title-bar {
   width: 500px;
 }
 .selectable-chart {
@@ -290,11 +293,9 @@
   color: #ffffff;
   overflow: hidden;
 }
-.selectable-chart .chart-title {
-  padding: 2px 0 2px 0;
+.selectable-chart .chart-title-bar {
+  height: 32px;
   background-color: #333333;
-  color: #ffffff;
-  text-align: center;
   -webkit-border-top-right-radius: 10px;
   -moz-border-radius-topright: 10px;
   border-top-right-radius: 10px;
@@ -302,8 +303,16 @@
   -moz-border-radius-topleft: 10px;
   border-top-left-radius: 10px;
 }
+.selectable-chart .chart-title-bar .chart-title {
+  padding-top: 8px;
+  text-align: center;
+}
+.selectable-chart .chart-title-bar .remove-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 .selectable-chart .chart-bottom {
-  padding-bottom: 5px;
   background-color: #555555;
   border: 1px solid #444444;
   border-top: none;
@@ -317,20 +326,6 @@
 .selectable-chart .xv-picker-label {
   width: 100px;
   color: #ffffff;
-}
-.split-menu {
-  -webkit-border-top-left-radius: 3px;
-  -moz-border-radius-topleft: 3px;
-  border-top-left-radius: 3px;
-  -webkit-border-bottom-left-radius: 3px;
-  -moz-border-radius-bottomleft: 3px;
-  border-bottom-left-radius: 3px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
 }
 body {
   font-family: "arial", "arial black";

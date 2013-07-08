@@ -10,17 +10,22 @@
 @tile-height: 230px;
 @picker-label: 100px;
 @bottom-border: #444;
+@icon-height: 32px;
 
 .dashboard {
   background-color: @gray;
-}
 
-.dashboard-chart {
-  width: @tile-width;
-  height: @tile-height;
+  .charts-panels {
+    overflow-y: auto;
+  }
 
-  .chart-title {
+  .selectable-chart {
     width: @tile-width;
+    height: @tile-height;
+
+    .chart-title-bar {
+      width: @tile-width;
+    }
   }
 }
 
@@ -29,16 +34,24 @@
   color: @white;
   overflow: hidden;
 
-  .chart-title {
-    padding: 2px 0 2px 0;
+  .chart-title-bar {
+    height: @icon-height;
     background-color: @dark-gray;
-    color: @white;
-    text-align: center;
     .border-top-radius(10px);
+
+    .chart-title {
+      padding-top: 8px;
+      text-align: center;
+    }
+
+    .remove-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
   }
 
   .chart-bottom {
-    padding-bottom: 5px;
     background-color: @charcoal;
     border: 1px solid @bottom-border;
     border-top: none;
@@ -49,8 +62,4 @@
     width: @picker-label;
     color: @white;
   }
-}
-
-.split-menu {
-  .border-radius-all(3px, 0, 0, 3px);
 }
