@@ -7,10 +7,10 @@
 		"comment": "Work Orders and Sales Orders",
     "privileges": {
       "all": {
-        "create": false,
+        "create": true,
         "read": true,
-        "update": false,
-        "delete": false
+        "update": true,
+        "delete": true
       }
     },
     "properties": [
@@ -119,10 +119,10 @@
 		"comment": "List of Open Work Orders and Sales Orders",
     "privileges": {
       "all": {
-        "create": false,
+        "create": true,
         "read": true,
-        "update": false,
-        "delete": false
+        "update": true,
+        "delete": true
       }
     },
     "properties": [
@@ -222,10 +222,10 @@
 		"comment": "List of Order Line Items",
     "privileges": {
       "all": {
-        "create": false,
+        "create": true,
         "read": true,
-        "update": false,
-        "delete": false
+        "update": true,
+        "delete": true
       }
     },
     "properties": [
