@@ -277,6 +277,11 @@
 */
 .dashboard {
   background-color: #8d8d8d;
+  /*
+    These styles will only be used
+    if the chart is in a dashboard
+  */
+
 }
 .dashboard .charts-panels {
   overflow-y: auto;
