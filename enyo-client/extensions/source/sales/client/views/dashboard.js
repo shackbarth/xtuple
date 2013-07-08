@@ -80,8 +80,11 @@ filter options
   enyo.kind({
     name: "XV.SalesDashboard",
     kind: "XV.Dashboard",
-    components: [
-      {kind: "XV.SalesHistoryTimeSeriesChart" }
+    // title is what show in the "add chart" picker on the
+    // dashboard and the chart is the widget to be added
+    charts: [
+      {title: "_salesHistory".loc(), chart: "XV.SalesHistoryTimeSeriesChart"},
+      {title: "_bookings".loc(), chart: "XV.SalesOrderTimeSeriesChart"}
     ]
   });
 
