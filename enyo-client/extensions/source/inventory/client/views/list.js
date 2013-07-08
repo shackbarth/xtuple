@@ -6,48 +6,43 @@ trailing:true white:true*/
 (function () {
 
   // ..........................................................
-  // PICK ORDERS LIST ITEM
+  // ORDER LIST ITEM
   //
 
   enyo.kind({
-    name: "XV.PickOrdersListItem",
+    name: "XV.OrderListItem",
     kind: "XV.List",
-    label: "_pickOrdersListItem".loc(),
-    collection: "XM.PickOrdersListItemCollection",
+    label: "_orderListItem".loc(),
+    collection: "XM.OrderListItemCollection",
     query: {orderBy: [
 			{attribute: 'scheduledDate'}
     ]},
-		parameterWidget: "XV.PickOrdersListItemParameters",
+		parameterWidget: "XV.OrderListItemParameters",
     components: [
       {kind: "XV.ListItem", components: [
 	  		{kind: "FittableColumns", components: [
 	    		{kind: "XV.ListColumn", classes: "first", components: [
 						{kind: "FittableColumns", components: [
 							{kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
-	      			{kind: "XV.ListAttr", attr: "info", fit: true, classes: "right"}
+	      			{kind: "XV.ListAttr", attr: "forName1", fit: true, classes: "right"}
 	    			]},
 	    			{kind: "FittableColumns", components: [
 	      			{kind: "XV.ListAttr", attr: "type"},
-							{kind: "XV.ListAttr", attr: "info2", classes: "right"}
+							{kind: "XV.ListAttr", attr: "forName2", classes: "right"}
 	    			]}
 					]},
 	    		{kind: "XV.ListColumn", classes: "second", components: [
-	      		{kind: "XV.ListAttr", attr: "scheduledDate"},
-						{kind: "XV.ListAttr", attr: "totalQtyRemaining"}
+	      		{kind: "XV.ListAttr", attr: "scheduledDate"}
 	    		]},
-	    		{kind: "XV.ListColumn", classes: "second", components: [
-	      		{kind: "XV.ListAttr", attr: "comments"},
-						{kind: "XV.ListAttr", attr: "notes"}
-					]},
 	    		{kind: "XV.ListColumn", classes: "last", components: [
-	      		{kind: "XV.ListAttr", attr: "assignedTo"}
+	      		{kind: "XV.ListAttr", attr: "assignedToUserName"}
 					]}
 	  		]}  
 			]}
     ]
   });
 
-  XV.registerModelList("XM.PickOrderRelation", "XV.PickOrderLineListItem");
+  XV.registerModelList("XM.OrderRelation", "XV.OrderLineListItem");
 
   // ..........................................................
   // SALES ORDER

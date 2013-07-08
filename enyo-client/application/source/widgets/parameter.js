@@ -569,19 +569,19 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
-  // PICK ORDERS LIST
+  // ORDER LIST
   //
 
   enyo.kind({
-    name: "XV.PickOrdersListItemParameters",
+    name: "XV.OrderListItemParameters",
     kind: "XV.ParameterWidget",
   //  characteristicsRole: 'isAccounts',
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_pickOrdersListItem".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_orderListItem".loc()},
       {name: "orderType", attr: "type", label: "_orderType".loc(), defaultKind: "XV.CustomerTypePicker"},
       {name: "number", label: "_number".loc(), attr: "number"},
 			{name: "scheduledDate", label: "_scheduledDate".loc(), attr: "scheduledDate"},
-      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo"}    
+      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedToUserName"}    
 		]
   }); 
 

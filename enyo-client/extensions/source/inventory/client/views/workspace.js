@@ -76,15 +76,15 @@ trailing:true, white:true*/
     });
 
   // ..........................................................
-  // SHIPMENT LINE
+  // ORDER LINE
   //
 
   enyo.kind({
-    name: "XV.ShipmentWorkspace",
+    name: "XV.OrderLineWorkspace",
     kind: "XV.Workspace",
-    title: "_shipment".loc(),
+    title: "_orderLine".loc(),
     headerAttrs: ["number", "-", "name"],
-    model: "XM.Shipment",
+    model: "XM.OrderLine",
     handlers: {
       onSavePrompt: "savePrompt"
     },
@@ -95,9 +95,8 @@ trailing:true, white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true, classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "lineNumber"},
-            {kind: "XV.InputWidget", attr: "item.number"},
-            {kind: "XV.InputWidget", attr: "item.description1"},
-            {kind: "XV.InputWidget", attr: "site.code"}      
+            {kind: "XV.InputWidget", attr: "itemSite.item.number"},
+            {kind: "XV.InputWidget", attr: "itemSite.item.description1"}    
 					]}
 				]}
 			]},
@@ -115,14 +114,14 @@ trailing:true, white:true*/
     ],
     create: function () {
       this.inherited(arguments);
-      var K = XM.Shipment.prototype,
+      var K = XM.OrderLine.prototype,
         roles = K.roleAttributes.sort(),
         that = this;
 
       // Loop and add a role checkbox for each role attribute found on the model
       _.each(roles, function (role) {
         that.createComponent({
-          kind: XV.ShipmentRoleCheckboxWidget,
+          kind: XV.OrderLineRoleCheckboxWidget,
           name: role + "Control",
           label: ("_" + role).loc(),
           attr: role,
@@ -154,8 +153,7 @@ trailing:true, white:true*/
     }
   });
 
-  //XV.registerModelWorkspace("XM.AccountRelation", "XV.AccountWorkspace");
-  XV.registerModelWorkspace("XM.PickOrdersListItem", "XV.ShipmentWorkspace");
+  XV.registerModelWorkspace("XM.OrderLine", "XV.OrderLineWorkspace");
 
   };
 
