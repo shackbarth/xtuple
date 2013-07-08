@@ -364,7 +364,12 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
     var routes = require(__dirname + "/" + route + "/routes");
 
     _.each(routes, function (routeDetails) {
-      app.get('/:org/' + routeDetails.path, routeDetails.function);
+      var verb = (routeDetails.verb || "all").toLowerCase();
+      if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
+        app[verb]('/:org/' + routeDetails.path, routeDetails.function);
+      } else {
+        console.log("Invalid verb for extension-defined route " + routeDetails.path);
+      }
     });
   });
 }
