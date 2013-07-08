@@ -14,6 +14,14 @@
     ],
     "properties": [
       {
+        "name": "controlMethod",
+        "attr": {
+          "type": "String",
+          "column": "itemsite_controlmethod",
+          "required": true
+        }
+      },
+      {
         "name": "costMethod",
         "attr": {
           "type": "String",

@@ -60,22 +60,22 @@ select xt.install_js('XM','Inventory','xtuple', $$
         "where (itemlocdist_series=$2);",
       insLocDistSql = "insert into itemlocdist " +
         "(itemlocdist_itemlocdist_id, itemlocdist_source_type, itemlocdist_source_id, " +
-        " itemlocdist_itemsite_id, itemlocdist_expiration " +
+        " itemlocdist_itemsite_id, itemlocdist_expiration, " +
         " itemlocdist_qty, itemlocdist_series, itemlocdist_invhist_id ) " +
-        " values ($1, 'L', $2, $3, endoftime(), $6, $7); ",
+        " values ($1, 'L', $2, $3, endoftime(), $4, $5, $6); ",
       distLocSql = "select distributeToLocations($1);",
       distSeriesSql = "select distributeitemlocseries($1);",
       postSeriesSql = "select postitemlocseries($1);",
       invHistSql = "select invhist_id " +
-        "from invhist join itemsite on itemsite_id = invhist_id " +
+        "from invhist join itemsite on itemsite_id = invhist_itemsite_id " +
         "where invhist_series = $1" +
         " and (itemsite_loccntrl or itemsite_controlmethod in ('L','S')); ",
-      infoSql = "select itemlocdist_id " + 
+      infoSql = "select itemlocdist_id, " + 
         " invhist_id, " +
-        " invhist_invqty " +
+        " invhist_invqty, " +
         " itemsite_id, " +
         " itemsite_controlmethod, " +
-        " itemsite_loccntrl, " +
+        " itemsite_loccntrl " +
         "from itemlocdist, invhist" +
         " join itemsite on itemsite_id = invhist_itemsite_id " +
         "where itemlocdist_series = $1 " +
@@ -100,14 +100,20 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     if (detail && detail.length) {
       info = plv8.execute(infoSql,[series]);
-      if (info.length > 1) { 
+
+      /* We shouldn't have detail if there are no detail control settings turned on */
+      if (!info.length) {
+        throw new handleError("Item Site is not controlled.");
+      } else if (info.length > 1) { 
         throw new handleError("Only distribution for one transaction at a time is supported.")
       }
+      info = info[0];
 
       /* Validate quantity */
       for (i = 0; i < detail.length; i++) {
         qty += detail[i].quantity; 
       }
+      
       if (qty != info.invhist_invqty) {
         throw new handleError("Distribution quantity does not match transaction quantity.")
       }
@@ -115,8 +121,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
       /* Loop through and handle each trace detail */
       if (info.itemsite_controlmethod === 'L' || info.itemsite_cntrolmethod === 'S') {
         for (i = 0; i < detail.length; i++) {
-          if (!d.trace) { throw new handleError("Itemsite requires lot or serial trace detail."); }
           d = detail[i];
+          if (!d.trace) { throw new handleError("Itemsite requires lot or serial trace detail."); }
           distId = plv8.execute(createTraceSql, [
             d.trace, series, d.quantity, d.expiration, d.warranty, info.itemlocdist_id
           ]);
@@ -141,19 +147,14 @@ select xt.install_js('XM','Inventory','xtuple', $$
         plv8.execute(assignTraceSql, [series, info.itemlocdist]);
 
       /* Location control w/o trace */
-      } else if (info.itemsite_loccntrl) {
-        for (i = 0; i < detail.length; i++) {
-          if (!d.location) { throw new handleError("Item Site requires location detail."); }
-          
-          d = detail[i];
-          locId = getLocId(d.location);
-          plv8.executec(insLocDistSql, [info.itemlocdist_id, locId, info.itemsite_id, d.quantity, series]);
-        }
-        
-
-      /* We shouldn't have detail if there are no detail control settings turned on */
       } else {
-        throw new handleError("Item Site is not controlled.");
+        for (i = 0; i < detail.length; i++) {
+          d = detail[i];
+          if (!d.location) { throw new handleError("Item Site requires location detail."); }
+          if (!d.trace) { throw new handleError("Item Site does not support lot/serial trace detail."); }
+          locId = getLocId(d.location);
+          plv8.execute(insLocDistSql, [info.itemlocdist_id, locId, info.itemsite_id, d.quantity, series, info.invhist_id]);
+        }
       }
 
     /* No half done transactions are permitted. */
@@ -164,11 +165,9 @@ select xt.install_js('XM','Inventory','xtuple', $$
     
     /* This set of post processing functions is to contend with legacy code plaque build up. */
     plv8.execute(distSeriesSql, [series]);
-
     for (i = 0; i < distIds; i++) {
       plv8.execute(distLocSql, [distIds[i]]);
     }
-    
     plv8.execute(postSeriesSql, [series]);
     return;
   }
