@@ -103,7 +103,7 @@
         "name": "lineItems",
         "toMany": {
 					"isNested": true,
-          "type": "QuoteLine",
+          "type": "OrderLine",
           "column": "orderhead_id",
 					"inverse": "order"
         }
@@ -246,8 +246,8 @@
 			},
 			{
         "name": "order",
-        "toOne": {
-          "type": "OrderListItem",
+        "attr": {
+          "type": "Number",
           "column": "orderitem_orderhead_id"
         }
 			},
