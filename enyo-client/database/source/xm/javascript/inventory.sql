@@ -90,10 +90,16 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
       /* Helper funciton to resolve location id */
       getLocId = function (uuid) {
-        var locSql = "select location_id from location where obj_uuid = $1;",
-          qry = plv8.execute(locSql, [uuid]);
+        var locSql = "select location_id " +
+          "from location where obj_uuid = $1" +
+          " and not location_restrict " +
+          " or location_id in (" +
+          " select locitemsite_location_id " +
+          " from xt.locitemsite " +
+          " where locitemsite_itemsite_id = $2);",
+          qry = plv8.execute(locSql, [uuid, info.itemsite_id]);
         if (!qry.length) {
-          throw new handleError("Location for " + uuid + " not found.")
+          throw new handleError("Location " + uuid + " is not valid.")
         }
         return qry[0].location_id;
       };
@@ -151,7 +157,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
         for (i = 0; i < detail.length; i++) {
           d = detail[i];
           if (!d.location) { throw new handleError("Item Site requires location detail."); }
-          if (!d.trace) { throw new handleError("Item Site does not support lot/serial trace detail."); }
+          if (d.trace) { throw new handleError("Item Site does not support lot/serial trace detail."); }
           locId = getLocId(d.location);
           plv8.execute(insLocDistSql, [info.itemlocdist_id, locId, info.itemsite_id, d.quantity, series, info.invhist_id]);
         }
