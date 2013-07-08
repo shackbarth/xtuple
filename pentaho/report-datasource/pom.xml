@@ -25,8 +25,6 @@
 			<url>http://repo.pentaho.org/artifactory/third-party/</url>
 		</repository>
 	</repositories>
-  
-  
     <build>
   	<plugins>
   		<plugin>
@@ -45,8 +43,103 @@
     			</dependency>
   			</dependencies>
   		</plugin>
-  	</plugins>
+  		<plugin>
+    		<artifactId>maven-clean-plugin</artifactId>
+    		<version>2.5</version>
+    		<configuration>
+      			<filesets>
+        			<fileset>
+          				<directory>/${env.BISERVER_HOME}/biserver-ce/tomcat/webapps/pentaho/WEB-INF/lib</directory>
+          				<includes>
+            				<include>antlr-2*.jar</include>
+            				<include>groovy-all*.jar</include>
+            				<include>asm-all*.jar</include>
+          				</includes>
+          				<followSymlinks>false</followSymlinks>
+        			</fileset>
+      			</filesets>
+    		</configuration>
+  		</plugin>  		
+  		<plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <id>copy-resources-to-classes</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>/${env.BISERVER_HOME}/biserver-ce/tomcat/webapps/pentaho/WEB-INF/classes</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <filtering>false</filtering>
+                  <includes><include>*.properties</include></includes>
+                </resource>
+              </resources>             
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-resources-to-lib</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>/${env.BISERVER_HOME}/biserver-ce/tomcat/webapps/pentaho/WEB-INF/lib</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>target</directory>
+                  <filtering>false</filtering>
+                  <includes><include>report-datasource-1.0.jar</include></includes>
+                </resource>
+                <resource>
+                  <directory>/${env.HOME}/.m2/repository/org/codehaus/groovy/groovy-all/2.0.6</directory>
+                  <filtering>false</filtering>
+                  <includes><include>groovy-all-2.0.6.jar</include></includes>
+                </resource>
+                <resource>
+                  <directory>/${env.HOME}/.m2/repository/antlr/antlr/2.7.7</directory>
+                  <filtering>false</filtering>
+                  <includes><include>antlr-2.7.7.jar</include></includes>
+                </resource>
+                <resource>
+                  <directory>/${env.HOME}/.m2/repository/org/ow2/asm/asm-all/4.0</directory>
+                  <filtering>false</filtering>
+                  <includes><include>asm-all-4.0.jar</include></includes>
+                </resource>
+                <resource>
+                  <directory>/${env.HOME}/.m2/repository/pentaho-reporting-engine/pentaho-reporting-engine-classic-core/3.9.1-GA</directory>
+                  <filtering>false</filtering>
+                  <includes><include>pentaho-reporting-engine-classic-core-3.9.1-GA.jar</include></includes>
+                </resource>
+              </resources>  
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-reports</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>/${env.BISERVER_HOME}/biserver-ce/pentaho-solutions/xtuple</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>xtuple</directory>
+                  <filtering>false</filtering>
+                  <includes><include>**/*</include></includes>
+                </resource>
+              </resources>             
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+   	</plugins>
   	</build>
+  	
    <dependencies>
     <dependency>
     	<groupId>org.codehaus.groovy</groupId>
@@ -57,6 +150,16 @@
 		<groupId>pentaho-reporting-engine</groupId>
 		<artifactId>pentaho-reporting-engine-classic-core</artifactId>
 		<version>3.9.1-GA</version>
+	</dependency>
+	<dependency>
+		<groupId>org.ow2.asm</groupId>
+		<artifactId>asm-all</artifactId>
+		<version>4.0</version>
+	</dependency>
+	<dependency>
+		<groupId>antlr</groupId>
+		<artifactId>antlr</artifactId>
+		<version>2.7.7</version>
 	</dependency>
     <dependency>
       <groupId>junit</groupId>

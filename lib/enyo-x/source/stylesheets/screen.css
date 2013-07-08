@@ -36,6 +36,302 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+/*
+  Styles relating to the groupbox and widgets contained
+    by a groupbox
+*/
+/*
+  Styles relating to the groupbox
+*/
+.xv-groupbox {
+  min-width: 320px;
+  padding: 8px;
+  margin-right: 5px;
+}
+.xv-groupbox.editor {
+  min-width: 250px;
+  padding: 0;
+  margin: 0;
+}
+.xv-groupbox.in-panel {
+  padding: 0;
+  margin: 0;
+}
+.xv-groupbox .in-panel > *:first-child {
+  border-top-color: #aaaaaa;
+  border-top: none;
+  border-width: 1px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.xv-groupbox .in-panel > *:last-child {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  border-bottom: none;
+}
+.xv-groupbox > .in-panel .editor {
+  border-right: none;
+}
+.xv-groupbox.panel {
+  min-width: 330px;
+}
+.xv-groupbox .xv-inputwidget {
+  background-color: #ffffff;
+}
+.xv-groupbox .onyx-input-decorator {
+  border: 0;
+}
+.xv-groupbox .onyx-picker-decorator .onyx-button {
+  width: 150px;
+}
+.xv-groupbox .xv-moneywidget {
+  background-color: #ffffff;
+  padding-top: 6px;
+  padding-bottom: 2px;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator {
+  border: 0;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+  width: 110px;
+  padding: 6px 10px 8px 6px;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator input,
+.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-money-label {
+  width: 100%;
+  text-align: right;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator.xv-currency-label {
+  width: 65px;
+}
+.xv-groupbox .xv-moneywidget .xv-picker {
+  width: 65px;
+  text-align: center;
+  padding: 10px;
+}
+.xv-groupbox .xv-relationwidget .onyx-input-decorator,
+.xv-groupbox .xv-datewidget .onyx-input-decorator {
+  width: 170px;
+}
+.xv-groupbox .xv-relationwidget input,
+.xv-groupbox .xv-datewidget input {
+  width: 120px;
+}
+.xv-groupbox > .onyx-input-decorator {
+  border-color: #aaaaaa;
+  border-width: 0 1px 1px 1px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child {
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > .onyx-input-decorator:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox > * {
+  display: block;
+  border: 1px #aaaaaa solid;
+  border-top-width: 0;
+  /* reset styles that make 'item' look bad if they happen to be there */
+
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  margin: 0;
+}
+.xv-groupbox > *:first-child {
+  border-top-color: #aaaaaa;
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > *:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > *:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox-header {
+  padding: 5px 10px;
+  color: #ffffff;
+  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #333333;
+  border: none;
+  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
+}
+.xv-groupbox-buttons {
+  border: none;
+}
+.xv-groupbox-buttons .xv-groupbox-button-single {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox-buttons .xv-groupbox-button-center {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.xv-groupbox-buttons .xv-groupbox-button-left {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox-buttons .xv-groupbox-button-right {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+/*
+  Styles relating to the dashboard
+*/
+/*
+  Styles relating to the dashboard
+*/
+/*
+  Variables for widths/colors
+*/
+.dashboard {
+  background-color: #8d8d8d;
+  /*
+    These styles will only be used
+    if the chart is in a dashboard
+  */
+
+}
+.dashboard .charts-panels {
+  overflow-y: auto;
+}
+.dashboard .selectable-chart {
+  width: 500px;
+  height: 230px;
+}
+.dashboard .selectable-chart .chart-title-bar {
+  width: 500px;
+}
+.selectable-chart {
+  margin: 10px;
+  color: #ffffff;
+  overflow: hidden;
+}
+.selectable-chart .chart-title-bar {
+  height: 32px;
+  background-color: #333333;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  border-top-left-radius: 10px;
+}
+.selectable-chart .chart-title-bar .chart-title {
+  padding-top: 8px;
+  text-align: center;
+}
+.selectable-chart .chart-title-bar .remove-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.selectable-chart .chart-bottom {
+  background-color: #555555;
+  border: 1px solid #444444;
+  border-top: none;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  border-bottom-left-radius: 10px;
+}
+.selectable-chart .xv-picker-label {
+  width: 100px;
+  color: #ffffff;
+}
 body {
   font-family: "arial", "arial black";
   font-size: 100%;
@@ -553,235 +849,6 @@ body {
 .xv-comment-box blockquote {
   margin: 0 15px 10px 15px;
   padding: 0;
-}
-/* Styles relating to the groupbox and widgets contained
-  by a groupbox
-*/
-/*
-  Styles relating to the groupbox
-*/
-.xv-groupbox {
-  min-width: 320px;
-  padding: 8px;
-  margin-right: 5px;
-}
-.xv-groupbox.editor {
-  min-width: 250px;
-  padding: 0;
-  margin: 0;
-}
-.xv-groupbox.in-panel {
-  padding: 0;
-  margin: 0;
-}
-.xv-groupbox .in-panel > *:first-child {
-  border-top-color: #aaaaaa;
-  border-top: none;
-  border-width: 1px;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-.xv-groupbox .in-panel > *:last-child {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  border-bottom: none;
-}
-.xv-groupbox > .in-panel .editor {
-  border-right: none;
-}
-.xv-groupbox.panel {
-  min-width: 330px;
-}
-.xv-groupbox .xv-inputwidget {
-  background-color: #ffffff;
-}
-.xv-groupbox .onyx-input-decorator {
-  border: 0;
-}
-.xv-groupbox .onyx-picker-decorator .onyx-button {
-  width: 150px;
-}
-.xv-groupbox .xv-moneywidget {
-  background-color: #ffffff;
-  padding-top: 6px;
-  padding-bottom: 2px;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator {
-  border: 0;
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-  width: 110px;
-  padding: 6px 10px 8px 6px;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator input,
-.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-money-label {
-  width: 100%;
-  text-align: right;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator.xv-currency-label {
-  width: 65px;
-}
-.xv-groupbox .xv-moneywidget .xv-picker {
-  width: 65px;
-  text-align: center;
-  padding: 10px;
-}
-.xv-groupbox .xv-relationwidget .onyx-input-decorator,
-.xv-groupbox .xv-datewidget .onyx-input-decorator {
-  width: 170px;
-}
-.xv-groupbox .xv-relationwidget input,
-.xv-groupbox .xv-datewidget input {
-  width: 120px;
-}
-.xv-groupbox > .onyx-input-decorator {
-  border-color: #aaaaaa;
-  border-width: 0 1px 1px 1px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child {
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > .onyx-input-decorator:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox > * {
-  display: block;
-  border: 1px #aaaaaa solid;
-  border-top-width: 0;
-  /* reset styles that make 'item' look bad if they happen to be there */
-
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  margin: 0;
-}
-.xv-groupbox > *:first-child {
-  border-top-color: #aaaaaa;
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > *:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > *:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox-header {
-  padding: 5px 10px;
-  color: #ffffff;
-  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: uppercase;
-  background-color: #333333;
-  border: none;
-  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
-}
-.xv-groupbox-buttons {
-  border: none;
-}
-.xv-groupbox-buttons .xv-groupbox-button-single {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox-buttons .xv-groupbox-button-center {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-.xv-groupbox-buttons .xv-groupbox-button-left {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox-buttons .xv-groupbox-button-right {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
 }
 /*
   XV Widgets
