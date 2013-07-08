@@ -76,11 +76,34 @@ trailing:true, white:true*/
     });
 
   // ..........................................................
+  // ORDER
+  //
+	/*
+  enyo.kind({
+    name: "XV.Order",
+    kind: "XV.Workspace",
+    allowPrint: true,
+    //printOnSaveSetting: "DefaultPrintSOOnSave",
+    //headerAttrs: ["number", "-", "billtoName"],
+    published: {
+      effectiveLabel: "_orderDate".loc(),
+      effectiveKey: "orderDate"
+    },
+    components: [
+      {kind: "Panels", name: "orderPanels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel"},
+        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"}
+      ]}
+    ]
+  });
+	*/
+  // ..........................................................
   // ORDER LINE
   //
 
   enyo.kind({
-    name: "XV.OrderLineWorkspace",
+    name: "XV.OrderWorkspace",
     kind: "XV.Workspace",
     title: "_orderLine".loc(),
     headerAttrs: ["number", "-", "name"],
@@ -99,61 +122,12 @@ trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "itemSite.item.description1"}    
 					]}
 				]}
-			]},
-      {kind: "onyx.Popup", name: "savePromptPopup", centered: true,
-        modal: true, floating: true, scrim: true,
-        onHide: "popupHidden", components: [
-        {content: "_mustSave".loc() },
-        {content: "_saveYourWork?".loc() },
-        {tag: "br"},
-        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "savePromptCancel",
-          classes: "xv-popup-button"},
-        {kind: "onyx.Button", content: "_save".loc(), ontap: "savePromptSave",
-          classes: "onyx-blue xv-popup-button"}
-      ]}
-    ],
-    create: function () {
-      this.inherited(arguments);
-      var K = XM.OrderLine.prototype,
-        roles = K.roleAttributes.sort(),
-        that = this;
-
-      // Loop and add a role checkbox for each role attribute found on the model
-      _.each(roles, function (role) {
-        that.createComponent({
-          kind: XV.OrderLineRoleCheckboxWidget,
-          name: role + "Control",
-          label: ("_" + role).loc(),
-          attr: role,
-          container: that.$.rolesGroup,
-          owner: that
-        });
-      });
-
-    },
-    savePrompt: function (inSender, inEvent) {
-      this._popupDone = false;
-      this._inEvent = inEvent;
-      this.$.savePromptPopup.show();
-    },
-    savePromptCancel: function () {
-      this._popupDone = true;
-      this._inEvent.callback(false);
-      this.$.savePromptPopup.hide();
-    },
-    savePromptSave: function () {
-      var that = this,
-        options = {};
-      options.success = function () {
-        that._inEvent.callback(true);
-      };
-      this._popupDone = true;
-      this.$.savePromptPopup.hide();
-      this.save(options);
-    }
+			]}
+    ]
   });
 
-  XV.registerModelWorkspace("XM.OrderLine", "XV.OrderLineWorkspace");
+  XV.registerModelWorkspace("XM.OrderRelation", "XV.OrderWorkspace");
+  XV.registerModelWorkspace("XM.OrderListItem", "XV.OrderWorkspace");
 
   };
 

@@ -337,6 +337,61 @@
       }
      ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OrderRelation",
+    "table": "xt.orderheadinfo",
+    "comment": "Order Relation Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "orderhead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_type"
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_number",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "forName1",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_forname1"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_shipvia"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]
 

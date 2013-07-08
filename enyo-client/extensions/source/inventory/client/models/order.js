@@ -1,3 +1,9 @@
+  XM.Order = XM.Document.extend({
+
+    recordType: 'XM.Order'
+
+  });
+
   XM.OrderLine = XM.Document.extend({
 
     recordType: "XM.OrderLine",
@@ -14,18 +20,28 @@
 
   });
 
+  XM.OrderRelation = XM.Info.extend({
+
+    recordType: 'XM.OrderRelation',
+
+    editableModel: 'XM.Order',
+
+    descriptionKey: "number"
+
+  });
+
   // ..........................................................
   // COLLECTIONS
   //
 
-  XM.OrderLineCollection = XM.Collection.extend({
-
-    model: XM.OrderLine
-
-  });  
-
   XM.OrderListItemCollection = XM.Collection.extend({
 
     model: XM.OrderListItem
+
+  });
+
+  XM.OrderRelationCollection = XM.Collection.extend({
+
+    model: XM.OrderRelation
 
   });    
