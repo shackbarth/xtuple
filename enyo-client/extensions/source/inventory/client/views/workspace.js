@@ -75,35 +75,12 @@ trailing:true, white:true*/
       ]
     });
 
-  // ..........................................................
-  // ORDER
-  //
-	/*
-  enyo.kind({
-    name: "XV.Order",
-    kind: "XV.Workspace",
-    allowPrint: true,
-    //printOnSaveSetting: "DefaultPrintSOOnSave",
-    //headerAttrs: ["number", "-", "billtoName"],
-    published: {
-      effectiveLabel: "_orderDate".loc(),
-      effectiveKey: "orderDate"
-    },
-    components: [
-      {kind: "Panels", name: "orderPanels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel"},
-        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"}
-      ]}
-    ]
-  });
-	*/
-  // ..........................................................
-  // ORDER LINE
-  //
+    // ..........................................................
+    // ORDER
+    //
 
   enyo.kind({
-    name: "XV.OrderWorkspace",
+    name: "XV.OrderLineWorkspace",
     kind: "XV.Workspace",
     title: "_orderLine".loc(),
     headerAttrs: ["number", "-", "name"],
@@ -117,17 +94,16 @@ trailing:true, white:true*/
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true, classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "lineNumber"},
-            {kind: "XV.InputWidget", attr: "itemSite.item.number"},
-            {kind: "XV.InputWidget", attr: "itemSite.item.description1"}    
+			
 					]}
 				]}
 			]}
     ]
   });
 
-  XV.registerModelWorkspace("XM.OrderRelation", "XV.OrderWorkspace");
-  XV.registerModelWorkspace("XM.OrderListItem", "XV.OrderWorkspace");
+  XV.registerModelWorkspace("XM.OrderRelation", "XV.OrderLineWorkspace");
+  XV.registerModelWorkspace("XM.OrderListItem", "XV.OrderLineWorkspace");
+  XV.registerModelWorkspace("XM.OrderLine", "XV.OrderLineWorkspace");
 
   };
 

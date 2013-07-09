@@ -23,17 +23,17 @@
         }
       },
 			{
-        "name": "type",
-        "attr": {
-          "type": "String",
-          "column": "orderhead_type"
-        }
-			},
-			{
         "name": "number",
         "attr": {
           "type": "String",
           "column": "orderhead_number"
+        }
+			},
+			{
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_type"
         }
 			},
 			{
@@ -135,19 +135,20 @@
         }
       },
 			{
-        "name": "type",
-        "attr": {
-          "type": "String",
-          "column": "orderhead_type"
-        }
-			},
-			{
         "name": "number",
         "attr": {
           "type": "String",
           "column": "orderhead_number"
         }
 			},
+			{
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_type"
+        }
+			},
+
 			{
         "name": "status",
         "attr": {
@@ -238,17 +239,17 @@
         }
       },
 			{
-        "name": "type",
-        "attr": {
-          "type": "String",
-          "column": "orderitem_orderhead_type"
-        }
-			},
-			{
         "name": "order",
         "attr": {
           "type": "Number",
           "column": "orderitem_orderhead_id"
+        }
+			},
+			{
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "orderitem_orderhead_type"
         }
 			},
 			{
@@ -362,18 +363,17 @@
         }
       },
       {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_number"
+        }
+      },
+      {
         "name": "type",
         "attr": {
           "type": "String",
           "column": "orderhead_type"
-        }
-      },
-      {
-        "name": "number",
-        "attr": {
-          "type": "String",
-          "column": "orderhead_number",
-          "isNaturalKey":true
         }
       },
       {

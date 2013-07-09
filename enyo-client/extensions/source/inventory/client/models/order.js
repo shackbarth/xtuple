@@ -6,7 +6,7 @@
 
   XM.OrderLine = XM.Document.extend({
 
-    recordType: "XM.OrderLine",
+    recordType: 'XM.OrderLine',
 
     idAttribute: "id"
 
@@ -14,9 +14,11 @@
 
   XM.OrderListItem = XM.Document.extend({
 
-    recordType: "XM.OrderListItem",
+    recordType: 'XM.OrderListItem',
 
-    idAttribute: "id"
+    idAttribute: "id",
+
+		editableModel: 'XM.Order'
 
   });
 
