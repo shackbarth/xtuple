@@ -92,15 +92,27 @@ trailing:true, white:true*/
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true, classes: "in-panel", components: [
-			
+          {kind: "onyx.GroupboxHeader", content: "_orderLines".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "lines", fit: true, classes: "in-panel", components: [
+					//	{kind: "Repeater", name: "lineItemsList", onSetupItem: "setupLineItem", count: 0, components: [
+					//		{name: "lineItem"}
+						]}
 					]}
 				]}
 			]}
     ]
   });
-
+/*
+  setupLineItem: function (inSender, inEvent) {
+    var row = inEvent.item.$.lineItem,
+      model = this._collection.at(inEvent.index);
+    row.setValue(model);
+    if (inEvent.index === 0) {
+      row.initializeNew();
+    }
+    return true;
+  };
+*/
   XV.registerModelWorkspace("XM.OrderRelation", "XV.OrderLineWorkspace");
   XV.registerModelWorkspace("XM.OrderListItem", "XV.OrderLineWorkspace");
   XV.registerModelWorkspace("XM.OrderLine", "XV.OrderLineWorkspace");
