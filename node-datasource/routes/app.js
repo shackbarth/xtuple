@@ -8,18 +8,84 @@ var async = require("async"),
 (function () {
   "use strict";
 
+  //
+  // Get the most recent version of the core code
+  // XXX: we'll need to sometimes give older versions
+  // @param {String} language Can be "js" or "css".
+  //
+  var getCoreUuid = function (language, organization, callback) {
+    var coll = new SYS.ClientCodeRelationCollection();
+    coll.fetch({
+      username: X.options.databaseServer.user,
+      database: organization,
+      query: {
+        parameters: [
+          { attribute: "language", value: language },
+          { attribute: "extension", value: null, includeNull: true }
+        ]
+      },
+      success: function (coll, res) {
+        var sortedModels = _.sortBy(coll.models, function (model) {
+          return -1 * getVersionSize(model.get("version"));
+        });
+        callback(null, sortedModels[0].get("uuid"));
+      }
+    });
+  };
+
+  /**
+    Just get a sense of how recent a version is without the dots.
+    Higher version number string inputs will result in higher int outputs.
+    Works with three or four dot-separated numbers.
+  */
+  var getVersionSize = function (version) {
+    var versionSplit = version.split('.'),
+      versionSize = 1000000 * versionSplit[0] +
+        10000 * versionSplit[1] +
+        100 * versionSplit[2];
+
+    if (versionSplit.length > 3) {
+      versionSize += versionSplit[3];
+    }
+    return versionSize;
+  };
   /**
     @name Extensions
     @class Extensions
     Returns a list of extensions associated with an organization.
    */
-  exports.extensions = function (req, res) {
+  exports.serveApp = function (req, res) {
+    if (!req.session.passport.user) {
+      routes.logout(req, res);
+      return;
+    }
+
     var userCollection = new SYS.UserCollection(),
       fetchError = function (err) {
         X.log("Extension fetch error", err);
         res.send({isError: true, message: "Error fetching extensions"});
       },
       fetchSuccess = function (collection, result) {
+        var sendExtensions = function (res, extensions) {
+          var uuids = _.map(extensions, function (ext) {
+            var sortedModels = _.sortBy(ext.codeInfo, function (codeInfo) {
+              return -1 * getVersionSize(codeInfo.version);
+            });
+            return sortedModels[0].uuid;
+          });
+          getCoreUuid('js', req.session.passport.user.organization, function (err, jsUuid) {
+            // TODO: handle error
+            getCoreUuid('css', req.session.passport.user.organization, function (err, cssUuid) {
+              // TODO: handle error
+              res.render('app', {
+                org: req.session.passport.user.organization,
+                coreJs: jsUuid,
+                coreCss: cssUuid,
+                extensions: uuids
+              });
+            });
+          });
+        };
         var getExtensionFromRole = function (role, callback) {
           var id = role.userAccountRole,
             roleModel = new SYS.UserAccountRole();
@@ -65,14 +131,13 @@ var async = require("async"),
                 }
               });
             });
-            res.send({data: extensions});
+            sendExtensions(res, extensions);
           });
 
         } else {
           // no second async call necessary
-          res.send({data: extensions});
+          sendExtensions(res, extensions);
         }
-
       };
 
     // Fetch under the authority of admin
@@ -86,11 +151,4 @@ var async = require("async"),
     });
   };
 
-  exports.serveApp = function (req, res) {
-    if (!req.session.passport.user) {
-      routes.logout(req, res);
-    } else {
-      res.render('app', { org: req.session.passport.user.organization });
-    }
-  };
 }());
