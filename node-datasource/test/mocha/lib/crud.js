@@ -123,6 +123,10 @@ var _ = require("underscore"),
             model.off('change:' + model.documentKey, modelCallback);
             assertAndCallback();
           }
+        } else if (model instanceof XM.Document) {
+          clearTimeout(timeoutId);
+          model.off('statusChange', modelCallback);
+          assertAndCallback();
         } else {
           clearTimeout(timeoutId);
           model.off('change:id', modelCallback);
@@ -130,9 +134,12 @@ var _ = require("underscore"),
         }
       };
 
-    // Add an event handler when using a model with an AUTO...NUMBER.
     if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
+      // Add an event handler when using a model with an AUTO...NUMBER.
       model.on('change:' + model.documentKey, modelCallback);
+    } else if (model instanceof XM.Document) {
+      // Add an event handler when using a model with an MANUAL policy.
+      model.on('statusChange', modelCallback);
     } else {
       model.on('change:id', modelCallback);
     }

@@ -19,7 +19,7 @@
       workspace;
 
     //
-    // Drill down into the sales module
+    // Drill down into the appropriate module and panel
     //
     _.each(navigator.modules, function (module, moduleIndex) {
       _.each(module.panels, function (panel, panelIndex) {
