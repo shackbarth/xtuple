@@ -296,14 +296,6 @@ require('./oauth2/passport');
  * Setup HTTP routes and handlers.
  */
 var that = this;
-app.get('/:org/app', function (req, res, next) {
-  "use strict";
-  if (!req.session.passport.user) {
-    routes.logout(req, res);
-  } else {
-    res.render('app', { org: req.session.passport.user.organization });
-  }
-});
 app.get('/:org/debug', function (req, res, next) {
   "use strict";
   if (!req.session.passport.user) {
@@ -340,6 +332,7 @@ app.post('/login', routes.login);
 app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
 app.get('/:org/logout', routes.logout);
+app.get('/:org/app', routes.app);
 
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
