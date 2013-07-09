@@ -331,6 +331,7 @@ app.get('/', routes.loginForm);
 app.post('/login', routes.login);
 app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
+app.get('/logout', routes.logout);
 app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
 

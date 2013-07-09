@@ -49,10 +49,11 @@ var async = require("async"),
     }
     return versionSize;
   };
+
   /**
-    @name Extensions
-    @class Extensions
-    Returns a list of extensions associated with an organization.
+   Figures out what extensions the user is entitled to. Queries to determine
+   client code UUIDs for core and those extensions. Sends on to the app view
+   to render.
    */
   exports.serveApp = function (req, res) {
     if (!req.session.passport.user) {
@@ -60,12 +61,12 @@ var async = require("async"),
       return;
     }
 
-    var userCollection = new SYS.UserCollection(),
+    var user = new SYS.User(),
       fetchError = function (err) {
         X.log("Extension fetch error", err);
         res.send({isError: true, message: "Error fetching extensions"});
       },
-      fetchSuccess = function (collection, result) {
+      fetchSuccess = function (model, result) {
         var sendExtensions = function (res, extensions) {
           var uuids = _.map(extensions, function (ext) {
             var sortedModels = _.sortBy(ext.codeInfo, function (codeInfo) {
@@ -74,9 +75,15 @@ var async = require("async"),
             return sortedModels[0].uuid;
           });
           getCoreUuid('js', req.session.passport.user.organization, function (err, jsUuid) {
-            // TODO: handle error
+            if (err) {
+              res.send({isError: true, error: err});
+              return;
+            }
             getCoreUuid('css', req.session.passport.user.organization, function (err, cssUuid) {
-              // TODO: handle error
+              if (err) {
+                res.send({isError: true, error: err});
+                return;
+              }
               res.render('app', {
                 org: req.session.passport.user.organization,
                 coreJs: jsUuid,
@@ -104,9 +111,6 @@ var async = require("async"),
             }
           });
         };
-        var user = _.find(collection.models, function (obj) {
-          return obj.get("username") === req.session.passport.user.username;
-        });
         var extensions = _.map(user.get("grantedExtensions"), function (ext) {
           return ext.extension;
         });
@@ -140,10 +144,8 @@ var async = require("async"),
         }
       };
 
-    // Fetch under the authority of admin
-    // or else most users would not be able to load their own extensions.
-    // TODO: just fetch the model instead of the whole collection
-    userCollection.fetch({
+    user.fetch({
+      id: req.session.passport.user.username,
       success: fetchSuccess,
       error: fetchError,
       username: X.options.databaseServer.user,
