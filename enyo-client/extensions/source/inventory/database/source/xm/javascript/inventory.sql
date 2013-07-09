@@ -45,46 +45,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
   */
   XM.PrivateInventory.distribute = function (series, detail) {
     detail = detail || [];
-    var createTraceSql = "select createlotserial(itemlocdist_itemsite_id, " +
-        "$1, $2,'I', NULL, itemlocdist_id,$3, $4, $5) as id " +
-        "from itemlocdist " +
-        "where (itemlocdist_id=$6);",
-      assignTraceSql = "update itemlocdist " +
-        "set itemlocdist_source_type='O' " +
-        "where itemlocdist_series=$1 " +
-        " and itemlocdist_source_type='D'; " +
-        "delete from itemlocdist where itemlocdist_id=$2;",
-      insTraceLocDistSql = "insert into itemlocdist " +
-        "( itemlocdist_itemlocdist_id," +
-        "  itemlocdist_source_type, itemlocdist_source_id," +
-        "  itemlocdist_qty, itemlocdist_ls_id, itemlocdist_expiration ) " +
-        "select itemlocdist_id, 'L', $1, $2, itemlocdist_ls_id, endOfTime() " +
-        "from itemlocdist " +
-        "where itemlocdist_id=$3;",
-      insLocDistSql = "insert into itemlocdist " +
-        "(itemlocdist_itemlocdist_id, itemlocdist_source_type, itemlocdist_source_id, " +
-        " itemlocdist_itemsite_id, itemlocdist_expiration, " +
-        " itemlocdist_qty, itemlocdist_series, itemlocdist_invhist_id ) " +
-        " values ($1, 'L', $2, $3, endoftime(), $4, $5, $6); ",
-      distLocSql = "select distributeToLocations($1);",
-      distSeriesSql = "select distributeitemlocseries($1);",
-      postSeriesSql = "select postitemlocseries($1);",
-      invHistSql = "select invhist_id " +
-        "from invhist join itemsite on itemsite_id = invhist_itemsite_id " +
-        "where invhist_series = $1" +
-        " and (itemsite_loccntrl or itemsite_controlmethod in ('L','S')); ",
-      infoSql = "select itemlocdist_id, " + 
-        " invhist_id, " +
-        " invhist_invqty, " +
-        " itemsite_id, " +
-        " itemsite_controlmethod, " +
-        " itemsite_loccntrl " +
-        "from itemlocdist, invhist" +
-        " join itemsite on itemsite_id = invhist_itemsite_id " +
-        "where itemlocdist_series = $1 " +
-        " and invhist_series = $1",
+    var sql,
+      sql2,
       distIds = [],
       distId,
+      traceSeries,
       locId,
       qty = 0,
       info,
@@ -108,7 +73,17 @@ select xt.install_js('XM','Inventory','xtuple', $$
       };
 
     if (detail && detail.length) {
-      info = plv8.execute(infoSql,[series]);
+      sql = "select itemlocdist_id, " + 
+        " invhist_id, " +
+        " invhist_invqty, " +
+        " itemsite_id, " +
+        " itemsite_controlmethod, " +
+        " itemsite_loccntrl " +
+        "from itemlocdist, invhist" +
+        " join itemsite on itemsite_id = invhist_itemsite_id " +
+        "where itemlocdist_series = $1 " +
+        " and invhist_series = $1";
+      info = plv8.execute(sql,[series]);
 
       /* We shouldn't have detail if there are no detail control settings turned on */
       if (!info.length) {
@@ -129,57 +104,108 @@ select xt.install_js('XM','Inventory','xtuple', $$
       
       /* Loop through and handle each trace detail */
       if (info.itemsite_controlmethod === 'L' || info.itemsite_controlmethod === 'S') {
+        sql = "select nextval('itemloc_series_seq') AS itemloc_series;";
+        traceSeries = plv8.execute(sql)[0].itemloc_series;
+
+        sql = "select createlotserial(itemlocdist_itemsite_id, " +
+          "$1, $2,'I', NULL, itemlocdist_id,$3, $4, $5) as id " +
+          "from itemlocdist " +
+          "where (itemlocdist_id=$6);";
+
+        sql2 = "insert into itemlocdist " +
+          "( itemlocdist_itemlocdist_id," +
+          "  itemlocdist_source_type, itemlocdist_source_id," +
+          "  itemlocdist_qty, itemlocdist_ls_id, itemlocdist_expiration ) " +
+          "select itemlocdist_id, 'L', $1, $2, itemlocdist_ls_id, endOfTime() " +
+          "from itemlocdist " +
+          "where itemlocdist_id=$3;";
+        
         for (i = 0; i < detail.length; i++) {
           d = detail[i];
+          
           if (!d.trace) { throw new handleError("Itemsite requires lot or serial trace detail."); }
-          distId = plv8.execute(createTraceSql, [
-            d.trace, series, d.quantity, d.expiration, d.warranty, info.itemlocdist_id
+          
+          distId = plv8.execute(sql, [
+            d.trace, traceSeries, d.quantity, d.expiration, d.warranty, info.itemlocdist_id
           ])[0].id;
-          distIds.push(distIds);
+          distIds.push(distId);
 
           /* Determine location id if applicable */
           if (info.itemsite_loccntrl) {
             if (!d.location) { throw new handleError("Itemsite requires location detail."); }
 
             locId = getLocId(d.location);
+
+            plv8.execute(sql2, [locId, d.quantity, distId]);
           } else { 
             if (d.location) { throw new handleError("Itemsite does not support location detail."); }
-           
-            locId = -1;
           }
-
-          /* Update for location distribution */
-          plv8.execute(insTraceLocDistSql, [locId, d.quantity, distId]);
         }
 
         /* Housekeeping */
-        plv8.execute(assignTraceSql, [series, info.itemlocdist]);
+        sql = "delete from itemlocdist where itemlocdist_id=$1;";
+        plv8.execute(sql, [info.itemlocdist_id]);
+        
+        /* Distribute by trace distribution if location controled */
+        if (info.itemsite_loccntrl) {
+          sql = "update itemlocdist " +
+            "set itemlocdist_source_type='O' " +
+            "where itemlocdist_series=$1;";
+          plv8.execute(sql, [traceSeries]);
+
+          sql = "select distributetolocations($1);";
+          for (i = 0; i < distIds.length; i++) {
+            plv8.execute(sql, [distIds[i]]);
+          }
+
+        /* Otherwise distribute by series */
+        } else {
+          sql = "update itemlocdist "
+                "set itemlocdist_source_type='L', itemlocdist_source_id=-1 "
+                "where (itemlocdist_series=$1); ";
+          plv8.execute(sql, [traceSeries]);
+
+          sql = "select distributeitemlocseries($1);";
+          plv8.execute(sql, [traceSeries]);
+        }
 
       /* Location control w/o trace */
       } else {
+        sql =  "insert into itemlocdist " +
+            "(itemlocdist_itemlocdist_id, itemlocdist_source_type, itemlocdist_source_id, " +
+            " itemlocdist_itemsite_id, itemlocdist_expiration, " +
+            " itemlocdist_qty, itemlocdist_series, itemlocdist_invhist_id ) " +
+            " values ($1, 'L', $2, $3, endoftime(), $4, $5, $6); ";
+            
         for (i = 0; i < detail.length; i++) {
           d = detail[i];
           if (!d.location) { throw new handleError("Item Site requires location detail."); }
           if (d.trace) { throw new handleError("Item Site does not support lot or serial trace detail."); }
           locId = getLocId(d.location);
-          plv8.execute(insLocDistSql, [
+
+          plv8.execute(sql, [
             info.itemlocdist_id, locId, info.itemsite_id, d.quantity, series, info.invhist_id
           ]);
         }
+
+        sql = "select distributeitemlocseries($1);";
+        plv8.execute(sql, [series]);
       }
 
     /* No half done transactions are permitted. */
     } else {
-      invHist = plv8.execute(invHistSql,[series]);
+      sql = "select invhist_id " +
+        "from invhist join itemsite on itemsite_id = invhist_itemsite_id " +
+        "where invhist_series = $1" +
+        " and (itemsite_loccntrl or itemsite_controlmethod in ('L','S')); ",
+      invHist = plv8.execute(sql,[series]);
+      
       if (invHist.length) { throw new handleError("Transaction requires distribution detail") }
     }
     
-    /* This set of post processing functions is to contend with legacy code plaque build up. */
-    plv8.execute(distSeriesSql, [series]);
-    for (i = 0; i < distIds; i++) {
-      plv8.execute(distLocSql, [distIds[i]]);
-    }
-    plv8.execute(postSeriesSql, [series]);
+    /* Wrap up */
+    sql = "select postitemlocseries($1);";
+    plv8.execute(sql, [series]);
     return;
   }
 
