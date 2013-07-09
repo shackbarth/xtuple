@@ -11,7 +11,7 @@ var _ = require("underscore"),
 (function () {
   "use strict";
 
-  var waitTime = exports.waitTime = 5000;
+  var waitTime = exports.waitTime = 20000;
 
   var testAttributes = function (data) {
     if (!data.autoTestAttributes) {
@@ -133,6 +133,8 @@ var _ = require("underscore"),
     // Add an event handler when using a model with an AUTO...NUMBER.
     if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
       model.on('change:' + model.documentKey, modelCallback);
+    } else {
+      model.on('change:id', modelCallback);
     }
     model.initialize(null, {isNew: true});
 
@@ -141,8 +143,6 @@ var _ = require("underscore"),
       assert.fail("timeout was reached on create " + data.recordType, "");
       callback();
     }, waitTime);
-
-    callback(model);
   };
 
   /**

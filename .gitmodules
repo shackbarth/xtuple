@@ -7,9 +7,6 @@
 [submodule "lib/layout"]
   path = lib/layout
   url = https://github.com/enyojs/layout.git
-[submodule "enyo-client/extensions/enyo"]
-  path = enyo-client/extensions/enyo
-  url = https://github.com/enyojs/enyo.git
 [submodule "lib/enyo-x/lib/gts-plugins"]
   path = lib/enyo-x/lib/gts-plugins
   url = https://bitbucket.org/GlitchTechScience/gts-plugins.git

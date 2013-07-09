@@ -40,16 +40,6 @@ white:true*/
     }
   });
 
-  XT.StartupTask.create({
-    taskName: "loadSessionExtensions",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XT.session.loadSessionObjects(XT.session.EXTENSIONS, options);
-    }
-  });
-
   // These will be loaded after all extensions are loaded
   if (!XT.StartupTasks) { XT.StartupTasks = []; }
 

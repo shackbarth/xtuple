@@ -7,12 +7,14 @@ trailing:true, white:true*/
 
   enyo.kind({
     name: "XV.OpenIncidentBarChart",
-    kind: "XV.BarChart",
+    kind: "XV.DrilldownBarChart",
     collection: "XM.IncidentListItemCollection",
     chartTitle: "_openIncidents".loc(),
     filterOptions: [
-      { name: "all" },
-      { name: "highPriority" }
+      { name: "all", parameters: [] },
+      { name: "highPriority", parameters: [
+        { attribute: "priorityOrder", operator: "<", value: 2 } // XXX magical 2
+      ]}
     ],
     groupByOptions: [
       { name: "assignedTo" },
@@ -27,27 +29,30 @@ trailing:true, white:true*/
         operator: "!=",
         value: "L"
       }],
-    },
-    filterData: function (data) {
-      var that = this;
-
-      return _.filter(data, function (datum) {
-        switch (that.getFilterField()) {
-        case "all":
-          return true;
-        case "highPriority":
-          return datum.get("priorityOrder") + 1 < (XM.priorities.length / 2); // XXX hack
-        }
-      });
     }
+  });
+
+  enyo.kind({
+    name: "XV.OpportunityBarChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.OpportunityListItemCollection",
+    chartTitle: "_opportunities".loc(),
+    groupByOptions: [
+      { name: "opportunityStage" },
+      { name: "opportunitySource" },
+      { name: "opportunityType" },
+      { name: "priority" }
+    ]
   });
 
   enyo.kind({
     name: "XV.CrmDashboard",
     kind: "XV.Dashboard",
-    components: [
-      {kind: "XV.OpenIncidentBarChart" }
+    // title is what show in the "add chart" picker on the
+    // dashboard and the chart is the widget to be added
+    charts: [
+      {title: "_openIncidents".loc(), chart: "XV.OpenIncidentBarChart"},
+      {title: "_opportunities".loc(), chart: "XV.OpportunityBarChart"}
     ]
   });
-
 }());

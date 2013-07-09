@@ -19,7 +19,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.login = [
     //passport.authenticate('local', { successReturnToOrRedirect: '/login/scope', failureRedirect: '/', failureFlash: 'Invalid username or password.' }),
     passport.authenticate('local', { failureRedirect: '/?login=fail' }),
-    function (/** @lends Auth# */req, res, next) {
+    function (req, res, next) {
 
       if (req && req.session && !req.session.oauth2 && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
         res.redirect("/" + req.session.passport.user.organization + '/app');
