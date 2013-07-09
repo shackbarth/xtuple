@@ -21,6 +21,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         } else {
           res.set('Content-Type', 'application/javascript');
         }
+        res.setHeader("Cache-Control", "public, max-age=86400000");
         res.send(model.get("code"));
       },
       error: function (err) {
