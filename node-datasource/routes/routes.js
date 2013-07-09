@@ -25,6 +25,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // is a function that returns another function, and express allows routes to
     // be defined in such a way as to chain these types of functions together in an array.
     ensureLogin = require('connect-ensure-login').ensureLoggedIn(logoutPath),
+    app = require('./app'),
     auth = require('./auth'),
     changePassword = require('./change_password'),
     clientCode = require('./client_code'),
@@ -43,6 +44,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Authentication-related routes
   //
+  exports.app = [ensureLogin, app.serveApp];
   exports.login = auth.login;
   exports.loginForm = auth.loginForm;
   exports.logout = auth.logout;
