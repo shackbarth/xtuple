@@ -2,74 +2,30 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, SYS:true, XT:true, _:true */
 
-var async = require("async");
-
 (function () {
   "use strict";
 
   /**
-    Just get a sense of how recent a version is without the dots.
-    Higher version number string inputs will result in higher int outputs.
-    Works with three or four dot-separated numbers.
-  */
-  var getVersionSize = function (version) {
-    var versionSplit = version.split('.'),
-      versionSize = 1000000 * versionSplit[0] +
-        10000 * versionSplit[1] +
-        100 * versionSplit[2];
-
-    if (versionSplit.length > 3) {
-      versionSize += versionSplit[3];
-    }
-    return versionSize;
-  };
-
-  /**
-    Sends the bundled client code based on the user's extensions
-    @param req.query.language {String} Can be css or js (default js)
+    Fetches and sends the client code of the requested UUID
    */
   exports.clientCode = function (req, res) {
+    var model = new SYS.ClientCode();
 
-    //
-    // We have the UUID of the code we want. Fetch it.
-    //
-    var getCodeFromUuid = function (uuid, callback) {
-      var code;
-
-      X.clientCodeCache = X.clientCodeCache || {};
-
-      code = X.clientCodeCache[uuid];
-      if (code) {
-        callback(null, code);
-        return;
-      }
-
-      var model = new SYS.ClientCode();
-      model.fetch({
-        id: uuid,
-        username: X.options.databaseServer.user,
-        database: req.session.passport.user.organization,
-        success: function (res, model) {
-          code = model.get("code");
-          X.clientCodeCache[uuid] = code;
-          callback(null, code);
-        },
-        error: function (err) {
-          callback(err);
+    model.fetch({
+      id: req.query.uuid,
+      username: X.options.databaseServer.user,
+      database: req.session.passport.user.organization,
+      success: function (result, model) {
+        if (req.query.language === 'css') {
+          res.set('Content-Type', 'text/css');
+        } else {
+          res.set('Content-Type', 'application/javascript');
         }
-      });
-    };
-
-    getCodeFromUuid(req.query.uuid, function (err, result) {
-      if (req.query.language === 'css') {
-        res.set('Content-Type', 'text/css');
-      } else {
-        res.set('Content-Type', 'application/javascript');
-
+        res.send(model.get("code"));
+      },
+      error: function (err) {
+        res.send({isError: true, error: err});
       }
-      res.send(result);
     });
-
-
   };
 }());
