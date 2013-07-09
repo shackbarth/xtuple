@@ -35,6 +35,8 @@ var _ = require('underscore'),
       }
       var psqlCommand = 'psql -d ' + credsClone.database +
         ' -U ' + credsClone.username +
+        ' -h ' + credsClone.hostname +
+        ' -p ' + credsClone.port +
         ' -f ' + filename +
         ' --single-transaction';
       exec(psqlCommand, {maxBuffer: 4000 * 1024 /* 20x default */}, function (err, stdout, stderr) {

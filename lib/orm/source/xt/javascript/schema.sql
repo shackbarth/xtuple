@@ -267,6 +267,8 @@ select xt.install_js('XT','Schema','xtuple', $$
     var columns = [],
         ext = {},
         extTables = [],
+        nkey = XT.Orm.naturalKey(orm),
+        pkey = XT.Orm.primaryKey(orm),
         ret = {},
         schemaColumnInfo = {},
         schemaTable = orm.table;
@@ -289,6 +291,11 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     /* Loop through the ORM properties and get the columns. */
     for (var i = 0; i < orm.properties.length; i++) {
+      /* Skip primaryKey if there is a natualKey that's a different property. */
+      if (nkey && orm.properties[i].name === pkey && orm.properties[i].name !== nkey) {
+        continue;
+      }
+
       if (!ret.properties) {
         /* Initialize properties. */
         ret.properties = {};
@@ -322,11 +329,13 @@ select xt.install_js('XT','Schema','xtuple', $$
           ret.properties[orm.properties[i].name].required = true;
         }
 
-        /* Add primary key flag. This isn't part of JSON-Schema, but very useful for URIs. */
-        /* example.com/resource/{primaryKey} */
+        /* Add key flag. This isn't part of JSON-Schema, but very useful for URIs. */
+        /* example.com/resource/{key} */
         /* JSON-Schema allows for additional custom properites like this. */
-        if (orm.properties[i].attr.isPrimaryKey) {
-          ret.properties[orm.properties[i].name].isPrimaryKey = true;
+        if (nkey && orm.properties[i].name === nkey) {
+          ret.properties[orm.properties[i].name].isKey = true;
+        } else if (!nkey && orm.properties[i].name === pkey) {
+          ret.properties[orm.properties[i].name].isKey = true;
         }
       }
       /* toOne property */
