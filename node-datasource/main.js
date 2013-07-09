@@ -296,14 +296,6 @@ require('./oauth2/passport');
  * Setup HTTP routes and handlers.
  */
 var that = this;
-app.get('/:org/app', function (req, res, next) {
-  "use strict";
-  if (!req.session.passport.user) {
-    routes.logout(req, res);
-  } else {
-    res.render('app', { org: req.session.passport.user.organization });
-  }
-});
 app.get('/:org/debug', function (req, res, next) {
   "use strict";
   if (!req.session.passport.user) {
@@ -339,7 +331,9 @@ app.get('/', routes.loginForm);
 app.post('/login', routes.login);
 app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
+app.get('/logout', routes.logout);
 app.get('/:org/logout', routes.logout);
+app.get('/:org/app', routes.app);
 
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
@@ -364,7 +358,12 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
     var routes = require(__dirname + "/" + route + "/routes");
 
     _.each(routes, function (routeDetails) {
-      app.get('/:org/' + routeDetails.path, routeDetails.function);
+      var verb = (routeDetails.verb || "all").toLowerCase();
+      if (_.contains(["all", "get", "post", "patch", "delete"], verb)) {
+        app[verb]('/:org/' + routeDetails.path, routeDetails.function);
+      } else {
+        console.log("Invalid verb for extension-defined route " + routeDetails.path);
+      }
     });
   });
 }

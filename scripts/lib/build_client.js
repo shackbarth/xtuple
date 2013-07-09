@@ -131,7 +131,11 @@ var _ = require('underscore'),
    */
   var buildCore = function (callback) {
     console.log("building client core");
-    exec(path.join(__dirname, "../../enyo-client/application/tools/deploy.sh"), function (err, stdout) {
+    exec(path.join(__dirname, "../../enyo-client/application/tools/deploy.sh"),
+    {
+      maxBuffer: 40000 * 1024 /* 200x default */
+    },
+    function (err, stdout) {
       if (err) {
         callback(err);
         return;

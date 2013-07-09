@@ -123,7 +123,6 @@
     "xm/javascript/customer.sql",
     "xm/javascript/database_information.sql",
     "xm/javascript/incident.sql",
-    "xm/javascript/inventory.sql",
     "xm/javascript/item.sql",
     "xm/javascript/item_site.sql",
     "xm/javascript/project.sql",
