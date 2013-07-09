@@ -1,8 +1,8 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true, enyo:true
-  document:true, setTimeout:true*/
+  document:true, setTimeout:true, document:true */
 
 (function () {
   "use strict";
@@ -173,26 +173,6 @@ white:true*/
       }
       ajax.response(this.ajaxSuccess);
       ajax.go(payload);
-    },
-
-    /*
-      Determine the list of extensions in use by the user's
-      organization.
-
-    @param {Object} parameters
-    @param {Function} options.success callback
-    @param {Function} options.error callback
-    */
-    getExtensionList: function (options) {
-      var ajax = new enyo.Ajax({
-          url: XT.getOrganizationPath() + "/extensions",
-          success: options ? options.success : undefined,
-          error: options ? options.error : undefined
-        });
-
-      ajax.response(this.ajaxSuccess);
-      ajax.go();
-
     },
 
     /* @private */

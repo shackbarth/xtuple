@@ -34,7 +34,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.dispatch = {
       functionName: "getList",
       isJSON: true,
-      parameters: [model, "https://mobile.xtuple.com/"] // TODO get rootURL
+      parameters: [model, "https://" + req.headers.host + "/"] // TODO get rootURL
     };
 
     // Dummy up session. This is a public call.
@@ -79,7 +79,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.dispatch = {
       functionName: "getDiscovery",
       isJSON: true,
-      parameters: [model, "https://mobile.xtuple.com/"] // TODO get rootURL
+      parameters: [model, "https://" + req.headers.host + "/"] // TODO get rootURL
     };
 
     // Dummy up session. This is a public call.

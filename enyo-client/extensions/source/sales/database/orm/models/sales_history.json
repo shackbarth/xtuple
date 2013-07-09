@@ -9,7 +9,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": true,
+        "read": "ViewSalesHistory",
         "update": false,
         "delete": false
       }

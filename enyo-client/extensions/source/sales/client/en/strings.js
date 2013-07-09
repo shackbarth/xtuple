@@ -20,6 +20,7 @@ var lang = XT.stringsFor("en_US", {
   "_allowFreeFormShiptos": "Allow Free Form Ship-Tos",
   "_autoAllocateCreditMemos": "Allocate Credit Memos to New Sales Order on Save",
   "_autoSelectForBilling": "Check 'Select for Billing' option on Ship Order",
+  "_bookings": "Bookings",
   "_convert": "Convert",
   "_creditControl": "Credit Control",
   "_creditMemo": "Credit Memo",
@@ -69,5 +70,6 @@ var lang = XT.stringsFor("en_US", {
   "_today": "Today",
   "_update": "Update",
   "_useCalculatedFreightPricing": "Use calculated Freight values by default",
-  "_usePromiseDates": "Enable Promise Dates"
+  "_usePromiseDates": "Enable Promise Dates",
+  "_viewSalesHistory": "View Sales History"
 });
