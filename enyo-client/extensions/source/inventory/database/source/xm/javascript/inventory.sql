@@ -108,7 +108,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
         traceSeries = plv8.execute(sql)[0].itemloc_series;
 
         sql = "select createlotserial(itemlocdist_itemsite_id, " +
-          "$1, $2,'I', NULL, itemlocdist_id,$3, $4, $5) as id " +
+          "$1, $2,'I', NULL, itemlocdist_id,$3, coalesce($4, endoftime()), $5) as id " +
           "from itemlocdist " +
           "where (itemlocdist_id=$6);";
 
@@ -145,7 +145,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
         /* Housekeeping */
         sql = "delete from itemlocdist where itemlocdist_id=$1;";
         plv8.execute(sql, [info.itemlocdist_id]);
-        
+    
         /* Distribute by trace distribution if location controled */
         if (info.itemsite_loccntrl) {
           sql = "update itemlocdist " +
@@ -160,9 +160,9 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
         /* Otherwise distribute by series */
         } else {
-          sql = "update itemlocdist "
-                "set itemlocdist_source_type='L', itemlocdist_source_id=-1 "
-                "where (itemlocdist_series=$1); ";
+          sql = "update itemlocdist " +
+            "set itemlocdist_source_type='L', itemlocdist_source_id=-1 " +
+            "where (itemlocdist_series=$1); ";
           plv8.execute(sql, [traceSeries]);
 
           sql = "select distributeitemlocseries($1);";
@@ -172,10 +172,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
       /* Location control w/o trace */
       } else {
         sql =  "insert into itemlocdist " +
-            "(itemlocdist_itemlocdist_id, itemlocdist_source_type, itemlocdist_source_id, " +
-            " itemlocdist_itemsite_id, itemlocdist_expiration, " +
-            " itemlocdist_qty, itemlocdist_series, itemlocdist_invhist_id ) " +
-            " values ($1, 'L', $2, $3, endoftime(), $4, $5, $6); ";
+          "(itemlocdist_itemlocdist_id, itemlocdist_source_type, itemlocdist_source_id, " +
+          " itemlocdist_itemsite_id, itemlocdist_expiration, " +
+          " itemlocdist_qty, itemlocdist_series, itemlocdist_invhist_id ) " +
+          " values ($1, 'L', $2, $3, endoftime(), $4, $5, $6); ";
             
         for (i = 0; i < detail.length; i++) {
           d = detail[i];
@@ -202,7 +202,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       
       if (invHist.length) { throw new handleError("Transaction requires distribution detail") }
     }
-    
+
     /* Wrap up */
     sql = "select postitemlocseries($1);";
     plv8.execute(sql, [series]);
