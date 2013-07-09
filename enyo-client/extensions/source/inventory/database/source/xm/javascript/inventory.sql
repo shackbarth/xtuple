@@ -10,6 +10,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
   /**
     Distribute location and/or trace detail for one or many inventory transactions.
+    For good or for ill, this function attempts to exactly replicate the behavior of
+    distributeInventory.cpp in the C++ client.
     
     Example:
 
@@ -47,8 +49,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
     detail = detail || [];
     var sql,
       sql2,
+      sql3,
       distIds = [],
       distId,
+      rec,
       traceSeries,
       locId,
       qty = 0,
@@ -119,11 +123,37 @@ select xt.install_js('XM','Inventory','xtuple', $$
           "select itemlocdist_id, 'L', $1, $2, itemlocdist_ls_id, endOfTime() " +
           "from itemlocdist " +
           "where itemlocdist_id=$3;";
+
+        sql3 = "select ls_id " +
+          "from itemloc join ls on itemloc_ls_id=ls_id " +
+          "where ls_number=$1 " +
+          " and itemloc_itemsite_id=$2 " +
+          "union all " +
+          "select ls_id " +
+          "from itemlocdist join ls on itemlocdist_ls_id=ls_id " +
+          "where ls_number = $1 " +
+          " and itemlocdist_itemsite_id=$2; ";
         
         for (i = 0; i < detail.length; i++) {
           d = detail[i];
           
           if (!d.trace) { throw new handleError("Itemsite requires lot or serial trace detail."); }
+
+          /* Serial numbers can only be one */
+          if (info.itemsite_controlmethod === 'S') {
+            rec = plv8.execute(sql3, [d.trace, info.itemsite_id]);
+            if (d.quantity === 1) {
+              if (rec.length) {
+                throw new handleError("Serial number " + d.trace + " already exists in inventory.");
+              }
+            } else if (d.quantity === -1) {
+              if (!rec.length) {
+                throw new handleError("Serial number " + d.trace + " does not exist in inventory.");
+              }
+            } else { 
+              throw new handleError("Serial number quantity must be one.");
+            }
+          }
           
           distId = plv8.execute(sql, [
             d.trace, traceSeries, d.quantity, d.expiration, d.warranty, info.itemlocdist_id
