@@ -27,6 +27,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
       it('should build without error on a brand-new database', function (done) {
         buildAll.build({
           database: databaseName,
+          queryDirect: true,
           initialize: true,
           // TODO: use postbooks backup
           backup: path.join(__dirname, "../lib/demo-test.backup")
@@ -60,6 +61,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     }
     it('should rebuild without error on an existing database', function (done) {
       buildAll.build({
+        queryDirect: true,
         database: databaseName
       }, function (err, res) {
         assert.isNull(err);
@@ -94,6 +96,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     it('should be able to build an extension', function (done) {
       buildAll.build({
         database: databaseName,
+        queryDirect: true,
         extension: path.join(__dirname + '../../../../../../xtuple-extensions/source/oauth2')
       }, function (err, res) {
         assert.isNull(err);
