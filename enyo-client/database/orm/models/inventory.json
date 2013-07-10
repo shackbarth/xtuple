@@ -1,0 +1,308 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InventoryHistory",
+    "table": "invhist",
+    "isRest": true,
+    "comment": "Inventory History Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewInventoryHistory",
+        "update": "ViewInventoryHistory",
+        "delete": false
+      },
+      "attribute": {
+        "id": {
+          "edit": false
+        },
+        "uuid": {
+          "edit": false
+        },
+        "itemSite": {
+          "edit": false
+        },
+        "transactionDate": {
+          "edit": false
+        },
+        "transactionType": {
+          "edit": false
+        },
+        "quantity": {
+          "edit": false
+        },
+        "unit": {
+          "edit": false
+        },
+        "orderType": {
+          "edit": false
+        },
+        "orderNumber": {
+          "edit": false
+        },
+        "documentNumber": {
+          "edit": false
+        },
+        "quantityBefore": {
+          "edit": false
+        },
+        "quantityAfter": {
+          "edit": false
+        },
+        "unitCost": {
+          "edit": false,
+          "view": "viewCosts"
+        },
+        "costMethod": {
+          "edit": false
+        },
+        "valueBefore": {
+          "edit": false,
+          "view": "ViewCosts"
+        },
+        "valueAfter": {
+          "edit": false,
+          "view": "ViewCosts"
+        },
+        "notes": {
+          "edit": true
+        },
+        "posted": {
+          "edit": false
+        },
+        "analyze": {
+          "edit": true
+        },
+        "user": {
+          "edit": false
+        },
+        "created": {
+          "edit": false
+        },
+        "detail": {
+          "edit": false
+        }
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invhist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "itemSite",
+        "toOne": {
+          "type": "ItemSiteRelation",
+          "column": "invhist_itemsite_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "transactionDate",
+        "attr": {
+          "type": "Date",
+          "column": "invhist_transdate"
+        }
+      },
+      {
+        "name": "transactionType",
+        "attr": {
+          "type": "String",
+          "column": "invhist_transtype"
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "invhist_invqty"
+        }
+      },
+      {
+        "name": "unit",
+        "attr": {
+          "type": "String",
+          "column": "invhist_invuom"
+        }
+      },
+      {
+        "name": "orderType",
+        "attr": {
+          "type": "String",
+          "column": "invhist_ordtype"
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "invhist_ordnumber"
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "invhist_docnumber"
+        }
+      },
+      {
+        "name": "quantityBefore",
+        "attr": {
+          "type": "Quantity",
+          "column": "invhist_qoh_before"
+        }
+      },
+      {
+        "name": "quantityAfter",
+        "attr": {
+          "type": "Quantity",
+          "column": "invhist_qoh_after"
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "invhist_unitcost"
+        }
+      },
+      {
+        "name": "costMethod",
+        "attr": {
+          "type": "String",
+          "column": "invhist_costmethod"
+        }
+      },
+      {
+        "name": "valueBefore",
+        "attr": {
+          "type": "Money",
+          "column": "invhist_value_before"
+        }
+      },
+      {
+        "name": "valueAfter",
+        "attr": {
+          "type": "Money",
+          "column": "invhist_value_after"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "invhist_comments"
+        }
+      },
+      {
+        "name": "posted",
+        "attr": {
+          "type": "String",
+          "column": "invhist_posted"
+        }
+      },
+      {
+        "name": "user",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "invhist_user",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "invhist_created"
+        }
+      },
+      {
+        "name": "detail",
+        "toMany": {
+          "isNested": true,
+          "type": "InventoryDetail",
+          "column": "invhist_id",
+          "inverse": "inventoryHistory"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InventoryDetail",
+    "table": "invdetail",
+    "comment": "Inventory Detail Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invdetail_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "inventoryHistory",
+        "attr": {
+          "type": "Number",
+          "column": "invdetail_invhist_id"
+        }
+      },
+      {
+        "name": "location",
+        "toOne": {
+          "type": "LocationRelation",
+          "column": "invdetail_location_id"
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "invdetail_qty"
+        }
+      },
+      {
+        "name": "quantityBefore",
+        "attr": {
+          "type": "Quantity",
+          "column": "invdetail_qty_before"
+        }
+      },
+      {
+        "name": "quantityAfter",
+        "attr": {
+          "type": "Quantity",
+          "column": "invdetail_qty_after"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]
