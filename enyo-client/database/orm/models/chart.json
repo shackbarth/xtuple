@@ -32,8 +32,8 @@
       {
         "name": "extension",
         "attr": {
-          "type": "Number",
-          "column": "usrchart_ext_id"
+          "type": "String",
+          "column": "usrchart_ext_name"
         }
       }
     ],

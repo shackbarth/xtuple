@@ -83,6 +83,8 @@ filter options
     collection: "XM.UserChartCollection",
     // title is what show in the "add chart" picker on the
     // dashboard and the chart is the widget to be added
+    // this tells the default query what extension to pull charts for
+    extension: "sales",
     charts: [
       {title: "_salesHistory".loc(), chart: "XV.SalesHistoryTimeSeriesChart"},
       {title: "_bookings".loc(), chart: "XV.SalesOrderTimeSeriesChart"}
