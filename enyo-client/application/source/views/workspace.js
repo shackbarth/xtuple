@@ -409,7 +409,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         var emailM = model.get('email').at(0);
         email = emailM.get('email');
       }
-      revision = new Date();
+      revision = dateFormat(new Date(), "yyyy-mm-dd");
       end = "VCARD";
 
       stringToSave = "BEGIN:" + begin + "\n";
