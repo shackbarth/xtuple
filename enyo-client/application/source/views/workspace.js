@@ -404,7 +404,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       revision = new Date();
       end = "VCARD";
 
-      stringToSave.concat(stringToSave, ("BEGIN:" + begin + "\n"));
+      stringToSave = "BEGIN:" + begin + "\n";
       stringToSave.concat(stringToSave, ("VERSION:" + version + "\n"));
       stringToSave.concat(stringToSave, ("N:" + name + "\n"));
       stringToSave.concat(stringToSave, ("FN:" + fullName + "\n"));
