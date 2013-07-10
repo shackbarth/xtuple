@@ -6,6 +6,45 @@ trailing:true white:true*/
 (function () {
 
   // ..........................................................
+  // ORDER LIST ITEM
+  //
+
+  enyo.kind({
+    name: "XV.OrderList",
+    kind: "XV.List",
+    label: "_order".loc(),
+    collection: "XM.OrderListItemCollection",
+    query: {orderBy: [
+			{attribute: 'scheduledDate'}
+    ]},
+		parameterWidget: "XV.OrderListItemParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+	  		{kind: "FittableColumns", components: [
+	    		{kind: "XV.ListColumn", classes: "first", components: [
+						{kind: "FittableColumns", components: [
+							{kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+	      			{kind: "XV.ListAttr", attr: "forName1", fit: true, classes: "right"}
+	    			]},
+	    			{kind: "FittableColumns", components: [
+	      			{kind: "XV.ListAttr", attr: "type"},
+							{kind: "XV.ListAttr", attr: "forName2", classes: "right"}
+	    			]}
+					]},
+	    		{kind: "XV.ListColumn", classes: "second", components: [
+	      		{kind: "XV.ListAttr", attr: "scheduledDate"}
+	    		]},
+	    		{kind: "XV.ListColumn", classes: "last", components: [
+	      		{kind: "XV.ListAttr", attr: "assignedToUserName"}
+					]}
+	  		]}  
+			]}
+    ]
+  });
+
+  XV.registerModelList("XM.OrderRelation", "XV.OrderList");
+
+  // ..........................................................
   // SALES ORDER
   //
 

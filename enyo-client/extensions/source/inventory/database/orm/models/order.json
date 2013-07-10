@@ -1,0 +1,397 @@
+[ 
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Order",
+    "table": "xt.orderheadinfo",    
+		"comment": "Work Orders and Sales Orders",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "orderhead_id",
+          "isPrimaryKey": true
+        }
+      },
+			{
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_number"
+        }
+			},
+			{
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_type"
+        }
+			},
+			{
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_status"
+        }
+      },
+    	{
+        "name": "orderDate",
+        "attr": {
+          "type": "Date",
+          "column": "orderhead_orderdate"
+        }
+      },
+    	{
+        "name": "scheduledDate",
+        "attr": {
+          "type": "Date",
+          "column": "orderhead_scheddate"
+        }
+      },
+    	{
+        "name": "lineCount",
+        "attr": {
+          "type": "Number",
+          "column": "orderhead_linecount"
+        }
+      },
+			{
+        "name": "forName1",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_forname1"
+        }
+      },
+			{
+        "name": "forName2",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_forname2"
+        }
+			},
+			{
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "orderhead_curr_id"
+        }
+			},
+ 			{
+        "name": "assignedToUserName",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_assignedto_username"
+        }
+      },
+ 			{
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_shipVia"
+        }
+      },
+ 			{
+        "name": "lineItems",
+        "toMany": {
+					"isNested": true,
+          "type": "OrderLine",
+          "column": "orderhead_id",
+					"inverse": "order"
+        }
+      }
+     ],
+    "isSystem": true
+  }, 
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OrderListItem",
+    "table": "xt.orderheadinfo",    
+		"comment": "List of Open Work Orders and Sales Orders",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "orderhead_id",
+          "isPrimaryKey": true
+        }
+      },
+			{
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_number"
+        }
+			},
+			{
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_type"
+        }
+			},
+
+			{
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_status"
+        }
+      },
+    	{
+        "name": "orderDate",
+        "attr": {
+          "type": "Date",
+          "column": "orderhead_orderdate"
+        }
+      },
+    	{
+        "name": "scheduledDate",
+        "attr": {
+          "type": "Date",
+          "column": "orderhead_scheddate"
+        }
+      },
+    	{
+        "name": "lineCount",
+        "attr": {
+          "type": "Number",
+          "column": "orderhead_linecount"
+        }
+      },
+			{
+        "name": "forName1",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_forname1"
+        }
+      },
+			{
+        "name": "forName2",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_forname2"
+        }
+			},
+			{
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "orderhead_curr_id"
+        }
+			},
+ 			{
+        "name": "assignedToUserName",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_assignedto_username"
+        }
+      },
+ 			{
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_shipVia"
+        }
+      }
+     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OrderLine",
+    "table": "xt.orderiteminfo",    
+		"comment": "List of Order Line Items",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "orderitem_id",
+          "isPrimaryKey": true
+        }
+      },
+			{
+        "name": "order",
+        "attr": {
+          "type": "Number",
+          "column": "orderitem_orderhead_id"
+        }
+			},
+			{
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "orderitem_orderhead_type"
+        }
+			},
+			{
+        "name": "lineNumber",
+        "attr": {
+          "type": "Number",
+          "column": "orderitem_linenumber"
+        }
+      },
+			{
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "orderitem_status"
+        }
+      },
+    	{
+        "name": "itemSite",
+        "toOne": {
+          "type": "ItemSiteRelation",
+          "column": "orderitem_itemsite_id"
+        }
+      },
+    	{
+        "name": "scheduledDate",
+        "attr": {
+          "type": "Date",
+          "column": "orderitem_scheddate"
+        }
+      },
+    	{
+        "name": "quantityOrdered",
+        "attr": {
+          "type": "Quantity",
+          "column": "orderitem_qty_ordered"
+        }
+      },
+			{
+        "name": "quantityTransacted",
+        "attr": {
+          "type": "Quantity",
+          "column": "orderitem_qty_transacted"
+        }
+      },
+			{
+        "name": "quantityUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "orderitem_qty_uom_id"
+        }
+			},
+			{
+        "name": "quantityUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "orderitem_qty_invuomratio"
+        }
+			},
+ 			{
+        "name": "cost",
+        "attr": {
+          "type": "Cost",
+          "column": "orderitem_unitcost"
+        }
+      },
+ 			{
+        "name": "costCurrency",
+        "toOne": {
+          "type": "Currency",
+          "column": "orderitem_unitcost_curr_id"
+        }
+      },
+ 			{
+        "name": "freight",
+        "attr": {
+          "type": "Cost",
+          "column": "orderitem_freight"
+        }
+      },
+ 			{
+        "name": "frieghtCurrency",
+        "toOne": {
+          "type": "Currency",
+          "column": "orderitem_freight_curr_id"
+        }
+      }
+     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OrderRelation",
+    "table": "xt.orderheadinfo",
+    "comment": "Order Relation Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "orderhead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_number"
+        }
+      },
+      {
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_type"
+        }
+      },
+      {
+        "name": "forName1",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_forname1"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "orderhead_shipvia"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
+
