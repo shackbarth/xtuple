@@ -34,10 +34,10 @@
          }
       },
       {
-        "name": "salesOrder",
-        "toOne": {
-          "type": "SalesOrderRelation",
-          "column": "shiphead_order_id"
+        "name": "order",
+        "attr": {
+          "type": "String",
+          "column": "order_number"
         }
       },
       {
@@ -45,6 +45,20 @@
         "attr": {
           "type": "String",
           "column": "shiphead_order_type"
+        }
+      },
+      {
+        "name": "forName1",
+        "attr": {
+          "type": "String",
+          "column": "forname1"
+        }
+      },
+      {
+        "name": "forName2",
+        "attr": {
+          "type": "String",
+          "column": "forname2"
         }
       },
       {
@@ -116,14 +130,23 @@
           "type": "String",
           "column": "shiphead_tracknum"
         }
+      },
+      {
+        "name": "lineItems",
+        "toMany": {
+          "isNested": true,
+          "type": "ShipmentLine",
+          "column": "shiphead_id",
+          "inverse": "shipment"
+        }
       }    
-	],
+		],
     "isSystem": true
   },
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "Shipment",
+    "type": "ShipmentListItem",
     "table": "xt.shipment",
     "idSequenceName": "shiphead_shiphead_id_seq",
     "lockable": true,
@@ -131,10 +154,10 @@
     "comment": "Shipment Map",
     "privileges": {
       "all": {
-        "create": "IssueStockToShipping",
+        "create": "false",
         "read": "ViewShipping",
-        "update": "IssueStockToShipping",
-        "delete": "IssueStockToShipping"
+        "update": "false",
+        "delete": "false"
       }
     },
     "properties": [
@@ -155,10 +178,10 @@
          }
       },
       {
-        "name": "salesOrder",
-        "toOne": {
-          "type": "SalesOrderRelation",
-          "column": "shiphead_order_id"
+        "name": "order",
+        "attr": {
+          "type": "String",
+          "column": "order_number"
         }
       },
       {
@@ -166,6 +189,20 @@
         "attr": {
           "type": "String",
           "column": "shiphead_order_type"
+        }
+      },
+      {
+        "name": "forName1",
+        "attr": {
+          "type": "String",
+          "column": "forname1"
+        }
+      },
+      {
+        "name": "forName2",
+        "attr": {
+          "type": "String",
+          "column": "forname2"
         }
       },
       {
@@ -190,58 +227,16 @@
         }
       },
       {
-        "name": "notes",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_notes"
-        }
-      },
-      {
-        "name": "isShipped",
-        "attr": {
-          "type": "Boolean",
-          "column": "shiphead_shipped"
-        }
-      },
-      {
         "name": "shipDate",
         "attr": {
           "type": "Date",
           "column": "shiphead_shipdate"
         }
-      },
-      {
-        "name": "shipCharge",
-        "toOne": {
-          "type": "ShipCharge",
-          "column": "shiphead_shipchrg_id"
-        }
-      },
-      {
-        "name": "shipForm",
-        "attr": {
-          "type": "Number",
-          "column": "shiphead_shipform_id"
-        }
-      },
-      {
-        "name": "sfStatus",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_sfstatus"
-        }
-      },
-      {
-        "name": "trackingNumber",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_tracknum"
-        }
-      }    
-	],
+      }
+  	],
     "isSystem": true
   },
-	{
+ 	{
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ShipmentLine",
@@ -371,7 +366,7 @@
 					"isNested": true
 				}
 			}	     
-	],
+		],
     "isSystem": true
   }
 ]

@@ -41,8 +41,9 @@ trailing:true white:true*/
       name: "inventory",
       label: "_inventory".loc(),
       panels: [
+				{name: "orderList", kind: "XV.OrderList"},
 				{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"},
-				{name: "orderList", kind: "XV.OrderList"}
+				{name: "shipmentList", kind: "XV.ShipmentList"}
       ]
     };
     XT.app.$.postbooks.insertModule(module, 4);

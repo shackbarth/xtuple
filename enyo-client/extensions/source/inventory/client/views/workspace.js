@@ -96,7 +96,7 @@ trailing:true, white:true*/
           {kind: "XV.ScrollableGroupbox", name: "lines", fit: true, classes: "in-panel", components: [
 					//	{kind: "Repeater", name: "lineItemsList", onSetupItem: "setupLineItem", count: 0, components: [
 					//		{name: "lineItem"}
-						]}
+					//	]}
 					]}
 				]}
 			]}

@@ -135,4 +135,51 @@ trailing:true white:true*/
 
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
 
+  // ..........................................................
+  // SHIPMENT LIST ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ShipmentList",
+    kind: "XV.List",
+    label: "_shipments".loc(),
+    collection: "XM.ShipmentListItemCollection",
+    query: {orderBy: [
+			{attribute: 'shipDate'}
+    ]},
+	//	parameterWidget: "XV.ShipmentListItemParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+	  		{kind: "FittableColumns", components: [
+	    		{kind: "XV.ListColumn", classes: "first", components: [
+						{kind: "FittableColumns", components: [
+							{kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+	      			{kind: "XV.ListAttr", attr: "forName1", fit: true, classes: "right"}
+	    			]},
+	    			{kind: "FittableColumns", components: [
+	      			{kind: "XV.ListAttr", attr: "orderType"},
+							{kind: "XV.ListAttr", attr: "forName2", classes: "right"}
+	    			]}
+					]},
+	    		{kind: "XV.ListColumn", classes: "second", components: [
+	      		{kind: "XV.ListAttr", attr: "shipDate"}
+	    		]},
+	    		{kind: "XV.ListColumn", classes: "second", components: [
+	      		{kind: "XV.ListAttr", attr: "freight", formatter: "formatExtendedPrice"},
+	      		{kind: "XV.ListAttr", attr: "currency"}	
+	    		]}
+	  		]}  
+			]}
+    ],
+
+    formatExtendedPrice: function (value, view, model) {
+      var currency = model ? model.getValue("currency") : false,
+        scale = XT.session.locale.attributes.extendedPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    }
+
+  });
+
+  XV.registerModelList("XM.ShipmentListItem", "XV.ShipmentList");
+
 }());

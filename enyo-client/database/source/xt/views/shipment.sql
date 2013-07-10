@@ -1,8 +1,9 @@
 select xt.create_view('xt.shipment', $$
 
-	SELECT *,
-		cohead_cust_id AS cust_id,
-		cohead_shipto_id AS shipto_id
+	SELECT shiphead.*,
+		cohead_number AS order_number,
+		cohead_billtoname AS forname1,
+		cohead_shiptoname AS forname2
 	FROM shiphead, cohead	
 	WHERE ((shiphead_order_type='SO')
 		AND (shiphead_order_id = cohead_id)); 
