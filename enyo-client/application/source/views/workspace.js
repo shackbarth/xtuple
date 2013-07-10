@@ -325,8 +325,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"},
-            {kind: "onyx.GroupboxHeader", content: "_export".loc()},
-            {kind: "onyx.Button", content: "_export".loc(), ontap: "exportContact"}
+            {kind: "onyx.GroupboxHeader", content: "_exportContact".loc()},
+            {kind: "onyx.Button", content: "VCF", ontap: "exportContact"}
           ]}
         ]},
         {kind: "XV.ContactCommentBox", attr: "comments"},
@@ -380,19 +380,24 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       photo = "";
       phoneWork = model.get('phone');
       phoneHome = model.get('alternate');
-      if (isNaN(model.getValue('address.line1').charAt(0))
-        title = model.getValue('address.line1');
-      else
-        address.push(model.getValue('address.line1'));
-      address.push(model.getValue('address.line2'));
+      if (isNaN(model.getValue('address.line1').charAt(0))) {
+        org = model.getValue('address.line1');
+        address[0] = model.getValue('address.line2');
+      }
+      else {
+        address[0] = model.getValue('address.line1');
+        address.push(model.getValue('address.line2'));
+      }
       address.push(model.getValue('address.line3'));
       address.push(model.getValue('address.city'));
       address.push(model.getValue('address.state'));
-      address.push(model.getValue('address.postalCode');
+      address.push(model.getValue('address.postalCode'));
       address.push(model.getValue('address.country'));
       //for address, set address with semicolon delimiters
       //for label, set address with ESCAPED newline delimiters
-      for (var i = 0; i < address.length; i++) {
+      addressWork = address[0];
+      labelWork = address[0];
+      for (var i = 1; i < address.length; i++) {
         if (address[i]) {
           addressWork = addressWork + address[i] + ";";
           labelWork = labelWork + address[i] + "\\n";
@@ -400,30 +405,35 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       }
       addressHome = "";
       labelHome = "";
-      email = model.get('email').at(0).get('email');
+      if (model.get('email').length >= 1) {
+        var emailM = model.get('email').at(0);
+        email = emailM.get('email');
+      }
       revision = new Date();
       end = "VCARD";
 
       stringToSave = "BEGIN:" + begin + "\n";
-      stringToSave.concat(stringToSave, ("VERSION:" + version + "\n"));
-      stringToSave.concat(stringToSave, ("N:" + name + "\n"));
-      stringToSave.concat(stringToSave, ("FN:" + fullName + "\n"));
+      stringToSave = stringToSave + "VERSION:" + version + "\n";
+      stringToSave = stringToSave + "N:" + name + "\n";
+      stringToSave = stringToSave + "FN:" + fullName + "\n";
       if (org)
-        stringToSave.concat(stringToSave, ("ORG:" + org + "\n"));
+        stringToSave = stringToSave + "ORG:" + org + "\n";
       if (title)
-        stringToSave.concat(stringToSave, ("TITLE:" + title + "\n"));
+        stringToSave = stringToSave + "TITLE:" + title + "\n";
       if (phoneWork)
-        stringToSave.concat(stringToSave, ("TEL;TYPE=WORK,VOICE:" + phoneWork + "\n"));
+        stringToSave = stringToSave + "TEL;TYPE=WORK,VOICE:" + phoneWork + "\n";
       if (phoneHome)
-        stringToSave.concat(stringToSave, ("TEL;TYPE=HOME,VOICE:" + phoneHome + "\n"));
+        stringToSave = stringToSave + "TEL;TYPE=HOME,VOICE:" + phoneHome + "\n";
       if (addressWork)
-        stringToSave.concat(stringToSave, ("ADR;TYPE=WORK:;;" + addressWork + "\n"));
+        stringToSave = stringToSave + "ADR;TYPE=WORK:;;" + addressWork + "\n";
       if (labelWork)
-        stringToSave.concat(stringToSave, ("LABEL;TYPE=WORK:;;" + labelWork + "\n"));
+        stringToSave = stringToSave + "LABEL;TYPE=WORK:;;" + labelWork + "\n";
       if (email)
-        stringToSave.concat(stringToSave, ("EMAIL;TYPE=PREF,INTERNET:" + email + "\n"));
-      stringToSave.concat(stringToSave, ("REV:" + revision + "\n"));
-      stringToSave.concat(stringToSave, ("END:" + end + "\n"));
+        stringToSave = stringToSave + "EMAIL;TYPE=PREF,INTERNET:" + email + "\n";
+      stringToSave = stringToSave + "REV:" + revision + "\n";
+      stringToSave = stringToSave + "END:" + end + "\n";
+
+      console.log(stringToSave);
 
       return stringToSave;
     }
