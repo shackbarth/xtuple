@@ -80,6 +80,7 @@
       {
         "name": "item",
         "toOne": {
+          "isNested": true,
           "type": "ItemRelation",
           "column": "itemsite_item_id",
           "required": true

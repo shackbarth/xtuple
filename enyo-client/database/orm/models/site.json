@@ -201,15 +201,106 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "SiteZoneRelation",
+    "table": "whsezone",
+    "comment": "Site Zone List Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "whsezone_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "whsezone_warehous_id"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "whsezone_name",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "whsezone_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SiteZone",
+    "table": "whsezone",
+    "idSequenceName": "whsezone_whsezone_id_seq",
+    "lockable": true,
+    "comment": "Site Zone Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "whsezone_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "site",
+        "attr": {
+          "type": "Number",
+          "column": "whsezone_warehous_id"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "whsezone_name",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "whsezone_descrip"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "SiteListItem",
     "table": "xt.site",
     "comment": "Site Info Map",
     "privileges": {
       "all": {
-        "create": "MaintainWarehouses",
-        "read": "ViewWarehouses",
-        "update": "MaintainWarehouses",
-        "delete": "MaintainWarehouses"
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -261,10 +352,10 @@
     "comment": "Site Info Map",
     "privileges": {
       "all": {
-        "create": "MaintainWarehouses",
-        "read": "ViewWarehouses",
-        "update": "MaintainWarehouses",
-        "delete": "MaintainWarehouses"
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -349,6 +440,169 @@
         }
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Location",
+    "table": "location",
+    "idSequenceName": "location_location_id_seq",
+    "lockable": true,
+    "isRest": true,
+    "comment": "Location Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainLocations",
+        "read": "ViewLocations",
+        "update": "MaintainLocations",
+        "delete": "MaintainLocations"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "location_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "location_warehous_id"
+        }
+      },
+      {
+        "name": "siteZone",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteZone",
+          "column": "location_warehous_id"
+        }
+      },
+      {
+        "name": "aisle",
+        "attr": {
+          "type": "String",
+          "column": "location_aisle"
+        }
+      },
+      {
+        "name": "rack",
+        "attr": {
+          "type": "String",
+          "column": "location_rack"
+        }
+      },
+      {
+        "name": "bin",
+        "attr": {
+          "type": "String",
+          "column": "location_bin"
+        }
+      },
+      {
+        "name": "location",
+        "attr": {
+          "type": "String",
+          "column": "location_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "location_descrip"
+        }
+      },
+      {
+        "name": "restricted",
+        "attr": {
+          "type": "Boolean",
+          "column": "location_restrict"
+        }
+      },
+      {
+        "name": "netable",
+        "attr": {
+          "type": "Boolean",
+          "column": "location_netable"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "LocationRelation",
+    "table": "location",
+    "comment": "Location Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "location_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "aisle",
+        "attr": {
+          "type": "String",
+          "column": "location_aisle"
+        }
+      },
+      {
+        "name": "rack",
+        "attr": {
+          "type": "String",
+          "column": "location_rack"
+        }
+      },
+      {
+        "name": "bin",
+        "attr": {
+          "type": "String",
+          "column": "location_bin"
+        }
+      },
+      {
+        "name": "location",
+        "attr": {
+          "type": "String",
+          "column": "location_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "location_descrip"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   }
 ]
