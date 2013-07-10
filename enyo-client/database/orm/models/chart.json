@@ -35,6 +35,20 @@
           "type": "String",
           "column": "usrchart_ext_name"
         }
+      },
+      {
+        "name": "filter",
+        "attr": {
+          "type": "String",
+          "column": "usrchart_filter_option"
+        }
+      },
+      {
+        "name": "groupBy",
+        "attr": {
+          "type": "String",
+          "column": "usrchart_groupby_option"
+        }
       }
     ],
     "isSystem": true
