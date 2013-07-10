@@ -375,47 +375,57 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
 
       begin = "VCARD";
       version = "3.0";
-      org = "?";
+      org = "";
       title = model.get('jobTitle');
       photo = "";
       phoneWork = model.get('phone');
       phoneHome = model.get('alternate');
-      address[0] = model.get('address').get('line1');
-      address[1] = model.get('address').get('line2');
-      address[2] = model.get('address').get('line3');
-      address[3] = model.get('address').get('city');
-      address[4] = model.get('address').get('state');
-      address[5] = model.get('address').get('postalCode');
-      address[6] = model.get('address').get('country');
+      if (isNaN(model.getValue('address.line1').charAt(0))
+        title = model.getValue('address.line1');
+      else
+        address.push(model.getValue('address.line1'));
+      address.push(model.getValue('address.line2'));
+      address.push(model.getValue('address.line3'));
+      address.push(model.getValue('address.city'));
+      address.push(model.getValue('address.state'));
+      address.push(model.getValue('address.postalCode');
+      address.push(model.getValue('address.country'));
       //for address, set address with semicolon delimiters
-      for (var i = 0; i < address.length; i++) {
-        addressWork = addressWork + address[i] + ";";
-      }
       //for label, set address with ESCAPED newline delimiters
       for (var i = 0; i < address.length; i++) {
-        labelWork = labelWork + address[i] + "\\n";
+        if (address[i]) {
+          addressWork = addressWork + address[i] + ";";
+          labelWork = labelWork + address[i] + "\\n";
+        }
       }
       addressHome = "";
       labelHome = "";
       email = model.get('email').at(0).get('email');
-      revision = "";
+      revision = new Date();
       end = "VCARD";
 
-      stringToSave = "BEGIN:" + begin + "\n" +
-        "VERSION:" + version + "\n" +
-        "N:" + name + "\n" +
-        "FN:" + fullName + "\n" +
-        "ORG:" + org + "\n" +
-        "TITLE:" + title + "\n" +
-        "TEL;TYPE=WORK,VOICE:" + phoneWork + "\n" +
-        "TEL;TYPE=HOME,VOICE:" + phoneHome + "\n" +
-        "ADR;TYPE=WORK:;;" + addressWork + "\n" +
-        "LABEL;TYPE=WORK:;;" + labelWork + "\n" +
-        "EMAIL;TYPE=PREF,INTERNET:" + email + "\n" +
-        "REV:" + revision + "\n" +
-        "END:" + end + "\n";
+      stringToSave.concat(stringToSave, ("BEGIN:" + begin + "\n"));
+      stringToSave.concat(stringToSave, ("VERSION:" + version + "\n"));
+      stringToSave.concat(stringToSave, ("N:" + name + "\n"));
+      stringToSave.concat(stringToSave, ("FN:" + fullName + "\n"));
+      if (org)
+        stringToSave.concat(stringToSave, ("ORG:" + org + "\n"));
+      if (title)
+        stringToSave.concat(stringToSave, ("TITLE:" + title + "\n"));
+      if (phoneWork)
+        stringToSave.concat(stringToSave, ("TEL;TYPE=WORK,VOICE:" + phoneWork + "\n"));
+      if (phoneHome)
+        stringToSave.concat(stringToSave, ("TEL;TYPE=HOME,VOICE:" + phoneHome + "\n"));
+      if (addressWork)
+        stringToSave.concat(stringToSave, ("ADR;TYPE=WORK:;;" + addressWork + "\n"));
+      if (labelWork)
+        stringToSave.concat(stringToSave, ("LABEL;TYPE=WORK:;;" + labelWork + "\n"));
+      if (email)
+        stringToSave.concat(stringToSave, ("EMAIL;TYPE=PREF,INTERNET:" + email + "\n"));
+      stringToSave.concat(stringToSave, ("REV:" + revision + "\n"));
+      stringToSave.concat(stringToSave, ("END:" + end + "\n"));
 
-        //actually save file
+      return stringToSave;
     }
   };
 
