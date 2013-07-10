@@ -54,7 +54,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       distId,
       rec,
       traceSeries,
-      locId,
+      locId = -1,
       qty = 0,
       info,
       d,
@@ -116,13 +116,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
           "from itemlocdist " +
           "where (itemlocdist_id=$6);";
 
-        sql2 = "insert into itemlocdist " +
-          "( itemlocdist_itemlocdist_id," +
-          "  itemlocdist_source_type, itemlocdist_source_id," +
-          "  itemlocdist_qty, itemlocdist_ls_id, itemlocdist_expiration ) " +
-          "select itemlocdist_id, 'L', $1, $2, itemlocdist_ls_id, endOfTime() " +
-          "from itemlocdist " +
-          "where itemlocdist_id=$3;";
+        sql2 = "update itemlocdist set" +
+          "  itemlocdist_source_type = 'L', " +
+          "  itemlocdist_source_id = $1" +
+          "where itemlocdist_id = $2";
 
         sql3 = "select ls_id " +
           "from itemloc join ls on itemloc_ls_id=ls_id " +
@@ -165,39 +162,18 @@ select xt.install_js('XM','Inventory','xtuple', $$
             if (!d.location) { throw new handleError("Itemsite requires location detail."); }
 
             locId = getLocId(d.location);
-
-            plv8.execute(sql2, [locId, d.quantity, distId]);
           } else { 
             if (d.location) { throw new handleError("Itemsite does not support location detail."); }
           }
+          plv8.execute(sql2, [locId, distId]);
         }
 
-        /* Housekeeping */
         sql = "delete from itemlocdist where itemlocdist_id=$1;";
         plv8.execute(sql, [info.itemlocdist_id]);
-    
-        /* Distribute by trace distribution if location controled */
-        if (info.itemsite_loccntrl) {
-          sql = "update itemlocdist " +
-            "set itemlocdist_source_type='O' " +
-            "where itemlocdist_series=$1;";
-          plv8.execute(sql, [traceSeries]);
 
-          sql = "select distributetolocations($1);";
-          for (i = 0; i < distIds.length; i++) {
-            plv8.execute(sql, [distIds[i]]);
-          }
+        sql = "select distributeitemlocseries($1);";
+        plv8.execute(sql, [traceSeries]);
 
-        /* Otherwise distribute by series */
-        } else {
-          sql = "update itemlocdist " +
-            "set itemlocdist_source_type='L', itemlocdist_source_id=-1 " +
-            "where (itemlocdist_series=$1); ";
-          plv8.execute(sql, [traceSeries]);
-
-          sql = "select distributeitemlocseries($1);";
-          plv8.execute(sql, [traceSeries]);
-        }
 
       /* Location control w/o trace */
       } else {
