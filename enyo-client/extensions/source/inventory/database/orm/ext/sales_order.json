@@ -1,0 +1,47 @@
+[
+  {
+    "context": "inventory",
+    "nameSpace": "XM",
+    "type": "SalesOrderLine",
+    "table": "xt.coiteminfo",
+    "isExtension": true,
+    "comment": "Extended by Inventory",
+    "relations": [
+      {
+        "column": "coitem_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "shipped",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_qtyshipped"
+        }
+      },
+      {
+        "name": "returned",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_qtyreturned"
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Number",
+          "column": "ship_balance"
+        }
+      },
+      {
+        "name": "atShipping",
+        "attr": {
+          "type": "Number",
+          "column": "at_shipping"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
