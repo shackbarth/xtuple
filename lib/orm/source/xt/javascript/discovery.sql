@@ -209,16 +209,36 @@ select xt.install_js('XT','Discovery','xtuple', $$
     /* Loop through resources and add JSON-Schema primKeyProp for methods that need it. */
     for (var i = 0; i < orms.length; i++) {
       var ormType = orms[i].orm_type,
-          primKeyProp = XT.Discovery.getPrimaryKeyProps(discovery.schemas[ormType]);
+          key = XT.Discovery.getKeyProps(discovery.schemas[ormType]);
 
-      discovery.resources[ormType].methods.delete.parameters["id"] = primKeyProp;
-      discovery.resources[ormType].methods.delete.parameters["id"].location = 'path';
-      discovery.resources[ormType].methods.get.parameters["id"] = primKeyProp;
-      discovery.resources[ormType].methods.get.parameters["id"].location = 'path';
-      discovery.resources[ormType].methods.head.parameters["id"] = primKeyProp;
-      discovery.resources[ormType].methods.head.parameters["id"].location = 'path';
-      discovery.resources[ormType].methods.patch.parameters["id"] = primKeyProp;
-      discovery.resources[ormType].methods.patch.parameters["id"].location = 'path';
+      if (!key) {
+        /* This should never happen. */
+        plv8.elog(ERROR, "No key found for ormType: ", ormType);
+      }
+
+      discovery.resources[ormType].methods.delete.path = discovery.resources[ormType].methods.delete.path + key.name + "}";
+      discovery.resources[ormType].methods.delete.parameters = {};
+      discovery.resources[ormType].methods.delete.parameters[key.name] = key.props;
+      discovery.resources[ormType].methods.delete.parameters[key.name].location = 'path';
+      discovery.resources[ormType].methods.delete.parameterOrder = [key.name];
+
+      discovery.resources[ormType].methods.get.path = discovery.resources[ormType].methods.get.path + key.name + "}";
+      discovery.resources[ormType].methods.get.parameters = {};
+      discovery.resources[ormType].methods.get.parameters[key.name] = key.props;
+      discovery.resources[ormType].methods.get.parameters[key.name].location = 'path';
+      discovery.resources[ormType].methods.get.parameterOrder = [key.name];
+
+      discovery.resources[ormType].methods.head.path = discovery.resources[ormType].methods.head.path + key.name + "}";
+      discovery.resources[ormType].methods.head.parameters = {};
+      discovery.resources[ormType].methods.head.parameters[key.name] = key.props;
+      discovery.resources[ormType].methods.head.parameters[key.name].location = 'path';
+      discovery.resources[ormType].methods.head.parameterOrder = [key.name];
+
+      discovery.resources[ormType].methods.patch.path = discovery.resources[ormType].methods.patch.path + key.name + "}";
+      discovery.resources[ormType].methods.patch.parameters = {};
+      discovery.resources[ormType].methods.patch.parameters[key.name] = key.props;
+      discovery.resources[ormType].methods.patch.parameters[key.name].location = 'path';
+      discovery.resources[ormType].methods.patch.parameterOrder = [key.name];
     }
 
 
@@ -310,7 +330,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
       var listModel,
           ormType = orms[i].orm_type,
           ormTypeHyphen = ormType.camelToHyphen(),
-          primKeyProp = {},
           sql = 'select orm_type from xt.orm where orm_type=$1 and orm_active;',
           ormListItem = plv8.execute(sql, [ormType + "ListItem"]);
 
@@ -328,15 +347,10 @@ select xt.install_js('XT','Discovery','xtuple', $$
        */
       resources[ormType].methods.delete = {
         "id": ormType + ".delete",
-        "path": ormTypeHyphen + "/{id}",
+        "path": ormTypeHyphen + "/{",
         "httpMethod": "DELETE",
         "description": "Deletes a single " + ormType + " record.",
       };
-
-      resources[ormType].methods.delete.parameters = {};
-      resources[ormType].methods.delete.parameters["id"] = primKeyProp;
-
-      resources[ormType].methods.delete.parameterOrder = ["id"];
 
       resources[ormType].methods.delete.scopes = [
         rootUrl + org + "/auth",
@@ -348,15 +362,10 @@ select xt.install_js('XT','Discovery','xtuple', $$
        */
       resources[ormType].methods.get = {
         "id": ormType + ".get",
-        "path": ormTypeHyphen + "/{id}",
+        "path": ormTypeHyphen + "/{",
         "httpMethod": "GET",
         "description": "Gets a single " + ormType + " record.",
       };
-
-      resources[ormType].methods.get.parameters = {};
-      resources[ormType].methods.get.parameters["id"] = primKeyProp;
-
-      resources[ormType].methods.get.parameterOrder = ["id"];
 
       resources[ormType].methods.get.response = {
         "$ref": ormType
@@ -373,15 +382,10 @@ select xt.install_js('XT','Discovery','xtuple', $$
        */
       resources[ormType].methods.head = {
         "id": ormType + ".head",
-        "path": ormTypeHyphen + "/{id}",
+        "path": ormTypeHyphen + "/{",
         "httpMethod": "HEAD",
         "description": "Returns the HTTP Header as if you made a GET request for a single " + ormType + " record, but will not return any response body.",
       };
-
-      resources[ormType].methods.head.parameters = {};
-      resources[ormType].methods.head.parameters["id"] = primKeyProp;
-
-      resources[ormType].methods.head.parameterOrder = ["id"];
 
       resources[ormType].methods.head.scopes = [
         rootUrl + org + "/auth",
@@ -493,15 +497,10 @@ select xt.install_js('XT','Discovery','xtuple', $$
        */
       resources[ormType].methods.patch = {
         "id": ormType + ".patch",
-        "path": ormTypeHyphen + "/{id}",
+        "path": ormTypeHyphen + "/{",
         "httpMethod": "PATCH",
         "description": "Modifies a single " + ormType + " record. This method supports JSON-Patch semantics.",
       };
-
-      resources[ormType].methods.patch.parameters = {};
-      resources[ormType].methods.patch.parameters["id"] = primKeyProp;
-
-      resources[ormType].methods.patch.parameterOrder = ["id"];
 
       resources[ormType].methods.patch.request = {
         "$ref": ormType
@@ -668,20 +667,20 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @param {Object} A JSON-Schema object.
    * @returns {Object}
    */
-  XT.Discovery.getPrimaryKeyProps = function(schema) {
+  XT.Discovery.getKeyProps = function(schema) {
     for (var prop in schema.properties) {
-      if (schema.properties[prop].isPrimaryKey) {
-        var primKeyProp = {};
+      if (schema.properties[prop].isKey) {
+        var keyProp = {};
 
         /* Use extend so we can delete without affecting schema.properties[prop]. */
-        primKeyProp = XT.extend(primKeyProp, schema.properties[prop]);
+        keyProp = XT.extend(keyProp, schema.properties[prop]);
 
         /* Delete these properties which are not needed for a resource's parameters. */
-        delete primKeyProp.isPrimaryKey;
-        delete primKeyProp.title;
-        delete primKeyProp.required;
+        delete keyProp.isKey;
+        delete keyProp.title;
+        delete keyProp.required;
 
-        return primKeyProp;
+        return {"name": prop, "props": keyProp};
       }
     }
 

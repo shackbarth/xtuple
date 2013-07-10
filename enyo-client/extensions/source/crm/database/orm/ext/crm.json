@@ -305,7 +305,7 @@
         "name": "toDoRelations",
         "toMany": {
           "type": "ToDoRelation",
-          "column": "incdt_id",
+          "column": "incdt_number",
           "inverse": "incident"
         }
       }

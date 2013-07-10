@@ -19,7 +19,7 @@
       workspace;
 
     //
-    // Drill down into the sales module
+    // Drill down into the appropriate module
     //
     _.each(navigator.modules, function (module, moduleIndex) {
       _.each(module.panels, function (panel, panelIndex) {
@@ -37,8 +37,8 @@
     // Create a new record
     //
     navigator.newRecord();
-    assert.isDefined(app.$.postbooks.$.workspaceContainer);
-    workspace = app.$.postbooks.$.workspaceContainer.$.workspace;
+    assert.isDefined(app.$.postbooks.getActive());
+    workspace = app.$.postbooks.getActive().$.workspace;
     assert.isDefined(workspace);
     return workspace;
   };
