@@ -48,6 +48,7 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.CrmDashboard",
     kind: "XV.Dashboard",
+    collection: "XM.UserChartCollection",
     // title is what show in the "add chart" picker on the
     // dashboard and the chart is the widget to be added
     charts: [

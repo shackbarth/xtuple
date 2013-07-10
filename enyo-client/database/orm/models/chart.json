@@ -1,0 +1,42 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserChart",
+    "table": "xt.usrchart",
+    "idSequenceName": "usrchart_usrchart_id_seq",
+    "comment": "User Chart Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "usrchart_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "chartname",
+        "attr": {
+          "type": "String",
+          "column": "usrchart_chart"
+        }
+      },
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "usrchart_usr_username"
+        }
+      },
+      {
+        "name": "extension",
+        "attr": {
+          "type": "Number",
+          "column": "usrchart_ext_id"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
