@@ -3,16 +3,18 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Shipment",
-    "table": "shiphead",
+    "table": "xt.shipheadinfo",
     "idSequenceName": "shiphead_shiphead_id_seq",
     "lockable": true,
+    "lockTable": "shiphead",
+    "isRest": true,
     "comment": "Shipment Map",
     "privileges": {
       "all": {
-        "create": "IssueStockToShipping",
-        "read": "ViewShipping",
-        "update": "IssueStockToShipping",
-        "delete": "IssueStockToShipping"
+        "create": false,
+        "read": "IssueStockToShipping",
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -140,10 +142,24 @@
         }
       },
 			{
-        "name": "issued",
+        "name": "atShipping",
         "attr": {
           "type": "Quantity",
-          "column": "issued"
+          "column": "at_shipping"
+        }
+      },
+      {
+        "name": "toIssue",
+        "attr": {
+          "type": "Quantity",
+          "column": "to_issue"
+        }
+      },
+      {
+        "name": "return",
+        "attr": {
+          "type": "Boolean",
+          "column": "return"
         }
       }
 	  ],
