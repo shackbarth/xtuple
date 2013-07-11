@@ -347,19 +347,15 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           fullName,
           org,
           title,
-          photo,
           phoneWork,
           phoneHome,
           address = [],
           addressWork,
-          addressHome,
           labelWork,
-          labelHome,
           email,
           revision,
           end,
-          stringToSave,
-          file;
+          stringToSave;
       if (model.get('lastName')) {
         name = model.get('lastName');
         fullName = model.get('lastName');
@@ -377,7 +373,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       version = "3.0";
       org = "";
       title = model.get('jobTitle');
-      photo = "";
       phoneWork = model.get('phone');
       phoneHome = model.get('alternate');
       if (isNaN(model.getValue('address.line1').charAt(0))) {
@@ -395,16 +390,14 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       address.push(model.getValue('address.country'));
       //for address, set address with semicolon delimiters
       //for label, set address with ESCAPED newline delimiters
-      addressWork = address[0];
-      labelWork = address[0];
+      addressWork = address[0] + ";";
+      labelWork = address[0] + "\\n";
       for (var i = 1; i < address.length; i++) {
         if (address[i]) {
           addressWork = addressWork + address[i] + ";";
           labelWork = labelWork + address[i] + "\\n";
         }
       }
-      addressHome = "";
-      labelHome = "";
       if (model.get('email').length >= 1) {
         var emailM = model.get('email').at(0);
         email = emailM.get('email');
