@@ -390,8 +390,10 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       address.push(model.getValue('address.country'));
       //for address, set address with semicolon delimiters
       //for label, set address with ESCAPED newline delimiters
-      addressWork = address[0] + ";";
-      labelWork = address[0] + "\\n";
+      if (address[0]) {
+        addressWork = address[0] + ";";
+        labelWork = address[0] + "\\n";
+      }
       for (var i = 1; i < address.length; i++) {
         if (address[i]) {
           addressWork = addressWork + address[i] + ";";
