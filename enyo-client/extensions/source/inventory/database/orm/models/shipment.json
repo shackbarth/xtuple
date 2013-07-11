@@ -152,7 +152,7 @@
         "name": "issued",
         "attr": {
           "type": "Quantity",
-          "column": "issued"
+          "column": "at_shipping"
         }
       }
 	  ],
