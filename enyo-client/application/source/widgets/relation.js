@@ -593,6 +593,17 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.SalesOrderRelationCollection",
+    list: "XV.SalesOrderList"
+  });
+
+  // ..........................................................
   // USER ACCOUNT
   //
 

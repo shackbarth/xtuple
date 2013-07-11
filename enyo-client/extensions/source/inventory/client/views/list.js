@@ -136,7 +136,7 @@ trailing:true white:true*/
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
 
   // ..........................................................
-  // SHIPMENT LIST ITEM
+  // SHIPMENT
   //
 
   enyo.kind({
@@ -154,11 +154,11 @@ trailing:true white:true*/
 	    		{kind: "XV.ListColumn", classes: "first", components: [
 						{kind: "FittableColumns", components: [
 							{kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
-	      			{kind: "XV.ListAttr", attr: "forName1", fit: true, classes: "right"}
+	      			{kind: "XV.ListAttr", attr: "order.customer", fit: true, classes: "right"}
 	    			]},
 	    			{kind: "FittableColumns", components: [
 	      			{kind: "XV.ListAttr", attr: "orderType"},
-							{kind: "XV.ListAttr", attr: "forName2", classes: "right"}
+							{kind: "XV.ListAttr", attr: "order.number", classes: "right"}
 	    			]}
 					]},
 	    		{kind: "XV.ListColumn", classes: "second", components: [
@@ -180,6 +180,6 @@ trailing:true white:true*/
 
   });
 
-  XV.registerModelList("XM.ShipmentListItem", "XV.ShipmentList");
+  XV.registerModelList("XM.ShipmentRelation", "XV.ShipmentList");
 
 }());
