@@ -4,7 +4,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderLineListItem",
     "table": "xt.coiteminfo",
-    "idSequenceName": "coitem_coitem_id_seq",
     "comment": "Sales Order Line Item List Items Map",
     "privileges": {
       "all": {
@@ -39,6 +38,13 @@
         }
       },
       {
+        "name": "subNumber",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_subnumber"
+        }
+      },
+      {
         "name": "itemSite",
         "toOne": {
           "type": "ItemSiteRelation",
@@ -61,13 +67,6 @@
         }
       },
       {
-        "name": "quantityUnitRatio",
-        "attr": {
-          "type": "Number",
-          "column": "coitem_qty_invuomratio"
-        }
-      },
-      {
         "name": "quantityShipped",
         "attr": {
           "type": "Number",
@@ -81,34 +80,6 @@
           "column": "ship_balance"
         }
       },          
-      {
-        "name": "basePrice",
-        "attr": {
-          "type": "Number",
-          "column": "base_price"
-        }
-      },
-      {
-        "name": "customerPrice",
-        "attr": {
-          "type": "Number",
-          "column": "coitem_custprice"
-        }
-      },
-      {
-        "name": "discount",
-        "attr": {
-          "type": "Percent",
-          "column": "cust_discount"
-        }
-      },
-      {
-        "name": "price",
-        "attr": {
-          "type": "Number",
-          "column": "coitem_price"
-        }
-      },
       {
         "name": "scheduleDate",
         "attr": {
@@ -124,31 +95,17 @@
         }
       },
       {
-        "name": "markup",
-        "attr": {
-          "type": "Percent",
-          "column": "markup"
-        }
-      },
-      {
-        "name": "listPrice",
-        "attr": {
-          "type": "Number",
-          "column": "list_price"
-        }
-      },
-      {
-        "name": "listPriceDiscount",
-        "attr": {
-          "type": "Percent",
-          "column": "list_price_discount"
-        }
-      },
-      {
         "name": "customerPartNumber",
         "attr": {
           "type": "String",
           "column": "coitem_custpn"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_price"
         }
       },
       {
@@ -159,31 +116,10 @@
         }
       },
       {
-        "name": "priceUnitRatio",
-        "attr": {
-          "type": "Number",
-          "column": "coitem_price_invuomratio"
-        }
-      },
-      {
         "name": "extendedPrice",
         "attr": {
           "type": "Number",
           "column": "ext_price"
-        }
-      },
-      {
-        "name": "taxType",
-        "toOne": {
-          "type": "TaxType",
-          "column": "coitem_taxtype_id"
-        }
-      },
-      {
-        "name": "tax",
-        "attr": {
-          "type": "String",
-          "column": "tax"
         }
       },
       {
@@ -192,33 +128,125 @@
           "type": "String",
           "column": "coitem_status"
         }
-      },
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ShippableSalesOrderLine",
+    "table": "xt.coitemship",
+    "comment": "Shippable Sales Order Line Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "IssueStockToShipping",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
       {
-        "name": "substituteItem",
-        "toOne": {
-          "type": "Item",
-          "column": "coitem_substitute_item_id"
-        }
-      },
-      {
-        "name": "subnumber",
+        "name": "id",
         "attr": {
           "type": "Number",
-          "column": "coitem_subnumber"
+          "column": "coitem_id",
+          "isPrimaryKey": true
         }
       },
       {
-        "name": "firm",
+        "name": "uuid",
         "attr": {
-          "type": "Boolean",
-          "column": "coitem_firm"
+          "type": "Number",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
-        "name": "notes",
+        "name": "salesOrder",
+        "toOne": {
+          "type": "SalesOrderListItem",
+          "column": "coitem_cohead_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "lineNumber",
         "attr": {
           "type": "String",
-          "column": "coitem_memo"
+          "column": "linenumber"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "type": "ItemRelation",
+          "column": "coitem_item_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "coitem_warehous_id"
+        }
+      },
+      {
+        "name": "scheduleDate",
+        "attr": {
+          "type": "Date",
+          "column": "coitem_scheddate"
+        }
+      },
+      {
+        "name": "unit",
+        "toOne": {
+          "type": "Unit",
+          "column": "coitem_qty_uom_id"
+        }
+      },
+      {
+        "name": "ordered",
+        "attr": {
+          "type": "Quantity",
+          "column": "coitem_qtyord"
+        }
+      },
+      {
+        "name": "shipped",
+        "attr": {
+          "type": "Quantity",
+          "column": "coitem_qtyshipped"
+        }
+      },
+      {
+        "name": "returned",
+        "attr": {
+          "type": "Quantity",
+          "column": "coitem_qtyreturned"
+        }
+      }, 
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Quantity",
+          "column": "ship_balance"
+        }
+      },  
+      {
+        "name": "atShipping",
+        "attr": {
+          "type": "Number",
+          "column": "at_shipping"
+        }
+      },
+      {
+        "name": "toIssue",
+        "attr": {
+          "type": "Quantity",
+          "column": "to_issue"
         }
       }
     ],

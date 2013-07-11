@@ -154,13 +154,6 @@
           "type": "Quantity",
           "column": "to_issue"
         }
-      },
-      {
-        "name": "return",
-        "attr": {
-          "type": "Boolean",
-          "column": "return"
-        }
       }
 	  ],
     "isNestedOnly": true,
