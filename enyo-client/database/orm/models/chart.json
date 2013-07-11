@@ -16,6 +16,13 @@
         }
       },
       {
+        "name": "order",
+        "attr": {
+          "type": "Number",
+          "column": "usrchart_order"
+        }
+      },
+      {
         "name": "chartname",
         "attr": {
           "type": "String",
