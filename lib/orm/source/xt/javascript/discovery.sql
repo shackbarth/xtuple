@@ -364,8 +364,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
         listModel = ormType;
       }
 
-      plv8.elog(INFO, "ORM: ", JSON.stringify(thisOrm));
-
       /*
        * delete
        */
@@ -624,16 +622,47 @@ select xt.install_js('XT','Discovery','xtuple', $$
    */
   XT.Discovery.getIsRestORMs = function(orm) {
     /* TODO - Do we need to include "XM" in the propName? */
-    var sql = "select orm_namespace, orm_type from xt.orm where orm_rest ",
-        sqlend = "group by orm_namespace, orm_type order by orm_namespace, orm_type",
-        orms = [];
+    var sql = "select orm_namespace, orm_type from xt.orm where orm_rest " +
+              "group by orm_namespace, orm_type order by orm_namespace, orm_type",
+        orms = [],
+        relations = [],
+        singleOrms = [],
+        thisOrm;
 
+    orms = plv8.execute(sql);
+
+    /* If this is a single ORM request, find all the related ORMs that are
+     * exposed to REST and return only the single and related ORMs.
+     */
     if (orm) {
-      sql = sql + "and orm_type = $1 " + sqlend;
-      orms = plv8.execute(sql, [orm]);
-    } else {
-      sql = sql + sqlend;
-      orms = plv8.execute(sql);
+      /* Fetch the single ORM. Only need this loop to get the namespace. */
+      for (var i = 0; i < orms.length; i++) {
+        if (orm === orms[i].orm_type) {
+          thisOrm = XT.Orm.fetch(orms[i].orm_namespace, orm, {"superUser":true});
+        }
+      }
+
+      /* Find the related ORMs. */
+      for (var prop in thisOrm.properties) {
+        var relation;
+
+        if (thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany) {
+          relation = thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany;
+          if (relation.type) {
+            relations.push(relation.type);
+          }
+        }
+      }
+
+      /* Return only ORM that are the single requested or a REST exposed relation. */
+      for (var i = 0; i < orms.length; i++) {
+        if (orms[i].orm_type === orm || relations.indexOf(orms[i].orm_type) !== -1) {
+          singleOrms.push(orms[i]);
+        }
+      }
+
+      /* The limited set of ORMs. */
+      orms = singleOrms;
     }
 
     if (!orms.length) {
