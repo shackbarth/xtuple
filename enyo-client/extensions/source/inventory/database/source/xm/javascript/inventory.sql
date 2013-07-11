@@ -272,6 +272,64 @@ select xt.install_js('XM','Inventory','xtuple', $$
     return;
   };
 
+  /**
+    Issue to shipping.
+    
+      select xt.post('{
+        "username": "admin",
+        "nameSpace":"XM",
+        "type":"Inventory",
+        "dispatch":{
+          "functionName":"issueToShipping",
+          "parameters":[
+            "95c30aba-883a-41da-e780-1d844a1dc112",
+            1,
+            {
+              "asOf": "2013-07-03T13:52:55.964Z",
+              "detail": [
+                {
+                  "location": "84cf43d5-8a44-4a2b-f709-4f415ca51a52",
+                  "quantity": 8
+                },
+                {
+                  "location": "d756682c-eda3-445d-eaef-4dce793b0dcf",
+                  "quantity": 2
+                }
+              ]
+            }
+          ]
+        }
+      }');
+  
+    @param {String} Order line uuid
+    @param {Number} Quantity
+    @param {Date}   [options.asOf=now()] Transaction Timestamp
+    @param {String} [options.type="SO"] Type
+    @param {Array} [options.detail] Distribution detail
+  */
+  XM.Inventory.issueToShipping = function (orderLine, quantity, options) {
+    options = options || {};
+    var  asOf = options.asOf || null,
+      prefix = options.type && options.type === 'TO' ? 'to' : 'co',
+      type = options.type && options.type === 'TO' ? 'TO' : 'SO',
+      series,
+      sql;
+
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401) };
+
+    /* Post the transaction */
+    sql = "select issuetoshipping($1, " + prefix + "item_id, $3, 0, $4::timestamptz, null) as series " +
+      "from " + prefix + "item where obj_uuid = $2;",
+    series = plv8.execute(sql, [type, orderLine, quantity, asOf])[0].series;
+
+    /* Distribute detail */
+    XM.PrivateInventory.distribute(series, options.detail);
+
+    return;
+  };
+
+
   XM.Inventory.options = [
 		"DefaultEventFence",    
 		"ItemSiteChangeLog",
