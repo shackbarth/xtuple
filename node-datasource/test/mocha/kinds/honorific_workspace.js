@@ -7,7 +7,8 @@
 (function () {
   "use strict";
 
-  var zombieAuth = require("../lib/zombie_auth"),
+  var _ = require("underscore"),
+    zombieAuth = require("../lib/zombie_auth"),
     smoke = require("../lib/smoke"),
     data = require("../models/honorific").data,
     assert = require("chai").assert;
@@ -23,10 +24,23 @@
       it('User navigates to Honorific-New and selects to create a new Honorific', function (done) {
         var workspace = smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList");
         assert.equal(workspace.value.recordType, "XM.Honorific");
+        var newModel = workspace.value; // TODO: get this off the list
         smoke.setWorkspaceAttributes(workspace, data.createHash);
-        smoke.saveAndVerify(workspace, function () {
+        smoke.saveWorkspace(workspace, function () {
           XT.app.$.postbooks.previous();
-          done();
+          var list = XT.app.$.postbooks.getActive().$.contentPanels.getActive();
+          // TODO: wait for the list to refresh?
+          //var newModel = _.find(list.value.models, function (model) {
+          //  console.log(model.get("code"), data.createHash.code);
+          //  return model.get("code") === data.createHash.code;
+          //});
+          newModel.on("statusChange", function (model, status) {
+            if (status === XM.Model.DESTROYED_DIRTY) {
+              done();
+            }
+          });
+          // TODO: deal with infomodel/editablemodel
+          list.deleteItem({model: newModel});
         });
       });
     });

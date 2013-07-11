@@ -64,7 +64,7 @@
   /**
     Save the model through the workspace and make sure it saved ok.
    */
-  exports.saveAndVerify = function (workspace, done) {
+  exports.saveWorkspace = function (workspace, done) {
     var validation = workspace.value.validate(workspace.value.attributes);
     assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
 
