@@ -135,8 +135,7 @@ trailing:true, white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number"},
-            {kind: "XV.SalesOrderWidget", attr: "order"}
+            {kind: "XV.InputWidget", attr: "number"}
           ]}
         ]}
       ]}
@@ -144,5 +143,6 @@ trailing:true, white:true*/
   });
 
   XV.registerModelWorkspace("XM.ShipmentListItem", "XV.ShipmentWorkspace");
+  XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
 
 }());

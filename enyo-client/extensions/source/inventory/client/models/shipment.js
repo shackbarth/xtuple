@@ -4,6 +4,12 @@ XM.Shipment = XM.Document.extend({
 
 });
 
+XM.ShipmentLine = XM.Document.extend({
+
+  recordType: "XM.ShipmentLine"
+
+});
+
 XM.ShipmentListItem = XM.Document.extend({
 
   recordType: "XM.ShipmentListItem"
