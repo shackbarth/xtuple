@@ -65,18 +65,14 @@
     Save the model through the workspace and make sure it saved ok.
    */
   exports.saveAndVerify = function (workspace, done) {
-    var doneIfClean,
-      validation = workspace.value.validate(workspace.value.attributes);
+    var validation = workspace.value.validate(workspace.value.attributes);
     assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
 
-    doneIfClean = function (model, status) {
-      if (status === XM.Model.READY_CLEAN) {
-        workspace.value.off("statusChange", doneIfClean);
+    workspace.save({
+      success: function () {
         done();
       }
-    };
-    workspace.value.on("statusChange", doneIfClean);
-    workspace.save();
+    });
   };
 
 }());

@@ -24,7 +24,10 @@
         var workspace = smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList");
         assert.equal(workspace.value.recordType, "XM.Honorific");
         smoke.setWorkspaceAttributes(workspace, data.createHash);
-        smoke.saveAndVerify(workspace, done);
+        smoke.saveAndVerify(workspace, function () {
+          XT.app.$.postbooks.previous();
+          done();
+        });
       });
     });
   });
