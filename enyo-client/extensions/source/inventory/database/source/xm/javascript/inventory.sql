@@ -80,6 +80,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       sql = "select itemlocdist_id, " + 
         " invhist_id, " +
         " invhist_invqty, " +
+        " invhistsense(invhist_id) as sense, " +
         " itemsite_id, " +
         " itemsite_controlmethod, " +
         " itemsite_loccntrl " +
@@ -99,7 +100,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
       /* Validate quantity */
       for (i = 0; i < detail.length; i++) {
-        qty += detail[i].quantity; 
+        qty += detail[i].quantity;
+        detail[i].quantity = detail[i].quantity * info.sense; /* Fix the nonsense */
       }
       
       if (qty != info.invhist_invqty) {
