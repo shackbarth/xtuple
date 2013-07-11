@@ -550,7 +550,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.SitePicker",
     kind: "XV.PickerWidget",
     nameAttribute: "code",
-    collection: "XM.sites",
+    collection: "XM.siteRelations",
     orderBy: [
       {attribute: 'code'}
     ]
