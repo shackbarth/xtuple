@@ -13,12 +13,12 @@ var async = require("async");
     Returns a list of extensions associated with an organization.
    */
   exports.extensions = function (req, res) {
-    var userCollection = new SYS.UserCollection(),
+    var user = new SYS.User(),
       fetchError = function (err) {
         X.log("Extension fetch error", err);
         res.send({isError: true, message: "Error fetching extensions"});
       },
-      fetchSuccess = function (collection, result) {
+      fetchSuccess = function (returnedModel, result) {
         var getExtensionFromRole = function (role, callback) {
           var id = role.userAccountRole,
             roleModel = new SYS.UserAccountRole();
@@ -37,9 +37,6 @@ var async = require("async");
             }
           });
         };
-        var user = _.find(collection.models, function (obj) {
-          return obj.get("username") === req.session.passport.user.username;
-        });
         var extensions = _.map(user.get("grantedExtensions"), function (ext) {
           return ext.extension;
         });
@@ -77,9 +74,10 @@ var async = require("async");
     // Fetch under the authority of admin
     // or else most users would not be able to load their own extensions.
     // TODO: just fetch the model instead of the whole collection
-    userCollection.fetch({
+    user.fetch({
       success: fetchSuccess,
       error: fetchError,
+      id: req.session.passport.user.username,
       username: X.options.databaseServer.user,
       database: req.session.passport.user.organization
     });
