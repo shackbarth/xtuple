@@ -1,0 +1,171 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "WorkOrderListItem",
+    "table": "wo",
+    "comment": "Work List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewWorkOrders MaintainWorkOrders",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "wo_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "wo_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "subnumber",
+        "attr": {
+          "type": "Number",
+          "column": "wo_subnumber"
+         }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "wo_status"
+         }
+      },
+      {
+        "name": "itemSite",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemSiteRelation",
+          "column": "wo_itemsite_id"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "wo_startdate"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "wo_duedate"
+         }
+      },
+      {
+        "name": "orderType",
+        "attr": {
+          "type": "String",
+          "column": "wo_ordtype"
+         }
+      },
+      {
+        "name": "orderId",
+        "attr": {
+          "type": "Number",
+          "column": "wo_ordid"
+         }
+      },
+      {
+        "name": "qtyOrdered",
+        "attr": {
+          "type": "Number",
+          "column": "wo_qtyord"
+         }
+      },
+      {
+        "name": "qtyReceived",
+        "attr": {
+          "type": "Number",
+          "column": "wo_qtyrcv"
+        }
+      },
+      {
+        "name": "isAdhoc",
+        "attr": {
+          "type": "Boolean",
+          "column": "wo_adhoc"
+        }
+      },
+      {
+        "name": "itemCfgSeries",
+        "attr": {
+          "type": "Number",
+          "column": "wo_itemcfg_series"
+        }
+      },
+      {
+        "name": "isImported",
+        "attr": {
+          "type": "Boolean",
+          "column": "wo_imported"
+        }
+      },
+      {
+        "name": "wipValue",
+        "attr": {
+          "type": "Currency",
+          "column": "wo_wipvalue"
+        }
+      },
+      {
+        "name": "postedValue",
+        "attr": {
+          "type": "Currency",
+          "column": "wo_postedvalue"
+        }
+      },
+     	{
+        "name": "productionNotes",
+        "attr": {
+          "type": "String",
+          "column": "wo_prodnotes"
+        }
+      },
+     	{
+        "name": "priority",
+        "attr": {
+          "type": "Number",
+          "column": "wo_priority"
+        }
+      },
+      {
+        "name": "brdValue",
+        "attr": {
+          "type": "Currency",
+          "column": "wo_brdvalue"
+        }
+      },
+      {
+        "name": "cosMethod",
+        "attr": {
+          "type": "String",
+          "column": "wo_cosmethod"
+        }
+      },
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "wo_username"
+        }
+      }
+ 	],
+    "isSystem": true
+  }
+]
+

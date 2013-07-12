@@ -28,6 +28,7 @@
     "xt/functions/average_cost.sql",
     "xt/functions/change_password.sql",
     "xt/functions/check_password.sql",
+    "xt/functions/co_line_at_shipping.sql",
     "xt/functions/co_line_base_price.sql",
     "xt/functions/co_line_customer_discount.sql",
     "xt/functions/co_line_markup.sql",
@@ -106,6 +107,8 @@
     "xt/views/iteminfo.sql",
     "xt/views/itemsiteinfo.sql",
     "xt/views/opheadinfo.sql",
+    "xt/views/orderheadinfo.sql",
+    "xt/views/orderiteminfo.sql",
     "xt/views/prjinfo.sql",
     "xt/views/quheadinfo.sql",
     "xt/views/quiteminfo.sql",
@@ -119,7 +122,6 @@
     "xm/javascript/customer.sql",
     "xm/javascript/database_information.sql",
     "xm/javascript/incident.sql",
-    "xm/javascript/inventory.sql",
     "xm/javascript/item.sql",
     "xm/javascript/item_site.sql",
     "xm/javascript/project.sql",
@@ -130,8 +132,6 @@
     "public/tables/comment_trigger.sql",
     "public/tables/pkghead.sql",
     "public/tables/schemaord.sql",
-    "create_xtbatch_schema.sql",
-    "xtbatch/tables/batch.sql",
     "update_version.sql"
   ]
 }

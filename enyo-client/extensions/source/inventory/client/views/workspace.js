@@ -75,6 +75,36 @@ trailing:true, white:true*/
       ]
     });
 
+    // ..........................................................
+    // ORDER
+    //
+
+  enyo.kind({
+    name: "XV.OrderLineWorkspace",
+    kind: "XV.Workspace",
+    title: "_orderLine".loc(),
+    headerAttrs: ["number", "-", "name"],
+    model: "XM.OrderLine",
+    handlers: {
+      onSavePrompt: "savePrompt"
+    },
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true, classes: "in-panel", components: [
+			
+					]}
+				]}
+			]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.OrderRelation", "XV.OrderLineWorkspace");
+  XV.registerModelWorkspace("XM.OrderListItem", "XV.OrderLineWorkspace");
+  XV.registerModelWorkspace("XM.OrderLine", "XV.OrderLineWorkspace");
+
   };
 
 }());
