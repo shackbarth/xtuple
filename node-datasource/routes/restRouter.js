@@ -147,7 +147,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           payload.query.rowLimit = (+req.query.maxResults) || 100;
           // assumption: pageToken is 0-indexed
           payload.query.rowOffset = (+req.query.pageToken) ?
-            (+req.query.pageToken) * (+req.query.maxResults) || 100 :
+            (+req.query.pageToken) * ((+req.query.maxResults) || 100) :
             0;
 
           // q represents a full-text search on any text attributes of the model
