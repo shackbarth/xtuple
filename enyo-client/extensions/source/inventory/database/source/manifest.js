@@ -1,5 +1,5 @@
 {
-  "version": "1.3.10",
+  "version": "1.4.0",
   "databaseScripts": [
     "register.sql",
     "public/tables/locitem.sql",
