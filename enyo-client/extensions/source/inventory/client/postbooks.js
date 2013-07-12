@@ -1,7 +1,7 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
+/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
-/*global XT:true, XV:true, enyo:true*/
+trailing:true, white:true*/
+/*global XT:true, XV:true, XM:true, enyo:true*/
 
 (function () {
 
@@ -41,14 +41,17 @@ trailing:true white:true*/
       name: "inventory",
       label: "_inventory".loc(),
       panels: [
-				{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"},
-				{name: "orderList", kind: "XV.OrderList"}
+        {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"},
+        {name: "orderList", kind: "XV.OrderList"}
+      ],
+      actions: [
+        {name: "issueToShipping", prerequisite: "issueStockToShipping", method: "doIssueToShipping", notify: false}
       ]
     };
     XT.app.$.postbooks.insertModule(module, 4);
 
     relevantPrivileges = [
-      "ConfigureIM"  	 
+      "ConfigureIM"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };
