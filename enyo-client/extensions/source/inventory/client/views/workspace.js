@@ -134,14 +134,32 @@ trailing:true, white:true*/
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number"}
+            classes: "in-panel", fit: true, components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.SalesOrderWidget", attr: "order"},
+            {kind: "XV.InputWidget", attr: "shipVia"},
+            {kind: "XV.InputWidget", attr: "shipDate"}
           ]}
-        ]}
+				]},
+        {kind: "XV.Groupbox", name: "lineItemsPanel", components: [				
+        	{kind: "onyx.GroupboxHeader", content: "_lineItems".loc()}, 
+					{kind: "XV.ScrollableGroupbox", name: "lineItems", classes: "in-panel", components: [
+						//{content: "Hello."}
+	  				{kind: "FittableColumns", components: [
+	    				{kind: "XV.ListColumn", classes: "first", components: [
+								{kind: "FittableColumns", components: [
+									{kind: "XV.ListAttr", attr: "shipment", isKey: true, fit: true},
+	      					{kind: "XV.ListAttr", attr: "orderLine.lineNumber", fit: true}
+	    					]}
+							]}
+	  				]} 
+					]}  
+				]}	
       ]}
     ]
   });
 
+  XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
   XV.registerModelWorkspace("XM.ShipmentListItem", "XV.ShipmentWorkspace");
   XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
 
