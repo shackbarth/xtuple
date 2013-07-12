@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -12,6 +12,32 @@ white:true*/
     @extends XM.Document
   */
   XM.SiteType = XM.Document.extend(/** @lends XM.Site.prototype */{
+
+    recordType: 'XM.SiteType',
+
+    documentKey: 'name'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.SiteZone = XM.Document.extend(/** @lends XM.SiteZone.prototype */{
+
+    recordType: 'XM.SiteType',
+
+    documentKey: 'name'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.SiteZoneRelation = XM.Document.extend(/** @lends XM.SiteZone.prototype */{
 
     recordType: 'XM.SiteType',
 
@@ -113,6 +139,16 @@ white:true*/
   XM.SiteListItemCollection = XM.Collection.extend(/** @lends XM.SiteListItemCollection.prototype */{
 
     model: XM.SiteListItem
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SiteZoneRelationCollection = XM.Collection.extend(/** @lends XM.SiteListItemCollection.prototype */{
+
+    model: XM.SiteZoneRelation
   });
 
 }());

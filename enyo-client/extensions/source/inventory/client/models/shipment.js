@@ -1,23 +1,37 @@
-XM.Shipment = XM.Document.extend({
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
+white:true*/
+/*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
-  recordType: "XM.Shipment"
+(function () {
+  "use strict";
 
-});
+  XT.extensions.inventory.initShipmentModels = function () {
 
-XM.ShipmentLine = XM.Document.extend({
+    /**
+      @class
 
-  recordType: "XM.ShipmentLine"
+      @extends XM.Model
+    */
+    XM.Shipment = XM.Document.extend({
+      recordType: "XM.Shipment"
+    });
 
-});
+    // ..........................................................
+    // COLLECTIONS
+    //
 
-XM.ShipmentListItem = XM.Document.extend({
+    /**
+      @class
 
-  recordType: "XM.ShipmentListItem"
+      @extends XM.Collection
+    */
+    XM.ShipmentCollection = XM.Collection.extend({
+      model: XM.Shipment
+    });
 
-});
+  };
 
-XM.ShipmentListItemCollection = XM.Collection.extend({
+}());
 
-  model: XM.ShipmentListItem
 
-});
