@@ -241,13 +241,6 @@
           "type": "Number",
           "column": "at_shipping"
         }
-      },
-      {
-        "name": "toIssue",
-        "attr": {
-          "type": "Quantity",
-          "column": "to_issue"
-        }
       }
     ],
     "isSystem": true
