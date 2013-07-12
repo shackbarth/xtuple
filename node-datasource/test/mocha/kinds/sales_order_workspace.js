@@ -71,7 +71,10 @@
         // item fields, so that we're 100% sure we're ready for the responses.
 
         workspace.value.on("change:total", function () {
-          smoke.saveAndVerify(workspace, done);
+          smoke.saveWorkspace(workspace, function (err, model) {
+            model.on("all", function () { console.log(arguments); });
+            smoke.deleteFromList(XT.app, model.id, done);
+          });
         });
 
         //
