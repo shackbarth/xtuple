@@ -107,7 +107,9 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     res = plv8.execute(sql, [schema, table]);
 
-    if (!res.length) return false;
+    if (!res.length) {
+      return false;
+    }
 
     for (var i = 0; i < res.length; i++) {
       ret[res[i].column_name] = {};
@@ -244,13 +246,12 @@ select xt.install_js('XT','Schema','xtuple', $$
           break;
         default:
           throw new Error("Unsupported datatype format. No known conversion from PostgreSQL to JSON-Schema.");
-          break;
       }
     }
 
     /* return the results */
     return ret;
-  }
+  };
 
   /**
    * Return a JSON-Schema for an ORM to be used for an API Discovery Service
@@ -262,11 +263,12 @@ select xt.install_js('XT','Schema','xtuple', $$
   XT.Schema.getProperties = function(orm) {
     /* Load ORM if this function was called with just orm.nameSpace and orm.type. */
     orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type, {"silentError": true});
-    if (!orm || !orm.properties) return false;
+    if (!orm || !orm.properties) {
+      return false;
+    }
 
     var columns = [],
         ext = {},
-        extTables = [],
         nkey = XT.Orm.naturalKey(orm),
         pkey = XT.Orm.primaryKey(orm),
         ret = {},
@@ -303,9 +305,9 @@ select xt.install_js('XT','Schema','xtuple', $$
 
       /* Add title and description properties. */
       /* For readability only, title should be first, therefore a redundant if. */
-      if ((orm.properties[i].attr && orm.properties[i].attr.column)
-        || (orm.properties[i].toOne)
-        || (orm.properties[i].toMany)) {
+      if ((orm.properties[i].attr && orm.properties[i].attr.column) ||
+        (orm.properties[i].toOne) ||
+        (orm.properties[i].toMany)) {
 
         /* Initialize named properties. */
         ret.properties[orm.properties[i].name] = {};
@@ -369,7 +371,7 @@ select xt.install_js('XT','Schema','xtuple', $$
     }
 
     /* Assign column attributes. */
-    var schemaColumnInfo = XT.Schema.columnInfo(schemaTable, columns);
+    schemaColumnInfo = XT.Schema.columnInfo(schemaTable, columns);
 
     /* Add in extension table column properties. */
     for (var tableName in ext) {
@@ -393,7 +395,7 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     /* return the results */
     return ret;
-  }
+  };
 
   /**
    * Return an array of requiredAttributes or columns that can not be NULL for an ORM.
@@ -410,7 +412,9 @@ select xt.install_js('XT','Schema','xtuple', $$
         schemaColumnInfo = {},
         ret = [];
 
-    if (!orm.properties) return false;
+    if (!orm.properties) {
+      return false;
+    }
 
     /* Loop through the ORM properties and get the columns. */
     for (var i = 0; i < orm.properties.length; i++) {
@@ -446,7 +450,7 @@ select xt.install_js('XT','Schema','xtuple', $$
     }
 
     /* Get required from the returned schemaColumnInfo properties. */
-    var schemaColumnInfo = XT.Schema.columnInfo(schemaTable, columns);
+    schemaColumnInfo = XT.Schema.columnInfo(schemaTable, columns);
 
     for (var i = 0; i < orm.properties.length; i++) {
       /* Basic properties only. */
@@ -459,10 +463,12 @@ select xt.install_js('XT','Schema','xtuple', $$
     }
 
     /* If this ORM has no column properties, we have an empty object, return false. */
-    if (!ret.length > 0) return false;
+    if (!ret.length > 0) {
+      return false;
+    }
 
     /* return the results */
     return ret;
-  }
+  };
 
 $$ );
