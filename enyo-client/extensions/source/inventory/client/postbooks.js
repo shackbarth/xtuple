@@ -41,12 +41,15 @@ trailing:true, white:true*/
       name: "inventory",
       label: "_inventory".loc(),
       panels: [
-        {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"},
-        {name: "orderList", kind: "XV.OrderList"}
+        {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
       ],
       actions: [
-        {name: "issueToShipping", prerequisite: "issueStockToShipping", method: "doIssueToShipping", notify: false}
-      ]
+        {name: "issueToShipping", privilege: "issueStockToShipping", method: "issueToShipping", notify: false}
+      ],
+      issueToShipping: function () {
+        alert("Testing!");
+      }
+
     };
     XT.app.$.postbooks.insertModule(module, 4);
 

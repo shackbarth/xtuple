@@ -17,6 +17,7 @@ trailing:true, white:true*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    allowPrint: true,
     parameterWidget: "XV.AccountListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -194,6 +195,7 @@ trailing:true, white:true*/
       {attribute: 'firstName'},
       {attribute: 'primaryEmail'}
     ]},
+    allowPrint: true,
     parameterWidget: "XV.ContactListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -330,6 +332,7 @@ trailing:true, white:true*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    allowPrint: true,
     parameterWidget: "XV.CustomerListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -703,6 +706,7 @@ trailing:true, white:true*/
       {attribute: 'updated', descending: true},
       {attribute: 'number', descending: true, numeric: true}
     ]},
+    allowPrint: true,
     toggleSelected: false,
     parameterWidget: "XV.IncidentListParameters",
     components: [
@@ -981,6 +985,7 @@ trailing:true, white:true*/
       {attribute: 'name'},
       {attribute: 'number', numeric: true}
     ]},
+    allowPrint: true,
     label: "_opportunities".loc(),
     parameterWidget: "XV.OpportunityListParameters",
     components: [
@@ -1255,6 +1260,7 @@ trailing:true, white:true*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    allowPrint: true,
     parameterWidget: "XV.ProspectListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -1331,6 +1337,7 @@ trailing:true, white:true*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    allowPrint: true,
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -1824,6 +1831,7 @@ trailing:true, white:true*/
       {attribute: 'dueDate'},
       {attribute: 'name'}
     ]},
+    allowPrint: true,
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
