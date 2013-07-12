@@ -251,6 +251,7 @@
     "nameSpace": "XM",
     "type": "ContactInfo",
     "table": "cntct",
+    "isRest": true,
     "idSequenceName": "cntct_cntct_id_seq",
     "orderSequence": "ContactNumber",
     "comment": "Contact Info Map",
@@ -911,6 +912,7 @@
     "nameSpace": "XM",
     "type": "ContactListItem",
     "table": "xt.cntctinfo",
+    "isRest": true,
     "comment": "Contact List Item Map",
     "privileges": {
       "all": {
@@ -1066,6 +1068,7 @@
     "nameSpace": "XM",
     "type": "ContactRelation",
     "table": "xt.cntctinfo",
+    "isRest": true,
     "comment": "Contact Relation Map",
     "privileges": {
       "all": {
@@ -1359,6 +1362,7 @@
     "nameSpace": "XM",
     "type": "Honorific",
     "table": "hnfc",
+    "isRest": true,
     "idSequenceName": "hnfc_hnfc_id_seq",
     "lockable": true,
     "comment": "Honorific Map",
