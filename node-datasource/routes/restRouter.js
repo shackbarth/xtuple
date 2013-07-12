@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, _:true */
+/*global XT:true, X:true, _:true */
 
 (function () {
   "use strict";
@@ -77,6 +77,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var id,
         error = {error: {}},
         model,
+        schema,
+        searchableAttributes,
         payload = {},
         session = {},
         callback = function (resp) {
@@ -139,9 +141,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
           routes.queryDatabase("get", payload, session, callback);
         } else { // This is a list request.
-          payload.type = resources[model].methods.list.response["$ref"];
+          payload.type = resources[model].methods.list.response.$ref;
           payload.query = {};
+          // unary plus is a cast to integer
+          payload.query.rowLimit = (+req.query.maxResults) || 100;
+          // assumption: pageToken is 0-indexed
+          payload.query.rowOffset = (+req.query.pageToken) ?
+            (+req.query.pageToken) * ((+req.query.maxResults) || 100) :
+            0;
 
+          // q represents a full-text search on any text attributes of the model
+          if (req.query.q) {
+            schema = XT.session.schemas.XM.attributes[payload.type.camelize().capitalize()];
+            searchableAttributes = _.compact(_.map(schema.columns, function (column) {
+              return column.category === 'S' ? column.name : null;
+            }));
+            if (searchableAttributes.length > 0) {
+              payload.query.parameters = [{
+                attribute: searchableAttributes,
+                operator: "MATCHES",
+                value: req.query.q
+              }];
+            }
+          }
           routes.queryDatabase("get", payload, session, callback);
         }
 
