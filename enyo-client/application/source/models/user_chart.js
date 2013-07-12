@@ -11,10 +11,18 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.UserChart = XM.Model.extend({
+  XM.UserChart = XM.Document.extend({
     /** @scope XM.UserChart.prototype */
 
-    recordType: 'XM.UserChart'
+    recordType: 'XM.UserChart',
+
+    defaults: function () {
+      return {
+        username: XM.currentUser.get("username"),
+        filter: "all",
+        order: 0
+      };
+    }
 
   });
 
@@ -26,7 +34,13 @@ white:true*/
   XM.UserChartCollection = XM.Collection.extend({
     /** @scope XM.UserChartCollection.prototype */
 
-    model: XM.UserChart
+    model: XM.UserChart,
+
+    orderAttribute: {
+      orderBy: [{
+        attribute: "order"
+      }]
+    }
 
   });
 
