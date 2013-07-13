@@ -299,6 +299,11 @@ select xt.install_js('XT','Schema','xtuple', $$
         continue;
       }
 
+      /* Skip this property if it has a attr.value. Those are just used for relation associaiton queries. */
+      if (orm.properties[i].attr && orm.properties[i].attr.value) {
+        continue;
+      }
+
       if (!ret.properties) {
         /* Initialize properties. */
         ret.properties = {};
