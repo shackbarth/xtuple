@@ -272,6 +272,7 @@ select xt.install_js('XT','Schema','xtuple', $$
         nkey = XT.Orm.naturalKey(orm),
         pkey = XT.Orm.primaryKey(orm),
         ret = {},
+        relatedSchema = {},
         schemaColumnInfo = {},
         schemaTable = orm.table;
 
@@ -342,8 +343,19 @@ select xt.install_js('XT','Schema','xtuple', $$
       }
       /* toOne property */
       else if (orm.properties[i].toOne) {
-        ret.properties[orm.properties[i].name].type = "object";
-        ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
+        if (orm.properties[i].toOne.isNested) {
+          ret.properties[orm.properties[i].name].type = "object";
+          ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
+        } else {
+          /* Fetch the related ORM's JSON-Schema and use it's key's type. */
+          /* TODO: Assuming "XM" here... */
+          relatedSchema = XT.Schema.getProperties({"nameSpace": "XM", "type": orm.properties[i].toOne.type});
+          for (var prop in relatedSchema.properties) {
+            if (relatedSchema.properties[prop].isKey) {
+              ret.properties[orm.properties[i].name].type = relatedSchema.properties[prop].type;
+            }
+          }
+        }
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].toOne.required) {
