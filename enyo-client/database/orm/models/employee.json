@@ -598,7 +598,7 @@
     "idSequenceName": "empgrp_empgrp_id_seq",
     "lockable": true,
     "comment": "Employee Group Map",
-    "priveleges": {
+    "privileges": {
       "all": {
           "create": "MaintainEmployeeGroups",
         "read": "ViewEmployeeGroups",
