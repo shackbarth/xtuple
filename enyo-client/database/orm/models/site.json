@@ -554,6 +554,14 @@
     "table": "location",
     "isRest": true,
     "comment": "Location Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
     "properties": [
       {
         "name": "id",
