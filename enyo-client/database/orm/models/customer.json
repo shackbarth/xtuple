@@ -1665,9 +1665,9 @@
     "idSequenceName": "custgrp_custgrp_id_seq",
     "lockable": true,
     "comment": "Customer Group Map",
-    "priveleges": {
+    "privileges": {
       "all": {
-          "create": "MaintainCustomerGroups",
+        "create": "MaintainCustomerGroups",
         "read": "ViewCustomerGroups",
         "update": "MaintainCustomerGroups",
         "delete": "MaintainCustomerGroups"
