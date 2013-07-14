@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "SaleType",
     "table": "saletype",
+    "isRest": true,
     "idSequenceName": "saletype_saletype_id_seq",
     "lockable": true,
     "comment": "Sale Type Map",
