@@ -9,9 +9,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.Model
   */
-  XM.UserChart = XM.Document.extend({
+  XM.UserChart = XM.Model.extend({
     /** @scope XM.UserChart.prototype */
 
     recordType: 'XM.UserChart',

@@ -6,6 +6,14 @@
     "table": "xt.usrchart",
     "idSequenceName": "usrchart_usrchart_id_seq",
     "comment": "User Chart Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
     "properties": [
       {
         "name": "id",
@@ -13,6 +21,14 @@
           "type": "Number",
           "column": "usrchart_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
