@@ -11,10 +11,36 @@ white:true*/
     /**
       @class
 
-      @extends XM.Model
+      @extends XM.Document
     */
     XM.Shipment = XM.Document.extend({
-      recordType: "XM.Shipment"
+
+    recordType: "XM.Shipment"
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Document
+    */
+    XM.ShipmentLine = XM.Document.extend({
+
+    recordType: "XM.ShipmentLine",
+
+    parentKey: "shipment"
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Document
+    */
+    XM.ShipmentListItem = XM.Document.extend({
+
+    recordType: "XM.ShipmentListItem"
+
     });
 
     // ..........................................................
@@ -27,7 +53,20 @@ white:true*/
       @extends XM.Collection
     */
     XM.ShipmentCollection = XM.Collection.extend({
-      model: XM.Shipment
+    
+    model: XM.Shipment
+    
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ShipmentListItemCollection = XM.Collection.extend({
+
+    model: XM.ShipmentListItem
+
     });
 
   };

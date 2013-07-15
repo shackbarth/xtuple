@@ -42,6 +42,7 @@ trailing:true, white:true*/
       label: "_inventory".loc(),
       panels: [
 				{name: "orderList", kind: "XV.OrderList"},
+        {name: "issueToShipping", kind: "XV.IssueToShippingList"},
 				{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"},
 				{name: "shipmentList", kind: "XV.ShipmentList"}
       ],

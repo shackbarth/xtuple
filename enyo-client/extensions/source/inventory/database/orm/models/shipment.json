@@ -238,5 +238,56 @@
       }
 	  ],
     "isSystem": true
+  },
+    {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ShipmentRelation",
+    "table": "shiphead",
+    "idSequenceName": "shiphead_shiphead_id_seq",
+    "lockable": true,
+    "comment": "Shipment Relation Map",
+    "privileges": {
+      "all": {
+        "create": "true",
+        "read": "ViewShipping",
+        "update": "true",
+        "delete": "true"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "shiphead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "shiphead_number",
+          "isNaturalKey": true
+         }
+      },
+      {
+        "name": "order",
+        "toOne": {
+          "type": "SalesOrderRelation",
+          "column": "shiphead_order_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "shiphead_shipvia"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]
