@@ -199,6 +199,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
       XT.Discovery.getORMSchemas(listItemOrms, schemas);
     }
 
+    /* Sanitize the JSON-Schema. */
+    XT.Discovery.sanitize(schemas);
+
     /* Sort schema properties alphabetically. */
     discovery.schemas = XT.Discovery.sortObject(schemas);
 
@@ -587,6 +590,47 @@ select xt.install_js('XT','Discovery','xtuple', $$
 
 
   /*
+   * Helper function to sanitize the schemas relations.
+   * Right now, this just removes the "inverse" property from a child schema.
+   * TODO: Consider using this to remove primary keys instead of the other
+   * logic above. May also need to remove unprivileged properties.
+   * @See: XT.Data.sanitize() function that is similar.
+   *
+   * @param {Object} Object of JSON-Schemas.
+   */
+  XT.Discovery.sanitize = function(schema) {
+    var inverse,
+        parentOrm,
+        parentOrmProp,
+        propName,
+        propery,
+        resource;
+
+    for (resource in schema) {
+      /* Find the inverse value from the original ORM. */
+      /* TODO: Assuming "XM" here... */
+      parentOrm = XT.Orm.fetch("XM", resource, {"silentError": true});
+
+      for (propName in schema[resource].properties) {
+        propery = schema[resource].properties[propName];
+
+        if (propery.items && propery.items.$ref) {
+          parentOrmProp = XT.Orm.getProperty(parentOrm, propName);
+          if (parentOrmProp.toMany && parentOrmProp.toMany.type && parentOrmProp.toMany.inverse) {
+            inverse = parentOrmProp.toMany.inverse;
+
+            /* Delete the inverse property from the Child JSON-Schema. */
+            if (schema[parentOrmProp.toMany.type] && schema[parentOrmProp.toMany.type].properties[inverse]) {
+              delete schema[parentOrmProp.toMany.type].properties[inverse];
+            }
+          }
+        }
+      }
+    }
+  };
+
+
+  /*
    * Helper function to sort the schemas properties alphabetically.
    * Note: ECMA-262 does not specify enumeration order. This is just for
    * human readability in outputted JSON.
@@ -595,9 +639,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @returns {Object}
    */
   XT.Discovery.sortObject = function(obj) {
-    var sorted = {},
+    var arr = [],
         key,
-        arr = [];
+        sorted = {};
 
     for (key in obj) {
       if (obj.hasOwnProperty(key)) {

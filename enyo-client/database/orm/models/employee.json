@@ -290,6 +290,7 @@
     "nameSpace": "XM",
     "type": "EmployeeRelation",
     "table": "emp",
+    "isRest": true,
     "comment": "Employee Relation Map",
     "privileges": {
       "all": {
@@ -376,6 +377,7 @@
     "nameSpace": "XM",
     "type": "EmployeeEmployeeRelation",
     "table": "emp",
+    "isRest": true,
     "comment": "Employee Employee Relation Map",
     "privileges": {
       "all": {
@@ -592,10 +594,11 @@
     "nameSpace": "XM",
     "type": "EmployeeGroup",
     "table": "empgrp",
+    "isRest": true,
     "idSequenceName": "empgrp_empgrp_id_seq",
     "lockable": true,
     "comment": "Employee Group Map",
-    "priveleges": {
+    "privileges": {
       "all": {
           "create": "MaintainEmployeeGroups",
         "read": "ViewEmployeeGroups",

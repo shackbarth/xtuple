@@ -675,6 +675,7 @@
     "nameSpace": "XM",
     "type": "ToDoRelation",
     "table": "xt.todoiteminfo",
+    "isRest": true,
     "comment": "Todo Relation Map",
     "privileges": {
       "all": {
@@ -801,6 +802,7 @@
     "nameSpace": "XM",
     "type": "ToDoListItem",
     "table": "xt.todoiteminfo",
+    "isRest": true,
     "comment": "Todo List Item Map",
     "privileges": {
       "all": {

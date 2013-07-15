@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "SalesOrder",
     "table": "xt.coheadinfo",
+    "isRest": true,
     "lockable": true,
     "lockTable": "cohead",
     "idSequenceName": "cohead_cohead_id_seq",
@@ -1451,6 +1452,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderListItem",
     "table": "xt.coheadinfo",
+    "isRest": true,
     "comment": "Sales Order List Item Map",
     "privileges": {
       "all": {
@@ -1578,6 +1580,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderRelation",
     "table": "xt.coheadinfo",
+    "isRest": true,
     "comment": "Sales Order Relation Map",
     "privileges": {
       "all": {

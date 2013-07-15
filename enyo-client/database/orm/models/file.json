@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "File",
     "table": "file",
+    "isRest": true,
     "idSequenceName": "file_file_id_seq",
     "lockable": true,
     "comment": "File Map",
@@ -64,6 +65,7 @@
     "nameSpace": "XM",
     "type": "FileRelation",
     "table": "file",
+    "isRest": true,
     "comment": "File Relation Map",
     "privileges": {
       "all": {

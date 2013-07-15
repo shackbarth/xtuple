@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Opportunity",
     "table": "ophead",
+    "isRest": true,
     "idSequenceName": "ophead_ophead_id_seq",
     "lockable": true,
     "orderSequence": "OpportunityNumber",
@@ -706,6 +707,7 @@
     "nameSpace": "XM",
     "type": "OpportunityRelation",
     "table": "xt.opheadinfo",
+    "isRest": true,
     "comment": "Opporunity Relation Map",
     "privileges": {
       "all": {
@@ -810,6 +812,7 @@
     "nameSpace": "XM",
     "type": "OpportunityListItem",
     "table": "xt.opheadinfo",
+    "isRest": true,
     "comment": "Opporunity List Item Map",
     "privileges": {
       "all": {
@@ -1115,6 +1118,7 @@
     "nameSpace": "XM",
     "type": "OpportunitySource",
     "table": "opsource",
+    "isRest": true,
     "idSequenceName": "opsource_opsource_id_seq",
     "lockable": true,
     "comment": "Opportunity Source Map",
@@ -1158,6 +1162,7 @@
     "nameSpace": "XM",
     "type": "OpportunityStage",
     "table": "opstage",
+    "isRest": true,
     "idSequenceName": "opstage_opstage_id_seq",
     "lockable": true,
     "comment": "Opportunity Stage Map",
@@ -1209,6 +1214,7 @@
     "nameSpace": "XM",
     "type": "OpportunityType",
     "table": "optype",
+    "isRest": true,
     "idSequenceName": "optype_optype_id_seq",
     "lockable": true,
     "comment": "Opportunity Type Map",

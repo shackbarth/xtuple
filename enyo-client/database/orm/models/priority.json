@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Priority",
     "table": "incdtpriority",
+    "isRest": true,
     "idSequenceName": "incdtpriority_incdtpriority_id_seq",
     "lockable": true,
     "comment": "Priority Map",
