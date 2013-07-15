@@ -1162,6 +1162,7 @@
     "nameSpace": "XM",
     "type": "CustomerShiptoRelation",
     "table": "shiptoinfo",
+    "isRest": true,
     "comment": "Customer Shipto Relation Map",
     "privileges": {
       "all": {
@@ -1289,6 +1290,7 @@
     "nameSpace": "XM",
     "type": "CustomerType",
     "table": "custtype",
+    "isRest": true,
     "idSequenceName": "custtype_custtype_id_seq",
     "lockable": true,
     "comment": "Vendor Type Map",
@@ -1332,6 +1334,7 @@
     "nameSpace": "XM",
     "type": "CustomerRelation",
     "table": "custinfo",
+    "isRest": true,
     "comment": "Customer Relation Map",
     "privileges": {
       "all": {
@@ -1519,6 +1522,7 @@
     "nameSpace": "XM",
     "type": "ShipCharge",
     "table": "shipchrg",
+    "isRest": true,
     "lockable": true,
     "idSequenceName": "shipchrg_shipchrg_id_seq",
     "comment": "Ship Charge Map",
@@ -1569,6 +1573,7 @@
     "nameSpace": "XM",
     "type": "ShipVia",
     "table": "shipvia",
+    "isRest": true,
     "idSequenceName": "shipvia_shipvia_id_seq",
     "lockable": true,
     "comment": "Ship Via Map",
@@ -1612,6 +1617,7 @@
     "nameSpace": "XM",
     "type": "ShipZone",
     "table": "shipzone",
+    "isRest": true,
     "lockable": true,
     "idSequenceName": "shipzone_shipzone_id_seq",
     "comment": "Ship Zone Map",
@@ -1655,12 +1661,13 @@
     "nameSpace": "XM",
     "type": "CustomerGroup",
     "table": "custgrp",
+    "isRest": true,
     "idSequenceName": "custgrp_custgrp_id_seq",
     "lockable": true,
     "comment": "Customer Group Map",
-    "priveleges": {
+    "privileges": {
       "all": {
-          "create": "MaintainCustomerGroups",
+        "create": "MaintainCustomerGroups",
         "read": "ViewCustomerGroups",
         "update": "MaintainCustomerGroups",
         "delete": "MaintainCustomerGroups"
@@ -1750,6 +1757,7 @@
     "nameSpace": "XM",
     "type": "CustomerProspectRelation",
     "table": "xt.customer_prospect",
+    "isRest": true,
     "comment": "Customer Prospect Relation Map",
     "privileges": {
       "all": {
@@ -1922,6 +1930,7 @@
     "nameSpace": "XM",
     "type": "CustomerProspectListItem",
     "table": "xt.customer_prospect",
+    "isRest": true,
     "comment": "Customer Prospect List Item Map",
     "privileges": {
       "all": {

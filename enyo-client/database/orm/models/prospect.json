@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Prospect",
     "table": "prospect",
+    "isRest": true,
     "idSequenceName": "cust_cust_id_seq",
     "lockable": true,
     "orderSequence": "CRMAccountNumber",
@@ -109,6 +110,7 @@
     "nameSpace": "XM",
     "type": "ProspectRelation",
     "table": "prospect",
+    "isRest": true,
     "comment": "Prospect Relation Map",
     "privileges": {
       "all": {
