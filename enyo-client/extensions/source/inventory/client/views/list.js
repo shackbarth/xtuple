@@ -183,34 +183,6 @@ trailing:true, white:true*/
 
   XV.registerModelList("XM.Shipment", "XV.ShipmentList");
 
-  // ..........................................................
-  // SHIPMENT
-  //
-
-  enyo.kind({
-    name: "XV.ShipmentLine",
-    kind: "XV.ListRelations",
-    label: "_shipments".loc(),
-    orderBy: [
-      {attribute: 'orderLine.lineNumber'}
-    ],
-    parentKey: "shipment",
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "orderLine.quantity", isKey: true, fit: true}
-            ]}
-          ]}  
-        ]}
-      ]}
-    ]
-  });
-
-  XV.registerModelList("XM.ShipmentLine", "XV.ShipmentLine");
-  XV.registerModelList("XM.Shipment", "XV.ShipmentLine")
-
   //
   // ISSUE TO SHIPPING
   //
