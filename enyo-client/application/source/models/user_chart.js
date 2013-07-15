@@ -19,8 +19,7 @@ white:true*/
     defaults: function () {
       return {
         username: XM.currentUser.get("username"),
-        filter: "all",
-        order: 0
+        filter: "all"
       };
     }
 
