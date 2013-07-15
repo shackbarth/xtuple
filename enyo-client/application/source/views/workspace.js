@@ -1040,6 +1040,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
               label: "_category".loc()},
             {kind: "XV.SalesPriceWidget", attr: "listPrice"},
+            {kind: "XV.SalesPriceWidget", attr: "wholesalePrice"},
             {kind: "XV.UnitPicker", attr: "priceUnit"},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader",
