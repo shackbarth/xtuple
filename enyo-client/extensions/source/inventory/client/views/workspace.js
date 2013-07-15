@@ -141,12 +141,7 @@ trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "shipDate"}
           ]}
 				]},
-        {kind: "XV.Groupbox", name: "lineItemsPanel", components: [
-        	{kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
-					{kind: "XV.ScrollableGroupbox", name: "lineItems", classes: "in-panel", components: [
-						{kind: "XV.ShipmentLineBox", attr: "issued"}
-					]}
-				]}
+				{kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
       ]}
     ]
   });

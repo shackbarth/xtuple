@@ -189,11 +189,12 @@ trailing:true, white:true*/
 
   enyo.kind({
     name: "XV.ShipmentLine",
-    kind: "XV.List",
+    kind: "XV.ListRelations",
     label: "_shipments".loc(),
-    query: {orderBy: [
+    orderBy: [
       {attribute: 'orderLine.lineNumber'}
-    ]},
+    ],
+    parentKey: "shipment",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [

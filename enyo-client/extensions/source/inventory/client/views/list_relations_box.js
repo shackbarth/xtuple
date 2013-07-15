@@ -10,12 +10,11 @@ trailing:true, white:true*/
   //
 
   enyo.kind({
-    name: "XV.ShipmentLineBox",
+    name: "XV.ShipmentLineRelationsBox",
     kind: "XV.ListRelationsBox",
     title: "_lineItems".loc(),
     parentKey: "shipment",
-    listRelations: "XV.ShipmentLine",
-    searchList: "XV.ShipmentLine"
+    listRelations: "XV.ShipmentLineListRelations"
   });
 
 }());

@@ -122,6 +122,14 @@
     "type": "ShipmentLine",
     "table": "xt.shipmentline",
     "comment": "Shipment Line Map",
+    "privileges": {
+      "all": {
+        "create": "false",
+        "read": "ViewShipping",
+        "update": "false",
+        "delete": "false"
+      }
+    },
     "properties": [
       {
         "name": "uuid",
