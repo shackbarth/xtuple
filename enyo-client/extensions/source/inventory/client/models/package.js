@@ -1,5 +1,9 @@
 enyo.depends(
-  "sales_order.js",
   "configure.js",
+  "inventory.js",
+  "location.js",
+  "sales_order.js",
+  "shipment.js",
+  "startup.js",
   "static.js"
 );
