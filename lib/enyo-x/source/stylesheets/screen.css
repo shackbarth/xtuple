@@ -328,9 +328,12 @@
   -moz-border-radius-bottomleft: 10px;
   border-bottom-left-radius: 10px;
 }
-.selectable-chart .xv-picker-label {
+.selectable-chart .chart-bottom .xv-picker-label {
   width: 100px;
   color: #ffffff;
+}
+.selectable-chart .chart-bottom .onyx-button {
+  width: 130px;
 }
 .menu-icon {
   margin-left: 15px;
