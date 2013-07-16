@@ -6,6 +6,4 @@ datasource.log
 datasource-err.log
 www
 lib/private/*
-test/mocha/lib/demo-test.backup
 pid/*
-test/shared/login_data.js
