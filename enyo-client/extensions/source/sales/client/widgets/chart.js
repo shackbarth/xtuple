@@ -44,7 +44,7 @@ filter options
       { name: "salesRep" }
     ],
     dateField: "shipDate",
-    totalField: "totalPrice",
+    totalField: "totalPrice"
   });
 
   enyo.kind({
@@ -58,7 +58,7 @@ filter options
       { name: "salesRep" }
     ],
     dateField: "orderDate",
-    totalField: "total",
+    totalField: "total"
   });
 
   /*
