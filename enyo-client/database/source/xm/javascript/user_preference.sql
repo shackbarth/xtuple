@@ -31,6 +31,7 @@ select xt.install_js('XM','UserPreference','xtuple', $$
    @returns {Boolean}
   */
   XM.UserPreference.commitSettings = function(patches) {
+    var data = Object.create(XT.Data);
 
     /* check privileges */
     if(!data.checkPrivilege('MaintainPreferencesSelf')) throw new Error('Access Denied');
