@@ -443,6 +443,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
       this.$.sitePicker.filter = filter;
       this.$.sitePicker.setShowing(XT.session.settings.get("MultiWhs"));
+      if (!XT.session.settings.get("MultiWhs")) {
+        this.$.privateItemSiteWidget.applyStyle("border-bottom-width", "0px");
+      }
       this._itemSites = new XM.ItemSiteRelationCollection();
       this.queryChanged();
     },
