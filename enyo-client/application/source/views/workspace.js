@@ -1,4 +1,4 @@
-q/*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+/*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true */
 
@@ -275,6 +275,25 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
                 label: "_version".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "DatabaseComments"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.UserPreferenceWorkspace",
+    kind: "XV.Workspace",
+    title: "_userPreferences".loc(),
+    model: "XM.UserPreference",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           ]}
         ]}
       ]}
