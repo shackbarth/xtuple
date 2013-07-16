@@ -8,7 +8,7 @@ trailing:true, white:true*/
   XT.extensions.inventory.initParameters = function () {
 
     // ..........................................................
-    // SALES HISTORY
+    // ISSUE TO SHIPPING
     //
 
     enyo.kind({
