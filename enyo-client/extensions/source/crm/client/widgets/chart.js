@@ -38,10 +38,13 @@ trailing:true, white:true*/
     collection: "XM.OpportunityListItemCollection",
     chartTitle: "_opportunities".loc(),
     groupByOptions: [
-      { name: "opportunityStage" },
-      { name: "opportunitySource" },
-      { name: "opportunityType" },
+      { name: "opportunityStage", content: "_stage".loc() },
+      { name: "opportunitySource", content: "_source".loc() },
+      { name: "opportunityType", content: "_type".loc() },
+      { name: "owner" },
+      { name: "assignedTo" },
       { name: "priority" }
-    ]
+    ],
+    totalField: "amount"
   });
 }());
