@@ -2340,7 +2340,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
      */
     attributesChanged: function (model, options) {
       this.inherited(arguments);
-      this.$.passwordCheck.setValue("");
+      if (this.value.getStatus() === XM.Model.READY_CLEAN) {
+        this.$.passwordCheck.setValue("");
+      }
     },
     /**
       The passwordCheck field is not on the model. Pipe to a hidden field.
