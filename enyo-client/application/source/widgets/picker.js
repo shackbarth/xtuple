@@ -1,4 +1,4 @@
-/*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+/*jshint node:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XM:true, enyo:true, _:true */
 
@@ -416,7 +416,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.SitePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.sites",
+    collection: "XM.siteRelations",
     orderBy: [
       {attribute: 'code'}
     ]
@@ -550,7 +550,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.SitePicker",
     kind: "XV.PickerWidget",
     nameAttribute: "code",
-    collection: "XM.sites",
+    collection: "XM.siteRelations",
     orderBy: [
       {attribute: 'code'}
     ]

@@ -23,8 +23,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
         master = {},
         org = XT.currentDb(),
         orms = XT.Discovery.getIsRestORMs(orm),
-        rootUrl = rootUrl || "{rootUrl}",
         version = "v1alpha1";
+
+    rootUrl = rootUrl || "{rootUrl}";
 
     if (!org) {
       return false;
@@ -50,13 +51,13 @@ select xt.install_js('XT','Discovery','xtuple', $$
       item.version = version;
       item.title = "xTuple ERP REST API for " + ormType + " business objects.";
       item.description = "Lets you get and manipulate xTuple ERP " + ormType + " business objects.";
-      item.discoveryRestUrl = rootUrl + "discovery/" + version + "/apis/" + org + "/" + ormTypeHyphen + "/" + version + "/rest";
-      item.discoveryLink = "./apis/" + org + "/" + ormTypeHyphen + "/" + version + "/rest";
+      item.discoveryRestUrl = rootUrl + org + "/discovery/" + version + "/apis/" + ormTypeHyphen + "/" + version + "/rest";
+      item.discoveryLink = "./apis/" + ormTypeHyphen + "/" + version + "/rest";
       item.icons = {
-        "x16": rootUrl + "assets/api/" + ormTypeHyphen + "-16.png",
-        "x32": rootUrl + "assets/api/" + ormTypeHyphen + "-32.png"
+        "x16": rootUrl + org + "/assets/api/" + ormTypeHyphen + "-16.png",
+        "x32": rootUrl + org + "/assets/api/" + ormTypeHyphen + "-32.png"
       };
-      item.documentationLink = "https://dev.xtuple.com/" + ormTypeHyphen; /* TODO - What should this be? */
+      item.documentationLink = "https://dev.xtuple.com/api/" + ormTypeHyphen; /* TODO - What should this be? */
       item.preferred = true; /* TODO - Change this as we add new versions. */
 
       list.items[i] = item;
@@ -70,20 +71,20 @@ select xt.install_js('XT','Discovery','xtuple', $$
       master.version = version;
       master.title = "xTuple ERP REST API all business objects.";
       master.description = "Lets you get and manipulate all xTuple ERP business objects.";
-      master.discoveryRestUrl = rootUrl + "discovery/" + version + "/apis/" + org + "/" + version + "/rest";
-      master.discoveryLink = "./apis/" + org + "/" + version + "/rest";
+      master.discoveryRestUrl = rootUrl + org + "/discovery/" + version + "/apis/" + version + "/rest";
+      master.discoveryLink = "./apis/" + version + "/rest";
       master.icons = {
-        "x16": rootUrl + "assets/api/api-16.png",
-        "x32": rootUrl + "assets/api/api-32.png"
+        "x16": rootUrl + org + "/assets/api/api-16.png",
+        "x32": rootUrl + org + "/assets/api/api-32.png"
       };
-      master.documentationLink = "https://dev.xtuple.com/"; /* TODO - What should this be? */
+      master.documentationLink = "https://dev.xtuple.com/api/"; /* TODO - What should this be? */
       master.preferred = true; /* TODO - Change this as we add new versions. */
 
       list.items.unshift(master);
     }
 
     return list;
-  }
+  };
 
   /**
    * Return an API Discovery document for this database's ORM where isRest = true.
@@ -96,8 +97,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
     var discovery = {},
         org = plv8.execute("select current_database()"),
         orms = XT.Discovery.getIsRestORMs(orm),
-        rootUrl = rootUrl || "{rootUrl}",
         version = "v1alpha1";
+
+    rootUrl = rootUrl || "{rootUrl}";
 
     if (org.length !== 1) {
       return false;
@@ -125,15 +127,15 @@ select xt.install_js('XT','Discovery','xtuple', $$
     discovery.title = "xTuple ERP REST API for " + (orm ? orm : "all") + " business objects.";
     discovery.description = "Lets you get and manipulate xTuple ERP " + (orm ? orm + " " : "") + "business objects.";
     discovery.icons = {
-      "x16": rootUrl + "assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-16.png",
-      "x32": rootUrl + "assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-32.png"
+      "x16": rootUrl + org + "/assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-16.png",
+      "x32": rootUrl + org + "/assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-32.png"
     };
     discovery.documentationLink = "https://dev.xtuple.com/" + (orm ? orm.camelToHyphen() : ""); /* TODO - What should this be? */
     discovery.protocol = "rest";
-    discovery.baseUrl = rootUrl + "api/" + version + "/";
-    discovery.basePath = "/api/" + version + "/";
+    discovery.baseUrl = rootUrl + org + "/api/" + version + "/";
+    discovery.basePath = "/" + org + "/api/" + version + "/";
     discovery.rootUrl = rootUrl;
-    discovery.servicePath = "api/" + version + "/";
+    discovery.servicePath = org + "/api/" + version + "/";
     discovery.batchPath = "batch"; /* TODO - Support batch requests? */
 
     /*
@@ -197,6 +199,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
       XT.Discovery.getORMSchemas(listItemOrms, schemas);
     }
 
+    /* Sanitize the JSON-Schema. */
+    XT.Discovery.sanitize(schemas);
+
     /* Sort schema properties alphabetically. */
     discovery.schemas = XT.Discovery.sortObject(schemas);
 
@@ -209,22 +214,53 @@ select xt.install_js('XT','Discovery','xtuple', $$
     /* Loop through resources and add JSON-Schema primKeyProp for methods that need it. */
     for (var i = 0; i < orms.length; i++) {
       var ormType = orms[i].orm_type,
-          primKeyProp = XT.Discovery.getPrimaryKeyProps(discovery.schemas[ormType]);
+          ormNamespace = orms[i].orm_namespace,
+          thisOrm = XT.Orm.fetch(ormNamespace, ormType, {"superUser":true}),
+          key = XT.Discovery.getKeyProps(discovery.schemas[ormType]);
 
-      discovery.resources[ormType].methods.delete.parameters["id"] = primKeyProp;
-      discovery.resources[ormType].methods.delete.parameters["id"].location = 'path';
-      discovery.resources[ormType].methods.get.parameters["id"] = primKeyProp;
-      discovery.resources[ormType].methods.get.parameters["id"].location = 'path';
-      discovery.resources[ormType].methods.head.parameters["id"] = primKeyProp;
-      discovery.resources[ormType].methods.head.parameters["id"].location = 'path';
-      discovery.resources[ormType].methods.patch.parameters["id"] = primKeyProp;
-      discovery.resources[ormType].methods.patch.parameters["id"].location = 'path';
+      if (!key) {
+        /* This should never happen. */
+        plv8.elog(ERROR, "No key found for ormType: ", ormType);
+      }
+
+
+      if (thisOrm.privileges.all.delete) {
+        discovery.resources[ormType].methods.delete.path = discovery.resources[ormType].methods.delete.path + key.name + "}";
+        discovery.resources[ormType].methods.delete.parameters = {};
+        discovery.resources[ormType].methods.delete.parameters[key.name] = key.props;
+        discovery.resources[ormType].methods.delete.parameters[key.name].location = 'path';
+        discovery.resources[ormType].methods.delete.parameterOrder = [key.name];
+      }
+
+      if (thisOrm.privileges.all.read) {
+        discovery.resources[ormType].methods.get.path = discovery.resources[ormType].methods.get.path + key.name + "}";
+        discovery.resources[ormType].methods.get.parameters = {};
+        discovery.resources[ormType].methods.get.parameters[key.name] = key.props;
+        discovery.resources[ormType].methods.get.parameters[key.name].location = 'path';
+        discovery.resources[ormType].methods.get.parameterOrder = [key.name];
+      }
+
+      if (thisOrm.privileges.all.read) {
+        discovery.resources[ormType].methods.head.path = discovery.resources[ormType].methods.head.path + key.name + "}";
+        discovery.resources[ormType].methods.head.parameters = {};
+        discovery.resources[ormType].methods.head.parameters[key.name] = key.props;
+        discovery.resources[ormType].methods.head.parameters[key.name].location = 'path';
+        discovery.resources[ormType].methods.head.parameterOrder = [key.name];
+      }
+
+      if (thisOrm.privileges.all.update) {
+        discovery.resources[ormType].methods.patch.path = discovery.resources[ormType].methods.patch.path + key.name + "}";
+        discovery.resources[ormType].methods.patch.parameters = {};
+        discovery.resources[ormType].methods.patch.parameters[key.name] = key.props;
+        discovery.resources[ormType].methods.patch.parameters[key.name].location = 'path';
+        discovery.resources[ormType].methods.patch.parameterOrder = [key.name];
+      }
     }
 
 
     /* return the results */
     return discovery;
-  }
+  };
 
 
   /**
@@ -238,8 +274,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
   XT.Discovery.getAuth = function(orm, rootUrl) {
     var auth = {},
       org = plv8.execute("select current_database()"),
-      orms = XT.Discovery.getIsRestORMs(orm),
-      rootUrl = rootUrl || "{rootUrl}";
+      orms = XT.Discovery.getIsRestORMs(orm);
+
+    rootUrl = rootUrl || "{rootUrl}";
 
 
     if (org.length !== 1) {
@@ -259,27 +296,32 @@ select xt.install_js('XT','Discovery','xtuple', $$
     };
 
     /* Set base full access scope. */
-    auth.oauth2.scopes[rootUrl + "auth/" + org] = {
+    auth.oauth2.scopes[rootUrl + org + "/auth"] = {
       "description": "Full access to all '" + org + "' resources"
-    }
+    };
 
     /* Loop through exposed ORM models and build scopes. */
     for (var i = 0; i < orms.length; i++) {
       var ormType = orms[i].orm_type,
+          ormNamespace = orms[i].orm_namespace,
+          thisOrm = XT.Orm.fetch(ormNamespace, ormType, {"superUser":true}),
           ormTypeHyphen = ormType.camelToHyphen();
 
       /* TODO - Do we need to include "XM" in the name? */
-      auth.oauth2.scopes[rootUrl + "auth/" + org + "/" + ormTypeHyphen] = {
+      auth.oauth2.scopes[rootUrl + org + "/auth/" + ormTypeHyphen] = {
         "description": "Manage " + orms[i].orm_type + " resources"
-      }
-      auth.oauth2.scopes[rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"] = {
-        "description": "View " + orms[i].orm_type + " resources"
-      }
+      };
 
+      /* Only include readonly if privileges are read only. */
+      if (!thisOrm.privileges.all.create && !thisOrm.privileges.all.update && !thisOrm.privileges.all.delete) {
+        auth.oauth2.scopes[rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"] = {
+          "description": "View " + orms[i].orm_type + " resources"
+        };
+      }
     }
 
     return auth;
-  }
+  };
 
 
   /**
@@ -294,8 +336,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
   XT.Discovery.getResources = function(orm, rootUrl) {
     var resources = {},
       org = XT.currentDb(),
-      orms = XT.Discovery.getIsRestORMs(orm),
-      rootUrl = rootUrl || "{rootUrl}";
+      orms = XT.Discovery.getIsRestORMs(orm);
+
+    rootUrl = rootUrl || "{rootUrl}";
 
     if (!org) {
       return false;
@@ -309,8 +352,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
     for (var i = 0; i < orms.length; i++) {
       var listModel,
           ormType = orms[i].orm_type,
+          ormNamespace = orms[i].orm_namespace,
+          thisOrm = XT.Orm.fetch(ormNamespace, ormType, {"superUser":true}),
           ormTypeHyphen = ormType.camelToHyphen(),
-          primKeyProp = {},
           sql = 'select orm_type from xt.orm where orm_type=$1 and orm_active;',
           ormListItem = plv8.execute(sql, [ormType + "ListItem"]);
 
@@ -326,199 +370,193 @@ select xt.install_js('XT','Discovery','xtuple', $$
       /*
        * delete
        */
-      resources[ormType].methods.delete = {
-        "id": ormType + ".delete",
-        "path": ormTypeHyphen + "/{id}",
-        "httpMethod": "DELETE",
-        "description": "Deletes a single " + ormType + " record.",
-      };
+      if (thisOrm.privileges.all.delete) {
+        resources[ormType].methods.delete = {
+          "id": ormType + ".delete",
+          "path": ormTypeHyphen + "/{",
+          "httpMethod": "DELETE",
+          "description": "Deletes a single " + ormType + " record.",
+        };
 
-      resources[ormType].methods.delete.parameters = {};
-      resources[ormType].methods.delete.parameters["id"] = primKeyProp;
-
-      resources[ormType].methods.delete.parameterOrder = ["id"];
-
-      resources[ormType].methods.delete.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen
-      ];
+        resources[ormType].methods.delete.scopes = [
+          rootUrl + org + "/auth",
+          rootUrl + org + "/auth/" + ormTypeHyphen
+        ];
+      }
 
       /*
        * get
        */
-      resources[ormType].methods.get = {
-        "id": ormType + ".get",
-        "path": ormTypeHyphen + "/{id}",
-        "httpMethod": "GET",
-        "description": "Gets a single " + ormType + " record.",
-      };
+      if (thisOrm.privileges.all.read) {
+        resources[ormType].methods.get = {
+          "id": ormType + ".get",
+          "path": ormTypeHyphen + "/{",
+          "httpMethod": "GET",
+          "description": "Gets a single " + ormType + " record.",
+        };
 
-      resources[ormType].methods.get.parameters = {};
-      resources[ormType].methods.get.parameters["id"] = primKeyProp;
+        resources[ormType].methods.get.response = {
+          "$ref": ormType
+        };
 
-      resources[ormType].methods.get.parameterOrder = ["id"];
-
-      resources[ormType].methods.get.response = {
-        "$ref": ormType
-      };
-
-      resources[ormType].methods.get.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
-      ];
+        resources[ormType].methods.get.scopes = [
+          rootUrl + org + "/auth",
+          rootUrl + org + "/auth/" + ormTypeHyphen,
+          rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"
+        ];
+      }
 
       /*
        * head
        */
-      resources[ormType].methods.head = {
-        "id": ormType + ".head",
-        "path": ormTypeHyphen + "/{id}",
-        "httpMethod": "HEAD",
-        "description": "Returns the HTTP Header as if you made a GET request for a single " + ormType + " record, but will not return any response body.",
-      };
+      if (thisOrm.privileges.all.read) {
+        resources[ormType].methods.head = {
+          "id": ormType + ".head",
+          "path": ormTypeHyphen + "/{",
+          "httpMethod": "HEAD",
+          "description": "Returns the HTTP Header as if you made a GET request for a single " + ormType + " record, but will not return any response body.",
+        };
 
-      resources[ormType].methods.head.parameters = {};
-      resources[ormType].methods.head.parameters["id"] = primKeyProp;
-
-      resources[ormType].methods.head.parameterOrder = ["id"];
-
-      resources[ormType].methods.head.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
-      ];
+        resources[ormType].methods.head.scopes = [
+          rootUrl + org + "/auth",
+          rootUrl + org + "/auth/" + ormTypeHyphen,
+          rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"
+        ];
+      }
 
       /*
        * insert
        */
-      resources[ormType].methods.insert = {
-        "id": ormType + ".insert",
-        "path": ormTypeHyphen,
-        "httpMethod": "POST",
-        "description": "Add a single " + ormType + " record.",
-      };
+      if (thisOrm.privileges.all.create) {
+        resources[ormType].methods.insert = {
+          "id": ormType + ".insert",
+          "path": ormTypeHyphen,
+          "httpMethod": "POST",
+          "description": "Add a single " + ormType + " record.",
+        };
 
-      resources[ormType].methods.insert.request = {
-        "$ref": ormType
-      };
+        resources[ormType].methods.insert.request = {
+          "$ref": ormType
+        };
 
-      resources[ormType].methods.insert.response = {
-        "$ref": ormType
-      };
+        resources[ormType].methods.insert.response = {
+          "$ref": ormType
+        };
 
-      resources[ormType].methods.insert.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen
-      ];
+        resources[ormType].methods.insert.scopes = [
+          rootUrl + org + "/auth",
+          rootUrl + org + "/auth/" + ormTypeHyphen
+        ];
+      }
 
       /*
        * list
        */
-      resources[ormType].methods.list = {
-        "id": ormType + ".list",
-        "path": ormTypeHyphen,
-        "httpMethod": "GET",
-        "description": "Returns a list of " + ormType + " records.",
-      };
+      if (thisOrm.privileges.all.read) {
+        resources[ormType].methods.list = {
+          "id": ormType + ".list",
+          "path": ormTypeHyphen,
+          "httpMethod": "GET",
+          "description": "Returns a list of " + ormType + " records.",
+        };
 
-      resources[ormType].methods.list.parameters = {
-        "maxResults": {
-          "type": "integer",
-          "description": "Maximum number of entries returned on one result page. Optional.",
-          "format": "int32",
-          "minimum": "1",
-          "location": "query"
-        },
-        "q": {
-          "type": "string",
-          "description": "Free text search terms to find events that match these terms in any field. Optional.",
-          "location": "query"
-        },
-        "pageToken": {
-          "type": "string",
-          "description": "Token specifying which result page to return. Optional.",
-          "location": "query"
-        }
-      };
+        resources[ormType].methods.list.parameters = {
+          "maxResults": {
+            "type": "integer",
+            "description": "Maximum number of entries returned on one result page. Optional.",
+            "format": "int32",
+            "minimum": "1",
+            "location": "query"
+          },
+          "q": {
+            "type": "string",
+            "description": "Free text search terms to find events that match these terms in any field. Optional.",
+            "location": "query"
+          },
+          "pageToken": {
+            "type": "string",
+            "description": "Token specifying which result page to return. Optional.",
+            "location": "query"
+          }
+        };
 
-      resources[ormType].methods.list.response = {
-        "$ref": listModel
-      };
+        resources[ormType].methods.list.response = {
+          "$ref": listModel
+        };
 
-      resources[ormType].methods.list.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
-      ];
+        resources[ormType].methods.list.scopes = [
+          rootUrl + org + "/auth",
+          rootUrl + org + "/auth/" + ormTypeHyphen,
+          rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"
+        ];
+      }
 
       /*
        * listhead
        */
-      resources[ormType].methods.listhead = {
-        "id": ormType + ".listhead",
-        "path": ormTypeHyphen,
-        "httpMethod": "HEAD",
-        "description": "Returns the HTTP Header as if you made a GET request for a list of " + ormType + " records, but will not return any response body.",
-      };
+      if (thisOrm.privileges.all.read) {
+        resources[ormType].methods.listhead = {
+          "id": ormType + ".listhead",
+          "path": ormTypeHyphen,
+          "httpMethod": "HEAD",
+          "description": "Returns the HTTP Header as if you made a GET request for a list of " + ormType + " records, but will not return any response body.",
+        };
 
-      resources[ormType].methods.listhead.parameters = {
-        "maxResults": {
-          "type": "integer",
-          "description": "Maximum number of entries returned on one result page. Optional.",
-          "format": "int32",
-          "minimum": "1",
-          "location": "query"
-        },
-        "q": {
-          "type": "string",
-          "description": "Free text search terms to find events that match these terms in any field. Optional.",
-          "location": "query"
-        },
-        "pageToken": {
-          "type": "string",
-          "description": "Token specifying which result page to return. Optional.",
-          "location": "query"
-        }
-      };
+        resources[ormType].methods.listhead.parameters = {
+          "maxResults": {
+            "type": "integer",
+            "description": "Maximum number of entries returned on one result page. Optional.",
+            "format": "int32",
+            "minimum": "1",
+            "location": "query"
+          },
+          "q": {
+            "type": "string",
+            "description": "Free text search terms to find events that match these terms in any field. Optional.",
+            "location": "query"
+          },
+          "pageToken": {
+            "type": "string",
+            "description": "Token specifying which result page to return. Optional.",
+            "location": "query"
+          }
+        };
 
-      resources[ormType].methods.listhead.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
-      ];
+        resources[ormType].methods.listhead.scopes = [
+          rootUrl + org + "/auth",
+          rootUrl + org + "/auth/" + ormTypeHyphen,
+          rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"
+        ];
+      }
 
       /*
        * patch
        */
-      resources[ormType].methods.patch = {
-        "id": ormType + ".patch",
-        "path": ormTypeHyphen + "/{id}",
-        "httpMethod": "PATCH",
-        "description": "Modifies a single " + ormType + " record. This method supports JSON-Patch semantics.",
-      };
+      if (thisOrm.privileges.all.update) {
+        resources[ormType].methods.patch = {
+          "id": ormType + ".patch",
+          "path": ormTypeHyphen + "/{",
+          "httpMethod": "PATCH",
+          "description": "Modifies a single " + ormType + " record. This method supports JSON-Patch semantics.",
+        };
 
-      resources[ormType].methods.patch.parameters = {};
-      resources[ormType].methods.patch.parameters["id"] = primKeyProp;
+        resources[ormType].methods.patch.request = {
+          "$ref": ormType
+        };
 
-      resources[ormType].methods.patch.parameterOrder = ["id"];
+        resources[ormType].methods.patch.response = {
+          "$ref": ormType
+        };
 
-      resources[ormType].methods.patch.request = {
-        "$ref": ormType
-      };
-
-      resources[ormType].methods.patch.response = {
-        "$ref": ormType
-      };
-
-      resources[ormType].methods.patch.scopes = [
-        rootUrl + "auth/" + org,
-        rootUrl + "auth/" + org + "/" + ormTypeHyphen
-      ];
+        resources[ormType].methods.patch.scopes = [
+          rootUrl + org + "/auth",
+          rootUrl + org + "/auth/" + ormTypeHyphen
+        ];
+      }
     }
 
     return resources;
-  }
+  };
 
 
   /*
@@ -548,7 +586,48 @@ select xt.install_js('XT','Discovery','xtuple', $$
     year = "" + year;
 
     return year + month + day;
-  }
+  };
+
+
+  /*
+   * Helper function to sanitize the schemas relations.
+   * Right now, this just removes the "inverse" property from a child schema.
+   * TODO: Consider using this to remove primary keys instead of the other
+   * logic above. May also need to remove unprivileged properties.
+   * @See: XT.Data.sanitize() function that is similar.
+   *
+   * @param {Object} Object of JSON-Schemas.
+   */
+  XT.Discovery.sanitize = function(schema) {
+    var inverse,
+        parentOrm,
+        parentOrmProp,
+        propName,
+        propery,
+        resource;
+
+    for (resource in schema) {
+      /* Find the inverse value from the original ORM. */
+      /* TODO: Assuming "XM" here... */
+      parentOrm = XT.Orm.fetch("XM", resource, {"silentError": true});
+
+      for (propName in schema[resource].properties) {
+        propery = schema[resource].properties[propName];
+
+        if (propery.items && propery.items.$ref) {
+          parentOrmProp = XT.Orm.getProperty(parentOrm, propName);
+          if (parentOrmProp.toMany && parentOrmProp.toMany.type && parentOrmProp.toMany.inverse) {
+            inverse = parentOrmProp.toMany.inverse;
+
+            /* Delete the inverse property from the Child JSON-Schema. */
+            if (schema[parentOrmProp.toMany.type] && schema[parentOrmProp.toMany.type].properties[inverse]) {
+              delete schema[parentOrmProp.toMany.type].properties[inverse];
+            }
+          }
+        }
+      }
+    }
+  };
 
 
   /*
@@ -560,9 +639,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @returns {Object}
    */
   XT.Discovery.sortObject = function(obj) {
-    var sorted = {},
+    var arr = [],
         key,
-        arr = [];
+        sorted = {};
 
     for (key in obj) {
       if (obj.hasOwnProperty(key)) {
@@ -573,11 +652,11 @@ select xt.install_js('XT','Discovery','xtuple', $$
     arr.sort();
 
     for (key = 0; key < arr.length; key++) {
-        sorted[arr[key]] = obj[arr[key]];
+      sorted[arr[key]] = obj[arr[key]];
     }
 
     return sorted;
-  }
+  };
 
   /*
    * Helper function to get a single or all isRest ORM Models.
@@ -587,16 +666,47 @@ select xt.install_js('XT','Discovery','xtuple', $$
    */
   XT.Discovery.getIsRestORMs = function(orm) {
     /* TODO - Do we need to include "XM" in the propName? */
-    var sql = "select orm_namespace, orm_type from xt.orm where orm_rest ",
-        sqlend = "group by orm_namespace, orm_type order by orm_namespace, orm_type",
-        orms = [];
+    var sql = "select orm_namespace, orm_type from xt.orm where orm_rest " +
+              "group by orm_namespace, orm_type order by orm_namespace, orm_type",
+        orms = [],
+        relations = [],
+        singleOrms = [],
+        thisOrm;
 
+    orms = plv8.execute(sql);
+
+    /* If this is a single ORM request, find all the related ORMs that are
+     * exposed to REST and return only the single and related ORMs.
+     */
     if (orm) {
-      sql = sql + "and orm_type = $1 " + sqlend;
-      orms = plv8.execute(sql, [orm]);
-    } else {
-      sql = sql + sqlend;
-      orms = plv8.execute(sql);
+      /* Fetch the single ORM. Only need this loop to get the namespace. */
+      for (var i = 0; i < orms.length; i++) {
+        if (orm === orms[i].orm_type) {
+          thisOrm = XT.Orm.fetch(orms[i].orm_namespace, orm, {"superUser":true});
+        }
+      }
+
+      /* Find the related ORMs. */
+      for (var prop in thisOrm.properties) {
+        var relation;
+
+        if (thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany) {
+          relation = thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany;
+          if (relation.type) {
+            relations.push(relation.type);
+          }
+        }
+      }
+
+      /* Return only ORM that are the single requested or a REST exposed relation. */
+      for (var i = 0; i < orms.length; i++) {
+        if (orms[i].orm_type === orm || relations.indexOf(orms[i].orm_type) !== -1) {
+          singleOrms.push(orms[i]);
+        }
+      }
+
+      /* The limited set of ORMs. */
+      orms = singleOrms;
     }
 
     if (!orms.length) {
@@ -604,7 +714,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     }
 
     return orms;
-  }
+  };
 
   /*
    * Helper function to get a JSON-Schema for ORM Models.
@@ -639,13 +749,14 @@ select xt.install_js('XT','Discovery','xtuple', $$
       if (schemas[propName] && schemas[propName].properties) {
         /* Drill down through schemas and get all $ref schemas. */
         for (var prop in schemas[propName].properties) {
-          var childProp = schemas[propName].properties[prop];
+          var childProp = schemas[propName].properties[prop],
+              childOrm;
 
           if (childProp) {
             if (childProp.items && childProp.items["$ref"]){
-              var childOrm = childProp.items["$ref"];
+              childOrm = childProp.items["$ref"];
             } else if (childProp["$ref"]){
-              var childOrm = childProp["$ref"];
+              childOrm = childProp["$ref"];
             }
 
             /* Only get this child schema if we don't already have it. */
@@ -659,7 +770,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     }
 
     return schemas;
-  }
+  };
 
 
   /*
@@ -668,23 +779,24 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @param {Object} A JSON-Schema object.
    * @returns {Object}
    */
-  XT.Discovery.getPrimaryKeyProps = function(schema) {
+  XT.Discovery.getKeyProps = function(schema) {
     for (var prop in schema.properties) {
-      if (schema.properties[prop].isPrimaryKey) {
-        var primKeyProp = {};
+      if (schema.properties[prop].isKey) {
+        var keyProp = {};
 
         /* Use extend so we can delete without affecting schema.properties[prop]. */
-        primKeyProp = XT.extend(primKeyProp, schema.properties[prop]);
+        keyProp = XT.extend(keyProp, schema.properties[prop]);
 
         /* Delete these properties which are not needed for a resource's parameters. */
-        delete primKeyProp.isPrimaryKey;
-        delete primKeyProp.title;
-        delete primKeyProp.required;
+        delete keyProp.isKey;
+        delete keyProp.title;
+        delete keyProp.required;
 
-        return primKeyProp;
+        return {"name": prop, "props": keyProp};
       }
     }
 
     return false;
-  }
-  $$ );
+  };
+
+$$ );

@@ -83,7 +83,8 @@ regexp:true, undef:true, trailing:true, white:true */
         ]},
         {name: "data", fit: true, components: [
           {name: "name", classes: "xv-relationwidget-description hasLabel"},
-          {name: "description", classes: "xv-relationwidget-description hasLabel"},
+          {name: "description", ontap: "callPhone",
+            classes: "xv-relationwidget-description hasLabel hyperlink"},
           {name: "alternate", classes: "xv-relationwidget-description hasLabel"},
           {name: "fax", classes: "xv-relationwidget-description hasLabel"},
           {name: "primaryEmail", ontap: "sendMail",
@@ -144,6 +145,15 @@ regexp:true, undef:true, trailing:true, white:true */
     openWindow: function () {
       var address = this.value ? this.value.get('webAddress') : null;
       if (address) { window.open('http://' + address); }
+      return true;
+    },
+    callPhone: function () {
+      var phoneNumber = this.value ? this.value.get('phone') : null,
+        win;
+      if (phoneNumber) {
+        win = window.open('tel://' + phoneNumber);
+        win.close();
+      }
       return true;
     },
     sendMail: function () {
@@ -325,13 +335,15 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ItemSiteWidget",
     published: {
+      item: null,
+      site: null,
       sites: null,
-      selectedSite: null,
       attr: null,
       value: null,
       placeholder: null,
       disabled: false,
-      query: null
+      query: null,
+      isEditableKey: "item"
     },
     handlers: {
       "onValueChange": "controlValueChanged"
@@ -377,14 +389,15 @@ regexp:true, undef:true, trailing:true, white:true */
         sitePicker.itemSites.reset();
         sitePicker.buildList();
         if (value && value.get) {
-          this.setValue(value); // In case an id was transformed to a model
-          // Select the matching site
+          item = value.get("item");
           site = value.get("site");
-          this.setSelectedSite(site);
+          this.setValue({
+            item: item,
+            site: site
+          }); // In case an id was transformed to a model
           // Don't allow another selection until we've fetch an updated list
           sitePicker.setDisabled(true);
           // Go fetch alternate sites for this item
-          item = value.get("item");
           options.query = { parameters: [{attribute: "item", value: item}]};
           options.success = function () {
             sitePicker.buildList();
@@ -394,7 +407,7 @@ regexp:true, undef:true, trailing:true, white:true */
         }
         return true;
       } else if (inEvent.originator.name === 'sitePicker') {
-        this.setSelectedSite(value);
+        this.setValue({site: value});
         this.$.privateItemSiteWidget.setDisabled(isNull);
         if (isNull) {
           this.$.privateItemSiteWidget.clear();
@@ -429,6 +442,8 @@ regexp:true, undef:true, trailing:true, white:true */
       };
       this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
       this.$.sitePicker.filter = filter;
+      this.$.sitePicker.setShowing(XT.session.settings.get("MultiWhs"));
+      this._itemSites = new XM.ItemSiteRelationCollection();
       this.queryChanged();
     },
     /**
@@ -453,17 +468,43 @@ regexp:true, undef:true, trailing:true, white:true */
     removeParameter: function (attr) {
       this.$.privateItemSiteWidget.removeParameter(attr);
     },
-    /**
-      Pass through attributes intended for onyx input inside.
-      XXX is this necessary given disabledChanged function above?
-    */
     disabledChanged: function () {
       var isDisabled = this.getDisabled();
       this.$.privateItemSiteWidget.setDisabled(isDisabled);
       this.$.sitePicker.setDisabled(isDisabled);
     },
-    selectedSiteChanged: function () {
-      var site = this.getSelectedSite();
+
+    itemChanged: function () {
+      var item = this.getItem(),
+        site = this.getSite(),
+        options = {},
+        that = this;
+      if (item && site) {
+        options.query = {
+          parameters: [
+            {
+              attribute: "item",
+              value: item
+            },
+            {
+              attribute: "site",
+              value: site
+            }
+          ]
+        };
+        options.success = function () {
+          if (that._itemSites.length) {
+            that.$.privateItemSiteWidget.setValue(that._itemSites.at(0));
+          }
+        };
+        this._itemSites.fetch(options);
+      } else if (!item) {
+        this.$.privateItemSiteWidget.clear();
+      }
+    },
+    siteChanged: function () {
+      var site = this.getSite(),
+        item = this.getItem();
       this.$.sitePicker.setValue(site, {silent: true});
       if (site) {
         this.$.privateItemSiteWidget.addParameter({
@@ -473,23 +514,47 @@ regexp:true, undef:true, trailing:true, white:true */
       } else {
         this.$.privateItemSiteWidget.removeParameter("site");
       }
+      this.itemChanged();
     },
     validate: function (value) {
       return value;
     },
+    /**
+      This setValue function handles a value which is an
+      object potentially consisting of multiple key/value pairs for the
+      item and site controls.
+
+      @param {Object} Value
+      @param {Object} [value.item] Item
+      @param {Date} [value.site] Site
+    */
     setValue: function (value, options) {
       options = options || {};
-      var oldValue = this.getValue(),
-        inEvent,
-        site;
-      if (oldValue !== value) {
-        this.value = value;
-        site = value && value.get ? value.get("site") : undefined;
-        this.$.privateItemSiteWidget.setValue(value);
-        inEvent = { value: value };
-        if (!options.silent) { this.doValueChange(inEvent); }
+      var attr = this.getAttr(),
+        changed = {},
+        keys = _.keys(value),
+        key,
+        set,
+        i;
+
+      // Loop through the properties and update calling
+      // appropriate "set" functions and add to "changed"
+      // object if applicable
+      for (i = 0; i < keys.length; i++) {
+        key = keys[i];
+        set = 'set' + key.slice(0, 1).toUpperCase() + key.slice(1);
+        this[set](value[key]);
+        if (attr[key]) {
+          changed[attr[key]] = value[key];
+          this[key + 'Changed']();
+        }
       }
-    }
+
+      // Bubble changes if applicable
+      if (!_.isEmpty(changed) && !options.silent) {
+        this.doValueChange({value: changed});
+      }
+    },
   });
 
   // ..........................................................
@@ -526,6 +591,18 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     collection: "XM.ProjectRelationCollection",
     list: "XV.ProjectList"
+  });
+
+  // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.SalesOrderListItemCollection",
+    keyAttribute: "number",
+    list: "XV.SalesOrderList"
   });
 
   // ..........................................................

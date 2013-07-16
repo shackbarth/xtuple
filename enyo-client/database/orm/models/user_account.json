@@ -55,6 +55,7 @@
     "nameSpace": "XM",
     "type": "Privilege",
     "table": "priv",
+    "isRest": true,
     "comment": "Privilege Map",
     "privileges": {
       "all": {
@@ -96,6 +97,7 @@
     "nameSpace": "XM",
     "type": "Locale",
     "table": "locale",
+    "isRest": true,
     "idSequenceName": "locale_locale_id_seq",
     "comment": "Locale Map",
     "privileges": {
@@ -415,6 +417,7 @@
     "nameSpace": "XM",
     "type": "UserAccountRelation",
     "table": "xt.usrinfo",
+    "isRest": true,
     "comment": "User Account Relation Map",
     "privileges": {
       "all": {
@@ -522,6 +525,7 @@
     "nameSpace": "XM",
     "type": "UserAccountRole",
     "table": "grp",
+    "isRest": true,
     "idSequenceName": "grp_grp_id_seq",
     "comment": "User Account Role Map",
     "privileges": {

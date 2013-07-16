@@ -1,17 +1,20 @@
 select xt.create_view('xt.coiteminfo', $$
 
 select coitem.*,
+  itemsite_item_id as coitem_item_id,
+  itemsite_warehous_id as coitem_warehous_id,
   xt.co_line_base_price(coitem) as base_price,
   xt.co_line_markup(coitem) as markup,
   xt.co_line_list_price(coitem) as list_price,
   xt.co_line_list_price_discount(coitem) as list_price_discount,
   xt.co_line_customer_discount(coitem) as cust_discount,
   xt.co_line_extended_price(coitem) as ext_price, 
+  xt.co_line_ship_balance(coitem) as ship_balance,
+  xt.co_line_at_shipping(coitem) as at_shipping,
   xt.co_line_margin(coitem) as margin,
   xt.co_line_tax(coitem) as tax
 from coitem
-  left join itemsite on coitem_itemsite_id=itemsite_id 
-  left join item on itemsite_item_id=item_id;
+  join itemsite on coitem_itemsite_id=itemsite_id;
 
 $$, false);
 
@@ -59,7 +62,7 @@ insert into coitem (
   new.coitem_id,
   new.coitem_cohead_id,
   new.coitem_linenumber,
-  new.coitem_itemsite_id,
+  itemsite_id,
   new.coitem_scheddate,
   new.coitem_qtyord,
   coalesce(new.coitem_unitcost, itemcost(itemsite_id)),
@@ -88,13 +91,14 @@ insert into coitem (
   coalesce(new.coitem_creator, geteffectivextuser()),
   new.coitem_warranty,
   new.coitem_cos_accnt_id,
-  COALESCE(new.coitem_qtyreserved, 0),
+  coalesce(new.coitem_qtyreserved, 0),
   new.coitem_subnumber,
   new.coitem_firm,
   new.coitem_rev_accnt_id,
-  new.coitem_pricemode
+  coalesce(new.coitem_pricemode, 'D')
 from itemsite
-where itemsite_id=new.coitem_itemsite_id;
+where itemsite_item_id=new.coitem_item_id
+  and itemsite_warehous_id=new.coitem_warehous_id;
 
 create or replace rule "_UPDATE" as on update to xt.coiteminfo do instead
 

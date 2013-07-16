@@ -20,6 +20,7 @@ var lang = XT.stringsFor("en_US", {
   "_allowFreeFormShiptos": "Allow Free Form Ship-Tos",
   "_autoAllocateCreditMemos": "Allocate Credit Memos to New Sales Order on Save",
   "_autoSelectForBilling": "Check 'Select for Billing' option on Ship Order",
+  "_bookings": "Bookings",
   "_convert": "Convert",
   "_creditControl": "Credit Control",
   "_creditMemo": "Credit Memo",
@@ -34,6 +35,7 @@ var lang = XT.stringsFor("en_US", {
   "_doNotUpdate": "Do Not Update",
   "_enableSOShipping": "Enable Shipping Interface from Sales Order screen",
   "_firmSalesOrdersWhenAddedToPackingList": "Firm Sales Orders when added to Packing List Batch",
+  "_fiveYears": "Five Years",
   "_freightPricing": "Freight Pricing",
   "_hideSOMiscCharge": "Hide Misc. Charge on Sales Order screen",
   "_ignoreIfDiscounted": "Ignore if Discounted",
@@ -64,8 +66,10 @@ var lang = XT.stringsFor("en_US", {
   "_thisMonth": "This Month",
   "_thisYear": "This Year",
   "_timeFrame": "Time Frame",
+  "_twoYears": "Two Years",
   "_today": "Today",
   "_update": "Update",
   "_useCalculatedFreightPricing": "Use calculated Freight values by default",
-  "_usePromiseDates": "Enable Promise Dates"
+  "_usePromiseDates": "Enable Promise Dates",
+  "_viewSalesHistory": "View Sales History"
 });

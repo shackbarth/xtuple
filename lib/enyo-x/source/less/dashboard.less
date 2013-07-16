@@ -1,0 +1,76 @@
+
+/*
+  Styles relating to the dashboard
+*/
+
+/*
+  Variables for widths/colors
+*/
+@tile-width: 500px;
+@tile-height: 230px;
+@picker-label: 100px;
+@bottom-border: #444;
+@icon-height: 32px;
+
+.dashboard {
+  background-color: @gray;
+
+  .charts-panels {
+    overflow-y: auto;
+  }
+
+  /*
+    These styles will only be used
+    if the chart is in a dashboard
+  */
+  .selectable-chart {
+    width: @tile-width;
+    height: @tile-height;
+
+    .chart-title-bar {
+      width: @tile-width;
+    }
+  }
+}
+
+.selectable-chart {
+  margin: 10px;
+  color: @white;
+  overflow: hidden;
+
+  .chart-title-bar {
+    height: @icon-height;
+    background-color: @dark-gray;
+    .border-top-radius(10px);
+
+    .chart-title {
+      padding-top: 8px;
+      text-align: center;
+    }
+
+    .remove-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+
+  .chart-bottom {
+    background-color: @charcoal;
+    border: 1px solid @bottom-border;
+    border-top: none;
+    .border-bottom-radius(10px);
+    .xv-picker-label {
+      width: @picker-label;
+      color: @white;
+    }
+    .onyx-button {
+      width: 130px;
+    }
+  }
+
+}
+
+.menu-icon {
+  margin-left: 15px;
+}

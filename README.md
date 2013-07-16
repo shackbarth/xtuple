@@ -17,7 +17,7 @@ To install this project, first fork this repo onto your own github account and c
 
 Then run:
 
-    cd xtuple/scripts
+    cd scripts
     sudo ./install_xtuple.sh
 
 This will take a while. Then, to start the datasource, run

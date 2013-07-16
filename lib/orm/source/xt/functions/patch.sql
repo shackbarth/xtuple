@@ -10,6 +10,37 @@
     @param {Object} [dataHash.lock] Lock information for pessemistic locking.
     @param {Number} [dataHash.lock.key] Lock key for pessemistic locking.
     @param {String} [dataHash.encryptionKey] Encryption key.
+
+    Sample usage:
+    select xt.js_init();
+    select xt.patch('{
+      "username": "admin",
+      "nameSpace":"XM",
+      "type": "Contact",
+      "id": "99999",
+      "etag": "5972fbbf-416d-43c8-9fd5-b30093093897",
+      "patches": [
+        {
+          "op":"replace",
+          "path":"/firstName",
+          "value":"Damien"
+        }
+        ,
+        {
+          "op": "add",
+          "path": "/comments/3",
+          "value": {
+            "uuid": "bb5a834a-b816-481c-ab17-0637a999b511",
+            "commentType": "General",
+            "text": "Get back to where you once belong.",
+            "isPublic": false,
+            "created": "2013-04-26T12:57:57.896Z",
+            "createdBy": "admin"
+          }
+        }
+      ],
+      "prettyPrint": true
+    }');
 */
 create or replace function xt.patch(data_hash text) returns text as $$
   try {
@@ -63,34 +94,3 @@ create or replace function xt.patch(data_hash text) returns text as $$
 
 $$ language plv8;
 
-/*
-select xt.js_init();
-select xt.patch('{
-  "username": "admin",
-  "nameSpace":"XM",
-  "type": "Contact",
-  "id": "99999",
-  "etag": "5972fbbf-416d-43c8-9fd5-b30093093897",
-  "patches": [
-    {
-      "op":"replace",
-      "path":"/firstName",
-      "value":"Damien"
-    }
-    ,
-    {
-      "op": "add",
-      "path": "/comments/3",
-      "value": {
-        "uuid": "bb5a834a-b816-481c-ab17-0637a999b511",
-        "commentType": "General",
-        "text": "Get back to where you once belong.",
-        "isPublic": false,
-        "created": "2013-04-26T12:57:57.896Z",
-        "createdBy": "admin"
-      }
-    }
-  ],
-  "prettyPrint": true
-}');
-*/

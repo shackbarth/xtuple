@@ -11,6 +11,28 @@ white:true*/
 
     @extends XM.SimpleModel
   */
+  SYS.ClientCodeRelation = XM.SimpleModel.extend({
+
+    recordType: 'SYS.ClientCodeRelation'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  SYS.ClientCode = XM.SimpleModel.extend({
+
+    recordType: 'SYS.ClientCode'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
   SYS.Extension = XM.SimpleModel.extend({
 
     recordType: 'SYS.Extension'
@@ -108,6 +130,17 @@ white:true*/
   // ..........................................................
   // COLLECTIONS
   //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  SYS.ClientCodeRelationCollection = XM.Collection.extend({
+
+    model: SYS.ClientCodeRelation
+
+  });
 
   /**
     @class

@@ -201,15 +201,108 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "SiteZoneRelation",
+    "table": "whsezone",
+    "isRest": true,
+    "comment": "Site Zone List Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "whsezone_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "whsezone_warehous_id"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "whsezone_name",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "whsezone_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SiteZone",
+    "table": "whsezone",
+    "idSequenceName": "whsezone_whsezone_id_seq",
+    "lockable": true,
+    "comment": "Site Zone Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "whsezone_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "site",
+        "attr": {
+          "type": "Number",
+          "column": "whsezone_warehous_id"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "whsezone_name",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "whsezone_descrip"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "SiteListItem",
     "table": "xt.site",
+    "isRest": true,
     "comment": "Site Info Map",
     "privileges": {
       "all": {
-        "create": "MaintainWarehouses",
-        "read": "ViewWarehouses",
-        "update": "MaintainWarehouses",
-        "delete": "MaintainWarehouses"
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -258,13 +351,14 @@
     "nameSpace": "XM",
     "type": "SiteRelation",
     "table": "xt.site",
+    "isRest": true,
     "comment": "Site Info Map",
     "privileges": {
       "all": {
-        "create": "MaintainWarehouses",
-        "read": "ViewWarehouses",
-        "update": "MaintainWarehouses",
-        "delete": "MaintainWarehouses"
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -313,6 +407,7 @@
     "nameSpace": "XM",
     "type": "SiteType",
     "table": "sitetype",
+    "isRest": true,
     "idSequenceName": "sitetype_sitetype_id_seq",
     "lockable": true,
     "comment": "Site Type Map",

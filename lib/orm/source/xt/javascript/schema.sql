@@ -107,7 +107,9 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     res = plv8.execute(sql, [schema, table]);
 
-    if (!res.length) return false;
+    if (!res.length) {
+      return false;
+    }
 
     for (var i = 0; i < res.length; i++) {
       ret[res[i].column_name] = {};
@@ -244,13 +246,12 @@ select xt.install_js('XT','Schema','xtuple', $$
           break;
         default:
           throw new Error("Unsupported datatype format. No known conversion from PostgreSQL to JSON-Schema.");
-          break;
       }
     }
 
     /* return the results */
     return ret;
-  }
+  };
 
   /**
    * Return a JSON-Schema for an ORM to be used for an API Discovery Service
@@ -262,12 +263,16 @@ select xt.install_js('XT','Schema','xtuple', $$
   XT.Schema.getProperties = function(orm) {
     /* Load ORM if this function was called with just orm.nameSpace and orm.type. */
     orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type, {"silentError": true});
-    if (!orm || !orm.properties) return false;
+    if (!orm || !orm.properties) {
+      return false;
+    }
 
     var columns = [],
         ext = {},
-        extTables = [],
+        nkey = XT.Orm.naturalKey(orm),
+        pkey = XT.Orm.primaryKey(orm),
         ret = {},
+        relatedSchema = {},
         schemaColumnInfo = {},
         schemaTable = orm.table;
 
@@ -289,6 +294,16 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     /* Loop through the ORM properties and get the columns. */
     for (var i = 0; i < orm.properties.length; i++) {
+      /* Skip primaryKey if there is a natualKey that's a different property. */
+      if (nkey && orm.properties[i].name === pkey && orm.properties[i].name !== nkey) {
+        continue;
+      }
+
+      /* Skip this property if it has a attr.value. Those are just used for relation associaiton queries. */
+      if (orm.properties[i].attr && orm.properties[i].attr.value) {
+        continue;
+      }
+
       if (!ret.properties) {
         /* Initialize properties. */
         ret.properties = {};
@@ -296,9 +311,9 @@ select xt.install_js('XT','Schema','xtuple', $$
 
       /* Add title and description properties. */
       /* For readability only, title should be first, therefore a redundant if. */
-      if ((orm.properties[i].attr && orm.properties[i].attr.column)
-        || (orm.properties[i].toOne)
-        || (orm.properties[i].toMany)) {
+      if ((orm.properties[i].attr && orm.properties[i].attr.column) ||
+        (orm.properties[i].toOne) ||
+        (orm.properties[i].toMany)) {
 
         /* Initialize named properties. */
         ret.properties[orm.properties[i].name] = {};
@@ -322,17 +337,30 @@ select xt.install_js('XT','Schema','xtuple', $$
           ret.properties[orm.properties[i].name].required = true;
         }
 
-        /* Add primary key flag. This isn't part of JSON-Schema, but very useful for URIs. */
-        /* example.com/resource/{primaryKey} */
+        /* Add key flag. This isn't part of JSON-Schema, but very useful for URIs. */
+        /* example.com/resource/{key} */
         /* JSON-Schema allows for additional custom properites like this. */
-        if (orm.properties[i].attr.isPrimaryKey) {
-          ret.properties[orm.properties[i].name].isPrimaryKey = true;
+        if (nkey && orm.properties[i].name === nkey) {
+          ret.properties[orm.properties[i].name].isKey = true;
+        } else if (!nkey && orm.properties[i].name === pkey) {
+          ret.properties[orm.properties[i].name].isKey = true;
         }
       }
       /* toOne property */
       else if (orm.properties[i].toOne) {
-        ret.properties[orm.properties[i].name].type = "object";
-        ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
+        if (orm.properties[i].toOne.isNested) {
+          ret.properties[orm.properties[i].name].type = "object";
+          ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
+        } else {
+          /* Fetch the related ORM's JSON-Schema and use it's key's type. */
+          /* TODO: Assuming "XM" here... */
+          relatedSchema = XT.Schema.getProperties({"nameSpace": "XM", "type": orm.properties[i].toOne.type});
+          for (var prop in relatedSchema.properties) {
+            if (relatedSchema.properties[prop].isKey) {
+              ret.properties[orm.properties[i].name].type = relatedSchema.properties[prop].type;
+            }
+          }
+        }
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].toOne.required) {
@@ -360,7 +388,7 @@ select xt.install_js('XT','Schema','xtuple', $$
     }
 
     /* Assign column attributes. */
-    var schemaColumnInfo = XT.Schema.columnInfo(schemaTable, columns);
+    schemaColumnInfo = XT.Schema.columnInfo(schemaTable, columns);
 
     /* Add in extension table column properties. */
     for (var tableName in ext) {
@@ -384,7 +412,7 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     /* return the results */
     return ret;
-  }
+  };
 
   /**
    * Return an array of requiredAttributes or columns that can not be NULL for an ORM.
@@ -401,7 +429,9 @@ select xt.install_js('XT','Schema','xtuple', $$
         schemaColumnInfo = {},
         ret = [];
 
-    if (!orm.properties) return false;
+    if (!orm.properties) {
+      return false;
+    }
 
     /* Loop through the ORM properties and get the columns. */
     for (var i = 0; i < orm.properties.length; i++) {
@@ -437,7 +467,7 @@ select xt.install_js('XT','Schema','xtuple', $$
     }
 
     /* Get required from the returned schemaColumnInfo properties. */
-    var schemaColumnInfo = XT.Schema.columnInfo(schemaTable, columns);
+    schemaColumnInfo = XT.Schema.columnInfo(schemaTable, columns);
 
     for (var i = 0; i < orm.properties.length; i++) {
       /* Basic properties only. */
@@ -450,10 +480,12 @@ select xt.install_js('XT','Schema','xtuple', $$
     }
 
     /* If this ORM has no column properties, we have an empty object, return false. */
-    if (!ret.length > 0) return false;
+    if (!ret.length > 0) {
+      return false;
+    }
 
     /* return the results */
     return ret;
-  }
+  };
 
 $$ );

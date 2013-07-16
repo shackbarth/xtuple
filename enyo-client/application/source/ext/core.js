@@ -187,7 +187,7 @@ white:true*/
     */
     defaultSite: function () {
       // TODO: Pick up default site based on user preference
-      return _.find(XM.sites.models, function (site) {
+      return _.find(XM.siteRelations.models, function (site) {
         return site.get("isActive");
       });
     },

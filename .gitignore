@@ -6,6 +6,10 @@
 node_modules
 npm-debug.log
 scripts/private
+scripts/lib/temp_query*
 scripts/1
-scripts/build
-scripts/deploy
+scripts/lib/build
+scripts/lib/deploy
+scripts/lib/package.js
+test/mocha/lib/demo-test.backup
+test/shared/login_data.js

@@ -336,6 +336,7 @@ var lang = XT.stringsFor("en_US", {
   "_manager": "Manager",
   "_mainAddress": "Main Address",
   "_manufactured": "Manufactured",
+  "_map": "Map",
   "_margin": "Margin",
   "_markup": "Markup",
   "_mask": "Mask",

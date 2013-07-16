@@ -8,7 +8,7 @@ white:true*/
 
   XT.extensions.crm = {
     setVersion: function () {
-      XT.setVersion("1.3.8", "crm");
+      XT.setVersion("1.4.0", "crm");
     }
   };
 

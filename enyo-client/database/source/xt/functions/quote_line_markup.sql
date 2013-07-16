@@ -9,4 +9,4 @@ create or replace function xt.quote_line_markup(quitem) returns numeric stable a
   from item, quhead
   where item_id=$1.quitem_item_id
    and quhead_id=$1.quitem_quhead_id;
-$$ language sql
+$$ language sql;

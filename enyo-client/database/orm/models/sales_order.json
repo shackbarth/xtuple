@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "SalesOrder",
     "table": "xt.coheadinfo",
+    "isRest": true,
     "lockable": true,
     "lockTable": "cohead",
     "idSequenceName": "cohead_cohead_id_seq",
@@ -1055,11 +1056,20 @@
         }
       },
       {
-        "name": "itemSite",
+        "name": "item",
         "toOne": {
           "isNested": true,
-          "type": "ItemSiteRelation",
-          "column": "coitem_itemsite_id",
+          "type": "ItemRelation",
+          "column": "coitem_item_id",
+          "required": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "coitem_warehous_id",
           "required": true
         }
       },
@@ -1267,7 +1277,8 @@
         }
       }
     ],
-    "isSystem": true
+    "isSystem": true,
+    "isNestedOnly": true
   },
   {
     "context": "xtuple",
@@ -1441,6 +1452,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderListItem",
     "table": "xt.coheadinfo",
+    "isRest": true,
     "comment": "Sales Order List Item Map",
     "privileges": {
       "all": {
@@ -1528,8 +1540,9 @@
         "name": "salesRep",
         "toOne": {
           "type": "SalesRep",
-          "column": "cohead_salesrep_id"
-        }
+          "column": "cohead_salesrep_id",
+	  			"isNested": true
+         }
       },
       {
         "name": "shiptoName",
@@ -1567,6 +1580,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderRelation",
     "table": "xt.coheadinfo",
+    "isRest": true,
     "comment": "Sales Order Relation Map",
     "privileges": {
       "all": {

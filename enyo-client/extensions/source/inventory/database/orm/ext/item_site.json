@@ -1,0 +1,230 @@
+[
+  {
+    "context": "inventory",
+    "nameSpace": "XM",
+    "type": "ItemSite",
+    "table": "itemsite",
+    "isExtension": true,
+    "comment": "Extended by Inventory",
+    "relations": [
+      {
+        "column": "itemsite_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "controlMethod",
+        "attr": {
+          "type": "String",
+          "column": "itemsite_controlmethod",
+          "required": true
+        }
+      },
+      {
+        "name": "costMethod",
+        "attr": {
+          "type": "String",
+          "column": "itemsite_costmethod",
+          "required": true
+        }
+      },
+      {
+        "name": "leadTime",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_leadtime",
+          "required": true
+        }
+      },
+      {
+        "name": "abcClass",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_abcclass"
+        }
+      },
+      {
+        "name": "automaticAbcClassUpdates",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_autoabcclass",
+          "required": true
+        }
+      },
+      {
+        "name": "cycleCountFrequency",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_cyclecountfreq",
+          "required": true
+        }
+      },
+      {
+        "name": "issueMethod",
+        "attr": {
+          "type": "String",
+          "column": "itemsite_issuemethod",
+          "required": true
+        }
+      },
+      {
+        "name": "stocked",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_stocked",
+          "required": true
+        }
+      },
+      {
+        "name": "safetyStock",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_safetystock",
+          "required": true
+        }
+      },
+      {
+        "name": "useParameters",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_useparams",
+          "required": true
+        }
+      },
+      {
+        "name": "reorderLevel",
+        "attr": {
+         "type": "Number",
+         "column": "itemsite_reorderLevel"
+        }
+      },
+      {
+        "name": "orderToQuantity",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_ordertoqty"
+        }
+      },
+      {
+        "name": "minimumOrderQuantity",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_minordqty"
+        }
+      },
+      {
+        "name": "multipleOrderQuantity",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_multordqty"
+        }
+      },
+      {
+        "name": "maximumOrderQuantity",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_maxordqty"
+        }
+      },
+      {
+        "name": "locationControl",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_loccntrl"
+        }
+      },
+      {
+        "name": "receiveLocation",
+        "toOne": {
+          "type": "Location",
+          "column": "itemsite_recvlocation_id"
+        }
+      },
+      {
+        "name": "receiveLocationAuto",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_recvlocation_dist"
+        }
+      },
+      {
+        "name": "stockLocation",
+        "toOne": {
+          "type": "Location",
+          "column": "itemsite_location_id"
+        }
+      },
+      {
+        "name": "stockLocationAuto",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_location_dist"
+        }
+      },
+      {
+        "name": "issueLocation",
+        "toOne": {
+          "type": "Location",
+          "column": "itemsite_issuelocation_id"
+        }
+      },
+      {
+        "name": "issueLocationAuto",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_issuelocation_dist"
+        }
+      },
+      {
+        "name": "userDefinedLocation",
+        "attr": {
+          "type": "String",
+          "column": "itemsite_location"
+        }
+      },
+      {
+        "name": "locationComment",
+        "attr": {
+          "type": "String",
+          "column": "itemsite_location_comments"
+        }
+      },
+      {
+        "name": "restrictedLoctionsAllowed",
+        "toMany": {
+          "isNested": true,
+          "type": "ItemSiteLocation",
+          "column": "itemsite_id",
+          "inverse": "itemSite"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "inventory",
+    "nameSpace": "XM",
+    "type": "ItemSiteListItem",
+    "table": "itemsite",
+    "isExtension": true,
+    "comment": "Extended by Inventory",
+    "relations": [
+      {
+        "column": "itemsite_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "quantityOnHand",
+        "attr": {
+          "type": "String",
+          "column": "itemsite_qtyonhand",
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

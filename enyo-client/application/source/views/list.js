@@ -17,6 +17,7 @@ trailing:true, white:true*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    allowPrint: true,
     parameterWidget: "XV.AccountListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -25,7 +26,7 @@ trailing:true, white:true*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "primaryContact.phone", fit: true,
-                classes: "right"}
+                ontap: "callPhone", classes: "right hyperlink"}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
@@ -41,6 +42,16 @@ trailing:true, white:true*/
         ]}
       ]}
     ],
+    callPhone: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        phoneNumber = model ? model.getValue('primaryContact.phone') : null,
+        win;
+      if (phoneNumber) {
+        win = window.open('tel://' + phoneNumber);
+        win.close();
+      }
+      return true;
+    },
     sendMail: function (inSender, inEvent) {
       var model = this.getModel(inEvent.index),
         email = model ? model.getValue('primaryContact.primaryEmail') : null,
@@ -184,6 +195,7 @@ trailing:true, white:true*/
       {attribute: 'firstName'},
       {attribute: 'primaryEmail'}
     ]},
+    allowPrint: true,
     parameterWidget: "XV.ContactListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -196,7 +208,8 @@ trailing:true, white:true*/
                 {kind: "XV.ListAttr", attr: "lastName", fit: true,
                   style: "padding-left: 0px;", isKey: true}
               ]},
-              {kind: "XV.ListAttr", attr: "phone", fit: true, classes: "right"}
+              {kind: "XV.ListAttr", attr: "phone", ontap: "callPhone",
+                classes: "right hyperlink", fit: true}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "jobTitle",
@@ -226,6 +239,16 @@ trailing:true, white:true*/
         view.addRemoveClass("hyperlink", true);
       }
       return value;
+    },
+    callPhone: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        phoneNumber = model ? model.getValue('phone') : null,
+        win;
+      if (phoneNumber) {
+        win = window.open('tel://' + phoneNumber);
+        win.close();
+      }
+      return true;
     },
     sendMail: function (inSender, inEvent) {
       var model = this.getModel(inEvent.index),
@@ -309,6 +332,7 @@ trailing:true, white:true*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    allowPrint: true,
     parameterWidget: "XV.CustomerListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -682,6 +706,7 @@ trailing:true, white:true*/
       {attribute: 'updated', descending: true},
       {attribute: 'number', descending: true, numeric: true}
     ]},
+    allowPrint: true,
     toggleSelected: false,
     parameterWidget: "XV.IncidentListParameters",
     components: [
@@ -960,6 +985,7 @@ trailing:true, white:true*/
       {attribute: 'name'},
       {attribute: 'number', numeric: true}
     ]},
+    allowPrint: true,
     label: "_opportunities".loc(),
     parameterWidget: "XV.OpportunityListParameters",
     components: [
@@ -1013,6 +1039,7 @@ trailing:true, white:true*/
     }
   });
 
+  XV.registerModelList("XM.OpportunityListItem", "XV.OpportunityList");
   XV.registerModelList("XM.OpportunityRelation", "XV.OpportunityList");
 
   // ..........................................................
@@ -1233,6 +1260,7 @@ trailing:true, white:true*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    allowPrint: true,
     parameterWidget: "XV.ProspectListParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -1309,6 +1337,7 @@ trailing:true, white:true*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    allowPrint: true,
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -1802,6 +1831,7 @@ trailing:true, white:true*/
       {attribute: 'dueDate'},
       {attribute: 'name'}
     ]},
+    allowPrint: true,
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
