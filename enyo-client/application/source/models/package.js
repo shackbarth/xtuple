@@ -28,5 +28,6 @@ enyo.depends(
   "to_do.js",
   "url.js",
   "user_account.js",
+  "user_chart.js",
   "static.js"
 );
