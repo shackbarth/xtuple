@@ -115,6 +115,15 @@
     "type": "LocationRelation",
     "table": "location",
     "comment": "Location Relation Map",
+    "isRest": true,
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
     "properties": [
       {
         "name": "id",
@@ -168,7 +177,6 @@
         }
       }
     ],
-    "isNestedOnly": true,
     "isSystem": true
   },
   {
