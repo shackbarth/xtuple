@@ -6,15 +6,30 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.extensions.inventory.initShipmentModels = function () {
+  XT.extensions.inventory.initLocationModels = function () {
 
     /**
       @class
 
       @extends XM.Model
     */
-    XM.Shipment = XM.Document.extend({
-      recordType: "XM.Shipment"
+    XM.Location = XM.Model.extend({
+      
+      recordType: "XM.Location"
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Info
+    */
+    XM.LocationRelation = XM.Model.extend({
+      
+      recordType: "XM.LocationRelation",
+
+      editableModel: "XM.Location"
+
     });
 
     // ..........................................................
@@ -26,8 +41,10 @@ white:true*/
 
       @extends XM.Collection
     */
-    XM.ShipmentCollection = XM.Collection.extend({
-      model: XM.Shipment
+    XM.LocationRelationCollection = XM.Collection.extend({
+
+      model: XM.LocationRelation
+      
     });
 
   };

@@ -80,6 +80,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       sql = "select itemlocdist_id, " + 
         " invhist_id, " +
         " invhist_invqty, " +
+        " invhistsense(invhist_id) as sense, " +
         " itemsite_id, " +
         " itemsite_controlmethod, " +
         " itemsite_loccntrl " +
@@ -99,7 +100,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
       /* Validate quantity */
       for (i = 0; i < detail.length; i++) {
-        qty += detail[i].quantity; 
+        qty += detail[i].quantity;
+        detail[i].quantity = detail[i].quantity * info.sense; /* Fix the nonsense */
       }
       
       if (qty != info.invhist_invqty) {
@@ -304,14 +306,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {String} Order line uuid
     @param {Number} Quantity
     @param {Date}   [options.asOf=now()] Transaction Timestamp
-    @param {String} [options.type="SO"] Type
     @param {Array} [options.detail] Distribution detail
   */
   XM.Inventory.issueToShipping = function (orderLine, quantity, options) {
     options = options || {};
     var  asOf = options.asOf || null,
-      prefix = options.type && options.type === 'TO' ? 'to' : 'co',
-      type = options.type && options.type === 'TO' ? 'TO' : 'SO',
       series,
       sql;
 
@@ -319,9 +318,9 @@ select xt.install_js('XM','Inventory','xtuple', $$
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401) };
 
     /* Post the transaction */
-    sql = "select issuetoshipping($1, " + prefix + "item_id, $3, 0, $4::timestamptz, null) as series " +
-      "from " + prefix + "item where obj_uuid = $2;",
-    series = plv8.execute(sql, [type, orderLine, quantity, asOf])[0].series;
+    sql = "select issuetoshipping('SO', coitem_id, $2, 0, $3::timestamptz) as series " +
+      "from coitem where obj_uuid = $1;",
+    series = plv8.execute(sql, [orderLine, quantity, asOf])[0].series;
 
     /* Distribute detail */
     XM.PrivateInventory.distribute(series, options.detail);
@@ -329,6 +328,32 @@ select xt.install_js('XM','Inventory','xtuple', $$
     return;
   };
 
+  /**
+    Return shipment transactions.
+    
+      select xt.post('{
+        "username": "admin",
+        "nameSpace":"XM",
+        "type":"Inventory",
+        "dispatch":{
+          "functionName":"returnFromShipping",
+          "parameters":["95c30aba-883a-41da-e780-1d844a1dc112"]
+        }
+      }');
+  
+    @param {String} Order line uuid
+  */
+  XM.Inventory.returnFromShipping = function (orderLine) {
+    var sql = "select returnitemshipments(coitem_id) from coitem where obj_uuid = $1;";
+
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401) };
+
+    /* Post the transaction */
+    plv8.execute(sql, [orderLine])[0].series;
+
+    return;
+  };
 
   XM.Inventory.options = [
 		"DefaultEventFence",    

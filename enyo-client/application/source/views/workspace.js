@@ -1,4 +1,4 @@
-/*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+q/*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true */
 
@@ -1040,7 +1040,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
               label: "_category".loc()},
             {kind: "XV.SalesPriceWidget", attr: "listPrice"},
-            {kind: "XV.SalesPriceWidget", attr: "wholesalePrice"},
             {kind: "XV.UnitPicker", attr: "priceUnit"},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader",
@@ -2334,16 +2333,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         ]}
       ]}
     ],
-    /**
-      Ensure that the passwordCheck field is wiped out. This would not happen otherwise
-      because it's not an attribute of the model.
-     */
-    attributesChanged: function (model, options) {
-      this.inherited(arguments);
-      if (this.value.getStatus() === XM.Model.READY_CLEAN) {
-        this.$.passwordCheck.setValue("");
-      }
-    },
     /**
       The passwordCheck field is not on the model. Pipe to a hidden field.
      */

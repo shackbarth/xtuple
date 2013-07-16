@@ -147,20 +147,6 @@
           "type": "Quantity",
           "column": "at_shipping"
         }
-      },
-      {
-        "name": "toIssue",
-        "attr": {
-          "type": "Quantity",
-          "column": "to_issue"
-        }
-      },
-      {
-        "name": "return",
-        "attr": {
-          "type": "Boolean",
-          "column": "return"
-        }
       }
 	  ],
     "isNestedOnly": true,
