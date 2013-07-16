@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "TaxAssignment",
     "table": "taxass",
+    "isRest": true,
     "idSequenceName": "taxass_taxass_id_seq",
     "comment": "Tax Assignment Map",
     "privileges": {
@@ -61,6 +62,7 @@
     "nameSpace": "XM",
     "type": "TaxAuthority",
     "table": "taxauth",
+    "isRest": true,
     "idSequenceName": "taxauth_taxauth_id_seq",
     "orderSequence": "CRMAccountNumber",
     "comment": "Tax Authority Map",
@@ -157,6 +159,7 @@
     "nameSpace": "XM",
     "type": "TaxAuthorityRelation",
     "table": "taxauth",
+    "isRest": true,
     "comment": "Tax Authority Relation",
     "privileges": {
       "all": {
@@ -199,6 +202,7 @@
     "nameSpace": "XM",
     "type": "TaxClass",
     "table": "taxclass",
+    "isRest": true,
     "idSequenceName": "taxclass_taxclass_id_seq",
     "comment": "Tax Class Map",
     "privileges": {
@@ -248,6 +252,7 @@
     "nameSpace": "XM",
     "type": "TaxCode",
     "table": "tax",
+    "isRest": true,
     "idSequenceName": "tax_tax_id_seq",
     "comment": "Tax Code Map",
     "privileges": {
@@ -311,6 +316,7 @@
     "nameSpace": "XM",
     "type": "TaxRate",
     "table": "taxrate",
+    "isRest": true,
     "idSequenceName": "taxrate_taxrate_id_seq",
     "comment": "Tax Rate Map",
     "privileges": {
@@ -394,6 +400,7 @@
     "nameSpace": "XM",
     "type": "TaxType",
     "table": "taxtype",
+    "isRest": true,
     "idSequenceName": "taxtype_taxtype_id_seq",
     "comment": "Tax Zone Map",
     "privileges": {
@@ -443,6 +450,7 @@
     "nameSpace": "XM",
     "type": "TaxZone",
     "table": "taxzone",
+    "isRest": true,
     "idSequenceName": "taxzone_taxzone_id_seq",
     "comment": "Tax Zone Map",
     "privileges": {

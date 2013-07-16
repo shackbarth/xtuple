@@ -324,6 +324,7 @@
     "nameSpace":"XM",
     "type":"AccountAddressListItem",
     "table":"xt.crmacctaddr",
+    "isRest":true,
     "comment":"Account Address List Item Map",
     "privileges":{
       "all":{
@@ -786,6 +787,7 @@
     "nameSpace":"XM",
     "type":"AccountRelation",
     "table":"crmacct",
+    "isRest":true,
     "comment":"Account Relation Map",
     "privileges":{
       "all":{
@@ -852,6 +854,7 @@
     "nameSpace":"XM",
     "type":"AccountListItem",
     "table":"crmacct",
+    "isRest":true,
     "comment":"Account List Item Map",
     "privileges":{
       "all":{

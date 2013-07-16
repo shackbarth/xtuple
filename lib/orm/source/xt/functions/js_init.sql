@@ -415,7 +415,8 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     sql = 'select js_type, js_text as "javascript" '
         + 'from xt.js '
         + 'where js_active '
-        + 'order by js_ext ';
+        + 'order by js_ext, '
+        + 'js_context = \'xtuple\' DESC';
     res = plv8.execute(sql);
     if(res.length) {
       for(var i = 0; i < res.length; i++) {

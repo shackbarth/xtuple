@@ -540,6 +540,7 @@
     "nameSpace": "XM",
     "type": "ProjectRelation",
     "table": "xt.prjinfo",
+    "isRest": true,
     "comment": "Project Relation Map",
     "privileges": {
       "all": {
@@ -709,6 +710,7 @@
     "nameSpace": "XM",
     "type": "TaskRelation",
     "table": "prjtask",
+    "isRest": true,
     "comment": "Project Task Relation Map",
     "privileges": {
      "all": {
@@ -772,6 +774,7 @@
     "nameSpace": "XM",
     "type": "ProjectListItem",
     "table": "xt.prjinfo",
+    "isRest": true,
     "comment": "Project List Item Map",
     "privileges": {
       "all": {
@@ -1386,6 +1389,7 @@
     "nameSpace": "XM",
     "type": "Task",
     "table": "prjtask",
+    "isRest": true,
     "lockable": true,
     "idSequenceName": "prjtask_prjtask_id_seq",
     "comment": "Task Map",
@@ -1657,6 +1661,7 @@
     "nameSpace": "XM",
     "type": "TaskListItem",
     "table": "prjtask",
+    "isRest": true,
     "comment": "Project Task List Item Map",
     "privileges": {
       "all": {

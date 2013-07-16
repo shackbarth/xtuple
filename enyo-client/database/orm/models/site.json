@@ -203,6 +203,7 @@
     "nameSpace": "XM",
     "type": "SiteZoneRelation",
     "table": "whsezone",
+    "isRest": true,
     "comment": "Site Zone List Map",
     "privileges": {
       "all": {
@@ -294,6 +295,7 @@
     "nameSpace": "XM",
     "type": "SiteListItem",
     "table": "xt.site",
+    "isRest": true,
     "comment": "Site Info Map",
     "privileges": {
       "all": {
@@ -349,6 +351,7 @@
     "nameSpace": "XM",
     "type": "SiteRelation",
     "table": "xt.site",
+    "isRest": true,
     "comment": "Site Info Map",
     "privileges": {
       "all": {
@@ -404,6 +407,7 @@
     "nameSpace": "XM",
     "type": "SiteType",
     "table": "sitetype",
+    "isRest": true,
     "idSequenceName": "sitetype_sitetype_id_seq",
     "lockable": true,
     "comment": "Site Type Map",

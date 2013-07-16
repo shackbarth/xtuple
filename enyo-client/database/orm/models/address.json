@@ -282,6 +282,7 @@
     "nameSpace": "XM",
     "type": "AddressInfo",
     "table": "addr",
+    "isRest": true,
     "idSequenceName": "addr_addr_id_seq",
     "lockable": true,
     "orderSequence": "AddressNumber",

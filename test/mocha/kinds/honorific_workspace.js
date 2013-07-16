@@ -7,7 +7,8 @@
 (function () {
   "use strict";
 
-  var zombieAuth = require("../lib/zombie_auth"),
+  var _ = require("underscore"),
+    zombieAuth = require("../lib/zombie_auth"),
     smoke = require("../lib/smoke"),
     data = require("../models/honorific").data,
     assert = require("chai").assert;
@@ -24,7 +25,9 @@
         var workspace = smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList");
         assert.equal(workspace.value.recordType, "XM.Honorific");
         smoke.setWorkspaceAttributes(workspace, data.createHash);
-        smoke.saveAndVerify(workspace, done);
+        smoke.saveWorkspace(workspace, function () {
+          smoke.deleteFromList(XT.app, data.createHash.code, done);
+        });
       });
     });
   });

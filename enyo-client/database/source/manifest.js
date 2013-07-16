@@ -85,6 +85,7 @@
     "xt/tables/ext.sql",
     "xt/tables/grpext.sql",
     "xt/tables/usrext.sql",
+    "xt/tables/usrchart.sql",
     "xt/tables/sessionstore.sql",
     "xt/tables/oa2client.sql",
     "xt/tables/oa2clientredirs.sql",
@@ -131,8 +132,6 @@
     "public/tables/comment_trigger.sql",
     "public/tables/pkghead.sql",
     "public/tables/schemaord.sql",
-    "create_xtbatch_schema.sql",
-    "xtbatch/tables/batch.sql",
     "update_version.sql"
   ]
 }

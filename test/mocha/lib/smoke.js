@@ -19,7 +19,7 @@
       workspace;
 
     //
-    // Drill down into the sales module
+    // Drill down into the appropriate module
     //
     _.each(navigator.modules, function (module, moduleIndex) {
       _.each(module.panels, function (panel, panelIndex) {
@@ -37,8 +37,8 @@
     // Create a new record
     //
     navigator.newRecord();
-    assert.isDefined(app.$.postbooks.$.workspaceContainer);
-    workspace = app.$.postbooks.$.workspaceContainer.$.workspace;
+    assert.isDefined(app.$.postbooks.getActive());
+    workspace = app.$.postbooks.getActive().$.workspace;
     assert.isDefined(workspace);
     return workspace;
   };
@@ -64,19 +64,50 @@
   /**
     Save the model through the workspace and make sure it saved ok.
    */
-  exports.saveAndVerify = function (workspace, done) {
-    var doneIfClean,
-      validation = workspace.value.validate(workspace.value.attributes);
+  exports.saveWorkspace = function (workspace, done) {
+    var validation = workspace.value.validate(workspace.value.attributes);
     assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
 
-    doneIfClean = function (model, status) {
-      if (status === XM.Model.READY_CLEAN) {
-        workspace.value.off("statusChange", doneIfClean);
+    workspace.save({
+      // wait until the list has been refreshed with this model before we return control
+      // TODO: this is probably where we'd want to insert a callback to be notified when
+      // the lock has been released.
+      modelChangeDone: function () {
+        done(null, workspace.value);
+      }
+    });
+  };
+
+  exports.deleteFromList = function (app, id, done) {
+    // back up to list
+    app.$.postbooks.previous();
+
+    // here's the list
+    var list = app.$.postbooks.getActive().$.contentPanels.getActive(),
+      // find the new model by id
+      // TODO: what if the new model is off the page and cannot be found?
+      newModel = _.find(list.value.models, function (model) {
+        return model.get(model.idAttribute) === id;
+      });
+
+    // TODO: this probably won't work if the model is not an editable model
+    // TODO: get rid of these 5 lines once we get the callback technique working
+    newModel.on("statusChange", function (model, status) {
+      if (status === XM.Model.DESTROYED_DIRTY) {
         done();
       }
-    };
-    workspace.value.on("statusChange", doneIfClean);
-    workspace.save();
+    });
+
+    // delete it, by calling the function that gets called when the user ok's the delete popup
+    list.deleteItem({model: newModel
+    // I believe this is the only way to get this to work with models whose lists are not editable
+    // models, however, there's no real way to know when the lock is released based on the way
+    // our workspace functions are plumbed together.
+    //,
+    //done: function () {
+    //  done();
+    //}
+    });
   };
 
 }());
