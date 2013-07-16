@@ -3,9 +3,8 @@ select xt.install_js('XM','UserPreference','xtuple', $$
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
   XM.UserPreference = {};
-  XM.UserPreference.options = [
-    "PreferredWarehouse"
-  ];
+  XM.UserPreference.options = [];
+
   XM.UserPreference.isDispatchable = true,
 
   /* 

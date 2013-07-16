@@ -560,6 +560,8 @@ var lang = XT.stringsFor("en_US", {
   "_userAccountRole": "User Account Role",
   "_userAccountRoles": "User Account Roles",
   "_username": "Username",
+  "_userPreference": "User Preference",
+  "_userPreferences": "User Preferences",
   "_usesPurchaseOrders": "Uses Purchase Orders",
   "_validator": "Validator",
   "_value": "Value",
