@@ -11,17 +11,12 @@ white:true*/
 
     @extends XM.Settings
   */
-  XM.UserPreference = XM.Settings.extend({
-    /** @scope XM.UserPreference.prototype */
+  XM.UserPreference = XM.Settings.extend(/** @lends XM.UserPreference.prototype */{
 
     recordType: 'XM.UserPreference',
 
-    privileges: true,//'ConfigDatabaseInfo',
+    privileges: "MaintainPreferencesSelf"
 
-    readOnlyAttributes: [
-      //"DatabaseName",
-      //"ServerVersion"
-    ]
   });
   XM.userPreference = new XM.UserPreference();
 

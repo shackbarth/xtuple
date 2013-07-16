@@ -2,19 +2,14 @@ select xt.install_js('XM','UserPreference','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
-  if(XM.UserPreference) {
-
-  } else {
-    XM.UserPreference = {};
-    XM.UserPreference.options = [
-      "PreferredWarehouse"
-    ];
-  }
-
+  XM.UserPreference = {};
+  XM.UserPreference.options = [
+    "PreferredWarehouse"
+  ];
   XM.UserPreference.isDispatchable = true,
 
   /* 
-  Return UserPreference configuration settings.
+    Return UserPreference configuration settings.
 
   @returns {Object}
   */
@@ -30,38 +25,35 @@ select xt.install_js('XM','UserPreference','xtuple', $$
   }
 
   /* 
-  Update UserPreference configuration settings. Only valid options as defined in the array
-  XM.DatabaseInfo.options will be processed.
+    Update UserPreference configuration settings.
 
    @param {Object} settings
    @returns {Boolean}
   */
   XM.UserPreference.commitSettings = function(patches) {
-    var settings, options = XM.DatabaseInformation.options.slice(0),
-        data = Object.create(XT.Data), metrics = {};
 
     /* check privileges */
-    if(!data.checkPrivilege('ConfigDatabaseInfo')) throw new Error('Access Denied');
+    if(!data.checkPrivilege('MaintainPreferencesSelf')) throw new Error('Access Denied');
 
     /* Compose our commit settings by applying the patch to what we already have */
-    settings = JSON.parse(XM.DatabaseInformation.settings());
-    if (!XT.jsonpatch.apply(settings, patches)) {
-      plv8.elog(NOTICE, 'Malformed patch document');
-    }
-
-    /* remove read only settings */
-    options.remove('Application');
-    options.remove('ServerVersion');
-    options.remove('ServerPatchVersion');
-
-    /* update remaining options as metrics.
-       first make sure we pass an object that only has valid metric options for this type */
-    for(var i = 0; i < options.length; i++) {
-      var prop = options[i];
-      if(settings[prop] !== undefined) metrics[prop] = settings[prop];
-    }
- 
-    return data.commitMetrics(metrics);
+    patches.map(function (patch) {
+      var sql,
+        updateSql = "UPDATE xt.userpref SET userpref_value = $1 WHERE userpref_usr_username = $2 AND userpref_name = $3;",
+        insertSql = "INSERT INTO xt.userpref (userpref_value, userpref_usr_username, userpref_name) VALUES ($1, $2, $3);";
+      
+      plv8.elog(NOTICE, "patch", patch.op, JSON.stringify(patch));
+      if (patch.op === 'add') {
+        sql = insertSql;
+      } else if(patch.op === 'replace') {
+        sql = updateSql;
+      } else {
+        /* no other operation is supported */
+        return;
+      }
+      
+      plv8.execute(sql, [patch.value, XT.username, patch.path.substring(1)]);
+    });
+    return true;
   }
   
 $$ );
