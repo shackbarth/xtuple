@@ -3,9 +3,9 @@
   newcap:true, noarg:true, undef:true */
 /*global XT:true, describe:true, it:true, require:true, __dirname:true, after:true */
 
-var buildAll = require('../../../../scripts/lib/build_all'),
+var buildAll = require('../../../scripts/lib/build_all'),
   assert = require('chai').assert,
-  datasource = require('../../../lib/ext/datasource').dataSource,
+  datasource = require('../../../node-datasource/lib/ext/datasource').dataSource,
   path = require('path'),
   expect = require('chai').expect,
   zombieAuth = require('../lib/zombie_auth');
@@ -15,7 +15,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
   describe('The database build tool', function () {
     this.timeout(10 * 60 * 1000);
 
-    var config = require(path.join(__dirname, "../../../config.js")),
+    var config = require(path.join(__dirname, "../../../node-datasource/config.js")),
       creds = config.databaseServer,
       testInit = true, // false is faster, true is more thorough
       databaseName = config.datasource.testDatabase;
@@ -94,7 +94,7 @@ var buildAll = require('../../../../scripts/lib/build_all'),
     it('should be able to build an extension', function (done) {
       buildAll.build({
         database: databaseName,
-        extension: path.join(__dirname + '../../../../../../xtuple-extensions/source/oauth2')
+        extension: path.join(__dirname + '../../../../../xtuple-extensions/source/oauth2')
       }, function (err, res) {
         assert.isNull(err);
         done();
