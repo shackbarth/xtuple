@@ -16,7 +16,11 @@ trailing:true, white:true*/
       kind: "XV.ParameterWidget",
       components: [
         {kind: "onyx.GroupboxHeader", content: "_issueToShipping".loc()},
-        {name: "order", attr: "order", label: "_order".loc(), defaultKind: "XV.SalesOrderWidget"}
+        {name: "order", attr: "order", label: "_order".loc(),
+          defaultKind: "XV.SalesOrderWidget",
+          query: {parameters: [
+            {attribute: "item.isSold", value: true}
+          ]
       ]
     });
   };
