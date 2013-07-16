@@ -2,34 +2,41 @@ select xt.install_js('XM','UserPreference','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
-  XM.UserPreference = {};
+  if(XM.UserPreference) {
+
+  } else {
+    XM.UserPreference = {};
+    XM.UserPreference.options = [
+      "PreferredWarehouse"
+    ];
+  }
 
   XM.UserPreference.isDispatchable = true,
 
-  XM.UserPreference.options = [
-    "PreferredWarehouse"
-  ]
-
   /* 
-  Return DatabaseInfo configuration settings.
+  Return UserPreference configuration settings.
 
   @returns {Object}
   */
   XM.UserPreference.settings = function() {
-    var keys = XM.DatabaseInformation.options.slice(0),
-      data = Object.create(XT.Data);
-    
-    return JSON.stringify([]);
+    var sql = "SELECT * FROM xt.userpref WHERE userpref_usr_username = $1",
+      result = plv8.execute(sql, [XT.username]),
+      resultObj = {};
+
+    result.map(function (res) {
+      resultObj[res.userpref_name] = res.userpref_value;
+    });
+    return JSON.stringify(resultObj);
   }
 
   /* 
-  Update DatabaseInfo configuration settings. Only valid options as defined in the array
+  Update UserPreference configuration settings. Only valid options as defined in the array
   XM.DatabaseInfo.options will be processed.
 
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.DatabaseInformation.commitSettings = function(patches) {
+  XM.UserPreference.commitSettings = function(patches) {
     var settings, options = XM.DatabaseInformation.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 

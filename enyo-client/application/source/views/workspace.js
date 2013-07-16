@@ -293,7 +293,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.InputWidget", attr: "PreferredWarehouse",
+              label: "_preferredWarehouse".loc()},
           ]}
         ]}
       ]}
