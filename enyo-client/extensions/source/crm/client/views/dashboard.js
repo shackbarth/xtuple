@@ -13,9 +13,9 @@ trailing:true, white:true*/
     extension: "crm",
     // title is what show in the "add chart" picker on the
     // dashboard and the chart is the widget to be added
-    charts: [
-      {title: "_openIncidents".loc(), chart: "XV.OpenIncidentBarChart"},
-      {title: "_opportunities".loc(), chart: "XV.OpportunityBarChart"}
+    newActions: [
+      {name: "openIncidents", label: "_openIncidents".loc(), item: "XV.OpenIncidentBarChart"},
+      {name: "opportunities", label: "_opportunities".loc(), item: "XV.OpportunityBarChart"}
     ]
   });
 }());
