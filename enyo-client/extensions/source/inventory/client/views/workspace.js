@@ -75,81 +75,48 @@ trailing:true, white:true*/
     });
 
     // ..........................................................
-    // ORDER
+    // SHIPMENT
     //
 
-  enyo.kind({
-    name: "XV.OrderLineWorkspace",
-    kind: "XV.Workspace",
-    title: "_orderLine".loc(),
-    headerAttrs: ["number", "-", "name"],
-    model: "XM.OrderLine",
-    handlers: {
-      onSavePrompt: "savePrompt"
-    },
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_orderLines".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "lines", fit: true, classes: "in-panel", components: [
-					//	{kind: "Repeater", name: "lineItemsList", onSetupItem: "setupLineItem", count: 0, components: [
-					//		{name: "lineItem"}
-					//	]}
-					]}
-				]}
-			]}
-    ]
-  });
+    enyo.kind({
+      name: "XV.ShipmentWorkspace",
+      kind: "XV.Workspace",
+      title: "_shipment".loc(),
+      model: "XM.Shipment",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", fit: true, components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.SalesOrderWidget", attr: "order"},
+              {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+              {kind: "XV.DateWidget", attr: "shipDate"},
+              {kind: "XV.CustomerProspectWidget", attr: "order.customer.number",
+                showAddress: true, label: "_customer".loc(),
+                nameAttribute: ""},
+              {kind: "XV.MoneyWidget",
+                attr: {localValue: "freight", currency: "currency"},
+                label: "_freight".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "XV.TextArea", attr: "notes", fit: true}
+            ]}
+  				]},
+  				{kind: "XV.ShipmentLineRelationsBox", attr: "lineItems", fit: true}
+        ]}
+      ],
+      formatPrice: function (value, view, model) {
+        var freight = model ? model.get("freight") : false,
+          scale = XT.session.locale.attributes.freight;
+        return freight ? freight.format(value, scale) : "";
+      }
+    });
 
-  XV.registerModelWorkspace("XM.OrderRelation", "XV.OrderLineWorkspace");
-  XV.registerModelWorkspace("XM.OrderListItem", "XV.OrderLineWorkspace");
-  XV.registerModelWorkspace("XM.OrderLine", "XV.OrderLineWorkspace");
+    XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
+    XV.registerModelWorkspace("XM.ShipmentListItem", "XV.ShipmentWorkspace");
+    XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
 
-  };
-
-  // ..........................................................
-  // SHIPMENT
-  //
-
-  enyo.kind({
-    name: "XV.ShipmentWorkspace",
-    kind: "XV.Workspace",
-    title: "_shipment".loc(),
-    model: "XM.Shipment",
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", fit: true, components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", fit: true, components: [
-            {kind: "XV.InputWidget", attr: "number"},
-            {kind: "XV.SalesOrderWidget", attr: "order"},
-            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
-            {kind: "XV.DateWidget", attr: "shipDate"},
-            {kind: "XV.CustomerProspectWidget", attr: "order.customer.number",
-              showAddress: true, label: "_customer".loc(),
-              nameAttribute: ""},
-            {kind: "XV.MoneyWidget",
-              attr: {localValue: "freight", currency: "currency"},
-              label: "_freight".loc()},
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true}
-          ]}
-				]},
-				{kind: "XV.ShipmentLineRelationsBox", attr: "lineItems", fit: true}
-      ]}
-    ],
-    formatPrice: function (value, view, model) {
-      var freight = model ? model.get("freight") : false,
-        scale = XT.session.locale.attributes.freight;
-      return freight ? freight.format(value, scale) : "";
-    }
-  });
-
-  XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
-  XV.registerModelWorkspace("XM.ShipmentListItem", "XV.ShipmentWorkspace");
-  XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
-
+  }
 }());

@@ -15,7 +15,13 @@ white:true*/
     */
     XM.Shipment = XM.Document.extend({
 
-    recordType: "XM.Shipment"
+    recordType: "XM.Shipment",
+
+    numberPolicy: XM.Document.AUTO_NUMBER,
+
+    readOnlyAttributes: [
+      "order"
+    ]
 
     });
 

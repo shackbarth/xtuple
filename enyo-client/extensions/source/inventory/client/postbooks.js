@@ -65,7 +65,7 @@ trailing:true, white:true*/
     XT.app.$.postbooks.handlers.onIssueToShipping = "issueToShipping";
     XT.app.$.postbooks.issueToShipping = function (inSender, inEvent) {
       var panel = this.createComponent({kind: "XV.IssueToShipping"});
-      
+
       panel.render();
       this.reflow();
       this.setIndex(this.getPanels().length - 1);
