@@ -1,0 +1,249 @@
+[  
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SalesOrderLineListItem",
+    "table": "xt.coiteminfo",
+    "comment": "Sales Order Line Item List Items Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewSalesOrders MaintainSalesOrders",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "salesOrder",
+        "toOne": {
+          "type": "SalesOrderListItem",
+          "column": "coitem_cohead_id",
+	  			"isNested": true
+        }
+      },
+      {
+        "name": "lineNumber",
+        "attr": {
+          "type": "String",
+          "column": "coitem_linenumber"
+        }
+      },
+      {
+        "name": "subNumber",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_subnumber"
+        }
+      },
+      {
+        "name": "itemSite",
+        "toOne": {
+          "type": "ItemSiteRelation",
+          "column": "coitem_itemsite_id",
+	  			"isNested": true
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_qtyord"
+        }
+      },
+      {
+        "name": "quantityUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "coitem_qty_uom_id"
+        }
+      },
+      {
+        "name": "quantityShipped",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_qtyshipped"
+        }
+      }, 
+      {
+        "name": "shipBalance",
+        "attr": {
+          "type": "Number",
+          "column": "ship_balance"
+        }
+      },          
+      {
+        "name": "scheduleDate",
+        "attr": {
+          "type": "Date",
+          "column": "coitem_scheddate"
+        }
+      },
+      {
+        "name": "promiseDate",
+        "attr": {
+          "type": "Date",
+          "column": "coitem_promdate"
+        }
+      },
+      {
+        "name": "customerPartNumber",
+        "attr": {
+          "type": "String",
+          "column": "coitem_custpn"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_price"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "coitem_price_uom_id"
+        }
+      },
+      {
+        "name": "extendedPrice",
+        "attr": {
+          "type": "Number",
+          "column": "ext_price"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "coitem_status"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ShippableSalesOrderLine",
+    "table": "xt.coitemship",
+    "comment": "Shippable Sales Order Line Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "IssueStockToShipping",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "Number",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "salesOrder",
+        "toOne": {
+          "type": "SalesOrderListItem",
+          "column": "coitem_cohead_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "lineNumber",
+        "attr": {
+          "type": "String",
+          "column": "linenumber"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "type": "ItemRelation",
+          "column": "coitem_item_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "coitem_warehous_id"
+        }
+      },
+      {
+        "name": "scheduleDate",
+        "attr": {
+          "type": "Date",
+          "column": "coitem_scheddate"
+        }
+      },
+      {
+        "name": "unit",
+        "toOne": {
+          "type": "Unit",
+          "column": "coitem_qty_uom_id"
+        }
+      },
+      {
+        "name": "ordered",
+        "attr": {
+          "type": "Quantity",
+          "column": "coitem_qtyord"
+        }
+      },
+      {
+        "name": "shipped",
+        "attr": {
+          "type": "Quantity",
+          "column": "coitem_qtyshipped"
+        }
+      },
+      {
+        "name": "returned",
+        "attr": {
+          "type": "Quantity",
+          "column": "coitem_qtyreturned"
+        }
+      }, 
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Quantity",
+          "column": "ship_balance"
+        }
+      },  
+      {
+        "name": "atShipping",
+        "attr": {
+          "type": "Number",
+          "column": "at_shipping"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
+

@@ -4,4 +4,4 @@ create or replace function xt.quote_line_base_price(quitem) returns numeric stab
     from charass
     where charass_target_type='QI'
       and charass_target_id=$1.quitem_id),4);
-$$ language sql
+$$ language sql;

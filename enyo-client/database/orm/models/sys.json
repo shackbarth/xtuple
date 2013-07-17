@@ -38,6 +38,13 @@
         }
       },
       {
+        "name": "disableExport",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_disable_export"
+        }
+      },
+      {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
@@ -66,6 +73,15 @@
         }
       },
       {
+        "name": "grantedUserAccountRoles",
+        "toMany": {
+          "column": "usr_username",
+          "type": "UserAccountUserAccountRoleAssignment",
+          "inverse": "userAccount",
+          "isNested": true
+        }
+      },
+      {
         "name": "grantedExtensions",
         "toMany": {
           "column": "usr_username",
@@ -77,5 +93,225 @@
     ],
     "isSystem": true,
     "sourceCode": "U"
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "UserAccountRole",
+    "table": "grp",
+    "idSequenceName": "grp_grp_id_seq",
+    "comment": "User Account Role Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainGroups",
+        "read": "MaintainGroups",
+        "update": "MaintainGroups",
+        "delete": "MaintainGroups"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "grp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "grp_name",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "grp_descrip"
+        }
+      },
+      {
+        "name": "grantedExtensions",
+        "toMany": {
+          "column": "grp_id",
+          "type": "UserAccountRoleExtension",
+          "inverse": "userAccountRole",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "UserAccountUserAccountRoleAssignment",
+    "table": "usrgrp",
+    "idSequenceName": "usrgrp_usrgrp_id_seq",
+    "comment": "User User Role Assignment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "usrgrp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "userAccount",
+        "attr": {
+          "type": "String",
+          "column": "usrgrp_username"
+        }
+      },
+      {
+        "name": "userAccountRole",
+        "toOne": {
+          "type": "UserAccountRole",
+          "column": "usrgrp_grp_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "ClientCode",
+    "table": "xt.clientcode",
+    "idSequenceName": "clientcode_clientcode_id_seq",
+    "comment": "Client Code (with the code) Assignment Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "clientcode_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "clientcode_code"
+        }
+      },
+      {
+        "name": "extension",
+        "attr": {
+          "type": "Number",
+          "column": "clientcode_ext_id"
+        }
+      },
+      {
+        "name": "version",
+        "attr": {
+          "type": "String",
+          "column": "clientcode_version"
+        }
+      },
+      {
+        "name": "language",
+        "attr": {
+          "type": "String",
+          "column": "clientcode_language"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "ClientCodeRelation",
+    "table": "xt.clientcode",
+    "idSequenceName": "clientcode_clientcode_id_seq",
+    "comment": "Client Code Information (w/o the code) Assignment Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "clientcode_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "extension",
+        "attr": {
+          "type": "Number",
+          "column": "clientcode_ext_id"
+        }
+      },
+      {
+        "name": "version",
+        "attr": {
+          "type": "String",
+          "column": "clientcode_version"
+        }
+      },
+      {
+        "name": "language",
+        "attr": {
+          "type": "String",
+          "column": "clientcode_language"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]

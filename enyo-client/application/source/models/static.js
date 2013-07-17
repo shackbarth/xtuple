@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -26,12 +26,20 @@ white:true*/
   }
 
   // Configuration
-  var configurationJson = {
-    model: "XM.databaseInformation",
-    name: "_database".loc(),
-    description: "_database".loc() + " " + "_information".loc(),
-    workspace: "XV.DatabaseInformationWorkspace"
-  };
+  var configurationJson = [
+    {
+      model: "XM.userPreference",
+      name: "_userPreferences".loc(),
+      description: "_userPreferences".loc(),
+      workspace: "XV.UserPreferenceWorkspace"
+    },
+    {
+      model: "XM.databaseInformation",
+      name: "_database".loc(),
+      description: "_database".loc() + " " + "_information".loc(),
+      workspace: "XV.DatabaseInformationWorkspace"
+    }
+  ];
   XM.ConfigurationModel = Backbone.Model.extend({
     attributeId: 'model'
   });
@@ -39,8 +47,10 @@ white:true*/
     model: XM.AccountTypeModel
   });
   XM.configurations = new XM.ConfigurationCollection();
-  var configuration = new XM.ConfigurationModel(configurationJson);
-  XM.configurations.add(configuration);
+  _.each(configurationJson, function (config) {
+    var configuration = new XM.ConfigurationModel(config);
+    XM.configurations.add(configuration);
+  });
 
   // Balance Methods
   var balanceMethodJson = [
@@ -228,7 +238,7 @@ white:true*/
     var holdType = new XM.HoldTypeModel(holdTypeJson[i]);
     XM.holdTypes.add(holdType);
   }
-  
+
   // Wage types
   K = XM.Wage;
   var wageTypeJson = [
@@ -244,7 +254,7 @@ white:true*/
     var wageType = new XM.WageTypeModel(wageTypeJson[i]);
     XM.wageTypes.add(wageType);
   }
-  
+
   // Wage periods
   var wagePeriodJson = [
     { id: K.HOURLY, name: "_hourly".loc() },
@@ -262,6 +272,24 @@ white:true*/
   for (i = 0; i < wagePeriodJson.length; i++) {
     var wagePeriod = new XM.WagePeriodModel(wagePeriodJson[i]);
     XM.wagePeriods.add(wagePeriod);
+  }
+
+  // ToDo Status
+  K = XM.ToDo;
+  var toDoStatusJson = [
+    { id: K.PENDING, name: "_pending".loc() },
+    { id: K.DEFERRED, name: "_deferred".loc() },
+    { id: K.NEITHER, name: "_neither".loc() }
+  ];
+  XM.ToDoStatusModel = Backbone.Model.extend({
+  });
+  XM.ToDoStatusCollection = Backbone.Collection.extend({
+    model: XM.ToDoStatusModel
+  });
+  XM.toDoStatuses = new XM.ToDoStatusCollection();
+  for (i = 0; i < toDoStatusJson.length; i++) {
+    var toDoStatus = new XM.ToDoStatusModel(toDoStatusJson[i]);
+    XM.toDoStatuses.add(toDoStatus);
   }
 
 }());

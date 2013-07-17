@@ -4,15 +4,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-
-  var queryDatabase = require('./data').queryDatabase;
+  
+  /**
+    @name File
+    @class File Used to serve up files to the client. Uses res.attachment to prompt browser to
+    save the file.
+    */
+  var queryDatabase = require(/** @lends File# */ './data').queryDatabase;
   // https://localhost/dev/file?recordType=XM.File&id=18e0573f-a08f-4016-ab4d-6205f2c89f77
 
-  /**
-    Used to serve up files to the client. Uses res.attachment to prompt browser to
-    save the file.
-   */
-  exports.file = function (req, res) {
+  exports.file = function (/** @lends File# */req, res) {
     var args = req.query,
       recordType = args.recordType,
       recordId = args.id,

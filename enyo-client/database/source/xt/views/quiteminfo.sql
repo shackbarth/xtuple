@@ -6,7 +6,7 @@ select xt.create_view('xt.quiteminfo', $$
     xt.quote_line_list_price_discount(quitem) as list_price_discount,  
     xt.quote_line_customer_discount(quitem) as cust_discount,  
     xt.quote_line_extended_price(quitem) as ext_price,  
-    xt.quote_line_profit(quitem) as profit,  
+    xt.quote_line_margin(quitem) as margin,  
     xt.quote_line_tax(quitem) as tax  
   from quitem  
     left join item on quitem_item_id=item_id; ;
@@ -44,32 +44,31 @@ insert into quitem (
   new.quitem_id,
   new.quitem_quhead_id,
   new.quitem_linenumber,
-  new.quitem_itemsite_id,
+  itemsite_id,
   new.quitem_scheddate,
   new.quitem_qtyord,
-  stdcost(item_id),
+  coalesce(new.quitem_unitcost, itemcost(itemsite_id)),
   new.quitem_price,
   new.quitem_custprice,
   new.quitem_memo,
   new.quitem_custpn,
-  new.quitem_createorder,
-  new.quitem_prcost,
-  new.quitem_imported,
+  coalesce(new.quitem_createorder, false),
+  coalesce(new.quitem_prcost,0),
+  coalesce(new.quitem_imported, false),
   new.quitem_qty_uom_id,
   new.quitem_qty_invuomratio,
   new.quitem_price_uom_id,
   new.quitem_price_invuomratio,
   new.quitem_promdate,
   new.quitem_taxtype_id,
-  new.quitem_dropship,
+  coalesce(new.quitem_dropship, false),
   new.quitem_itemsrc_id,
-  new.quitem_pricemode,
-  warehous_id,
-  item_id
+  coalesce(new.quitem_pricemode, 'D'),
+  new.quitem_order_warehous_id,
+  new.quitem_item_id
 from itemsite
-  join item on item_id=itemsite_item_id
-  join whsinfo on warehous_id=itemsite_warehous_id
-where itemsite_id=new.quitem_itemsite_id;
+where itemsite_item_id=new.quitem_item_id
+  and itemsite_warehous_id=new.quitem_order_warehous_id;
 
 create or replace rule "_UPDATE" as on update to xt.quiteminfo do instead
 

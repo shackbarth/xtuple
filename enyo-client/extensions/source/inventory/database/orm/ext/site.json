@@ -1,0 +1,28 @@
+[
+  {
+    "context": "inventory",
+    "nameSpace": "XM",
+    "type": "Site",
+    "table": "xt.site",
+    "isExtension": true,
+    "comment": "Extended by Inventory",
+    "relations": [
+      {
+        "column": "warehous_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "zones",
+        "toMany": {
+          "isNested": true,
+          "type": "SiteZone",
+          "column": "warehous_id",
+          "inverse": "site"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

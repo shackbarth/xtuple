@@ -1,0 +1,95 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SalesHistory",
+    "table": "xt.cohistinfo",
+    "idSequenceName": "cohist_cohist_id_seq",
+    "comment": "Sales History Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewSalesHistory",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cohist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "cohist_cust_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "cohist_salesrep_id"
+        }
+      },
+      {
+        "name": "itemSite",
+        "toOne": {
+          "type": "ItemSite",
+          "column": "cohist_itemsite_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "Number",
+          "column": "cohist_ordernumber"
+        }
+      },
+      {
+        "name": "shipDate",
+        "attr": {
+          "type": "Date",
+          "column": "cohist_shipdate"
+        }
+      },
+      {
+        "name": "quantityShipped",
+        "attr": {
+          "type": "Number",
+          "column": "cohist_qtyshipped"
+        }
+      },
+      {
+        "name": "unitPrice",
+        "attr": {
+          "type": "Number",
+          "column": "cohist_unitprice"
+        }
+      },
+      {
+        "name": "totalPrice",
+        "attr": {
+          "type": "Number",
+          "column": "cohist_extprice"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

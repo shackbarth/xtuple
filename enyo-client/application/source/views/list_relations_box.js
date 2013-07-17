@@ -1,6 +1,6 @@
-/*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
+/*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
+trailing:true, white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, Globalize:true */
 
 (function () {
@@ -31,7 +31,7 @@ trailing:true white:true*/
     searchList: "XV.CustomerList",
     listRelations: "XV.CustomerGroupCustomerListRelations"
   });
-  
+
   // ..........................................................
   // EMPLOYEE GROUP EMPLOYEE
   //
@@ -45,7 +45,7 @@ trailing:true white:true*/
     searchList: "XV.EmployeeList",
     listRelations: "XV.EmployeeGroupEmployeeListRelations"
   });
-  
+
   // ..........................................................
   // EMPLOYEE GROUP GROUP
   //
@@ -107,8 +107,7 @@ trailing:true white:true*/
     kind: "XV.ListRelationsBox",
     title: "_quotes".loc(),
     parentKey: "customer",
-    listRelations: "XV.CustomerQuoteListRelations",
-    searchList: "XV.QuoteList"
+    listRelations: "XV.CustomerQuoteListRelations"
   });
 
   // ..........................................................
@@ -120,8 +119,7 @@ trailing:true white:true*/
     kind: "XV.ListRelationsBox",
     title: "_salesOrders".loc(),
     parentKey: "customer",
-    listRelations: "XV.CustomerQuoteListRelations", // not a bug
-    searchList: "XV.SalesOrderList"
+    listRelations: "XV.CustomerQuoteListRelations" // not a bug
   });
 
   // ..........................................................
@@ -133,8 +131,7 @@ trailing:true white:true*/
     kind: "XV.ListRelationsBox",
     title: "_quotes".loc(),
     parentKey: "customer", // not a bug
-    listRelations: "XV.CustomerQuoteListRelations", // not a bug
-    searchList: "XV.QuoteList"
+    listRelations: "XV.CustomerQuoteListRelations" // not a bug
   });
 
 }());

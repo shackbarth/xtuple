@@ -34,7 +34,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.dispatch = {
       functionName: "getList",
       isJSON: true,
-      parameters: [model, "https://mobile.xtuple.com/"] // TODO get rootURL
+      parameters: [model, "https://" + req.headers.host + "/"] // TODO get rootURL
     };
 
     // Dummy up session. This is a public call.
@@ -60,6 +60,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return next(new Error("Invalid Request."));
       }
 
+      // The discovery doc should be cacheable. A "Vary: " header will break that.
+      // See: http://code.google.com/p/google-api-php-client/source/browse/tags/0.6.2/src/io/Google_CacheParser.php#100
+      delete res._headers.vary;
       res.json(result.data);
     };
 
@@ -76,7 +79,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.dispatch = {
       functionName: "getDiscovery",
       isJSON: true,
-      parameters: [model, "https://mobile.xtuple.com/"] // TODO get rootURL
+      parameters: [model, "https://" + req.headers.host + "/"] // TODO get rootURL
     };
 
     // Dummy up session. This is a public call.

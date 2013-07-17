@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "SalesRep",
     "table": "salesrep",
+    "isRest": true,
     "idSequenceName": "salesrep_salesrep_id_seq",
     "lockable": true,
     "orderSequence": "CRMAccountNumber",

@@ -1,14 +1,37 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, console:true, issue:true, require:true, XM:true, io:true, Backbone:true, _:true, X:true */
+/*global XT:true, console:true, issue:true, require:true, XM:true, io:true,
+Backbone:true, _:true, X:true, __dirname:true, exports:true */
+
+// to allow this file to run outside the context of a node-datasource
+// we need to add some more global variables if they're not already
+// defined
+if (typeof XT === 'undefined') {
+  XT = {};
+}
+if (typeof X === 'undefined') {
+  require('../../xt/foundation/foundation');
+  require('../../xt/database/database');
+  _ = require("underscore");
+}
 
 (function () {
   "use strict";
 
-  XT.dataSource = X.Database.create({
+  exports.dataSource = XT.dataSource = X.Database.create({
     requestNum: 0,
     callbacks: {},
+
+    getAdminCredentials: function (organization) {
+      return {
+        user: X.options.databaseServer.user,
+        hostname: X.options.databaseServer.hostname,
+        port: X.options.databaseServer.port,
+        database: organization,
+        password: X.options.databaseServer.password
+      };
+    },
 
     /**
      * Initializes database by setting the default pool size
@@ -90,12 +113,12 @@ white:true*/
      */
     query: function (query, options, callback) {
       var creds = {
-            "user": options.user,
-            "port": options.port,
-            "host": options.hostname,
-            "database": options.database,
-            "password": options.password
-          };
+        "user": options.user,
+        "port": options.port,
+        "host": options.hostname,
+        "database": options.database,
+        "password": options.password
+      };
 
       if (X.options && X.options.datasource && X.options.datasource.pgWorker) {
         this.requestNum += 1;
@@ -115,7 +138,9 @@ white:true*/
         // options.debugDatabase = X.options.datasource.debugDatabase;
         // worker.send({id: this.requestNum, query: query, options: options, creds: creds});
       } else {
-        if (X.options.datasource.debugging) {
+        if (X.options && X.options.datasource.debugging &&
+            query.indexOf('select xt.delete($${"nameSpace":"SYS","type":"SessionStore"') < 0 &&
+            query.indexOf('select xt.get($${"nameSpace":"SYS","type":"SessionStore"') < 0) {
           X.log(query);
         }
         X.pg.connect(creds, _.bind(this.connected, this, query, options, callback));
@@ -133,7 +158,8 @@ white:true*/
     */
     connected: function (query, options, callback, err, client, done, ranInit) {
       // WARNING!!! If you make any changes here, please update pgworker.js as well.
-      var that = this;
+      var that = this,
+        queryCallback;
 
       if (err) {
         issue(X.warning("Failed to connect to database: " +
@@ -149,14 +175,19 @@ white:true*/
         client.hasRunInit = true;
 
         // Register error handler to log errors.
-        // TODO - Not sure if setting that.activeQuery below is getting the right query here.
         client.connection.on('error', function (msg) {
-          if (msg.message === "unhandledError") {
+          var lastQuery;
+
+          if (msg.message !== "handledError") {
             X.err("Database Error! ", msg.message + " Please fix this!!!");
             _.each(client.debug, function (message) {
               X.err("Database Error! DB message was: ", message);
             });
-            X.err("Database Error! Last query was: ", that.activeQuery);
+            lastQuery = that.activeQuery && that.activeQuery.length > 10000 ?
+              "Too long to print (" + that.activeQuery.length + " chars) " +
+              "but starts with " + that.activeQuery.substring(0, 1000) :
+              that.activeQuery;
+            X.err("Database Error! Last query was: ", lastQuery);
             X.err("Database Error! DB name = ", options.database);
           }
         });
@@ -182,10 +213,10 @@ white:true*/
 
       if (!client.hasRunInit) {
         //client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
-        client.query("select xt.js_init(" + (X.options.datasource.debugDatabase || false) + ");", _.bind(
+        client.query("select xt.js_init(" + (X.options && X.options.datasource.debugDatabase || false) + ");", _.bind(
           this.connected, this, query, options, callback, err, client, done, true));
       } else {
-        client.query(query, function (err, result) {
+        queryCallback = function (err, result) {
           if (err) {
             // Set activeQuery for error event handler above.
             that.activeQuery = client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.';
@@ -237,7 +268,15 @@ white:true*/
 
           // Call the call back.
           callback(err, result);
-        });
+        };
+
+        // node-postgres supports parameters as a second argument. These will be options.parameters
+        // if they're there.
+        if (options.parameters) {
+          client.query(query, options.parameters, queryCallback);
+        } else {
+          client.query(query, queryCallback);
+        }
       }
     },
 

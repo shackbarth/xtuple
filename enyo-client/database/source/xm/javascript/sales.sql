@@ -2,11 +2,8 @@ select xt.install_js('XM','Sales','xtuple', $$
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xtuple.com/CPAL for the full text of the software license. */
 
-  XM.Sales = {};
-
-  XM.Sales.isDispatchable = true;
-
-  XM.Sales.options = [
+(function () {
+  var salesOptions = [
     "CONumberGeneration",
     "CMNumberGeneration",
     "QUNumberGeneration",
@@ -49,7 +46,23 @@ select xt.install_js('XM','Sales','xtuple', $$
     "DefaultFreeFormShiptos",
     "SOCreditLimit",
     "SOCreditRate"
-  ]
+  ],
+    i, option;
+
+  if (XM.Sales) { 
+    for(i = 0; i < salesOptions.length; i++) {
+      option = salesOptions[i];
+      if(!XM.Sales.options.contains(option)) {
+        XM.Sales.options.push(option);
+      }
+    }
+
+  } else {
+    XM.Sales = {}; 
+    XM.Sales.options = salesOptions;
+  }
+
+  XM.Sales.isDispatchable = true;
   
   /**
    Returns an array of freight detail records based on input
@@ -213,5 +226,7 @@ select xt.install_js('XM','Sales','xtuple', $$
  
     return data.commitMetrics(metrics);
   }
+
+}());
   
 $$ );

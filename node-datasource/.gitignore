@@ -7,4 +7,3 @@ datasource-err.log
 www
 lib/private/*
 pid/*
-test/shared/login_data.js

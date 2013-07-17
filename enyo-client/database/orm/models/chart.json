@@ -1,0 +1,79 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserChart",
+    "table": "xt.usrchart",
+    "idSequenceName": "usrchart_usrchart_id_seq",
+    "comment": "User Chart Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "usrchart_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "order",
+        "attr": {
+          "type": "Number",
+          "column": "usrchart_order"
+        }
+      },
+      {
+        "name": "chartname",
+        "attr": {
+          "type": "String",
+          "column": "usrchart_chart"
+        }
+      },
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "usrchart_usr_username"
+        }
+      },
+      {
+        "name": "extension",
+        "attr": {
+          "type": "String",
+          "column": "usrchart_ext_name"
+        }
+      },
+      {
+        "name": "filter",
+        "attr": {
+          "type": "String",
+          "column": "usrchart_filter_option"
+        }
+      },
+      {
+        "name": "groupBy",
+        "attr": {
+          "type": "String",
+          "column": "usrchart_groupby_option"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

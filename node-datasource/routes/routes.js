@@ -25,17 +25,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // is a function that returns another function, and express allows routes to
     // be defined in such a way as to chain these types of functions together in an array.
     ensureLogin = require('connect-ensure-login').ensureLoggedIn(logoutPath),
+    app = require('./app'),
     auth = require('./auth'),
     changePassword = require('./change_password'),
+    clientCode = require('./client_code'),
     email = require('./email'),
     exxport = require('./export'),
-    extensions = require('./extensions'),
     data = require('./data'),
     dataFromKey = require('./data_from_key'),
     file = require('./file'),
     passport = require('passport'),
     redirector = require('./redirector'),
     report = require('./report'),
+    analysis = require('./analysis'),
     restDiscovery = require('./restDiscovery'),
     restRouter = require('./restRouter'),
     vcfExport = require('./vcfExport');
@@ -43,6 +45,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Authentication-related routes
   //
+  exports.app = [ensureLogin, app.serveApp];
   exports.login = auth.login;
   exports.loginForm = auth.loginForm;
   exports.logout = auth.logout;
@@ -75,13 +78,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // Custom routes
   //
   exports.changePassword = [ensureLogin, changePassword.changePassword];
+  exports.clientCode = [ensureLogin, clientCode.clientCode];
   exports.dataFromKey = dataFromKey.dataFromKey; // don't authenticate
   exports.email = [ensureLogin, email.email];
   exports.exxport = [ensureLogin, exxport.exxport];
-  exports.extensions = [ensureLogin, extensions.extensions];
   exports.file = [ensureLogin, file.file];
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];
+  exports.analysis = [ensureLogin, analysis.analysis];
   exports.resetPassword = [ensureLogin, changePassword.resetPassword];
   exports.vcfExport = [ensureLogin, vcfExport.vcfExport]
 

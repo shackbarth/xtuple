@@ -1,4 +1,4 @@
-/*jshint node:true, bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+/*jshint node:true, bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true */
 
@@ -62,7 +62,7 @@ require('./foundation');
       "\n================================================\n"
     );
 
-    if (X.requireDatabase) require("./database");
+    require("./database");
 
     X.pid = process.pid;
 
@@ -75,14 +75,14 @@ require('./foundation');
         X.pidFilePath = _path.join(X.basePath, X.pidFilePath);
       }
       if (!X.pidFileName) {
-        X.pidFileName = "%@.pid".f(X.processName? X.processName: "node_xt_process");
+        X.pidFileName = "%@.pid".f(X.options.processName ? X.options.processName: "node_xt_process");
       } else if (X.pidFileName.indexOf(".pid") === -1) {
         X.pidFileName = X.pidFileName.suf(".pid");
       }
 
       // if we're allowed to have multiples of this resource executing
       // simultaneously we need to make the name unique
-      if (X.allowMultipleInstances === true) {
+      if (X.options.allowMultipleInstances === true) {
         i = X.pidFileName.indexOf(".pid");
         sub = X.pidFileName.substring(0, i);
         X.pidFileName = "%@_%@.pid".f(sub, X.pid);
@@ -92,14 +92,18 @@ require('./foundation');
       X.pidFile = _path.join(X.pidFilePath, X.pidFileName);
 
       X.exists(X.pidFile, function (exists) {
-        if (exists && !X.allowMultupleInstances) {
-          issue(X.fatal("Multiple instances are not allowed"));
+        if (exists && !X.options.allowMultipleInstances) {
+          X.error("Multiple instances are not allowed");
         } else {
 
           // write our pidfile...
           X.exists(_path.join(X.pidFilePath), function (exists) {
-            if (!exists) X.createDir(X.pidFilePath, X.writePidFile);
-            else X.writePidFile();
+            if (!exists) {
+              X.createDir(X.pidFilePath, X.writePidFile);
+            }
+            else {
+              X.writePidFile();
+            }
           });
         }
       });

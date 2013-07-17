@@ -3,4 +3,4 @@ create or replace function xt.co_line_list_price(coitem) returns numeric stable 
   from itemsite
   inner join item on itemsite_item_id = item_id
   where itemsite_id=$1.coitem_itemsite_id;
-$$ language sql
+$$ language sql;

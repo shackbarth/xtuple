@@ -1,8 +1,10 @@
 select xt.install_js('XM','Tax','xtuple', $$
-/* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
+/* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
    See www.xtuple.com/CPAL for the full text of the software license. */
 
-  XM.Tax = {};
+(function () {
+
+  if (!XM.Tax) { XM.Tax = {}; }
 
   XM.Tax.isDispatchable = true;
 
@@ -34,6 +36,8 @@ select xt.install_js('XM','Tax','xtuple', $$
     for (var i = 0; i < ret.length; i++) ret[i].taxCode = XT.camelize(ret[i].taxCode);
     return JSON.stringify(ret);
   };
+
+}());
   
 $$ );
 

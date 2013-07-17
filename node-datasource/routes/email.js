@@ -6,6 +6,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   /**
+    @name Email
+    @class Email
     Defines the email route. Anyone with appropriate permissions can use this
     to easily send emails out of the node layer.
    */
@@ -29,7 +31,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       };
 
-    //res.header("Access-Control-Allow-Origin", "*"); // XXX temp until migration
     X.smtpTransport.sendMail(mailContent, callback);
   };
 }());

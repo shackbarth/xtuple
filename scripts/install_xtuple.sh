@@ -30,7 +30,7 @@ else
 	log "Must run with sudo, not as root."
 	exit -1
 fi
-XTUPLE_REPO='mobile-repo.xtuple.com'
+XTUPLE_REPO='http://sourceforge.net/projects/postbooks/files/mobile-debian'
 varlog XTUPLE_REPO
 
 while getopts ":icbpgnh-:" opt; do
@@ -218,8 +218,8 @@ build_deps() {
 		log "Looking for nodejs_$NODE_VERSION.deb in $(pwd)"
 		if [ ! -f nodejs_$NODE_VERSION.deb ]
 		then
-			log "File not found. Attempting to download http://$XTUPLE_REPO/nodejs_$NODE_VERSION.deb"
-			wget -q http://$XTUPLE_REPO/nodejs_$NODE_VERSION.deb && wait
+			log "File not found. Attempting to download $XTUPLE_REPO/nodejs_$NODE_VERSION.deb"
+			wget -q $XTUPLE_REPO/nodejs_$NODE_VERSION.deb && wait
 
 			if [ $? -ne 0 ]
 			then
@@ -248,103 +248,79 @@ build_deps() {
 	fi
 	
 	cdir $RUN_DIR
-	log "Checking if v8 or xtuple-mobileweb-lib is installed."
-	dpkg -s xtuple-mobileweb-lib 2>1 > /dev/null
+	log "Checking if libv8 is installed"
+	dpkg -s libv8 2>1 > /dev/null
 	if [ $? -eq 0 ]
 	then
-		log "xtuple-mobileweb-lib is installed."
+		log "libv8 is installed"
 	else
-		log "Looking for xtuple-mobileweb-lib in $(pwd)"
-		XTUPLE_LIB_DEB=$(ls | grep xtuple-mobileweb-lib | head -1)
-		if [ $XTUPLE_LIB_DEB ]
+		log "libv8 is not installed."
+		
+		log "Looking for libv8-3.16.5_3.16.5-1_amd64.deb in $(pwd)"
+		if [ -f libv8-3.16.5_3.16.5-1_amd64.deb ]
 		then
-			log "Installing xtuple-mobileweb-lib"
-			dpkg -i $XTUPLE_LIB_DEB 2>1 | tee -a $LOG_FILE
+			log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
+			dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
 		else
-			log "Package not found."
+			log "File not found."
+			log "Attempting to download $XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb"
 			
-			log "Attempting to download http://$XTUPLE_REPO/xtuple-mobileweb-lib_1.3.4-0_amd64.deb"
-			wget -q http://$XTUPLE_REPO/xtuple-mobileweb-lib_1.3.4-0_amd64.deb && wait
+			wget -q $XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb && wait
 			if [ $? -ne 0 ]
 			then
 				log "Error occured while downloading ($?)"
-			
-				log "Checking if libv8 is installed"
-				dpkg -s libv8 2>1 > /dev/null
-				if [ $? -eq 0 ]
-				then
-					log "libv8 is installed"
-				else
-					log "libv8 is not installed."
-					
-					log "Looking for libv8-3.16.5_3.16.5-1_amd64.deb in $(pwd)"
-					if [ -f libv8-3.16.5_3.16.5-1_amd64.deb ]
-					then
-						log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
-						dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
-					else
-						log "File not found."
-						log "Attempting to download http://$XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb"
-						
-						wget -q http://$XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb && wait
-						if [ $? -ne 0 ]
-						then
-							log "Error occured while downloading ($?)"
-							log "Compiling from source."
-			
-							cdir $BASEDIR/v8
-							git checkout 3.16.5 2>1 | tee -a $LOG_FILE
-			
-							make dependencies 2>1 | tee -a $LOG_FILE
-			
-							make library=shared native 2>1 | tee -a $LOG_FILE
-							log "Installing library."
-							cp $BASEDIR/v8/out/native/lib.target/libv8.so /usr/lib/ #root
-						else
-							log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
-							dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
-						fi
-					fi
-				fi
-				
-				cdir $RUN_DIR
-				log "Checking if plv8js is installed."
-				dpkg -s postgresql-9.1-plv8 2>1 > /dev/null
-				if [ $? -eq 0 ]
-				then
-					log "plv8js is installed"
-				else
-					log "plv8js is not installed"
-					
-					log "Looking for postgresql-9.1-plv8_1.4.0-1_amd64.deb in $(pwd)"
-					if [ ! -f postgresql-9.1-plv8_1.4.0-1_amd64.deb ]
-					then
-						log "File not found."
-						log "Attempting to download http://$XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-						wget -q http://$XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb && wait
+				log "Compiling from source."
 
-						if [ $? -ne 0 ]
-						then
-							log "Error occured while downloading ($?)"
-							log "Compiling from source"
-							cdir $BASEDIR/plv8
-							make V8_SRCDIR=../v8 CPLUS_INCLUDE_PATH=../v8/include 2>1 | tee -a $LOG_FILE
-							if [ $? -ne 0 ]
-							then
-								return 1
-							fi
-							log "Installing plv8js."
-							make install 2>1 | tee -a $LOG_FILE
-						else
-							log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-							dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
-						fi
-					else
-						log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-						dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
-					fi
-				fi
+				cdir $BASEDIR/v8
+				git checkout 3.16.5 2>1 | tee -a $LOG_FILE
+
+				make dependencies 2>1 | tee -a $LOG_FILE
+
+				make library=shared native 2>1 | tee -a $LOG_FILE
+				log "Installing library."
+				cp $BASEDIR/v8/out/native/lib.target/libv8.so /usr/lib/ #root
+			else
+				log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
+				dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
 			fi
+		fi
+	fi
+	
+	cdir $RUN_DIR
+	log "Checking if plv8js is installed."
+	dpkg -s postgresql-9.1-plv8 2>1 > /dev/null
+	if [ $? -eq 0 ]
+	then
+		log "plv8js is installed"
+	else
+		log "plv8js is not installed"
+		
+		log "Looking for postgresql-9.1-plv8_1.4.0-1_amd64.deb in $(pwd)"
+		if [ ! -f postgresql-9.1-plv8_1.4.0-1_amd64.deb ]
+		then
+			log "File not found."
+			log "Attempting to download $XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb"
+			wget -q $XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb && wait
+
+			if [ $? -ne 0 ]
+			then
+				log "Error occured while downloading ($?)"
+				log "Compiling from source"
+				cdir $BASEDIR/plv8
+				make V8_SRCDIR=../v8 CPLUS_INCLUDE_PATH=../v8/include 2>1 | tee -a $LOG_FILE
+				if [ $? -ne 0 ]
+				then
+					return 1
+				fi
+				log "Installing plv8js."
+				make install 2>1 | tee -a $LOG_FILE
+			else
+				log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
+				dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
+			fi
+		else
+			log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
+			dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
 		fi
 	fi
 }
@@ -420,15 +396,8 @@ setup_postgres() {
 
 	psql -U postgres dev -c "CREATE EXTENSION plv8" 2>1 | tee -a $LOG_FILE
 	
-	cdir $XT_DIR/enyo-client/database/source/
-	psql -U admin -d dev -p 5432 -h localhost -f "init_instance.sql" 2>1 | tee -a $LOG_FILE
-
-	cdir $XT_DIR/enyo-client/extensions/source/crm/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql" 2>1 | tee -a $LOG_FILE
-	cdir $XT_DIR/enyo-client/extensions/source/project/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql" 2>1 | tee -a $LOG_FILE
-	cdir $XT_DIR/enyo-client/extensions/source/sales/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql" 2>1 | tee -a $LOG_FILE
+	cdir $XT_DIR
+	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
 }
 
 # Pull submodules
@@ -464,36 +433,15 @@ pull_modules() {
 	cdir ../../../enyo-client/extensions
     rm -f debug.js
     echo "enyo.depends(" > debug.js
-    echo "  '/dev/core-extensions/source/project/client/package.js'," >> debug.js
     echo "  '/dev/core-extensions/source/crm/client/package.js'," >> debug.js
+    echo "  '/dev/core-extensions/source/inventory/client/package.js'," >> debug.js
+    echo "  '/dev/core-extensions/source/project/client/package.js'," >> debug.js
     echo "  '/dev/core-extensions/source/sales/client/package.js'" >> debug.js
     echo ");" >> debug.js
 	log "Created debug.js"
 }
 
 init_everythings() {
-	cdir $XT_DIR/enyo-client/extensions
-	./tools/buildExtensions.sh 2>1 | tee -a $LOG_FILE
-	
-	# deploy enyo client
-	cdir ../application
-	rm -rf deploy
-	cdir tools
-	./deploy.sh 2>1 | tee -a $LOG_FILE
-	
-	log ""
-	log "######################################################"
-	log "######################################################"
-	log "Running the ORM installer on the database"
-	log "######################################################"
-	log "######################################################"
-	log ""
-	
-	cdir $XT_DIR/node-datasource/installer/
-	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/database/orm/ 2>1 | tee -a $LOG_FILE
-	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/crm/database/orm 2>1 | tee -a $LOG_FILE
-	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/project/database/orm 2>1 | tee -a $LOG_FILE
-	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/sales/database/orm 2>1 | tee -a $LOG_FILE
 
 	log ""
 	log "######################################################"

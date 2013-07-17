@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true */
 
@@ -13,9 +13,9 @@ white:true*/
   // PRIVATE
   //
 
-  /** @private
-
+  /**
     Function that actually does the calculation work
+    @private
   */
   var _calculateTotals = function (model) {
     var miscCharge = model.get("miscCharge") || 0.0,
@@ -39,8 +39,8 @@ white:true*/
     var forEachCalcFunction = function (lineItem) {
       var extPrice = lineItem.get('extendedPrice') || 0,
         quantity = lineItem.get("quantity") || 0,
-        standardCost = lineItem.getValue("itemSite.item.standardCost") || 0,
-        item = lineItem.getValue("itemSite.item"),
+        unitCost = lineItem.get("unitCost") || 0,
+        item = lineItem.get("item"),
         prodWeight = item ? item.get("productWeight") : 0,
         packWeight = item ? item.get("packageWeight") : 0,
         itemWeight = item ? add(prodWeight, packWeight, XT.WEIGHT_SCALE) : 0,
@@ -49,7 +49,7 @@ white:true*/
 
       weights.push(grossWeight);
       subtotals.push(extPrice);
-      costs.push(quantity * standardCost);
+      costs.push(quantity * unitCost);
       taxDetails = taxDetails.concat(lineItem.taxDetail);
     };
 
@@ -98,12 +98,13 @@ white:true*/
   };
 
 
-  /** @private
+  /**
     This should only be called by `calculatePrice`.
+    @private
   */
   var _calculatePrice = function (model) {
     var K = model.getClass(),
-      item = model.getValue("itemSite.item"),
+      item = model.get("item"),
       characteristics = model.get("characteristics"),
       isConfigured = item ? item.get("isConfigured") : false,
       counter = isConfigured ? characteristics.length + 1 : 1,
@@ -173,7 +174,6 @@ white:true*/
     itemOptions.quantityUnit = quantityUnit;
     itemOptions.priceUnit = priceUnit;
     itemOptions.success = function (resp) {
-      var priceMode;
 
       // Handle no price found scenario
       if (resp.price === -9999 && !model._invalidPriceRequest) {
@@ -193,10 +193,6 @@ white:true*/
       } else {
         counter--;
         if (!model._invalidPriceRequest) {
-          priceMode = (resp.type === "N" ||
-                       resp.type === "D" ||
-                       resp.type === "P") ? XM.SalesOrderLineBase.DISCOUNT_MODE : XM.SalesOrderLineBase.MARKUP_MODE;
-          model.set("priceMode", priceMode);
           model.set("basePrice", resp.price);
           prices.push(resp.price);
         }
@@ -415,7 +411,6 @@ white:true*/
         counter,
         existing,
         line,
-        itemSite,
         quantity,
         quantityUnitRatio,
         weight,
@@ -429,13 +424,12 @@ white:true*/
         // Collect data needed for freight
         for (i = 0; i < lineItems.length; i++) {
           line = lineItems[i];
-          itemSite = line.get("itemSite");
-          if (!itemSite) {
+          if (!item || !site) {
             siteClass = [];
             break;
           }
-          site = itemSite.get("site");
-          item = itemSite.get("item");
+          site = line.get("site");
+          item = line.get("item");
           freightClass = item.getValue("freightClass");
           weight = item.get("productWeight");
           quantity = line.get("quantity");
@@ -801,8 +795,8 @@ white:true*/
 
     lineItemsDidChange: function () {
       var lineItems = this.get("lineItems");
-      this.setReadOnly("currency", lineItems.length);
-      this.setReadOnly("customer", lineItems.length);
+      this.setReadOnly("currency", lineItems.length > 0);
+      this.setReadOnly("customer", lineItems.length > 0);
     },
 
     /**
@@ -912,7 +906,7 @@ white:true*/
           // Loop through each item and see if we can sell on
           // requested date
           _.each(lineItems.models, function (line) {
-            var item = line.getValue("itemSite.item");
+            var item = line.getValue("item");
             id = line.id;
             customer.canPurchase(item, scheduleDate, custOptions);
           });
@@ -986,6 +980,7 @@ white:true*/
       var status = this.getStatus();
       if (status === XM.Model.READY_CLEAN) {
         this.setReadOnly(["number", "customer"], true);
+        this.lineItemsDidChange();
         this.applyCustomerSettings();
       }
     },
@@ -1068,7 +1063,6 @@ white:true*/
       var allowASAP = XT.session.settings.get("AllowASAPShipSchedules");
       return {
         quantityUnitRatio: 1,
-        priceMode: XM.SalesOrderLineBase.DISCOUNT_MODE,
         priceUnitRatio: 1,
         scheduleDate: allowASAP ? new Date() : undefined
       };
@@ -1078,9 +1072,12 @@ white:true*/
       XM.Model.prototype.bindEvents.apply(this, arguments);
       var settings = XT.session.settings;
       this.on('change:discount', this.discountDidChange);
-      this.on("change:itemSite", this.itemSiteDidChange);
+      this.on('change:markup', this.calculateMarkupPrice);
+      this.on("change:item", this.itemDidChange);
+      this.on("change:site", this.siteDidChange);
       this.on("change:price", this.priceDidChange);
       this.on('change:quantity', this.quantityDidChange);
+      this.on('change:unitCost', this.calculateMarkupPrice);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
       this.on('change:taxType', this.calculateTax);
@@ -1099,14 +1096,14 @@ white:true*/
       var settings = XT.session.settings,
         privileges = XT.session.privileges;
       this.taxDetail = [];
-      this._updatePrice = true; // TODO: This probably is un-needed.
+      this._updatePrice = true;
       this._unitIsFractional = false;
 
       //  Disable the Discount Percent stuff if we don't allow them
       if (!settings.get("AllowDiscounts") &&
         !privileges.get("OverridePrice")) {
         this.setReadOnly('price');
-        this.setReadyOnl('discount');
+        this.setReadOnly('discount');
       }
 
       if (settings.get("DisableSalesOrderPriceOverride") ||
@@ -1122,11 +1119,10 @@ white:true*/
       "extendedPrice",
       "inventoryQuantityUnitRatio",
       "lineNumber",
-      "markup",
+      "listPrice",
       "listPriceDiscount",
-      "priceMode",
       "priceUnitRatio",
-      "profit",
+      "margin",
       "site",
       "tax"
     ],
@@ -1144,10 +1140,41 @@ white:true*/
         extPrice =  (quantity * quantityUnitRatio / priceUnitRatio) * price;
       extPrice = XT.toExtendedPrice(extPrice);
       this.set("extendedPrice", extPrice);
-      this.calculateProfit();
+      this.calculateMargin();
       this.calculateTax();
       this.recalculateParent();
       return this;
+    },
+
+    calculateMarkupPrice: function () {
+      var parent = this.getParent(),
+        currency = parent ? parent.get("currency") : false,
+        effective = parent ? parent.get(parent.documentDateKey) : false,
+        unitCost = this.get("unitCost"),
+        that = this,
+        options = {};
+
+      if (!unitCost) {
+        this.off("markup", this.calculateMarkupPrice);
+        this.unset("markup");
+        this.on("markup", this.calculateMarkupPrice);
+      } else if (this._updatePrice && currency) {
+        options.success = function (value) {
+          var price,
+            markup = that.get("markup"),
+            long30 = XT.session.settings.get("Long30Markups");
+          if (markup <= 50 && long30) {
+            price = value / (1.0 - markup);
+          } else {
+            price = value + value * markup;
+          }
+          that.off("price", that.priceDidChange);
+          that.set("price", price);
+          that.on("price", that.priceDidChange);
+          that.priceDidChange();
+        };
+        currency.fromBase(unitCost, effective, options);
+      }
     },
 
     /**
@@ -1161,47 +1188,74 @@ white:true*/
         currency = parent ? parent.get("currency") : false,
         parentDate = parent ? parent.get(parent.documentDateKey) : false,
         price = this.get("price"),
-        options = {};
+        customerPrice = this.get("customerPrice"),
+        priceOptions = {},
+        custPriceOptions = {},
+        counter = 0,
+        baseCustomerPrice,
+        basePrice,
+        i,
+        calculate = function () {
+          var K = that.getClass(),
+            unitCost = that.get("unitCost"),
+            long30 = XT.session.settings.get("Long30Markups"),
+            listPrice = that.getValue("item.listPrice"),
+            attrs = {
+              discount: undefined,
+              listPriceDiscount: undefined,
+              markup: undefined,
+              listPrice: listPrice
+            };
 
-      options.success = function (basePrice) {
-        var K = that.getClass(),
-          priceMode = that.get("priceMode"),
-          customerPrice = that.get("customerPrice"),
-          wholesalePrice = that.getValue("itemSite.item.wholesalePrice"),
-          listPrice = that.getValue("itemSite.item.listPrice"),
-          attrs = {
-            discount: undefined,
-            listPriceDiscount: undefined,
-            markup: undefined,
-            listPrice: listPrice
-          };
+          if (basePrice === 0) {
+            attrs.discount = 1;
+            attrs.listPriceDiscount = 1;
+            attrs.markup = 0;
+          } else {
+            if (listPrice) {
+              attrs.listPriceDiscount = XT.toPercent(1 - basePrice / listPrice);
+            }
+            if (unitCost) {
+              attrs.markup =  XT.toPercent(long30 ? 1.0 - unitCost / basePrice : basePrice / unitCost - 1.0);
+            }
+            if (customerPrice) {
+              attrs.discount = XT.toPercent(1 - basePrice / baseCustomerPrice);
+            }
+          }
 
-        if (price === 0) {
-          attrs.discount = priceMode === K.MARKUP_MODE ? 0 : 1;
-          attrs.listPriceDiscount = 1;
-          attrs.markup = 0;
-        } else {
-          if (listPrice) {
-            attrs.listPriceDiscount = XT.toPercent(1 - basePrice / listPrice);
-          }
-          if (wholesalePrice) {
-            attrs.markup = XT.toPercent(basePrice / wholesalePrice - 1);
-          }
-          if (customerPrice) {
-            attrs.discount = priceMode === K.MARKUP_MODE ?
-              XT.toPercent(price / customerPrice - 1) : // Markup
-              XT.toPercent(1 - price / customerPrice);  // Discount
-          }
-        }
+          that.off('change:markup', that.calculateMarkupPrice);
+          that.set(attrs);
+          that.on('change:markup', that.calculateMarkupPrice);
+        };
 
-        that.set(attrs);
+      // Keep track of requests, we'll ignore stale ones
+      this._counter = _.isNumber(this._counter) ? this._counter + 1 : 0;
+      i = this._counter;
+
+      priceOptions.success = function (value) {
+        // I only smell freshness
+        if (i < that._counter) { return; }
+
+        // Don't calculate unless we have both conversions
+        basePrice = value;
+        counter++;
+        if (counter < 2) { return; }
+        calculate();
       };
-      options.error = function (error) {
-        this.trigger("error", error);
+      custPriceOptions.success = function (value) {
+        // I only smell freshness
+        if (i < that._counter) { return; }
+
+        // Don't calculate unless we have both conversions
+        baseCustomerPrice = value;
+        counter++;
+        if (counter < 2) { return; }
+        calculate();
       };
 
-      // Convert price to base, then do the real work in the callback
-      currency.toBase(price, parentDate, options);
+      // Convert price to base, then do the real work in the callbacks
+      currency.toBase(price, parentDate, priceOptions);
+      currency.toBase(customerPrice, parentDate, custPriceOptions);
 
       return this;
     },
@@ -1219,7 +1273,7 @@ white:true*/
         canUpdate = this.canUpdate(),
         discount = this.get("discount"),
         ignoreDiscount = settings.get("IgnoreCustDisc"),
-        item = this.getValue("itemSite.item"),
+        item = this.get("item"),
         editing = !this.isNew(),
         priceUnit = this.get("priceUnit"),
         priceUnitRatio = this.get("priceUnitRatio"),
@@ -1254,8 +1308,8 @@ white:true*/
           } else if (updatePolicy !== K.ALWAYS_UPDATE) {
             this.notify("_updatePrice?".loc(), {
               type: K.QUESTION,
-              callback: function (answer) {
-                that._updatePrice = answer;
+              callback: function (response) {
+                that._updatePrice = response.answer;
                 _calculatePrice(that);
               }
             });
@@ -1267,26 +1321,30 @@ white:true*/
       return this;
     },
 
-    calculateProfit: function () {
-      var standardCost = this.getValue("itemSite.item.standardCost"),
-        price = this.get("price"),
+    calculateMargin: function () {
+      var unitCost = this.getValue("unitCost"),
+        extendedPrice = this.get("extendedPrice"),
+        quantityOrdered = this.get("quantityOrdered"),
+        quantityUnitRatio = this.get("quantityUnitRatio"),
+        priceUnitRatio = this.get("priceUnitRatio"),
         parent = this.getParent(),
         effective = parent ? parent.get(parent.documentDateKey) : false,
         currency = parent ? parent.get("currency") : false,
         that = this,
         options = {};
 
-      if (price) {
-        if (standardCost) {
+      if (extendedPrice) {
+        if (unitCost) {
           options.success = function (value) {
-            that.set("profit", XT.toPercent((value - standardCost) / standardCost));
+            var extendedCost = value * quantityOrdered * quantityUnitRatio / priceUnitRatio;
+            that.set("margin", XT.math.subtract(extendedPrice - extendedCost));
           };
-          currency.toBase(price, effective, options);
+          currency.fromBase(unitCost, effective, options);
         } else {
-          this.set("profit", 1);
+          this.set("margin", extendedPrice);
         }
       } else {
-        this.unset("profit");
+        this.unset("margin");
       }
     },
 
@@ -1337,21 +1395,28 @@ white:true*/
     */
     discountDidChange: function () {
       var K = this.getClass(),
-        isConfigured = this.getValue("itemSite.item.isConfigured"),
+        isConfigured = this.getValue("item.isConfigured"),
         characteristics = this.get("characteristics").models,
         discount = this.get("discount"),
         customerPrice = this.get("customerPrice"),
-        sense = this.get("priceMode") === K.MARKUP_MODE ? -1 : 1,
+        unitCost = this.get("unitCost"),
+        long30 = XT.session.settings.get("Long30Markups"),
+        parent = this.getParent(),
+        currency = parent.get("currency"),
+        effective = parent.get(parent.documentKey),
         scale = XT.SALES_PRICE_SCALE,
+        that = this,
+        options = {},
         charPrices = 0,
         discounted,
-        price;
+        price = 0;
 
       if (!customerPrice) {
         this.unset("discount");
       } else if (this._updatePrice) {
-        discounted = customerPrice * discount * sense;
+        discounted = customerPrice * discount;
         price = XT.math.subtract(customerPrice, discounted, scale);
+
         if (isConfigured) {
           _.each(characteristics, function (char) {
             charPrices += char.get("price");
@@ -1363,6 +1428,22 @@ white:true*/
         this.priceDidChange();
         this.set("basePrice", XT.math.subtract(price, charPrices, scale));
       }
+
+      // Handle Markup
+      if (!unitCost) {
+        this.off('change:markup', this.calculateMarkupPrice);
+        this.unset("markup");
+        this.on('change:markup', this.calculateMarkupPrice);
+      } else {
+        options.success = function (value) {
+          var markup = long30 ? 1.0 - unitCost / value : value / unitCost - 1.0;
+          that.off('change:markup', that.calculateMarkupPrice);
+          that.set("markup", markup);
+          that.on('change:markup', that.calculateMarkupPrice);
+        };
+        currency.toBase(price, effective, options);
+      }
+
       return this;
     },
 
@@ -1375,7 +1456,7 @@ white:true*/
     fetchSellingUnits: function (resetDefaults) {
       resetDefaults = _.isBoolean(resetDefaults) ? resetDefaults : true;
       var that = this,
-        item = this.getValue("itemSite.item"),
+        item = this.get("item"),
         options = {};
 
       if (resetDefaults) {
@@ -1407,11 +1488,14 @@ white:true*/
       return this;
     },
 
-    itemSiteDidChange: function () {
+    itemDidChange: function () {
       var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
-        item = this.getValue("itemSite.item"),
+        site = this.get("site"),
+        item = this.get("item"),
         characteristics = this.get("characteristics"),
+        isWholesaleCost = XT.session.settings.get("WholesalePriceCosting"),
+        unitCost = isWholesaleCost ? item.get("wholesalePrice") : item.get("standardCost"),
         that = this,
         options = {},
         itemCharAttrs,
@@ -1431,6 +1515,11 @@ white:true*/
       }
 
       if (!item) { return; }
+
+      // Reset Unit Cost
+      this.off("unitCost", this.unitCostDidChange);
+      this.set("unitCost", unitCost);
+      this.on("unitCost", this.unitCostDidChange);
 
       // Fetch and update tax type
       options.success = function (id) {
@@ -1475,9 +1564,17 @@ white:true*/
         characteristics.add(quoteLineChar);
       });
 
-      this.calculatePrice();
-      this.calculateProfit();
-      this.recalculateParent();
+      if (site) { this.siteDidChange(); }
+    },
+
+    siteDidChange: function () {
+      var item = this.get("item"),
+        site = this.get("site");
+      if (item && site) {
+        this.calculatePrice();
+        this.calculateMargin();
+        this.recalculateParent();
+      }
     },
 
     parentDidChange: function () {
@@ -1523,7 +1620,7 @@ white:true*/
     priceUnitDidChange: function () {
       var quantityUnit = this.get("quantityUnit"),
         priceUnit = this.get("priceUnit"),
-        item = this.getValue("itemSite.item"),
+        item = this.getValue("item"),
         inventoryUnit = item ? item.getValue("inventoryUnit") : false,
         that = this,
         options = {};
@@ -1556,7 +1653,7 @@ white:true*/
     quantityUnitDidChange: function () {
       var quantity = this.get("quantity"),
         quantityUnit = this.get("quantityUnit"),
-        item = this.getValue("itemSite.item"),
+        item = this.getValue("item"),
         inventoryUnit = item ? item.get("inventoryUnit") : false,
         that = this,
         options = {},
@@ -1611,7 +1708,7 @@ white:true*/
     save: function () {
       var quantity = this.get("quantity"),
         quantityUnitRatio = this.get("quantityUnitRatio"),
-        itemIsNotFractional = !this.get("itemSite.item.isFractional"),
+        itemIsNotFractional = !this.get("item.isFractional"),
         scale = this._unitIsFractional ? 2 : 0;
 
       // Check inventory quantity against conversion fractional setting
@@ -1631,7 +1728,7 @@ white:true*/
     },
 
     scheduleDateDidChange: function () {
-      var item = this.getValue("itemSite.item"),
+      var item = this.getValue("item"),
         parent = this.getParent(),
         customer = parent.get("customer"),
         shipto = parent.get("shipto"),
@@ -1662,7 +1759,8 @@ white:true*/
     statusDidChange: function () {
       var status = this.getStatus();
       if (status === XM.Model.READY_CLEAN) {
-        this.setReadOnly("itemSite");
+        this.setReadOnly("item");
+        this.setReadOnly("site");
       }
     },
 
