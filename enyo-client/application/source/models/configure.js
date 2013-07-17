@@ -15,7 +15,13 @@ white:true*/
 
     recordType: 'XM.UserPreference',
 
-    privileges: "MaintainPreferencesSelf"
+    privileges: "MaintainPreferencesSelf",
+
+    dispatchRecordType: 'XT.Session',
+
+    dispatchFetchFunction: 'preferences',
+
+    dispatchCommitFunction: 'commitPreferences'
 
   });
   XM.userPreference = new XM.UserPreference();

@@ -122,7 +122,6 @@
     "xm/javascript/crm.sql",
     "xm/javascript/customer.sql",
     "xm/javascript/database_information.sql",
-    "xm/javascript/user_preference.sql",
     "xm/javascript/incident.sql",
     "xm/javascript/item.sql",
     "xm/javascript/item_site.sql",
