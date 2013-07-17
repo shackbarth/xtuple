@@ -32,6 +32,7 @@ var lang = XT.stringsFor("en_US", {
   "_database": "Database",
   "_equity": "Equity",
   "_expense": "Expense",
+  "_exportVcf": "Export VCF",
   "_feedback": "Feedback",
   "_hourly": "Hourly",
   "_individual": "Individual",

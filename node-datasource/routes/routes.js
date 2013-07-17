@@ -37,7 +37,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     redirector = require('./redirector'),
     report = require('./report'),
     restDiscovery = require('./restDiscovery'),
-    restRouter = require('./restRouter');
+    restRouter = require('./restRouter'),
+    vcfExport = require('./vcfExport');
 
   //
   // Authentication-related routes
@@ -82,5 +83,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];
   exports.resetPassword = [ensureLogin, changePassword.resetPassword];
+  exports.vcfExport = [ensureLogin, vcfExport.vcfExport]
 
 }());

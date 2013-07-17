@@ -327,6 +327,7 @@ app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
+app.all('/:org/vcfExport', routes.vcfExport);
 app.all('/:org/extensions', routes.extensions);
 app.get('/:org/file', routes.file);
 app.get('/:org/report', routes.report);
