@@ -407,30 +407,32 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       revision = dateFormat(new Date(), "yyyy-mm-dd");
       end = "VCARD";
 
-      stringToSave = "BEGIN:" + begin + "\n";
-      stringToSave = stringToSave + "VERSION:" + version + "\n";
-      stringToSave = stringToSave + "N:" + name + "\n";
-      stringToSave = stringToSave + "FN:" + fullName + "\n";
+      stringToSave = "BEGIN:" + begin + "%0A";
+      stringToSave = stringToSave + "VERSION:" + version + "%0A";
+      stringToSave = stringToSave + "N:" + name + "%0A";
+      stringToSave = stringToSave + "FN:" + fullName + "%0A";
       if (org)
-        stringToSave = stringToSave + "ORG:" + org + "\n";
+        stringToSave = stringToSave + "ORG:" + org + "%0A";
       if (title)
-        stringToSave = stringToSave + "TITLE:" + title + "\n";
+        stringToSave = stringToSave + "TITLE:" + title + "%0A";
       if (phoneWork)
-        stringToSave = stringToSave + "TEL;TYPE=WORK,VOICE:" + phoneWork + "\n";
+        stringToSave = stringToSave + "TEL;TYPE=WORK,VOICE:" + phoneWork + "%0A";
       if (phoneHome)
-        stringToSave = stringToSave + "TEL;TYPE=HOME,VOICE:" + phoneHome + "\n";
+        stringToSave = stringToSave + "TEL;TYPE=HOME,VOICE:" + phoneHome + "%0A";
       if (addressWork)
-        stringToSave = stringToSave + "ADR;TYPE=WORK:;;" + addressWork + "\n";
+        stringToSave = stringToSave + "ADR;TYPE=WORK:;;" + addressWork + "%0A";
       if (labelWork)
-        stringToSave = stringToSave + "LABEL;TYPE=WORK:;;" + labelWork + "\n";
+        stringToSave = stringToSave + "LABEL;TYPE=WORK:;;" + labelWork + "%0A";
       if (email)
-        stringToSave = stringToSave + "EMAIL;TYPE=PREF,INTERNET:" + email + "\n";
-      stringToSave = stringToSave + "REV:" + revision + "\n";
-      stringToSave = stringToSave + "END:" + end + "\n";
+        stringToSave = stringToSave + "EMAIL;TYPE=PREF,INTERNET:" + email + "%0A";
+      stringToSave = stringToSave + "REV:" + revision + "%0A";
+      stringToSave = stringToSave + "END:" + end + "%0A";
 
-      console.log(stringToSave);
-
-      return stringToSave;
+      window.open(XT.getOrganizationPath() +
+        '/%@?stringToSave=%@'
+        .f('vcfExport',
+          stringToSave),
+        '_newtab');
     }
   };
 

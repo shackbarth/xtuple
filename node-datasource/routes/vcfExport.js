@@ -6,9 +6,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  exports.vcfExport = function (stringToExport) {
+  exports.vcfExport = function (req, res) {
     var fs = require('fs');
 
-    fs.writeFile('exportedContact.vcf', stringToExport);
+    res.attachment("exportedContact.vcf");
+    res.send(req.query.stringToSave);
   };
 }());
