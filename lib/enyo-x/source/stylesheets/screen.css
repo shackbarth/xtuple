@@ -108,7 +108,7 @@
 .xv-groupbox .xv-moneywidget .xv-picker {
   width: 65px;
   text-align: center;
-  padding: 10px;
+  padding: 10px 4px;
 }
 .xv-groupbox .xv-relationwidget .onyx-input-decorator,
 .xv-groupbox .xv-datewidget .onyx-input-decorator {
@@ -283,10 +283,6 @@
   */
 
 }
-.dashboard .picker-icon {
-  margin-left: 15px;
-  color: #ffffff;
-}
 .dashboard .charts-panels {
   overflow-y: auto;
 }
@@ -338,6 +334,7 @@
 }
 .selectable-chart .chart-bottom .onyx-button {
   width: 130px;
+  padding: 10px 10px;
 }
 /**
   Styles relating to the parameter widget
@@ -431,6 +428,60 @@
 .xv-parameter-item .xv-radiogroup {
   padding: 6px;
   margin-left: 130px;
+}
+/**
+  Less styles for the
+*/
+/**
+  Styles related to pickers, combo boxes, and relation widgets
+*/
+/* Picker */
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-pickerwidget {
+  background-color: #ffffff;
+}
+.xv-picker {
+  text-align: left;
+  width: 160px;
+}
+.xv-picker-label {
+  color: #000000;
+  padding: 18px 8px 8px 8px;
+  text-align: right;
+  width: 130px;
+}
+.picker-icon {
+  color: #000000;
+  float: right;
+}
+/* Combo Box */
+.xv-combobox {
+  padding: 6px;
+  padding-top: 8px;
+  padding-right: 0;
+  height: 24px;
+  width: 170px;
+  display: inline-block;
+}
+.xv-combobox-input {
+  font-size: medium;
+  border: 0;
+  display: inline-block;
+  outline: none;
+  width: 125px;
+}
+.xv-combobox-icon {
+  margin-left: 4px;
+  display: inline-block;
+}
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
 }
 /**
   Import for Font-Awesome icons
@@ -2248,44 +2299,6 @@ body {
 .xv-short-relations-box.panel {
   width: 500px;
 }
-/* Combo Box */
-.xv-combobox {
-  padding: 6px;
-  padding-top: 8px;
-  padding-right: 0;
-  height: 24px;
-  width: 170px;
-  display: inline-block;
-}
-.xv-combobox-input {
-  font-size: medium;
-  border: 0;
-  display: inline-block;
-  outline: none;
-  width: 125px;
-}
-.xv-combobox-icon {
-  margin-left: 4px;
-  display: inline-block;
-}
-.xv-combobox-note {
-  padding: 14px 3px 8px 3px;
-  text-align: left;
-}
-/* Picker */
-.onyx-picker .onyx-menu-item {
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.xv-pickerwidget {
-  background-color: #ffffff;
-}
-.xv-picker {
-  width: 160px;
-  text-align: left;
-}
 .xv-label {
   width: 130px;
   padding: 8px;
@@ -2295,16 +2308,6 @@ body {
   width: 130px;
   padding: 14px 8px 8px 8px;
   text-align: right;
-}
-.xv-picker-label {
-  width: 130px;
-  padding: 18px 8px 8px 8px;
-  text-align: right;
-  color: #000000;
-}
-.picker-icon {
-  margin-left: 15px;
-  color: #000000;
 }
 .xv-textarea-input {
   width: 90%;
