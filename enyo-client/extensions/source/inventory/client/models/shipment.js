@@ -15,13 +15,13 @@ white:true*/
     */
     XM.Shipment = XM.Document.extend({
 
-    recordType: "XM.Shipment",
+      recordType: "XM.Shipment",
 
-    numberPolicy: XM.Document.AUTO_NUMBER,
+      numberPolicy: XM.Document.AUTO_NUMBER,
 
-    readOnlyAttributes: [
-      "order"
-    ]
+      readOnlyAttributes: [
+        "order"
+      ]
 
     });
 
@@ -32,9 +32,9 @@ white:true*/
     */
     XM.ShipmentLine = XM.Document.extend({
 
-    recordType: "XM.ShipmentLine",
+      recordType: "XM.ShipmentLine",
 
-    parentKey: "shipment"
+      parentKey: "shipment"
 
     });
 
@@ -49,7 +49,7 @@ white:true*/
     */
     XM.ShipmentCollection = XM.Collection.extend({
 
-    model: XM.Shipment
+      model: XM.Shipment
 
     });
 
