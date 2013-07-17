@@ -13,9 +13,9 @@ trailing:true, white:true*/
     // dashboard and the chart is the widget to be added
     // this tells the default query what extension to pull charts for
     extension: "sales",
-    charts: [
-      {title: "_salesHistory".loc(), chart: "XV.SalesHistoryTimeSeriesChart"},
-      {title: "_bookings".loc(), chart: "XV.SalesOrderTimeSeriesChart"}
+    newActions: [
+      {name: "salesHistory", label: "_salesHistory".loc(), item: "XV.SalesHistoryTimeSeriesChart"},
+      {name: "bookings", label: "_bookings".loc(), item: "XV.SalesOrderTimeSeriesChart"}
     ]
   });
 
