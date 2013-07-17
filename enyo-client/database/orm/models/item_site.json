@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "CostCategory",
     "table": "costcat",
+    "isRest": true,
     "idSequenceName": "costcat_costcat_id_seq",
     "lockable": true,
     "comment": "Cost Category Map",
@@ -80,6 +81,7 @@
       {
         "name": "item",
         "toOne": {
+          "isNested": true,
           "type": "ItemRelation",
           "column": "itemsite_item_id",
           "required": true
@@ -214,7 +216,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -240,6 +243,7 @@
     "nameSpace": "XM",
     "type": "ItemSiteListItem",
     "table": "itemsite",
+    "isRest": true,
     "comment": "Itemsite List Item Map",
     "privileges": {
       "all": {
@@ -318,6 +322,7 @@
     "nameSpace": "XM",
     "type": "ItemSiteRelation",
     "table": "xt.itemsiteinfo",
+    "isRest": true,
     "comment": "Itemsite Relation Map",
     "privileges": {
       "all": {
@@ -325,6 +330,11 @@
         "read": true,
         "update": false,
         "delete": false
+      },
+      "attribute": {
+        "unitCost": {
+          "view": "ViewCosts MaintainCosts"
+        }
       }
     },
     "properties": [
@@ -389,10 +399,10 @@
         }
       },
       {
-        "name": "averageCost",
+        "name": "unitCost",
         "attr": {
           "type": "Number",
-          "column": "avg_cost"
+          "column": "unit_cost"
         }
       }
     ],
@@ -403,6 +413,7 @@
     "nameSpace": "XM",
     "type": "PlannerCode",
     "table": "plancode",
+    "isRest": true,
     "idSequenceName": "plancode_plancode_id_seq",
     "lockable": true,
     "comment": "Planner Code Map",

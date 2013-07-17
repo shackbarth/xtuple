@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "SalesOrder",
     "table": "xt.coheadinfo",
+    "isRest": true,
     "lockable": true,
     "lockTable": "cohead",
     "idSequenceName": "cohead_cohead_id_seq",
@@ -15,6 +16,17 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
+      },
+      "attribute": {
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "orderDate": {
+          "edit": "OverrideSODate"
+        },
+        "packDate": {
+          "edit": "AlterPackDate"
+        }
       }
     },
     "properties": [
@@ -734,7 +746,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -990,6 +1003,23 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
+      },
+      "attribute": {
+        "firm": {
+          "edit": "FirmSalesOrder"
+        },
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "unitCost": {
+          "view": "ViewCosts"
+        },
+        "taxType": {
+          "edit": "OverrideTax"
+        },
+        "markup": {
+          "view": "ViewCosts"
+        }
       }
     },
     "properties": [
@@ -1026,11 +1056,28 @@
         }
       },
       {
-        "name": "itemSite",
+        "name": "item",
         "toOne": {
-          "type": "ItemSiteRelation",
-          "column": "coitem_itemsite_id",
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "coitem_item_id",
           "required": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "coitem_warehous_id",
+          "required": true
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "coitem_unitcost"
         }
       },
       {
@@ -1147,14 +1194,6 @@
         }
       },
       {
-        "name": "priceMode",
-        "attr": {
-          "type": "String",
-          "column": "coitem_pricemode",
-          "required": true
-        }
-      },
-      {
         "name": "extendedPrice",
         "attr": {
           "type": "ExtendedPrice",
@@ -1162,10 +1201,10 @@
         }
       },
       {
-        "name": "profit",
+        "name": "margin",
         "attr": {
           "type": "String",
-          "column": "profit"
+          "column": "margin"
         }
       },
       {
@@ -1238,7 +1277,8 @@
         }
       }
     ],
-    "isSystem": true
+    "isSystem": true,
+    "isNestedOnly": true
   },
   {
     "context": "xtuple",
@@ -1385,7 +1425,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -1411,6 +1452,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderListItem",
     "table": "xt.coheadinfo",
+    "isRest": true,
     "comment": "Sales Order List Item Map",
     "privileges": {
       "all": {
@@ -1496,9 +1538,10 @@
       },
       {
         "name": "salesRep",
-        "attr": {
-          "type": "Number",
-          "column": "cohead_salesrep_id"
+        "toOne": {
+          "type": "SalesRep",
+          "column": "cohead_salesrep_id",
+	  			"isNested": true
          }
       },
       {
@@ -1537,6 +1580,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderRelation",
     "table": "xt.coheadinfo",
+    "isRest": true,
     "comment": "Sales Order Relation Map",
     "privileges": {
       "all": {

@@ -9,4 +9,4 @@ create or replace function xt.co_line_tax(coitem) returns numeric stable as $$
       xt.co_line_extended_price($1))).taxdetail_tax as tax
     from cohead
     where cohead_id = $1.coitem_cohead_id) data;
-$$ language sql
+$$ language sql;

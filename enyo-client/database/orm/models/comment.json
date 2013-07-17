@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "CommentType",
     "table": "cmnttype",
+    "isRest": true,
     "idSequenceName": "cmnttype_cmnttype_id_seq",
     "comment": "Comment Type Map",
     "privileges": {
@@ -129,6 +130,7 @@
     "nameSpace": "XM",
     "type": "Source",
     "table": "source",
+    "isRest": true,
     "comment": "Comment Type Source Map",
     "privileges": {
       "all": {

@@ -5,15 +5,18 @@
     <link rel="shortcut icon" href="/assets/favicon.ico" />
     <!-- -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+    <meta http-equiv="Cache-control" content="No-Cache">
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <!-- css -->
-    <link href="/<%= org %>/client/build/enyo.css?1.3.3" rel="stylesheet"/>
-    <link href="/<%= org %>/client/build/app.css?1.3.3" rel="stylesheet"/>
+    <link href="/<%= org %>/client/lib/enyo-x/lib/nvd3/src/nv.d3.css" rel="stylesheet"/>
+    <link href="/<%= org %>/client/build/client-code?uuid=<%= coreCss %>&language=css" rel="stylesheet"/>
     <!-- js -->
-    <script src="/socket.io/socket.io.js?1.3.3" type="text/javascript"></script>
-    <script src="/<%= org %>/client/build/enyo.js?1.3.3"></script>
-    <script src="/<%= org %>/client/build/app.js?1.3.3"></script>
+    <script src="/socket.io/socket.io.js?1.3.10" type="text/javascript"></script>
+    <script src="/<%= org %>/client/build/client-code?uuid=<%= coreJs %>&language=js"></script>
+    <% for (var i = 0; i < extensions.length; i++) { %>
+      <script src="/<%= org %>/client/build/client-code?uuid=<%= extensions[i] %>&language=js"></script>
+    <% } %>
   </head>
   <body class="enyo-unselectable">
     <script>

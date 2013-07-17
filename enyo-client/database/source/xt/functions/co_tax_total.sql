@@ -7,4 +7,4 @@ create or replace function xt.co_tax_total(cohead) returns numeric stable as $$
     select round(sum(taxdetail_tax),2) as tax 
     from calculateTaxDetailSummary('S', $1.cohead_id, 'T')
     group by taxdetail_tax_id) as data;
-$$ language sql
+$$ language sql;

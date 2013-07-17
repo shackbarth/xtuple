@@ -1,10 +1,32 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global SYS:true, XM:true, Backbone:true, _:true */
 
 (function () {
   "use strict";
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  SYS.ClientCodeRelation = XM.SimpleModel.extend({
+
+    recordType: 'SYS.ClientCodeRelation'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  SYS.ClientCode = XM.SimpleModel.extend({
+
+    recordType: 'SYS.ClientCode'
+
+  });
 
   /**
     @class
@@ -78,6 +100,18 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  SYS.UserAccountRole = XM.SimpleModel.extend({
+    /** @scope SYS.UserAccountRole.prototype */
+
+    recordType: 'SYS.UserAccountRole'
+
+  });
+
 
   /**
     @class
@@ -96,6 +130,17 @@ white:true*/
   // ..........................................................
   // COLLECTIONS
   //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  SYS.ClientCodeRelationCollection = XM.Collection.extend({
+
+    model: SYS.ClientCodeRelation
+
+  });
 
   /**
     @class

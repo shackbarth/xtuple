@@ -8,7 +8,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   module.exports = {
     processName: "node-datasource",
     allowMultipleInstances: true,
-    requireDatabase: true,
     datasource: {
       debugging: false,
       debugDatabase: false,
@@ -25,6 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       certFile: "./lib/private/server.crt",
       caFile: null,
       saltFile: "./lib/private/salt.txt",
+      biKeyFile: "",
       xTupleDbDir: "/usr/local/xtuple/databases",
       psqlPath: "psql",
       nodePath: "node",
@@ -37,7 +37,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       smtpPassword: "_smtp_password_",
 
       // URL of BI server
-      biUrl: "http://your.bi.solution/report.html?args=sample",
+      // Leave this empty unless reports are installed
+      biUrl: "", // "http://yourserver.com:8080/pentaho/content/reporting/reportviewer/report.html?",
+      biServerUrl: "", // "http://yourserver.com:8080/pentaho/"
 
       // these properties are dynamically registered with the
       // node discovery service
@@ -58,17 +60,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       databases: ["dev"],
       testDatabase: "" // this must remain empty for production datasources
     },
+    extensionRoutes: [],
     databaseServer: {
       hostname: "localhost",
       port: 5432,
       user: "admin",
       password: "admin"
-    },
-    required: [
-      "lib/ext/database",
-      "lib/ext/datasource",
-      "lib/ext/smtpTransport",
-      "lib/ext/models"
-    ]
+    }
   };
 }());

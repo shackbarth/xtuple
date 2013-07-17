@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true, enyo:true */
 
@@ -183,13 +183,27 @@ white:true*/
     },
 
     /**
-      Returns first alpha active selling site
+      Returns the default site if profiled, otherwise returns
+      the first alpha active selling site
     */
     defaultSite: function () {
-      // TODO: Pick up default site based on user preference
-      return _.find(XM.sites.models, function (site) {
-        return site.get("isActive");
-      });
+      var preferredSite = XT.session.preferences.get("PreferredWarehouse"),
+        foundSite;
+
+      if (preferredSite) {
+        foundSite = _.find(XM.siteRelations.models, function (site) {
+          return site.get("code") === preferredSite;
+        });
+      }
+
+      if (!foundSite) {
+        // either there is no preference or the preference is miswired somehow
+        foundSite = _.find(XM.siteRelations.models, function (site) {
+          return site.get("isActive");
+        });
+      }
+
+      return foundSite;
     },
 
     /**

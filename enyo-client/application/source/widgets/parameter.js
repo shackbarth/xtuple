@@ -176,6 +176,7 @@ trailing:true, white:true*/
       },
       {name: "number", label: "_number".loc(), attr: "number"},
       {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "customerType", attr: "customerType", label: "_customerType".loc(), defaultKind: "XV.CustomerTypePicker"},
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
       {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "billingContact.primaryEmail"},
       {name: "phone", label: "_phone".loc(), attr: ["billingContact.phone", "billingContact.alternate", "billingContact.fax"]},
@@ -566,6 +567,23 @@ trailing:true, white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
+
+  // ..........................................................
+  // ORDER LIST
+  //
+
+  enyo.kind({
+    name: "XV.OrderListItemParameters",
+    kind: "XV.ParameterWidget",
+  //  characteristicsRole: 'isAccounts',
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_orderListItem".loc()},
+      {name: "orderType", attr: "type", label: "_orderType".loc(), defaultKind: "XV.CustomerTypePicker"},
+      {name: "number", label: "_number".loc(), attr: "number"},
+			{name: "scheduledDate", label: "_scheduledDate".loc(), attr: "scheduledDate"},
+      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedToUserName"}    
+		]
+  }); 
 
   // ..........................................................
   // PLANNER CODE

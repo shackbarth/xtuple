@@ -9,7 +9,8 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
   XM.DatabaseInformation.options = [
     "DatabaseName",
     "DatabaseComments",
-    "ServerVersion"
+    "ServerVersion",
+    "WelcomePage"
   ]
 
   /* 

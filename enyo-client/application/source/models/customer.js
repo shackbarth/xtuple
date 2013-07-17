@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true */
 
@@ -212,7 +212,8 @@ white:true*/
       var prospect = new XM.Prospect(),
         fetchOptions = {},
         that = this;
-
+      // this id is the natural key, which is the number
+      // for both customer and prospect
       fetchOptions.id = id;
 
       fetchOptions.success = function (resp) {
@@ -221,9 +222,9 @@ white:true*/
         that.set("salesRep", prospect.get("salesRep"));
         that.set("preferredSite", prospect.get("site"));
         that.set("taxZone", prospect.get("taxZone"));
-        that.setReadOnly("id", false);
-        that.set("id", prospect.id);
-        that.setReadOnly("id", true);
+        that.setReadOnly("number", false);
+        that.set("number", prospect.id);
+        that.setReadOnly("number", true);
         that.revertStatus();
         that.checkConflicts = false;
       };

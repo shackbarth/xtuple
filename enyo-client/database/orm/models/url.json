@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Url",
     "table": "urlinfo",
+    "isRest": true,
     "idSequenceName": "urlinfo_url_id_seq",
     "comment": "URL Map",
     "privileges": {

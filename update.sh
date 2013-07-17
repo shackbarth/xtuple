@@ -66,20 +66,5 @@ fi
 rm -rf node_modules
 npm install
 
-# restart the datasource
-monit stop node
-sleep 10
-monit start node
-sleep 10
-
-# TODO: update DBs
-
-# build extensions
-cd enyo-client/extensions
-./tools/buildExtensions.sh
-
-# deploy enyo client
-cd ../application
-rm -rf deploy
-cd tools
-./deploy.sh
+# rebuild the client and database sides of the app
+./scripts/build_app.js

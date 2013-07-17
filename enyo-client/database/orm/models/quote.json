@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Quote",
     "table": "xt.quheadinfo",
+    "isRest": true,
     "idSequenceName": "quhead_quhead_id_seq",
     "lockable": true,
     "lockTable": "quhead",
@@ -14,6 +15,17 @@
         "read": "ViewQuotes",
         "update": "MaintainQuotes",
         "delete": "MaintainQuotes"
+      },
+      "attribute": {
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "quoteDate": {
+          "edit": "OverrideSODate"
+        },
+        "packDate": {
+          "edit": "AlterPackDate"
+        }
       }
     },
     "properties": [
@@ -696,7 +708,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -944,6 +957,7 @@
     "nameSpace": "XM",
     "type": "QuoteLine",
     "table": "xt.quiteminfo",
+    "isRest": true,
     "idSequenceName": "quitem_quitem_id_seq",
     "comment": "Quote Line Item Map",
     "privileges": {
@@ -952,6 +966,20 @@
         "read": "ViewQuotes",
         "update": "MaintainQuotes",
         "delete": "MaintainQuotes"
+      },
+      "attribute": {
+        "taxType": {
+          "edit": "OverrideTax"
+        },
+        "margin": {
+          "view": "ShowMarginsOnSalesOrder"
+        },
+        "unitCost": {
+          "view": "ViewCosts"
+        },
+        "markup": {
+          "view": "ViewCosts"
+        }
       }
     },
     "properties": [
@@ -988,12 +1016,28 @@
         }
       },
       {
-        "name": "itemSite",
+        "name": "item",
         "toOne": {
-          "type": "ItemSiteRelation",
-          "column": "quitem_itemsite_id",
+          "type": "ItemRelation",
+          "column": "quitem_item_id",
           "isNested": true,
           "required": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "quitem_order_warehous_id",
+          "isNested": true,
+          "required": true
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "quitem_unitcost"
         }
       },
       {
@@ -1110,14 +1154,6 @@
         }
       },
       {
-        "name": "priceMode",
-        "attr": {
-          "type": "String",
-          "column": "quitem_pricemode",
-          "required": true
-        }
-      },
-      {
         "name": "extendedPrice",
         "attr": {
           "type": "ExtendedPrice",
@@ -1125,10 +1161,10 @@
         }
       },
       {
-        "name": "profit",
+        "name": "margin",
         "attr": {
           "type": "String",
-          "column": "profit"
+          "column": "margin"
         }
       },
       {
@@ -1318,7 +1354,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -1344,6 +1381,7 @@
     "nameSpace": "XM",
     "type": "QuoteListItem",
     "table": "xt.quheadinfo",
+    "isRest": true,
     "comment": "Quote List Item Map",
     "privileges": {
       "all": {
@@ -1429,10 +1467,10 @@
       },
       {
         "name": "salesRep",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "SalesRep",
           "column": "quhead_salesrep_id"
-         }
+        }
       },
       {
         "name": "shiptoName",
@@ -1456,6 +1494,7 @@
     "nameSpace": "XM",
     "type": "QuoteRelation",
     "table": "xt.quheadinfo",
+    "isRest": true,
     "comment": "Quote Relation Map",
     "privileges": {
       "all": {

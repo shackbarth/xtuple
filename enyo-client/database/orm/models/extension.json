@@ -67,7 +67,7 @@
     "type": "UserAccountExtension",
     "table": "xt.usrext",
     "idSequenceName": "xt.usrext_usrext_id_seq",
-    "comment": "Extension Map",
+    "comment": "User Account Extension Map",
     "properties": [
      {
        "name": "id",
@@ -97,6 +97,49 @@
        "toOne": {
          "type": "Extension",
          "column": "usrext_ext_id",
+         "isNested": true
+       }
+     }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserAccountRoleExtension",
+    "table": "xt.grpext",
+    "idSequenceName": "xt.grpext_grpext_id_seq",
+    "comment": "User Account Role Extension Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "grpext_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "uuid",
+       "attr": {
+         "type": "String",
+         "column": "obj_uuid",
+         "isNaturalKey": true
+       }
+     },
+     {
+       "name": "userAccountRole",
+       "attr": {
+         "type": "Number",
+         "column": "grpext_grp_id"
+       }
+     },
+     {
+       "name": "extension",
+       "toOne": {
+         "type": "Extension",
+         "column": "grpext_ext_id",
          "isNested": true
        }
      }
@@ -162,6 +205,15 @@
          "type": "Number",
          "column": "ext_load_order"
        }
+     },
+     {
+       "name": "codeInfo",
+       "toMany": {
+         "column": "ext_id",
+         "type": "ClientCodeRelation",
+         "inverse": "extension",
+         "isNested": true
+       }
      }
     ],
     "isSystem": true
@@ -172,7 +224,7 @@
     "type": "UserExtension",
     "table": "xt.usrext",
     "idSequenceName": "xt.usrext_usrext_id_seq",
-    "comment": "Extension Map",
+    "comment": "User Account Extension Map",
     "properties": [
      {
        "name": "id",
@@ -202,6 +254,49 @@
        "toOne": {
          "type": "Extension",
          "column": "usrext_ext_id",
+         "isNested": true
+       }
+     }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "UserAccountRoleExtension",
+    "table": "xt.grpext",
+    "idSequenceName": "xt.grpext_grpext_id_seq",
+    "comment": "User Account Role Extension Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "grpext_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "uuid",
+       "attr": {
+         "type": "String",
+         "column": "obj_uuid",
+         "isNaturalKey": true
+       }
+     },
+     {
+       "name": "userAccountRole",
+       "attr": {
+         "type": "Number",
+         "column": "grpext_grp_id"
+       }
+     },
+     {
+       "name": "extension",
+       "toOne": {
+         "type": "Extension",
+         "column": "grpext_ext_id",
          "isNested": true
        }
      }

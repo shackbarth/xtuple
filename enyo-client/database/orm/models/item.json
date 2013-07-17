@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "ClassCode",
     "table": "classcode",
+    "isRest": true,
     "idSequenceName": "classcode_classcode_id_seq",
     "lockable": true,
     "comment": "Class Code Map",
@@ -48,6 +49,7 @@
     "nameSpace": "XM",
     "type": "FreightClass",
     "table": "freightclass",
+    "isRest": true,
     "idSequenceName": "freightclass_freightclass_id_seq",
     "lockable": true,
     "comment": "Freight Class Map",
@@ -335,7 +337,7 @@
         }
       },
       {
-        "name": "itemSites",
+        "name": "itemSiteRelations",
         "toMany": {
           "type": "ItemSiteRelation",
           "column": "item_id"
@@ -649,7 +651,8 @@
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
-          "column": "comment_public"
+          "column": "comment_public",
+          "value": true
         }
       },
       {
@@ -823,6 +826,7 @@
     "nameSpace": "XM",
     "type": "ItemListItem",
     "table": "item",
+    "isRest": true,
     "comment": "Item List Item Map",
     "privileges": {
       "all": {
@@ -1029,6 +1033,7 @@
     "nameSpace": "XM",
     "type": "ItemRelation",
     "table": "xt.iteminfo",
+    "isRest": true,
     "comment": "Item Relation Map",
     "privileges": {
       "all": {
@@ -1036,6 +1041,11 @@
         "read": true,
         "update": false,
         "delete": false
+      },
+      "attribute": {
+        "standardCost": {
+          "view": "ViewCosts MaintainCosts"
+        }
       }
     },
     "properties": [
@@ -1425,6 +1435,7 @@
     "nameSpace": "XM",
     "type": "ProductCategory",
     "table": "prodcat",
+    "isRest": true,
     "idSequenceName": "prodcat_prodcat_id_seq",
     "lockable": true,
     "comment": "Product Category Map",
@@ -1468,6 +1479,7 @@
     "nameSpace": "XM",
     "type": "Unit",
     "table": "uom",
+    "isRest": true,
     "idSequenceName": "uom_uom_id_seq",
     "lockable": true,
     "comment": "Unit Map",

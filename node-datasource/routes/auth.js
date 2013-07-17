@@ -5,6 +5,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
+  /**
+    @name Auth
+    @class Auth
+    */
+
   var passport = require('passport'),
       url = require('url');
 
