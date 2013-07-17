@@ -38,17 +38,6 @@ white:true*/
 
     });
 
-    /**
-      @class
-
-      @extends XM.Document
-    */
-    XM.ShipmentListItem = XM.Document.extend({
-
-    recordType: "XM.ShipmentListItem"
-
-    });
-
     // ..........................................................
     // COLLECTIONS
     //
@@ -61,17 +50,6 @@ white:true*/
     XM.ShipmentCollection = XM.Collection.extend({
 
     model: XM.Shipment
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Collection
-    */
-    XM.ShipmentListItemCollection = XM.Collection.extend({
-
-    model: XM.ShipmentListItem
 
     });
 

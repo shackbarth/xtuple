@@ -3,16 +3,18 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Shipment",
-    "table": "shiphead",
+    "table": "xt.shipheadinfo",
     "idSequenceName": "shiphead_shiphead_id_seq",
     "lockable": true,
+    "lockTable": "shiphead",
+    "isRest": true,
     "comment": "Shipment Map",
     "privileges": {
       "all": {
-        "create": "IssueStockToShipping",
+        "create": "false",
         "read": "ViewShipping",
-        "update": "IssueStockToShipping",
-        "delete": "IssueStockToShipping"
+        "update": "false",
+        "delete": "false"
       }
     },
     "properties": [
@@ -149,7 +151,7 @@
         }
       },
 			{
-        "name": "issued",
+        "name": "atShipping",
         "attr": {
           "type": "Quantity",
           "column": "at_shipping"
@@ -157,128 +159,6 @@
       }
 	  ],
     "isNestedOnly": true,
-    "isSystem": true
-  },
- 	{
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "ShipmentListItem",
-    "table": "shiphead",
-    "idSequenceName": "shiphead_shiphead_id_seq",
-    "comment": "Shipment Map",
-    "privileges": {
-      "all": {
-        "create": "false",
-        "read": "ViewShipping",
-        "update": "false",
-        "delete": "false"
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "shiphead_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "number",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_number",
-					"isNaturalKey": true
-         }
-      },
-      {
-        "name": "order",
-        "toOne": {
-          "type": "SalesOrderRelation",
-          "column": "shiphead_order_id",
-					"isNested": true
-        }
-      },
-      {
-        "name": "shipVia",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_shipvia"
-        }
-      },
-      {
-        "name": "freight",
-        "attr": {
-          "type": "Currency",
-          "column": "shiphead_freight"
-        }
-      },
-      {
-        "name": "currency",
-        "toOne": {
-          "type": "Currency",
-          "column": "shiphead_freight_curr_id"
-        }
-      },
-      {
-        "name": "shipDate",
-        "attr": {
-          "type": "Date",
-          "column": "shiphead_shipdate"
-        }
-      }
-	  ],
-    "isSystem": true
-  },
-    {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "ShipmentRelation",
-    "table": "shiphead",
-    "idSequenceName": "shiphead_shiphead_id_seq",
-    "lockable": true,
-    "comment": "Shipment Relation Map",
-    "privileges": {
-      "all": {
-        "create": "true",
-        "read": "ViewShipping",
-        "update": "true",
-        "delete": "true"
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "shiphead_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "number",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_number",
-          "isNaturalKey": true
-         }
-      },
-      {
-        "name": "order",
-        "toOne": {
-          "type": "SalesOrderRelation",
-          "column": "shiphead_order_id",
-          "isNested": true
-        }
-      },
-      {
-        "name": "shipVia",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_shipvia"
-        }
-      }
-    ],
     "isSystem": true
   }
 ]

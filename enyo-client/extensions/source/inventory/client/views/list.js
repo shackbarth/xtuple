@@ -155,7 +155,6 @@ trailing:true, white:true*/
       query: {orderBy: [
         {attribute: 'scheduledDate'}
       ]},
-      parameterWidget: "XV.OrderListItemParameters",
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -282,7 +281,7 @@ trailing:true, white:true*/
       name: "XV.ShipmentList",
       kind: "XV.List",
       label: "_shipments".loc(),
-      collection: "XM.ShipmentListItemCollection",
+      collection: "XM.ShipmentCollection",
       query: {orderBy: [
   			{attribute: 'shipDate'}
       ]},

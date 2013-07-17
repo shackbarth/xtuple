@@ -115,7 +115,6 @@ trailing:true, white:true*/
     });
 
     XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
-    XV.registerModelWorkspace("XM.ShipmentListItem", "XV.ShipmentWorkspace");
     XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
 
   }
