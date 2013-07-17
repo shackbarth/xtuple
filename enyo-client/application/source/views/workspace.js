@@ -1504,7 +1504,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     ],
     create: function () {
       this.inherited(arguments);
-      this.$.sitePicker.setShowing(XT.session.settings.get("MultiWhs"));
       var effectiveKey = this.getEffectiveKey();
       this.build();
       this.$.dateField.setLabel(this.getEffectiveLabel());
@@ -1537,7 +1536,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         customer = model ? model.get("customer") : false,
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
 
-      this.$.sitePicker.setShowing(this.$.sitePicker.getShowing() && XT.session.settings.get("MultiWhs"));
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
     },

@@ -114,7 +114,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.creditStatuses"
   });
-  
+
   // ..........................................................
   // DEPARTMENT
   //
@@ -209,7 +209,7 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.incidentStatuses",
     valueAttribute: "id"
   });
-  
+
   // ..........................................................
   // ITEM TYPE
   //
@@ -220,7 +220,7 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.itemTypes",
     valueAttribute: "id"
   });
-  
+
   // ..........................................................
   // LEDGER ACCOUNT TYPE
   //
@@ -345,7 +345,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.projectStatuses"
   });
-  
+
   // ..........................................................
   // TODO STATUS
   //
@@ -421,7 +421,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // SHIFT
   //
@@ -553,7 +553,11 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.siteRelations",
     orderBy: [
       {attribute: 'code'}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      this.setShowing(this.getShowing() && XT.session.settings.get("MultiWhs"));
+    }
   });
 
   // ..........................................................
@@ -582,7 +586,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // WAGE TYPE
   //
@@ -594,7 +598,7 @@ regexp:true, undef:true, trailing:true, white:true */
     showNone: false,
     valueAttribute: "id"
   });
-  
+
   // ..........................................................
   // WAGE PERIOD
   //
