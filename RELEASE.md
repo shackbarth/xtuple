@@ -1,8 +1,12 @@
-1.3.10 (2013/06)
+1.4.0 (2013/06)
 ===============
 
 Critical deployment changes
 ---------------------------
+* We have moved the test folder from the node-datasource directory.
+  You will want to move by hand the two gitignored files in there:
+  demo-test.backup, and login_data.js. Then, you can rmdir the 
+  `node-datasource/test` folder and all its subfolders.
 * The init_scripts and the command-line ORM installer are gone.
   You will have to use /scripts/build_app.js for your installation needs.
   Run it with the -h flag to see the options.

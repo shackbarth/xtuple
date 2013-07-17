@@ -5,18 +5,20 @@ trailing:true, white:true*/
 
 (function () {
 
-  // ..........................................................
-  // SALES HISTORY
-  //
+  XT.extensions.sales.initParameters = function () {
+    // ..........................................................
+    // SALES HISTORY
+    //
 
-  enyo.kind({
-    name: "XV.SalesHistoryListParameters",
-    kind: "XV.ParameterWidget",
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_salesHistory".loc()},
-      {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.CustomerProspectWidget"},
-      {name: "salesRep", attr: "salesRep", label: "_salesRep".loc(), defaultKind: "XV.SalesRepPicker"},
-    ]
-  });
+    enyo.kind({
+      name: "XV.SalesHistoryListParameters",
+      kind: "XV.ParameterWidget",
+      components: [
+        {kind: "onyx.GroupboxHeader", content: "_salesHistory".loc()},
+        {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.CustomerProspectWidget"},
+        {name: "salesRep", attr: "salesRep", label: "_salesRep".loc(), defaultKind: "XV.SalesRepPicker"},
+      ]
+    });
+  };
 
 }());

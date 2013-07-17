@@ -1,6 +1,6 @@
 [
   {
-    "context": "xtuple",
+    "context": "inventory",
     "nameSpace": "XM",
     "type": "InventoryHistory",
     "table": "invhist",
@@ -244,7 +244,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "inventory",
     "nameSpace": "XM",
     "type": "InventoryDetail",
     "table": "invdetail",

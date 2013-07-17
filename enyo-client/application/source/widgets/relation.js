@@ -442,6 +442,7 @@ regexp:true, undef:true, trailing:true, white:true */
       };
       this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
       this.$.sitePicker.filter = filter;
+      this.$.sitePicker.setShowing(XT.session.settings.get("MultiWhs"));
       this._itemSites = new XM.ItemSiteRelationCollection();
       this.queryChanged();
     },
@@ -599,7 +600,8 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.SalesOrderWidget",
     kind: "XV.RelationWidget",
-    collection: "XM.SalesOrderRelationCollection",
+    collection: "XM.SalesOrderListItemCollection",
+    keyAttribute: "number",
     list: "XV.SalesOrderList"
   });
 

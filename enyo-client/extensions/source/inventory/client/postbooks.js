@@ -49,8 +49,8 @@ trailing:true, white:true*/
       actions: [
         {name: "issueToShipping", privilege: "issueStockToShipping", method: "issueToShipping", notify: false}
       ],
-      issueToShipping: function () {
-        alert("Testing!");
+      issueToShipping: function (inSender, inEvent) {
+        inSender.bubbleUp("onIssueToShipping", inEvent, inSender);
       }
 
     };
@@ -60,5 +60,18 @@ trailing:true, white:true*/
       "ConfigureIM"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
+
+    // Postbooks level handler for the thing that is neither fish nor fowl
+    XT.app.$.postbooks.handlers.onIssueToShipping = "issueToShipping";
+    XT.app.$.postbooks.issueToShipping = function (inSender, inEvent) {
+      var panel = this.createComponent({kind: "XV.IssueToShipping"});
+      
+      panel.render();
+      this.reflow();
+      this.setIndex(this.getPanels().length - 1);
+
+      return true;
+    };
+
   };
 }());
