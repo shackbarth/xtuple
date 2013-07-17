@@ -652,6 +652,7 @@ var lang = XT.stringsFor("en_US", {
   "_maintainPersonalOpportunities": "Maintain Personal Opportunities",
   "_maintainPersonalProjects": "Maintain Personal Projects",
   "_maintainPersonalToDoItems": "Maintain Personal To-Do Items",
+  "_maintainPreferencesSelf": "Maintain Personal Preferences",
   "_maintainTaxAssignments": "Maintain Tax Assignments",
   "_maintainTaxClasses": "Maintain Tax Classes",
   "_maintainTaxCodes": "MaintainTaxCodes",
