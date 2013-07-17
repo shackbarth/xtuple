@@ -1737,10 +1737,17 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.SalesOrderCommentBox", attr: "comments"},
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
         ], {owner: this});
-      this.$.lineItemsPanel.createComponents([
-        // Line Item Box
-        {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
-      ], {owner: this});
+      if (enyo.platform.touch) {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
+        ], {owner: this});
+      } else {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems"}
+        ], {owner: this});
+      }
     }
   });
 
