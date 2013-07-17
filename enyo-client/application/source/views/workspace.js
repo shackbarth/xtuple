@@ -1478,7 +1478,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.ContactWidget", attr: "shiptoContact",
               name: "shiptoContact"},
             {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
-            {kind: "XV.SitePicker", attr: "site", name: "sitePicker"},
+            {kind: "XV.SitePicker", attr: "site"},
             {kind: "XV.DateWidget", attr: "packDate"},
             {kind: "XV.InputWidget", attr: "fob"},
             {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
