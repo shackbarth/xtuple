@@ -41,14 +41,6 @@
         }
       },
       {
-        "name": "orderType",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_order_type",
-					"value": "SO"
-        }
-      },
-      {
         "name": "shipVia",
         "attr": {
           "type": "String",
@@ -124,10 +116,10 @@
     "comment": "Shipment Line Map",
     "privileges": {
       "all": {
-        "create": "false",
+        "create": "IssueStockToShipping",
         "read": "ViewShipping",
-        "update": "false",
-        "delete": "false"
+        "update": "IssueStockToShipping",
+        "delete": "IssueStockToShipping"
       }
     },
     "properties": [
@@ -173,7 +165,6 @@
     "type": "ShipmentListItem",
     "table": "shiphead",
     "idSequenceName": "shiphead_shiphead_id_seq",
-    "lockable": true,
     "comment": "Shipment Map",
     "privileges": {
       "all": {
@@ -206,14 +197,6 @@
           "type": "SalesOrderRelation",
           "column": "shiphead_order_id",
 					"isNested": true
-        }
-      },
-      {
-        "name": "orderType",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_order_type",
-					"value": "SO"
         }
       },
       {

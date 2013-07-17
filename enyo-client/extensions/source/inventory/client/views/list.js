@@ -155,10 +155,9 @@ trailing:true, white:true*/
 	    		{kind: "XV.ListColumn", classes: "first", components: [
 						{kind: "FittableColumns", components: [
 							{kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
-	      			{kind: "XV.ListAttr", attr: "order.customer", fit: true, classes: "right"}
+	      			{kind: "XV.ListAttr", attr: "order.customer.name", fit: true, classes: "right"}
 	    			]},
 	    			{kind: "FittableColumns", components: [
-	      			{kind: "XV.ListAttr", attr: "orderType"},
 							{kind: "XV.ListAttr", attr: "order.number", classes: "right"}
 	    			]}
 					]},

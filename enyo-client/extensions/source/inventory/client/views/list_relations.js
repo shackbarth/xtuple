@@ -30,10 +30,13 @@ trailing:true, white:true*/
               fit: true,  style: "text-indent: 18px;"}
           ]},
           {kind: "XV.ListColumn", classes: "money", components: [
+            {kind: "XV.ListAttr", attr: "orderLine.quantity",
+              formatter: "formatQuantity", style: "text-align: right"},
             {kind: "XV.ListAttr", attr: "orderLine.shipped",
-              formatter: "formatQuantity", style: "text-align: right"}
+              formatter: "formatQuantity", style: "text-align: right", classes: "bold"}
           ]},
           {kind: "XV.ListColumn", classes: "money", components: [
+            {kind: "XV.ListAttr", attr: "orderLine.quantityUnit.name"},
             {kind: "XV.ListAttr", attr: "orderLine.quantityUnit.name"}
           ]}
         ]}

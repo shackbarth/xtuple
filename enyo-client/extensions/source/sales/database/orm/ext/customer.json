@@ -17,16 +17,14 @@
         "name": "quoteRelations",
         "toMany": {
           "type": "QuoteRelation",
-          "column": "cust_number",
-          "inverse": "customer"
+          "column": "cust_id"
         }
       },
       {
         "name": "salesOrderRelations",
         "toMany": {
           "type": "SalesOrderRelation",
-          "column": "cust_number",
-          "inverse": "customer"
+          "column": "cust_id"
         }
       }
     ],

@@ -53,9 +53,9 @@ white:true*/
       @extends XM.Collection
     */
     XM.ShipmentCollection = XM.Collection.extend({
-    
+
     model: XM.Shipment
-    
+
     });
 
     /**

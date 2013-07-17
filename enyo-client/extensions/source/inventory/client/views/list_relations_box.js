@@ -14,7 +14,8 @@ trailing:true, white:true*/
     kind: "XV.ListRelationsBox",
     title: "_lineItems".loc(),
     parentKey: "shipment",
-    listRelations: "XV.ShipmentLineListRelations"
+    listRelations: "XV.ShipmentLineListRelations",
+    canOpen: false
   });
 
 }());

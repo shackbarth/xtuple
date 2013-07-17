@@ -47,5 +47,6 @@ var lang = XT.stringsFor("en_US", {
   "_reporting": "Reporting",
 	"_shipmentNumberPolicy": "Shipment Number Policy",
   "_disableReceiptExcessQty": "Disallow PO Receipt of Qty greater than ordered",
+  "_shipments": "Shipments",
   "_warnIfReceiptQtyDiffers": "Warn if PO Receipt Qty differs from receivable Qty"
 });
