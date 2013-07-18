@@ -436,10 +436,10 @@
   Styles related to pickers, combo boxes, and relation widgets
 */
 /* Picker */
-.onyx-picker {
+.onyx-picker-decorator .onyx-button {
   padding: 10px 10px;
 }
-.onyx-picker .onyx-menu-item {
+.onyx-picker-decorator .onyx-picker .onyx-menu-item {
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -450,21 +450,20 @@
 }
 .xv-picker {
   text-align: left;
-  width: 160px;
 }
 .xv-picker .picker-content {
-  max-width: 95px;
+  max-width: 120px;
   overflow: hidden;
+}
+.xv-picker .picker-icon {
+  color: #000000;
+  float: right;
 }
 .xv-picker-label {
   color: #000000;
   padding: 18px 8px 8px 8px;
   text-align: right;
   width: 130px;
-}
-.picker-icon {
-  color: #000000;
-  float: right;
 }
 /* Combo Box */
 .xv-combobox {
