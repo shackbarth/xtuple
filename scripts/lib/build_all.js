@@ -75,6 +75,7 @@ var _ = require('underscore'),
             callback(null, {
               extensions: paths,
               database: database,
+              keepSql: options.keepSql,
               wipeViews: options.wipeViews,
               clientOnly: options.clientOnly,
               databaseOnly: options.databaseOnly,
@@ -165,6 +166,7 @@ var _ = require('underscore'),
         options.backup :
         path.join(process.cwd(), options.backup);
       buildSpecs.initialize = true;
+      buildSpecs.keepSql = options.keepSql;
       buildSpecs.wipeViews = options.wipeViews;
       buildSpecs.clientOnly = options.clientOnly;
       buildSpecs.databaseOnly = options.databaseOnly;
@@ -195,6 +197,7 @@ var _ = require('underscore'),
           path.join(process.cwd(), options.extension);
         return {
           database: database,
+          keepSql: options.keepSql,
           wipeViews: options.wipeViews,
           clientOnly: options.clientOnly,
           databaseOnly: options.databaseOnly,
