@@ -47,6 +47,11 @@
   min-width: 320px;
   padding: 8px;
   margin-right: 5px;
+  /**
+    Top level input-decorator class.
+    All below this are overrides.
+  */
+
 }
 .xv-groupbox.editor {
   min-width: 250px;
@@ -83,7 +88,23 @@
 .xv-groupbox .onyx-input-decorator {
   border: 0;
 }
+.xv-groupbox .onyx-input-decorator input {
+  width: 150px;
+}
 .xv-groupbox .onyx-picker-decorator .onyx-button {
+  width: 150px;
+}
+.xv-groupbox .xv-relationwidget .onyx-input-decorator,
+.xv-groupbox .xv-datewidget .onyx-input-decorator,
+.xv-groupbox .xv-numberwidget .onyx-input-decorator {
+  width: 170px;
+}
+.xv-groupbox .xv-relationwidget input,
+.xv-groupbox .xv-datewidget input,
+.xv-groupbox .xv-numberwidget input {
+  width: 120px;
+}
+.xv-groupbox .xv-numberwidget input {
   width: 150px;
 }
 .xv-groupbox .xv-moneywidget {
@@ -109,14 +130,6 @@
   width: 65px;
   text-align: center;
   padding: 10px 4px;
-}
-.xv-groupbox .xv-relationwidget .onyx-input-decorator,
-.xv-groupbox .xv-datewidget .onyx-input-decorator {
-  width: 170px;
-}
-.xv-groupbox .xv-relationwidget input,
-.xv-groupbox .xv-datewidget input {
-  width: 120px;
 }
 .xv-groupbox > .onyx-input-decorator {
   border-color: #aaaaaa;
@@ -437,7 +450,7 @@
 */
 /* Picker */
 .onyx-picker-decorator .onyx-button {
-  padding: 10px 10px;
+  padding: 12px 8px 12px 8px;
 }
 .onyx-picker-decorator .onyx-picker .onyx-menu-item {
   text-align: left;
@@ -452,7 +465,7 @@
   text-align: left;
 }
 .xv-picker .picker-content {
-  max-width: 120px;
+  max-width: 118px;
   overflow: hidden;
 }
 .xv-picker .picker-icon {
@@ -2175,9 +2188,6 @@ body {
 /*
   XV Widgets
 */
-.xv-numberwidget .onyx-input-decorator {
-  width: 150px;
-}
 .xv-numberwidget input {
   text-align: right;
 }

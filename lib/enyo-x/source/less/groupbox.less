@@ -46,12 +46,34 @@
     background-color: @white;
   }
 
+  /**
+    Top level input-decorator class.
+    All below this are overrides.
+  */
   .onyx-input-decorator {
     border: 0;
+    input {
+      width: 150px;
+    }
   }
 
   .onyx-picker-decorator {
     .onyx-button {
+      width: 150px;
+    }
+  }
+
+  .xv-relationwidget, .xv-datewidget, .xv-numberwidget {
+    .onyx-input-decorator {
+      width: 170px;
+    }
+    input {
+      width: 120px;
+    }
+  }
+
+  .xv-numberwidget {
+    input {
       width: 150px;
     }
   }
@@ -81,15 +103,6 @@
       width: 65px;
       text-align: center;
       padding: 10px 4px;
-    }
-  }
-
-  .xv-relationwidget, .xv-datewidget {
-    .onyx-input-decorator {
-      width: 170px;
-    }
-    input {
-      width: 120px;
     }
   }
 
