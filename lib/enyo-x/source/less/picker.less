@@ -3,12 +3,19 @@
 */
 
 /* Picker */
-.onyx-picker {
-  .onyx-menu-item {
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+.onyx-picker-decorator {
+  .onyx-button {
+    padding: 10px 10px;
+  }
+
+  .onyx-picker {
+    .onyx-menu-item {
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 
@@ -18,7 +25,16 @@
 
 .xv-picker {
   text-align: left;
-  width: 160px;
+
+  .picker-content {
+    max-width: 120px;
+    overflow: hidden;
+  }
+
+  .picker-icon {
+    color: @black;
+    float: right;
+  }
 }
 
 .xv-picker-label {
@@ -28,10 +44,6 @@
   width: 130px;
 }
 
-.picker-icon {
-  color: @black;
-  float: right;
-}
 
 /* Combo Box */
 .xv-combobox {
