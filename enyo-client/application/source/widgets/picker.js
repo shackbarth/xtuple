@@ -554,9 +554,13 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'code'}
     ],
-    create: function () {
-      this.inherited(arguments);
-      this.setShowing(this.getShowing() && XT.session.settings.get("MultiWhs"));
+    setShowing: function () {
+      console.log("set showing", arguments);
+      if (XT.session.settings.get("MultiWhs")) {
+        this.inherited(arguments);
+      } else {
+        this.inherited([false]);
+      }
     }
   });
 
