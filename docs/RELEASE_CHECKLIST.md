@@ -13,11 +13,13 @@
   you have left sitting in github.
 7. Make sure that all Resolved <Not Open> issues have a Fixed-In version.
 8. Create a new branch with the naming convention `tags/R1_4_0` and push to the `XTUPLE` remote.
-```bash
-git checkout XTUPLE/master
-git checkout -b tags/R1_4_0
-git push XTUPLE tags/R1_4_0
-```
+
+  ```bash
+  git checkout XTUPLE/master
+  git checkout -b tags/R1_4_0
+  git push XTUPLE tags/R1_4_0
+  ```
+
 9. Send out an email.
 
 ### Testing
