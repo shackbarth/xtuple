@@ -281,6 +281,24 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     ]
   });
 
+  enyo.kind({
+    name: "XV.UserPreferenceWorkspace",
+    kind: "XV.Workspace",
+    title: "_userPreferences".loc(),
+    model: "XM.UserPreference",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
   // ..........................................................
   // CONTACT
   //
