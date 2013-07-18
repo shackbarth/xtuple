@@ -114,7 +114,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.creditStatuses"
   });
-  
+
   // ..........................................................
   // DEPARTMENT
   //
@@ -209,7 +209,7 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.incidentStatuses",
     valueAttribute: "id"
   });
-  
+
   // ..........................................................
   // ITEM TYPE
   //
@@ -220,7 +220,7 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.itemTypes",
     valueAttribute: "id"
   });
-  
+
   // ..........................................................
   // LEDGER ACCOUNT TYPE
   //
@@ -345,7 +345,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.projectStatuses"
   });
-  
+
   // ..........................................................
   // TODO STATUS
   //
@@ -421,7 +421,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // SHIFT
   //
@@ -553,7 +553,39 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.siteRelations",
     orderBy: [
       {attribute: 'code'}
-    ]
+    ],
+    /**
+      We can't assume that setShowing will be called on
+      this widget, so call it ourselves on create. Note
+      that we have to make sure XT.session.settings exists
+      before we can do so.
+     */
+    create: function () {
+      this.inherited(arguments);
+      var that = this,
+        callback = function () {
+          that.setShowing(that.getShowing());
+        };
+
+      // If not everything is loaded yet, come back to it later
+      if (!XT.session || !XT.session.settings) {
+        XT.getStartupManager().registerCallback(callback);
+      } else {
+        callback();
+      }
+    },
+    /**
+      If the user does not have multi-site, then always
+      keep hidden. We assume that this function is called
+      at least once by the time the picker is to be used.
+     */
+    setShowing: function () {
+      if (XT.session.settings.get("MultiWhs")) {
+        this.inherited(arguments);
+      } else {
+        this.inherited(arguments, [false]);
+      }
+    }
   });
 
   // ..........................................................
@@ -582,7 +614,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // WAGE TYPE
   //
@@ -594,7 +626,7 @@ regexp:true, undef:true, trailing:true, white:true */
     showNone: false,
     valueAttribute: "id"
   });
-  
+
   // ..........................................................
   // WAGE PERIOD
   //
