@@ -436,6 +436,9 @@
   Styles related to pickers, combo boxes, and relation widgets
 */
 /* Picker */
+.onyx-picker {
+  padding: 10px 10px;
+}
 .onyx-picker .onyx-menu-item {
   text-align: left;
   white-space: nowrap;
@@ -448,6 +451,10 @@
 .xv-picker {
   text-align: left;
   width: 160px;
+}
+.xv-picker .picker-content {
+  max-width: 95px;
+  overflow: hidden;
 }
 .xv-picker-label {
   color: #000000;
