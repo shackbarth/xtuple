@@ -554,12 +554,16 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'code'}
     ],
+    /**
+      If the user does not have multi-site, then always
+      keep hidden. We assume that this function is called
+      at least once by the time the picker is to be used.
+     */
     setShowing: function () {
-      console.log("set showing", arguments);
       if (XT.session.settings.get("MultiWhs")) {
         this.inherited(arguments);
       } else {
-        this.inherited([false]);
+        this.inherited(arguments, [false]);
       }
     }
   });
