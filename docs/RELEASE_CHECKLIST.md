@@ -20,7 +20,8 @@
   git push XTUPLE tags/R1_4_0
   ```
 
-9. Send out an email.
+9. Build Pandora on the frozen code
+10. Send out an email.
 
 ### Testing
 
@@ -35,7 +36,8 @@
   end users do not need to know about, e.g. bugs that were caused and fixed all within a sprint.
 3. Commit and push changes.
 4. Tag and push the release.
-5. Send out an email.
+5. Also tag `xtuple-extensions` and `private-extensions`.
+6. Send out an email.
 
 ### Deploying
 
