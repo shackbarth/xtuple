@@ -69,17 +69,18 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       onError: "errorNotify"
     },
     published: {
-      existingId: ""
+      // The natural key is the number, not the UUID
+      existingNumber: ""
     },
     accountConvert: function (inEvent) {
-      this.value.convertFromAccount(this.existingId);
+      this.value.convertFromAccount(this.existingNumber);
       this._popupDone = true;
       this.$.findExistingAccountPopup.hide();
     },
     errorNotify: function (inSender, inEvent) {
       // Handle existing
       if (inEvent.error.code === 'xt1008') {
-        this.existingId = inEvent.error.params.response.id;
+        this.existingNumber = inEvent.error.params.response.id;
         this._popupDone = false;
         this.$.findExistingAccountPopup.show();
         return true;
@@ -457,7 +458,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       onError: "errorNotify"
     },
     published: {
-      existingId: ""
+      // The natural key is Number, not UUID
+      existingNumber: ""
     },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -531,16 +533,16 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       this._popupDone = true;
       this.$.findExistingCustomerPopup.hide();
       if (inEvent.type === "prospect") {
-        this.value.convertFromProspect(this.existingId);
+        this.value.convertFromProspect(this.existingNumber);
       } else if (inEvent.type === "account") {
-        this.value.convertFromAccount(this.existingId);
+        this.value.convertFromAccount(this.existingNumber);
       }
     },
     errorNotify: function (inSender, inEvent) {
       // Handle customer existing as prospect
       if (inEvent.error.code === 'xt1008') {
         var type = inEvent.error.params.response.type;
-        this.existingId = inEvent.error.params.response.id;
+        this.existingNumber = inEvent.error.params.response.id;
         if (type === 'P') { // Prospect
           this._popupDone = false;
           this.$.exists.setContent("_prospectExists".loc());
