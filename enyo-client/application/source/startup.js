@@ -23,7 +23,8 @@ white:true*/
         success: _.bind(this.didComplete, this)
       };
       var relevantPrivileges = [
-        "MaintainUsers"
+        "MaintainUsers",
+        "MaintainPreferencesSelf"
       ];
       XT.session.addRelevantPrivileges("core", relevantPrivileges);
       XT.session.loadSessionObjects(XT.session.PRIVILEGES, options);
@@ -37,6 +38,16 @@ white:true*/
         success: _.bind(this.didComplete, this)
       };
       XT.session.loadSessionObjects(XT.session.LOCALE, options);
+    }
+  });
+
+  XT.StartupTask.create({
+    taskName: "loadSessionPreferences",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XT.session.loadSessionObjects(XT.session.PREFERENCES, options);
     }
   });
 

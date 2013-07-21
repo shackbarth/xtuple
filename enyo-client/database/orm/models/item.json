@@ -337,7 +337,7 @@
         }
       },
       {
-        "name": "itemSites",
+        "name": "itemSiteRelations",
         "toMany": {
           "type": "ItemSiteRelation",
           "column": "item_id"
