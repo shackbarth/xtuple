@@ -358,6 +358,19 @@ trailing:true, white:true*/
       ]}
     ]
   };
+  enyo.kind({
+    name: "XV.SalesOrderLineItemGridBox",
+    kind: "XV.GridBox",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
+      {kind: "Scroller", horizontal: "auto", classes: "xv-groupbox xv-scroller", components: [
+        {kind: "Repeater", name: "gridRepeater", onSetupItem: "setupRow", components: [
+          {kind: "XV.RelationsEditor", name: "gridRow", components: lineEditor.components[0].components }
+        ]}
+      ]}
+    ],
+  });
+
   enyo.mixin(lineEditor, XV.LineMixin);
 
   var quoteLineEditor = {name: "XV.QuoteLineItemEditor"};
