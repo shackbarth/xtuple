@@ -26,7 +26,7 @@
 }
 .xv-grid-box .xv-groupbox .xv-datewidget .onyx-input-decorator {
   padding: 0px;
-  width: 60px;
+  width: 90px;
 }
 .xv-grid-box .xv-groupbox .xv-numberwidget .onyx-input-decorator {
   padding: 0px;
@@ -35,6 +35,9 @@
 .xv-grid-box .xv-groupbox .xv-moneywidget .onyx-input-decorator {
   padding: 0px;
   width: 60px;
+}
+.xv-grid-box .xv-groupbox .xv-moneywidget {
+  padding: 0px;
 }
 .xv-grid-box .xv-groupbox .onyx-input-decorator input {
   width: 50px;
