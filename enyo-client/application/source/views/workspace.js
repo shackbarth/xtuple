@@ -343,118 +343,15 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "fax"},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes"},
-            {kind: "onyx.GroupboxHeader", content: "_exportContact".loc()},
-            {kind: "onyx.Button", content: "VCF", ontap: "exportContact"}
+            {kind: "XV.TextArea", attr: "notes"}
           ]}
         ]},
         {kind: "XV.ContactCommentBox", attr: "comments"},
         {kind: "XV.ContactDocumentsBox", attr: "documents"},
         {kind: "XV.ContactEmailBox", attr: "email"}
       ]}
-    ],
-    /*
-    *@exportContact
-    *
-    *this function exports the contact as a vCard 3.0 file
-    */
-    exportContact: function (inSender, inEvent) {
-      var model = this.getValue(),
-          begin,
-          version,
-          name,
-          fullName,
-          org,
-          title,
-          phoneWork,
-          phoneHome,
-          address = [],
-          addressWork,
-          labelWork,
-          email,
-          revision,
-          end,
-          stringToSave;
-      if (model.get('lastName')) {
-        name = model.get('lastName');
-        fullName = model.get('lastName');
-      }
-      if (model.get('middleName')) {
-        name = name + ";" + model.get('middleName');
-        fullName = model.get('middleName') + " " + fullName;
-      }
-      if (model.get('firstName')) {
-        name = name + ";" + model.get('firstName');
-        fullName = model.get('firstName') + " " + fullName;
-      }
-
-      begin = "VCARD";
-      version = "3.0";
-      org = "";
-      title = model.get('jobTitle');
-      phoneWork = model.get('phone');
-      phoneHome = model.get('alternate');
-      if (isNaN(model.getValue('address.line1').charAt(0))) {
-        org = model.getValue('address.line1');
-        address[0] = model.getValue('address.line2');
-      }
-      else {
-        address[0] = model.getValue('address.line1');
-        address.push(model.getValue('address.line2'));
-      }
-      address.push(model.getValue('address.line3'));
-      address.push(model.getValue('address.city'));
-      address.push(model.getValue('address.state'));
-      address.push(model.getValue('address.postalCode'));
-      address.push(model.getValue('address.country'));
-      //for address, set address with semicolon delimiters
-      //for label, set address with ESCAPED newline delimiters
-      if (address[0]) {
-        addressWork = address[0] + ";";
-        labelWork = address[0] + "\\n";
-      }
-      for (var i = 1; i < address.length; i++) {
-        if (address[i]) {
-          addressWork = addressWork + address[i] + ";";
-          labelWork = labelWork + address[i] + "\\n";
-        }
-      }
-      if (model.get('email').length >= 1) {
-        var emailM = model.get('email').at(0);
-        email = emailM.get('email');
-      }
-      revision = dateFormat(new Date(), "yyyy-mm-dd");
-      end = "VCARD";
-
-      stringToSave = "BEGIN:" + begin + "%0A";
-      stringToSave = stringToSave + "VERSION:" + version + "%0A";
-      stringToSave = stringToSave + "N:" + name + "%0A";
-      stringToSave = stringToSave + "FN:" + fullName + "%0A";
-      if (org)
-        stringToSave = stringToSave + "ORG:" + org + "%0A";
-      if (title)
-        stringToSave = stringToSave + "TITLE:" + title + "%0A";
-      if (phoneWork)
-        stringToSave = stringToSave + "TEL;TYPE=WORK,VOICE:" + phoneWork + "%0A";
-      if (phoneHome)
-        stringToSave = stringToSave + "TEL;TYPE=HOME,VOICE:" + phoneHome + "%0A";
-      if (addressWork)
-        stringToSave = stringToSave + "ADR;TYPE=WORK:;;" + addressWork + "%0A";
-      if (labelWork)
-        stringToSave = stringToSave + "LABEL;TYPE=WORK:;;" + labelWork + "%0A";
-      if (email)
-        stringToSave = stringToSave + "EMAIL;TYPE=PREF,INTERNET:" + email + "%0A";
-      stringToSave = stringToSave + "REV:" + revision + "%0A";
-      stringToSave = stringToSave + "END:" + end + "%0A";
-
-      window.open(XT.getOrganizationPath() +
-        '/%@?stringToSave=%@'
-        .f('vcfExport',
-          stringToSave),
-        '_newtab');
-    }
+    ]
   };
-
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
 
