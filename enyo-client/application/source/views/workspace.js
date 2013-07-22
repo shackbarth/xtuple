@@ -1822,8 +1822,26 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         {kind: "Repeater", name: "gridRepeater", onSetupItem: "setupRow", components: [
           { kind: "XV.SalesOrderLineItemGridRow", name: "gridRow" }
         ]}
-      ]}
-    ]
+      ]},
+      {
+        kind: "FittableColumns",
+        name: "navigationButtonPanel",
+        classes: "xv-groupbox-buttons",
+        components: [
+          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+            content: "_new".loc(), classes: "xv-groupbox-button-left"}
+        ]
+      },
+      {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
+    ],
+    /**
+      Set the current model into Summary Panel.
+    */
+    valueChanged: function () {
+      this.inherited(arguments);
+      var model = this.value.salesOrder;
+      this.$.summaryPanel.setValue(model);
+    }
   });
 
   enyo.kind({
