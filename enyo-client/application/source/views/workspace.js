@@ -1797,6 +1797,12 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         {name: "headerNotes", classes: "xv-grid-header", content: "_notes".loc()},
         {kind: "XV.InputWidget", attr: "notes" }
       ]},
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
+        {name: "headerAction", classes: "xv-grid-header", content: "_act".loc()},
+        {content: "X", kind: "enyo.Button", name: "deleteGridRowButton" }, // TODO: font-awesome
+        {content: "_", kind: "enyo.Button", name: "clearGridRowButton" }, // TODO: font-awesome
+        {content: "+", kind: "enyo.Button", name: "addGridRowButton" } // TODO: font-awesome
+      ]}
     ]
   });
   enyo.kind({

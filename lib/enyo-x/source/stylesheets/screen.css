@@ -9,7 +9,7 @@
 /* Grid box */
 
 .xv-grid-box.panel {
-  width: 900px;
+  width: 950px;
 }
 .xv-grid-column {
   padding-left: 10px;
@@ -20,7 +20,7 @@
   text-transform: uppercase;
   text-align: center;
 }
-.xv-grid-box .onyx-input-decorator {
+.xv-grid-box .xv-groupbox .onyx-input-decorator {
   padding: 0px;
   width: 60px;
 }
@@ -36,7 +36,7 @@
   padding: 0px;
   width: 60px;
 }
-.xv-grid-box .onyx-input-decorator input {
+.xv-grid-box .xv-groupbox .onyx-input-decorator input {
   width: 50px;
   font-size: 13px;
 }
