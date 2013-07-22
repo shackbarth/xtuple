@@ -8,6 +8,14 @@
 
 /* Grid box */
 
+.xv-grid-header {
+  font-size: 12px;
+  text-transform: uppercase;
+  text-align: center;
+}
+.xv-grid-box .xv-subinput {
+  width: 50px;
+}
 .xv-grid-box .xv-input {
   width: 50px;
 }
@@ -15,6 +23,9 @@
   height: 20px;
   padding-top: 3px;
   width: 30px;
+}
+.xv-grid-box .xv-label {
+  display: none;
 }
 
 
