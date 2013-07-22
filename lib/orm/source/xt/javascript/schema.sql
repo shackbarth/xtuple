@@ -350,7 +350,6 @@ select xt.install_js('XT','Schema','xtuple', $$
       else if (orm.properties[i].toOne) {
         if (orm.properties[i].toOne.isNested) {
           ret.properties[orm.properties[i].name].type = "object";
-          ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
         } else {
           /* Fetch the related ORM's JSON-Schema and use it's key's type. */
           /* TODO: Assuming "XM" here... */
@@ -361,6 +360,8 @@ select xt.install_js('XT','Schema','xtuple', $$
             }
           }
         }
+
+        ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].toOne.required) {

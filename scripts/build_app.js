@@ -21,6 +21,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-d, --database [database name]', 'Use specific database. [All databases in config file.]')
     .option('-e, --extension [/path/to/extension]', 'Extension to build. [Core plus all extensions registered for the database.]')
     .option('-i, --initialize', 'Initialize database. Must be used with the -b flag.')
+    .option('-k, --keepsql', 'Do not delete the temporary sql files that represent the payload of the build.')
     .option('-q, --querydirect', 'Query the database directly, without delegating to psql.')
     .option('-w, --wipeviews', 'Drop the views and the orm registrations pre-emptively.')
     .option('-y, --clientonly', 'Only rebuild the client.')
@@ -33,6 +34,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     config: program.config,
     extension: program.extension,
     initialize: program.initialize,
+    keepSql: program.keepsql,
     queryDirect: program.querydirect,
     wipeViews: program.wipeviews,
     clientOnly: program.clientonly,

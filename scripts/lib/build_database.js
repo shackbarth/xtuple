@@ -21,11 +21,11 @@ var _ = require('underscore'),
   //
   // There are a few ways we could actually send our query to the database
   //
-  var sendToDatabaseDatasource = function (query, credsClone, callback) {
+  var sendToDatabaseDatasource = function (query, credsClone, options, callback) {
     dataSource.query(query, credsClone, callback);
   };
 
-  var sendToDatabasePsql = function (query, credsClone, callback) {
+  var sendToDatabasePsql = function (query, credsClone, options, callback) {
     var filename = path.join(__dirname, "temp_query_" + credsClone.database + ".sql");
     fs.writeFile(filename, query, function (err) {
       if (err) {
@@ -45,13 +45,19 @@ var _ = require('underscore'),
           callback(err);
           return;
         }
-        fs.unlink(filename, function (err) {
-          if (err) {
-            winston.error("Cannot delete written query file");
-            callback(err);
-          }
+        if (options.keepSql) {
+          // do not delete the temp query file
+          winston.info("SQL file kept as ", filename);
           callback();
-        });
+        } else {
+          fs.unlink(filename, function (err) {
+            if (err) {
+              winston.error("Cannot delete written query file");
+              callback(err);
+            }
+            callback();
+          });
+        }
       });
     });
   };
@@ -381,7 +387,7 @@ var _ = require('underscore'),
           allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
         }
         credsClone.database = spec.database;
-        sendToDatabase(allSql, credsClone, function (err, res) {
+        sendToDatabase(allSql, credsClone, spec, function (err, res) {
           databaseCallback(err, res);
         });
       });
