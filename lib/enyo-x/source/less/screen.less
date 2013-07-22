@@ -680,15 +680,19 @@ body {
   text-transform: uppercase;
   text-align: center;
 }
+
+.tightened-input-decorator (@width: 60px) {
+  padding: 0px;
+  width: @width;
+  input {
+    width: 50px;
+    font-size: 13px;
+  }
+}
 .xv-grid-box {
   .xv-groupbox {
     .onyx-input-decorator {
-      padding: 0px;
-      width: 60px;
-      input {
-        width: 50px;
-        font-size: 13px;
-      }
+      .tightened-input-decorator;
     }
     .onyx-picker-decorator .onyx-button {
       height: 20px;
@@ -698,30 +702,15 @@ body {
     }
     .xv-datewidget {
       .onyx-input-decorator {
-        padding: 0px;
-        width: 90px;
-        input {
-          width: 50px;
-          font-size: 13px;
-        }
+        .tightened-input-decorator(90px);
       }
     }
     .xv-numberwidget .onyx-input-decorator {
-      padding: 0px;
-      width: 60px;
-      input {
-        width: 50px;
-        font-size: 13px;
-      }
+      .tightened-input-decorator;
     }
     .xv-moneywidget {
       .onyx-input-decorator {
-        padding: 0px;
-        width: 60px;
-        input {
-          width: 50px;
-          font-size: 13px;
-        }
+        .tightened-input-decorator;
       }
       .onyx-picker-decorator {
         display: none;
