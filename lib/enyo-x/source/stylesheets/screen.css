@@ -36,9 +36,6 @@
   padding: 0px;
   width: 60px;
 }
-.xv-grid-box .xv-groupbox .xv-moneywidget {
-  padding: 0px;
-}
 .xv-grid-box .xv-groupbox .onyx-input-decorator input {
   width: 50px;
   font-size: 13px;
@@ -68,6 +65,7 @@
   height: 20px;
   padding-top: 3px;
   width: 60px;
+  font-size: 13px;
 }
 .xv-grid-box .xv-groupbox .xv-relationwidget .onyx-input-decorator {
   width: 100px;

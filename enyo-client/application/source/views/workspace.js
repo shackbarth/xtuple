@@ -1799,15 +1799,17 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerAction", classes: "xv-grid-header", content: "_actions".loc()},
-        {content: "X", kind: "enyo.Button", name: "deleteGridRowButton" }, // TODO: font-awesome
-        {content: "_", kind: "enyo.Button", name: "clearGridRowButton" }, // TODO: font-awesome
-        {content: "+", kind: "enyo.Button", name: "addGridRowButton" } // TODO: font-awesome
+        {content: "+", kind: "enyo.Button", name: "addGridRowButton" }, // TODO: font-awesome
+        {content: "O", kind: "enyo.Button", name: "expandGridRowButton" }, // TODO: font-awesome
+        //{content: "_", kind: "enyo.Button", name: "clearGridRowButton" }, // TODO: font-awesome
+        {content: "X", kind: "enyo.Button", name: "deleteGridRowButton" } // TODO: font-awesome
       ]}
     ]
   });
   enyo.kind({
     name: "XV.SalesOrderLineItemGridBox",
     kind: "XV.GridBox",
+    associatedWorkspace: "XV.SalesOrderLineWorkspace",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
       {kind: "Scroller", horizontal: "auto", classes: "xv-groupbox xv-scroller", components: [
