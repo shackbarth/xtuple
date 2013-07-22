@@ -1799,10 +1799,12 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerAction", classes: "xv-grid-header", content: "_actions".loc()},
-        {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton" },
-        {kind: "enyo.Button", classes: "icon-eye-open", name: "expandGridRowButton" },
-        //{kind: "enyo.Button", classes: "icon-eraser", name: "clearGridRowButton" },
-        {kind: "enyo.Button", classes: "icon-remove", name: "deleteGridRowButton" }
+        {kind: "FittableColumns", classes: "xv-grid-actions", components: [
+          {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton" },
+          {kind: "enyo.Button", classes: "icon-eye-open", name: "expandGridRowButton" },
+          //{kind: "enyo.Button", classes: "icon-eraser", name: "clearGridRowButton" },
+          {kind: "enyo.Button", classes: "icon-remove", name: "deleteGridRowButton" }
+        ]}
       ]}
     ]
   });
