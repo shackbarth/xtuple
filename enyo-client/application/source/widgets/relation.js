@@ -497,6 +497,7 @@ regexp:true, undef:true, trailing:true, white:true */
         site = this.getSite(),
         options = {},
         that = this;
+
       if (item && site) {
         options.query = {
           parameters: [
@@ -511,7 +512,7 @@ regexp:true, undef:true, trailing:true, white:true */
           ]
         };
         options.success = function () {
-          if (that._itemSites.length) {
+          if (!that.destroyed && that._itemSites.length) {
             that.$.privateItemSiteWidget.setValue(that._itemSites.at(0));
           }
         };

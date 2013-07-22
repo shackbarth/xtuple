@@ -4,6 +4,21 @@
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 
+
+
+/* Grid box */
+
+.xv-grid-box .xv-input {
+  width: 50px;
+}
+.xv-grid-box .onyx-picker-decorator .onyx-button {
+  height: 20px;
+  padding-top: 3px;
+  width: 30px;
+}
+
+
+
 */
 /*
   These variables will show in css as their hex values
