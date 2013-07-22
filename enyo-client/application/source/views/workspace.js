@@ -1799,9 +1799,14 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerAction", classes: "xv-grid-header", content: "_actions".loc()},
+        // icon-plus (&#xf067;)
         {content: "+", kind: "enyo.Button", name: "addGridRowButton" }, // TODO: font-awesome
+        // icon-eye-open (&#xf06e;)
+        // icon-expand (&#xf152;)
+        // icon-expand-alt (&#xf116;)
         {content: "O", kind: "enyo.Button", name: "expandGridRowButton" }, // TODO: font-awesome
         //{content: "_", kind: "enyo.Button", name: "clearGridRowButton" }, // TODO: font-awesome
+        // icon-remove (&#xf00d;)
         {content: "X", kind: "enyo.Button", name: "deleteGridRowButton" } // TODO: font-awesome
       ]}
     ]
