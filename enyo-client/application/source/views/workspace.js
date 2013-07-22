@@ -1739,11 +1739,13 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     name: "XV.SalesOrderLineItemGridRow",
     kind: "XV.GridRow",
     components: [
+      /*
       {kind: "FittableRows", classes: "xv-grid-header", components: [
         {name: "headerLineNumber", content: "_lineNumber".loc()},
-        {kind: "XV.Number", attr: "lineNumber"}
+        {kind: "XV.NumberWidget", attr: "lineNumber"}
       ]},
-      {kind: "FittableRows", components: [
+      */
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerItemSite", classes: "xv-grid-header", content: "_item".loc()},
         {kind: "XV.ItemSiteWidget", attr:
           {item: "item", site: "site"},
@@ -1755,37 +1757,46 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {attribute: "isActive", value: true}
         ]}},
       ]},
-      {kind: "FittableRows", components: [
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerQuantity", classes: "xv-grid-header", content: "_quantity".loc()},
-        {kind: "XV.Quantity", attr: "quantity"}
+        {kind: "XV.QuantityWidget", attr: "quantity"}
       ]},
-      {kind: "FittableRows", components: [
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerQuantityUnit", classes: "xv-grid-header", content: "_unit".loc()},
         {kind: "XV.UnitPickr", attr: "quantityUnit", name: "quantityUnitPicker" }
       ]},
-      {kind: "FittableRows", components: [
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerDiscount", classes: "xv-grid-header", content: "_discount".loc()},
-        {kind: "XV.Percent", name: "discount", attr: "discount" }
+        {kind: "XV.PercentWidget", name: "discount", attr: "discount" }
       ]},
-      {kind: "FittableRows", components: [
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerPrice", classes: "xv-grid-header", content: "_price".loc()},
         {kind: "XV.MoneyWidget", attr:
           {localValue: "price", currency: ""},
           currencyDisabled: true, scale: XT.SALES_PRICE_SCALE}
       ]},
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
+        {name: "headerPriceUnit", classes: "xv-grid-header", content: "_priceUnit".loc()},
+        {kind: "XV.UnitPickr", attr: "priceUnit", name: "priceUnitPicker"}
+      ]},
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
+        {name: "headerExtendedPrice", classes: "xv-grid-header", content: "_extPrice".loc()},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "extendedPrice", currency: ""},
+          currencyDisabled: true, scale: XT.EXTENDED_PRICE_SCALE}
+      ]},
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
+        {name: "headerScheduleDate", classes: "xv-grid-header", content: "_schedDate".loc()},
+        {kind: "XV.DateWidget", attr: "scheduleDate"}
+      ]},
       /*
-      {kind: "XV.UnitPicker", attr: "priceUnit",
-        name: "priceUnitPicker"},
-      {kind: "XV.MoneyWidget", attr:
-        {localValue: "extendedPrice", currency: ""},
-        label: "_extendedPrice".loc(), currencyDisabled: true,
-        scale: XT.EXTENDED_PRICE_SCALE},
-      {kind: "XV.DateWidget", attr: "scheduleDate"},
       {kind: "XV.DateWidget", name: "promiseDate", attr: "promiseDate",
         showing: false},
-      {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-      {kind: "XV.TextArea", attr: "notes", fit: true}
       */
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
+        {name: "headerNotes", classes: "xv-grid-header", content: "_notes".loc()},
+        {kind: "XV.InputWidget", attr: "notes" }
+      ]},
     ]
   });
   enyo.kind({
