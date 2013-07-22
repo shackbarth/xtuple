@@ -1735,7 +1735,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   // SALES ORDER
   //
 
-  enyo.kind({
+  var salesOrderGridRow = {
     name: "XV.SalesOrderLineItemGridRow",
     kind: "XV.GridRow",
     components: [
@@ -1807,7 +1807,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         ]}
       ]}
     ]
-  });
+  };
+
+  enyo.mixin(salesOrderGridRow, XV.LineMixin);
+  enyo.kind(salesOrderGridRow);
+
   enyo.kind({
     name: "XV.SalesOrderLineItemGridBox",
     kind: "XV.GridBox",
