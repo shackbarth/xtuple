@@ -2350,14 +2350,14 @@ body {
   display: none;
 }
 .xv-grid-box .xv-grid-column .xv-datewidget {
-  padding-top: 0px;
+  padding-top: 0px !important;
 }
 .xv-grid-box .xv-grid-column .xv-datewidget .onyx-input-decorator {
   padding: 0px;
-  width: 90px;
+  width: 105px;
 }
 .xv-grid-box .xv-grid-column .xv-datewidget .onyx-input-decorator input {
-  width: 50px;
+  width: 65px;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-column .xv-numberwidget {

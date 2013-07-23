@@ -717,9 +717,14 @@ body {
       display: none;
     }
     .xv-datewidget {
-      padding-top: 0px;
+      padding-top: 0px !important;
       .onyx-input-decorator {
-        .tightened-input-decorator(90px);
+        padding: 0px;
+        width: 105px;
+        input {
+          width: 65px;
+          font-size: 13px;
+        }
       }
     }
     .xv-numberwidget {
