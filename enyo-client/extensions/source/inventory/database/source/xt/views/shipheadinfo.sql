@@ -1,7 +1,11 @@
 select xt.create_view('xt.shipheadinfo', $$
 
-  select *, current_date as trans_date
-   from shiphead; 
+  select distinct shiphead.*, current_date as trans_date, COALESCE(invchead_posted, false) as invoice_posted
+  from shiphead
+    left join shipitem on shiphead_id = shipitem_shiphead_id
+    left join invcitem ON (invcitem_id=shipitem_invcitem_id)
+    left join invchead ON (invchead_id=invcitem_invchead_id)
+  where shiphead_shipped; 
 
 $$, false);
 

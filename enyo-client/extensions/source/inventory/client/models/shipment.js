@@ -21,7 +21,27 @@ white:true*/
 
       readOnlyAttributes: [
         "order"
-      ]
+      ],
+
+      recallShipment: function (callback) {
+        this.dispatch("XM.Inventory", "recallShipment", [this.id], {
+          success: function () {
+            if (callback) {
+              callback();
+            }
+          },
+          error: function () {
+            if (callback) {
+              callback();
+            }
+          }
+        });
+      },
+      //Todo - If the shipment is invoiced I need to check if the user has the privilege to Recall Invoiced Shipments
+      canRecall: function (callback) {
+        var canIRecall = this.get("isShipped") === true && this.get("isPostedInvoice") === false;
+        callback(canIRecall);
+      }
 
     });
 

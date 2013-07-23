@@ -3,7 +3,6 @@ enyo.depends(
   "item_site.js",
   "inventory.js",
   "location.js",
-  "order.js",
   "sales_order.js",
   "shipment.js",
   "startup.js",

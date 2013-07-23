@@ -106,6 +106,13 @@
           "column": "shiphead_id",
           "inverse": "shipment"
         }
+      },
+      {
+        "name": "isPostedInvoice",
+        "attr": {
+          "type": "Boolean",
+          "column": "invoice_posted"
+        }
       }
 	  ],
     "isSystem": true
@@ -116,14 +123,6 @@
     "type": "ShipmentLine",
     "table": "xt.shipmentline",
     "comment": "Shipment Line Map",
-    "privileges": {
-      "all": {
-        "create": "IssueStockToShipping",
-        "read": "ViewShipping",
-        "update": "IssueStockToShipping",
-        "delete": "IssueStockToShipping"
-      }
-    },
     "properties": [
       {
         "name": "uuid",
