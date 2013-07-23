@@ -718,9 +718,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             classes: "in-panel", components: [
             {kind: "XV.DateWidget", attr: "startDate"},
             {kind: "XV.SitePicker", attr: "site"},
-            {kind: "XV.DepartmentPicker", attr: "department"},
+            {kind: "XV.DepartmentWidget", attr: "department"},
             {kind: "XV.EmployeeWidget", attr: "manager"},
-            {kind: "XV.ShiftPicker", attr: "shift"},
+            {kind: "XV.ShiftWidget", attr: "shift"},
             {kind: "onyx.GroupboxHeader", content: "_financials".loc()},
             {kind: "XV.WageTypePicker", attr: "wageType"},
             {kind: "XV.MoneyWidget",
