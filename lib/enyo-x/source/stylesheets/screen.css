@@ -2407,6 +2407,14 @@ body {
 .xv-grid-box .xv-grid-column .xv-private-item-site-widget {
   border-bottom: 0px;
 }
+.xv-grid-box .xv-sales-summary-panel {
+  padding-left: 0px;
+  border-width: 0px;
+}
+.xv-grid-box .xv-sales-summary-total-group {
+  padding-left: 0px;
+  border-width: 0px;
+}
 /* ListRelationsBox */
 .xv-list-relations-box.panel {
   width: 625px;
