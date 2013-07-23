@@ -525,7 +525,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.sitePicker.setValue(site, {silent: true});
       if (site) {
         this.$.privateItemSiteWidget.addParameter({
-          attribute: "site",
+          attribute: "site.code",
           value: site
         }, true);
       } else {
