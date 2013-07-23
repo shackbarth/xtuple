@@ -1874,7 +1874,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       } else {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems"}
+          {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems", fit: true}
         ], {owner: this});
       }
     }
