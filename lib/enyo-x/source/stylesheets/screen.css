@@ -1,4 +1,4 @@
-/* LESS version of screen.scss file previously in client
+/*
 
   To compile to .css:
   lessc screen.less > ../stylesheets/screen.css
@@ -2310,7 +2310,7 @@ body {
 }
 /* Grid box */
 .xv-grid-box.panel {
-  width: 950px;
+  width: 1000px;
 }
 .xv-grid-column {
   padding-left: 10px;
@@ -2340,6 +2340,9 @@ body {
   padding-top: 3px;
   width: 60px;
   font-size: 13px;
+}
+.xv-grid-box .xv-groupbox .xv-picker-label {
+  display: none;
 }
 .xv-grid-box .xv-groupbox .xv-datewidget {
   padding-top: 0px;

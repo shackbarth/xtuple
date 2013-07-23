@@ -1747,7 +1747,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       */
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerItemSite", classes: "xv-grid-header", content: "_item".loc()},
-        {kind: "XV.ItemSiteWidget", attr:
+        {kind: "XV.HorizontalItemSiteWidget", attr:
           {item: "item", site: "site"},
           name: "itemSiteWidget",
           query: {parameters: [

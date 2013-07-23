@@ -576,6 +576,18 @@ regexp:true, undef:true, trailing:true, white:true */
     },
   });
 
+  enyo.kind({
+    name: "XV.HorizontalItemSiteWidget",
+    kind: "XV.ItemSiteWidget",
+    components: [
+      {kind: "FittableColumns", components: [
+        {kind: _privateItemSiteWidget, name: "privateItemSiteWidget",
+          label: "_item".loc()},
+        {kind: "XV.SitePicker", name: "sitePicker", label: "_site".loc()}
+      ]}
+    ]
+  });
+
   // ..........................................................
   // LEDGER ACCOUNT
   //
