@@ -2407,6 +2407,15 @@ body {
 .xv-grid-box .xv-grid-column .xv-private-item-site-widget {
   border-bottom: 0px;
 }
+.xv-grid-box .xv-grid-column .xv-grid-line-number {
+  width: 25px !important;
+}
+.xv-grid-box .xv-grid-column .xv-grid-line-number .xv-input-decorator {
+  width: 25px !important;
+}
+.xv-grid-box .xv-grid-column .xv-grid-line-number .xv-input-decorator input {
+  width: 20px !important;
+}
 .xv-grid-box .xv-sales-summary-panel {
   padding-left: 0px;
   border-width: 0px;

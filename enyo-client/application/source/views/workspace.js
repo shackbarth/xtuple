@@ -1739,12 +1739,10 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     name: "XV.SalesOrderLineItemGridRow",
     kind: "XV.GridRow",
     components: [
-      /*
-      {kind: "FittableRows", classes: "xv-grid-header", components: [
-        {name: "headerLineNumber", content: "_lineNumber".loc()},
-        {kind: "XV.NumberWidget", attr: "lineNumber"}
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
+        {name: "headerLineNumber", classes: "xv-grid-header", content: "#"},
+        {kind: "XV.NumberWidget", classes: "xv-grid-line-number", attr: "lineNumber"}
       ]},
-      */
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerItemSite", classes: "xv-grid-header", content: "_item".loc()},
         {kind: "XV.HorizontalItemSiteWidget", attr:
@@ -1788,14 +1786,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerScheduleDate", classes: "xv-grid-header", content: "_schedDate".loc()},
         {kind: "XV.DateWidget", attr: "scheduleDate"}
-      ]},
-      /*
-      {kind: "XV.DateWidget", name: "promiseDate", attr: "promiseDate",
-        showing: false},
-      */
-      {kind: "FittableRows", classes: "xv-grid-column", components: [
-        {name: "headerNotes", classes: "xv-grid-header", content: "_notes".loc()},
-        {kind: "XV.InputWidget", attr: "notes" }
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerAction", classes: "xv-grid-header", content: "_actions".loc()},
