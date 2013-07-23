@@ -2299,6 +2299,11 @@ body {
 .xv-relationwidget-description.hyperlink {
   color: blue;
 }
+.xv-private-item-site-widget {
+  border-bottom-color: #aaaaaa;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
 /* RelationsEditorBox */
 .xv-relations-editor-box .xv-groupbox {
   margin-right: 0;
@@ -2310,7 +2315,7 @@ body {
 }
 /* Grid box */
 .xv-grid-box.panel {
-  width: 1000px;
+  width: 984px;
 }
 .xv-grid-column {
   padding-left: 10px;
@@ -2398,6 +2403,9 @@ body {
 }
 .xv-grid-box .xv-relationwidget-description {
   display: none;
+}
+.xv-grid-box .xv-private-item-site-widget {
+  border-bottom: 0px;
 }
 /* ListRelationsBox */
 .xv-list-relations-box.panel {
