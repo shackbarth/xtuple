@@ -352,7 +352,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       ]}
     ]
   };
-
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
 
