@@ -418,7 +418,7 @@ pull_modules() {
 	npm install 2>1 | tee -a $LOG_FILE
 	npm install -g mocha 2>1 | tee -a $LOG_FILE
 
-    cdir node-datasource/test/shared
+    cdir test/shared
     rm -f login_data.js
     echo "exports.data = {" >> login_data.js
     echo "  webaddress: ''," >> login_data.js
@@ -430,7 +430,7 @@ pull_modules() {
     echo "}" >> login_data.js
 	log "Created testing login_data.js"
 
-	cdir ../../../enyo-client/extensions
+	cdir ../../enyo-client/extensions
     rm -f debug.js
     echo "enyo.depends(" > debug.js
     echo "  '/dev/core-extensions/source/crm/client/package.js'," >> debug.js
