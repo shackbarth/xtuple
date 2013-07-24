@@ -395,9 +395,6 @@ setup_postgres() {
 	pg_restore -U postgres -d dev postbooks_demo-$NEWESTVERSION.backup 2>1 | tee -a $LOG_FILE
 
 	psql -U postgres dev -c "CREATE EXTENSION plv8" 2>1 | tee -a $LOG_FILE
-	
-	cdir $XT_DIR
-	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
 }
 
 # Pull submodules
@@ -500,6 +497,9 @@ init_everythings() {
 		log "cd /usr/local/src/xtuple/node-datasource/"
 		log "sudo node main.js"
 	fi
+	
+	cdir $XT_DIR
+	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
 }
 
 if [ $USERINIT ]
