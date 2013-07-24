@@ -372,6 +372,17 @@
   margin: 4px 0 8px 4px;
   padding: 0;
 }
+.pullout .xv-groupbox .xv-filter-form .button-row {
+  background-color: #ffffff;
+  padding: 7px;
+  text-align: center;
+}
+.pullout .xv-groupbox .xv-filter-form .button-row .onyx-button {
+  margin-right: 3px;
+}
+.pullout .xv-groupbox .xv-filter-form .button-row.more-row {
+  background-color: #dddddd;
+}
 .pullout .pullout-scroller {
   position: relative;
   margin-right: 4px;
