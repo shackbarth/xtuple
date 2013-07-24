@@ -278,6 +278,16 @@ regexp:true, undef:true, trailing:true, white:true */
     list: "XV.CustomerShiptoList"
   });
 
+  // ..........................................................
+  // DEPARTMENT
+  //
+
+  enyo.kind({
+    name: "XV.DepartmentWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.DepartmentCollection",
+    list: "XV.DepartmentList"
+  });
 
   // ..........................................................
   // EMPLOYEE
@@ -621,6 +631,17 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.SalesOrderListItemCollection",
     keyAttribute: "number",
     list: "XV.SalesOrderList"
+  });
+
+  // ..........................................................
+  // SHIFT
+  //
+
+  enyo.kind({
+    name: "XV.ShiftWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.ShiftCollection",
+    list: "XV.ShiftList"
   });
 
   // ..........................................................
