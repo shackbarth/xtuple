@@ -128,7 +128,6 @@
 }
 .xv-groupbox .xv-moneywidget .xv-picker {
   width: 65px;
-  text-align: center;
   padding: 10px 4px;
 }
 .xv-groupbox > .onyx-input-decorator {
@@ -472,8 +471,10 @@
   overflow: hidden;
 }
 .xv-picker .picker-icon {
+  position: absolute;
+  right: 0;
+  margin: 0 10px 0 2px;
   color: #000000;
-  float: right;
 }
 .xv-picker-label {
   color: #000000;
