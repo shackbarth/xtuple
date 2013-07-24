@@ -1580,11 +1580,18 @@ white:true*/
     parentDidChange: function () {
       var parent = this.getParent(),
        lineNumber = this.get("lineNumber"),
+       maxLineNumber,
        scheduleDate;
 
       // Set next line number
       if (parent && !lineNumber) {
-        this.set("lineNumber", parent.get("lineItems").length);
+        maxLineNumber = Math.max.apply(null,
+          _.compact(_.map(parent.get("lineItems").models, function (model) {
+            return model.get("lineNumber");
+          }))
+        );
+        // XXX this will allow holes if we delete from the middle
+        this.set("lineNumber", maxLineNumber + 1);
       }
 
       // Default to schedule date of header
