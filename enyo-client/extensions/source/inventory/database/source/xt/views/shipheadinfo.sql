@@ -5,7 +5,7 @@ select xt.create_view('xt.shipheadinfo', $$
     left join shipitem on shiphead_id = shipitem_shiphead_id
     left join invcitem ON (invcitem_id=shipitem_invcitem_id)
     left join invchead ON (invchead_id=invcitem_invchead_id)
-  where shiphead_shipped; 
+  where shiphead_shipped;
 
 $$, false);
 

@@ -1,0 +1,195 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PurchaseOrder",
+    "table": "itemsrc",
+    "idSequenceName": "itemsrc_itemsrc_id_seq",
+    "lockable": true,
+    "lockTable": "itemsrc",
+    "isRest": true,
+    "comment": "Purchase Order Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPurchaseOrders",
+        "read": "ViewPurchaseOrders",
+        "update": "MaintainPurchaseOrders",
+        "delete": "MaintainPurchaseOrders"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "type": "ItemRelation",
+          "column": "itemsrc_item_id",
+					"isNested": true
+         }
+      },
+      {
+        "name": "vendor",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_vend_id"
+        }
+      },
+      {
+        "name": "vendorItemNumber",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_vend_item_number"
+        }
+      },
+      {
+        "name": "vendorItemDescription",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_vend_item_descrip"
+        }
+      },
+      {
+        "name": "fob",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_fob"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_shipvia"
+        }
+      },
+      {
+        "name": "comments",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_comments"
+        }
+      },
+      {
+        "name": "vendorUnit",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_vend_uom"
+        }
+      },
+      {
+        "name": "vendorUnitRatio",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_invvenduomratio"
+        }
+      },
+      {
+        "name": "minimumOrderQuantity",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_minordqty"
+        }
+      },
+      {
+        "name": "multipleOrderQuantity",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_multordqty"
+        }
+      },
+      {
+        "name": "leadTime",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_leadtime"
+        }
+      },
+      {
+        "name": "ranking",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_ranking"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsrc_active"
+        }
+      },
+      {
+        "name": "manufacturerName",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_manuf_name"
+        }
+      },
+      {
+        "name": "manufacturerItemNumber",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_manuf_item_number"
+        }
+      },
+      {
+        "name": "manufacturerItemDescription",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_manuf_item_descrip"
+        }
+      },
+      {
+        "name": "isDefault",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsrc_default"
+        }
+      },
+      {
+        "name": "upcCode",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_upccode"
+        }
+      },
+      {
+        "name": "effective",
+        "attr": {
+          "type": "Date",
+          "column": "itemsrc_effective"
+        }
+      },
+      {
+        "name": "expires",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsrc_active"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsrc_active"
+        }
+      }
+	  ],
+    "isSystem": true
+  }
+]

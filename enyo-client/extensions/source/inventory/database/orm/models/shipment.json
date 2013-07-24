@@ -31,7 +31,7 @@
         "attr": {
           "type": "String",
           "column": "shiphead_number",
-					"isNaturalKey": true
+          "isNaturalKey": true
          }
       },
       {
@@ -39,7 +39,7 @@
         "toOne": {
           "type": "SalesOrderRelation",
           "column": "shiphead_order_id",
-					"isNested": true
+          "isNested": true
         }
       },
       {
@@ -114,10 +114,10 @@
           "column": "invoice_posted"
         }
       }
-	  ],
+    ],
     "isSystem": true
   },
-	{
+  {
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ShipmentLine",
@@ -149,14 +149,14 @@
           "inverse": "uuid"
         }
       },
-			{
+      {
         "name": "atShipping",
         "attr": {
           "type": "Quantity",
           "column": "at_shipping"
         }
       }
-	  ],
+    ],
     "isNestedOnly": true,
     "isSystem": true
   }
