@@ -46,6 +46,11 @@
 @import "dashboard.less";
 
 /**
+  Styles relating to grid-entry 
+*/
+@import "grid.less";
+
+/**
   Styles relating to the parameter widget
 */
 @import "pullout.less";
@@ -670,127 +675,6 @@ body {
     width: 350px;
   }
 }
-
-
-/* Grid box */
-
-.xv-grid-box.panel {
-  width: 984px;
-}
-.xv-grid-column {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-.xv-grid-header {
-  font-size: 12px;
-  text-transform: uppercase;
-  text-align: center;
-}
-
-.xv-grid-actions {
-  padding-top: 6px;
-}
-
-.tightened-input-decorator (@width: 60px) {
-  padding: 0px;
-  width: @width;
-  input {
-    width: 50px;
-    font-size: 13px;
-  }
-}
-.xv-grid-box {
-  .enyo-fittable-columns-layout {
-    background-color: white;
-  }
-  .xv-grid-column {
-    .onyx-input-decorator {
-      .tightened-input-decorator;
-    }
-    .onyx-picker-decorator {
-      padding-top: 6px;
-      .onyx-button {
-        height: 20px;
-        padding-top: 3px;
-        width: 60px;
-        font-size: 13px;
-      }
-    }
-    .xv-picker-label {
-      display: none;
-    }
-    .xv-datewidget {
-      padding-top: 0px !important;
-      .onyx-input-decorator {
-        padding: 0px;
-        width: 105px;
-        input {
-          width: 65px;
-          font-size: 13px;
-        }
-      }
-    }
-    .xv-numberwidget {
-      padding-top: 6px;
-      .onyx-input-decorator {
-        .tightened-input-decorator;
-      }
-    }
-    .xv-moneywidget {
-      .onyx-input-decorator {
-        .tightened-input-decorator;
-      }
-      .onyx-picker-decorator {
-        display: none;
-      }
-    }
-    .xv-relationwidget {
-      .onyx-input-decorator {
-        width: 100px;
-      }
-      .onyx-input {
-        width: 50px;
-      }
-    }
-    .xv-subinput {
-      width: 50px;
-    }
-    .xv-input {
-      padding-top: 6px;
-      width: 50px;
-    }
-    .xv-label {
-      display: none;
-    }
-    .xv-decorated-label {
-      display: none;
-    }
-    .xv-relationwidget-description {
-      display: none;
-    }
-    .xv-private-item-site-widget {
-      border-bottom: 0px;
-    }
-    .xv-grid-line-number {
-      width: 25px !important;
-      .xv-input-decorator {
-        width: 25px !important;
-        input {
-          width: 20px !important;
-        }
-      }
-    }
-  }
-  .xv-sales-summary-panel {
-    padding-left: 0px;
-    border-width: 0px;
-  }
-  .xv-sales-summary-total-group {
-    padding-left: 0px;
-    border-width: 0px;
-  }
-}
-
 
 /* ListRelationsBox */
 .xv-list-relations-box {

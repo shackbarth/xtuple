@@ -349,6 +349,122 @@
   padding: 10px 10px;
 }
 /**
+  Styles relating to grid-entry 
+*/
+/* 
+  Styles relating to the grid box 
+*/
+.xv-grid-box.panel {
+  width: 984px;
+}
+.xv-grid-column {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.xv-grid-header {
+  font-size: 12px;
+  text-transform: uppercase;
+  text-align: center;
+}
+.xv-grid-actions {
+  padding-top: 6px;
+}
+.xv-grid-box .enyo-fittable-columns-layout {
+  background-color: white;
+}
+.xv-grid-box .xv-grid-column .onyx-input-decorator {
+  padding: 0px;
+  width: 60px;
+}
+.xv-grid-box .xv-grid-column .onyx-input-decorator input {
+  width: 50px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-column .onyx-picker-decorator {
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-column .onyx-picker-decorator .onyx-button {
+  height: 20px;
+  padding-top: 3px;
+  width: 60px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-column .xv-picker-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-column .xv-datewidget {
+  padding-top: 0px !important;
+}
+.xv-grid-box .xv-grid-column .xv-datewidget .onyx-input-decorator {
+  padding: 0px;
+  width: 105px;
+}
+.xv-grid-box .xv-grid-column .xv-datewidget .onyx-input-decorator input {
+  width: 65px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-column .xv-numberwidget {
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-column .xv-numberwidget .onyx-input-decorator {
+  padding: 0px;
+  width: 60px;
+}
+.xv-grid-box .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
+  width: 50px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-column .xv-moneywidget .onyx-input-decorator {
+  padding: 0px;
+  width: 60px;
+}
+.xv-grid-box .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
+  width: 50px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-column .xv-relationwidget .onyx-input-decorator {
+  width: 100px;
+}
+.xv-grid-box .xv-grid-column .xv-relationwidget .onyx-input {
+  width: 50px;
+}
+.xv-grid-box .xv-grid-column .xv-subinput {
+  width: 50px;
+}
+.xv-grid-box .xv-grid-column .xv-input {
+  padding-top: 6px;
+  width: 50px;
+}
+.xv-grid-box .xv-grid-column .xv-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-column .xv-decorated-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-column .xv-relationwidget-description {
+  display: none;
+}
+.xv-grid-box .xv-grid-column .xv-private-item-site-widget {
+  border-bottom: 0px;
+}
+.xv-grid-box .xv-grid-column .xv-grid-line-number {
+  width: 25px !important;
+}
+.xv-grid-box .xv-grid-column .xv-grid-line-number .xv-input-decorator {
+  width: 25px !important;
+}
+.xv-grid-box .xv-grid-column .xv-grid-line-number .xv-input-decorator input {
+  width: 20px !important;
+}
+.xv-grid-box .xv-sales-summary-panel {
+  padding-left: 0px;
+  border-width: 0px;
+}
+.xv-grid-box .xv-sales-summary-total-group {
+  padding-left: 0px;
+  border-width: 0px;
+}
+/**
   Styles relating to the parameter widget
 */
 /**
@@ -2313,120 +2429,6 @@ body {
 }
 .xv-relations-editor-box.panel {
   width: 350px;
-}
-/* Grid box */
-.xv-grid-box.panel {
-  width: 984px;
-}
-.xv-grid-column {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-.xv-grid-header {
-  font-size: 12px;
-  text-transform: uppercase;
-  text-align: center;
-}
-.xv-grid-actions {
-  padding-top: 6px;
-}
-.xv-grid-box .enyo-fittable-columns-layout {
-  background-color: white;
-}
-.xv-grid-box .xv-grid-column .onyx-input-decorator {
-  padding: 0px;
-  width: 60px;
-}
-.xv-grid-box .xv-grid-column .onyx-input-decorator input {
-  width: 50px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-column .onyx-picker-decorator {
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-column .onyx-picker-decorator .onyx-button {
-  height: 20px;
-  padding-top: 3px;
-  width: 60px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-column .xv-picker-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-column .xv-datewidget {
-  padding-top: 0px !important;
-}
-.xv-grid-box .xv-grid-column .xv-datewidget .onyx-input-decorator {
-  padding: 0px;
-  width: 105px;
-}
-.xv-grid-box .xv-grid-column .xv-datewidget .onyx-input-decorator input {
-  width: 65px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-column .xv-numberwidget {
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-column .xv-numberwidget .onyx-input-decorator {
-  padding: 0px;
-  width: 60px;
-}
-.xv-grid-box .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
-  width: 50px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-column .xv-moneywidget .onyx-input-decorator {
-  padding: 0px;
-  width: 60px;
-}
-.xv-grid-box .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
-  width: 50px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-column .xv-moneywidget .onyx-picker-decorator {
-  display: none;
-}
-.xv-grid-box .xv-grid-column .xv-relationwidget .onyx-input-decorator {
-  width: 100px;
-}
-.xv-grid-box .xv-grid-column .xv-relationwidget .onyx-input {
-  width: 50px;
-}
-.xv-grid-box .xv-grid-column .xv-subinput {
-  width: 50px;
-}
-.xv-grid-box .xv-grid-column .xv-input {
-  padding-top: 6px;
-  width: 50px;
-}
-.xv-grid-box .xv-grid-column .xv-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-column .xv-decorated-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-column .xv-relationwidget-description {
-  display: none;
-}
-.xv-grid-box .xv-grid-column .xv-private-item-site-widget {
-  border-bottom: 0px;
-}
-.xv-grid-box .xv-grid-column .xv-grid-line-number {
-  width: 25px !important;
-}
-.xv-grid-box .xv-grid-column .xv-grid-line-number .xv-input-decorator {
-  width: 25px !important;
-}
-.xv-grid-box .xv-grid-column .xv-grid-line-number .xv-input-decorator input {
-  width: 20px !important;
-}
-.xv-grid-box .xv-sales-summary-panel {
-  padding-left: 0px;
-  border-width: 0px;
-}
-.xv-grid-box .xv-sales-summary-total-group {
-  padding-left: 0px;
-  border-width: 0px;
 }
 /* ListRelationsBox */
 .xv-list-relations-box.panel {
