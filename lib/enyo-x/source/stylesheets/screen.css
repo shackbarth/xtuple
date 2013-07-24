@@ -2329,6 +2329,9 @@ body {
 .xv-grid-actions {
   padding-top: 6px;
 }
+.xv-grid-box .enyo-fittable-columns-layout {
+  background-color: white;
+}
 .xv-grid-box .xv-grid-column .onyx-input-decorator {
   padding: 0px;
   width: 60px;

@@ -1735,12 +1735,22 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   // SALES ORDER
   //
 
+  //
+  // The implementation of GridRow and GridBox is here in the workspace kind.
+  // We could move them to a grid_box.js if we want. It is currently the only
+  // implementation of GridRow and GridBox. Once we have a second, we'll probably
+  // want to generalize this code and move it to enyo-x.
+  //
   var salesOrderGridRow = {
     name: "XV.SalesOrderLineItemGridRow",
     kind: "XV.GridRow",
     components: [
+      // each field is grouped with its column header so that the alignment always
+      // works out. All but the first column header will be invisible.
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerLineNumber", classes: "xv-grid-header", content: "#"},
+        // Using XV.NumberWidget instead of XV.Number here (and below) because
+        // of the pretty rounded corners, even though we have to hide the label with css
         {kind: "XV.NumberWidget", classes: "xv-grid-line-number", attr: "lineNumber"}
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
@@ -1792,6 +1802,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         {kind: "FittableColumns", classes: "xv-grid-actions", components: [
           {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton" },
           {kind: "enyo.Button", classes: "icon-eye-open", name: "expandGridRowButton" },
+          // something in the model code doesn't like a clear()
           //{kind: "enyo.Button", classes: "icon-eraser", name: "clearGridRowButton" },
           {kind: "enyo.Button", classes: "icon-remove", name: "deleteGridRowButton" }
         ]}
@@ -1808,21 +1819,22 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
-      {kind: "Scroller", horizontal: "auto", classes: "xv-groupbox xv-scroller", components: [
+      {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", fit: true, horizontal: "auto", components: [
         {kind: "Repeater", name: "gridRepeater", onSetupItem: "setupRow", components: [
           { kind: "XV.SalesOrderLineItemGridRow", name: "gridRow" }
-        ]}
+        ]},
+        {
+          kind: "FittableColumns",
+          name: "navigationButtonPanel",
+          classes: "xv-groupbox-buttons",
+          components: [
+            {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+              content: "_new".loc(), classes: "xv-groupbox-button-left"}
+          ]
+        },
+        {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
+
       ]},
-      {
-        kind: "FittableColumns",
-        name: "navigationButtonPanel",
-        classes: "xv-groupbox-buttons",
-        components: [
-          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
-            content: "_new".loc(), classes: "xv-groupbox-button-left"}
-        ]
-      },
-      {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
     ],
     /**
       Set the current model into Summary Panel.
