@@ -46,11 +46,11 @@ create or replace function xt.patch(data_hash text) returns text as $$
   try {
     var dataHash = JSON.parse(data_hash),
       data = Object.create(XT.Data),
-      orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type),
-      idKey = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm),
       options = JSON.parse(JSON.stringify(dataHash)),
       patches = options.patches,
       prettyPrint = dataHash.prettyPrint ? 2 : null,
+      orm,
+      idKey,
       observer,
       prv,
       rec,
@@ -58,6 +58,9 @@ create or replace function xt.patch(data_hash text) returns text as $$
 
     dataHash.superUser = false;
     if (dataHash.username) { XT.username = dataHash.username; }
+
+    orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type);
+    idKey = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm);
 
     /* get the current version of the record */
     prv = data.retrieveRecord(dataHash);
