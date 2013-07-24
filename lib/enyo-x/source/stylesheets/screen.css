@@ -296,6 +296,9 @@
   */
 
 }
+.dashboard .nvtooltip {
+  color: black;
+}
 .dashboard .charts-panels {
   overflow-y: auto;
 }
