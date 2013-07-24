@@ -1780,7 +1780,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         {name: "headerPrice", classes: "xv-grid-header", content: "_price".loc()},
         {kind: "XV.MoneyWidget", attr:
           {localValue: "price", currency: ""},
-          currencyDisabled: true, scale: XT.SALES_PRICE_SCALE}
+          currencyDisabled: true, currencyShowing: false, scale: XT.SALES_PRICE_SCALE}
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerPriceUnit", classes: "xv-grid-header", content: "_priceUnit".loc()},
@@ -1790,7 +1790,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         {name: "headerExtendedPrice", classes: "xv-grid-header", content: "_extPrice".loc()},
         {kind: "XV.MoneyWidget", attr:
           {localValue: "extendedPrice", currency: ""},
-          currencyDisabled: true, scale: XT.EXTENDED_PRICE_SCALE}
+          currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerScheduleDate", classes: "xv-grid-header", content: "_schedDate".loc()},
