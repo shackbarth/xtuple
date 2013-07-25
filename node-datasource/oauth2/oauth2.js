@@ -486,11 +486,54 @@ exports.authorization = [
   function (req, res, next) {
     "use strict";
 
-    var scope;
+    var callback,
+        payload = {},
+        rootUrl = req.protocol + "://" + req.host + "/",
+        routes = require('../routes/routes');
+
+    // Handle the returned scopes list.
+    callback = function (result) {
+      if (result.isError) {
+        return next(new Error("Invalid Request."));
+      }
+
+      var client,
+        scope,
+        scopes = [];
+
+      client = {
+        "logo": req.oauth2.client.get("clientLogo"),
+        "name": req.oauth2.client.get("clientName")
+      };
+      scope = req.session.passport.user.organization;
+
+      // Loop through the requested OAuth 2.0 scopes and get the descriptions.
+      for (var i = 0; i < req.oauth2.req.scope.length; i++) {
+        if (result.data && result.data.oauth2 && result.data.oauth2.scopes &&
+          result.data.oauth2.scopes[req.oauth2.req.scope[i]]
+          ) {
+
+          // Add the description for this scope to the array to be displayed by dialog.ejs form.
+          scopes.push(result.data.oauth2.scopes[req.oauth2.req.scope[i]].description);
+        }
+      }
+
+      // Render the dialog.ejs form.
+      res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user.id, client: client, scope: scope, scopes: scopes });
+    };
+
 
     if (req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
-      scope = req.session.passport.user.organization;
-      res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user.id, client: req.oauth2.client.get("clientName"), scope: scope });
+      payload.nameSpace = "XT";
+      payload.type = "Discovery";
+      payload.dispatch = {
+        functionName: "getAuth",
+        isJSON: true,
+        parameters: [null, rootUrl]
+      };
+
+      // Get the scopes list from the Discovery Doc.
+      routes.queryDatabase("post", payload, req.session, callback);
     } else {
       next(new Error('Invalid OAuth 2.0 scope.'));
     }
@@ -515,6 +558,11 @@ exports.decision = [
 
     if (req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
       ares.scope = req.session.passport.user.organization;
+
+      // Oauth 2.0 has been approved. Remove it from the session so the user
+      // can login to the app normally again.
+      delete req.session.oauth2;
+
       return next(null, ares);
     } else {
       return next(new Error('Invalid OAuth 2.0 scope.'));

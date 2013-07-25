@@ -1,4 +1,4 @@
-/* LESS version of screen.scss file previously in login 
+/* LESS version of screen.scss file previously in login
 
 	To compile to .css: lessc screen.less > ../stylesheets/screen.css
 	Use -compress for a compressed .css with no comments
@@ -71,11 +71,24 @@ label.login-message-box.error {
   width: 280px;
   margin: 80px auto;
 }
-#login img {
+#header_image {
   display: block;
   margin: 0 auto 5px auto;
   width: 162px;
   text-align: center;
+}
+#oauth {
+  display: table;
+  padding-bottom: 5px;
+}
+#oauth_icon {
+  display: table-cell;
+  float: left;
+  margin-right: 5px;
+}
+#oauth_request {
+  display: table-cell;
+  vertical-align: middle;
 }
 #main {
   -webkit-box-sizing: border-box;
@@ -89,6 +102,20 @@ label.login-message-box.error {
   position: relative;
   overflow: visible;
   z-index: 2;
+}
+#oauth_party {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  background-color: #2f6c9d;
+  padding: 40px 30px 50px 30px;
+  position: relative;
+  overflow: visible;
+  z-index: 2;
+  color: #ffffff;
 }
 #main div {
   position: relative;
