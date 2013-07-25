@@ -1793,7 +1793,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {localValue: "extendedPrice", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column", components: [
+      {kind: "FittableRows", classes: "xv-grid-column", style: "width: 110px;", components: [
         {name: "headerScheduleDate", classes: "xv-grid-header", content: "_schedDate".loc()},
         {kind: "XV.DateWidget", attr: "scheduleDate"}
       ]},
