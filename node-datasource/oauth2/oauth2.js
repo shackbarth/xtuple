@@ -67,7 +67,7 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
 
   // Generate the auth code.
   var code = utils.generateUUID(),
-      salt = '$2a$10$' + client.get("clientID").substring(0, 22),
+      salt = '$2a$10$' + client.get("clientID").replace(/[^a-zA-Z0-9]/g, "").substring(0, 22),
       codehash = X.bcrypt.hashSync(code, salt);
 
   // The authCode can be used to get a refreshToken and accessToken. We bcrypt the authCode
@@ -111,7 +111,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
   }
 
   // bcrypt the code before looking for a matching hash.
-  var salt = '$2a$10$' + client.get("clientID").substring(0, 22),
+  var salt = '$2a$10$' + client.get("clientID").replace(/[^a-zA-Z0-9]/g, "").substring(0, 22),
       codehash = X.bcrypt.hashSync(code, salt);
 
   db.authorizationCodes.find(codehash, client.get("organization"), function (err, authCode) {
