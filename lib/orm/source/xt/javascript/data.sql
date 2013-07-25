@@ -1564,7 +1564,7 @@ select xt.install_js('XT','Data','xtuple', $$
         props = orm.properties,
         attrPriv = orm.privileges && orm.privileges.attribute ?
           orm.privileges.attribute : false,
-        inclKeys = options.inclKeys,
+        inclKeys = options.includeKeys,
         superUser = options.superUser,
         c,
         i,
