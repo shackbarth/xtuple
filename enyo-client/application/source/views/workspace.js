@@ -1735,6 +1735,69 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   // SALES ORDER
   //
 
+  enyo.kind({
+    name: "XV.SalesOrderLineItemReadOnlyGridRow",
+    kind: "XV.ReadOnlyGridRow",
+    components: [
+      // each field is grouped with its column header so that the alignment always
+      // works out. All but the first column header will be invisible.
+      {classes: "xv-grid-column", components: [
+        {name: "headerLineNumber", classes: "xv-grid-header", content: "#"},
+        // Using XV.NumberWidget instead of XV.Number here (and below) because
+        // of the pretty rounded corners, even though we have to hide the label with css
+        {classes: "xv-grid-line-number", name: "lineNumber"}
+      ]},/*
+      {kind: "FittableRows", classes: "xv-grid-column", style: "width: 250px;", components: [
+        {name: "headerItemSite", classes: "xv-grid-header", content: "_item".loc()},
+        {kind: "XV.ItemSiteWidget", attr:
+          {item: "item", site: "site"},
+          name: "itemSiteWidget",
+          query: {parameters: [
+          {attribute: "item.isSold", value: true},
+          {attribute: "item.isActive", value: true},
+          {attribute: "isSold", value: true},
+          {attribute: "isActive", value: true}
+        ]}},
+      ]},
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
+        {name: "headerQuantity", classes: "xv-grid-header", content: "_quantity".loc()},
+        {kind: "XV.QuantityWidget", attr: "quantity"},
+        {kind: "XV.UnitPickr", attr: "quantityUnit", name: "quantityUnitPicker" }
+      ]},
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
+        {name: "headerDiscount", classes: "xv-grid-header", content: "_discount".loc()},
+        {kind: "XV.PercentWidget", name: "discount", attr: "discount" }
+      ]},
+      {kind: "FittableRows", classes: "xv-grid-column", components: [
+        {name: "headerPrice", classes: "xv-grid-header", content: "_price".loc()},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "price", currency: ""},
+          currencyDisabled: true, currencyShowing: false, scale: XT.SALES_PRICE_SCALE},
+        {kind: "XV.UnitPickr", attr: "priceUnit", name: "priceUnitPicker"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "extendedPrice", currency: ""},
+          currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
+      ]},*/
+      {classes: "xv-grid-column", style: "width: 110px;", components: [
+        {name: "headerScheduleDate", classes: "xv-grid-header", content: "_schedDate".loc()},
+        {name: "scheduleDate"}
+      ]},
+      {classes: "xv-grid-column", components: [
+        {name: "headerAction", classes: "xv-grid-header", content: "_actions".loc()},
+        {kind: "FittableColumns", classes: "xv-grid-actions", components: [
+          {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton" },
+          {kind: "enyo.Button", classes: "icon-eye-open", name: "expandGridRowButton" },
+          {kind: "enyo.Button", classes: "icon-remove", name: "deleteGridRowButton" }
+        ]}
+      ]}
+    ],
+    valueChanged: function () {
+      var model = this.getValue();
+      this.$.lineNumber.setContent(model.get("lineNumber"));
+      this.$.scheduleDate.setContent(model.get("scheduleDate"));
+    }
+  });
+
   //
   // The implementation of GridRow and GridBox is here in the workspace kind.
   // We could move them to a grid_box.js if we want. It is currently the only
@@ -1808,23 +1871,21 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
-      {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", fit: true, horizontal: "auto", components: [
-        {kind: "Repeater", name: "gridRepeater", onSetupItem: "setupRow", components: [
-          { kind: "XV.SalesOrderLineItemGridRow", name: "gridRow" }
-        ]},
-        {
-          kind: "FittableColumns",
-          name: "navigationButtonPanel",
-          classes: "xv-groupbox-buttons",
-          components: [
-            {kind: "onyx.Button", name: "newButton", onclick: "newItem",
-              content: "_new".loc(), classes: "xv-groupbox-button-left"}
-          ]
-        },
-        {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
-
+      {kind: "List", name: "gridList", count: 0, onSetupItem: "setupRow", components: [
+        { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "gridRow" }
       ]},
+      {
+        kind: "FittableColumns",
+        name: "navigationButtonPanel",
+        classes: "xv-groupbox-buttons",
+        components: [
+          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+            content: "_new".loc(), classes: "xv-groupbox-button-left"}
+        ]
+      },
+      {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
     ],
+
     /**
       Set the current model into Summary Panel.
     */
