@@ -344,7 +344,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {String} Order line uuid
   */
   XM.Inventory.returnFromShipping = function (orderLine) {
-    var sql = "select returnitemshipments(coitem_id) from coitem where obj_uuid = $1;";
+    var sql = "select returnitemshipments(coitem_id) as series " +
+      "from coitem where obj_uuid = $1;";
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401) };
@@ -355,10 +356,37 @@ select xt.install_js('XM','Inventory','xtuple', $$
     return;
   };
 
+  /**
+    Return complete shipment (only available for orders that have not been shipped) - used in maintain shipping contents screen.
+    
+      select xt.post('{
+        "username": "admin",
+        "nameSpace":"XM",
+        "type":"Inventory",
+        "dispatch":{
+          "functionName":"recallShipment",
+          "parameters":["203"]
+        }
+      }');
+  
+    @param {Number} shipment id
+  */
+  XM.Inventory.recallShipment = function (shipment) {
+    var sql = "select recallshipment(shiphead_id) from shiphead where shiphead_number = $1;";
+
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("RecallOrders")) { throw new handleError("Access Denied", 401) };
+
+    /* Post the transaction */
+    plv8.execute(sql, [shipment])[0].series;
+
+    return;
+  };
+
   XM.Inventory.options = [
 		"DefaultEventFence",    
 		"ItemSiteChangeLog",
-                "WarehouseChangeLog",
+    "WarehouseChangeLog",
 		"AllowAvgCostMethod",  
 		"AllowStdCostMethod",
 		"AllowJobCostMethod",

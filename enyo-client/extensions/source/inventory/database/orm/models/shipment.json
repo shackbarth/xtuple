@@ -11,10 +11,10 @@
     "comment": "Shipment Map",
     "privileges": {
       "all": {
-        "create": false,
-        "read": "IssueStockToShipping",
-        "update": false,
-        "delete": false
+        "create": "false",
+        "read": "ViewShipping",
+        "update": "false",
+        "delete": "false"
       }
     },
     "properties": [
@@ -38,7 +38,8 @@
         "name": "order",
         "toOne": {
           "type": "SalesOrderRelation",
-          "column": "shiphead_order_id"
+          "column": "shiphead_order_id",
+					"isNested": true
         }
       },
       {
@@ -104,6 +105,13 @@
           "type": "ShipmentLine",
           "column": "shiphead_id",
           "inverse": "shipment"
+        }
+      },
+      {
+        "name": "isPostedInvoice",
+        "attr": {
+          "type": "Boolean",
+          "column": "invoice_posted"
         }
       }
 	  ],
