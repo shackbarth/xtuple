@@ -413,6 +413,16 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // SORT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SortTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.sortTypes"
+  });
+
+  // ..........................................................
   // TAX AUTHORITY
   //
 
