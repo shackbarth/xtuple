@@ -1583,14 +1583,13 @@ white:true*/
        maxLineNumber,
        scheduleDate;
 
-      // Set next line number
+      // Set next line number to be 1 more than the highest living model
       if (parent && !lineNumber) {
         maxLineNumber = Math.max.apply(null,
           _.compact(_.map(parent.get("lineItems").models, function (model) {
-            return model.get("lineNumber");
+            return model.isDestroyed() ? null : model.get("lineNumber");
           }))
         );
-        // XXX this will allow holes if we delete from the middle
         this.set("lineNumber", maxLineNumber + 1);
       }
 
