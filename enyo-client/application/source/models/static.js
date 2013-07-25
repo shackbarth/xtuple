@@ -187,23 +187,6 @@ white:true*/
     XM.projectStatuses.add(projectStatus);
   }
 
-  // Sort Type
-  var sortTypeJson = [
-    { id: "N", name: "_none".loc()},
-    { id: "A", name: "_ascending".loc() },
-    { id: "D", name: "_descending".loc() }
-  ];
-  XM.SortTypeModel = Backbone.Model.extend({
-  });
-  XM.SortTypeCollection = Backbone.Collection.extend({
-    model: XM.SortTypeModel
-  });
-  XM.sortTypes = new XM.SortTypeCollection();
-  for (i = 0; i < sortTypeJson.length; i++) {
-    var sortType = new XM.SortTypeModel(sortTypeJson[i]);
-    XM.sortTypes.add(sortType);
-  }
-
   // Characteristic Type
   K = XM.Characteristic;
   var characteristicTypeJson = [

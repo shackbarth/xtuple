@@ -418,8 +418,11 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.SortTypePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.sortTypes"
+    kind: "onyx.Picker", components: [
+      {content: "_none".loc(), active: true},
+      {content: "_ascending".loc()},
+      {content: "_descending".loc()}
+    ]
   });
 
   // ..........................................................
