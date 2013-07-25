@@ -17,7 +17,7 @@ white:true*/
 
       recordType: "XM.Shipment",
 
-    //  numberPolicy: XM.Document.AUTO_NUMBER,
+      numberPolicy: XM.Document.AUTO_NUMBER,
 
       readOnlyAttributes: [
         "order"
