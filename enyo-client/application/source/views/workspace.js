@@ -1753,12 +1753,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         // of the pretty rounded corners, even though we have to hide the label with css
         {kind: "XV.NumberWidget", classes: "xv-grid-line-number", attr: "lineNumber"}
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column", components: [
+      {kind: "FittableRows", classes: "xv-grid-column", style: "width: 250px;", components: [
         {name: "headerItemSite", classes: "xv-grid-header", content: "_item".loc()},
         {kind: "XV.ItemSiteWidget", attr:
           {item: "item", site: "site"},
           name: "itemSiteWidget",
-          horizontalOrientation: true,
           query: {parameters: [
           {attribute: "item.isSold", value: true},
           {attribute: "item.isActive", value: true},
@@ -1768,10 +1767,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerQuantity", classes: "xv-grid-header", content: "_quantity".loc()},
-        {kind: "XV.QuantityWidget", attr: "quantity"}
-      ]},
-      {kind: "FittableRows", classes: "xv-grid-column", components: [
-        {name: "headerQuantityUnit", classes: "xv-grid-header", content: "_unit".loc()},
+        {kind: "XV.QuantityWidget", attr: "quantity"},
         {kind: "XV.UnitPickr", attr: "quantityUnit", name: "quantityUnitPicker" }
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
@@ -1782,14 +1778,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         {name: "headerPrice", classes: "xv-grid-header", content: "_price".loc()},
         {kind: "XV.MoneyWidget", attr:
           {localValue: "price", currency: ""},
-          currencyDisabled: true, currencyShowing: false, scale: XT.SALES_PRICE_SCALE}
-      ]},
-      {kind: "FittableRows", classes: "xv-grid-column", components: [
-        {name: "headerPriceUnit", classes: "xv-grid-header", content: "_priceUnit".loc()},
-        {kind: "XV.UnitPickr", attr: "priceUnit", name: "priceUnitPicker"}
-      ]},
-      {kind: "FittableRows", classes: "xv-grid-column", components: [
-        {name: "headerExtendedPrice", classes: "xv-grid-header", content: "_extPrice".loc()},
+          currencyDisabled: true, currencyShowing: false, scale: XT.SALES_PRICE_SCALE},
+        {kind: "XV.UnitPickr", attr: "priceUnit", name: "priceUnitPicker"},
         {kind: "XV.MoneyWidget", attr:
           {localValue: "extendedPrice", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
@@ -1803,8 +1793,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         {kind: "FittableColumns", classes: "xv-grid-actions", components: [
           {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton" },
           {kind: "enyo.Button", classes: "icon-eye-open", name: "expandGridRowButton" },
-          // something in the model code doesn't like a clear()
-          //{kind: "enyo.Button", classes: "icon-eraser", name: "clearGridRowButton" },
           {kind: "enyo.Button", classes: "icon-remove", name: "deleteGridRowButton" }
         ]}
       ]}

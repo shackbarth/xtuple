@@ -374,10 +374,10 @@
 }
 .xv-grid-box .xv-grid-column .onyx-input-decorator {
   padding: 0px;
-  width: 70px;
+  width: 90px;
 }
 .xv-grid-box .xv-grid-column .onyx-input-decorator input {
-  width: 60px;
+  width: 80px;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-column .onyx-picker-decorator {
@@ -386,7 +386,7 @@
 .xv-grid-box .xv-grid-column .onyx-picker-decorator .onyx-button {
   height: 20px;
   padding-top: 3px;
-  width: 60px;
+  width: 80px;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-column .xv-picker-label {
@@ -409,32 +409,32 @@
 }
 .xv-grid-box .xv-grid-column .xv-numberwidget .onyx-input-decorator {
   padding: 0px;
-  width: 70px;
+  width: 90px;
 }
 .xv-grid-box .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
-  width: 60px;
+  width: 80px;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-column .xv-moneywidget .onyx-input-decorator {
   padding: 0px;
-  width: 70px;
+  width: 90px;
 }
 .xv-grid-box .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
-  width: 60px;
+  width: 80px;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-column .xv-relationwidget .onyx-input-decorator {
-  width: 130px;
+  width: 150px;
 }
 .xv-grid-box .xv-grid-column .xv-relationwidget .onyx-input {
-  width: 80px;
+  width: 100px;
 }
 .xv-grid-box .xv-grid-column .xv-subinput {
-  width: 60px;
+  width: 80px;
 }
 .xv-grid-box .xv-grid-column .xv-input {
   padding-top: 6px;
-  width: 60px;
+  width: 80px;
 }
 .xv-grid-box .xv-grid-column .xv-label {
   display: none;
@@ -443,6 +443,10 @@
   display: none;
 }
 .xv-grid-box .xv-grid-column .xv-relationwidget-description {
+  text-indent: 0px;
+  padding-bottom: 0px;
+}
+.xv-grid-box .xv-grid-column .xv-relationwidget-secondarydescription {
   display: none;
 }
 .xv-grid-box .xv-grid-column .xv-private-item-site-widget {
