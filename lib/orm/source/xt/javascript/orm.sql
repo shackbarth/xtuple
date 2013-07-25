@@ -218,13 +218,17 @@ select xt.install_js('XT','Orm','xtuple', $$
                  " and not orm_ext " +
                  " and orm_active; ";
 
-      if (DEBUG) {
-        XT.debug('fetch sql = ', sql);
-        XT.debug('fetch values = ', [nameSpace, type]);
-      }
       if (isSuper) {
+        if (DEBUG) {
+          XT.debug('fetch sql = ', superSql);
+          XT.debug('fetch values = ', [nameSpace, type]);
+        }
         res = plv8.execute(superSql, [nameSpace, type]);
       } else {
+        if (DEBUG) {
+          XT.debug('fetch sql = ', sql);
+          XT.debug('fetch values = ', [nameSpace, type, XT.username]);
+        }
         res = plv8.execute(sql, [nameSpace, type, XT.username]);
       }
 
