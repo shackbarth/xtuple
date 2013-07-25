@@ -341,6 +341,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "phone"},
             {kind: "XV.InputWidget", attr: "alternate"},
             {kind: "XV.InputWidget", attr: "fax"},
+            {kind: "XV.InputWidget", attr: "webAddress"},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"}
