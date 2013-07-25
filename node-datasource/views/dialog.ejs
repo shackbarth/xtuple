@@ -38,9 +38,9 @@
         </ul>
         <form action="/<%= scope %>/dialog/authorize/decision" method="post">
           <input name="transaction_id" type="hidden" value="<%= transactionID %>">
-          <div>
-          <input type="submit" value="Accept" id="allow">
-          <input type="submit" value="Cancel" name="cancel" id="deny">
+          <div style="display: block;">
+            <input class="enyo-tool-decorator onyx-button enyo-unselectable login-button" id="form-fields_acceptButton" type="submit" value="Accept" id="allow">
+            <input class="enyo-tool-decorator onyx-button enyo-unselectable login-button" id="form-fields_cancelButton" type="submit" value="Cancel" name="cancel" id="deny">
           </div>
         </form>
       </div>
