@@ -175,7 +175,14 @@
         "name": "lineNumber",
         "attr": {
           "type": "String",
-          "column": "linenumber"
+          "column": "coitem_linenumber"
+        }
+      },
+      {
+        "name": "subNumber",
+        "attr": {
+          "type": "String",
+          "column": "coitem_subnumber"
         }
       },
       {

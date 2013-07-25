@@ -5,6 +5,8 @@ select xt.create_view('xt.coitemship', $$
     obj_uuid,
     coitem_cohead_id,
     formatsolinenumber(coitem_id) as linenumber,
+    coitem_linenumber,
+    coitem_subnumber,
     coitem_item_id, 
     coitem_warehous_id,
     coitem_scheddate,
