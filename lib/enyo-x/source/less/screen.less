@@ -25,6 +25,7 @@
 @dark-gray  :  #333;
 @blue-gray  : #93a1a1;
 @near-black  : #0e0e0e;
+@black      : #000;
 @white      : #fff;
 @red        :  #c51616;
 @bright-red  :  #ff0000;
@@ -43,6 +44,16 @@
   Styles relating to the dashboard
 */
 @import "dashboard.less";
+
+/**
+  Styles relating to the parameter widget
+*/
+@import "pullout.less";
+
+/**
+  Less styles for the
+*/
+@import "picker.less";
 
 /**
   Import for Font-Awesome icons
@@ -144,7 +155,7 @@ body {
    text-shadow: none;
 }
 .text-shadow-0 {
-  text-shadow: 0px 0px black;
+  text-shadow: 0px 0px @black;
 }
 // end hack
 
@@ -240,25 +251,6 @@ body {
   padding: 10px;
 }
 
-/* Pullout */
-.slim-datewidget($labelVisibility, $pickerVisibility: visible) {
-  .xv-input-decorator {
-    padding: 0;
-    height: 32px;
-  }
-  .xv-label {
-    visibility: $labelVisibility;
-  }
-  .onyx-icon {
-    visibility: $pickerVisibility;
-    vertical-align: top;
-  }
-  .onyx-input {
-    width: 90px;
-    vertical-align: top;
-  }
-}
-
 /*
   Media query for responsive design. This adapts to smaller
   displays.
@@ -272,64 +264,6 @@ body {
        min-width: 100%;
        max-width: 100%;
    }
-}
-
-.xv-pullout-header {
-  text-align: center;
-  padding: 10px 0;
-}
-
-.pullout {
-  position: absolute;
-  top: 57px;
-  left: 0;
-  bottom: 0;
-  width: 320px;
-  background: @smoke;
-  .xv-groupbox {
-    min-width: 300px;
-    padding: 8px 0 8px 5px;
-    margin: 0;
-  }
-}
-
-.pullout-shadow {
-  position: absolute;
-  height: 100%;
-  width: 20px;
-  right: -20px;
-  /** this is weird and indicates the REAL need to change the
-      whatever the css system is...this relative path is different... **/
-  background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
-  background-size: 20px 2px;
-}
-
-.pullout-grabbutton {
-  position: absolute;
-  height: 54px;
-  width: 50px;
-  bottom: 20px;
-  right: -46px;
-  .border-radius-all(0, 10px, 10px, 0);
-  background-color: @smoke;
-  box-shadow: 4px 4px 4px rgba(0,0,0,0.3);
-}
-
-.pullout-toolbar {
-  padding-top: 4px;
-  text-align: center;
-}
-
-#app_pullout_container,
-#app_pullout_help,
-#app_pullout_help_helpPage {
- height: 100%;
-}
-
-#app_pullout_help_helpPage {
-  border: none;
-  height: 100%;
-  width: 100%;
 }
 
 /*
@@ -350,7 +284,7 @@ body {
     }
     &.inactive {
       background-color: @gray;
-      color: black;
+      color: @black;
       .xv-list-column {
         .xv-list-attr {
           background-color: @gray;
@@ -434,7 +368,7 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: black;
+  color: @black;
   background-color: @white;
   &.header {
     padding: 4px;
@@ -450,7 +384,7 @@ body {
     font-size: .7em;
     font-weight: bold;
     text-transform: uppercase;
-    color: black;
+    color: @black;
   }
   &.right {
     position: absolute;
@@ -475,35 +409,6 @@ body {
   }
   &.hyperlink {
     color: blue;
-  }
-}
-
-/* Parameter */
-.xv-parameter-item {
-  background-color: @white;
-  .xv-label {
-    color: #000;
-  }
-  .xv-decorated-label {
-    color: #000;
-  }
-  .xv-picker {
-    width: 150px;
-  }
-  .xv-radiogroup {
-    padding: 6px;
-    margin-left: 130px; /* hack */
-  }
-  /* this ain't right */
-  .xv-relationwidget {
-    .xv-subinput {
-     width: 127px;
-    }
-  }
-  .xv-datewidget {
-    .xv-subinput {
-      width: 127px;
-    }
   }
 }
 
@@ -617,9 +522,6 @@ body {
 */
 
 .xv-numberwidget {
-  .onyx-input-decorator {
-    width: 150px;
-  }
   input {
     text-align: right;
   }
@@ -776,53 +678,6 @@ body {
   }
 }
 
-/* Combo Box */
-.xv-combobox {
-  padding: 6px;
-  padding-top: 8px;
-  padding-right: 0;
-  height: 24px;
-  width: 170px;
-  display: inline-block;
-}
-
-.xv-combobox-input {
-  font-size: medium;
-  border: 0;
-  display: inline-block;
-  outline: none;
-  width: 125px;
-}
-
-.xv-combobox-icon {
-  margin-left: 4px;
-  display: inline-block;
-}
-
-.xv-combobox-note {
-  padding: 14px 3px 8px 3px;
-  text-align: left;
-}
-
-/* Picker */
-.onyx-picker {
-  .onyx-menu-item {
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-.xv-pickerwidget {
-  background-color: @white;
-}
-
-.xv-picker {
-  width: 160px;
-  text-align: left;
-}
-
 .xv-label {
   width: 130px;
   padding: 8px;
@@ -835,20 +690,13 @@ body {
   text-align: right;
 }
 
-.xv-picker-label {
-  width: 130px;
-  padding: 18px 8px 8px 8px;
-  text-align: right;
-  color: black;
-}
-
 .xv-textarea-input {
   width: 90%;
   height: 100%;
   min-height: 100px;
   margin: 6px;
   border: #ddd 2px solid;
-  color: black;
+  color: @black;
 }
 
 .xv-documents-picker-label {

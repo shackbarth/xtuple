@@ -47,6 +47,11 @@
   min-width: 320px;
   padding: 8px;
   margin-right: 5px;
+  /**
+    Top level input-decorator class.
+    All below this are overrides.
+  */
+
 }
 .xv-groupbox.editor {
   min-width: 250px;
@@ -83,7 +88,23 @@
 .xv-groupbox .onyx-input-decorator {
   border: 0;
 }
+.xv-groupbox .onyx-input-decorator input {
+  width: 150px;
+}
 .xv-groupbox .onyx-picker-decorator .onyx-button {
+  width: 150px;
+}
+.xv-groupbox .xv-relationwidget .onyx-input-decorator,
+.xv-groupbox .xv-datewidget .onyx-input-decorator,
+.xv-groupbox .xv-numberwidget .onyx-input-decorator {
+  width: 170px;
+}
+.xv-groupbox .xv-relationwidget input,
+.xv-groupbox .xv-datewidget input,
+.xv-groupbox .xv-numberwidget input {
+  width: 120px;
+}
+.xv-groupbox .xv-numberwidget input {
   width: 150px;
 }
 .xv-groupbox .xv-moneywidget {
@@ -107,16 +128,7 @@
 }
 .xv-groupbox .xv-moneywidget .xv-picker {
   width: 65px;
-  text-align: center;
-  padding: 10px;
-}
-.xv-groupbox .xv-relationwidget .onyx-input-decorator,
-.xv-groupbox .xv-datewidget .onyx-input-decorator {
-  width: 170px;
-}
-.xv-groupbox .xv-relationwidget input,
-.xv-groupbox .xv-datewidget input {
-  width: 120px;
+  padding: 10px 4px;
 }
 .xv-groupbox > .onyx-input-decorator {
   border-color: #aaaaaa;
@@ -334,9 +346,162 @@
 }
 .selectable-chart .chart-bottom .onyx-button {
   width: 130px;
+  padding: 10px 10px;
 }
-.menu-icon {
-  margin-left: 15px;
+/**
+  Styles relating to the parameter widget
+*/
+/**
+  Styles relating to widgets in the pullout
+*/
+/* Pullout */
+.xv-pullout-header {
+  text-align: center;
+  padding: 10px 0;
+}
+.pullout {
+  position: absolute;
+  top: 57px;
+  left: 0;
+  bottom: 0;
+  width: 320px;
+  background: #dddddd;
+}
+.pullout .xv-groupbox {
+  min-width: 280px;
+  margin: 4px 0 8px 4px;
+  padding: 0;
+}
+.pullout .pullout-scroller {
+  position: relative;
+  margin-right: 4px;
+}
+.pullout .pullout-shadow {
+  position: absolute;
+  height: 100%;
+  width: 20px;
+  right: -20px;
+  /**
+      TODO: this is weird and indicates the REAL need to change the
+      whatever the css system is...this relative path is different...
+    **/
+
+  background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
+  background-size: 20px 2px;
+}
+.pullout .pullout-grabbutton {
+  position: absolute;
+  height: 54px;
+  width: 50px;
+  bottom: 20px;
+  right: -46px;
+  background-color: #dddddd;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+}
+.pullout .pullout-toolbar {
+  padding-top: 4px;
+  text-align: center;
+}
+#app_pullout_container,
+#app_pullout_help,
+#app_pullout_help_helpPage {
+  height: 100%;
+}
+#app_pullout_help_helpPage {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+/* Parameter Widget */
+.xv-parameter-item {
+  background-color: #ffffff;
+}
+.xv-parameter-item .xv-label {
+  color: #000;
+}
+.xv-parameter-item .xv-decorated-label {
+  color: #000;
+}
+.xv-parameter-item .xv-picker {
+  width: 150px;
+}
+.xv-parameter-item .xv-radiogroup {
+  padding: 6px;
+  margin-left: 130px;
+}
+/**
+  Less styles for the
+*/
+/**
+  Styles related to pickers, combo boxes, and relation widgets
+*/
+/* Picker */
+.onyx-picker-decorator .onyx-button {
+  padding: 12px 8px 12px 8px;
+}
+.onyx-picker-decorator .onyx-picker .onyx-menu-item {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-pickerwidget {
+  background-color: #ffffff;
+}
+.xv-picker {
+  text-align: left;
+}
+.xv-picker .picker-content {
+  max-width: 118px;
+  overflow: hidden;
+}
+.xv-picker .picker-icon {
+  position: absolute;
+  right: 0;
+  margin: 0 10px 0 2px;
+  color: #000000;
+}
+.xv-picker-label {
+  color: #000000;
+  padding: 18px 8px 8px 8px;
+  text-align: right;
+  width: 130px;
+}
+/* Combo Box */
+.xv-combobox {
+  padding: 6px;
+  padding-top: 8px;
+  padding-right: 0;
+  height: 24px;
+  width: 170px;
+  display: inline-block;
+}
+.xv-combobox-input {
+  font-size: medium;
+  border: 0;
+  display: inline-block;
+  outline: none;
+  width: 125px;
+}
+.xv-combobox-icon {
+  margin-left: 4px;
+  display: inline-block;
+}
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
 }
 /**
   Import for Font-Awesome icons
@@ -1700,7 +1865,7 @@ body {
   text-shadow: none;
 }
 .text-shadow-0 {
-  text-shadow: 0px 0px black;
+  text-shadow: 0px 0px #000000;
 }
 .xt-app {
   position: absolute;
@@ -1785,22 +1950,6 @@ body {
 .xv-version-label {
   padding: 10px;
 }
-/* Pullout */
-.slim-datewidget($labelVisibility, $pickerVisibility: visible) .xv-input-decorator {
-  padding: 0;
-  height: 32px;
-}
-.slim-datewidget($labelVisibility, $pickerVisibility: visible) .xv-label {
-  visibility: $labelVisibility;
-}
-.slim-datewidget($labelVisibility, $pickerVisibility: visible) .onyx-icon {
-  visibility: $pickerVisibility;
-  vertical-align: top;
-}
-.slim-datewidget($labelVisibility, $pickerVisibility: visible) .onyx-input {
-  width: 90px;
-  vertical-align: top;
-}
 /*
   Media query for responsive design. This adapts to smaller
   displays.
@@ -1814,69 +1963,6 @@ body {
     min-width: 100%;
     max-width: 100%;
   }
-}
-.xv-pullout-header {
-  text-align: center;
-  padding: 10px 0;
-}
-.pullout {
-  position: absolute;
-  top: 57px;
-  left: 0;
-  bottom: 0;
-  width: 320px;
-  background: #dddddd;
-}
-.pullout .xv-groupbox {
-  min-width: 300px;
-  padding: 8px 0 8px 5px;
-  margin: 0;
-}
-.pullout-shadow {
-  position: absolute;
-  height: 100%;
-  width: 20px;
-  right: -20px;
-  /** this is weird and indicates the REAL need to change the
-      whatever the css system is...this relative path is different... **/
-
-  background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
-  background-size: 20px 2px;
-}
-.pullout-grabbutton {
-  position: absolute;
-  height: 54px;
-  width: 50px;
-  bottom: 20px;
-  right: -46px;
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-right-radius: 10px;
-  background-color: #dddddd;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
-}
-.pullout-toolbar {
-  padding-top: 4px;
-  text-align: center;
-}
-#app_pullout_container,
-#app_pullout_help,
-#app_pullout_help_helpPage {
-  height: 100%;
-}
-#app_pullout_help_helpPage {
-  border: none;
-  height: 100%;
-  width: 100%;
 }
 /*
   XV Views
@@ -1897,7 +1983,7 @@ body {
 }
 .xv-list .xv-list-item.inactive {
   background-color: #8d8d8d;
-  color: black;
+  color: #000000;
 }
 .xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
   background-color: #8d8d8d;
@@ -1968,7 +2054,7 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: black;
+  color: #000000;
   background-color: #ffffff;
 }
 .xv-list-attr.header {
@@ -1985,7 +2071,7 @@ body {
   font-size: .7em;
   font-weight: bold;
   text-transform: uppercase;
-  color: black;
+  color: #000000;
 }
 .xv-list-attr.right {
   position: absolute;
@@ -2010,33 +2096,6 @@ body {
 }
 .xv-list-attr.hyperlink {
   color: blue;
-}
-/* Parameter */
-.xv-parameter-item {
-  background-color: #ffffff;
-  /* this ain't right */
-
-}
-.xv-parameter-item .xv-label {
-  color: #000;
-}
-.xv-parameter-item .xv-decorated-label {
-  color: #000;
-}
-.xv-parameter-item .xv-picker {
-  width: 150px;
-}
-.xv-parameter-item .xv-radiogroup {
-  padding: 6px;
-  margin-left: 130px;
-  /* hack */
-
-}
-.xv-parameter-item .xv-relationwidget .xv-subinput {
-  width: 127px;
-}
-.xv-parameter-item .xv-datewidget .xv-subinput {
-  width: 127px;
 }
 /* Navigator */
 .xv-navigator-header {
@@ -2130,9 +2189,6 @@ body {
 /*
   XV Widgets
 */
-.xv-numberwidget .onyx-input-decorator {
-  width: 150px;
-}
 .xv-numberwidget input {
   text-align: right;
 }
@@ -2260,44 +2316,6 @@ body {
 .xv-short-relations-box.panel {
   width: 500px;
 }
-/* Combo Box */
-.xv-combobox {
-  padding: 6px;
-  padding-top: 8px;
-  padding-right: 0;
-  height: 24px;
-  width: 170px;
-  display: inline-block;
-}
-.xv-combobox-input {
-  font-size: medium;
-  border: 0;
-  display: inline-block;
-  outline: none;
-  width: 125px;
-}
-.xv-combobox-icon {
-  margin-left: 4px;
-  display: inline-block;
-}
-.xv-combobox-note {
-  padding: 14px 3px 8px 3px;
-  text-align: left;
-}
-/* Picker */
-.onyx-picker .onyx-menu-item {
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.xv-pickerwidget {
-  background-color: #ffffff;
-}
-.xv-picker {
-  width: 160px;
-  text-align: left;
-}
 .xv-label {
   width: 130px;
   padding: 8px;
@@ -2308,19 +2326,13 @@ body {
   padding: 14px 8px 8px 8px;
   text-align: right;
 }
-.xv-picker-label {
-  width: 130px;
-  padding: 18px 8px 8px 8px;
-  text-align: right;
-  color: black;
-}
 .xv-textarea-input {
   width: 90%;
   height: 100%;
   min-height: 100px;
   margin: 6px;
   border: #ddd 2px solid;
-  color: black;
+  color: #000000;
 }
 .xv-documents-picker-label {
   width: 85px;

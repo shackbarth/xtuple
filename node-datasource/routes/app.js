@@ -68,6 +68,9 @@ var async = require("async"),
       },
       fetchSuccess = function (model, result) {
         var sendExtensions = function (res, extensions) {
+          extensions = _.sortBy(extensions, function (ext) {
+            return ext.loadOrder;
+          });
           var uuids = _.map(extensions, function (ext) {
             var sortedModels = _.sortBy(ext.codeInfo, function (codeInfo) {
               return -1 * getVersionSize(codeInfo.version);

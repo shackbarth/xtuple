@@ -278,6 +278,16 @@ regexp:true, undef:true, trailing:true, white:true */
     list: "XV.CustomerShiptoList"
   });
 
+  // ..........................................................
+  // DEPARTMENT
+  //
+
+  enyo.kind({
+    name: "XV.DepartmentWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.DepartmentCollection",
+    list: "XV.DepartmentList"
+  });
 
   // ..........................................................
   // EMPLOYEE
@@ -433,16 +443,34 @@ regexp:true, undef:true, trailing:true, white:true */
         var ids;
         if (this.itemSites.length) {
           // Consolidate all the site ids
-          ids = _.pluck(_.pluck(_.pluck(this.itemSites.models, "attributes"), 'site'), 'id');
+          ids = _.pluck(_.compact(_.pluck(_.pluck(this.itemSites.models, "attributes"), 'site')), 'id');
           return _.filter(models, function (model) {
             return _.contains(ids, model.id);
           });
         }
         return models;
-      };
+      },
+        callback,
+        that = this;
+
       this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
       this.$.sitePicker.filter = filter;
-      this.$.sitePicker.setShowing(XT.session.settings.get("MultiWhs"));
+
+      //
+      // Prevent an ugly thick line if the site picker is hidden.
+      //
+      callback = function () {
+        if (!XT.session.settings.get("MultiWhs")) {
+          that.$.privateItemSiteWidget.applyStyle("border-bottom-width", "0px");
+        }
+      };
+      // If not everything is loaded yet, come back to it later
+      if (!XT.session || !XT.session.settings) {
+        XT.getStartupManager().registerCallback(callback);
+      } else {
+        callback();
+      }
+
       this._itemSites = new XM.ItemSiteRelationCollection();
       this.queryChanged();
     },
@@ -603,6 +631,17 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.SalesOrderListItemCollection",
     keyAttribute: "number",
     list: "XV.SalesOrderList"
+  });
+
+  // ..........................................................
+  // SHIFT
+  //
+
+  enyo.kind({
+    name: "XV.ShiftWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.ShiftCollection",
+    list: "XV.ShiftList"
   });
 
   // ..........................................................

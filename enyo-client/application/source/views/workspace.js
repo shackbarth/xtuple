@@ -69,17 +69,18 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       onError: "errorNotify"
     },
     published: {
-      existingId: ""
+      // The natural key is the number, not the UUID
+      existingNumber: ""
     },
     accountConvert: function (inEvent) {
-      this.value.convertFromAccount(this.existingId);
+      this.value.convertFromAccount(this.existingNumber);
       this._popupDone = true;
       this.$.findExistingAccountPopup.hide();
     },
     errorNotify: function (inSender, inEvent) {
       // Handle existing
       if (inEvent.error.code === 'xt1008') {
-        this.existingId = inEvent.error.params.response.id;
+        this.existingNumber = inEvent.error.params.response.id;
         this._popupDone = false;
         this.$.findExistingAccountPopup.show();
         return true;
@@ -281,6 +282,24 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     ]
   });
 
+  enyo.kind({
+    name: "XV.UserPreferenceWorkspace",
+    kind: "XV.Workspace",
+    title: "_userPreferences".loc(),
+    model: "XM.UserPreference",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
   // ..........................................................
   // CONTACT
   //
@@ -322,6 +341,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "phone"},
             {kind: "XV.InputWidget", attr: "alternate"},
             {kind: "XV.InputWidget", attr: "fax"},
+            {kind: "XV.InputWidget", attr: "webAddress"},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"}
@@ -333,7 +353,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       ]}
     ]
   };
-
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
 
@@ -439,7 +458,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       onError: "errorNotify"
     },
     published: {
-      existingId: ""
+      // The natural key is Number, not UUID
+      existingNumber: ""
     },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -513,16 +533,16 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       this._popupDone = true;
       this.$.findExistingCustomerPopup.hide();
       if (inEvent.type === "prospect") {
-        this.value.convertFromProspect(this.existingId);
+        this.value.convertFromProspect(this.existingNumber);
       } else if (inEvent.type === "account") {
-        this.value.convertFromAccount(this.existingId);
+        this.value.convertFromAccount(this.existingNumber);
       }
     },
     errorNotify: function (inSender, inEvent) {
       // Handle customer existing as prospect
       if (inEvent.error.code === 'xt1008') {
         var type = inEvent.error.params.response.type;
-        this.existingId = inEvent.error.params.response.id;
+        this.existingNumber = inEvent.error.params.response.id;
         if (type === 'P') { // Prospect
           this._popupDone = false;
           this.$.exists.setContent("_prospectExists".loc());
@@ -699,9 +719,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             classes: "in-panel", components: [
             {kind: "XV.DateWidget", attr: "startDate"},
             {kind: "XV.SitePicker", attr: "site"},
-            {kind: "XV.DepartmentPicker", attr: "department"},
+            {kind: "XV.DepartmentWidget", attr: "department"},
             {kind: "XV.EmployeeWidget", attr: "manager"},
-            {kind: "XV.ShiftPicker", attr: "shift"},
+            {kind: "XV.ShiftWidget", attr: "shift"},
             {kind: "onyx.GroupboxHeader", content: "_financials".loc()},
             {kind: "XV.WageTypePicker", attr: "wageType"},
             {kind: "XV.MoneyWidget",
