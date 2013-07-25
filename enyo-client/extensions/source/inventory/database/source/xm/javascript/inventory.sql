@@ -380,7 +380,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     /* Post the transaction */
     plv8.execute(sql, [shipment])[0].series;
 
-    return;
+    return true;
   };
 
   XM.Inventory.options = [

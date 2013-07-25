@@ -17,12 +17,12 @@ white:true*/
 
       recordType: "XM.Shipment",
 
-      numberPolicy: XM.Document.AUTO_NUMBER,
+    //  numberPolicy: XM.Document.AUTO_NUMBER,
 
       readOnlyAttributes: [
         "order"
       ],
-
+      /*
       recallShipment: function (callback) {
         this.dispatch("XM.Inventory", "recallShipment", [this.id], {
           success: function () {
@@ -41,9 +41,37 @@ white:true*/
       canRecall: function (callback) {
         var canIRecall = this.get("isShipped") === true && this.get("isPostedInvoice") === false;
         callback(canIRecall);
-      }
+      }  */
+      
+      doRecallShipment: function (callback) {
+        return _doDispatch.call(this, "recallShipment", callback);
+      } 
 
     });
+    
+    /** @private */
+    
+    var _doDispatch = function (method, callback, params) {
+      var that = this,
+        options = {};
+      params = params || [];
+      params.unshift(this.id);
+      options.success = function (resp) {
+        var fetchOpts = {};
+        fetchOpts.success = function () {
+          if (callback) { callback(resp); }
+        };
+        fetchOpts.error = function() {
+          console.log("error", arguments);
+        };
+        that.fetch(fetchOpts);
+      };
+      options.error = function (resp) {
+        if (callback) { callback(resp); }
+      };
+      this.dispatch("XM.Inventory", method, params, options);
+      return this;
+    }; 
 
     /**
       @class

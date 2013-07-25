@@ -153,7 +153,7 @@ trailing:true, white:true*/
       label: "_shipments".loc(),
       collection: "XM.ShipmentCollection",
       actions: [{
-        name: "recallShipment", method: "recallShipment", prerequisite: "canRecall",
+        name: "recallShipment", method: "doRecallShipment", //prerequisite: "canRecallShipment",
           notifyMessage: "_recallShipment?".loc()
       }],
       query: {orderBy: [
