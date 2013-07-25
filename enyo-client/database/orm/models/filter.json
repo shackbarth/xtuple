@@ -1,0 +1,65 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Filter",
+    "table": "xt.filter",
+    "idSequenceName": "filter_filter_id_seq",
+    "comment": "User Chart Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "filter_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "filter_name"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "filter_createdby"
+        }
+      },
+      {
+        "name": "shared",
+        "attr": {
+          "type": "Boolean",
+          "column": "filter_shared"
+        }
+      },
+      {
+        "name": "params",
+        "attr": {
+          "type": "String",
+          "column": "filter_params"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

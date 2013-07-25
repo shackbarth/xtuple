@@ -127,6 +127,16 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // FILTER
+  //
+
+  enyo.kind({
+    name: "XV.FilterPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.filters"
+  });
+
+  // ..........................................................
   // HOLD TYPE
   //
 
