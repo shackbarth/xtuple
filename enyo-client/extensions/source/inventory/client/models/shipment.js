@@ -22,26 +22,7 @@ white:true*/
       readOnlyAttributes: [
         "order"
       ],
-      /*
-      recallShipment: function (callback) {
-        this.dispatch("XM.Inventory", "recallShipment", [this.id], {
-          success: function () {
-            if (callback) {
-              callback();
-            }
-          },
-          error: function () {
-            if (callback) {
-              callback();
-            }
-          }
-        });
-      },
-      //Todo - If the shipment is invoiced I need to check if the user has the privilege to Recall Invoiced Shipments
-      canRecall: function (callback) {
-        var canIRecall = this.get("isShipped") === true && this.get("isPostedInvoice") === false;
-        callback(canIRecall);
-      }  */
+  
       canRecallShipment: function (callback) {
         var priv = this.get("isShipped") && this.get("isInvoiced") && this.get("isInvoicePosted") === false ? "RecallInvoicedShipment" : this.get("isShipped") && this.get("isInvoiced") === false ? "RecallOrders" : false;
         return _canDo.call(this, priv, callback);
@@ -49,9 +30,10 @@ white:true*/
       
       doRecallShipment: function (callback) {
         return _doDispatch.call(this, "recallShipment", callback);
-      } 
+      }
 
     });
+
     /** @private */
     var _canDo = function (priv, callback) {
       var ret = XT.session.privileges.get(priv);
@@ -76,17 +58,13 @@ white:true*/
         if (resp) {
           that.fetch(fetchOpts);
         }
-      //  fetchOpts.error = function() {
-      //    console.log("error", arguments);
-      //  };
-      //  that.fetch(fetchOpts);
       };
       options.error = function (resp) {
         if (callback) { callback(resp); }
       };
       this.dispatch("XM.Inventory", method, params, options);
       return this;
-    }; 
+    };
 
     /**
       @class
