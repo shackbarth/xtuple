@@ -208,7 +208,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
   }
 
   // bcrypt the refreshToken before looking for a matching hash.
-  var salt = '$2a$10$' + client.get("clientID").substring(0, 22),
+  var salt = '$2a$10$' + client.get("clientID").replace(/[^a-zA-Z0-9]/g, "").substring(0, 22),
       refreshhash = X.bcrypt.hashSync(refreshToken, salt);
 
   db.accessTokens.findByRefreshToken(refreshhash, client.get("organization"), function (err, token) {
