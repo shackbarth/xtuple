@@ -164,9 +164,9 @@
         }
       },
       {
-        "name": "salesOrder",
+        "name": "order",
         "toOne": {
-          "type": "SalesOrderListItem",
+          "type": "SalesOrderRelation",
           "column": "coitem_cohead_id",
           "isNested": true
         }
