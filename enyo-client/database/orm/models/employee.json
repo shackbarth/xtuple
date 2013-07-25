@@ -166,7 +166,7 @@
       {
         "name": "site",
         "toOne": {
-          "type": "Site",
+          "type": "SiteRelation",
           "column": "emp_warehous_id"
         }
       },
@@ -191,6 +191,7 @@
       {
         "name": "department",
         "toOne": {
+          "isNested": true,
           "type": "Department",
           "column": "emp_dept_id"
         }
@@ -198,6 +199,7 @@
       {
         "name": "shift",
         "toOne": {
+          "isNested": true,
           "type": "Shift",
           "column": "emp_shift_id"
         }
@@ -351,6 +353,7 @@
       {
         "name": "department",
         "toOne": {
+          "isNested": true,
           "type": "Department",
           "column": "emp_dept_id"
         }
@@ -358,6 +361,7 @@
       {
         "name": "shift",
         "toOne": {
+          "isNested": true,
           "type": "Shift",
           "column": "emp_shift_id"
         }
@@ -365,7 +369,7 @@
       {
         "name": "site",
         "toOne": {
-          "type": "Site",
+          "type": "SiteRelation",
           "column": "emp_warehous_id"
         }
       }

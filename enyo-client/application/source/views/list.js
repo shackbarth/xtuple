@@ -302,20 +302,27 @@ trailing:true, white:true*/
       stringToSave = stringToSave + "VERSION:" + version + "%0A";
       stringToSave = stringToSave + "N:" + name + "%0A";
       stringToSave = stringToSave + "FN:" + fullName + "%0A";
-      if (org)
+      if (org) {
         stringToSave = stringToSave + "ORG:" + org + "%0A";
-      if (title)
+      }
+      if (title) {
         stringToSave = stringToSave + "TITLE:" + title + "%0A";
-      if (phoneWork)
+      }
+      if (phoneWork) {
         stringToSave = stringToSave + "TEL;TYPE=WORK,VOICE:" + phoneWork + "%0A";
-      if (phoneHome)
+      }
+      if (phoneHome) {
         stringToSave = stringToSave + "TEL;TYPE=HOME,VOICE:" + phoneHome + "%0A";
-      if (addressWork)
+      }
+      if (addressWork) {
         stringToSave = stringToSave + "ADR;TYPE=WORK:;;" + addressWork + "%0A";
-      if (labelWork)
+      }
+      if (labelWork) {
         stringToSave = stringToSave + "LABEL;TYPE=WORK:;;" + labelWork + "%0A";
-      if (email)
+      }
+      if (email) {
         stringToSave = stringToSave + "EMAIL;TYPE=PREF,INTERNET:" + email + "%0A";
+      }
       stringToSave = stringToSave + "REV:" + revision + "%0A";
       stringToSave = stringToSave + "END:" + end + "%0A";
 
@@ -601,6 +608,7 @@ trailing:true, white:true*/
     kind: "XV.List",
     label: "_departments".loc(),
     collection: "XM.DepartmentCollection",
+    parameterWidget: "XV.DepartmentListParameters",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -1635,6 +1643,7 @@ trailing:true, white:true*/
     kind: "XV.List",
     label: "_shifts".loc(),
     collection: "XM.ShiftCollection",
+    parameterWidget: "XV.ShiftListParameters",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
