@@ -257,6 +257,8 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
       return done && done(err);
     };
 
+    saveOptions.database = client.get("organization");
+
     // Set model values and save.
     token.set("state", "Token Refreshed");
     token.set("accessToken", accesshash);
@@ -439,7 +441,7 @@ exports.authorization = [
 
     // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
     scope = url.parse(scope[0], true);
-    var scopeOrg = scope.path.match(/\/auth\/(.*)/)[1] || null;
+    var scopeOrg = scope.path.split("/")[1] || null;
 
     db.clients.findByClientId(clientID, scopeOrg, function (err, client) {
       if (err) { return done(err); }
