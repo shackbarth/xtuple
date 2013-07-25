@@ -408,13 +408,6 @@
         }
       },
       {
-        "name": "salesOrder",
-        "toOne": {
-          "type": "SalesOrderRelation",
-          "column": "pohead_cohead_id"
-        }
-      },
-      {
         "name": "isReleased",
         "attr": {
           "type": "Boolean",
@@ -422,9 +415,62 @@
         }
       },
       {
-        "name"
+        "name": "purchaseOrderLines",
+        "toMany": {
+          "type": "PurchaseOrderLine"
+        }
       }
-	  ],
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderRelation",
+    "table": "pohead",
+    "isRest": true,
+    "comment": "Purchase Order Relation Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPurchaseOrders",
+        "read": "ViewPurchaseOrders",
+        "update": "MaintainPurchaseOrders",
+        "delete": "MaintainPurchaseOrders"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "pohead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "pohead_number",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "type": "VendorRelation",
+          "column": "pohead_vend_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipvia"
+        }
+      }
+    ],
     "isSystem": true
   },
   {
@@ -455,11 +501,18 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "Number",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "purchaseOrder",
         "attr": {
           "type": "Number",
-          "column": "poitem_pohead_id",
-          "isNaturalKey": true
+          "column": "poitem_pohead_id"
          }
       },
       {
@@ -488,7 +541,7 @@
         "toOne": {
           "type": "ItemSiteRelation",
           "column": "poitem_itemsite_id",
-          "toOne": true
+          "isNested": true
         }
       },
       {
@@ -652,20 +705,76 @@
           "type": "Date",
           "column": "poitem_rlsd_duedate"
         }
-      },
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderListItem",
+    "table": "pohead",
+    "isRest": true,
+    "comment": "Purchase Order List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewPurchaseOrders MaintainPurchaseOrders",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
       {
-        "name": "order",
+        "name": "id",
         "attr": {
           "type": "Number",
-          "column": "poitem_order_id"
+          "column": "pohead_id",
+          "isPrimaryKey": true
         }
       },
       {
-        "name": "orderType",
+        "name": "number",
         "attr": {
           "type": "String",
-          "column": "poitem_order_type"
+          "column": "pohead_number",
+          "isNaturalKey":true
         }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "type": "VendorRelation",
+          "column": "pohead_vend_id"
+        }
+      },
+      {
+        "name": "orderDate",
+        "attr": {
+          "type": "Date",
+          "column": "pohead_orderdate"
+         }
+      },
+      {
+        "name": "agentUserName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_agent_username"
+         }
+      },
+      {
+        "name": "isPrinted",
+        "attr": {
+          "type": "Boolean",
+          "column": "pohead_printed"
+         }
+      },
+      {
+        "name": "status",
+        "attr": { 
+          "type": "String",
+          "column": "pohead_status"
+         }
       }
     ],
     "isSystem": true
