@@ -1518,7 +1518,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
             {kind: "XV.TextArea", attr: "shipNotes", fit: true}
           ]}
-        ]}
+        ]},
+        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"}
       ]}
     ],
     create: function () {
@@ -1588,12 +1589,12 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
         {kind: "XV.DateWidget", attr: "expireDate"}
       ], {owner: this});
       this.$.salesPanels.createComponents([
-        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
-          // Line Item Box
-          {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true}
-        ]},
-        {kind: "XV.QuoteCommentBox", attr: "comments"},
-        {kind: "XV.QuoteDocumentsBox", attr: "documents"}
+          {kind: "XV.QuoteCommentBox", attr: "comments"},
+          {kind: "XV.QuoteDocumentsBox", attr: "documents"}
+        ], {owner: this});
+      this.$.lineItemsPanel.createComponents([
+        // Line Item Box
+        {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true}
       ], {owner: this});
     }
   });
@@ -1819,7 +1820,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
-      {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", fit: true, components: [
+      {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", fit: true, horizontal: "auto", components: [
         {kind: "Repeater", name: "gridRepeater", onSetupItem: "setupRow", components: [
           { kind: "XV.SalesOrderLineItemGridRow", name: "gridRow" }
         ]},
@@ -1864,27 +1865,21 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       this.$.settingsPanel.createComponents([
         {kind: "XV.HoldTypePicker", attr: "holdType"}
       ], {owner: this});
-      if (enyo.platform.touch) {
-        this.$.salesPanels.createComponents([
-          {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
-            // Line Item Box
-            {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
-          ]}
-        ], {owner: this});
-      } else {
-        this.$.salesPanels.createComponents([
-          // Line Item Grid Box, in a scroller
-          {kind: "enyo.Scroller", title: "_lineItems".loc(), name: "lineItemScoller", components: [
-            {kind: "FittableRows", name: "lineItemsPanel", components: [
-              {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems", fit: true}
-            ]}
-          ]}
-        ], {owner: this});
-      }
       this.$.salesPanels.createComponents([
           {kind: "XV.SalesOrderCommentBox", attr: "comments"},
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
         ], {owner: this});
+      if (enyo.platform.touch) {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
+        ], {owner: this});
+      } else {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems", fit: true}
+        ], {owner: this});
+      }
     }
   });
 
