@@ -136,7 +136,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.redirect(req.session.returnTo);
       } else {
         // Redirect to start loading the client app.
-        res.redirect('/client');
+        res.redirect('/' + selectedOrg + '/app');
       }
     };
 
