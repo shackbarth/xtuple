@@ -1754,9 +1754,10 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerItemSite", classes: "xv-grid-header", content: "_item".loc()},
-        {kind: "XV.HorizontalItemSiteWidget", attr:
+        {kind: "XV.ItemSiteWidget", attr:
           {item: "item", site: "site"},
           name: "itemSiteWidget",
+          horizontalOrientation: true,
           query: {parameters: [
           {attribute: "item.isSold", value: true},
           {attribute: "item.isActive", value: true},

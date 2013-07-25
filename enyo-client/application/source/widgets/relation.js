@@ -351,7 +351,8 @@ regexp:true, undef:true, trailing:true, white:true */
       placeholder: null,
       disabled: false,
       query: null,
-      isEditableKey: "item"
+      isEditableKey: "item",
+      horizontalOrientation: false
     },
     handlers: {
       "onValueChange": "controlValueChanged"
@@ -360,7 +361,8 @@ regexp:true, undef:true, trailing:true, white:true */
       "onValueChange": ""
     },
     components: [
-      {kind: "FittableRows", components: [
+      {kind: "enyo.Control", name: "fittableContainer",
+      components: [
         {kind: _privateItemSiteWidget, name: "privateItemSiteWidget",
           label: "_item".loc()},
         {kind: "XV.SitePicker", name: "sitePicker", label: "_site".loc()}
@@ -453,6 +455,12 @@ regexp:true, undef:true, trailing:true, white:true */
 
       this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
       this.$.sitePicker.filter = filter;
+
+      if (this.getHorizontalOrientation()) {
+        this.$.fittableContainer.setLayoutKind("FittableColumnsLayout");
+      } else {
+        this.$.fittableContainer.setLayoutKind("FittableRowsLayout");
+      }
 
       //
       // Prevent an ugly thick line if the site picker is hidden.
@@ -582,18 +590,6 @@ regexp:true, undef:true, trailing:true, white:true */
         this.doValueChange({value: changed});
       }
     },
-  });
-
-  enyo.kind({
-    name: "XV.HorizontalItemSiteWidget",
-    kind: "XV.ItemSiteWidget",
-    components: [
-      {kind: "FittableColumns", components: [
-        {kind: _privateItemSiteWidget, name: "privateItemSiteWidget",
-          label: "_item".loc()},
-        {kind: "XV.SitePicker", name: "sitePicker", label: "_site".loc()}
-      ]}
-    ]
   });
 
   // ..........................................................
