@@ -30,6 +30,32 @@ trailing:true, white:true*/
     //  characteristicsRole: 'isAccounts',
       components: [
         {kind: "onyx.GroupboxHeader", content: "_shipments".loc()},
+        {name: "isShipped", attr: "isShipped", label: "_showUnshipped".loc(), defaultKind: "XV.CheckboxWidget",
+          getParameter: function () {
+            var param;
+            if (!this.getValue()) {
+              param = {
+                attribute: this.getAttr(),
+                operator: '=',
+                value: true
+              };
+            }
+            return param;
+          }
+        },
+        {name: "isInvoiced", attr: "isInvoiced", label: "_showInvoiced".loc(), defaultKind: "XV.CheckboxWidget",
+          getParameter: function () {
+            var param;
+            if (!this.getValue()) {
+              param = {
+                attribute: this.getAttr(),
+                operator: '=',
+                value: false
+              };
+            }
+            return param;
+          }
+        },
         {name: "orderNumber", label: "_orderNumber".loc(), attr: "order.number"},
         {name: "customer", attr: "order.customer.name", label: "_customer".loc(), defaultKind: "XV.CustomerProspectWidget"},
         {name: "shipVia", attr: "shipVia", label: "_shipVia".loc(), defaultKind: "XV.ShipViaPicker"},

@@ -42,13 +42,25 @@ white:true*/
         var canIRecall = this.get("isShipped") === true && this.get("isPostedInvoice") === false;
         callback(canIRecall);
       }  */
+      canRecallShipment: function (callback) {
+        var priv = this.get("isShipped") && this.get("isInvoiced") && this.get("isInvoicePosted") === false ? "RecallInvoicedShipment" : this.get("isShipped") && this.get("isInvoiced") === false ? "RecallOrders" : false;
+        return _canDo.call(this, priv, callback);
+      },
       
       doRecallShipment: function (callback) {
         return _doDispatch.call(this, "recallShipment", callback);
       } 
 
     });
-    
+    /** @private */
+    var _canDo = function (priv, callback) {
+      var ret = XT.session.privileges.get(priv);
+      if (callback) {
+        callback(ret);
+      }
+      return ret;
+    };
+
     /** @private */
     
     var _doDispatch = function (method, callback, params) {
@@ -61,10 +73,13 @@ white:true*/
         fetchOpts.success = function () {
           if (callback) { callback(resp); }
         };
-        fetchOpts.error = function() {
-          console.log("error", arguments);
-        };
-        that.fetch(fetchOpts);
+        if (resp) {
+          that.fetch(fetchOpts);
+        }
+      //  fetchOpts.error = function() {
+      //    console.log("error", arguments);
+      //  };
+      //  that.fetch(fetchOpts);
       };
       options.error = function (resp) {
         if (callback) { callback(resp); }

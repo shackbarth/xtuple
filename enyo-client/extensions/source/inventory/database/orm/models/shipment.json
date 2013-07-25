@@ -108,10 +108,24 @@
         }
       },
       {
-        "name": "isPostedInvoice",
+        "name": "isInvoiced",
         "attr": {
           "type": "Boolean",
-          "column": "invoice_posted"
+          "column": "isInvoiced"
+        }
+      },
+      {
+        "name": "isInvoicePosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "isInvoicePosted"
+        }
+      },
+      {
+        "name": "orderType",
+        "attr": {
+          "type": "String",
+          "column": "shiphead_order_type"
         }
       }
 	  ],
