@@ -8,7 +8,7 @@ trailing:true, white:true*/
   XT.extensions.inventory.initLists = function () {
 
     // ..........................................................
-    // SALES ORDER
+    // BACKLOG REPORT
     //
 
     enyo.kind({
@@ -97,8 +97,6 @@ trailing:true, white:true*/
       }
     });
 
-    XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
-
     // ..........................................................
     // ISSUE TO SHIPPING
     //
@@ -145,6 +143,54 @@ trailing:true, white:true*/
 
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
 
-  };
+    // ..........................................................
+    // SHIPMENT
+    //
 
+    enyo.kind({
+      name: "XV.ShipmentList",
+      kind: "XV.List",
+      label: "_shipments".loc(),
+      collection: "XM.ShipmentCollection",
+      actions: [{
+        name: "recallShipment", method: "recallShipment", prerequisite: "canRecall",
+          notifyMessage: "_recallShipment?".loc()
+      }],
+      query: {orderBy: [
+  			{attribute: 'shipDate'}
+      ]},
+      parameterWidget: "XV.ShipmentListItemParameters",
+      components: [
+        {kind: "XV.ListItem", components: [
+  	  		{kind: "FittableColumns", components: [
+  	    		{kind: "XV.ListColumn", classes: "first", components: [
+  						{kind: "FittableColumns", components: [
+  							{kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+  	      			{kind: "XV.ListAttr", attr: "order.customer.name", fit: true, classes: "right"}
+  	    			]},
+  	    			{kind: "FittableColumns", components: [
+  							{kind: "XV.ListAttr", attr: "order.number", classes: "right"}
+  	    			]}
+  					]},
+  	    		{kind: "XV.ListColumn", classes: "second", components: [
+  	      		{kind: "XV.ListAttr", attr: "shipDate"},
+              {kind: "XV.ListAttr", attr: "isShipped"}
+  	    		]},
+  	    		{kind: "XV.ListColumn", classes: "second", components: [
+  	      		{kind: "XV.ListAttr", attr: "freight", formatter: "formatExtendedPrice"},
+  	      		{kind: "XV.ListAttr", attr: "currency"}
+  	    		]}
+  	  		]}
+  			]}
+      ],
+
+      formatExtendedPrice: function (value, view, model) {
+        var currency = model ? model.getValue("currency") : false,
+          scale = XT.session.locale.attributes.extendedPriceScale;
+        return currency ? currency.format(value, scale) : "";
+      }
+    });
+
+    XV.registerModelList("XM.Shipment", "XV.ShipmentList");
+  };
 }());
