@@ -2,13 +2,13 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "PurchaseOrder",
+    "type": "ItemSource",
     "table": "itemsrc",
     "idSequenceName": "itemsrc_itemsrc_id_seq",
     "lockable": true,
     "lockTable": "itemsrc",
     "isRest": true,
-    "comment": "Purchase Order Map",
+    "comment": "Item Source Map",
     "privileges": {
       "all": {
         "create": "MaintainPurchaseOrders",
