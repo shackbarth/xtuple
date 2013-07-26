@@ -60,7 +60,7 @@
         }
       },
       {
-        "name": "section",
+        "name": "kind",
         "attr": {
           "type": "String",
           "column": "filter_param_kind"
