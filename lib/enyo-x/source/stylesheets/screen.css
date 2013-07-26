@@ -360,8 +360,41 @@
   background-color: #CCCCCC;
   font-size: 13px;
 }
+.xv-read-only-grid-row .xv-read-only {
+  width: 80px;
+}
+.xv-read-only-grid-row .xv-grid-column {
+  vertical-align: top;
+}
 .xv-read-only-grid-row > * {
   display: inline-block;
+}
+.xv-grid-actions > * {
+  display: inline-block;
+}
+.xv-grid-row {
+  background-color: #ffffff;
+}
+.xv-grid-row > * {
+  display: inline-block;
+}
+.xv-grid-column-item {
+  width: 250px;
+}
+.xv-grid-column-quantity {
+  width: 100px;
+}
+.xv-grid-column-discount {
+  width: 90px;
+}
+.xv-grid-column-price {
+  width: 90px;
+}
+.xv-grid-column-schedule {
+  width: 110px;
+}
+.xv-grid-column-actions {
+  width: 90px;
 }
 .xv-grid-box.panel {
   width: 984px;
@@ -374,12 +407,21 @@
   font-size: 12px;
   text-transform: uppercase;
   text-align: center;
+  font-weight: bold;
+  width: 88px;
+}
+.xv-grid-header-line-number {
+  width: 20px !important;
 }
 .xv-grid-actions {
+  width: 105px;
   padding-top: 6px;
 }
 .xv-grid-box .enyo-fittable-columns-layout {
   background-color: white;
+}
+.xv-grid-box .xv-grid-column {
+  vertical-align: top;
 }
 .xv-grid-box .xv-grid-column .onyx-input-decorator {
   padding: 0px;
