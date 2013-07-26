@@ -26,7 +26,7 @@
     </section>
     <section class="enyo-panels enyo-arranger enyo-arranger-fit enyo-panels-fit-narrow" id="oauth_party">
       <div style="transform: translateZ(0px); opacity: 1;" id="form-fields">
-      <% if (client.logo.length > 0) { %>
+      <% if (client.logo && client.logo.length > 0) { %>
         <img src="<%= client.logo %>">
       <% } %>
         <h2>App: <%= client.name %></h2>
