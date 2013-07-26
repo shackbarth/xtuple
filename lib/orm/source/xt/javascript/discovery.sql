@@ -346,6 +346,14 @@ select xt.install_js('XT','Discovery','xtuple', $$
 
     rootUrl = rootUrl || "{rootUrl}";
 
+
+    /*
+    TODO: rootUrl?
+    filter by orm
+    TODOs in response
+    document more methods
+    */
+
     if (!org) {
       return false;
     }
@@ -354,21 +362,29 @@ select xt.install_js('XT','Discovery','xtuple', $$
       var businessObject = XM[businessObjectName];
       objectServices = {};
       for (var methodName in businessObject) {
-        var func = businessObject[methodName];
-        if (typeof func === 'function' && func.description && func.params) {
+        var method = businessObject[methodName];
+        if (typeof method === 'function' && method.description && method.params) {
+          for (var methodParamName in method.params) {
+            var methodParam = method.params[methodParamName];
+            methodParam.location = "TODO";
+          }
+          method.params.path
           objectServices[methodName] = {
-            id: "TODO",
+            id: businessObjectName + "." + methodName,
             path: "TODO",
             httpMethod: "POST",
-            description: func.description,
-            parameters: func.params, 
-            parameterOrder: Object.keys(func.params)
+            scopes: "TODO",
+            description: method.description,
+            parameters: method.params, 
+            parameterOrder: Object.keys(method.params)
           };
         }
+      }
+      if(Object.keys(objectServices).length > 0) {
+        /* only document objects with >= 1 documented dispatch function */
         allServices[businessObjectName] = {methods: objectServices};
       }
     }
-    plv8.elog(NOTICE, JSON.stringify(allServices));
     return allServices;
   }
 
