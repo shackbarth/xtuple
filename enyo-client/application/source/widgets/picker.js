@@ -413,15 +413,32 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // SORT
+  //
+
+  enyo.kind({
+    name: "XV.SortPicker",
+    kind: "onyx.PickerDecorator", components: [
+      {},
+      {kind: "onyx.Picker", components: [
+        {content: "asdf", active: true}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // SORT TYPE
   //
 
   enyo.kind({
     name: "XV.SortTypePicker",
-    kind: "onyx.Picker", components: [
-      {content: "_none".loc(), active: true},
-      {content: "_ascending".loc()},
-      {content: "_descending".loc()}
+    kind: "onyx.PickerDecorator", components: [
+      {},
+      {kind: "onyx.Picker", components: [
+        {content: "_none".loc(), active: true},
+        {content: "_ascending".loc()},
+        {content: "_descending".loc()}
+      ]}
     ]
   });
 
