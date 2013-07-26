@@ -4,6 +4,7 @@ enyo.depends(
   "inventory.js",
   "location.js",
   "purchase_order.js",
+  "receipt.js",
   "sales_order.js",
   "shipment.js",
   "startup.js",
