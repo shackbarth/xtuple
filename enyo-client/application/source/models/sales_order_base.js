@@ -1580,16 +1580,16 @@ white:true*/
     parentDidChange: function () {
       var parent = this.getParent(),
        lineNumber = this.get("lineNumber"),
+       lineNumberArray,
        maxLineNumber,
        scheduleDate;
 
       // Set next line number to be 1 more than the highest living model
       if (parent && !lineNumber) {
-        maxLineNumber = Math.max.apply(null,
-          _.compact(_.map(parent.get("lineItems").models, function (model) {
-            return model.isDestroyed() ? null : model.get("lineNumber");
-          }))
-        );
+        lineNumberArray = _.compact(_.map(parent.get("lineItems").models, function (model) {
+          return model.isDestroyed() ? null : model.get("lineNumber");
+        }));
+        maxLineNumber = lineNumberArray.length > 0 ? Math.max.apply(null, lineNumberArray) : 0;
         this.set("lineNumber", maxLineNumber + 1);
       }
 
