@@ -142,11 +142,11 @@ Globalize:true */
     components: [
       {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", fit: true, horizontal: "auto", components: [
         {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
-        {kind: "List", name: "aboveGridList", onSetupItem: "setupRowAbove", ontap: "aboveGridRowTap", components: [
+        {kind: "List", name: "aboveGridList", onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
           { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow" }
         ]},
         { kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false },
-        {kind: "List", name: "belowGridList", onSetupItem: "setupRowBelow", ontap: "belowGridRowTap", components: [
+        {kind: "List", name: "belowGridList", onSetupItem: "setupRowBelow", ontap: "gridRowTapBelow", components: [
           { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "belowGridRow" }
         ]},
         {
