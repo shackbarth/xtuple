@@ -257,6 +257,10 @@ select xt.install_js('XT','Discovery','xtuple', $$
       }
     }
 
+    /*
+     * Services section.
+     */
+    discovery.services = XT.Discovery.getServices(orm, rootUrl);
 
     /* return the results */
     return discovery;
@@ -323,6 +327,36 @@ select xt.install_js('XT','Discovery','xtuple', $$
     return auth;
   };
 
+  /**
+   * Return an API Discovery document's Services section.
+  ?  for this database's ORM where isRest = true.
+  ? This function allows you get the Resources section much faster than the full getDiscovery() above.
+  ? To make it faster, the JSON-Schema is skipped, so method's parameter's primKeyProp will be blank.
+   *
+   * @param {String} Optional. An orm_type name like "Contact".
+   * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
+   * @returns {Object}
+   */
+  XT.Discovery.getServices = function(orm, rootUrl) {
+    var resources = {},
+      org = XT.currentDb(),
+      orms = XT.Discovery.getIsRestORMs(orm),
+      services = [];
+
+    rootUrl = rootUrl || "{rootUrl}";
+
+    if (!org) {
+      return false;
+    }
+    for (var key in XM.Tax) {
+      var obj = XM.Tax[key];
+      if (typeof obj === 'function' && obj.params) {
+        services.push({serviceName: key, serviceParams: obj.params});
+      }
+    }
+    plv8.elog(NOTICE, JSON.stringify(services));
+    return services;
+  }
 
   /**
    * Return an API Discovery document's Resources section for this database's ORM where isRest = true.

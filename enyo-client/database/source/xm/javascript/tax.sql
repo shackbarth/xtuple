@@ -36,6 +36,9 @@ select xt.install_js('XM','Tax','xtuple', $$
     for (var i = 0; i < ret.length; i++) ret[i].taxCode = XT.camelize(ret[i].taxCode);
     return JSON.stringify(ret);
   };
+  XM.Tax.taxDetail.params = [
+    {name: "taxZoneId", type: "Number", description: "The Tax Zone ID"}
+  ];
 
 }());
   
