@@ -1,6 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
-/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true */
+/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true,
+Globalize:true */
 
 (function () {
 
@@ -1739,45 +1740,33 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     name: "XV.SalesOrderLineItemReadOnlyGridRow",
     kind: "XV.ReadOnlyGridRow",
     components: [
-      // each field is grouped with its column header so that the alignment always
-      // works out. All but the first column header will be invisible.
       {classes: "xv-grid-column", components: [
         {name: "headerLineNumber", classes: "xv-grid-header", content: "#"},
-        // Using XV.NumberWidget instead of XV.Number here (and below) because
-        // of the pretty rounded corners, even though we have to hide the label with css
         {classes: "xv-grid-line-number", name: "lineNumber"}
-      ]},/*
+      ]},
       {kind: "FittableRows", classes: "xv-grid-column", style: "width: 250px;", components: [
         {name: "headerItemSite", classes: "xv-grid-header", content: "_item".loc()},
-        {kind: "XV.ItemSiteWidget", attr:
-          {item: "item", site: "site"},
-          name: "itemSiteWidget",
-          query: {parameters: [
-          {attribute: "item.isSold", value: true},
-          {attribute: "item.isActive", value: true},
-          {attribute: "isSold", value: true},
-          {attribute: "isActive", value: true}
-        ]}},
+        {name: "itemNumber" },
+        {name: "itemDescription" },
+        {name: "siteCode" },
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerQuantity", classes: "xv-grid-header", content: "_quantity".loc()},
-        {kind: "XV.QuantityWidget", attr: "quantity"},
-        {kind: "XV.UnitPickr", attr: "quantityUnit", name: "quantityUnitPicker" }
+        {name: "quantity" },
+        {name: "quantityUnit" }
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerDiscount", classes: "xv-grid-header", content: "_discount".loc()},
-        {kind: "XV.PercentWidget", name: "discount", attr: "discount" }
+        {name: "discount" }
       ]},
       {kind: "FittableRows", classes: "xv-grid-column", components: [
         {name: "headerPrice", classes: "xv-grid-header", content: "_price".loc()},
-        {kind: "XV.MoneyWidget", attr:
-          {localValue: "price", currency: ""},
-          currencyDisabled: true, currencyShowing: false, scale: XT.SALES_PRICE_SCALE},
-        {kind: "XV.UnitPickr", attr: "priceUnit", name: "priceUnitPicker"},
-        {kind: "XV.MoneyWidget", attr:
-          {localValue: "extendedPrice", currency: ""},
-          currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
-      ]},*/
+        {name: "price" },
+          // scale: XT.SALES_PRICE_SCALE},
+        {name: "priceUnit" },
+        {name: "extendedPrice" }
+          //currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
+      ]},
       {classes: "xv-grid-column", style: "width: 110px;", components: [
         {name: "headerScheduleDate", classes: "xv-grid-header", content: "_schedDate".loc()},
         {name: "scheduleDate"}
@@ -1794,7 +1783,19 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     valueChanged: function () {
       var model = this.getValue();
       this.$.lineNumber.setContent(model.get("lineNumber"));
-      this.$.scheduleDate.setContent(model.get("scheduleDate"));
+      this.$.itemNumber.setContent(model.getValue("item.number"));
+      this.$.itemDescription.setContent(model.getValue("item.description1"));
+      this.$.siteCode.setContent(model.getValue("site.code"));
+      this.$.quantity.setContent(Globalize.format(XT.math.round(model.get("quantity"), XT.QTY_SCALE), "n" + XT.QTY_SCALE));
+      this.$.quantityUnit.setContent(model.getValue("quantityUnit.name"));
+      this.$.discount.setContent(Globalize.format(XT.math.round(model.get("discount"), XT.PERCENT_SCALE) * 100, "n" + XT.PERCENT_SCALE));
+
+      this.$.price.setContent(Globalize.format(XT.math.round(model.get("price"), XT.SALES_PRICE_SCALE), "n" + XT.SALES_PRICE_SCALE));
+      this.$.priceUnit.setContent(model.getValue("priceUnit.name"));
+      this.$.extendedPrice.setContent(Globalize.format(XT.math.round(model.get("extendedPrice"),
+        XT.EXTENDED_PRICE_SCALE), "n" + XT.EXTENDED_PRICE_SCALE));
+      this.$.scheduleDate.setContent(Globalize.format(model.get("scheduleDate"), "d"));
+
     }
   });
 
@@ -1874,6 +1875,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       {kind: "List", name: "gridList", count: 0, onSetupItem: "setupRow", components: [
         { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "gridRow" }
       ]},
+      { kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow" },
       {
         kind: "FittableColumns",
         name: "navigationButtonPanel",

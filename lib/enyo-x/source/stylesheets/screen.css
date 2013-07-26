@@ -355,10 +355,10 @@
   Styles relating to the grid box 
 */
 .xv-read-only-grid-row {
-  height: 100px;
+  height: 80px;
   border-top: 1px solid silver;
-  padding: 12px 16px;
-  background-color: #333333;
+  background-color: #CCCCCC;
+  font-size: 13px;
 }
 .xv-read-only-grid-row > * {
   display: inline-block;
