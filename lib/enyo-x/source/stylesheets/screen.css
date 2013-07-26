@@ -305,9 +305,6 @@
 .dashboard .selectable-chart .chart-title-bar {
   width: 500px;
 }
-.dashboard .nvtooltip {
-  color: black;
-}
 .selectable-chart {
   margin: 10px;
   color: #ffffff;
@@ -1949,6 +1946,13 @@ body {
 .xv-my-account-popup .onyx-input {
   padding-left: 10px;
   float: right;
+}
+.xv-sort-popup {
+  background-color: #ffffff;
+  color: #000;
+}
+.xv-sort-popup .onyx-button {
+  margin: 0 auto 0 auto;
 }
 .xv-version-label {
   padding: 10px;
