@@ -749,6 +749,32 @@ trailing:true, white:true*/
   XV.registerModelList("XM.FileRelation", "XV.FileList");
 
   // ..........................................................
+  // FILE
+  //
+
+  enyo.kind({
+    name: "XV.FilterList",
+    kind: "XV.List",
+    label: "_filters".loc(),
+    collection: "XM.FilterCollection",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "shared"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  //
+
+  // ..........................................................
   // FREIGHT CLASS
   //
 

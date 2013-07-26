@@ -134,7 +134,8 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.FilterPicker",
     kind: "XV.PickerWidget",
     collection: "XM.filters",
-    valueAttribute: "id"
+    valueAttribute: "id",
+    noneText: "_default".loc()
   });
 
   // ..........................................................
