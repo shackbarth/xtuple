@@ -116,8 +116,7 @@ trailing:true, white:true*/
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "lineNumber",
-                  formatter: "formatLineNumber"},
+                {kind: "XV.ListAttr", attr: "lineNumber"},
                 {kind: "XV.ListAttr", attr: "site.code",
                   classes: "right"},
                 {kind: "XV.ListAttr", attr: "item.number", fit: true}
@@ -167,57 +166,67 @@ trailing:true, white:true*/
     });
 
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
- 
+
     // ..........................................................
-    // PURCHASE ORDER
+    // ENTER RECEIPT
     //
 
     enyo.kind({
-      name: "XV.PurchaseOrderList",
+      name: "XV.EnterReceiptList",
       kind: "XV.List",
-      label: "_purchaseOrders".loc(),
-      collection: "XM.PurchaseOrderListItemCollection",
-      //parameterWidget: "XV.PurchaseOrderListItemParameters",
+      label: "_enterReceipt".loc(),
+      collection: "XM.PurchaseOrderLineCollection",
+      parameterWidget: "XV.EnterReceiptParameters",
       query: {orderBy: [
-        {attribute: 'number'}
+        {attribute: 'lineNumber'}
       ]},
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+                {kind: "XV.ListAttr", attr: "lineNumber",
+                  formatter: "formatLineNumber"},
+                {kind: "XV.ListAttr", attr: "itemSite.site.code",
+                  classes: "right"},
+                {kind: "XV.ListAttr", attr: "itemSite.item.number", fit: true}
               ]},
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "status"}
-              ]}
+              {kind: "XV.ListAttr", attr: "itemSite.item.description1",
+                fit: true,  style: "text-indent: 18px;"}
             ]},
-            {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "vendor.number"},
-              {kind: "XV.ListAttr", attr: "vendor.name"}
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "ordered",
+                formatter: "formatQuantity", style: "text-align: right"}
             ]},
-            {kind: "XV.ListColumn", classes: "last", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "isPrinted"},
-                {kind: "XV.ListAttr", attr: "orderDate"}
-              ]},
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "agentUserName", classes: "right"}
-              ]}
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "received",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "toReceive",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "dueDate",
+                style: "text-align: right"}
             ]}
           ]}
         ]}
-      ]
-      /*
-      formatPrice: function (value, view, model) {
-        var currency = model ? model.get("currency") : false,
-          scale = XT.session.locale.attributes.salesPriceScale;
-        return currency ? currency.format(value, scale) : "";
-      } */
+      ],
+      formatDueDate: function (value, view, model) {
+        var today = new Date(),
+          isLate = XT.date.compareDate(value, today) < 1;
+        view.addRemoveClass("error", isLate);
+        return value;
+      },
+      formatQuantity: function (value, view, model) {
+        var scale = XT.session.locale.attributes.quantityScale;
+        return Globalize.format(value, "n" + scale);
+      }
     });
 
-    XV.registerModelList("XM.PurchaseOrderListItem", "XV.PurchaseOrderList");
-
+    XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderLineListItem");
+ 
     // ..........................................................
     // SHIPMENT
     //
@@ -251,7 +260,7 @@ trailing:true, white:true*/
               ]}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "shipDate"}
+              {kind: "XV.ListAttr", attr: "shipDate"},
               {kind: "XV.ListAttr", attr: "isShipped"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [

@@ -42,50 +42,36 @@ trailing:true, white:true*/
     });
 
     // ..........................................................
-    // PURCHASE ORDER LIST
+    // ENTER RECEIPT
     //
 
     enyo.kind({
-      name: "XV.PurchaseOrderListItemParameters",
+      name: "XV.EnterReceiptParameters",
       kind: "XV.ParameterWidget",
       components: [
-        {kind: "onyx.GroupboxHeader", content: "_purchaseOrders".loc()},
-        {name: "open", attr: "status", label: "_open".loc(), defaultKind: "XV.CheckboxWidget",
-          getParameter: function () {
-            var param;
-            if (!this.getValue()) {
-              param = {
-                attribute: this.getAttr(),
-                operator: '=',
-                value: "O"
-              };
-            }
-            return param;
+        {kind: "onyx.GroupboxHeader", content: "_enterReceipt".loc()},
+        {name: "order", attr: "order", label: "_order".loc(), defaultKind: "XV.PurchaseOrderWidget",
+        getParameter: function () {
+          var param,
+           value = this.getValue();
+
+          // If no order build a query that returns nothing
+          if (value) {
+            param = {
+              attribute: "order",
+              operator: '=',
+              value: value
+            };
+          } else {
+            param = {
+              attribute: "lineNumber",
+              operator: '=',
+              value: -1
+            };
           }
-        },
-        {name: "unReleased", attr: "status", label: "_unReleased".loc(), defaultKind: "XV.CheckboxWidget",
-          getParameter: function () {
-            var param;
-            if (!this.getValue()) {
-              param = {
-                attribute: this.getAttr(),
-                operator: '=',
-                value: "U"
-              };
-            }
-            return param;
-          }
-        },
-        {name: "number", label: "_number".loc(), attr: "number"},
-        {name: "vendor", attr: "vendor.number", label: "_vendor".loc(), defaultKind: "XV.VendorWidget"},
-        {name: "fromDate", label: "_fromDate".loc(),
-          filterLabel: "_date".loc() + " " + "_fromDate".loc(),
-          attr: "orderDate", operator: ">=",
-          defaultKind: "XV.DateWidget"},
-        {name: "toDate", label: "_toDatete".loc(),
-          filterLabel: "_date".loc() + " " + "_toDate".loc(),
-          attr: "orderDate", operator: "<=",
-          defaultKind: "XV.DateWidget"}
+
+          return param;
+        }}
       ]
     });
 

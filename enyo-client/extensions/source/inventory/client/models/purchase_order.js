@@ -25,6 +25,18 @@ white:true*/
     /**
       @class
 
+      @extends XM.Document
+    */
+    XM.PurchaseOrderLine = XM.Document.extend({
+      /** @scope XM.PurchaseOrder.prototype */
+
+      recordType: 'XM.PurchaseOrderLine'
+
+    });
+
+    /**
+      @class
+
       @extends XM.Info
     */
     XM.PurchaseOrderRelation = XM.Info.extend({
@@ -52,9 +64,17 @@ white:true*/
 
     });
 
-    // ..........................................................
-    // METHODS
-    //
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.PurchaseOrderLineCollection = XM.Collection.extend({
+      /** @scope XM.PurchaseOrderLineCollection.prototype */
+
+      model: XM.PurchaseOrderLine
+
+    });
 
     /**
       @class

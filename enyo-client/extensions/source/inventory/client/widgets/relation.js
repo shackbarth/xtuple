@@ -3,15 +3,17 @@ regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XV:true, XM:true, Backbone:true, window:true, enyo:true, _:true */
 
 (function () {
+
   // ..........................................................
-  // CUSTOMER
+  // PURCHASE ORDER
   //
 
   enyo.kind({
-    name: "XV.VendorWidget",
+    name: "XV.PurchaseOrderWidget",
     kind: "XV.RelationWidget",
-    collection: "XM.VendorRelationCollection",
-    list: "XV.VendorList"
+    collection: "XM.PurchaseOrderListItemCollection",
+    keyAttribute: "number",
+    list: "XV.PurchaseOrderList"
   });
 
 }());

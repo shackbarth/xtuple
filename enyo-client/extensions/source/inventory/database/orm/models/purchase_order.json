@@ -570,35 +570,35 @@
         }
       },
       {
-        "name": "quantityOrdered",
+        "name": "ordered",
         "attr": {
           "type": "Number",
           "column": "poitem_qty_ordered"
         }
       },
       {
-        "name": "quantityToReceive",
+        "name": "toReceive",
         "attr": {
           "type": "Number",
           "column": "poitem_qty_toreceive"
         }
       },
       {
-        "name": "quantityReceived",
+        "name": "received",
         "attr": {
           "type": "Number",
           "column": "poitem_qty_received"
         }
       },
       {
-        "name": "quantityrReturned",
+        "name": "returned",
         "attr": {
           "type": "Number",
           "column": "poitem_qty_returned"
         }
       },
       {
-        "name": "quantityVouchered",
+        "name": "vouchered",
         "attr": {
           "type": "Number",
           "column": "poitem_qty_vouchered"
