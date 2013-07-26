@@ -140,21 +140,26 @@ Globalize:true */
     kind: "XV.GridBox",
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
-      {kind: "List", name: "gridList", onSetupItem: "setupRow", ontap: "gridRowTap", components: [
-        { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "gridRow" }
-      ]},
-      { kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false },
-      {
-        kind: "FittableColumns",
-        name: "navigationButtonPanel",
-        classes: "xv-groupbox-buttons",
-        components: [
-          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
-            content: "_new".loc(), classes: "xv-groupbox-button-left"}
-        ]
-      },
-      {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
+      {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", fit: true, horizontal: "auto", components: [
+        {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
+        {kind: "List", name: "aboveGridList", onSetupItem: "setupRowAbove", ontap: "aboveGridRowTap", components: [
+          { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow" }
+        ]},
+        { kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false },
+        {kind: "List", name: "belowGridList", onSetupItem: "setupRowBelow", ontap: "belowGridRowTap", components: [
+          { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "belowGridRow" }
+        ]},
+        {
+          kind: "FittableColumns",
+          name: "navigationButtonPanel",
+          classes: "xv-groupbox-buttons",
+          components: [
+            {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+              content: "_new".loc(), classes: "xv-groupbox-button-left"}
+          ]
+        },
+        {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
+      ]}
     ],
 
     /**
