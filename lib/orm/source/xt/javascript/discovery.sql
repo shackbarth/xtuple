@@ -341,21 +341,35 @@ select xt.install_js('XT','Discovery','xtuple', $$
     var resources = {},
       org = XT.currentDb(),
       orms = XT.Discovery.getIsRestORMs(orm),
-      services = [];
+      objectServices,
+      allServices = {};
 
     rootUrl = rootUrl || "{rootUrl}";
 
     if (!org) {
       return false;
     }
-    for (var key in XM.Tax) {
-      var obj = XM.Tax[key];
-      if (typeof obj === 'function' && obj.params) {
-        services.push({serviceName: key, serviceParams: obj.params});
+
+    for (var businessObjectName in XM) {
+      var businessObject = XM[businessObjectName];
+      objectServices = {};
+      for (var methodName in businessObject) {
+        var func = businessObject[methodName];
+        if (typeof func === 'function' && func.description && func.params) {
+          objectServices[methodName] = {
+            id: "TODO",
+            path: "TODO",
+            httpMethod: "POST",
+            description: func.description,
+            parameters: func.params, 
+            parameterOrder: Object.keys(func.params)
+          };
+        }
+        allServices[businessObjectName] = {methods: objectServices};
       }
     }
-    plv8.elog(NOTICE, JSON.stringify(services));
-    return services;
+    plv8.elog(NOTICE, JSON.stringify(allServices));
+    return allServices;
   }
 
   /**

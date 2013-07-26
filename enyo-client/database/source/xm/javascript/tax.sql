@@ -36,9 +36,14 @@ select xt.install_js('XM','Tax','xtuple', $$
     for (var i = 0; i < ret.length; i++) ret[i].taxCode = XT.camelize(ret[i].taxCode);
     return JSON.stringify(ret);
   };
-  XM.Tax.taxDetail.params = [
-    {name: "taxZoneId", type: "Number", description: "The Tax Zone ID"}
-  ];
+  XM.Tax.taxDetail.description = "Returns the calculated tax detail for a given amount, currency, and date";
+  XM.Tax.taxDetail.params = {
+    taxZoneId: {type: "Number", description: "Tax Zone ID"},
+    taxTypeId: {type: "Number", description: "Tax Type ID"},
+    effective: {type: "Date", description: "Effective Date"},
+    currencyID: {type: "Number", description: "Currency ID"},
+    amount: {type: "Number", description: "Taxable Amount"}
+  };
 
 }());
   
