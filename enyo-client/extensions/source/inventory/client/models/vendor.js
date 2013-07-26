@@ -45,7 +45,7 @@ white:true*/
     */
     XM.VendorRelationCollection = XM.Collection.extend(/** @lends XM.VendorRelationCollection.prototype */{
 
-      model: XM.VendorRelation
+      model: 'XM.VendorRelation'
 
     });
 

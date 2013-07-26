@@ -63,7 +63,7 @@ white:true*/
     */
     XM.PurchaesOrderCollection = XM.Collection.extend(/** @lends XM.PurchaseOrderCollection.prototype */{
 
-      model: XM.PurchaseOrder
+      model: 'XM.PurchaseOrder'
 
     });
 
@@ -75,7 +75,7 @@ white:true*/
     XM.PurchaseOrderListItemCollection = XM.Collection.extend({
       /** @scope XM.PurchaseOrderListItemCollection.prototype */
 
-      model: XM.PurchaseOrderListItem
+      model: 'XM.PurchaseOrderListItem'
 
     });
   };
