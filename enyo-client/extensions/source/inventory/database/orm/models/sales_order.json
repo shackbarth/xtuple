@@ -164,9 +164,9 @@
         }
       },
       {
-        "name": "salesOrder",
+        "name": "order",
         "toOne": {
-          "type": "SalesOrderListItem",
+          "type": "SalesOrderRelation",
           "column": "coitem_cohead_id",
           "isNested": true
         }
@@ -175,7 +175,14 @@
         "name": "lineNumber",
         "attr": {
           "type": "String",
-          "column": "linenumber"
+          "column": "coitem_linenumber"
+        }
+      },
+      {
+        "name": "subNumber",
+        "attr": {
+          "type": "String",
+          "column": "coitem_subnumber"
         }
       },
       {
