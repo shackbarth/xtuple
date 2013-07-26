@@ -206,7 +206,12 @@ var conditionalExpressSession = function (req, res, next) {
 
   // REST API endpoints start with "/api" in their path.
   // The 'assets' folder and login page are sessionless.
-  if ((/^api/i).test(req.path.split("/")[2]) || (/^\/assets/i).test(req.path) || req.path === "/") {
+  if ((/^api/i).test(req.path.split("/")[2]) ||
+    (/^\/assets/i).test(req.path) ||
+    req.path === "/" ||
+    req.path === "/favicon.ico"
+    ) {
+
     next();
   } else {
     if (req.path === "/login") {
@@ -252,7 +257,12 @@ var conditionalPassportSession = function (req, res, next) {
 
   // REST API endpoints start with "/api" in their path.
   // The 'assets' folder and login page are sessionless.
-  if ((/^api/i).test(req.path.split("/")[2]) || (/^\/assets/i).test(req.path) || req.path === "/") {
+  if ((/^api/i).test(req.path.split("/")[2]) ||
+    (/^\/assets/i).test(req.path) ||
+    req.path === "/" ||
+    req.path === "/favicon.ico"
+    ) {
+
     next();
   } else {
     // Instead of doing app.use(passport.session())
@@ -296,6 +306,8 @@ require('./oauth2/passport');
  * Setup HTTP routes and handlers.
  */
 var that = this;
+
+app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
 app.get('/:org/debug', function (req, res, next) {
   "use strict";
   if (!req.session.passport.user) {
@@ -340,6 +352,7 @@ app.all('/:org/client/build/client-code', routes.clientCode);
 app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
+app.all('/:org/vcfExport', routes.vcfExport);
 app.get('/:org/file', routes.file);
 app.get('/:org/report', routes.report);
 app.get('/:org/analysis', routes.analysis);

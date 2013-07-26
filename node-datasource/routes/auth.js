@@ -136,7 +136,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.redirect(req.session.returnTo);
       } else {
         // Redirect to start loading the client app.
-        res.redirect('/client');
+        res.redirect('/' + selectedOrg + '/app');
       }
     };
 
@@ -187,7 +187,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
           // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
           scope = url.parse(value, true);
-          org = scope.path.match(/\/auth\/(.*)/)[1] || null;
+          org = scope.path.split("/")[1] || null;
 
           // TODO - Still need more work to support userinfo calls.
           // See node-datasource/oauth2/oauth2.js authorization.

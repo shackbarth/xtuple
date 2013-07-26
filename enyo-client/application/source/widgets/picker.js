@@ -116,16 +116,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // DEPARTMENT
-  //
-
-  enyo.kind({
-    name: "XV.DepartmentPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.departments"
-  });
-
-  // ..........................................................
   // EXPENSE CATEGORY
   //
 
@@ -420,16 +410,6 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'code'}
     ]
-  });
-
-  // ..........................................................
-  // SHIFT
-  //
-
-  enyo.kind({
-    name: "XV.ShiftPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.shifts"
   });
 
   // ..........................................................

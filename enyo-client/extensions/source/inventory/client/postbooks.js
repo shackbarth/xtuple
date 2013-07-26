@@ -29,7 +29,7 @@ trailing:true, white:true*/
 
 
     configurationJson = {
-      model: "XM.inventory",
+      model: "XM.Inventory",
       name: "_inventory".loc(),
       description: "_inventoryDescription".loc(),
       workspace: "XV.InventoryWorkspace"
@@ -41,10 +41,13 @@ trailing:true, white:true*/
       name: "inventory",
       label: "_inventory".loc(),
       panels: [
-        {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
+        {name: "shipmentList", kind: "XV.ShipmentList"},
+        {name: "issueToShipping", kind: "XV.IssueToShippingList"},
+				{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
       ],
       actions: [
-        {name: "issueToShipping", privilege: "issueStockToShipping", method: "issueToShipping", notify: false}
+        {name: "issueToShipping", privilege: "issueStockToShipping", method: "issueToShipping", notify: false},
+        {name: "returnCompleteShipment", privilege: "returnStockFromShipping", method: "returnCompleteShipment", notify: false}
       ],
       issueToShipping: function (inSender, inEvent) {
         inSender.bubbleUp("onIssueToShipping", inEvent, inSender);
@@ -53,8 +56,8 @@ trailing:true, white:true*/
     };
     XT.app.$.postbooks.insertModule(module, 4);
 
-    relevantPrivileges = [
-      "ConfigureIM"
+    relevantPrivileges = ["MaintainCarriers", "ViewShipping", "ViewLocations", "ViewInventoryAvailability", "CreateAdjustmentTrans", "CreateScrapTrans", "CreateReceiptTrans", "CreateInterWarehouseTrans", "MaintainItemSites", "ViewItemSites", "PostCountSlips", "EnterCountSlips", "DeleteCountTags", "ZeroCountTags", "ViewCountTags", "PostCountTags", "PurgeCountSlips", "PurgeCountTags", "ViewInventoryValue", "RelocateInventory", "ReassignLotSerial", "ViewQOH", "UpdateCycleCountFreq", "UpdateLeadTime", "SummarizeInventoryTransactions", "ThawInventory", "MaintainCostCategories", "ViewCostCategories", "DeleteCountSlips", "PrintBillsOfLading", "ShipOrders", "ReturnStockFromShipping", "IssueStockToShipping", "PurgeShippingRecords", "ViewDestinations", "MaintainDestinations", "EnterShippingInformation", "RecallOrders", "ViewCarriers", "EnterReceipts", "EnterReturns", "UpdateOUTLevels", "UpdateReorderLevels", "MaintainPackingListBatch", "ViewPackingListBatch", "MaintainCharacteristics",
+"ViewCharacteristics", "DeleteItemSites", "CreateExpenseTrans", "CreateTransformTrans", "RecallInvoicedShipment", "ViewItemAvailabilityWorkbench", "MaintainTransferOrders", "ViewTransferOrders", "OverrideTODate", "ViewInventoryHistory", "ViewWarehouses", "MaintainWarehouses", "UpdateABCClass", "FreezeInventory", "EnterMiscCounts", "IssueCountTags", "EnterCountTags", "MaintainLocations", "AlterTransactionDates", "MaintainExternalShipping", "MaintainSiteTypes", "ViewSiteTypes", "ReleaseTransferOrders"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
 
@@ -62,7 +65,7 @@ trailing:true, white:true*/
     XT.app.$.postbooks.handlers.onIssueToShipping = "issueToShipping";
     XT.app.$.postbooks.issueToShipping = function (inSender, inEvent) {
       var panel = this.createComponent({kind: "XV.IssueToShipping"});
-      
+
       panel.render();
       this.reflow();
       this.setIndex(this.getPanels().length - 1);

@@ -1556,7 +1556,7 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     sanitize: function (nameSpace, type, data, options) {
       options = options || {};
-      if (options.includeKeys && !options.superUser) { return; }
+      if (options.includeKeys && options.superUser) { return; }
       if (XT.typeOf(data) !== "array") { data = [data]; }
       var orm = XT.Orm.fetch(nameSpace, type),
         pkey = XT.Orm.primaryKey(orm),
@@ -1564,7 +1564,7 @@ select xt.install_js('XT','Data','xtuple', $$
         props = orm.properties,
         attrPriv = orm.privileges && orm.privileges.attribute ?
           orm.privileges.attribute : false,
-        inclKeys = options.inclKeys,
+        inclKeys = options.includeKeys,
         superUser = options.superUser,
         c,
         i,

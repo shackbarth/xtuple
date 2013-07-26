@@ -341,6 +341,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "phone"},
             {kind: "XV.InputWidget", attr: "alternate"},
             {kind: "XV.InputWidget", attr: "fax"},
+            {kind: "XV.InputWidget", attr: "webAddress"},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"}
@@ -352,7 +353,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       ]}
     ]
   };
-
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
 
@@ -719,9 +719,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             classes: "in-panel", components: [
             {kind: "XV.DateWidget", attr: "startDate"},
             {kind: "XV.SitePicker", attr: "site"},
-            {kind: "XV.DepartmentPicker", attr: "department"},
+            {kind: "XV.DepartmentWidget", attr: "department"},
             {kind: "XV.EmployeeWidget", attr: "manager"},
-            {kind: "XV.ShiftPicker", attr: "shift"},
+            {kind: "XV.ShiftWidget", attr: "shift"},
             {kind: "onyx.GroupboxHeader", content: "_financials".loc()},
             {kind: "XV.WageTypePicker", attr: "wageType"},
             {kind: "XV.MoneyWidget",

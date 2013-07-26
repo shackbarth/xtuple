@@ -204,6 +204,20 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // DEPARTMENT
+  //
+
+  enyo.kind({
+    name: "XV.DepartmentListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_department".loc()},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_code".loc(), attr: "name"}
+    ]
+  });
+
+  // ..........................................................
   // EMPLOYEE
   //
 
@@ -231,8 +245,8 @@ trailing:true, white:true*/
       {name: "name", label: "_name".loc(), attr: "name"},
       {kind: "onyx.GroupboxHeader", content: "_detail".loc()},
       {name: "manager", label: "_manager".loc(), attr: "manager", defaultKind: "XV.EmployeeWidget"},
-      {name: "department", label: "_department".loc(), attr: "department", defaultKind: "XV.DepartmentPicker"},
-      {name: "shift", label: "_shift".loc(), attr: "shift", defaultKind: "XV.ShiftPicker"},
+      {name: "department", label: "_department".loc(), attr: "department", defaultKind: "XV.DepartmentWidget"},
+      {name: "shift", label: "_shift".loc(), attr: "shift", defaultKind: "XV.ShiftWidget"},
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
       {name: "contact", label: "_contact".loc(), attr: "contact.name"},
       {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "contact.primaryEmail"},
@@ -568,24 +582,6 @@ trailing:true, white:true*/
     ]
   });
 
-  // ..........................................................
-  // ORDER LIST
-  //
-
-  enyo.kind({
-    name: "XV.OrderListItemParameters",
-    kind: "XV.ParameterWidget",
-  //  characteristicsRole: 'isAccounts',
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_orderListItem".loc()},
-      {name: "orderType", attr: "type", label: "_orderType".loc(), defaultKind: "XV.CustomerTypePicker"},
-      {name: "number", label: "_number".loc(), attr: "number"},
-			{name: "scheduledDate", label: "_scheduledDate".loc(), attr: "scheduledDate"},
-      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedToUserName"}    
-		]
-  }); 
-
-  // ..........................................................
   // PLANNER CODE
   //
 
@@ -900,6 +896,20 @@ trailing:true, white:true*/
       },
       {kind: "onyx.GroupboxHeader", content: "_site".loc()},
       {name: "code", label: "_code".loc(), attr: "code"}
+    ]
+  });
+
+  // ..........................................................
+  // SHIFT
+  //
+
+  enyo.kind({
+    name: "XV.ShiftListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_shift".loc()},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_code".loc(), attr: "name"}
     ]
   });
 
