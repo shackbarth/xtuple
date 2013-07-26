@@ -5,16 +5,14 @@
     "type": "PurchaseOrder",
     "table": "pohead",
     "idSequenceName": "pohead_pohead_id_seq",
-    "lockable": true,
-    "lockTable": "pohead",
     "isRest": true,
     "comment": "Purchase Order Map",
     "privileges": {
       "all": {
-        "create": "MaintainPurchaseOrders",
-        "read": "ViewPurchaseOrders",
-        "update": "MaintainPurchaseOrders",
-        "delete": "MaintainPurchaseOrders"
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -50,9 +48,10 @@
       },
       {
         "name": "vendor",
-        "attr": {
-          "type": "Number",
-          "column": "pohead_vend_id"
+        "toOne": {
+          "type": "VendorRelation",
+          "column": "pohead_vend_id",
+          "isNested": true
         }
       },
       {
@@ -432,10 +431,10 @@
     "comment": "Purchase Order Relation Map",
     "privileges": {
       "all": {
-        "create": "MaintainPurchaseOrders",
-        "read": "ViewPurchaseOrders",
-        "update": "MaintainPurchaseOrders",
-        "delete": "MaintainPurchaseOrders"
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -479,16 +478,14 @@
     "type": "PurchaseOrderLine",
     "table": "poitem",
     "idSequenceName": "poitem_poitem_id_seq",
-    "lockable": true,
-    "lockTable": "poitem",
     "isRest": true,
     "comment": "Purchase Order Line Map",
     "privileges": {
       "all": {
-        "create": "MaintainPurchaseOrders",
-        "read": "ViewPurchaseOrders",
-        "update": "MaintainPurchaseOrders",
-        "delete": "MaintainPurchaseOrders"
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -719,7 +716,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewPurchaseOrders MaintainPurchaseOrders",
+        "read": true,
         "update": false,
         "delete": false
       }
@@ -745,7 +742,8 @@
         "name": "vendor",
         "toOne": {
           "type": "VendorRelation",
-          "column": "pohead_vend_id"
+          "column": "pohead_vend_id",
+          "isNested": true
         }
       },
       {

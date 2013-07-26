@@ -27,11 +27,20 @@
         }
       },
       {
-        "name": "number",
+        "name": "uuid",
         "attr": {
-          "type": "String",
+          "type": "Number",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "purchaseOrder",
+        "toOne": {
+          "type": "PurchaseOrderRelation",
           "column": "recv_order_number",
-					"isNaturalKey": true
+          "inverse": "number",
+          "isNested": true 
          }
       },
       {
@@ -42,10 +51,11 @@
         }
       },
       {
-        "name": "orderLine",
-        "attr": {
-          "type": "Number",
-          "column": "recv_orderitem_id"
+        "name": "purchaseOrderLine",
+        "toOne": {
+          "type": "PurchaseOrderLine",
+          "column": "recv_orderitem_id",
+          "isNested": true
         }
       },
       {
@@ -65,9 +75,10 @@
       },
       {
         "name": "vendor",
-        "attr": {
-          "type": "Number",
-          "column": "recv_vend_id"
+        "toOne": {
+          "type": "VendorRelation",
+          "column": "recv_vend_id",
+          "isNested": true
         }
       },
       {

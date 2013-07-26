@@ -70,7 +70,8 @@
         "name": "vendorType",
         "toOne": {
           "type": "VendorType",
-          "column": "vend_vendtype_id"
+          "column": "vend_vendtype_id",
+          "isNested": true
         }
       },
       {
@@ -128,7 +129,7 @@
     "privileges": {
       "all": {
         "create": "MaintainVendorTypes",
-        "read": "ViewVendorTypes",
+        "read": true,
         "update": "MaintainVendorTypes",
         "delete": "MaintainVendorTypes"
       }

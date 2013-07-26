@@ -7,5 +7,6 @@ enyo.depends(
   "sales_order.js",
   "shipment.js",
   "startup.js",
-  "static.js"
+  "static.js",
+  "vendor.js"
 );

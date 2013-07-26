@@ -52,6 +52,9 @@ trailing:true, white:true*/
       ],
       issueToShipping: function (inSender, inEvent) {
         inSender.bubbleUp("onIssueToShipping", inEvent, inSender);
+      },
+      enterReceipt: function (inSender, inEvent) {
+        inSender.bubbleUp("onEnterReceipt", inEvent, inSender);
       }
 
     };
@@ -66,6 +69,18 @@ trailing:true, white:true*/
     XT.app.$.postbooks.handlers.onIssueToShipping = "issueToShipping";
     XT.app.$.postbooks.issueToShipping = function (inSender, inEvent) {
       var panel = this.createComponent({kind: "XV.IssueToShipping"});
+
+      panel.render();
+      this.reflow();
+      this.setIndex(this.getPanels().length - 1);
+
+      return true;
+    };
+
+    //Receive Purchase Order using Action button in nav bar at top
+    XT.app.$.postbooks.handlers.onEnterReceipt = "enterReceipt";
+    XT.app.$.postbooks.enterReceipt = function (inSender, inEvent) {
+      var panel = this.createComponent({kind: "XV.EnterReceipt"});
 
       panel.render();
       this.reflow();

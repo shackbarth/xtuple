@@ -28,13 +28,13 @@ white:true*/
       @extends XM.Info
     */
     XM.PurchaseOrderRelation = XM.Info.extend({
-      /** @scope XM.ContactRelation.prototype */
+      /** @scope XM.PurchaseOrderRelation.prototype */
 
       recordType: 'XM.PurchaseOrderRelation',
 
       editableModel: 'XM.PurchaseOrder',
 
-      numberKey: "number"
+      descriptionKey: "number"
 
     });
 
@@ -61,21 +61,10 @@ white:true*/
 
       @extends XM.Collection
     */
-    XM.PurchaesOrderCollection = XM.Collection.extend(/** @lends XM.PurchaseOrderCollection.prototype */{
-
-      model: 'XM.PurchaseOrder'
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Collection
-    */
     XM.PurchaseOrderListItemCollection = XM.Collection.extend({
       /** @scope XM.PurchaseOrderListItemCollection.prototype */
 
-      model: 'XM.PurchaseOrderListItem'
+      model: XM.PurchaseOrderListItem
 
     });
   };

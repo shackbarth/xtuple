@@ -152,7 +152,7 @@ trailing:true, white:true*/
       kind: "XV.List",
       label: "_purchaseOrders".loc(),
       collection: "XM.PurchaseOrderListItemCollection",
-      parameterWidget: "XV.PurchaseOrderListItemParameters",
+      //parameterWidget: "XV.PurchaseOrderListItemParameters",
       query: {orderBy: [
         {attribute: 'number'}
       ]},
@@ -191,7 +191,7 @@ trailing:true, white:true*/
       } */
     });
 
-    XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderList");
+    XV.registerModelList("XM.PurchaseOrderListItem", "XV.PurchaseOrderList");
 
     // ..........................................................
     // SHIPMENT
