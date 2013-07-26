@@ -133,7 +133,8 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.FilterPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.filters"
+    collection: "XM.filters",
+    valueAttribute: "id"
   });
 
   // ..........................................................

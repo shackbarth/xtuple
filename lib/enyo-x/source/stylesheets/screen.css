@@ -380,8 +380,13 @@
 .pullout .xv-groupbox .xv-filter-form .button-row .onyx-button {
   margin-right: 3px;
 }
-.pullout .xv-groupbox .xv-filter-form .button-row.more-row {
+.pullout .xv-groupbox .xv-filter-form .top-drawer {
+  border-top: #aaaaaa 1px solid;
   background-color: #dddddd;
+  padding: 7px 0 7px 0;
+}
+.pullout .xv-groupbox .xv-filter-form .top-drawer > * {
+  margin-left: 5px;
 }
 .pullout .pullout-scroller {
   position: relative;

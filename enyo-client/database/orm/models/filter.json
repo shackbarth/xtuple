@@ -58,6 +58,13 @@
           "type": "String",
           "column": "filter_params"
         }
+      },
+      {
+        "name": "section",
+        "attr": {
+          "type": "String",
+          "column": "filter_param_kind"
+        }
       }
     ],
     "isSystem": true

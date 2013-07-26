@@ -6,5 +6,6 @@ select xt.add_column('filter','filter_createdby', 'text');
 select xt.add_column('filter','filter_name', 'text');
 select xt.add_column('filter','filter_shared', 'boolean');
 select xt.add_column('filter','filter_params', 'text');
+select xt.add_column('filter','filter_param_kind', 'text');
 
 comment on table xt.filter is 'Saved filter parameters for advanced search';
