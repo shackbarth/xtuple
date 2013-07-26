@@ -141,7 +141,7 @@ Globalize:true */
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
-      {kind: "List", name: "gridList", count: 0, onSetupItem: "setupRow", components: [
+      {kind: "List", name: "gridList", onSetupItem: "setupRow", ontap: "gridRowTap", components: [
         { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "gridRow" }
       ]},
       { kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false },
