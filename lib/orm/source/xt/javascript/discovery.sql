@@ -328,67 +328,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
   };
 
   /**
-   * Return an API Discovery document's Services section.
-  ?  for this database's ORM where isRest = true.
-  ? This function allows you get the Resources section much faster than the full getDiscovery() above.
-  ? To make it faster, the JSON-Schema is skipped, so method's parameter's primKeyProp will be blank.
-   *
-   * @param {String} Optional. An orm_type name like "Contact".
-   * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
-   * @returns {Object}
-   */
-  XT.Discovery.getServices = function(orm, rootUrl) {
-    var resources = {},
-      org = XT.currentDb(),
-      orms = XT.Discovery.getIsRestORMs(orm),
-      objectServices,
-      allServices = {};
-
-    rootUrl = rootUrl || "{rootUrl}";
-
-
-    /*
-    TODO: rootUrl?
-    filter by orm
-    TODOs in response
-    document more methods
-    */
-
-    if (!org) {
-      return false;
-    }
-
-    for (var businessObjectName in XM) {
-      var businessObject = XM[businessObjectName];
-      objectServices = {};
-      for (var methodName in businessObject) {
-        var method = businessObject[methodName];
-        if (typeof method === 'function' && method.description && method.params) {
-          for (var methodParamName in method.params) {
-            var methodParam = method.params[methodParamName];
-            methodParam.location = "TODO";
-          }
-          method.params.path
-          objectServices[methodName] = {
-            id: businessObjectName + "." + methodName,
-            path: "TODO",
-            httpMethod: "POST",
-            scopes: "TODO",
-            description: method.description,
-            parameters: method.params, 
-            parameterOrder: Object.keys(method.params)
-          };
-        }
-      }
-      if(Object.keys(objectServices).length > 0) {
-        /* only document objects with >= 1 documented dispatch function */
-        allServices[businessObjectName] = {methods: objectServices};
-      }
-    }
-    return allServices;
-  }
-
-  /**
    * Return an API Discovery document's Resources section for this database's ORM where isRest = true.
    * This function allows you get the Resources section much faster than the full getDiscovery() above.
    * To make it faster, the JSON-Schema is skipped, so method's parameter's primKeyProp will be blank.
@@ -620,6 +559,75 @@ select xt.install_js('XT','Discovery','xtuple', $$
     }
 
     return resources;
+  };
+
+  /**
+   * Return an API Discovery document's Services section.
+   *
+   * @param {String} Optional. An orm_type name like "Contact".
+   * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
+   * @returns {Object}
+   */
+  XT.Discovery.getServices = function(orm, rootUrl) {
+    var resources = {},
+      org = XT.currentDb(),
+      orms = XT.Discovery.getIsRestORMs(orm),
+      objectServices,
+      allServices = {};
+
+    rootUrl = rootUrl || "{rootUrl}";
+
+    /*
+    TODO: use rootUrl in scopes
+    filter by orm
+    TODOs in response
+    document more methods
+    */
+
+    if (!org) {
+      return false;
+    }
+
+    /*
+      XXX Note that we can't iterate through the ORMS, as we would expect, because
+      the objects with dispatchable functions don't necessarily have ORMS, e.g. XM.Tax.
+      or XM.Sales. This is something we should fix if we want to support getting a list
+      of services filtered by business object name.
+    */
+    for (var businessObjectName in XM) {
+      var businessObject = XM[businessObjectName];
+      objectServices = {};
+      if(businessObject.isDispatchable) {
+        for (var methodName in businessObject) {
+          var method = businessObject[methodName];
+          /* 
+          Report only on documented dispatch methods. We document the methods by
+          tacking description and params attributes onto the function.
+          */
+          if (typeof method === 'function' && method.description && method.params) {
+            for (var methodParamName in method.params) {
+              var methodParam = method.params[methodParamName];
+              methodParam.location = "TODO";
+            }
+            method.params.path
+            objectServices[methodName] = {
+              id: businessObjectName + "." + methodName,
+              path: "TODO",
+              httpMethod: "POST",
+              scopes: ["TODO"],
+              description: method.description,
+              parameters: method.params, 
+              parameterOrder: Object.keys(method.params)
+            };
+          }
+        }
+      }
+      if(Object.keys(objectServices).length > 0) {
+        /* only return objects with >= 1 documented dispatch function */
+        allServices[businessObjectName] = {methods: objectServices};
+      }
+    }
+    return allServices;
   };
 
 
