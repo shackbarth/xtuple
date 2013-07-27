@@ -420,16 +420,14 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.SortPicker",
     kind: "onyx.PickerDecorator",
     components: [
-      {},
-      {kind: "onyx.Picker", components: [
-        {content: "asdf", active: true}
-      ]}
+      {}
     ],
     buildList: function (options) {
       console.log("buildlist in sortpicker");
     },
     setComponentsList: function (toSet) {
-      this.components = toSet;
+      console.log(toSet);
+      //_.each(toSet, add item to components)
     }
   });
 
