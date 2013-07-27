@@ -428,8 +428,8 @@ regexp:true, undef:true, trailing:true, white:true */
     buildList: function (options) {
       console.log("buildlist in sortpicker");
     },
-    modelChanged: function () {
-      this.buildList();
+    setComponentsList: function (toSet) {
+      this.components = toSet;
     }
   });
 
