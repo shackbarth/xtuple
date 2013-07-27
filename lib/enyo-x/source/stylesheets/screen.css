@@ -1951,7 +1951,8 @@ body {
   background-color: #ffffff;
   color: #000;
 }
-.xv-sort-popup .onyx-button {
+.xv-sort-popup .onyx-picker-decorator .onyx-button {
+  width: 130px;
   margin: 0 auto 0 auto;
 }
 .xv-version-label {

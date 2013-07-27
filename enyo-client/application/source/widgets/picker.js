@@ -418,12 +418,19 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.SortPicker",
-    kind: "onyx.PickerDecorator", components: [
+    kind: "onyx.PickerDecorator",
+    components: [
       {},
       {kind: "onyx.Picker", components: [
         {content: "asdf", active: true}
       ]}
-    ]
+    ],
+    buildList: function (options) {
+      console.log("buildlist in sortpicker");
+    },
+    modelChanged: function () {
+      this.buildList();
+    }
   });
 
   // ..........................................................
