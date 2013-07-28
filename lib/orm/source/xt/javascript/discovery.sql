@@ -600,8 +600,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     rootUrl = rootUrl || "{rootUrl}";
 
     /*
-    TODOs in response
-    document more methods
+    TODO: document more methods
     */
 
     if (!org) {
@@ -633,7 +632,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
           ];
           objectServices[methodName] = {
             id: businessObjectName + "." + methodName,
-            path: "services/" + businessObjectNameHyphen + "/" + methodName,
+            path: "services/" + businessObjectNameHyphen + "/" + methodName.camelToHyphen(),
             httpMethod: "POST",
             scopes: scopes,
             description: method.description,

@@ -273,6 +273,17 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return;
   };
+  XM.Inventory.adjustment.description = "Perform Inventory Adjustments.";
+  XM.Inventory.adjustment.params = {
+    itemSite: {type: "String", description: "UUID of itemSite"},
+    quantity: {type: "Number", description: "Quantity" },
+    options: {type: "Object", description: "Other attributes", attributes: {
+      detail: {type: "Array", description: "Distribution detail"},
+      asOf: {type: "Date", description: "Transaction Timestamp, default to now()"},
+      docNumber: {type: "String", description: "Document Number"},
+      notes: {type: "String", description: "Notes"},
+      value: {type: "String", description: "Value"}
+  }};
 
   /**
     Issue to shipping.
