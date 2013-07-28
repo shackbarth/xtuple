@@ -107,9 +107,11 @@ select xt.install_js('XT','Discovery','xtuple', $$
       org = org[0].current_database;
     }
 
+    /*
     if (!orms) {
       return false;
     }
+    */
 
     /*
      * Header section.
@@ -561,6 +563,18 @@ select xt.install_js('XT','Discovery','xtuple', $$
     return resources;
   };
 
+  XT.Discovery.getDispatchableObjects = function (orm) {
+    var dispatchableObjects = [];
+    for (var businessObjectName in XM) {
+      var businessObject = XM[businessObjectName];
+      if(businessObject.isDispatchable &&
+          (!orm || businessObjectName === orm)) {
+        dispatchableObjects.push(businessObjectName);
+      }
+    }
+    return dispatchableObjects;
+  };
+
   /**
    * Return an API Discovery document's Services section.
    *
@@ -571,7 +585,14 @@ select xt.install_js('XT','Discovery','xtuple', $$
   XT.Discovery.getServices = function(orm, rootUrl) {
     var resources = {},
       org = XT.currentDb(),
-      orms = XT.Discovery.getIsRestORMs(orm),
+      dispatchableObjects = XT.Discovery.getDispatchableObjects(orm),
+      i,
+      businessObject,
+      businessObjectName,
+      method,
+      methodName,
+      methodParam,
+      methodParamName,
       objectServices,
       allServices = {};
 
@@ -587,39 +608,31 @@ select xt.install_js('XT','Discovery','xtuple', $$
     if (!org) {
       return false;
     }
-
-    /*
-      XXX Note that we can't iterate through the ORMS, as we would expect, because
-      the objects with dispatchable functions don't necessarily have ORMS, e.g. XM.Tax.
-      or XM.Sales. This is something we should fix if we want to support getting a list
-      of services filtered by business object name.
-    */
-    for (var businessObjectName in XM) {
-      var businessObject = XM[businessObjectName];
+    for (i = 0; i < dispatchableObjects.length; i++) {
+      businessObjectName = dispatchableObjects[i];
+      businessObject = XM[businessObjectName];
       objectServices = {};
-      if(businessObject.isDispatchable) {
-        for (var methodName in businessObject) {
-          var method = businessObject[methodName];
-          /* 
-          Report only on documented dispatch methods. We document the methods by
-          tacking description and params attributes onto the function.
-          */
-          if (typeof method === 'function' && method.description && method.params) {
-            for (var methodParamName in method.params) {
-              var methodParam = method.params[methodParamName];
-              methodParam.location = "TODO";
-            }
-            method.params.path
-            objectServices[methodName] = {
-              id: businessObjectName + "." + methodName,
-              path: "TODO",
-              httpMethod: "POST",
-              scopes: ["TODO"],
-              description: method.description,
-              parameters: method.params, 
-              parameterOrder: Object.keys(method.params)
-            };
+      for (methodName in businessObject) {
+        method = businessObject[methodName];
+        /* 
+        Report only on documented dispatch methods. We document the methods by
+        tacking description and params attributes onto the function.
+        */
+        if (typeof method === 'function' && method.description && method.params) {
+          for (methodParamName in method.params) {
+            methodParam = method.params[methodParamName];
+            methodParam.location = "TODO";
           }
+          method.params.path
+          objectServices[methodName] = {
+            id: businessObjectName + "." + methodName,
+            path: "TODO",
+            httpMethod: "POST",
+            scopes: ["TODO"],
+            description: method.description,
+            parameters: method.params, 
+            parameterOrder: Object.keys(method.params)
+          };
         }
       }
       if(Object.keys(objectServices).length > 0) {
@@ -759,13 +772,15 @@ select xt.install_js('XT','Discovery','xtuple', $$
       }
 
       /* Find the related ORMs. */
-      for (var prop in thisOrm.properties) {
-        var relation;
+      if(thisOrm) {
+        for (var prop in thisOrm.properties) {
+          var relation;
 
-        if (thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany) {
-          relation = thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany;
-          if (relation.type) {
-            relations.push(relation.type);
+          if (thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany) {
+            relation = thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany;
+            if (relation.type) {
+              relations.push(relation.type);
+            }
           }
         }
       }
