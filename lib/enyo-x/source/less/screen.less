@@ -1,4 +1,4 @@
-/* LESS version of screen.scss file previously in client
+/*
 
   To compile to .css:
   lessc screen.less > ../stylesheets/screen.css
@@ -44,6 +44,11 @@
   Styles relating to the dashboard
 */
 @import "dashboard.less";
+
+/**
+  Styles relating to grid-entry 
+*/
+@import "grid.less";
 
 /**
   Styles relating to the parameter widget
@@ -653,6 +658,12 @@ body {
   }
 }
 
+.xv-private-item-site-widget {
+  border-bottom-color: rgb(170, 170, 170);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
 /* RelationsEditorBox */
 .xv-relations-editor-box {
   .xv-groupbox {
@@ -738,6 +749,8 @@ body {
     margin: 0 40px 0 40px;
   }
 }
+
+
 
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {

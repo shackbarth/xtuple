@@ -337,9 +337,7 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: ["item.number", "item.barcode"],
     nameAttribute: "item.description1",
     descripAttribute: "item.description2",
-    style: "border-bottom-color: rgb(170, 170, 170); " +
-      "border-bottom-width: 1px; " +
-      "border-bottom-style: solid;"
+    classes: "xv-private-item-site-widget"
   });
 
   enyo.kind({
@@ -353,7 +351,8 @@ regexp:true, undef:true, trailing:true, white:true */
       placeholder: null,
       disabled: false,
       query: null,
-      isEditableKey: "item"
+      isEditableKey: "item",
+      horizontalOrientation: false
     },
     handlers: {
       "onValueChange": "controlValueChanged"
@@ -362,7 +361,8 @@ regexp:true, undef:true, trailing:true, white:true */
       "onValueChange": ""
     },
     components: [
-      {kind: "FittableRows", components: [
+      {kind: "enyo.Control", name: "fittableContainer",
+      components: [
         {kind: _privateItemSiteWidget, name: "privateItemSiteWidget",
           label: "_item".loc()},
         {kind: "XV.SitePicker", name: "sitePicker", label: "_site".loc()}
@@ -456,6 +456,12 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
       this.$.sitePicker.filter = filter;
 
+      if (this.getHorizontalOrientation()) {
+        this.$.fittableContainer.setLayoutKind("FittableColumnsLayout");
+      } else {
+        this.$.fittableContainer.setLayoutKind("FittableRowsLayout");
+      }
+
       //
       // Prevent an ugly thick line if the site picker is hidden.
       //
@@ -507,6 +513,7 @@ regexp:true, undef:true, trailing:true, white:true */
         site = this.getSite(),
         options = {},
         that = this;
+
       if (item && site) {
         options.query = {
           parameters: [
@@ -521,7 +528,7 @@ regexp:true, undef:true, trailing:true, white:true */
           ]
         };
         options.success = function () {
-          if (that._itemSites.length) {
+          if (!that.destroyed && that._itemSites.length) {
             that.$.privateItemSiteWidget.setValue(that._itemSites.at(0));
           }
         };
@@ -536,7 +543,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.sitePicker.setValue(site, {silent: true});
       if (site) {
         this.$.privateItemSiteWidget.addParameter({
-          attribute: "site",
+          attribute: "site.code",
           value: site
         }, true);
       } else {

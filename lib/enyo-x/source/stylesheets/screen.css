@@ -1,4 +1,4 @@
-/* LESS version of screen.scss file previously in client
+/*
 
   To compile to .css:
   lessc screen.less > ../stylesheets/screen.css
@@ -350,6 +350,179 @@
 .selectable-chart .chart-bottom .onyx-button {
   width: 130px;
   padding: 10px 10px;
+}
+/**
+  Styles relating to grid-entry 
+*/
+/* 
+  Styles relating to the grid box 
+*/
+.xv-read-only-grid-row {
+  height: 70px;
+  border-top: 1px solid silver;
+  background-color: #CCCCCC;
+  font-size: 13px;
+}
+.xv-read-only-grid-row .xv-read-only {
+  width: 80px;
+}
+.xv-read-only-grid-row .xv-grid-column {
+  vertical-align: top;
+}
+.xv-read-only-grid-row > * {
+  display: inline-block;
+}
+.xv-grid-actions > * {
+  display: inline-block;
+}
+.xv-grid-row {
+  background-color: #ffffff;
+}
+.xv-grid-row > * {
+  display: inline-block;
+}
+.xv-grid-column-item {
+  width: 250px;
+}
+.xv-grid-column-quantity {
+  width: 100px;
+}
+.xv-grid-column-discount {
+  width: 90px;
+}
+.xv-grid-column-price {
+  width: 90px;
+}
+.xv-grid-column-schedule {
+  width: 110px;
+}
+.xv-grid-column-actions {
+  width: 90px;
+}
+.xv-grid-box.panel {
+  width: 984px;
+}
+.xv-grid-column {
+  padding-left: 0px;
+  padding-right: 12px;
+}
+.xv-grid-header {
+  font-size: 12px;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: bold;
+  width: 88px;
+  padding-bottom: 5px;
+}
+.xv-grid-header-line-number {
+  width: 20px !important;
+}
+.xv-grid-actions {
+  width: 105px;
+  padding-top: 6px;
+}
+.xv-grid-box .enyo-fittable-columns-layout {
+  background-color: white;
+}
+.xv-grid-box .xv-grid-column {
+  vertical-align: top;
+}
+.xv-grid-box .xv-grid-column .onyx-input-decorator {
+  padding: 0px;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-column .onyx-input-decorator input {
+  width: 80px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-column .onyx-picker-decorator {
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-column .onyx-picker-decorator .onyx-button {
+  height: 20px;
+  padding-top: 3px;
+  width: 80px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-column .xv-picker-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-column .xv-datewidget {
+  margin-right: 10px;
+  padding-top: 0px !important;
+}
+.xv-grid-box .xv-grid-column .xv-datewidget .onyx-input-decorator {
+  padding: 0px;
+  width: 105px;
+}
+.xv-grid-box .xv-grid-column .xv-datewidget .onyx-input-decorator input {
+  width: 65px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-column .xv-numberwidget {
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-column .xv-numberwidget .onyx-input-decorator {
+  padding: 0px;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
+  width: 80px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-column .xv-moneywidget .onyx-input-decorator {
+  padding: 0px;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
+  width: 80px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-column .xv-relationwidget .onyx-input-decorator {
+  width: 150px;
+}
+.xv-grid-box .xv-grid-column .xv-relationwidget .onyx-input {
+  width: 100px;
+}
+.xv-grid-box .xv-grid-column .xv-subinput {
+  width: 80px;
+}
+.xv-grid-box .xv-grid-column .xv-input {
+  padding-top: 6px;
+  width: 80px;
+}
+.xv-grid-box .xv-grid-column .xv-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-column .xv-decorated-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-column .xv-relationwidget-description {
+  text-indent: 0px;
+  padding-bottom: 0px;
+}
+.xv-grid-box .xv-grid-column .xv-relationwidget-secondarydescription {
+  display: none;
+}
+.xv-grid-box .xv-grid-column .xv-private-item-site-widget {
+  border-bottom: 0px;
+}
+.xv-grid-box .xv-grid-column .xv-grid-line-number {
+  width: 25px !important;
+}
+.xv-grid-box .xv-grid-column .xv-grid-line-number .xv-input-decorator {
+  width: 25px !important;
+}
+.xv-grid-box .xv-grid-column .xv-grid-line-number .xv-input-decorator input {
+  width: 20px !important;
+}
+.xv-grid-box .xv-sales-summary-panel {
+  padding-left: 0px;
+  border-width: 0px;
+}
+.xv-grid-box .xv-sales-summary-total-group {
+  padding-left: 0px;
+  border-width: 0px;
 }
 /**
   Styles relating to the parameter widget
@@ -2302,6 +2475,11 @@ body {
 }
 .xv-relationwidget-description.hyperlink {
   color: blue;
+}
+.xv-private-item-site-widget {
+  border-bottom-color: #aaaaaa;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }
 /* RelationsEditorBox */
 .xv-relations-editor-box .xv-groupbox {
