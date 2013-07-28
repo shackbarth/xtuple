@@ -599,8 +599,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
     rootUrl = rootUrl || "{rootUrl}";
 
     /*
-    TODO: use rootUrl in scopes
-    filter by orm
     TODOs in response
     document more methods
     */
@@ -608,6 +606,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     if (!org) {
       return false;
     }
+
     for (i = 0; i < dispatchableObjects.length; i++) {
       businessObjectName = dispatchableObjects[i];
       businessObject = XM[businessObjectName];
@@ -626,12 +625,16 @@ select xt.install_js('XT','Discovery','xtuple', $$
               methodParam.location = "query";
             }
           }
-          method.params.path
+          var ormTypeHyphen = businessObjectName.camelToHyphen();
+          var scopes = [
+            rootUrl + org + "/auth",
+            rootUrl + org + "/auth/" + ormTypeHyphen,
+          ];
           objectServices[methodName] = {
             id: businessObjectName + "." + methodName,
             path: "TODO",
             httpMethod: "POST",
-            scopes: ["TODO"],
+            scopes: scopes,
             description: method.description,
             parameters: method.params, 
             parameterOrder: Object.keys(method.params)
