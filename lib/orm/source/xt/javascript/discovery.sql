@@ -620,8 +620,11 @@ select xt.install_js('XT','Discovery','xtuple', $$
         */
         if (typeof method === 'function' && method.description && method.params) {
           for (methodParamName in method.params) {
+            /* The parameter location is query unless otherwise specified */
             methodParam = method.params[methodParamName];
-            methodParam.location = "TODO";
+            if(!methodParam.location) {
+              methodParam.location = "query";
+            }
           }
           method.params.path
           objectServices[methodName] = {
