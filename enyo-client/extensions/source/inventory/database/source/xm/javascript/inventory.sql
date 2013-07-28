@@ -283,7 +283,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
       docNumber: {type: "String", description: "Document Number"},
       notes: {type: "String", description: "Notes"},
       value: {type: "String", description: "Value"}
-  }};
+    }}
+  };
 
   /**
     Issue to shipping.
@@ -338,6 +339,16 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return;
   };
+  XM.Inventory.issueToShipping.description = "Issue to Shipping.";
+  XM.Inventory.issueToShipping.params = {
+    orderLine: { type: "String", description: "Order line UUID" },
+    quantity: {type: "Number", description: "Quantity" },
+    options: {type: "Object", description: "Other attributes", attributes: {
+      asOf: {type: "Date", description: "Transaction Timestamp. Default to now()."},
+      detail: {type: "Array", description: "Distribution detail" }
+    }}
+  };
+
 
   /**
     Return shipment transactions.
@@ -366,6 +377,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return;
   };
+  XM.Inventory.returnFromShipping.description = "Return shipment transactions.";
+  XM.Inventory.returnFromShipping.params = {
+    orderLine: { type: "String", description: "Order line UUID" }
+  };
 
   /**
     Return complete shipment (only available for orders that have not been shipped) - used in maintain shipping contents screen.
@@ -392,6 +407,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
     plv8.execute(sql, [shipment])[0].series;
 
     return;
+  };
+  XM.Inventory.recallShipment.description = "Return complete shipment (only available for orders that " +
+    "have not been shipped) - used in maintain shipping contents screen.";
+  XM.Inventory.recallShipment.params = {
+     shipment: { type: "Number", description: "Shipment ID" }
   };
 
   XM.Inventory.options = [
