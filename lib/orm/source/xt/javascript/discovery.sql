@@ -594,7 +594,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
       methodParam,
       methodParamName,
       objectServices,
-      allServices = {};
+      allServices = {},
+      version = "v1alpha1";
 
     rootUrl = rootUrl || "{rootUrl}";
 
@@ -625,14 +626,14 @@ select xt.install_js('XT','Discovery','xtuple', $$
               methodParam.location = "query";
             }
           }
-          var ormTypeHyphen = businessObjectName.camelToHyphen();
+          var businessObjectNameHyphen = businessObjectName.camelToHyphen();
           var scopes = [
             rootUrl + org + "/auth",
-            rootUrl + org + "/auth/" + ormTypeHyphen,
+            rootUrl + org + "/auth/" + businessObjectNameHyphen,
           ];
           objectServices[methodName] = {
             id: businessObjectName + "." + methodName,
-            path: "TODO",
+            path: "services/" + businessObjectNameHyphen + "/" + methodName,
             httpMethod: "POST",
             scopes: scopes,
             description: method.description,
