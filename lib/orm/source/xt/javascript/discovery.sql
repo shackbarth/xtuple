@@ -108,6 +108,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
     }
 
     /*
+    XXX if we restrict filters for only objects with REST ORMs then we'll never be able
+    to filter for dispatchable objects that have no orm, such as
+    https://localhost/dev/discovery/v1alpha1/apis/sales/v1alpha1/rest
     if (!orms) {
       return false;
     }
@@ -598,10 +601,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
       version = "v1alpha1";
 
     rootUrl = rootUrl || "{rootUrl}";
-
-    /*
-    TODO: document more methods
-    */
 
     if (!org) {
       return false;
