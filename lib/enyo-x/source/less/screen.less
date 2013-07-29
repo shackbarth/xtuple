@@ -9,27 +9,27 @@
 /*
   These variables will show in css as their hex values
 */
-@highlight  : #d6f1ff;
-@orange     : #f60;
-@bright-orange  :  #f49200;
-@sky-blue   : #9cf;
-@slate-blue : #226b9a;
-@light-blue  :  #35a8ee;
-@blue        :  #0000ff;
-@silver      :  #aaa;
-@smoke       : #ddd;
-@gray       : #8d8d8d;
-@med-gray    :  #999;
-@charcoal    : #555;
-@dim-gray    : #696969;
-@dark-gray  :  #333;
-@blue-gray  : #93a1a1;
-@near-black  : #0e0e0e;
-@black      : #000;
-@white      : #fff;
-@red        :  #c51616;
-@bright-red  :  #ff0000;
-
+@highlight: #d6f1ff;
+@orange: #f60;
+@bright-orange: #f49200;
+@sky-blue: #9cf;
+@slate-blue: #226b9a;
+@light-blue: #35a8ee;
+@blue: #0000ff;
+@silver: #aaa;
+@smoke: #ddd;
+@gray: #8d8d8d;
+@med-gray: #999;
+@charcoal: #555;
+@dim-gray: #696969;
+@dark-gray: #333;
+@header-gray: #4c4c4c;
+@blue-gray: #93a1a1;
+@near-black: #0e0e0e;
+@black: #000;
+@white: #fff;
+@red: #c51616;
+@bright-red: #ff0000;
 
 /* Helper classes for css3 */
 @import "mixins.less";
@@ -41,14 +41,19 @@
 @import "groupbox.less";
 
 /**
+  Styles relating to grid-entry
+*/
+@import "grid.less";
+
+/**
   Styles relating to the dashboard
 */
 @import "dashboard.less";
 
 /**
-  Styles relating to grid-entry 
+  Styles relating to Lists
 */
-@import "grid.less";
+@import "list.less";
 
 /**
   Styles relating to the parameter widget
@@ -274,166 +279,6 @@ body {
 /*
   XV Views
 */
-
-/* List */
-.xv-list {
-  background-color: @white;
-  .xv-list-item {
-    @include box-sizing(border-box);
-    background-color: @white;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    border-bottom: 1px solid @smoke;
-    &.header {
-      padding-top: 0;
-    }
-    &.inactive {
-      background-color: @gray;
-      color: @black;
-      .xv-list-column {
-        .xv-list-attr {
-          background-color: @gray;
-          &.placeholder {
-            color: @gray;
-          }
-        }
-      }
-    }
-    .xv-list-column {
-      &.short {
-        width: 9em;
-      }
-      &.first {
-        width: 19em;
-      }
-      &.second {
-        width: 10em;
-      }
-      &.third {
-        width: 4.5em;
-      }
-      &.money {
-        width: 5em;
-      }
-      &.descr {
-        width: 15.56em;
-      }
-    }
-    &.item-selected {
-      background: @slate-blue url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
-      .xv-list-attr {
-        color: @white;
-        background: none;
-        &.placeholder {
-          font-style: italic;
-          color: @sky-blue;
-        }
-        &.hyperlink {
-          color: @bright-orange;
-          background: transparent;
-        }
-      }
-      .xv-list-attr {
-        &.header {
-          background: @sky-blue;
-        }
-      }
-      .xv-list-column {
-        .xv-list-attr {
-          color: @white;
-          background: none;
-          &.placeholder {
-            font-style: italic;
-            color: SkyBlue;
-          }
-          &.hyperlink {
-            color: @bright-orange;
-            background: transparent;
-          }
-        }
-      }
-    }
-  }
-}
-
-.xv-list-item > * {
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.xv-list-gear-icon-button {
-  float: right;
-  display: none;
-  margin-top: -4px;
-}
-
-.xv-list-attr {
-  padding: 5px;
-  font-size: .8em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: @black;
-  background-color: @white;
-  &.header {
-    padding: 4px;
-    background: @gray;
-    font-size: .7em;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: @white;
-  }
-  &.footer {
-    padding: 4px;
-    background: @gray;
-    font-size: .7em;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: @black;
-  }
-  &.right {
-    position: absolute;
-    right: 0;
-    height: 20px;
-  }
-  &.text-align-right {
-    text-align: right;
-  }
-  &.bold {
-    font-weight: bold;
-  }
-  &.error {
-    color: @bright-red;
-  }
-  &.italic {
-    font-style: italic;
-  }
-  &.placeholder {
-    font-style: italic;
-    color: @blue-gray;
-  }
-  &.hyperlink {
-    color: blue;
-  }
-}
-
-/* Navigator */
-.xv-navigator-header {
-  font-size: small;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: @orange;
-  padding-left: 20px;
-  border-bottom: 1px solid @near-black;
-}
-
-.xv-workspace-header {
-  color: @white;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 8px 0 0 8px;
-}
 
 /* Characteristics */
 .xv-characteristic-picker {

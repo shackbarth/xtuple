@@ -1,179 +1,207 @@
-/* 
-  Styles relating to the grid box 
+/*
+  Styles relating to the grid box
 */
 
+/**
+  This is a little hacky, but it gets rid of the border
+  that is around the entire widget.
+*/
+.xv-groupbox {
+  .in-panel {
+    border:none;
+  }
+}
 
-.xv-read-only-grid-row {
-	height: 70px;
-	border-top: 1px solid silver;
-	background-color: #CCCCCC;
-    font-size: 13px;
-    .xv-read-only {
-      width: 80px;
+/* Entire box including the grid and the summary panel */
+.xv-grid-box {
+  &.panel {
+    width: 984px;
+    padding: 0;
+  }
+
+  .xv-groupbox-buttons {
+    padding: 5px;
+    .xv-groupbox-button-center {
+      .border-radius(4px);
     }
+  }
+
+  /**
+    This is the most general grid row that
+    is not specific to read-only or selected
+  */
+  .xv-grid-row {
+    font-size: 12px;
+    border-top: @silver;
+    > * {
+      display: inline-block;
+    }
+    /**
+      This is the most general grid column
+      that is not specific to a kind of data
+    */
     .xv-grid-column {
       vertical-align: top;
-    }
-}
-.xv-read-only-grid-row > * {
-	display: inline-block;
-}
-.xv-grid-actions > * {
-	display: inline-block;
-}
+      width: 100px;
 
-.xv-grid-row {
-  background-color: @white;
-}
-
-.xv-grid-row > * {
-	display: inline-block;
-}
-
-.xv-grid-column-item {
-  width: 250px;
-}
-
-.xv-grid-column-quantity {
-  width: 100px;
-}
-.xv-grid-column-discount {
-  width: 90px;
-}
-.xv-grid-column-price {
-  width: 90px;
-}
-.xv-grid-column-schedule {
-  width: 110px;
-}
-.xv-grid-column-actions {
-  width: 90px;
-}
-
-.xv-grid-box.panel {
-  width: 984px;
-}
-.xv-grid-column {
-  padding-left: 0px;
-  padding-right: 12px;
-}
-.xv-grid-header {
-  font-size: 12px;
-  text-transform: uppercase;
-  text-align: center;
-  font-weight: bold;
-  width: 88px;
-  padding-bottom: 5px;
-}
-.xv-grid-header-line-number {
-  width: 20px !important;
-}
-
-.xv-grid-actions {
-  width: 105px;
-  padding-top: 6px;
-}
-
-.tightened-input-decorator (@width: 90px) {
-  padding: 0px;
-  width: @width;
-  input {
-    width: 80px;
-    font-size: 13px;
-  }
-}
-.xv-grid-box {
-  .enyo-fittable-columns-layout {
-    background-color: white;
-  }
-  .xv-grid-column {
-    vertical-align: top;
-    .onyx-input-decorator {
-      .tightened-input-decorator;
-    }
-    .onyx-picker-decorator {
-      padding-top: 6px;
-      .onyx-button {
-        height: 20px;
-        padding-top: 3px;
-        width: 80px;
-        font-size: 13px;
-      }
-    }
-    .xv-picker-label {
-      display: none;
-    }
-    .xv-datewidget {
-      margin-right: 10px;
-      padding-top: 0px !important;
-      .onyx-input-decorator {
-        padding: 0px;
-        width: 105px;
-        input {
-          width: 65px;
-          font-size: 13px;
+      /**
+        This is the grid header row
+      */
+      .xv-grid-header {
+        background-color: @charcoal;
+        color: @white;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-top: none;
+        border-right: 1px solid @header-gray;
+        border-bottom: 1px solid @header-gray;
+        &.last {
+          border-right: none;
         }
       }
-    }
-    .xv-numberwidget {
-      padding-top: 6px;
-      .onyx-input-decorator {
-        .tightened-input-decorator;
+      > * {
+        padding: 7px 10px;
       }
-    }
-    .xv-moneywidget {
-      .onyx-input-decorator {
-        .tightened-input-decorator;
+
+      &.line-number {
+        width: 30px;
       }
-    }
-    .xv-relationwidget {
-      .onyx-input-decorator {
-        width: 150px;
+      /**
+        TODO: There is some issue here where
+        the grid actions header is longer in the
+        read-only row. Suspect the padding.
+      */
+      &.grid-actions {
+        width: 276px !important;
+        > * {
+          display: inline-block;
+          width: 100%;
+        }
       }
-      .onyx-input {
+      &.grid-item {
+        width: 250px;
+      }
+      &.quantity {
         width: 100px;
       }
+      &.discount {
+        width: 90px;
+      }
+      &.price {
+        width: 90px;
+      }
+      &.schedule {
+        width: 110px;
+      }
     }
-    .xv-subinput {
-      width: 80px;
+
+    &.readonly {
+      background: @silver;
+      border-bottom: @header-gray;
     }
-    .xv-input {
-      padding-top: 6px;
-      width: 80px;
-    }
-    .xv-label {
-      display: none;
-    }
-    .xv-decorated-label {
-      display: none;
-    }
-    .xv-relationwidget-description {
-      text-indent: 0px;
-      padding-bottom: 0px;
-    }
-    .xv-relationwidget-secondarydescription {
-      display: none;
-    }
-    .xv-private-item-site-widget {
-      border-bottom: 0px;
-    }
-    .xv-grid-line-number {
-      width: 25px !important;
-      .xv-input-decorator {
-        width: 25px !important;
-        input {
-          width: 20px !important;
+
+    &.selected {
+      background-color: @white;
+      .xv-grid-column {
+        .onyx-input-decorator {
+          .tightened-input-decorator;
+        }
+        .onyx-picker-decorator {
+          padding-top: 6px;
+          .onyx-button {
+            height: 20px;
+            padding-top: 3px;
+            width: 80px;
+            font-size: 13px;
+          }
+        }
+        .xv-picker-label {
+          display: none;
+        }
+        .xv-datewidget {
+          margin-right: 10px;
+          padding-top: 0;
+          .onyx-input-decorator {
+            padding: 0;
+            width: 105px;
+            input {
+              width: 65px;
+              font-size: 13px;
+            }
+          }
+        }
+        .xv-numberwidget {
+          padding-top: 6px;
+          .onyx-input-decorator {
+            .tightened-input-decorator;
+          }
+        }
+        &.line-number {
+          .xv-numberwidget {
+            .onyx-input-decorator {
+              .tightened-input-decorator(30px);
+            }
+          }
+        }
+        .xv-moneywidget {
+          .onyx-input-decorator {
+            .tightened-input-decorator;
+          }
+        }
+        .xv-relationwidget {
+          .onyx-input-decorator {
+            width: 150px;
+          }
+          .onyx-input {
+            width: 100px;
+          }
+        }
+        .xv-subinput {
+          width: 80px;
+        }
+        .xv-input {
+          padding-top: 6px;
+          width: 80px;
+        }
+        .xv-label {
+          display: none;
+        }
+        .xv-decorated-label {
+          display: none;
+        }
+        .xv-relationwidget-description {
+          text-indent: 0;
+          padding-bottom: 0;
+        }
+        .xv-relationwidget-secondarydescription {
+          display: none;
+        }
+        .xv-private-item-site-widget {
+          border-bottom: 0;
+          padding: 0;
         }
       }
     }
   }
   .xv-sales-summary-panel {
-    padding-left: 0px;
-    border-width: 0px;
-  }
-  .xv-sales-summary-total-group {
-    padding-left: 0px;
-    border-width: 0px;
+    border: none;
+    margin-top: 0;
+    .xv-sales-summary-total-group {
+      padding: 0;
+      border: none;
+    }
   }
 }
+
+.tightened-input-decorator (@width: 90px) {
+  padding: 0;
+  width: @width;
+  input {
+    text-align: left;
+    width: (@width - 10px);
+    font-size: 13px;
+  }
+}
+
 
