@@ -16,7 +16,7 @@ white:true*/
     XM.SalesOrderLineListItem = XM.Model.extend({
 
       recordType: 'XM.SalesOrderLineListItem'
-    
+
     });
 
     /**
@@ -27,7 +27,7 @@ white:true*/
     XM.ShippableSalesOrderLine = XM.Model.extend({
 
       recordType: 'XM.ShippableSalesOrderLine'
-    
+
     });
 
     // ..........................................................

@@ -35,9 +35,9 @@ var lang = XT.stringsFor("en_US", {
   "_shippingAndReceiving": "Shipping and Receiving",
   "_noUnpostedSlipDupsSite": "No Unposted Dups. in a Site",
   "_noUnpostedSlipDups": "No Unposted Dups.",
-  "_noSlipDupsSite": "No Dups. in a Site", 
+  "_noSlipDupsSite": "No Dups. in a Site",
   "_useStandardCost": "Standard Costs",
-  "_useAverageCost": "Average Costs", 
+  "_useAverageCost": "Average Costs",
   "_nextShipmentNumber": "Next Shipment Number",
   "_noSlipDups": "No Slip # Duplications",
   "_number": "Number",
@@ -47,5 +47,7 @@ var lang = XT.stringsFor("en_US", {
   "_reporting": "Reporting",
 	"_shipmentNumberPolicy": "Shipment Number Policy",
   "_disableReceiptExcessQty": "Disallow PO Receipt of Qty greater than ordered",
+  "_shipment": "Shipment",
+  "_shipments": "Shipments",
   "_warnIfReceiptQtyDiffers": "Warn if PO Receipt Qty differs from receivable Qty"
 });
