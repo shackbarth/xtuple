@@ -76,6 +76,53 @@ trailing:true, white:true*/
     });
 
     // ..........................................................
+    // PURCHASE ORDER LIST
+    //
+
+    enyo.kind({
+      name: "XV.PurchaseOrderListItemParameters",
+      kind: "XV.ParameterWidget",
+      components: [
+        {kind: "onyx.GroupboxHeader", content: "_purchaseOrders".loc()},
+        {name: "open", attr: "status", label: "_open".loc(), defaultKind: "XV.CheckboxWidget",
+          getParameter: function () {
+            var param;
+            if (!this.getValue()) {
+              param = {
+                attribute: this.getAttr(),
+                operator: '=',
+                value: "O"
+              };
+            }
+            return param;
+          }
+        },
+        {name: "unReleased", attr: "status", label: "_unReleased".loc(), defaultKind: "XV.CheckboxWidget",
+          getParameter: function () {
+            var param;
+            if (!this.getValue()) {
+              param = {
+                attribute: this.getAttr(),
+                operator: '=',
+                value: "U"
+              };
+            }
+            return param;
+          }
+        },
+        {name: "number", label: "_number".loc(), attr: "number"},
+        //{name: "vendor", attr: "vendor.number", label: "_vendor".loc(), defaultKind: "XV.VendorWidget"},
+        {name: "fromDate", label: "_fromDate".loc(),
+          filterLabel: "_date".loc() + " " + "_fromDate".loc(),
+          attr: "orderDate", operator: ">=",
+          defaultKind: "XV.DateWidget"},
+        {name: "toDate", label: "_toDate".loc(),
+          filterLabel: "_date".loc() + " " + "_toDate".loc(),
+          attr: "orderDate", operator: "<=",
+          defaultKind: "XV.DateWidget"}
+      ]
+    });
+    // ..........................................................
     // SHIPMENT LIST
     //
 

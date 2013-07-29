@@ -13,7 +13,8 @@ white:true*/
 
       @extends XM.Info
     */
-    XM.VendorType = XM.Document.extend(/** @scope XM.VendorType.prototype */{
+    XM.VendorType = XM.Document.extend(/** @scope XM.VendorType.prototype */
+    {
 
       recordType: 'XM.VendorType',
 
