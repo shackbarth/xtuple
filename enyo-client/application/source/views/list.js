@@ -760,16 +760,41 @@ trailing:true, white:true*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short",
+          {kind: "XV.ListColumn", classes: "short", fit: true,
             components: [
             {kind: "XV.ListAttr", attr: "name"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "shared"}
+          {kind: "XV.ListColumn", classes: "third", components: [
+            {kind: "XV.ListAttr", attr: "shared", formatter: "formatShared"}
+          ]},
+          {kind: "XV.ListColumn", classes: "icon", components: [
+            {tag: "i", classes: "icon-remove list-icon", ontap: "removeRow"}
+          ]},
+          {kind: "XV.ListColumn", classes: "icon", components: [
+            {tag: "i", classes: "icon-signout list-icon", ontap: "shareRow"}
           ]}
         ]}
       ]}
-    ]
+    ],
+    formatShared: function (value, view, model) {
+      var shared = model.get('shared') ? "_shared".loc() : "";
+      return shared;
+    },
+    removeRow: function (inSender, inEvent) {
+      var index = inEvent.index,
+        model = this.getValue().models[index];
+      model.destroy();
+      this.reset();
+    },
+    shareRow: function (inSender, inEvent) {
+      var index = inEvent.index, that = this,
+        model = this.getValue().models[index];
+      model.set("shared", true);
+      options.success = function (model, resp, options) {
+        that.reset();
+      };
+      model.save(null, options);
+    }
   });
 
   //

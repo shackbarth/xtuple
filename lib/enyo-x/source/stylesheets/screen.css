@@ -392,6 +392,9 @@
 .pullout .xv-groupbox .xv-filter-form .top-drawer > * {
   margin-right: 10px;
 }
+.pullout .xv-groupbox .xv-filter-form .xv-list {
+  height: 150px;
+}
 .pullout .pullout-scroller {
   position: relative;
   margin-right: 4px;
@@ -2028,6 +2031,18 @@ body {
 }
 .xv-list .xv-list-item .xv-list-column.descr {
   width: 15.56em;
+}
+.xv-list .xv-list-item .xv-list-column.icon {
+  width: 1.5em;
+}
+.xv-list .xv-list-item .xv-list-column .list-icon {
+  padding: 2px;
+  color: #555555;
+  vertical-align: sub;
+  border: 1px solid #eeeeee;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 .xv-list .xv-list-item.item-selected {
   background: #226b9a url(../../../../../../assets/item-hilite.png/) repeat-x bottom;

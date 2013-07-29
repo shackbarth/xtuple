@@ -16,6 +16,7 @@
 @slate-blue: #226b9a;
 @light-blue: #35a8ee;
 @blue: #0000ff;
+@lightest-gray: #eee;
 @silver: #aaa;
 @smoke: #ddd;
 @gray: #8d8d8d;
@@ -312,6 +313,16 @@ body {
       }
       &.descr {
         width: 15.56em;
+      }
+      &.icon {
+        width: 1.5em;
+      }
+      .list-icon {
+        padding: 2px;
+        color: @charcoal;
+        vertical-align: sub;
+        border: 1px solid @lightest-gray;
+        .border-radius(2px);
       }
     }
     &.item-selected {
