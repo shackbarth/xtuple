@@ -107,14 +107,12 @@ select xt.install_js('XT','Discovery','xtuple', $$
       org = org[0].current_database;
     }
 
-    /*
-    XXX if we restrict filters for only objects with REST ORMs then we'll never be able
-    to filter for dispatchable objects that have no orm, such as
-    https://localhost/dev/discovery/v1alpha1/apis/sales/v1alpha1/rest
     if (!orms) {
-      return false;
+      if(XT.Discovery.getDispatchableObjects(orm).length === 0) {
+        /* If there are no resource, and no services, then there's nothing to see here */
+        return false;
+      }
     }
-    */
 
     /*
      * Header section.
@@ -631,7 +629,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
           ];
           objectServices[methodName] = {
             id: businessObjectName + "." + methodName,
-            path: "services/" + businessObjectNameHyphen + "/" + methodName.camelToHyphen(),
+            /* TODO: decide the path we want to put these under in restRouter, and reflect that here */
+            path: /* "services/" + */ businessObjectNameHyphen + "/" + methodName.camelToHyphen(),
             httpMethod: "POST",
             scopes: scopes,
             description: method.description,
