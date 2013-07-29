@@ -552,16 +552,22 @@ regexp:true, undef:true, trailing:true, white:true */
         changed = {},
         keys = _.keys(value),
         key,
-        set,
         i;
 
-      // Loop through the properties and update calling
-      // appropriate "set" functions and add to "changed"
-      // object if applicable
+      // Loop through the properties and update them directly,
+      // then call the appropriate "set" functions and add to "changed"
+      // object if applicable. We want to make sure that both item
+      // and site are set to their new, appropriate values before
+      // functions like itemChanged or siteChanged get called, to avoid
+      // having a mismatched old value for the fetch that those functions
+      // call.
       for (i = 0; i < keys.length; i++) {
         key = keys[i];
-        set = 'set' + key.slice(0, 1).toUpperCase() + key.slice(1);
-        this[set](value[key]);
+
+        this[key] = value[key];
+      }
+      for (i = 0; i < keys.length; i++) {
+        key = keys[i];
         if (attr[key]) {
           changed[attr[key]] = value[key];
           this[key + 'Changed']();
