@@ -398,15 +398,16 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {Number} shipment id
   */
   XM.Inventory.recallShipment = function (shipment) {
-    var sql = "select recallshipment(shiphead_id) from shiphead where shiphead_number = $1;";
+    var sql = "select recallshipment(shiphead_id) as series " +
+      "from shiphead where shiphead_number = $1;";
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("RecallOrders")) { throw new handleError("Access Denied", 401) };
 
     /* Post the transaction */
-    plv8.execute(sql, [shipment])[0].series;
+    var ret = plv8.execute(sql, [shipment])[0].series;
 
-    return;
+    return ret ? ret : true;
   };
   XM.Inventory.recallShipment.description = "Return complete shipment (only available for orders that " +
     "have not been shipped) - used in maintain shipping contents screen.";

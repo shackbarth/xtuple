@@ -45,8 +45,7 @@ trailing:true, white:true*/
         {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
       ],
       actions: [
-        {name: "issueToShipping", privilege: "issueStockToShipping", method: "issueToShipping", notify: false},
-        {name: "returnCompleteShipment", privilege: "returnStockFromShipping", method: "returnCompleteShipment", notify: false}
+        {name: "issueToShipping", privilege: "issueStockToShipping", method: "issueToShipping", notify: false}
       ],
       issueToShipping: function (inSender, inEvent) {
         inSender.bubbleUp("onIssueToShipping", inEvent, inSender);

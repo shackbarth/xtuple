@@ -175,10 +175,12 @@ trailing:true, white:true*/
       kind: "XV.List",
       label: "_shipments".loc(),
       collection: "XM.ShipmentCollection",
-      actions: [
-        {name: "recallShipment", method: "recallShipment", prerequisite: "canRecall",
-          notifyMessage: "_recallShipment?".loc()}
-      ],
+      actions: [{
+        name: "recallShipment",
+        method: "doRecallShipment",
+        prerequisite: "canRecallShipment",
+        notifyMessage: "_recallShipment?".loc()
+      }],
       query: {orderBy: [
         {attribute: 'shipDate'}
       ]},
@@ -192,16 +194,20 @@ trailing:true, white:true*/
                 {kind: "XV.ListAttr", attr: "order.customer.name", fit: true, classes: "right"}
               ]},
               {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "orderType"},
                 {kind: "XV.ListAttr", attr: "order.number", classes: "right"}
               ]}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "shipDate"},
-              {kind: "XV.ListAttr", attr: "isShipped"}
+              {kind: "XV.ListAttr", attr: "shipDate"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
               {kind: "XV.ListAttr", attr: "freight", formatter: "formatExtendedPrice"},
               {kind: "XV.ListAttr", attr: "currency"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "isShipped"},
+              {kind: "XV.ListAttr", attr: "isInvoicePosted"}
             ]}
           ]}
         ]}

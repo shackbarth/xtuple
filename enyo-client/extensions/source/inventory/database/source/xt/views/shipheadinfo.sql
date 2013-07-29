@@ -1,11 +1,14 @@
 select xt.create_view('xt.shipheadinfo', $$
 
-  select distinct shiphead.*, current_date as trans_date, COALESCE(invchead_posted, false) as invoice_posted
+  select distinct shiphead.*, 
+    current_date as trans_date, 
+    case when invchead_id is not null then true else false end as isInvoiced, 
+    COALESCE(invchead_posted, false) as isInvoicePosted
   from shiphead
     left join shipitem on shiphead_id = shipitem_shiphead_id
     left join invcitem ON (invcitem_id=shipitem_invcitem_id)
     left join invchead ON (invchead_id=invcitem_invchead_id)
-  where shiphead_shipped; 
+  ; 
 
 $$, false);
 
