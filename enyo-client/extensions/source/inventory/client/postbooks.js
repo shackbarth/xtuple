@@ -41,9 +41,9 @@ trailing:true, white:true*/
       name: "inventory",
       label: "_inventory".loc(),
       panels: [
-        {name: "purchaseOrderList", kind: "XV.PurchaseOrderList"},
         {name: "shipmentList", kind: "XV.ShipmentList"},
-        {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
+        {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"},
+        {name: "vendorList", kind: "XV.VendorList"}
       ],
       actions: [
         {name: "issueToShipping", privilege: "issueStockToShipping", method: "issueToShipping", notify: false},

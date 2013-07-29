@@ -16,4 +16,16 @@ regexp:true, undef:true, trailing:true, white:true */
     list: "XV.PurchaseOrderList"
   });
 
+  // ..........................................................
+  // VENDOR
+  //
+
+  enyo.kind({
+    name: "XV.VendorWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.VendorRelationCollection",
+    keyAttribute: "number",
+    list: "XV.VendorList"
+  });
+
 }());

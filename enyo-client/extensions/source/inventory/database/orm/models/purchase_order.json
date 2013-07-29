@@ -507,9 +507,10 @@
       },
       {
         "name": "purchaseOrder",
-        "attr": {
-          "type": "Number",
-          "column": "poitem_pohead_id"
+        "toOne": {
+          "type": "PurchaseOrderRelation",
+          "column": "poitem_pohead_id",
+          "isNested": true
          }
       },
       {

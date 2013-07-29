@@ -26,14 +26,21 @@ white:true*/
 
       @extends XM.Info
     */
-    XM.VendorRelation = XM.Info.extend({
-      /** @scope XM.VendorRelation.prototype */
+    XM.VendorRelation = XM.Document.extend(/** @scope XM.VendorRelation.prototype */{
 
-      recordType: 'XM.VendorRelation'
+      recordType: 'XM.VendorRelation',
+
+      documentKey: "number"
+
+      //editableModel: 'XM.Vendor'
 
       //numberKey: "number"
 
     });
+
+    // ..........................................................
+    // COLLECTIONS
+    //
 
     /**
       @class
