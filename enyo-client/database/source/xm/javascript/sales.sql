@@ -151,6 +151,18 @@ select xt.install_js('XM','Sales','xtuple', $$
     }
     return JSON.stringify(results);
   };
+  XM.Sales.freightDetail.description = "Returns an array of freight detail records based on input";
+  XM.Sales.freightDetail.params = {
+   customerId: {type: "Number", description: "Customer ID"},
+   shiptoId: {type: "Number", description: "Shipto ID"},
+   shipZoneId: {type: "Number", description: "Ship Zone ID"},
+   orderDate: {type: "Date", description: "Quote Date"},
+   shipVia: {type: "String", description: "Ship Via"},
+   currencyId: {type: "Number", description: "Currency ID"},
+   siteId: {type: "Number", description: "Site ID"},
+   freightClassId: {type: "Number", description: "Freight Class ID"},
+   weight: {type: "Number", description: "Weight"}
+  };
 
   /* 
   Return Sales configuration settings.

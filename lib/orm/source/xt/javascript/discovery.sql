@@ -108,7 +108,10 @@ select xt.install_js('XT','Discovery','xtuple', $$
     }
 
     if (!orms) {
-      return false;
+      if(XT.Discovery.getDispatchableObjects(orm).length === 0) {
+        /* If there are no resource, and no services, then there's nothing to see here */
+        return false;
+      }
     }
 
     /*
@@ -257,6 +260,10 @@ select xt.install_js('XT','Discovery','xtuple', $$
       }
     }
 
+    /*
+     * Services section.
+     */
+    discovery.services = XT.Discovery.getServices(orm, rootUrl);
 
     /* return the results */
     return discovery;
@@ -322,7 +329,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
 
     return auth;
   };
-
 
   /**
    * Return an API Discovery document's Resources section for this database's ORM where isRest = true.
@@ -558,6 +564,89 @@ select xt.install_js('XT','Discovery','xtuple', $$
     return resources;
   };
 
+  XT.Discovery.getDispatchableObjects = function (orm) {
+    var dispatchableObjects = [];
+    for (var businessObjectName in XM) {
+      var businessObject = XM[businessObjectName];
+      if(businessObject.isDispatchable &&
+          (!orm || businessObjectName === orm)) {
+        dispatchableObjects.push(businessObjectName);
+      }
+    }
+    return dispatchableObjects;
+  };
+
+  /**
+   * Return an API Discovery document's Services section.
+   *
+   * @param {String} Optional. An orm_type name like "Contact".
+   * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
+   * @returns {Object}
+   */
+  XT.Discovery.getServices = function(orm, rootUrl) {
+    var resources = {},
+      org = XT.currentDb(),
+      dispatchableObjects = XT.Discovery.getDispatchableObjects(orm),
+      i,
+      businessObject,
+      businessObjectName,
+      method,
+      methodName,
+      methodParam,
+      methodParamName,
+      objectServices,
+      allServices = {},
+      version = "v1alpha1";
+
+    rootUrl = rootUrl || "{rootUrl}";
+
+    if (!org) {
+      return false;
+    }
+
+    for (i = 0; i < dispatchableObjects.length; i++) {
+      businessObjectName = dispatchableObjects[i];
+      businessObject = XM[businessObjectName];
+      objectServices = {};
+      for (methodName in businessObject) {
+        method = businessObject[methodName];
+        /* 
+        Report only on documented dispatch methods. We document the methods by
+        tacking description and params attributes onto the function.
+        */
+        if (typeof method === 'function' && method.description && method.params) {
+          for (methodParamName in method.params) {
+            /* The parameter location is query unless otherwise specified */
+            methodParam = method.params[methodParamName];
+            if(!methodParam.location) {
+              methodParam.location = "query";
+            }
+          }
+          var businessObjectNameHyphen = businessObjectName.camelToHyphen();
+          var scopes = [
+            rootUrl + org + "/auth",
+            rootUrl + org + "/auth/" + businessObjectNameHyphen,
+          ];
+          objectServices[methodName] = {
+            id: businessObjectName + "." + methodName,
+            /* TODO: decide the path we want to put these under in restRouter, and reflect that here */
+            path: /* "services/" + */ businessObjectNameHyphen + "/" + methodName.camelToHyphen(),
+            httpMethod: "POST",
+            scopes: scopes,
+            description: method.description,
+            parameters: method.params, 
+            parameterOrder: Object.keys(method.params)
+          };
+        }
+      }
+      if(Object.keys(objectServices).length > 0) {
+        /* only return objects with >= 1 documented dispatch function */
+        allServices[businessObjectName] = {methods: objectServices};
+      }
+    }
+    return allServices;
+  };
+
 
   /*
    * Helper function to convert date to string in yyyyMMdd format.
@@ -687,13 +776,15 @@ select xt.install_js('XT','Discovery','xtuple', $$
       }
 
       /* Find the related ORMs. */
-      for (var prop in thisOrm.properties) {
-        var relation;
+      if(thisOrm) {
+        for (var prop in thisOrm.properties) {
+          var relation;
 
-        if (thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany) {
-          relation = thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany;
-          if (relation.type) {
-            relations.push(relation.type);
+          if (thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany) {
+            relation = thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany;
+            if (relation.type) {
+              relations.push(relation.type);
+            }
           }
         }
       }
