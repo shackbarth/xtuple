@@ -526,11 +526,11 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.sitePicker.setValue(site, {silent: true});
       if (site) {
         this.$.privateItemSiteWidget.addParameter({
-          attribute: "site",
-          value: site
+          attribute: "site.code",
+          value: site.id ? site.id : site
         }, true);
       } else {
-        this.$.privateItemSiteWidget.removeParameter("site");
+        this.$.privateItemSiteWidget.removeParameter("site.code");
       }
       this.itemChanged();
     },
