@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -83,7 +83,7 @@ white:true*/
       var status = this.get('status'),
 	date = new Date(), K = XM.Project;
       if (status === K.IN_PROCESS && !this.get('assignDate')) {
-      	this.set('assignDate', date);
+        this.set('assignDate', date);
       } else if (status === K.COMPLETED && !this.get('completeDate')) {
         this.set('completeDate', date);
       }
@@ -584,6 +584,18 @@ white:true*/
     recordType: 'XM.TaskRelation',
 
     editableModel: 'XM.Task'
+
+  });
+
+    /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.TaskProjectRelation = XM.Info.extend({
+    /** @scope XM.TaskProjectRelation.prototype */
+
+    recordType: 'XM.TaskProjectRelation'
 
   });
 

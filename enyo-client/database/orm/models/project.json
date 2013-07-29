@@ -708,6 +708,41 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "TaskProjectRelation",
+    "table": "xt.prjinfo",
+    "isRest": true,
+    "comment": "Task Project Relation Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "prj_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "prj_number",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "prj_name"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "TaskRelation",
     "table": "prjtask",
     "isRest": true,
@@ -741,7 +776,7 @@
        "name": "project",
        "toOne": {
          "isNested": true,
-         "type": "ProjectRelation",
+         "type": "TaskProjectRelation",
          "column": "prjtask_prj_id"
        }
      },

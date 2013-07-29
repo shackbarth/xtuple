@@ -305,6 +305,9 @@
 .dashboard .selectable-chart .chart-title-bar {
   width: 500px;
 }
+.dashboard .nvtooltip {
+  color: black;
+}
 .selectable-chart {
   margin: 10px;
   color: #ffffff;
