@@ -48,6 +48,9 @@ Globalize:true */
     ],
     valueChanged: function () {
       var model = this.getValue();
+      if (!model) {
+        return;
+      }
       this.$.lineNumber.setContent(model.get("lineNumber"));
       this.$.itemNumber.setContent(model.getValue("item.number"));
       this.$.itemDescription.setContent(model.getValue("item.description1"));
