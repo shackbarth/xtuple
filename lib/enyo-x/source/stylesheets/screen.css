@@ -348,6 +348,7 @@
 }
 .xv-grid-box .xv-grid-row .grid-actions {
   display: block;
+  padding-left: 30px;
   width: 276px !important;
 }
 .xv-grid-box .xv-grid-row .grid-actions > * {
