@@ -314,30 +314,22 @@
 .xv-grid-box .xv-grid-row {
   font-size: 12px;
   border-top: #aaaaaa;
+  vertical-align: top;
   /**
-      This is the most general grid column
-      that is not specific to a kind of data
+      This is the grid header row
+    */
+
+  /**
+      TODO: There is some issue here where
+      the grid actions header is longer in the
+      read-only row. Suspect the padding.
     */
 
 }
 .xv-grid-box .xv-grid-row > * {
   display: inline-block;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column {
-  vertical-align: top;
-  width: 100px;
-  /**
-        This is the grid header row
-      */
-
-  /**
-        TODO: There is some issue here where
-        the grid actions header is longer in the
-        read-only row. Suspect the padding.
-      */
-
-}
-.xv-grid-box .xv-grid-row .xv-grid-column .xv-grid-header {
+.xv-grid-box .xv-grid-row .xv-grid-header {
   background-color: #555555;
   color: #ffffff;
   font-size: 12px;
@@ -347,35 +339,38 @@
   border-right: 1px solid #4c4c4c;
   border-bottom: 1px solid #4c4c4c;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column .xv-grid-header.last {
+.xv-grid-box .xv-grid-row .xv-grid-header.last {
   border-right: none;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column > * {
+.xv-grid-box .xv-grid-row > * {
   padding: 7px 10px;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column.line-number {
+.xv-grid-box .xv-grid-row .line-number {
   width: 30px;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column.grid-actions {
+.xv-grid-box .xv-grid-row.grid-actions {
   width: 276px !important;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column.grid-actions > * {
+.xv-grid-box .xv-grid-row.grid-actions > * {
   display: inline-block;
   width: 100%;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column.grid-item {
+.xv-grid-box .xv-grid-row .grid-item {
+  vertical-align: top;
   width: 250px;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column.quantity {
+.xv-grid-box .xv-grid-row .quantity {
+  vertical-align: top;
   width: 100px;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column.discount {
+.xv-grid-box .xv-grid-row .discount {
+  vertical-align: top;
   width: 90px;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column.price {
+.xv-grid-box .xv-grid-row .price {
   width: 90px;
 }
-.xv-grid-box .xv-grid-row .xv-grid-column.schedule {
+.xv-grid-box .xv-grid-row .schedule {
   width: 110px;
 }
 .xv-grid-box .xv-grid-row.readonly {

@@ -6,47 +6,46 @@ Globalize:true */
 (function () {
 
   enyo.kind({
+    name: "XV.SalesOrderLineItemHeaders",
+    classes: "xv-grid-row",
+    components: [
+      {name: "headerLineNumber", classes: "xv-grid-header line-number", content: "#" },
+      {name: "headerItemSite", classes: "xv-grid-header grid-item", content: "_item".loc()},
+      {name: "headerQuantity", classes: "xv-grid-header quantity", content: "_quantity".loc()},
+      {name: "headerDiscount", classes: "xv-grid-header discount", content: "_discount".loc()},
+      {name: "headerPrice", classes: "xv-grid-header price", content: "_price".loc()},
+      {name: "headerScheduleDate", classes: "xv-grid-header schedule", content: "_schedDate".loc()}
+    ]
+  });
+
+  enyo.kind({
     name: "XV.SalesOrderLineItemReadOnlyGridRow",
     kind: "XV.ReadOnlyGridRow",
     components: [
       {classes: "xv-grid-column line-number", components: [
-        {name: "headerLineNumber", classes: "xv-grid-header", content: "#" },
         {name: "lineNumber"}
       ]},
       {kind: "FittableRows", classes: "xv-grid-column grid-item", components: [
-        {name: "headerItemSite", classes: "xv-grid-header", content: "_item".loc()},
         {name: "itemNumber"},
         {name: "itemDescription"},
         {name: "siteCode"},
       ]},
       {kind: "FittableRows", classes: "xv-grid-column quantity", components: [
-        {name: "headerQuantity", classes: "xv-grid-header", content: "_quantity".loc()},
         {name: "quantity"},
         {name: "quantityUnit"}
       ]},
       {kind: "FittableRows", classes: "xv-grid-column discount", components: [
-        {name: "headerDiscount", classes: "xv-grid-header", content: "_discount".loc()},
-        {name: "discount",}
+        {name: "discount"}
       ]},
       {kind: "FittableRows", classes: "xv-grid-column price", components: [
-        {name: "headerPrice", classes: "xv-grid-header", content: "_price".loc()},
-        {name: "price",},
+        {name: "price"},
           // scale: XT.SALES_PRICE_SCALE},
         {name: "priceUnit", classes: "xv-read-only" },
         {name: "extendedPrice"}
           //currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
       ]},
       {classes: "xv-grid-column schedule", components: [
-        {name: "headerScheduleDate", classes: "xv-grid-header", content: "_schedDate".loc()},
         {name: "scheduleDate"}
-      ]},
-      {classes: "xv-grid-column grid-actions", components: [
-        {name: "headerAction", classes: "xv-grid-header last", content: "_actions".loc()},
-        {components: [
-          {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton" },
-          {kind: "enyo.Button", classes: "icon-eye-open", name: "expandGridRowButton" },
-          {kind: "enyo.Button", classes: "icon-remove", name: "deleteGridRowButton" }
-        ]}
       ]}
     ],
     valueChanged: function () {
@@ -64,7 +63,6 @@ Globalize:true */
       this.$.extendedPrice.setContent(Globalize.format(XT.math.round(model.get("extendedPrice"),
         XT.EXTENDED_PRICE_SCALE), "n" + XT.EXTENDED_PRICE_SCALE));
       this.$.scheduleDate.setContent(Globalize.format(model.get("scheduleDate"), "d"));
-
     }
   });
 
@@ -81,13 +79,11 @@ Globalize:true */
       // each field is grouped with its column header so that the alignment always
       // works out. All but the first column header will be invisible.
       {kind: "FittableRows", classes: "xv-grid-column line-number", components: [
-        {name: "headerLineNumber", classes: "xv-grid-header", content: "#"},
-        // Using XV.NumberWidget instead of XV.Number here (and below) because
+        // Using XV.NumberWidget instead of XV.Number here (and elsewhere) because
         // of the pretty rounded corners, even though we have to hide the label with css
         {kind: "XV.NumberWidget", attr: "lineNumber"}
       ]},
       {kind: "FittableRows", classes: "xv-grid-column grid-item", components: [
-        {name: "headerItemSite", classes: "xv-grid-header", content: "_item".loc()},
         {kind: "XV.ItemSiteWidget", attr:
           {item: "item", site: "site"},
           name: "itemSiteWidget",
@@ -99,16 +95,13 @@ Globalize:true */
         ]}},
       ]},
       {kind: "FittableRows", classes: "xv-grid-column quantity", components: [
-        {name: "headerQuantity", classes: "xv-grid-header", content: "_quantity".loc()},
         {kind: "XV.QuantityWidget", attr: "quantity"},
         {kind: "XV.UnitPickr", attr: "quantityUnit", name: "quantityUnitPicker" }
       ]},
       {kind: "FittableRows", classes: "xv-grid-column discount", components: [
-        {name: "headerDiscount", classes: "xv-grid-header", content: "_discount".loc()},
         {kind: "XV.PercentWidget", name: "discount", attr: "discount" }
       ]},
       {kind: "FittableRows", classes: "xv-grid-column price", components: [
-        {name: "headerPrice", classes: "xv-grid-header", content: "_price".loc()},
         {kind: "XV.MoneyWidget", attr:
           {localValue: "price", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.SALES_PRICE_SCALE},
@@ -118,11 +111,9 @@ Globalize:true */
           currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
       ]},
       {kind: "FittableRows", classes: "xv-grid-column schedule", components: [
-        {name: "headerScheduleDate", classes: "xv-grid-header", content: "_schedDate".loc()},
         {kind: "XV.DateWidget", attr: "scheduleDate"}
       ]},
       {kind: "FittableRows", classes: "xv-grid-column grid-actions", components: [
-        {name: "headerAction", classes: "xv-grid-header last", content: "_actions".loc()},
         {components: [
           {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton" },
           {kind: "enyo.Button", classes: "icon-eye-open", name: "expandGridRowButton" },
@@ -143,6 +134,7 @@ Globalize:true */
       {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", fit: true, horizontal: "auto", components: [
         {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
+          {kind: "XV.SalesOrderLineItemHeaders"},
           {kind: "List", name: "aboveGridList", onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
             { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
           ]},

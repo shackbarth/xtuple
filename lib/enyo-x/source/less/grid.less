@@ -36,64 +36,60 @@
     > * {
       display: inline-block;
     }
+    vertical-align: top;
+
     /**
-      This is the most general grid column
-      that is not specific to a kind of data
+      This is the grid header row
     */
-    .xv-grid-column {
+    .xv-grid-header {
+      background-color: @charcoal;
+      color: @white;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-top: none;
+      border-right: 1px solid @header-gray;
+      border-bottom: 1px solid @header-gray;
+      &.last {
+        border-right: none;
+      }
+    }
+    > * {
+      padding: 7px 10px;
+    }
+
+    .line-number {
+      width: 30px;
+    }
+    /**
+      TODO: There is some issue here where
+      the grid actions header is longer in the
+      read-only row. Suspect the padding.
+    */
+    &.grid-actions {
+      width: 276px !important;
+      > * {
+        display: inline-block;
+        width: 100%;
+      }
+    }
+    .grid-item {
+      vertical-align: top;
+      width: 250px;
+    }
+    .quantity {
       vertical-align: top;
       width: 100px;
-
-      /**
-        This is the grid header row
-      */
-      .xv-grid-header {
-        background-color: @charcoal;
-        color: @white;
-        font-size: 12px;
-        font-weight: bold;
-        text-transform: uppercase;
-        border-top: none;
-        border-right: 1px solid @header-gray;
-        border-bottom: 1px solid @header-gray;
-        &.last {
-          border-right: none;
-        }
-      }
-      > * {
-        padding: 7px 10px;
-      }
-
-      &.line-number {
-        width: 30px;
-      }
-      /**
-        TODO: There is some issue here where
-        the grid actions header is longer in the
-        read-only row. Suspect the padding.
-      */
-      &.grid-actions {
-        width: 276px !important;
-        > * {
-          display: inline-block;
-          width: 100%;
-        }
-      }
-      &.grid-item {
-        width: 250px;
-      }
-      &.quantity {
-        width: 100px;
-      }
-      &.discount {
-        width: 90px;
-      }
-      &.price {
-        width: 90px;
-      }
-      &.schedule {
-        width: 110px;
-      }
+    }
+    .discount {
+      vertical-align: top;
+      width: 90px;
+    }
+    .price {
+      width: 90px;
+    }
+    .schedule {
+      width: 110px;
     }
 
     &.readonly {
