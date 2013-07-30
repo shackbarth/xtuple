@@ -757,6 +757,17 @@ trailing:true, white:true*/
     kind: "XV.List",
     label: "_filters".loc(),
     collection: "XM.FilterCollection",
+    query: {
+      orderBy: [{
+        attribute: 'name'
+      }]
+    },
+    events: {
+      onCollectionChange: ""
+    },
+    handlers: {
+      onModelChange: "",
+    },
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -776,23 +787,38 @@ trailing:true, white:true*/
         ]}
       ]}
     ],
+    valueChanged: function () {
+      this.inherited(arguments);
+      // bind enyo event to add/remove on collection of models
+      this.getValue().on("add", this.doCollectionChange(), this);
+      this.getValue().on("remove", this.doCollectionChange(), this);
+    },
     formatShared: function (value, view, model) {
-      var shared = model.get('shared') ? "_shared".loc() : "";
+      var shared = model && model.get('shared') ? "_shared".loc() : "";
       return shared;
     },
     removeRow: function (inSender, inEvent) {
       var index = inEvent.index,
-        model = this.getValue().models[index];
-      model.destroy();
-      this.reset();
+        value = this.getValue(),
+        model = value.models[index],
+        that = this;
+      inEvent.model = model;
+      inEvent.done = function () {
+        // this row has been removed
+        that.doCollectionChange();
+      };
+      this.deleteItem(inEvent);
     },
     shareRow: function (inSender, inEvent) {
-      var index = inEvent.index, that = this,
+      var options = {},
+        index = inEvent.index,
+        that = this,
         model = this.getValue().models[index];
       model.set("shared", true);
       options.success = function (model, resp, options) {
         that.reset();
       };
+      // TODO: this isn't saving because it isn't dirty
       model.save(null, options);
     }
   });
