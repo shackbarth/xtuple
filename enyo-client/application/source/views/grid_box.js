@@ -9,12 +9,12 @@ Globalize:true */
     name: "XV.SalesOrderLineItemHeaders",
     classes: "xv-grid-row",
     components: [
-      {name: "headerLineNumber", classes: "xv-grid-header line-number", content: "#" },
-      {name: "headerItemSite", classes: "xv-grid-header grid-item", content: "_item".loc()},
-      {name: "headerQuantity", classes: "xv-grid-header quantity", content: "_quantity".loc()},
-      {name: "headerDiscount", classes: "xv-grid-header discount", content: "_discount".loc()},
-      {name: "headerPrice", classes: "xv-grid-header price", content: "_price".loc()},
-      {name: "headerScheduleDate", classes: "xv-grid-header schedule", content: "_schedDate".loc()}
+      {classes: "xv-grid-header line-number", content: "#" },
+      {classes: "xv-grid-header grid-item", content: "_item".loc()},
+      {classes: "xv-grid-header quantity", content: "_quantity".loc()},
+      {classes: "xv-grid-header discount", content: "_discount".loc()},
+      {classes: "xv-grid-header price", content: "_price".loc()},
+      {classes: "xv-grid-header schedule", content: "_schedDate".loc()}
     ]
   });
 
@@ -25,24 +25,22 @@ Globalize:true */
       {classes: "xv-grid-column line-number", components: [
         {name: "lineNumber"}
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column grid-item", components: [
+      {classes: "xv-grid-column grid-item", components: [
         {name: "itemNumber"},
         {name: "itemDescription"},
         {name: "siteCode"},
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column quantity", components: [
+      {classes: "xv-grid-column quantity", components: [
         {name: "quantity"},
         {name: "quantityUnit"}
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column discount", components: [
+      {classes: "xv-grid-column discount", components: [
         {name: "discount"}
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column price", components: [
+      {classes: "xv-grid-column price", components: [
         {name: "price"},
-          // scale: XT.SALES_PRICE_SCALE},
-        {name: "priceUnit", classes: "xv-read-only" },
+        {name: "priceUnit"},
         {name: "extendedPrice"}
-          //currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
       ]},
       {classes: "xv-grid-column schedule", components: [
         {name: "scheduleDate"}
@@ -78,12 +76,12 @@ Globalize:true */
     components: [
       // each field is grouped with its column header so that the alignment always
       // works out. All but the first column header will be invisible.
-      {kind: "FittableRows", classes: "xv-grid-column line-number", components: [
+      {classes: "xv-grid-column line-number", components: [
         // Using XV.NumberWidget instead of XV.Number here (and elsewhere) because
         // of the pretty rounded corners, even though we have to hide the label with css
         {kind: "XV.NumberWidget", attr: "lineNumber"}
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column grid-item", components: [
+      {classes: "xv-grid-column grid-item", components: [
         {kind: "XV.ItemSiteWidget", attr:
           {item: "item", site: "site"},
           name: "itemSiteWidget",
@@ -94,14 +92,14 @@ Globalize:true */
           {attribute: "isActive", value: true}
         ]}},
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column quantity", components: [
+      {classes: "xv-grid-column quantity", components: [
         {kind: "XV.QuantityWidget", attr: "quantity"},
         {kind: "XV.UnitPickr", attr: "quantityUnit", name: "quantityUnitPicker" }
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column discount", components: [
+      {classes: "xv-grid-column discount", components: [
         {kind: "XV.PercentWidget", name: "discount", attr: "discount" }
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column price", components: [
+      {classes: "xv-grid-column price", components: [
         {kind: "XV.MoneyWidget", attr:
           {localValue: "price", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.SALES_PRICE_SCALE},
@@ -110,10 +108,10 @@ Globalize:true */
           {localValue: "extendedPrice", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column schedule", components: [
+      {classes: "xv-grid-column schedule", components: [
         {kind: "XV.DateWidget", attr: "scheduleDate"}
       ]},
-      {kind: "FittableRows", classes: "xv-grid-column grid-actions", components: [
+      {classes: "xv-grid-column grid-actions", components: [
         {components: [
           {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton" },
           {kind: "enyo.Button", classes: "icon-eye-open", name: "expandGridRowButton" },

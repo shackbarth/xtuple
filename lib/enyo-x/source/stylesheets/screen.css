@@ -386,8 +386,6 @@
   background-color: #ffffff;
   border: 1px solid #f49200;
   border-top: 1px solid #f49200;
-  border-left: 1px solid #f49200;
-  border-right: 1px solid #f49200;
   border-bottom: 1px solid #f49200;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
