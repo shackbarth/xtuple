@@ -319,6 +319,10 @@ select xt.install_js('XT','Discovery','xtuple', $$
         "description": "Manage " + orms[i].orm_type + " resources"
       };
 
+      if (!thisOrm.privileges) {
+        plv8.elog(ERROR, "ORM Fail, missing privileges: " + ormNamespace + "." + ormType);
+      }
+
       /* Only include readonly if privileges are read only. */
       if (!thisOrm.privileges.all.create && !thisOrm.privileges.all.update && !thisOrm.privileges.all.delete) {
         auth.oauth2.scopes[rootUrl + org + "/auth/" + ormTypeHyphen + ".readonly"] = {
@@ -610,7 +614,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       objectServices = {};
       for (methodName in businessObject) {
         method = businessObject[methodName];
-        /* 
+        /*
         Report only on documented dispatch methods. We document the methods by
         tacking description and params attributes onto the function.
         */
@@ -634,7 +638,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
             httpMethod: "POST",
             scopes: scopes,
             description: method.description,
-            parameters: method.params, 
+            parameters: method.params,
             parameterOrder: Object.keys(method.params)
           };
         }
