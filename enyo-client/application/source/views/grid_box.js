@@ -135,7 +135,7 @@ Globalize:true */
         {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
           {kind: "XV.SalesOrderLineItemHeaders"},
-          {kind: "List", name: "aboveGridList", onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
+          {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list", onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
             { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
           ]},
           {kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false},

@@ -311,6 +311,9 @@
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
+.xv-grid-box .xv-above-grid-list {
+  border: 0px;
+}
 .xv-grid-box .xv-grid-row {
   font-size: 12px;
   border-top: #aaaaaa;
@@ -377,11 +380,15 @@
   width: 110px;
 }
 .xv-grid-box .xv-grid-row.readonly {
-  background: #aaaaaa;
-  border-bottom: #4c4c4c;
+  background: #f8f8ff;
 }
 .xv-grid-box .xv-grid-row.selected {
   background-color: #ffffff;
+  border: 1px solid #f49200;
+  border-top: 1px solid #f49200;
+  border-left: 1px solid #f49200;
+  border-right: 1px solid #f49200;
+  border-bottom: 1px solid #f49200;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
   padding: 0;

@@ -26,6 +26,10 @@
     }
   }
 
+  .xv-above-grid-list {
+    border: 0px;
+  }
+
   /**
     This is the most general grid row that
     is not specific to read-only or selected
@@ -96,12 +100,16 @@
     }
 
     &.readonly {
-      background: @silver;
-      border-bottom: @header-gray;
+      background: @ghost;
     }
 
     &.selected {
       background-color: @white;
+      border: 1px solid @bright-orange;
+      border-top: 1px solid @bright-orange;
+      border-left: 1px solid @bright-orange;
+      border-right: 1px solid @bright-orange;
+      border-bottom: 1px solid @bright-orange;
       .xv-grid-column {
         .onyx-input-decorator {
           .tightened-input-decorator;
