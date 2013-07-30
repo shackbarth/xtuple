@@ -47,6 +47,7 @@
   },
   "main": "node-datasource/main.js",
   "scripts": {
+    "test-build": "mocha test/mocha/database/build_database.js",
     "test": "mocha test/mocha/models/honorific.js"
   }
 }

@@ -165,6 +165,7 @@ var _ = require("underscore"),
       timeoutId,
       model = data.model,
       modelCallback = function () {
+        console.log("model callback", model.getStatusString());
         var status = model.getStatus(),
           K = XM.Model;
         if (status === K.READY_CLEAN) {
@@ -178,9 +179,13 @@ var _ = require("underscore"),
         }
       };
 
+    console.log(model.id);
     //assert.equal(JSON.stringify(model.validate(model.attributes)), undefined);
     model.on('statusChange', modelCallback);
     model.save(null, {
+      success: function () {
+        console.log("success", arguments);
+      },
       error: function (model, error, options) {
         clearTimeout(timeoutId);
         assert.fail(JSON.stringify(error) || "Unspecified error", "");
@@ -190,6 +195,7 @@ var _ = require("underscore"),
 
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
+      console.log(JSON.stringify(data.model.validate(data.model.attributes)));
       assert.fail("timeout was reached on save " + data.recordType, "");
       callback();
     }, waitTime);

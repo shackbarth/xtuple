@@ -20,6 +20,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     to fit with the native callback of XT.dataSource.
    */
   var queryDatabase = exports.queryDatabase = function (functionName, payload, session, callback) {
+    console.log("query database", arguments);
     var exposedFunctions = ["delete", "get", "patch", "post"],
       query,
       queryOptions,
@@ -29,6 +30,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       buffer,
       binaryData,
       adaptorCallback = function (err, res) {
+        console.log("adaptor callback", arguments);
         var data,
             status;
 
@@ -47,6 +49,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           } catch (error) {
             data = {isError: true, status: "Cannot parse data"};
           }
+          console.log("here", data, res.status, res.debug);
           callback({
             data: data,
             status: res.status,
@@ -92,6 +95,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (err) {
         res.send(500, {data: err});
       } else {
+        console.log("sending data", resp);
         res.send({data: resp});
       }
     };
