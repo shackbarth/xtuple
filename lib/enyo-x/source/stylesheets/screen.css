@@ -322,12 +322,6 @@
       This is the grid header row
     */
 
-  /**
-      TODO: There is some issue here where
-      the grid actions header is longer in the
-      read-only row. Suspect the padding.
-    */
-
 }
 .xv-grid-box .xv-grid-row > * {
   display: inline-block;
@@ -352,10 +346,11 @@
   vertical-align: top;
   width: 30px;
 }
-.xv-grid-box .xv-grid-row.grid-actions {
+.xv-grid-box .xv-grid-row .grid-actions {
+  display: block;
   width: 276px !important;
 }
-.xv-grid-box .xv-grid-row.grid-actions > * {
+.xv-grid-box .xv-grid-row .grid-actions > * {
   display: inline-block;
   width: 100%;
 }
