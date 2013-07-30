@@ -2552,6 +2552,9 @@ body {
   padding: 14px 8px 8px 8px;
   text-align: right;
 }
+.xv-short-textarea .xv-textarea-input {
+  min-height: 0px;
+}
 .xv-textarea-input {
   width: 90%;
   height: 100%;

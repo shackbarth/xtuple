@@ -46,5 +46,7 @@
     "node": "0.8.x"
   },
   "main": "node-datasource/main.js",
-  "scripts": {}
+  "scripts": {
+    "test": "mocha test/mocha/models/honorific.js"
+  }
 }

@@ -273,6 +273,18 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return;
   };
+  XM.Inventory.adjustment.description = "Perform Inventory Adjustments.";
+  XM.Inventory.adjustment.params = {
+    itemSite: {type: "String", description: "UUID of itemSite"},
+    quantity: {type: "Number", description: "Quantity" },
+    options: {type: "Object", description: "Other attributes", attributes: {
+      detail: {type: "Array", description: "Distribution detail"},
+      asOf: {type: "Date", description: "Transaction Timestamp, default to now()"},
+      docNumber: {type: "String", description: "Document Number"},
+      notes: {type: "String", description: "Notes"},
+      value: {type: "String", description: "Value"}
+    }}
+  };
 
   /**
     Issue to shipping.
@@ -327,6 +339,16 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return;
   };
+  XM.Inventory.issueToShipping.description = "Issue to Shipping.";
+  XM.Inventory.issueToShipping.params = {
+    orderLine: { type: "String", description: "Order line UUID" },
+    quantity: {type: "Number", description: "Quantity" },
+    options: {type: "Object", description: "Other attributes", attributes: {
+      asOf: {type: "Date", description: "Transaction Timestamp. Default to now()."},
+      detail: {type: "Array", description: "Distribution detail" }
+    }}
+  };
+
 
   /**
     Return shipment transactions.
@@ -355,6 +377,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return;
   };
+  XM.Inventory.returnFromShipping.description = "Return shipment transactions.";
+  XM.Inventory.returnFromShipping.params = {
+    orderLine: { type: "String", description: "Order line UUID" }
+  };
 
   /**
     Return complete shipment (only available for orders that have not been shipped) - used in maintain shipping contents screen.
@@ -372,15 +398,21 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {Number} shipment id
   */
   XM.Inventory.recallShipment = function (shipment) {
-    var sql = "select recallshipment(shiphead_id) from shiphead where shiphead_number = $1;";
+    var sql = "select recallshipment(shiphead_id) as series " +
+      "from shiphead where shiphead_number = $1;";
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("RecallOrders")) { throw new handleError("Access Denied", 401) };
 
     /* Post the transaction */
-    plv8.execute(sql, [shipment])[0].series;
+    var ret = plv8.execute(sql, [shipment])[0].series;
 
-    return;
+    return ret ? ret : true;
+  };
+  XM.Inventory.recallShipment.description = "Return complete shipment (only available for orders that " +
+    "have not been shipped) - used in maintain shipping contents screen.";
+  XM.Inventory.recallShipment.params = {
+     shipment: { type: "Number", description: "Shipment ID" }
   };
 
   XM.Inventory.options = [

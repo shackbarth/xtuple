@@ -105,14 +105,19 @@ trailing:true, white:true*/
       name: "XV.IssueToShippingList",
       kind: "XV.List",
       label: "_issueToShipping".loc(),
-      collection: "XM.ShippableSalesOrderLine",
+      collection: "XM.ShippableSalesOrderLineCollection",
       parameterWidget: "XV.IssueToShippingParameters",
+      query: {orderBy: [
+        {attribute: 'lineNumber'},
+        {attribute: 'subNumber'}
+      ]},
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "lineNumber", classes: "bold"},
+                {kind: "XV.ListAttr", attr: "lineNumber",
+                  formatter: "formatLineNumber"},
                 {kind: "XV.ListAttr", attr: "site.code",
                   classes: "right"},
                 {kind: "XV.ListAttr", attr: "item.number", fit: true}
@@ -121,27 +126,45 @@ trailing:true, white:true*/
                 fit: true,  style: "text-indent: 18px;"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
-              {kind: "XV.ListAttr", attr: "quantity",
-                formatter: "formatQuantity", style: "text-align: right"},
-              {kind: "XV.ListAttr", attr: "price",
-                formatter: "formatPrice", style: "text-align: right"}
+              {kind: "XV.ListAttr", attr: "ordered",
+                formatter: "formatQuantity", style: "text-align: right"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
-              {kind: "XV.ListAttr", attr: "unit.name"},
-              {kind: "XV.ListAttr", attr: "priceUnit.name"}
+              {kind: "XV.ListAttr", attr: "balance",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "atShipping",
+                formatter: "formatQuantity", style: "text-align: right"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
               {kind: "XV.ListAttr", attr: "scheduleDate",
-                style: "text-align: right"},
-              {kind: "XV.ListAttr", attr: "extendedPrice",
-                style: "text-align: right", formatter: "formatExtendedPrice"}
+                style: "text-align: right"}
             ]}
           ]}
         ]}
-      ]
+      ],
+      formatDueDate: function (value, view, model) {
+        var today = new Date(),
+          isLate = XT.date.compareDate(value, today) < 1;
+        view.addRemoveClass("error", isLate);
+        return value;
+      },
+      formatLineNumber: function (value, view, model) {
+        var lineNumber = model.get("lineNumber"),
+          subnumber = model.get("subNumber");
+        if (subnumber === 0) {
+          value = lineNumber;
+        } else {
+          value = lineNumber + "." + subnumber;
+        }
+        return value;
+      },
+      formatQuantity: function (value, view, model) {
+        var scale = XT.session.locale.attributes.quantityScale;
+        return Globalize.format(value, "n" + scale);
+      }
     });
-
-    XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
 
     // ..........................................................
     // SHIPMENT
@@ -153,35 +176,41 @@ trailing:true, white:true*/
       label: "_shipments".loc(),
       collection: "XM.ShipmentCollection",
       actions: [{
-        name: "recallShipment", method: "recallShipment", prerequisite: "canRecall",
-          notifyMessage: "_recallShipment?".loc()
+        name: "recallShipment",
+        method: "doRecallShipment",
+        prerequisite: "canRecallShipment",
+        notifyMessage: "_recallShipment?".loc()
       }],
       query: {orderBy: [
-  			{attribute: 'shipDate'}
+        {attribute: 'shipDate'}
       ]},
       parameterWidget: "XV.ShipmentListItemParameters",
       components: [
         {kind: "XV.ListItem", components: [
-  	  		{kind: "FittableColumns", components: [
-  	    		{kind: "XV.ListColumn", classes: "first", components: [
-  						{kind: "FittableColumns", components: [
-  							{kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
-  	      			{kind: "XV.ListAttr", attr: "order.customer.name", fit: true, classes: "right"}
-  	    			]},
-  	    			{kind: "FittableColumns", components: [
-  							{kind: "XV.ListAttr", attr: "order.number", classes: "right"}
-  	    			]}
-  					]},
-  	    		{kind: "XV.ListColumn", classes: "second", components: [
-  	      		{kind: "XV.ListAttr", attr: "shipDate"},
-              {kind: "XV.ListAttr", attr: "isShipped"}
-  	    		]},
-  	    		{kind: "XV.ListColumn", classes: "second", components: [
-  	      		{kind: "XV.ListAttr", attr: "freight", formatter: "formatExtendedPrice"},
-  	      		{kind: "XV.ListAttr", attr: "currency"}
-  	    		]}
-  	  		]}
-  			]}
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+                {kind: "XV.ListAttr", attr: "order.customer.name", fit: true, classes: "right"}
+              ]},
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "orderType"},
+                {kind: "XV.ListAttr", attr: "order.number", classes: "right"}
+              ]}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "shipDate"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "freight", formatter: "formatExtendedPrice"},
+              {kind: "XV.ListAttr", attr: "currency"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "isShipped"},
+              {kind: "XV.ListAttr", attr: "isInvoicePosted"}
+            ]}
+          ]}
+        ]}
       ],
 
       formatExtendedPrice: function (value, view, model) {
