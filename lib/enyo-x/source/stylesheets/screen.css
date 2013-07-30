@@ -346,6 +346,7 @@
   padding: 7px 10px;
 }
 .xv-grid-box .xv-grid-row .line-number {
+  vertical-align: top;
   width: 30px;
 }
 .xv-grid-box .xv-grid-row.grid-actions {
@@ -368,9 +369,11 @@
   width: 90px;
 }
 .xv-grid-box .xv-grid-row .price {
+  vertical-align: top;
   width: 90px;
 }
 .xv-grid-box .xv-grid-row .schedule {
+  vertical-align: top;
   width: 110px;
 }
 .xv-grid-box .xv-grid-row.readonly {
