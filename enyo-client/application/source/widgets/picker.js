@@ -420,6 +420,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.SortPicker",
     kind: "XV.Picker",
     buildList: function (comps) {
+      this.$.picker.destroyClientControls();
     //the first picker you open is fine - the next one
     //  will have the list doubled and the third tripled.
       if (!comps)
@@ -427,11 +428,7 @@ regexp:true, undef:true, trailing:true, white:true */
       for (var i = 0; i < comps.length; i++) {
         this.$.picker.createComponent(comps[i]);
       }
-      /*
-      * calling this.$.picker.render() renders the list
-      *   to the back.
-      */
-      //this.$.picker.render();
+      this.$.picker.render();
     },
     setComponentsList: function (toSet) {
       var comps = [];
