@@ -1,11 +1,15 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
-/*global XT:true, enyo:true, window:true */
+/*global XT:true, enyo:true, window:true, location: true */
 
 XT = typeof XT !== 'undefined' ? XT : {};
 
 (function () {
+
+  XT.getBaseUrl = function () {
+    return location.protocol + "//" + location.hostname + (location.port && ":" + location.port);
+  };
 
   XT.getOrganizationPath = function () {
     return "/" + window.location.pathname.split("/")[1];

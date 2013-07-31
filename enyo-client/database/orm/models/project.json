@@ -712,6 +712,14 @@
     "table": "xt.prjinfo",
     "isRest": true,
     "comment": "Task Project Relation Map",
+    "privileges": {
+     "all": {
+       "create": false,
+       "read": true,
+       "update": false,
+       "delete": false
+     }
+    },
     "properties": [
       {
         "name": "id",
