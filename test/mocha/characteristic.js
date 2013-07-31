@@ -8,19 +8,20 @@
 
   var crud = require('../lib/crud'),
     data = {
-      recordType: "XM.Contact",
+      recordType: "XM.Characteristic",
       autoTestAttributes: true,
       verbose: true,
       createHash: {
-        firstName: "Michael",
-        primaryEmail: "modonnell@xtuple.com"
+        name: "Test Characteristic" + Math.random(),
+        isSearchable: false,
+        isItems: true
       },
       updateHash: {
-        firstName: "Mike"
+        name: "updated characteristic"
       }
     };
 
-  describe('Contact CRUD Test', function () {
+  describe('Characteristic CRUD Test', function () {
     this.timeout(20 * 1000);
     it('should perform all the crud operations', function (done) {
       crud.runAllCrud(data, done);

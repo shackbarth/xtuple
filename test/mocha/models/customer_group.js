@@ -15,7 +15,7 @@
         name: "CupGrp" + Math.random()
       },
       updateHash: {
-        name: "group"
+        name: "group" + Math.random()
       }
     };
 

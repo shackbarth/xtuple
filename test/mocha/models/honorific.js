@@ -10,15 +10,15 @@
     assert = require("chai").assert;
 
   var data = exports.data = {
-      recordType: "XM.Honorific",
-      autoTestAttributes: true,
-      createHash: {
-        code: "Herr" + Math.random()
-      },
-      updateHash: {
-        code: "Dame" + Math.random()
-      }
-    };
+    recordType: "XM.Honorific",
+    autoTestAttributes: true,
+    createHash: {
+      code: "Herr" + Math.random()
+    },
+    updateHash: {
+      code: "Dame" + Math.random()
+    }
+  };
 
   describe('Honorific crud test', function () {
     this.timeout(20 * 1000);

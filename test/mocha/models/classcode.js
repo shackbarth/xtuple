@@ -11,7 +11,7 @@
       recordType : "XM.ClassCode",
       autoTestAttributes : true,
       createHash : {
-        code: 'test code',
+        code: 'TESTCODE' + Math.random(),
         description: 'code description'
       },
       updateHash : {

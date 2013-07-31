@@ -134,6 +134,12 @@ var _ = require("underscore"),
         }
       };
 
+    // If we don't hear back, keep going
+    timeoutId = setTimeout(function () {
+      assert.fail("timeout was reached on create " + data.recordType, "");
+      callback();
+    }, waitTime);
+
     if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
       // Add an event handler when using a model with an AUTO...NUMBER.
       model.on('change:' + model.documentKey, modelCallback);
@@ -144,12 +150,6 @@ var _ = require("underscore"),
       model.on('change:id', modelCallback);
     }
     model.initialize(null, {isNew: true});
-
-    // If we don't hear back, keep going
-    timeoutId = setTimeout(function () {
-      assert.fail("timeout was reached on create " + data.recordType, "");
-      callback();
-    }, waitTime);
   };
 
   /**
@@ -191,28 +191,10 @@ var _ = require("underscore"),
         }
       };
 
-    if (data.verbose) {
-      console.log("Saving", data.model.id);
-    }
     assert.equal(JSON.stringify(model.validate(model.attributes)), undefined);
-    model.on('statusChange', modelCallback);
-    model.on('invalid', invalid);
-    model.on('notify', notify);
-    model.save(null, {
-      error: function (model, error, options) {
-        console.log("save error");
-        clearTimeout(timeoutId);
-        model.off('statusChange', modelCallback);
-        model.off('invalid', invalid);
-        model.off('notify', notify);
-        assert.fail(JSON.stringify(error) || "Unspecified error", "");
-        callback();
-      }
-    });
 
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
-      console.log("Validation error: ", JSON.stringify(data.model.validate(data.model.attributes)));
       assert.fail("timeout was reached on save " + data.recordType, "");
       clearTimeout(timeoutId);
       model.off('statusChange', modelCallback);
@@ -220,6 +202,11 @@ var _ = require("underscore"),
       model.off('notify', notify);
       callback();
     }, waitTime);
+
+    model.on('statusChange', modelCallback);
+    model.on('invalid', invalid);
+    model.on('notify', notify);
+    model.save(null, {});
   };
 
 
@@ -259,14 +246,14 @@ var _ = require("underscore"),
         }
       };
 
-    model.on('statusChange', modelCallback);
-    model.destroy();
-
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
       assert.fail("timeout was reached on delete " + data.recordType, "");
       callback();
     }, waitTime);
+
+    model.on('statusChange', modelCallback);
+    model.destroy();
   };
 
   /**
@@ -274,7 +261,6 @@ var _ = require("underscore"),
     tested with a single function
    */
   var runAllCrud = exports.runAllCrud = function (data, done) {
-
     // very clever: we allow testmakers to define their own custom
     // callbacks in their data object. If data.setCallback is set,
     // then what we do is, instead of:
@@ -342,7 +328,7 @@ var _ = require("underscore"),
     };
 
     // Step 1: load the environment with Zombie
-    zombieAuth.loadApp({callback: runCrud, verbose: data.verbose});
+    zombieAuth.loadApp({callback: runCrud, verbose: false /* data.verbose */});
   };
 
 }());
