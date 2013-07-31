@@ -423,18 +423,19 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.picker.destroyClientControls();
     //the first picker you open is fine - the next one
     //  will have the list doubled and the third tripled.
-      if (!comps)
+      if (!comps) {
         return;
+      }
       for (var i = 0; i < comps.length; i++) {
         this.$.picker.createComponent(comps[i]);
       }
-      this.$.picker.render();
+      //this.$.picker.render();
     },
     setComponentsList: function (toSet) {
       var comps = [];
       for (var i = 0; i < toSet.length; i++) {
         var stringToSet = "_" + toSet[i],
-          objectToSet = {content: stringToSet.loc()} ;
+          objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
 
         comps.push(objectToSet);
       }
@@ -448,14 +449,11 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.SortTypePicker",
-    kind: "onyx.PickerDecorator", components: [
-      {},
-      {kind: "onyx.Picker", components: [
-        {content: "_none".loc(), active: true},
-        {content: "_ascending".loc()},
-        {content: "_descending".loc()}
-      ]}
-    ]
+    kind: "XV.Picker",
+    buildList: function (options) {
+      this.$.picker.createComponent({content: "_ascending".loc()});
+      this.$.picker.createComponent({content: "_descending".loc()});
+    }
   });
 
   // ..........................................................

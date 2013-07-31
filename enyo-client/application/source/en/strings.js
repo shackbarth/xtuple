@@ -64,6 +64,7 @@ var lang = XT.stringsFor("en_US", {
   "_accounting": "Accounting",
   "_accountNumber": "Account Number",
   "_accountNumberGeneration": "Account Number Generation",
+  "_accountParent": "Account Parent",
   "_accountType": "Account Type",
   "_accounts": "Accounts",
   "_active": "Active",
