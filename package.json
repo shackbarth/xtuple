@@ -48,6 +48,7 @@
   "main": "node-datasource/main.js",
   "scripts": {
     "test-build": "mocha test/mocha/database/build_database.js",
-    "test": "mocha test/mocha/lib/login.js test/mocha/models/* test/mocha/kinds/* test/mocha/lib/long_test.js"
+    "test": "mocha test/mocha/lib/login.js test/mocha/models/* test/mocha/kinds/* test/mocha/lib/long_test.js",
+    "test-datasource": "mocha test/mocha/routes/*"
   }
 }
