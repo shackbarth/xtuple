@@ -17,6 +17,7 @@ enyo.depends(
   "priority.js",
   "project.js",
   "prospect.js",
+  "purchase_order.js",
   "sales_order_base.js",
   "quote.js",
   "sales_order.js",
@@ -30,5 +31,6 @@ enyo.depends(
   "url.js",
   "user_account.js",
   "user_chart.js",
-  "static.js"
+  "static.js",
+  "vendor.js"
 );

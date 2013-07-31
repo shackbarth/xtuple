@@ -535,6 +535,17 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // VENDOR TYPE
+  //
+
+  enyo.kind({
+    name: "XV.VendorTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.vendorType",
+    nameAttribute: "code"
+  });
+
+  // ..........................................................
   // SITE
   //
 
