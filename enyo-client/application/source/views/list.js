@@ -749,7 +749,7 @@ trailing:true, white:true*/
   XV.registerModelList("XM.FileRelation", "XV.FileList");
 
   // ..........................................................
-  // FILE
+  // FILTER
   //
 
   enyo.kind({
@@ -764,9 +764,6 @@ trailing:true, white:true*/
     },
     events: {
       onCollectionChange: ""
-    },
-    handlers: {
-      onModelChange: "",
     },
     components: [
       {kind: "XV.ListItem", components: [
@@ -787,16 +784,28 @@ trailing:true, white:true*/
         ]}
       ]}
     ],
+    /**
+      When the value of the list is changed, bind the add
+      and remove events of this collection.
+    */
     valueChanged: function () {
       this.inherited(arguments);
       // bind enyo event to add/remove on collection of models
       this.getValue().on("add", this.doCollectionChange(), this);
       this.getValue().on("remove", this.doCollectionChange(), this);
     },
+    /**
+      Formatting function to show the shared text instead of
+      the boolean value.
+    */
     formatShared: function (value, view, model) {
       var shared = model && model.get('shared') ? "_shared".loc() : "";
       return shared;
     },
+    /**
+      Removes the selected row when the "remove" icon is
+      selected.
+    */
     removeRow: function (inSender, inEvent) {
       var index = inEvent.index,
         value = this.getValue(),
@@ -804,11 +813,14 @@ trailing:true, white:true*/
         that = this;
       inEvent.model = model;
       inEvent.done = function () {
-        // this row has been removed
         that.doCollectionChange();
       };
       this.deleteItem(inEvent);
     },
+    /**
+      Sets the shared value of the current model when the
+      "shared" icon is selected.
+    */
     shareRow: function (inSender, inEvent) {
       var options = {},
         index = inEvent.index,
