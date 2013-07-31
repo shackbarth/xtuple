@@ -58,7 +58,7 @@
         "create": "MaintainItemSites",
         "read": "ViewItemSites",
         "update": "MaintainItemSites",
-        "delete": "MaintainItemSites"
+        "delete": "DeleteItemSites"
       }
     },
     "properties": [
