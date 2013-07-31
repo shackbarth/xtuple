@@ -10,9 +10,8 @@
   var zombieAuth = require("../lib/zombie_auth"),
     _ = require("underscore"),
     async = require("async"),
-    customerModel,
-    siteModel,
-    itemModel,
+    salesOrderCrud = require('../test/sales_order'),
+    submodels,
     smoke = require("../lib/smoke"),
     assert = require("chai").assert;
 
@@ -24,27 +23,8 @@
     //
     before(function (done) {
       zombieAuth.loadApp(function () {
-        async.series([
-          function (callback) {
-            customerModel = new XM.CustomerProspectRelation();
-            customerModel.fetch({number: "TTOYS", success: function () {
-              callback();
-            }});
-          },
-          function (callback) {
-            itemModel = new XM.ItemRelation();
-            itemModel.fetch({number: "BTRUCK1", success: function () {
-              callback();
-            }});
-          },
-          function (callback) {
-            siteModel = new XM.SiteRelation();
-            siteModel.fetch({code: "WH1", success: function () {
-              callback();
-            }});
-          }
-        ], function (err) {
-          done();
+        salesOrderCrud.primeSubmodels(function (submods) {
+          submodels = submods;
         });
       });
     });
@@ -60,7 +40,7 @@
         // Set the customer from the appropriate workspace widget
         //
         var createHash = {
-          customer: customerModel
+          customer: submodels.customerModel
         };
         smoke.setWorkspaceAttributes(workspace, createHash);
         assert.equal(workspace.value.get("shiptoCity"), "Walnut Hills");
@@ -83,7 +63,7 @@
         //
         workspace.$.salesOrderLineItemBox.newItem();
         lineItemEditor = workspace.$.salesOrderLineItemBox.$.editor;
-        lineItemEditor.$.itemSiteWidget.doValueChange({value: {item: itemModel, site: siteModel}});
+        lineItemEditor.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
         lineItemEditor.$.quantityWidget.doValueChange({value: 5});
       });
     });

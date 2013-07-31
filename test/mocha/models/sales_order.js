@@ -1,47 +1,76 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
+/*global describe:true, it:true, XT:true, XM:true, XV:true, process:true,
+module:true, require:true, exports:true, console:true */
 
 (function () {
   "use strict";
+
+  var async = require("async");
+  var primeSubmodels = exports.primeDefaults = function (done) {
+    var submodels = {};
+    async.series([
+      function (callback) {
+        submodels.customerModel = new XM.CustomerProspectRelation();
+        submodels.customerModel.fetch({number: "TTOYS", success: function () {
+          callback();
+        }});
+      },
+      function (callback) {
+        submodels.itemModel = new XM.ItemRelation();
+        submodels.itemModel.fetch({number: "BTRUCK1", success: function () {
+          callback();
+        }});
+      },
+      function (callback) {
+        submodels.siteModel = new XM.SiteRelation();
+        submodels.siteModel.fetch({code: "WH1", success: function () {
+          callback();
+        }});
+      }
+    ], function (err) {
+      done(submodels);
+    });
+  };
 
   /**
     Useful for any model that uses XM.SalesOrderLineBase
    */
   var getSetCallback = function (lineRecordType) {
     return function (data, next) {
+      var lineItem = new XM[lineRecordType.substring(3)](),
+        itemInitialized = function (submodels) {
+          var unitUpdated = function () {
+            // make sure all the fields we need to save successfully have been calculated
+            if (lineItem.get("price") &&
+                lineItem.get("customerPrice")) {
 
-      var movedOn = false,
-        lineItem = new XM[lineRecordType.substring(3)](),
-        itemSite = new XM.ItemSiteRelation(),
-        modelFetched = function () {
-          if (lineItem.isReady() && itemSite.isReady()) {
-            var unitUpdated = function () {
-              // make sure all the fields we need to save successfully have been calculated
-              if (lineItem.get("price") &&
-                  lineItem.get("customerPrice")) {
-
-                //lineItem.off("all", unitUpdated);
-                if (!movedOn) {
-                  movedOn = true;
-                  next();
-                }
+              //lineItem.off("all", unitUpdated);
+              if (!movedOn) {
+                movedOn = true;
+                next();
               }
-            };
+            }
+          };
 
-            // changing the item site will trigger a change which will ultimately change these three
-            // fields. run the callback when they all have been set
-            lineItem.on("all", unitUpdated); // XXX do better than this
-            data.model.get("lineItems").add(lineItem);
-            data.model.set({currency: XM.currencies.models[0]}); // XXX shouldn't be necessary
-            lineItem.set({quantity: 7});
-            lineItem.set({itemSite: itemSite});
-          }
+          // changing the item site will trigger a change which will ultimately change these three
+          // fields. run the callback when they all have been set
+          lineItem.on("all", unitUpdated); // XXX do better than this
+          data.model.get("lineItems").add(lineItem);
+          data.model.set({currency: XM.currencies.models[0]}); // XXX shouldn't be necessary
+          lineItem.set({quantity: 7});
+          lineItem.set({item: submodels.itemModel});
+          lineItem.set({site: submodels.siteModel});
         };
-      itemSite.on("statusChange", modelFetched);
-      itemSite.fetch({uuid: "d4b9a61f-f53c-4679-f9c4-bc9057823964" /* BTRUCK1 WH1 */}); // XXX this is fragile
-      lineItem.on("statusChange", modelFetched);
+
+
+      var movedOn = false;
+      lineItem.on("statusChange", function () {
+        if (lineItem.getStatus() === XM.Model.READY_NEW) {
+          primeSubmodels(itemInitialized);
+        }
+      });
       lineItem.initialize(null, {isNew: true});
     };
   };
@@ -52,11 +81,10 @@
     salesOrderData = {
       recordType: "XM.SalesOrder",
       autoTestAttributes: true,
-      verbose: true,
       createHash: {
         calculateFreight: true,
         customer: { number: "TTOYS" },
-        terms: { code: "COD" },
+        terms: { code: "2-10N30" },
         salesRep: { number: "2000" },
         wasQuote: true
       },
@@ -75,7 +103,7 @@
       createHash: {
         calculateFreight: true,
         customer: { number: "TTOYS" },
-        terms: { code: "COD" },
+        terms: { code: "2-10N30" },
         salesRep: { number: "2000" },
       },
       /**
@@ -101,6 +129,7 @@
         initCallback = function () {
           terms.set({code: "COD"});
           customer.set({terms: terms, billtoContact: "Bob"});
+          assert.equal(salesOrder.getValue("terms.code"), "");
           salesOrder.set({customer: customer});
 
           // customer.terms.code gets copied to terms.code
@@ -126,6 +155,7 @@
         initCallback = function () {
           terms.set({code: "COD"});
           customer.set({terms: terms, billtoContact: "Bob"});
+          assert.equal(quote.getValue("terms.code"), "");
           quote.set({customer: customer});
 
           // customer.terms.code gets copied to terms.code
