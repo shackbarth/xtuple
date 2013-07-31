@@ -425,7 +425,7 @@ regexp:true, undef:true, trailing:true, white:true */
       for (var i = 0; i < options.length; i++) {
         this.$.picker.createComponent(options[i]);
       }
-      this.$.picker.render();
+      //this.$.picker.render();
     },
     setComponentsList: function (toSet) {
       this.comps = [{}];
