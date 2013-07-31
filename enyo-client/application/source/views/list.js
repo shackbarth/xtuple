@@ -818,12 +818,9 @@ trailing:true, white:true*/
       options.success = function (model, resp, options) {
         that.reset();
       };
-      // TODO: this isn't saving because it isn't dirty
       model.save(null, options);
     }
   });
-
-  //
 
   // ..........................................................
   // FREIGHT CLASS
