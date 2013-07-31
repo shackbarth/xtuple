@@ -72,6 +72,7 @@
     "xt/functions/trylock.sql",
     "xt/functions/undomerge.sql",
     "xt/tables/emlprofile.sql",
+    "xt/tables/filter.sql",
     "xt/tables/incdtemlprofile.sql",
     "xt/tables/incdtcatemlprofile.sql",
     "xt/tables/pkgcmd.sql",
