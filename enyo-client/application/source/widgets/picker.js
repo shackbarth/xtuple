@@ -423,11 +423,16 @@ regexp:true, undef:true, trailing:true, white:true */
       {}
     ],
     buildList: function (options) {
-      console.log("buildlist in sortpicker");
+      //
     },
     setComponentsList: function (toSet) {
+      this.comps = [{}];
       console.log(toSet);
-      //_.each(toSet, add item to components)
+      for (var i = 0; i < toSet.legnth; i++) {
+        console.log("in for loop");
+        this.comps.push({content: toSet[i]});
+      }
+      console.log(this.comps);
     }
   });
 
