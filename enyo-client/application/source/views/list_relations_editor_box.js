@@ -235,7 +235,8 @@ trailing:true, white:true*/
     },
     setValue: function (value) {
       var parent,
-       site,
+       parentSite,
+       childSite,
        effectivePolicy = XT.session.settings.get("soPriceEffective");
       // Remove any old bindings
       if (this.value) {
@@ -256,8 +257,11 @@ trailing:true, white:true*/
           this.value.on("change:scheduleDate", this.scheduleDateChanged, this);
           this.changeItemSiteParameter("scheduleDate", "effectiveDate");
         }
-        site = parent ? parent.get("site") : false;
-        if (site) { this.$.itemSiteWidget.setSite(site); }
+        parentSite = parent ? parent.get("site") : false;
+        childSite = this.$.itemSiteWidget.getSite();
+        if (parentSite && !childSite) {
+          this.$.itemSiteWidget.setSite(parentSite);
+        }
       }
       this.changeItemSiteParameter("customer");
       this.changeItemSiteParameter("shipto");
@@ -358,6 +362,7 @@ trailing:true, white:true*/
       ]}
     ]
   };
+
   enyo.mixin(lineEditor, XV.LineMixin);
 
   var quoteLineEditor = {name: "XV.QuoteLineItemEditor"};
@@ -448,10 +453,11 @@ trailing:true, white:true*/
 
   enyo.kind({
     name: "XV.SalesSummaryPanel",
+    classes: "xv-sales-summary-panel",
     kind: "XV.RelationsEditor",
     style: "margin-top: 10px;",
     components: [
-      {kind: "XV.Groupbox", name: "totalGroup", components: [
+      {kind: "XV.Groupbox", name: "totalGroup", classes: "xv-sales-summary-total-group", components: [
         {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
         {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
           {kind: "FittableRows", name: "summaryColumnOne", components: [

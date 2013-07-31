@@ -337,9 +337,7 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: ["item.number", "item.barcode"],
     nameAttribute: "item.description1",
     descripAttribute: "item.description2",
-    style: "border-bottom-color: rgb(170, 170, 170); " +
-      "border-bottom-width: 1px; " +
-      "border-bottom-style: solid;"
+    classes: "xv-private-item-site-widget"
   });
 
   enyo.kind({
@@ -353,7 +351,8 @@ regexp:true, undef:true, trailing:true, white:true */
       placeholder: null,
       disabled: false,
       query: null,
-      isEditableKey: "item"
+      isEditableKey: "item",
+      horizontalOrientation: false
     },
     handlers: {
       "onValueChange": "controlValueChanged"
@@ -362,7 +361,8 @@ regexp:true, undef:true, trailing:true, white:true */
       "onValueChange": ""
     },
     components: [
-      {kind: "FittableRows", components: [
+      {kind: "enyo.Control", name: "fittableContainer",
+      components: [
         {kind: _privateItemSiteWidget, name: "privateItemSiteWidget",
           label: "_item".loc()},
         {kind: "XV.SitePicker", name: "sitePicker", label: "_site".loc()}
@@ -456,6 +456,12 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
       this.$.sitePicker.filter = filter;
 
+      if (this.getHorizontalOrientation()) {
+        this.$.fittableContainer.setLayoutKind("FittableColumnsLayout");
+      } else {
+        this.$.fittableContainer.setLayoutKind("FittableRowsLayout");
+      }
+
       //
       // Prevent an ugly thick line if the site picker is hidden.
       //
@@ -507,6 +513,7 @@ regexp:true, undef:true, trailing:true, white:true */
         site = this.getSite(),
         options = {},
         that = this;
+
       if (item && site) {
         options.query = {
           parameters: [
@@ -521,7 +528,7 @@ regexp:true, undef:true, trailing:true, white:true */
           ]
         };
         options.success = function () {
-          if (that._itemSites.length) {
+          if (!that.destroyed && that._itemSites.length) {
             that.$.privateItemSiteWidget.setValue(that._itemSites.at(0));
           }
         };
@@ -536,11 +543,11 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.sitePicker.setValue(site, {silent: true});
       if (site) {
         this.$.privateItemSiteWidget.addParameter({
-          attribute: "site",
-          value: site
+          attribute: "site.code",
+          value: site.id ? site.id : site
         }, true);
       } else {
-        this.$.privateItemSiteWidget.removeParameter("site");
+        this.$.privateItemSiteWidget.removeParameter("site.code");
       }
       this.itemChanged();
     },
@@ -562,16 +569,22 @@ regexp:true, undef:true, trailing:true, white:true */
         changed = {},
         keys = _.keys(value),
         key,
-        set,
         i;
 
-      // Loop through the properties and update calling
-      // appropriate "set" functions and add to "changed"
-      // object if applicable
+      // Loop through the properties and update them directly,
+      // then call the appropriate "set" functions and add to "changed"
+      // object if applicable. We want to make sure that both item
+      // and site are set to their new, appropriate values before
+      // functions like itemChanged or siteChanged get called, to avoid
+      // having a mismatched old value for the fetch that those functions
+      // call.
       for (i = 0; i < keys.length; i++) {
         key = keys[i];
-        set = 'set' + key.slice(0, 1).toUpperCase() + key.slice(1);
-        this[set](value[key]);
+
+        this[key] = value[key];
+      }
+      for (i = 0; i < keys.length; i++) {
+        key = keys[i];
         if (attr[key]) {
           changed[attr[key]] = value[key];
           this[key + 'Changed']();
