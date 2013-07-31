@@ -10,7 +10,6 @@
     data = {
       recordType: "XM.Account",
       autoTestAttributes: true,
-      verbose: true,
       createHash: {
         number: "Test_account" + Math.random(),
         name: "A test Account"

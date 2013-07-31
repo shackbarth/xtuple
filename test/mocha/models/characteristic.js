@@ -10,7 +10,6 @@
     data = {
       recordType: "XM.Characteristic",
       autoTestAttributes: true,
-      verbose: true,
       createHash: {
         name: "Test Characteristic" + Math.random(),
         isSearchable: false,
