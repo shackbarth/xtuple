@@ -418,21 +418,24 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.SortPicker",
-    kind: "onyx.PickerDecorator",
-    components: [
-      {}
-    ],
+    kind: "XV.Picker",
     buildList: function (options) {
-      //
+      if (!options)
+        return;
+      for (var i = 0; i < options.length; i++) {
+        this.$.picker.createComponent(options[i]);
+      }
+      this.$.picker.render();
     },
     setComponentsList: function (toSet) {
       this.comps = [{}];
-      console.log(toSet);
       for (var i = 0; i < toSet.length; i++) {
-        console.log("in for loop");
-        this.comps.push({content: toSet[i]});
+        var stringToSet = "_" + toSet[i],
+          objectToSet = {content: stringToSet.loc()} ;
+
+        this.comps.push(objectToSet);
       }
-      console.log(this.comps);
+      this.buildList(this.comps);
     }
   });
 
