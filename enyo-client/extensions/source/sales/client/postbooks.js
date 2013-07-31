@@ -70,6 +70,7 @@ trailing:true, white:true*/
 
     relevantPrivileges = [
       "ConfigureSO",
+      "MaintainCustomerMasters",
       "MaintainFreightClasses",
       "MaintainCustomerGroups",
       "MaintainQuotes",
@@ -91,6 +92,7 @@ trailing:true, white:true*/
       "ShowMarginsOnSalesOrder",
       "UpdateCustomerCreditStatus",
       "ViewCosts",
+      "ViewCustomerMasters",
       "ViewFreightClasses",
       "ViewCustomerGroups",
       "ViewQuotes",
