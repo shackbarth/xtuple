@@ -428,7 +428,7 @@ regexp:true, undef:true, trailing:true, white:true */
     setComponentsList: function (toSet) {
       this.comps = [{}];
       console.log(toSet);
-      for (var i = 0; i < toSet.legnth; i++) {
+      for (var i = 0; i < toSet.length; i++) {
         console.log("in for loop");
         this.comps.push({content: toSet[i]});
       }
