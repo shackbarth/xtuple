@@ -1432,6 +1432,58 @@ trailing:true, white:true*/
   XV.registerModelList("XM.ProspectRelation", "XV.ProspectList");
 
   // ..........................................................
+  // PURCHASE ORDER
+  //
+
+  enyo.kind({
+    name: "XV.PurchaseOrderList",
+    kind: "XV.List",
+    label: "_purchaseOrders".loc(),
+    collection: "XM.PurchaseOrderListItemCollection",
+    parameterWidget: "XV.PurchaseOrderListItemParameters",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "status"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "XV.ListAttr", attr: "vendor.number"},
+            {kind: "XV.ListAttr", attr: "vendor.name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "isPrinted"},
+              {kind: "XV.ListAttr", attr: "orderDate"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "agentUserName", classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+    /*
+    formatPrice: function (value, view, model) {
+      var currency = model ? model.get("currency") : false,
+        scale = XT.session.locale.attributes.salesPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    } */
+  });
+
+  XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderList");
+
+  XV.registerModelList("XM.PurchaseOrderListItem", "XV.PurchaseOrderList");
+
+  // ..........................................................
   // QUOTE
   //
 
@@ -2078,6 +2130,57 @@ trailing:true, white:true*/
       {attribute: 'abbreviation'}
     ]}
   });
+
+  // ..........................................................
+  // VENDOR
+  //
+
+  enyo.kind({
+    name: "XV.VendorList",
+    kind: "XV.List",
+    label: "_vendors".loc(),
+    collection: "XM.VendorRelationCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    allowPrint: true,
+    parameterWidget: "XV.VendorListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "contact1.phone", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name"},
+              {kind: "XV.ListAttr", attr: "contact1.primaryEmail",
+                ontap: "sendMail", classes: "right hyperlink"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "contact1.name", classes: "italic",
+              placeholder: "_noContact".loc()},
+            {kind: "XV.ListAttr", attr: "address.formatShort"}
+          ]}
+        ]}
+      ]}
+    ],
+    sendMail: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        email = model ? model.getValue('contact1.primaryEmail') : null,
+        win;
+      if (email) {
+        win = window.open('mailto:' + email);
+        win.close();
+      }
+      return true;
+    }
+  });
+
+  XV.registerModelList("XM.VendorRelation", "XV.VendorList");
 
   // ..........................................................
   // INCIDENT CATEGORIES, RESOLUTIONS, SEVERITIES,

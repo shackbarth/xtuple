@@ -399,6 +399,31 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // CUSTOMER/PROSPECT SALESORDER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerSalesOrderListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: 'number', descending: true}
+    ],
+    parentKey: "customer",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "shipVia", classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // CUSTOMER/PROSPECT QUOTE/SALESORDER
   //
 
