@@ -72,6 +72,7 @@
 
         workspace.value.on("change:total", function () {
           smoke.saveWorkspace(workspace, function (err, model) {
+            assert.isNull(err);
             model.on("all", function () { console.log(arguments); });
             smoke.deleteFromList(XT.app, model.id, done);
           });

@@ -36,7 +36,7 @@
     //
     // Create a new record
     //
-    navigator.newRecord();
+    navigator.newRecord({}, {originator: {}});
     assert.isDefined(app.$.postbooks.getActive());
     workspace = app.$.postbooks.getActive().$.workspace;
     assert.isDefined(workspace);
@@ -68,6 +68,9 @@
     var validation = workspace.value.validate(workspace.value.attributes);
     assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
 
+    workspace.value.on('invalid', function (model, err) {
+      done(err);
+    });
     workspace.save({
       // wait until the list has been refreshed with this model before we return control
       // TODO: this is probably where we'd want to insert a callback to be notified when
