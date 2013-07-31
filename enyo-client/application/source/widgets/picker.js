@@ -419,23 +419,29 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.SortPicker",
     kind: "XV.Picker",
-    buildList: function (options) {
-      if (!options)
+    buildList: function (comps) {
+    //the first picker you open is fine - the next one
+    //  will have the list doubled and the third tripled.
+      if (!comps)
         return;
-      for (var i = 0; i < options.length; i++) {
-        this.$.picker.createComponent(options[i]);
+      for (var i = 0; i < comps.length; i++) {
+        this.$.picker.createComponent(comps[i]);
       }
+      /*
+      * calling this.$.picker.render() renders the list
+      *   to the back.
+      */
       //this.$.picker.render();
     },
     setComponentsList: function (toSet) {
-      this.comps = [{}];
+      var comps = [];
       for (var i = 0; i < toSet.length; i++) {
         var stringToSet = "_" + toSet[i],
           objectToSet = {content: stringToSet.loc()} ;
 
-        this.comps.push(objectToSet);
+        comps.push(objectToSet);
       }
-      this.buildList(this.comps);
+      this.buildList(comps);
     }
   });
 
