@@ -476,6 +476,7 @@ var lang = XT.stringsFor("en_US", {
   "_settings": "Settings",
   "_setup": "Setup",
   "_severity": "Severity",
+  "_shared": "Shared",
   "_shift": "Shift",
   "_shifts": "Shifts",
   "_shipping": "Shipping",
