@@ -7,7 +7,9 @@ module:true, require:true, exports:true, console:true */
 (function () {
   "use strict";
 
-  var async = require("async");
+  var async = require("async"),
+    _ = require("underscore");
+
   var primeSubmodels = function (done) {
     var submodels = {};
     async.series([
@@ -39,23 +41,16 @@ module:true, require:true, exports:true, console:true */
    */
   var getSetCallback = function (lineRecordType) {
     return function (data, next) {
-      console.log("here is the set callback");
       var lineItem = new XM[lineRecordType.substring(3)](),
         itemInitialized = function (submodels) {
           var unitUpdated = function () {
             // make sure all the fields we need to save successfully have been calculated
-            console.log("updated", lineItem.getStatusString(),
-              lineItem.recordType,
-              lineItem.getValue('item.number'), lineItem.getValue('site.code'),
-              lineItem.get("quantity"), lineItem.get("price"),
-              lineItem.get("customerPrice"));
             if (lineItem.get("price") &&
                 lineItem.get("customerPrice")) {
 
               //lineItem.off("all", unitUpdated);
               if (!movedOn) {
                 movedOn = true;
-                console.log("moved on");
                 next();
               }
             }
@@ -63,10 +58,13 @@ module:true, require:true, exports:true, console:true */
 
           // changing the item site will trigger a change which will ultimately change these three
           // fields. run the callback when they all have been set
-          lineItem.on("all", unitUpdated); // XXX do better than this
+          lineItem.on("all", unitUpdated);
           data.model.get("lineItems").add(lineItem);
-          data.model.set({currency: XM.currencies.models[0]}); // XXX shouldn't be necessary
-          console.log("lis", lineItem.getStatusString());
+          // XXX This currency should be already set
+          var currency = _.find(XM.currencies.models, function (curr) {
+            return curr.get("isBase");
+          });
+          data.model.set({currency: currency});
           lineItem.set({quantity: 7});
           lineItem.set({item: submodels.itemModel});
           lineItem.set({site: submodels.siteModel});
@@ -127,7 +125,7 @@ module:true, require:true, exports:true, console:true */
   describe('Sales order', function () {
     crud.runAllCrud(salesOrderData);
   });
-/*
+
   describe('Sales order business logic', function () {
     it('should take the defaults from the customer', function (done) {
       var terms = new XM.Terms(),
@@ -173,5 +171,4 @@ module:true, require:true, exports:true, console:true */
       quote.initialize(null, {isNew: true});
     });
   });
-  */
 }());

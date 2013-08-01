@@ -289,18 +289,18 @@ var _ = require("underscore"),
     }
 
     // Step 4: set the model with our createData hash
+    it('sets values on the model', function (done) {
+      if (data.verbose) { console.log("set model", data.recordType); }
+      data.updated = false;
+      setModel(data, done);
+    });
+
     if (data.setCallback) {
       it('calls a specified function after set', function (done) {
         this.timeout(20 * 1000);
         data.setCallback(data, done);
       });
     }
-
-    it('sets values on the model', function (done) {
-      if (data.verbose) { console.log("set model", data.recordType); }
-      data.updated = false;
-      setModel(data, done);
-    });
 
     // Step 5: save the data to the database
     it('saves the values to the database', function (done) {
