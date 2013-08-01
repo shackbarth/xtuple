@@ -826,11 +826,13 @@ trailing:true, white:true*/
         index = inEvent.index,
         that = this,
         model = this.getValue().models[index];
-      model.set("shared", true);
-      options.success = function (model, resp, options) {
-        that.reset();
+      if (!model.get("shared")) {
+        model.set("shared", true);
+        options.success = function (model, resp, options) {
+          that.reset();
+        };
+        model.save(null, options);
       };
-      model.save(null, options);
     }
   });
 
