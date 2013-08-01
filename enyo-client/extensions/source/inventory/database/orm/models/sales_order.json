@@ -186,18 +186,11 @@
         }
       },
       {
-        "name": "item",
+        "name": "itemSite",
         "toOne": {
-          "type": "ItemRelation",
-          "column": "coitem_item_id",
+          "type": "ItemSiteRelation",
+          "column": "coitem_itemsite_id",
           "isNested": true
-        }
-      },
-      {
-        "name": "site",
-        "toOne": {
-          "type": "SiteRelation",
-          "column": "coitem_warehous_id"
         }
       },
       {

@@ -219,9 +219,39 @@
       {
         "name": "quantityOnHand",
         "attr": {
+          "type": "Number",
+          "column": "itemsite_qtyonhand"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "inventory",
+    "nameSpace": "XM",
+    "type": "ItemSiteRelation",
+    "table": "itemsite",
+    "isExtension": true,
+    "comment": "Extended by Inventory",
+    "relations": [
+      {
+        "column": "itemsite_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "controlMethod",
+        "attr": {
           "type": "String",
-          "column": "itemsite_qtyonhand",
-          "required": true
+          "column": "itemsite_controlmethod"
+        }
+      },
+      {
+        "name": "locationControl",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_loccntrl"
         }
       }
     ],
