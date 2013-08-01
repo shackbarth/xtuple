@@ -110,6 +110,12 @@ trailing:true, white:true*/
       query: {orderBy: [
         {attribute: 'lineNumber'}
       ]},
+      showDeleteAction: false,
+      actions: [
+        {name: "enterReceipt", prerequisite: "canEnterReceipt",
+          method: "doEnterReceipt", notify: false}
+      ],
+      toggleSelected: true,
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [

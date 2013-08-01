@@ -28,7 +28,21 @@ white:true*/
   XM.PurchaseOrderLine = XM.Document.extend({
     /** @scope XM.PurchaseOrder.prototype */
 
-    recordType: 'XM.PurchaseOrderLine'
+    recordType: 'XM.PurchaseOrderLine',
+
+      canEnterReceipt: function (callback) {
+        if (callback) {
+          callback(true);
+        }
+        return this;
+      },
+
+      doEnterReceipt: function (callback) {
+        if (callback) {
+          callback(true);
+        }
+        return this;
+      }
 
   });
 

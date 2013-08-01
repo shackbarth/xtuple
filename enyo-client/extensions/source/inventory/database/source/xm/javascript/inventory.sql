@@ -286,6 +286,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
     }}
   };
 
+  XM.Inventory.enterReceipt = function () {
+    var ret = true;
+    return ret;
+  };
+
   /**
     Issue to shipping.
     
