@@ -125,6 +125,7 @@ Globalize:true */
   };
 
   enyo.mixin(salesOrderGridRow, XV.LineMixin);
+  enyo.mixin(salesOrderGridRow, XV.SalesOrderLineMixin);
   enyo.kind(salesOrderGridRow);
 
   enyo.kind({

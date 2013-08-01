@@ -274,7 +274,9 @@ trailing:true, white:true*/
   XV.SalesOrderLineMixin = {
     create: function () {
       this.inherited(arguments);
-      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+      if (this.$.promiseDate) {
+        this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+      }
 
       // Loop through the components and set the specific attribute information for the Money widgets
       this.getComponents().forEach(function (e) {
