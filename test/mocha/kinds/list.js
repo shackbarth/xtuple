@@ -73,7 +73,7 @@
 
             // make sure that attrs with paths are for nested relations
             _.each(attrs, function (attr) {
-              var prefix, relation, cacheName;
+              var prefix, suffix, relation, cacheName, relatedModelPrototype;
 
               prefix = XT.String.prefix(attr) || attr;
               relation = _.find(relations, function (rel) {
@@ -92,7 +92,9 @@
                   " schema needs the relation " + prefix);
 
                 if (!cacheName && !relation.isNested) {
-                  assert.fail(1, 0, "The " + recordType +
+                  suffix = XT.String.suffix(attr);
+                  relatedModelPrototype = XM[XT.String.suffix(relation.relatedModel)].prototype;
+                  assert.equal(typeof relatedModelPrototype[suffix], "function", "The " + recordType +
                     " schema needs the relation " + prefix + " to be nested or the model " +
                     relation.relatedModel + " needs to be cached");
                 }
