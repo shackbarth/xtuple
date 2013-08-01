@@ -39,16 +39,23 @@ module:true, require:true, exports:true, console:true */
    */
   var getSetCallback = function (lineRecordType) {
     return function (data, next) {
+      console.log("here is the set callback");
       var lineItem = new XM[lineRecordType.substring(3)](),
         itemInitialized = function (submodels) {
           var unitUpdated = function () {
             // make sure all the fields we need to save successfully have been calculated
+            console.log("updated", lineItem.getStatusString(),
+              lineItem.recordType,
+              lineItem.getValue('item.number'), lineItem.getValue('site.code'),
+              lineItem.get("quantity"), lineItem.get("price"),
+              lineItem.get("customerPrice"));
             if (lineItem.get("price") &&
                 lineItem.get("customerPrice")) {
 
               //lineItem.off("all", unitUpdated);
               if (!movedOn) {
                 movedOn = true;
+                console.log("moved on");
                 next();
               }
             }
@@ -59,6 +66,7 @@ module:true, require:true, exports:true, console:true */
           lineItem.on("all", unitUpdated); // XXX do better than this
           data.model.get("lineItems").add(lineItem);
           data.model.set({currency: XM.currencies.models[0]}); // XXX shouldn't be necessary
+          console.log("lis", lineItem.getStatusString());
           lineItem.set({quantity: 7});
           lineItem.set({item: submodels.itemModel});
           lineItem.set({site: submodels.siteModel});
@@ -119,7 +127,7 @@ module:true, require:true, exports:true, console:true */
   describe('Sales order', function () {
     crud.runAllCrud(salesOrderData);
   });
-
+/*
   describe('Sales order business logic', function () {
     it('should take the defaults from the customer', function (done) {
       var terms = new XM.Terms(),
@@ -165,4 +173,5 @@ module:true, require:true, exports:true, console:true */
       quote.initialize(null, {isNew: true});
     });
   });
+  */
 }());
