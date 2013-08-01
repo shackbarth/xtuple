@@ -96,7 +96,8 @@
                   relatedModelPrototype = XM[XT.String.suffix(relation.relatedModel)].prototype;
                   assert.equal(typeof relatedModelPrototype[suffix], "function", "The " + recordType +
                     " schema needs the relation " + prefix + " to be nested or the model " +
-                    relation.relatedModel + " needs to be cached");
+                    relation.relatedModel + " needs to be cached, or " + suffix + " needs to be a " +
+                    "function on " + relation.relatedModel);
                 }
 
                 if (attr === child.getQuery().orderBy[0].attribute && !relation.isNested) {

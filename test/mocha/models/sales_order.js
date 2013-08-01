@@ -8,7 +8,7 @@ module:true, require:true, exports:true, console:true */
   "use strict";
 
   var async = require("async");
-  var primeSubmodels = exports.primeDefaults = function (done) {
+  var primeSubmodels = function (done) {
     var submodels = {};
     async.series([
       function (callback) {

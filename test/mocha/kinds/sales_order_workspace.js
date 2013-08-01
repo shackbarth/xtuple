@@ -10,28 +10,53 @@
   var zombieAuth = require("../lib/zombie_auth"),
     _ = require("underscore"),
     async = require("async"),
-    salesOrderCrud = require('../test/sales_order'),
     submodels,
     smoke = require("../lib/smoke"),
-    assert = require("chai").assert;
+    assert = require("chai").assert,
+    primeSubmodels = function (done) {
+      var submodels = {};
+      async.series([
+        function (callback) {
+          submodels.customerModel = new XM.CustomerProspectRelation();
+          submodels.customerModel.fetch({number: "TTOYS", success: function () {
+            callback();
+          }});
+        },
+        function (callback) {
+          submodels.itemModel = new XM.ItemRelation();
+          submodels.itemModel.fetch({number: "BTRUCK1", success: function () {
+            callback();
+          }});
+        },
+        function (callback) {
+          submodels.siteModel = new XM.SiteRelation();
+          submodels.siteModel.fetch({code: "WH1", success: function () {
+            callback();
+          }});
+        }
+      ], function (err) {
+        done(err, submodels);
+      });
+    };
 
   describe('Sales Order Workspace', function () {
-    this.timeout(30 * 1000);
+    this.timeout(20 * 1000);
 
     //
     // We'll want to have TTOYS, BTRUCK1, and WH1 onhand and ready for the test to work.
     //
     before(function (done) {
       zombieAuth.loadApp(function () {
-        salesOrderCrud.primeSubmodels(function (submods) {
+        primeSubmodels(function (err, submods) {
           submodels = submods;
+          done();
         });
       });
     });
 
     describe('User selects to create a sales order', function () {
       it('User navigates to Sales Order-New and selects to create a new Sales order', function (done) {
-        var lineItemEditor;
+        var gridRow;
 
         var workspace = smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList");
         assert.equal(workspace.value.recordType, "XM.SalesOrder");
@@ -50,10 +75,14 @@
         // It's good practice to set this trigger *before* we change the line
         // item fields, so that we're 100% sure we're ready for the responses.
 
+        workspace.value.on("statusChange", function (model, status) {
+          if (status === XM.Model.DESTROYED_DIRTY) {
+            done();
+          }
+        });
         workspace.value.on("change:total", function () {
           smoke.saveWorkspace(workspace, function (err, model) {
             assert.isNull(err);
-            model.on("all", function () { console.log(arguments); });
             smoke.deleteFromList(XT.app, model.id, done);
           });
         });
@@ -61,10 +90,10 @@
         //
         // Set the line item fields
         //
-        workspace.$.salesOrderLineItemBox.newItem();
-        lineItemEditor = workspace.$.salesOrderLineItemBox.$.editor;
-        lineItemEditor.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
-        lineItemEditor.$.quantityWidget.doValueChange({value: 5});
+        workspace.$.salesOrderLineItemGridBox.newItem();
+        gridRow = workspace.$.salesOrderLineItemGridBox.$.editableGridRow;
+        gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
+        gridRow.$.quantityWidget.doValueChange({value: 5});
       });
     });
   });

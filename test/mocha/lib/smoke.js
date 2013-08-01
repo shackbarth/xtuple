@@ -93,8 +93,12 @@
         return model.get(model.idAttribute) === id;
       });
 
-    // TODO: this probably won't work if the model is not an editable model
-    // TODO: get rid of these 5 lines once we get the callback technique working
+    // For heavy models, this new model will be the lightweight version, which
+    // itself is not going to get destroyed, so this will only work for lightweight
+    // editable models. The ideal strategy is to make all async processes in the
+    // app have a callback so we can know when they finish. Until we get there,
+    // you have to set up a listener on the heavyweight model in your implementation
+    // test to done() when it is destroyed.
     newModel.on("statusChange", function (model, status) {
       if (status === XM.Model.DESTROYED_DIRTY) {
         done();
@@ -103,9 +107,7 @@
 
     // delete it, by calling the function that gets called when the user ok's the delete popup
     list.deleteItem({model: newModel
-    // I believe this is the only way to get this to work with models whose lists are not editable
-    // models, however, there's no real way to know when the lock is released based on the way
-    // our workspace functions are plumbed together.
+    // The ideal strategy would look something like this:
     //,
     //done: function () {
     //  done();
