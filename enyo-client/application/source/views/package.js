@@ -3,6 +3,7 @@ enyo.depends(
   "list_relations.js",
   "list_relations_box.js",
   "list_relations_editor_box.js",
+  "grid_box.js",
   "workspace.js",
   "comment_box.js",
   "assignment_box.js",

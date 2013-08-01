@@ -81,8 +81,14 @@ select xt.install_js('XM','item','xtuple', $$
   XM.Item.unitToUnitRatio = function(itemId, fromUnitId, toUnitId) {
     var sql = 'select itemuomtouomratio($1, $2, $3) as "ratio"' +
               'from item, uom fu, uom tu ' +
-              'where item_number = $1 and fu.uom_name = $2 and tu.uom_name = $3;';
-    return plv8.execute(sql, [itemId, fromUnitId, toUnitId])[0].ratio;
+              'where item_number = $4 and fu.uom_name = $5 and tu.uom_name = $6;';
+    /* resolve natural keys to primary keys */
+    var itemPrimaryId = itemId ? XT.Data.getId(XT.Orm.fetch('XM', 'Item'), itemId) : null;
+    var fromUnitPrimaryId = fromUnitId ? XT.Data.getId(XT.Orm.fetch('XM', 'Unit'), fromUnitId) : null;
+    var toUnitPrimaryId = toUnitId ? XT.Data.getId(XT.Orm.fetch('XM', 'Unit'), toUnitId) : null;
+    
+    return plv8.execute(sql, [itemPrimaryId, fromUnitPrimaryId, toUnitPrimaryId,
+      itemId, fromUnitId, toUnitId])[0].ratio;
   }
   
   /** @private

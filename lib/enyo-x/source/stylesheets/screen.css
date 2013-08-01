@@ -1,4 +1,4 @@
-/* LESS version of screen.scss file previously in client
+/*
 
   To compile to .css:
   lessc screen.less > ../stylesheets/screen.css
@@ -279,6 +279,214 @@
   border-bottom-right-radius: 4px;
 }
 /**
+  Styles relating to grid-entry
+*/
+/*
+  Styles relating to the grid box
+*/
+/**
+  This is a little hacky, but it gets rid of the border
+  that is around the entire widget.
+*/
+.xv-groupbox .in-panel {
+  border: none;
+}
+/* Entire box including the grid and the summary panel */
+.xv-grid-box {
+  /**
+    This is the most general grid row that
+    is not specific to read-only or selected
+  */
+
+}
+.xv-grid-box.panel {
+  width: 984px;
+  padding: 0;
+}
+.xv-grid-box .xv-groupbox-buttons {
+  padding: 5px;
+}
+.xv-grid-box .xv-groupbox-buttons .xv-groupbox-button-center {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-grid-box .xv-above-grid-list {
+  border: 0px;
+}
+.xv-grid-box .xv-grid-row {
+  font-size: 12px;
+  border-top: #aaaaaa;
+  vertical-align: top;
+  /**
+      This is the grid header row
+    */
+
+}
+.xv-grid-box .xv-grid-row > * {
+  display: inline-block;
+}
+.xv-grid-box .xv-grid-row .xv-grid-header {
+  background-color: #555555;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-top: none;
+  border-right: 1px solid #4c4c4c;
+  border-bottom: 1px solid #4c4c4c;
+}
+.xv-grid-box .xv-grid-row .xv-grid-header.last {
+  border-right: none;
+}
+.xv-grid-box .xv-grid-row > * {
+  padding: 7px 10px;
+}
+.xv-grid-box .xv-grid-row .line-number {
+  vertical-align: top;
+  width: 30px;
+}
+.xv-grid-box .xv-grid-row .grid-actions {
+  display: block;
+  padding-left: 30px;
+  width: 276px !important;
+}
+.xv-grid-box .xv-grid-row .grid-actions > * {
+  display: inline-block;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row .grid-item {
+  vertical-align: top;
+  width: 250px;
+}
+.xv-grid-box .xv-grid-row .quantity {
+  vertical-align: top;
+  width: 100px;
+}
+.xv-grid-box .xv-grid-row .discount {
+  vertical-align: top;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row .price {
+  vertical-align: top;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row .schedule {
+  vertical-align: top;
+  padding-top: 0px;
+  width: 110px;
+}
+.xv-grid-box .xv-grid-row.readonly {
+  background: #f8f8ff;
+}
+.xv-grid-box .xv-grid-row.selected {
+  background-color: #ffffff;
+  border: 1px solid #f49200;
+  border-top: 1px solid #f49200;
+  border-bottom: 1px solid #f49200;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
+  padding: 0;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator input {
+  text-align: left;
+  width: 80px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
+  height: 20px;
+  padding-top: 3px;
+  width: 80px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget {
+  margin-right: 10px;
+  padding-top: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
+  padding: 0;
+  width: 105px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
+  width: 65px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator {
+  padding: 0;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
+  text-align: left;
+  width: 80px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column.line-number .xv-numberwidget .onyx-input-decorator {
+  padding: 0;
+  width: 30px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column.line-number .xv-numberwidget .onyx-input-decorator input {
+  text-align: left;
+  width: 20px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator {
+  padding: 0;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
+  text-align: left;
+  width: 80px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
+  width: 150px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input {
+  width: 100px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-subinput {
+  width: 80px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
+  padding-top: 6px;
+  width: 80px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-decorated-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
+  text-indent: 0;
+  padding-bottom: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
+  border-bottom: 0;
+  padding: 0;
+}
+.xv-grid-box .xv-sales-summary-panel {
+  border: none;
+  margin-top: 0;
+}
+.xv-grid-box .xv-sales-summary-panel .xv-sales-summary-total-group {
+  padding: 0;
+  border: none;
+}
+/**
   Styles relating to the dashboard
 */
 /*
@@ -352,6 +560,157 @@
   padding: 10px 10px;
 }
 /**
+  Styles relating to Lists
+*/
+/**
+  Styles relating to Lists
+*/
+.xv-list {
+  background-color: #ffffff;
+}
+.xv-list .xv-list-item {
+  background-color: #ffffff;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #dddddd;
+}
+@include box-sizing(border-box);
+.xv-list .xv-list-item.header {
+  padding-top: 0;
+}
+.xv-list .xv-list-item.inactive {
+  background-color: #8d8d8d;
+  color: #000000;
+}
+.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
+  background-color: #8d8d8d;
+}
+.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
+  color: #8d8d8d;
+}
+.xv-list .xv-list-item .xv-list-column.short {
+  width: 9em;
+}
+.xv-list .xv-list-item .xv-list-column.first {
+  width: 19em;
+}
+.xv-list .xv-list-item .xv-list-column.second {
+  width: 10em;
+}
+.xv-list .xv-list-item .xv-list-column.third {
+  width: 4.5em;
+}
+.xv-list .xv-list-item .xv-list-column.money {
+  width: 5em;
+}
+.xv-list .xv-list-item .xv-list-column.descr {
+  width: 15.56em;
+}
+.xv-list .xv-list-item.item-selected {
+  background: #226b9a url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr {
+  color: #ffffff;
+  background: none;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
+  font-style: italic;
+  color: #99ccff;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
+  color: #f49200;
+  background: transparent;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.header {
+  background: #99ccff;
+}
+.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr {
+  color: #ffffff;
+  background: none;
+}
+.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.placeholder {
+  font-style: italic;
+  color: SkyBlue;
+}
+.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.hyperlink {
+  color: #f49200;
+  background: transparent;
+}
+.xv-list-item > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+.xv-list-gear-icon-button {
+  float: right;
+  display: none;
+  margin-top: -4px;
+}
+.xv-list-attr {
+  padding: 5px;
+  font-size: .8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #000000;
+  background-color: #ffffff;
+}
+.xv-list-attr.header {
+  padding: 4px;
+  background: #8d8d8d;
+  font-size: .7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.xv-list-attr.footer {
+  padding: 4px;
+  background: #8d8d8d;
+  font-size: .7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #000000;
+}
+.xv-list-attr.right {
+  position: absolute;
+  right: 0;
+  height: 20px;
+}
+.xv-list-attr.text-align-right {
+  text-align: right;
+}
+.xv-list-attr.bold {
+  font-weight: bold;
+}
+.xv-list-attr.error {
+  color: #ff0000;
+}
+.xv-list-attr.italic {
+  font-style: italic;
+}
+.xv-list-attr.placeholder {
+  font-style: italic;
+  color: #93a1a1;
+}
+.xv-list-attr.hyperlink {
+  color: blue;
+}
+/* Navigator */
+.xv-navigator-header {
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ff6600;
+  padding-left: 20px;
+  border-bottom: 1px solid #0e0e0e;
+}
+.xv-workspace-header {
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 0 0 8px;
+}
+/**
   Styles relating to the parameter widget
 */
 /**
@@ -374,6 +733,26 @@
   min-width: 280px;
   margin: 4px 0 8px 4px;
   padding: 0;
+}
+.pullout .xv-groupbox .xv-filter-form .button-row {
+  background-color: #ffffff;
+  padding: 7px;
+  text-align: center;
+}
+.pullout .xv-groupbox .xv-filter-form .button-row .onyx-button {
+  margin-right: 3px;
+}
+.pullout .xv-groupbox .xv-filter-form .top-drawer {
+  border-top: #aaaaaa 1px solid;
+  background-color: #dddddd;
+  color: #4c4c4c;
+  padding: 7px 0 7px 5px;
+}
+.pullout .xv-groupbox .xv-filter-form .top-drawer > * {
+  margin-right: 10px;
+}
+.pullout .xv-groupbox .xv-filter-form .xv-list {
+  height: 150px;
 }
 .pullout .pullout-scroller {
   position: relative;
@@ -2012,6 +2391,18 @@ body {
 .xv-list .xv-list-item .xv-list-column.descr {
   width: 15.56em;
 }
+.xv-list .xv-list-item .xv-list-column.icon {
+  width: 1.5em;
+}
+.xv-list .xv-list-item .xv-list-column .list-icon {
+  padding: 2px;
+  color: #555555;
+  vertical-align: sub;
+  border: 1px solid #eeeeee;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
 .xv-list .xv-list-item.item-selected {
   background: #226b9a url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
 }
@@ -2302,6 +2693,11 @@ body {
 }
 .xv-relationwidget-description.hyperlink {
   color: blue;
+}
+.xv-private-item-site-widget {
+  border-bottom-color: #aaaaaa;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }
 /* RelationsEditorBox */
 .xv-relations-editor-box .xv-groupbox {

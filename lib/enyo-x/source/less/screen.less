@@ -1,4 +1,4 @@
-/* LESS version of screen.scss file previously in client
+/*
 
   To compile to .css:
   lessc screen.less > ../stylesheets/screen.css
@@ -9,27 +9,29 @@
 /*
   These variables will show in css as their hex values
 */
-@highlight  : #d6f1ff;
-@orange     : #f60;
-@bright-orange  :  #f49200;
-@sky-blue   : #9cf;
-@slate-blue : #226b9a;
-@light-blue  :  #35a8ee;
-@blue        :  #0000ff;
-@silver      :  #aaa;
-@smoke       : #ddd;
-@gray       : #8d8d8d;
-@med-gray    :  #999;
-@charcoal    : #555;
-@dim-gray    : #696969;
-@dark-gray  :  #333;
-@blue-gray  : #93a1a1;
-@near-black  : #0e0e0e;
-@black      : #000;
-@white      : #fff;
-@red        :  #c51616;
-@bright-red  :  #ff0000;
-
+@highlight: #d6f1ff;
+@orange: #f60;
+@bright-orange: #f49200;
+@sky-blue: #9cf;
+@slate-blue: #226b9a;
+@light-blue: #35a8ee;
+@blue: #0000ff;
+@lightest-gray: #eee;
+@silver: #aaa;
+@smoke: #ddd;
+@gray: #8d8d8d;
+@med-gray: #999;
+@charcoal: #555;
+@header-gray: #4c4c4c;
+@dim-gray: #696969;
+@dark-gray: #333;
+@blue-gray: #93a1a1;
+@near-black: #0e0e0e;
+@black: #000;
+@white: #fff;
+@ghost: #f8f8ff;
+@red: #c51616;
+@bright-red: #ff0000;
 
 /* Helper classes for css3 */
 @import "mixins.less";
@@ -41,9 +43,19 @@
 @import "groupbox.less";
 
 /**
+  Styles relating to grid-entry
+*/
+@import "grid.less";
+
+/**
   Styles relating to the dashboard
 */
 @import "dashboard.less";
+
+/**
+  Styles relating to Lists
+*/
+@import "list.less";
 
 /**
   Styles relating to the parameter widget
@@ -312,6 +324,16 @@ body {
       }
       &.descr {
         width: 15.56em;
+      }
+      &.icon {
+        width: 1.5em;
+      }
+      .list-icon {
+        padding: 2px;
+        color: @charcoal;
+        vertical-align: sub;
+        border: 1px solid @lightest-gray;
+        .border-radius(2px);
       }
     }
     &.item-selected {
@@ -653,6 +675,12 @@ body {
   }
 }
 
+.xv-private-item-site-widget {
+  border-bottom-color: rgb(170, 170, 170);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
 /* RelationsEditorBox */
 .xv-relations-editor-box {
   .xv-groupbox {
@@ -743,6 +771,8 @@ body {
     margin: 0 40px 0 40px;
   }
 }
+
+
 
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {

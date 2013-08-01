@@ -24,6 +24,7 @@ var lang = XT.stringsFor("en_US", {
   "_defaultEventFence": "Default Event Fence (Days)",
   "_dontPost": "Do Not Post",
   "_enableAsOfQOH": "Enable As-Of QOH Reporting",
+  "_enterReceipt": "Enter Receipt",
   "_inventory": "Inventory",
 	"_inventoryDescription": "Shipping and Receiving, Inventory and Cost Management",
   "_issueToShipping": "Issue to Shipping",
@@ -42,6 +43,8 @@ var lang = XT.stringsFor("en_US", {
   "_noSlipDups": "No Slip # Duplications",
   "_number": "Number",
   "_physicalInventory": "Physical Inventory (Counting)",
+  "_purchaseOrder": "Purchase Order",
+  "_purchaseOrders": "Purchase Orders",
   "_recallShipment": "Recall Shipment",
   "_recallShipment?": "Are you shure you want to recall this shipment?. If it has been invoiced the invoice will also be deleted.",
   "_receiptQtyTolerancePct": "By the Following Amount (%)",
@@ -54,5 +57,9 @@ var lang = XT.stringsFor("en_US", {
   "_shipped": "Shipped",
   "_shipment": "Shipment",
   "_shipments": "Shipments",
+  "_unReleased": "Unreleased",
+  "_vendor": "Vendor",
+  "_vendors": "Vendors",
+  "_vendorType": "Vendor Type",
   "_warnIfReceiptQtyDiffers": "Warn if PO Receipt Qty differs from receivable Qty"
 });
