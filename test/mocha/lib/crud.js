@@ -2,7 +2,7 @@
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
-setTimeout:true, clearTimeout: true, exports: true */
+setTimeout:true, clearTimeout:true, exports:true, it:true */
 
 var _ = require("underscore"),
   zombieAuth = require("./zombie_auth"),
@@ -260,75 +260,70 @@ var _ = require("underscore"),
     String all CRUD tests together so that simple models can be
     tested with a single function
    */
-  var runAllCrud = exports.runAllCrud = function (data, done) {
-    // very clever: we allow testmakers to define their own custom
-    // callbacks in their data object. If data.setCallback is set,
-    // then what we do is, instead of:
-    // 1. Run the set operation
-    // 2: Run the default set callback (which moves on to the next step)
-    //
-    // it will do this instead:
-    // 1. Run the set operation
-    // 2. Run the user's custom set callback
-    // 3: Run the default set callback (which moves on to the next step)
+  var runAllCrud = exports.runAllCrud = function (data) {
+    // Step 1: load the environment with Zombie
+    it('loads the client with zombie', function (done) {
+      this.timeout(20 * 1000);
+      zombieAuth.loadApp({callback: done, verbose: data.verbose});
+    });
 
-    var tempSetCallback, tempCreateCallback, tempInitCallback;
-
-    var runCrud = function () {
-      var initCallback = function () {
-        var setCallback = function () {
-          var saveCallback = function () {
-            var secondSaveCallback = function () {
-
-              // Step 8: delete the model from the database
-              if (data.verbose) { console.log("destroy model", data.recordType); }
-              destroy(data, done);
-            };
-
-            // Step 6: set the model with updated data
-            if (data.verbose) { console.log("update model", data.recordType); }
-            update(data);
-
-            // Step 7: save the updated model to the database
-            if (data.verbose) { console.log("save updated model", data.recordType); }
-            save(data, secondSaveCallback);
-          };
-
-          // Step 5: save the data to the database
-          if (data.verbose) { console.log("save model", data.recordType); }
-          save(data, saveCallback);
-        };
-
-        // Step 4: set the model with our createData hash
-        if (data.setCallback) {
-          tempSetCallback = setCallback;
-          setCallback = function () {
-            data.setCallback(data, tempSetCallback);
-          };
-        }
-        if (data.verbose) { console.log("set model", data.recordType); }
-        data.updated = false;
-        setModel(data, setCallback);
-      };
-
-      // Step 2: create the model per the record type specified
-      if (data.verbose) { console.log("create model", data.recordType); }
+    // Step 2: create the model per the record type specified
+    if (data.verbose) { console.log("create model", data.recordType); }
+    it('creates the model of the appropriate record type', function () {
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
+    });
 
-      // Step 3: initialize the model to get the ID from the database
-      if (data.initCallback) {
-        tempInitCallback = initCallback;
-        initCallback = function () {
-          data.initCallback(data, tempInitCallback);
-        };
-      }
-      if (data.verbose) { console.log("init model", data.recordType); }
-      init(data, initCallback);
-    };
+    // Step 3: initialize the model to get the ID from the database
+    if (data.verbose) { console.log("init model", data.recordType); }
+    it('initializes the model by fetching an id from the server', function (done) {
+      init(data, done);
+    });
 
-    // Step 1: load the environment with Zombie
-    zombieAuth.loadApp({callback: runCrud, verbose: false /* data.verbose */});
+    if (data.initCallback) {
+      // very clever: we allow testmakers to define their own custom
+      // functions in their data object.
+      it('calls a specified function after initialization', function (done) {
+        data.initCallback(data, done);
+      });
+    }
+
+    // Step 4: set the model with our createData hash
+    if (data.setCallback) {
+      it('calls a specified function after set', function (done) {
+        data.setCallback(data, done);
+      });
+    }
+
+    it('sets values on the model', function (done) {
+      if (data.verbose) { console.log("set model", data.recordType); }
+      data.updated = false;
+      setModel(data, done);
+    });
+
+    // Step 5: save the data to the database
+    it('saves the values to the database', function (done) {
+      if (data.verbose) { console.log("save model", data.recordType); }
+      save(data, done);
+    });
+
+
+    // Step 6: set the model with updated data
+    it('updates the model', function () {
+      if (data.verbose) { console.log("update model", data.recordType); }
+      update(data);
+    });
+
+    // Step 7: save the updated model to the database
+    it('saves the updated values to the database', function (done) {
+      if (data.verbose) { console.log("save updated model", data.recordType); }
+      save(data, done);
+    });
+
+    // Step 8: delete the model from the database
+    it('deletes the model from the database', function (done) {
+      if (data.verbose) { console.log("destroy model", data.recordType); }
+      destroy(data, done);
+    });
   };
-
 }());
