@@ -291,6 +291,7 @@ var _ = require("underscore"),
     // Step 4: set the model with our createData hash
     if (data.setCallback) {
       it('calls a specified function after set', function (done) {
+        this.timeout(20 * 1000);
         data.setCallback(data, done);
       });
     }

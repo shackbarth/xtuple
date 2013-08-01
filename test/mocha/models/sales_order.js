@@ -117,11 +117,10 @@ module:true, require:true, exports:true, console:true */
     };
 
   describe('Sales order', function () {
-    this.timeout(15 * 1000);
-    it('should perform all the crud operations', function (done) {
-      crud.runAllCrud(salesOrderData, done);
-    });
+    crud.runAllCrud(salesOrderData);
+  });
 
+  describe('Sales order business logic', function () {
     it('should take the defaults from the customer', function (done) {
       var terms = new XM.Terms(),
         customer = new XM.CustomerProspectRelation(),
@@ -143,11 +142,10 @@ module:true, require:true, exports:true, console:true */
   });
 
   describe('Quote', function () {
-    this.timeout(10 * 1000);
-    it('should perform all the crud operations on quote', function (done) {
-      crud.runAllCrud(quoteData, done);
-    });
+    crud.runAllCrud(quoteData);
+  });
 
+  describe('Quote business logic', function () {
     it('should take the defaults from the customer', function (done) {
       var terms = new XM.Terms(),
         customer = new XM.CustomerProspectRelation(),

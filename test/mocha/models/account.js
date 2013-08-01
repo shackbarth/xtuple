@@ -20,9 +20,6 @@
     };
 
   describe('Account CRUD Test', function () {
-      this.timeout(30 * 1000);
-      it('should perform all the crud operations', function (done) {
-        crud.runAllCrud(data, done);
-      });
-    });
+    crud.runAllCrud(data);
+  });
 }());
