@@ -26,31 +26,23 @@ trailing:true, white:true*/
               {kind: "onyx.GroupboxHeader", content: "_reporting".loc()},
               {kind: "XV.NumberWidget", attr: "DefaultEventFence",
                 label: "_defaultEventFence".loc(), formatting: false},
-            	//{kind: "XV.ToggleButtonWidget", attr: "EnableAsOfQOH",
-              	//label: "_enableAsOfQOH".loc()},
               {kind: "onyx.GroupboxHeader", content: "_changeLog".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "WarehouseChangeLog",
                 label: "_postSiteChanges".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "ItemSiteChangeLog",
                 label: "_postItemSiteChanges".loc()},
-
               {kind: "onyx.GroupboxHeader", content: "_costing".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "AllowAvgCostMethod",
                 label: "_allowAvgCostMethod".loc()},
-	      			//{kind: "XV.ToggleButtonWidget", attr: "AllowReceiptCostOverride",
-                //label: "_allowReceiptCostOverride".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "AllowStdCostMethod",
                 label: "_allowStdCostMethod".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "AllowJobCostMethod",
                 label: "_allowJobCostMethod".loc()},
-	      			// Not bothering to define a kind
               {kind: "XV.PickerWidget", attr: "CountAvgCostMethod",
                 label: "_countAvgCostMethod".loc(), collection: "XM.countAvgCostMethod"},
-	      			{kind: "onyx.GroupboxHeader", content: "_physicalInventory".loc()},
-              // Not bothering to define a kind
+              {kind: "onyx.GroupboxHeader", content: "_physicalInventory".loc()},
               {kind: "XV.PickerWidget", attr: "PostCountTagToDefault",
                 label: "_postCountTagToDefault".loc(), collection: "XM.postCountTagToDefault"},
-	      			// Not bothering to define a kind
               {kind: "XV.PickerWidget", attr: "CountSlipAuditing",
                 label: "_countSlipAuditing".loc(), collection: "XM.countSlipAuditing"},
               {kind: "onyx.GroupboxHeader", content: "_shippingAndReceiving".loc()},
@@ -70,6 +62,38 @@ trailing:true, white:true*/
                 label: "_recordPPVOnReceipt".loc()}
             ]}
           ]}
+        ]}
+      ]
+    });
+
+    // ..........................................................
+    // ISSUE STOCK
+    //
+
+    enyo.kind({
+      name: "XV.IssueStockWorkspace",
+      kind: "XV.Workspace",
+      title: "_issueStock".loc(),
+      model: "XM.ShippableSalesOrderLine",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_order".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.SalesOrderWidget", attr: "order"},
+              {kind: "XV.ShipmentWidget", attr: "shipment"},
+              {kind: "onyx.GroupboxHeader", content: "_item".loc()},
+              {kind: "XV.ItemSite", attr: "itemSite"},
+              {kind: "XV.QuantityWidget", attr: "ordered"},
+              {kind: "XV.QuantityWidget", attr: "shipped"},
+              {kind: "XV.QuantityWidget", attr: "returned"},
+              {kind: "XV.QuantityWidget", attr: "balance"},
+              {kind: "onyx.GroupboxHeader", content: "_issue".loc()},
+              {kind: "XV.QuantityWidget", attr: "toIssue"},
+            ]}
+          ]},
         ]}
       ]
     });
@@ -103,19 +127,14 @@ trailing:true, white:true*/
               {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
-  				]},
-  				{kind: "XV.ShipmentLineRelationsBox", attr: "lineItems", fit: true}
+          ]},
+          {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems", fit: true}
         ]}
-      ],
-      formatPrice: function (value, view, model) {
-        var freight = model ? model.get("freight") : false,
-          scale = XT.session.locale.attributes.freight;
-        return freight ? freight.format(value, scale) : "";
-      }
+      ]
     });
 
     XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
     XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
 
-  }
+  };
 }());

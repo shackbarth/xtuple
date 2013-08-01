@@ -173,7 +173,7 @@ trailing:true, white:true*/
       showDeleteAction: false,
       actions: [
         {name: "issueStock", prerequisite: "canIssueStock",
-          method: "doIssueStock", notify: false},
+          method: "issueStock", notify: false, isViewMethod: true},
         {name: "issueLine", prerequisite: "canIssueStock",
           method: "doIssueLine", notify: false},
         {name: "returnLine", prerequisite: "canReturnStock",
@@ -231,7 +231,21 @@ trailing:true, white:true*/
       formatQuantity: function (value, view, model) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
-      }
+      },
+      issueStock: function (inEvent) {
+        var model = inEvent.model,
+          modelId = model.id,
+          success = function () {
+            this.getValue().convertFromProspect(modelId);
+          };
+
+        this.doWorkspace({
+          workspace: "XV.IssueStockWorkspace",
+          id: model.id,
+          success: success,
+          allowNew: false
+        });
+      },
     });
 
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");

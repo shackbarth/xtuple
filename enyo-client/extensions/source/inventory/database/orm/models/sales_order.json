@@ -172,6 +172,14 @@
         }
       },
       {
+        "name": "shipment",
+        "toOne": {
+          "isNested": true,
+          "type": "ShipmentRelation",
+          "column": "shiphead_id"
+        }
+      },
+      {
         "name": "lineNumber",
         "attr": {
           "type": "String",
@@ -240,6 +248,13 @@
         "attr": {
           "type": "Number",
           "column": "at_shipping"
+        }
+      },
+      {
+        "name": "toIssue",
+        "attr": {
+          "type": "Number",
+          "column": "to_issue"
         }
       }
     ],

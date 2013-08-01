@@ -5,27 +5,15 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   // ..........................................................
-  // PURCHASE ORDER
+  // SHIPMENT
   //
 
   enyo.kind({
-    name: "XV.PurchaseOrderWidget",
+    name: "XV.ShipmentWidget",
     kind: "XV.RelationWidget",
-    collection: "XM.PurchaseOrderListItemCollection",
+    collection: "XM.ShipmentCollection",
     keyAttribute: "number",
-    list: "XV.PurchaseOrderList"
-  });
-
-  // ..........................................................
-  // VENDOR
-  //
-
-  enyo.kind({
-    name: "XV.VendorWidget",
-    kind: "XV.RelationWidget",
-    collection: "XM.VendorRelationCollection",
-    keyAttribute: "number",
-    list: "XV.VendorList"
+    list: "XV.ShipmentList"
   });
 
 }());

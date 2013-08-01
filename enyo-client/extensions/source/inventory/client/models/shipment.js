@@ -79,6 +79,20 @@ white:true*/
 
     });
 
+    /**
+      @class
+
+      @extends XM.Info
+    */
+    XM.ShipmentRelation = XM.Info.extend({
+
+      recordType: "XM.ShipmentRelation",
+
+      editableModel: "XM.Shipment"
+
+    });
+
+
     // ..........................................................
     // COLLECTIONS
     //
