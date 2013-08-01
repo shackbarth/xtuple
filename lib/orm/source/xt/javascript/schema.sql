@@ -379,6 +379,15 @@ select xt.install_js('XT','Schema','xtuple', $$
 
         if (orm.properties[i].toMany.isNested) {
           ret.properties[orm.properties[i].name].items = {"$ref": orm.properties[i].toMany.type};
+        } else {
+          /* This is an array of related keys, not a full object. */
+          /* Make the $ref to the relation's natural key. */
+          /* Using JSON-Schema $ref paths like this: */
+          /* http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.5.7.2 */
+          /* See also: http://www.sitepen.com/blog/2008/06/17/json-referencing-in-dojo/ */
+          ret.properties[orm.properties[i].name].items = {
+            "$ref": orm.properties[i].toMany.type + "/" + nkey || pkey
+          };
         }
       }
       /* Error */

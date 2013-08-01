@@ -26,7 +26,35 @@ white:true*/
     */
     XM.ShippableSalesOrderLine = XM.Model.extend({
 
-      recordType: 'XM.ShippableSalesOrderLine'
+      recordType: 'XM.ShippableSalesOrderLine',
+
+      canIssueStock: function (callback) {
+        if (callback) {
+          callback(true);
+        }
+        return this;
+      },
+
+      canReturnStock: function (callback) {
+        if (callback) {
+          callback(false);
+        }
+        return this;
+      },
+
+      doIssueStock: function (callback) {
+        if (callback) {
+          callback(true);
+        }
+        return this;
+      },
+
+      doReturnStock: function (callback) {
+        if (callback) {
+          callback(true);
+        }
+        return this;
+      }
 
     });
 

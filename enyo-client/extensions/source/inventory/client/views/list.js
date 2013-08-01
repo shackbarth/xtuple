@@ -170,6 +170,16 @@ trailing:true, white:true*/
         {attribute: 'lineNumber'},
         {attribute: 'subNumber'}
       ]},
+      showDeleteAction: false,
+      actions: [
+        {name: "issueStock", prerequisite: "canIssueStock",
+          method: "doIssueStock", notify: false},
+        {name: "issueLine", prerequisite: "canIssueStock",
+          method: "doIssueLine", notify: false},
+        {name: "returnLine", prerequisite: "canReturnStock",
+          method: "doReturnStock", notify: false}
+      ],
+      toggleSelected: true,
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [

@@ -1609,10 +1609,9 @@
       },
       {
         "name": "customer",
-        "toOne": {
-          "isNested": true,
-          "type": "CustomerRelation",
-          "column": "cohead_cust_id"
+        "attr": {
+          "type": "Number",
+          "column": "cust_number"
         }
       },
       {
