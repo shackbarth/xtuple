@@ -72,7 +72,8 @@ Globalize:true */
       this.$.priceUnit.setContent(model.getValue("priceUnit.name"));
       this.$.extendedPrice.setContent(Globalize.format(XT.math.round(model.get("extendedPrice"),
         XT.EXTENDED_PRICE_SCALE), "n" + XT.EXTENDED_PRICE_SCALE));
-      this.$.scheduleDate.setContent(Globalize.format(model.get("scheduleDate"), "d"));
+
+      this.$.scheduleDate.setContent(Globalize.format(XT.date.applyTimezoneOffset(model.get("scheduleDate"), true), "d"));
     }
   });
 
