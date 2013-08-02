@@ -135,7 +135,7 @@ Globalize:true */
     components: [
       {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
       {kind: "XV.SalesOrderLineItemHeaders"},
-      {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", horizontal: "hidden", fit: true, components: [
+      {kind: "XV.Scroller", name: "mainGroup", horizontal: "hidden", fit: true, components: [
         {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list", onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
           { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
         ]},

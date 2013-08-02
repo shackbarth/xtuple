@@ -284,13 +284,6 @@
 /*
   Styles relating to the grid box
 */
-/**
-  This is a little hacky, but it gets rid of the border
-  that is around the entire widget.
-*/
-.xv-groupbox .in-panel {
-  border: none;
-}
 /* Entire box including the grid and the summary panel */
 .xv-grid-box {
   /**
@@ -301,7 +294,6 @@
 }
 .xv-grid-box.panel {
   width: 840px;
-  padding: 0;
 }
 .xv-grid-box .xv-above-grid-list {
   border: 0px;
