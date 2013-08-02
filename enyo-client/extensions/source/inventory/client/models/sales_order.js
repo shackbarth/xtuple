@@ -39,6 +39,13 @@ white:true*/
         "shipped"
       ],
 
+       bindEvents: function () {
+        XM.Model.prototype.bindEvents.apply(this, arguments);
+
+        // Bind events
+        this.on('statusChange', this.statusDidChange);
+      },
+
       canIssueStock: function (callback) {
         if (callback) {
           callback(true);
@@ -69,7 +76,14 @@ white:true*/
 
       save: function () {
         // Do something else
+      },
+
+      statusDidChange: function () {
+        if (this.getStatus() === XM.Model.READY_CLEAN) {
+          this.set("toIssue", this.get("balance"));
+        }
       }
+
 
     });
 

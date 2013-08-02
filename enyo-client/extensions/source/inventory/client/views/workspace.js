@@ -93,11 +93,21 @@ trailing:true, white:true*/
               {kind: "XV.QuantityWidget", attr: "returned"},
               {kind: "XV.QuantityWidget", attr: "balance"},
               {kind: "onyx.GroupboxHeader", content: "_issue".loc()},
-              {kind: "XV.QuantityWidget", attr: "toIssue"},
+              {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
           ]},
         ]}
-      ]
+      ],
+      attributesChanged: function () {
+        this.inherited(arguments);
+        var model = this.getValue();
+        if (!this._focused && model &&
+          model.getStatus() === XM.Model.READY_DIRTY) {
+          this.$.toIssue.focus();
+          this.$.toIssue.$.input.selectContents();
+          this._focused = true;
+        }
+      }
     });
 
     // ..........................................................
