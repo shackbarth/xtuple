@@ -461,16 +461,32 @@
   border-bottom: 0;
   padding: 0;
 }
-.xv-grid-box .xv-sales-summary-panel {
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel {
   border: none;
   margin-top: 0;
+  padding-left: 0px;
+  padding-right: 0px;
 }
-.xv-grid-box .xv-sales-summary-panel .xv-sales-summary-total-group {
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group {
   padding: 0;
   border: none;
 }
-.xv-grid-box .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget {
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget .xv-input-decorator {
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget {
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
   width: 163px;
+  padding-bottom: 0px;
+  padding-top: 0px;
 }
 /**
   Styles relating to the dashboard
