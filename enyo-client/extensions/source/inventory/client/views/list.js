@@ -170,7 +170,7 @@ trailing:true, white:true*/
       name: "XV.IssueToShippingList",
       kind: "XV.List",
       label: "_issueToShipping".loc(),
-      collection: "XM.ShippableSalesOrderLineCollection",
+      collection: "XM.IssueToShippingCollection",
       parameterWidget: "XV.IssueToShippingParameters",
       query: {orderBy: [
         {attribute: 'lineNumber'},

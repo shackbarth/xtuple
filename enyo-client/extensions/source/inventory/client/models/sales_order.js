@@ -19,74 +19,6 @@ white:true*/
 
     });
 
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.ShippableSalesOrderLine = XM.Model.extend({
-
-      recordType: 'XM.ShippableSalesOrderLine',
-
-      readOnlyAttributes: [
-        "balance",
-        "item",
-        "order",
-        "ordered",
-        "returned",
-        "site",
-        "shipment",
-        "shipped"
-      ],
-
-       bindEvents: function () {
-        XM.Model.prototype.bindEvents.apply(this, arguments);
-
-        // Bind events
-        this.on('statusChange', this.statusDidChange);
-      },
-
-      canIssueStock: function (callback) {
-        if (callback) {
-          callback(true);
-        }
-        return this;
-      },
-
-      canReturnStock: function (callback) {
-        if (callback) {
-          callback(false);
-        }
-        return this;
-      },
-
-      doIssueStock: function (callback) {
-        if (callback) {
-          callback(true);
-        }
-        return this;
-      },
-
-      doReturnStock: function (callback) {
-        if (callback) {
-          callback(true);
-        }
-        return this;
-      },
-
-      save: function () {
-        // Do something else
-      },
-
-      statusDidChange: function () {
-        if (this.getStatus() === XM.Model.READY_CLEAN) {
-          this.set("toIssue", this.get("balance"));
-        }
-      }
-
-
-    });
-
     // ..........................................................
     // COLLECTIONS
     //
@@ -99,17 +31,6 @@ white:true*/
     XM.SalesOrderLineListItemCollection = XM.Collection.extend({
 
       model: XM.SalesOrderLineListItem
-
-    });
-
-      /**
-      @class
-
-      @extends XM.Collection
-    */
-    XM.ShippableSalesOrderLineCollection = XM.Collection.extend({
-
-      model: XM.ShippableSalesOrderLine
 
     });
 

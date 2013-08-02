@@ -74,7 +74,7 @@ trailing:true, white:true*/
       name: "XV.IssueStockWorkspace",
       kind: "XV.Workspace",
       title: "_issueStock".loc(),
-      model: "XM.ShippableSalesOrderLine",
+      model: "XM.IssueToShipping",
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
