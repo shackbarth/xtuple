@@ -430,7 +430,7 @@ regexp:true, undef:true, trailing:true, white:true */
       for (var i = 0; i < comps.length; i++) {
         this.$.picker.createComponent(comps[i]);
       }
-      //this.$.picker.render();
+      this.$.picker.render();
     },
     itemSelected: function (inSender, inEvent) {
       this.attr = inEvent.originator.attr;
