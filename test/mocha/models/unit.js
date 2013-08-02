@@ -7,20 +7,19 @@
   "use strict";
 
   var crud = require('../lib/crud'),
-   data = {
-    recordType: "XM.TaxAssignment",
-    autoTestAttributes: true,
-    createHash: {
-      tax: "GA TAX-A" + Math.random(),
-      taxZone: "GA TAX",
-      taxType: "Adjustment"
-    },
-    updateHash: {
-      taxType: "Freight"
-    }
-  };
+    data = {
+      recordType : "XM.Unit",
+      autoTestAttributes : true,
+      createHash : {
+        name : 'IN',
+        description : 'Inch'
+      },
+      updateHash : {
+        description : 'Inch Description'
+      }
+    };
 
-  describe.skip('TaxAssignment CRUD Test', function () {
+  describe('Unit CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());

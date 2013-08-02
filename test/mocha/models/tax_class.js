@@ -8,19 +8,19 @@
 
   var crud = require('../lib/crud'),
     data = {
-      recordType : "XM.State",
-      autoTestAttributes : true,
+      recordType: "XM.TaxClass",
+      autoTestAttributes: true,
       createHash: {
-        name: "Milky Way" + Math.random(),
-        abbreviation: "MW",
-        country: 213  //arbitrary number, must match actual country_id
+        code: "TC Code" + Math.random(),
+        description: "Tax Class Code",
+        sequence: 998
       },
       updateHash: {
-        abbreviation: "XY"
+        description: "updated descrip"
       }
     };
 
-  describe('State CRUD Test', function () {
+  describe('Tax Class CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());

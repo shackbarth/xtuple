@@ -8,20 +8,22 @@
 
   var crud = require('../lib/crud'),
     data = {
-      recordType: "XM.SalesRep",
+      recordType: "XM.TaxRate",
       autoTestAttributes: true,
-      createHash : {
-        number: "TESTSALESREP" + Math.random(),
-        name: "TestRep"
+      createHash: {
+        amount: 10,
+        percent: 5,
+        effectiveDate: new Date(),
+        expirationDate: new Date(),
+        tax: {code: 'VATAX-A'},
+        currency: {abbreviation: 'USD'}
       },
-      updateHash : {
-        name: "Updated Test SalesRep"
-      },
-      beforeDeleteActions: crud.accountBeforeDeleteActions,
-      afterDeleteActions: crud.accountAfterDeleteActions
+      updateHash: {
+        amount: 20
+      }
     };
 
-  describe('SalesRep CRUD Test', function () {
+  describe('Tax rate CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());

@@ -8,20 +8,20 @@
 
   var crud = require('../lib/crud'),
     data = {
-      recordType: "XM.SalesRep",
+      recordType: "XM.TaxAuthority",
       autoTestAttributes: true,
       createHash : {
-        number: "TESTSALESREP" + Math.random(),
-        name: "TestRep"
+        code: "TAXAUTH3" + Math.random(),
+        name: "TAXAUTH NAME"
       },
       updateHash : {
-        name: "Updated Test SalesRep"
+        name: "Jon Fishman"
       },
       beforeDeleteActions: crud.accountBeforeDeleteActions,
       afterDeleteActions: crud.accountAfterDeleteActions
     };
 
-  describe('SalesRep CRUD Test', function () {
+  describe('TaxAuthority CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());

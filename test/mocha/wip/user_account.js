@@ -7,21 +7,23 @@
   "use strict";
 
   var crud = require('../lib/crud'),
-    data = {
-      recordType: "XM.SalesRep",
+      data = {
+      recordType: "XM.UserAccount",
       autoTestAttributes: true,
-      createHash : {
-        number: "TESTSALESREP" + Math.random(),
-        name: "TestRep"
+      createHash: {
+        username: 'uname1',
+        password: 'second',
+        passwordCheck: 'second',
+        properName: 'Peter',
+        isActive: true,
+        locale: 'Default'
       },
-      updateHash : {
-        name: "Updated Test SalesRep"
-      },
-      beforeDeleteActions: crud.accountBeforeDeleteActions,
-      afterDeleteActions: crud.accountAfterDeleteActions
+      updateHash: {
+        properName : 'Parker'
+      }
     };
 
-  describe('SalesRep CRUD Test', function () {
+  describe('User Account CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());
