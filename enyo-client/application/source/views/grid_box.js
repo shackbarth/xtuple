@@ -96,7 +96,7 @@ Globalize:true */
         ]}},
       ]},
       {classes: "xv-grid-column quantity", components: [
-        {kind: "XV.QuantityWidget", attr: "quantity"},
+        {kind: "XV.QuantityWidget", attr: "quantity", name: "quantityWidget"},
         {kind: "XV.UnitPickr", attr: "quantityUnit", name: "quantityUnitPicker" }
       ]},
       {classes: "xv-grid-column discount", components: [
@@ -112,13 +112,13 @@ Globalize:true */
           currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
       ]},
       {classes: "xv-grid-column schedule", components: [
-        {kind: "XV.DateWidget", attr: "scheduleDate"}
+        {kind: "XV.DateWidget", attr: "scheduleDate" }
       ]},
       {classes: "xv-grid-column grid-actions", components: [
         {components: [
-          {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton" },
-          {kind: "enyo.Button", classes: "icon-eye-open", name: "expandGridRowButton" },
-          {kind: "enyo.Button", classes: "icon-remove", name: "deleteGridRowButton" }
+          {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton", onkeyup: "addButtonKeyup" },
+          {kind: "enyo.Button", attributes: {tabIndex: "-1"}, classes: "icon-eye-open", name: "expandGridRowButton" },
+          {kind: "enyo.Button", attributes: {tabIndex: "-1"}, classes: "icon-remove", name: "deleteGridRowButton" }
         ]}
       ]}
     ]
