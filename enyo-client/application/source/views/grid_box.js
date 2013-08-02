@@ -150,12 +150,12 @@ Globalize:true */
             classes: "xv-groupbox-buttons",
             components: [
               {kind: "onyx.Button", name: "newButton", onclick: "newItem",
-                content: "_new".loc(), classes: "xv-groupbox-button-center"}
+                content: "_new".loc(), classes: "xv-groupbox-button-single"}
             ]
           }
-        ]},
-        {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
-      ]}
+        ]}
+      ]},
+      {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
     ],
 
     /**
