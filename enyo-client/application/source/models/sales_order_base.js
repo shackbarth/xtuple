@@ -1403,7 +1403,7 @@ white:true*/
         long30 = XT.session.settings.get("Long30Markups"),
         parent = this.getParent(),
         currency = parent.get("currency"),
-        effective = parent.get(parent.documentKey),
+        effective = parent.get(parent.documentDateKey),
         scale = XT.SALES_PRICE_SCALE,
         that = this,
         options = {},
