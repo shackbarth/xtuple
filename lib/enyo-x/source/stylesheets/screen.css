@@ -300,16 +300,8 @@
 
 }
 .xv-grid-box.panel {
-  width: 984px;
+  width: 840px;
   padding: 0;
-}
-.xv-grid-box .xv-groupbox-buttons {
-  padding: 5px;
-}
-.xv-grid-box .xv-groupbox-buttons .xv-groupbox-button-center {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
 }
 .xv-grid-box .xv-above-grid-list {
   border: 0px;
@@ -484,6 +476,9 @@
 .xv-grid-box .xv-sales-summary-panel .xv-sales-summary-total-group {
   padding: 0;
   border: none;
+}
+.xv-grid-box .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
+  width: 163px;
 }
 /**
   Styles relating to the dashboard
