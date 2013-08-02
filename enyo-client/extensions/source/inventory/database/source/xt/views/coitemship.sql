@@ -6,7 +6,8 @@ select xt.create_view('xt.coitemship', $$
     coitem_cohead_id,
     coitem_linenumber,
     coitem_subnumber,
-    coitem_itemsite_id,
+    item_id,
+    itemsite_warehous_id,
     coitem_scheddate,
     coitem_qty_uom_id,
     coitem_qtyord,
@@ -14,10 +15,13 @@ select xt.create_view('xt.coitemship', $$
     coitem_qtyreturned,
     ship_balance,
     at_shipping,
-    null as to_issue
+    null as to_issue,
+    shiphead_id
   from xt.coiteminfo as coitem
     join itemsite on itemsite_id=coitem_itemsite_id
     join item on itemsite_item_id=item_id
+    join cohead on cohead_id=coitem_cohead_id
+    left join shiphead on cohead_id=shiphead_order_id and shiphead_order_type='S' and not shiphead_shipped
   where coitem_status='O'
     and item_type != 'K'
   order by coitem_linenumber, coitem_subnumber

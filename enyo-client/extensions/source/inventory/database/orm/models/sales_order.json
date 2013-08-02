@@ -142,7 +142,7 @@
       "all": {
         "create": false,
         "read": "IssueStockToShipping",
-        "update": false,
+        "update": "IssueStockToShipping",
         "delete": false
       }
     },
@@ -172,6 +172,14 @@
         }
       },
       {
+        "name": "shipment",
+        "toOne": {
+          "isNested": true,
+          "type": "ShipmentRelation",
+          "column": "shiphead_id"
+        }
+      },
+      {
         "name": "lineNumber",
         "attr": {
           "type": "String",
@@ -186,10 +194,18 @@
         }
       },
       {
-        "name": "itemSite",
+        "name": "item",
         "toOne": {
-          "type": "ItemSiteRelation",
-          "column": "coitem_itemsite_id",
+          "type": "ItemRelation",
+          "column": "item_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "itemsite_warehous_id",
           "isNested": true
         }
       },
@@ -240,6 +256,13 @@
         "attr": {
           "type": "Number",
           "column": "at_shipping"
+        }
+      },
+      {
+        "name": "toIssue",
+        "attr": {
+          "type": "Number",
+          "column": "to_issue"
         }
       }
     ],

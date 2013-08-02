@@ -179,7 +179,7 @@ trailing:true, white:true*/
       showDeleteAction: false,
       actions: [
         {name: "issueStock", prerequisite: "canIssueStock",
-          method: "doIssueStock", notify: false},
+          method: "issueStock", notify: false, isViewMethod: true},
         {name: "issueLine", prerequisite: "canIssueStock",
           method: "doIssueLine", notify: false},
         {name: "returnLine", prerequisite: "canReturnStock",
@@ -192,11 +192,11 @@ trailing:true, white:true*/
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
                 {kind: "XV.ListAttr", attr: "lineNumber"},
-                {kind: "XV.ListAttr", attr: "itemSite.site.code",
+                {kind: "XV.ListAttr", attr: "site.code",
                   classes: "right"},
-                {kind: "XV.ListAttr", attr: "itemSite.item.number", fit: true}
+                {kind: "XV.ListAttr", attr: "item.number", fit: true}
               ]},
-              {kind: "XV.ListAttr", attr: "itemSite.item.description1",
+              {kind: "XV.ListAttr", attr: "item.description1",
                 fit: true,  style: "text-indent: 18px;"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
@@ -213,14 +213,15 @@ trailing:true, white:true*/
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
               {kind: "XV.ListAttr", attr: "scheduleDate",
-                style: "text-align: right"}
+                formatter: "formatScheduleDate", style: "text-align: right"}
             ]}
           ]}
         ]}
       ],
-      formatDueDate: function (value, view, model) {
+      formatScheduleDate: function (value, view, model) {
         var today = new Date(),
-          isLate = XT.date.compareDate(value, today) < 1;
+          isLate = XT.date.compareDate(value, today) < 1 &&
+            model.get("balance") > 0;
         view.addRemoveClass("error", isLate);
         return value;
       },
@@ -237,7 +238,21 @@ trailing:true, white:true*/
       formatQuantity: function (value, view, model) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
-      }
+      },
+      issueStock: function (inEvent) {
+        var model = inEvent.model,
+          modelId = model.id,
+          success = function () {
+            this.getValue().convertFromProspect(modelId);
+          };
+
+        this.doWorkspace({
+          workspace: "XV.IssueStockWorkspace",
+          id: model.id,
+          success: success,
+          allowNew: false
+        });
+      },
     });
 
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
