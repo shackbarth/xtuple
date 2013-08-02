@@ -15,16 +15,10 @@
 /* Entire box including the grid and the summary panel */
 .xv-grid-box {
   &.panel {
-    width: 984px;
+    width: 840px;
     padding: 0;
   }
 
-  .xv-groupbox-buttons {
-    padding: 5px;
-    .xv-groupbox-button-center {
-      .border-radius(4px);
-    }
-  }
 
   .xv-above-grid-list {
     border: 0px;
@@ -93,7 +87,6 @@
     }
     .schedule {
       vertical-align: top;
-      padding-top: 0px;
       width: 110px;
     }
 
@@ -193,6 +186,11 @@
     .xv-sales-summary-total-group {
       padding: 0;
       border: none;
+      .xv-numberwidget {
+        .xv-input-decorator {
+          width: 163px;
+        }
+      }
     }
   }
 }
