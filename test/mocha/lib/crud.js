@@ -11,6 +11,40 @@ var _ = require("underscore"),
 (function () {
   "use strict";
 
+
+
+  exports.accountBeforeDeleteActions = [{it: 'saves the account id', action: function (data, done) {
+    data.deleteData = {
+      accntId: data.model.get("account"),
+      accountModel: new XM.Account()
+    };
+    done();
+  }}];
+
+  exports.accountAfterDeleteActions = [{it: 'deletes the related account', action: function (data, done) {
+    var account = data.deleteData.accountModel,
+      fetchOptionsAccnt = {},
+      destroyAccount;
+    fetchOptionsAccnt.id = data.deleteData.accntId;
+    destroyAccount = function () {
+      if (account.getStatus() === XM.Model.READY_CLEAN) {
+        var accountDestroyed = function () {
+          if (account.getStatus() === XM.Model.DESTROYED_CLEAN) {
+            account.off("statusChange", accountDestroyed);
+            done();
+          }
+        };
+
+        account.off("statusChange", destroyAccount);
+        account.on("statusChange", accountDestroyed);
+        account.destroy();
+      }
+    };
+    account.on("statusChange", destroyAccount);
+    account.fetch(fetchOptionsAccnt);
+  }}];
+
+
   var waitTime = exports.waitTime = 10000;
 
   var testAttributes = function (data) {
