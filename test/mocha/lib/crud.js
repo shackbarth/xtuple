@@ -304,6 +304,7 @@ var _ = require("underscore"),
 
     // Step 5: save the data to the database
     it('saves the values to the database', function (done) {
+      this.timeout(10 * 1000);
       if (data.verbose) { console.log("save model", data.recordType); }
       save(data, done);
     });
@@ -317,6 +318,7 @@ var _ = require("underscore"),
 
     // Step 7: save the updated model to the database
     it('saves the updated values to the database', function (done) {
+      this.timeout(10 * 1000);
       if (data.verbose) { console.log("save updated model", data.recordType); }
       save(data, done);
     });
