@@ -2,17 +2,23 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, XT:true, _:true, describe:true, it:true, before:true */
 
-XT = {};
+if (typeof XT === undefined) {
+  XT = {};
+}
 _ = require("underscore");
 
 var assert = require("chai").assert,
-  exportRoute = require("../../../routes/export"),
-  dataRoute = require("../../../routes/data");
+  exportRoute = require("../../../node-datasource/routes/export"),
+  dataRoute = require("../../../node-datasource/routes/data");
 
-require("../../../xt");
-require("../../../../lib/tools/source/foundation");
-require("../../../../lib/tools/source/ext/string");
-require("../../../../lib/tools/source/ext/proto/string");
+require("../../../node-datasource/xt");
+require("../../../lib/tools/source/foundation");
+require("../../../lib/tools/source/ext/string");
+require("../../../lib/tools/source/ext/proto/string");
+
+X.options = {
+  databaseServer: {}
+};
 
 (function () {
   "use strict";
@@ -47,7 +53,9 @@ require("../../../../lib/tools/source/ext/proto/string");
         };
 
       // inject our mock query into the global variable
-      X.database = {query: queryFunction};
+      XT.dataSource = {query: queryFunction, getAdminCredentials: function () {
+        return {};
+      }};
 
       exportRoute.exxport(req, res);
     });
