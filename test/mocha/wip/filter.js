@@ -8,18 +8,22 @@
 
   var crud = require('../lib/crud'),
     data = {
-      recordType : "XM.SaleType",
+      recordType : "XM.Filter",
       autoTestAttributes : true,
+      enforceUpperKey: false,
       createHash : {
-        code: "TESTSALE" + Math.random(),
-        description: "Test Sale Type"
+        name: 'Filter Name',
+        createdBy: 'username',
+        params: '{search: search}',
+        kind: 'XM.SomeParameterKind'
       },
       updateHash : {
-        description: "Changed Descrip"
+        name: 'New Filter Name',
+        shared: true
       }
     };
 
-  describe('SaleType CRUD Test', function () {
+  describe('Filter CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());

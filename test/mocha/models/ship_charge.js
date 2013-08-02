@@ -8,14 +8,16 @@
 
   var crud = require('../lib/crud'),
     data = {
-      recordType : "XM.SaleType",
+      recordType : "XM.ShipCharge",
       autoTestAttributes : true,
       createHash : {
-        code: "TESTSALE" + Math.random(),
-        description: "Test Sale Type"
+        name: "Test Ship Charge" + Math.random(),
+        description: "iAmAShipCharge",
+        isCustomerPay: true
       },
       updateHash : {
-        description: "Changed Descrip"
+        name: "Update Test Ship Charge",
+        isCustomerPay: false
       }
     };
 
