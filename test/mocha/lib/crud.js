@@ -261,21 +261,25 @@ var _ = require("underscore"),
     tested with a single function
    */
   var runAllCrud = exports.runAllCrud = function (data) {
+    //
     // Step 1: load the environment with Zombie
+    //
     it('loads the client with zombie', function (done) {
       this.timeout(20 * 1000);
       zombieAuth.loadApp({callback: done, verbose: data.verbose});
     });
 
+    //
     // Step 2: create the model per the record type specified
-    if (data.verbose) { console.log("create model", data.recordType); }
+    //
     it('creates the model of the appropriate record type', function () {
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
     });
 
+    //
     // Step 3: initialize the model to get the ID from the database
-    if (data.verbose) { console.log("init model", data.recordType); }
+    //
     it('initializes the model by fetching an id from the server', function (done) {
       init(data, done);
     });
@@ -288,9 +292,10 @@ var _ = require("underscore"),
       });
     }
 
+    //
     // Step 4: set the model with our createData hash
+    //
     it('sets values on the model', function (done) {
-      if (data.verbose) { console.log("set model", data.recordType); }
       data.updated = false;
       setModel(data, done);
     });
@@ -302,31 +307,48 @@ var _ = require("underscore"),
       });
     }
 
+    //
     // Step 5: save the data to the database
+    //
     it('saves the values to the database', function (done) {
       this.timeout(10 * 1000);
-      if (data.verbose) { console.log("save model", data.recordType); }
       save(data, done);
     });
 
-
+    //
     // Step 6: set the model with updated data
+    //
     it('updates the model', function () {
-      if (data.verbose) { console.log("update model", data.recordType); }
       update(data);
     });
 
+    //
     // Step 7: save the updated model to the database
+    //
     it('saves the updated values to the database', function (done) {
       this.timeout(10 * 1000);
-      if (data.verbose) { console.log("save updated model", data.recordType); }
       save(data, done);
     });
 
+    //
     // Step 8: delete the model from the database
+    //
+    _.each(data.beforeDeleteActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(data, done);
+      });
+    });
+
     it('deletes the model from the database', function (done) {
-      if (data.verbose) { console.log("destroy model", data.recordType); }
       destroy(data, done);
+    });
+
+    _.each(data.afterDeleteActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(data, done);
+      });
     });
   };
 }());

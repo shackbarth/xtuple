@@ -11,14 +11,42 @@
       recordType: "XM.SalesRep",
       autoTestAttributes: true,
       createHash : {
-        number: "TESTSALESREP",
+        number: "TESTSALESREP" + Math.random(),
         name: "TestRep"
       },
       updateHash : {
         name: "Updated Test SalesRep"
-      }
-    },
-    deleteData = {};
+      },
+      beforeDeleteActions: [{it: 'saves the account id', action: function (data, done) {
+        data.deleteData = {
+          accntId: data.model.get("account"),
+          accountModel: new XM.Account()
+        };
+        done();
+      }}],
+      afterDeleteActions: [{it: 'deletes the related account', action: function (data, done) {
+        var account = data.deleteData.accountModel,
+          fetchOptionsAccnt = {},
+          destroyAccount;
+        fetchOptionsAccnt.id = data.deleteData.accntId;
+        destroyAccount = function () {
+          if (account.getStatus() === XM.Model.READY_CLEAN) {
+            var accountDestroyed = function () {
+              if (account.getStatus() === XM.Model.DESTROYED_CLEAN) {
+                account.off("statusChange", accountDestroyed);
+                done();
+              }
+            };
+
+            account.off("statusChange", destroyAccount);
+            account.on("statusChange", accountDestroyed);
+            account.destroy();
+          }
+        };
+        account.on("statusChange", destroyAccount);
+        account.fetch(fetchOptionsAccnt);
+      }}]
+    };
 
   describe('SalesRep CRUD Test', function () {
     crud.runAllCrud(data);
