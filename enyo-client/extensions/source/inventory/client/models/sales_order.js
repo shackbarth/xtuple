@@ -28,6 +28,17 @@ white:true*/
 
       recordType: 'XM.ShippableSalesOrderLine',
 
+      readOnlyAttributes: [
+        "balance",
+        "item",
+        "order",
+        "ordered",
+        "returned",
+        "site",
+        "shipment",
+        "shipped"
+      ],
+
       canIssueStock: function (callback) {
         if (callback) {
           callback(true);
@@ -54,6 +65,10 @@ white:true*/
           callback(true);
         }
         return this;
+      },
+
+      save: function () {
+        // Do something else
       }
 
     });

@@ -85,7 +85,9 @@ trailing:true, white:true*/
               {kind: "XV.SalesOrderWidget", attr: "order"},
               {kind: "XV.ShipmentWidget", attr: "shipment"},
               {kind: "onyx.GroupboxHeader", content: "_item".loc()},
-              {kind: "XV.ItemSite", attr: "itemSite"},
+              {kind: "XV.ItemSiteWidget", attr:
+                {item: "item", site: "site"}
+              },
               {kind: "XV.QuantityWidget", attr: "ordered"},
               {kind: "XV.QuantityWidget", attr: "shipped"},
               {kind: "XV.QuantityWidget", attr: "returned"},
