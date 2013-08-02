@@ -98,7 +98,7 @@ module:true, require:true, exports:true, console:true */
         An extra bit of work we have to do after the createHash fields are set:
         create a valid line item.
        */
-      setCallback: getSetCallback("XM.SalesOrderLine"),
+      beforeSaveActions: [{it: 'sets up a valid line item', action: getSetCallback("XM.SalesOrderLine")}],
       updateHash: {
         wasQuote: false
       }
@@ -116,7 +116,7 @@ module:true, require:true, exports:true, console:true */
         An extra bit of work we have to do after the createHash fields are set:
         create a valid line item.
        */
-      setCallback: getSetCallback("XM.QuoteLine"),
+      beforeSaveActions: [{it: 'sets up a valid line item', action: getSetCallback("XM.QuoteLine")}],
       updateHash: {
         calculateFreight: false
       }

@@ -284,28 +284,27 @@ var _ = require("underscore"),
       init(data, done);
     });
 
-    if (data.initCallback) {
-      // very clever: we allow testmakers to define their own custom
-      // functions in their data object.
-      it('calls a specified function after initialization', function (done) {
-        data.initCallback(data, done);
-      });
-    }
-
     //
     // Step 4: set the model with our createData hash
     //
+    _.each(data.beforeSetActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(data, done);
+      });
+    });
+
     it('sets values on the model', function (done) {
       data.updated = false;
       setModel(data, done);
     });
 
-    if (data.setCallback) {
-      it('calls a specified function after set', function (done) {
+    _.each(data.beforeSaveActions || [], function (spec) {
+      it(spec.it, function (done) {
         this.timeout(20 * 1000);
-        data.setCallback(data, done);
+        spec.action(data, done);
       });
-    }
+    });
 
     //
     // Step 5: save the data to the database
