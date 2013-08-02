@@ -133,28 +133,26 @@ Globalize:true */
     kind: "XV.GridBox",
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
     components: [
-      {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", fit: true, horizontal: "auto", components: [
-        {kind: "XV.Groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
-          {kind: "XV.SalesOrderLineItemHeaders"},
-          {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list", onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
-            { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
-          ]},
-          {kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false},
-          {kind: "List", name: "belowGridList", onSetupItem: "setupRowBelow", ontap: "gridRowTapBelow", components: [
-            {kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "belowGridRow"}
-          ]},
-          {
-            kind: "FittableColumns",
-            name: "navigationButtonPanel",
-            classes: "xv-groupbox-buttons",
-            components: [
-              {kind: "onyx.Button", name: "newButton", onclick: "newItem",
-                content: "_new".loc(), classes: "xv-groupbox-button-single"}
-            ]
-          }
-        ]}
+      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
+      {kind: "XV.SalesOrderLineItemHeaders"},
+      {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", horizontal: "hidden", fit: true, components: [
+        {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list", onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
+          { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
+        ]},
+        {kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false},
+        {kind: "List", name: "belowGridList", onSetupItem: "setupRowBelow", ontap: "gridRowTapBelow", components: [
+          {kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "belowGridRow"}
+        ]},
       ]},
+      {
+        kind: "FittableColumns",
+        name: "navigationButtonPanel",
+        classes: "xv-groupbox-buttons",
+        components: [
+          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+            content: "_new".loc(), classes: "xv-groupbox-button-single"}
+        ]
+      },
       {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
     ],
 
