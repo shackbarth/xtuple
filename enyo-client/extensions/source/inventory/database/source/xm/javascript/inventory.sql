@@ -287,7 +287,31 @@ select xt.install_js('XM','Inventory','xtuple', $$
   };
 
   /**
-    Enter Receipt
+    PO Enter Receipt 
+  */
+  XM.Inventory.enterReceipt = function (orderLine, quantity) {
+    var series,
+      sql;
+
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401) };
+    
+    sql = "select public.enterporeceipt($1, $2) as series " +
+      "from poitem where obj_uuid=$1));";
+
+    series = plv8.execute(sql, [orderLine, quantity])[0].series;
+
+    return;
+  };
+
+  XM.Inventory.enterReceipt.description = "Enter Purchase Order Receipt.";
+  XM.Inventory.enterReceipt.params = {
+    orderLine: { type: "String", description: "Order line UUID" },
+    quantity: { type: "Number", description: "Quantity" }
+  };
+
+  /**
+    PO Receive All
   */
   XM.Inventory.receiveAll = function (purchaseOrder) {
     var sql = "select public.enterporeceipt(poitem_id, poitem_qty_ordered) from poitem" + 
@@ -298,6 +322,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
     if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401) };
 
     ret = plv8.execute(sql, [purchaseOrder])[0];
+
+    series = plv8.execute(sql, [orderLine, quantity, asOf])[0].series;
 
     return ret;
   };

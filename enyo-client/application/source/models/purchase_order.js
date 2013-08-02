@@ -29,6 +29,15 @@ white:true*/
     /** @scope XM.PurchaseOrder.prototype */
 
     recordType: 'XM.PurchaseOrderLine',
+    
+    canEnterReceipt: function (callback) {
+      var priv = "EnterReceipts";
+      return _canDo.call(this, priv, callback);
+    },
+
+    doEnterReceipt: function (callback) {
+      return _doDispatch.call(this, "enterReceipt", callback);
+    },
 
     canReceiveAll: function (callback) {
       var priv = "EnterReceipts";

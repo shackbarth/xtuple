@@ -113,7 +113,9 @@ trailing:true, white:true*/
       showDeleteAction: false,
       actions: [
         {name: "receiveAll", prerequisite: "canReceiveAll",
-          method: "doReceiveAll", notify: false}
+          method: "doReceiveAll", notify: false},
+        {name: "enterReceipt", prerequisite: "canEnterReceipt",
+          method: "doEnterReceipt", notify: false, isViewMethod: true}
       ],
       toggleSelected: true,
       components: [
@@ -157,6 +159,20 @@ trailing:true, white:true*/
       formatQuantity: function (value, view, model) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
+      },
+      enterReceipt: function (inEvent) {
+        var model = inEvent.model,
+          modelId = model.id,
+          success = function () {
+            this.getValue().convertFromProspect(modelId);
+          };
+
+        this.doWorkspace({
+          workspace: "XV.EnterReceiptWorkspace",
+          id: model.id,
+          success: success,
+          allowNew: false
+        });
       }
     });
 
@@ -252,7 +268,7 @@ trailing:true, white:true*/
           success: success,
           allowNew: false
         });
-      },
+      }
     });
 
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
