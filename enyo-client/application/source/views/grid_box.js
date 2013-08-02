@@ -47,19 +47,28 @@ Globalize:true */
       ]}
     ],
     valueChanged: function () {
-      var model = this.getValue();
+      var model = this.getValue(),
+        quantity, discount;
+
       if (!model) {
         return;
       }
       this.$.lineNumber.setContent(model.get("lineNumber"));
-      this.$.itemNumber.setContent(model.getValue("item.number"));
+      this.$.itemNumber.setContent(model.getValue("item.number") || "_required".loc());
+      this.$.itemNumber.addRemoveClass("xv-error", !model.getValue("item.number"));
       this.$.itemDescription.setContent(model.getValue("item.description1"));
       this.$.siteCode.setContent(model.getValue("site.code"));
-      this.$.quantity.setContent(Globalize.format(XT.math.round(model.get("quantity"), XT.QTY_SCALE), "n" + XT.QTY_SCALE));
-      this.$.quantityUnit.setContent(model.getValue("quantityUnit.name"));
-      this.$.discount.setContent(Globalize.format(XT.math.round(model.get("discount"), XT.PERCENT_SCALE) * 100, "n" + XT.PERCENT_SCALE));
 
-      this.$.price.setContent(Globalize.format(XT.math.round(model.get("price"), XT.SALES_PRICE_SCALE), "n" + XT.SALES_PRICE_SCALE));
+      quantity = model.get("quantity") ? Globalize.format(XT.math.round(model.get("quantity"), XT.QTY_SCALE), "n" + XT.QTY_SCALE) : "_required".loc();
+      this.$.quantity.setContent(quantity);
+      this.$.quantity.addRemoveClass("xv-error", !model.getValue("quantity"));
+
+      this.$.quantityUnit.setContent(model.getValue("quantityUnit.name"));
+      discount = model.get("discount") ? Globalize.format(XT.math.round(model.get("discount"), XT.PERCENT_SCALE) * 100, "n" + XT.PERCENT_SCALE) : "";
+      this.$.discount.setContent(discount);
+
+      this.$.price.setContent(Globalize.format(XT.math.round(model.get("price"), XT.SALES_PRICE_SCALE), "n" + XT.SALES_PRICE_SCALE) || "_required".loc());
+      this.$.itemNumber.addRemoveClass("xv-error", !model.getValue("price"));
       this.$.priceUnit.setContent(model.getValue("priceUnit.name"));
       this.$.extendedPrice.setContent(Globalize.format(XT.math.round(model.get("extendedPrice"),
         XT.EXTENDED_PRICE_SCALE), "n" + XT.EXTENDED_PRICE_SCALE));
