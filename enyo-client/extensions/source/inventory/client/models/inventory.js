@@ -102,11 +102,11 @@ white:true*/
         fetchOptions.success = function () {
           var K = XM.ItemSite,
             itemSite = itemSites.at(0),
-            dispOptions = {},
+            issOptions = {},
             params = [
               that.id,
               that.get("toIssue"),
-              dispOptions
+              issOptions
             ],
             locationControl = itemSite.get("locationControl"),
             controlMethod = itemSite.controlMethod,
@@ -118,10 +118,17 @@ white:true*/
 
             // Callback to handle detail if applicable
             callback = function (detail) {
+              var dispOptions = {};
+              
+              // Refresh the model we started from passing options through
+              dispOptions.success = function () {
+                that.fetch(options);
+              };
               if (detail) {
-                dispOptions.detail = detail;
+                issOptions.detail = detail;
               }
-              that.dispatch("XM.Inventory", "issueToShipping", params, options);
+              that.dispatch("XM.Inventory", "issueToShipping", params, dispOptions);
+              
             };
           if (requiresDetail) {
             // Send notification that we need to accumulate detail
