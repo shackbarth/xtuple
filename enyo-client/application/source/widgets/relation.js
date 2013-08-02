@@ -635,6 +635,18 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // PURCHASE ORDER
+  //
+
+  enyo.kind({
+    name: "XV.PurchaseOrderWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.PurchaseOrderListItemCollection",
+    keyAttribute: "number",
+    list: "XV.PurchaseOrderList"
+  });
+
+  // ..........................................................
   // SALES ORDER
   //
 
@@ -668,6 +680,18 @@ regexp:true, undef:true, trailing:true, white:true */
     list: "XV.UserAccountList",
     keyAttribute: "username",
     nameAttribute: "properName"
+  });
+
+  // ..........................................................
+  // VENDOR
+  //
+
+  enyo.kind({
+    name: "XV.VendorWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.VendorRelationCollection",
+    keyAttribute: "number",
+    list: "XV.VendorList"
   });
 
 }());

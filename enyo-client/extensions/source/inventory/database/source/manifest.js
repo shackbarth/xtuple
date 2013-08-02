@@ -3,7 +3,6 @@
   "databaseScripts": [
     "register.sql",
     "public/tables/locitem.sql",
-    "xt/functions/po_receive_all.sql",
     "xt/views/coitemship.sql",
     "xt/views/locitemsite.sql",
     "xt/views/shipheadinfo.sql",

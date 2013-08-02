@@ -286,8 +286,19 @@ select xt.install_js('XM','Inventory','xtuple', $$
     }}
   };
 
-  XM.Inventory.enterReceipt = function () {
-    var ret = true;
+  /**
+    Enter Receipt
+  */
+  XM.Inventory.receiveAll = function (purchaseOrder) {
+    var sql = "select public.enterporeceipt(poitem_id, poitem_qty_ordered) from poitem" + 
+      "join pohead on poitem_pohead_id = pohead_id where ( (poitem_status <> 'C') and (pohead_number=$1));",
+      ret;
+    
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401) };
+
+    ret = plv8.execute(sql, [purchaseOrder])[0];
+
     return ret;
   };
 
@@ -371,16 +382,17 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {String} Order line uuid
   */
   XM.Inventory.returnFromShipping = function (orderLine) {
-    var sql = "select returnitemshipments(coitem_id) as series " +
-      "from coitem where obj_uuid = $1;";
+    var sql = "select returnitemshipments(coitem_id) " +
+      "from coitem where obj_uuid = $1;",
+      ret;
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401) };
 
     /* Post the transaction */
-    plv8.execute(sql, [orderLine])[0].series;
+    ret = plv8.execute(sql, [orderLine])[0];
 
-    return;
+    return ret;
   };
   XM.Inventory.returnFromShipping.description = "Return shipment transactions.";
   XM.Inventory.returnFromShipping.params = {

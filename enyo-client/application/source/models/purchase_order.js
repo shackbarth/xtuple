@@ -30,21 +30,48 @@ white:true*/
 
     recordType: 'XM.PurchaseOrderLine',
 
-      canEnterReceipt: function (callback) {
-        if (callback) {
-          callback(true);
-        }
-        return this;
-      },
+    canReceiveAll: function (callback) {
+      var priv = "EnterReceipts";
+      return _canDo.call(this, priv, callback);
+    },
 
-      doEnterReceipt: function (callback) {
-        if (callback) {
-          callback(true);
-        }
-        return this;
-      }
+    doReceiveAll: function (callback) {
+      return _doDispatch.call(this, "receiveAll", callback);
+    }
 
   });
+
+  /** @private */
+  var _canDo = function (priv, callback) {
+    var ret = XT.session.privileges.get(priv);
+    if (callback) {
+      callback(ret);
+    }
+    return ret;
+  };
+
+  /** @private */
+  
+  var _doDispatch = function (method, callback, params) {
+    var that = this,
+      options = {};
+    params = params || [];
+    params.unshift(this.id);
+    options.success = function (resp) {
+      var fetchOpts = {};
+      fetchOpts.success = function () {
+        if (callback) { callback(resp); }
+      };
+      if (resp) {
+        that.fetch(fetchOpts);
+      }
+    };
+    options.error = function (resp) {
+      if (callback) { callback(resp); }
+    };
+    this.dispatch("XM.Inventory", method, params, options);
+    return this;
+  };
 
   /**
     @class

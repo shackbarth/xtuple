@@ -112,8 +112,8 @@ trailing:true, white:true*/
       ]},
       showDeleteAction: false,
       actions: [
-        {name: "enterReceipt", prerequisite: "canEnterReceipt",
-          method: "doEnterReceipt", notify: false}
+        {name: "receiveAll", prerequisite: "canReceiveAll",
+          method: "doReceiveAll", notify: false}
       ],
       toggleSelected: true,
       components: [
@@ -298,57 +298,6 @@ trailing:true, white:true*/
     });
 
     XV.registerModelList("XM.Shipment", "XV.ShipmentList");
-
-    // ..........................................................
-    // VENDOR
-    //
-
-    enyo.kind({
-      name: "XV.VendorList",
-      kind: "XV.List",
-      label: "_vendors".loc(),
-      collection: "XM.VendorRelationCollection",
-      query: {orderBy: [
-        {attribute: 'number'}
-      ]},
-      allowPrint: true,
-      parameterWidget: "XV.VendorListParameters",
-      components: [
-        {kind: "XV.ListItem", components: [
-          {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "first", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "number", isKey: true},
-                {kind: "XV.ListAttr", attr: "contact1.phone", fit: true,
-                  classes: "right"}
-              ]},
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "name"},
-                {kind: "XV.ListAttr", attr: "contact1.primaryEmail",
-                  ontap: "sendMail", classes: "right hyperlink"}
-              ]}
-            ]},
-            {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-              {kind: "XV.ListAttr", attr: "contact1.name", classes: "italic",
-                placeholder: "_noContact".loc()},
-              {kind: "XV.ListAttr", attr: "address.formatShort"}
-            ]}
-          ]}
-        ]}
-      ],
-      sendMail: function (inSender, inEvent) {
-        var model = this.getModel(inEvent.index),
-          email = model ? model.getValue('contact1.primaryEmail') : null,
-          win;
-        if (email) {
-          win = window.open('mailto:' + email);
-          win.close();
-        }
-        return true;
-      }
-    });
-
-    XV.registerModelList("XM.VendorRelation", "XV.VendorList");
 
   };
 }());
