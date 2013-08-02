@@ -112,7 +112,7 @@ Globalize:true */
           currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
       ]},
       {classes: "xv-grid-column schedule", components: [
-        {kind: "XV.DateWidget", attr: "scheduleDate" }
+        {kind: "XV.DateWidget", attr: "scheduleDate"}
       ]},
       {classes: "xv-grid-column grid-actions", components: [
         {components: [
