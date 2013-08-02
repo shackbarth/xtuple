@@ -419,6 +419,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.SortPicker",
     kind: "XV.Picker",
+    onSelect: "itemSelected",
     buildList: function (comps) {
       this.$.picker.destroyClientControls();
     //the first picker you open is fine - the next one
@@ -430,6 +431,9 @@ regexp:true, undef:true, trailing:true, white:true */
         this.$.picker.createComponent(comps[i]);
       }
       //this.$.picker.render();
+    },
+    itemSelected: function (inSender, inEvent) {
+      this.attr = inEvent.originator.attr;
     },
     setComponentsList: function (toSet) {
       var comps = [];
