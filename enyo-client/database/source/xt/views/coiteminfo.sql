@@ -57,7 +57,8 @@ insert into coitem (
   coitem_subnumber,
   coitem_firm,
   coitem_rev_accnt_id,
-  coitem_pricemode
+  coitem_pricemode,
+  obj_uuid
 ) select
   new.coitem_id,
   new.coitem_cohead_id,
@@ -95,7 +96,8 @@ insert into coitem (
   new.coitem_subnumber,
   new.coitem_firm,
   new.coitem_rev_accnt_id,
-  coalesce(new.coitem_pricemode, 'D')
+  coalesce(new.coitem_pricemode, 'D'),
+  new.obj_uuid
 from itemsite
 where itemsite_item_id=new.coitem_item_id
   and itemsite_warehous_id=new.coitem_warehous_id;
@@ -138,7 +140,8 @@ update coitem set
   coitem_subnumber = new.coitem_subnumber,
   coitem_firm = new.coitem_firm,
   coitem_rev_accnt_id = new.coitem_rev_accnt_id,
-  coitem_pricemode=new.coitem_pricemode
+  coitem_pricemode = new.coitem_pricemode,
+  obj_uuid = new.obj_uuid
 where coitem_id = old.coitem_id;
 
 create or replace rule "_DELETE" as on delete to xt.coiteminfo do instead

@@ -300,16 +300,8 @@
 
 }
 .xv-grid-box.panel {
-  width: 984px;
+  width: 840px;
   padding: 0;
-}
-.xv-grid-box .xv-groupbox-buttons {
-  padding: 5px;
-}
-.xv-grid-box .xv-groupbox-buttons .xv-groupbox-button-center {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
 }
 .xv-grid-box .xv-above-grid-list {
   border: 0px;
@@ -484,6 +476,9 @@
 .xv-grid-box .xv-sales-summary-panel .xv-sales-summary-total-group {
   padding: 0;
   border: none;
+}
+.xv-grid-box .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
+  width: 163px;
 }
 /**
   Styles relating to the dashboard
@@ -728,31 +723,6 @@
   width: 320px;
   background: #dddddd;
 }
-.pullout .xv-groupbox {
-  min-width: 280px;
-  margin: 4px 0 8px 4px;
-  padding: 0;
-}
-.pullout .xv-groupbox .xv-filter-form .button-row {
-  background-color: #ffffff;
-  padding: 7px;
-  text-align: center;
-}
-.pullout .xv-groupbox .xv-filter-form .button-row .onyx-button {
-  margin-right: 3px;
-}
-.pullout .xv-groupbox .xv-filter-form .top-drawer {
-  border-top: #aaaaaa 1px solid;
-  background-color: #dddddd;
-  color: #4c4c4c;
-  padding: 7px 0 7px 5px;
-}
-.pullout .xv-groupbox .xv-filter-form .top-drawer > * {
-  margin-right: 10px;
-}
-.pullout .xv-groupbox .xv-filter-form .xv-list {
-  height: 150px;
-}
 .pullout .pullout-scroller {
   position: relative;
   margin-right: 4px;
@@ -794,6 +764,31 @@
 .pullout .pullout-toolbar {
   padding-top: 4px;
   text-align: center;
+}
+.xv-groupbox.xv-parameter {
+  min-width: 280px;
+  margin: 4px 0 8px 4px;
+  padding: 0;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .button-row {
+  background-color: #ffffff;
+  padding: 7px;
+  text-align: center;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .button-row .onyx-button {
+  margin-right: 3px;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .top-drawer {
+  border-top: #aaaaaa 1px solid;
+  background-color: #dddddd;
+  color: #4c4c4c;
+  padding: 7px 0 7px 5px;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .top-drawer > * {
+  margin-right: 10px;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .xv-list {
+  height: 150px;
 }
 #app_pullout_container,
 #app_pullout_help,
