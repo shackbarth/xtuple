@@ -1,7 +1,7 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, trailing:true,
 white:true*/
-/*global enyo:true, XT:true, XV:true */
+/*global enyo:true, XT:true, XV:true, Globalize:true, XM:true */
 
 (function () {
 
@@ -100,9 +100,9 @@ white:true*/
     priceChanged: function () {
       var model = this.getValue(),
         line = model.collection.quoteLine ? model.collection.quoteLine : model.collection.salesOrderLine,
-        itemIsSold = line.getValue("itemSite.item.isSold"),
+        itemIsSold = line.getValue("item.isSold"),
         price = model.get("price") !== undefined ? model.get("price") : "",
-        note = itemIsSold ? Globalize.format( price, "c" ) : "";
+        note = itemIsSold ? Globalize.format(price, "c") : "";
 
       this.$.combobox.setNote(note);
     },
@@ -126,17 +126,17 @@ white:true*/
         characteristicName = characteristic.get('name'),
         // this could be quoteLine or a salesOrderLine
         line = model.collection.quoteLine ? model.collection.quoteLine : model.collection.salesOrderLine,
-        allItemCharacteristics = line.getValue("itemSite.item.characteristics"),
+        allItemCharacteristics = line.getValue("item.characteristics"),
         // filter for only the models of the appropriate characteristic
         // allItemCharacteristics may be "", in which case we want an empty array
         // we can use this underscore method in backbone but it unfortunately
         // returns an array of models instead of a collection
         relevantArray = allItemCharacteristics ? allItemCharacteristics.filter(function (model) {
-          return model.getValue("characteristic.id") === characteristicId
+          return model.getValue("characteristic.id") === characteristicId;
         }) : [],
         // so we have to make it a collection here
         relevantItemCharacteristics = new XM.CharacteristicCollection(relevantArray),
-        itemIsSold = line.getValue("itemSite.item.isSold");
+        itemIsSold = line.getValue("item.isSold");
 
       // pass the backing collection to the combobox
       this.$.combobox.setCollection(relevantItemCharacteristics);

@@ -274,7 +274,9 @@ trailing:true, white:true*/
   XV.SalesOrderLineMixin = {
     create: function () {
       this.inherited(arguments);
-      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+      if (this.$.promiseDate) {
+        this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+      }
 
       // Loop through the components and set the specific attribute information for the Money widgets
       this.getComponents().forEach(function (e) {
@@ -290,8 +292,10 @@ trailing:true, white:true*/
       this.changeItemSiteParameter("orderDate", "effectiveDate");
     },
     setValue: function (value) {
-      var parent, site, effectivePolicy = XT.session.settings.get("soPriceEffective");
-           // Remove any old bindings
+      var parent, parentSite, childSite,
+        effectivePolicy = XT.session.settings.get("soPriceEffective");
+
+      // Remove any old bindings
       if (this.value) {
         parent = value.getParent();
         parent.off("change:shipto", this.shiptoChanged, this);
@@ -310,9 +314,10 @@ trailing:true, white:true*/
           this.value.on("change:scheduleDate", this.scheduleDateChanged, this);
           this.changeItemSiteParameter("scheduleDate", "effectiveDate");
         }
-        site = parent ? parent.get("site") : false;
-        if (site) {
-          this.$.itemSiteWidget.setSite(site);
+        parentSite = parent ? parent.get("site") : false;
+        childSite = this.$.itemSiteWidget.getSite();
+        if (parentSite && !childSite) {
+          this.$.itemSiteWidget.setSite(parentSite);
         }
       }
       this.changeItemSiteParameter("customer");
