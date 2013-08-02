@@ -2,21 +2,11 @@
   Styles relating to the grid box
 */
 
-/**
-  This is a little hacky, but it gets rid of the border
-  that is around the entire widget.
-*/
-.xv-groupbox {
-  .in-panel {
-    border:none;
-  }
-}
 
 /* Entire box including the grid and the summary panel */
 .xv-grid-box {
   &.panel {
     width: 840px;
-    padding: 0;
   }
 
 
@@ -180,15 +170,31 @@
       }
     }
   }
-  .xv-sales-summary-panel {
-    border: none;
-    margin-top: 0;
-    .xv-sales-summary-total-group {
-      padding: 0;
+  &.xv-groupbox {
+    .xv-sales-summary-panel {
       border: none;
-      .xv-numberwidget {
-        .xv-input-decorator {
-          width: 163px;
+      margin-top: 0;
+      padding-left: 0px;
+      padding-right: 0px;
+      .xv-sales-summary-total-group {
+        padding: 0;
+        border: none;
+        .xv-moneywidget {
+          padding-bottom: 0px;
+          padding-top: 0px;
+          .xv-input-decorator {
+            padding-bottom: 0px;
+            padding-top: 0px;
+          }
+        }
+        .xv-numberwidget {
+          padding-bottom: 0px;
+          padding-top: 0px;
+          .xv-input-decorator {
+            width: 163px;
+            padding-bottom: 0px;
+            padding-top: 0px;
+          }
         }
       }
     }
