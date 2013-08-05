@@ -82,10 +82,10 @@ trailing:true, white:true*/
             {kind: "onyx.GroupboxHeader", content: "_order".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup",
               classes: "in-panel", fit: true, components: [
-              {kind: "XV.SalesOrderWidget", attr: "purchaseOrder"},
+              {kind: "XV.PurchaseOrderWidget", attr: "purchaseOrder"},
               {kind: "onyx.GroupboxHeader", content: "_item".loc()},
               {kind: "XV.ItemSiteWidget", attr:
-                {item: "itemSite.item", site: "itemSite"}
+                {item: "itemSite.item", site: "itemSite.site"}
               },
               {kind: "XV.QuantityWidget", attr: "ordered"},
               {kind: "XV.QuantityWidget", attr: "received"},
@@ -95,7 +95,17 @@ trailing:true, white:true*/
             ]}
           ]},
         ]}
-      ]
+      ],
+      attributesChanged: function () {
+        this.inherited(arguments);
+        var model = this.getValue();
+        if (!this._focused && model &&
+          model.getStatus() === XM.Model.READY_DIRTY) {
+          this.$.toReceive.focus();
+          this.$.toReceive.$.input.selectContents();
+          this._focused = true;
+        }
+      }
     });
 
     XV.registerModelWorkspace("XM.PurchaseOrderLine", "XV.EnterReceiptWorkspace");

@@ -158,7 +158,7 @@ trailing:true, white:true*/
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
-      enterReceipt: function (inEvent) {
+      doEnterReceipt: function (inEvent) {
         var model = inEvent.model,
           modelId = model.id,
           success = function () {

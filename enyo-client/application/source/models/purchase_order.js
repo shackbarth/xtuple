@@ -30,11 +30,18 @@ white:true*/
 
     recordType: 'XM.PurchaseOrderLine',
 
+    bindEvents: function () {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+
+      // Bind events
+      this.on('statusChange', this.statusDidChange);
+    },
     canEnterReceipt: function (callback) {
       if (callback) {
         callback(true);
       }
       return this;
+      console.log("canEnterReceipt");
     },
 
     doEnterReceipt: function (callback) {
@@ -42,8 +49,9 @@ white:true*/
         callback(true);
       }
       return this;
+      console.log("canEnterReceipt");
     },
-    /**
+    /*
     canEnterReceipt: function (callback) {
       var priv = "EnterReceipts";
       return _canDo.call(this, priv, callback);
@@ -53,6 +61,7 @@ white:true*/
       return _doDispatch.call(this, "enterReceipt", callback);
     },
     */
+    /*
     canReceiveAll: function (callback) {
       var priv = "EnterReceipts";
       return _canDo.call(this, priv, callback);
@@ -60,6 +69,81 @@ white:true*/
 
     doReceiveAll: function (callback) {
       return _doDispatch.call(this, "receiveAll", callback);
+    },
+    */
+    save: function (key, value, options) {
+      options = options ? _.clone(options) : {};
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isEmpty(key)) {
+        options = value ? _.clone(value) : {};
+      }
+
+      // Need to get more info about the itemsite first
+      var query = {},
+        that = this,
+        itemSites = new XM.ItemSiteRelationCollection(),
+        fetchOptions = {query: query};
+
+      fetchOptions.success = function () {
+        var K = XM.ItemSite,
+          itemSite = itemSites.at(0),
+          issOptions = {},
+          params = [
+            that.id,
+            that.get("toReceive"),
+            issOptions
+          ],
+          locationControl = itemSite.get("locationControl"),
+          controlMethod = itemSite.controlMethod,
+          // Techically check for LOT / SERIAL should be done in standard ed.
+          // but let's just get it working for now.
+          requiresDetail = locationControl ||
+            controlMethod === K.LOT_CONTROL ||
+            controlMethod === K.SERIAL_CONTROL,
+
+          // Callback to handle detail if applicable
+          callback = function (detail) {
+            var dispOptions = {};
+            
+            // Refresh the model we started from passing options through
+            dispOptions.success = function () {
+              that.fetch(options);
+            };
+            if (detail) {
+              issOptions.detail = detail;
+            }
+            that.dispatch("XM.Inventory", "enterReceipt", params, dispOptions);
+            
+          };
+        if (requiresDetail) {
+          // Send notification that we need to accumulate detail
+          // Execute callback when we get results
+        } else {
+          callback();
+        }
+
+      };
+
+      query.parameters = [
+        {
+          attribute: "item",
+          value: this.get("item")
+        },
+        {
+          attribute: "site",
+          value: this.get("site")
+        }
+      ];
+
+      itemSites.fetch(fetchOptions);
+      return this;
+    },
+
+    statusDidChange: function () {
+        if (this.getStatus() === XM.Model.READY_CLEAN) {
+          this.set("toReceive", this.get("toReceive"));
+        }
     }
 
   });
@@ -74,7 +158,6 @@ white:true*/
   };
 
   /** @private */
-  
   var _doDispatch = function (method, callback, params) {
     var that = this,
       options = {};
