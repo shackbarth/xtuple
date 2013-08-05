@@ -112,8 +112,6 @@ trailing:true, white:true*/
       ]},
       showDeleteAction: false,
       actions: [
-        {name: "receiveAll", prerequisite: "canReceiveAll",
-          method: "doReceiveAll", notify: false},
         {name: "enterReceipt", prerequisite: "canEnterReceipt",
           method: "doEnterReceipt", notify: false, isViewMethod: true}
       ],
@@ -176,7 +174,7 @@ trailing:true, white:true*/
       }
     });
 
-    XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderLineListItem");
+    XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderLine");
 
     // ..........................................................
     // ISSUE TO SHIPPING

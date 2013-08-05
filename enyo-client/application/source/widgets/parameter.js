@@ -719,14 +719,27 @@ trailing:true, white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_purchaseOrders".loc()},
-      {name: "unReleased", attr: "status", label: "_unReleased".loc(), defaultKind: "XV.CheckboxWidget",
+      {name: "showUnReleased", attr: "status", label: "_showUnReleased".loc(), defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: '!=',
               value: "U"
+            };
+          }
+          return param;
+        }
+      },
+      {name: "showClosed", attr: "status", label: "_showClosed".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: "C"
             };
           }
           return param;

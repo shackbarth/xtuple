@@ -23,13 +23,27 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.Model
   */
-  XM.PurchaseOrderLine = XM.Document.extend({
+  XM.PurchaseOrderLine = XM.Model.extend({
     /** @scope XM.PurchaseOrder.prototype */
 
     recordType: 'XM.PurchaseOrderLine',
-    
+
+    canEnterReceipt: function (callback) {
+      if (callback) {
+        callback(true);
+      }
+      return this;
+    },
+
+    doEnterReceipt: function (callback) {
+      if (callback) {
+        callback(true);
+      }
+      return this;
+    },
+    /**
     canEnterReceipt: function (callback) {
       var priv = "EnterReceipts";
       return _canDo.call(this, priv, callback);
@@ -38,7 +52,7 @@ white:true*/
     doEnterReceipt: function (callback) {
       return _doDispatch.call(this, "enterReceipt", callback);
     },
-
+    */
     canReceiveAll: function (callback) {
       var priv = "EnterReceipts";
       return _canDo.call(this, priv, callback);

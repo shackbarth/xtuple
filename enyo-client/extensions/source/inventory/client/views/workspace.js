@@ -67,6 +67,40 @@ trailing:true, white:true*/
     });
 
     // ..........................................................
+    // ENTER RECEIPT
+    //
+
+    enyo.kind({
+      name: "XV.EnterReceiptWorkspace",
+      kind: "XV.Workspace",
+      title: "_enterReceipt".loc(),
+      model: "XM.PurchaseOrderLine",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_order".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.SalesOrderWidget", attr: "purchaseOrder"},
+              {kind: "onyx.GroupboxHeader", content: "_item".loc()},
+              {kind: "XV.ItemSiteWidget", attr:
+                {item: "itemSite.item", site: "itemSite"}
+              },
+              {kind: "XV.QuantityWidget", attr: "ordered"},
+              {kind: "XV.QuantityWidget", attr: "received"},
+              {kind: "XV.QuantityWidget", attr: "returned"},
+              {kind: "onyx.GroupboxHeader", content: "_receive".loc()},
+              {kind: "XV.QuantityWidget", attr: "toReceive", name: "toReceive"},
+            ]}
+          ]},
+        ]}
+      ]
+    });
+
+    XV.registerModelWorkspace("XM.PurchaseOrderLine", "XV.EnterReceiptWorkspace");
+
+    // ..........................................................
     // ISSUE STOCK
     //
 
