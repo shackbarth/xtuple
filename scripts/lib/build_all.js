@@ -127,7 +127,10 @@ var _ = require('underscore'),
       },
       config;
 
-    if (options.config) {
+    // the backup path is not relative if it starts with a slash
+    if (options.config && options.config.substring(0, 1) === '/') {
+      config = require(options.config);
+    } else if (options.config) {
       config = require(path.join(process.cwd(), options.config));
     } else {
       config = require(path.join(__dirname, "../../node-datasource/config.js"));
