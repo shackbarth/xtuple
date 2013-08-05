@@ -28,12 +28,6 @@ white:true*/
   // Configuration
   var configurationJson = [
     {
-      model: "XM.userPreference",
-      name: "_userPreferences".loc(),
-      description: "_userPreferences".loc(),
-      workspace: "XV.UserPreferenceWorkspace"
-    },
-    {
       model: "XM.databaseInformation",
       name: "_database".loc(),
       description: "_database".loc() + " " + "_information".loc(),
