@@ -164,12 +164,22 @@ trailing:true, white:true*/
       name: "XV.IssueToShippingList",
       kind: "XV.List",
       label: "_issueToShipping".loc(),
-      collection: "XM.ShippableSalesOrderLineCollection",
+      collection: "XM.IssueToShippingCollection",
       parameterWidget: "XV.IssueToShippingParameters",
       query: {orderBy: [
         {attribute: 'lineNumber'},
         {attribute: 'subNumber'}
       ]},
+      showDeleteAction: false,
+      actions: [
+        {name: "issueStock", prerequisite: "canIssueStock",
+          method: "issueStock", notify: false, isViewMethod: true},
+        {name: "issueLine", prerequisite: "canIssueStock",
+          method: "doIssueLine", notify: false},
+        {name: "returnLine", prerequisite: "canReturnStock",
+          method: "doReturnStock", notify: false}
+      ],
+      toggleSelected: true,
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -197,14 +207,15 @@ trailing:true, white:true*/
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
               {kind: "XV.ListAttr", attr: "scheduleDate",
-                style: "text-align: right"}
+                formatter: "formatScheduleDate", style: "text-align: right"}
             ]}
           ]}
         ]}
       ],
-      formatDueDate: function (value, view, model) {
+      formatScheduleDate: function (value, view, model) {
         var today = new Date(),
-          isLate = XT.date.compareDate(value, today) < 1;
+          isLate = XT.date.compareDate(value, today) < 1 &&
+            model.get("balance") > 0;
         view.addRemoveClass("error", isLate);
         return value;
       },
@@ -221,7 +232,21 @@ trailing:true, white:true*/
       formatQuantity: function (value, view, model) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
-      }
+      },
+      issueStock: function (inEvent) {
+        var model = inEvent.model,
+          modelId = model.id,
+          success = function () {
+            this.getValue().convertFromProspect(modelId);
+          };
+
+        this.doWorkspace({
+          workspace: "XV.IssueStockWorkspace",
+          id: model.id,
+          success: success,
+          allowNew: false
+        });
+      },
     });
 
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
