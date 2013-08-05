@@ -308,8 +308,7 @@ trailing:true, white:true*/
               {kind: "XV.ListAttr", attr: "isShipped"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "freight", formatter: "formatExtendedPrice"},
-              {kind: "XV.ListAttr", attr: "currency"}
+              {kind: "XV.ListAttr", attr: "freight", formatter: "formatExtendedPrice"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
               {kind: "XV.ListAttr", attr: "isShipped"},

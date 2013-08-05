@@ -8,18 +8,19 @@
 
   var crud = require('../lib/crud'),
     data = {
-      recordType : "XM.ShipVia",
-      autoTestAttributes : true,
-      createHash : {
-        code: "TESTSHIPVIA" + Math.random(),
-        description: "Test Ship Via"
+      recordType: "XM.Site",
+      autoTestAttributes: true,
+      createHash: {
+        code: "B2E2" + Math.random(),
+        description: "Between Egypt and Eritrea",
+        siteType: {id: 2}
       },
-      updateHash : {
-        code: "UPDATETESTSHIPVIA"
+      updateHash: {
+        description: "Between England and Eire, PA"
       }
     };
 
-  describe('ShipVia CRUD Test', function () {
+  describe('Site CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());
