@@ -762,6 +762,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     var sql = "select orm_namespace, orm_type from xt.orm where orm_rest " +
               "group by orm_namespace, orm_type order by orm_namespace, orm_type",
         orms = [],
+        relatedORMs,
         relations = [],
         singleOrms = [],
         thisOrm;
@@ -787,7 +788,12 @@ select xt.install_js('XT','Discovery','xtuple', $$
           if (thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany) {
             relation = thisOrm.properties[prop].toOne || thisOrm.properties[prop].toMany;
             if (relation.type) {
-              relations.push(relation.type);
+              /* Recurse into the relation's ORM and add it's related ORMs. */
+              relatedORMs = XT.Discovery.getIsRestORMs(relation.type);
+
+              for (var i = 0; i < relatedORMs.length; i++) {
+                relations.push(relatedORMs[i].orm_type);
+              }
             }
           }
         }
