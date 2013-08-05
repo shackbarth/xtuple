@@ -1,6 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
-/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true */
+/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true,
+Globalize:true */
 
 (function () {
 
@@ -1758,10 +1759,17 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.SalesOrderCommentBox", attr: "comments"},
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
         ], {owner: this});
-      this.$.lineItemsPanel.createComponents([
-        // Line Item Box
-        {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
-      ], {owner: this});
+      if (enyo.platform.touch) {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
+        ], {owner: this});
+      } else {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems", fit: true}
+        ], {owner: this});
+      }
     }
   });
 

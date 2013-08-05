@@ -1403,7 +1403,7 @@ white:true*/
         long30 = XT.session.settings.get("Long30Markups"),
         parent = this.getParent(),
         currency = parent.get("currency"),
-        effective = parent.get(parent.documentKey),
+        effective = parent.get(parent.documentDateKey),
         scale = XT.SALES_PRICE_SCALE,
         that = this,
         options = {},
@@ -1580,11 +1580,17 @@ white:true*/
     parentDidChange: function () {
       var parent = this.getParent(),
        lineNumber = this.get("lineNumber"),
+       lineNumberArray,
+       maxLineNumber,
        scheduleDate;
 
-      // Set next line number
+      // Set next line number to be 1 more than the highest living model
       if (parent && !lineNumber) {
-        this.set("lineNumber", parent.get("lineItems").length);
+        lineNumberArray = _.compact(_.map(parent.get("lineItems").models, function (model) {
+          return model.isDestroyed() ? null : model.get("lineNumber");
+        }));
+        maxLineNumber = lineNumberArray.length > 0 ? Math.max.apply(null, lineNumberArray) : 0;
+        this.set("lineNumber", maxLineNumber + 1);
       }
 
       // Default to schedule date of header

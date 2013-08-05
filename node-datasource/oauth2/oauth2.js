@@ -289,7 +289,9 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
         accesshash,
         decodedHeader = JSON.parse(utils.base64urlDecode(header)),
         decodedClaimSet = JSON.parse(utils.base64urlDecode(claimSet)),
+        expDate,
         initCallback,
+        iatDate,
         saveOptions = {},
         today = new Date(),
         expires = new Date(today.getTime() + (60 * 60 * 1000)), // One hour from now.
@@ -299,15 +301,24 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
     if (!decodedHeader || !decodedHeader.alg || !decodedHeader.typ) {
       return done(new Error("Invalid JWT header."));
     }
-    if (!decodedClaimSet || decodedClaimSet.length < 5 || !decodedClaimSet.iss || !decodedClaimSet.scope
-      || !decodedClaimSet.aud || !decodedClaimSet.exp || !decodedClaimSet.iat) {
+    if (!decodedClaimSet || decodedClaimSet.length < 5 || !decodedClaimSet.iss ||
+      !decodedClaimSet.scope || !decodedClaimSet.aud || !decodedClaimSet.exp ||
+      !decodedClaimSet.iat) {
+
       return done(new Error("Invalid JWT claim set."));
     }
-    if (((new Date(decodedClaimSet.exp)).getTime() <= 0) || ((new Date(decodedClaimSet.iat)).getTime() <= 0) // exp && iat are NOT valid epoch timestamps.
-      || (((new Date(decodedClaimSet.exp * 1000)).getTime()) - ((new Date(decodedClaimSet.iat * 1000)).getTime()) <= 0) // exp - iat <= 0
-      || (((new Date(decodedClaimSet.exp * 1000)).getTime()) - ((new Date(decodedClaimSet.iat * 1000)).getTime()) > 3600000) // exp is more than 1 hour from the iat time.
-      || (((new Date(decodedClaimSet.iat * 1000)) - today) > 0) // Great Scott! JWT was issued in the future.
+
+    // These dates will be valid epoch timestamps because of (... * 1000)
+    // don't use for initial check of epoch validity below.
+    expDate = new Date(decodedClaimSet.exp * 1000);
+    iatDate = new Date(decodedClaimSet.iat * 1000);
+
+    if (((new Date(decodedClaimSet.exp)).getTime() <= 0) || ((new Date(decodedClaimSet.iat)).getTime() <= 0) || // exp && iat are NOT valid epoch timestamps.
+      ((expDate.getTime()) - (iatDate.getTime()) <= 0) || // exp - iat <= 0
+      ((expDate.getTime()) - (iatDate.getTime()) > 3600000) || // exp is more than 1 hour from the iat time.
+      (((iatDate - today) - (10 * 60 * 1000)) > 0) // Great Scott! JWT was issued in the future. 10 minute buffer for clock errors.
       ) {
+
       return done(new Error("Invalid JWT timestamps."));
     }
 
@@ -317,7 +328,7 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
     }
 
     // JWT is only valid for 1 hour. Has it expired yet?
-    if (((new Date(decodedClaimSet.exp * 1000)) - today) < 0) {
+    if ((expDate - today) < 0) {
       return done(new Error("JWT has expired."));
     }
 
@@ -411,6 +422,8 @@ server.exchange('assertion', jwtBearer(function (client, header, claimSet, signa
 
       // TODO - Handle public scopes with no delegatedAccess users if we ever need to.
     }
+  } else {
+    return done(new Error("Invalid JWT. Signature verification failed"));
   }
 }));
 

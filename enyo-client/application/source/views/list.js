@@ -749,6 +749,94 @@ trailing:true, white:true*/
   XV.registerModelList("XM.FileRelation", "XV.FileList");
 
   // ..........................................................
+  // FILTER
+  //
+
+  enyo.kind({
+    name: "XV.FilterList",
+    kind: "XV.List",
+    label: "_filters".loc(),
+    collection: "XM.FilterCollection",
+    query: {
+      orderBy: [{
+        attribute: 'name'
+      }]
+    },
+    events: {
+      onCollectionChange: ""
+    },
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short", fit: true,
+            components: [
+            {kind: "XV.ListAttr", attr: "name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "third", components: [
+            {kind: "XV.ListAttr", attr: "shared", formatter: "formatShared"}
+          ]},
+          {kind: "XV.ListColumn", classes: "icon", components: [
+            {tag: "i", classes: "icon-remove list-icon", ontap: "removeRow"}
+          ]},
+          {kind: "XV.ListColumn", classes: "icon", components: [
+            {tag: "i", classes: "icon-signout list-icon", ontap: "shareRow"}
+          ]}
+        ]}
+      ]}
+    ],
+    /**
+      When the value of the list is changed, bind the add
+      and remove events of this collection.
+    */
+    valueChanged: function () {
+      this.inherited(arguments);
+      // bind enyo event to add/remove on collection of models
+      this.getValue().on("add", this.doCollectionChange(), this);
+      this.getValue().on("remove", this.doCollectionChange(), this);
+    },
+    /**
+      Formatting function to show the shared text instead of
+      the boolean value.
+    */
+    formatShared: function (value, view, model) {
+      var shared = model && model.get('shared') ? "_shared".loc() : "";
+      return shared;
+    },
+    /**
+      Removes the selected row when the "remove" icon is
+      selected.
+    */
+    removeRow: function (inSender, inEvent) {
+      var index = inEvent.index,
+        value = this.getValue(),
+        model = value.models[index],
+        that = this;
+      inEvent.model = model;
+      inEvent.done = function () {
+        that.doCollectionChange();
+      };
+      this.deleteItem(inEvent);
+    },
+    /**
+      Sets the shared value of the current model when the
+      "shared" icon is selected.
+    */
+    shareRow: function (inSender, inEvent) {
+      var options = {},
+        index = inEvent.index,
+        that = this,
+        model = this.getValue().models[index];
+      if (!model.get("shared")) {
+        model.set("shared", true);
+        options.success = function (model, resp, options) {
+          that.reset();
+        };
+        model.save(null, options);
+      };
+    }
+  });
+
+  // ..........................................................
   // FREIGHT CLASS
   //
 

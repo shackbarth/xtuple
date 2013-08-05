@@ -2,16 +2,51 @@
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
-setTimeout:true, clearTimeout: true, exports: true */
+setTimeout:true, clearTimeout:true, exports:true, it:true */
 
 var _ = require("underscore"),
   zombieAuth = require("./zombie_auth"),
+  Globalize = require("../../../lib/tools/lib/globalize/lib/globalize"),
   assert = require("chai").assert;
 
 (function () {
   "use strict";
 
-  var waitTime = exports.waitTime = 20000;
+
+
+  exports.accountBeforeDeleteActions = [{it: 'saves the account id', action: function (data, done) {
+    data.deleteData = {
+      accntId: data.model.get("account"),
+      accountModel: new XM.Account()
+    };
+    done();
+  }}];
+
+  exports.accountAfterDeleteActions = [{it: 'deletes the related account', action: function (data, done) {
+    var account = data.deleteData.accountModel,
+      fetchOptionsAccnt = {},
+      destroyAccount;
+    fetchOptionsAccnt.id = data.deleteData.accntId;
+    destroyAccount = function () {
+      if (account.getStatus() === XM.Model.READY_CLEAN) {
+        var accountDestroyed = function () {
+          if (account.getStatus() === XM.Model.DESTROYED_CLEAN) {
+            account.off("statusChange", accountDestroyed);
+            done();
+          }
+        };
+
+        account.off("statusChange", destroyAccount);
+        account.on("statusChange", accountDestroyed);
+        account.destroy();
+      }
+    };
+    account.on("statusChange", destroyAccount);
+    account.fetch(fetchOptionsAccnt);
+  }}];
+
+
+  var waitTime = exports.waitTime = 10000;
 
   var testAttributes = function (data) {
     if (!data.autoTestAttributes) {
@@ -30,6 +65,11 @@ var _ = require("underscore"),
       } else if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
         // if the data is a model and the test hash looks like {contact: 7}
         assert.equal(data.model.get(key).id, value);
+      } else if (_.isDate(data.model.get(key))) {
+        // comparing dates requires a bit of finesse
+        // TODO: get this to work with timezoneoffset
+        // date comparison is disabled until we do
+        //assert.equal(Globalize.format(new Date(data.model.get(key)), "d"), Globalize.format(new Date(value), "d"));
       } else {
         // default case, such as comparing strings to strings etc.
         assert.equal(data.model.get(key), value);
@@ -64,7 +104,7 @@ var _ = require("underscore"),
         }
       };
     _.each(data.createHash, function (value, key) {
-      if (typeof value === 'object') {
+      if (typeof value === 'object' && !_.isDate(value)) {
         // if it's an object we want to set on the model, flesh it out
         var fetchObject = {
             success: fetchSuccess,
@@ -130,9 +170,16 @@ var _ = require("underscore"),
         } else {
           clearTimeout(timeoutId);
           model.off('change:id', modelCallback);
+          model.off('change:' + model.idAttribute, modelCallback);
           assertAndCallback();
         }
       };
+
+    // If we don't hear back, keep going
+    timeoutId = setTimeout(function () {
+      assert.fail("timeout was reached on create " + data.recordType, "");
+      callback();
+    }, waitTime);
 
     if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
       // Add an event handler when using a model with an AUTO...NUMBER.
@@ -142,14 +189,9 @@ var _ = require("underscore"),
       model.on('statusChange', modelCallback);
     } else {
       model.on('change:id', modelCallback);
+      model.on('change:' + model.idAttribute, modelCallback);
     }
     model.initialize(null, {isNew: true});
-
-    // If we don't hear back, keep going
-    timeoutId = setTimeout(function () {
-      assert.fail("timeout was reached on create " + data.recordType, "");
-      callback();
-    }, waitTime);
   };
 
   /**
@@ -164,12 +206,25 @@ var _ = require("underscore"),
     var that = this,
       timeoutId,
       model = data.model,
+      invalid = function (model, error) {
+        assert.fail(JSON.stringify(error) || "Unspecified error", "");
+        clearTimeout(timeoutId);
+        model.off('statusChange', modelCallback);
+        model.off('invalid', invalid);
+        model.off('notify', notify);
+        callback();
+      },
+      notify = function () {
+        console.log("notify", JSON.stringify(arguments));
+      },
       modelCallback = function () {
         var status = model.getStatus(),
           K = XM.Model;
         if (status === K.READY_CLEAN) {
           clearTimeout(timeoutId);
           model.off('statusChange', modelCallback);
+          model.off('invalid', invalid);
+          model.off('notify', notify);
 
           assert.equal(data.model.getStatusString(), 'READY_CLEAN');
           testAttributes(data);
@@ -178,21 +233,22 @@ var _ = require("underscore"),
         }
       };
 
-    //assert.equal(JSON.stringify(model.validate(model.attributes)), undefined);
-    model.on('statusChange', modelCallback);
-    model.save(null, {
-      error: function (model, error, options) {
-        clearTimeout(timeoutId);
-        assert.fail(JSON.stringify(error) || "Unspecified error", "");
-        callback();
-      }
-    });
+    assert.equal(JSON.stringify(model.validate(model.attributes)), undefined);
 
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
       assert.fail("timeout was reached on save " + data.recordType, "");
+      clearTimeout(timeoutId);
+      model.off('statusChange', modelCallback);
+      model.off('invalid', invalid);
+      model.off('notify', notify);
       callback();
     }, waitTime);
+
+    model.on('statusChange', modelCallback);
+    model.on('invalid', invalid);
+    model.on('notify', notify);
+    model.save(null, {});
   };
 
 
@@ -232,90 +288,109 @@ var _ = require("underscore"),
         }
       };
 
-    model.on('statusChange', modelCallback);
-    model.destroy();
-
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
       assert.fail("timeout was reached on delete " + data.recordType, "");
       callback();
     }, waitTime);
+
+    model.on('statusChange', modelCallback);
+    model.destroy();
   };
 
   /**
     String all CRUD tests together so that simple models can be
     tested with a single function
    */
-  var runAllCrud = exports.runAllCrud = function (data, done) {
-
-    // very clever: we allow testmakers to define their own custom
-    // callbacks in their data object. If data.setCallback is set,
-    // then what we do is, instead of:
-    // 1. Run the set operation
-    // 2: Run the default set callback (which moves on to the next step)
+  var runAllCrud = exports.runAllCrud = function (data) {
     //
-    // it will do this instead:
-    // 1. Run the set operation
-    // 2. Run the user's custom set callback
-    // 3: Run the default set callback (which moves on to the next step)
+    // Step 1: load the environment with Zombie
+    //
+    it('loads the client with zombie', function (done) {
+      this.timeout(20 * 1000);
+      zombieAuth.loadApp({callback: done, verbose: false /* data.verbose */});
+    });
 
-    var tempSetCallback, tempCreateCallback, tempInitCallback;
-
-    var runCrud = function () {
-      var initCallback = function () {
-        var setCallback = function () {
-          var saveCallback = function () {
-            var secondSaveCallback = function () {
-
-              // Step 8: delete the model from the database
-              if (data.verbose) { console.log("destroy model", data.recordType); }
-              destroy(data, done);
-            };
-
-            // Step 6: set the model with updated data
-            if (data.verbose) { console.log("update model", data.recordType); }
-            update(data);
-
-            // Step 7: save the updated model to the database
-            if (data.verbose) { console.log("save updated model", data.recordType); }
-            save(data, secondSaveCallback);
-          };
-
-          // Step 5: save the data to the database
-          if (data.verbose) { console.log("save model", data.recordType); }
-          save(data, saveCallback);
-        };
-
-        // Step 4: set the model with our createData hash
-        if (data.setCallback) {
-          tempSetCallback = setCallback;
-          setCallback = function () {
-            data.setCallback(data, tempSetCallback);
-          };
-        }
-        if (data.verbose) { console.log("set model", data.recordType); }
-        data.updated = false;
-        setModel(data, setCallback);
-      };
-
-      // Step 2: create the model per the record type specified
-      if (data.verbose) { console.log("create model", data.recordType); }
+    //
+    // Step 2: create the model per the record type specified
+    //
+    it('creates the model of the appropriate record type', function () {
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
+    });
 
-      // Step 3: initialize the model to get the ID from the database
-      if (data.initCallback) {
-        tempInitCallback = initCallback;
-        initCallback = function () {
-          data.initCallback(data, tempInitCallback);
-        };
-      }
-      if (data.verbose) { console.log("init model", data.recordType); }
-      init(data, initCallback);
-    };
+    //
+    // Step 3: initialize the model to get the ID from the database
+    //
+    it('initializes the model by fetching an id from the server', function (done) {
+      this.timeout(20 * 1000);
+      init(data, done);
+    });
 
-    // Step 1: load the environment with Zombie
-    zombieAuth.loadApp({callback: runCrud, verbose: data.verbose});
+    //
+    // Step 4: set the model with our createData hash
+    //
+    _.each(data.beforeSetActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(data, done);
+      });
+    });
+
+    it('sets values on the model', function (done) {
+      data.updated = false;
+      setModel(data, done);
+    });
+
+    _.each(data.beforeSaveActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(data, done);
+      });
+    });
+
+    //
+    // Step 5: save the data to the database
+    //
+    it('saves the values to the database', function (done) {
+      this.timeout(10 * 1000);
+      save(data, done);
+    });
+
+    //
+    // Step 6: set the model with updated data
+    //
+    it('updates the model', function () {
+      update(data);
+    });
+
+    //
+    // Step 7: save the updated model to the database
+    //
+    it('saves the updated values to the database', function (done) {
+      this.timeout(10 * 1000);
+      save(data, done);
+    });
+
+    //
+    // Step 8: delete the model from the database
+    //
+    _.each(data.beforeDeleteActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(data, done);
+      });
+    });
+
+    it('deletes the model from the database', function (done) {
+      destroy(data, done);
+    });
+
+    _.each(data.afterDeleteActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(data, done);
+      });
+    });
   };
-
 }());

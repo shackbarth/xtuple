@@ -39,7 +39,8 @@ insert into quitem (
   quitem_itemsrc_id,
   quitem_pricemode,
   quitem_order_warehous_id,
-  quitem_item_id
+  quitem_item_id,
+  obj_uuid
 ) select
   new.quitem_id,
   new.quitem_quhead_id,
@@ -65,7 +66,8 @@ insert into quitem (
   new.quitem_itemsrc_id,
   coalesce(new.quitem_pricemode, 'D'),
   new.quitem_order_warehous_id,
-  new.quitem_item_id
+  new.quitem_item_id,
+  new.obj_uuid
 from itemsite
 where itemsite_item_id=new.quitem_item_id
   and itemsite_warehous_id=new.quitem_order_warehous_id;
@@ -93,7 +95,8 @@ update quitem set
   quitem_taxtype_id=new.quitem_taxtype_id,
   quitem_dropship=new.quitem_dropship,
   quitem_itemsrc_id=new.quitem_itemsrc_id,
-  quitem_pricemode=new.quitem_pricemode
+  quitem_pricemode=new.quitem_pricemode,
+  obj_uuid=new.obj_uuid 
 where quitem_id = old.quitem_id;
 
 create or replace rule "_DELETE" as on delete to xt.quiteminfo do instead

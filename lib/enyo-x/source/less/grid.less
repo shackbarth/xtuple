@@ -1,0 +1,214 @@
+/*
+  Styles relating to the grid box
+*/
+
+
+/* Entire box including the grid and the summary panel */
+.xv-grid-box {
+  &.panel {
+    width: 840px;
+  }
+
+
+  .xv-above-grid-list {
+    border: 0px;
+  }
+
+  /**
+    This is the most general grid row that
+    is not specific to read-only or selected
+  */
+  .xv-grid-row {
+    font-size: 12px;
+    border-top: @silver;
+    > * {
+      display: inline-block;
+    }
+    vertical-align: top;
+
+    /**
+      This is the grid header row
+    */
+    .xv-grid-header {
+      background-color: @charcoal;
+      color: @white;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-top: none;
+      border-right: 1px solid @header-gray;
+      border-bottom: 1px solid @header-gray;
+      &.last {
+        border-right: none;
+      }
+    }
+    > * {
+      padding: 7px 10px;
+    }
+
+    .line-number {
+      vertical-align: top;
+      width: 30px;
+    }
+    .grid-actions {
+      display: block;
+      padding-left: 30px;
+      width: 276px !important;
+      > * {
+        display: inline-block;
+        width: 100%;
+      }
+    }
+    .grid-item {
+      vertical-align: top;
+      width: 250px;
+    }
+    .quantity {
+      vertical-align: top;
+      width: 100px;
+    }
+    .discount {
+      vertical-align: top;
+      width: 90px;
+    }
+    .price {
+      vertical-align: top;
+      width: 90px;
+    }
+    .schedule {
+      vertical-align: top;
+      width: 110px;
+    }
+
+    &.readonly {
+      background: @ghost;
+    }
+
+    &.selected {
+      background-color: @white;
+      border: 1px solid @bright-orange;
+      border-top: 1px solid @bright-orange;
+      border-bottom: 1px solid @bright-orange;
+      .xv-grid-column {
+        .onyx-input-decorator {
+          .tightened-input-decorator;
+        }
+        .onyx-picker-decorator {
+          padding-top: 6px;
+          .onyx-button {
+            height: 20px;
+            padding-top: 3px;
+            width: 80px;
+            font-size: 13px;
+          }
+        }
+        .xv-picker-label {
+          display: none;
+        }
+        .xv-datewidget {
+          margin-right: 10px;
+          padding-top: 0;
+          .onyx-input-decorator {
+            padding: 0;
+            width: 105px;
+            input {
+              width: 65px;
+              font-size: 13px;
+            }
+          }
+        }
+        .xv-numberwidget {
+          padding-top: 6px;
+          .onyx-input-decorator {
+            .tightened-input-decorator;
+          }
+        }
+        &.line-number {
+          .xv-numberwidget {
+            .onyx-input-decorator {
+              .tightened-input-decorator(30px);
+            }
+          }
+        }
+        .xv-moneywidget {
+          .onyx-input-decorator {
+            .tightened-input-decorator;
+          }
+        }
+        .xv-relationwidget {
+          .onyx-input-decorator {
+            width: 150px;
+          }
+          .onyx-input {
+            width: 100px;
+          }
+        }
+        .xv-subinput {
+          width: 80px;
+        }
+        .xv-input {
+          padding-top: 6px;
+          width: 80px;
+        }
+        .xv-label {
+          display: none;
+        }
+        .xv-decorated-label {
+          display: none;
+        }
+        .xv-relationwidget-description {
+          text-indent: 0;
+          padding-bottom: 0;
+        }
+        .xv-relationwidget-secondarydescription {
+          display: none;
+        }
+        .xv-private-item-site-widget {
+          border-bottom: 0;
+          padding: 0;
+        }
+      }
+    }
+  }
+  &.xv-groupbox {
+    .xv-sales-summary-panel {
+      border: none;
+      margin-top: 0;
+      padding-left: 0px;
+      padding-right: 0px;
+      .xv-sales-summary-total-group {
+        padding: 0;
+        border: none;
+        .xv-moneywidget {
+          padding-bottom: 0px;
+          padding-top: 0px;
+          .xv-input-decorator {
+            padding-bottom: 0px;
+            padding-top: 0px;
+          }
+        }
+        .xv-numberwidget {
+          padding-bottom: 0px;
+          padding-top: 0px;
+          .xv-input-decorator {
+            width: 163px;
+            padding-bottom: 0px;
+            padding-top: 0px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.tightened-input-decorator (@width: 90px) {
+  padding: 0;
+  width: @width;
+  input {
+    text-align: left;
+    width: (@width - 10px);
+    font-size: 13px;
+  }
+}
+
+

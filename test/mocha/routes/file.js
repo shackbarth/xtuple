@@ -2,17 +2,19 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, XT:true, _:true, describe:true, it:true, before:true */
 
-XT = {};
+if (typeof XT === undefined) {
+  XT = {};
+}
 _ = require("underscore");
 
 var assert = require("chai").assert,
-  fileRoute = require("../../../routes/file"),
-  dataRoute = require("../../../routes/data");
+  fileRoute = require("../../../node-datasource/routes/file"),
+  dataRoute = require("../../../node-datasource/routes/data");
 
-require("../../../xt");
-require("../../../../lib/tools/source/foundation");
-require("../../../../lib/tools/source/ext/string");
-require("../../../../lib/tools/source/ext/proto/string");
+require("../../../node-datasource/xt");
+require("../../../lib/tools/source/foundation");
+require("../../../lib/tools/source/ext/string");
+require("../../../lib/tools/source/ext/proto/string");
 
 (function () {
   "use strict";

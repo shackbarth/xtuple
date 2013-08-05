@@ -1,23 +1,28 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true */
 
 (function () {
+
+  "use strict";
 
   /**
     @class
 
     @extends XM.SalesOrderBase
   */
-  XM.SalesOrder = XM.SalesOrderBase.extend(/** @lends XM.SalesOrder.prototype */{
+  XM.SalesOrder = XM.SalesOrderBase.extend(
+    /** @lends XM.SalesOrder.prototype */{
 
     recordType: 'XM.SalesOrder',
+
+    nameAttribute: 'number',
 
     numberPolicySetting: 'CONumberGeneration',
 
     documentDateKey: "orderDate",
-    
+
     /**
       Add default for wasQuote.
      */
@@ -282,5 +287,15 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SalesOrderLineCollection = XM.Collection.extend(/** @lends XM.SalesOrderLineCollection.prototype */{
+
+    model: XM.SalesOrderLine
+
+  });
 
 }());
