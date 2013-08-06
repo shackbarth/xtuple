@@ -113,7 +113,7 @@ trailing:true, white:true*/
       showDeleteAction: false,
       actions: [
         {name: "enterReceipt", prerequisite: "canEnterReceipt",
-          method: "doEnterReceipt", notify: false, isViewMethod: true}
+          method: "enterReceipt", notify: false, isViewMethod: true}
       ],
       toggleSelected: true,
       components: [
@@ -158,7 +158,7 @@ trailing:true, white:true*/
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
-      doEnterReceipt: function (inEvent) {
+      enterReceipt: function (inEvent) {
         var model = inEvent.model,
           modelId = model.id,
           success = function () {

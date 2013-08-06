@@ -32,7 +32,6 @@ white:true*/
 
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
-
       // Bind events
       this.on('statusChange', this.statusDidChange);
     },
@@ -41,7 +40,6 @@ white:true*/
         callback(true);
       }
       return this;
-      console.log("canEnterReceipt");
     },
 
     doEnterReceipt: function (callback) {
@@ -49,28 +47,8 @@ white:true*/
         callback(true);
       }
       return this;
-      console.log("canEnterReceipt");
-    },
-    /*
-    canEnterReceipt: function (callback) {
-      var priv = "EnterReceipts";
-      return _canDo.call(this, priv, callback);
     },
 
-    doEnterReceipt: function (callback) {
-      return _doDispatch.call(this, "enterReceipt", callback);
-    },
-    */
-    /*
-    canReceiveAll: function (callback) {
-      var priv = "EnterReceipts";
-      return _canDo.call(this, priv, callback);
-    },
-
-    doReceiveAll: function (callback) {
-      return _doDispatch.call(this, "receiveAll", callback);
-    },
-    */
     save: function (key, value, options) {
       options = options ? _.clone(options) : {};
 
@@ -128,11 +106,11 @@ white:true*/
       query.parameters = [
         {
           attribute: "item",
-          value: this.get("item")
+          value: this.getValue("itemSite.item")
         },
         {
           attribute: "site",
-          value: this.get("site")
+          value: this.getValue("itemSite.site")
         }
       ];
 
@@ -141,43 +119,12 @@ white:true*/
     },
 
     statusDidChange: function () {
-        if (this.getStatus() === XM.Model.READY_CLEAN) {
-          this.set("toReceive", this.get("toReceive"));
-        }
+      if (this.getStatus() === XM.Model.READY_CLEAN) {
+        this.set("toReceive", this.get("toReceive"));
+      }
     }
 
   });
-
-  /** @private */
-  var _canDo = function (priv, callback) {
-    var ret = XT.session.privileges.get(priv);
-    if (callback) {
-      callback(ret);
-    }
-    return ret;
-  };
-
-  /** @private */
-  var _doDispatch = function (method, callback, params) {
-    var that = this,
-      options = {};
-    params = params || [];
-    params.unshift(this.id);
-    options.success = function (resp) {
-      var fetchOpts = {};
-      fetchOpts.success = function () {
-        if (callback) { callback(resp); }
-      };
-      if (resp) {
-        that.fetch(fetchOpts);
-      }
-    };
-    options.error = function (resp) {
-      if (callback) { callback(resp); }
-    };
-    this.dispatch("XM.Inventory", method, params, options);
-    return this;
-  };
 
   /**
     @class

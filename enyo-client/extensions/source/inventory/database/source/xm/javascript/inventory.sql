@@ -288,26 +288,50 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
   /**
     PO Enter Receipt 
+      select xt.post($${
+        "nameSpace":"XM",
+        "type":"Inventory",
+        "dispatch":{
+          "functionName":"enterReceipt",
+          "parameters":[
+            "a452239d-aef2-41c0-f3a4-e04f87cbe0d2",
+            1,
+            {}
+          ]
+        },
+        "username":"admin"
+      }$$)
+
+  
+    @param {String} Order line uuid
+    @param {Number} Quantity
+    @param {Array} [options.detail] Distribution detail
   */
-  XM.Inventory.enterReceipt = function (orderLine, quantity) {
-    var series,
+  XM.Inventory.enterReceipt = function (orderLine, quantity, options) {
+    options = options || {};
+    var  series,
       sql;
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401) };
-    
-    sql = "select public.enterporeceipt($1, $2) as series " +
-      "from poitem where obj_uuid=$1));";
 
+    /* Post the transaction */
+    sql = "select public.enterporeceipt(poitem_id, $2) as series " +
+      "from poitem where obj_uuid=$1;",
     series = plv8.execute(sql, [orderLine, quantity])[0].series;
+
+    /* Distribute detail */
+    XM.PrivateInventory.distribute(series, options.detail);
 
     return;
   };
-
   XM.Inventory.enterReceipt.description = "Enter Purchase Order Receipt.";
   XM.Inventory.enterReceipt.params = {
     orderLine: { type: "String", description: "Order line UUID" },
-    quantity: { type: "Number", description: "Quantity" }
+    quantity: {type: "Number", description: "Quantity" },
+    options: {type: "Object", description: "Other attributes", attributes: {
+      detail: {type: "Array", description: "Distribution detail" }
+    }}
   };
 
   /**
