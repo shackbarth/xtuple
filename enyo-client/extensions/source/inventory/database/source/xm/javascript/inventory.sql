@@ -300,7 +300,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           ]
         },
         "username":"admin"
-      }'');
+      }');
 
   
     @param {String} Order line uuid
