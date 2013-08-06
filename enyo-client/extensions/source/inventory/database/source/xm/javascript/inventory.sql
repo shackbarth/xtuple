@@ -71,7 +71,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           " where locitemsite_itemsite_id = $2);",
           qry = plv8.execute(locSql, [uuid, info.itemsite_id]);
         if (!qry.length) {
-          throw new handleError("Location " + uuid + " is not valid.")
+          throw new handleError("Location " + uuid + " is not valid.");
         }
         return qry[0].location_id;
       };
@@ -94,7 +94,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       if (!info.length) {
         throw new handleError("Item Site is not controlled.");
       } else if (info.length > 1) { 
-        throw new handleError("Only distribution for one transaction at a time is supported.")
+        throw new handleError("Only distribution for one transaction at a time is supported.");
       }
       info = info[0];
 
@@ -105,7 +105,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       }
       
       if (qty != info.invhist_invqty) {
-        throw new handleError("Distribution quantity does not match transaction quantity.")
+        throw new handleError("Distribution quantity does not match transaction quantity.");
       }
       
       /* Loop through and handle each trace detail */
@@ -208,14 +208,14 @@ select xt.install_js('XM','Inventory','xtuple', $$
         " and (itemsite_loccntrl or itemsite_controlmethod in ('L','S')); ",
       invHist = plv8.execute(sql,[series]);
       
-      if (invHist.length) { throw new handleError("Transaction requires distribution detail") }
+      if (invHist.length) { throw new handleError("Transaction requires distribution detail"); }
     }
 
     /* Wrap up */
     sql = "select postitemlocseries($1);";
     plv8.execute(sql, [series]);
     return;
-  }
+  };
 
 
   if (!XM.Inventory) { XM.Inventory = {}; }
@@ -263,7 +263,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       series;
 
     /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("CreateAdjustmentTrans")) { throw new handleError("Access Denied", 401) };
+    if (!XT.Data.checkPrivilege("CreateAdjustmentTrans")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
     series = plv8.execute(sql, [itemSite, quantity, docNumber, notes, asOf, value])[0].series;
@@ -288,7 +288,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
   /**
     PO Enter Receipt 
-      select xt.post($${
+      select xt.post('{
         "nameSpace":"XM",
         "type":"Inventory",
         "dispatch":{
@@ -300,7 +300,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           ]
         },
         "username":"admin"
-      }$$)
+      }');
 
   
     @param {String} Order line uuid
@@ -313,7 +313,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       sql;
 
     /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401) };
+    if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
     sql = "select public.enterporeceipt(poitem_id, $2) as series " +
@@ -343,7 +343,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       ret;
     
     /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401) };
+    if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401); }
 
     ret = plv8.execute(sql, [purchaseOrder])[0];
 
@@ -393,7 +393,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       sql;
 
     /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401) };
+    if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
     sql = "select issuetoshipping('SO', coitem_id, $2, 0, $3::timestamptz) as series " +
@@ -437,7 +437,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       ret;
 
     /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401) };
+    if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
     ret = plv8.execute(sql, [orderLine])[0];
@@ -469,7 +469,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       "from shiphead where shiphead_number = $1;";
 
     /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("RecallOrders")) { throw new handleError("Access Denied", 401) };
+    if (!XT.Data.checkPrivilege("RecallOrders")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
     var ret = plv8.execute(sql, [shipment])[0].series;
@@ -499,7 +499,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
 		"WarnIfReceiptQtyDiffers",
 		"ReceiptQtyTolerancePct",
 		"RecordPPVonReceipt" 
-  ]
+  ];
   
   /* 
   Return Inventory configuration settings.
@@ -520,7 +520,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
     return JSON.stringify(ret);
-  }
+  };
   
   /* 
   Update Inventory configuration settings. Only valid options as defined in the array
@@ -558,8 +558,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
     }
  
     return data.commitMetrics(metrics);
-  }
+  };
 
-}());
+})
   
 $$ );
