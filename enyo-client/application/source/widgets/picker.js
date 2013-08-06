@@ -425,6 +425,54 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // SORT
+  //
+
+  enyo.kind({
+    name: "XV.SortPicker",
+    kind: "XV.Picker",
+    onSelect: "itemSelected",
+    buildList: function (comps) {
+      this.$.picker.destroyClientControls();
+    //the first picker you open is fine - the next one
+    //  will have the list doubled and the third tripled.
+      if (!comps) {
+        return;
+      }
+      for (var i = 0; i < comps.length; i++) {
+        this.$.picker.createComponent(comps[i]);
+      }
+      this.$.picker.render();
+    },
+    itemSelected: function (inSender, inEvent) {
+      this.attr = inEvent.originator.attr;
+    },
+    setComponentsList: function (toSet) {
+      var comps = [];
+      for (var i = 0; i < toSet.length; i++) {
+        var stringToSet = "_" + toSet[i],
+          objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
+
+        comps.push(objectToSet);
+      }
+      this.buildList(comps);
+    }
+  });
+
+  // ..........................................................
+  // SORT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SortTypePicker",
+    kind: "XV.Picker",
+    buildList: function (options) {
+      this.$.picker.createComponent({content: "_ascending".loc()});
+      this.$.picker.createComponent({content: "_descending".loc()});
+    }
+  });
+
+  // ..........................................................
   // TAX AUTHORITY
   //
 

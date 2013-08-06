@@ -2331,6 +2331,14 @@ body {
   padding-left: 10px;
   float: right;
 }
+.xv-sort-popup {
+  background-color: #ffffff;
+  color: #000;
+}
+.xv-sort-popup .onyx-picker-decorator .onyx-button {
+  width: 130px;
+  margin: 0 auto 0 auto;
+}
 .xv-version-label {
   padding: 10px;
 }
