@@ -28,15 +28,6 @@
           if (model instanceof XM.Model && !model instanceof XM.Settings) {
             assert.include(model.getAttributeNames(), model.idAttribute, key + " does not contain its idAttribute");
           }
-          /*
-          if (model instanceof XM.Document) {
-            if (model.getAttributeNames().indexOf(model.nameAttribute) < 0) {
-              console.log(key);
-            }
-
-            //assert.include(model.getAttributeNames(), model.nameAttribute, key + " does not contain its nameAttribute");
-          }
-          */
         }
       });
     });
