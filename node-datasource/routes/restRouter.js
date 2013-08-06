@@ -89,7 +89,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             error.error.message = resp.status.message;
             return res.json(resp.status.code, error);
           } else {
-            return res.json(resp.status.code, resp.data);
+            return res.json(resp.status.code, resp);
           }
         };
 
