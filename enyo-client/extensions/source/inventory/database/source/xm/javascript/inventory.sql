@@ -287,6 +287,72 @@ select xt.install_js('XM','Inventory','xtuple', $$
   };
 
   /**
+    PO Enter Receipt 
+      select xt.post($${
+        "nameSpace":"XM",
+        "type":"Inventory",
+        "dispatch":{
+          "functionName":"enterReceipt",
+          "parameters":[
+            "a452239d-aef2-41c0-f3a4-e04f87cbe0d2",
+            1,
+            {}
+          ]
+        },
+        "username":"admin"
+      }$$)
+
+  
+    @param {String} Order line uuid
+    @param {Number} Quantity
+    @param {Array} [options.detail] Distribution detail
+  */
+  XM.Inventory.enterReceipt = function (orderLine, quantity, options) {
+    options = options || {};
+    var  series,
+      sql;
+
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401) };
+
+    /* Post the transaction */
+    sql = "select public.enterporeceipt(poitem_id, $2) as series " +
+      "from poitem where obj_uuid=$1;",
+    series = plv8.execute(sql, [orderLine, quantity])[0].series;
+
+    /* Distribute detail */
+    XM.PrivateInventory.distribute(series, options.detail);
+
+    return;
+  };
+  XM.Inventory.enterReceipt.description = "Enter Purchase Order Receipt.";
+  XM.Inventory.enterReceipt.params = {
+    orderLine: { type: "String", description: "Order line UUID" },
+    quantity: {type: "Number", description: "Quantity" },
+    options: {type: "Object", description: "Other attributes", attributes: {
+      detail: {type: "Array", description: "Distribution detail" }
+    }}
+  };
+
+  /**
+    PO Receive All
+  */
+  XM.Inventory.receiveAll = function (purchaseOrder) {
+    var sql = "select public.enterporeceipt(poitem_id, poitem_qty_ordered) from poitem" + 
+      "join pohead on poitem_pohead_id = pohead_id where ( (poitem_status <> 'C') and (pohead_number=$1));",
+      ret;
+    
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401) };
+
+    ret = plv8.execute(sql, [purchaseOrder])[0];
+
+    series = plv8.execute(sql, [orderLine, quantity, asOf])[0].series;
+
+    return ret;
+  };
+
+  /**
     Issue to shipping.
     
       select xt.post('{
@@ -366,16 +432,17 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {String} Order line uuid
   */
   XM.Inventory.returnFromShipping = function (orderLine) {
-    var sql = "select returnitemshipments(coitem_id) as series " +
-      "from coitem where obj_uuid = $1;";
+    var sql = "select returnitemshipments(coitem_id) " +
+      "from coitem where obj_uuid = $1;",
+      ret;
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401) };
 
     /* Post the transaction */
-    plv8.execute(sql, [orderLine])[0].series;
+    ret = plv8.execute(sql, [orderLine])[0];
 
-    return;
+    return ret;
   };
   XM.Inventory.returnFromShipping.description = "Return shipment transactions.";
   XM.Inventory.returnFromShipping.params = {

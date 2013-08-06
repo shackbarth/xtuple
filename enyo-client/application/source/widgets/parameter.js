@@ -711,6 +711,57 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // PURCHASE ORDER LIST
+  //
+
+  enyo.kind({
+    name: "XV.PurchaseOrderListItemParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_purchaseOrders".loc()},
+      {name: "showUnReleased", attr: "status", label: "_showUnReleased".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: "U"
+            };
+          }
+          return param;
+        }
+      },
+      {name: "showClosed", attr: "status", label: "_showClosed".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: "C"
+            };
+          }
+          return param;
+        }
+      },
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
+      {name: "vendor", attr: "vendor.number", label: "_vendor".loc(), defaultKind: "XV.VendorWidget"},
+      {name: "vendorType", attr: "vendor.vendorType.code", label: "_vendorType".loc(), defaultKind: "XV.VendorTypePicker"},
+      {kind: "onyx.GroupboxHeader", content: "_purchaseOrderDate".loc()},
+      {name: "fromDate", label: "_fromDate".loc(),
+        filterLabel: "_date".loc() + " " + "_fromDate".loc(),
+        attr: "orderDate", operator: ">=",
+        defaultKind: "XV.DateWidget"},
+      {name: "toDate", label: "_toDate".loc(),
+        filterLabel: "_date".loc() + " " + "_toDate".loc(),
+        attr: "orderDate", operator: "<=",
+        defaultKind: "XV.DateWidget"}
+    ]
+  });
+
+  // ..........................................................
   // QUOTE
   //
 
@@ -1106,6 +1157,43 @@ trailing:true, white:true*/
       {kind: "onyx.GroupboxHeader", content: "_url".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
       {name: "address", label: "_address".loc(), attr: "path"}
+    ]
+  });
+
+  // ..........................................................
+  // VENDOR
+  //
+
+  enyo.kind({
+    name: "XV.VendorListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "vendorType", attr: "vendorType.code", label: "_vendorType".loc(), defaultKind: "XV.VendorTypePicker"},
+      {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "contact1.primaryEmail"},
+      {name: "phone", label: "_phone".loc(), attr: ["contact1.phone", "contact1.alternate", "contact1.fax"]},
+      {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+      {name: "street", label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
+      {name: "city", label: "_city".loc(), attr: "address.city"},
+      {name: "state", label: "_state".loc(), attr: "address.state"},
+      {name: "postalCode", label: "_postalCode".loc(), attr: "address.postalCode"},
+      {name: "country", label: "_country".loc(), attr: "address.country"}
     ]
   });
 
