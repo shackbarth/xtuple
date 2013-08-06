@@ -9,10 +9,10 @@
     "comment": "Purchase Order Map",
     "privileges": {
       "all": {
-        "create": false,
-        "read": true,
-        "update": false,
-        "delete": false
+        "create": "MaintainPurchaseOrders",
+        "read": "ViewPurchaseOrders",
+        "update": "MaintainPurchaseOrders",
+        "delete": "MaintainPurchaseOrders"
       }
     },
     "properties": [
