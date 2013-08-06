@@ -199,6 +199,14 @@ trailing:true, white:true*/
         {name: "returnLine", prerequisite: "canReturnStock",
           method: "doReturnStock", notify: false}
       ],
+      headerActions: [
+        {
+          name: "issueAll",
+          method: function () {
+            // TODO: actually issue all
+          }
+        },
+      ],
       toggleSelected: true,
       components: [
         {kind: "XV.ListItem", components: [
@@ -270,7 +278,7 @@ trailing:true, white:true*/
     });
 
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
- 
+
     // ..........................................................
     // SHIPMENT
     //
