@@ -814,7 +814,8 @@ trailing:true, white:true*/
         that = this;
       inEvent.model = model;
       inEvent.done = function () {
-        that.doCollectionChange();
+        inEvent.delete = true;
+        that.doCollectionChange(inEvent);
       };
       this.deleteItem(inEvent);
     },
