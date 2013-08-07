@@ -1,5 +1,6 @@
 scripts/install.log
 1
+libpeerconnection.log
 enyo-client/extensions/1
 *.DS_Store
 *.swp
