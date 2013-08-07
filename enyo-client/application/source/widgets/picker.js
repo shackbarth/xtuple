@@ -450,10 +450,21 @@ regexp:true, undef:true, trailing:true, white:true */
     setComponentsList: function (toSet) {
       var comps = [];
       for (var i = 0; i < toSet.length; i++) {
-        var stringToSet = "_" + toSet[i],
-          objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
-
-        comps.push(objectToSet);
+        if (toSet[i].indexOf('.') === -1) {
+          var stringToSet = "_" + toSet[i],
+            objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
+          comps.push(objectToSet)
+        }
+        else {
+          var stringToSet,
+            objectToSet;
+          var strArray = toSet[i].split('.');
+          strArray[0] = "_" + strArray[0];
+          strArray[1] = "_" + strArray[1];
+          stringToSet = strArray[0].loc() + " " + strArray[1].loc();
+          objectToSet = {content: stringToSet, attr: toSet[i]};
+          comps.push(objectToSet);
+        }
       }
       this.buildList(comps);
     }

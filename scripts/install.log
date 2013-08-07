@@ -1,0 +1,666 @@
+RUN_DIR = /home/mike/Dev/xtuple/scripts
+BASEDIR = /usr/local/src
+XT_DIR = /home/mike/Dev/xtuple/scripts/..
+XTUPLE_REPO = http://sourceforge.net/projects/postbooks/files/mobile-debian
+NODE_VERSION = 0.8.22-1_amd64
+## install_packages ##
+Ign http://us.archive.ubuntu.com precise InRelease
+Ign http://us.archive.ubuntu.com precise-updates InRelease
+Ign http://us.archive.ubuntu.com precise-backports InRelease
+Hit http://us.archive.ubuntu.com precise Release.gpg
+Get:1 http://us.archive.ubuntu.com precise-updates Release.gpg [198 B]
+Hit http://us.archive.ubuntu.com precise-backports Release.gpg
+Ign http://security.ubuntu.com precise-security InRelease
+Ign http://extras.ubuntu.com precise InRelease
+Hit http://us.archive.ubuntu.com precise Release
+Get:2 http://us.archive.ubuntu.com precise-updates Release [49.6 kB]
+Hit http://security.ubuntu.com precise-security Release.gpg
+Hit http://us.archive.ubuntu.com precise-backports Release
+Hit http://extras.ubuntu.com precise Release.gpg
+Hit http://us.archive.ubuntu.com precise/main Sources
+Hit http://us.archive.ubuntu.com precise/restricted Sources
+Hit http://us.archive.ubuntu.com precise/universe Sources
+Hit http://us.archive.ubuntu.com precise/multiverse Sources
+Hit http://us.archive.ubuntu.com precise/main amd64 Packages
+Hit http://us.archive.ubuntu.com precise/restricted amd64 Packages
+Hit http://us.archive.ubuntu.com precise/universe amd64 Packages
+Hit http://us.archive.ubuntu.com precise/multiverse amd64 Packages
+Hit http://us.archive.ubuntu.com precise/main i386 Packages
+Hit http://us.archive.ubuntu.com precise/restricted i386 Packages
+Hit http://us.archive.ubuntu.com precise/universe i386 Packages
+Hit http://us.archive.ubuntu.com precise/multiverse i386 Packages
+Hit http://us.archive.ubuntu.com precise/main TranslationIndex
+Hit http://security.ubuntu.com precise-security Release
+Hit http://us.archive.ubuntu.com precise/multiverse TranslationIndex
+Hit http://us.archive.ubuntu.com precise/restricted TranslationIndex
+Hit http://us.archive.ubuntu.com precise/universe TranslationIndex
+Get:3 http://us.archive.ubuntu.com precise-updates/main Sources [412 kB]
+Hit http://extras.ubuntu.com precise Release
+Hit http://security.ubuntu.com precise-security/main Sources
+Hit http://extras.ubuntu.com precise/main Sources
+Hit http://security.ubuntu.com precise-security/restricted Sources
+Hit http://security.ubuntu.com precise-security/universe Sources
+Hit http://security.ubuntu.com precise-security/multiverse Sources
+Hit http://extras.ubuntu.com precise/main amd64 Packages
+Hit http://security.ubuntu.com precise-security/main amd64 Packages
+Hit http://security.ubuntu.com precise-security/restricted amd64 Packages
+Hit http://extras.ubuntu.com precise/main i386 Packages
+Ign http://extras.ubuntu.com precise/main TranslationIndex
+Get:4 http://us.archive.ubuntu.com precise-updates/restricted Sources [5,467 B]
+Get:5 http://us.archive.ubuntu.com precise-updates/universe Sources [93.1 kB]
+Get:6 http://us.archive.ubuntu.com precise-updates/multiverse Sources [6,582 B]
+Get:7 http://us.archive.ubuntu.com precise-updates/main amd64 Packages [672 kB]
+Hit http://security.ubuntu.com precise-security/universe amd64 Packages
+Hit http://security.ubuntu.com precise-security/multiverse amd64 Packages
+Hit http://security.ubuntu.com precise-security/main i386 Packages
+Hit http://security.ubuntu.com precise-security/restricted i386 Packages
+Hit http://security.ubuntu.com precise-security/universe i386 Packages
+Hit http://security.ubuntu.com precise-security/multiverse i386 Packages
+Hit http://security.ubuntu.com precise-security/main TranslationIndex
+Hit http://security.ubuntu.com precise-security/multiverse TranslationIndex
+Hit http://security.ubuntu.com precise-security/restricted TranslationIndex
+Hit http://security.ubuntu.com precise-security/universe TranslationIndex
+Hit http://security.ubuntu.com precise-security/main Translation-en
+Get:8 http://us.archive.ubuntu.com precise-updates/restricted amd64 Packages [10.1 kB]
+Hit http://security.ubuntu.com precise-security/multiverse Translation-en
+Hit http://security.ubuntu.com precise-security/restricted Translation-en
+Get:9 http://us.archive.ubuntu.com precise-updates/universe amd64 Packages [210 kB]
+Get:10 http://us.archive.ubuntu.com precise-updates/multiverse amd64 Packages [13.6 kB]
+Hit http://security.ubuntu.com precise-security/universe Translation-en
+Get:11 http://us.archive.ubuntu.com precise-updates/main i386 Packages [692 kB]
+Get:12 http://us.archive.ubuntu.com precise-updates/restricted i386 Packages [10.0 kB]
+Get:13 http://us.archive.ubuntu.com precise-updates/universe i386 Packages [214 kB]
+Get:14 http://us.archive.ubuntu.com precise-updates/multiverse i386 Packages [13.8 kB]
+Hit http://us.archive.ubuntu.com precise-updates/main TranslationIndex
+Hit http://us.archive.ubuntu.com precise-updates/multiverse TranslationIndex
+Hit http://us.archive.ubuntu.com precise-updates/restricted TranslationIndex
+Hit http://us.archive.ubuntu.com precise-updates/universe TranslationIndex
+Hit http://us.archive.ubuntu.com precise-backports/main Sources
+Hit http://us.archive.ubuntu.com precise-backports/restricted Sources
+Hit http://us.archive.ubuntu.com precise-backports/universe Sources
+Hit http://us.archive.ubuntu.com precise-backports/multiverse Sources
+Hit http://us.archive.ubuntu.com precise-backports/main amd64 Packages
+Hit http://us.archive.ubuntu.com precise-backports/restricted amd64 Packages
+Hit http://us.archive.ubuntu.com precise-backports/universe amd64 Packages
+Hit http://us.archive.ubuntu.com precise-backports/multiverse amd64 Packages
+Hit http://us.archive.ubuntu.com precise-backports/main i386 Packages
+Hit http://us.archive.ubuntu.com precise-backports/restricted i386 Packages
+Hit http://us.archive.ubuntu.com precise-backports/universe i386 Packages
+Hit http://us.archive.ubuntu.com precise-backports/multiverse i386 Packages
+Ign http://extras.ubuntu.com precise/main Translation-en_US
+Hit http://us.archive.ubuntu.com precise-backports/main TranslationIndex
+Hit http://us.archive.ubuntu.com precise-backports/multiverse TranslationIndex
+Hit http://us.archive.ubuntu.com precise-backports/restricted TranslationIndex
+Hit http://us.archive.ubuntu.com precise-backports/universe TranslationIndex
+Hit http://us.archive.ubuntu.com precise/main Translation-en
+Hit http://us.archive.ubuntu.com precise/multiverse Translation-en
+Hit http://us.archive.ubuntu.com precise/restricted Translation-en
+Hit http://us.archive.ubuntu.com precise/universe Translation-en
+Hit http://us.archive.ubuntu.com precise-updates/main Translation-en
+Hit http://us.archive.ubuntu.com precise-updates/multiverse Translation-en
+Hit http://us.archive.ubuntu.com precise-updates/restricted Translation-en
+Hit http://us.archive.ubuntu.com precise-updates/universe Translation-en
+Hit http://us.archive.ubuntu.com precise-backports/main Translation-en
+Hit http://us.archive.ubuntu.com precise-backports/multiverse Translation-en
+Hit http://us.archive.ubuntu.com precise-backports/restricted Translation-en
+Hit http://us.archive.ubuntu.com precise-backports/universe Translation-en
+Ign http://extras.ubuntu.com precise/main Translation-en
+Fetched 2,402 kB in 1s (1,249 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+git is already the newest version.
+The following extra packages will be installed:
+  comerr-dev dpkg-dev fakeroot g++ g++-4.6 krb5-multidev
+  libalgorithm-diff-perl libalgorithm-diff-xs-perl libalgorithm-merge-perl
+  libapr1 libaprutil1 libdb4.8 libdpkg-perl libgssrpc4 libkadm5clnt-mit8
+  libkadm5srv-mit8 libkdb5-6 libkrb5-dev libossp-uuid16 libpq-dev libpq5
+  libssl-dev libssl-doc libssl1.0.0 libstdc++6-4.6-dev libsvn1
+  libtimedate-perl postgresql-client-9.1 postgresql-client-common
+  postgresql-common postgresql-contrib-9.1 vim-runtime zlib1g-dev
+Suggested packages:
+  debian-keyring g++-multilib g++-4.6-multilib gcc-4.6-doc libstdc++6-4.6-dbg
+  krb5-doc krb5-user uuid postgresql-doc-9.1 libstdc++6-4.6-doc oidentd
+  ident-server locales-all libdbd-pg-perl subversion-tools db4.8-util ctags
+  vim-doc vim-scripts
+The following NEW packages will be installed:
+  build-essential comerr-dev dpkg-dev fakeroot g++ g++-4.6 krb5-multidev
+  libalgorithm-diff-perl libalgorithm-diff-xs-perl libalgorithm-merge-perl
+  libapr1 libaprutil1 libdb4.8 libdpkg-perl libgssrpc4 libkadm5clnt-mit8
+  libkadm5srv-mit8 libkdb5-6 libkrb5-dev libossp-uuid16 libpq-dev libpq5
+  libssl-dev libssl-doc libstdc++6-4.6-dev libsvn1 libtimedate-perl
+  postgresql-9.1 postgresql-client-9.1 postgresql-client-common
+  postgresql-common postgresql-contrib postgresql-contrib-9.1
+  postgresql-server-dev-9.1 subversion vim vim-runtime zlib1g-dev
+The following packages will be upgraded:
+  libssl1.0.0
+1 upgraded, 38 newly installed, 0 to remove and 295 not upgraded.
+Need to get 29.8 MB of archives.
+After this operation, 91.5 MB of additional disk space will be used.
+Get:1 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libssl1.0.0 amd64 1.0.1-4ubuntu5.10 [1,048 kB]
+Get:2 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libgssrpc4 amd64 1.10+dfsg~beta1-2ubuntu0.3 [57.5 kB]
+Get:3 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libkadm5clnt-mit8 amd64 1.10+dfsg~beta1-2ubuntu0.3 [38.7 kB]
+Get:4 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libkdb5-6 amd64 1.10+dfsg~beta1-2ubuntu0.3 [37.5 kB]
+Get:5 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libkadm5srv-mit8 amd64 1.10+dfsg~beta1-2ubuntu0.3 [54.4 kB]
+Get:6 http://us.archive.ubuntu.com/ubuntu/ precise/main libdb4.8 amd64 4.8.30-11ubuntu1 [679 kB]
+Get:7 http://us.archive.ubuntu.com/ubuntu/ precise/main libapr1 amd64 1.4.6-1 [89.6 kB]
+Get:8 http://us.archive.ubuntu.com/ubuntu/ precise/main libaprutil1 amd64 1.3.12+dfsg-3 [74.6 kB]
+Get:9 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libsvn1 amd64 1.6.17dfsg-3ubuntu3.3 [820 kB]
+Get:10 http://us.archive.ubuntu.com/ubuntu/ precise/main libstdc++6-4.6-dev amd64 4.6.3-1ubuntu5 [1,660 kB]
+Get:11 http://us.archive.ubuntu.com/ubuntu/ precise/main g++-4.6 amd64 4.6.3-1ubuntu5 [6,954 kB]
+Get:12 http://us.archive.ubuntu.com/ubuntu/ precise/main g++ amd64 4:4.6.3-1ubuntu5 [1,442 B]
+Get:13 http://us.archive.ubuntu.com/ubuntu/ precise/main libtimedate-perl all 1.2000-1 [41.6 kB]
+Get:14 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libdpkg-perl all 1.16.1.2ubuntu7.1 [180 kB]
+Get:15 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main dpkg-dev all 1.16.1.2ubuntu7.1 [469 kB]
+Get:16 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main build-essential amd64 11.5ubuntu2.1 [5,816 B]
+Get:17 http://us.archive.ubuntu.com/ubuntu/ precise/main fakeroot amd64 1.18.2-1 [87.2 kB]
+Get:18 http://us.archive.ubuntu.com/ubuntu/ precise/main comerr-dev amd64 2.1-1.42-1ubuntu2 [42.7 kB]
+Get:19 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main krb5-multidev amd64 1.10+dfsg~beta1-2ubuntu0.3 [125 kB]
+Get:20 http://us.archive.ubuntu.com/ubuntu/ precise/main libalgorithm-diff-perl all 1.19.02-2 [50.7 kB]
+Get:21 http://us.archive.ubuntu.com/ubuntu/ precise/main libalgorithm-diff-xs-perl amd64 0.04-2build2 [12.4 kB]
+Get:22 http://us.archive.ubuntu.com/ubuntu/ precise/main libalgorithm-merge-perl all 0.08-2 [12.7 kB]
+Get:23 http://us.archive.ubuntu.com/ubuntu/ precise/main libossp-uuid16 amd64 1.6.2-1.1build3 [51.4 kB]
+Get:24 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libpq5 amd64 9.1.9-0ubuntu12.04 [97.6 kB]
+Get:25 http://us.archive.ubuntu.com/ubuntu/ precise/main zlib1g-dev amd64 1:1.2.3.4.dfsg-3ubuntu4 [165 kB]
+Get:26 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libssl-dev amd64 1.0.1-4ubuntu5.10 [1,573 kB]
+Get:27 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libkrb5-dev amd64 1.10+dfsg~beta1-2ubuntu0.3 [11.0 kB]
+Get:28 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libpq-dev amd64 9.1.9-0ubuntu12.04 [215 kB]
+Get:29 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libssl-doc all 1.0.1-4ubuntu5.10 [1,036 kB]
+Get:30 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main postgresql-client-common all 129ubuntu1 [25.1 kB]
+Get:31 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main postgresql-client-9.1 amd64 9.1.9-0ubuntu12.04 [958 kB]
+Get:32 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main postgresql-common all 129ubuntu1 [96.5 kB]
+Get:33 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main postgresql-9.1 amd64 9.1.9-0ubuntu12.04 [4,302 kB]
+Get:34 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main postgresql-contrib-9.1 amd64 9.1.9-0ubuntu12.04 [460 kB]
+Get:35 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main postgresql-contrib all 9.1+129ubuntu1 [5,572 B]
+Get:36 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main postgresql-server-dev-9.1 amd64 9.1.9-0ubuntu12.04 [682 kB]
+Get:37 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main subversion amd64 1.6.17dfsg-3ubuntu3.3 [297 kB]
+Get:38 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main vim-runtime all 2:7.3.429-2ubuntu2.1 [6,277 kB]
+Get:39 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main vim amd64 2:7.3.429-2ubuntu2.1 [1,048 kB]
+Preconfiguring packages ...
+Fetched 29.8 MB in 18s (1,609 kB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 142256 files and directories currently installed.)
+Preparing to replace libssl1.0.0 1.0.1-4ubuntu5.5 (using .../libssl1.0.0_1.0.1-4ubuntu5.10_amd64.deb) ...
+Unpacking replacement libssl1.0.0 ...
+Setting up libssl1.0.0 (1.0.1-4ubuntu5.10) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+Selecting previously unselected package libgssrpc4.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 142256 files and directories currently installed.)
+Unpacking libgssrpc4 (from .../libgssrpc4_1.10+dfsg~beta1-2ubuntu0.3_amd64.deb) ...
+Selecting previously unselected package libkadm5clnt-mit8.
+Unpacking libkadm5clnt-mit8 (from .../libkadm5clnt-mit8_1.10+dfsg~beta1-2ubuntu0.3_amd64.deb) ...
+Selecting previously unselected package libkdb5-6.
+Unpacking libkdb5-6 (from .../libkdb5-6_1.10+dfsg~beta1-2ubuntu0.3_amd64.deb) ...
+Selecting previously unselected package libkadm5srv-mit8.
+Unpacking libkadm5srv-mit8 (from .../libkadm5srv-mit8_1.10+dfsg~beta1-2ubuntu0.3_amd64.deb) ...
+Selecting previously unselected package libdb4.8.
+Unpacking libdb4.8 (from .../libdb4.8_4.8.30-11ubuntu1_amd64.deb) ...
+Selecting previously unselected package libapr1.
+Unpacking libapr1 (from .../libapr1_1.4.6-1_amd64.deb) ...
+Selecting previously unselected package libaprutil1.
+Unpacking libaprutil1 (from .../libaprutil1_1.3.12+dfsg-3_amd64.deb) ...
+Selecting previously unselected package libsvn1.
+Unpacking libsvn1 (from .../libsvn1_1.6.17dfsg-3ubuntu3.3_amd64.deb) ...
+Selecting previously unselected package libstdc++6-4.6-dev.
+Unpacking libstdc++6-4.6-dev (from .../libstdc++6-4.6-dev_4.6.3-1ubuntu5_amd64.deb) ...
+Selecting previously unselected package g++-4.6.
+Unpacking g++-4.6 (from .../g++-4.6_4.6.3-1ubuntu5_amd64.deb) ...
+Selecting previously unselected package g++.
+Unpacking g++ (from .../g++_4%3a4.6.3-1ubuntu5_amd64.deb) ...
+Selecting previously unselected package libtimedate-perl.
+Unpacking libtimedate-perl (from .../libtimedate-perl_1.2000-1_all.deb) ...
+Selecting previously unselected package libdpkg-perl.
+Unpacking libdpkg-perl (from .../libdpkg-perl_1.16.1.2ubuntu7.1_all.deb) ...
+Selecting previously unselected package dpkg-dev.
+Unpacking dpkg-dev (from .../dpkg-dev_1.16.1.2ubuntu7.1_all.deb) ...
+Selecting previously unselected package build-essential.
+Unpacking build-essential (from .../build-essential_11.5ubuntu2.1_amd64.deb) ...
+Selecting previously unselected package fakeroot.
+Unpacking fakeroot (from .../fakeroot_1.18.2-1_amd64.deb) ...
+Selecting previously unselected package comerr-dev.
+Unpacking comerr-dev (from .../comerr-dev_2.1-1.42-1ubuntu2_amd64.deb) ...
+Selecting previously unselected package krb5-multidev.
+Unpacking krb5-multidev (from .../krb5-multidev_1.10+dfsg~beta1-2ubuntu0.3_amd64.deb) ...
+Selecting previously unselected package libalgorithm-diff-perl.
+Unpacking libalgorithm-diff-perl (from .../libalgorithm-diff-perl_1.19.02-2_all.deb) ...
+Selecting previously unselected package libalgorithm-diff-xs-perl.
+Unpacking libalgorithm-diff-xs-perl (from .../libalgorithm-diff-xs-perl_0.04-2build2_amd64.deb) ...
+Selecting previously unselected package libalgorithm-merge-perl.
+Unpacking libalgorithm-merge-perl (from .../libalgorithm-merge-perl_0.08-2_all.deb) ...
+Selecting previously unselected package libossp-uuid16.
+Unpacking libossp-uuid16 (from .../libossp-uuid16_1.6.2-1.1build3_amd64.deb) ...
+Selecting previously unselected package libpq5.
+Unpacking libpq5 (from .../libpq5_9.1.9-0ubuntu12.04_amd64.deb) ...
+Selecting previously unselected package zlib1g-dev.
+Unpacking zlib1g-dev (from .../zlib1g-dev_1%3a1.2.3.4.dfsg-3ubuntu4_amd64.deb) ...
+Selecting previously unselected package libssl-dev.
+Unpacking libssl-dev (from .../libssl-dev_1.0.1-4ubuntu5.10_amd64.deb) ...
+Selecting previously unselected package libkrb5-dev.
+Unpacking libkrb5-dev (from .../libkrb5-dev_1.10+dfsg~beta1-2ubuntu0.3_amd64.deb) ...
+Selecting previously unselected package libpq-dev.
+Unpacking libpq-dev (from .../libpq-dev_9.1.9-0ubuntu12.04_amd64.deb) ...
+Selecting previously unselected package libssl-doc.
+Unpacking libssl-doc (from .../libssl-doc_1.0.1-4ubuntu5.10_all.deb) ...
+Selecting previously unselected package postgresql-client-common.
+Unpacking postgresql-client-common (from .../postgresql-client-common_129ubuntu1_all.deb) ...
+Selecting previously unselected package postgresql-client-9.1.
+Unpacking postgresql-client-9.1 (from .../postgresql-client-9.1_9.1.9-0ubuntu12.04_amd64.deb) ...
+Selecting previously unselected package postgresql-common.
+Unpacking postgresql-common (from .../postgresql-common_129ubuntu1_all.deb) ...
+Adding 'diversion of /usr/bin/pg_config to /usr/bin/pg_config.libpq-dev by postgresql-common'
+Selecting previously unselected package postgresql-9.1.
+Unpacking postgresql-9.1 (from .../postgresql-9.1_9.1.9-0ubuntu12.04_amd64.deb) ...
+Selecting previously unselected package postgresql-contrib-9.1.
+Unpacking postgresql-contrib-9.1 (from .../postgresql-contrib-9.1_9.1.9-0ubuntu12.04_amd64.deb) ...
+Selecting previously unselected package postgresql-contrib.
+Unpacking postgresql-contrib (from .../postgresql-contrib_9.1+129ubuntu1_all.deb) ...
+Selecting previously unselected package postgresql-server-dev-9.1.
+Unpacking postgresql-server-dev-9.1 (from .../postgresql-server-dev-9.1_9.1.9-0ubuntu12.04_amd64.deb) ...
+Selecting previously unselected package subversion.
+Unpacking subversion (from .../subversion_1.6.17dfsg-3ubuntu3.3_amd64.deb) ...
+Selecting previously unselected package vim-runtime.
+Unpacking vim-runtime (from .../vim-runtime_2%3a7.3.429-2ubuntu2.1_all.deb) ...
+Adding 'diversion of /usr/share/vim/vim73/doc/help.txt to /usr/share/vim/vim73/doc/help.txt.vim-tiny by vim-runtime'
+Adding 'diversion of /usr/share/vim/vim73/doc/tags to /usr/share/vim/vim73/doc/tags.vim-tiny by vim-runtime'
+Selecting previously unselected package vim.
+Unpacking vim (from .../vim_2%3a7.3.429-2ubuntu2.1_amd64.deb) ...
+Processing triggers for man-db ...
+Processing triggers for doc-base ...
+Processing 29 changed doc-base files, 1 added doc-base file...
+Processing triggers for install-info ...
+Processing triggers for ureadahead ...
+ureadahead will be reprofiled on next reboot
+Setting up libgssrpc4 (1.10+dfsg~beta1-2ubuntu0.3) ...
+Setting up libkadm5clnt-mit8 (1.10+dfsg~beta1-2ubuntu0.3) ...
+Setting up libkdb5-6 (1.10+dfsg~beta1-2ubuntu0.3) ...
+Setting up libkadm5srv-mit8 (1.10+dfsg~beta1-2ubuntu0.3) ...
+Setting up libdb4.8 (4.8.30-11ubuntu1) ...
+Setting up libapr1 (1.4.6-1) ...
+Setting up libaprutil1 (1.3.12+dfsg-3) ...
+Setting up libsvn1 (1.6.17dfsg-3ubuntu3.3) ...
+Setting up libtimedate-perl (1.2000-1) ...
+Setting up libdpkg-perl (1.16.1.2ubuntu7.1) ...
+Setting up dpkg-dev (1.16.1.2ubuntu7.1) ...
+Setting up fakeroot (1.18.2-1) ...
+update-alternatives: using /usr/bin/fakeroot-sysv to provide /usr/bin/fakeroot (fakeroot) in auto mode.
+Setting up comerr-dev (2.1-1.42-1ubuntu2) ...
+Setting up krb5-multidev (1.10+dfsg~beta1-2ubuntu0.3) ...
+Setting up libalgorithm-diff-perl (1.19.02-2) ...
+Setting up libalgorithm-diff-xs-perl (0.04-2build2) ...
+Setting up libalgorithm-merge-perl (0.08-2) ...
+Setting up libossp-uuid16 (1.6.2-1.1build3) ...
+Setting up libpq5 (9.1.9-0ubuntu12.04) ...
+Setting up zlib1g-dev (1:1.2.3.4.dfsg-3ubuntu4) ...
+Setting up libssl-dev (1.0.1-4ubuntu5.10) ...
+Setting up libkrb5-dev (1.10+dfsg~beta1-2ubuntu0.3) ...
+Setting up libpq-dev (9.1.9-0ubuntu12.04) ...
+Setting up libssl-doc (1.0.1-4ubuntu5.10) ...
+Setting up postgresql-client-common (129ubuntu1) ...
+Setting up postgresql-client-9.1 (9.1.9-0ubuntu12.04) ...
+update-alternatives: using /usr/share/postgresql/9.1/man/man1/psql.1.gz to provide /usr/share/man/man1/psql.1.gz (psql.1.gz) in auto mode.
+Setting up postgresql-common (129ubuntu1) ...
+Adding user postgres to group ssl-cert
+Building PostgreSQL dictionaries from installed myspell/hunspell packages...
+  en_au
+  en_gb
+  en_us
+  en_za
+Setting up postgresql-9.1 (9.1.9-0ubuntu12.04) ...
+Creating new cluster (configuration: /etc/postgresql/9.1/main, data: /var/lib/postgresql/9.1/main)...
+Moving configuration file /var/lib/postgresql/9.1/main/postgresql.conf to /etc/postgresql/9.1/main...
+Moving configuration file /var/lib/postgresql/9.1/main/pg_hba.conf to /etc/postgresql/9.1/main...
+Moving configuration file /var/lib/postgresql/9.1/main/pg_ident.conf to /etc/postgresql/9.1/main...
+Configuring postgresql.conf to use port 5432...
+update-alternatives: using /usr/share/postgresql/9.1/man/man1/postmaster.1.gz to provide /usr/share/man/man1/postmaster.1.gz (postmaster.1.gz) in auto mode.
+ * Starting PostgreSQL 9.1 database server       [80G [74G[ OK ]
+Setting up postgresql-contrib-9.1 (9.1.9-0ubuntu12.04) ...
+Setting up postgresql-contrib (9.1+129ubuntu1) ...
+Setting up postgresql-server-dev-9.1 (9.1.9-0ubuntu12.04) ...
+Setting up subversion (1.6.17dfsg-3ubuntu3.3) ...
+Setting up vim-runtime (2:7.3.429-2ubuntu2.1) ...
+Processing /usr/share/vim/addons/doc
+Setting up vim (2:7.3.429-2ubuntu2.1) ...
+update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/vim (vim) in auto mode.
+update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/vimdiff (vimdiff) in auto mode.
+update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/rvim (rvim) in auto mode.
+update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/rview (rview) in auto mode.
+update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/vi (vi) in auto mode.
+update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/view (view) in auto mode.
+update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/ex (ex) in auto mode.
+Setting up libstdc++6-4.6-dev (4.6.3-1ubuntu5) ...
+Setting up g++-4.6 (4.6.3-1ubuntu5) ...
+Setting up g++ (4:4.6.3-1ubuntu5) ...
+update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mode.
+Setting up build-essential (11.5ubuntu2.1) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+apt-get returned 0
+## install_packages returned 0 ##
+## clone_repo ##
+Changing directory to /usr/local/src
+Cloning https://code.google.com/p/plv8js/
+Cloning into 'plv8js'...
+Cloning git://github.com/v8/v8.git
+Cloning into 'v8'...
+Changing directory to /home/mike/Dev/xtuple/scripts/..
+## clone_repo returned 0 ##
+## build_repo ##
+Changing directory to /home/mike/Dev/xtuple/scripts
+Checking if nodejs is installed
+nodejs is not installed
+Looking for nodejs_0.8.22-1_amd64.deb in /home/mike/Dev/xtuple/scripts
+File not found. Attempting to download http://sourceforge.net/projects/postbooks/files/mobile-debian/nodejs_0.8.22-1_amd64.deb
+Installing nodejs_0.8.22-1_amd64.deb
+Selecting previously unselected package nodejs.
+(Reading database ... 147828 files and directories currently installed.)
+Unpacking nodejs (from nodejs_0.8.22-1_amd64.deb) ...
+Setting up nodejs (0.8.22-1) ...
+update-alternatives: using /usr/bin/node to provide /usr/bin/js (js) in auto mode.
+Processing triggers for man-db ...
+Changing directory to /home/mike/Dev/xtuple/scripts
+Checking if libv8 is installed
+libv8 is not installed.
+Looking for libv8-3.16.5_3.16.5-1_amd64.deb in /home/mike/Dev/xtuple/scripts
+File not found.
+Attempting to download http://sourceforge.net/projects/postbooks/files/mobile-debian/libv8-3.16.5_3.16.5-1_amd64.deb
+Installing libv8-3.16.5_3.16.5-1_amd64.deb
+Selecting previously unselected package libv8-3.16.5.
+(Reading database ... 148845 files and directories currently installed.)
+Unpacking libv8-3.16.5 (from libv8-3.16.5_3.16.5-1_amd64.deb) ...
+Setting up libv8-3.16.5 (3.16.5-1) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+Changing directory to /home/mike/Dev/xtuple/scripts
+Checking if plv8js is installed.
+plv8js is not installed
+Looking for postgresql-9.1-plv8_1.4.0-1_amd64.deb in /home/mike/Dev/xtuple/scripts
+File not found.
+Attempting to download http://sourceforge.net/projects/postbooks/files/mobile-debian/postgresql-9.1-plv8_1.4.0-1_amd64.deb
+Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb
+Selecting previously unselected package postgresql-9.1-plv8.
+(Reading database ... 148852 files and directories currently installed.)
+Unpacking postgresql-9.1-plv8 (from postgresql-9.1-plv8_1.4.0-1_amd64.deb) ...
+Setting up postgresql-9.1-plv8 (1.4.0-1) ...
+## build_repo returned 0 ##
+## setup_postgres ##
+
+Dropping old databases if they already exist...
+
+Changing directory to /usr/local/src/postgres
+######################################################
+######################################################
+Setup database
+######################################################
+######################################################
+
+CREATE EXTENSION
+## setup_postgres returned 0 ##
+## pull_modules ##
+Changing directory to /home/mike/Dev/xtuple/scripts/..
+Submodule 'enyo-client/application/enyo' () registered for path 'enyo-client/application/enyo'
+Submodule 'lib/backbone-x/lib/Backbone-relational' () registered for path 'lib/backbone-x/lib/Backbone-relational'
+Submodule 'lib/backbone-x/lib/JSON-Patch' () registered for path 'lib/backbone-x/lib/JSON-Patch'
+Submodule 'lib/backbone-x/lib/backbone' () registered for path 'lib/backbone-x/lib/backbone'
+Submodule 'lib/enyo-x/enyo' () registered for path 'lib/enyo-x/enyo'
+Submodule 'lib/enyo-x/lib/gts-plugins' () registered for path 'lib/enyo-x/lib/gts-plugins'
+Submodule 'lib/enyo-x/lib/layout' () registered for path 'lib/enyo-x/lib/layout'
+Submodule 'lib/enyo-x/lib/nvd3' () registered for path 'lib/enyo-x/lib/nvd3'
+Submodule 'lib/enyo-x/lib/onyx' () registered for path 'lib/enyo-x/lib/onyx'
+Submodule 'lib/layout' () registered for path 'lib/layout'
+Submodule 'lib/onyx' () registered for path 'lib/onyx'
+Submodule 'lib/tools/lib/globalize' () registered for path 'lib/tools/lib/globalize'
+Submodule 'lib/tools/lib/underscore' () registered for path 'lib/tools/lib/underscore'
+
+> bcrypt@0.7.6 install /home/mike/Dev/xtuple/node_modules/bcrypt
+> node-gyp rebuild
+
+
+> pg@0.14.1 install /home/mike/Dev/xtuple/node_modules/pg
+> node-gyp rebuild || (exit 0)
+
+make: Entering directory `/home/mike/Dev/xtuple/node_modules/bcrypt/build'
+  CXX(target) Release/obj.target/bcrypt_lib/src/blowfish.o
+  CXX(target) Release/obj.target/bcrypt_lib/src/bcrypt.o
+  CXX(target) Release/obj.target/bcrypt_lib/src/bcrypt_node.o
+  SOLINK_MODULE(target) Release/obj.target/bcrypt_lib.node
+  SOLINK_MODULE(target) Release/obj.target/bcrypt_lib.node: Finished
+  COPY Release/bcrypt_lib.node
+make: Leaving directory `/home/mike/Dev/xtuple/node_modules/bcrypt/build'
+make: Entering directory `/home/mike/Dev/xtuple/node_modules/pg/build'
+  CXX(target) Release/obj.target/binding/src/binding.o
+  SOLINK_MODULE(target) Release/obj.target/binding.node
+  SOLINK_MODULE(target) Release/obj.target/binding.node: Finished
+  COPY Release/binding.node
+make: Leaving directory `/home/mike/Dev/xtuple/node_modules/pg/build'
+
+> ws@0.4.27 install /home/mike/Dev/xtuple/node_modules/zombie/node_modules/ws
+> (node-gyp rebuild 2> builderror.log) || (exit 0)
+
+
+> ws@0.4.27 install /home/mike/Dev/xtuple/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws
+> (node-gyp rebuild 2> builderror.log) || (exit 0)
+
+make: Entering directory `/home/mike/Dev/xtuple/node_modules/zombie/node_modules/ws/build'
+  CXX(target) Release/obj.target/bufferutil/src/bufferutil.o
+make: Entering directory `/home/mike/Dev/xtuple/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/build'
+  CXX(target) Release/obj.target/bufferutil/src/bufferutil.o
+  SOLINK_MODULE(target) Release/obj.target/bufferutil.node
+  SOLINK_MODULE(target) Release/obj.target/bufferutil.node
+  SOLINK_MODULE(target) Release/obj.target/bufferutil.node: Finished
+  COPY Release/bufferutil.node
+  CXX(target) Release/obj.target/validation/src/validation.o
+  SOLINK_MODULE(target) Release/obj.target/bufferutil.node: Finished
+  COPY Release/bufferutil.node
+  CXX(target) Release/obj.target/validation/src/validation.o
+  SOLINK_MODULE(target) Release/obj.target/validation.node
+  SOLINK_MODULE(target) Release/obj.target/validation.node: Finished
+  COPY Release/validation.node
+make: Leaving directory `/home/mike/Dev/xtuple/node_modules/zombie/node_modules/ws/build'
+  SOLINK_MODULE(target) Release/obj.target/validation.node
+  SOLINK_MODULE(target) Release/obj.target/validation.node: Finished
+  COPY Release/validation.node
+make: Leaving directory `/home/mike/Dev/xtuple/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/build'
+
+> contextify@0.1.6 install /home/mike/Dev/xtuple/node_modules/zombie/node_modules/jsdom/node_modules/contextify
+> node-gyp rebuild
+
+make: Entering directory `/home/mike/Dev/xtuple/node_modules/zombie/node_modules/jsdom/node_modules/contextify/build'
+  CXX(target) Release/obj.target/contextify/src/contextify.o
+  SOLINK_MODULE(target) Release/obj.target/contextify.node
+  SOLINK_MODULE(target) Release/obj.target/contextify.node: Finished
+  COPY Release/contextify.node
+make: Leaving directory `/home/mike/Dev/xtuple/node_modules/zombie/node_modules/jsdom/node_modules/contextify/build'
+
+> contextify@0.1.6 install /home/mike/Dev/xtuple/node_modules/zombie/node_modules/html5/node_modules/jsdom/node_modules/contextify
+> node-gyp rebuild
+
+make: Entering directory `/home/mike/Dev/xtuple/node_modules/zombie/node_modules/html5/node_modules/jsdom/node_modules/contextify/build'
+  CXX(target) Release/obj.target/contextify/src/contextify.o
+  SOLINK_MODULE(target) Release/obj.target/contextify.node
+  SOLINK_MODULE(target) Release/obj.target/contextify.node: Finished
+  COPY Release/contextify.node
+make: Leaving directory `/home/mike/Dev/xtuple/node_modules/zombie/node_modules/html5/node_modules/jsdom/node_modules/contextify/build'
+connect-ensure-login@0.1.1 node_modules/connect-ensure-login
+
+colors@0.6.1 node_modules/colors
+
+async@0.2.9 node_modules/async
+
+backbone-relational@0.8.0 node_modules/backbone-relational
+
+backbone@0.9.10 node_modules/backbone
+
+underscore@1.4.4 node_modules/underscore
+
+json-patch@0.0.1 node_modules/json-patch
+
+ejs@0.8.4 node_modules/ejs
+
+chai@1.5.0 node_modules/chai
+
+request@2.14.0 node_modules/request
+
+passport-oauth2-jwt-bearer@0.1.1 node_modules/passport-oauth2-jwt-bearer
+└── pkginfo@0.2.3
+
+commander@1.2.0 node_modules/commander
+└── keypress@0.1.0
+
+passport-oauth2-client-password@0.1.1 node_modules/passport-oauth2-client-password
+└── pkginfo@0.2.3
+
+passport-local@0.1.6 node_modules/passport-local
+└── pkginfo@0.2.3
+
+oauth2orize@0.1.0 node_modules/oauth2orize
+└── debug@0.7.2
+
+passport@0.1.17 node_modules/passport
+├── pause@0.0.1
+└── pkginfo@0.2.3
+
+passport-http-bearer@0.2.1 node_modules/passport-http-bearer
+└── pkginfo@0.2.3
+
+rimraf@2.2.2 node_modules/rimraf
+└── graceful-fs@2.0.0
+
+oauth2orize-jwt-bearer@0.1.0 node_modules/oauth2orize-jwt-bearer
+└── pkginfo@0.2.3
+
+passport-http@0.2.2 node_modules/passport-http
+└── pkginfo@0.2.3
+
+vows@0.7.0 node_modules/vows
+├── diff@1.0.5
+└── eyes@0.1.8
+
+bcrypt@0.7.6 node_modules/bcrypt
+└── bindings@1.0.0
+
+less@1.4.2 node_modules/less
+├── mime@1.2.10
+├── mkdirp@0.3.5
+└── ycssmin@1.0.1
+
+pg@0.14.1 node_modules/pg
+├── deprecate@0.1.0
+└── generic-pool@2.0.4
+
+mocha@1.9.0 node_modules/mocha
+├── growl@1.7.0
+├── debug@0.7.2
+├── commander@0.6.1
+├── diff@1.0.2
+├── mkdirp@0.3.3
+├── ms@0.3.0
+└── jade@0.26.3 (mkdirp@0.3.0)
+
+express@3.1.2 node_modules/express
+├── methods@0.0.1
+├── fresh@0.1.0
+├── range-parser@0.0.4
+├── cookie-signature@1.0.0
+├── buffer-crc32@0.2.1
+├── cookie@0.0.5
+├── debug@0.7.2
+├── commander@0.6.1
+├── mkdirp@0.3.5
+├── send@0.1.0 (mime@1.2.6)
+└── connect@2.7.5 (pause@0.0.1, bytes@0.2.0, buffer-crc32@0.1.1, formidable@1.0.11, qs@0.5.1)
+
+winston@0.7.2 node_modules/winston
+├── eyes@0.1.8
+├── pkginfo@0.3.0
+├── cycle@1.0.2
+├── stack-trace@0.0.7
+└── request@2.16.6 (forever-agent@0.2.0, aws-sign@0.2.0, tunnel-agent@0.2.0, oauth-sign@0.2.0, json-stringify-safe@3.0.0, cookie-jar@0.2.0, node-uuid@1.4.0, mime@1.2.10, qs@0.5.6, hawk@0.10.2, form-data@0.0.10)
+
+nodemailer@0.3.44 node_modules/nodemailer
+├── optimist@0.6.0 (minimist@0.0.1, wordwrap@0.0.2)
+├── simplesmtp@0.3.6 (xoauth2@0.1.8, rai@0.1.7)
+└── mailcomposer@0.2.1 (mime@1.2.9, mimelib@0.2.12)
+
+socket.io@0.9.16 node_modules/socket.io
+├── base64id@0.1.0
+├── policyfile@0.0.4
+├── redis@0.7.3
+└── socket.io-client@0.9.16 (xmlhttprequest@1.4.2, uglify-js@1.2.5, ws@0.4.27, active-x-obfuscator@0.0.1)
+
+zombie@1.4.1 node_modules/zombie
+├── q@0.8.12
+├── mime@1.2.10
+├── eventsource@0.0.7
+├── ms@0.1.0
+├── request@2.10.0
+├── tough-cookie@0.9.15 (punycode@1.2.3)
+├── ws@0.4.27 (tinycolor@0.0.1, options@0.0.5, commander@0.6.1)
+├── jsdom@0.2.19 (cssom@0.2.5, cssstyle@0.2.3, htmlparser@1.7.6, contextify@0.1.6)
+└── html5@0.3.13 (opts@1.2.2, html5-entities@0.5.0, jsdom@0.8.3)
+/usr/bin/mocha -> /usr/lib/node_modules/mocha/bin/mocha
+/usr/bin/_mocha -> /usr/lib/node_modules/mocha/bin/_mocha
+mocha@1.12.0 /usr/lib/node_modules/mocha
+├── growl@1.7.0
+├── debug@0.7.2
+├── commander@0.6.1
+├── mkdirp@0.3.5
+├── diff@1.0.2
+├── ms@0.3.0
+├── jade@0.26.3 (mkdirp@0.3.0)
+└── glob@3.2.1 (inherits@1.0.0, graceful-fs@1.2.3, minimatch@0.2.12)
+Changing directory to test/shared
+Created testing login_data.js
+Changing directory to ../../enyo-client/extensions
+Created debug.js
+## pull_modules returned 0 ##
+## init_everythings ##
+
+######################################################
+######################################################
+Setting properties of admin user
+######################################################
+######################################################
+
+Changing directory to /home/mike/Dev/xtuple/scripts/../node-datasource
+Configured node-datasource
+
+The database is now set up...
+
+Changing directory to /home/mike/Dev/xtuple/scripts/../node-datasource/lib/private
+Created salt
+
+######################################################
+######################################################
+You can login to the database and mobile client with:
+username: admin
+password: admin
+######################################################
+######################################################
+
+Installation now finished.
+
+Run the following commands to start the datasource:
+
+cd ~/xtuple/node-datasource
+sudo node main.js
+Changing directory to /home/mike/Dev/xtuple/scripts/..
+building client core
+building crm
+building inventory
+building project
+building sales
+info: Success installing all scripts.
+info: Cleaning up.
+Build succeeded.
+Database: dev
+Directories:
+  /home/mike/Dev/xtuple/lib/orm
+  /home/mike/Dev/xtuple/enyo-client
+  /home/mike/Dev/xtuple/enyo-client/extensions/source/crm
+  /home/mike/Dev/xtuple/enyo-client/extensions/source/inventory
+  /home/mike/Dev/xtuple/enyo-client/extensions/source/project
+  /home/mike/Dev/xtuple/enyo-client/extensions/source/sales
+
+## init_everythings returned 0 ##
+All Done!
