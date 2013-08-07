@@ -1,7 +1,3 @@
-scripts/install.log
-1
-libpeerconnection.log
-enyo-client/extensions/1
 *.DS_Store
 *.swp
 *.swo
@@ -17,3 +13,4 @@ scripts/lib/deploy
 scripts/lib/package.js
 test/mocha/lib/demo-test.backup
 test/shared/login_data.js
+
