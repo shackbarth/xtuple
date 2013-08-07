@@ -13,6 +13,40 @@ white:true*/
     //datasourcePort: 443,
     isConnected: false,
 
+    /**
+      Returns the value of the user preference if it exists in the
+      preferences cache.
+    */
+    getUserPreference: function (name) {
+      var pref = _.find(XT.session.preferences.attributes,
+        function (v, k) {
+          return k === name;
+        });
+      return pref;
+    },
+
+    /**
+      Performs a dispatch call to save the given payload
+      string to the specified user preference.
+      @param {String} name
+      @param {String} stringified payload
+      @param {String} operation string
+    */
+    saveUserPreference: function (name, payload, op) {
+      var options = {}, patch = [], param = [],
+        path = "/" + name;
+      options.error = function (resp) {
+        if (resp.isError) { console.log("uh oh"); }
+      };
+      patch = [
+        {"op": op, "path": path, "value": payload}
+      ];
+      // Add the patch array to the parameter array
+      param.push(patch);
+      XM.ModelMixin.dispatch('XT.Session',
+        'commitPreferences', param, options);
+    },
+
     /*
     Server request
 
