@@ -1,6 +1,162 @@
 1.4.0 (2013/06)
 ===============
 
+Features and bugfixes
+----------------
+- Fixed
+  issue #[18711](http://www.xtuple.org/xtincident/view/bugs/18711)
+  _Edit Owner privilege is not enforced_
+- Fixed
+  issue #[18724](http://www.xtuple.org/xtincident/view/bugs/18724)
+  _ReassignToDoItems privilege is not enforced_
+- Fixed
+  issue #[18726](http://www.xtuple.org/xtincident/view/bugs/18726)
+  _*Left of Contact Address Not Visible in panel_
+- Fixed
+  issue #[18968](http://www.xtuple.org/xtincident/view/bugs/18968)
+  _Panel sizing on Item workspace_
+- Fixed
+  issue #[19042](http://www.xtuple.org/xtincident/view/bugs/19042)
+  _Omnibus: Observation: New User Account created from Owner field is not populated automatically in Owner field_
+- Implemented
+  issue #[19626](http://www.xtuple.org/xtincident/view/bugs/19626)
+  _Add link to google maps_
+- Completed
+  issue #[19645](http://www.xtuple.org/xtincident/view/bugs/19645)
+  _Install/build process for reports_
+- Fixed
+  issue #[19711](http://www.xtuple.org/xtincident/view/bugs/19711)
+  _*Irrelevant behavior is observed on selecting to save the role assigned to the CRM Account_
+- Fixed
+  issue #[19796](http://www.xtuple.org/xtincident/view/bugs/19796)
+  _Quote shows costs when users do not have cost privilege_
+- Fixed
+  issue #[19800](http://www.xtuple.org/xtincident/view/bugs/19800)
+  _Site should only appear on quote when multi-site enabled_
+- Implemented
+  issue #[19801](http://www.xtuple.org/xtincident/view/bugs/19801)
+  _Site should default on quote_
+- Fixed
+  issue #[19805](http://www.xtuple.org/xtincident/view/bugs/19805)
+  _User should not be able to edit quote price unless they have privileges to do so_
+- Fixed
+  issue #[19859](http://www.xtuple.org/xtincident/view/bugs/19859)
+  _*Selecting to create a new project task from an existing project task displays Data source error_
+- Fixed
+  issue #[19967](http://www.xtuple.org/xtincident/view/bugs/19967)
+  _*Irrelevant dialog is displayed on saving a quote_
+- Fixed
+  issue #[20008](http://www.xtuple.org/xtincident/view/bugs/20008)
+  _Converting prospect to customer freezes client_
+- Fixed
+  issue #[20068](http://www.xtuple.org/xtincident/view/bugs/20068)
+  _Click Apply on Customer Groups will Lock the record_
+- Implemented
+  issue #[20190](http://www.xtuple.org/xtincident/view/bugs/20190)
+  _Mobile Client Phone Numbers Should be Clickable_
+- Implemented
+  issue #[20380](http://www.xtuple.org/xtincident/view/bugs/20380)
+  _Sales analysis view_
+- Fixed
+  issue #[20489](http://www.xtuple.org/xtincident/view/bugs/20489)
+  _Item does not display Wholesale Price_
+- Implemented
+  issue #[20524](http://www.xtuple.org/xtincident/view/bugs/20524)
+  _build_database script_
+- Fixed
+  issue #[20555](http://www.xtuple.org/xtincident/view/bugs/20555)
+  _new authentication does not work with pgbouncer_
+- Implemented
+  issue #[20559](http://www.xtuple.org/xtincident/view/bugs/20559)
+  _Need to create an interface to manage Oauth_
+- Implemented
+  issue #[20574](http://www.xtuple.org/xtincident/view/bugs/20574)
+  _sales order should use item and site instead of itemsite_
+- No Change Required
+  issue #[20596](http://www.xtuple.org/xtincident/view/bugs/20596)
+  _Numbers cut off by scroller_
+- Implemented
+  issue #[20614](http://www.xtuple.org/xtincident/view/bugs/20614)
+  _Need an installer methodology for the mobile client and extensions_
+- Fixed
+  issue #[20638](http://www.xtuple.org/xtincident/view/bugs/20638)
+  _Attach option on relation boxes should not display objects already attached to other objects_
+- Fixed
+  issue #[20672](http://www.xtuple.org/xtincident/view/bugs/20672)
+  _Admin Role gives Java Console Error_
+- Fixed
+  issue #[20673](http://www.xtuple.org/xtincident/view/bugs/20673)
+  _User Account gives Disable Export error_
+- Implemented
+  issue #[20676](http://www.xtuple.org/xtincident/view/bugs/20676)
+  _Create Inventory Configuration Settings_
+- Implemented
+  issue #[20715](http://www.xtuple.org/xtincident/view/bugs/20715)
+  _Sales dashboard_
+- Implemented
+  issue #[20723](http://www.xtuple.org/xtincident/view/bugs/20723)
+  _Single signon support for Pentaho_
+- Implemented
+  issue #[20726](http://www.xtuple.org/xtincident/view/bugs/20726)
+  _Support for Pentaho dynamic OLAP cubes based on organization_
+- Fixed
+  issue #[20736](http://www.xtuple.org/xtincident/view/bugs/20736)
+  _xt package pkg tables missing triggers, causing issues loading packages_
+- Implemented
+  issue #[20746](http://www.xtuple.org/xtincident/view/bugs/20746)
+  _Multi-tenant support for Sales cubes_
+- Implemented
+  issue #[20747](http://www.xtuple.org/xtincident/view/bugs/20747)
+  _Multi-tenant support for sales ETL_
+- Fixed
+  issue #[20760](http://www.xtuple.org/xtincident/view/bugs/20760)
+  _*Quantity UOM is not available for selection in SO Line item screen_
+- Implemented
+  issue #[20771](http://www.xtuple.org/xtincident/view/bugs/20771)
+  _generate p12 in oauth generate-key route_
+- No Change Required
+  issue #[20774](http://www.xtuple.org/xtincident/view/bugs/20774)
+  _access user_account REST_
+- Fixed
+  issue #[20775](http://www.xtuple.org/xtincident/view/bugs/20775)
+  _Remove xtbatch schema if not being used by mobile_
+- Implemented
+  issue #[20780](http://www.xtuple.org/xtincident/view/bugs/20780)
+  _improve maven reports deployment_
+- Fixed
+  issue #[20785](http://www.xtuple.org/xtincident/view/bugs/20785)
+  _Change Password does not remove Confirmed Password_
+- Fixed
+  issue #[20792](http://www.xtuple.org/xtincident/view/bugs/20792)
+  _*Username of a User Account is editable_
+- Fixed
+  issue #[20803](http://www.xtuple.org/xtincident/view/bugs/20803)
+  _*Observation: Newly created records are displayed as locked on opening the records immediately after creation_
+- Fixed
+  issue #[20814](http://www.xtuple.org/xtincident/view/bugs/20814)
+  _Cannot save a Sales Order_
+- Implemented
+  issue #[20820](http://www.xtuple.org/xtincident/view/bugs/20820)
+  _REST - Expose all objects needed for basic relation functionality to work_
+- Fixed
+  issue #[20848](http://www.xtuple.org/xtincident/view/bugs/20848)
+  _Advanced Search Groupbox is too wide_
+- Implemented
+  issue #[20865](http://www.xtuple.org/xtincident/view/bugs/20865)
+  _Add dropdown indicator icon to picker_
+- Implemented
+  issue #[20868](http://www.xtuple.org/xtincident/view/bugs/20868)
+  _-k flag for build_app_
+- Implemented
+  issue #[20874](http://www.xtuple.org/xtincident/view/bugs/20874)
+  _Merge time and expense functionality into project_
+- Fixed
+  issue #[20999](http://www.xtuple.org/xtincident/view/bugs/20999)
+  _support build_app with absolute -c path_
+- Fixed
+  issue #[21007](http://www.xtuple.org/xtincident/view/bugs/21007)
+  _Sales Analysis does not display correct Cube after changing databases_
+
 Critical deployment changes
 ---------------------------
 * We have moved the test folder from the node-datasource directory.
@@ -20,6 +176,9 @@ Critical deployment changes
 
 1.3.9 (2013/06/27)
 ==================
+
+Features and bugfixes
+----------------
 - Fixed
   issue #[18845](http://www.xtuple.org/xtincident/view/bugs/18845)
   _Status is missing from To Do_
@@ -102,7 +261,7 @@ Critical deployment changes
 1.3.8 (2013/06/19)
 ==================
 
-Features and bugs
+Features and bugfixes
 ----------------
 - Fixed
   issue #[20605](http://www.xtuple.org/xtincident/view/bugs/20605)
@@ -111,14 +270,14 @@ Features and bugs
 1.3.7 (2013/06/11)
 ==================
 
-Features and bugs
+Features and bugfixes
 ----------------
 - Fixed problem where user names that are email addresses could not log in.
 
 1.3.6 (2013/06/06)
 ==================
 
-Features and bugs
+Features and bugfixes
 ----------------
 * Fix critical user login problem
 - Fixed 
@@ -162,7 +321,7 @@ Critical deployment changes
   To test if your plv8 is working correctly, try adding a comment to an Account or Contact.
   See if you get any errors in your browsers Javascript Console and make sure the comment saves.
 
-Features and bugs
+Features and bugfixes
 ----------------
 
 - Implemented parts of
@@ -317,7 +476,7 @@ Features and bugs
 1.3.4 (2013/05/06)
 ===============
 
-Features and bugs
+Features and bugfixes
 -----------------
 - Fixed
   issue #[20169](http://www.xtuple.org/xtincident/view/bugs/20169)
@@ -388,7 +547,7 @@ Critical deployment changes
 * We are now running on [our own fork of plv8](https://github.com/xtuple/plv8).
 
 
-Features and bugs
+Features and bugfixes
 -----------------
 - Fixed
   issue #[19246](http://www.xtuple.org/xtincident/view/bugs/19246)
