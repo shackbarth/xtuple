@@ -9,7 +9,7 @@ rm -rf ../../jsdoc/out
 
 #the above error has been corrected and all the paths appended to the below string:
 # to include README.md's just append the path to it at then end of the string i.e. ../README.md
-../../jsdoc/jsdoc -l -t ./templates/xtuple -d ../../jsdoc/out -r ../lib/backbone-x/source ../lib/tools/source ../lib/enyo-x/source/widgets ../lib/enyo-x/source/views 
+../../jsdoc/jsdoc -l -c ./jsdoc.conf.json -d ../../jsdoc/out -r ../lib/backbone-x/source ../lib/tools/source ../lib/enyo-x/source/widgets ../lib/enyo-x/source/views
 #../../jsdoc/jsdoc -l -t ./templates/xtuple -d ../../jsdoc/out -r ../lib/backbone-x/source  
 #../../jsdoc/jsdoc -l -t ./templates/xtuple -d ../../jsdoc/out -r ../lib/enyo-x/source/widgets 
 #../../jsdoc/jsdoc -l -t ./templates/xtuple -d ../../jsdoc/out -r ../lib/enyo-x/source/views 
