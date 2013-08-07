@@ -47,23 +47,33 @@ Globalize:true */
       ]}
     ],
     valueChanged: function () {
-      var model = this.getValue();
+      var model = this.getValue(),
+        quantity, discount;
+
       if (!model) {
         return;
       }
       this.$.lineNumber.setContent(model.get("lineNumber"));
-      this.$.itemNumber.setContent(model.getValue("item.number"));
+      this.$.itemNumber.setContent(model.getValue("item.number") || "_required".loc());
+      this.$.itemNumber.addRemoveClass("xv-error", !model.getValue("item.number"));
       this.$.itemDescription.setContent(model.getValue("item.description1"));
       this.$.siteCode.setContent(model.getValue("site.code"));
-      this.$.quantity.setContent(Globalize.format(XT.math.round(model.get("quantity"), XT.QTY_SCALE), "n" + XT.QTY_SCALE));
-      this.$.quantityUnit.setContent(model.getValue("quantityUnit.name"));
-      this.$.discount.setContent(Globalize.format(XT.math.round(model.get("discount"), XT.PERCENT_SCALE) * 100, "n" + XT.PERCENT_SCALE));
 
-      this.$.price.setContent(Globalize.format(XT.math.round(model.get("price"), XT.SALES_PRICE_SCALE), "n" + XT.SALES_PRICE_SCALE));
+      quantity = model.get("quantity") ? Globalize.format(XT.math.round(model.get("quantity"), XT.QTY_SCALE), "n" + XT.QTY_SCALE) : "_required".loc();
+      this.$.quantity.setContent(quantity);
+      this.$.quantity.addRemoveClass("xv-error", !model.getValue("quantity"));
+
+      this.$.quantityUnit.setContent(model.getValue("quantityUnit.name"));
+      discount = model.get("discount") ? Globalize.format(XT.math.round(model.get("discount"), XT.PERCENT_SCALE) * 100, "n" + XT.PERCENT_SCALE) : "";
+      this.$.discount.setContent(discount);
+
+      this.$.price.setContent(Globalize.format(XT.math.round(model.get("price"), XT.SALES_PRICE_SCALE), "n" + XT.SALES_PRICE_SCALE) || "_required".loc());
+      this.$.itemNumber.addRemoveClass("xv-error", !model.getValue("price"));
       this.$.priceUnit.setContent(model.getValue("priceUnit.name"));
       this.$.extendedPrice.setContent(Globalize.format(XT.math.round(model.get("extendedPrice"),
         XT.EXTENDED_PRICE_SCALE), "n" + XT.EXTENDED_PRICE_SCALE));
-      this.$.scheduleDate.setContent(Globalize.format(model.get("scheduleDate"), "d"));
+
+      this.$.scheduleDate.setContent(Globalize.format(XT.date.applyTimezoneOffset(model.get("scheduleDate"), true), "d"));
     }
   });
 
@@ -96,7 +106,7 @@ Globalize:true */
         ]}},
       ]},
       {classes: "xv-grid-column quantity", components: [
-        {kind: "XV.QuantityWidget", attr: "quantity"},
+        {kind: "XV.QuantityWidget", attr: "quantity", name: "quantityWidget"},
         {kind: "XV.UnitPickr", attr: "quantityUnit", name: "quantityUnitPicker" }
       ]},
       {classes: "xv-grid-column discount", components: [
@@ -116,9 +126,9 @@ Globalize:true */
       ]},
       {classes: "xv-grid-column grid-actions", components: [
         {components: [
-          {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton" },
-          {kind: "enyo.Button", classes: "icon-eye-open", name: "expandGridRowButton" },
-          {kind: "enyo.Button", classes: "icon-remove", name: "deleteGridRowButton" }
+          {kind: "enyo.Button", classes: "icon-plus", name: "addGridRowButton", onkeyup: "addButtonKeyup" },
+          {kind: "enyo.Button", attributes: {tabIndex: "-1"}, classes: "icon-eye-open", name: "expandGridRowButton" },
+          {kind: "enyo.Button", attributes: {tabIndex: "-1"}, classes: "icon-remove", name: "deleteGridRowButton" }
         ]}
       ]}
     ]
@@ -133,28 +143,28 @@ Globalize:true */
     kind: "XV.GridBox",
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
     components: [
-      {kind: "enyo.Scroller", name: "mainGroup", classes: "in-panel", fit: true, horizontal: "auto", components: [
-        {kind: "XV.Groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
-          {kind: "XV.SalesOrderLineItemHeaders"},
-          {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list", onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
-            { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
-          ]},
-          {kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false},
-          {kind: "List", name: "belowGridList", onSetupItem: "setupRowBelow", ontap: "gridRowTapBelow", components: [
-            {kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "belowGridRow"}
-          ]},
-          {
-            kind: "FittableColumns",
-            name: "navigationButtonPanel",
-            classes: "xv-groupbox-buttons",
-            components: [
-              {kind: "onyx.Button", name: "newButton", onclick: "newItem",
-                content: "_new".loc(), classes: "xv-groupbox-button-single"}
-            ]
-          }
-        ]}
+      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
+      {kind: "XV.SalesOrderLineItemHeaders"},
+      {kind: "XV.Scroller", name: "mainGroup", horizontal: "hidden", fit: true, components: [
+        {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list",
+            onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
+          { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
+        ]},
+        {kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false},
+        {kind: "List", name: "belowGridList", onSetupItem: "setupRowBelow",
+            ontap: "gridRowTapBelow", components: [
+          {kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "belowGridRow"}
+        ]},
       ]},
+      {
+        kind: "FittableColumns",
+        name: "navigationButtonPanel",
+        classes: "xv-groupbox-buttons",
+        components: [
+          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+            content: "_new".loc(), classes: "xv-groupbox-button-single"}
+        ]
+      },
       {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
     ],
 

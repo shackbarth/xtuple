@@ -110,6 +110,12 @@ trailing:true, white:true*/
       query: {orderBy: [
         {attribute: 'lineNumber'}
       ]},
+      showDeleteAction: false,
+      actions: [
+        {name: "enterReceipt", prerequisite: "canEnterReceipt",
+          method: "enterReceipt", notify: false, isViewMethod: true}
+      ],
+      toggleSelected: true,
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -151,10 +157,24 @@ trailing:true, white:true*/
       formatQuantity: function (value, view, model) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
+      },
+      enterReceipt: function (inEvent) {
+        var model = inEvent.model,
+          modelId = model.id,
+          success = function () {
+            this.getValue().convertFromProspect(modelId);
+          };
+
+        this.doWorkspace({
+          workspace: "XV.EnterReceiptWorkspace",
+          id: model.id,
+          success: success,
+          allowNew: false
+        });
       }
     });
 
-    XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderLineListItem");
+    XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderLine");
 
     // ..........................................................
     // ISSUE TO SHIPPING
@@ -164,12 +184,30 @@ trailing:true, white:true*/
       name: "XV.IssueToShippingList",
       kind: "XV.List",
       label: "_issueToShipping".loc(),
-      collection: "XM.ShippableSalesOrderLineCollection",
+      collection: "XM.IssueToShippingCollection",
       parameterWidget: "XV.IssueToShippingParameters",
       query: {orderBy: [
         {attribute: 'lineNumber'},
         {attribute: 'subNumber'}
       ]},
+      showDeleteAction: false,
+      actions: [
+        {name: "issueStock", prerequisite: "canIssueStock",
+          method: "issueStock", notify: false, isViewMethod: true},
+        {name: "issueLine", prerequisite: "canIssueStock",
+          method: "doIssueLine", notify: false},
+        {name: "returnLine", prerequisite: "canReturnStock",
+          method: "doReturnStock", notify: false}
+      ],
+      headerActions: [
+        {
+          name: "issueAll",
+          method: function () {
+            // TODO: actually issue all
+          }
+        },
+      ],
+      toggleSelected: true,
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -197,14 +235,15 @@ trailing:true, white:true*/
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
               {kind: "XV.ListAttr", attr: "scheduleDate",
-                style: "text-align: right"}
+                formatter: "formatScheduleDate", style: "text-align: right"}
             ]}
           ]}
         ]}
       ],
-      formatDueDate: function (value, view, model) {
+      formatScheduleDate: function (value, view, model) {
         var today = new Date(),
-          isLate = XT.date.compareDate(value, today) < 1;
+          isLate = XT.date.compareDate(value, today) < 1 &&
+            model.get("balance") > 0;
         view.addRemoveClass("error", isLate);
         return value;
       },
@@ -221,11 +260,25 @@ trailing:true, white:true*/
       formatQuantity: function (value, view, model) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
+      },
+      issueStock: function (inEvent) {
+        var model = inEvent.model,
+          modelId = model.id,
+          success = function () {
+            this.getValue().convertFromProspect(modelId);
+          };
+
+        this.doWorkspace({
+          workspace: "XV.IssueStockWorkspace",
+          id: model.id,
+          success: success,
+          allowNew: false
+        });
       }
     });
 
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
- 
+
     // ..........................................................
     // SHIPMENT
     //
@@ -263,8 +316,7 @@ trailing:true, white:true*/
               {kind: "XV.ListAttr", attr: "isShipped"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "freight", formatter: "formatExtendedPrice"},
-              {kind: "XV.ListAttr", attr: "currency"}
+              {kind: "XV.ListAttr", attr: "freight", formatter: "formatExtendedPrice"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
               {kind: "XV.ListAttr", attr: "isShipped"},
@@ -282,57 +334,6 @@ trailing:true, white:true*/
     });
 
     XV.registerModelList("XM.Shipment", "XV.ShipmentList");
-
-    // ..........................................................
-    // VENDOR
-    //
-
-    enyo.kind({
-      name: "XV.VendorList",
-      kind: "XV.List",
-      label: "_vendors".loc(),
-      collection: "XM.VendorRelationCollection",
-      query: {orderBy: [
-        {attribute: 'number'}
-      ]},
-      allowPrint: true,
-      parameterWidget: "XV.VendorListParameters",
-      components: [
-        {kind: "XV.ListItem", components: [
-          {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "first", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "number", isKey: true},
-                {kind: "XV.ListAttr", attr: "contact1.phone", fit: true,
-                  classes: "right"}
-              ]},
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "name"},
-                {kind: "XV.ListAttr", attr: "contact1.primaryEmail",
-                  ontap: "sendMail", classes: "right hyperlink"}
-              ]}
-            ]},
-            {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-              {kind: "XV.ListAttr", attr: "contact1.name", classes: "italic",
-                placeholder: "_noContact".loc()},
-              {kind: "XV.ListAttr", attr: "address.formatShort"}
-            ]}
-          ]}
-        ]}
-      ],
-      sendMail: function (inSender, inEvent) {
-        var model = this.getModel(inEvent.index),
-          email = model ? model.getValue('contact1.primaryEmail') : null,
-          win;
-        if (email) {
-          win = window.open('mailto:' + email);
-          win.close();
-        }
-        return true;
-      }
-    });
-
-    XV.registerModelList("XM.VendorRelation", "XV.VendorList");
 
   };
 }());

@@ -7,16 +7,28 @@ trailing:true, white:true*/
 
   XT.extensions.inventory.initIssueToShipping = function () {
 
+
     /**
       @name XV.IssueToShipping
       @extends XV.SearchContainer
      */
-    enyo.kind(
-      /** @lends XV.IssueToShipping# */{
+    var issueToShipping =  /** @lends XV.IssueToShipping# */ {
       name: "XV.IssueToShipping",
       kind: "XV.SearchContainer",
+      handlers: {
+        onListItemMenuTap: "showListItemMenu"
+      },
       create: function () {
         this.inherited(arguments);
+        this.$.listPanel.createComponent({
+          name: "listItemMenu",
+          kind: "onyx.Menu",
+          floating: true,
+          onSelect: "listActionSelected",
+          maxHeight: 500,
+          components: [],
+          owner: this
+        });
         this.setList({list: "XV.IssueToShippingList"});
       },
       /**
@@ -32,8 +44,14 @@ trailing:true, white:true*/
           if (this.callback) { this.callback(value); }
         }
         */
+      },
+      listActionSelected: function (inSender, inEvent) {
+        alert("List Action Selected!");
       }
-    });
+    };
+
+    enyo.mixin(issueToShipping, XV.ListMenuManagerMixin);
+    enyo.kind(issueToShipping);
 
   };
 

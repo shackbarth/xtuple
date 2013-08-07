@@ -27,7 +27,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           X.log("Email error", error);
           res.send({isError: true, message: "Error emailing"});
         } else {
-          res.send({message: "email success"});
+          res.send({message: "Email success"});
         }
       };
 

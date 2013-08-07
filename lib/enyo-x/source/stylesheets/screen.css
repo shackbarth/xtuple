@@ -284,13 +284,6 @@
 /*
   Styles relating to the grid box
 */
-/**
-  This is a little hacky, but it gets rid of the border
-  that is around the entire widget.
-*/
-.xv-groupbox .in-panel {
-  border: none;
-}
 /* Entire box including the grid and the summary panel */
 .xv-grid-box {
   /**
@@ -301,7 +294,6 @@
 }
 .xv-grid-box.panel {
   width: 840px;
-  padding: 0;
 }
 .xv-grid-box .xv-above-grid-list {
   border: 0px;
@@ -469,16 +461,32 @@
   border-bottom: 0;
   padding: 0;
 }
-.xv-grid-box .xv-sales-summary-panel {
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel {
   border: none;
   margin-top: 0;
+  padding-left: 0px;
+  padding-right: 0px;
 }
-.xv-grid-box .xv-sales-summary-panel .xv-sales-summary-total-group {
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group {
   padding: 0;
   border: none;
 }
-.xv-grid-box .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget {
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget .xv-input-decorator {
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget {
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
   width: 163px;
+  padding-bottom: 0px;
+  padding-top: 0px;
 }
 /**
   Styles relating to the dashboard

@@ -18,10 +18,11 @@ white:true*/
       recordType: "XM.Shipment",
 
       numberPolicy: XM.Document.AUTO_NUMBER,
-
+      /*
       readOnlyAttributes: [
         "order"
       ],
+      */
   
       canRecallShipment: function (callback) {
         var priv = this.get("isShipped") && this.get("isInvoiced") && this.get("isInvoicePosted") === false ? "RecallInvoicedShipment" : this.get("isShipped") && this.get("isInvoiced") === false ? "RecallOrders" : false;
@@ -78,6 +79,20 @@ white:true*/
       parentKey: "shipment"
 
     });
+
+    /**
+      @class
+
+      @extends XM.Info
+    */
+    XM.ShipmentRelation = XM.Info.extend({
+
+      recordType: "XM.ShipmentRelation",
+
+      editableModel: "XM.Shipment"
+
+    });
+
 
     // ..........................................................
     // COLLECTIONS

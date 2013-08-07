@@ -6,19 +6,13 @@
 (function () {
   "use strict";
 
-  var crud = require('../lib/crud'),
-    data = {
-      recordType: "XM.TaxCode",
-      autoTestAttributes: true,
-      createHash: {
-        code: "asdf"
-      },
-      updateHash: {
-        code: "fdsa"
-      }
-    };
+  var zombieAuth = require('../lib/zombie_auth');
 
-  describe('Tax Code CRUD Test', function () {
-    crud.runAllCrud(data);
+  describe('The zombie login process', function () {
+    it('should work if we give it enough time', function (done) {
+      this.timeout(10 * 60 * 1000);
+      zombieAuth.loadApp(done);
+    });
   });
+
 }());

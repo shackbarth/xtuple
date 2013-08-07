@@ -11,10 +11,10 @@
     "comment": "Receipt Map",
     "privileges": {
       "all": {
-        "create": "EnterReceipt",
+        "create": "EnterReceipts",
         "read": true,
-        "update": "EnterReceipt",
-        "delete": "EnterReceipt"
+        "update": "EnterReceipts",
+        "delete": "EnterReceipts"
       }
     },
     "properties": [

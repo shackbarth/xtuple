@@ -7,21 +7,23 @@
   "use strict";
 
   var crud = require('../lib/crud'),
-    data = {
-      recordType: "XM.TaxAuthority",
+      data = {
+      recordType: "XM.UserAccount",
       autoTestAttributes: true,
-      createHash : {
-        code: "TAXAUTH3" + Math.random(),
-        name: "TAXAUTH NAME"
+      createHash: {
+        username: 'uname1',
+        password: 'second',
+        passwordCheck: 'second',
+        properName: 'Peter',
+        isActive: true,
+        locale: 'Default'
       },
-      updateHash : {
-        name: "Jon Fishman"
-      },
-      beforeDeleteActions: crud.accountBeforeDeleteActions,
-      afterDeleteActions: crud.accountAfterDeleteActions
+      updateHash: {
+        properName : 'Parker'
+      }
     };
 
-  describe('TaxAuthority CRUD Test', function () {
+  describe('User Account CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());

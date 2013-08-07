@@ -6,49 +6,21 @@
 (function () {
   "use strict";
 
-  /**
-    Usage:
-    cd node-datasource/test/mocha
-    mocha -R spec
-  */
-
   var crud = require("../lib/crud"),
     assert = require("chai").assert;
 
   var data = exports.data = {
-      recordType: "XM.Honorific",
-      autoTestAttributes: true,
-      createHash: {
-        code: "Herr" + Math.random()
-      },
-      updateHash: {
-        code: "Dame" + Math.random()
-      }
-    };
+    recordType: "XM.Honorific",
+    autoTestAttributes: true,
+    createHash: {
+      code: "Herr" + Math.random()
+    },
+    updateHash: {
+      code: "Dame" + Math.random()
+    }
+  };
 
   describe('Honorific crud test', function () {
-    this.timeout(20 * 1000);
-    it('should perform all the crud operations', function (done) {
-      crud.runAllCrud(data, done);
-    });
+    crud.runAllCrud(data);
   });
-/*
-
-  Proof-of-concept: you *could* run this as many times as you want.
-
-  describe('Honorific crud test', function (){
-    this.timeout(20 * 1000);
-    it('should perform all the crud operations', function (done) {
-      crud.runAllCrud(data, done);
-    });
-  });
-
-  describe('Honorific crud test', function (){
-    this.timeout(20 * 1000);
-    it('should perform all the crud operations', function (done) {
-      crud.runAllCrud(data, done);
-    });
-  });
-
-*/
 }());

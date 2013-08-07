@@ -173,5 +173,61 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ShipmentRelation",
+    "table": "shiphead",
+    "isRest": true,
+    "comment": "Shipment Relation Map",
+    "privileges": {
+      "all": {
+        "create": "false",
+        "read": "true",
+        "update": "false",
+        "delete": "false"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "shiphead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "shiphead_number",
+          "isNaturalKey": true
+         }
+      },
+      {
+        "name": "isShipped",
+        "attr": {
+          "type": "Boolean",
+          "column": "shiphead_shipped"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "shiphead_shipvia"
+        }
+      },
+      {
+        "name": "trackingNumber",
+        "attr": {
+          "type": "String",
+          "column": "shiphead_tracknum"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]
