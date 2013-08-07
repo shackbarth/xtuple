@@ -386,11 +386,12 @@ trailing:true, white:true*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "code", isKey: true},
-              {kind: "XV.ListAttr", attr: "description", fit: true, classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
           ]}
         ]}
       ]}
@@ -832,7 +833,7 @@ trailing:true, white:true*/
           that.reset();
         };
         model.save(null, options);
-      };
+      }
     }
   });
 
