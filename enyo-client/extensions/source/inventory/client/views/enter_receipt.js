@@ -11,12 +11,27 @@ trailing:true, white:true*/
       @name XV.EnterReceipt
       @extends XV.SearchContainer
      */
-    enyo.kind(
-      /** @lends XV.EnterReceipt# */{
+    var enterReceipt =  /** @lends XV.EnterReceipt# */ {
       name: "XV.EnterReceipt",
       kind: "XV.SearchContainer",
       create: function () {
         this.inherited(arguments);
+        this.setList({list: "XV.EnterReceiptList"});
+      },
+      handlers: {
+        onListItemMenuTap: "showListItemMenu"
+      },
+      create: function () {
+        this.inherited(arguments);
+        this.$.listPanel.createComponent({
+          name: "listItemMenu",
+          kind: "onyx.Menu",
+          floating: true,
+          onSelect: "listActionSelected",
+          maxHeight: 500,
+          components: [],
+          owner: this
+        });
         this.setList({list: "XV.EnterReceiptList"});
       },
       /**
@@ -32,9 +47,15 @@ trailing:true, white:true*/
           if (this.callback) { this.callback(value); }
         }
         */
+      },
+      listActionSelected: function (inSender, inEvent) {
+        alert("List Action Selected!");
       }
-    });
+    };
 
-  };
+    enyo.mixin(enterReceipt, XV.ListMenuManagerMixin);
+    enyo.kind(enterReceipt);
+
+    };
 
 }());

@@ -1524,7 +1524,7 @@
       {
         "name": "customer",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "cust_number"
         }
       },
