@@ -25,7 +25,7 @@
 
 ### Testing
 
-
+TODO: verify that the jsdoc look ok. Should this go in testing?
 
 ### Tagging
 

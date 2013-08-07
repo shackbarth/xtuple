@@ -1,5 +1,7 @@
 This is the API documentation for the framework code on
-the client of the xTuple Web/Mobile platform.
+the client of the xTuple Web/Mobile platform. It does not
+include database or datasource code, nor does it include
+business-object-specific implementation classes.
 
 These objects are in one of three namespaces: 
 
