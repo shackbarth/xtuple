@@ -338,6 +338,7 @@ var _ = require("underscore"),
     });
 
     it('sets values on the model', function (done) {
+      this.timeout(20 * 1000);
       data.updated = false;
       setModel(data, done);
     });
@@ -383,6 +384,7 @@ var _ = require("underscore"),
     });
 
     it('deletes the model from the database', function (done) {
+      this.timeout(10 * 1000);
       destroy(data, done);
     });
 

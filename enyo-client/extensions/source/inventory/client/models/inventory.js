@@ -14,7 +14,7 @@ white:true*/
       @extends XM.Model
     */
     XM.InventoryHistory = XM.Model.extend({
-      
+
       recordType: "XM.InventoryHistory"
 
     });
@@ -25,7 +25,7 @@ white:true*/
       @extends XM.Model
     */
     XM.InventoryDetail = XM.Model.extend({
-      
+
       recordType: "XM.InventoryDetail"
 
     });
@@ -49,6 +49,10 @@ white:true*/
         "shipment",
         "shipped"
       ],
+
+      name: function () {
+        return this.get("order") + " #" + this.get("lineNumber");
+      },
 
       bindEvents: function () {
         XM.Model.prototype.bindEvents.apply(this, arguments);
@@ -119,7 +123,7 @@ white:true*/
             // Callback to handle detail if applicable
             callback = function (detail) {
               var dispOptions = {};
-              
+
               // Refresh the model we started from passing options through
               dispOptions.success = function () {
                 that.fetch(options);
@@ -128,7 +132,7 @@ white:true*/
                 issOptions.detail = detail;
               }
               that.dispatch("XM.Inventory", "issueToShipping", params, dispOptions);
-              
+
             };
           if (requiresDetail) {
             // Send notification that we need to accumulate detail
@@ -175,7 +179,7 @@ white:true*/
     XM.InventoryHistoryCollection = XM.Collection.extend({
 
       model: XM.InventoryHistory
-      
+
     });
 
     /**

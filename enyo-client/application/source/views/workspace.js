@@ -1770,6 +1770,18 @@ Globalize:true */
           {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems", fit: true}
         ], {owner: this});
       }
+    },
+    /**
+      Reset the grid-box back to its read-only state in the case of "apply"
+     */
+    save: function (options) {
+      this.inherited(arguments);
+      var gridBox = this.$.salesOrderLineItemGridBox;
+      if (gridBox) {
+        gridBox.setEditableIndex(null);
+        gridBox.valueChanged();
+        gridBox.$.editableGridRow.setShowing(false);
+      }
     }
   });
 
