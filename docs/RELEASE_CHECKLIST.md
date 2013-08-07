@@ -29,15 +29,16 @@ TODO: verify that the jsdoc look ok. Should this go in testing?
 
 ### Tagging
 
-1. Add the version number and date to `RELEASE.md` if it has not been done already.
-2. Run `node getReleaseNotes.js` from `private-extensions/source/incident_plus/server/` to generate 
+1. Jump to the frozen branch.
+2. Add the version number and date to `RELEASE.md` if it has not been done already.
+3. Run `node getReleaseNotes.js` from `private-extensions/source/incident_plus/scripts/` to generate 
   some code that you should run in the JS console against production dogfood. That will in turn 
   generate some code that you should plug into the `README.md` file. Delete out the incidents that 
   end users do not need to know about, e.g. bugs that were caused and fixed all within a sprint.
-3. Commit and push changes.
-4. Tag and push the release.
-5. Also tag `xtuple-extensions` and `private-extensions`.
-6. Send out an email.
+4. Commit and push changes.
+5. Tag and push the release.
+6. Also tag `xtuple-extensions`, `private-extensions`, and `bi`.
+7. Send out an email.
 
 ### Deploying
 
