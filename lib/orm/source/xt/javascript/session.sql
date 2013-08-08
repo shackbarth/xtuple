@@ -170,11 +170,14 @@ select xt.install_js('XT','Session','xtuple', $$
               '  join pg_type t on a.atttypid = t.oid ' +
               '  join xt.orm on lower(orm_namespace) = n.nspname and xt.decamelize(orm_type) = c.relname and not orm_ext ' +
               '  join xt.ext on ext_name = orm_context ' +
-              '  join xt.usrext on ext_id = usrext_ext_id ' +
+              '  left join xt.usrext on ext_id = usrext_ext_id ' +
+              '  left join xt.grpext on ext_id=grpext_ext_id ' +
+              '  left join usrgrp on usrgrp_grp_id=grpext_grp_id ' +
               'where n.nspname = $1 ' +
               ' and relkind = \'v\' ' +
               ' and orm_context != \'xtuple\' ' +
-              ' and usrext_usr_username = $2 ' +
+              ' and (usrext_usr_username = $2 or usrgrp_username = $2) ' +
+              ' group by c.relname, attname, typcategory, n.nspname, attnum ' +
               'order by type, attnum',
       recs = plv8.execute(sql, [schema, XT.username]),
       type,
