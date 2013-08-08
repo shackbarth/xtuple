@@ -501,8 +501,12 @@ select xt.install_js('XT','Discovery','xtuple', $$
               "type": attr.type.toLowerCase(),
               "location": "query"
             };
-            if(['Boolean', 'Number', 'String'].indexOf(attr.type) >= 0) {
-              paramObj.description = "Exact value match on " + prop.name;
+            if(['Boolean', 'Number'].indexOf(attr.type) >= 0) {
+              paramObj.description = "Exact match on " + prop.name;
+              resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
+            }
+            if(['String'].indexOf(attr.type) >= 0) {
+              paramObj.description = "Case-insensitive full-text match on " + prop.name;
               resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
             }
             if(['Date', 'Number'].indexOf(attr.type) >= 0) {

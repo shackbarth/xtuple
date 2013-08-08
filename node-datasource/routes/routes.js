@@ -87,6 +87,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.report = [ensureLogin, report.report];
   exports.analysis = [ensureLogin, analysis.analysis];
   exports.resetPassword = [ensureLogin, changePassword.resetPassword];
-  exports.vcfExport = [ensureLogin, vcfExport.vcfExport]
+  exports.vcfExport = [ensureLogin, vcfExport.vcfExport];
 
 }());
