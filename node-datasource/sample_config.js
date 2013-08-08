@@ -8,6 +8,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   module.exports = {
     processName: "node-datasource",
     allowMultipleInstances: true,
+    client: {
+      freeDemo: true
+    },
     datasource: {
       debugging: false,
       debugDatabase: false,

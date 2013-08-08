@@ -578,13 +578,15 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // ???
   socket.on('session', function (data, callback) {
     ensureLoggedIn(function (session) {
-      callback({
-        data: session.passport.user,
-        code: 1,
-        debugging: X.options.datasource.debugging,
-        biUrl: X.options.datasource.biUrl,
-        version: X.version
-      });
+      var callbackObj = _.extend(X.options.client,
+        {
+          data: session.passport.user,
+          code: 1,
+          debugging: X.options.datasource.debugging,
+          biUrl: X.options.datasource.biUrl,
+          version: X.version
+        });
+      callback(callbackObj);
     }, data && data.payload);
   });
 
