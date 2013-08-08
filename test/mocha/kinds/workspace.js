@@ -33,6 +33,12 @@
             // exclude abstract classes and child workspaces
             return;
           }
+          if (['EnterReceiptWorkspace'].indexOf(key) >= 0) {
+            // TODO: investigate these workspaces
+            return;
+          }
+
+
 
           // create the workspace
           try {
