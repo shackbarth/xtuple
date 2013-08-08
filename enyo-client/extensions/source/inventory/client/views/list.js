@@ -115,6 +115,15 @@ trailing:true, white:true*/
         {name: "enterReceipt", prerequisite: "canEnterReceipt",
           method: "enterReceipt", notify: false, isViewMethod: true}
       ],
+      headerActions: [
+        {
+          name: "receiveAll",
+          prerequisite: "canReceiveAll",
+          method: "doReceiveAll",
+          notifyMessage: "_receiveAll?",
+          modelName: "XM.PurchaseOrderLine"
+        }
+      ],
       toggleSelected: true,
       components: [
         {kind: "XV.ListItem", components: [
@@ -171,6 +180,20 @@ trailing:true, white:true*/
           success: success,
           allowNew: false
         });
+      },
+      receiveAll: function (inEvent) {
+        var model = inEvent.model,
+          modelId = model.id,
+          success = function () {
+            this.getValue().convertFromProspect(modelId);
+          };
+
+        this.doWorkspace({
+          workspace: "XV.EnterReceiptWorkspace",
+          id: model.id,
+          success: success,
+          allowNew: false
+        });
       }
     });
 
@@ -204,6 +227,7 @@ trailing:true, white:true*/
           name: "issueAll",
           method: function () {
             // TODO: actually issue all
+            console.log("Write the issueAll function!");
           }
         },
       ],

@@ -338,18 +338,29 @@ select xt.install_js('XM','Inventory','xtuple', $$
     PO Receive All
   */
   XM.Inventory.receiveAll = function (purchaseOrder) {
-    var sql = "select public.enterporeceipt(poitem_id, poitem_qty_ordered) from poitem" + 
-      "join pohead on poitem_pohead_id = pohead_id where ( (poitem_status <> 'C') and (pohead_number=$1));",
-      ret;
-    
+    var series,
+      sql;
+
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401); }
+    
+    /* Post the transaction */
+    sql = "select public.enterporeceipt(poitem_id, poitem_qty_ordered) from poitem" + 
+      "join pohead on poitem_pohead_id = pohead_id where ( (poitem_status <> 'C') and (pohead_number=$1));",
+     
+    series = plv8.execute(sql, [purchaseOrder])[0].series;
 
-    ret = plv8.execute(sql, [purchaseOrder])[0];
+    /* Distribute detail */
+    XM.PrivateInventory.distribute(series, options.detail);
 
-    series = plv8.execute(sql, [orderLine, quantity, asOf])[0].series;
-
-    return ret;
+    return;
+  };
+  XM.Inventory.receiveAll.description = "Enter Purchase Order Receipt.";
+  XM.Inventory.receiveAll.params = {
+    purchaseOrder: { type: "String", description: "Order line UUID" },
+    options: {type: "Object", description: "Other attributes", attributes: {
+      detail: {type: "Array", description: "Distribution detail" }
+    }}
   };
 
   /**
@@ -479,7 +490,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
   XM.Inventory.recallShipment.description = "Return complete shipment (only available for orders that " +
     "have not been shipped) - used in maintain shipping contents screen.";
   XM.Inventory.recallShipment.params = {
-     shipment: { type: "Number", description: "Shipment ID" }
+     shipment: { type: "String", description: "Shipment Number" }
   };
 
   XM.Inventory.options = [
@@ -560,6 +571,6 @@ select xt.install_js('XM','Inventory','xtuple', $$
     return data.commitMetrics(metrics);
   };
 
-})
+}())
   
 $$ );
