@@ -442,6 +442,8 @@ regexp:true, undef:true, trailing:true, white:true */
       for (var i = 0; i < comps.length; i++) {
         this.$.picker.createComponent(comps[i]);
       }
+      this.$.picker.applyStyle("position", "absolute");
+      this.$.picker.applyStyle("z-index", "9999");
       this.$.picker.render();
     },
     itemSelected: function (inSender, inEvent) {
