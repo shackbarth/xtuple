@@ -578,7 +578,8 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // ???
   socket.on('session', function (data, callback) {
     ensureLoggedIn(function (session) {
-      var callbackObj = _.extend(X.options.client,
+      var callbackObj = X.options.client || {};
+      callbackObj = _.extend(callbackObj,
         {
           data: session.passport.user,
           code: 1,
