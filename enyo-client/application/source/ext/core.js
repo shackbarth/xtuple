@@ -157,7 +157,7 @@ white:true*/
       this.history.unshift({
         modelType: model.recordType,
         modelId: model.get(model.idAttribute),
-        modelName: model.getValue(model.nameAttribute),
+        modelName: model.getValue(model.nameAttribute) || model.get(model.idAttribute),
         workspaceType: workspaceType
       });
 

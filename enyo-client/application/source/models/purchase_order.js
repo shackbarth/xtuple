@@ -51,12 +51,11 @@ white:true*/
     },
 
     canReceiveAll: function (callback) {
-      var priv = "RecallInvoicedShipment";
-      return _canDo.call(this, priv, callback);
+      return XT.session.privileges.get("EnterReceipts");
     },
 
-    doReceiveAll: function (callback) {
-      return _doDispatch.call(this, "receiveAll", callback);
+    doReceiveAll: function (callback, id) {
+      return _doDispatch.call(this, "receiveAll", callback, [id]);
     },
 
     save: function (key, value, options) {
@@ -180,16 +179,6 @@ white:true*/
     var that = this,
       options = {};
     params = params || [];
-    params.unshift(this.id);
-    options.success = function (resp) {
-      var fetchOpts = {};
-      fetchOpts.success = function () {
-        if (callback) { callback(resp); }
-      };
-      if (resp) {
-        that.fetch(fetchOpts);
-      }
-    };
     options.error = function (resp) {
       if (callback) { callback(resp); }
     };

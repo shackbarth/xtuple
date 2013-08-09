@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -15,7 +15,7 @@ white:true*/
     /** @scope XM.TaxClass.prototype */
 
     recordType: 'XM.TaxClass',
-    
+
     documentKey: "code"
 
   });
@@ -28,7 +28,11 @@ white:true*/
   XM.TaxAssignment = XM.Model.extend({
     /** @scope XM.TaxAssignment */
 
-    recordType: 'XM.TaxAssignment'
+    recordType: 'XM.TaxAssignment',
+
+    name: function () {
+      return this.get("tax").id + " " + this.get("taxType").id;
+    }
 
   });
 
@@ -41,7 +45,7 @@ white:true*/
     /** @scope XM.TaxAuthority.prototype */
 
     recordType: 'XM.TaxAuthority',
-    
+
     documentKey: 'code',
 
     defaults: function () {
@@ -79,7 +83,7 @@ white:true*/
     documentKey: 'code'
 
   });
-  
+
   /**
     @class
 
@@ -88,7 +92,11 @@ white:true*/
   XM.TaxRate = XM.Model.extend({
     /** @scope XM.TaxRate */
 
-    recordType: 'XM.TaxRate'
+    recordType: 'XM.TaxRate',
+
+    name: function () {
+      return this.get("tax").id;
+    }
 
   });
 
@@ -201,7 +209,7 @@ white:true*/
     model: XM.TaxType
 
   });
-  
+
   /**
     @class
 

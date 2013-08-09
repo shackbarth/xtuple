@@ -1,4 +1,4 @@
-select xt.install_js('XT','Session','xtuple', $$
+﻿select xt.install_js('XT','Session','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple.
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -91,7 +91,7 @@ select xt.install_js('XT','Session','xtuple', $$
 
 
 
-  /* 
+  /*
     Return user preferences
 
     @returns {Object}
@@ -107,7 +107,7 @@ select xt.install_js('XT','Session','xtuple', $$
     return JSON.stringify(resultObj);
   }
 
-  /* 
+  /*
     Update user preferences.
 
    @param {Object} patches
@@ -124,7 +124,7 @@ select xt.install_js('XT','Session','xtuple', $$
       var sql,
         updateSql = "UPDATE xt.userpref SET userpref_value = $1 WHERE userpref_usr_username = $2 AND userpref_name = $3;",
         insertSql = "INSERT INTO xt.userpref (userpref_value, userpref_usr_username, userpref_name) VALUES ($1, $2, $3);";
-      
+
       plv8.elog(NOTICE, "patch", patch.op, JSON.stringify(patch));
       if (patch.op === 'add') {
         sql = insertSql;
@@ -134,7 +134,7 @@ select xt.install_js('XT','Session','xtuple', $$
         /* no other operation is supported at the moment */
         return;
       }
-      
+
       plv8.execute(sql, [patch.value, XT.username, patch.path.substring(1)]);
     });
     return true;
@@ -159,7 +159,7 @@ select xt.install_js('XT','Session','xtuple', $$
               'where n.nspname = $1 ' +
               'and relkind = \'v\' ' +
               'and orm_context = \'xtuple\' ' +
-              'union all ' + 
+              'union all ' +
               'select c.relname as "type", ' +
               '  attname as "column", ' +
               '  typcategory as "category", ' +
