@@ -50,6 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.loginForm = auth.loginForm;
   exports.forgotPassword = auth.forgotPasswordForm;
   exports.recoverPassword = auth.recoverPassword;
+  exports.verifyRecoverPassword = auth.verifyRecoverPassword;
   exports.logout = auth.logout;
   exports.scope = auth.scope;
   exports.scopeForm = auth.scopeForm;
@@ -89,6 +90,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.report = [ensureLogin, report.report];
   exports.analysis = [ensureLogin, analysis.analysis];
   exports.resetPassword = [ensureLogin, changePassword.resetPassword];
-  exports.vcfExport = [ensureLogin, vcfExport.vcfExport]
+  exports.vcfExport = [ensureLogin, vcfExport.vcfExport];
 
 }());

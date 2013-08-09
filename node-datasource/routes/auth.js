@@ -8,6 +8,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var recoverEmailText = "Follow this secure link to reset your password: " +
     "https://%@/%@/recover/reset/%@/%@";
+  var systemErrorMessage = "A system error occurred. I'm very sorry about this, but I can't give " +
+    "you any more details because I'm very cautious about security and this is a sensitive topic.";
 
   /**
     @name Auth
@@ -56,8 +58,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       email = req.body.email,
       database = req.body.database,
       errorMessage = "Cannot find email address",
-      systemErrorMessage = "A system error occurred. I'm very sorry about this, but I can't give " +
-        "you any more details because I'm very cautious about security and this is a sensitive topic.",
       successMessage = "An email has been sent with password recovery instructions";
 
     if (!database || X.options.datasource.databases.indexOf(database) < 0) {
@@ -150,11 +150,53 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
       }
     });
-
-
-    console.log("Recover password");
   };
 
+  exports.verifyRecoverPassword = function (req, res) {
+    var username = req.params.username,
+      uuid = req.params.token,
+      database = req.params.org,
+      coll = new SYS.RecoverCollection();
+
+    coll.fetch({
+      query: {
+        parameters: [{
+          attribute: "recoverUsername",
+          value: username
+        }]
+      },
+      database: req.params.org,
+      username: X.options.databaseServer.user,
+      success: function (collection, results, options) {
+        var match;
+
+        results.map(function (result) {
+          var salt = '$2a$10$' + (username.replace(/[^a-zA-Z0-9]/g, "") + "00000000000000000000000").substring(0, 22),
+            uuidHash = X.bcrypt.hashSync(uuid, salt);
+
+          //var compare = X.bcrypt.compareSync(result.hashedToken, uuidHash); XXX why doesn't this work?
+          if (result.hashedToken === uuidHash &&
+              !result.accessed &&
+              !result.reset &&
+              new Date().getTime() < result.expiresTimestamp.getTime()) {
+            match = result;
+          }
+        });
+
+        if (!match) {
+          // TODO: get the paths straight
+          res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
+          return;
+        }
+
+        console.log(match);
+
+      },
+      error: function () {
+        res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
+      }
+    });
+  };
   /**
     Logs out user by removing the session and sending the user to the login screen.
    */
