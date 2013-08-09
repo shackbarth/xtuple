@@ -17,6 +17,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     */
   var passport = require('passport'),
       url = require('url'),
+      setPassword = require('./change_password').setPassword,
       utils = require('../oauth2/utils');
 
   /**
@@ -277,11 +278,36 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             username: X.options.databaseServer.user,
             error: error,
             success: function (model, result, options) {
-              // TODO: update the actual user's password
-              // TODO: get the path right
-              res.render('login', {
-                message: ["Your password has been updated. Please log in."],
-                databases: X.options.datasource.databases
+              var userModel = new SYS.User();
+              userModel.fetch({
+                id: model.get("recoverUsername"),
+                database: req.params.org,
+                username: X.options.databaseServer.user,
+                error: error,
+                success: function (model, result, options) {
+                  //
+                  // NOW we update the user's password
+                  //
+                  setPassword(recoveryModel.get("recoverUsername"),
+                    req.body.password,
+                    req.params.org,
+                    model.get("useEnhancedAuth"),
+                    function (err) {
+                      if (err) {
+                        error();
+                        return;
+                      }
+                      //
+                      // The password has been updated. Redirect the user to the login screen.
+                      //
+                      // TODO: get the path right
+                      res.render('login', {
+                        message: ["Your password has been updated. Please log in."],
+                        databases: X.options.datasource.databases
+                      });
+                    }
+                  );
+                }
               });
             }
           });
