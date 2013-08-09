@@ -210,7 +210,8 @@ var conditionalExpressSession = function (req, res, next) {
       (/^\/assets/i).test(req.path) ||
       req.path === "/" ||
       req.path === "/favicon.ico" ||
-      req.path === "/forgot-password") {
+      req.path === "/forgot-password" ||
+      req.path === "/recover") {
 
     next();
   } else {
@@ -342,6 +343,7 @@ app.all('/:org/api/v1alpha1/*', routes.restRouter);
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
 app.get('/forgot-password', routes.forgotPassword);
+app.post('/recover', routes.recoverPassword);
 app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
 app.get('/logout', routes.logout);

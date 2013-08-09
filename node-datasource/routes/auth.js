@@ -44,7 +44,52 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   exports.forgotPasswordForm = function (req, res) {
-    res.render('forgot_password', { databases: X.options.datasource.databases });
+    res.render('forgot_password', { message: [], databases: X.options.datasource.databases });
+  };
+
+  exports.recoverPassword = function (req, res) {
+    var userCollection = new SYS.UserCollection(),
+      email = req.body.email,
+      database = req.body.database,
+      errorMessage = "Cannot find email address",
+      successMessage = "An email has been sent with password recovery instructions";
+
+    if (!database || X.options.datasource.databases.indexOf(database) < 0) {
+      // don't give away that this database exists (or not) to prying eyes
+      res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
+      return;
+    }
+    // TODO: guard against illegal db calls
+
+    userCollection.fetch({
+      query: {
+        parameters: [{
+          attribute: "email",
+          value: email
+        }]
+      },
+      database: database,
+      username: X.options.databaseServer.user,
+      success: function (collection, results, options) {
+        if (results.length === 0) {
+          res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
+          return;
+        } else if (results.length === 2) {
+          // quite a quandary
+          // errorMessage = "Wasn't expecting to see two users with this email address";
+          res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
+          return;
+        }
+        // TODO: recover the password
+        res.render('forgot_password', { message: [successMessage], databases: X.options.datasource.databases });
+      },
+      error: function () {
+        res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
+      }
+    });
+
+
+    console.log("Recover password");
   };
 
   /**
