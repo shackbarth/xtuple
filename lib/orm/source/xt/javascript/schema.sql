@@ -350,6 +350,7 @@ select xt.install_js('XT','Schema','xtuple', $$
       else if (orm.properties[i].toOne) {
         if (orm.properties[i].toOne.isNested) {
           ret.properties[orm.properties[i].name].type = "object";
+          ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
         } else {
           /* Fetch the related ORM's JSON-Schema and use it's key's type. */
           /* TODO: Assuming "XM" here... */
@@ -359,9 +360,14 @@ select xt.install_js('XT','Schema','xtuple', $$
               ret.properties[orm.properties[i].name].type = relatedSchema.properties[prop].type;
             }
           }
-        }
 
-        ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
+          /* This is an array of related keys, not a full object. */
+          /* Make the $ref to the relation's natural key. */
+          /* Using JSON-Schema $ref paths like this: */
+          /* http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.5.7.2 */
+          /* See also: http://www.sitepen.com/blog/2008/06/17/json-referencing-in-dojo/ */
+          ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type + "/" + nkey || pkey;
+        }
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].toOne.required) {
