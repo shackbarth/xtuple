@@ -5,11 +5,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
+
+  var recoverEmailText = "Follow this secure link to reset your password: " +
+    "https://%@/%@/recover/reset/%@/%@";
+
   /**
     @name Auth
     @class Auth
     */
-
   var passport = require('passport'),
       url = require('url'),
       utils = require('../oauth2/utils');
@@ -62,7 +65,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
       return;
     }
-    // TODO: guard against illegal db calls
 
     userCollection.fetch({
       query: {
@@ -89,6 +91,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
         username = results[0].username;
         setRecovery = function () {
+          //
+          // We've initialized our recovery model. Now set and save it.
+          //
           var uuid = utils.generateUUID(),
             salt = '$2a$10$' + (username.replace(/[^a-zA-Z0-9]/g, "") + "00000000000000000000000").substring(0, 22),
             uuidHash = X.bcrypt.hashSync(uuid, salt),
@@ -103,7 +108,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               expiresTimestamp: tomorrow
             },
             saveSuccess = function () {
-              res.render('forgot_password', { message: [successMessage], databases: X.options.datasource.databases });
+              //
+              // We've saved our recovery model. Now send out an email.
+              //
+              var mailContent = {
+                from: "no-reply@xtuple.com",
+                to: email,
+                subject: "xTuple password reset instructions",
+                text: recoverEmailText.f(req.headers.host, database, username, uuid)
+              };
+              X.smtpTransport.sendMail(mailContent, function (err) {
+                //
+                // We've sent out the email. Now return to the user
+                //
+                if (err) {
+                  res.render('forgot_password', { message: [systemErrorMessage],
+                    databases: X.options.datasource.databases });
+                  return;
+                }
+                res.render('forgot_password', { message: [successMessage],
+                  databases: X.options.datasource.databases });
+              });
             },
             saveError = function () {
               res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
