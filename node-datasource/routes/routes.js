@@ -51,6 +51,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.forgotPassword = auth.forgotPasswordForm;
   exports.recoverPassword = auth.recoverPassword;
   exports.verifyRecoverPassword = auth.verifyRecoverPassword;
+  exports.resetRecoveredPassword = auth.resetRecoveredPassword;
   exports.logout = auth.logout;
   exports.scope = auth.scope;
   exports.scopeForm = auth.scopeForm;

@@ -345,6 +345,7 @@ app.post('/login', routes.login);
 app.get('/forgot-password', routes.forgotPassword);
 app.post('/recover', routes.recoverPassword);
 app.get('/:org/recover/reset/:id/:token', routes.verifyRecoverPassword);
+app.post('/:org/recover/resetUpdate', routes.resetRecoveredPassword);
 app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
 app.get('/logout', routes.logout);

@@ -49,10 +49,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     res.render('login', { message: message, databases: X.options.datasource.databases });
   };
 
+  /**
+    Renders the "forgot password?" form
+  */
   exports.forgotPasswordForm = function (req, res) {
     res.render('forgot_password', { message: [], databases: X.options.datasource.databases });
   };
 
+  /**
+    Create a row in the recover table, and send an email to the user with the token
+    whose hash is stored in the row, as well as the id to the row.
+   */
   exports.recoverPassword = function (req, res) {
     var userCollection = new SYS.UserCollection(),
       email = req.body.email,
@@ -61,11 +68,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       successMessage = "An email has been sent with password recovery instructions";
 
     if (!database || X.options.datasource.databases.indexOf(database) < 0) {
-      // don't give away that this database exists (or not) to prying eyes
+      // don't show our hand
       res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
       return;
     }
 
+    //
+    // Find a user with the inputted email address. Make sure only one result is found.
+    //
     userCollection.fetch({
       query: {
         parameters: [{
@@ -76,11 +86,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       database: database,
       username: X.options.databaseServer.user,
       success: function (collection, results, options) {
-        var recoverModel,
-          setRecovery,
-          username;
+        var recoverModel = new SYS.Recover(),
+          setRecovery;
 
         if (results.length === 0) {
+          // XXX Ben recommends we don't show our hand here.
           res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
           return;
         } else if (results.length > 1) {
@@ -89,7 +99,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
           return;
         }
-        username = results[0].username;
         setRecovery = function () {
           //
           // We've initialized our recovery model. Now set and save it.
@@ -100,7 +109,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             now = new Date(),
             tomorrow = new Date(now.getTime() + 1000 * 60 * 60 * 24),
             attributes = {
-              recoverUsername: username,
+              recoverUsername: results[0].username,
               hashedToken: uuidHash,
               accessed: false,
               reset: false,
@@ -144,7 +153,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             error: saveError
           });
         };
-        recoverModel = new SYS.Recover();
         recoverModel.on('change:id', setRecovery);
         recoverModel.initialize(null, {isNew: true, database: database});
       },
@@ -154,23 +162,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
+  /**
+    Validates the link that the user clicks on when they receive their email.
+    The token in the URL should hash to the hashed value in the table row
+    specified by the ID of the email. If everything checks out, forward them
+    to a screen to reset their password.
+   */
   exports.verifyRecoverPassword = function (req, res) {
-    var database = req.params.org,
-      error = function () {
+    var error = function () {
         res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
       },
       recoveryModel = new SYS.Recover();
 
-    console.log(req.params);
+    //
+    // We get the id and the unencrypted token from the URL. Make sure that the token checks out
+    // to that id in the database.
+    //
     recoveryModel.fetch({
       id: req.params.id,
       database: req.params.org,
       username: X.options.databaseServer.user,
       success: function (model, result, options) {
-        var now = new Date(),
-          uuidHash = X.bcrypt.hashSync(req.params.token, 12);
-        console.log(model, result);
-        console.log(model.get("hashedToken"), req.params.token);
+        var now = new Date();
+
         X.bcrypt.compare(req.params.token, model.get("hashedToken"), function (err, compare) {
           if (err ||
               !compare ||
@@ -182,25 +196,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
             return;
           }
-          console.log(compare, result.hashedToken, req.params.token);
 
           //
-          // There is a valid recovery model. Update it as accessed.
+          // This is a valid recovery model. Update it as accessed, and
+          // set recovery variables in the user's session.
           //
+          req.session.recover = {
+            id: req.params.id,
+            token: req.params.token
+          };
           recoveryModel.set({
-            // TODO: activate this
-            //accessed: true,
-            //accessedTimestamp: now,
+            accessed: true,
+            accessedTimestamp: now,
             expiresTimestamp: new Date(now.getTime() + 1000 * 60 * 15), // 15 minutes
             ip: req.connection.remoteAddress
           });
-          // TODO: put the token and the id in the user's session
           recoveryModel.save(null, {
             database: req.params.org,
             username: X.options.databaseServer.user,
             error: error,
             success: function (model, result, options) {
-              res.render('reset_password');
+              res.render('reset_password', {message: []});
             }
           });
         });
@@ -208,6 +224,72 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       error: error
     });
   };
+
+  /**
+    Handles the form submission to reset the password. Makes sure that the session is
+    the same one that we recently validate by re-validating. If everything checks out,
+    disable the validation row (by setting reset:true), update the user's password,
+    and redirect to the login page.
+   */
+  exports.resetRecoveredPassword = function (req, res) {
+    var error = function () {
+        res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
+      },
+      recoveryModel = new SYS.Recover();
+
+    if (req.body.password !== req.body.password2) {
+      res.render('reset_password', {message: ["Passwords do not match"]});
+      return;
+    }
+    //
+    // We get the id and the unencrypted token from the session.
+    // Make sure that the token checks out to that id in the database.
+    //
+    recoveryModel.fetch({
+      id: req.session.recover.id,
+      database: req.params.org,
+      username: X.options.databaseServer.user,
+      success: function (model, result, options) {
+        var now = new Date();
+
+        X.bcrypt.compare(req.session.recover.token, model.get("hashedToken"), function (err, compare) {
+          if (err ||
+              !compare ||
+              !model.get("accessed") ||
+              model.get("reset") ||
+              model.get("ip") !== req.connection.remoteAddress ||
+              now.getTime() > model.get("expiresTimestamp").getTime()) {
+
+            // TODO: get the paths straight
+            res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
+            return;
+          }
+
+          //
+          // This is a valid recovery model. Update it as reset.
+          //
+          recoveryModel.set({
+            reset: true,
+            resetTimestamp: now
+          });
+          recoveryModel.save(null, {
+            database: req.params.org,
+            username: X.options.databaseServer.user,
+            error: error,
+            success: function (model, result, options) {
+              // TODO: update the actual user's password
+              // TODO: get the path right
+              res.render('login', {
+                message: ["Your password has been updated. Please log in."],
+                databases: X.options.datasource.databases
+              });
+            }
+          });
+        });
+      }
+    });
+  };
+
   /**
     Logs out user by removing the session and sending the user to the login screen.
    */
