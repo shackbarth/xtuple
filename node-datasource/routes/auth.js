@@ -95,8 +95,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // We've initialized our recovery model. Now set and save it.
           //
           var uuid = utils.generateUUID(),
-            salt = '$2a$10$' + (username.replace(/[^a-zA-Z0-9]/g, "") + "00000000000000000000000").substring(0, 22),
-            uuidHash = X.bcrypt.hashSync(uuid, salt),
+            id = recoverModel.get("id"),
+            uuidHash = X.bcrypt.hashSync(uuid, 12),
             now = new Date(),
             tomorrow = new Date(now.getTime() + 1000 * 60 * 60 * 24),
             attributes = {
@@ -115,8 +115,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
                 from: "no-reply@xtuple.com",
                 to: email,
                 subject: "xTuple password reset instructions",
-                text: recoverEmailText.f(req.headers.host, database, username, uuid)
+                text: recoverEmailText.f(req.headers.host, database, id, uuid)
               };
+              // XXX: don't log this
+              console.log(mailContent);
               X.smtpTransport.sendMail(mailContent, function (err) {
                 //
                 // We've sent out the email. Now return to the user
@@ -153,48 +155,57 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   exports.verifyRecoverPassword = function (req, res) {
-    var username = req.params.username,
-      uuid = req.params.token,
-      database = req.params.org,
-      coll = new SYS.RecoverCollection();
-
-    coll.fetch({
-      query: {
-        parameters: [{
-          attribute: "recoverUsername",
-          value: username
-        }]
+    var database = req.params.org,
+      error = function () {
+        res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
       },
+      recoveryModel = new SYS.Recover();
+
+    console.log(req.params);
+    recoveryModel.fetch({
+      id: req.params.id,
       database: req.params.org,
       username: X.options.databaseServer.user,
-      success: function (collection, results, options) {
-        var match;
+      success: function (model, result, options) {
+        var now = new Date(),
+          uuidHash = X.bcrypt.hashSync(req.params.token, 12);
+        console.log(model, result);
+        console.log(model.get("hashedToken"), req.params.token);
+        X.bcrypt.compare(req.params.token, model.get("hashedToken"), function (err, compare) {
+          if (err ||
+              !compare ||
+              model.get("accessed") ||
+              model.get("reset") ||
+              now.getTime() > model.get("expiresTimestamp").getTime()) {
 
-        results.map(function (result) {
-          var salt = '$2a$10$' + (username.replace(/[^a-zA-Z0-9]/g, "") + "00000000000000000000000").substring(0, 22),
-            uuidHash = X.bcrypt.hashSync(uuid, salt);
-
-          //var compare = X.bcrypt.compareSync(result.hashedToken, uuidHash); XXX why doesn't this work?
-          if (result.hashedToken === uuidHash &&
-              !result.accessed &&
-              !result.reset &&
-              new Date().getTime() < result.expiresTimestamp.getTime()) {
-            match = result;
+            // TODO: get the paths straight
+            res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
+            return;
           }
+          console.log(compare, result.hashedToken, req.params.token);
+
+          //
+          // There is a valid recovery model. Update it as accessed.
+          //
+          recoveryModel.set({
+            // TODO: activate this
+            //accessed: true,
+            //accessedTimestamp: now,
+            expiresTimestamp: new Date(now.getTime() + 1000 * 60 * 15), // 15 minutes
+            ip: req.connection.remoteAddress
+          });
+          // TODO: put the token and the id in the user's session
+          recoveryModel.save(null, {
+            database: req.params.org,
+            username: X.options.databaseServer.user,
+            error: error,
+            success: function (model, result, options) {
+              res.render('reset_password');
+            }
+          });
         });
-
-        if (!match) {
-          // TODO: get the paths straight
-          res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
-          return;
-        }
-
-        console.log(match);
-
       },
-      error: function () {
-        res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
-      }
+      error: error
     });
   };
   /**
