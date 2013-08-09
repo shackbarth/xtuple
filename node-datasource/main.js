@@ -207,10 +207,10 @@ var conditionalExpressSession = function (req, res, next) {
   // REST API endpoints start with "/api" in their path.
   // The 'assets' folder and login page are sessionless.
   if ((/^api/i).test(req.path.split("/")[2]) ||
-    (/^\/assets/i).test(req.path) ||
-    req.path === "/" ||
-    req.path === "/favicon.ico"
-    ) {
+      (/^\/assets/i).test(req.path) ||
+      req.path === "/" ||
+      req.path === "/favicon.ico" ||
+      req.path === "/forgot-password") {
 
     next();
   } else {
@@ -341,6 +341,7 @@ app.all('/:org/api/v1alpha1/*', routes.restRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
+app.get('/forgot-password', routes.forgotPassword);
 app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
 app.get('/logout', routes.logout);

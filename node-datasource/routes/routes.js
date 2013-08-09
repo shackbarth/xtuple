@@ -48,6 +48,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.app = [ensureLogin, app.serveApp];
   exports.login = auth.login;
   exports.loginForm = auth.loginForm;
+  exports.forgotPassword = auth.forgotPasswordForm;
   exports.logout = auth.logout;
   exports.scope = auth.scope;
   exports.scopeForm = auth.scopeForm;

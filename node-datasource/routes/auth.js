@@ -43,6 +43,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     res.render('login', { message: message, databases: X.options.datasource.databases });
   };
 
+  exports.forgotPasswordForm = function (req, res) {
+    res.render('forgot_password', { databases: X.options.datasource.databases });
+  };
+
   /**
     Logs out user by removing the session and sending the user to the login screen.
    */
