@@ -11,7 +11,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     */
 
   var passport = require('passport'),
-      url = require('url');
+      url = require('url'),
+      utils = require('../oauth2/utils');
 
   /**
     Receives user authentication credentials and have passport do the authentication.
@@ -52,6 +53,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       email = req.body.email,
       database = req.body.database,
       errorMessage = "Cannot find email address",
+      systemErrorMessage = "A system error occurred. I'm very sorry about this, but I can't give " +
+        "you any more details because I'm very cautious about security and this is a sensitive topic.",
       successMessage = "An email has been sent with password recovery instructions";
 
     if (!database || X.options.datasource.databases.indexOf(database) < 0) {
@@ -71,17 +74,52 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       database: database,
       username: X.options.databaseServer.user,
       success: function (collection, results, options) {
+        var recoverModel,
+          setRecovery,
+          username;
+
         if (results.length === 0) {
           res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
           return;
-        } else if (results.length === 2) {
+        } else if (results.length > 1) {
           // quite a quandary
-          // errorMessage = "Wasn't expecting to see two users with this email address";
-          res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
+          // errorMessage = "Wasn't expecting to see multiple users with this email address";
+          res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
           return;
         }
-        // TODO: recover the password
-        res.render('forgot_password', { message: [successMessage], databases: X.options.datasource.databases });
+        username = results[0].username;
+        setRecovery = function () {
+          var uuid = utils.generateUUID(),
+            salt = '$2a$10$' + (username.replace(/[^a-zA-Z0-9]/g, "") + "00000000000000000000000").substring(0, 22),
+            uuidHash = X.bcrypt.hashSync(uuid, salt),
+            now = new Date(),
+            tomorrow = new Date(now.getTime() + 1000 * 60 * 60 * 24),
+            attributes = {
+              recoverUsername: username,
+              hashedToken: uuidHash,
+              accessed: false,
+              reset: false,
+              createdTimestamp: now,
+              expiresTimestamp: tomorrow
+            },
+            saveSuccess = function () {
+              res.render('forgot_password', { message: [successMessage], databases: X.options.datasource.databases });
+            },
+            saveError = function () {
+              res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
+            };
+
+          recoverModel.set(attributes);
+          recoverModel.save(null, {
+            database: database,
+            username: X.options.databaseServer.user,
+            success: saveSuccess,
+            error: saveError
+          });
+        };
+        recoverModel = new SYS.Recover();
+        recoverModel.on('change:id', setRecovery);
+        recoverModel.initialize(null, {isNew: true, database: database});
       },
       error: function () {
         res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });

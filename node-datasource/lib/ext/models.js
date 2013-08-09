@@ -126,6 +126,18 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  SYS.Recover = XM.SimpleModel.extend(/** @lends SYS.Recover.prototype */{
+
+    recordType: 'SYS.Recover',
+
+    idAttribute: 'id'
+
+  });
 
   // ..........................................................
   // COLLECTIONS
@@ -206,6 +218,18 @@ white:true*/
     /** @scope SYS.BiCacheCollection.prototype */
 
     model: SYS.BiCache
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  SYS.RecoverCollection = XM.Collection.extend({
+    /** @scope SYS.RecoverCollection.prototype */
+
+    model: SYS.Recover
 
   });
 }());
