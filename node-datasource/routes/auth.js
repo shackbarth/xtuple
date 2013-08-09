@@ -8,7 +8,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var recoverEmailText = "Follow this secure link to reset your password: " +
     "https://%@/%@/recover/reset/%@/%@";
-  var systemErrorMessage = "A system error occurred. I'm very sorry about this, but I can't give " +
+  var systemErrorMessage = "Request unsuccessful. I'm very sorry about this, but I can't give " +
     "you any more details because I'm very cautious about security and this is a sensitive topic.";
 
   /**
@@ -66,11 +66,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       email = req.body.email,
       database = req.body.database,
       errorMessage = "Cannot find email address",
-      successMessage = "An email has been sent with password recovery instructions";
+      successMessage = "An email has been sent with password recovery instructions",
+      error = function () {
+        res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
+      };
 
     if (!database || X.options.datasource.databases.indexOf(database) < 0) {
       // don't show our hand
-      res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
+      error();
       return;
     }
 
@@ -86,6 +89,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       },
       database: database,
       username: X.options.databaseServer.user,
+      error: error,
       success: function (collection, results, options) {
         var recoverModel = new SYS.Recover(),
           setRecovery;
@@ -106,17 +110,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           //
           var uuid = utils.generateUUID(),
             id = recoverModel.get("id"),
-            uuidHash = X.bcrypt.hashSync(uuid, 12),
             now = new Date(),
             tomorrow = new Date(now.getTime() + 1000 * 60 * 60 * 24),
-            attributes = {
-              recoverUsername: results[0].username,
-              hashedToken: uuidHash,
-              accessed: false,
-              reset: false,
-              createdTimestamp: now,
-              expiresTimestamp: tomorrow
-            },
             saveSuccess = function () {
               //
               // We've saved our recovery model. Now send out an email.
@@ -134,31 +129,39 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
                 // We've sent out the email. Now return to the user
                 //
                 if (err) {
-                  res.render('forgot_password', { message: [systemErrorMessage],
-                    databases: X.options.datasource.databases });
+                  error();
                   return;
                 }
                 res.render('forgot_password', { message: [successMessage],
                   databases: X.options.datasource.databases });
               });
-            },
-            saveError = function () {
-              res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
             };
 
-          recoverModel.set(attributes);
-          recoverModel.save(null, {
-            database: database,
-            username: X.options.databaseServer.user,
-            success: saveSuccess,
-            error: saveError
+          X.bcrypt.hash(uuid, 12, function (err, uuidHash) {
+            if (err) {
+              error();
+              return;
+            }
+            var attributes = {
+              recoverUsername: results[0].username,
+              hashedToken: uuidHash,
+              accessed: false,
+              reset: false,
+              createdTimestamp: now,
+              expiresTimestamp: tomorrow
+            };
+
+            recoverModel.set(attributes);
+            recoverModel.save(null, {
+              database: database,
+              username: X.options.databaseServer.user,
+              success: saveSuccess,
+              error: error
+            });
           });
         };
         recoverModel.on('change:id', setRecovery);
         recoverModel.initialize(null, {isNew: true, database: database});
-      },
-      error: function () {
-        res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
       }
     });
   };
