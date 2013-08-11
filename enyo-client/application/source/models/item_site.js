@@ -42,6 +42,10 @@ white:true*/
 
     recordType: 'XM.ItemSite',
 
+    name: function () {
+      return this.getValue("item.number") + " " + this.getValue("site.code");
+    },
+
     defaults: {
       isActive: true
     },

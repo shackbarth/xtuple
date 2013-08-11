@@ -1113,6 +1113,12 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.ToDoListParameters",
     kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        showInactive: false,
+        assignedTo: XM.currentUser
+      };
+    },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_toDo".loc()},
       {name: "showInactive", label: "_showInactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",

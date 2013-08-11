@@ -136,6 +136,7 @@ var _ = require('underscore'),
         // recurse to do the build step. Of course we don't want to initialize a second
         // time, so destroy those flags.
         specs[0].initialize = false;
+        specs[0].wasInitialized = true;
         specs[0].backup = undefined;
         buildDatabase(specs, creds, masterCallback);
       });
@@ -386,6 +387,14 @@ var _ = require('underscore'),
           // on the case of error.
           allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
         }
+
+        if (spec.wasInitialized) {
+          // give the admin user every extension by default
+          allSql = allSql + "insert into xt.usrext (usrext_usr_username, usrext_ext_id) " +
+            "select '" + creds.username +
+            "', ext_id from xt.ext where ext_location = '/core-extensions';";
+        }
+
         credsClone.database = spec.database;
         sendToDatabase(allSql, credsClone, spec, function (err, res) {
           databaseCallback(err, res);

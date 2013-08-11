@@ -560,6 +560,6 @@ select xt.install_js('XM','Inventory','xtuple', $$
     return data.commitMetrics(metrics);
   };
 
-})
+}());
   
 $$ );
