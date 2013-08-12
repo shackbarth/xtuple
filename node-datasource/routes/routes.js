@@ -25,6 +25,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // is a function that returns another function, and express allows routes to
     // be defined in such a way as to chain these types of functions together in an array.
     ensureLogin = require('connect-ensure-login').ensureLoggedIn(logoutPath),
+    analysis = require('./analysis'),
     app = require('./app'),
     auth = require('./auth'),
     changePassword = require('./change_password'),
@@ -37,7 +38,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     passport = require('passport'),
     redirector = require('./redirector'),
     report = require('./report'),
-    analysis = require('./analysis'),
+    recover = require('./recover'),
     restDiscovery = require('./restDiscovery'),
     restRouter = require('./restRouter'),
     vcfExport = require('./vcfExport');
@@ -48,14 +49,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.app = [ensureLogin, app.serveApp];
   exports.login = auth.login;
   exports.loginForm = auth.loginForm;
-  exports.forgotPassword = auth.forgotPasswordForm;
-  exports.recoverPassword = auth.recoverPassword;
-  exports.verifyRecoverPassword = auth.verifyRecoverPassword;
-  exports.resetRecoveredPassword = auth.resetRecoveredPassword;
   exports.logout = auth.logout;
   exports.scope = auth.scope;
   exports.scopeForm = auth.scopeForm;
 
+  exports.forgotPassword = recover.forgotPasswordForm;
+  exports.recoverPassword = recover.recoverPassword;
+  exports.verifyRecoverPassword = recover.verifyRecoverPassword;
+  exports.resetRecoveredPassword = recover.resetRecoveredPassword;
   //
   // Data-passthrough routes
   //
