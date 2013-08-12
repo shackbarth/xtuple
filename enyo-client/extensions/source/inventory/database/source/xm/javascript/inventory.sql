@@ -337,7 +337,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
   /**
     PO Receive All
   */
-  XM.Inventory.receiveAll = function (purchaseOrder) {
+  XM.Inventory.receiveAll = function (purchaseOrder, options) {
+    options = options || {};
     var series,
       sql;
 
@@ -345,7 +346,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401); }
     
     /* Post the transaction */
-    sql = "select public.enterporeceipt(poitem_id, poitem_qty_ordered) from poitem" + 
+    sql = "select public.enterporeceipt(poitem_id, poitem_qty_ordered) from poitem " + 
       "join pohead on poitem_pohead_id = pohead_id where ( (poitem_status <> 'C') and (pohead_number=$1));",
      
     series = plv8.execute(sql, [purchaseOrder])[0].series;
