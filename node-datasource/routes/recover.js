@@ -87,8 +87,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
                 subject: "xTuple password reset instructions",
                 text: recoverEmailText.f(req.headers.host, database, id, uuid)
               };
-              // XXX: don't log this
-              console.log(mailContent);
               X.smtpTransport.sendMail(mailContent, function (err) {
                 //
                 // We've sent out the email. Now return to the user
