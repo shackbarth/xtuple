@@ -990,7 +990,7 @@ white:true*/
         shipto = this.get("shipto"),
         total = this.get("total"),
         lineItems = this.get("lineItems"),
-        lineItemLength = lineItems.length,
+        validItems,
         K = XM.SalesOrderBase,
         params = {},
         error;
@@ -1008,16 +1008,15 @@ white:true*/
         return XT.Error.clone('xt2011');
       }
 
-      // Just checking for a zero-length line items list is
-      // not enough here because some children may be
-      // pending deletion. We are checking the previous status
-      // here because the status is BUSY_COMMITTING once a save
-      // is requested by the parent, prior to validation.
-      lineItemsLength = _.map(lineItems, function (item) {
+      // Check for line items has to consider models that
+      // are marked for deletion, but not yet saved.
+      // The prevStatus is used because the current
+      // status is BUSY_COMMITTING once save has begun.
+      validItems = _.filter(lineItems.models, function (item) {
         return item._prevStatus !== K.DESTROYED_DIRTY;
       });
 
-      if (!lineItemLength) {
+      if (!validItems.length) {
         return XT.Error.clone('xt2012');
       }
 
