@@ -20,7 +20,7 @@
     </header>
     <section id="main">
       <div style="transform: translateZ(0px); opacity: 1;" id="form-fields">
-        <form action="/login" method="post">
+        <form name="loginForm" action="/login" method="post">
           <div class="login-label" id="form-fields_idLabel">Username</div>
           <input class="login-input" id="form-fields_id" name="id" placeholder="Username">
           <div class="login-label" id="form-fields_passwordLabel">Password</div>
@@ -41,5 +41,8 @@
       <label class="login-message-box error"><%= message[i] %></label>
     <% } %>
   </section>
+  <script>
+    document.loginForm.id.focus();
+  </script>
   </body>
 </html>
