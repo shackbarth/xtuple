@@ -496,20 +496,19 @@ select xt.install_js('XT','Discovery','xtuple', $$
             resourceParams = resources[ormType].methods.list.parameters,
             paramObj;
 
-          if(attr && ['Boolean', 'Date', 'Number', 'String'].indexOf(attr.type) >= 0) {
+          if(attr) {
             paramObj = {
               "type": attr.type.toLowerCase(),
               "location": "query"
             };
-            if(['Boolean', 'Number'].indexOf(attr.type) >= 0) {
+            if(attr.type === 'String') {
+              paramObj.description = "Case-insensitive full-text match on " + prop.name;
+              resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
+            } else {
               paramObj.description = "Exact match on " + prop.name;
               resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
             }
-            if(['String'].indexOf(attr.type) >= 0) {
-              paramObj.description = "Case-insensitive full-text match on " + prop.name;
-              resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
-            }
-            if(['Date', 'Number'].indexOf(attr.type) >= 0) {
+            if(attr.type !== 'Boolean') {
               paramObj.description = "Greater than or equal match on " + prop.name;
               resourceParams[prop.name + "Min"] = JSON.parse(JSON.stringify(paramObj));
               paramObj.description = "Less than or equal match on " + prop.name;
