@@ -32,7 +32,7 @@ hr {
 }
 #background {
   position: fixed;
-  top: 0; left: 525px; right: 0; bottom: 0;
+  top: 0; left: 725px; right: 0; bottom: 0;
   background: #f5f5ff;
   border-left: 1px solid #e5e5ee;
   z-index: -1;
