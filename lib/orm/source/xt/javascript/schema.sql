@@ -273,6 +273,7 @@ select xt.install_js('XT','Schema','xtuple', $$
         pkey = XT.Orm.primaryKey(orm),
         ret = {},
         relatedSchema = {},
+        relatedSchemaKey,
         schemaColumnInfo = {},
         schemaTable = orm.table;
 
@@ -350,6 +351,7 @@ select xt.install_js('XT','Schema','xtuple', $$
       else if (orm.properties[i].toOne) {
         if (orm.properties[i].toOne.isNested) {
           ret.properties[orm.properties[i].name].type = "object";
+          ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
         } else {
           /* Fetch the related ORM's JSON-Schema and use it's key's type. */
           /* TODO: Assuming "XM" here... */
@@ -357,11 +359,17 @@ select xt.install_js('XT','Schema','xtuple', $$
           for (var prop in relatedSchema.properties) {
             if (relatedSchema.properties[prop].isKey) {
               ret.properties[orm.properties[i].name].type = relatedSchema.properties[prop].type;
+              relatedSchemaKey = prop;
             }
           }
-        }
 
-        ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
+          /* This is an array of related keys, not a full object. */
+          /* Make the $ref to the relation's natural key. */
+          /* Using JSON-Schema $ref paths like this: */
+          /* http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.5.7.2 */
+          /* See also: http://www.sitepen.com/blog/2008/06/17/json-referencing-in-dojo/ */
+          ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type + "/" + relatedSchemaKey;
+        }
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].toOne.required) {
@@ -370,23 +378,33 @@ select xt.install_js('XT','Schema','xtuple', $$
       }
       /* toMany property */
       else if (orm.properties[i].toMany) {
-        ret.properties[orm.properties[i].name].type = "array";
-
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].toMany.required) {
           ret.properties[orm.properties[i].name].required = true;
         }
 
         if (orm.properties[i].toMany.isNested) {
+          ret.properties[orm.properties[i].name].type = "object";
           ret.properties[orm.properties[i].name].items = {"$ref": orm.properties[i].toMany.type};
         } else {
+          /* Fetch the related ORM's JSON-Schema and use it's key's type. */
+          /* TODO: Assuming "XM" here... */
+          relatedSchema = XT.Schema.getProperties({"nameSpace": "XM", "type": orm.properties[i].toMany.type});
+          for (var prop in relatedSchema.properties) {
+            if (relatedSchema.properties[prop].isKey) {
+              relatedSchemaKey = prop;
+            }
+          }
+
+          ret.properties[orm.properties[i].name].type = "array";
+
           /* This is an array of related keys, not a full object. */
           /* Make the $ref to the relation's natural key. */
           /* Using JSON-Schema $ref paths like this: */
           /* http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.5.7.2 */
           /* See also: http://www.sitepen.com/blog/2008/06/17/json-referencing-in-dojo/ */
           ret.properties[orm.properties[i].name].items = {
-            "$ref": orm.properties[i].toMany.type + "/" + nkey || pkey
+            "$ref": orm.properties[i].toMany.type + "/" + relatedSchemaKey
           };
         }
       }

@@ -119,7 +119,7 @@ trailing:true, white:true*/
     kind: "XV.ListRelationsBox",
     title: "_salesOrders".loc(),
     parentKey: "customer",
-    listRelations: "XV.CustomerQuoteListRelations" // not a bug
+    listRelations: "XV.CustomerSalesOrderListRelations" // not a bug
   });
 
   // ..........................................................

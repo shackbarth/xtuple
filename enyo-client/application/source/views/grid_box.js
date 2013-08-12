@@ -146,11 +146,13 @@ Globalize:true */
       {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
       {kind: "XV.SalesOrderLineItemHeaders"},
       {kind: "XV.Scroller", name: "mainGroup", horizontal: "hidden", fit: true, components: [
-        {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list", onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
+        {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list",
+            onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
           { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
         ]},
         {kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false},
-        {kind: "List", name: "belowGridList", onSetupItem: "setupRowBelow", ontap: "gridRowTapBelow", components: [
+        {kind: "List", name: "belowGridList", onSetupItem: "setupRowBelow",
+            ontap: "gridRowTapBelow", components: [
           {kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "belowGridRow"}
         ]},
       ]},

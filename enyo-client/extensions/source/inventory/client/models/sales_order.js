@@ -19,17 +19,6 @@ white:true*/
 
     });
 
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.ShippableSalesOrderLine = XM.Model.extend({
-
-      recordType: 'XM.ShippableSalesOrderLine'
-
-    });
-
     // ..........................................................
     // COLLECTIONS
     //
@@ -42,17 +31,6 @@ white:true*/
     XM.SalesOrderLineListItemCollection = XM.Collection.extend({
 
       model: XM.SalesOrderLineListItem
-
-    });
-
-      /**
-      @class
-
-      @extends XM.Collection
-    */
-    XM.ShippableSalesOrderLineCollection = XM.Collection.extend({
-
-      model: XM.ShippableSalesOrderLine
 
     });
 

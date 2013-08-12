@@ -22,28 +22,7 @@ comment on table xt.oa2client is 'Defines global OAuth 2.0 server registered cli
 ----------------------------------------------------------
 -- Upsert row defining Client using oauth single signon
 ----------------------------------------------------------
-UPDATE xt.oa2client SET 
-oa2client_client_id = 'oauthsso',
-oa2client_client_secret = 'oauthsso', 
-oa2client_client_name = 'xTuple',
-oa2client_client_email = 'info@xtuple.com', 
-oa2client_client_web_site = 'www.xtuple.com', 
-oa2client_client_logo = NULL, 
-oa2client_client_type = 'assertion', 
-oa2client_active = true, 
-oa2client_issued = '2013-06-20 01:00:00.000000',  
-oa2client_auth_uri = 'dialog/authorize',
-oa2client_token_uri = 'oauth/token',
-oa2client_delegated_access = true, 
-oa2client_client_x509_pub_cert =
-'-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQChqPrMA4/kRvvZr2iyNfvZl/yG
-QsPjuDHFtFNxydfMk1ZHDofLUd83mJeu4I18RBTAwrQHk8askA3DhlL6jOkGs81V
-ia8RqkAgoDslgQrcckD4mduxRUDQ/n2LGK50VsgfXA4VsPD7eU2G32W9GrhV6R/i
-Y+HkgBjVqN7Nxy/2sQIDAQAB
------END PUBLIC KEY-----', 
-oa2client_org = 'dev'
-WHERE oa2client_client_id = 'oauthsso';
+DELETE FROM xt.oa2client WHERE oa2client_client_id = 'oauthsso';
 
 INSERT INTO xt.oa2client 
 (oa2client_client_id, 
@@ -58,8 +37,7 @@ oa2client_issued,
 oa2client_auth_uri, 
 oa2client_token_uri, 
 oa2client_delegated_access, 
-oa2client_client_x509_pub_cert, 
-oa2client_org) 
+oa2client_client_x509_pub_cert) 
 SELECT
 'oauthsso', 
 'oauthsso',
@@ -78,6 +56,6 @@ MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQChqPrMA4/kRvvZr2iyNfvZl/yG
 QsPjuDHFtFNxydfMk1ZHDofLUd83mJeu4I18RBTAwrQHk8askA3DhlL6jOkGs81V
 ia8RqkAgoDslgQrcckD4mduxRUDQ/n2LGK50VsgfXA4VsPD7eU2G32W9GrhV6R/i
 Y+HkgBjVqN7Nxy/2sQIDAQAB
------END PUBLIC KEY-----',
-'dev'
+-----END PUBLIC KEY-----
+'
 WHERE NOT EXISTS (SELECT 1 from xt.oa2client WHERE oa2client_client_id = 'oauthsso');
