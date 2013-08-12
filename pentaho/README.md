@@ -24,8 +24,18 @@ Install Reports
 
 Start Server
 ------------
-	cd ~/ErpBI-x.x.x/biservder-ce
-	sudo ./start-pentaho.sh
+If the server is already running you will need shut down first:
+	cd ~/ErpBI-x.x.x/biserver-ce
+	sudo ./stop-pentaho.sh
+Then start up:
+	sudo ./stop-pentaho.sh
+	
+The build adds resources to the BI Server so the repository cache must be refreshed:
+	connect to http://localhost:8080
+	log in as admin/Car54WhereRU
+	tools > Refresh > Repository Cache
+	tools > Refresh > Reporting Metadata
+	tools > Refresh > Reporting Data Cache
 
 Connect Mobile App to Server
 ----------------------------
