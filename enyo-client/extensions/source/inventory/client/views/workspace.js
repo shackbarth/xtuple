@@ -192,5 +192,17 @@ trailing:true, white:true*/
     XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
     XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
 
+    // ..........................................................
+    // ITEM SITE
+    //
+
+    extensions = [
+      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_inventory".loc(), components: [
+            {kind: "XV.ControlMethodPicker", attr: "controlMethod"}
+      ]}
+    ];
+
+    XV.appendExtension("XV.ItemSiteWorkspace", extensions);
+
   };
 }());

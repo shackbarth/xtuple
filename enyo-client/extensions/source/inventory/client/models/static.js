@@ -42,6 +42,23 @@ white:true*/
       XM.postCountTagToDefault.add(postCountTagToDefault);
     }
 
+    // Control Method
+    var K = XM.ItemSite;
+    var controlMethodJson = [
+      { id: K.N, name: "_none".loc() },
+      { id: K.R, name: "_regular".loc() }
+    ];
+    XM.ControlMethodModel = Backbone.Model.extend({
+    });
+    XM.ControlMethodCollection = Backbone.Collection.extend({
+      model: XM.ControlMethodModel
+    });
+    XM.controlMethod = new XM.ControlMethodCollection();
+    for (i = 0; i < controlMethodJson.length; i++) {
+      var controlMethod = new XM.ControlMethodModel(controlMethodJson[i]);
+      XM.controlMethod.add(controlMethod);
+    }
+
     // Cost Slip Auditing
     var countSlipAuditingJson = [
       { id: "allowDups", name: "_allowDups".loc() },
