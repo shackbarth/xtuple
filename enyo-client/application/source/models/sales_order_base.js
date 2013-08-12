@@ -990,6 +990,8 @@ white:true*/
         shipto = this.get("shipto"),
         total = this.get("total"),
         lineItems = this.get("lineItems"),
+        validItems,
+        K = XM.SalesOrderBase,
         params = {},
         error;
 
@@ -1006,7 +1008,15 @@ white:true*/
         return XT.Error.clone('xt2011');
       }
 
-      if (!lineItems.length) {
+      // Check for line items has to consider models that
+      // are marked for deletion, but not yet saved.
+      // The prevStatus is used because the current
+      // status is BUSY_COMMITTING once save has begun.
+      validItems = _.filter(lineItems.models, function (item) {
+        return item._prevStatus !== K.DESTROYED_DIRTY;
+      });
+
+      if (!validItems.length) {
         return XT.Error.clone('xt2012');
       }
 
