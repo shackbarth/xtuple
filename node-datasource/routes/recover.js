@@ -6,8 +6,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
 
-  var recoverEmailText = "Follow this secure link to reset your password: " +
-      "https://%@/%@/recover/reset/%@/%@",
+  var recoverEmailText = "You have requested to reset your xTuple password. " +
+      " Please follow this secure link to reset your password: \n" +
+      "https://%@/%@/recover/reset/%@/%@\n\n" +
+      "Thanks,\n The xTuple Team",
     systemErrorMessage = "Request unsuccessful. I'm very sorry about this, but I can't give " +
       "you any more details because I'm very cautious about security and this is a sensitive topic.",
     setPassword = require('./change_password').setPassword,
@@ -159,7 +161,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               model.get("reset") ||
               now.getTime() > model.get("expiresTimestamp").getTime()) {
 
-            // TODO: get the paths straight
             res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
             return;
           }
@@ -227,7 +228,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               model.get("ip") !== req.connection.remoteAddress ||
               now.getTime() > model.get("expiresTimestamp").getTime()) {
 
-            // TODO: get the paths straight
             res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
             return;
           }
@@ -266,7 +266,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
                       //
                       // The password has been updated. Redirect the user to the login screen.
                       //
-                      // TODO: get the path right
                       res.render('login', {
                         message: ["Your password has been updated. Please log in."],
                         databases: X.options.datasource.databases
