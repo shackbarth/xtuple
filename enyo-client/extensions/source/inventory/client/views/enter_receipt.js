@@ -14,15 +14,14 @@ trailing:true, white:true*/
     var enterReceipt =  /** @lends XV.EnterReceipt# */ {
       name: "XV.EnterReceipt",
       kind: "XV.SearchContainer",
+      published: {keyAttribute: null},
+      handlers: {
+        onListItemMenuTap: "showListItemMenu",
+        onValueChange: "getDocKey"
+      },
       create: function () {
         this.inherited(arguments);
         this.setList({list: "XV.EnterReceiptList"});
-      },
-      handlers: {
-        onListItemMenuTap: "showListItemMenu"
-      },
-      create: function () {
-        this.inherited(arguments);
         this.$.listPanel.createComponent({
           name: "listItemMenu",
           kind: "onyx.Menu",
@@ -32,7 +31,29 @@ trailing:true, white:true*/
           components: [],
           owner: this
         });
-        this.setList({list: "XV.EnterReceiptList"});
+        this.$.toolbar.createComponent({
+          name: "headerAction",
+          kind: "onyx.MenuDecorator",
+          style: "margin: 0;", 
+          onSelect: "headerActionSelected", 
+          components: [
+            {kind: "XV.IconButton", src: "/assets/menu-icon-gear.png", content: "_actions".loc(), name: "headerActionButton"},
+            {kind: "onyx.Menu", name: "headerActionMenu", components: [
+              {kind: "XV.MenuItem", 
+                content: "receiveAll".loc(),
+                name: "receiveAll",
+                prerequisite: "canReceiveAll",
+                method: "doReceiveAll",
+                notifyMessage: "_receiveAll?",
+                modelName: "XM.PurchaseOrderLine"
+              }
+            ]}
+          ]
+        });
+      },
+      getDocKey: function(inSender, inEvent) {
+        console.log("getDocKey function");
+        var key = inEvent.value;
       },
       /**
       @todo Document the itemTap method.
@@ -48,8 +69,24 @@ trailing:true, white:true*/
         }
         */
       },
+      /*
+      // lists are allowed to define headerActions that will
+      this.$.actionButton.setShowing(component.headerActions);
+      if (component.headerActions) {
+        _.each(component.headerActions, function (headerAction) {
+          that.$.actionMenu.createComponent({
+            name: headerAction.name,
+            kind: "XV.MenuItem",
+            content: headerAction.label || ("_" + headerAction.name).loc(),
+            action: headerAction
+          });
+        });
+      },*/
       listActionSelected: function (inSender, inEvent) {
         alert("List Action Selected!");
+      },
+      headerActionSelected: function (inSender, inEvent) {
+        alert("Header Action Selected!");
       }
     };
 
