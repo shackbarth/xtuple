@@ -479,6 +479,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.SortTypePicker",
     kind: "XV.Picker",
+    showNone: false,
     buildList: function (options) {
       this.$.picker.createComponent({content: "_ascending".loc()});
       this.$.picker.createComponent({content: "_descending".loc()});
