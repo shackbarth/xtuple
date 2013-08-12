@@ -201,16 +201,18 @@ select xt.install_js('XT','Orm','xtuple', $$
             " and orm_active " +
             " and orm_context='xtuple'  " +
             "union all " +
-            "select orm_json as json " +
-            "from xt.orm " +
-            " join xt.ext on ext_name=orm_context " +
-            " join xt.usrext on ext_id=usrext_ext_id " +
+            "select orm_json as json from xt.orm where orm_id in (" +
+            " select orm_id from xt.orm " +
+            " left join xt.ext on ext_name=orm_context " +
+            " left join xt.usrext on ext_id=usrext_ext_id " +
+            " left join xt.grpext on ext_id=grpext_ext_id " +
+            " left join usrgrp on usrgrp_grp_id=grpext_grp_id " +
             "where orm_namespace=$1 " +
             " and orm_type=$2 " +
             " and not orm_ext " +
             " and orm_active " +
             " and orm_context != 'xtuple'" +
-            " and usrext_usr_username=$3;";
+            " and (usrext_usr_username=$3 or usrgrp_username=$3));";
       superSql = "select orm_json as json " +
                  "from xt.orm " +
                  "where orm_namespace=$1" +
