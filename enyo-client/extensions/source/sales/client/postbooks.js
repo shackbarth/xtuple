@@ -61,7 +61,7 @@ trailing:true, white:true*/
       ]
     };
 
-    isBiAvailable = XT.reporting && XT.session.privileges.get("ViewSalesHistory");
+    isBiAvailable = XT.session.config.biUrl && XT.session.privileges.get("ViewSalesHistory");
     if (isBiAvailable) {
       module.panels.push({name: "salesAnalysisPage", kind: "analysisFrame"});
     }
@@ -124,13 +124,19 @@ trailing:true, white:true*/
       tag: "iframe",
       style: "border: none;",
       attributes: {src: ""},
+      events: {
+        onMessage: ""
+      },
       published: {
         source: ""
       },
 
       create: function () {
         this.inherited(arguments);
-        // generate the web tooken and render
+        if (XT.session.config.freeDemo) {
+          this.doMessage({message: "_staleAnalysisWarning".loc()});
+        }
+        // generate the web token and render
         // the iFrame
         var url, ajax = new enyo.Ajax({
           url: XT.getOrganizationPath() + "/analysis",
