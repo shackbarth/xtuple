@@ -119,6 +119,9 @@ trailing:true, white:true*/
       kind: "XV.Workspace",
       title: "_issueStock".loc(),
       model: "XM.IssueToShipping",
+      saveText: "_issue".loc(),
+      hideApply: true,
+      hideRefresh: true,
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -136,6 +139,7 @@ trailing:true, white:true*/
               {kind: "XV.QuantityWidget", attr: "shipped"},
               {kind: "XV.QuantityWidget", attr: "returned"},
               {kind: "XV.QuantityWidget", attr: "balance"},
+              {kind: "XV.QuantityWidget", attr: "atShipping"},
               {kind: "onyx.GroupboxHeader", content: "_issue".loc()},
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
