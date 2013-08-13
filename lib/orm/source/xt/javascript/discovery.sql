@@ -364,6 +364,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
           ormType = orms[i].orm_type,
           ormNamespace = orms[i].orm_namespace,
           thisOrm = XT.Orm.fetch(ormNamespace, ormType, {"superUser":true}),
+          thisListOrm,
           ormTypeHyphen = ormType.camelToHyphen(),
           sql = 'select orm_type from xt.orm where orm_type=$1 and orm_active;',
           ormListItem = plv8.execute(sql, [ormType + "ListItem"]);
@@ -489,6 +490,32 @@ select xt.install_js('XT','Discovery','xtuple', $$
             "location": "query"
           }
         };
+        thisListOrm = XT.Orm.fetch(ormNamespace, listModel, {"superUser":true});
+        thisListOrm.properties.map(function (prop) {
+          var attr = prop.attr,
+            resourceParams = resources[ormType].methods.list.parameters,
+            paramObj;
+
+          if(attr) {
+            paramObj = {
+              "type": attr.type.toLowerCase(),
+              "location": "query"
+            };
+            if(attr.type === 'String') {
+              paramObj.description = "Case-insensitive full-text match on " + prop.name;
+              resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
+            } else {
+              paramObj.description = "Exact match on " + prop.name;
+              resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
+            }
+            if(attr.type !== 'Boolean') {
+              paramObj.description = "Greater than or equal match on " + prop.name;
+              resourceParams[prop.name + "Min"] = JSON.parse(JSON.stringify(paramObj));
+              paramObj.description = "Less than or equal match on " + prop.name;
+              resourceParams[prop.name + "Max"] = JSON.parse(JSON.stringify(paramObj));
+            }
+          }
+        });
 
         resources[ormType].methods.list.response = {
           "$ref": listModel
