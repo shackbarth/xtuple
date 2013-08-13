@@ -88,6 +88,7 @@
     "xt/tables/usrext.sql",
     "xt/tables/userpref.sql",
     "xt/tables/usrchart.sql",
+    "xt/tables/recover.sql",
     "xt/tables/sessionstore.sql",
     "xt/tables/oa2client.sql",
     "xt/tables/oa2clientredirs.sql",
