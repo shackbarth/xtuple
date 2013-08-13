@@ -29,6 +29,13 @@
           smoke.deleteFromList(XT.app, data.createHash.code, done);
         });
       });
+      it('User edits an existing honorific', function (done) {
+        smoke.navigateToExistingWorkspace(XT.app, "XV.HonorificList", function (workspace) {
+          assert.equal(workspace.value.recordType, "XM.Honorific");
+          smoke.setWorkspaceAttributes(workspace, data.updateHash);
+          smoke.saveWorkspace(workspace, done);
+        });
+      });
     });
   });
 }());
