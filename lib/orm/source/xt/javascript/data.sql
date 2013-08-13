@@ -1603,15 +1603,31 @@ select xt.install_js('XT','Data','xtuple', $$
         item,
         n,
         prop,
+        itemAttr,
+        filteredProps,
         val;
+
       for (var c = 0; c < data.length; c++) {
         item = data[c];
 
         /* Remove primary key if applicable */
         if (!inclKeys && nkey && nkey !== pkey) { delete item[pkey]; }
 
-        for (var i = 0; i < props.length; i++) {
-          prop = props[i];
+        for (itemAttr in item) {
+          if(!item.hasOwnProperty(itemAttr)) {
+            continue;
+          }
+          filteredProps = orm.properties.filter(function (p) {
+            return p.name === itemAttr;
+          });
+
+          /* Remove attributes not found in the ORM */
+          if(filteredProps.length === 0) {
+            XT.debug("deleting", [itemAttr]);
+            delete item[itemAttr];
+          } else {
+            prop = filteredProps[0];
+          }
 
           /* Remove unprivileged attribute if applicable */
           if (!superUser && attrPriv && attrPriv[prop.name] &&
