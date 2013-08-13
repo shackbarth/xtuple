@@ -437,8 +437,72 @@
           "type": "Number",
           "column": "to_issue"
         }
+      },
+      {
+        "name": "locationControl",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_loccntrl"
+        }
+      },
+      {
+        "name": "detail",
+        "toMany": {
+          "isNested": true,
+          "type": "InventoryDistribution",
+          "column": "coitem_id",
+          "inverse": "parent"
+        }
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InventoryDistribution",
+    "table": "xt.invdist",
+    "comment": "Dummy Inventory Distribution Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invdist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "Number",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "String",
+          "column": "invdist_parent_id"
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Number",
+          "column": "invdist_qty"
+        }
+      },
+      {
+        "name": "location",
+        "toOne": {
+          "type": "Location",
+          "column": "invdist_location_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   }
 ]

@@ -122,6 +122,7 @@ trailing:true, white:true*/
       saveText: "_issue".loc(),
       hideApply: true,
       hideRefresh: true,
+      dirtyWarn: false,
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
