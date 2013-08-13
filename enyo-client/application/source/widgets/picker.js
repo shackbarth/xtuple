@@ -444,6 +444,13 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.picker.applyStyle("z-index", "9999");
       this.$.picker.render();
     },
+    findItemByAttr: function (attr) {
+      for (var i = 0; i < this.$.picker.getComponents().length; i++) {
+        if (attr === this.$.picker.getComponents()[i].attr) {
+          return this.$.picker.getComponents()[i];
+        }
+      }
+    },
     itemSelected: function (inSender, inEvent) {
       this.attr = inEvent.originator.attr;
     },
@@ -479,8 +486,15 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.SortTypePicker",
     kind: "XV.Picker",
     buildList: function (options) {
-      this.$.picker.createComponent({content: "_ascending".loc()});
-      this.$.picker.createComponent({content: "_descending".loc()});
+      this.$.picker.createComponent({content: "_ascending".loc(), attr: "ascending"});
+      this.$.picker.createComponent({content: "_descending".loc(), attr: "descending"});
+    },
+    findItemByAttr: function (attr) {
+      for (var i = 0; i < this.$.picker.getComponents().length; i++) {
+        if (attr === this.$.picker.getComponents()[i].attr) {
+          return this.$.picker.getComponents()[i];
+        }
+      }
     }
   });
 
