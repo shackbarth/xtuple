@@ -495,6 +495,9 @@ regexp:true, undef:true, trailing:true, white:true */
           return this.$.picker.getComponents()[i];
         }
       }
+    },
+    itemSelected: function (inSender, inEvent) {
+      this.attr = inEvent.originator.attr;
     }
   });
 
