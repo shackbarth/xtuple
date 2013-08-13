@@ -1621,9 +1621,19 @@ select xt.install_js('XT','Data','xtuple', $$
             return p.name === itemAttr;
           });
 
+          if(filteredProps.length === 0 && orm.extensions.length > 0) {
+            /* Try to get the orm prop from an extension if it's not in the core*/
+            orm.extensions.forEach(function (ext) {
+              if (filteredProps.length === 0) {
+                filteredProps = ext.properties.filter(function (p) {
+                  return p.name === itemAttr;
+                });
+              }
+            });
+          }
+
           /* Remove attributes not found in the ORM */
           if(filteredProps.length === 0) {
-            XT.debug("deleting", [itemAttr]);
             delete item[itemAttr];
           } else {
             prop = filteredProps[0];
