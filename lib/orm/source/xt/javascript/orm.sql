@@ -160,7 +160,6 @@ select xt.install_js('XT','Orm','xtuple', $$
     @param {String} name space
     @param {String} type
     @param {Object} options
-    @param {Boolean} [options.refresh=false] Indicate whether to force a refresh of the orm cached result.
     @param {Boolean} [options.silentError=false] Silence errors and return false instead.
     @param {Boolean} [options.superUser=false] Ignore privilege checking.
     @returns {Object}
@@ -172,7 +171,6 @@ select xt.install_js('XT','Orm','xtuple', $$
       i,
       orm,
       ret,
-      recordType = nameSpace + '.'+ type,
       res,
       sql,
       isSuper = options.superUser || false;
@@ -229,7 +227,6 @@ select xt.install_js('XT','Orm','xtuple', $$
     ret = JSON.parse(res[0].json);
     if (DEBUG) {
       XT.debug('result count = ', [res.length]);
-      XT.debug('results = ', res);
     }
 
     /* get extensions and merge them into the base */
@@ -280,6 +277,9 @@ select xt.install_js('XT','Orm','xtuple', $$
       ret.extensions.push(ext);
     }
 
+    if (DEBUG) {
+      XT.debug('props = ', ret.properties.map(function (prop) {return prop.name})); 
+    }
     return ret;
   };
 
