@@ -40,8 +40,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // Dummy up session. This is a public call.
     session.passport = {
       "user": {
-        "id": "admin",
-        "username": "admin",
+        "id": X.options.databaseServer.user,
+        "username": X.options.databaseServer.user,
         "organization": req.params.org
       }
     };
@@ -85,8 +85,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // Dummy up session. This is a public call.
     session.passport = {
       "user": {
-        "id": "admin",
-        "username": "admin",
+        "id": X.options.databaseServer.user,
+        "username": X.options.databaseServer.user,
         "organization": req.params.org
       }
     };

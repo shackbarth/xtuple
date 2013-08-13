@@ -12,8 +12,7 @@ To install this project, first fork this repo onto your own github account and c
 
     git remote add XTUPLE git://github.com/xtuple/xtuple.git
     git fetch XTUPLE
-    git describe --abbrev=0 // This should output the latest tag number
-    git checkout {tag} // Enter output of the previous line in {tag}
+    git checkout `git describe --abbrev=0`
 
 Then run:
 
