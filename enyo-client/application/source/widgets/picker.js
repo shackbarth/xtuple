@@ -434,6 +434,7 @@ regexp:true, undef:true, trailing:true, white:true */
     onSelect: "itemSelected",
     buildList: function (comps) {
       this.$.picker.destroyClientControls();
+      this.index = 1;
       if (!comps) {
         return;
       }
@@ -446,6 +447,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     itemSelected: function (inSender, inEvent) {
       this.attr = inEvent.originator.attr;
+      this.index = inEvent.originator.index;
     },
     setComponentsList: function (toSet) {
       var comps = [];
@@ -453,7 +455,7 @@ regexp:true, undef:true, trailing:true, white:true */
       for (var i = 0; i < toSet.length; i++) {
         if (toSet[i].indexOf('.') === -1) {
           var stringToSet = "_" + toSet[i],
-            objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
+            objectToSet = {content: stringToSet.loc(), attr: toSet[i], index: i};
           comps.push(objectToSet)
         }
         else {
@@ -463,7 +465,7 @@ regexp:true, undef:true, trailing:true, white:true */
           strArray[0] = "_" + strArray[0];
           strArray[1] = "_" + strArray[1];
           stringToSet = strArray[0].loc() + " " + strArray[1].loc();
-          objectToSet = {content: stringToSet, attr: toSet[i]};
+          objectToSet = {content: stringToSet, attr: toSet[i], index: i};
           comps.push(objectToSet);
         }
       }
@@ -479,8 +481,12 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.SortTypePicker",
     kind: "XV.Picker",
     buildList: function (options) {
-      this.$.picker.createComponent({content: "_ascending".loc()});
-      this.$.picker.createComponent({content: "_descending".loc()});
+      this.index = 1;
+      this.$.picker.createComponent({content: "_ascending".loc(), index: 1});
+      this.$.picker.createComponent({content: "_descending".loc(), index: 2});
+    },
+    itemSelected: function (inSender, inEvent) {
+      this.index = inEvent.originator.index;
     }
   });
 
