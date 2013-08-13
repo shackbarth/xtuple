@@ -313,5 +313,95 @@
       }
     ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "Recover",
+    "table": "recover",
+    "idSequenceName": "recover_recover_id_seq",
+    "comment": "Password Recovery Table Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainUsers",
+        "read": "MaintainUsers",
+        "update": "MaintainUsers",
+        "delete": "MaintainUsers"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "recover_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "recoverUsername",
+        "attr": {
+          "type": "String",
+          "column": "recover_username"
+        }
+      },
+      {
+        "name": "hashedToken",
+        "attr": {
+          "type": "String",
+          "column": "recover_hashed_token"
+        }
+      },
+      {
+        "name": "createdTimestamp",
+        "attr": {
+          "type": "Date",
+          "column": "recover_created_timestamp"
+        }
+      },
+      {
+        "name": "accessed",
+        "attr": {
+          "type": "Boolean",
+          "column": "recover_accessed"
+        }
+      },
+      {
+        "name": "accessedTimestamp",
+        "attr": {
+          "type": "Date",
+          "column": "recover_accessed_timestamp"
+        }
+      },
+      {
+        "name": "reset",
+        "attr": {
+          "type": "Boolean",
+          "column": "recover_reset"
+        }
+      },
+      {
+        "name": "resetTimestamp",
+        "attr": {
+          "type": "Date",
+          "column": "recover_reset_timestamp"
+        }
+      },
+      {
+        "name": "expiresTimestamp",
+        "attr": {
+          "type": "Date",
+          "column": "recover_expires_timestamp"
+        }
+      },
+      {
+        "name": "ip",
+        "attr": {
+          "type": "String",
+          "column": "recover_ip"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]

@@ -17,7 +17,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return md5.digest('hex');
   };
 
-  var setPassword = function (username, password, organization, useEnhancedAuth, callback) {
+  var setPassword = exports.setPassword = function (username, password, organization, useEnhancedAuth, callback) {
     var query, queryArg, queryOptions;
 
     if (useEnhancedAuth) {
