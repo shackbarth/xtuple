@@ -98,11 +98,15 @@
     workspace.value.on('invalid', function (model, err) {
       done(err);
     });
+    //workspace.value.on('all', function (model, err) {
+    //  console.log("save event", arguments);
+    //});
     workspace.save({
       // wait until the list has been refreshed with this model before we return control
       // TODO: this is probably where we'd want to insert a callback to be notified when
       // the lock has been released.
       modelChangeDone: function () {
+        workspace.value.releaseLock();
         done(null, workspace.value);
       }
     });
