@@ -434,8 +434,6 @@ regexp:true, undef:true, trailing:true, white:true */
     onSelect: "itemSelected",
     buildList: function (comps) {
       this.$.picker.destroyClientControls();
-    //the first picker you open is fine - the next one
-    //  will have the list doubled and the third tripled.
       if (!comps) {
         return;
       }
@@ -451,6 +449,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     setComponentsList: function (toSet) {
       var comps = [];
+      comps[0] = {content: "_none".loc(), attr: "none"};
       for (var i = 0; i < toSet.length; i++) {
         if (toSet[i].indexOf('.') === -1) {
           var stringToSet = "_" + toSet[i],
@@ -479,7 +478,6 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.SortTypePicker",
     kind: "XV.Picker",
-    showNone: false,
     buildList: function (options) {
       this.$.picker.createComponent({content: "_ascending".loc()});
       this.$.picker.createComponent({content: "_descending".loc()});
