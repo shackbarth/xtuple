@@ -31,7 +31,8 @@ white:true*/
     recordType: 'XM.TaxAssignment',
 
     name: function () {
-      return this.get("tax").id + " " + this.get("taxType").id;
+      return this.get("tax") &&
+        this.get("tax").id + " " + this.get("taxType").id;
     }
 
   });
@@ -95,7 +96,7 @@ white:true*/
     recordType: 'XM.TaxRate',
 
     name: function () {
-      return this.get("tax").id;
+      return this.get("tax") && this.get("tax").id;
     }
 
   });
