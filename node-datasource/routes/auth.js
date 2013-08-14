@@ -9,7 +9,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     @name Auth
     @class Auth
     */
-
   var passport = require('passport'),
       url = require('url');
 

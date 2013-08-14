@@ -1,5 +1,5 @@
 {
-  "version": "1.3.9",
+  "version": "1.4.1",
   "databaseScripts": [
     "drop_deprecated.sql",
     "xt/trigger_functions/comment_did_change.sql",
@@ -88,6 +88,7 @@
     "xt/tables/usrext.sql",
     "xt/tables/userpref.sql",
     "xt/tables/usrchart.sql",
+    "xt/tables/recover.sql",
     "xt/tables/sessionstore.sql",
     "xt/tables/oa2client.sql",
     "xt/tables/oa2clientredirs.sql",

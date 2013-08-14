@@ -1,0 +1,136 @@
+<!DOCTYPE html><html><head><title>orm_doc.js</title><meta http-equiv="content-type" content="text/html; charset=UTF-8"><link rel="stylesheet" media="all" href="./docco.css" /></head><body><div id="container"><div id="background"></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>orm_doc.js</h1></th><th class="code"></th></tr></thead><tbody><tr id="section-0"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-0">&#182;</a></div><p>@json</p>
+
+<p>An ORM is an Object Relational Mapping that defines the relationship between object oriented type<br /> definitions and relational tables or views in a database. This implementation is currently designed<br /> to apply specifically to a PostgreSQL database, but theoretically could be applied to any database<br /> for which an ORM API is defined to process these definitions.</p>
+
+<p>In the xTuple PostgreSQL implmentation the installation of ORM files triggers views to be created<br /> whose structures and rules conform to the definition of the ORM. The ORMs use camel and class case<br /> conventions when referencing object attributes and snake case conventions when referencing database<br /> attributes. Because ORMs generates views, these views can in turn be referenced by other ORMs to manage<br /> a class hierachy. To determine the name of a view created by an ORM simply convert the name space<br /> qualified type of the object to a snake case schema and view name like so:</p>
+
+<p>Object Name      Datbase Name<br /> --------------   ----------------<br /> XM.Contact       xm.contact<br /> XM.ToDo          xm.to_do<br /> XM.ToDoComment   xm.to_do_comment</p>
+
+<p>ORMs are specifically designed to be extensible so that a database table can be virtually expanded<br /> without changing the original table definition, while presenting the new data through the ORM API<br /> as though it were all one unit. This effectively ensures that "core" database definitions<br /> and custom or 3rd party data extensions are effectively encapuslated from one another. In addition<br /> ORMs can be activated and deactivated in the xt.orm table so extensions can be "turned off" at<br /> any time.</p>
+
+<p>The initial ORM is referred to as the "base" ORM. Additional ORMs can be defined against the<br /> original base using the same name space and type but giving them a different context name and<br /> setting the isExtension flag to true. Typically the table on an ORM extension should reside in a<br /> different database schema where you would create a table with colums that contain data you want to<br /> "add" to a table in the original schema. The new table should contain a column relation to associate<br /> with the original (which may also be the primary key for it as well.) When you create an ORM<br /> extension the new table will be left joined on the original. Any inserts, updates or delete<br /> actions will propagate results to both the original and the new table automatically.</p>
+
+<p>Extensions can be created as both completely independent ORM definitions or added to an<br /> extension array on a base or extension ORM.</p></td><td class="code"><div class="highlight"><pre lang="javascript">{</pre></div></td></tr><tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>A container identifier that correlates with an object name space.</p>
+
+<p>Required.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"nameSpace": "XM",</pre></div></td></tr><tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>A specific type name that correlates with an object type.</p>
+
+<p>Required.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"type": "ProjectTask",</pre></div></td></tr><tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Context is a sub container for name space that allows extending the same<br />name space and type in different contexts. The name space, type and context<br />must be unique. When you extend an ORM outside the original definition, you<br />should create a new context for each extension.</p>
+
+<p>Required.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"context": "xtuple",</pre></div></td></tr><tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>The source table or view from which you are drawing data. Schema qualifications<br />should be included when referencing views created by other ORMs. Only one table<br />may be defined per root ORM. Use extensions to relate additional tables.</p>
+
+<p>Required.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"table": "prjtask",</pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>Table name that specifies which table controls the versioning information<br />for records. If not specified, <code>table</code> will be the versioned table.<br />Useful if the <code>table</code> property actually references a view that can not, by<br />definition, be version controlled.</p>
+
+<p>Optional.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"lockTable": "prjtask",</pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>Indicates this ORM is an extension to another ORM. A join will be created between<br />the two tables to represent them as one in the corresponding view.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isExtension": false,</pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-7">&#182;</a></div><p>This value only applies to extensions and indicates the query should perform a join<br />instead of a left join to improve performance. It should only be used in cases where<br />a related record on the extension's table is always guaranteed to exist.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isChild": false,</pre></div></td></tr><tr id="section-8"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-8">&#182;</a></div><p>The table sequence to use when generating the next unique record id. Necessary<br />for any objects for which new records can be created.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"idSequenceName": "prjtask_prjtask_id_seq",</pre></div></td></tr><tr id="section-9"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-9">&#182;</a></div><p>Text describing the purpose of the ORM which will be appended to the associated<br />view.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"comment": "Project Task Map",</pre></div></td></tr><tr id="section-10"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-10">&#182;</a></div><p>Designates that data for this type can only be accessed in the context of a parent. Any attempts<br />by a client to query or update this record directly, regardless of privilege settings, will fail.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isNestedOnly": false,</pre></div></td></tr><tr id="section-11"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-11">&#182;</a></div><p>Used to describe document access. If absent no access will be granted to this type.</p>
+
+<p>Required.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"privileges": {</pre></div></td></tr><tr id="section-12"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-12">&#182;</a></div><p>Describes privileges that allow a user to have access to all records of this<br />object type. The same privilege can be set to control multiple or all of the create, read,<br />update and delete (aka. crud) access methods. Privilege settings can be a boolean that indicates<br />universal access or lack thereof, or a string that refereces a specific privilege name that<br />allows access if the user has been granted the privilege.</p>
+
+<p>Required.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"all": {</pre></div></td></tr><tr id="section-13"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-13">&#182;</a></div><p>The create privilege for this object.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"create": "MaintainAllProjects",</pre></div></td></tr><tr id="section-14"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-14">&#182;</a></div><p>The read privilege for this object.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"read": "ViewAllProjects",</pre></div></td></tr><tr id="section-15"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-15">&#182;</a></div><p>The update privilege for this object. This<br />  privilege also implicitly enables read access if<br />  the privilege for read is not explicitly granted.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"update": "MaintainAllProjects",</pre></div></td></tr><tr id="section-16"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-16">&#182;</a></div><p>The delete privilege for this object.</p>
+
+<pre><code> @type {String}
+</code></pre></td><td class="code"><div class="highlight"><pre lang="javascript">"delete": "MaintainAllProjects"
+},</pre></div></td></tr><tr id="section-17"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-17">&#182;</a></div><p>Describes privileges that allow a user to have access only to specific records<br />of this object type as defined by a specific relationship between the user and the<br />record as determined by matching logged in user account name to the value of the<br />fields listed in the "properties" array.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"personal": {</pre></div></td></tr><tr id="section-18"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-18">&#182;</a></div><p>The personal create privilege for this object.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"create": "MaintainPersonalProjects",</pre></div></td></tr><tr id="section-19"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-19">&#182;</a></div><p>The personal read privilege for this object.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"read": "ViewPersonalProjects",</pre></div></td></tr><tr id="section-20"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-20">&#182;</a></div><p>The personal update privilege for this object. This privilege also implicitly<br />  enables read access if the privilege for read is not explicitly granted.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"update": "MaintainPersonalProjects",</pre></div></td></tr><tr id="section-21"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-21">&#182;</a></div><p>The personal delete privilege for this object.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"delete": "MaintainPersonalProjects",</pre></div></td></tr><tr id="section-22"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-22">&#182;</a></div><p>An array properties on the object on which to compare the logged in user<br />  account name to determine access.</p>
+
+<p>@type {Array}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"properties": [
+    "owner",
+    "assignedTo",
+    "projectOwner",
+    "projectAssignedTo"
+   ]
+},</pre></div></td></tr><tr id="section-23"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-23">&#182;</a></div><p>Attribute level privileges. Each attribute that has privilege control should be listed<br />as a key/value pair where the key is a properties attribute name and the value is an object<br />that contains one or both of its own key/value pairs whose keys would either be <code>view</code> or <code>edit</code>.<br />The value in these pairs is a string with one or more space separated privilege listings.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"attribute": {
+  "owner": {
+    "edit": "editOwner"
+  },
+  "cost": {
+    "view": "viewCosts maintainCosts"
+  }
+}
+},</pre></div></td></tr><tr id="section-24"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-24">&#182;</a></div><p>The array of client object properties that maps to table columns. Each hash listed<br />should have one and only one of the following properties: attr, toOne or toMany,<br />the purposes of which are described below.</p>
+
+<p>Required.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"properties": [
+{</pre></div></td></tr><tr id="section-25"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-25">&#182;</a></div><p>The property name.</p>
+
+<p>Required.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"name": "task",</pre></div></td></tr><tr id="section-26"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-26">&#182;</a></div><p>Indicates this property is an attribute that maps directly to table column.</p>
+
+<p>@type {Hash}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"attr": {</pre></div></td></tr><tr id="section-27"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-27">&#182;</a></div><p>The expected type of the property. Should be any of the following:<br />String<br />Date<br />Boolean<br />Number<br />Money<br />Cost<br />SalesPrice<br />PurchasePrice<br />ExtendedPrice<br />Weight<br />Percent</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"type": "Number",</pre></div></td></tr><tr id="section-28"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-28">&#182;</a></div><p>The mapped database column associated with this property.</p>
+
+<p>There is support for a special case where if the column name is <code>obj_uuid</code> and<br />  it is not found to exist on the table, the ORM generator will add the column<br />  with type <code>uuid</code> that generates it's own default value. This is usefull for adding<br />  a naturalKey to a table that is normally a child table and doesn't have one good<br />  attribute to serve as the natural key.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"column": "prjtask_id",</pre></div></td></tr><tr id="section-29"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-29">&#182;</a></div><p>Indicates this column is the relation to be used qualifying updates and deletions<br />  internally.</p>
+
+<p>The current implementation requires one and only one property to be defined as<br />  the primary key per map.</p>
+
+<p>@type {Boolean}<br />  @default false</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isPrimaryKey": true,</pre></div></td></tr><tr id="section-30"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-30">&#182;</a></div><p>Indicates this column is the relation to be used qualifying updates and deletions<br />  externally. This key will appear as the value on non-nested toOne relations.</p>
+
+<p>@type {Boolean}<br />  @default false</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isNaturalKey": true,</pre></div></td></tr><tr id="section-31"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-31">&#182;</a></div><p>Use to indicate a mandatory property.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isRequired": true,</pre></div></td></tr><tr id="section-32"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-32">&#182;</a></div><p>Indicates a fixed value on which to filter all table reads and set as default on<br />  new inserts. It can not be updated.</p>
+
+<p>Useful for tables that store data of mixed types where one column holds<br />  a source code string that designates the type as part of compound key. It forces<br />  queries to return and affect only records with values that match the one<br />  defined here.</p>
+
+<p>@type {Any}<br />  @default false</p></td><td class="code"><div class="highlight"><pre lang="javascript">"value": "TA",</pre></div></td></tr><tr id="section-33"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-33">&#182;</a></div><p>Flags whether the proprety should be visible on query results or not.</p>
+
+<p>Useful when used in conjunction with "value" where there is no need to see the<br />  fixed value in a result set.</p>
+
+<p>@type {Boolean}<br />  @default {true}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isVisible": false,</pre></div></td></tr><tr id="section-34"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-34">&#182;</a></div><p>Flags whether the property must be encrypted. When true, the data source must pass<br />  an encryption key in with the payload to encrypte the data. If one is not found<br />  the commit will fail.</p>
+
+<p>@type {Boolean}<br />  @default {true}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isEncrypted": false
+
+},</pre></div></td></tr><tr id="section-35"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-35">&#182;</a></div><p>Indicates this property will return the entire row to which this column is related.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"toOne": {</pre></div></td></tr><tr id="section-36"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-36">&#182;</a></div><p>The non-name space qualified type name of the object to which this property is<br />  related. This ORM will be dependent on the definition of this object already existing<br />  and will not install unless it does.</p>
+
+<p>Required.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"type": "UserAccountInfo",</pre></div></td></tr><tr id="section-37"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-37">&#182;</a></div><p>If true the returned value will contain the complete row for each matching record, otherwise<br />  the value will return exactly like a regular attribute.</p>
+
+<p>@type {Boolean}<br />  @default false</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isNested": true,</pre></div></td></tr><tr id="section-38"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-38">&#182;</a></div><p>The table column to map to. It should be a foreign key relation to the corresponding type.</p>
+
+<p>Required.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"column": "prjtask_username",</pre></div></td></tr><tr id="section-39"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-39">&#182;</a></div><p>The property relation of the type on which to join. Will accept camel case or snake case<br />  mappings, but camel case is recommended.</p>
+
+<p>Required.</p>
+
+<p>@type {String}<br />  @default guid</p></td><td class="code"><div class="highlight"><pre lang="javascript">"inverse": "username",</pre></div></td></tr><tr id="section-40"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-40">&#182;</a></div><p>If true a join will be performed on the table instead of a left join to improve performance.<br />  This should only be done if this property is required and is always guaranteed to have<br />  a value.</p>
+
+<p>@type {Boolean}<br />  @default false</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isChild": false,</pre></div></td></tr><tr id="section-41"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-41">&#182;</a></div><p>A value to substitute if the client returns a null value.</p>
+
+<p>@type {Boolean}<br />  @default false</p></td><td class="code"><div class="highlight"><pre lang="javascript">"nullValue": -1
+},</pre></div></td></tr><tr id="section-42"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-42">&#182;</a></div><p>Indicates this property will return an array of all records to which it is related.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"toMany": {</pre></div></td></tr><tr id="section-43"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-43">&#182;</a></div><p>The type name of the objects to be included. Type name should be class case and not include<br />  a name space qualification.</p>
+
+<p>Note that the toMany relationship will be dependent on an ORM of this type in a matching<br />  name space already existing. If it does not installation will fail.</p>
+
+<p>Required.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"type": "ProjectTaskComment",</pre></div></td></tr><tr id="section-44"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-44">&#182;</a></div><p>The table column to map to. If not specified all rows for the type will be returned.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"column": "prjtask_id",</pre></div></td></tr><tr id="section-45"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-45">&#182;</a></div><p>The key that is the relation to the column. Ignored if no column specified.</p>
+
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"inverse": "project_task",</pre></div></td></tr><tr id="section-46"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-46">&#182;</a></div><p>If true the returned array will contain the complete row for each matching record, otherwise<br />  the array will contain only primary keys for matching records.</p>
+
+<p>Nested records will be automatically deleted when the parent is deleted so long as their edit<br />  rules allow it. See deleteDelegate for situations where the rules are in conflict.</p>
+
+<p>@see deletDelegate<br />  @type {Boolean}<br />  @default false</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isNested": true
+}
+}
+],</pre></div></td></tr><tr id="section-47"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-47">&#182;</a></div><p>The extensions array allows you to define addtional tables on which to join to the table<br />of this ORM. The following keys apply to extensions in the exact same manner as the root<br />definition:</p>
+
+<p>table<br />isChild<br />properties<br />order</p>
+
+<p>Note that the name space should not be included in extension arrays. It will be assumed<br />to be the root name space. The isExension property will automatically be true on values<br />listed in the extensions array.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"extensions": [],</pre></div></td></tr><tr id="section-48"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-48">&#182;</a></div><p>Indicates the ORM has been created as part of an extension package. Helps to differentiate<br />standard from custom ORMs created by users for local implementations.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isSystem": false,</pre></div></td></tr><tr id="section-49"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-49">&#182;</a></div><p>Dictates the sequence that extensions are processed in. Higher sequences will add columns to the<br />furthermost right of the ORM views.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"sequence": 0
+
+}</pre></div></td></tr></tbody></table></div>
+Generated with dox-docco
+</body></html>

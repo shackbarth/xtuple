@@ -126,7 +126,7 @@ label.login-message-box.error {
   -moz-border-radius: 6px;
   border-radius: 6px;
   background-color: #2f6c9d;
-  padding: 40px 50px 50px 50px;
+  padding: 40px 50px 30px 50px;
   position: relative;
   overflow: visible;
   z-index: 2;
@@ -191,6 +191,13 @@ label.login-message-box.error {
   text-transform: uppercase;
   color: #ff6600;
   cursor:default;
+}
+.forgot-password {
+  color: orange;
+  text-decoration: none;
+}
+.forgot-password:hover {
+  text-decoration: underline;
 }
 @include box-sizing(border-box);
 #main #organizations .organization-item:hover {
