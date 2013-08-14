@@ -8,7 +8,7 @@ white:true*/
 
   XT.extensions.project = {
     setVersion: function () {
-      XT.setVersion("1.4.0", "project");
+      XT.setVersion("1.4.1", "project");
     }
   };
 
