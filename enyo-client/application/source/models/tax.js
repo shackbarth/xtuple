@@ -94,6 +94,12 @@ white:true*/
 
     recordType: 'XM.TaxRate',
 
+    defaults: function () {
+      return {
+        currency: XT.baseCurrency()
+      };
+    },
+
     name: function () {
       return this.get("tax").id;
     }
