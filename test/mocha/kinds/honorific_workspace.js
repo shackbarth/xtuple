@@ -10,30 +10,51 @@
   var _ = require("underscore"),
     zombieAuth = require("../lib/zombie_auth"),
     smoke = require("../lib/smoke"),
-    data = require("../models/honorific").data,
-    assert = require("chai").assert;
+    assert = require("chai").assert,
+    testData = [
+      {kind: "XV.HonorificList", model: "XM.Honorific", update: "code"},
+      {kind: "XV.AccountList", model: "XM.Account", update: "name"},
+      {kind: "XV.OpportunityList", model: "XM.Opportunity", update: "name"},
+      {kind: "XV.ContactList", model: "XM.Contact", update: "firstName"},
+      {kind: "XV.ToDoList", model: "XM.ToDo", update: "notes"},
+      {kind: "XV.IncidentList", model: "XM.Incident", update: "notes"}
+    ];
 
   describe('Honorific Workspace', function () {
-    this.timeout(30 * 1000);
 
     before(function (done) {
+      this.timeout(30 * 1000);
       zombieAuth.loadApp(done);
     });
 
     describe('User selects to create an honorific', function () {
       it('User navigates to Honorific-New and selects to create a new Honorific', function (done) {
-        var workspace = smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList");
+        this.timeout(30 * 1000);
+        var code = "Herr" + Math.random(),
+          workspace = smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList");
+
         assert.equal(workspace.value.recordType, "XM.Honorific");
-        smoke.setWorkspaceAttributes(workspace, data.createHash);
+        smoke.setWorkspaceAttributes(workspace, {code: code});
         smoke.saveWorkspace(workspace, function () {
-          smoke.deleteFromList(XT.app, data.createHash.code, done);
+          smoke.deleteFromList(XT.app, code, done);
         });
       });
-      it('User edits an existing honorific', function (done) {
-        smoke.navigateToExistingWorkspace(XT.app, "XV.HonorificList", function (workspace) {
-          assert.equal(workspace.value.recordType, "XM.Honorific");
-          smoke.setWorkspaceAttributes(workspace, data.updateHash);
-          smoke.saveWorkspace(workspace, done);
+      _.each(testData, function (test) {
+        it('should allow update to the first element of ' + test.kind, function (done) {
+          this.timeout(30 * 1000);
+          smoke.navigateToExistingWorkspace(XT.app, test.kind, function (workspace) {
+            var updateObj;
+            assert.equal(workspace.value.recordType, test.model);
+            if (typeof test.update === 'string') {
+              updateObj = {};
+              updateObj[test.update] = "Test" + Math.random();
+            } else if (typeof test.update === 'object') {
+              updateObj = test.update;
+            }
+
+            smoke.setWorkspaceAttributes(workspace, updateObj);
+            smoke.saveWorkspace(workspace, done);
+          });
         });
       });
     });
