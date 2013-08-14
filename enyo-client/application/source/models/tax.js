@@ -95,7 +95,7 @@ white:true*/
     recordType: 'XM.TaxRate',
 
     name: function () {
-      return this.get("tax").id;
+      return this.get("tax") && this.get("tax").id;
     }
 
   });

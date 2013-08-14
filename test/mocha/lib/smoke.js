@@ -91,9 +91,11 @@
   /**
     Save the model through the workspace and make sure it saved ok.
    */
-  var saveWorkspace = exports.saveWorkspace = function (workspace, done) {
-    var validation = workspace.value.validate(workspace.value.attributes);
-    assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
+  var saveWorkspace = exports.saveWorkspace = function (workspace, done, skipValidation) {
+    if (!skipValidation) {
+      var validation = workspace.value.validate(workspace.value.attributes);
+      assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
+    }
 
     workspace.value.on('invalid', function (model, err) {
       done(err);
@@ -165,6 +167,19 @@
           done();
         });
       });
+    });
+  };
+
+  exports.saveEmptyToFail = function (test) {
+    it('Should fail preictably if you try to save a workspace without filling in anything', function (done) {
+      this.timeout(30 * 1000);
+      var workspace = navigateToNewWorkspace(XT.app, test.kind);
+
+      saveWorkspace(workspace, function (err, model) {
+        assert.isNotNull(err);
+        assert.equal(err.code, "xt1004");
+        done();
+      }, true);
     });
   };
 
