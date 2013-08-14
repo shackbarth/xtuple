@@ -160,7 +160,10 @@
         }
 
         setWorkspaceAttributes(workspace, updateObj);
-        saveWorkspace(workspace, done);
+        saveWorkspace(workspace, function () {
+          XT.app.$.postbooks.previous();
+          done();
+        });
       });
     });
   };
