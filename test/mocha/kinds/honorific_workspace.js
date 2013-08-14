@@ -10,23 +10,25 @@
   var _ = require("underscore"),
     zombieAuth = require("../lib/zombie_auth"),
     smoke = require("../lib/smoke"),
-    data = require("../models/honorific").data,
     assert = require("chai").assert;
 
   describe('Honorific Workspace', function () {
-    this.timeout(30 * 1000);
 
     before(function (done) {
+      this.timeout(30 * 1000);
       zombieAuth.loadApp(done);
     });
 
     describe('User selects to create an honorific', function () {
       it('User navigates to Honorific-New and selects to create a new Honorific', function (done) {
-        var workspace = smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList");
+        this.timeout(30 * 1000);
+        var code = "Herr" + Math.random(),
+          workspace = smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList");
+
         assert.equal(workspace.value.recordType, "XM.Honorific");
-        smoke.setWorkspaceAttributes(workspace, data.createHash);
+        smoke.setWorkspaceAttributes(workspace, {code: code});
         smoke.saveWorkspace(workspace, function () {
-          smoke.deleteFromList(XT.app, data.createHash.code, done);
+          smoke.deleteFromList(XT.app, code, done);
         });
       });
     });

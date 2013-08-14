@@ -44,7 +44,7 @@ select xt.install_js('XT','Data','xtuple', $$
         orClause,
         orderByIdentifiers = [],
         orderByParams = [],
-        orm = XT.Orm.fetch(nameSpace, type),
+        orm = this.fetchOrm(nameSpace, type),
         param,
         params = [],
         parts,
@@ -187,7 +187,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
                   if (n < parts.length - 1) {
                     params[pcount] = "(" + params[pcount] + ").";
-                    childOrm = XT.Orm.fetch(nameSpace, prop.toOne.type);
+                    childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                   } else if (param.isLower) {
                     params[pcount] = "lower(" + params[pcount] + ")";
                   }
@@ -245,7 +245,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
               if (n < parts.length - 1) {
                 orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
-                orm = XT.Orm.fetch(nameSpace, prop.toOne.type);
+                orm = this.fetchOrm(nameSpace, prop.toOne.type);
               }
             }
             orm = prevOrm;
@@ -349,7 +349,7 @@ select xt.install_js('XT','Data','xtuple', $$
         committing = record ? record.dataState !== this.READ_STATE : false,
         isGrantedAll = true,
         isGrantedPersonal = false,
-        map = XT.Orm.fetch(nameSpace, type),
+        map = this.fetchOrm(nameSpace, type),
         privileges = map.privileges;
 
 
@@ -574,7 +574,7 @@ select xt.install_js('XT','Data','xtuple', $$
       var data = options.data,
         encryptionKey = options.encryptionKey,
         i,
-        orm = XT.Orm.fetch(options.nameSpace, options.type),
+        orm = this.fetchOrm(options.nameSpace, options.type),
         sql = this.prepareInsert(orm, data, null, encryptionKey);
 
       /* Handle extensions on the same table. */
@@ -693,7 +693,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
-        iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
+        iorm = ormp.toOne ? this.fetchOrm(orm.nameSpace, ormp.toOne.type) : false,
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
@@ -815,7 +815,7 @@ select xt.install_js('XT','Data','xtuple', $$
     updateRecord: function (options) {
       var data = options.data,
         encryptionKey = options.encryptionKey,
-        orm = XT.Orm.fetch(options.nameSpace, options.type),
+        orm = this.fetchOrm(options.nameSpace, options.type),
         pkey = XT.Orm.primaryKey(orm),
         id = data[pkey],
         ext,
@@ -974,7 +974,7 @@ select xt.install_js('XT','Data','xtuple', $$
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
-        iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false;
+        iorm = ormp.toOne ? this.fetchOrm(orm.nameSpace, ormp.toOne.type) : false;
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop],
@@ -1080,7 +1080,7 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     deleteRecord: function (options) {
       var data = options.data,
-        orm = XT.Orm.fetch(options.nameSpace, options.type, {silentError: true}),
+        orm = this.fetchOrm(options.nameSpace, options.type, {silentError: true}),
         pkey,
         nkey,
         id,
@@ -1209,7 +1209,7 @@ select xt.install_js('XT','Data','xtuple', $$
      * @returns {Object}
      */
     decrypt: function (nameSpace, type, record, encryptionKey) {
-      var orm = XT.Orm.fetch(nameSpace, type);
+      var orm = this.fetchOrm(nameSpace, type);
 
       for (prop in record) {
         var ormp = XT.Orm.getProperty(orm, prop.camelize());
@@ -1236,6 +1236,38 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       return record;
+    },
+
+    /**
+      Fetches the ORM. Caches the result in this data object, where it can be used
+      for this request but will be conveniently forgotten between requests.
+     */
+    fetchOrm: function (nameSpace, type) {
+      var db = XT.currentDb(),
+        res,
+        ret,
+        recordType = nameSpace + '.'+ type;
+
+      if (!this._maps) {
+        this._maps = {};
+      }
+      if (!this._maps[db]) {
+        this._maps[db] = {};
+      }
+      if (!this._maps[db][XT.username]) {
+        this._maps[db][XT.username] = [];
+      }
+
+      res = this._maps[db][XT.username].findProperty('recordType', recordType);
+      if (res) {
+        ret = res.map;
+      } else {
+        ret = XT.Orm.fetch(nameSpace, type);
+
+        /* cache the result so we don't requery needlessly */
+        this._maps[db][XT.username].push({ "recordType": recordType, "map": ret});
+      }
+      return ret;
     },
 
     /**
@@ -1359,7 +1391,7 @@ select xt.install_js('XT','Data','xtuple', $$
         type = options.type,
         query = options.query || {},
         orderBy = query.orderBy,
-        orm = XT.Orm.fetch(nameSpace, type),
+        orm = this.fetchOrm(nameSpace, type),
         parameters = query.parameters,
         clause = this.buildClause(nameSpace, type, parameters, orderBy),
         i,
@@ -1444,7 +1476,7 @@ select xt.install_js('XT','Data','xtuple', $$
       var id = options.id,
         nameSpace = options.nameSpace,
         type = options.type,
-        map = XT.Orm.fetch(nameSpace, type),
+        map = this.fetchOrm(nameSpace, type),
         context = options.context,
         encryptionKey = options.encryptionKey,
         join = "",
@@ -1477,7 +1509,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (context) {
         context.nameSpace = context.nameSpace || context.recordType.beforeDot();
         context.type = context.type || context.recordType.afterDot()
-        context.map = XT.Orm.fetch(context.nameSpace, context.type);
+        context.map = this.fetchOrm(context.nameSpace, context.type);
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.fkey = context.prop.toMany.inverse;
         context.pkey = XT.Orm.naturalKey(context.map) || XT.Orm.primaryKey(context.map);
@@ -1558,7 +1590,7 @@ select xt.install_js('XT','Data','xtuple', $$
       options = options || {};
       if (options.includeKeys && options.superUser) { return; }
       if (XT.typeOf(data) !== "array") { data = [data]; }
-      var orm = XT.Orm.fetch(nameSpace, type),
+      var orm = this.fetchOrm(nameSpace, type),
         pkey = XT.Orm.primaryKey(orm),
         nkey = XT.Orm.naturalKey(orm),
         props = orm.properties,
@@ -1571,15 +1603,41 @@ select xt.install_js('XT','Data','xtuple', $$
         item,
         n,
         prop,
+        itemAttr,
+        filteredProps,
         val;
+
       for (var c = 0; c < data.length; c++) {
         item = data[c];
 
         /* Remove primary key if applicable */
         if (!inclKeys && nkey && nkey !== pkey) { delete item[pkey]; }
 
-        for (var i = 0; i < props.length; i++) {
-          prop = props[i];
+        for (itemAttr in item) {
+          if(!item.hasOwnProperty(itemAttr)) {
+            continue;
+          }
+          filteredProps = orm.properties.filter(function (p) {
+            return p.name === itemAttr;
+          });
+
+          if(filteredProps.length === 0 && orm.extensions.length > 0) {
+            /* Try to get the orm prop from an extension if it's not in the core*/
+            orm.extensions.forEach(function (ext) {
+              if (filteredProps.length === 0) {
+                filteredProps = ext.properties.filter(function (p) {
+                  return p.name === itemAttr;
+                });
+              }
+            });
+          }
+
+          /* Remove attributes not found in the ORM */
+          if(filteredProps.length === 0) {
+            delete item[itemAttr];
+          } else {
+            prop = filteredProps[0];
+          }
 
           /* Remove unprivileged attribute if applicable */
           if (!superUser && attrPriv && attrPriv[prop.name] &&
