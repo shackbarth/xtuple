@@ -95,14 +95,6 @@
         gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
         gridRow.$.quantityWidget.doValueChange({value: 5});
       });
-
-      it('User edits an existing sales order', function (done) {
-        smoke.navigateToExistingWorkspace(XT.app, "XV.SalesOrderList", function (workspace) {
-          assert.equal(workspace.value.recordType, "XM.SalesOrder");
-          smoke.setWorkspaceAttributes(workspace, {fob: "FOB" + Math.random()});
-          smoke.saveWorkspace(workspace, done);
-        });
-      });
     });
   });
 }());

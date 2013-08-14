@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, XM:true, XV:true, exports:true, require:true, setTimeout:true */
+/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true, setTimeout:true */
 
 (function () {
   "use strict";
@@ -34,7 +34,7 @@
   /**
     Finds the list in the panels and opens up a new workspace from that list.
   */
-  exports.navigateToNewWorkspace = function (app, listKind) {
+  var navigateToNewWorkspace = exports.navigateToNewWorkspace = function (app, listKind) {
     var navigator, workspace;
 
     navigator = navigateToList(app, listKind);
@@ -48,7 +48,7 @@
     return workspace;
   };
 
-  exports.navigateToExistingWorkspace = function (app, listKind, done) {
+  var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
     var navigator, workspace;
 
     navigator = navigateToList(app, listKind);
@@ -74,7 +74,7 @@
     Applies the attributes to the model by bubbling up the values
     from the widgets in the workspace.
    */
-  exports.setWorkspaceAttributes = function (workspace, createHash) {
+  var setWorkspaceAttributes = exports.setWorkspaceAttributes = function (workspace, createHash) {
     _.each(createHash, function (value, key) {
       var widgetFound = false;
       _.each(workspace.$, function (widget) {
@@ -91,7 +91,7 @@
   /**
     Save the model through the workspace and make sure it saved ok.
    */
-  exports.saveWorkspace = function (workspace, done) {
+  var saveWorkspace = exports.saveWorkspace = function (workspace, done) {
     var validation = workspace.value.validate(workspace.value.attributes);
     assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
 
@@ -145,5 +145,25 @@
     //}
     });
   };
+
+  exports.updateFirstModel = function (test) {
+    it('should allow a trivial update to the first model of ' + test.kind, function (done) {
+      this.timeout(30 * 1000);
+      navigateToExistingWorkspace(XT.app, test.kind, function (workspace) {
+        var updateObj;
+        assert.equal(workspace.value.recordType, test.model);
+        if (typeof test.update === 'string') {
+          updateObj = {};
+          updateObj[test.update] = "Test" + Math.random();
+        } else if (typeof test.update === 'object') {
+          updateObj = test.update;
+        }
+
+        setWorkspaceAttributes(workspace, updateObj);
+        saveWorkspace(workspace, done);
+      });
+    });
+  };
+
 
 }());
