@@ -16,8 +16,11 @@ trailing:true, white:true*/
       kind: "XV.SearchContainer",
       published: {keyAttribute: null},
       handlers: {
-        onListItemMenuTap: "showListItemMenu",
-        onValueChange: "getDocKey"
+        onListItemMenuTap: "showListItemMenu"
+      },
+      requery: function (inSender, inEvent) {
+        this.inherited(arguments);
+        var key = inEvent.originator.getParameter().value.id;
       },
       create: function () {
         this.inherited(arguments);
@@ -46,14 +49,10 @@ trailing:true, white:true*/
                 method: "doReceiveAll",
                 notifyMessage: "_receiveAll?",
                 modelName: "XM.PurchaseOrderLine"
-              }
-            ]}
+              } 
+            ]} 
           ]
         });
-      },
-      getDocKey: function(inSender, inEvent) {
-        console.log("getDocKey function");
-        var key = inEvent.value;
       },
       /**
       @todo Document the itemTap method.
@@ -62,7 +61,6 @@ trailing:true, white:true*/
         /*
         var list = inEvent.list,
           value = list ? list.getModel(inEvent.index) : null;
-
         if (value) {
           this.close();
           if (this.callback) { this.callback(value); }
@@ -84,6 +82,7 @@ trailing:true, white:true*/
       },*/
       listActionSelected: function (inSender, inEvent) {
         alert("List Action Selected!");
+        console.log("header action selected");
       },
       headerActionSelected: function (inSender, inEvent) {
         alert("Header Action Selected!");

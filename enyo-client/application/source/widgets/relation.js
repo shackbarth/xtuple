@@ -643,8 +643,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     collection: "XM.PurchaseOrderListItemCollection",
     keyAttribute: "number",
-    list: "XV.PurchaseOrderList",
-    events: {onValueChange: ""} 
+    list: "XV.PurchaseOrderList"
   });
 
   // ..........................................................
