@@ -9,11 +9,11 @@ trailing:true, white:true*/
   XT.extensions.inventory.initListRelations = function () {
 
     // ..........................................................
-    // ISSUE TO SHIPPING LOCATIONS
+    // ISSUE TO SHIPPING DETAIL
     //
 
     enyo.kind({
-      name: "XV.IssueToShippingLocationListRelations",
+      name: "XV.IssueToShippingDetailListRelations",
       kind: "XV.ListRelations",
       /*
       orderBy: [

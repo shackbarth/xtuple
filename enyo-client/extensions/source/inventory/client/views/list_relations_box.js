@@ -12,11 +12,11 @@ trailing:true, white:true*/
     //
 
     enyo.kind({
-      name: "XV.IssueToShippingLocationRelationsBox",
+      name: "XV.IssueToShippingDetailRelationsBox",
       kind: "XV.ListRelationsBox",
-      title: "_locations".loc(),
+      title: "_detail".loc(),
       parentKey: "itemSite",
-      listRelations: "XV.IssueToShippingLocationListRelations",
+      listRelations: "XV.IssueToShippingDetailListRelations",
       canOpen: false
     });
 
