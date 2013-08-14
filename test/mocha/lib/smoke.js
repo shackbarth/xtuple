@@ -158,12 +158,14 @@
         } else if (typeof test.update === 'object') {
           updateObj = test.update;
         }
-
-        setWorkspaceAttributes(workspace, updateObj);
-        saveWorkspace(workspace, function () {
-          XT.app.$.postbooks.previous();
-          done();
-        });
+        // TODO: again, sloppy: probably waiting for a lock key here.
+        setTimeout(function () {
+          setWorkspaceAttributes(workspace, updateObj);
+          saveWorkspace(workspace, function () {
+            XT.app.$.postbooks.previous();
+            done();
+          });
+        }, 1000);
       });
     });
   };
