@@ -99,7 +99,7 @@ white:true*/
         }
 
         var that = this,
-          locationControl = this.get("locationControl"),
+          locationControl = this.getValue("itemsite.locationControl"),
           callback,
           success = options.success;
         
@@ -108,7 +108,6 @@ white:true*/
           if (!resp.answer) { return; }
             
           var dispOptions = {},
-            detail = that.get("detail"),
             issOptions = {},
             params = [
               that.id,
@@ -120,9 +119,11 @@ white:true*/
           dispOptions.success = function () {
             that.fetch(options);
           };
+          /*
           if (detail.length) {
             issOptions.detail = detail;
           }
+          */
           that.setStatus(XM.Model.BUSY_COMMITTING);
           that.dispatch("XM.Inventory", "issueToShipping", params, dispOptions);
 
@@ -155,6 +156,17 @@ white:true*/
           this.set("toIssue", this.issueBalance());
         }
       }
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.InventoryLocation = XM.Model.extend({
+
+      recordType: "XM.InventoryLocation"
 
     });
 
