@@ -5,48 +5,89 @@ trailing:true, white:true*/
 
 (function () {
 
-  // ..........................................................
-  // SHIPMENT LINE
-  //
 
-  enyo.kind({
-    name: "XV.ShipmentLineListRelations",
-    kind: "XV.ListRelations",
-    orderBy: [
-      {attribute: "issued"}
-    ],
-    parentKey: "shipment",
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "orderLine.lineNumber", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "orderLine.site.code",
-                classes: "right"},
-              {kind: "XV.ListAttr", attr: "orderLine.item.number", fit: true}
-            ]},
-            {kind: "XV.ListAttr", attr: "orderLine.item.description1",
-              fit: true,  style: "text-indent: 18px;"}
-          ]},
-          {kind: "XV.ListColumn", classes: "money", components: [
-            {kind: "XV.ListAttr", attr: "orderLine.quantity",
-              formatter: "formatQuantity", style: "text-align: right"},
-            {kind: "XV.ListAttr", attr: "orderLine.shipped",
-              formatter: "formatQuantity", style: "text-align: right", classes: "bold"}
-          ]},
-          {kind: "XV.ListColumn", classes: "money", components: [
-            {kind: "XV.ListAttr", attr: "orderLine.quantityUnit.name"},
-            {kind: "XV.ListAttr", attr: "orderLine.quantityUnit.name"}
+  XT.extensions.inventory.initListRelations = function () {
+
+    // ..........................................................
+    // ISSUE TO SHIPPING LOCATIONS
+    //
+
+    enyo.kind({
+      name: "XV.IssueToShippingLocationListRelations",
+      kind: "XV.ListRelations",
+      /*
+      orderBy: [
+        {attribute: "issued"}
+      ],
+      */
+      parentKey: "itemSite",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "location", formatter: "formatLocation"},
+                {kind: "XV.ListAttr", attr: "quantity", formatter: "formatQuantity",
+                  classes: "right"},
+                {kind: "XV.ListAttr", attr: "orderLine.item.number", fit: true}
+              ]}
+            ]}
           ]}
         ]}
-      ]}
-    ],
+      ],
+      formatLocation: function (value, view, model) {
+        if (value) { return value.format(); }
+      },
+      formatQuantity: function (value, view, model) {
+        var scale = XT.session.locale.attributes.quantityScale;
+        return Globalize.format(value, "n" + scale);
+      }
+    });
 
-    formatQuantity: function (value, view, model) {
-      var scale = XT.session.locale.attributes.quantityScale;
-      return Globalize.format(value, "n" + scale);
-    }
-  });
+    // ..........................................................
+    // SHIPMENT LINE
+    //
+
+    enyo.kind({
+      name: "XV.ShipmentLineListRelations",
+      kind: "XV.ListRelations",
+      orderBy: [
+        {attribute: "issued"}
+      ],
+      parentKey: "shipment",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "orderLine.lineNumber", classes: "bold"},
+                {kind: "XV.ListAttr", attr: "orderLine.site.code",
+                  classes: "right"},
+                {kind: "XV.ListAttr", attr: "orderLine.item.number", fit: true}
+              ]},
+              {kind: "XV.ListAttr", attr: "orderLine.item.description1",
+                fit: true,  style: "text-indent: 18px;"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "orderLine.quantity",
+                formatter: "formatQuantity", style: "text-align: right"},
+              {kind: "XV.ListAttr", attr: "orderLine.shipped",
+                formatter: "formatQuantity", style: "text-align: right", classes: "bold"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "orderLine.quantityUnit.name"},
+              {kind: "XV.ListAttr", attr: "orderLine.quantityUnit.name"}
+            ]}
+          ]}
+        ]}
+      ],
+
+      formatQuantity: function (value, view, model) {
+        var scale = XT.session.locale.attributes.quantityScale;
+        return Globalize.format(value, "n" + scale);
+      }
+    });
+
+  };
 
 }());

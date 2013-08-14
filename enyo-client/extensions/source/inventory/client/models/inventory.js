@@ -159,17 +159,6 @@ white:true*/
 
     });
 
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.InventoryLocation = XM.Model.extend({
-
-      recordType: "XM.InventoryLocation"
-
-    });
-
     // ..........................................................
     // COLLECTIONS
     //

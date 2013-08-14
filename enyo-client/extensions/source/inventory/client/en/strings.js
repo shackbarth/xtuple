@@ -34,6 +34,7 @@ var lang = XT.stringsFor("en_US", {
   "_issueLine": "Issue Line",
   "_issueStock": "Issue Stock",
   "_issueToShipping": "Issue to Shipping",
+  "_locations": "Locations",
   "_kitComponentInheritCOS": "Kit Components Inherit COS from Kit Parent",
   "_postSiteChanges": "Post Site Changes",
   "_postItemSiteChanges": "Post Item Site Changes",

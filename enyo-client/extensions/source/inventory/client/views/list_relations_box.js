@@ -5,17 +5,34 @@ trailing:true, white:true*/
 
 (function () {
 
-  // ..........................................................
-  // SHIPMENT LINE
-  //
+  XT.extensions.inventory.initListRelationsBox = function () {
 
-  enyo.kind({
-    name: "XV.ShipmentLineRelationsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_lineItems".loc(),
-    parentKey: "shipment",
-    listRelations: "XV.ShipmentLineListRelations",
-    canOpen: false
-  });
+    // ..........................................................
+    // ISSUE TO SHIPPING LOCATIONS
+    //
+
+    enyo.kind({
+      name: "XV.IssueToShippingLocationRelationsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_locations".loc(),
+      parentKey: "itemSite",
+      listRelations: "XV.IssueToShippingLocationListRelations",
+      canOpen: false
+    });
+
+    // ..........................................................
+    // SHIPMENT LINE
+    //
+
+    enyo.kind({
+      name: "XV.ShipmentLineRelationsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_lineItems".loc(),
+      parentKey: "shipment",
+      listRelations: "XV.ShipmentLineListRelations",
+      canOpen: false
+    });
+
+  };
 
 }());

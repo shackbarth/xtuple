@@ -134,7 +134,7 @@ trailing:true, white:true*/
               {kind: "XV.ShipmentWidget", attr: "shipment"},
               {kind: "onyx.GroupboxHeader", content: "_item".loc()},
               {kind: "XV.ItemSiteWidget", attr:
-                {item: "item", site: "site"}
+                {item: "itemSite.item", site: "itemSite.site"}
               },
               {kind: "XV.QuantityWidget", attr: "ordered"},
               {kind: "XV.QuantityWidget", attr: "shipped"},
@@ -145,6 +145,7 @@ trailing:true, white:true*/
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
           ]},
+          {kind: "XV.IssueToShippingLocationRelationsBox", attr: "locations", fit: true}
         ]}
       ],
       attributesChanged: function () {

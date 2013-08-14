@@ -18,6 +18,30 @@ white:true*/
       recordType: "XM.ItemSiteLocation"
 
     });
+
+    /**
+      @class
+
+      @extends XM.Info
+    */
+    XM.ItemSiteInventory = XM.Info.extend({
+      
+      recordType: "XM.ItemSiteInventory",
+
+      editableModel: "XM.ItemSite"
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.ItemSiteDetail = XM.Model.extend({
+      
+      recordType: "XM.ItemSiteDetail"
+
+    });
   
     // ..........................................................
     // CLASS CONSTANTS

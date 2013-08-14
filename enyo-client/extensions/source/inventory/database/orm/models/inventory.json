@@ -367,26 +367,11 @@
         }
       },
       {
-        "name": "item",
-        "toOne": {
-          "type": "ItemRelation",
-          "column": "item_id",
-          "isNested": true
-        }
-      },
-      {
-        "name": "site",
-        "toOne": {
-          "type": "SiteRelation",
-          "column": "itemsite_warehous_id",
-          "isNested": true
-        }
-      },
-      {
         "name": "itemSite",
-        "attr": {
-          "type": "String",
-          "column": "itemsite_uuid"
+        "toOne": {
+          "isNested": true,
+          "type": "ItemSiteInventory",
+          "column": "coitem_itemsite_id"
         }
       },
       {
@@ -444,64 +429,8 @@
           "type": "Number",
           "column": "to_issue"
         }
-      },
-      {
-        "name": "locations",
-        "toMany": {
-          "type": "InventoryLocation",
-          "column": "itemsite_uuid",
-          "inverse": "itemSite"
-        }
-      }     
+      }  
     ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "InventoryLocation",
-    "table": "xt.itemsiteloc",
-    "comment": "Inventory Location Map",
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "itemloc_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "Number",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "itemSite",
-        "attr": {
-          "type": "String",
-          "column": "itemsite_uuid"
-        }
-      },
-      {
-        "name": "location",
-        "toOne": {
-          "type": "Location",
-          "column": "itemloc_location_id"
-        }
-      },
-      {
-        "name": "quantity",
-        "attr": {
-          "type": "Number",
-          "column": "itemloc_qty"
-        }
-      }
-    ],
-    "isNestedOnly": true,
     "isSystem": true
   }
 ]
