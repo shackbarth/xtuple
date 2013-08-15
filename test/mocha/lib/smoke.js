@@ -91,13 +91,18 @@
   /**
     Save the model through the workspace and make sure it saved ok.
    */
-  var saveWorkspace = exports.saveWorkspace = function (workspace, done) {
-    var validation = workspace.value.validate(workspace.value.attributes);
-    assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
-
-    workspace.value.on('invalid', function (model, err) {
+  var saveWorkspace = exports.saveWorkspace = function (workspace, done, skipValidation) {
+    var invalid = function (model, err) {
+      workspace.value.off('invalid', invalid);
       done(err);
-    });
+    };
+
+    if (!skipValidation) {
+      var validation = workspace.value.validate(workspace.value.attributes);
+      assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
+    }
+
+    workspace.value.on('invalid', invalid);
     //workspace.value.on('all', function (model, err) {
     //  console.log("save event", arguments);
     //});
@@ -158,15 +163,16 @@
         } else if (typeof test.update === 'object') {
           updateObj = test.update;
         }
-
-        setWorkspaceAttributes(workspace, updateObj);
-        saveWorkspace(workspace, function () {
-          XT.app.$.postbooks.previous();
-          done();
-        });
+        // TODO: again, sloppy: probably waiting for a lock key here.
+        setTimeout(function () {
+          setWorkspaceAttributes(workspace, updateObj);
+          saveWorkspace(workspace, function () {
+            XT.app.$.postbooks.previous();
+            done();
+          });
+        }, 1000);
       });
     });
   };
-
 
 }());
