@@ -107,7 +107,7 @@ Globalize:true */
       ]},
       {classes: "xv-grid-column quantity", components: [
         {kind: "XV.QuantityWidget", attr: "quantity", name: "quantityWidget"},
-        {kind: "XV.UnitPickr", attr: "quantityUnit", name: "quantityUnitPicker" }
+        {kind: "XV.UnitCombobox", attr: "quantityUnit", name: "quantityUnitPicker" }
       ]},
       {classes: "xv-grid-column discount", components: [
         {kind: "XV.PercentWidget", name: "discount", attr: "discount" }
@@ -116,7 +116,7 @@ Globalize:true */
         {kind: "XV.MoneyWidget", attr:
           {localValue: "price", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.SALES_PRICE_SCALE},
-        {kind: "XV.UnitPickr", attr: "priceUnit", name: "priceUnitPicker"},
+        {kind: "XV.UnitCombobox", attr: "priceUnit", name: "priceUnitPicker"},
         {kind: "XV.MoneyWidget", attr:
           {localValue: "extendedPrice", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
