@@ -261,10 +261,20 @@ body {
 
 .xv-sort-popup {
   background-color: @white;
-  color: #000;
-  .onyx-picker-decorator .onyx-button {
-    width: 130px;
-    margin: 0 auto 0 auto;
+  color: @black;
+  .xv-groupbox > *:last-child {
+    text-align: center;
+    padding: 5px;
+    .onyx-button {
+      margin: 3px;
+    }
+  }
+}
+
+.xv-button-bar {
+  text-align: center;
+  .onyx-button {
+    margin: 5px 5px 0 0;
   }
 }
 
@@ -773,15 +783,6 @@ body {
     color: @dim-gray;
   }
 }
-
-.xv-button-bar {
-  .onyx-button {
-    /* TODO: center buttons, spacing in between (margin: auto on bar) */
-    margin: 0 40px 0 40px;
-  }
-}
-
-
 
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {
