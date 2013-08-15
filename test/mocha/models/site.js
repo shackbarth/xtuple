@@ -13,7 +13,7 @@
       createHash: {
         code: "B2E2" + Math.random(),
         description: "Between Egypt and Eritrea",
-        siteType: {id: 2}
+        siteType: {name: "DIST"}
       },
       updateHash: {
         description: "Between England and Eire, PA"
