@@ -425,6 +425,66 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // SORT
+  //
+
+  enyo.kind({
+    name: "XV.SortPicker",
+    kind: "XV.Picker",
+    onSelect: "itemSelected",
+    buildList: function (comps) {
+      this.$.picker.destroyClientControls();
+      if (!comps) {
+        return;
+      }
+      for (var i = 0; i < comps.length; i++) {
+        this.$.picker.createComponent(comps[i]);
+      }
+      this.$.picker.applyStyle("position", "absolute");
+      this.$.picker.applyStyle("z-index", "9999");
+      this.$.picker.render();
+    },
+    itemSelected: function (inSender, inEvent) {
+      this.attr = inEvent.originator.attr;
+    },
+    setComponentsList: function (toSet) {
+      var comps = [];
+      comps[0] = {content: "_none".loc(), attr: "none"};
+      for (var i = 0; i < toSet.length; i++) {
+        if (toSet[i].indexOf('.') === -1) {
+          var stringToSet = "_" + toSet[i],
+            objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
+          comps.push(objectToSet)
+        }
+        else {
+          var stringToSet,
+            objectToSet;
+          var strArray = toSet[i].split('.');
+          strArray[0] = "_" + strArray[0];
+          strArray[1] = "_" + strArray[1];
+          stringToSet = strArray[0].loc() + " " + strArray[1].loc();
+          objectToSet = {content: stringToSet, attr: toSet[i]};
+          comps.push(objectToSet);
+        }
+      }
+      this.buildList(comps);
+    }
+  });
+
+  // ..........................................................
+  // SORT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SortTypePicker",
+    kind: "XV.Picker",
+    buildList: function (options) {
+      this.$.picker.createComponent({content: "_ascending".loc()});
+      this.$.picker.createComponent({content: "_descending".loc()});
+    }
+  });
+
+  // ..........................................................
   // TAX AUTHORITY
   //
 
