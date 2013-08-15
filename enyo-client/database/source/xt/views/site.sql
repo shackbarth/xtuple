@@ -64,14 +64,14 @@ insert into whsinfo (
   new.warehous_shipping_commission,
   new.warehous_cntct_id,
   new.warehous_addr_id,
-  new.warehous_transit,
+  COALESCE(new.warehous_transit, false),
   new.warehous_shipform_id,
   new.warehous_shipvia_id,
   new.warehous_shipcomments,
   new.warehous_costcat_id,
   new.warehous_sitetype_id,
   new.warehous_taxzone_id,
-  new.warehous_sequence
+  COALESCE(new.warehous_sequence, 0)
 );
 
 create or replace rule "_UPDATE" as on update to xt.site do instead
@@ -101,14 +101,14 @@ update whsinfo set
   warehous_shipping_commission=new.warehous_shipping_commission,
   warehous_cntct_id=new.warehous_cntct_id,
   warehous_addr_id=new.warehous_addr_id,
-  warehous_transit=new.warehous_transit,
+  warehous_transit=COALESCE(new.warehous_transit, false),
   warehous_shipform_id=new.warehous_shipform_id,
   warehous_shipvia_id=new.warehous_shipvia_id,
   warehous_shipcomments=new.warehous_shipcomments,
   warehous_costcat_id=new.warehous_costcat_id,
   warehous_sitetype_id=new.warehous_sitetype_id,
   warehous_taxzone_id=new.warehous_taxzone_id,
-  warehous_sequence=new.warehous_sequence
+  warehous_sequence=COALESCE(new.warehous_sequence, 0)
 where warehous_id = old.warehous_id;
 
 create or replace rule "_DELETE" as on delete to xt.site do instead
