@@ -151,8 +151,8 @@ Globalize:true */
           { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
         ]},
         {kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false},
-        {kind: "List", name: "belowGridList", onSetupItem: "setupRowBelow",
-            ontap: "gridRowTapBelow", components: [
+        {kind: "List", name: "belowGridList", classes: "xv-below-grid-list",
+            onSetupItem: "setupRowBelow", ontap: "gridRowTapBelow", components: [
           {kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "belowGridRow"}
         ]},
       ]},

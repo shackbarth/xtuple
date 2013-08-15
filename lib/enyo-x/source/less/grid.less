@@ -9,6 +9,13 @@
     width: 840px;
   }
 
+  .enyo-list-page {
+    > *:first-child {
+      .xv-grid-row {
+        border-top: 0px;  
+      }
+    }
+  }
 
   .xv-above-grid-list {
     border: 0px;
@@ -20,7 +27,7 @@
   */
   .xv-grid-row {
     font-size: 12px;
-    border-top: @silver;
+    border-top: 1px solid @silver;
     > * {
       display: inline-block;
     }
@@ -82,6 +89,7 @@
 
     &.readonly {
       background: @ghost;
+      min-height: 56px;
     }
 
     &.selected {
