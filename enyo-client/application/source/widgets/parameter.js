@@ -1116,7 +1116,7 @@ trailing:true, white:true*/
     defaultParameters: function () {
       return {
         showInactive: false,
-        assignedTo: XM.currentUser
+        //user: XM.currentUser
       };
     },
     components: [
@@ -1142,6 +1142,7 @@ trailing:true, white:true*/
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "user", label: "_user".loc(), attr: ["owner", "assignedTo"], defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
       {name: "fromDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
         filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
