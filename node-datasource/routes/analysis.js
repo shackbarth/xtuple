@@ -24,7 +24,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       datasource = "https://" + req.headers.host + "/",
       database = req.session.passport.user.organization,
       scope = datasource + database + "/auth/" + database,
-      audience = datasource + database + "/oauth/token";
+      audience = datasource + database + "/oauth/token",
+      superuser = X.options.databaseServer.user;
 
     // get private key from path in config
     privKey = X.fs.readFileSync(X.options.datasource.biKeyFile);
@@ -41,6 +42,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       "scope": scope,
       "aud": audience,
       "org": database,
+      "superuser": superuser,
       "datasource": datasource, // rest api url
       "exp": Math.round(expires.getTime() / 1000), // expiration date in millis
       "iat": Math.round(today.getTime() / 1000)  // created date in millis
@@ -60,6 +62,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       data,
       jwt;
 
+    if (!key) {
+      X.log("No private key");
+    }
+
     // if there is a problem encoding/signing the JWT, then return invalid
     try {
       encodeHeader = utils.base64urlEncode(JSON.stringify(JSON.parse(header)));
@@ -77,6 +83,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       jwt = {
         jwt: "invalid"
       };
+      X.log("Invalid JWT");
     }
 
     return jwt;
