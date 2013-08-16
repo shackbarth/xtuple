@@ -523,18 +523,6 @@ regexp:true, undef:true, trailing:true, white:true */
   //
 
   enyo.kind({
-    name: "XV.UnitPickr",
-    kind: "XV.Picker",
-    collection: "XM.units",
-    published: {
-      allowedUnits: null
-    },
-    orderBy: [
-      {attribute: 'name'}
-    ]
-  });
-
-  enyo.kind({
     name: "XV.UnitPicker",
     kind: "XV.PickerWidget",
     collection: "XM.units",
