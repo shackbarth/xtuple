@@ -17,7 +17,7 @@ trailing:true, white:true*/
       published: {keyAttribute: null},
       handlers: {
         onListItemMenuTap: "showListItemMenu"
-      },
+      }, 
       requery: function (inSender, inEvent) {
         this.inherited(arguments);
         var key = inEvent.originator.getParameter().value.id;
@@ -38,7 +38,7 @@ trailing:true, white:true*/
           name: "headerAction",
           kind: "onyx.MenuDecorator",
           style: "margin: 0;", 
-          onSelect: "headerActionSelected", 
+          ontap: "headerActionSelected",
           components: [
             {kind: "XV.IconButton", src: "/assets/menu-icon-gear.png", content: "_actions".loc(), name: "headerActionButton"},
             {kind: "onyx.Menu", name: "headerActionMenu", components: [
@@ -49,10 +49,14 @@ trailing:true, white:true*/
                 method: "doReceiveAll",
                 notifyMessage: "_receiveAll?",
                 modelName: "XM.PurchaseOrderLine"
-              } 
-            ]} 
-          ]
-        });
+              }
+            ]}
+          ],
+          headerActionSelected: function (inSender, inEvent) {
+            alert("header action selected");
+            console.log("header action selected");
+          }
+        }); 
       },
       /**
       @todo Document the itemTap method.
