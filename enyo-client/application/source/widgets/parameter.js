@@ -325,6 +325,11 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.IncidentListParameters",
     kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        user: XM.currentUser
+      };
+    },
     characteristicsRole: 'isIncidents',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
