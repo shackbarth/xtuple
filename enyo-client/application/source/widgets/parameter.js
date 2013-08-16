@@ -1116,7 +1116,7 @@ trailing:true, white:true*/
     defaultParameters: function () {
       return {
         showInactive: false,
-        //user: XM.currentUser
+        user: XM.currentUser
       };
     },
     components: [
