@@ -405,6 +405,7 @@ trailing:true, white:true*/
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_created".loc()},
       {name: "createdFromDate", label: "_fromDate".loc(),
         filterLabel: "_created".loc() + " " + "_fromDate".loc(),
@@ -544,6 +545,11 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.OpportunityListParameters",
     kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        user: XM.currentUser
+      };
+    },
     characteristicsRole: 'isOpportunities',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_opportunity".loc()},
@@ -577,6 +583,7 @@ trailing:true, white:true*/
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_targetClose".loc()},
       {name: "fromTargetDate", label: "_fromDate".loc(), attr: "targetClose", operator: ">=",
         filterLabel: "_from".loc() + " " + "_targetClose".loc() + " " + "_date".loc(),
@@ -607,6 +614,11 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.ProjectListParameters",
     kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        user: XM.currentUser
+      };
+    },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_project".loc()},
       {name: "showCompleted", label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
@@ -632,6 +644,7 @@ trailing:true, white:true*/
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
       {name: "fromDueDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
         filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
@@ -645,6 +658,11 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.ProjectTaskListParameters",
     kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        user: XM.currentUser
+      };
+    },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_project".loc()},
       {name: "showCompleted", label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
@@ -669,6 +687,7 @@ trailing:true, white:true*/
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
       {name: "fromDueDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
         filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
@@ -1121,7 +1140,7 @@ trailing:true, white:true*/
     defaultParameters: function () {
       return {
         showInactive: false,
-        assignedTo: XM.currentUser
+        user: XM.currentUser
       };
     },
     components: [
@@ -1147,6 +1166,7 @@ trailing:true, white:true*/
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
       {name: "fromDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
         filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
