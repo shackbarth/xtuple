@@ -151,19 +151,62 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             0;
 
           // q represents a full-text search on any text attributes of the model
+          payload.query.parameters = [];
+          schema = XT.session.schemas.XM.attributes[payload.type.camelize().capitalize()];
           if (req.query.q) {
-            schema = XT.session.schemas.XM.attributes[payload.type.camelize().capitalize()];
             searchableAttributes = _.compact(_.map(schema.columns, function (column) {
               return column.category === 'S' ? column.name : null;
             }));
             if (searchableAttributes.length > 0) {
-              payload.query.parameters = [{
+              payload.query.parameters.push({
                 attribute: searchableAttributes,
                 operator: "MATCHES",
                 value: req.query.q
-              }];
+              });
             }
           }
+
+          // We also support field-level filtering, with the MATCHES, >=, or <=
+          // operations. These latter two can be requested by appending Min or Max
+          // to the end of the attribute name, as advertised in the discovery doc.
+          _.each(schema.columns, function (column) {
+            var attr = column.name,
+              category = column.category,
+              operator;
+
+            if (['B', 'D', 'N', 'S'].indexOf(category) < 0) {
+              return;
+            }
+            if (req.query[attr]) {
+              if (category === 'S') {
+                operator = "MATCHES";
+              } else if (category === 'B' || category === 'N') {
+                operator = "=";
+              }
+              payload.query.parameters.push({
+                attribute: attr,
+                operator: operator,
+                value: req.query[attr]
+              });
+            }
+
+            if (req.query[attr + "Min"]) {
+              payload.query.parameters.push({
+                attribute: attr,
+                operator: ">=",
+                value: req.query[attr + "Min"]
+              });
+            }
+            if (req.query[attr + "Max"]) {
+              payload.query.parameters.push({
+                attribute: attr,
+                operator: "<=",
+                value: req.query[attr + "Max"]
+              });
+            }
+          });
+
+
           routes.queryDatabase("get", payload, session, callback);
         }
 

@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -17,6 +17,15 @@ white:true*/
       recordType: 'XM.Sales',
 
       privileges: 'ConfigureSO',
+
+      bindEvents: function () {
+        XM.Settings.prototype.bindEvents.apply(this, arguments);
+        this.on('statusChange', this.statusDidChange);
+      },
+
+      statusDidChange: function () {
+        // extensions might want to inject business logic in here
+      },
 
       validate: function (attributes, options) {
         // XXX not sure if number widgets can fail in this way.
@@ -39,7 +48,6 @@ white:true*/
           return XT.Error.clone('xt1003', { params: params });
         }
       }
-
     });
 
     XM.sales = new XM.Sales();
