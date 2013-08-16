@@ -835,7 +835,7 @@
 .onyx-picker-decorator .onyx-button {
   padding: 12px 8px 12px 8px;
 }
-.onyx-picker-decorator .onyx-picker .onyx-menu-item {
+.onyx-picker .onyx-menu-item {
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -844,18 +844,18 @@
 .xv-pickerwidget {
   background-color: #ffffff;
 }
-.xv-picker {
-  text-align: left;
-}
-.xv-picker .picker-content {
-  max-width: 118px;
-  overflow: hidden;
-}
-.xv-picker .picker-icon {
+.picker-icon {
   position: absolute;
   right: 0;
   margin: 0 10px 0 2px;
   color: #000000;
+}
+.xv-picker-button {
+  text-align: left;
+}
+.xv-picker-button .picker-content {
+  max-width: 118px;
+  overflow: hidden;
 }
 .xv-picker-label {
   color: #000000;
