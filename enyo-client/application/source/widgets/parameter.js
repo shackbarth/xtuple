@@ -325,6 +325,11 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.IncidentListParameters",
     kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        user: XM.currentUser
+      };
+    },
     characteristicsRole: 'isIncidents',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
@@ -540,6 +545,11 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.OpportunityListParameters",
     kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        user: XM.currentUser
+      };
+    },
     characteristicsRole: 'isOpportunities',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_opportunity".loc()},
@@ -604,6 +614,11 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.ProjectListParameters",
     kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        user: XM.currentUser
+      };
+    },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_project".loc()},
       {name: "showCompleted", label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
@@ -643,6 +658,11 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.ProjectTaskListParameters",
     kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        user: XM.currentUser
+      };
+    },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_project".loc()},
       {name: "showCompleted", label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
