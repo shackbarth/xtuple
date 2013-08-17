@@ -171,7 +171,11 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.filters",
     valueAttribute: "id",
-    noneText: "_default".loc()
+    noneText: "_default".loc(),
+    iconClass: "icon-group",
+    iconVisible: function (model) {
+      return model.get("shared");
+    }
   });
 
   // ..........................................................
