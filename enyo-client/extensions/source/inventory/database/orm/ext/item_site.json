@@ -45,7 +45,7 @@
         }
       },
       {
-        "name": "automaticAbcClassUpdates",
+        "name": "isAutomaticAbcClassUpdates",
         "attr": {
           "type": "Boolean",
           "column": "itemsite_autoabcclass",
@@ -65,11 +65,11 @@
         "attr": {
           "type": "String",
           "column": "itemsite_issuemethod",
-          "required": true
+          "required": false
         }
       },
       {
-        "name": "stocked",
+        "name": "isStocked",
         "attr": {
           "type": "Boolean",
           "column": "itemsite_stocked",
@@ -96,7 +96,7 @@
         "name": "reorderLevel",
         "attr": {
          "type": "Number",
-         "column": "itemsite_reorderLevel"
+         "column": "itemsite_reorderlevel"
         }
       },
       {
@@ -138,7 +138,8 @@
         "name": "receiveLocation",
         "toOne": {
           "type": "Location",
-          "column": "itemsite_recvlocation_id"
+          "column": "itemsite_recvlocation_id",
+          "nullValue": -1
         }
       },
       {
@@ -152,7 +153,8 @@
         "name": "stockLocation",
         "toOne": {
           "type": "Location",
-          "column": "itemsite_location_id"
+          "column": "itemsite_location_id",
+          "nullValue": -1
         }
       },
       {
@@ -166,7 +168,8 @@
         "name": "issueLocation",
         "toOne": {
           "type": "Location",
-          "column": "itemsite_issuelocation_id"
+          "column": "itemsite_issuelocation_id",
+          "nullValue": -1
         }
       },
       {

@@ -10,6 +10,23 @@ white:true*/
     // These are hard coded collections that may be turned into tables at a later date
     var i;
 
+    // ABC Class
+    var abcClassJson = [
+      { id: "A", name: "_a".loc() },
+      { id: "B", name: "_b".loc() },
+      { id: "C", name: "_c".loc() }
+    ];
+    XM.AbcClassModel = Backbone.Model.extend({
+    });
+    XM.AbcClassCollection = Backbone.Collection.extend({
+      model: XM.AbcClassModel
+    });
+    XM.abcClass = new XM.AbcClassCollection();
+    for (i = 0; i < abcClassJson.length; i++) {
+      var abcClass = new XM.AbcClassModel(abcClassJson[i]);
+      XM.abcClass.add(abcClass);
+    }
+
     // Cost Method for Avg Cost Count Tags
     var countAvgCostMethodJson = [
       { id: "stdcost", name: "_standardCost".loc() },
@@ -43,10 +60,9 @@ white:true*/
     }
 
     // Control Method
-    var K = XM.ItemSite;
     var controlMethodJson = [
-      { id: K.N, name: "_none".loc() },
-      { id: K.R, name: "_regular".loc() }
+      { id: "N", name: "_none".loc() },
+      { id: "R", name: "_regular".loc() }
     ];
     XM.ControlMethodModel = Backbone.Model.extend({
     });
@@ -76,6 +92,23 @@ white:true*/
     for (i = 0; i < countSlipAuditingJson.length; i++) {
       var countSlipAuditing = new XM.CountSlipAuditingModel(countSlipAuditingJson[i]);
       XM.countSlipAuditing.add(countSlipAuditing);
+    }
+
+    // Cost Method
+    var costMethodJson = [
+      { id: "N", name: "_none".loc() },
+      { id: "S", name: "_standard".loc() },
+      { id: "J", name: "_job".loc() }
+    ];
+    XM.CostMethodModel = Backbone.Model.extend({
+    });
+    XM.CostMethodCollection = Backbone.Collection.extend({
+      model: XM.CostMethodModel
+    });
+    XM.costMethod = new XM.CostMethodCollection();
+    for (i = 0; i < costMethodJson.length; i++) {
+      var costMethod = new XM.CostMethodModel(costMethodJson[i]);
+      XM.costMethod.add(costMethod);
     }
   };
 

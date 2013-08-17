@@ -50,6 +50,112 @@ white:true*/
       isActive: true
     },
 
+    controlMethodDidChange: function () {
+      var K = XM.ItemSite,
+        controlMethod = this.get("controlMethod");
+      if (controlMethod === K.NO_CONTROL) {
+        this.setReadOnly('costMethod', true);
+        this.set('costMethod', 'N');
+      }
+      else if (controlMethod !== K.NO_CONTROL) {
+        this.setReadOnly('costMethod', false);
+        this.set('costMethod', 'S');
+      }
+    },
+
+    costMethodDidChange: function () {
+      var K = XM.ItemSite,
+        I = XM.Item,
+        costMethod = this.get("costMethod"),
+        isSold = false,
+        abcClass = false,
+        isAutomaticAbcClassUpdates = false,
+        cycleCountFrequency = false,
+        isStocked = false,
+        locationControl = false,
+        restrictedLoctionsAllowed = false,
+        safetyStock = false,
+        useParameters = false,
+        reorderLevel = false,
+        orderToQuantity = false,
+        minimumOrderQuantity = false,
+        multipleOrderQuantity = false,
+        maximumOrderQuantity = false,
+        receiveLocationAuto = false,
+        stockLocationAuto = false,
+        plannerCode = false;
+      switch (costMethod) {
+      case K.JOB_COST:
+        //TODO: THIS I.ITEMTYPE ISN'T WORKING PROPERLY
+        if (I.MANUFACTURED) {
+          isSold = true;
+          abcClass = true;
+          isAutomaticAbcClassUpdates = true;
+          cycleCountFrequency = true;
+          isStocked = true;
+          locationControl = true;
+          restrictedLoctionsAllowed = true;
+          safetyStock = true;
+          useParameters = true;
+          reorderLevel = true;
+          orderToQuantity = true;
+          minimumOrderQuantity = true;
+          multipleOrderQuantity = true;
+          maximumOrderQuantity = true;
+          receiveLocationAuto = true;
+          stockLocationAuto = true;
+          plannerCode = true;
+          this.set("isSold", false);
+          this.set("isAutomaticAbcClassUpdates", false);
+          this.set("cycleCountFrequency", 0);
+          this.set("useParameters", false);
+          this.set("isStocked", false);
+          this.set("locationControl", false);
+          this.set("safetyStock", 0);
+        }
+        else if (I.PURCHASED || I.OUTSIDE_PROCESS) {
+          isSold = false;
+          abcClass = true;
+          isAutomaticAbcClassUpdates = true;
+          cycleCountFrequency = true;
+          isStocked = true;
+          locationControl = true;
+          restrictedLoctionsAllowed = true;
+          safetyStock = true;
+          useParameters = true;
+          this.set("isSold", true);
+          this.set("isAutomaticAbcClassUpdates", false);
+          this.set("cycleCountFrequency", 0);
+          this.set("useParameters", false);
+          this.set("isStocked", false);
+          this.set("locationControl", false);
+          this.set("safetyStock", 0);
+        }
+        else {
+          isStocked = true;
+        }
+      }
+      //this.set("sold", sold);
+      this.setReadOnly("isSold", isSold);
+      this.setReadOnly("abcClass", abcClass);
+      this.setReadOnly("isAutomaticAbcClassUpdates", isAutomaticAbcClassUpdates);
+      this.setReadOnly("cycleCountFrequency", cycleCountFrequency);
+      this.setReadOnly("useParameters", useParameters);
+      this.setReadOnly("isStocked", isStocked);
+      this.setReadOnly("locationControl", locationControl);
+      this.setReadOnly("restrictedLoctionsAllowed", restrictedLoctionsAllowed);
+      this.setReadOnly("safetyStock", safetyStock);
+      this.setReadOnly("useParameters", useParameters);
+      this.setReadOnly("reorderLevel", reorderLevel);
+      this.setReadOnly("orderToQuantity", orderToQuantity);
+      this.setReadOnly("minimumOrderQuantity", minimumOrderQuantity);
+      this.setReadOnly("multipleOrderQuantity", multipleOrderQuantity);
+      this.setReadOnly("maximumOrderQuantity", maximumOrderQuantity);
+      this.setReadOnly("receiveLocationAuto", receiveLocationAuto);
+      this.setReadOnly("stockLocationAuto", stockLocationAuto);
+      this.setReadOnly("plannerCode", plannerCode);
+    },
+
     /**
       Users must not be able to set the site except for new itemsites
      */
@@ -63,6 +169,8 @@ white:true*/
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:item change:site', this.checkDuplicatePair);
+      this.on('change:controlMethod', this.controlMethodDidChange);
+      this.on('change:costMethod', this.costMethodDidChange);
     },
 
     /**

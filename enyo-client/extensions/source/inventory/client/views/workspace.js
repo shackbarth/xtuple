@@ -195,14 +195,21 @@ trailing:true, white:true*/
     // ..........................................................
     // ITEM SITE
     //
-
+    
     extensions = [
-      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_inventory".loc(), components: [
-            {kind: "XV.ControlMethodPicker", attr: "controlMethod"}
-      ]}
+      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_inventory".loc() },
+      {kind: "XV.ControlMethodPicker", container: "mainGroup", attr: "controlMethod"},
+      {kind: "XV.PlannerCodePicker", container: "mainGroup", attr: "plannerCode"},
+      {kind: "XV.CostCategoryPicker", container: "mainGroup", attr: "costCategory"},
+      {kind: "XV.CostMethodPicker", container: "mainGroup", attr: "costMethod"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStocked"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isAutomaticAbcClassUpdates"},
+      {kind: "XV.AbcClassPicker", container: "mainGroup", attr: "abcClass"},
+      //TODO: Create an XV widget that includes an integer input field and an increase and decrease button
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "cycleCountFrequency"}
     ];
 
     XV.appendExtension("XV.ItemSiteWorkspace", extensions);
-
+    
   };
 }());
