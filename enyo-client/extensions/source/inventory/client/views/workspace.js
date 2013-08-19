@@ -155,6 +155,39 @@ trailing:true, white:true*/
     });
 
     // ..........................................................
+    // LOCATION
+    //
+
+    enyo.kind({
+      name: "XV.LocationWorkspace",
+      kind: "XV.Workspace",
+      title: "_location".loc(),
+      model: "XM.Location",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_location".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.SiteZonePicker", attr: "siteZone.name"},
+              {kind: "XV.CheckboxWidget", attr: "netable"},
+              {kind: "XV.CheckboxWidget", attr: "restricted"},
+              {kind: "XV.InputWidget", attr: "aisle"},
+              {kind: "XV.InputWidget", attr: "rack"},
+              {kind: "XV.InputWidget", attr: "bin"},
+              {kind: "XV.InputWidget", attr: "location"},
+              {kind: "XV.TextArea", fit: true, attr: "description"}
+              //TODO add allowbale items panel
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
+    XV.registerModelWorkspace("XM.Location", "XV.LocationWorkspace");
+
+    // ..........................................................
     // SHIPMENT
     //
 
@@ -211,11 +244,11 @@ trailing:true, white:true*/
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isLocationControl"},
       //TODO: Add default location checkbox
       //PICKER   - LOCATION/USER-DEFINED - (display the following 3/6 OR USERDEFINED)
-      {kind: "XV.ItemSiteLocationPicker", container: "mainGroup", attr: "receiveLocation"},
+      {kind: "XV.LocationPicker", container: "mainGroup", attr: "receiveLocation"},
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isReceiveLocationAuto"},
-      {kind: "XV.InputWidget", container: "mainGroup", attr: "stockLocation"},
+      {kind: "XV.LocationPicker", container: "mainGroup", attr: "stockLocation"},
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStockLocationAuto"},
-      {kind: "XV.InputWidget", container: "mainGroup", attr: "issueLocation"},
+      {kind: "XV.LocationPicker", container: "mainGroup", attr: "issueLocation"},
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isIssueLocationAuto"},
       {kind: "XV.InputWidget", container: "mainGroup", attr: "locationComment"},
       //LIST     - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location

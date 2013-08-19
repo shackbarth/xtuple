@@ -253,20 +253,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // ITEM SITE LOCATIONS
-  //
-
-  enyo.kind({
-    name: "XV.ItemSiteLocationPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.itemSiteLocation",
-    nameAttribute: "location",
-    orderBy: [
-      {attribute: 'location'}
-    ]
-  });
-
-  // ..........................................................
   // ITEM TYPE
   //
 
@@ -298,6 +284,20 @@ regexp:true, undef:true, trailing:true, white:true */
     nameAttribute: "code",
     orderBy: [
       {attribute: 'code'}
+    ]
+  });
+
+  // ..........................................................
+  // LOCATION
+  //
+
+  enyo.kind({
+    name: "XV.LocationPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.location",
+    nameAttribute: "description",
+    orderBy: [
+      {attribute: 'description'}
     ]
   });
 
@@ -460,6 +460,19 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ShipZonePicker",
     kind: "XV.PickerWidget",
     collection: "XM.shipZones",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+
+  // ..........................................................
+  // SITE ZONE
+  //
+
+  enyo.kind({
+    name: "XV.SiteZonePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.siteZoneRelations",
     orderBy: [
       {attribute: 'name'}
     ]

@@ -20,7 +20,7 @@ trailing:true, white:true*/
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
-      {name: "siteLocationList", kind: "XV.SiteLocationList"},
+      {name: "locationList", kind: "XV.LocationList"},
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
       {name: "plannerCodeList", kind: "XV.PlannerCodeList"},
       {name: "customerTypeList", kind: "XV.CustomerTypeList"},

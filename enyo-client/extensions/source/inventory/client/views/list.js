@@ -304,6 +304,51 @@ trailing:true, white:true*/
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
 
     // ..........................................................
+    // LOCATION
+    //
+
+    enyo.kind({
+      name: "XV.LocationList",
+      kind: "XV.List",
+      label: "_locations".loc(),
+      collection: "XM.LocationCollection",
+      query: {orderBy: [
+        {attribute: 'description'}
+      ]},
+      //parameterWidget: "XV.ItemSiteListParameters",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short",
+              components: [
+              {kind: "XV.ListAttr", attr: "location", isKey: true}
+            ]},
+            {kind: "XV.ListColumn", classes: "right", components: [
+              {kind: "XV.ListAttr", attr: "site.code"}
+            ]},
+            {kind: "XV.ListColumn", classes: "right", components: [
+              {kind: "XV.ListAttr", attr: "description"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "restricted"}
+            ]},
+            {kind: "XV.ListColumn", classes: "last", components: [
+              {kind: "XV.ListAttr", attr: "netable"}
+            ]}
+          ]}
+        ]}
+      ],
+      formatLocationName: function (inEvent) {
+        var model = inEvent.model;
+          name = model.get("name");
+        console.log("Here I am", model);
+      }
+
+    });
+
+    XV.registerModelList("XM.Location", "XV.LocationList");
+
+    // ..........................................................
     // SHIPMENT
     //
 

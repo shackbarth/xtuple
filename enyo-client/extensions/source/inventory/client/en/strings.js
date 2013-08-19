@@ -40,6 +40,7 @@ var lang = XT.stringsFor("en_US", {
   "_kitComponentInheritCOS": "Kit Components Inherit COS from Kit Parent",
   "_leadTime": "Lead Time",
   "_location": "Location",
+  "_locations": "Locations",
   "_locationComment": "Location Comment",
   "_maximumOrderQuantity": "Maximum Order Quantity",
   "_minimumOrderQuantity": "Minimum Order Quantity",

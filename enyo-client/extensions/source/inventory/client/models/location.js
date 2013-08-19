@@ -35,6 +35,16 @@ white:true*/
     // ..........................................................
     // COLLECTIONS
     //
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.LocationCollection = XM.Collection.extend({
+
+      model: XM.Location
+      
+    });
 
     /**
       @class
