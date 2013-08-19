@@ -1,6 +1,7 @@
-/*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+/*jshint node:true, indent:2, curly:true, eqeqeq:true, immed:true,
+latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
-/*global XT:true, XV:true, Globalize:true, enyo:true, _:true */
+/*global XT:true, XV:true, XM:true, Globalize:true, enyo:true, _:true */
 
 (function () {
 
@@ -13,7 +14,8 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.CountryCombobox
     @extends XV.Combobox
    */
-  enyo.kind(/** @lends XV.CountryCombobox# */{
+  enyo.kind(
+    /** @lends XV.CountryCombobox# */{
     name: "XV.CountryCombobox",
     kind: "XV.Combobox",
     collection: "XM.countries"
@@ -124,4 +126,23 @@ regexp:true, undef:true, trailing:true, white:true */
       this.buildList();
     }
   });
+
+  // ..........................................................
+  // UNIT
+  //
+
+  enyo.kind({
+    name: "XV.UnitCombobox",
+    kind: "XV.Combobox",
+    collection: "XM.units",
+    keyAttribute: "name",
+    setValue: function (value, options) {
+      if (value && value.id) {
+        this.inherited(arguments, [value.id, options]);
+      } else {
+        this.inherited(arguments);
+      }
+    }
+  });
+
 }());

@@ -243,10 +243,12 @@ trailing:true, white:true*/
           title,
           phoneWork,
           phoneHome,
+          phoneFax,
           address = [],
           addressWork,
           labelWork,
           email,
+          website,
           revision,
           end,
           stringToSave;
@@ -269,6 +271,7 @@ trailing:true, white:true*/
       title = model.get('jobTitle');
       phoneWork = model.get('phone');
       phoneHome = model.get('alternate');
+      phoneFax = model.get('fax');
       if (isNaN(model.getValue('address.line1').charAt(0))) {
         org = model.getValue('address.line1');
         address[0] = model.getValue('address.line2');
@@ -295,6 +298,7 @@ trailing:true, white:true*/
         }
       }
       email = model.get('primaryEmail');
+      website = model.get('webAddress');
       revision = dateFormat(new Date(), "yyyy-mm-dd");
       end = "VCARD";
 
@@ -314,6 +318,9 @@ trailing:true, white:true*/
       if (phoneHome) {
         stringToSave = stringToSave + "TEL;TYPE=HOME,VOICE:" + phoneHome + "%0A";
       }
+      if (phoneFax) {
+        stringToSave = stringToSave + "TEL;TYPE=FAX:" + phoneFax + "%0A";
+      }
       if (addressWork) {
         stringToSave = stringToSave + "ADR;TYPE=WORK:;;" + addressWork + "%0A";
       }
@@ -322,6 +329,9 @@ trailing:true, white:true*/
       }
       if (email) {
         stringToSave = stringToSave + "EMAIL;TYPE=PREF,INTERNET:" + email + "%0A";
+      }
+      if (website) {
+        stringToSave = stringToSave + "URL:" + website + "%0A";
       }
       stringToSave = stringToSave + "REV:" + revision + "%0A";
       stringToSave = stringToSave + "END:" + end + "%0A";
