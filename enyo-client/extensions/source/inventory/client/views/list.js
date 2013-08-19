@@ -169,29 +169,21 @@ trailing:true, white:true*/
       },
       enterReceipt: function (inEvent) {
         var model = inEvent.model,
-          modelId = model.id,
-          success = function () {
-            this.getValue().convertFromProspect(modelId);
-          };
+          modelId = model.id;
 
         this.doWorkspace({
           workspace: "XV.EnterReceiptWorkspace",
           id: model.id,
-          success: success,
           allowNew: false
         });
       },
       receiveAll: function (inEvent) {
         var model = inEvent.model,
-          modelId = model.id,
-          success = function () {
-            this.getValue().convertFromProspect(modelId);
-          };
+          modelId = model.id;
 
         this.doWorkspace({
           workspace: "XV.EnterReceiptWorkspace",
           id: model.id,
-          success: success,
           allowNew: false
         });
       }
