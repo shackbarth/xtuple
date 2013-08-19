@@ -10,9 +10,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       " Please follow this secure link to reset your password: \n" +
       "https://%@/%@/recover/reset/%@/%@\n\n" +
       "Thanks,\n The xTuple Team",
-    systemErrorMessage = "Request unsuccessful. I'm very sorry about this, but I can't give " +
-      "you any more details because I'm very cautious about security and this is a sensitive topic.",
+    systemErrorMessage = "Password change unsuccessful.",
     setPassword = require('./change_password').setPassword,
+    async = require('async'),
     utils = require('../oauth2/utils');
 
   /**
@@ -198,35 +198,46 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     and redirect to the login page.
    */
   exports.resetRecoveredPassword = function (req, res) {
-    var error = function () {
-        res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
+    var recoveryModel,
+      userModel,
+      //
+      // Make sure the user typed the password in twice the same
+      //
+      verifyPasswords = function (callback) {
+        if (req.body.password !== req.body.password2) {
+          callback("PASSWORD_MISMATCH");
+        } else {
+          callback();
+        }
       },
-      recoveryModel = new SYS.Recover();
+      //
+      // We get the id and the unencrypted token from the session.
+      // Make sure that the token checks out to that id in the database.
+      //
+      fetchRecoveryModel = function (callback) {
+        recoveryModel = new SYS.Recover();
+        recoveryModel.fetch({
+          id: req.session.recover.id,
+          database: req.params.org,
+          username: X.options.databaseServer.user,
+          error: callback, // first arg is error in both paradigms
+          success: function () {
+            callback();
+          }
+        });
+      },
+      verifyRecoveryModel = function (callback) {
+        X.bcrypt.compare(req.session.recover.token, recoveryModel.get("hashedToken"), function (err, compare) {
+          var now = new Date();
 
-    if (req.body.password !== req.body.password2) {
-      res.render('reset_password', {message: ["Passwords do not match"]});
-      return;
-    }
-    //
-    // We get the id and the unencrypted token from the session.
-    // Make sure that the token checks out to that id in the database.
-    //
-    recoveryModel.fetch({
-      id: req.session.recover.id,
-      database: req.params.org,
-      username: X.options.databaseServer.user,
-      success: function (model, result, options) {
-        var now = new Date();
-
-        X.bcrypt.compare(req.session.recover.token, model.get("hashedToken"), function (err, compare) {
           if (err ||
               !compare ||
-              !model.get("accessed") ||
-              model.get("reset") ||
-              model.get("ip") !== req.connection.remoteAddress ||
-              now.getTime() > model.get("expiresTimestamp").getTime()) {
+              !recoveryModel.get("accessed") ||
+              recoveryModel.get("reset") ||
+              recoveryModel.get("ip") !== req.connection.remoteAddress ||
+              now.getTime() > recoveryModel.get("expiresTimestamp").getTime()) {
 
-            res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
+            callback(true); // error
             return;
           }
 
@@ -240,42 +251,65 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           recoveryModel.save(null, {
             database: req.params.org,
             username: X.options.databaseServer.user,
-            error: error,
-            success: function (model, result, options) {
-              var userModel = new SYS.User();
-              userModel.fetch({
-                id: model.get("recoverUsername"),
-                database: req.params.org,
-                username: X.options.databaseServer.user,
-                error: error,
-                success: function (model, result, options) {
-                  //
-                  // NOW we update the user's password
-                  //
-                  setPassword(recoveryModel.get("recoverUsername"),
-                    req.body.password,
-                    req.params.org,
-                    model.get("useEnhancedAuth"),
-                    function (err) {
-                      if (err) {
-                        error();
-                        return;
-                      }
-                      //
-                      // The password has been updated. Redirect the user to the login screen.
-                      //
-                      res.render('login', {
-                        message: ["Your password has been updated. Please log in."],
-                        databases: X.options.datasource.databases
-                      });
-                    }
-                  );
-                }
-              });
+            error: callback, // first arg is error in both paradigms
+            success: function () {
+              callback();
             }
           });
         });
-      }
-    });
+      },
+      //
+      // Update the user's password AFTER we've verified and disabled the
+      // recovery object
+      //
+      fetchUserModel = function (callback) {
+        userModel = new SYS.User();
+        userModel.fetch({
+          id: recoveryModel.get("recoverUsername"),
+          database: req.params.org,
+          username: X.options.databaseServer.user,
+          error: callback, // first arg is error in both paradigms
+          success: function () {
+            callback();
+          }
+        });
+      },
+      updateUserPassword = function (callback) {
+        setPassword(recoveryModel.get("recoverUsername"),
+          req.body.password,
+          req.params.org,
+          userModel.get("useEnhancedAuth"),
+          callback);
+      },
+      //
+      // Send a response back to the user, either:
+      // -They did not type the same password twice
+      // -Some other error (which should not happen, so be guarded about the response)
+      // -Success
+      //
+      renderResponse = function (err, results) {
+        if (err === "PASSWORD_MISMATCH") {
+          res.render('reset_password', {message: ["Passwords do not match"]});
+        } else if (err) {
+          res.render('forgot_password', { message: [systemErrorMessage], databases: X.options.datasource.databases });
+        } else {
+          //
+          // The password has been updated. Redirect the user to the login screen.
+          //
+          res.render('login', {
+            message: ["Your password has been updated. Please log in."],
+            databases: X.options.datasource.databases
+          });
+        }
+      };
+
+    async.series([
+      verifyPasswords,
+      fetchRecoveryModel,
+      verifyRecoveryModel,
+      fetchUserModel,
+      updateUserPassword
+    ], renderResponse);
+
   };
 }());

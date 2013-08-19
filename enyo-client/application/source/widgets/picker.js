@@ -135,7 +135,11 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.filters",
     valueAttribute: "id",
-    noneText: "_default".loc()
+    noneText: "_default".loc(),
+    iconClass: "icon-group",
+    iconVisible: function (model) {
+      return model.get("shared");
+    }
   });
 
   // ..........................................................
@@ -521,18 +525,6 @@ regexp:true, undef:true, trailing:true, white:true */
   // ..........................................................
   // UNIT
   //
-
-  enyo.kind({
-    name: "XV.UnitPickr",
-    kind: "XV.Picker",
-    collection: "XM.units",
-    published: {
-      allowedUnits: null
-    },
-    orderBy: [
-      {attribute: 'name'}
-    ]
-  });
 
   enyo.kind({
     name: "XV.UnitPicker",
