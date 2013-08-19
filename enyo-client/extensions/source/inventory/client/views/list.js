@@ -321,7 +321,7 @@ trailing:true, white:true*/
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "short",
               components: [
-              {kind: "XV.ListAttr", attr: "location", isKey: true}
+            //  {kind: "XV.ListAttr", attr: "location", isKey: true}
             ]},
             {kind: "XV.ListColumn", classes: "right", components: [
               {kind: "XV.ListAttr", attr: "site.code"}

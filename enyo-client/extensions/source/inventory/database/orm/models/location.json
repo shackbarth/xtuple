@@ -36,6 +36,7 @@
       {
         "name": "site",
         "toOne": {
+          "isNested": true,
           "type": "SiteRelation",
           "column": "location_warehous_id"
         }
