@@ -253,6 +253,20 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // ITEM SITE LOCATIONS
+  //
+
+  enyo.kind({
+    name: "XV.ItemSiteLocationPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.itemSiteLocation",
+    nameAttribute: "location",
+    orderBy: [
+      {attribute: 'location'}
+    ]
+  });
+
+  // ..........................................................
   // ITEM TYPE
   //
 

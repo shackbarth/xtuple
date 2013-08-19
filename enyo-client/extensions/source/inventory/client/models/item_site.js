@@ -117,6 +117,21 @@ white:true*/
 
     });
 
+    // ..........................................................
+    // COLLECTIONS
+    //
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ItemSiteLocationCollection = XM.Collection.extend({
+      
+      model: XM.ItemSiteLocation
+
+    });
+
   };
 
 

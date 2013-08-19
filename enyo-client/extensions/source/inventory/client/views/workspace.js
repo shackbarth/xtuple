@@ -206,7 +206,30 @@ trailing:true, white:true*/
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isAutomaticAbcClassUpdates"},
       {kind: "XV.AbcClassPicker", container: "mainGroup", attr: "abcClass"},
       //TODO: Create an XV widget that includes an integer input field and an increase and decrease button
-      {kind: "XV.InputWidget", container: "mainGroup", attr: "cycleCountFrequency"}
+      {kind: "XV.NumberWidget", container: "mainGroup", attr: "cycleCountFrequency", scale: 0},
+      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_location".loc() },
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isLocationControl"},
+      //TODO: Add default location checkbox
+      //PICKER   - LOCATION/USER-DEFINED - (display the following 3/6 OR USERDEFINED)
+      {kind: "XV.ItemSiteLocationPicker", container: "mainGroup", attr: "receiveLocation"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isReceiveLocationAuto"},
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "stockLocation"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStockLocationAuto"},
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "issueLocation"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isIssueLocationAuto"},
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "locationComment"},
+      //LIST     - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location
+      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_planning".loc() },
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParameters"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "reorderLevel"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "orderToQuantity"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "minimumOrderQuantity"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "maximumOrderQuantity"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "orderMultipleQuantity"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParametersManual"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "safetyStock"},
+      {kind: "XV.NumberWidget", container: "mainGroup", attr: "leadTime", scale: 0}
+
     ];
 
     XV.appendExtension("XV.ItemSiteWorkspace", extensions);
