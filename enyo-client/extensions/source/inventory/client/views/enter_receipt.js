@@ -1,8 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
-/*global XT:true, XV:true, XM:true, _:true, enyo:true, console:true */
-// TODO: remove console:true
+/*global XT:true, XV:true, XM:true, _:true, enyo:true */
 
 (function () {
 
@@ -107,7 +106,7 @@ trailing:true, white:true*/
         });
       },*/
       listActionSelected: function (inSender, inEvent) {
-        console.log("list action selected");
+        //console.log("list action selected");
       },
       headerActionSelected: function (inSender, inEvent) {
         var that = this,
@@ -140,10 +139,17 @@ trailing:true, white:true*/
 
         // step 1: make sure we can do the method
         XM.Inventory[prerequisite](function (isAllowed) {
+          var notifyEvent;
+
           if (isAllowed) {
             notify();
           } else {
-            console.log("You don't have privs");
+            notifyEvent = {
+              originator: this,
+              type: XM.Model.CRITICAL,
+              message: "_canNotUpdate".loc()
+            };
+            that.doNotify(notifyEvent);
           }
         });
       }
