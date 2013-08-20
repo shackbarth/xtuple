@@ -391,7 +391,7 @@ var _ = require('underscore'),
             "', ext_id from xt.ext where ext_location = '/core-extensions';";
         }
 
-        winston.info("Committing build to database " + spec.database);
+        winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
         sendToDatabase(allSql, credsClone, spec, function (err, res) {
           databaseCallback(err, res);
