@@ -143,8 +143,6 @@ var _ = require('underscore'),
       return;
     }
 
-    // TODO: set up winston file transport
-    winston.log("Building databases with specs", JSON.stringify(specs));
 
     //
     // The function to generate all the scripts for a database
@@ -152,8 +150,6 @@ var _ = require('underscore'),
     var installDatabase = function (spec, databaseCallback) {
       var extensions = spec.extensions,
         databaseName = spec.database;
-
-      winston.log("Installing on database", databaseName);
 
       //
       // The function to install all the scripts for an extension
@@ -395,6 +391,7 @@ var _ = require('underscore'),
             "', ext_id from xt.ext where ext_location = '/core-extensions';";
         }
 
+        winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
         sendToDatabase(allSql, credsClone, spec, function (err, res) {
           databaseCallback(err, res);

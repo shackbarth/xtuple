@@ -607,7 +607,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
           if (sql.statement) {
 	    plv8.execute(sql.statement, sql.values);
-	  } 
+	  }
         }
       }
 
@@ -983,7 +983,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   orm.privileges.attribute[prop] &&
                   orm.privileges.attribute[prop].edit ?
                   this.checkPrivilege(orm.privileges.attribute[prop].edit) : true;
-          
+
         if (canEdit && val !== undefined && !ormp.toMany) {
 
           /* Handle encryption if applicable. */
@@ -1569,7 +1569,7 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-     *  Remove unprivileged attributes, primary and foreign keys from the data. 
+     *  Remove unprivileged attributes, primary and foreign keys from the data.
      *  Only removes the primary key if a natural key has been specified in the ORM.
      *
      * @param {String} Namespace
@@ -1645,7 +1645,7 @@ select xt.install_js('XT','Data','xtuple', $$
           } else if (prop.toMany && prop.toMany.isNested && item[prop.name]) {
             for (var n = 0; n < item[prop.name].length; n++) {
               val = item[prop.name][n];
-                
+
               /* Remove foreign key if applicable */
               if (!inclKeys) { delete val[prop.toMany.inverse]; }
               this.sanitize(nameSpace, prop.toMany.type, val, options);

@@ -416,7 +416,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccountRelation",
-    "table": "xt.usrinfo",
+    "table": "xt.usrlite",
     "isRest": true,
     "comment": "User Account Relation Map",
     "privileges": {
