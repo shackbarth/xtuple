@@ -16,13 +16,13 @@ white:true*/
     XM.LocationMixin = {
       format: function () {
         var ary = [
-          this.get("asile"),
+          this.get("aisle"),
           this.get("rack"),
           this.get("bin"),
           this.get("location")
         ];
         return _.filter(ary, function (item) {
-          return !_.empty(item);
+          return !_.isEmpty(item);
         }).join("-");
       }
     };

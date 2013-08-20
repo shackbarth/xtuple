@@ -79,7 +79,7 @@
         "name": "detail",
         "toMany": {
           "type": "ItemSiteDetail",
-          "column": "itemsite_id",
+          "column": "obj_uuid",
           "inverse": "itemSite"
         }
       }
@@ -90,7 +90,7 @@
     "context": "inventory",
     "nameSpace": "XM",
     "type": "ItemSiteDetail",
-    "table": "itemloc",
+    "table": "xt.itemsitedtl",
     "comment": "Item Site Detail Map",
     "privileges": {
       "all": {
@@ -120,8 +120,8 @@
       {
         "name": "itemSite",
         "attr": {
-          "type": "Number",
-          "column": "itemloc_itemsite_id"
+          "type": "String",
+          "column": "itemsite_uuid"
         }
       },
       {
