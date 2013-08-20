@@ -15,7 +15,9 @@ trailing:true, white:true*/
     var enterReceipt =  /** @lends XV.EnterReceipt# */ {
       name: "XV.EnterReceipt",
       kind: "XV.SearchContainer",
-      published: {keyAttribute: null},
+      published: {
+        key: null
+      },
       events: {
         onNotify: ""
       },
@@ -59,7 +61,9 @@ trailing:true, white:true*/
       ],
       requery: function (inSender, inEvent) {
         this.inherited(arguments);
-        var key = inEvent.originator.getParameter().value.id;
+        this.setKey(inEvent.originator.getParameter().value.id);
+
+        return true;
       },
       create: function () {
         this.inherited(arguments);
