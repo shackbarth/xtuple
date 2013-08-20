@@ -18,24 +18,22 @@
       zombieAuth.loadApp(done);
     });
 
-    // XXX This test works best on an app with all the extensions!
     it('should be plumbed correctly', function () {
-      var workspace,
-        Klass,
-        master = new enyo.Control();
-
       // look at all the workspaces in XV
       _.each(XV, function (value, key) {
         if (XV.inheritsFrom(value.prototype, "XV.Workspace")) {
-          if (key === 'SalesOrderBase' || value.prototype.modelAmnesty) {
+          if (_.contains(['SalesOrderBase', 'AccountDocumentWorkspace', 'OrderedReferenceWorkspace'], key) ||
+              value.prototype.modelAmnesty) {
             // exclude abstract classes and child workspaces
             return;
           }
 
           describe('XV.' + key, function () {
-
             it('should reflect well in the history panel', function () {
-              workspace = master.createComponent({kind: "XV." + key});
+              var master = new enyo.Control(),
+                Klass,
+                workspace = master.createComponent({kind: "XV." + key});
+
               if (workspace.model) {
                 Klass = XT.getObjectByName(workspace.model);
                 assert.isNotNull(Klass);
@@ -49,24 +47,19 @@
             });
 
             it('should have its attrs set up right', function () {
-              workspace = master.createComponent({kind: "XV." + key});
+              var master = new enyo.Control(),
+                workspace = master.createComponent({kind: "XV." + key});
+
               var attrs = _.compact(_.map(workspace.$, function (component) {
                 return component.attr;
               }));
               _.each(attrs, function (attr) {
                 common.verifyAttr(attr, workspace.model);
               });
-
-              assert.equal(1, 1);
             });
-
-
           });
         }
       });
-
     });
   });
-
-
 }());

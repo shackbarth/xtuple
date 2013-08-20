@@ -16,6 +16,11 @@
     var relations = XT.session.schemas.XM.get(XT.String.suffix(recordType)).relations,
       prefix, suffix, relation, cacheName, relatedModelPrototype;
 
+    if (typeof attr === 'object') {
+      // TODO: test these compound attrs
+      return;
+    }
+
     prefix = XT.String.prefix(attr) || attr;
     relation = _.find(relations, function (rel) {
       return rel.key === prefix;

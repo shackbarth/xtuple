@@ -32,6 +32,10 @@ white:true*/
 
     idAttribute: 'uuid',
 
+    name: function () {
+      return this.getValue("purchaseOrder.id") + " #" + this.getValue("lineNumber");
+    },
+
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       // Bind events
