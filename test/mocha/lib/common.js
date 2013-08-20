@@ -12,11 +12,8 @@
   /**
     Make sure that the attrs of a list or a workspace correspond to the schema
    */
-  exports.verifyAttr = function (attr, collName, orderByAttribute) {
-    var Coll = XM.Model.getObjectByName(collName),
-      coll = new Coll(),
-      recordType = coll.model.prototype.recordType,
-      relations = XT.session.schemas.XM.get(XT.String.suffix(recordType)).relations,
+  exports.verifyAttr = function (attr, recordType, orderByAttribute) {
+    var relations = XT.session.schemas.XM.get(XT.String.suffix(recordType)).relations,
       prefix, suffix, relation, cacheName, relatedModelPrototype;
 
     prefix = XT.String.prefix(attr) || attr;

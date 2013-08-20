@@ -33,11 +33,13 @@
 
     describe('XV lists', function () {
       it('should be set up correctly', function () {
-        var child,
-          collName,
-          master = new enyo.Control();
         // look at all the lists in XV
         _.each(XV, function (value, key) {
+          var child,
+            collName,
+            recordType,
+            master = new enyo.Control();
+
           if (XV.inheritsFrom(value.prototype, "XV.List") &&
               // don't test abstract kinds
               !_.contains(['List', 'ConfigurationsList', 'AbbreviationList', 'NameDescriptionList'], key)) {
@@ -54,6 +56,7 @@
                 // get the relations for the backing model
                 collName = child.getCollection();
                 assert.isNotNull(collName, 'XV.' + key + ' has no collection behind it');
+                recordType = XM.Model.getObjectByName(collName).prototype.model.prototype.recordType;
 
                 // get the attributes
                 var attrs = _.compact(_.map(child.$, function (component) {
@@ -65,7 +68,7 @@
 
                 // make sure that attrs with paths are for nested relations
                 _.each(attrs, function (attr) {
-                  common.verifyAttr(attr, collName, child.getQuery().orderBy[0].attribute);
+                  common.verifyAttr(attr, recordType, child.getQuery().orderBy[0].attribute);
                 });
               });
             });
@@ -73,7 +76,5 @@
         });
       });
     });
-
   });
-
 }());

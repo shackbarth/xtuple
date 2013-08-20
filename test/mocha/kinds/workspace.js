@@ -9,10 +9,8 @@
 
   var zombieAuth = require("../lib/zombie_auth"),
     _ = require("underscore"),
-    assert = require("chai").assert,
-    endsWith = function (s, key) {
-      return s.indexOf(key, s.length - key.length) !== -1;
-    };
+    common = require("../lib/common"),
+    assert = require("chai").assert;
 
   describe('Workspaces', function () {
     this.timeout(20 * 1000);
@@ -35,21 +33,9 @@
           }
 
           describe('XV.' + key, function () {
-            it('should reflect well in the history panel', function () {
-              // create the workspace
-              try {
-                workspace = master.createComponent({
-                  kind: "XV." + key,
-                  name: key
-                });
-              } catch (error) {
-                //assert.fail(1, 0, "XV." + key + " cannot be created");
-                console.log("XV." + key + " cannot be created with the extensions you " +
-                  " have installed (probably none). Best to run it with all the extensions.");
-                return;
-              }
-              assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
 
+            it('should reflect well in the history panel', function () {
+              workspace = master.createComponent({kind: "XV." + key});
               if (workspace.model) {
                 Klass = XT.getObjectByName(workspace.model);
                 assert.isNotNull(Klass);
@@ -62,7 +48,14 @@
               }
             });
 
-            it('should look nice', function () {
+            it('should have its attrs set up right', function () {
+              workspace = master.createComponent({kind: "XV." + key});
+              var attrs = _.compact(_.map(workspace.$, function (component) {
+                return component.attr;
+              }));
+              _.each(attrs, function (attr) {
+                common.verifyAttr(attr, workspace.model);
+              });
 
               assert.equal(1, 1);
             });
