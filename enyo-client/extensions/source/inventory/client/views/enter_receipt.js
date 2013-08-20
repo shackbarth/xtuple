@@ -50,7 +50,14 @@ trailing:true, white:true*/
               {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
                 placeholder: "_search".loc(), onchange: "requery"},
               {kind: "Image", src: "/assets/search-input-search.png"}
-            ]}
+            ]},
+            {
+              name: "listItemMenu",
+              kind: "onyx.Menu",
+              floating: true,
+              onSelect: "listActionSelected",
+              maxHeight: 500
+            }
           ]},
           {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0}
         ]}
@@ -58,46 +65,6 @@ trailing:true, white:true*/
       create: function () {
         this.inherited(arguments);
         this.setList({list: "XV.EnterReceiptList"});
-        /*
-        this.$.listPanel.createComponent({
-          name: "listItemMenu",
-          kind: "onyx.Menu",
-          floating: true,
-          onSelect: "listActionSelected",
-          maxHeight: 500,
-          components: [],
-          owner: this
-        });
-        */
-      },
-      /**
-      @todo Document the itemTap method.
-      */
-      itemTap: function (inSender, inEvent) {
-        /*
-        var list = inEvent.list,
-          value = list ? list.getModel(inEvent.index) : null;
-        if (value) {
-          this.close();
-          if (this.callback) { this.callback(value); }
-        }
-        */
-      },
-      /*
-      // lists are allowed to define headerActions that will
-      this.$.actionButton.setShowing(component.headerActions);
-      if (component.headerActions) {
-        _.each(component.headerActions, function (headerAction) {
-          that.$.actionMenu.createComponent({
-            name: headerAction.name,
-            kind: "XV.MenuItem",
-            content: headerAction.label || ("_" + headerAction.name).loc(),
-            action: headerAction
-          });
-        });
-      },*/
-      listActionSelected: function (inSender, inEvent) {
-        //console.log("list action selected");
       },
       headerActionSelected: function (inSender, inEvent) {
         var that = this,
