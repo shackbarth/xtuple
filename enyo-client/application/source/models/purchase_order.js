@@ -50,16 +50,6 @@ white:true*/
       return this;
     },
 
-    canReceiveAll: function (callback) {
-      var canDo = XT.session.privileges.get("EnterReceipts");
-      callback(canDo);
-      return canDo;
-    },
-
-    doReceiveAll: function (callback) {
-      return _doDispatch.call(this, "receiveAll", callback, [this.id]);
-    },
-
     save: function (key, value, options) {
       options = options ? _.clone(options) : {};
 

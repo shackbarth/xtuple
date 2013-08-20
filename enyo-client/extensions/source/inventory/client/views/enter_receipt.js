@@ -116,7 +116,6 @@ trailing:true, white:true*/
 
         switch (inEvent.originator.name) {
         case 'receiveAll':
-          model = new XM.PurchaseOrderLine();
           prerequisite = "canReceiveAll";
           method = "doReceiveAll";
           notifyMessage = "_receiveAll?";
@@ -125,7 +124,7 @@ trailing:true, white:true*/
 
         // step 3: execute the method
         execute = function () {
-          model[method]();
+          XM.Inventory[method](that.getKey());
         };
 
         // step 2: ask the user if they really want to do the method
@@ -140,7 +139,7 @@ trailing:true, white:true*/
         };
 
         // step 1: make sure we can do the method
-        model[prerequisite](function (isAllowed) {
+        XM.Inventory[prerequisite](function (isAllowed) {
           if (isAllowed) {
             notify();
           } else {

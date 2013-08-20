@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -25,9 +25,43 @@ white:true*/
             isNaN(attributes.NextShipmentNumber)) {
           params.attr = "_shipment".loc() + " " + "_number".loc();
           return XT.Error.clone('xt1003', { params: params });
-        } 
-      } 
+        }
+      }
     });
+
+    //
+    // CLASS FUNCTIONS
+    //
+    _.extend(XM.Inventory, {
+      canReceiveAll: function (callback) {
+        var canDo = XT.session.privileges.get("EnterReceipts");
+        callback(canDo);
+        return canDo;
+      },
+
+      doReceiveAll: function (id, callback) {
+        var options = {
+            error: callback,
+            success: function (resp) {
+              if (callback) {
+                callback(null, resp);
+              }
+            }
+          },
+          payload = {
+            nameSpace: "XM",
+            type: "Inventory",
+            dispatch: {
+              functionName: "receiveAll",
+              parameters: [id]
+            }
+          };
+
+        XT.dataSource.request(null, "post", payload, options);
+      }
+
+    });
+
 
     XM.inventory = new XM.Inventory();
 
