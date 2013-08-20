@@ -25,7 +25,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       database = req.session.passport.user.organization,
       scope = datasource + database + "/auth/" + database,
       audience = datasource + database + "/oauth/token",
-      superuser = X.options.databaseServer.user;
+      superuser = X.options.databaseServer.user,
+      tenant = X.options.databaseServer.uniqueTenantId;
 
     // get private key from path in config
     privKey = X.fs.readFileSync(X.options.datasource.biKeyFile);
@@ -42,10 +43,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       "scope": scope,
       "aud": audience,
       "org": database,
-      "superuser": superuser,
+      "superuser": superuser, // database user
       "datasource": datasource, // rest api url
       "exp": Math.round(expires.getTime() / 1000), // expiration date in millis
-      "iat": Math.round(today.getTime() / 1000)  // created date in millis
+      "iat": Math.round(today.getTime() / 1000),  // created date in millis
+      "tenant": tenant || "default" // unique tenant id
     };
 
     // encode and sign JWT with private key
