@@ -30,6 +30,8 @@ white:true*/
 
     recordType: 'XM.PurchaseOrderLine',
 
+    idAttribute: 'uuid',
+
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       // Bind events

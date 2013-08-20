@@ -19,6 +19,7 @@
     "public/tables/incdt.sql",
     "public/tables/itemsite.sql",
     "public/tables/metric.sql",
+    "public/tables/poitem.sql",
     "public/tables/prj.sql",
     "public/tables/prjtask.sql",
     "public/tables/ophead.sql",
