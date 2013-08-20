@@ -7,6 +7,7 @@
     "idSequenceName": "warehous_warehous_id_seq",
     "isRest": true,
     "lockable": true,
+    "lockTable": "whsinfo",
     "comment": "Site Map",
     "privileges": {
       "all": {
