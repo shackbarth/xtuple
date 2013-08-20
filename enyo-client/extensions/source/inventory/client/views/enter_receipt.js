@@ -14,9 +14,6 @@ trailing:true, white:true*/
     var enterReceipt =  /** @lends XV.EnterReceipt# */ {
       name: "XV.EnterReceipt",
       kind: "XV.SearchContainer",
-      published: {
-        key: null
-      },
       events: {
         onNotify: ""
       },
@@ -58,12 +55,6 @@ trailing:true, white:true*/
           {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0}
         ]}
       ],
-      requery: function (inSender, inEvent) {
-        this.inherited(arguments);
-        this.setKey(inEvent.originator.getParameter().value.id);
-
-        return true;
-      },
       create: function () {
         this.inherited(arguments);
         this.setList({list: "XV.EnterReceiptList"});
@@ -115,15 +106,22 @@ trailing:true, white:true*/
 
         switch (inEvent.originator.name) {
         case 'receiveAll':
-          prerequisite = "canReceiveAll";
-          method = "doReceiveAll";
+          prerequisite = "canEnterReceipt";
+          method = "enterReceipt";
           notifyMessage = "_receiveAll?";
           break;
         }
 
         // step 3: execute the method
         execute = function () {
-          XM.Inventory[method](that.getKey());
+          var listItems = _.map(that.$.list.getValue().models, function (model) {
+            return {
+              uuid: model.id,
+              quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
+              // TODO: get this off a calculate field
+            };
+          });
+          XM.Inventory[method](listItems);
         };
 
         // step 2: ask the user if they really want to do the method

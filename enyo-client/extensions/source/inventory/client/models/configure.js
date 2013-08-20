@@ -33,13 +33,18 @@ white:true*/
     // CLASS FUNCTIONS
     //
     _.extend(XM.Inventory, {
-      canReceiveAll: function (callback) {
+      canEnterReceipt: function (callback) {
         var canDo = XT.session.privileges.get("EnterReceipts");
         callback(canDo);
         return canDo;
       },
 
-      doReceiveAll: function (id, callback) {
+      /**
+        @param {Array} lineItemsDetail
+        @param {String} lineItemsDetail[n].uuid
+        @param {Number} lineItemsDetail[n].quantity
+       */
+      enterReceipt: function (lineItemsDetail, callback) {
         var options = {
             error: callback,
             success: function (resp) {
@@ -52,8 +57,8 @@ white:true*/
             nameSpace: "XM",
             type: "Inventory",
             dispatch: {
-              functionName: "receiveAll",
-              parameters: [id]
+              functionName: "enterReceipt",
+              parameters: [lineItemsDetail]
             }
           };
 

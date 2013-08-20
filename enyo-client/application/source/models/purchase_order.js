@@ -71,8 +71,10 @@ white:true*/
           itemSite = itemSites.at(0),
           issOptions = {},
           params = [
-            that.id,
-            that.get("toReceive"),
+            [{
+              uuid: that.id,
+              quantity: that.get("toReceive")
+            }],
             issOptions
           ],
           locationControl = itemSite.get("locationControl"),
