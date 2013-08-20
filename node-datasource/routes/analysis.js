@@ -26,7 +26,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       scope = datasource + database + "/auth/" + database,
       audience = datasource + database + "/oauth/token",
       superuser = X.options.databaseServer.user,
-      tenant = X.options.databaseServer.uniqueTenantId;
+      tenant = X.options.datasource.uniqueTenantId;
 
     // get private key from path in config
     privKey = X.fs.readFileSync(X.options.datasource.biKeyFile);
