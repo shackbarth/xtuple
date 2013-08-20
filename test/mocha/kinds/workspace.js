@@ -21,7 +21,7 @@
     });
 
     // XXX This test works best on an app with all the extensions!
-    it('should have reflect well in the history panel', function () {
+    it('should be plumbed correctly', function () {
       var workspace,
         Klass,
         master = new enyo.Control();
@@ -33,37 +33,42 @@
             // exclude abstract classes and child workspaces
             return;
           }
-          if (['EnterReceiptWorkspace'].indexOf(key) >= 0) {
-            // TODO: investigate these workspaces
-            return;
-          }
 
+          describe('XV.' + key, function () {
+            it('should reflect well in the history panel', function () {
+              // create the workspace
+              try {
+                workspace = master.createComponent({
+                  kind: "XV." + key,
+                  name: key
+                });
+              } catch (error) {
+                //assert.fail(1, 0, "XV." + key + " cannot be created");
+                console.log("XV." + key + " cannot be created with the extensions you " +
+                  " have installed (probably none). Best to run it with all the extensions.");
+                return;
+              }
+              assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
 
-
-          // create the workspace
-          try {
-            workspace = master.createComponent({
-              kind: "XV." + key,
-              name: key
+              if (workspace.model) {
+                Klass = XT.getObjectByName(workspace.model);
+                assert.isNotNull(Klass);
+                if (Klass.prototype.getAttributeNames().indexOf(Klass.prototype.nameAttribute) < 0 &&
+                    typeof Klass.prototype[Klass.prototype.nameAttribute] !== 'function' &&
+                    Klass.prototype.idAttribute === 'uuid') {
+                  assert.fail(0, 1, workspace.model + " does not contain its nameAttribute, which will reflect " +
+                    "poorly in the history panel");
+                }
+              }
             });
-          } catch (error) {
-            //assert.fail(1, 0, "XV." + key + " cannot be created");
-            console.log("XV." + key + " cannot be created with the extensions you " +
-              " have installed (probably none). Best to run it with all the extensions.");
-            return;
-          }
-          assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
 
-          if (workspace.model) {
-            Klass = XT.getObjectByName(workspace.model);
-            assert.isNotNull(Klass);
-            if (Klass.prototype.getAttributeNames().indexOf(Klass.prototype.nameAttribute) < 0 &&
-                typeof Klass.prototype[Klass.prototype.nameAttribute] !== 'function' &&
-                Klass.prototype.idAttribute === 'uuid') {
-              assert.fail(0, 1, workspace.model + " does not contain its nameAttribute, which will reflect " +
-                "poorly in the history panel");
-            }
-          }
+            it('should look nice', function () {
+
+              assert.equal(1, 1);
+            });
+
+
+          });
         }
       });
 
