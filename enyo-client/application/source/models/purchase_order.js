@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -51,11 +51,13 @@ white:true*/
     },
 
     canReceiveAll: function (callback) {
-      return XT.session.privileges.get("EnterReceipts");
+      var canDo = XT.session.privileges.get("EnterReceipts");
+      callback(canDo);
+      return canDo;
     },
 
-    doReceiveAll: function (callback, id) {
-      return _doDispatch.call(this, "receiveAll", callback, [id]);
+    doReceiveAll: function (callback) {
+      return _doDispatch.call(this, "receiveAll", callback, [this.id]);
     },
 
     save: function (key, value, options) {
@@ -92,7 +94,7 @@ white:true*/
           // Callback to handle detail if applicable
           callback = function (detail) {
             var dispOptions = {};
-            
+
             // Refresh the model we started from passing options through
             dispOptions.success = function () {
               that.fetch(options);
@@ -101,7 +103,7 @@ white:true*/
               issOptions.detail = detail;
             }
             that.dispatch("XM.Inventory", "enterReceipt", params, dispOptions);
-            
+
           };
         if (requiresDetail) {
           // Send notification that we need to accumulate detail

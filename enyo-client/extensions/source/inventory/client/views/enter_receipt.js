@@ -16,6 +16,9 @@ trailing:true, white:true*/
       name: "XV.EnterReceipt",
       kind: "XV.SearchContainer",
       published: {keyAttribute: null},
+      events: {
+        onNotify: ""
+      },
       handlers: {
         onListItemMenuTap: "showListItemMenu"
       },
@@ -23,24 +26,14 @@ trailing:true, white:true*/
         {name: "parameterPanel", kind: "FittableRows", classes: "left",
           components: [
           {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-            {kind: "onyx.Button", name: "backButton", content: "_back".loc(),
-              ontap: "close"},
+            {kind: "onyx.Button", name: "backButton", content: "_back".loc(), ontap: "close"},
             {
               kind: "onyx.MenuDecorator",
               components: [
                 {kind: "XV.IconButton", src: "/assets/menu-icon-gear.png",
-                  content: "_actions".loc(), name: "headerActionButton"},
-                {kind: "onyx.Menu",
-                    ontap: "headerActionSelected",
-                    name: "headerActionMenu", components: [
-                  {kind: "XV.MenuItem",
-                    content: "receiveAll".loc(),
-                    name: "receiveAll",
-                    prerequisite: "canReceiveAll",
-                    method: "doReceiveAll",
-                    notifyMessage: "_receiveAll?",
-                    modelName: "XM.PurchaseOrderLine"
-                  }
+                  content: "_actions".loc() },
+                {kind: "onyx.Menu", ontap: "headerActionSelected", components: [
+                  {kind: "XV.MenuItem", content: "_receiveAll".loc(), name: "receiveAll" }
                 ]}
               ]
             }
@@ -113,7 +106,43 @@ trailing:true, white:true*/
         console.log("list action selected");
       },
       headerActionSelected: function (inSender, inEvent) {
-        console.log("header action selected");
+        var that = this,
+          execute, notify,
+          model, prerequisite, method, notifyMessage;
+
+        switch (inEvent.originator.name) {
+        case 'receiveAll':
+          model = new XM.PurchaseOrderLine();
+          prerequisite = "canReceiveAll";
+          method = "doReceiveAll";
+          notifyMessage = "_receiveAll?";
+          break;
+        }
+
+        // step 3: execute the method
+        execute = function () {
+          model[method]();
+        };
+
+        // step 2: ask the user if they really want to do the method
+        notify = function () {
+          var notifyEvent = {
+            originator: this,
+            message: notifyMessage,
+            type: XM.Model.QUESTION,
+            callback: execute
+          };
+          that.doNotify(notifyEvent);
+        };
+
+        // step 1: make sure we can do the method
+        model[prerequisite](function (isAllowed) {
+          if (isAllowed) {
+            notify();
+          } else {
+            console.log("You don't have privs");
+          }
+        });
       }
     };
 

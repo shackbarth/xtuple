@@ -347,9 +347,14 @@ select xt.install_js('XM','Inventory','xtuple', $$
     
     /* Post the transaction */
     sql = "select public.enterporeceipt(poitem_id, poitem_qty_ordered) as series " + 
-      "from poitem join pohead on poitem_pohead_id = pohead_id where ( (poitem_status <> 'C') and (pohead_number=$1));",
-     
+      "from poitem join pohead on poitem_pohead_id = pohead_id where ( (poitem_status <> 'C') and (pohead_number=$1));";
+    
+    XT.debug("purchase order is", purchaseOrder); 
+    XT.debug(sql, purchaseOrder); 
+    var result = plv8.execute(sql, [purchaseOrder]);
+    XT.debug("result " + result.length); 
     series = plv8.execute(sql, [purchaseOrder])[0].series;
+
 
     /* Distribute detail */
     XM.PrivateInventory.distribute(series, options.detail);
