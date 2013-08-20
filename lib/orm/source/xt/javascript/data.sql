@@ -1243,29 +1243,22 @@ select xt.install_js('XT','Data','xtuple', $$
       for this request but will be conveniently forgotten between requests.
      */
     fetchOrm: function (nameSpace, type) {
-      var db = XT.currentDb(),
-        res,
+      var res,
         ret,
         recordType = nameSpace + '.'+ type;
 
       if (!this._maps) {
-        this._maps = {};
-      }
-      if (!this._maps[db]) {
-        this._maps[db] = {};
-      }
-      if (!this._maps[db][XT.username]) {
-        this._maps[db][XT.username] = [];
+        this._maps = [];
       }
 
-      res = this._maps[db][XT.username].findProperty('recordType', recordType);
+      res = this._maps.findProperty('recordType', recordType);
       if (res) {
         ret = res.map;
       } else {
         ret = XT.Orm.fetch(nameSpace, type);
 
         /* cache the result so we don't requery needlessly */
-        this._maps[db][XT.username].push({ "recordType": recordType, "map": ret});
+        this._maps.push({ "recordType": recordType, "map": ret});
       }
       return ret;
     },

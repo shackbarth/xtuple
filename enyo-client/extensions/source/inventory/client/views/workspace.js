@@ -119,6 +119,10 @@ trailing:true, white:true*/
       kind: "XV.Workspace",
       title: "_issueStock".loc(),
       model: "XM.IssueToShipping",
+      saveText: "_issue".loc(),
+      hideApply: true,
+      hideRefresh: true,
+      dirtyWarn: false,
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -130,16 +134,18 @@ trailing:true, white:true*/
               {kind: "XV.ShipmentWidget", attr: "shipment"},
               {kind: "onyx.GroupboxHeader", content: "_item".loc()},
               {kind: "XV.ItemSiteWidget", attr:
-                {item: "item", site: "site"}
+                {item: "itemSite.item", site: "itemSite.site"}
               },
               {kind: "XV.QuantityWidget", attr: "ordered"},
               {kind: "XV.QuantityWidget", attr: "shipped"},
               {kind: "XV.QuantityWidget", attr: "returned"},
               {kind: "XV.QuantityWidget", attr: "balance"},
+              {kind: "XV.QuantityWidget", attr: "atShipping"},
               {kind: "onyx.GroupboxHeader", content: "_issue".loc()},
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
           ]},
+          {kind: "XV.IssueToShippingDetailRelationsBox", attr: "itemSite.detail", fit: true}
         ]}
       ],
       attributesChanged: function () {

@@ -40,6 +40,7 @@ white:true*/
       recordType: 'XM.IssueToShipping',
 
       readOnlyAttributes: [
+        "atShipping",
         "balance",
         "item",
         "order",
@@ -97,73 +98,64 @@ white:true*/
           options = value ? _.clone(value) : {};
         }
 
-        // Need to get more info about the itemsite first
-        var query = {},
-          that = this,
-          itemSites = new XM.ItemSiteRelationCollection(),
-          fetchOptions = {query: query};
-
-        fetchOptions.success = function () {
-          var K = XM.ItemSite,
-            itemSite = itemSites.at(0),
+        var that = this,
+          locationControl = this.getValue("itemsite.locationControl"),
+          callback,
+          success = options.success;
+        
+        // Callback for after we determine quantity validity
+        callback = function (resp) {
+          if (!resp.answer) { return; }
+            
+          var dispOptions = {},
             issOptions = {},
             params = [
               that.id,
               that.get("toIssue"),
               issOptions
-            ],
-            locationControl = itemSite.get("locationControl"),
-            controlMethod = itemSite.controlMethod,
-            // Techically check for LOT / SERIAL should be done in standard ed.
-            // but let's just get it working for now.
-            requiresDetail = locationControl ||
-              controlMethod === K.LOT_CONTROL ||
-              controlMethod === K.SERIAL_CONTROL,
+            ];
 
-            // Callback to handle detail if applicable
-            callback = function (detail) {
-              var dispOptions = {};
-
-              // Refresh the model we started from passing options through
-              dispOptions.success = function () {
-                that.fetch(options);
-              };
-              if (detail) {
-                issOptions.detail = detail;
-              }
-              that.dispatch("XM.Inventory", "issueToShipping", params, dispOptions);
-
-            };
-          if (requiresDetail) {
-            // Send notification that we need to accumulate detail
-            // Execute callback when we get results
-          } else {
-            callback();
+          // Refresh once we've completed the work
+          dispOptions.success = function () {
+            that.fetch(options);
+          };
+          /*
+          if (detail.length) {
+            issOptions.detail = detail;
           }
+          */
+          that.setStatus(XM.Model.BUSY_COMMITTING);
+          that.dispatch("XM.Inventory", "issueToShipping", params, dispOptions);
 
         };
 
-        query.parameters = [
-          {
-            attribute: "item",
-            value: this.get("item")
-          },
-          {
-            attribute: "site",
-            value: this.get("site")
-          }
-        ];
+        // Validate
+        if (this.get("toIssue") <= 0) {
+          this.trigger('invalid', this, XT.Error.clone('xt2013'), options || {});
+        } else if (!this.issueBalance() && this.get("toIssue") > 0) {
+          this.notify("_issueExcess".loc(), {
+            type: XM.Model.QUESTION,
+            callback: callback
+          });
+        } else {
+          callback({answer: true});
+        }
 
-        itemSites.fetch(fetchOptions);
         return this;
+      },
+
+      issueBalance: function () {
+        var balance = this.get("balance"),
+          atShipping = this.get("atShipping"),
+          toIssue = XT.math.subtract(balance, atShipping, XT.QUANTITY_SCALE);
+        return toIssue >= 0 ? toIssue : 0;
       },
 
       statusDidChange: function () {
         if (this.getStatus() === XM.Model.READY_CLEAN) {
-          this.set("toIssue", this.get("balance"));
+          this.set("toIssue", this.issueBalance());
         }
       }
-
 
     });
 
