@@ -1,6 +1,6 @@
 [  
   {
-    "context": "xtuple",
+    "context": "inventory",
     "nameSpace": "XM",
     "type": "SalesOrderLineListItem",
     "table": "xt.coiteminfo",

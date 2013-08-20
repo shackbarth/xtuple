@@ -306,7 +306,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "inventory",
     "nameSpace": "XM",
     "type": "IssueToShipping",
     "table": "xt.coitemship",

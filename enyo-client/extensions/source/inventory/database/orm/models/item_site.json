@@ -1,6 +1,6 @@
 [
   {
-    "context": "xtuple",
+    "context": "inventory",
     "nameSpace": "XM",
     "type": "ItemSiteInventory",
     "table": "itemsite",
@@ -87,7 +87,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "inventory",
     "nameSpace": "XM",
     "type": "ItemSiteDetail",
     "table": "itemloc",
