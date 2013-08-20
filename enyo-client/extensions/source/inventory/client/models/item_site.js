@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, _:true */
 
 (function () {
   "use strict";
@@ -39,7 +39,28 @@ white:true*/
     */
     XM.ItemSiteDetail = XM.Model.extend({
       
-      recordType: "XM.ItemSiteDetail"
+      recordType: "XM.ItemSiteDetail",
+
+      /**
+        Set selected to zero.
+
+      */
+      deselect: function () {
+        this.set("selected", 0);
+        return this;
+      },
+
+      /**
+        Select the balance available up to the quantity passed.
+
+        @param {Number} Quantity
+      */
+      select: function (qty) {
+        var qoh = this.get("quantity"),
+          sel = qty > qoh ? qoh : qty;
+        this.set("selected", sel);
+        return this;
+      }
 
     });
   
@@ -64,7 +85,7 @@ white:true*/
         @type String
         @default S
       */
-      NO_COST: 'N',
+      NO_COST: "N",
 
       /**
         Standard Cost.
@@ -74,7 +95,7 @@ white:true*/
         @type String
         @default S
       */
-      STANDARD_COST: 'S',
+      STANDARD_COST: "S",
 
       /**
         Average Cost.
@@ -84,7 +105,7 @@ white:true*/
         @type String
         @default 'A'
       */
-      AVERAGE_COST: 'A',
+      AVERAGE_COST: "A",
 
       /**
         Job Cost.
@@ -94,7 +115,7 @@ white:true*/
         @type String
         @default J
       */
-      JOB_COST: 'J',
+      JOB_COST: "J",
 
       /**
         Not controlled method
@@ -104,7 +125,7 @@ white:true*/
         @type String
         @default 'N'
       */
-      NO_CONTROL: 'N',
+      NO_CONTROL: "N",
 
       /**
         Regular control method
@@ -114,7 +135,7 @@ white:true*/
         @type String
         @default 'R'
       */
-      REGULAR_CONTROL: 'R',
+      REGULAR_CONTROL: "R",
 
     // TO DO: Move LOT and SERIAL constants to standard edition
 
@@ -126,7 +147,7 @@ white:true*/
         @type String
         @default L
       */
-      LOT_CONTROL: 'L',
+      LOT_CONTROL: "L",
 
 
       /**
@@ -137,7 +158,7 @@ white:true*/
         @type Number
         @default 'S'
       */
-      SERIAL_CONTROL: 'S'
+      SERIAL_CONTROL: "S"
 
     });
 

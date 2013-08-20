@@ -137,6 +137,13 @@
           "type": "Number",
           "column": "itemloc_qty"
         }
+      },
+      {
+        "name": "selected",
+        "attr": {
+          "type": "Number",
+          "column": "selected"
+        }
       }
     ],
     "isSystem": true

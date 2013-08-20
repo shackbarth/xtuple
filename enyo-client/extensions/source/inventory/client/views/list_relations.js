@@ -15,11 +15,12 @@ trailing:true, white:true*/
     enyo.kind({
       name: "XV.IssueToShippingDetailListRelations",
       kind: "XV.ListRelations",
-      /*
       orderBy: [
-        {attribute: "issued"}
+        {attribute: "aisle"},
+        {attribute: "rack"},
+        {attribute: "bin"},
+        {attribute: "location"}
       ],
-      */
       parentKey: "itemSite",
       components: [
         {kind: "XV.ListItem", components: [
@@ -29,7 +30,8 @@ trailing:true, white:true*/
                 {kind: "XV.ListAttr", attr: "location", formatter: "formatLocation"},
                 {kind: "XV.ListAttr", attr: "quantity", formatter: "formatQuantity",
                   classes: "right"},
-                {kind: "XV.ListAttr", attr: "orderLine.item.number", fit: true}
+                {kind: "XV.ListAttr", attr: "selected", formatter: "formatQuantity",
+                  classes: "right"}
               ]}
             ]}
           ]}
