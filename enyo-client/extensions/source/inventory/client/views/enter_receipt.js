@@ -132,6 +132,32 @@ trailing:true, white:true*/
       }
     });
 
+    enyo.kind({
+      name: "XV.IssueToShipping",
+      kind: "XV.TransactionList",
+      prerequisite: "canIssueToShipping",
+      notifyMessage: "_issueAll?".loc(),
+      create: function () {
+        this.inherited(arguments);
+        this.setList({list: "XV.IssueToShippingList"});
+        this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_issueToShipping".loc() });
+      },
+      executeDispatch: function () {
+        var that = this,
+          listItems = [],/* TODO_.map(that.$.list.getValue().models, function (model) {
+            return {
+              uuid: model.id,
+              quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
+              // TODO: get this off a calculated field
+            };
+          })*/
+          callback = function () {
+            // TODO: verify this actually worked
+            XT.log("Success!?", arguments);
+          };
+        XM.Inventory.issueToShipping(listItems, callback);
+      }
+    });
   };
 
 }());
