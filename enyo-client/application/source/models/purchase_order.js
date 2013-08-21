@@ -42,20 +42,6 @@ white:true*/
       this.on('statusChange', this.statusDidChange);
     },
 
-    canEnterReceipt: function (callback) {
-      if (callback) {
-        callback(true);
-      }
-      return this;
-    },
-
-    doEnterReceipt: function (callback) {
-      if (callback) {
-        callback(true);
-      }
-      return this;
-    },
-
     save: function (key, value, options) {
       options = options ? _.clone(options) : {};
 
@@ -164,27 +150,6 @@ white:true*/
     editableModel: 'XM.PurchaseOrder'
 
   });
-
-  /** @private */
-  var _canDo = function (priv, callback) {
-    var ret = XT.session.privileges.get(priv);
-    if (callback) {
-      callback(ret);
-    }
-    return ret;
-  };
-
-  /** @private */
-  var _doDispatch = function (method, callback, params) {
-    var that = this,
-      options = {};
-    params = params || [];
-    options.error = function (resp) {
-      if (callback) { callback(resp); }
-    };
-    this.dispatch("XM.Inventory", method, params, options);
-    return this;
-  };
 
   // ..........................................................
   // COLLECTIONS
