@@ -42,11 +42,11 @@ white:true*/
       recordType: "XM.ItemSiteDetail",
 
       /**
-        Set selected to zero.
+        Set distributed to zero.
 
       */
-      deselect: function () {
-        this.set("selected", 0);
+      clear: function () {
+        this.set("distributed", 0);
         return this;
       },
 
@@ -55,10 +55,10 @@ white:true*/
 
         @param {Number} Quantity
       */
-      select: function (qty) {
+      distribute: function (qty) {
         var qoh = this.get("quantity"),
           sel = qty > qoh ? qoh : qty;
-        this.set("selected", sel);
+        this.set("distributed", sel);
         return this;
       }
 

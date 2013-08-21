@@ -139,10 +139,10 @@
         }
       },
       {
-        "name": "selected",
+        "name": "distributed",
         "attr": {
           "type": "Number",
-          "column": "selected"
+          "column": "distributed"
         }
       }
     ],

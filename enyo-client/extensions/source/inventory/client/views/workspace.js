@@ -123,6 +123,9 @@ trailing:true, white:true*/
       hideApply: true,
       hideRefresh: true,
       dirtyWarn: false,
+      handlers: {
+        onDetailSelectionChanged: "toggleDetailSelection"
+      },
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -156,6 +159,19 @@ trailing:true, white:true*/
           this.$.toIssue.focus();
           this.$.toIssue.$.input.selectContents();
           this._focused = true;
+        }
+      },
+      /**
+        If detail has been selected or deselected, handle default distribution.
+      */
+      toggleDetailSelection: function (inSender, inEvent) {
+        var detail = inEvent.model,
+          undistributed = this.getValue().undistributed;
+        if (!detail) { return; }
+        if (inEvent.isSelected) {
+          detail.distribute(undistributed);
+        } else {
+          detail.clear();
         }
       }
     });
