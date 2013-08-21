@@ -1,4 +1,98 @@
-1.4.0 (2013/06)
+1.4.1 (2013/08/21)
+===============
+
+Features and bugfixes
+----------------
+- Implemented
+  issue #[18668](http://www.xtuple.org/xtincident/view/bugs/18668)
+  _Initial documentation build for Mobile platform_
+- Implemented
+  issue #[19294](http://www.xtuple.org/xtincident/view/bugs/19294)
+  _OAuth 2.0 - Refactor route and functor mapping in Express to use a loop for loading_
+- Implemented
+  issue #[19303](http://www.xtuple.org/xtincident/view/bugs/19303)
+  _REST - Add Discovery Service routes_
+- Implemented
+  issue #[19305](http://www.xtuple.org/xtincident/view/bugs/19305)
+  _REST - Add route handler functions for end point CRUD_
+- Implemented
+  issue #[19306](http://www.xtuple.org/xtincident/view/bugs/19306)
+  _REST - Add "service" endpoints_
+- Completed
+  issue #[19443](http://www.xtuple.org/xtincident/view/bugs/19443)
+  _Use data schema in Pentaho report scripts_
+- Fixed
+  issue #[20195](http://www.xtuple.org/xtincident/view/bugs/20195)
+  _*Irrelevant behavior is observed on re-opening a quote_
+- Fixed
+  issue #[20265](http://www.xtuple.org/xtincident/view/bugs/20265)
+  _OAUTH - Existing session/cookie causes client to load. Fix redirect to auth dialog page_
+- Fixed
+  issue #[20458](http://www.xtuple.org/xtincident/view/bugs/20458)
+  _Editing Worksheet Time Billable does not save_
+- Fixed
+  issue #[20642](http://www.xtuple.org/xtincident/view/bugs/20642)
+  _Filters broken on incidents_
+- Implemented
+  issue #[20864](http://www.xtuple.org/xtincident/view/bugs/20864)
+  _Grid entry for Sales Order on Desktop based browser client_
+- Implemented
+  issue #[20866](http://www.xtuple.org/xtincident/view/bugs/20866)
+  _Allow filters to be saved on lists_
+- Fixed
+  issue #[20886](http://www.xtuple.org/xtincident/view/bugs/20886)
+  _Searchable is required on New Characteristic_
+- Implemented
+  issue #[20890](http://www.xtuple.org/xtincident/view/bugs/20890)
+  _OAuth2 - Admin Interface Usability Tweaks_
+- Fixed
+  issue #[20891](http://www.xtuple.org/xtincident/view/bugs/20891)
+  _Add "website" to contact overview_
+- Fixed
+  issue #[20898](http://www.xtuple.org/xtincident/view/bugs/20898)
+  _Item Site not populating correctly for Sales Order_
+- Fixed
+  issue #[20899](http://www.xtuple.org/xtincident/view/bugs/20899)
+  _Advanced Search does not display list after clearing bad data_
+- Fixed
+  issue #[20902](http://www.xtuple.org/xtincident/view/bugs/20902)
+  _Adding an Item to Quote_
+- Fixed
+  issue #[20908](http://www.xtuple.org/xtincident/view/bugs/20908)
+  _Dashboard Charts shrink upon returning to Dashboard screen_
+- Fixed
+  issue #[20932](http://www.xtuple.org/xtincident/view/bugs/20932)
+  _Dashboard Query is not working_
+- Fixed
+  issue #[20979](http://www.xtuple.org/xtincident/view/bugs/20979)
+  _oath2client table entry for Pentaho needs to use default database_
+- Fixed
+  issue #[20983](http://www.xtuple.org/xtincident/view/bugs/20983)
+  _History shows "undefined" for many objects_
+- Fixed
+  issue #[20989](http://www.xtuple.org/xtincident/view/bugs/20989)
+  _oauth2 check for JWT issued in the future causes timing problem_
+- Fixed
+  issue #[21016](http://www.xtuple.org/xtincident/view/bugs/21016)
+  _Cost Categories Desciption alignment is wrong_
+- Fixed
+  issue #[21051](http://www.xtuple.org/xtincident/view/bugs/21051)
+  _Characteristic - No Error message when trying to save without a role_
+- Fixed
+  issue #[21055](http://www.xtuple.org/xtincident/view/bugs/21055)
+  _Updating Extensions on Role will not allow application to load on login_
+- Fixed
+  issue #[21066](http://www.xtuple.org/xtincident/view/bugs/21066)
+  _Editing a Sales Order gives _shipped error_
+- Fixed
+  issue #[21129](http://www.xtuple.org/xtincident/view/bugs/21129)
+  _Sales Analysis user can not use Pentaho single sign on without admin privilege_
+- Fixed
+  issue #[21138](http://www.xtuple.org/xtincident/view/bugs/21138)
+  _Relation Lists are not loading Properly in Workspaces_
+
+
+1.4.0 (2013/08/07)
 ===============
 
 Features and bugfixes
