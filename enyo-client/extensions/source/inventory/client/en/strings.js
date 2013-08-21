@@ -30,6 +30,8 @@ var lang = XT.stringsFor("en_US", {
   "_inventory": "Inventory",
 	"_inventoryDescription": "Shipping and Receiving, Inventory and Cost Management",
   "_issue": "Issue",
+  "_issueAll": "Issue All",
+  "_issueAll?": "Are you sure you want to issue stock for all these items?",
   "_issueExcess": "You are attempting to issue more material than is required. Are you sure you want to do this?",
   "_issueLine": "Issue Line",
   "_issueStock": "Issue Stock",

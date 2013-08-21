@@ -35,7 +35,7 @@ white:true*/
     _.extend(XM.Inventory, {
 
       canIssueStock: function (callback) {
-        var canDo = true; // TODO ??? //XT.session.privileges.get("EnterReceipts");
+        var canDo = true; // TODO Is this always true?
         callback(canDo);
         return canDo;
       },

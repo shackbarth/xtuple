@@ -124,10 +124,8 @@ trailing:true, white:true*/
               // TODO: get this off a calculated field
             };
           }),
-          callback = function () {
-            // TODO: verify this actually worked
-            XT.log("Success!?", arguments);
-          };
+          // TODO: verify this actually worked
+          callback = function () {};
 
         XM.Inventory.enterReceipt(listItems, callback);
       }
@@ -152,10 +150,8 @@ trailing:true, white:true*/
               // TODO: get this off a calculated field
             };
           })*/
-          callback = function () {
-            // TODO: verify this actually worked
-            XT.log("Success!?", arguments);
-          };
+          // TODO: verify this actually worked
+          callback = function () {};
 
         XM.Inventory.issueStock(listItems, callback);
       }
