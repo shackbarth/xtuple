@@ -1,6 +1,6 @@
 [
   {
-    "context": "xtuple",
+    "context": "inventory",
     "nameSpace": "XM",
     "type": "Receipt",
     "table": "recv",

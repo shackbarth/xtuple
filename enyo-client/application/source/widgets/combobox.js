@@ -111,7 +111,9 @@ regexp:true, undef:true, trailing:true, white:true */
     */
     countryChanged: function () {
       var country = this.getCountry();
-      if (typeof country === 'string') {
+      if (!country) {
+        this._countryId = undefined;
+      } else if (typeof country === 'string') {
         country = _.find(XM.countries.models, function (model) {
           return model.get('name') === country;
         });

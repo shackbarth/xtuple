@@ -11,7 +11,27 @@ white:true*/
     /**
       @class
 
+      Mixin for formatting location data.
+    */
+    XM.LocationMixin = {
+      format: function () {
+        var ary = [
+          this.get("aisle"),
+          this.get("rack"),
+          this.get("bin"),
+          this.get("location")
+        ];
+        return _.filter(ary, function (item) {
+          return !_.isEmpty(item);
+        }).join("-");
+      }
+    };
+
+    /**
+      @class
+
       @extends XM.Model
+      @extends XM.LocationMixin
     */
     XM.Location = XM.Model.extend({
       
@@ -19,10 +39,14 @@ white:true*/
 
     });
 
+    // Add in location mixin
+    XM.Location = XM.Location.extend(XM.LocationMixin);
+
     /**
       @class
 
       @extends XM.Info
+      @extends XM.LocationMixin
     */
     XM.LocationRelation = XM.Model.extend({
       
@@ -31,6 +55,9 @@ white:true*/
       editableModel: "XM.Location"
 
     });
+
+    // Add in location mixin
+    XM.LocationRelation = XM.LocationRelation.extend(XM.LocationMixin);
 
     // ..........................................................
     // COLLECTIONS
