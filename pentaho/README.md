@@ -6,6 +6,7 @@ serve reports.
 
 Install Java & Maven
 --------------------
+
 	sudo apt-get install openjdk-6-jdk
 	sudo apt-get install maven2
 
@@ -18,6 +19,7 @@ Dowload pre-configured Pentaho from http://sourceforge.net/projects/erpbi/files/
 
 Install Reports
 -------------------
+
 	export BISERVER_HOME= ~/ErpBI-x.x.x
 	cd xtuple/pentaho/datasource
 	./build.sh
@@ -25,12 +27,16 @@ Install Reports
 Start Server
 ------------
 If the server is already running you will need shut down first:
+
 	cd ~/ErpBI-x.x.x/biserver-ce
 	sudo ./stop-pentaho.sh
+	
 Then start up:
+
 	sudo ./stop-pentaho.sh
 	
 The build adds resources to the BI Server so the repository cache must be refreshed:
+
 	connect to http://localhost:8080
 	log in as admin/Car54WhereRU
 	tools > Refresh > Repository Cache
@@ -40,17 +46,21 @@ The build adds resources to the BI Server so the repository cache must be refres
 Connect Mobile App to Server
 ----------------------------
 Edit xtuple/node-datasource/config.js defining the server URL.  For example:
+
       biUrl: "http://192.168.56.101:8080/pentaho/content/reporting/reportviewer/report.html?solution=xtuple&path=%2Fprpt&locale=en_US&userid=reports&password=password&output-target=pageable/pdf"
 
-Also, Mobile Client SSL keys must have a Common Name. Make sure common name is you IP address when you run openssl req.
-	openssl genrsa -des3 -out server.key -passout pass:xtuple
-	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple 
+Also, Mobile Client SSL keys must have a Common Name. Make sure common name is your URL or IP address when you run openssl req.
+
+	cd xtuple/node-datasource/lib/private
+	openssl genrsa -des3 -out server.key -passout pass:admin 1024
+	openssl rsa -in server.key -passin pass:admin -out key.pem -passout pass:admin
 	openssl req -new -key key.pem -out server.csr
-	sudo bash -c " openssl rsa -in server.key -passin pass:xtuple -passout pass:xtuple -pubout > server.pub"
+	openssl x509 -req -days 365 -in server.csr -signkey key.pem -out server.crt
 	  
 Report Flow
 ===========
 The route for a print action requests a report from the BI Server with a URL like:
+
 	http://localhost:8080/pentaho/content/reporting/reportviewer/report.html
 	?solution=erpbi-reports
 	&path=test

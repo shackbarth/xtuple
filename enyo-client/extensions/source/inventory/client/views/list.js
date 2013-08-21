@@ -214,11 +214,11 @@ trailing:true, white:true*/
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
                 {kind: "XV.ListAttr", attr: "lineNumber"},
-                {kind: "XV.ListAttr", attr: "site.code",
+                {kind: "XV.ListAttr", attr: "itemSite.site.code",
                   classes: "right"},
-                {kind: "XV.ListAttr", attr: "item.number", fit: true}
+                {kind: "XV.ListAttr", attr: "itemSite.item.number", fit: true}
               ]},
-              {kind: "XV.ListAttr", attr: "item.description1",
+              {kind: "XV.ListAttr", attr: "itemSite.item.description1",
                 fit: true,  style: "text-indent: 18px;"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [

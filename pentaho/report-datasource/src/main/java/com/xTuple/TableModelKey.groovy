@@ -29,6 +29,9 @@ class TableModelKey{
 	  def schema = struct[position]["properties"]
       schema.each { it ->
 		  
+		  // Ignore arrays as we can't put an array in a report field.
+		  if (it.value["items"] == null) {
+		  
 		  	 // If an object, recurse and add children
              if (it.value["type"].toString() == "object") {             
                     //json[prefix + '.' + it.key] = it.value.getClass().toString().minus('class ')
@@ -39,7 +42,6 @@ class TableModelKey{
                     }
             }
 			// If not an object, add it with correct Java class understood by reports.
-			// But ignore type array as we can't put an array in a report field.
             else {
 					if (it.value["type"].toString() == "string") { 
 						json[prefix + '.' + it.key] = "java.lang.String"
@@ -54,7 +56,7 @@ class TableModelKey{
 						json[prefix + '.' + it.key] = "java.math.BigDecimal"
 					}
             }
-    
+		  }
       }
       return json
 
