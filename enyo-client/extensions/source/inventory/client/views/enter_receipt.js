@@ -8,10 +8,10 @@ trailing:true, white:true*/
   XT.extensions.inventory.initEnterReceipt = function () {
 
     /**
-      @name XV.EnterReceipt
+      @name XV.TransactionList
       @extends XV.SearchContainer
      */
-    var transactionList =  /** @lends XV.EnterReceipt# */ {
+    var transactionList =  /** @lends XV.TransactionList# */ {
       name: "XV.TransactionList",
       kind: "XV.SearchContainer",
       published: {
@@ -34,9 +34,7 @@ trailing:true, white:true*/
               components: [
                 {kind: "XV.IconButton", src: "/assets/menu-icon-gear.png",
                   content: "_actions".loc() },
-                {kind: "onyx.Menu", ontap: "headerActionSelected", components: [
-                  {kind: "XV.MenuItem", content: "_receiveAll".loc(), name: "receiveAll" }
-                ]}
+                {kind: "onyx.Menu", name: "headerMenu", ontap: "headerActionSelected" }
               ]
             }
           ]},
@@ -69,6 +67,8 @@ trailing:true, white:true*/
       create: function () {
         this.inherited(arguments);
         this.setList({list: "XV.EnterReceiptList"});
+
+        this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_receiveAll".loc() });
       },
       executeDispatch: function () {
         var that = this,
@@ -80,9 +80,10 @@ trailing:true, white:true*/
             };
           }),
           callback = function () {
+            // TODO: verify this actually worked
             XT.log("Success!?", arguments);
           };
-        XM.Inventory.enterReceipt(listItems);
+        XM.Inventory.enterReceipt(listItems, callback);
       },
       headerActionSelected: function (inSender, inEvent) {
         var that = this,
