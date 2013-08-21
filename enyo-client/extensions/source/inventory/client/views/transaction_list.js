@@ -5,7 +5,7 @@ trailing:true, white:true*/
 
 (function () {
 
-  XT.extensions.inventory.initEnterReceipt = function () {
+  XT.extensions.inventory.initTransactionList = function () {
 
     /**
       @name XV.TransactionList
