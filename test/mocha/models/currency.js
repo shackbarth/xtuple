@@ -14,7 +14,7 @@
       createHash : {
         name: 'rupee' + Math.random(),
         symbol: 'R',
-        abbreviation: 'RUP'
+        abbreviation: Math.random().toString(36).slice(2, 5)
       },
       updateHash : {
         symbol: 'Rs'
