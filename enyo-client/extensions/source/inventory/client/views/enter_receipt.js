@@ -15,8 +15,8 @@ trailing:true, white:true*/
       name: "XV.TransactionList",
       kind: "XV.SearchContainer",
       published: {
-        prerequisite: "canEnterReceipt",
-        notifyMessage: "_receiveAll?".loc()
+        prerequisite: "",
+        notifyMessage: ""
       },
       events: {
         onNotify: ""
@@ -64,26 +64,8 @@ trailing:true, white:true*/
           {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0}
         ]}
       ],
-      create: function () {
-        this.inherited(arguments);
-        this.setList({list: "XV.EnterReceiptList"});
-
-        this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_receiveAll".loc() });
-      },
+      // must be implemented by the subkind
       executeDispatch: function () {
-        var that = this,
-          listItems = _.map(that.$.list.getValue().models, function (model) {
-            return {
-              uuid: model.id,
-              quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
-              // TODO: get this off a calculated field
-            };
-          }),
-          callback = function () {
-            // TODO: verify this actually worked
-            XT.log("Success!?", arguments);
-          };
-        XM.Inventory.enterReceipt(listItems, callback);
       },
       headerActionSelected: function (inSender, inEvent) {
         var that = this,
@@ -125,7 +107,29 @@ trailing:true, white:true*/
 
     enyo.kind({
       name: "XV.EnterReceipt",
-      kind: "XV.TransactionList"
+      kind: "XV.TransactionList",
+      prerequisite: "canEnterReceipt",
+      notifyMessage: "_receiveAll?".loc(),
+      create: function () {
+        this.inherited(arguments);
+        this.setList({list: "XV.EnterReceiptList"});
+        this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_receiveAll".loc() });
+      },
+      executeDispatch: function () {
+        var that = this,
+          listItems = _.map(that.$.list.getValue().models, function (model) {
+            return {
+              uuid: model.id,
+              quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
+              // TODO: get this off a calculated field
+            };
+          }),
+          callback = function () {
+            // TODO: verify this actually worked
+            XT.log("Success!?", arguments);
+          };
+        XM.Inventory.enterReceipt(listItems, callback);
+      }
     });
 
   };
