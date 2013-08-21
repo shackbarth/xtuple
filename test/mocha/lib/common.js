@@ -46,12 +46,13 @@
           "function on " + relation.relatedModel);
       }
 
+      // list-only
       if (orderByAttribute && attr === orderByAttribute && !relation.isNested) {
         assert.fail(1, 0, "The " + recordType +
           " schema needs the relation " + prefix + " to be nested to be used in the list query");
       }
 
-
+    // list-only
     } else if (orderByAttribute && attr !== orderByAttribute) {
       // there is no dot in the attribute: we're not recursing down another model
       if ((relation && relation.isNested) || cacheName) {
