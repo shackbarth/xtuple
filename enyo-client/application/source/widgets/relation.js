@@ -586,7 +586,10 @@ regexp:true, undef:true, trailing:true, white:true */
       for (i = 0; i < keys.length; i++) {
         key = keys[i];
         if (attr[key]) {
-          changed[attr[key]] = value[key];
+          // Don't bubble on path attributes that are by definition read only
+          if (attr[key].indexOf(".") === -1) {
+            changed[attr[key]] = value[key];
+          }
           this[key + 'Changed']();
         }
       }

@@ -157,7 +157,7 @@ select xt.install_js('XM','Model','xtuple', $$
       map = XT.Orm.fetch(nameSpace, type),
       data = Object.create(XT.Data),
       nkey = XT.Orm.naturalKey(map),
-      tableName = map.table,
+      tableName = map.lockTable || map.table,
       tableSuffix = tableName.indexOf('.') ? tableName.afterDot() : tableName,
       sql,
       fkeys,
@@ -191,18 +191,28 @@ select xt.install_js('XM','Model','xtuple', $$
           "and con.relnamespace=pg_namespace.oid; "
     fkeys = plv8.execute(sql, [tableSuffix]);
 
-    /* isNested toMany relationships are irrelevant and should be counted */
+    /* isNested toMany relationships are irrelevant and should not be counted */
+    /* First boil down our list of isNested toManys from the orm */
+    var toMany = map.properties.filter(function (prop) {
+      return prop.toMany && prop.toMany.isNested;
+    }).map(function (prop) {
+      var toManyType = prop.toMany.type,
+        toManyMap = XT.Orm.fetch(nameSpace, toManyType)
+        toManyTable = toManyMap.table,
+        toManyPrefix = toManyTable.indexOf('.') < 0 ? "public" : toManyTable.beforeDot(),
+        toManySuffix = toManyTable.afterDot();
+
+      return {nameSpace: toManyPrefix, tableName: toManySuffix};
+    });
+
     for (fkIndex = fkeys.length - 1; fkIndex >= 0; fkIndex-=1) {
       /* loop backwards because we might be deleting elements of the array */
       fkey = fkeys[fkIndex];
-      for(propIndex = 0; propIndex < map.properties.length; propIndex++) {
-        propObj = map.properties[propIndex]; /* pining for underscore */
-        if(propObj.toMany && propObj.toMany.isNested) {
-          /* this fk is irrelevant and should not be counted against used */
+      toMany.map(function (prop) {
+        if (fkey.schemaname === prop.nameSpace && fkey.tablename === prop.tableName) {
           fkeys.splice(fkIndex, 1);
-          break;
         }
-      }
+      });
     }
 
     if (DEBUG) { XT.debug('XM.Model.used keys length:', fkeys.length) }

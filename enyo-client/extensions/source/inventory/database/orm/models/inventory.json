@@ -306,7 +306,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "inventory",
     "nameSpace": "XM",
     "type": "IssueToShipping",
     "table": "xt.coitemship",
@@ -367,19 +367,11 @@
         }
       },
       {
-        "name": "item",
+        "name": "itemSite",
         "toOne": {
-          "type": "ItemRelation",
-          "column": "item_id",
-          "isNested": true
-        }
-      },
-      {
-        "name": "site",
-        "toOne": {
-          "type": "SiteRelation",
-          "column": "itemsite_warehous_id",
-          "isNested": true
+          "isNested": true,
+          "type": "ItemSiteInventory",
+          "column": "coitem_itemsite_id"
         }
       },
       {
@@ -437,7 +429,7 @@
           "type": "Number",
           "column": "to_issue"
         }
-      }
+      }  
     ],
     "isSystem": true
   }
