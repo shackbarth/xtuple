@@ -33,10 +33,21 @@ white:true*/
     // CLASS FUNCTIONS
     //
     _.extend(XM.Inventory, {
+
+      canIssueStock: function (callback) {
+        var canDo = true; // TODO ??? //XT.session.privileges.get("EnterReceipts");
+        callback(canDo);
+        return canDo;
+      },
+
       canEnterReceipt: function (callback) {
         var canDo = XT.session.privileges.get("EnterReceipts");
         callback(canDo);
         return canDo;
+      },
+
+      issueStock: function () {
+        // TODO
       },
 
       /**

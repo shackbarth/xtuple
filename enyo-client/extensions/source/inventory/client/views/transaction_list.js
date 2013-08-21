@@ -128,6 +128,7 @@ trailing:true, white:true*/
             // TODO: verify this actually worked
             XT.log("Success!?", arguments);
           };
+
         XM.Inventory.enterReceipt(listItems, callback);
       }
     });
@@ -135,12 +136,12 @@ trailing:true, white:true*/
     enyo.kind({
       name: "XV.IssueToShipping",
       kind: "XV.TransactionList",
-      prerequisite: "canIssueToShipping",
+      prerequisite: "canIssueStock",
       notifyMessage: "_issueAll?".loc(),
       create: function () {
         this.inherited(arguments);
         this.setList({list: "XV.IssueToShippingList"});
-        this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_issueToShipping".loc() });
+        this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_issueAll".loc() });
       },
       executeDispatch: function () {
         var that = this,
@@ -155,7 +156,8 @@ trailing:true, white:true*/
             // TODO: verify this actually worked
             XT.log("Success!?", arguments);
           };
-        XM.Inventory.issueToShipping(listItems, callback);
+
+        XM.Inventory.issueStock(listItems, callback);
       }
     });
   };
