@@ -195,15 +195,6 @@ trailing:true, white:true*/
         {name: "returnLine", prerequisite: "canReturnStock",
           method: "doReturnStock", notify: false}
       ],
-      headerActions: [
-        {
-          name: "issueAll",
-          method: function () {
-            // TODO: actually issue all
-            console.log("Write the issueAll function!");
-          }
-        },
-      ],
       toggleSelected: true,
       components: [
         {kind: "XV.ListItem", components: [
