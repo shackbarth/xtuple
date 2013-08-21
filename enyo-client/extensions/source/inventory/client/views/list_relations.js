@@ -1,5 +1,5 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
-latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
+latedef:true, newcap:true, noarg:true, regexp:true, undef:true, strict: false,
 trailing:true, white:true*/
 /*global XT:true, enyo:true, Globalize:true*/
 
@@ -26,14 +26,18 @@ trailing:true, white:true*/
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "first", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "location", formatter: "formatLocation"},
-                {kind: "XV.ListAttr", attr: "quantity", formatter: "formatQuantity",
-                  classes: "right"},
-                {kind: "XV.ListAttr", attr: "selected", formatter: "formatQuantity",
-                  classes: "right"}
-              ]}
+            {kind: "XV.ListColumn", classes: "first",
+              components: [
+              {kind: "XV.ListAttr", attr: "location", formatter: "formatLocation"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "quantity", "style": "text-align: right",
+              formatter: "formatQuantity"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", fit: true, components: [
+              {kind: "XV.ListAttr", attr: "distributed",  "style": "text-align: right",
+                formatter: "formatQuantity",
+                classes: "hyperlink"}
             ]}
           ]}
         ]}

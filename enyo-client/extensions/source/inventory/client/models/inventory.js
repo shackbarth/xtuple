@@ -158,18 +158,29 @@ white:true*/
           this.set("toIssue", this.issueBalance());
         }
       },
-
+      /**
+        Return the quantity of items that require detail distribution.
+      returns Number
+      */
       undistributed: function () {
         var toIssue = this.get("toIssue"),
           scale = XT.QUANTITY_SCALE,
-          total = 0,
+          undist = 0,
           dist;
+        // We only care about distribution on controlled items
         if (this.requiresDetail() && toIssue) {
-          dist = _.pluck(this.get("detail").models("distributed"));
-          total = XT.math.add(dist, scale);
-          total = XT.math.subtract(total, toIssue, scale);
+          // Get the distributed values
+          dist = _.pluck(this.getValue("itemSite.detail").models, "distributed");
+          // Filter on only ones that actually have a value
+          dist = _.filter(dist, function (item) {
+            return !_.isEmpty(item);
+          });
+          if (dist.length) {
+            undist = XT.math.add(dist, scale);
+          }
+          undist = XT.math.subtract(toIssue, dist, scale);
         }
-        return total;
+        return undist;
       }
 
     });
