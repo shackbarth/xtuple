@@ -294,7 +294,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.LocationPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.location",
+    collection: "XM.locationCollection",
     nameAttribute: "description",
     orderBy: [
       {attribute: 'description'}
@@ -459,7 +459,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ShipZonePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.shipZones",
+    collection: "XM.shipZones",   
     orderBy: [
       {attribute: 'name'}
     ]

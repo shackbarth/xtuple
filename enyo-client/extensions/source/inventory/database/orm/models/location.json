@@ -101,7 +101,7 @@
       {
         "name": "items",
         "toMany": {
-          "iNested": true,
+          "isNested": true,
           "type": "LocationItem",
           "column": "location_id",
           "inverse": "location"
@@ -213,6 +213,7 @@
       {
         "name": "item",
         "toOne": {
+          "isNested": true,
           "type": "ItemRelation",
           "column": "locitem_item_id"
         }

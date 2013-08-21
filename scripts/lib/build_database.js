@@ -39,7 +39,7 @@ var _ = require('underscore'),
         ' -p ' + credsClone.port +
         ' -f ' + filename +
         ' --single-transaction';
-      exec(psqlCommand, {maxBuffer: 4000 * 1024 /* 20x default */}, function (err, stdout, stderr) {
+      exec(psqlCommand, {maxBuffer: 40000 * 1024 /* 20x default */}, function (err, stdout, stderr) {
         if (err) {
           winston.error("Cannot install file ", filename);
           callback(err);

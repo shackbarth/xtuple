@@ -170,22 +170,23 @@ trailing:true, white:true*/
             {kind: "onyx.GroupboxHeader", content: "_location".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup",
               classes: "in-panel", fit: true, components: [
-              {kind: "XV.SiteZonePicker", attr: "siteZone.name"},
+              {kind: "XV.SiteZonePicker", attr: "siteZone"},
               {kind: "XV.CheckboxWidget", attr: "netable"},
               {kind: "XV.CheckboxWidget", attr: "restricted"},
               {kind: "XV.InputWidget", attr: "aisle"},
               {kind: "XV.InputWidget", attr: "rack"},
               {kind: "XV.InputWidget", attr: "bin"},
               {kind: "XV.InputWidget", attr: "location"},
-              {kind: "XV.TextArea", fit: true, attr: "description"}
-              //TODO add allowbale items panel
+              {kind: "XV.TextArea", fit: true, attr: "description"},
             ]}
-          ]}
+          ]},
+          {kind: "XV.LocationItemRelationBox", attr: "items"}
         ]}
       ]
     });
 
     XV.registerModelWorkspace("XM.Location", "XV.LocationWorkspace");
+    XV.registerModelWorkspace("XM.LocationItem", "XV.LocationWorkspace");
 
     // ..........................................................
     // SHIPMENT
@@ -260,7 +261,7 @@ trailing:true, white:true*/
       {kind: "XV.QuantityWidget", container: "mainGroup", attr: "maximumOrderQuantity"},
       {kind: "XV.QuantityWidget", container: "mainGroup", attr: "orderMultipleQuantity"},
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParametersManual"},
-      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "safetyStock"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "safetyStock"},
       {kind: "XV.NumberWidget", container: "mainGroup", attr: "leadTime", scale: 0}
 
     ];

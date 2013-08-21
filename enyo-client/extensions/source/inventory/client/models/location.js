@@ -15,7 +15,24 @@ white:true*/
     */
     XM.Location = XM.Model.extend({
       
-      recordType: "XM.Location"
+      recordType: "XM.Location",
+
+      name: function () {
+      return this.get("aisle") + " " + this.get("rack") + " " + this.get("bin") + " " + this.get("location");
+    }
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.LocationItem = XM.Model.extend({
+      
+      recordType: "XM.LocationItem",
+
+      parentKey: "location"
 
     });
 

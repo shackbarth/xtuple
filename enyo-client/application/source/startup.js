@@ -129,6 +129,7 @@ white:true*/
   XT.cacheCollection("XM.honorifics", "XM.HonorificCollection", "code");
   XT.cacheCollection("XM.languages", "XM.LanguageCollection");
   XT.cacheCollection("XM.locales", "XM.LocaleCollection");
+  XT.cacheCollection("XM.location", "XM.LocationCollection");
   XT.cacheCollection("XM.priorities", "XM.PriorityCollection");
   XT.cacheCollection("XM.privileges", "XM.PrivilegeCollection");
   XT.cacheCollection("XM.shifts", "XM.ShiftCollection", "number");

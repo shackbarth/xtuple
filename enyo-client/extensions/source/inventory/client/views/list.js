@@ -319,17 +319,16 @@ trailing:true, white:true*/
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "short",
-              components: [
-            //  {kind: "XV.ListAttr", attr: "location", isKey: true}
+            {kind: "XV.ListColumn", classes: "short", components: [
+              {kind: "XV.ListAttr", attr: "name", isKey: true}
             ]},
-            {kind: "XV.ListColumn", classes: "right", components: [
+            {kind: "XV.ListColumn", classes: "second", components: [
               {kind: "XV.ListAttr", attr: "site.code"}
             ]},
-            {kind: "XV.ListColumn", classes: "right", components: [
+            {kind: "XV.ListColumn", classes: "second left", components: [
               {kind: "XV.ListAttr", attr: "description"}
             ]},
-            {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListColumn", classes: "second", components: [
               {kind: "XV.ListAttr", attr: "restricted"}
             ]},
             {kind: "XV.ListColumn", classes: "last", components: [
@@ -337,16 +336,12 @@ trailing:true, white:true*/
             ]}
           ]}
         ]}
-      ],
-      formatLocationName: function (inEvent) {
-        var model = inEvent.model;
-          name = model.get("name");
-        console.log("Here I am", model);
-      }
+      ]
 
     });
 
     XV.registerModelList("XM.Location", "XV.LocationList");
+    XV.registerModelList("XM.LocationItem", "XV.LocationList");
 
     // ..........................................................
     // SHIPMENT

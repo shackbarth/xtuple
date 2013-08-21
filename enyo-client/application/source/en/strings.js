@@ -18,6 +18,7 @@ var lang = XT.stringsFor("en_US", {
   // ********
 
   "_analysis": "Analysis",
+  "_allowableItems": "Allowable Items",
   "_all": "All",
   "_annualy": "Annually",
   "_asset": "Asset",

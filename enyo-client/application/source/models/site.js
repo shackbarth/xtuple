@@ -26,7 +26,7 @@ white:true*/
   */
   XM.SiteZone = XM.Document.extend(/** @lends XM.SiteZone.prototype */{
 
-    recordType: 'XM.SiteType',
+    recordType: 'XM.SiteZone',
 
     documentKey: 'name'
 
@@ -37,9 +37,9 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.SiteZoneRelation = XM.Document.extend(/** @lends XM.SiteZone.prototype */{
+  XM.SiteZoneRelation = XM.Document.extend(/** @lends XM.SiteZoneRelation.prototype */{
 
-    recordType: 'XM.SiteType',
+    recordType: 'XM.SiteZoneRelation',
 
     documentKey: 'name'
 
