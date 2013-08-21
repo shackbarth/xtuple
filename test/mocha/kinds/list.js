@@ -43,7 +43,7 @@
         _.each(XV, function (value, key) {
           if (XV.inheritsFrom(value.prototype, "XV.List") &&
               // don't test abstract kinds
-              !_.contains(['List', 'ConfigurationsList', 'AbbreviationList', 'NameDescriptionList'], key)) {
+              !_.contains(['List', 'ConfigurationsList', 'AbbreviationList', 'NameList', 'NameDescriptionList'], key)) {
 
             // create the list
             child = master.createComponent({
