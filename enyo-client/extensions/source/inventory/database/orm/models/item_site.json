@@ -78,8 +78,9 @@
       {
         "name": "detail",
         "toMany": {
+          "isNested": true,
           "type": "ItemSiteDetail",
-          "column": "obj_uuid",
+          "column": "itemsite_id",
           "inverse": "itemSite"
         }
       }
@@ -120,8 +121,8 @@
       {
         "name": "itemSite",
         "attr": {
-          "type": "String",
-          "column": "itemsite_uuid"
+          "type": "Number",
+          "column": "itemloc_itemsite_id"
         }
       },
       {
