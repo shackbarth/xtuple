@@ -40,8 +40,7 @@
         "name": "leadTime",
         "attr": {
           "type": "Number",
-          "column": "itemsite_leadtime",
-          "required": true
+          "column": "itemsite_leadtime"
         }
       },
       {
@@ -55,48 +54,42 @@
         "name": "isAutomaticAbcClassUpdates",
         "attr": {
           "type": "Boolean",
-          "column": "itemsite_autoabcclass",
-          "required": true
+          "column": "itemsite_autoabcclass"
         }
       },
       {
         "name": "cycleCountFrequency",
         "attr": {
           "type": "Number",
-          "column": "itemsite_cyclecountfreq",
-          "required": true
+          "column": "itemsite_cyclecountfreq"
         }
       },
       {
         "name": "issueMethod",
         "attr": {
           "type": "String",
-          "column": "itemsite_issuemethod",
-          "required": false
+          "column": "itemsite_issuemethod"
         }
       },
       {
         "name": "isStocked",
         "attr": {
           "type": "Boolean",
-          "column": "itemsite_stocked",
-          "required": true
+          "column": "itemsite_stocked"
         }
       },
       {
         "name": "safetyStock",
         "attr": {
           "type": "Number",
-          "column": "itemsite_safetystock",
-          "required": true
+          "column": "itemsite_safetystock"
         }
       },
       {
         "name": "useParameters",
         "attr": {
           "type": "Boolean",
-          "column": "itemsite_useparams",
-          "required": true
+          "column": "itemsite_useparams"
         }
       },
       {

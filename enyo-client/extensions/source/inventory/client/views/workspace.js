@@ -119,6 +119,13 @@ trailing:true, white:true*/
       kind: "XV.Workspace",
       title: "_issueStock".loc(),
       model: "XM.IssueToShipping",
+      saveText: "_issue".loc(),
+      hideApply: true,
+      hideRefresh: true,
+      dirtyWarn: false,
+      handlers: {
+        onDetailSelectionChanged: "toggleDetailSelection"
+      },
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -130,16 +137,18 @@ trailing:true, white:true*/
               {kind: "XV.ShipmentWidget", attr: "shipment"},
               {kind: "onyx.GroupboxHeader", content: "_item".loc()},
               {kind: "XV.ItemSiteWidget", attr:
-                {item: "item", site: "site"}
+                {item: "itemSite.item", site: "itemSite.site"}
               },
               {kind: "XV.QuantityWidget", attr: "ordered"},
               {kind: "XV.QuantityWidget", attr: "shipped"},
               {kind: "XV.QuantityWidget", attr: "returned"},
               {kind: "XV.QuantityWidget", attr: "balance"},
+              {kind: "XV.QuantityWidget", attr: "atShipping"},
               {kind: "onyx.GroupboxHeader", content: "_issue".loc()},
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
           ]},
+          {kind: "XV.IssueToShippingDetailRelationsBox", attr: "itemSite.detail", fit: true}
         ]}
       ],
       attributesChanged: function () {
@@ -150,6 +159,19 @@ trailing:true, white:true*/
           this.$.toIssue.focus();
           this.$.toIssue.$.input.selectContents();
           this._focused = true;
+        }
+      },
+      /**
+        If detail has been selected or deselected, handle default distribution.
+      */
+      toggleDetailSelection: function (inSender, inEvent) {
+        var detail = inEvent.model,
+          undistributed = this.getValue().undistributed;
+        if (!detail) { return; }
+        if (inEvent.isSelected) {
+          detail.distribute(undistributed);
+        } else {
+          detail.clear();
         }
       }
     });

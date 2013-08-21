@@ -205,7 +205,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       sql = "select invhist_id " +
         "from invhist join itemsite on itemsite_id = invhist_itemsite_id " +
         "where invhist_series = $1" +
-        " and (itemsite_loccntrl or itemsite_controlmethod in ('L','S')); ",
+        " and (itemsite_loccntrl or itemsite_controlmethod in ('L','S')); ";
       invHist = plv8.execute(sql,[series]);
       
       if (invHist.length) { throw new handleError("Transaction requires distribution detail"); }
@@ -303,61 +303,37 @@ select xt.install_js('XM','Inventory','xtuple', $$
       }');
 
   
-    @param {String} Order line uuid
-    @param {Number} Quantity
+    @param {Array} orderLines
+    @param {String} orderLines[n].uuid
+    @param {String} orderLines[n].quantity
     @param {Array} [options.detail] Distribution detail
   */
-  XM.Inventory.enterReceipt = function (orderLine, quantity, options) {
+  XM.Inventory.enterReceipt = function (orderLines, options) {
     options = options || {};
-    var  series,
-      sql;
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401); }
 
-    /* Post the transaction */
-    sql = "select public.enterporeceipt(poitem_id, $2) as series " +
-      "from poitem where obj_uuid=$1;",
-    series = plv8.execute(sql, [orderLine, quantity])[0].series;
+    orderLines.map(function (line) {
+      var uuid = line.uuid,
+        quantity = line.quantity,
+        /* Post the transaction */
+        sql = "select public.enterporeceipt(poitem_id, $2) as series " +
+          "from poitem where obj_uuid=$1;",
+        series = plv8.execute(sql, [uuid, quantity])[0].series;
 
-    /* Distribute detail */
-    XM.PrivateInventory.distribute(series, options.detail);
+      /* Distribute detail */
+      XM.PrivateInventory.distribute(series, options.detail);
+    });
 
     return;
   };
   XM.Inventory.enterReceipt.description = "Enter Purchase Order Receipt.";
   XM.Inventory.enterReceipt.params = {
-    orderLine: { type: "String", description: "Order line UUID" },
-    quantity: {type: "Number", description: "Quantity" },
-    options: {type: "Object", description: "Other attributes", attributes: {
-      detail: {type: "Array", description: "Distribution detail" }
-    }}
-  };
-
-  /**
-    PO Receive All
-  */
-  XM.Inventory.receiveAll = function (purchaseOrder) {
-    var series,
-      sql;
-
-    /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("EnterReceipts")) { throw new handleError("Access Denied", 401); }
-    
-    /* Post the transaction */
-    sql = "select public.enterporeceipt(poitem_id, poitem_qty_ordered) from poitem" + 
-      "join pohead on poitem_pohead_id = pohead_id where ( (poitem_status <> 'C') and (pohead_number=$1));",
-     
-    series = plv8.execute(sql, [purchaseOrder])[0].series;
-
-    /* Distribute detail */
-    XM.PrivateInventory.distribute(series, options.detail);
-
-    return;
-  };
-  XM.Inventory.receiveAll.description = "Enter Purchase Order Receipt.";
-  XM.Inventory.receiveAll.params = {
-    purchaseOrder: { type: "String", description: "Order line UUID" },
+    orderLines: {type: "Array", description: "Detail of order lines", attributes: { 
+      uuid: {type: "String", description: "Order line UUID" },
+      quantity: {type: "Number", description: "Quantity" }
+    }},
     options: {type: "Object", description: "Other attributes", attributes: {
       detail: {type: "Array", description: "Distribution detail" }
     }}
@@ -408,7 +384,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     /* Post the transaction */
     sql = "select issuetoshipping('SO', coitem_id, $2, 0, $3::timestamptz) as series " +
-      "from coitem where obj_uuid = $1;",
+      "from coitem where obj_uuid = $1;";
     series = plv8.execute(sql, [orderLine, quantity, asOf])[0].series;
 
     /* Distribute detail */
@@ -555,14 +531,14 @@ select xt.install_js('XM','Inventory','xtuple', $$
       plv8.elog(NOTICE, 'Malformed patch document');
     }
     
-		/* update numbers */
-    if(settings['NextShipmentNumber']) {
-      plv8.execute('select setNextShipmentNumber($1)', [settings['NextShipmentNumber'] - 0]);
+    /* update numbers */
+    if(settings.NextShipmentNumber) {
+      plv8.execute('select setNextShipmentNumber($1)', [settings.NextShipmentNumber - 0]);
     }
     options.remove('NextShipmentNumber'); 
 
-  /* update remaining options as metrics
-       first make sure we pass an object that only has valid metric options for this type */
+    /* update remaining options as metrics
+      first make sure we pass an object that only has valid metric options for this type */
     for(var i = 0; i < options.length; i++) {
       var prop = options[i];
       if(settings[prop] !== undefined) metrics[prop] = settings[prop];

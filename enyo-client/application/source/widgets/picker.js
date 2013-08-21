@@ -479,19 +479,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // PLANNER CODE
-  //
-
-  enyo.kind({
-    name: "XV.SitePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.siteRelations",
-    orderBy: [
-      {attribute: 'code'}
-    ]
-  });
-
-  // ..........................................................
   // TAX AUTHORITY
   //
 

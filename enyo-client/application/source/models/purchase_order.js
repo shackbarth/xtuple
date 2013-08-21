@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -30,32 +30,16 @@ white:true*/
 
     recordType: 'XM.PurchaseOrderLine',
 
+    idAttribute: 'uuid',
+
+    name: function () {
+      return this.getValue("purchaseOrder.id") + " #" + this.getValue("lineNumber");
+    },
+
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       // Bind events
       this.on('statusChange', this.statusDidChange);
-    },
-
-    canEnterReceipt: function (callback) {
-      if (callback) {
-        callback(true);
-      }
-      return this;
-    },
-
-    doEnterReceipt: function (callback) {
-      if (callback) {
-        callback(true);
-      }
-      return this;
-    },
-
-    canReceiveAll: function (callback) {
-      return XT.session.privileges.get("EnterReceipts");
-    },
-
-    doReceiveAll: function (callback, id) {
-      return _doDispatch.call(this, "receiveAll", callback, [id]);
     },
 
     save: function (key, value, options) {
@@ -77,8 +61,10 @@ white:true*/
           itemSite = itemSites.at(0),
           issOptions = {},
           params = [
-            that.id,
-            that.get("toReceive"),
+            [{
+              uuid: that.id,
+              quantity: that.get("toReceive")
+            }],
             issOptions
           ],
           locationControl = itemSite.get("locationControl"),
@@ -92,7 +78,7 @@ white:true*/
           // Callback to handle detail if applicable
           callback = function (detail) {
             var dispOptions = {};
-            
+
             // Refresh the model we started from passing options through
             dispOptions.success = function () {
               that.fetch(options);
@@ -101,7 +87,7 @@ white:true*/
               issOptions.detail = detail;
             }
             that.dispatch("XM.Inventory", "enterReceipt", params, dispOptions);
-            
+
           };
         if (requiresDetail) {
           // Send notification that we need to accumulate detail
@@ -164,27 +150,6 @@ white:true*/
     editableModel: 'XM.PurchaseOrder'
 
   });
-
-  /** @private */
-  var _canDo = function (priv, callback) {
-    var ret = XT.session.privileges.get(priv);
-    if (callback) {
-      callback(ret);
-    }
-    return ret;
-  };
-
-  /** @private */
-  var _doDispatch = function (method, callback, params) {
-    var that = this,
-      options = {};
-    params = params || [];
-    options.error = function (resp) {
-      if (callback) { callback(resp); }
-    };
-    this.dispatch("XM.Inventory", method, params, options);
-    return this;
-  };
 
   // ..........................................................
   // COLLECTIONS
