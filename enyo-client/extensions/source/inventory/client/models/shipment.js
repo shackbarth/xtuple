@@ -44,8 +44,7 @@ white:true*/
       return ret;
     };
 
-    /** @private */
-    
+    /** @private */ 
     var _doDispatch = function (method, callback, params) {
       var that = this,
         options = {};

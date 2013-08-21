@@ -160,15 +160,11 @@ trailing:true, white:true*/
       },
       enterReceipt: function (inEvent) {
         var model = inEvent.model,
-          modelId = model.id,
-          success = function () {
-            this.getValue().convertFromProspect(modelId);
-          };
+          modelId = model.id;
 
         this.doWorkspace({
           workspace: "XV.EnterReceiptWorkspace",
           id: model.id,
-          success: success,
           allowNew: false
         });
       }
@@ -198,14 +194,6 @@ trailing:true, white:true*/
           method: "doIssueLine", notify: false},
         {name: "returnLine", prerequisite: "canReturnStock",
           method: "doReturnStock", notify: false}
-      ],
-      headerActions: [
-        {
-          name: "issueAll",
-          method: function () {
-            // TODO: actually issue all
-          }
-        },
       ],
       toggleSelected: true,
       components: [
