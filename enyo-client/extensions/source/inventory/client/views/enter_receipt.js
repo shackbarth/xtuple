@@ -11,9 +11,14 @@ trailing:true, white:true*/
       @name XV.EnterReceipt
       @extends XV.SearchContainer
      */
-    var enterReceipt =  /** @lends XV.EnterReceipt# */ {
-      name: "XV.EnterReceipt",
+    var transactionList =  /** @lends XV.EnterReceipt# */ {
+      name: "XV.TransactionList",
       kind: "XV.SearchContainer",
+      published: {
+        prerequisite: "canEnterReceipt",
+        method: "enterReceipt",
+        notifyMessage: "_receiveAll?"
+      },
       events: {
         onNotify: ""
       },
@@ -68,34 +73,29 @@ trailing:true, white:true*/
       },
       headerActionSelected: function (inSender, inEvent) {
         var that = this,
-          execute, notify,
-          model, prerequisite, method, notifyMessage;
-
-        switch (inEvent.originator.name) {
-        case 'receiveAll':
-          prerequisite = "canEnterReceipt";
-          method = "enterReceipt";
-          notifyMessage = "_receiveAll?";
-          break;
-        }
+          execute,
+          notify;
 
         // step 3: execute the method
         execute = function () {
           var listItems = _.map(that.$.list.getValue().models, function (model) {
-            return {
-              uuid: model.id,
-              quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
-              // TODO: get this off a calculate field
+              return {
+                uuid: model.id,
+                quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
+                // TODO: get this off a calculated field
+              };
+            }),
+            callback = function () {
+              XT.log("Success!?", arguments);
             };
-          });
-          XM.Inventory[method](listItems);
+          XM.Inventory[that.getMethod()](listItems);
         };
 
         // step 2: ask the user if they really want to do the method
         notify = function () {
           var notifyEvent = {
             originator: this,
-            message: notifyMessage,
+            message: that.getNotifyMessage(),
             type: XM.Model.QUESTION,
             callback: execute
           };
@@ -103,7 +103,7 @@ trailing:true, white:true*/
         };
 
         // step 1: make sure we can do the method
-        XM.Inventory[prerequisite](function (isAllowed) {
+        XM.Inventory[this.getPrerequisite()](function (isAllowed) {
           var notifyEvent;
 
           if (isAllowed) {
@@ -120,8 +120,13 @@ trailing:true, white:true*/
       }
     };
 
-    enyo.mixin(enterReceipt, XV.ListMenuManagerMixin);
-    enyo.kind(enterReceipt);
+    enyo.mixin(transactionList, XV.ListMenuManagerMixin);
+    enyo.kind(transactionList);
+
+    enyo.kind({
+      name: "XV.EnterReceipt",
+      kind: "XV.TransactionList"
+    });
 
   };
 
