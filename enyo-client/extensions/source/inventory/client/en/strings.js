@@ -52,6 +52,8 @@ var lang = XT.stringsFor("en_US", {
   "_recallShipment?": "Are you shure you want to recall this shipment?. If it has been invoiced the invoice will also be deleted.",
   "_receiptQtyTolerancePct": "By the Following Amount (%)",
   "_receive": "Receive",
+  "_receiveAll": "Receive All",
+  "_receiveAll?": "Are you sure you want to enter receipt for all these items?",
   "_received": "Received",
   "_recordPPVOnReceipt": "Record Purchase Price Variance on Receipt",
   "_reporting": "Reporting",

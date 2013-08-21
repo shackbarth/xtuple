@@ -16,8 +16,7 @@ trailing:true, white:true*/
       kind: "XV.SearchContainer",
       published: {
         prerequisite: "canEnterReceipt",
-        method: "enterReceipt",
-        notifyMessage: "_receiveAll?"
+        notifyMessage: "_receiveAll?".loc()
       },
       events: {
         onNotify: ""
@@ -71,25 +70,24 @@ trailing:true, white:true*/
         this.inherited(arguments);
         this.setList({list: "XV.EnterReceiptList"});
       },
+      executeDispatch: function () {
+        var that = this,
+          listItems = _.map(that.$.list.getValue().models, function (model) {
+            return {
+              uuid: model.id,
+              quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
+              // TODO: get this off a calculated field
+            };
+          }),
+          callback = function () {
+            XT.log("Success!?", arguments);
+          };
+        XM.Inventory.enterReceipt(listItems);
+      },
       headerActionSelected: function (inSender, inEvent) {
         var that = this,
           execute,
           notify;
-
-        // step 3: execute the method
-        execute = function () {
-          var listItems = _.map(that.$.list.getValue().models, function (model) {
-              return {
-                uuid: model.id,
-                quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
-                // TODO: get this off a calculated field
-              };
-            }),
-            callback = function () {
-              XT.log("Success!?", arguments);
-            };
-          XM.Inventory[that.getMethod()](listItems);
-        };
 
         // step 2: ask the user if they really want to do the method
         notify = function () {
@@ -97,7 +95,8 @@ trailing:true, white:true*/
             originator: this,
             message: that.getNotifyMessage(),
             type: XM.Model.QUESTION,
-            callback: execute
+            // step 3: execute the dispatch function
+            callback: _.bind(that.executeDispatch, that)
           };
           that.doNotify(notifyEvent);
         };
