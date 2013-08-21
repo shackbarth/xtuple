@@ -166,9 +166,10 @@ trailing:true, white:true*/
       */
       toggleDetailSelection: function (inSender, inEvent) {
         var detail = inEvent.model,
-          undistributed = this.getValue().undistributed();
+          undistributed;
         if (!detail) { return; }
         if (inEvent.isSelected) {
+          undistributed = this.getValue().undistributed();
           detail.distribute(undistributed);
         } else {
           detail.clear();

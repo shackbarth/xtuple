@@ -164,21 +164,18 @@ white:true*/
       */
       undistributed: function () {
         var toIssue = this.get("toIssue"),
-          scale = XT.QUANTITY_SCALE,
+          scale = XT.QTY_SCALE,
           undist = 0,
           dist;
         // We only care about distribution on controlled items
         if (this.requiresDetail() && toIssue) {
           // Get the distributed values
-          dist = _.pluck(this.getValue("itemSite.detail").models, "distributed");
+          dist = _.pluck(_.pluck(this.getValue("itemSite.detail").models, "attributes"), "distributed");
           // Filter on only ones that actually have a value
-          dist = _.filter(dist, function (item) {
-            return !_.isEmpty(item);
-          });
           if (dist.length) {
             undist = XT.math.add(dist, scale);
           }
-          undist = XT.math.subtract(toIssue, dist, scale);
+          undist = XT.math.subtract(toIssue, undist, scale);
         }
         return undist;
       }
