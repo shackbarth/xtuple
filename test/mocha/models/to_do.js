@@ -11,9 +11,20 @@
       recordType: "XM.ToDo",
       autoTestAttributes: true,
       createHash: {
-        name: "Pass the VOWS tests" + Math.random(),
+        name: "ToDo Name" + Math.random(),
         dueDate: new Date()
       },
+      beforeSaveActions: [{
+        it: 'adds a comment',
+        action: function (data, next) {
+          var comment = new XM.ToDoComment(),
+            comments = [];
+          comment.initialize(null, {isNew: true});
+          comment.set("commentType", "General");
+          comments.push(comment);
+          data.model.set({comments: comments});
+        }
+      }],
       updateHash: {
         name: "Updated"
       }
