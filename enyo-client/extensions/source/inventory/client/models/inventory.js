@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, _:true */
 
 (function () {
   "use strict";
@@ -37,7 +37,7 @@ white:true*/
     */
     XM.IssueToShipping = XM.Model.extend({
 
-      recordType: 'XM.IssueToShipping',
+      recordType: "XM.IssueToShipping",
 
       readOnlyAttributes: [
         "atShipping",
@@ -59,7 +59,7 @@ white:true*/
         XM.Model.prototype.bindEvents.apply(this, arguments);
 
         // Bind events
-        this.on('statusChange', this.statusDidChange);
+        this.on("statusChange", this.statusDidChange);
       },
 
       canIssueStock: function (callback) {
@@ -99,9 +99,7 @@ white:true*/
         }
 
         var that = this,
-          locationControl = this.getValue("itemsite.locationControl"),
-          callback,
-          success = options.success;
+          callback;
         
         // Callback for after we determine quantity validity
         callback = function (resp) {
@@ -131,7 +129,7 @@ white:true*/
 
         // Validate
         if (this.get("toIssue") <= 0) {
-          this.trigger('invalid', this, XT.Error.clone('xt2013'), options || {});
+          this.trigger("invalid", this, XT.Error.clone("xt2013"), options || {});
         } else if (!this.issueBalance() && this.get("toIssue") > 0) {
           this.notify("_issueExcess".loc(), {
             type: XM.Model.QUESTION,
@@ -151,10 +149,27 @@ white:true*/
         return toIssue >= 0 ? toIssue : 0;
       },
 
+      requiresDetail: function () {
+        return this.getValue("itemSite.locationControl");
+      },
+
       statusDidChange: function () {
         if (this.getStatus() === XM.Model.READY_CLEAN) {
           this.set("toIssue", this.issueBalance());
         }
+      },
+
+      undistributed: function () {
+        var toIssue = this.get("toIssue"),
+          scale = XT.QUANTITY_SCALE,
+          total = 0,
+          dist;
+        if (this.requiresDetail() && toIssue) {
+          dist = _.pluck(this.get("detail").models("distributed"));
+          total = XT.math.add(dist, scale);
+          total = XT.math.subtract(total, toIssue, scale);
+        }
+        return total;
       }
 
     });
