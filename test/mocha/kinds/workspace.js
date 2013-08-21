@@ -9,10 +9,8 @@
 
   var zombieAuth = require("../lib/zombie_auth"),
     _ = require("underscore"),
-    assert = require("chai").assert,
-    endsWith = function (s, key) {
-      return s.indexOf(key, s.length - key.length) !== -1;
-    };
+    common = require("../lib/common"),
+    assert = require("chai").assert;
 
   describe('Workspaces', function () {
     this.timeout(20 * 1000);
@@ -20,55 +18,48 @@
       zombieAuth.loadApp(done);
     });
 
-    // XXX This test works best on an app with all the extensions!
-    it('should have reflect well in the history panel', function () {
-      var workspace,
-        Klass,
-        master = new enyo.Control();
-
+    it('should be plumbed correctly', function () {
       // look at all the workspaces in XV
       _.each(XV, function (value, key) {
         if (XV.inheritsFrom(value.prototype, "XV.Workspace")) {
-          if (key === 'SalesOrderBase' || value.prototype.modelAmnesty) {
+          if (_.contains(['SalesOrderBase', 'AccountDocumentWorkspace', 'OrderedReferenceWorkspace'], key) ||
+              value.prototype.modelAmnesty) {
             // exclude abstract classes and child workspaces
             return;
           }
-          if (['EnterReceiptWorkspace'].indexOf(key) >= 0) {
-            // TODO: investigate these workspaces
-            return;
-          }
 
+          describe('XV.' + key, function () {
+            it('should reflect well in the history panel', function () {
+              var master = new enyo.Control(),
+                Klass,
+                workspace = master.createComponent({kind: "XV." + key});
 
-
-          // create the workspace
-          try {
-            workspace = master.createComponent({
-              kind: "XV." + key,
-              name: key
+              if (workspace.model) {
+                Klass = XT.getObjectByName(workspace.model);
+                assert.isNotNull(Klass);
+                if (Klass.prototype.getAttributeNames().indexOf(Klass.prototype.nameAttribute) < 0 &&
+                    typeof Klass.prototype[Klass.prototype.nameAttribute] !== 'function' &&
+                    Klass.prototype.idAttribute === 'uuid') {
+                  assert.fail(0, 1, workspace.model + " does not contain its nameAttribute, which will reflect " +
+                    "poorly in the history panel");
+                }
+              }
             });
-          } catch (error) {
-            //assert.fail(1, 0, "XV." + key + " cannot be created");
-            console.log("XV." + key + " cannot be created with the extensions you " +
-              " have installed (probably none). Best to run it with all the extensions.");
-            return;
-          }
-          assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
 
-          if (workspace.model) {
-            Klass = XT.getObjectByName(workspace.model);
-            assert.isNotNull(Klass);
-            if (Klass.prototype.getAttributeNames().indexOf(Klass.prototype.nameAttribute) < 0 &&
-                typeof Klass.prototype[Klass.prototype.nameAttribute] !== 'function' &&
-                Klass.prototype.idAttribute === 'uuid') {
-              assert.fail(0, 1, workspace.model + " does not contain its nameAttribute, which will reflect " +
-                "poorly in the history panel");
-            }
-          }
+            it('should have its attrs set up right', function () {
+              var master = new enyo.Control(),
+                workspace = master.createComponent({kind: "XV." + key});
+
+              var attrs = _.compact(_.map(workspace.$, function (component) {
+                return component.attr;
+              }));
+              _.each(attrs, function (attr) {
+                common.verifyAttr(attr, workspace.model);
+              });
+            });
+          });
         }
       });
-
     });
   });
-
-
 }());
