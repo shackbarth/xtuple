@@ -69,6 +69,48 @@
         }
       },
       {
+        "name": "receiveLocation",
+        "toOne": {
+          "type": "LocationRelation",
+          "column": "itemsite_recvlocation_id"
+        }
+      },
+      {
+        "name": "receiveLocationAuto",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_recvlocation_dist"
+        }
+      },
+      {
+        "name": "stockLocation",
+        "toOne": {
+          "type": "LocationRelation",
+          "column": "itemsite_location_id"
+        }
+      },
+      {
+        "name": "stockLocationAuto",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_location_dist"
+        }
+      },
+      {
+        "name": "issueLocation",
+        "toOne": {
+          "type": "LocationRelation",
+          "column": "itemsite_issuelocation_id"
+        }
+      },
+      {
+        "name": "issueLocationAuto",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_issuelocation_dist"
+        }
+      },
+      {
         "name": "quantityOnHand",
         "attr": {
           "type": "Quantity",

@@ -37,7 +37,8 @@ trailing:true, white:true*/
                   classes: "right"},
               ]},
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "location.description"},
+                {kind: "XV.ListAttr", attr: "location.description",
+                  formatter: "formatDefault"},
                 {kind: "XV.ListAttr", attr: "distributed",
                   classes: "right hyperlink"}
               ]}
@@ -45,7 +46,19 @@ trailing:true, white:true*/
           ]}
         ]}
       ],
+      isDefault: function (model) {
+        var location = model.get("location"),
+          itemSite = model.get("itemSite"),
+          issueLoc = itemSite.get("issueLocation"),
+          stockLoc = itemSite.get("stockLocation");
+        return issueLoc.id === location.id || stockLoc.id === location.id;
+      },
+      formatDefault: function (value, view, model) {
+        view.addRemoveClass("emphasis", this.isDefault(model));
+        return value;
+      },
       formatLocation: function (value, view, model) {
+        view.addRemoveClass("emphasis", this.isDefault(model));
         if (value) { return value.format(); }
       },
       formatQuantity: function (value, view, model) {
@@ -58,10 +71,10 @@ trailing:true, white:true*/
       setupItem: function (inSender, inEvent) {
         this.inherited(arguments);
         var isSelected = inEvent.originator.isSelected(inEvent.index),
-          view = this.$.distributed,
-          model = this.readyModels()[inEvent.index],
+          view = this.$.listItem,
+          model = this.readyModels()[inEvent.index];
         isSelected = isSelected && model.get("distributed");
-        this.$.listItem.addRemoveClass("item-selected", isSelected);
+        view.addRemoveClass("item-selected", isSelected);
       }
     });
 
