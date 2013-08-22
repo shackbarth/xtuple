@@ -32,12 +32,14 @@ TODO: verify that the jsdoc look ok. Should this go in testing?
   end users do not need to know about, e.g. bugs that were caused and fixed all within a sprint.
 4. Commit and push changes.
 5. Tag and push the release.
+
 ```bash
 git fetch XTUPLE 
-git checkout XTUPLE/tags/1_4_0
+git checkout XTUPLE/tags/R1_4_0
 git tag -a v1.4.0 -m "xTuple Web Platform - Details here"
 git push --tags XTUPLE
 ```
+
 6. Also tag `xtuple-extensions`, `private-extensions`, and `bi`.
 7. Send out an email.
 
