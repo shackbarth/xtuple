@@ -307,7 +307,7 @@ var _ = require("underscore"),
     // Step 1: load the environment with Zombie
     //
     it('loads the client with zombie', function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
       zombieAuth.loadApp({callback: done, verbose: false /* data.verbose */});
     });
 
@@ -317,6 +317,7 @@ var _ = require("underscore"),
     it('creates the model of the appropriate record type', function () {
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
+
     });
 
     //
