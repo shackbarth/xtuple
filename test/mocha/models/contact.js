@@ -9,7 +9,9 @@
   var crud = require('../lib/crud'),
     data = {
       recordType: "XM.Contact",
+      commentType: "XM.ContactComment",
       autoTestAttributes: true,
+      testComments: true,
       createHash: {
         firstName: "Michael",
         primaryEmail: "modonnell@xtuple.com"
