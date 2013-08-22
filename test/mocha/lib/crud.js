@@ -12,8 +12,6 @@ var _ = require("underscore"),
 (function () {
   "use strict";
 
-
-
   exports.accountBeforeDeleteActions = [{it: 'saves the account id', action: function (data, done) {
     data.deleteData = {
       accntId: data.model.get("account"),
@@ -75,6 +73,40 @@ var _ = require("underscore"),
         assert.equal(data.model.get(key), value);
       }
     });
+
+    if (data.commentType) {
+      var comments = data.model.get("comments");
+      // verify that there is a comment
+      assert.isTrue(comments.length > 0);
+    }
+  };
+
+  /**
+    For the models that have comments, we can test adding and saving
+    a mock comment. Here we create and initialize the specified comment
+    type for this model, set a commentType to pass validation, and
+    set this in the current model.
+   */
+  var setComments = function (data, callback) {
+    // if this model doesn't have comments, exit swiftly.
+    if (!data.commentType) {
+      callback();
+    }
+    var comment = new XM[data.commentType.substring(3)](),
+      comments = [];
+    comment.on('change:' + comment.idAttribute, function () {
+      // comment was initialized, set commentType
+      comment.set("commentType", "General");
+      // add mock comment to array
+      comments.push(comment);
+      data.model.on('change:comments', function () {
+        // verify that comments were changed and exit
+        callback();
+      })
+      data.model.set({comments: comments});
+    });
+    // initialize the new comment
+    comment.initialize(null, {isNew: true});
   };
 
   /**
@@ -342,6 +374,11 @@ var _ = require("underscore"),
       this.timeout(20 * 1000);
       data.updated = false;
       setModel(data, done);
+    });
+
+    it('sets comments on the model', function (done) {
+      this.timeout(20 * 1000);
+      setComments(data, done);
     });
 
     _.each(data.beforeSaveActions || [], function (spec) {
