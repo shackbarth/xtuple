@@ -74,7 +74,7 @@ SYS = {};
   var encryptionKeyFilename = './lib/private/encryption_key.txt';
   X.fs.exists(encryptionKeyFilename, function (exists) {
     if (exists) {
-      X.options.encryptionKey = X.fs.readFileSync(encryptionKeyFilename);
+      X.options.encryptionKey = X.fs.readFileSync(encryptionKeyFilename, "utf8");
     } else {
       X.options.encryptionKey = Math.random().toString(36).slice(2);
       X.fs.writeFile(encryptionKeyFilename, X.options.encryptionKey);

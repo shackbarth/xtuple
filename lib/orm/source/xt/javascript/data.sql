@@ -591,7 +591,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       if (sql.statement) {
-	plv8.execute(sql.statement, sql.values);
+        plv8.execute(sql.statement, sql.values);
       }
 
       /* Handle extensions on other tables. */
@@ -720,6 +720,7 @@ select xt.install_js('XT','Data','xtuple', $$
               encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
               encryptSql = XT.format(encryptQuery, [record[prop], encryptionKey, 'bf']);
               val = "(" + encryptSql + ")";
+              params.columns.push("%" + count + "$I");
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("$" + count);
@@ -778,8 +779,10 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* Build the insert statement */
+      XT.debug("about to build columns", params.columns);
       columns = params.columns.join(', ');
       columns = XT.format(columns, params.identifiers);
+      XT.debug("just built columns", columns);
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
 
@@ -1231,7 +1234,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* Check recursively. */
         } else if (ormp.toMany && ormp.toMany.isNested) {
-          this.decrypt(nameSpace, ormp.toMany.type, record[prop][i]);
+          this.decrypt(nameSpace, ormp.toMany.type, record[prop][i], encryptionKey);
         }
       }
 
@@ -1383,6 +1386,7 @@ select xt.install_js('XT','Data','xtuple', $$
       var nameSpace = options.nameSpace,
         type = options.type,
         query = options.query || {},
+        encryptionKey = options.encryptionKey,
         orderBy = query.orderBy,
         orm = this.fetchOrm(nameSpace, type),
         parameters = query.parameters,
@@ -1417,7 +1421,7 @@ select xt.install_js('XT','Data','xtuple', $$
       ret.data = plv8.execute(sql, clause.parameters) || [];
 
       for (var i = 0; i < ret.data.length; i++) {
-        ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
+        ret.data[i] = this.decrypt(nameSpace, type, ret.data[i], encryptionKey);
       }
 
       this.sanitize(nameSpace, type, ret.data, options);

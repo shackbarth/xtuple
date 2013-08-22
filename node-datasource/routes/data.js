@@ -61,6 +61,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
     payload.username = session.passport.user.username;
+    payload.encryptionKey = X.options.encryptionKey;
     org = session.passport.user.organization;
 
     // Make sure functionName is one of the exposed functions.
