@@ -130,6 +130,32 @@ white:true*/
         return toIssue >= 0 ? toIssue : 0;
       },
 
+      /**
+        Formats distribution detail to an object that can be processed by
+        `issueToShipping` dispatch function called in `save`.
+
+        @returns {Object}
+      */
+      formatDetail: function () {
+        var ret = [],
+          details = this.getValue("itemSite.detail").models;
+        _.each(details, function (detail) {
+          var qty = detail.get("distributed");
+          if (qty) {
+            ret.push({
+              location: detail.get("location").id,
+              quantity: qty
+            });
+          }
+        });
+        return ret;
+      },
+
+      /**
+        Overload: Calls `issueToShipping` dispatch function.
+
+        @returns {Object} Receiver
+        */
       save: function (key, value, options) {
         options = options ? _.clone(options) : {};
 
@@ -147,24 +173,24 @@ white:true*/
             
           var dispOptions = {},
             issOptions = {},
+            detail = that.formatDetail(),
             params = [
               that.id,
               that.get("toIssue"),
-              issOptions
+              issOptions = {}
             ];
 
           // Refresh once we've completed the work
           dispOptions.success = function () {
             that.fetch(options);
           };
-          /*
+
+          // Add distribution detail if applicable
           if (detail.length) {
             issOptions.detail = detail;
           }
-          */
           that.setStatus(XM.Model.BUSY_COMMITTING);
           that.dispatch("XM.Inventory", "issueToShipping", params, dispOptions);
-
         };
 
         // Validate
