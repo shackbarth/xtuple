@@ -69,6 +69,18 @@ SYS = {};
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
 
+  // load the encryption key, or create it if it doesn't exist
+  // it should created just once, the very first time the datasoruce starts
+  var encryptionKeyFilename = './lib/private/encryption_key.txt';
+  X.fs.exists(encryptionKeyFilename, function (exists) {
+    if (exists) {
+      X.options.encryptionKey = X.fs.readFileSync(encryptionKeyFilename);
+    } else {
+      X.options.encryptionKey = Math.random().toString(36).slice(2);
+      X.fs.writeFile(encryptionKeyFilename, X.options.encryptionKey);
+    }
+  });
+
   sessionOptions.username = X.options.databaseServer.user;
   sessionOptions.database = X.options.datasource.databases[0];
 
