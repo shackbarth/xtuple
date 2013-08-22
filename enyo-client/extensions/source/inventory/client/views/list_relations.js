@@ -49,9 +49,8 @@ trailing:true, white:true*/
       isDefault: function (model) {
         var location = model.get("location"),
           itemSite = model.get("itemSite"),
-          issueLoc = itemSite.get("issueLocation"),
           stockLoc = itemSite.get("stockLocation");
-        return issueLoc.id === location.id || stockLoc.id === location.id;
+        return stockLoc.id === location.id;
       },
       formatDefault: function (value, view, model) {
         view.addRemoveClass("emphasis", this.isDefault(model));
@@ -70,11 +69,10 @@ trailing:true, white:true*/
       */
       setupItem: function (inSender, inEvent) {
         this.inherited(arguments);
-        var isSelected = inEvent.originator.isSelected(inEvent.index),
-          view = this.$.listItem,
-          model = this.readyModels()[inEvent.index];
-        isSelected = isSelected && model.get("distributed");
-        view.addRemoveClass("item-selected", isSelected);
+        var view = this.$.listItem,
+          model = this.readyModels()[inEvent.index],
+          isDistributed = model.get("distributed");
+        view.addRemoveClass("item-selected", isDistributed);
       }
     });
 

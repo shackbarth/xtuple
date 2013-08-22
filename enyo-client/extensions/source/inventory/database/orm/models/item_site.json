@@ -97,20 +97,6 @@
         }
       },
       {
-        "name": "issueLocation",
-        "toOne": {
-          "type": "LocationRelation",
-          "column": "itemsite_issuelocation_id"
-        }
-      },
-      {
-        "name": "issueLocationAuto",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_issuelocation_dist"
-        }
-      },
-      {
         "name": "quantityOnHand",
         "attr": {
           "type": "Quantity",

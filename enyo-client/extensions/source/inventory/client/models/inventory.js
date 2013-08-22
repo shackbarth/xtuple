@@ -60,6 +60,7 @@ white:true*/
 
         // Bind events
         this.on("statusChange", this.statusDidChange);
+        this.on("change:toIssue", this.toIssueDidChange);
       },
 
       canIssueStock: function (callback) {
@@ -76,6 +77,33 @@ white:true*/
         return this;
       },
 
+      /**
+        Attempt to distribute any undistributed inventory to default location.
+
+        @returns {Object} Receiver
+      */
+      distributeToDefault: function () {
+        var itemSite = this.get("itemSite"),
+          autoIssue = itemSite.get("stockLocationAuto"),
+          stockLoc,
+          toIssue,
+          undistributed,
+          detail;
+
+        if (!autoIssue) { return this; }
+
+        stockLoc = itemSite.get("stockLocation");
+        toIssue = this.get("toIssue");
+        undistributed = this.undistributed();
+        detail = _.find(itemSite.get("detail").models, function (model) {
+          return  model.get("location").id === stockLoc.id;
+        });
+        
+        detail.distribute(undistributed);
+
+        return this;
+      },
+
       doIssueStock: function (callback) {
         if (callback) {
           callback(true);
@@ -88,6 +116,18 @@ white:true*/
           callback(true);
         }
         return this;
+      },
+
+      /**
+        Calculate the balance remaining to issue.
+
+        @returns {Number}
+      */
+      issueBalance: function () {
+        var balance = this.get("balance"),
+          atShipping = this.get("atShipping"),
+          toIssue = XT.math.subtract(balance, atShipping, XT.QUANTITY_SCALE);
+        return toIssue >= 0 ? toIssue : 0;
       },
 
       save: function (key, value, options) {
@@ -142,13 +182,12 @@ white:true*/
         return this;
       },
 
-      issueBalance: function () {
-        var balance = this.get("balance"),
-          atShipping = this.get("atShipping"),
-          toIssue = XT.math.subtract(balance, atShipping, XT.QUANTITY_SCALE);
-        return toIssue >= 0 ? toIssue : 0;
-      },
+      /**
 
+        Returns with detail distribution is required.
+
+        @returns {Boolean}
+        */
       requiresDetail: function () {
         return this.getValue("itemSite.locationControl");
       },
@@ -158,9 +197,15 @@ white:true*/
           this.set("toIssue", this.issueBalance());
         }
       },
+
+      toIssueDidChange: function () {
+        this.distributeToDefault();
+      },
+
       /**
         Return the quantity of items that require detail distribution.
-      returns Number
+      
+        @returns {Number}
       */
       undistributed: function () {
         var toIssue = this.get("toIssue"),

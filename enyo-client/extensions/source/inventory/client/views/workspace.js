@@ -148,9 +148,13 @@ trailing:true, white:true*/
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
           ]},
-          {kind: "XV.IssueToShippingDetailRelationsBox", attr: "itemSite.detail"}
+          {kind: "XV.IssueToShippingDetailRelationsBox",
+            attr: "itemSite.detail", name: "detail"}
         ]}
       ],
+      /**
+        Overload: Some special handling for the automatic population of quantities.
+        */
       attributesChanged: function () {
         this.inherited(arguments);
         var model = this.getValue();
