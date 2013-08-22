@@ -42,7 +42,7 @@
 
           if (XV.inheritsFrom(value.prototype, "XV.List") &&
               // don't test abstract kinds
-              !_.contains(['List', 'ConfigurationsList', 'AbbreviationList', 'NameDescriptionList'], key)) {
+              !_.contains(['List', 'ConfigurationsList', 'AbbreviationList', 'NameList', 'NameDescriptionList'], key)) {
 
             describe('XV.' + key, function () {
               it('should have their attrs set up right', function () {
