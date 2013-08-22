@@ -164,8 +164,10 @@ white:true*/
           options = value ? _.clone(value) : {};
         }
 
-        var that = this,
-          callback;
+        var toIssue = this.get("toIssue"),
+          that = this,
+          callback,
+          err;
         
         // Callback for after we determine quantity validity
         callback = function (resp) {
@@ -194,13 +196,19 @@ white:true*/
         };
 
         // Validate
-        if (this.get("toIssue") <= 0) {
-          this.trigger("invalid", this, XT.Error.clone("xt2013"), options || {});
-        } else if (!this.issueBalance() && this.get("toIssue") > 0) {
+        if (this.undistributed()) {
+          err = XT.Error.clone("xt2017");
+        } else if (toIssue <= 0) {
+          err = XT.Error.clone("xt2013");
+        } else if (!this.issueBalance() && toIssue > 0) {
           this.notify("_issueExcess".loc(), {
             type: XM.Model.QUESTION,
             callback: callback
           });
+        }
+
+        if (err) {
+          this.trigger("invalid", this, err, options || {});
         } else {
           callback({answer: true});
         }
