@@ -251,7 +251,7 @@ trailing:true, white:true*/
     // ..........................................................
     // ITEM SITE
     //
-    
+
     extensions = [
       {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_inventory".loc() },
       {kind: "XV.ControlMethodPicker", container: "mainGroup", attr: "controlMethod"},

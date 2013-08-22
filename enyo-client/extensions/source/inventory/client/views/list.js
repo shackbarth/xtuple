@@ -277,7 +277,7 @@ trailing:true, white:true*/
       label: "_locations".loc(),
       collection: "XM.LocationCollection",
       query: {orderBy: [
-        {attribute: 'description'}
+        {attribute: 'name'}
       ]},
       //parameterWidget: "XV.ItemSiteListParameters",
       components: [
