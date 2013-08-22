@@ -355,6 +355,15 @@
           "column": "cust_preferred_warehous_id",
           "nullValue": -1
         }
+      },
+      {
+        "name": "creditCards",
+        "toMany": {
+          "isNested": true,
+          "type": "CreditCard",
+          "column": "cust_id",
+          "inverse": "customer"
+        }
       }
     ],
     "extensions": [],

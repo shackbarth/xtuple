@@ -248,6 +248,11 @@ var _ = require("underscore"),
     model.on('statusChange', modelCallback);
     model.on('invalid', invalid);
     model.on('notify', notify);
+    if (data.verbose) {
+      model.on('all', function () {
+        console.log("Model event", arguments);
+      });
+    }
     model.save(null, {});
   };
 
