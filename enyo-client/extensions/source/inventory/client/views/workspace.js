@@ -1,12 +1,11 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
-/*global XT:true, XM:true, XV:true, enyo:true*/
+trailing:true, white:true, strict: false*/
+/*global XT:true, XM:true, XV:true, enyo:true, Globalize: true*/
 
 (function () {
 
   XT.extensions.inventory.initWorkspaces = function () {
-    var extensions;
 
     // ..........................................................
     // CONFIGURE
@@ -185,10 +184,13 @@ trailing:true, white:true*/
         this.$.distributePopup.hide();
       },
       distributeOk: function () {
-        var qty = this.$.quantityInput.getValue();
-        this._distModel.set("distribute", qty);
-        if (this._distModel.isValid()) {
+        var qty = this.$.quantityInput.getValue(),
+          dist = this._distModel;
+        qty = Globalize.parseFloat(qty);
+        dist.set("distributed", qty);
+        if (dist._validate(dist.attributes, {})) {
           this.distributeDone();
+          this.$.detail.$.list.refresh();
         }
       },
       distributedTapped: function (inSender, inEvent) {
@@ -197,6 +199,7 @@ trailing:true, white:true*/
         this._popupDone = false;
         this._distModel = inEvent.model;
         this.$.distributePopup.show();
+        qty = Globalize.format(qty, "n" + XT.QTY_SCALE);
         input.setValue(qty);
         input.focus();
         input.selectContents();
@@ -211,13 +214,14 @@ trailing:true, white:true*/
       */
       toggleDetailSelection: function (inSender, inEvent) {
         var detail = inEvent.model,
+          isDistributed = detail.get("distributed") > 0,
           undistributed;
         if (!detail) { return; }
-        if (inEvent.isSelected) {
+        if (isDistributed) {
+          detail.clear();
+        } else {
           undistributed = this.getValue().undistributed();
           detail.distribute(undistributed);
-        } else {
-          detail.clear();
         }
       }
     });
