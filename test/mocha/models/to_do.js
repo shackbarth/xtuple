@@ -21,9 +21,6 @@
         action: function (data, next) {
           var comment = new XM.ToDoComment(),
             comments = [];
-
-          console.log("preparing to add a comment");
-
           comment.on('change:' + comment.idAttribute, function () {
             // callback to verify uuid
             comment.set("commentType", "General");
