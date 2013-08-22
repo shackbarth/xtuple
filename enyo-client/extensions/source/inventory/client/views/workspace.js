@@ -148,7 +148,7 @@ trailing:true, white:true*/
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
           ]},
-          {kind: "XV.IssueToShippingDetailRelationsBox", attr: "itemSite.detail", fit: true}
+          {kind: "XV.IssueToShippingDetailRelationsBox", attr: "itemSite.detail"}
         ]}
       ],
       attributesChanged: function () {

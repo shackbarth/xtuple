@@ -26,18 +26,21 @@ trailing:true, white:true*/
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "first",
-              components: [
-              {kind: "XV.ListAttr", attr: "location", formatter: "formatLocation"}
-            ]},
-            {kind: "XV.ListColumn", classes: "money", components: [
-              {kind: "XV.ListAttr", attr: "quantity", "style": "text-align: right",
-              formatter: "formatQuantity"}
-            ]},
-            {kind: "XV.ListColumn", classes: "money", fit: true, components: [
-              {kind: "XV.ListAttr", attr: "distributed",  "style": "text-align: right",
-                formatter: "formatQuantity",
-                classes: "hyperlink"}
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "FittableColumns", components: [
+                  {kind: "XV.ListAttr", attr: "location",
+                    formatter: "formatLocation"},
+                ]},
+                {kind: "XV.ListAttr", attr: "quantity",
+                  formatter: "formatQuantity",
+                  classes: "right"},
+              ]},
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "location.description"},
+                {kind: "XV.ListAttr", attr: "distributed",
+                  classes: "right hyperlink"}
+              ]}
             ]}
           ]}
         ]}
@@ -48,6 +51,17 @@ trailing:true, white:true*/
       formatQuantity: function (value, view, model) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
+      },
+      /**
+        Overload: Don't highlight as selected if no quantity was distributed.
+      */
+      setupItem: function (inSender, inEvent) {
+        this.inherited(arguments);
+        var isSelected = inEvent.originator.isSelected(inEvent.index),
+          view = this.$.distributed,
+          model = this.readyModels()[inEvent.index],
+        isSelected = isSelected && model.get("distributed");
+        this.$.listItem.addRemoveClass("item-selected", isSelected);
       }
     });
 
