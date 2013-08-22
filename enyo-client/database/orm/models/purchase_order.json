@@ -29,7 +29,7 @@
         "attr": {
           "type": "String",
           "column": "pohead_number",
-					"isNaturalKey": true
+          "isNaturalKey": true
          }
       },
       {

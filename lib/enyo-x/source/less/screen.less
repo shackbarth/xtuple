@@ -259,6 +259,25 @@ body {
   }
 }
 
+.xv-sort-popup {
+  background-color: @white;
+  color: @black;
+  .xv-groupbox > *:last-child {
+    text-align: center;
+    padding: 5px;
+    .onyx-button {
+      margin: 3px;
+    }
+  }
+}
+
+.xv-button-bar {
+  text-align: center;
+  .onyx-button {
+    margin: 5px 5px 0 0;
+  }
+}
+
 .xv-version-label {
   padding: 10px;
 }
@@ -764,15 +783,6 @@ body {
     color: @dim-gray;
   }
 }
-
-.xv-button-bar {
-  .onyx-button {
-    /* TODO: center buttons, spacing in between (margin: auto on bar) */
-    margin: 0 40px 0 40px;
-  }
-}
-
-
 
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {
