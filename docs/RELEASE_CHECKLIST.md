@@ -9,7 +9,7 @@
 4. Update `package.json` in the `xtuple-extensions`, `private-extensions`, and `bi` repos,
    and update the extension versions *if they have changed*.
 5. Update the project version number on dogfood and create new project version number for the next sprint.
-6. Look at the open pull requests for all three repositories to make sure we have pulled everything
+6. Look at the open pull requests for all four repositories to make sure we have pulled everything
   we want for this release.
 7. Make sure the only Resolved/Open issues for XT-MOBILE correspond to pull requests that
   you have left sitting in github.
