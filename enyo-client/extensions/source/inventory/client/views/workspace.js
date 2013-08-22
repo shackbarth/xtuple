@@ -124,7 +124,8 @@ trailing:true, white:true*/
       hideRefresh: true,
       dirtyWarn: false,
       handlers: {
-        onDetailSelectionChanged: "toggleDetailSelection"
+        onDetailSelectionChanged: "toggleDetailSelection",
+        onDistributedTapped: "distributedTapped"
       },
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -150,6 +151,19 @@ trailing:true, white:true*/
           ]},
           {kind: "XV.IssueToShippingDetailRelationsBox",
             attr: "itemSite.detail", name: "detail"}
+        ]},
+        {kind: "onyx.Popup", name: "distributePopup", centered: true,
+          onHide: "popupHidden",
+          modal: true, floating: true, components: [
+          {content: "_quantity".loc()},
+          {kind: "onyx.InputDecorator", components: [
+            {kind: "onyx.Input", name: "quantityInput"}
+          ]},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "distributeOk",
+            classes: "onyx-blue xv-popup-button"},
+          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "distributeDone",
+            classes: "xv-popup-button"},
         ]}
       ],
       /**
@@ -163,6 +177,33 @@ trailing:true, white:true*/
           this.$.toIssue.focus();
           this.$.toIssue.$.input.selectContents();
           this._focused = true;
+        }
+      },
+      distributeDone: function () {
+        this._popupDone = true;
+        delete this._distModel;
+        this.$.distributePopup.hide();
+      },
+      distributeOk: function () {
+        var qty = this.$.quantityInput.getValue();
+        this._distModel.set("distribute", qty);
+        if (this._distModel.isValid()) {
+          this.distributeDone();
+        }
+      },
+      distributedTapped: function (inSender, inEvent) {
+        var input = this.$.quantityInput,
+          qty = inEvent.model.get("distributed");
+        this._popupDone = false;
+        this._distModel = inEvent.model;
+        this.$.distributePopup.show();
+        input.setValue(qty);
+        input.focus();
+        input.selectContents();
+      },
+      popupHidden: function (inSender, inEvent) {
+        if (!this._popupDone) {
+          inEvent.originator.show();
         }
       },
       /**

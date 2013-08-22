@@ -23,6 +23,9 @@ trailing:true, white:true*/
       ],
       multiSelect: true,
       parentKey: "itemSite",
+      events: {
+        onDistributedTapped: ""
+      },
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -40,12 +43,17 @@ trailing:true, white:true*/
                 {kind: "XV.ListAttr", attr: "location.description",
                   formatter: "formatDefault"},
                 {kind: "XV.ListAttr", attr: "distributed",
-                  classes: "right hyperlink"}
+                  classes: "right hyperlink", ontap: "distributedTapped"}
               ]}
             ]}
           ]}
         ]}
       ],
+      distributedTapped: function (inSender, inEvent) {
+        inEvent.model = this.readyModels()[inEvent.index];
+        this.doDistributedTapped(inEvent);
+        return true;
+      },
       isDefault: function (model) {
         var location = model.get("location"),
           itemSite = model.get("itemSite"),
