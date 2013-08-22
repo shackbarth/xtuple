@@ -73,12 +73,6 @@ var _ = require("underscore"),
         assert.equal(data.model.get(key), value);
       }
     });
-
-    if (data.commentType) {
-      var comments = data.model.get("comments");
-      // verify that there is a comment
-      assert.isTrue(comments.length > 0);
-    }
   };
 
   /**
@@ -88,10 +82,6 @@ var _ = require("underscore"),
     set this in the current model.
    */
   var setComments = function (data, callback) {
-    // if this model doesn't have comments, exit swiftly.
-    if (!data.commentType) {
-      callback();
-    }
     var comment = new XM[data.commentType.substring(3)](),
       comments = [];
     comment.on('change:' + comment.idAttribute, function () {
@@ -107,6 +97,15 @@ var _ = require("underscore"),
     });
     // initialize the new comment
     comment.initialize(null, {isNew: true});
+  };
+
+  /**
+    Test that the comments collection is not empty.
+  */
+  var testComments = function (data) {
+    var comments = data.model.get("comments");
+    // verify that there is a comment
+    assert.isTrue(comments.length > 0);
   };
 
   /**
@@ -260,7 +259,9 @@ var _ = require("underscore"),
 
           assert.equal(data.model.getStatusString(), 'READY_CLEAN');
           testAttributes(data);
-
+          if (data.commentType && data.testComments) {
+            testComments(data);
+          }
           callback();
         }
       };
@@ -376,10 +377,13 @@ var _ = require("underscore"),
       setModel(data, done);
     });
 
-    it('sets comments on the model', function (done) {
-      this.timeout(20 * 1000);
-      setComments(data, done);
-    });
+    // if this model has comments, set them on the model
+    if (data.commentType) {
+      it('sets comments on the model', function (done) {
+        this.timeout(20 * 1000);
+        setComments(data, done);
+      });
+    }
 
     _.each(data.beforeSaveActions || [], function (spec) {
       it(spec.it, function (done) {

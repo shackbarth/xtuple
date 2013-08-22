@@ -7,11 +7,11 @@
   "use strict";
 
   var crud = require('../lib/crud'),
-    assert = require("chai").assert,
     data = {
       recordType: "XM.ToDo",
       commentType: "XM.ToDoComment",
       autoTestAttributes: true,
+      testComments: true,
       verbose: true,
       createHash: {
         name: "ToDo Name" + Math.random(),
