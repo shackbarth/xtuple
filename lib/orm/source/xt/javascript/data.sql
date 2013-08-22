@@ -779,10 +779,8 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* Build the insert statement */
-      XT.debug("about to build columns", params.columns);
       columns = params.columns.join(', ');
       columns = XT.format(columns, params.identifiers);
-      XT.debug("just built columns", columns);
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
 
