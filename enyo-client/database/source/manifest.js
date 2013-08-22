@@ -1,5 +1,5 @@
 {
-  "version": "1.4.1",
+  "version": "1.4.2",
   "databaseScripts": [
     "drop_deprecated.sql",
     "xt/trigger_functions/comment_did_change.sql",
