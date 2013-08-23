@@ -57,8 +57,18 @@ white:true*/
       */
       distribute: function (qty) {
         var qoh = this.get("quantity"),
-          sel = qty > qoh ? qoh : qty;
-        this.set("distributed", sel);
+          scale = XT.QTY_SCALE;
+
+        // Calculate the change
+        qty = XT.math.add(this.get("distributed"), qty, scale);
+
+        // Can not distribute more than is available
+        qty = qty > qoh ? qoh : qty;
+
+        // Can not distribute negative
+        qty = qty < 0 ? 0 : qty;
+        
+        this.set("distributed", qty);
         return this;
       },
 
