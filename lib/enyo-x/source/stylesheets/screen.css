@@ -851,8 +851,6 @@
 }
 .onyx-picker .onyx-menu-item {
   text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 .xv-pickerwidget {
@@ -2345,6 +2343,23 @@ body {
   padding-left: 10px;
   float: right;
 }
+.xv-sort-popup {
+  background-color: #ffffff;
+  color: #000000;
+}
+.xv-sort-popup .xv-groupbox > *:last-child {
+  text-align: center;
+  padding: 5px;
+}
+.xv-sort-popup .xv-groupbox > *:last-child .onyx-button {
+  margin: 3px;
+}
+.xv-button-bar {
+  text-align: center;
+}
+.xv-button-bar .onyx-button {
+  margin: 5px 5px 0 0;
+}
 .xv-version-label {
   padding: 10px;
 }
@@ -2772,11 +2787,6 @@ body {
 }
 .xv-menuitem.disabled {
   color: #696969;
-}
-.xv-button-bar .onyx-button {
-  /* TODO: center buttons, spacing in between (margin: auto on bar) */
-
-  margin: 0 40px 0 40px;
 }
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {
