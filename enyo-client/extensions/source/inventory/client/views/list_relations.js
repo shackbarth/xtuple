@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true, strict: false,
 trailing:true, white:true*/
-/*global XT:true, enyo:true, Globalize:true*/
+/*global XT:true, enyo:true, Globalize:true, _:true*/
 
 (function () {
 
@@ -49,6 +49,14 @@ trailing:true, white:true*/
           ]}
         ]}
       ],
+      destroy: function () {
+        var collection = this.getValue(),
+          that = this;
+        _.each(collection.models, function (model) {
+          model.off("change:distributed", that.rowChanged, that);
+        });
+        this.inherited(arguments);
+      },
       distributedTapped: function (inSender, inEvent) {
         inEvent.model = this.readyModels()[inEvent.index];
         this.doDistributedTapped(inEvent);
@@ -68,9 +76,12 @@ trailing:true, white:true*/
         view.addRemoveClass("emphasis", this.isDefault(model));
         if (value) { return value.format(); }
       },
-      formatQuantity: function (value, view, model) {
+      formatQuantity: function (value) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
+      },
+      rowChanged: function (model) {
+        this.renderRow(this.getValue().indexOf(model));
       },
       /**
         Overload: Don't highlight as selected if no quantity was distributed.
@@ -81,6 +92,18 @@ trailing:true, white:true*/
           model = this.readyModels()[inEvent.index],
           isDistributed = model.get("distributed");
         view.addRemoveClass("item-selected", isDistributed);
+      },
+      /**
+       Overload: Add observers to all detail models to re-render if
+       distribute values change.
+       */
+      valueChanged: function () {
+        this.inherited(arguments);
+        var that = this,
+         collection = this.getValue();
+        _.each(collection.models, function (model) {
+          model.on("change:distributed", that.rowChanged, that);
+        });
       }
     });
 
@@ -121,8 +144,7 @@ trailing:true, white:true*/
           ]}
         ]}
       ],
-
-      formatQuantity: function (value, view, model) {
+      formatQuantity: function (value) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
       }

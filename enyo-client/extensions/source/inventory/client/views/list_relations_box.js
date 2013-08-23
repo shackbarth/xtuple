@@ -28,7 +28,6 @@ trailing:true, white:true*/
           model: this.$.list.readyModels()[index],
           isSelected: inEvent.originator.isSelected(index)
         });
-        this.$.list.renderRow(inEvent.key);
       }
     });
 
