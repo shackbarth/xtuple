@@ -87,10 +87,12 @@ trailing:true, white:true*/
         Overload: Don't highlight as selected if no quantity was distributed.
       */
       setupItem: function (inSender, inEvent) {
-        this.inherited(arguments);
         var view = this.$.listItem,
           model = this.readyModels()[inEvent.index],
-          isDistributed = model.get("distributed");
+          isDistributed;
+        if (!model) { return; } // Hack
+        this.inherited(arguments);
+        isDistributed = model.get("distributed");
         view.addRemoveClass("item-selected", isDistributed);
       },
       /**
