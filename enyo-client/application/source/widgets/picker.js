@@ -476,7 +476,10 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.siteZoneRelations",
     orderBy: [
       {attribute: 'name'}
+    ]
+  });
 
+  // ..........................................................
   // PLANNER CODE
   //
 
@@ -526,7 +529,7 @@ regexp:true, undef:true, trailing:true, white:true */
         if (toSet[i].indexOf('.') === -1) {
           var stringToSet = "_" + toSet[i],
             objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
-          comps.push(objectToSet)
+          comps.push(objectToSet);
         }
         else {
           var stringToSet,
@@ -567,7 +570,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
->>>>>>> xtuple/master
   // TAX AUTHORITY
   //
 
