@@ -1,3 +1,13 @@
+1.4.2 (2013/08/23)
+==================
+
+Features and bugfixes
+---------------------
+- Fixed
+  issue #[21260](http://www.xtuple.org/xtincident/view/bugs/21260)
+  _XT.filter table naming conflict with public.filter_
+
+
 1.4.1 (2013/08/21)
 ===============
 

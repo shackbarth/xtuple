@@ -3,8 +3,8 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Filter",
-    "table": "xt.filter",
-    "idSequenceName": "filter_filter_id_seq",
+    "table": "xt.fltr",
+    "idSequenceName": "fltr_fltr_id_seq",
     "comment": "User Chart Map",
     "privileges": {
       "all": {
@@ -19,7 +19,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "filter_id",
+          "column": "fltr_id",
           "isPrimaryKey": true
         }
       },
@@ -35,35 +35,35 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "filter_name"
+          "column": "fltr_name"
         }
       },
       {
         "name": "createdBy",
         "attr": {
           "type": "String",
-          "column": "filter_createdby"
+          "column": "fltr_createdby"
         }
       },
       {
         "name": "shared",
         "attr": {
           "type": "Boolean",
-          "column": "filter_shared"
+          "column": "fltr_shared"
         }
       },
       {
         "name": "params",
         "attr": {
           "type": "String",
-          "column": "filter_params"
+          "column": "fltr_params"
         }
       },
       {
         "name": "kind",
         "attr": {
           "type": "String",
-          "column": "filter_param_kind"
+          "column": "fltr_param_kind"
         }
       }
     ],

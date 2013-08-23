@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS xt.userrole CASCADE;
 DROP TABLE IF EXISTS xt.userrolepriv CASCADE;
 DROP TABLE IF EXISTS xt.useruserrole CASCADE;
 DROP TABLE IF EXISTS xt.usrorg CASCADE;
+DROP TABLE IF EXISTS xt.filter CASCADE;
 DROP VIEW IF EXISTS xt.usr CASCADE;
 DROP FUNCTION IF EXISTS xt.createuser(text, boolean);
 DROP FUNCTION IF EXISTS xt.user_account_sync(text);
