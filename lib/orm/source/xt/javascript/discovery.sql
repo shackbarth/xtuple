@@ -881,10 +881,20 @@ select xt.install_js('XT','Discovery','xtuple', $$
               childOrm;
 
           if (childProp) {
-            if (childProp.items && childProp.items["$ref"]){
-              childOrm = childProp.items["$ref"];
+            if (childProp.items && childProp.items["$ref"]) {
+              if (childProp.items["$ref"].indexOf("/") === -1) {
+                childOrm = childProp.items["$ref"];
+              } else {
+                /* This is a JSON-Path type of $ref. e.g. SalesRep/name */
+                childOrm = childProp.items["$ref"].split("/")[0];
+              }
             } else if (childProp["$ref"]){
-              childOrm = childProp["$ref"];
+              if (childProp["$ref"].indexOf("/") === -1) {
+                childOrm = childProp["$ref"];
+              } else {
+                /* This is a JSON-Path type of $ref. e.g. SalesRep/name */
+                childOrm = childProp["$ref"].split("/")[0];
+              }
             }
 
             /* Only get this child schema if we don't already have it. */
