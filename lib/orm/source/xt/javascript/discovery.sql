@@ -814,7 +814,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
               " and orm_rest " +
               " and not orm_ext " +
               " and orm_active " +
-              " and orm_context ='xtuple' " +
+              " and orm_context = 'xtuple' " +
               "union all " +
               "select orm_namespace, orm_type " +
               "from xt.orm " +
