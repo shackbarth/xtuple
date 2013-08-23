@@ -99,7 +99,9 @@ white:true*/
           return  model.get("location").id === stockLoc.id;
         });
         
-        detail.distribute(undistributed);
+        if (detail) { // Might not be any inventory there now
+          detail.distribute(undistributed);
+        }
 
         return this;
       },
