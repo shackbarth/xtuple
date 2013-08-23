@@ -166,16 +166,23 @@ trailing:true, white:true, strict: false*/
         ]}
       ],
       /**
-        Overload: Some special handling for the automatic population of quantities.
+        Overload: Some special handling for start up.
         */
       attributesChanged: function () {
         this.inherited(arguments);
         var model = this.getValue();
-        if (!this._focused && model &&
+        
+        // Focus and select qty on start up.
+        if (!this._started && model &&
           model.getStatus() === XM.Model.READY_DIRTY) {
           this.$.toIssue.focus();
           this.$.toIssue.$.input.selectContents();
-          this._focused = true;
+          this._started = true;
+        }
+
+        // Hide detail if not applicable
+        if (!model.requiresDetail()) {
+          this.$.detail.hide();
         }
       },
       distributeDone: function () {
