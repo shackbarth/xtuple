@@ -11,7 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ShipmentWidget",
     kind: "XV.RelationWidget",
-    collection: "XM.ShipmentCollection",
+    collection: "XM.ShipmentRelationCollection",
     keyAttribute: "number",
     list: "XV.ShipmentList"
   });
