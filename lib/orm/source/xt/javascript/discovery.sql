@@ -226,7 +226,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
 
       if (!key) {
         /* This should never happen. */
-        plv8.elog(WARNING, "Have you granted the user", XT.username, "access to the", ormType, "extension?");
         plv8.elog(ERROR, "No key found for ormType: ", ormType);
       }
 
@@ -809,7 +808,29 @@ select xt.install_js('XT','Discovery','xtuple', $$
     "use strict";
 
     /* TODO - Do we need to include "XM" in the propName? */
-    var sql = "select orm_namespace, orm_type from xt.orm where orm_rest " +
+    var sql = "select orm_namespace, orm_type " +
+              "from xt.orm " +
+              "where 1=1 " +
+              " and orm_rest " +
+              " and not orm_ext " +
+              " and orm_active " +
+              " and orm_context ='xtuple' " +
+              "union all " +
+              "select orm_namespace, orm_type " +
+              "from xt.orm " +
+              "where orm_id in (" +
+              " select orm_id " +
+              " from xt.orm " +
+              " left join xt.ext on ext_name=orm_context " +
+              " left join xt.usrext on ext_id=usrext_ext_id " +
+              " left join xt.grpext on ext_id=grpext_ext_id " +
+              " left join usrgrp on usrgrp_grp_id=grpext_grp_id " +
+              " where 1=1 " +
+              "  and orm_rest " +
+              "  and not orm_ext " +
+              "  and orm_active " +
+              "  and orm_context != 'xtuple' " +
+              "  and (usrext_usr_username=$1 or usrgrp_username=$1)) " +
               "group by orm_namespace, orm_type order by orm_namespace, orm_type",
         orms = [],
         relatedORMs,
@@ -817,7 +838,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
         singleOrms = [],
         thisOrm;
 
-    orms = plv8.execute(sql);
+    orms = plv8.execute(sql, [XT.username]);
 
     /* If this is a single ORM request, find all the related ORMs that are
      * exposed to REST and return only the single and related ORMs.
