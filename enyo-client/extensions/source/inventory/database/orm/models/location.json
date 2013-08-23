@@ -46,7 +46,7 @@
         "toOne": {
           "isNested": true,
           "type": "SiteZone",
-          "column": "location_warehous_id"
+          "column": "location_whsezone_id"
         }
       },
       {

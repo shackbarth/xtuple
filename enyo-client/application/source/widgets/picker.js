@@ -298,7 +298,8 @@ regexp:true, undef:true, trailing:true, white:true */
     nameAttribute: "name",
     orderBy: [
       {attribute: 'name'}
-    ]
+    ],
+    valueAttribute: "id"
   });
 
   // ..........................................................

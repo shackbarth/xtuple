@@ -82,6 +82,9 @@ trailing:true, white:true*/
     title: "_allowableItems".loc(),
     parentKey: "location",
     listRelations: "XV.LocationItemListRelations"
+    //searchList: "XV.ItemListItem"
+    //TODO ability to New or Delete an item
+    //canOpen: false
   });
 
   // ..........................................................

@@ -255,8 +255,6 @@ trailing:true, white:true*/
     extensions = [
       {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_inventory".loc() },
       {kind: "XV.ControlMethodPicker", container: "mainGroup", attr: "controlMethod"},
-      {kind: "XV.PlannerCodePicker", container: "mainGroup", attr: "plannerCode"},
-      {kind: "XV.CostCategoryPicker", container: "mainGroup", attr: "costCategory"},
       {kind: "XV.CostMethodPicker", container: "mainGroup", attr: "costMethod"},
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStocked"},
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isAutomaticAbcClassUpdates"},
@@ -271,8 +269,7 @@ trailing:true, white:true*/
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isReceiveLocationAuto"},
       {kind: "XV.LocationPicker", container: "mainGroup", attr: "stockLocation"},
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStockLocationAuto"},
-      {kind: "XV.LocationPicker", container: "mainGroup", attr: "issueLocation"},
-      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isIssueLocationAuto"},
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "userDefinedLocation"},
       {kind: "XV.InputWidget", container: "mainGroup", attr: "locationComment"},
       //LIST     - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location
       {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_planning".loc() },

@@ -146,7 +146,8 @@
         "toOne": {
           "type": "Location",
           "column": "itemsite_recvlocation_id",
-          "nullValue": -1
+          "nullValue": -1,
+          "inverse": "id"
         }
       },
       {
@@ -161,7 +162,8 @@
         "toOne": {
           "type": "Location",
           "column": "itemsite_location_id",
-          "nullValue": -1
+          "nullValue": -1,
+          "inverse": "id"
         }
       },
       {
