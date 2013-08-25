@@ -78,13 +78,12 @@ trailing:true, white:true*/
 
   enyo.kind({
     name: "XV.LocationItemRelationBox",
-    kind: "XV.ListRelationsBox",
+    kind: "XV.ListGroupRelationsBox",
     title: "_allowableItems".loc(),
     parentKey: "location",
+    groupItemKey: "item",
+    searchList: "XV.ItemList",
     listRelations: "XV.LocationItemListRelations"
-    //searchList: "XV.ItemListItem"
-    //TODO ability to New or Delete an item
-    //canOpen: false
   });
 
   // ..........................................................

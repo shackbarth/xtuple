@@ -215,7 +215,8 @@
         "toOne": {
           "isNested": true,
           "type": "ItemRelation",
-          "column": "locitem_item_id"
+          "column": "locitem_item_id",
+          "inverse": "id"
         }
       }
     ],

@@ -295,9 +295,9 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.LocationPicker",
     kind: "XV.PickerWidget",
     collection: "XM.location",
-    nameAttribute: "name",
+    nameAttribute: "format",
     orderBy: [
-      {attribute: 'name'}
+      {attribute: 'format'}
     ],
     valueAttribute: "id"
   });

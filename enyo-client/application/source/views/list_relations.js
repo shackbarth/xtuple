@@ -384,7 +384,6 @@ trailing:true, white:true*/
       {attribute: 'item.number'}
     ],
     parentKey: "location",
-    //workspace: "XV.IncidentWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [

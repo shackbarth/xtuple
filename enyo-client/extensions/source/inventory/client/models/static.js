@@ -98,6 +98,7 @@ white:true*/
     var costMethodJson = [
       { id: "N", name: "_none".loc() },
       { id: "S", name: "_standard".loc() },
+      { id: "A", name: "_average".loc() },
       { id: "J", name: "_job".loc() }
     ];
     XM.CostMethodModel = Backbone.Model.extend({
