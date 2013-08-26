@@ -1210,6 +1210,13 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     decrypt: function (nameSpace, type, record, encryptionKey) {
       var result,
+        hex2a = function (hex) {
+          var str = '';
+          for (var i = 2; i < hex.length; i += 2) {
+            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+          }
+          return str;
+        },
         orm = this.fetchOrm(nameSpace, type);
 
       for (prop in record) {
@@ -1227,13 +1234,6 @@ select xt.install_js('XT','Data','xtuple', $$
               XT.debug('decrypt values =', [record[prop], encryptionKey]);
             }
             result = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
-            var hex2a = function (hex) {
-              var str = '';
-              for (var i = 2; i < hex.length; i += 2) {
-                str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-              }
-              return str;
-            };
             result = result ? hex2a(result) : result;
             if(ormp.attr.isEncrypted === "credit_card_number" && result && result.length >= 4) {
               record[prop] = "************" + result.substring(result.length - 4);
