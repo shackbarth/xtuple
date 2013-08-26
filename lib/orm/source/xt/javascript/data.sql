@@ -606,8 +606,8 @@ select xt.install_js('XT','Data','xtuple', $$
           }
 
           if (sql.statement) {
-	    plv8.execute(sql.statement, sql.values);
-	  }
+            plv8.execute(sql.statement, sql.values);
+          }
         }
       }
 
@@ -1210,9 +1210,10 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     decrypt: function (nameSpace, type, record, encryptionKey) {
       var result,
+        that = this,
         hex2a = function (hex) {
-          var str = '';
-          for (var i = 2; i < hex.length; i += 2) {
+          var str = '', i;
+          for (i = 2; i < hex.length; i += 2) {
             str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
           }
           return str;
@@ -1246,7 +1247,9 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* Check recursively. */
         } else if (ormp.toMany && ormp.toMany.isNested) {
-          this.decrypt(nameSpace, ormp.toMany.type, record[prop][i], encryptionKey);
+          record[prop].map(function (subdata) {
+            that.decrypt(nameSpace, ormp.toMany.type, subdata, encryptionKey);
+          });
         }
       }
 
@@ -1573,10 +1576,10 @@ select xt.install_js('XT','Data','xtuple', $$
             throw new Error("Access Denied.");
           }
         }
-
-        /* Decrypt result where applicable. */
-        ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
+
+      /* Decrypt result where applicable. */
+      ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
 
       this.sanitize(nameSpace, type, ret.data, options);
 

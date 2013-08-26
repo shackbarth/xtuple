@@ -46,7 +46,7 @@
       afterSaveActions: [{
         it: "should have saved the credit card correctly",
         action: function (data, next) {
-          assert.equal(data.model.get("creditCards").models[0].get("number"), "4111111111111111");
+          assert.equal(data.model.get("creditCards").models[0].get("number"), "************1111");
           next();
         }
       }],
