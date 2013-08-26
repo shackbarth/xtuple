@@ -1576,10 +1576,10 @@ select xt.install_js('XT','Data','xtuple', $$
             throw new Error("Access Denied.");
           }
         }
+        /* Decrypt result where applicable. */
+        ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
 
-      /* Decrypt result where applicable. */
-      ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
 
       this.sanitize(nameSpace, type, ret.data, options);
 
