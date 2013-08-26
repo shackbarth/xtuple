@@ -85,14 +85,14 @@
         }
       },
       {
-        "name": "restricted",
+        "name": "isRestricted",
         "attr": {
           "type": "Boolean",
           "column": "location_restrict"
         }
       },
       {
-        "name": "netable",
+        "name": "isNetable",
         "attr": {
           "type": "Boolean",
           "column": "location_netable"

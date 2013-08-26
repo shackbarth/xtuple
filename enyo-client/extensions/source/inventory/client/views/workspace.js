@@ -193,8 +193,8 @@ trailing:true, white:true*/
             {kind: "XV.ScrollableGroupbox", name: "mainGroup",
               classes: "in-panel", fit: true, components: [
               {kind: "XV.SiteZonePicker", attr: "siteZone"},
-              {kind: "XV.CheckboxWidget", attr: "netable"},
-              {kind: "XV.CheckboxWidget", attr: "restricted"},
+              {kind: "XV.CheckboxWidget", attr: "isNetable"},
+              {kind: "XV.CheckboxWidget", attr: "isRestricted"},
               {kind: "XV.InputWidget", attr: "aisle"},
               {kind: "XV.InputWidget", attr: "rack"},
               {kind: "XV.InputWidget", attr: "bin"},
@@ -204,7 +204,15 @@ trailing:true, white:true*/
           ]},
           {kind: "XV.LocationItemRelationBox", attr: "items"}
         ]}
-      ]
+      ],
+      //TODO get the following working
+      isRestrictedDidChange: function () {
+        var model = this.getValue(),
+          isRestricted = model ? model.get("isRestricted") : false;
+        if (!isRestricted) {
+          this.$.locationItemRelationBox.setDisabled(true);
+        }
+      }
     });
 
     XV.registerModelWorkspace("XM.Location", "XV.LocationWorkspace");
@@ -263,22 +271,23 @@ trailing:true, white:true*/
       {kind: "XV.NumberWidget", container: "mainGroup", attr: "cycleCountFrequency", scale: 0},
       {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_location".loc() },
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isLocationControl"},
-      //TODO: Add default location checkbox
-      //PICKER   - LOCATION/USER-DEFINED - (display the following 3/6 OR USERDEFINED)
+      //TODO get a checkbox working for useDefaultLocation - currently a function on the model
+      //{kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isUseDefaultLocation"},
+      //{kind: "XV.InputWidget", container: "mainGroup", type: "boolean", name: "isUseDefaultLocation", label: "_isUseDefaultLocation".loc()},
       {kind: "XV.LocationPicker", container: "mainGroup", attr: "receiveLocation"},
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isReceiveLocationAuto"},
       {kind: "XV.LocationPicker", container: "mainGroup", attr: "stockLocation"},
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStockLocationAuto"},
       {kind: "XV.InputWidget", container: "mainGroup", attr: "userDefinedLocation"},
       {kind: "XV.InputWidget", container: "mainGroup", attr: "locationComment"},
-      //LIST     - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location
+      //LIST - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location. Look at the privileges checkbox list.
       {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_planning".loc() },
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParameters"},
       {kind: "XV.QuantityWidget", container: "mainGroup", attr: "reorderLevel"},
       {kind: "XV.QuantityWidget", container: "mainGroup", attr: "orderToQuantity"},
       {kind: "XV.QuantityWidget", container: "mainGroup", attr: "minimumOrderQuantity"},
       {kind: "XV.QuantityWidget", container: "mainGroup", attr: "maximumOrderQuantity"},
-      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "orderMultipleQuantity"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "multipleOrderQuantity"},
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParametersManual"},
       {kind: "XV.QuantityWidget", container: "mainGroup", attr: "safetyStock"},
       {kind: "XV.NumberWidget", container: "mainGroup", attr: "leadTime", scale: 0}

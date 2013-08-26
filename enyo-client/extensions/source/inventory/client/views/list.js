@@ -283,7 +283,7 @@ trailing:true, white:true*/
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "short", components: [
-              {kind: "XV.ListAttr", attr: "name", isKey: true}
+              {kind: "XV.ListAttr", attr: "format", isKey: true}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
               {kind: "XV.ListAttr", attr: "site.code"}
@@ -292,10 +292,10 @@ trailing:true, white:true*/
               {kind: "XV.ListAttr", attr: "description"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "restricted"}
+              {kind: "XV.ListAttr", attr: "isRestricted"}
             ]},
             {kind: "XV.ListColumn", classes: "last", components: [
-              {kind: "XV.ListAttr", attr: "netable"}
+              {kind: "XV.ListAttr", attr: "isNetable"}
             ]}
           ]}
         ]}

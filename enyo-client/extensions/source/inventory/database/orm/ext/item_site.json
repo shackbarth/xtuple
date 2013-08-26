@@ -135,7 +135,7 @@
         }
       },
       {
-        "name": "locationControl",
+        "name": "isLocationControl",
         "attr": {
           "type": "Boolean",
           "column": "itemsite_loccntrl"
@@ -144,7 +144,8 @@
       {
         "name": "receiveLocation",
         "toOne": {
-          "type": "Location",
+          "isNested": true,
+          "type": "LocationRelation",
           "column": "itemsite_recvlocation_id",
           "nullValue": -1,
           "inverse": "id"
@@ -160,7 +161,8 @@
       {
         "name": "stockLocation",
         "toOne": {
-          "type": "Location",
+          "isNested": true,
+          "type": "LocationRelation",
           "column": "itemsite_location_id",
           "nullValue": -1,
           "inverse": "id"
@@ -176,9 +178,11 @@
       {
         "name": "issueLocation",
         "toOne": {
-          "type": "Location",
+          "isNested": true,
+          "type": "LocationRelation",
           "column": "itemsite_issuelocation_id",
-          "nullValue": -1
+          "nullValue": -1,
+          "inverse": "id"
         }
       },
       {

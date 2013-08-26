@@ -10,16 +10,59 @@ white:true*/
 
     var locationBehaviorFunctions = {
 
-      //TODO if Item Type is Purchased, Cost Method available options restricted to Average, Standard
-      //return array of allowable costing types
-      /*
-      itemType: function () {
+      isUseDefaultLocation: function () {
+        return [false, true];
+      },
+
+      defaults: function () {
+        var K = XM.ItemSite;
+        this.set('isUseDefaultLocation', false);
+        this.setReadOnly(this.get('receiveLocation'), true);
+        this.setReadOnly(this.get('isReceiveLocationAuto'), true);
+        this.setReadOnly(this.get('stockLocation'), true);
+        this.setReadOnly(this.get('isStockLocationAuto'), true);
+        this.setReadOnly(this.get('userDefinedLocation'), true);
+      },
+
+      isUseDefaultLocationDidChange: function () {
         var K = XM.ItemSite,
-          itemType = this.get("item.itemType");
-        if (itemType === "P") {
-          return costMethod = {"A", "S"};
+          isUseDefaultLocation = this.get('isUseDefaultLocation'),
+          isLocationControl = this.get('isLocationControl'),
+          receiveLocation = true,
+          isReceiveLocationAuto = true,
+          stockLocation = true,
+          isStockLocationAuto = true,
+          userDefinedLocation = true;
+        if (isUseDefaultLocation === true && isLocationControl === false) {
+          receiveLocation = false;
+          isReceiveLocationAuto = false;
+          stockLocation = false;
+          isStockLocationAuto = false;
+          userDefinedLocation = false;
         }
-      }, */
+        else if (isUseDefaultLocation === true && isLocationControl === true) {
+          receiveLocation = false;
+          isReceiveLocationAuto = false;
+          stockLocation = false;
+          isStockLocationAuto = false;
+          userDefinedLocation = true;
+        }
+        this.setReadOnly('receiveLocation', receiveLocation);
+        this.setReadOnly('isReceiveLocationAuto', isReceiveLocationAuto);
+        this.setReadOnly('stockLocation', stockLocation);
+        this.setReadOnly('isStockLocationAuto', isStockLocationAuto);
+        this.setReadOnly('userDefinedLocation', userDefinedLocation);
+      },
+      
+      //TODO get the following function to work.
+      costMethod: function () {
+        var K = XM.ItemSite,
+          itemType = this.get("item.itemType"),
+          costMethod = this.get("costMethod");
+        if (itemType === "P") {
+          return costMethod = ["A", "S"];
+        }
+      }, 
 
       controlMethodDidChange: function () {
         var K = XM.ItemSite,
@@ -145,10 +188,10 @@ white:true*/
       },
 
       bindEvents: function () {
-
         XM.Model.prototype.bindEvents.apply(this, arguments);
         this.on('change:controlMethod', this.controlMethodDidChange);
         this.on('change:costMethod', this.costMethodDidChange);
+        this.on('change:isUseDefaultLocation', this.isUseDefaultLocationDidChange);
       }
     };
 

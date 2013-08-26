@@ -37,15 +37,11 @@ white:true*/
       
       recordType: "XM.Location",
 
-      name: function () {
-        return this.get("aisle") + " " + this.get("rack") + " " + this.get("bin") + " " + this.get("location");
-      },
-
       //TODO get this or similar function working to set the site according to the siteZone.site value
       siteZoneDidChange: function () {
         var K = XM.Location,
           siteZone = this.get("siteZone");
-          this.set('site', siteZone.site);
+        this.set('site', siteZone.site);
       },
 
       bindEvents: function () {
