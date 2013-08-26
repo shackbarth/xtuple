@@ -7,6 +7,7 @@
   "use strict";
 
   var crud = require('../lib/crud'),
+    assert = require("chai").assert,
     data = {
       recordType: "XM.Customer",
       autoTestAttributes: true,
@@ -21,6 +22,34 @@
       updateHash : {
         name: "Updated Test Cust"
       },
+      beforeSaveActions: [{
+        it: "should add a credit card",
+        action: function (data, next) {
+          var creditCardModel = new XM.CreditCard(),
+            creditCardHash = {
+              creditCardType: "V",
+              name: "John Smith",
+              number: "4111111111111111",
+              sequence: 500
+            },
+            setCreditCard = function () {
+              creditCardModel.off("change:id", setCreditCard);
+              creditCardModel.set(creditCardHash);
+              data.model.get("creditCards").add(creditCardModel);
+              next();
+            };
+
+          creditCardModel.on("change:uuid", setCreditCard);
+          creditCardModel.initialize(null, {isNew: true});
+        }
+      }],
+      afterSaveActions: [{
+        it: "should have saved the credit card correctly",
+        action: function (data, next) {
+          assert.equal(data.model.get("creditCards").models[0].get("number"), "4111111111111111");
+          next();
+        }
+      }],
       beforeDeleteActions: crud.accountBeforeDeleteActions,
       afterDeleteActions: crud.accountAfterDeleteActions
     };
