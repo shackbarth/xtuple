@@ -113,7 +113,7 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "isEncrypted": true,
+          "isEncrypted": "credit_card_number",
           "column": "ccard_number"
         }
       },

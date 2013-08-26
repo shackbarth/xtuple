@@ -719,7 +719,7 @@ select xt.install_js('XT','Data','xtuple', $$
             if (encryptionKey) {
               encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
               encryptSql = XT.format(encryptQuery, [record[prop], encryptionKey, 'bf']);
-              val = "(" + encryptSql + ")";
+              val = record[prop] ? plv8.execute(encryptSql)[0].encrypt : null;
               params.columns.push("%" + count + "$I");
               params.values.push(val);
               params.identifiers.push(attr.column);
@@ -992,8 +992,7 @@ select xt.install_js('XT','Data','xtuple', $$
             if (encryptionKey) {
               encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
               encryptSql = XT.format(encryptQuery, [val, encryptionKey, 'bf']);
-              val = "(" + encryptSql + ")";
-
+              val = record[prop] ? plv8.execute(encryptSql)[0].encrypt : null;
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("%" + count + "$I = $" + count);
@@ -1210,7 +1209,8 @@ select xt.install_js('XT','Data','xtuple', $$
      * @returns {Object}
      */
     decrypt: function (nameSpace, type, record, encryptionKey) {
-      var orm = this.fetchOrm(nameSpace, type);
+      var result,
+        orm = this.fetchOrm(nameSpace, type);
 
       for (prop in record) {
         var ormp = XT.Orm.getProperty(orm, prop.camelize());
@@ -1218,14 +1218,28 @@ select xt.install_js('XT','Data','xtuple', $$
         /* Decrypt property if applicable. */
         if (ormp && ormp.attr && ormp.attr.isEncrypted) {
           if (encryptionKey) {
-            sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
+            sql = "select formatbytea(decrypt($1, setbytea($2), 'bf')) as result";
             // TODO - Handle not found error.
 
             if (DEBUG) {
+              XT.debug('decrypt prop =', prop);
               XT.debug('decrypt sql =', sql);
               XT.debug('decrypt values =', [record[prop], encryptionKey]);
             }
-            record[prop] = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
+            result = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
+            var hex2a = function (hex) {
+              var str = '';
+              for (var i = 0; i < hex.length; i += 2) {
+                str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+              }
+              return str;
+            };
+            result = result ? hex2a(result) : result;
+            if(ormp.attr.isEncrypted === "credit_card_number" && result && result.length >= 4) {
+              record[prop] = "************" + result.substring(result.length - 4);
+            } else {
+              record[prop] = result;
+            }
           } else {
             record[prop] = '**********';
           }

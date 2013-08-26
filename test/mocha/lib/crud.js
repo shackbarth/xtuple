@@ -362,6 +362,12 @@ var _ = require("underscore"),
       this.timeout(10 * 1000);
       save(data, done);
     });
+    _.each(data.afterSaveActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(data, done);
+      });
+    });
 
     //
     // Step 6: set the model with updated data
