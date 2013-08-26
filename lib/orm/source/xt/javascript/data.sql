@@ -1229,7 +1229,7 @@ select xt.install_js('XT','Data','xtuple', $$
             result = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
             var hex2a = function (hex) {
               var str = '';
-              for (var i = 0; i < hex.length; i += 2) {
+              for (var i = 2; i < hex.length; i += 2) {
                 str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
               }
               return str;

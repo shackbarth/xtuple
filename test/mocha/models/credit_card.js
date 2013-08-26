@@ -25,7 +25,7 @@
     afterSaveActions: [{
       it: "should mask the first 12 digits of the credit card number",
       action: function (data, next) {
-        //assert.equal(data.model.get("name"), "John Smith");
+        assert.equal(data.model.get("name"), "John Smith");
         assert.equal(data.model.get("number"), "************1111");
         next();
       }
