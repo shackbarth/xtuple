@@ -792,6 +792,15 @@
   margin: 4px 0 8px 4px;
   padding: 0;
 }
+.xv-groupbox.xv-parameter .top-drawer {
+  border-top: #aaaaaa 1px solid;
+  background-color: #dddddd;
+  color: #4c4c4c;
+  padding: 7px 0 7px 5px;
+}
+.xv-groupbox.xv-parameter .top-drawer > * {
+  margin-right: 10px;
+}
 .xv-groupbox.xv-parameter .xv-filter-form .button-row {
   background-color: #ffffff;
   padding: 7px;
@@ -799,15 +808,6 @@
 }
 .xv-groupbox.xv-parameter .xv-filter-form .button-row .onyx-button {
   margin-right: 3px;
-}
-.xv-groupbox.xv-parameter .xv-filter-form .top-drawer {
-  border-top: #aaaaaa 1px solid;
-  background-color: #dddddd;
-  color: #4c4c4c;
-  padding: 7px 0 7px 5px;
-}
-.xv-groupbox.xv-parameter .xv-filter-form .top-drawer > * {
-  margin-right: 10px;
 }
 .xv-groupbox.xv-parameter .xv-filter-form .xv-list {
   height: 150px;
