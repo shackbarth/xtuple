@@ -155,6 +155,7 @@ var lang = XT.stringsFor("en_US", {
   "_created": "Created",
   "_createdBy": "Created By",
   "_credit": "Credit",
+  "_creditCards": "Credit Cards",
   "_creditHolding": "On Credit Holding",
   "_creditLimit": "Credit Limit",
   "_creditRating": "Credit Rating",
@@ -297,6 +298,7 @@ var lang = XT.stringsFor("en_US", {
   "_isAddresses": "Addresses",
   "_isBase": "Base",
   "_isContacts": "Contacts",
+  "_isDebit": "Debit",
   "_isDefault": "Default",
   "_isDeleted": "Deleted",
   "_isEmployees": "Employees",
@@ -358,7 +360,7 @@ var lang = XT.stringsFor("en_US", {
   "_middleName": "Middle Name",
   "_miscCharge": "Misc. Charge",
   "_module": "Module",
-  "_monthExpire": "Month Expire",
+  "_monthExpired": "Expiration Month",
   "_multiple": "Multiple",
   "_name": "Name",
   "_neither": "Neither",
@@ -596,6 +598,7 @@ var lang = XT.stringsFor("en_US", {
   "_welcome": "Welcome",
   "_wholesalePrice": "Wholesale Price",
   "_xtuplePostbooks": "PostBooks",
+  "_yearExpired": "Expiration Year",
 
   // ********
   // Placeholders

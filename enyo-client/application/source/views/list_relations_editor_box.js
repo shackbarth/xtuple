@@ -40,9 +40,31 @@ trailing:true, white:true*/
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
-        {kind: "XV.InputWidget", attr: "number"}
+        {kind: "XV.InputWidget", attr: "name"},
+        {kind: "XV.InputWidget", attr: "address1"},
+        {kind: "XV.InputWidget", attr: "address2"},
+        {kind: "XV.InputWidget", attr: "city"},
+        {kind: "XV.CountryComboboxWidget", attr: "country", name: "country", onValueChange: "countryChanged" },
+        {kind: "XV.StateComboboxWidget", attr: "state", name: "state"}, // TODO: get this working
+        {kind: "XV.InputWidget", attr: "zip", label: "_postalCode".loc()},
+        {kind: "XV.InputWidget", attr: "creditCardType", label: "_type".loc()}, // TODO: could be picker
+        {kind: "XV.CheckboxWidget", attr: "isDebit"},
+        {kind: "XV.InputWidget", attr: "number"},
+        {kind: "XV.InputWidget", attr: "monthExpired"}, // TODO: could be picker
+        {kind: "XV.InputWidget", attr: "yearExpired"}, // TODO: could be picker
+        {kind: "XV.CheckboxWidget", attr: "isActive"},
+        {kind: "XV.NumberWidget", attr: "sequence"}
       ]}
-    ]
+    ],
+    /**
+      When the country is changed we want to both do the typical event
+      (to update the model) but also set the country of the state, which
+      will limit its options.
+    */
+    countryChanged: function (inSender, inEvent) {
+      var country = this.$.country.getValue();
+      this.$.state.setCountry(country);
+    },
   });
 
   enyo.kind({

@@ -16,7 +16,11 @@ white:true*/
 
     recordType: 'XM.CreditCard',
 
-    idAttribute: "uuid"
+    idAttribute: "uuid",
+
+    defaults: {
+      isActive: true
+    }
 
   });
 

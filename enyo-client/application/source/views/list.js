@@ -299,6 +299,7 @@ trailing:true, white:true*/
       }
       email = model.get('primaryEmail');
       website = model.get('webAddress');
+      // XXX unsure of support for dateFormat. Use Globalize?
       revision = dateFormat(new Date(), "yyyy-mm-dd");
       end = "VCARD";
 
@@ -402,6 +403,36 @@ trailing:true, white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.CostCategory", "XV.CostCategoryList");
+
+  // ..........................................................
+  // CREDIT CARD
+  //
+
+  enyo.kind({
+    name: "XV.CreditCardList",
+    kind: "XV.List",
+    label: "_creditCards".loc(),
+    collection: "XM.CreditCardCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    parameterWidget: "XV.CreditCardListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"}
           ]}
         ]}
       ]}
@@ -2331,8 +2362,7 @@ trailing:true, white:true*/
     kind: "XV.NameList",
     create: function () {
       this.inherited(arguments);
-      this.createComponent({
-        kind: "XV.ListColumn", classes: "last", fit: true, components: [
+      this.createComponent({kind: "XV.ListColumn", classes: "last", fit: true, components: [
           {kind: "XV.ListAttr", attr: "description"}
         ]
       });

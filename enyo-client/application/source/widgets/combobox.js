@@ -20,6 +20,12 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Combobox",
     collection: "XM.countries"
   });
+  enyo.kind(
+    /** @lends XV.CountryComboboxWidget# */{
+    name: "XV.CountryComboboxWidget",
+    kind: "XV.ComboboxWidget",
+    collection: "XM.countries"
+  });
 
   // ..........................................................
   // HONORIFIC
@@ -84,9 +90,53 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.StateCombobox
     @extends XV.Combobox
    */
-  enyo.kind(/** @lends XV.StateCombobox# */{
+  enyo.kind({
     name: "XV.StateCombobox",
     kind: "XV.Combobox",
+    collection: "XM.states",
+    keyAttribute: "abbreviation",
+    published: {
+      country: null
+    },
+    /**
+    @todo Document the create method.
+    */
+    create: function () {
+      this.inherited(arguments);
+      var that = this,
+        filter = function (models) {
+          return _.filter(models, function (model) {
+            var country = model.get('country') || {};
+            return country.id === that._countryId;
+          });
+        };
+      this.setFilter(filter);
+    },
+    /**
+    @todo Document the countryChanged method.
+    */
+    countryChanged: function () {
+      var country = this.getCountry();
+      if (!country) {
+        this._countryId = undefined;
+      } else if (typeof country === 'string') {
+        country = _.find(XM.countries.models, function (model) {
+          return model.get('name') === country;
+        });
+        this._countryId = country ? country.id : undefined;
+      } else if (typeof country === 'object') {
+        this._countryId = country.id;
+      } else if (typeof country === 'number') {
+        this._countryId = country;
+      } else {
+        this._countryId = undefined;
+      }
+      this.buildList();
+    }
+  });
+  enyo.kind({
+    name: "XV.StateComboboxWidget",
+    kind: "XV.ComboboxWidget",
     collection: "XM.states",
     keyAttribute: "abbreviation",
     published: {

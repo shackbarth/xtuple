@@ -1541,6 +1541,7 @@ Globalize:true */
     customerChanged: function () {
       var customer = this.$.customerProspectWidget.getValue(),
         id = customer ? customer.get("account") : -1;
+
       this.$.billtoContact.addParameter({attribute: "account", value: id}, true);
       this.$.shiptoContact.addParameter({attribute: "account", value: id}, true);
       if (customer) {
@@ -1549,6 +1550,9 @@ Globalize:true */
           attribute: "customer",
           value: customer.id
         });
+        if (this.$.creditCardWidget) {
+          this.$.creditCardWidget.addParameter({attribute: "customer", value: customer.id});
+        }
       } else {
         this.$.customerShiptoWidget.setDisabled(true);
       }
@@ -1760,6 +1764,20 @@ Globalize:true */
           {kind: "XV.SalesOrderCommentBox", attr: "comments"},
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
         ], {owner: this});
+
+      this.$.salesPanels.createComponent(
+        {kind: "XV.Groupbox", name: "paymentPanel", title: "_payment".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_payment".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "paymentGroup",
+            classes: "in-panel", fit: true, components: [
+            {kind: "XV.CreditCardWidget", name: "creditCardWidget", label: "_creditCard".loc()},
+            {kind: "XV.InputWidget", name: "cvv", label: "_CVV".loc() },
+            {kind: "XV.NumberWidget", name: "creditCardAmount", label: "_amount".loc() }
+          ]}
+        ]}, {owner: this}
+      );
+
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
