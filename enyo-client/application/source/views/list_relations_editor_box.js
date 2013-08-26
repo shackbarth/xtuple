@@ -32,6 +32,29 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // CREDIT CARDS
+  //
+  enyo.kind({
+    name: "XV.CreditCardsEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "number"}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.CreditCardsBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_creditCards".loc(),
+    editor: "XV.CreditCardsEditor",
+    parentKey: "customer",
+    listRelations: "XV.CreditCardListRelations"
+  });
+
+  // ..........................................................
   // CONTACT
   //
   enyo.kind({

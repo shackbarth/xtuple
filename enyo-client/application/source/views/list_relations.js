@@ -89,6 +89,27 @@ trailing:true, white:true*/
     }
   });
 
+  // ..........................................................
+  // CREDIT CARDS
+  //
+
+  enyo.kind({
+    name: "XV.CreditCardListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "customer",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "number", classes: "bold"}
+          ]},
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 
   // ..........................................................
   // CUSTOMER GROUP CUSTOMER

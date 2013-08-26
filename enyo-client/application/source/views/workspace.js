@@ -514,6 +514,7 @@ Globalize:true */
         {kind: "XV.CustomerSalesOrderListRelationsBox", attr: "salesOrderRelations"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
+        {kind: "XV.CreditCardsBox", attr: "creditCards"},
         {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerDocumentsBox", attr: "documents"}
       ]},
