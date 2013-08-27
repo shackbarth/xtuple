@@ -9,7 +9,9 @@
   var crud = require('../lib/crud'),
     data = {
       recordType: "XM.Address",
+      commentType: "XM.AddressComment",
       autoTestAttributes: true,
+      testComments: true,
       createHash: {
         line1: "123 Main St"
       },

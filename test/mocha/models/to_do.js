@@ -9,9 +9,12 @@
   var crud = require('../lib/crud'),
     data = {
       recordType: "XM.ToDo",
+      commentType: "XM.ToDoComment",
       autoTestAttributes: true,
+      testComments: true,
+      verbose: true,
       createHash: {
-        name: "Pass the VOWS tests" + Math.random(),
+        name: "ToDo Name" + Math.random(),
         dueDate: new Date()
       },
       updateHash: {
