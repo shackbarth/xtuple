@@ -44,8 +44,8 @@ trailing:true, white:true*/
         {kind: "XV.InputWidget", attr: "address1"},
         {kind: "XV.InputWidget", attr: "address2"},
         {kind: "XV.InputWidget", attr: "city"},
-        {kind: "XV.CountryComboboxWidget", attr: "country", name: "country", onValueChange: "countryChanged" },
-        {kind: "XV.StateComboboxWidget", attr: "state", name: "state"}, // TODO: get this working
+        {kind: "XV.CountryCombobox", attr: "country", name: "country", onValueChange: "countryChanged" },
+        {kind: "XV.StateCombobox", attr: "state", name: "state"}, // TODO: get this working
         {kind: "XV.InputWidget", attr: "zip", label: "_postalCode".loc()},
         {kind: "XV.InputWidget", attr: "creditCardType", label: "_type".loc()}, // TODO: could be picker
         {kind: "XV.CheckboxWidget", attr: "isDebit"},
