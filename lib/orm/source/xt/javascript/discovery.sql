@@ -18,7 +18,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
    * @returns {Object}
    */
-  XT.Discovery.getList = function(orm, rootUrl) {
+  XT.Discovery.getList = function (orm, rootUrl) {
+    "use strict";
+
     var list = {},
         master = {},
         org = XT.currentDb(),
@@ -86,6 +88,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     return list;
   };
 
+
   /**
    * Return an API Discovery document for this database's ORM where isRest = true.
    *
@@ -93,10 +96,14 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
    * @returns {Object}
    */
-  XT.Discovery.getDiscovery = function(orm, rootUrl) {
+  XT.Discovery.getDiscovery = function (orm, rootUrl) {
+    "use strict";
+
     var discovery = {},
+        listItemOrms = [],
         org = plv8.execute("select current_database()"),
         orms = XT.Discovery.getIsRestORMs(orm),
+        schemas = {},
         version = "v1alpha1";
 
     rootUrl = rootUrl || "{rootUrl}";
@@ -108,7 +115,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     }
 
     if (!orms) {
-      if(XT.Discovery.getDispatchableObjects(orm).length === 0) {
+      if (XT.Discovery.getDispatchableObjects(orm).length === 0) {
         /* If there are no resource, and no services, then there's nothing to see here */
         return false;
       }
@@ -172,7 +179,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
         "description": "Returns response with indentations and line breaks.",
         "default": "true",
         "location": "query"
-      },
+      }
     };
 
     /*
@@ -184,14 +191,11 @@ select xt.install_js('XT','Discovery','xtuple', $$
     /*
      * Schema section.
      */
-    schemas = {};
     XT.Discovery.getORMSchemas(orms, schemas);
 
     if (!schemas) {
       return false;
     }
-
-    var listItemOrms = [];
 
     /* Get parent ListItem ORMs */
     for (var i = 0; i < orms.length; i++) {
@@ -201,9 +205,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
     if (listItemOrms.length > 0) {
       XT.Discovery.getORMSchemas(listItemOrms, schemas);
     }
-
-    /* Sanitize the JSON-Schema. */
-    XT.Discovery.sanitize(schemas);
 
     /* Sort schema properties alphabetically. */
     discovery.schemas = XT.Discovery.sortObject(schemas);
@@ -218,7 +219,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     for (var i = 0; i < orms.length; i++) {
       var ormType = orms[i].orm_type,
           ormNamespace = orms[i].orm_namespace,
-          thisOrm = XT.Orm.fetch(ormNamespace, ormType, {"superUser":true}),
+          thisOrm = XT.Orm.fetch(ormNamespace, ormType, {"superUser": true}),
           key = XT.Discovery.getKeyProps(discovery.schemas[ormType]);
 
       if (!key) {
@@ -278,7 +279,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
    * @returns {Object}
    */
-  XT.Discovery.getAuth = function(orm, rootUrl) {
+  XT.Discovery.getAuth = function (orm, rootUrl) {
+    "use strict";
+
     var auth = {},
       org = plv8.execute("select current_database()"),
       orms = XT.Discovery.getIsRestORMs(orm);
@@ -311,7 +314,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     for (var i = 0; i < orms.length; i++) {
       var ormType = orms[i].orm_type,
           ormNamespace = orms[i].orm_namespace,
-          thisOrm = XT.Orm.fetch(ormNamespace, ormType, {"superUser":true}),
+          thisOrm = XT.Orm.fetch(ormNamespace, ormType, {"superUser": true}),
           ormTypeHyphen = ormType.camelToHyphen();
 
       /* TODO - Do we need to include "XM" in the name? */
@@ -334,6 +337,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     return auth;
   };
 
+
   /**
    * Return an API Discovery document's Resources section for this database's ORM where isRest = true.
    * This function allows you get the Resources section much faster than the full getDiscovery() above.
@@ -343,7 +347,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
    * @returns {Object}
    */
-  XT.Discovery.getResources = function(orm, rootUrl) {
+  XT.Discovery.getResources = function (orm, rootUrl) {
+    "use strict";
+
     var resources = {},
       org = XT.currentDb(),
       orms = XT.Discovery.getIsRestORMs(orm);
@@ -363,7 +369,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       var listModel,
           ormType = orms[i].orm_type,
           ormNamespace = orms[i].orm_namespace,
-          thisOrm = XT.Orm.fetch(ormNamespace, ormType, {"superUser":true}),
+          thisOrm = XT.Orm.fetch(ormNamespace, ormType, {"superUser": true}),
           thisListOrm,
           ormTypeHyphen = ormType.camelToHyphen(),
           sql = 'select orm_type from xt.orm where orm_type=$1 and orm_active;',
@@ -386,7 +392,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
           "id": ormType + ".delete",
           "path": ormTypeHyphen + "/{",
           "httpMethod": "DELETE",
-          "description": "Deletes a single " + ormType + " record.",
+          "description": "Deletes a single " + ormType + " record."
         };
 
         resources[ormType].methods.delete.scopes = [
@@ -403,7 +409,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
           "id": ormType + ".get",
           "path": ormTypeHyphen + "/{",
           "httpMethod": "GET",
-          "description": "Gets a single " + ormType + " record.",
+          "description": "Gets a single " + ormType + " record."
         };
 
         resources[ormType].methods.get.response = {
@@ -425,7 +431,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
           "id": ormType + ".head",
           "path": ormTypeHyphen + "/{",
           "httpMethod": "HEAD",
-          "description": "Returns the HTTP Header as if you made a GET request for a single " + ormType + " record, but will not return any response body.",
+          "description": "Returns the HTTP Header as if you made a GET request for a single " + ormType + " record, but will not return any response body."
         };
 
         resources[ormType].methods.head.scopes = [
@@ -443,7 +449,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
           "id": ormType + ".insert",
           "path": ormTypeHyphen,
           "httpMethod": "POST",
-          "description": "Add a single " + ormType + " record.",
+          "description": "Add a single " + ormType + " record."
         };
 
         resources[ormType].methods.insert.request = {
@@ -468,7 +474,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
           "id": ormType + ".list",
           "path": ormTypeHyphen,
           "httpMethod": "GET",
-          "description": "Returns a list of " + ormType + " records.",
+          "description": "Returns a list of " + ormType + " records."
         };
 
         resources[ormType].methods.list.parameters = {
@@ -490,29 +496,81 @@ select xt.install_js('XT','Discovery','xtuple', $$
             "location": "query"
           }
         };
-        thisListOrm = XT.Orm.fetch(ormNamespace, listModel, {"superUser":true});
+
+        thisListOrm = XT.Orm.fetch(ormNamespace, listModel, {"superUser": true});
+
         thisListOrm.properties.map(function (prop) {
           var attr = prop.attr,
+            childAttr,
+            childProp,
+            childResource,
+            childOrm,
+            childNKey,
+            childPKey,
+            childKey,
             resourceParams = resources[ormType].methods.list.parameters,
             paramObj;
 
-          if(attr) {
+          if (attr) {
             paramObj = {
               "type": attr.type.toLowerCase(),
               "location": "query"
             };
-            if(attr.type === 'String') {
+
+            if (attr.type === 'String') {
               paramObj.description = "Case-insensitive full-text match on " + prop.name;
               resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
             } else {
               paramObj.description = "Exact match on " + prop.name;
               resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
             }
-            if(attr.type !== 'Boolean') {
+
+            if (attr.type !== 'Boolean') {
               paramObj.description = "Greater than or equal match on " + prop.name;
               resourceParams[prop.name + "Min"] = JSON.parse(JSON.stringify(paramObj));
               paramObj.description = "Less than or equal match on " + prop.name;
               resourceParams[prop.name + "Max"] = JSON.parse(JSON.stringify(paramObj));
+            }
+          } else {
+            /* Handle some types of child relations. */
+            if (prop.toOne && !prop.toOne.isNested) {
+              /* Handle toOne key relations. */
+
+              childResource = prop.toOne.type;
+
+              /* Assuming XM here. */
+              childOrm = XT.Orm.fetch(ormNamespace, childResource, {"superUser": true});
+              childNKey = XT.Orm.naturalKey(childOrm);
+              childPKey = XT.Orm.primaryKey(childOrm);
+              childKey = childNKey || childPKey;
+              childProp = XT.Orm.getProperty(childOrm, childKey);
+              childAttr = childProp && childProp.attr ? childProp.attr : null;
+
+              if (childAttr) {
+                paramObj = {
+                  "type": childAttr.type.toLowerCase(),
+                  "location": "query"
+                };
+
+                if (childAttr.type === 'String') {
+                  paramObj.description = "Case-insensitive full-text match on " + prop.name;
+                  resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
+                } else {
+                  paramObj.description = "Exact match on " + prop.name;
+                  resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
+                }
+
+                if (childAttr.type !== 'Boolean') {
+                  paramObj.description = "Greater than or equal match on " + prop.name;
+                  resourceParams[prop.name + "Min"] = JSON.parse(JSON.stringify(paramObj));
+                  paramObj.description = "Less than or equal match on " + prop.name;
+                  resourceParams[prop.name + "Max"] = JSON.parse(JSON.stringify(paramObj));
+                }
+              }
+            } else if (prop.toMany && !prop.toMany.isNested) {
+              /* Handle toOne key relations. */
+
+              /* TODO */
             }
           }
         });
@@ -536,7 +594,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
           "id": ormType + ".listhead",
           "path": ormTypeHyphen,
           "httpMethod": "HEAD",
-          "description": "Returns the HTTP Header as if you made a GET request for a list of " + ormType + " records, but will not return any response body.",
+          "description": "Returns the HTTP Header as if you made a GET request for a list of " + ormType + " records, but will not return any response body."
         };
 
         resources[ormType].methods.listhead.parameters = {
@@ -574,7 +632,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
           "id": ormType + ".patch",
           "path": ormTypeHyphen + "/{",
           "httpMethod": "PATCH",
-          "description": "Modifies a single " + ormType + " record. This method supports JSON-Patch semantics.",
+          "description": "Modifies a single " + ormType + " record. This method supports JSON-Patch semantics."
         };
 
         resources[ormType].methods.patch.request = {
@@ -595,17 +653,23 @@ select xt.install_js('XT','Discovery','xtuple', $$
     return resources;
   };
 
+
   XT.Discovery.getDispatchableObjects = function (orm) {
+    "use strict";
+
     var dispatchableObjects = [];
+
     for (var businessObjectName in XM) {
       var businessObject = XM[businessObjectName];
-      if(businessObject.isDispatchable &&
+      if (businessObject.isDispatchable &&
           (!orm || businessObjectName === orm)) {
         dispatchableObjects.push(businessObjectName);
       }
     }
+
     return dispatchableObjects;
   };
+
 
   /**
    * Return an API Discovery document's Services section.
@@ -614,7 +678,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
    * @returns {Object}
    */
-  XT.Discovery.getServices = function(orm, rootUrl) {
+  XT.Discovery.getServices = function (orm, rootUrl) {
+    "use strict";
+
     var resources = {},
       org = XT.currentDb(),
       dispatchableObjects = XT.Discovery.getDispatchableObjects(orm),
@@ -649,14 +715,14 @@ select xt.install_js('XT','Discovery','xtuple', $$
           for (methodParamName in method.params) {
             /* The parameter location is query unless otherwise specified */
             methodParam = method.params[methodParamName];
-            if(!methodParam.location) {
+            if (!methodParam.location) {
               methodParam.location = "query";
             }
           }
           var businessObjectNameHyphen = businessObjectName.camelToHyphen();
           var scopes = [
             rootUrl + org + "/auth",
-            rootUrl + org + "/auth/" + businessObjectNameHyphen,
+            rootUrl + org + "/auth/" + businessObjectNameHyphen
           ];
           objectServices[methodName] = {
             id: businessObjectName + "." + methodName,
@@ -670,11 +736,12 @@ select xt.install_js('XT','Discovery','xtuple', $$
           };
         }
       }
-      if(Object.keys(objectServices).length > 0) {
+      if (Object.keys(objectServices).length > 0) {
         /* only return objects with >= 1 documented dispatch function */
         allServices[businessObjectName] = {methods: objectServices};
       }
     }
+
     return allServices;
   };
 
@@ -684,7 +751,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
    *
    * @returns {String}
    */
-  XT.Discovery.getDate = function() {
+  XT.Discovery.getDate = function () {
+    "use strict";
+
     var today = new Date(),
         year = today.getUTCFullYear(),
         month = today.getUTCMonth() + 1,
@@ -710,47 +779,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
 
 
   /*
-   * Helper function to sanitize the schemas relations.
-   * Right now, this just removes the "inverse" property from a child schema.
-   * TODO: Consider using this to remove primary keys instead of the other
-   * logic above. May also need to remove unprivileged properties.
-   * @See: XT.Data.sanitize() function that is similar.
-   *
-   * @param {Object} Object of JSON-Schemas.
-   */
-  XT.Discovery.sanitize = function(schema) {
-    var inverse,
-        parentOrm,
-        parentOrmProp,
-        propName,
-        propery,
-        resource;
-
-    for (resource in schema) {
-      /* Find the inverse value from the original ORM. */
-      /* TODO: Assuming "XM" here... */
-      parentOrm = XT.Orm.fetch("XM", resource, {"silentError": true});
-
-      for (propName in schema[resource].properties) {
-        propery = schema[resource].properties[propName];
-
-        if (propery.items && propery.items.$ref) {
-          parentOrmProp = XT.Orm.getProperty(parentOrm, propName);
-          if (parentOrmProp.toMany && parentOrmProp.toMany.type && parentOrmProp.toMany.inverse) {
-            inverse = parentOrmProp.toMany.inverse;
-
-            /* Delete the inverse property from the Child JSON-Schema. */
-            if (schema[parentOrmProp.toMany.type] && schema[parentOrmProp.toMany.type].properties[inverse]) {
-              delete schema[parentOrmProp.toMany.type].properties[inverse];
-            }
-          }
-        }
-      }
-    }
-  };
-
-
-  /*
    * Helper function to sort the schemas properties alphabetically.
    * Note: ECMA-262 does not specify enumeration order. This is just for
    * human readability in outputted JSON.
@@ -758,7 +786,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @param {Object} Object of JSON-Schemas.
    * @returns {Object}
    */
-  XT.Discovery.sortObject = function(obj) {
+  XT.Discovery.sortObject = function (obj) {
+    "use strict";
+
     var arr = [],
         key,
         sorted = {};
@@ -778,15 +808,40 @@ select xt.install_js('XT','Discovery','xtuple', $$
     return sorted;
   };
 
+
   /*
    * Helper function to get a single or all isRest ORM Models.
    *
    * @param {String} Optional. An orm_type name like "Contact".
    * @returns {Object}
    */
-  XT.Discovery.getIsRestORMs = function(orm) {
+  XT.Discovery.getIsRestORMs = function (orm) {
+    "use strict";
+
     /* TODO - Do we need to include "XM" in the propName? */
-    var sql = "select orm_namespace, orm_type from xt.orm where orm_rest " +
+    var sql = "select orm_namespace, orm_type " +
+              "from xt.orm " +
+              "where 1=1 " +
+              " and orm_rest " +
+              " and not orm_ext " +
+              " and orm_active " +
+              " and orm_context = 'xtuple' " +
+              "union all " +
+              "select orm_namespace, orm_type " +
+              "from xt.orm " +
+              "where orm_id in (" +
+              " select orm_id " +
+              " from xt.orm " +
+              " left join xt.ext on ext_name=orm_context " +
+              " left join xt.usrext on ext_id=usrext_ext_id " +
+              " left join xt.grpext on ext_id=grpext_ext_id " +
+              " left join usrgrp on usrgrp_grp_id=grpext_grp_id " +
+              " where 1=1 " +
+              "  and orm_rest " +
+              "  and not orm_ext " +
+              "  and orm_active " +
+              "  and orm_context != 'xtuple' " +
+              "  and (usrext_usr_username=$1 or usrgrp_username=$1)) " +
               "group by orm_namespace, orm_type order by orm_namespace, orm_type",
         orms = [],
         relatedORMs,
@@ -794,7 +849,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
         singleOrms = [],
         thisOrm;
 
-    orms = plv8.execute(sql);
+    orms = plv8.execute(sql, [XT.username]);
 
     /* If this is a single ORM request, find all the related ORMs that are
      * exposed to REST and return only the single and related ORMs.
@@ -803,12 +858,12 @@ select xt.install_js('XT','Discovery','xtuple', $$
       /* Fetch the single ORM. Only need this loop to get the namespace. */
       for (var i = 0; i < orms.length; i++) {
         if (orm === orms[i].orm_type) {
-          thisOrm = XT.Orm.fetch(orms[i].orm_namespace, orm, {"superUser":true});
+          thisOrm = XT.Orm.fetch(orms[i].orm_namespace, orm, {"superUser": true});
         }
       }
 
       /* Find the related ORMs. */
-      if(thisOrm) {
+      if (thisOrm) {
         for (var prop in thisOrm.properties) {
           var relation;
 
@@ -844,6 +899,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     return orms;
   };
 
+
   /*
    * Helper function to get a JSON-Schema for ORM Models.
    *
@@ -851,7 +907,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @param {Object} Optional. A schema object to add schemas too.
    * @returns {Object}
    */
-  XT.Discovery.getORMSchemas = function(orms, schemas) {
+  XT.Discovery.getORMSchemas = function (orms, schemas) {
+    "use strict";
+
     schemas = schemas || {};
 
     if (!orms.length) {
@@ -878,7 +936,10 @@ select xt.install_js('XT','Discovery','xtuple', $$
         /* Drill down through schemas and get all $ref schemas. */
         for (var prop in schemas[propName].properties) {
           var childProp = schemas[propName].properties[prop],
-              childOrm;
+              childOrm,
+              inverse,
+              parentOrm,
+              parentOrmProp;
 
           if (childProp) {
             if (childProp.items && childProp.items["$ref"]) {
@@ -888,7 +949,18 @@ select xt.install_js('XT','Discovery','xtuple', $$
                 /* This is a JSON-Path type of $ref. e.g. SalesRep/name */
                 childOrm = childProp.items["$ref"].split("/")[0];
               }
-            } else if (childProp["$ref"]){
+
+              parentOrm = XT.Orm.fetch(orms[i].orm_namespace, orms[i].orm_type, {"silentError": true});
+              parentOrmProp = XT.Orm.getProperty(parentOrm, propName);
+              if (parentOrmProp.toMany && parentOrmProp.toMany.type && parentOrmProp.toMany.inverse) {
+                inverse = parentOrmProp.toMany.inverse;
+
+                /* Delete the inverse property from the Child JSON-Schema. */
+                if (schemas[parentOrmProp.toMany.type] && schemas[parentOrmProp.toMany.type].properties[inverse]) {
+                  delete schemas[parentOrmProp.toMany.type].properties[inverse];
+                }
+              }
+            } else if (childProp["$ref"]) {
               if (childProp["$ref"].indexOf("/") === -1) {
                 childOrm = childProp["$ref"];
               } else {
@@ -917,24 +989,29 @@ select xt.install_js('XT','Discovery','xtuple', $$
    * @param {Object} A JSON-Schema object.
    * @returns {Object}
    */
-  XT.Discovery.getKeyProps = function(schema) {
-    for (var prop in schema.properties) {
-      if (schema.properties[prop].isKey) {
-        var keyProp = {};
+  XT.Discovery.getKeyProps = function (schema) {
+    "use strict";
 
-        /* Use extend so we can delete without affecting schema.properties[prop]. */
-        keyProp = XT.extend(keyProp, schema.properties[prop]);
+    if (schema && schema.properties) {
+      for (var prop in schema.properties) {
+        if (schema.properties[prop].isKey) {
+          var keyProp = {};
 
-        /* Delete these properties which are not needed for a resource's parameters. */
-        delete keyProp.isKey;
-        delete keyProp.title;
-        delete keyProp.required;
+          /* Use extend so we can delete without affecting schema.properties[prop]. */
+          keyProp = XT.extend(keyProp, schema.properties[prop]);
 
-        return {"name": prop, "props": keyProp};
+          /* Delete these properties which are not needed for a resource's parameters. */
+          delete keyProp.isKey;
+          delete keyProp.title;
+          delete keyProp.required;
+
+          return {"name": prop, "props": keyProp};
+        }
       }
+    } else {
+      return false;
     }
-
-    return false;
   };
+
 
 $$ );
