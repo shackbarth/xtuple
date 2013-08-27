@@ -51,7 +51,7 @@
         "name": "customer",
         "toOne": {
           "isNested": true,
-          "type": "CustomerProspectRelation",
+          "type": "SalesCustomer",
           "column": "cohead_cust_id",
           "required": true
         }
@@ -1483,7 +1483,7 @@
         "name": "customer",
         "toOne": {
           "isNested": true,
-          "type": "CustomerProspectRelation",
+          "type": "SalesCustomer",
           "column": "cohead_cust_id"
         }
       },
@@ -1541,7 +1541,7 @@
         "toOne": {
           "type": "SalesRep",
           "column": "cohead_salesrep_id",
-	  			"isNested": true
+          "isNested": true
          }
       },
       {

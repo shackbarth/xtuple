@@ -1766,16 +1766,18 @@ Globalize:true */
         ], {owner: this});
 
       this.$.salesPanels.createComponent(
+        {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards"},
+        /*
         {kind: "XV.Groupbox", name: "paymentPanel", title: "_payment".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_payment".loc()},
           {kind: "XV.ScrollableGroupbox", name: "paymentGroup",
             classes: "in-panel", fit: true, components: [
-            {kind: "XV.CreditCardWidget", name: "creditCardWidget", label: "_creditCard".loc()},
             {kind: "XV.InputWidget", name: "cvv", label: "_CVV".loc() },
             {kind: "XV.NumberWidget", name: "creditCardAmount", label: "_amount".loc() }
           ]}
-        ]}, {owner: this}
+        ]}
+        */ {owner: this}
       );
 
       if (enyo.platform.touch) {

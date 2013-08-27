@@ -91,7 +91,7 @@ module:true, require:true, exports:true, console:true */
         calculateFreight: true,
         customer: { number: "TTOYS" },
         terms: { code: "2-10N30" },
-        salesRep: { number: "2000" },
+        salesRep: { number: "SMASTERS" },
         wasQuote: true
       },
       /**
@@ -99,6 +99,9 @@ module:true, require:true, exports:true, console:true */
         create a valid line item.
        */
       beforeSaveActions: [{it: 'sets up a valid line item', action: getSetCallback("XM.SalesOrderLine")}],
+      afterSaveActions: [{it: 'has the credit card information', action: function (data, next) {
+        next();
+      }}],
       updateHash: {
         wasQuote: false
       }
@@ -129,7 +132,7 @@ module:true, require:true, exports:true, console:true */
   describe('Sales order business logic', function () {
     it('should take the defaults from the customer', function (done) {
       var terms = new XM.Terms(),
-        customer = new XM.CustomerProspectRelation(),
+        customer = new XM.SalesCustomer(),
         salesOrder = new XM.SalesOrder(),
         initCallback = function () {
           terms.set({code: "COD"});

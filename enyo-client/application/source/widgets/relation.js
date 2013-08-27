@@ -16,17 +16,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // CREDIT CARD
-  //
-
-  enyo.kind({
-    name: "XV.CreditCardWidget",
-    kind: "XV.RelationWidget",
-    collection: "XM.CreditCardCollection",
-    list: "XV.CreditCardList"
-  });
-
-  // ..........................................................
   // CONTACT
   //
 

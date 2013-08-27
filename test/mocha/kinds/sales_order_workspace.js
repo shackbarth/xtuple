@@ -17,7 +17,7 @@
       var submodels = {};
       async.series([
         function (callback) {
-          submodels.customerModel = new XM.CustomerProspectRelation();
+          submodels.customerModel = new XM.SalesCustomer();
           submodels.customerModel.fetch({number: "TTOYS", success: function () {
             callback();
           }});

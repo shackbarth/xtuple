@@ -250,7 +250,7 @@ var _ = require("underscore"),
     model.on('notify', notify);
     if (data.verbose) {
       model.on('all', function () {
-        console.log("Model event", arguments);
+        console.log("Model event", model.getStatusString(), arguments);
       });
     }
     model.save(null, {});

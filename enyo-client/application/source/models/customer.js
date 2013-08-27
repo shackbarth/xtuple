@@ -55,6 +55,16 @@ white:true*/
       return this;
     },
 
+    getDefaultShipto: function () {
+      if (!this.get("shiptos")) {
+        return null;
+      }
+      var defaultShipto = _.filter(this.get("shiptos").models, function (shipto) {
+        return shipto.get("isDefault");
+      });
+      return defaultShipto.length > 0 ? defaultShipto[0] : null;
+    },
+
     /**
       Retrieve the customer's price for a given item and quantity.
 
@@ -547,6 +557,25 @@ white:true*/
     enforceUpperKey: false
 
   });
+
+
+  /**
+    @class
+
+    @extends XM.AccountDocument
+  */
+  XM.SalesCustomer = XM.AccountDocument.extend({
+    /** @scope XM.SalesCustomer.prototype */
+
+    recordType: 'XM.SalesCustomer',
+
+    descriptionKey: "name"
+
+  });
+
+  // Add in item mixin
+  XM.SalesCustomer = XM.SalesCustomer.extend(XM.CustomerMixin);
+
 
   /**
     @class

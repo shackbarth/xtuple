@@ -19,6 +19,19 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // CREDIT CARD
+  //
+
+  enyo.kind({
+    name: "XV.CreditCardBox",
+    kind: "XV.ListRelationsBox",
+    title: "_creditCards".loc(),
+    parentKey: "customer",
+    listRelations: "XV.CreditCardListRelations",
+    searchList: "XV.CreditCardList"
+  });
+
+  // ..........................................................
   // CUSTOMER GROUP CUSTOMER
   //
 
@@ -30,6 +43,30 @@ trailing:true, white:true*/
     groupItemKey: "customer",
     searchList: "XV.CustomerList",
     listRelations: "XV.CustomerGroupCustomerListRelations"
+  });
+
+  // ..........................................................
+  // CUSTOMER QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerQuoteListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_quotes".loc(),
+    parentKey: "customer",
+    listRelations: "XV.CustomerQuoteListRelations"
+  });
+
+  // ..........................................................
+  // CUSTOMER SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerSalesOrderListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_salesOrders".loc(),
+    parentKey: "customer",
+    listRelations: "XV.CustomerSalesOrderListRelations" // not a bug
   });
 
   // ..........................................................
@@ -96,30 +133,6 @@ trailing:true, white:true*/
     parentKey: "opportunity",
     listRelations: "XV.OpportunityQuoteListRelations", // not a bug
     searchList: "XV.SalesOrderList"
-  });
-
-  // ..........................................................
-  // CUSTOMER QUOTE
-  //
-
-  enyo.kind({
-    name: "XV.CustomerQuoteListRelationsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_quotes".loc(),
-    parentKey: "customer",
-    listRelations: "XV.CustomerQuoteListRelations"
-  });
-
-  // ..........................................................
-  // CUSTOMER SALES ORDER
-  //
-
-  enyo.kind({
-    name: "XV.CustomerSalesOrderListRelationsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_salesOrders".loc(),
-    parentKey: "customer",
-    listRelations: "XV.CustomerSalesOrderListRelations" // not a bug
   });
 
   // ..........................................................
