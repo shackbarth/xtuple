@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, _:true */
+/*global XT:true, XM:true, _:true, Backbone:true */
 
 (function () {
   "use strict";
@@ -57,9 +57,26 @@ white:true*/
       */
       distribute: function (qty) {
         var qoh = this.get("quantity"),
-          sel = qty > qoh ? qoh : qty;
-        this.set("distributed", sel);
+          scale = XT.QTY_SCALE;
+
+        // Calculate the change
+        qty = XT.math.add(this.get("distributed"), qty, scale);
+
+        // Can not distribute more than is available
+        qty = qty > qoh ? qoh : qty;
+
+        // Can not distribute negative
+        qty = qty < 0 ? 0 : qty;
+        
+        this.set("distributed", qty);
         return this;
+      },
+
+      /**
+        Overload: Ignore status issues in this implementation.
+      */
+      set: function () {
+        return Backbone.RelationalModel.prototype.set.apply(this, arguments);
       }
 
     });
