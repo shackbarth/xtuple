@@ -1604,7 +1604,10 @@ select xt.install_js('XT','Data','xtuple', $$
         prop,
         itemAttr,
         filteredProps,
-        val;
+        val,
+        check = function (p) {
+          return p.name === itemAttr;
+        };
 
       for (var c = 0; c < data.length; c++) {
         item = data[c];
@@ -1613,26 +1616,22 @@ select xt.install_js('XT','Data','xtuple', $$
         if (!inclKeys && nkey && nkey !== pkey) { delete item[pkey]; }
 
         for (itemAttr in item) {
-          if(!item.hasOwnProperty(itemAttr)) {
+          if (!item.hasOwnProperty(itemAttr)) {
             continue;
           }
-          filteredProps = orm.properties.filter(function (p) {
-            return p.name === itemAttr;
-          });
+          filteredProps = orm.properties.filter(check);
 
-          if(filteredProps.length === 0 && orm.extensions.length > 0) {
+          if (filteredProps.length === 0 && orm.extensions.length > 0) {
             /* Try to get the orm prop from an extension if it's not in the core*/
             orm.extensions.forEach(function (ext) {
               if (filteredProps.length === 0) {
-                filteredProps = ext.properties.filter(function (p) {
-                  return p.name === itemAttr;
-                });
+                filteredProps = ext.properties.filter(check);
               }
             });
           }
 
           /* Remove attributes not found in the ORM */
-          if(filteredProps.length === 0) {
+          if (filteredProps.length === 0) {
             delete item[itemAttr];
           } else {
             prop = filteredProps[0];
