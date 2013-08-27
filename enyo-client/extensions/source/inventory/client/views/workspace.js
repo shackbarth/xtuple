@@ -234,6 +234,48 @@ trailing:true, white:true, strict: false*/
     });
 
     // ..........................................................
+    // LOCATION
+    //
+
+    enyo.kind({
+      name: "XV.LocationWorkspace",
+      kind: "XV.Workspace",
+      title: "_location".loc(),
+      model: "XM.Location",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_location".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.SiteZonePicker", attr: "siteZone"},
+              {kind: "XV.CheckboxWidget", attr: "isNetable"},
+              {kind: "XV.CheckboxWidget", attr: "isRestricted"},
+              {kind: "XV.InputWidget", attr: "aisle"},
+              {kind: "XV.InputWidget", attr: "rack"},
+              {kind: "XV.InputWidget", attr: "bin"},
+              {kind: "XV.InputWidget", attr: "location"},
+              {kind: "XV.TextArea", fit: true, attr: "description"},
+            ]}
+          ]},
+          {kind: "XV.LocationItemRelationBox", attr: "items"}
+        ]}
+      ],
+      //TODO get the following working
+      isRestrictedDidChange: function () {
+        var model = this.getValue(),
+          isRestricted = model ? model.get("isRestricted") : false;
+        if (!isRestricted) {
+          this.$.locationItemRelationBox.setDisabled(true);
+        }
+      }
+    });
+
+    XV.registerModelWorkspace("XM.Location", "XV.LocationWorkspace");
+    XV.registerModelWorkspace("XM.LocationItem", "XV.LocationWorkspace");
+
+    // ..........................................................
     // SHIPMENT
     //
 
@@ -271,5 +313,45 @@ trailing:true, white:true, strict: false*/
     XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
     XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
 
+    // ..........................................................
+    // ITEM SITE
+    //
+
+    extensions = [
+      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_inventory".loc() },
+      {kind: "XV.ControlMethodPicker", container: "mainGroup", attr: "controlMethod"},
+      {kind: "XV.CostMethodPicker", container: "mainGroup", attr: "costMethod"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStocked"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isAutomaticAbcClassUpdates"},
+      {kind: "XV.AbcClassPicker", container: "mainGroup", attr: "abcClass"},
+      //TODO: Create an XV widget that includes an integer input field and an increase and decrease button
+      {kind: "XV.NumberWidget", container: "mainGroup", attr: "cycleCountFrequency", scale: 0},
+      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_location".loc() },
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isLocationControl"},
+      //TODO get a checkbox working for useDefaultLocation - currently a function on the model
+      //{kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isUseDefaultLocation"},
+      //{kind: "XV.InputWidget", container: "mainGroup", type: "boolean", name: "isUseDefaultLocation", label: "_isUseDefaultLocation".loc()},
+      {kind: "XV.LocationPicker", container: "mainGroup", attr: "receiveLocation"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isReceiveLocationAuto"},
+      {kind: "XV.LocationPicker", container: "mainGroup", attr: "stockLocation"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStockLocationAuto"},
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "userDefinedLocation"},
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "locationComment"},
+      //LIST - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location. Look at the privileges checkbox list.
+      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_planning".loc() },
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParameters"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "reorderLevel"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "orderToQuantity"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "minimumOrderQuantity"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "maximumOrderQuantity"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "multipleOrderQuantity"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParametersManual"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "safetyStock"},
+      {kind: "XV.NumberWidget", container: "mainGroup", attr: "leadTime", scale: 0}
+
+    ];
+
+    XV.appendExtension("XV.ItemSiteWorkspace", extensions);
+    
   };
 }());

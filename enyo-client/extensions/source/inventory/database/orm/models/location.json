@@ -36,6 +36,7 @@
       {
         "name": "site",
         "toOne": {
+          "isNested": true,
           "type": "SiteRelation",
           "column": "location_warehous_id"
         }
@@ -45,7 +46,7 @@
         "toOne": {
           "isNested": true,
           "type": "SiteZone",
-          "column": "location_warehous_id"
+          "column": "location_whsezone_id"
         }
       },
       {
@@ -84,14 +85,14 @@
         }
       },
       {
-        "name": "restricted",
+        "name": "isRestricted",
         "attr": {
           "type": "Boolean",
           "column": "location_restrict"
         }
       },
       {
-        "name": "netable",
+        "name": "isNetable",
         "attr": {
           "type": "Boolean",
           "column": "location_netable"
@@ -100,7 +101,7 @@
       {
         "name": "items",
         "toMany": {
-          "iNested": true,
+          "isNested": true,
           "type": "LocationItem",
           "column": "location_id",
           "inverse": "location"
@@ -212,8 +213,10 @@
       {
         "name": "item",
         "toOne": {
+          "isNested": true,
           "type": "ItemRelation",
-          "column": "locitem_item_id"
+          "column": "locitem_item_id",
+          "inverse": "id"
         }
       }
     ],

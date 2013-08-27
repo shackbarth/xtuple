@@ -35,7 +35,32 @@ white:true*/
     */
     XM.Location = XM.Model.extend({
       
-      recordType: "XM.Location"
+      recordType: "XM.Location",
+
+      //TODO get this or similar function working to set the site according to the siteZone.site value
+      siteZoneDidChange: function () {
+        var K = XM.Location,
+          siteZone = this.get("siteZone");
+        this.set('site', siteZone.site);
+      },
+
+      bindEvents: function () {
+        XM.Model.prototype.bindEvents.apply(this, arguments);
+        this.on('change:siteZone', this.siteZoneDidChange);
+      }
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.LocationItem = XM.Model.extend({
+      
+      recordType: "XM.LocationItem",
+
+      parentKey: "location"
 
     });
 
@@ -62,6 +87,16 @@ white:true*/
     // ..........................................................
     // COLLECTIONS
     //
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.LocationCollection = XM.Collection.extend({
+
+      model: XM.Location
+      
+    });
 
     /**
       @class

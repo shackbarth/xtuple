@@ -268,6 +268,45 @@ trailing:true, white:true*/
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
 
     // ..........................................................
+    // LOCATION
+    //
+
+    enyo.kind({
+      name: "XV.LocationList",
+      kind: "XV.List",
+      label: "_locations".loc(),
+      collection: "XM.LocationCollection",
+      query: {orderBy: [
+        {attribute: 'description'}
+      ]},
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short", components: [
+              {kind: "XV.ListAttr", attr: "format", isKey: true}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "site.code"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second left", components: [
+              {kind: "XV.ListAttr", attr: "description"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "isRestricted"}
+            ]},
+            {kind: "XV.ListColumn", classes: "last", components: [
+              {kind: "XV.ListAttr", attr: "isNetable"}
+            ]}
+          ]}
+        ]}
+      ]
+
+    });
+
+    XV.registerModelList("XM.Location", "XV.LocationList");
+    XV.registerModelList("XM.LocationItem", "XV.LocationList");
+
+    // ..........................................................
     // SHIPMENT
     //
 
