@@ -218,6 +218,7 @@ create or replace function xt.post(data_hash text) returns text as $$
 
       /* calculate a patch of the modifed version */
       observer = XT.jsonpatch.observe(prv);
+      dataHash.superUser = true;
       ret = data.retrieveRecord(dataHash);
       observer.object = ret.data;
       delete ret.data;
