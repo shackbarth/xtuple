@@ -342,7 +342,6 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     checkPrivileges: function (nameSpace, type, record, isTopLevel) {
       isTopLevel = isTopLevel !== false ? true : false;
-
       var action =  record && record.dataState === this.CREATED_STATE ? 'create' :
                   record && record.dataState === this.DELETED_STATE ? 'delete' :
                   record && record.dataState === this.UPDATED_STATE ? 'update' : 'read',
@@ -350,8 +349,9 @@ select xt.install_js('XT','Data','xtuple', $$
         isGrantedAll = true,
         isGrantedPersonal = false,
         map = this.fetchOrm(nameSpace, type),
-        privileges = map.privileges;
-
+        privileges = map.privileges,
+        pkey,
+        old;
 
       /* If there is no ORM, this isn't a table data type so no check required. */
       if (DEBUG) {
@@ -401,7 +401,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* If we're checknig an actual record and only have personal privileges, */
       /* see if the record allows access. */
-      if (record && !isGrantedAll && isGrantedPersonal) {
+      if (record && !isGrantedAll && isGrantedPersonal && action !== "create") {
         if (DEBUG) { XT.debug('checking record level personal privileges'); }
         var that = this,
 
@@ -438,9 +438,15 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* If committing we need to ensure the record in its previous state is editable by this user. */
         if (committing && (action === 'update' || action === 'delete')) {
-          var pkey = XT.Orm.primaryKey(map),
-              old = this.retrieveRecord(nameSpace + '.' + type, record[pkey]);
-          isGrantedPersonal = checkPersonal(old);
+          pkey = XT.Orm.naturalKey(map) || XT.Orm.primaryKey(map);
+          old = this.retrieveRecord({
+            nameSpace: nameSpace,
+            type: type,
+            id: record[pkey],
+            superUser: true,
+            includeKeys: true
+          });
+          isGrantedPersonal = checkPersonal(old.data);
 
         /* Otherwise check personal privileges on the record passed. */
         } else if (action === 'read') {
@@ -1550,7 +1556,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       if (!context) {
         /* Check privileges again, this time against record specific criteria where applicable. */
-        if(!options.superUser && !this.checkPrivileges(nameSpace, type, ret)) {
+        if(!options.superUser && !this.checkPrivileges(nameSpace, type, ret.data)) {
           if (options.silentError) {
             return false;
           } else {

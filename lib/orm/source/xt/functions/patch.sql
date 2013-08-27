@@ -65,6 +65,7 @@ create or replace function xt.patch(data_hash text) returns text as $$
     /* get the current version of the record */
     prv = data.retrieveRecord(dataHash);
     dataHash.includeKeys = true;
+    dataHash.superUser = true;
     rec = data.retrieveRecord(dataHash);
 
     /* apply the patch */
