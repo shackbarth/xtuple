@@ -40,7 +40,8 @@ white:true*/
 
     defaults: function () {
       return {
-        isActive: true
+        isActive: true,
+        owner: XM.currentUser
       };
     },
 
