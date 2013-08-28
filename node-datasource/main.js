@@ -13,6 +13,7 @@ SYS = {};
   "use strict";
 
   var options = require("./lib/options"),
+    authorizeNet,
     sessionOptions = {};
 
   /**
@@ -68,6 +69,19 @@ SYS = {};
   require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
+
+  if (X.options.integration &&
+      X.options.integration.authorizeNetLogin &&
+      X.options.integration.authorizeNetTransactionKey) {
+
+    authorizeNet = require('paynode').use('authorizenet');
+    X.authorizeNetClient = authorizeNet.createClient({
+      level: authorizeNet.levels.sandbox,
+      login: X.options.integration.authorizeNetLogin,
+      tran_key: X.options.integration.authorizeNetTransactionKey
+    });
+  }
+
 
   // load the encryption key, or create it if it doesn't exist
   // it should created just once, the very first time the datasoruce starts

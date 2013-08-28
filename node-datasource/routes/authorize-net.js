@@ -5,15 +5,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  var authorizenet = require('paynode').use('authorizenet');
 
   exports.transact = function (req, res) {
-    var client = authorizenet.createClient({
-      level: authorizenet.levels.sandbox,
-      login: X.options.integration.authorizeNetLogin,
-      tran_key: X.options.integration.authorizeNetTransactionKey
-    });
-    client.performAimTransaction({
+    if (!X.authorizeNetClient) {
+      res.send({isError: true, message: "Authorize.Net client has not been set up"});
+      return;
+    }
+    X.authorizeNetClient.performAimTransaction({
       "x_type": "AUTH_CAPTURE",
       "x_method": "CC",
       "x_card_num": "4111111111111111",
