@@ -26,7 +26,7 @@
       zombieAuth.loadApp(done);
     });
 
-    describe('Trivial test', function () {
+    describe('Update tests', function () {
       _.each(testData, smoke.updateFirstModel);
     });
   });
