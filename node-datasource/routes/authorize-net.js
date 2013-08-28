@@ -27,12 +27,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       "x_zip": "98004"
     })
     .on('success', function (err, result) {
-      // do something to handle a successful transaction
       res.send(result);
     })
     .on('failure', function (err, result) {
-      // do something to handle a failed transaction
-      res.send(err);
+      res.send({isError: true, error: err});
     });
 
 
