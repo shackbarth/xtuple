@@ -1126,7 +1126,7 @@
       {
         "name": "isConfigured",
         "attr": {
-          "type": "Number",
+          "type": "Boolean",
           "column": "item_config"
         }
       },
