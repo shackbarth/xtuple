@@ -187,6 +187,11 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.basePanel.setShowing(showing);
     },
 
+    setDisabled: function (isDisabled) {
+      this.inherited(arguments);
+      this.$.picker.setDisabled(isDisabled || this.getCurrencyDisabled());
+    },
+
     /**
       This setValue function handles a value which is an
       object potentially consisting of multiple key/value pairs for the
