@@ -10,8 +10,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.transact = function (req, res) {
     var client = authorizenet.createClient({
       level: authorizenet.levels.sandbox,
-      login: '9N8T3NK4q6vk',
-      tran_key: '2jmpG96xM59QAJ4d'
+      login: X.options.integration.authorizeNetLogin,
+      tran_key: X.options.integration.authorizeNetTransactionKey
     });
     client.performAimTransaction({
       "x_type": "AUTH_CAPTURE",
