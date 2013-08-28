@@ -576,6 +576,21 @@ white:true*/
   // Add in item mixin
   XM.SalesCustomer = XM.SalesCustomer.extend(XM.CustomerMixin);
 
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.CustomerListItem = XM.Info.extend({
+    /** @scope XM.CustomerListItem.prototype */
+
+    recordType: 'XM.CustomerListItem',
+
+    editableModel: 'XM.Customer',
+
+    descriptionKey: "name"
+
+  });
 
   /**
     @class
@@ -592,9 +607,6 @@ white:true*/
     descriptionKey: "name"
 
   });
-
-  // Add in item mixin
-  XM.CustomerRelation = XM.CustomerRelation.extend(XM.CustomerMixin);
 
   /**
     @class
@@ -715,6 +727,18 @@ white:true*/
     /** @scope XM.SalesCustomerCollection.prototype */
 
     model: XM.SalesCustomer
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerListItemCollection = XM.Collection.extend({
+    /** @scope XM.CustomerListItemCollection.prototype */
+
+    model: XM.CustomerListItem
 
   });
 

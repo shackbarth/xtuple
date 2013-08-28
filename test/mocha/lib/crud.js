@@ -394,10 +394,12 @@ var _ = require("underscore"),
       });
     });
 
-    it('deletes the model from the database', function (done) {
-      this.timeout(10 * 1000);
-      destroy(data, done);
-    });
+    if (!data.skipDelete) {
+      it('deletes the model from the database', function (done) {
+        this.timeout(10 * 1000);
+        destroy(data, done);
+      });
+    }
 
     _.each(data.afterDeleteActions || [], function (spec) {
       it(spec.it, function (done) {

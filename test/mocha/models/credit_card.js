@@ -29,7 +29,8 @@
         assert.equal(data.model.get("number"), "************1111");
         next();
       }
-    }]
+    }],
+    skipDelete: true
   };
 
   describe('Credit card crud test', function () {

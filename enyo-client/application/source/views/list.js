@@ -476,7 +476,7 @@ trailing:true, white:true*/
     name: "XV.CustomerList",
     kind: "XV.List",
     label: "_customers".loc(),
-    collection: "XM.CustomerRelationCollection",
+    collection: "XM.CustomerListItemCollection",
     query: {orderBy: [
       {attribute: 'number'}
     ]},

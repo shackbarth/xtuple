@@ -11,7 +11,7 @@
         "create": "ProcessCreditCards",
         "read": "ProcessCreditCards",
         "update": "ProcessCreditCards",
-        "delete": "ProcessCreditCards"
+        "delete": false
       }
     },
     "properties": [
