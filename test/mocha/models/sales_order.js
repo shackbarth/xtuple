@@ -91,7 +91,7 @@ module:true, require:true, exports:true, console:true */
         calculateFreight: true,
         customer: { number: "TTOYS" },
         terms: { code: "2-10N30" },
-        salesRep: { number: "SMASTERS" },
+        salesRep: { number: "2000" },
         wasQuote: true
       },
       /**
