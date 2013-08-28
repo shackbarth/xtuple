@@ -105,8 +105,8 @@ class TableModelKey{
              url = new URL(proto + urlParm + orgParm + "/data-from-key?datakey=" + keyParm)
         }
 
-		//  Get data from data-from-key        
-        System.out.print("\nReport connecting to .....: " + url);
+		//  Get data from data-from-key  
+		System.out.print("\nReport requesting data from: " + url);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
         connection.setRequestProperty("content-type", "application/json");
@@ -173,8 +173,6 @@ class TableModelKey{
 		****************************************************************************/
 		def rowMapProperties = jsonProp(resultRest, reportParm, '')
 		
-		System.out.print("\nschema: " + rowMapProperties);
-		
         /****************************************************************************
         If this is a list report we get a data:[] ArrayList.  Otherwise convert 
         data:{} to ArrayList.  If there is a childParm, get the child ArrayList
@@ -232,19 +230,16 @@ class TableModelKey{
             row = new Object [rowListColumns.size()]
             for(int m; m < rowListColumns.size(); m++) {
                 def keyTokens = rowListColumns[m].tokenize('.')
-				System.out.print("\nfind prop: " + result[j] + " " + keyTokens)
                 def prop = findProp(result[j], keyTokens)
                  if (prop == null) {
                      row[m] = ""
                      }
                  else {
                     row[m] = prop.toString()
-					System.out.print("\nadd prop: " + prop.toString())
                  }
 
             }
             model.addRow(row)
-			System.out.print("row: " + row)
         }
     return model
     }
