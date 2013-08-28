@@ -179,6 +179,16 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // CUSTOMER
+  //
+
+  enyo.kind({
+    name: "XV.SalesCustomerWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.SalesCustomerCollection",
+    list: "XV.CustomerList"
+  });
+  // ..........................................................
   // CUSTOMER PROSPECT
   //
 

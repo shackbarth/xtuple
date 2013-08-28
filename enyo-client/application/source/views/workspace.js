@@ -1470,9 +1470,7 @@ Globalize:true */
             {name: "datePanel"},
             {kind: "XV.InputWidget", attr: "getOrderStatusString", label: "_status".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
-            {kind: "XV.CustomerProspectWidget", attr: "customer",
-              showAddress: true, label: "_customer".loc(),
-              nameAttribute: ""},
+            {name: "customerWidgetContainer"},
             {kind: "XV.AddressFieldsWidget", attr:
               {name: "billtoName", line1: "billtoAddress1",
                 line2: "billtoAddress2", line3: "billtoAddress3",
@@ -1539,7 +1537,7 @@ Globalize:true */
       this.titleChanged();
     },
     customerChanged: function () {
-      var customer = this.$.customerProspectWidget.getValue(),
+      var customer = this.$.customerWidget.getValue(),
         id = customer ? customer.get("account") : -1;
 
       this.$.billtoContact.addParameter({attribute: "account", value: id}, true);
@@ -1592,6 +1590,15 @@ Globalize:true */
       components where they should be rendered.
     */
     build: function () {
+      this.createComponent({
+        kind: "XV.CustomerProspectWidget",
+        attr: "customer",
+        name: "customerWidget",
+        showAddress: true,
+        label: "_customer".loc(),
+        nameAttribute: "",
+        container: this.$.customerWidgetContainer
+      });
       this.$.datePanel.createComponents([
         {kind: "XV.DateWidget", attr: "expireDate"}
       ], {owner: this});
@@ -1751,6 +1758,15 @@ Globalize:true */
       Inserts additional components where they should be rendered.
     */
     build: function () {
+      this.createComponent({
+        kind: "XV.SalesCustomerWidget",
+        attr: "customer",
+        name: "customerWidget",
+        showAddress: true,
+        label: "_customer".loc(),
+        nameAttribute: "",
+        container: this.$.customerWidgetContainer
+      });
       this.$.datePanel.createComponents([
         {kind: "XV.CheckboxWidget", attr: "shipComplete"}
       ], {owner: this});

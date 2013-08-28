@@ -711,6 +711,18 @@ white:true*/
 
     @extends XM.Collection
   */
+  XM.SalesCustomerCollection = XM.Collection.extend({
+    /** @scope XM.SalesCustomerCollection.prototype */
+
+    model: XM.SalesCustomer
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   XM.CustomerRelationCollection = XM.Collection.extend({
     /** @scope XM.CustomerRelationCollection.prototype */
 
