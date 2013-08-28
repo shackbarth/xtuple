@@ -364,6 +364,7 @@ app.get('/logout', routes.logout);
 app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
 
+app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
 app.all('/:org/data-from-key', routes.dataFromKey);
