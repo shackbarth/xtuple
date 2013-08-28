@@ -28,7 +28,13 @@ trailing:true, white:true*/
     title: "_creditCards".loc(),
     parentKey: "customer",
     listRelations: "XV.CreditCardListRelations",
-    searchList: "XV.CreditCardList"
+    searchList: "XV.CreditCardList",
+    create: function () {
+      this.inherited(arguments);
+      this.$.attachButton.hide();
+      this.$.detachButton.hide();
+      this.$.openButton.hide();
+    }
   });
 
   // ..........................................................
