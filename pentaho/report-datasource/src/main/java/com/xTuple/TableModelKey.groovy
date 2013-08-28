@@ -33,7 +33,7 @@ class TableModelKey{
 		  if (it.value["items"] == null) {
 		  
 		  	 // If an object, recurse and add children
-             if (it.value["type"].toString() == "object") {             
+             if (it.value["type"].toString().toLowerCase() == "object") {             
                     //json[prefix + '.' + it.key] = it.value.getClass().toString().minus('class ')
                     def childJson = [:]
                     childJson = jsonProp(struct, it.value["\$ref"].toString(), prefix + '.' + it.key)
@@ -43,16 +43,16 @@ class TableModelKey{
             }
 			// If not an object, add it with correct Java class understood by reports.
             else {
-					if (it.value["type"].toString() == "string") { 
+					if (it.value["type"].toString().toLowerCase() == "string") { 
 						json[prefix + '.' + it.key] = "java.lang.String"
 					}
-					else if (it.value["type"].toString() == "boolean") { 
+					else if (it.value["type"].toString().toLowerCase() == "boolean") { 
 						json[prefix + '.' + it.key] = "java.lang.Boolean"
 					}
-					else if (it.value["type"].toString() == "integer") {
+					else if (it.value["type"].toString().toLowerCase() == "integer") {
 						json[prefix + '.' + it.key] = "java.lang.Integer"
 					}
-					else if (it.value["type"].toString() == "number") {
+					else if (it.value["type"].toString().toLowerCase() == "number") {
 						json[prefix + '.' + it.key] = "java.math.BigDecimal"
 					}
             }
@@ -105,8 +105,8 @@ class TableModelKey{
              url = new URL(proto + urlParm + orgParm + "/data-from-key?datakey=" + keyParm)
         }
 
-		//  Get data from data-from-key        
-        System.out.print("\nReport connecting to .....: " + url);
+		//  Get data from data-from-key  
+		System.out.print("\nReport requesting data from: " + url);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
         connection.setRequestProperty("content-type", "application/json");
@@ -231,20 +231,7 @@ class TableModelKey{
             for(int m; m < rowListColumns.size(); m++) {
                 def keyTokens = rowListColumns[m].tokenize('.')
                 def prop = findProp(result[j], keyTokens)
-                
-                 if( rowListTypes[m].toString() =='java.math.BigDecimal'){
-                     if (prop == null) {
-                         prop = 0
-                     }
-                     def bigDec = new BigDecimal(prop)
-                     bigDec = bigDec.setScale(3, BigDecimal.ROUND_UP)
-                     //Groovy is defaulting to float.  So force it to create a 3 precision BigDecimal  
-                     row[m] = bigDec.toString()
-                 }
-                 else if (prop.toString().indexOf(',') > -1) {
-                     row[m] = '"' + prop.toString() + '"'
-                 }
-                 else if (prop == null) {
+                 if (prop == null) {
                      row[m] = ""
                      }
                  else {
@@ -253,7 +240,6 @@ class TableModelKey{
 
             }
             model.addRow(row)
-//			System.out.print("row: " + row)
         }
     return model
     }

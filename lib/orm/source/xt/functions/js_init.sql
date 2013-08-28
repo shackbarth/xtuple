@@ -332,6 +332,199 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
     return string;
   };
+  
+  /**
+   * Wrap formatDate() 
+   *
+   * @param Object The date. 
+   * @returns {String} Date string in user's locale.
+  */
+  XT.formatDate = function (string) {
+    var query = "select formatdate($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatDate sql =', query);
+      XT.debug('XT.formatDate arg =', string);
+    }
+    ret = plv8.execute(query, [string])[0];
+    return ret;
+  };
+
+  /**
+   * Wrap formatCost() 
+   *
+   * @param Number The cost. 
+   * @returns {Number} Cost number in user's locale & scale.
+  */
+  XT.formatCost = function (numb) {
+    var query = "select formatcost($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatCost sql =', query);
+      XT.debug('XT.formatCost arg =', numb);
+    }
+    ret = plv8.execute(query, [numb])[0];
+    return ret;
+  };
+  
+  /**
+   * Wrap formatMoney() 
+   *
+   * @param Number The money. 
+   * @returns {Number} Money in user's locale & scale.
+  */
+  XT.formatMoney = function (numb) {
+    var query = "select formatmoney($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatMoney sql =', query);
+      XT.debug('XT.formatMoney arg =', numb);
+    }
+    ret = plv8.execute(query, [numb])[0];
+    return ret;
+  };
+  
+  /**
+   * Wrap formatSalesPrice() 
+   *
+   * @param Number The price. 
+   * @returns {Number} Price in user's locale & scale.
+  */
+  XT.formatSalesPrice = function (numb) {
+    var query = "select formatsalesprice($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatSalesPrice sql =', query);
+      XT.debug('XT.formatSalesPrice arg =', numb);
+    }
+    ret = plv8.execute(query, [numb])[0];
+    return ret;
+  };
+  
+  /**
+   * Wrap formatPurchPrice() 
+   *
+   * @param Number The price. 
+   * @returns {Number} Price in user's locale & scale.
+  */
+  XT.formatPurchPrice = function (numb) {
+    var query = "select formatpurchprice($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatPurchPrice sql =', query);
+      XT.debug('XT.formatPurchPrice arg =', numb);
+    }
+    ret = plv8.execute(query, [numb])[0];
+    return ret;
+  };
+  
+  /**
+   * Wrap formatExtPrice() 
+   *
+   * @param Number The price. 
+   * @returns {Number} Price in user's locale & scale.
+  */
+  XT.formatExtPrice = function (numb) {
+    var query = "select formatExtPrice($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatExtPrice sql =', query);
+      XT.debug('XT.formatExtPrice arg =', numb);
+    }
+    ret = plv8.execute(query, [numb])[0];
+    return ret;
+  };
+  
+  /**
+   * Wrap formatQty() 
+   *
+   * @param Number The quantity. 
+   * @returns {Number} Quantity in user's locale & scale.
+  */
+  XT.formatQty = function (numb) {
+    var query = "select formatqty($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatQty sql =', query);
+      XT.debug('XT.formatQty arg =', numb);
+    }
+    ret = plv8.execute(query, [numb])[0];
+    return ret;
+  };
+  
+  /**
+   * Wrap formatQtyPer() 
+   *
+   * @param Number The quantity per. 
+   * @returns {Number} Quantity per in user's locale & scale.
+  */
+  XT.formatQtyPer = function (numb) {
+    var query = "select formatqtyper($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatQtyPer sql =', query);
+      XT.debug('XT.formatQtyPer arg =', numb);
+    }
+    ret = plv8.execute(query, [numb])[0];
+    return ret;
+  };
+  
+  /**
+   * Wrap formatRatio() 
+   *
+   * @param Number The ratio. 
+   * @returns {Number} Ratio in user's locale & scale.
+  */
+  XT.formatRatio = function (numb) {
+    var query = "select formatRatio($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatRatio sql =', query);
+      XT.debug('XT.formatRatio arg =', numb);
+    }
+    ret = plv8.execute(query, [numb])[0];
+    return ret;
+  };
+  
+  /**
+   * Wrap formatPrcnt() 
+   *
+   * @param Number The percent. 
+   * @returns {Number} Percent in user's locale & scale.
+  */
+  XT.formatPrcnt = function (numb) {
+    var query = "select formatprcnt($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatPrcnt sql =', query);
+      XT.debug('XT.formatPrcnt arg =', numb);
+    }
+    ret = plv8.execute(query, [numb])[0];
+    return ret;
+  };
+  
+  /** 
+   * Wrap formatWeight() 
+   *
+   * @param Number The weight. 
+   * @returns {Number} Weight in user's locale & scale.
+  */
+  XT.formatWeight = function (numb) {
+    var query = "select formatweight($1);"
+    if (DEBUG) {
+      XT.debug('XT.formatWeight sql =', query);
+      XT.debug('XT.formatWeight arg =', numb);
+    }
+    ret = plv8.execute(query, [numb])[0];
+    return ret;
+  };
+  
+  /**
+   * Wrap formatNumeric() 
+   *
+   * @param Number. 
+   * @returns {Number} Number in user's locale & scale.
+  */
+  XT.formatNumeric = function (numb, text) {
+    var query = "select formatNumeric($1, $2);"
+    if (DEBUG) {
+      XT.debug('XT.formatNumeric sql =', query);
+      XT.debug('XT.formatNumeric arg1 =', numb);
+      XT.debug('XT.formatNumeric arg2 =', text);
+    }
+    ret = plv8.execute(query, [numb, text])[0];
+    return ret;
+  };
 
   /**
     Return a universally unique identifier.
