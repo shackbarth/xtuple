@@ -100,6 +100,7 @@ module:true, require:true, exports:true, console:true */
        */
       beforeSaveActions: [{it: 'sets up a valid line item', action: getSetCallback("XM.SalesOrderLine")}],
       afterSaveActions: [{it: 'has the credit card information', action: function (data, next) {
+        assert.equal(data.model.getValue("customer.creditCards").models[0].get("number"), "************1111");
         next();
       }}],
       updateHash: {

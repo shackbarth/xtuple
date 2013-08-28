@@ -1211,7 +1211,7 @@ select xt.install_js('XT','Data','xtuple', $$
     decrypt: function (nameSpace, type, record, encryptionKey) {
       var result,
         that = this,
-        hex2a = function (hex) {
+        hexToAlpha = function (hex) {
           var str = '', i;
           for (i = 2; i < hex.length; i += 2) {
             str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
@@ -1235,7 +1235,10 @@ select xt.install_js('XT','Data','xtuple', $$
               XT.debug('decrypt values =', [record[prop], encryptionKey]);
             }
             result = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
-            result = result ? hex2a(result) : result;
+            /* we SOMETIMES need to translate from hex here */
+            if(typeof result === 'string' && result.substring(0, 2) === '\\x') {
+              result = result ? hexToAlpha(result) : result;
+            }
             if(ormp.attr.isEncrypted === "credit_card_number" && result && result.length >= 4) {
               record[prop] = "************" + result.substring(result.length - 4);
             } else {
@@ -1246,6 +1249,9 @@ select xt.install_js('XT','Data','xtuple', $$
           }
 
         /* Check recursively. */
+        } else if (ormp.toOne && ormp.toOne.isNested) {
+          that.decrypt(nameSpace, ormp.toOne.type, record[prop], encryptionKey);
+
         } else if (ormp.toMany && ormp.toMany.isNested) {
           record[prop].map(function (subdata) {
             that.decrypt(nameSpace, ormp.toMany.type, subdata, encryptionKey);
@@ -1579,7 +1585,6 @@ select xt.install_js('XT','Data','xtuple', $$
         /* Decrypt result where applicable. */
         ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
-
 
       this.sanitize(nameSpace, type, ret.data, options);
 
