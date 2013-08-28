@@ -12,10 +12,11 @@
       autoTestAttributes: false,
       createHash: {
         uuid: "NEWTEST" + Math.random(),
-        site: {code: "WH1"},
+        site: 35,
         siteZone: {name: "RM1"},
         rack: "1",
-        bin: "2"
+        bin: "2",
+        location: "2"
       },
       updateHash: {
         rack: "3"

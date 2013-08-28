@@ -35,9 +35,8 @@
       },
       {
         "name": "site",
-        "toOne": {
-          "isNested": true,
-          "type": "SiteRelation",
+        "attr": {
+          "type": "Number",
           "column": "location_warehous_id"
         }
       },
@@ -74,7 +73,8 @@
         "name": "location",
         "attr": {
           "type": "String",
-          "column": "location_name"
+          "column": "location_name",
+          "required": true
         }
       },
       {

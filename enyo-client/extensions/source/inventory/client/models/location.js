@@ -39,9 +39,9 @@ white:true*/
 
       //TODO get this or similar function working to set the site according to the siteZone.site value
       siteZoneDidChange: function () {
-        var K = XM.Location,
-          siteZone = this.get("siteZone");
-        this.set('site', siteZone.site);
+        var siteZone = this.get("siteZone");
+        this.set('site', this.getValue('siteZone.site'));
+        console.log(this.getValue("site"));
       },
 
       bindEvents: function () {
