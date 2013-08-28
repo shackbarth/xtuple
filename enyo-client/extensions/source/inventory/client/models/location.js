@@ -41,7 +41,6 @@ white:true*/
       siteZoneDidChange: function () {
         var siteZone = this.get("siteZone");
         this.set('site', this.getValue('siteZone.site'));
-        console.log(this.getValue("site"));
       },
 
       bindEvents: function () {
