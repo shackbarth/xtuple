@@ -64,21 +64,54 @@ trailing:true, white:true*/
         customer = that.parent.parent.getValue().getValue("customer"),
         creditCardCollection = customer.get("creditCards"),
         creditCardModel = new XM.CreditCard(),
+        // when we add a credit card we're really making the change
+        // to customer. Sales Order don't care. Fetch customer so
+        // we have a fresh and locked record we can save.
+        customerFetched = function () {
+          var effective,
+            lockMessage;
+
+          if (customer.getStatus() === XM.Model.READY_CLEAN) {
+            customer.off('statusChange', customerFetched);
+            if (!customer.hasLockKey()) {
+              effective = Globalize.format(new Date(customer.lock.effective), "t");
+              lockMessage = "_lockInfo".loc()
+                .replace("{user}", customer.lock.username)
+                .replace("{effective}", effective);
+
+              that.doNotify({message: lockMessage});
+              return;
+            }
+            creditCardModel.initialize(null, {isNew: true});
+            creditCardCollection.add(creditCardModel);
+            // XXX we could wait until this is done before popping up the workspace
+
+            that.doPopupWorkspace({
+              message: "_enterNewCreditCardHere".loc(),
+              workspace: "XV.CreditCardsEditor",
+              model: creditCardModel,
+              callback: workspaceCallback
+            });
+          }
+        },
+        // save the customer when the user is finished with the popup
         workspaceCallback = function (model) {
+          if (model === false) {
+            // the user has clicked to cancel, so get rid of the credit card model
+            creditCardCollection.remove(creditCardModel);
+          }
+          customer.on('statusChange', releaseCustomerLock);
           customer.save();
-          console.log(customer, model);
+        },
+        releaseCustomerLock = function () {
+          if (customer.getStatus() === XM.Model.READY_CLEAN) {
+            customer.off('statusChange', releaseCustomerLock);
+            customer.releaseLock();
+          }
         };
 
-      creditCardModel.initialize(null, {isNew: true});
-      creditCardCollection.add(creditCardModel);
-      // XXX we could wait until this is done before notifying
-
-      this.doPopupWorkspace({
-        message: "_enterNewCreditCardHere".loc(),
-        workspace: "XV.CreditCardsEditor",
-        model: creditCardModel,
-        callback: workspaceCallback
-      });
+      customer.on('statusChange', customerFetched);
+      customer.fetch();
     },
     processCreditCard: function (inSender, inEvent) {
       var that = this,
