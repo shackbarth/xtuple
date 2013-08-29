@@ -64,15 +64,18 @@ white:true*/
       },
 
       canIssueStock: function (callback) {
+        var isShipped = this.getValue("shipment.isShipped") || false;
         if (callback) {
-          callback(true);
+          callback(!isShipped);
         }
         return this;
       },
 
       canReturnStock: function (callback) {
+        var isShipped = this.getValue("shipment.isShipped") || false,
+          atShipping = this.get("atShipping");
         if (callback) {
-          callback(false);
+          callback(!isShipped && atShipping > 0);
         }
         return this;
       },
@@ -114,9 +117,23 @@ white:true*/
       },
 
       doReturnStock: function (callback) {
-        if (callback) {
-          callback(true);
-        }
+        var that = this,
+          options = {};
+
+        // Refresh once we've completed the work
+        options.success = function () {
+          that.fetch({
+            success: function () {
+              if (callback) {
+                callback();
+              }
+            }
+          });
+        };
+
+        this.setStatus(XM.Model.BUSY_COMMITTING);
+        this.dispatch("XM.Inventory", "returnFromShipping", [this.id], options);
+
         return this;
       },
 

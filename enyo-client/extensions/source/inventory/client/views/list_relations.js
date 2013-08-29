@@ -40,8 +40,7 @@ trailing:true, white:true*/
                   classes: "right"},
               ]},
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "location.description",
-                  formatter: "formatDefault"},
+                {content: ""},
                 {kind: "XV.ListAttr", attr: "distributed",
                   classes: "right hyperlink", ontap: "distributedTapped"}
               ]}
