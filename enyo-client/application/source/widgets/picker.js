@@ -459,23 +459,22 @@ regexp:true, undef:true, trailing:true, white:true */
     itemSelected: function (inSender, inEvent) {
       this.attr = inEvent.originator.attr;
     },
+    // TODO: This should be modified to use buildList
     setComponentsList: function (toSet) {
-      var comps = [], stringToSet, objectToSet;
+      var comps = [], attrs = [],
+        stringToSet,
+        objectToSet;
+      // This is taking the place of the noneText in parent
       comps[0] = {content: "_none".loc(), attr: ""};
       for (var i = 0; i < toSet.length; i++) {
-        if (toSet[i].indexOf('.') === -1) {
-          stringToSet = "_" + toSet[i];
-          objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
-          comps.push(objectToSet);
+        if (toSet[i].indexOf('.') !== -1) {
+          attrs = toSet[i].split(".");
+          stringToSet = ("_" + attrs[0]).loc() + ("_" + attrs[1]).loc();
+        } else {
+          stringToSet = ("_" + toSet[i]).loc();
         }
-        else {
-          var strArray = toSet[i].split('.');
-          strArray[0] = "_" + strArray[0];
-          strArray[1] = "_" + strArray[1];
-          stringToSet = strArray[0].loc() + " " + strArray[1].loc();
-          objectToSet = {content: stringToSet, attr: toSet[i]};
-          comps.push(objectToSet);
-        }
+        objectToSet = {content: stringToSet, attr: toSet[i]};
+        comps.push(objectToSet);
       }
       this.buildList(comps);
     }
