@@ -173,7 +173,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.Model
   */
   XM.ItemGroupItem = XM.Document.extend({
     /** @scope XM.ItemGroupItem.prototype */
@@ -708,6 +708,18 @@ white:true*/
    /** @scope XM.ItemGroupCollection.prototype */
 
     model: XM.ItemGroup
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.ItemGroupItemCollection = XM.Collection.extend({
+   /** @scope XM.ItemGroupCollection.prototype */
+
+    model: XM.ItemGroupItem
 
   });
 

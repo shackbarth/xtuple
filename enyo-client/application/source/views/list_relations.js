@@ -390,7 +390,7 @@ trailing:true, white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "item.number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "item.description1", fit: true}
+              {kind: "XV.ListAttr", attr: "item.description1", classes: "right"}
             ]}
           ]}
         ]}

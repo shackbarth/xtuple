@@ -872,6 +872,7 @@
       {
         "name": "items",
         "toMany": {
+          "isNested": true,
           "type": "ItemGroupItem",
           "column": "itemgrp_id",
           "inverse": "itemGroup"
@@ -972,10 +973,9 @@
       },
       {
         "name": "itemGroup",
-        "toOne": {
-          "type": "ItemGroup",
-          "column": "itemgrpitem_itemgrp_id",
-          "inverse": "id"
+        "attr": {
+          "type": "Number",
+          "column": "itemgrpitem_itemgrp_id"
         }
       }
     ],
