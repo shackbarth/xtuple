@@ -131,6 +131,19 @@ white:true*/
 
     @extends XM.SimpleModel
   */
+  SYS.CreditCard = XM.SimpleModel.extend(/** @lends SYS.CreditCard.prototype */{
+
+    recordType: 'SYS.CreditCard',
+
+    idAttribute: 'uuid'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
   SYS.Recover = XM.SimpleModel.extend(/** @lends SYS.Recover.prototype */{
 
     recordType: 'SYS.Recover',

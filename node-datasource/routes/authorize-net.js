@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, _:true */
+/*global X:true, _:true, SYS:true */
 
 (function () {
   "use strict";
@@ -26,12 +26,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     var uuid = req.query.creditCard,
-      creditCardQueryPayload = {
-        nameSpace: "XM",
-        type: "CreditCard",
-        id: uuid,
-        username: req.session.passport.user.id
-      },
+      creditCardModel = new SYS.CreditCard(),
       adaptCreditCardData = function (rawData) {
         var data = JSON.parse(JSON.stringify(rawData)),
           monthExpiry = rawData.monthExpired,
@@ -54,12 +49,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         data.expiry = expiry;
         data.address = address;
 
-        data.number = "4111111111111111"; //TODO: get the raw data
-
         return data;
       },
-      performTransaction = function (result) {
-        var creditCardData = adaptCreditCardData(result.data.data);
+      performTransaction = function (model) {
+        var creditCardData = adaptCreditCardData(model.toJSON());
 
         try {
           X.authorizeNetClient.performAimTransaction({
@@ -88,6 +81,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       };
 
-    data.queryDatabase("get", creditCardQueryPayload, req.session, performTransaction);
+    creditCardModel.fetch({
+      id: uuid,
+      database: req.session.passport.user.organization,
+      username: req.session.passport.user.id,
+      success: performTransaction
+    });
   };
 }());
