@@ -16,6 +16,16 @@
         "update": "MaintainCustomerMasters",
         "delete": "MaintainCustomerMasters"
       },
+      "personal":{
+        "create":"MaintainPersonalCRMAccounts",
+        "read":"ViewPersonalCRMAccounts",
+        "update":"MaintainPersonalCRMAccounts",
+        "delete":"MaintainPersonalCRMAccounts",
+        "properties":[
+          "account.owner.username",
+          "account.number"
+        ]
+      },
       "attribute": {
         "creditStatus": {
           "edit": "UpdateCustomerCreditStatus"
