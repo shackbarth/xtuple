@@ -42,6 +42,7 @@ trailing:true, white:true*/
               {kind: "FittableColumns", components: [
                 {content: ""},
                 {kind: "XV.ListAttr", attr: "distributed",
+                  formatter: "formatQuantity",
                   classes: "right hyperlink", ontap: "distributedTapped"}
               ]}
             ]}
@@ -65,7 +66,7 @@ trailing:true, white:true*/
         var location = model.get("location"),
           itemSite = model.get("itemSite"),
           stockLoc = itemSite.get("stockLocation");
-        return stockLoc.id === location.id;
+        return location && stockLoc.id === location.id;
       },
       formatLocation: function (value, view, model) {
         view.addRemoveClass("emphasis", this.isDefault(model));
