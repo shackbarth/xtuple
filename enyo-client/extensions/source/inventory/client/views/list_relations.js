@@ -67,10 +67,6 @@ trailing:true, white:true*/
           stockLoc = itemSite.get("stockLocation");
         return stockLoc.id === location.id;
       },
-      formatDefault: function (value, view, model) {
-        view.addRemoveClass("emphasis", this.isDefault(model));
-        return value;
-      },
       formatLocation: function (value, view, model) {
         view.addRemoveClass("emphasis", this.isDefault(model));
         if (value) { return value.format(); }
