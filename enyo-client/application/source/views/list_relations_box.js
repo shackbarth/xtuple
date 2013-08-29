@@ -29,11 +29,61 @@ trailing:true, white:true*/
     parentKey: "customer",
     listRelations: "XV.CreditCardListRelations",
     searchList: "XV.CreditCardList",
+    handlers: {
+      onValueChange: "selectionChanged"
+    },
     create: function () {
       this.inherited(arguments);
       this.$.attachButton.hide();
       this.$.detachButton.hide();
       this.$.openButton.hide();
+      this.createComponent({
+        kind: "XV.InputWidget",
+        name: "creditCardAmount",
+        label: "_amount".loc()
+      });
+      this.$.buttonsPanel.createComponent({
+        kind: "onyx.Button",
+        name: "processButton",
+        showing: false,
+        ontap: "processCreditCard",
+        classes: "onyx-affirmative",
+        content: "_process".loc()
+      }, {owner: this});
+    },
+    newItem: function () {
+      this.doNotify({message: "TODO: open popup workspace"});
+    },
+    processCreditCard: function (inSender, inEvent) {
+      var that = this,
+        list = this.$.list,
+        creditCard = list.getModel(list.getFirstSelected()),
+        amount = this.$.creditCardAmount.value,
+        payload = {},
+        success = function () {
+          that.doNotify({message: "_success".loc()});
+        },
+        error = function () {
+          that.doNotify({message: "_error".loc()});
+        };
+
+      if (creditCard && amount) {
+        payload.creditCard = creditCard.id;
+        payload.amount = amount;
+        this.$.processButton.setShowing(false);
+        XT.dataSource.callRoute("credit-card", payload, {success: success, error: error});
+      }
+    },
+    /**
+      Totally different than the original design
+    */
+    selectionChanged: function (inSender, inEvent) {
+      var list = this.$.list,
+        creditCard = list.getModel(list.getFirstSelected()),
+        amount = this.$.creditCardAmount.value;
+
+      this.$.processButton.setShowing(creditCard && amount);
+      return true;
     }
   });
 
