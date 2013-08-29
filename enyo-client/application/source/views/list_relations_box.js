@@ -40,6 +40,7 @@ trailing:true, white:true*/
       this.createComponent({
         kind: "XV.InputWidget",
         name: "creditCardAmount",
+        addBefore: this.$.buttonsPanel,
         label: "_amount".loc()
       });
       this.$.buttonsPanel.createComponent({
@@ -50,9 +51,25 @@ trailing:true, white:true*/
         classes: "onyx-affirmative",
         content: "_process".loc()
       }, {owner: this});
+
+      // don't want to show inactive credit cards
+      this.$.list.setSuppressInactive(true);
     },
     newItem: function () {
-      this.doNotify({message: "TODO: open popup workspace"});
+      var creditCardModel = new XM.CreditCard();
+      creditCardModel.initialize(null, {isNew: true});
+      // XXX we could wait until this is done before notifying
+
+      this.doNotify({
+        message: "_enterNewCreditCardHere".loc(),
+        component: {
+          kind: "XV.CreditCardsEditor"
+        },
+        componentModel: creditCardModel,
+        callback: function (response) {
+          XT.log(response.componentValue);
+        }
+      });
     },
     processCreditCard: function (inSender, inEvent) {
       var that = this,
@@ -75,7 +92,8 @@ trailing:true, white:true*/
       }
     },
     /**
-      Totally different than the original design
+      Show the process button if the user has entered all the necessary inputs.
+      Totally different than the original design.
     */
     selectionChanged: function (inSender, inEvent) {
       var list = this.$.list,

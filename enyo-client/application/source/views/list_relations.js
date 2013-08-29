@@ -96,6 +96,9 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.CreditCardListRelations",
     kind: "XV.ListRelations",
+    published: {
+      suppressInactive: false
+    },
     parentKey: "customer",
     components: [
       {kind: "XV.ListItem", components: [
@@ -108,7 +111,19 @@ trailing:true, white:true*/
           ]}
         ]}
       ]}
-    ]
+    ],
+    setupItem: function (inSender, inEvent) {
+      var index = inEvent.index,
+        model = this.readyModels()[index],
+        isActive = model.getValue('isActive'),
+        isNotActive = _.isBoolean(isActive) ? !isActive : false;
+
+      this.inherited(arguments);
+
+      if (this.getSuppressInactive()) {
+        this.$.listItem.setShowing(!isNotActive);
+      }
+    }
   });
 
   // ..........................................................
