@@ -69,6 +69,7 @@ select xt.install_js('XT','Data','xtuple', $$
         parameters.push({
           attribute: privileges.personal.properties,
           isLower: true,
+          isUsernamePrivFilter: true,
           value: XT.username
         });
       }
@@ -199,7 +200,11 @@ select xt.install_js('XT','Data','xtuple', $$
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
                 identifiers.push(param.attribute[c]);
-                params.push("%" + identifiers.length + "$I");
+                if (param.isUsernamePrivFilter) {
+                  params.push("lower(%" + identifiers.length + "$I)");
+                } else {
+                  params.push("%" + identifiers.length + "$I");
+                }
                 pcount = params.length - 1;
               }
 
@@ -1647,7 +1652,7 @@ select xt.install_js('XT','Data','xtuple', $$
             delete item[prop.name];
           }
 
-	  	/*  Format for printing if printFormat and not an object */ 
+	  	/*  Format for printing if printFormat and not an object */
 		if (printFormat && !prop.toOne && !prop.toMany) {
 			switch(prop.attr.type) {
 	     		case "Date":
