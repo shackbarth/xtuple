@@ -73,6 +73,20 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // ITEM GROUP ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ItemGroupItemBox",
+    kind: "XV.ListGroupRelationsBox",
+    title: "_items".loc(),
+    parentKey: "itemGroup",
+    groupItemKey: "item",
+    searchList: "XV.ItemList",
+    listRelations: "XV.ItemGroupItemListRelations"
+  });
+
+  // ..........................................................
   // LOCATION ITEMS
   //
 

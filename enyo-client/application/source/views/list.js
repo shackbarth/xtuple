@@ -1102,6 +1102,33 @@ trailing:true, white:true*/
   XV.registerModelList("XM.ItemRelation", "XV.ItemList");
 
   // ..........................................................
+  // ITEM GROUP
+  //
+
+  enyo.kind({
+    name: "XV.ItemGroupList",
+    kind: "XV.List",
+    label: "_itemGroups".loc(),
+    collection: "XM.ItemGroupCollection",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // ITEM SITE
   //
 

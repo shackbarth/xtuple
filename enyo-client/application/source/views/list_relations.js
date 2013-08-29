@@ -374,6 +374,31 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // ITEM GROUP ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ItemGroupItemListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: "item.number"}
+    ],
+    parentKey: "itemGroup",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "item.number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "item.description1", fit: true}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // LOCATION ITEM
   //
 

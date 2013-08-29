@@ -173,6 +173,61 @@ trailing:true, white:true*/
     XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderLine");
 
     // ..........................................................
+    // INVENTORY HISTORY REPORT
+    //
+
+    enyo.kind({
+      name: "XV.InventoryHistoryList",
+      kind: "XV.List",
+      label: "_inventoryHistory".loc(),
+      collection: "XM.InventoryHistoryCollection",
+      query: {orderBy: [
+        {attribute: 'transactionDate'}
+      ]},
+      parameterWidget: "XV.InventoryHistoryListParameters",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short", components: [
+              {kind: "XV.ListAttr", attr: "transactionDate", isKey: true}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "transactionType"},
+              {kind: "XV.ListAttr", attr: "itemSite.site.code"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second left", components: [
+              {kind: "XV.ListAttr", attr: "itemSite.item.number"},
+              {kind: "XV.ListAttr", attr: "itemSite.item.description1"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "orderType"},
+              {kind: "XV.ListAttr", attr: "orderNumber"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "unit"},
+              {kind: "XV.ListAttr", attr: "quantity"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "valueBefore"},
+              {kind: "XV.ListAttr", attr: "quantityBefore"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "valueAfter"},
+              {kind: "XV.ListAttr", attr: "quantityAfter"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "costMethod"},
+              {kind: "XV.ListAttr", attr: "user"}
+            ]}
+          ]}
+        ]}
+      ]
+
+    });
+
+    XV.registerModelList("XM.InventoryHistory", "XV.InventoryHistoryList");
+
+    // ..........................................................
     // ISSUE TO SHIPPING
     //
 

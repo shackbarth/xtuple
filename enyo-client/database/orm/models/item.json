@@ -826,6 +826,164 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "ItemGroup",
+    "table": "itemgrp",
+    "idSequenceName": "itemgrp_itemgrp_id_seq",
+    "comment": "Item Group Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainItemGroups",
+        "read": true,
+        "update": "MaintainItemGroups",
+        "delete": "MaintainItemGroups"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemgrp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "itemgrp_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "itemgrp_descrip"
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "type": "ItemGroupItem",
+          "column": "itemgrp_id",
+          "inverse": "itemGroup"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemGroupItem",
+    "table": "itemgrpitem",
+    "idSequenceName": "itemgrpitem_itemgrpitem_id_seq",
+    "comment": "Item Group Item Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainItemGroups",
+        "read": true,
+        "update": "MaintainItemGroups",
+        "delete": "MaintainItemGroups"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemgrpitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "itemgrpitem_item_id"
+        }
+      },
+      {
+        "name": "itemGroup",
+        "attr": {
+          "type": "Number",
+          "column": "itemgrpitem_itemgrp_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemGroupItemRelation",
+    "table": "itemgrpitem",
+    "idSequenceName": "itemgrpitem_itemgrpitem_id_seq",
+    "comment": "Item Group Item Relation Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainItemGroups",
+        "read": true,
+        "update": "MaintainItemGroups",
+        "delete": "MaintainItemGroups"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemgrpitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "itemgrpitem_item_id"
+        }
+      },
+      {
+        "name": "itemGroup",
+        "toOne": {
+          "type": "ItemGroup",
+          "column": "itemgrpitem_itemgrp_id",
+          "inverse": "id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "ItemListItem",
     "table": "item",
     "isRest": true,
@@ -1197,6 +1355,15 @@
         "name": "characteristics",
         "toMany": {
           "type": "ItemRelationCharacteristic",
+          "column": "item_id",
+          "inverse": "item",
+          "isNested": true
+        }
+      },
+      {
+        "name": "itemGroups",
+        "toMany": {
+          "type": "ItemGroupItemRelation",
           "column": "item_id",
           "inverse": "item",
           "isNested": true

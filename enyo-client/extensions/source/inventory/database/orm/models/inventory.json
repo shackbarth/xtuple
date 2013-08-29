@@ -54,8 +54,8 @@
           "edit": false,
           "view": "viewCosts"
         },
-        "costMethod": {
-          "edit": false
+        "costMethod": 
+{          "edit": false
         },
         "valueBefore": {
           "edit": false,

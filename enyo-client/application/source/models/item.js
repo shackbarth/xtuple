@@ -161,6 +161,41 @@ white:true*/
 
     @extends XM.Document
   */
+  XM.ItemGroup = XM.Document.extend({
+    /** @scope XM.ItemGroup.prototype */
+
+    recordType: 'XM.ItemGroup',
+
+    documentKey: 'name'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.ItemGroupItem = XM.Document.extend({
+    /** @scope XM.ItemGroupItem.prototype */
+
+    recordType: 'XM.ItemGroupItem'
+
+  });
+
+  XM.ItemGroupItemRelation = XM.Info.extend({
+    /** @scope XM.ItemGroupItemRelation.prototype */
+
+    recordType: 'XM.ItemGroupItemRelation',
+
+    editableModel: 'XM.ItemGroupItem'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Document
+  */
   XM.ProductCategory = XM.Document.extend({
     /** @scope XM.ProductCategory.prototype */
 
@@ -661,6 +696,18 @@ white:true*/
    /** @scope XM.FreightClassCollection.prototype */
 
     model: XM.FreightClass
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.ItemGroupCollection = XM.Collection.extend({
+   /** @scope XM.ItemGroupCollection.prototype */
+
+    model: XM.ItemGroup
 
   });
 
