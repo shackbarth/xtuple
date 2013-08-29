@@ -381,10 +381,10 @@
     "comment": "Customer Map",
     "privileges": {
       "all": {
-        "create": "MaintainCustomerMasters",
-        "read": "ViewCustomerMasters",
-        "update": "MaintainCustomerMasters",
-        "delete": "MaintainCustomerMasters"
+        "create": "MaintainSalesOrders",
+        "read": "ViewSalesOrders",
+        "update": "MaintainSalesOrders",
+        "delete": "MaintainSalesOrders"
       },
       "attribute": {
         "creditStatus": {

@@ -29,6 +29,9 @@ trailing:true, white:true*/
     parentKey: "customer",
     listRelations: "XV.CreditCardListRelations",
     searchList: "XV.CreditCardList",
+    events: {
+      onPopupWorkspace: ""
+    },
     handlers: {
       onValueChange: "selectionChanged"
     },
@@ -56,19 +59,25 @@ trailing:true, white:true*/
       this.$.list.setSuppressInactive(true);
     },
     newItem: function () {
-      var creditCardModel = new XM.CreditCard();
+      var that = this,
+        // TODO: parent.parent is hackish
+        customer = that.parent.parent.getValue().getValue("customer"),
+        creditCardCollection = customer.get("creditCards"),
+        creditCardModel = new XM.CreditCard(),
+        workspaceCallback = function (model) {
+          customer.save();
+          console.log(customer, model);
+        };
+
       creditCardModel.initialize(null, {isNew: true});
+      creditCardCollection.add(creditCardModel);
       // XXX we could wait until this is done before notifying
 
-      this.doNotify({
+      this.doPopupWorkspace({
         message: "_enterNewCreditCardHere".loc(),
-        component: {
-          kind: "XV.CreditCardsEditor"
-        },
-        componentModel: creditCardModel,
-        callback: function (response) {
-          XT.log(response.componentValue);
-        }
+        workspace: "XV.CreditCardsEditor",
+        model: creditCardModel,
+        callback: workspaceCallback
       });
     },
     processCreditCard: function (inSender, inEvent) {
