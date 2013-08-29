@@ -269,7 +269,8 @@
         "update": "MaintainPersonalContacts",
         "delete": "MaintainPersonalContacts",
         "properties": [
-          "owner.username"
+          "owner.username",
+          "account.number"
         ]
       }
     },
@@ -1085,7 +1086,8 @@
         "update": false,
         "delete": false,
         "properties": [
-          "owner.username"
+          "owner.username",
+          "account.number"
         ]
       }
     },
