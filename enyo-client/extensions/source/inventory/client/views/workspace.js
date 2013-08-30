@@ -218,6 +218,19 @@ trailing:true, white:true, strict: false*/
         }
       },
       /**
+        Overload: This version of save looks for a callback. If it's
+        there then the assumption is we're doing a series of issues
+        so forward to the next one.
+      */
+      save: function () {
+        var callback = this.getCallback();
+        if (callback) {
+          callback(this);
+        } else {
+          this.inherited(arguments);
+        }
+      },
+      /**
         If detail has been selected or deselected, handle default distribution.
       */
       toggleDetailSelection: function (inSender, inEvent) {

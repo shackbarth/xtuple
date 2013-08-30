@@ -270,16 +270,11 @@ trailing:true, white:true, strict:false*/
         }
       },
       issueStock: function (inEvent) {
-        var model = inEvent.model,
-          modelId = model.id,
-          success = function () {
-            this.getValue().convertFromProspect(modelId);
-          };
+        var model = inEvent.model;
 
         this.doWorkspace({
           workspace: "XV.IssueStockWorkspace",
           id: model.id,
-          success: success,
           allowNew: false
         });
       }

@@ -145,7 +145,7 @@ white:true*/
             params = [
               that.id,
               that.get("toIssue"),
-              issOptions = {}
+              issOptions
             ];
 
           // Refresh once we've completed the work

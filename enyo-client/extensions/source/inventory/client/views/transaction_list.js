@@ -54,6 +54,12 @@ trailing:true, white:true, strict:false*/
               onSelect: "listActionSelected", maxHeight: 500}
           ]},
           {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0}
+        ]},
+        {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
+          modal: true, floating: true, scrim: true,
+          onHide: "popupHidden", components: [
+          {kind: "onyx.Spinner"},
+          {name: "spinnerMessage", content: "_processing".loc() + "..."}
         ]}
       ],
       actionSelected: function (inSender, inEvent) {
@@ -95,8 +101,18 @@ trailing:true, white:true, strict:false*/
         }
         this.buildMenu();
       },
-      valueChanged: function () {
-        // Replace with your valuable code here
+      popupHidden: function (inSender, inEvent) {
+        if (!this._popupDone) {
+          inEvent.originator.show();
+        }
+      },
+      spinnerHide: function () {
+        this._popupDone = true;
+        this.$.spinnerPopup.hide();
+      },
+      spinnerShow: function () {
+        this._popupDone = false;
+        this.$.spinnerPopup.show();
       }
     };
 
@@ -141,19 +157,105 @@ trailing:true, white:true, strict:false*/
       ],
       canIssueStock: function () {
         var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
-          hasModel = !_.isEmpty(this.getModel());
-        return hasPrivilege && hasModel;
+          hasModel = !_.isEmpty(this.getModel()),
+          hasOpenLines = this.$.list.value.length;
+        return hasPrivilege && hasModel && hasOpenLines;
       },
       issueAll: function () {
-        alert("Sweet!");
+        var that = this,
+          collection = this.$.list.value,
+          i = -1,
+          callback,
+          data = [];
+
+        // Recursively issue everything we can
+        callback = function (workspace) {
+          var model,
+            options = {},
+            toIssue,
+            params,
+            dispOptions;
+
+          // If argument is false, this whole process was cancelled
+          if (workspace === false) {
+            workspace.doPrevious();
+            return;
+
+          // If a workspace brought us here, process the information it obtained
+          } else if (workspace) {
+            model = workspace.getValue();
+            toIssue = model.get("toIssue");
+            if ("toIssue") {
+              options.detail = model.formatDetail();
+              params = [
+                model.id,
+                toIssue,
+                options
+              ];
+              data.push(params);
+            }
+            workspace.doPrevious();
+          }
+
+          i++;
+          // If we've worked through all the models then forward to the server
+          if (i === collection.length) {
+            that.spinnerShow();
+            dispOptions.success = function () {
+              that.spinnerHide();
+            };
+            that.dispatch("XM.Inventory", "issueToShipping", data, dispOptions);
+
+          // Else if there's something here we can issue, handle it
+          } else {
+            model = collection.at(i);
+            toIssue = model.get("toIssue");
+
+            // See if there's anything to issue here
+            if (toIssue) {
+
+              // If distribution detail required, open a workspace to handle it
+              if (model.undistributed()) {
+                that.doWorkspace({
+                  workspace: "XV.IssueStockWorkspace",
+                  id: model.id,
+                  callback: callback,
+                  allowNew: false
+                });
+
+              // Otherwise just use the data we have
+              } else {
+                options.detail = model.formatDetail();
+                params = [
+                  model.id,
+                  toIssue,
+                  options
+                ];
+                data.push(params);
+              }
+
+            // Nothing to issue, move on
+            } else {
+              callback();
+            }
+          }
+        };
+        callback();
       },
       /**
         Overload: Piggy back on existing handler for `onParameterChanged event`
         by forwarding this requery to `parameterChanged`.
       */
       requery: function (inSender, inEvent) {
-        this.inherited(arguments);
+        var that = this,
+          options = {
+            success: function () {
+              that.buildMenu();
+            }
+          };
+        this.fetch(options);
         this.parameterChanged(inSender, inEvent);
+        return true;
       },
       parameterChanged: function (inSender, inEvent) {
         if (inEvent.originator.name === "order") {
