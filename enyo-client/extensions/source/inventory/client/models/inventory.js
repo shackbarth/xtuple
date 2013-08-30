@@ -109,13 +109,6 @@ white:true*/
         return this;
       },
 
-      doIssueStock: function (callback) {
-        if (callback) {
-          callback(true);
-        }
-        return this;
-      },
-
       doReturnStock: function (callback) {
         var that = this,
           options = {};
