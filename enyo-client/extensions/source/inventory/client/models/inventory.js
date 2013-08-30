@@ -66,18 +66,20 @@ white:true*/
       },
 
       canIssueStock: function (callback) {
-        var isShipped = this.getValue("shipment.isShipped") || false;
+        var isShipped = this.getValue("shipment.isShipped") || false,
+          hasPrivilege = XT.session.privileges.get("IssueStockToShipping");
         if (callback) {
-          callback(!isShipped);
+          callback(!isShipped && hasPrivilege);
         }
         return this;
       },
 
       canReturnStock: function (callback) {
         var isShipped = this.getValue("shipment.isShipped") || false,
+          hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
           atShipping = this.get("atShipping");
         if (callback) {
-          callback(!isShipped && atShipping > 0);
+          callback(!isShipped && atShipping > 0 && hasPrivilege);
         }
         return this;
       },

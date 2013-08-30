@@ -17,10 +17,9 @@ trailing:true, white:true, strict:false*/
       published: {
         prerequisite: "",
         notifyMessage: "",
-        list: null
-      },
-      events: {
-        onNotify: ""
+        list: null,
+        actions: null,
+        model: null
       },
       handlers: {
         onListItemMenuTap: "showListItemMenu"
@@ -30,10 +29,10 @@ trailing:true, white:true, strict:false*/
           components: [
           {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
             {kind: "onyx.Button", name: "backButton", content: "_back".loc(), ontap: "close"},
-            {kind: "onyx.MenuDecorator", components: [
+            {kind: "onyx.MenuDecorator", style: "margin: 0;", onSelect: "actionSelected", components: [
               {kind: "XV.IconButton", src: "/assets/menu-icon-gear.png",
-                content: "_actions".loc() },
-              {kind: "onyx.Menu", name: "headerMenu", ontap: "headerActionSelected" }
+                content: "_actions".loc(), name: "actionButton"},
+              {kind: "onyx.Menu", name: "actionMenu"}
             ]}
           ]},
           {name: "leftTitle", content: "_advancedSearch".loc(), classes: "xv-parameter-title"},
@@ -57,44 +56,47 @@ trailing:true, white:true, strict:false*/
           {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0}
         ]}
       ],
+      actionSelected: function (inSender, inEvent) {
+        var action = inEvent.originator.action,
+          method = action.method || action.name;
+
+        this[method](inSender, inEvent);
+      },
+      buildMenu: function () {
+        var actionMenu = this.$.actionMenu,
+          actions = this.getActions().slice(0),
+          that = this;
+
+        // reset the menu
+        actionMenu.destroyClientControls();
+
+        // then add whatever actions are applicable
+        _.each(actions, function (action) {
+          var name = action.name,
+            prerequisite = action.prerequisite,
+            isDisabled = prerequisite ? !that[prerequisite]() : false;
+          actionMenu.createComponent({
+            name: name,
+            kind: XV.MenuItem,
+            content: action.label || ("_" + name).loc(),
+            action: action,
+            disabled: isDisabled
+          });
+
+        });
+        actionMenu.render();
+        this.$.actionButton.setShowing(actions.length);
+      },
       create: function () {
         this.inherited(arguments);
         this.setList({list: this.getList()});
+        if (!this.getActions()) {
+          this.setActions([]);
+        }
+        this.buildMenu();
       },
-      // must be implemented by the subkind
-      executeDispatch: function () {},
-      headerActionSelected: function () {
-        var that = this,
-          execute,
-          notify;
-
-        // step 2: ask the user if they really want to do the method
-        notify = function () {
-          var notifyEvent = {
-            originator: this,
-            message: that.getNotifyMessage(),
-            type: XM.Model.QUESTION,
-            // step 3: execute the dispatch function
-            callback: _.bind(that.executeDispatch, that)
-          };
-          that.doNotify(notifyEvent);
-        };
-
-        // step 1: make sure we can do the method
-        XM.Inventory[this.getPrerequisite()](function (isAllowed) {
-          var notifyEvent;
-
-          if (isAllowed) {
-            notify();
-          } else {
-            notifyEvent = {
-              originator: this,
-              type: XM.Model.CRITICAL,
-              message: "_canNotUpdate".loc()
-            };
-            that.doNotify(notifyEvent);
-          }
-        });
+      valueChanged: function () {
+        // Replace with your valuable code here
       }
     };
 
@@ -133,23 +135,31 @@ trailing:true, white:true, strict:false*/
       prerequisite: "canIssueStock",
       notifyMessage: "_issueAll?".loc(),
       list: "XV.IssueToShippingList",
-      create: function () {
-        this.inherited(arguments);
-        this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_issueAll".loc() });
+      actions: [
+        {name: "issueAll", label: "_issueAll".loc(),
+          prerequisite: "canIssueStock" },
+      ],
+      canIssueStock: function () {
+        var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
+          hasModel = !_.isEmpty(this.getModel());
+        return hasPrivilege && hasModel;
       },
-      executeDispatch: function () {
-        var that = this,
-          listItems = [],/* TODO_.map(that.$.list.getValue().models, function (model) {
-            return {
-              uuid: model.id,
-              quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
-              // TODO: get this off a calculated field
-            };
-          })*/
-          // TODO: verify this actually worked
-          callback = function () {};
-
-        XM.Inventory.issueStock(listItems, callback);
+      issueAll: function () {
+        alert("Sweet!");
+      },
+      /**
+        Overload: Piggy back on existing handler for `onParameterChanged event`
+        by forwarding this requery to `parameterChanged`.
+      */
+      requery: function (inSender, inEvent) {
+        this.inherited(arguments);
+        this.parameterChanged(inSender, inEvent);
+      },
+      parameterChanged: function (inSender, inEvent) {
+        if (inEvent.originator.name === "order") {
+          this.setModel(inEvent.originator.getParameter().value);
+          this.buildMenu();
+        }
       }
     });
   };
