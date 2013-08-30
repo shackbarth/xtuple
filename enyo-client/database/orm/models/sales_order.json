@@ -1633,6 +1633,41 @@
   },
   {
     "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "SalesOrderRelation",
+    "table": "xt.coheadinfo",
+    "isRest": true,
+    "comment": "Sales Order Relation Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainSalesOrders",
+        "read": "ViewSalesOrders",
+        "update": "MaintainSalesOrders",
+        "delete": "MaintainSalesOrders"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cohead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cohead_number",
+          "isNaturalKey":true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
     "nameSpace": "XM",
     "type": "SalesOrderUrl",
     "table": "xt.doc",

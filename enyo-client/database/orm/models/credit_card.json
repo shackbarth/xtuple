@@ -392,5 +392,54 @@
       }
     ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "SalesOrderPayment",
+    "table": "payco",
+    "idSequenceName": "payco_payco_id_seq",
+    "comment": "Sales Order Payment Map",
+    "privileges": {
+      "all": {
+        "create": "ProcessCreditCards",
+        "read": "ProcessCreditCards",
+        "update": "ProcessCreditCards",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "payment",
+        "toOne": {
+          "isNested": true,
+          "type": "CreditCardPayment",
+          "column": "payco_ccpay_id"
+        }
+      },
+      {
+        "name": "salesOrder",
+        "toOne": {
+          "type": "SalesOrderRelation",
+          "column": "payco_cohead_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "payco_amount"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]

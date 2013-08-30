@@ -159,6 +159,19 @@ white:true*/
 
     @extends XM.SimpleModel
   */
+  SYS.SalesOrderPayment = XM.SimpleModel.extend(/** @lends SYS.SalesOrderPayment.prototype */{
+
+    recordType: 'SYS.SalesOrderPayment',
+
+    idAttribute: "uuid"
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
   SYS.Recover = XM.SimpleModel.extend(/** @lends SYS.Recover.prototype */{
 
     recordType: 'SYS.Recover',

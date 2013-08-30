@@ -40,6 +40,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       authorizeOnly = req.query.action === 'authorize',
       creditCardModel = new SYS.CreditCard(),
       creditCardPaymentModel = new SYS.CreditCardPayment(),
+      paymentLinkModel = new SYS.SalesOrderPayment(),
       fetchCreditCard = function (callback) {
         creditCardModel.fetch({
           id: uuid,
@@ -78,7 +79,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           type: 'C', // TODO
           originalType: 'C' // TODO
         });
-        console.log(creditCardPaymentModel.validate(creditCardPaymentModel.attributes));
         creditCardPaymentModel.save(null, {
           database: req.session.passport.user.organization,
           username: req.session.passport.user.id,
@@ -117,7 +117,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         try {
           X.authorizeNetClient.performAimTransaction({
-            "x_type": "AUTH_CAPTURE",
+            "x_type": authorizeOnly ? "AUTH_ONLY" : "AUTH_CAPTURE",
             "x_method": "CC",
             "x_card_num": creditCardData.number,
             "x_exp_date": creditCardData.expiry,
@@ -156,11 +156,42 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             error: callback
           });
       },
+      initializePaymentLink = function (callback) {
+        var changeId = function () {
+          if (paymentLinkModel.id) {
+            paymentLinkModel.off('change:id', changeId);
+            callback();
+          }
+        };
+
+        paymentLinkModel.on('change:uuid', changeId);
+        paymentLinkModel.initialize(null, {
+          isNew: true,
+          database: req.session.passport.user.organization,
+          username: req.session.passport.user.id
+        });
+      },
+      savePaymentLink = function (callback) {
+        paymentLinkModel.set({
+          payment: creditCardPaymentModel,
+          salesOrder: req.query.orderNumber,
+          amount: Number(req.query.amount)
+        });
+        //console.log(paymentLinkModel.validate(paymentLinkModel.attributes));
+        paymentLinkModel.save(null, {
+          database: req.session.passport.user.organization,
+          username: req.session.passport.user.id,
+          success: function (model) {
+            callback(null, model);
+          },
+          error: callback
+        });
+      },
       respondToClient = function (err, response) {
         if (err) {
           res.send({isError: true, error: err});
         } else {
-          res.send({data: response});
+          res.send({data: true});
         }
       };
 
@@ -169,9 +200,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       initializeCreditCardPayment,
       saveCreditCardPayment,
       transactWithApi,
-      postCreditIfCapture
-
-
+      postCreditIfCapture,
+      initializePaymentLink,
+      savePaymentLink
     ], respondToClient);
 
 
