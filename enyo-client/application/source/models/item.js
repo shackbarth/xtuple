@@ -175,7 +175,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.ItemGroupItem = XM.Document.extend({
+  XM.ItemGroupItem = XM.Model.extend({
     /** @scope XM.ItemGroupItem.prototype */
 
     recordType: 'XM.ItemGroupItem'

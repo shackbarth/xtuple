@@ -38,9 +38,9 @@ trailing:true, white:true*/
         {name: "itemDescription", label: "_description".loc(), attr: ["itemSite.item.description1", "itemSite.item.description2"]},
         //TODO get item groups working - orms, picker
         {kind: "onyx.GroupboxHeader", content: "_itemGroup".loc()},
-        {name: "itemGroup", label: "_equals".loc(), attr: "itemSite.item.itemGroups.itemGroup",
+        {name: "itemGroup", label: "_equals".loc(), attr: "itemSite.item.itemGroups",
           defaultKind: "XV.ItemGroupPicker"},
-        {name: "itemGroupPattern", label: "_itemGroup".loc() + " " + "_pattern".loc(), attr: "itemSite.item.itemGroups.itemGroup"},
+        {name: "itemGroupPattern", label: "_itemGroup".loc() + " " + "_pattern".loc(), attr: "itemSite.item.itemGroups"},
         {kind: "onyx.GroupboxHeader", content: "_orderNumber".loc()},
         {name: "orderNumberPattern", label: "_orderNumber".loc(), attr: "orderNumber"},
         {kind: "onyx.GroupboxHeader", content: "_costCategory".loc()},
