@@ -12,7 +12,7 @@
       autoTestAttributes: false,
       createHash: {
         uuid: "NEWTEST" + Math.random(),
-        site: 35,
+        site: {code: "WH1"},
         siteZone: {name: "RM1"},
         rack: "1",
         bin: "2",
