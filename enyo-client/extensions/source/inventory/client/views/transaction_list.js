@@ -1,6 +1,6 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
+trailing:true, white:true, strict:false*/
 /*global XT:true, XV:true, XM:true, _:true, enyo:true */
 
 (function () {
@@ -16,7 +16,8 @@ trailing:true, white:true*/
       kind: "XV.SearchContainer",
       published: {
         prerequisite: "",
-        notifyMessage: ""
+        notifyMessage: "",
+        list: null
       },
       events: {
         onNotify: ""
@@ -29,14 +30,11 @@ trailing:true, white:true*/
           components: [
           {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
             {kind: "onyx.Button", name: "backButton", content: "_back".loc(), ontap: "close"},
-            {
-              kind: "onyx.MenuDecorator",
-              components: [
-                {kind: "XV.IconButton", src: "/assets/menu-icon-gear.png",
-                  content: "_actions".loc() },
-                {kind: "onyx.Menu", name: "headerMenu", ontap: "headerActionSelected" }
-              ]
-            }
+            {kind: "onyx.MenuDecorator", components: [
+              {kind: "XV.IconButton", src: "/assets/menu-icon-gear.png",
+                content: "_actions".loc() },
+              {kind: "onyx.Menu", name: "headerMenu", ontap: "headerActionSelected" }
+            ]}
           ]},
           {name: "leftTitle", content: "_advancedSearch".loc(), classes: "xv-parameter-title"},
           {kind: "Scroller", name: "parameterScroller", fit: true},
@@ -49,25 +47,23 @@ trailing:true, white:true*/
             {name: "rightLabel", content: "_search".loc(), classes: "left-float"},
             {name: "search", kind: "onyx.InputDecorator", classes: "right-float",
               components: [
-              {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
+              {name: "searchInput", kind: "onyx.Input", style: "width: 200px;",
                 placeholder: "_search".loc(), onchange: "requery"},
               {kind: "Image", src: "/assets/search-input-search.png"}
             ]},
-            {
-              name: "listItemMenu",
-              kind: "onyx.Menu",
-              floating: true,
-              onSelect: "listActionSelected",
-              maxHeight: 500
-            }
+            {name: "listItemMenu", kind: "onyx.Menu", floating: true,
+              onSelect: "listActionSelected", maxHeight: 500}
           ]},
           {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0}
         ]}
       ],
-      // must be implemented by the subkind
-      executeDispatch: function () {
+      create: function () {
+        this.inherited(arguments);
+        this.setList({list: this.getList()});
       },
-      headerActionSelected: function (inSender, inEvent) {
+      // must be implemented by the subkind
+      executeDispatch: function () {},
+      headerActionSelected: function () {
         var that = this,
           execute,
           notify;
@@ -110,9 +106,9 @@ trailing:true, white:true*/
       kind: "XV.TransactionList",
       prerequisite: "canEnterReceipt",
       notifyMessage: "_receiveAll?".loc(),
+      list: "XV.EnterReceiptList",
       create: function () {
         this.inherited(arguments);
-        this.setList({list: "XV.EnterReceiptList"});
         this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_receiveAll".loc() });
       },
       executeDispatch: function () {
@@ -136,9 +132,9 @@ trailing:true, white:true*/
       kind: "XV.TransactionList",
       prerequisite: "canIssueStock",
       notifyMessage: "_issueAll?".loc(),
+      list: "XV.IssueToShippingList",
       create: function () {
         this.inherited(arguments);
-        this.setList({list: "XV.IssueToShippingList"});
         this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_issueAll".loc() });
       },
       executeDispatch: function () {

@@ -183,6 +183,7 @@ trailing:true, white:true, strict: false*/
         // Hide detail if not applicable
         if (!model.requiresDetail()) {
           this.$.detail.hide();
+          this.parent.parent.$.menu.refresh();
         }
       },
       distributeDone: function () {
