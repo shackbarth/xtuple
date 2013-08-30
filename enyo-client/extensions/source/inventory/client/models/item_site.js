@@ -340,30 +340,7 @@ white:true*/
         @type String
         @default 'R'
       */
-      REGULAR_CONTROL: "R",
-
-    // TO DO: Move LOT and SERIAL constants to standard edition
-
-      /**
-        Lot Control.
-
-        @static
-        @constant
-        @type String
-        @default L
-      */
-      LOT_CONTROL: "L",
-
-
-      /**
-        Serial Control
-
-        @static
-        @constant
-        @type Number
-        @default 'S'
-      */
-      SERIAL_CONTROL: "S"
+      REGULAR_CONTROL: "R"
 
     });
 
