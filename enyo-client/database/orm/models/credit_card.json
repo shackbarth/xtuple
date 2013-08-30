@@ -335,6 +335,13 @@
         }
       },
       {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "ccpay_cust_id"
+        }
+      },
+      {
         "name": "amount",
         "attr": {
           "type": "Number",
@@ -367,6 +374,20 @@
         "attr": {
           "type": "String",
           "column": "ccpay_auth_charge"
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_order_number"
+        }
+      },
+      {
+        "name": "orderNumberSeq",
+        "attr": {
+          "type": "Number",
+          "column": "ccpay_order_number_seq"
         }
       }
     ],

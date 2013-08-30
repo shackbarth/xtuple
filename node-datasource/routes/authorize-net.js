@@ -6,7 +6,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
 
-// https://localhost/dev/credit-card?creditCard=b42fdf19-5e2e-45d8-a4f8-83fb6e6e7391&amount=500
+// https://localhost/dev/credit-card?creditCard=b42fdf19-5e2e-45d8-a4f8-83fb6e6e7391&action=authorize&amount=5000&orderNumber=40000
 
 // authorization only
 //https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L442
@@ -37,6 +37,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     var uuid = req.query.creditCard,
+      authorizeOnly = req.query.action === 'authorize',
       creditCardModel = new SYS.CreditCard(),
       creditCardPaymentModel = new SYS.CreditCardPayment(),
       fetchCreditCard = function (callback) {
@@ -68,12 +69,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       saveCreditCardPayment = function (callback) {
         creditCardPaymentModel.set({
           creditCard: uuid,
+          customer: req.query.customerNumber,
           amount: Number(req.query.amount),
+          orderNumber: req.query.orderNumber,
+          orderNumberSeq: 1, //TODO
           wasPreauthorization: false, // TODO
           status: 'C', // TODO
           type: 'C', // TODO
           originalType: 'C' // TODO
         });
+        console.log(creditCardPaymentModel.validate(creditCardPaymentModel.attributes));
         creditCardPaymentModel.save(null, {
           database: req.session.passport.user.organization,
           username: req.session.passport.user.id,
@@ -118,7 +123,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             "x_exp_date": creditCardData.expiry,
 
             "x_amount": req.query.amount,
-            "x_description": "Sample Transaction",
+            "x_description": "Credit Card Transaction",
 
             "x_first_name": creditCardData.name, // TODO split space
             "x_last_name": creditCardData.name,
@@ -134,6 +139,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           callback(error);
         }
       },
+      postCreditIfCapture = function (callback) {
+        if (authorizeOnly) {
+          // we don't post credit if it's just an authorization
+          callback();
+          return;
+        }
+        creditCardModel.dispatch("XM.CreditCard", "postCashReceipt",
+          [creditCardPaymentModel.id, Number(req.query.orderNumber), "cohead", Number(req.query.amount)], // TODO
+          {
+            database: req.session.passport.user.organization,
+            username: req.session.passport.user.id,
+            success: function (response) {
+              callback(null, response);
+            },
+            error: callback
+          });
+      },
       respondToClient = function (err, response) {
         if (err) {
           res.send({isError: true, error: err});
@@ -146,7 +168,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       fetchCreditCard,
       initializeCreditCardPayment,
       saveCreditCardPayment,
-      transactWithApi
+      transactWithApi,
+      postCreditIfCapture
 
 
     ], respondToClient);

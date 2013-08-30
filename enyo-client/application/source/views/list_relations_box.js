@@ -54,6 +54,13 @@ trailing:true, white:true*/
         classes: "onyx-affirmative",
         content: "_process".loc()
       }, {owner: this});
+      this.$.buttonsPanel.createComponent({
+        kind: "onyx.Button",
+        name: "authorizeButton",
+        showing: false,
+        ontap: "processCreditCard",
+        content: "_authorize".loc()
+      }, {owner: this});
 
       // don't want to show inactive credit cards
       this.$.list.setSuppressInactive(true);
@@ -117,6 +124,7 @@ trailing:true, white:true*/
       var that = this,
         list = this.$.list,
         creditCard = list.getModel(list.getFirstSelected()),
+        action = inEvent.originator.name.replace("Button", ""),
         amount = this.$.creditCardAmount.value,
         payload = {},
         success = function () {
@@ -126,9 +134,14 @@ trailing:true, white:true*/
           that.doNotify({message: "_error".loc()});
         };
 
+      // TODO: notify
       if (creditCard && amount) {
         payload.creditCard = creditCard.id;
+        payload.action = action;
         payload.amount = amount;
+        payload.orderNumber = this.parent.parent.getValue().id;
+        payload.customerNumber = this.parent.parent.getValue().getValue("customer.id");
+        this.$.authorizeButton.setShowing(false);
         this.$.processButton.setShowing(false);
         XT.dataSource.callRoute("credit-card", payload, {success: success, error: error});
       }
@@ -143,6 +156,7 @@ trailing:true, white:true*/
         amount = this.$.creditCardAmount.value;
 
       this.$.processButton.setShowing(creditCard && amount);
+      this.$.authorizeButton.setShowing(creditCard && amount);
       return true;
     }
   });
