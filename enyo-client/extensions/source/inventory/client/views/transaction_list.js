@@ -174,7 +174,9 @@ trailing:true, white:true, strict:false*/
             options = {},
             toIssue,
             params,
-            dispOptions;
+            dispOptions,
+            wsOptions,
+            wsParams;
 
           // If argument is false, this whole process was cancelled
           if (workspace === false) {
@@ -185,14 +187,14 @@ trailing:true, white:true, strict:false*/
           } else if (workspace) {
             model = workspace.getValue();
             toIssue = model.get("toIssue");
-            if ("toIssue") {
-              options.detail = model.formatDetail();
-              params = [
+            if (toIssue) {
+              wsOptions.detail = model.formatDetail();
+              wsParams = [
                 model.id,
                 toIssue,
                 options
               ];
-              data.push(params);
+              data.push(wsParams);
             }
             workspace.doPrevious();
           }
