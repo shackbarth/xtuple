@@ -839,6 +839,21 @@
   padding: 6px;
   margin-left: 130px;
 }
+/* Layout Widget */
+.xv-tree {
+  background-color: #ffffff;
+}
+.xv-tree .xv-tree-node {
+  /* These picker styles are for the ListAttr node */
+
+}
+.xv-tree .xv-tree-node .xv-pickerwidget {
+  display: inline-block;
+  padding: 4px;
+}
+.xv-tree .xv-tree-node .xv-pickerwidget .xv-picker-label {
+  width: 50px;
+}
 /**
   Less styles for the
 */

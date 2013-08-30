@@ -12,7 +12,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.LayoutTree",
     kind: "XV.Tree",
-    content: "_layout".loc(),
+    content: "_columnsLayout".loc(),
     /**
       Recursively builds tree based on source. This will be overriden by
       children of this widget to fit their individual needs.
@@ -28,11 +28,14 @@ regexp:true, undef:true, trailing:true, white:true */
         } else if (controls[i].kind === "XV.ListColumn") {
           c = {kind: "XV.TreeNode", content: "_column".loc()};
         } else if (controls[i].kind === "XV.ListAttr") {
-          c = {kind: "XV.ListAttrNode"};
+          c = {kind: "XV.ListAttrNode", attr: controls[i].attr};
         } else {
-          c = {kind: "XV.TreeNode", content: controls[i].kind}; // this isn't a node we recognize
+          // this isn't the node that we're looking for
+          c = null;
         }
-        newComponent = node.createComponent(c, {owner: node});
+        // if this isn't a valid node, just sent the current node
+        // as the parent back into the function
+        newComponent = c ? node.createComponent(c) : node;
         // recurse back into this function with the new component
         this.buildTree(controls[i], newComponent);
       }
@@ -48,9 +51,16 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ListAttrNode",
     kind: "XV.TreeNode",
-    content: "I am a picker widget",
     expandable: false,
-    expanded: false
+    expanded: false,
+    published: {
+      attr: null
+    },
+    components: [
+      {name: "icon", kind: "Image", showing: false},
+      // we're naming this "caption" because we're stomping on the Node's component array
+      {kind: "XV.PickerWidget", name: "caption", label: "_attr".loc()}
+    ],
   });
 
 }());
