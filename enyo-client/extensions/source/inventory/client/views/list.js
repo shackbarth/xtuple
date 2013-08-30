@@ -306,7 +306,7 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.ListAttr", attr: "format", isKey: true}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "site.code"}
+              {kind: "XV.ListAttr", attr: "site"}
             ]},
             {kind: "XV.ListColumn", classes: "second left", components: [
               {kind: "XV.ListAttr", attr: "description"}

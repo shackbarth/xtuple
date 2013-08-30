@@ -27,7 +27,7 @@
       }
     };
 
-  describe('Item Site CRUD Test', function () {
+  describe.skip('Item Site CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());
