@@ -40,9 +40,9 @@ trailing:true, white:true*/
                   classes: "right"},
               ]},
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "location.description",
-                  formatter: "formatDefault"},
+                {content: ""},
                 {kind: "XV.ListAttr", attr: "distributed",
+                  formatter: "formatQuantity",
                   classes: "right hyperlink", ontap: "distributedTapped"}
               ]}
             ]}
@@ -66,11 +66,7 @@ trailing:true, white:true*/
         var location = model.get("location"),
           itemSite = model.get("itemSite"),
           stockLoc = itemSite.get("stockLocation");
-        return stockLoc.id === location.id;
-      },
-      formatDefault: function (value, view, model) {
-        view.addRemoveClass("emphasis", this.isDefault(model));
-        return value;
+        return location && stockLoc.id === location.id;
       },
       formatLocation: function (value, view, model) {
         view.addRemoveClass("emphasis", this.isDefault(model));

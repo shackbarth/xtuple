@@ -688,7 +688,7 @@
 }
 .xv-list-attr.right {
   position: absolute;
-  right: 0;
+  right: 10px;
   height: 20px;
 }
 .xv-list-attr.text-align-right {
@@ -2506,7 +2506,7 @@ body {
 }
 .xv-list-attr.right {
   position: absolute;
-  right: 0;
+  right: 10px;
   height: 20px;
 }
 .xv-list-attr.text-align-right {
