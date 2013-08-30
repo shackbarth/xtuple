@@ -126,6 +126,7 @@
     "xm/javascript/account.sql",
     "xm/javascript/address.sql",
     "xm/javascript/contact.sql",
+    "xm/javascript/credit_card.sql",
     "xm/javascript/crm.sql",
     "xm/javascript/customer.sql",
     "xm/javascript/database_information.sql",
