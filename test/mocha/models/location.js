@@ -15,7 +15,8 @@
         site: {code: "WH1"},
         siteZone: {name: "RM1"},
         rack: "1",
-        bin: "2"
+        bin: "2",
+        location: "2"
       },
       updateHash: {
         rack: "3"
