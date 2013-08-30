@@ -8,16 +8,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 // https://localhost/dev/credit-card?creditCard=b42fdf19-5e2e-45d8-a4f8-83fb6e6e7391&amount=500
 
+// authorization only
 //https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L442
+// insert ccpay
+// go to authorize.net
+// insert copay
+
+// auth and capture
+// insert ccpay
+// go to authorize.net
+// postCCcashReceipt
+// insert copay
+
+
+
 //https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L688
 //https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L1126
 //https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L1171
 //https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L1193
 
-  var data = require("./data");
-
-
-
+  var data = require("./data"),
+    async = require("async");
 
   exports.transact = function (req, res) {
     if (!X.authorizeNetClient) {
@@ -27,6 +38,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     var uuid = req.query.creditCard,
       creditCardModel = new SYS.CreditCard(),
+      fetchCreditCard = function (callback) {
+        creditCardModel.fetch({
+          id: uuid,
+          database: req.session.passport.user.organization,
+          username: req.session.passport.user.id,
+          success: function (model) {
+            callback(null, model);
+          }
+        });
+      },
       adaptCreditCardData = function (rawData) {
         var data = JSON.parse(JSON.stringify(rawData)),
           monthExpiry = rawData.monthExpired,
@@ -51,8 +72,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         return data;
       },
-      performTransaction = function (model) {
-        var creditCardData = adaptCreditCardData(model.toJSON());
+      transactWithApi = function (callback) {
+        var creditCardData = adaptCreditCardData(creditCardModel.toJSON());
 
         try {
           X.authorizeNetClient.performAimTransaction({
@@ -70,22 +91,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             "x_state": creditCardData.state,
             "x_zip": creditCardData.zip
           })
-          .on('success', function (err, result) {
-            res.send({data: result});
-          })
+          .on('success', callback)
           .on('failure', function (err, result) {
-            res.send({isError: true, error: err || result});
+            callback(err || result);
           });
         } catch (error) {
-          res.send({isError: true, error: error});
+          callback(error);
+        }
+      },
+      respondToClient = function (err, response) {
+        if (err) {
+          res.send({isError: true, error: err});
+        } else {
+          res.send({data: response});
         }
       };
 
-    creditCardModel.fetch({
-      id: uuid,
-      database: req.session.passport.user.organization,
-      username: req.session.passport.user.id,
-      success: performTransaction
-    });
+    async.series([
+      fetchCreditCard,
+      transactWithApi
+
+
+    ], respondToClient);
+
+
   };
 }());
