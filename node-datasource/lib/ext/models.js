@@ -146,7 +146,11 @@ white:true*/
   */
   SYS.CreditCardPayment = XM.SimpleModel.extend(/** @lends SYS.CreditCardPayment.prototype */{
 
-    recordType: 'SYS.CreditCardPayment'
+    recordType: 'SYS.CreditCardPayment',
+
+    idAttribute: "id",
+
+    autoFetchId: true
 
   });
 

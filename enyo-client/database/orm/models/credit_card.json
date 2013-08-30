@@ -305,7 +305,7 @@
   },
   {
     "context": "xtuple",
-    "nameSpace": "XM",
+    "nameSpace": "SYS",
     "type": "CreditCardPayment",
     "table": "ccpay",
     "idSequenceName": "ccpay_ccpay_id_seq",
@@ -345,7 +345,7 @@
         "name": "wasPreauthorization",
         "attr": {
           "type": "Boolean",
-          "column": "ccpay_aauth"
+          "column": "ccpay_auth"
         }
       },
       {

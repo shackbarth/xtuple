@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, _:true, SYS:true */
+/*global X:true, XM:true, _:true, SYS:true */
 
 (function () {
   "use strict";
@@ -38,6 +38,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     var uuid = req.query.creditCard,
       creditCardModel = new SYS.CreditCard(),
+      creditCardPaymentModel = new SYS.CreditCardPayment(),
       fetchCreditCard = function (callback) {
         creditCardModel.fetch({
           id: uuid,
@@ -45,7 +46,41 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           username: req.session.passport.user.id,
           success: function (model) {
             callback(null, model);
+          },
+          error: callback
+        });
+      },
+      initializeCreditCardPayment = function (callback) {
+        var changeId = function () {
+          if (creditCardPaymentModel.id) {
+            creditCardPaymentModel.off('change:id', changeId);
+            callback();
           }
+        };
+
+        creditCardPaymentModel.on('change:id', changeId);
+        creditCardPaymentModel.initialize(null, {
+          isNew: true,
+          database: req.session.passport.user.organization,
+          username: req.session.passport.user.id
+        });
+      },
+      saveCreditCardPayment = function (callback) {
+        creditCardPaymentModel.set({
+          creditCard: uuid,
+          amount: Number(req.query.amount),
+          wasPreauthorization: false, // TODO
+          status: 'C', // TODO
+          type: 'C', // TODO
+          originalType: 'C' // TODO
+        });
+        creditCardPaymentModel.save(null, {
+          database: req.session.passport.user.organization,
+          username: req.session.passport.user.id,
+          success: function (model) {
+            callback(null, model);
+          },
+          error: callback
         });
       },
       adaptCreditCardData = function (rawData) {
@@ -109,6 +144,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     async.series([
       fetchCreditCard,
+      initializeCreditCardPayment,
+      saveCreditCardPayment,
       transactWithApi
 
 
