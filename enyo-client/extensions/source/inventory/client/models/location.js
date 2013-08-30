@@ -24,7 +24,9 @@ white:true*/
         return _.filter(ary, function (item) {
           return !_.isEmpty(item);
         }).join("-");
-      }
+      },
+
+      nameAttribute: "format"
     };
 
     /**
