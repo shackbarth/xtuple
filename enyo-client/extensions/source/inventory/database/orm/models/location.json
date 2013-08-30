@@ -257,8 +257,7 @@
         "name": "location",
         "toOne": {
           "type": "LocationRelation",
-          "column": "locitemsite_location_id",
-          "inverse": "id"
+          "column": "locitemsite_location_id"
         }
       }
     ],
