@@ -302,5 +302,74 @@
       }
     ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CreditCardPayment",
+    "table": "ccpay",
+    "idSequenceName": "ccpay_ccpay_id_seq",
+    "comment": "Credit Card Payment Map",
+    "privileges": {
+      "all": {
+        "create": "ProcessCreditCards",
+        "read": "ProcessCreditCards",
+        "update": "ProcessCreditCards",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ccpay_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "creditCard",
+        "toOne": {
+          "type": "CreditCard",
+          "column": "ccpay_ccard_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "ccpay_amount"
+        }
+      },
+      {
+        "name": "wasPreauthorization",
+        "attr": {
+          "type": "Boolean",
+          "column": "ccpay_aauth"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_status"
+        }
+      },
+      {
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_type"
+        }
+      },
+      {
+        "name": "originalType",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_auth_charge"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]

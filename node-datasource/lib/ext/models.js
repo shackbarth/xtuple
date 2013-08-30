@@ -144,6 +144,17 @@ white:true*/
 
     @extends XM.SimpleModel
   */
+  SYS.CreditCardPayment = XM.SimpleModel.extend(/** @lends SYS.CreditCardPayment.prototype */{
+
+    recordType: 'SYS.CreditCardPayment'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
   SYS.Recover = XM.SimpleModel.extend(/** @lends SYS.Recover.prototype */{
 
     recordType: 'SYS.Recover',
