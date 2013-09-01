@@ -23,7 +23,7 @@
       }
     };
 
-  describe.skip('Location CRUD Test', function () {
+  describe('Location CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());
