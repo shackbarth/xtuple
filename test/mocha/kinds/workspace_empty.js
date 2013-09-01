@@ -13,9 +13,9 @@
     smoke = require("../lib/smoke");
 
   describe('Workspaces', function () {
+    this.timeout(30 * 1000);
 
     before(function (done) {
-      this.timeout(30 * 1000);
       zombieAuth.loadApp(done);
     });
 
