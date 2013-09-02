@@ -110,7 +110,7 @@ trailing:true, white:true, strict: false*/
     XV.registerModelWorkspace("XM.PurchaseOrderLine", "XV.EnterReceiptWorkspace");
 
     // ..........................................................
-    // ISSUE STOCK
+    // ISSUE TO SHIPPING
     //
 
     enyo.kind({
@@ -122,6 +122,9 @@ trailing:true, white:true, strict: false*/
       hideApply: true,
       hideRefresh: true,
       dirtyWarn: false,
+      events: {
+        onPrevious: ""
+      },
       handlers: {
         onDetailSelectionChanged: "toggleDetailSelection",
         onDistributedTapped: "distributedTapped"

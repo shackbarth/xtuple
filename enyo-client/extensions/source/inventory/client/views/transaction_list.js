@@ -21,8 +21,11 @@ trailing:true, white:true, strict:false*/
         actions: null,
         model: null
       },
+      events: {
+        onWorkspace: ""
+      },
       handlers: {
-        onListItemMenuTap: "showListItemMenu"
+        onListItemMenuTap: "showListItemMenu",
       },
       components: [
         {name: "parameterPanel", kind: "FittableRows", classes: "left",
@@ -35,7 +38,6 @@ trailing:true, white:true, strict:false*/
               {kind: "onyx.Menu", name: "actionMenu"}
             ]}
           ]},
-          {name: "leftTitle", content: "_advancedSearch".loc(), classes: "xv-parameter-title"},
           {kind: "Scroller", name: "parameterScroller", fit: true},
         ]},
         {name: "listPanel", kind: "FittableRows", components: [
@@ -53,13 +55,13 @@ trailing:true, white:true, strict:false*/
             {name: "listItemMenu", kind: "onyx.Menu", floating: true,
               onSelect: "listActionSelected", maxHeight: 500}
           ]},
-          {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0}
-        ]},
-        {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
-          modal: true, floating: true, scrim: true,
-          onHide: "popupHidden", components: [
-          {kind: "onyx.Spinner"},
-          {name: "spinnerMessage", content: "_processing".loc() + "..."}
+          {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0},
+          {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
+              modal: true, floating: true, scrim: true,
+              onHide: "popupHidden", components: [
+            {kind: "onyx.Spinner"},
+            {name: "spinnerMessage", content: "_processing".loc() + "..."}
+          ]}
         ]}
       ],
       actionSelected: function (inSender, inEvent) {
@@ -175,7 +177,7 @@ trailing:true, white:true, strict:false*/
             toIssue,
             params,
             dispOptions,
-            wsOptions,
+            wsOptions = {},
             wsParams;
 
           // If argument is false, this whole process was cancelled
@@ -192,7 +194,7 @@ trailing:true, white:true, strict:false*/
               wsParams = [
                 model.id,
                 toIssue,
-                options
+                wsOptions
               ];
               data.push(wsParams);
             }
@@ -234,6 +236,7 @@ trailing:true, white:true, strict:false*/
                   options
                 ];
                 data.push(params);
+                callback();
               }
 
             // Nothing to issue, move on
