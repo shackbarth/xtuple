@@ -368,27 +368,45 @@ select xt.install_js('XM','Inventory','xtuple', $$
         }
       }');
   
-    @param {String} Order line uuid
-    @param {Number} Quantity
+    @param {String|Array} Order line uuid or array of objects
+    @param {Number|Object} Quantity or options
     @param {Date}   [options.asOf=now()] Transaction Timestamp
     @param {Array} [options.detail] Distribution detail
   */
   XM.Inventory.issueToShipping = function (orderLine, quantity, options) {
-    options = options || {};
     var  asOf = options.asOf || null,
-      series,
-      sql;
+      series = 0,
+      sql,
+      ary,
+      item,
+      i;
+
+    /* Make into an array if an array not passed */
+    if (typeof arguments[0] !== "object") {
+      ary = [
+        {
+          orderLine: orderLine,
+          quantity: quantity,
+          options: options || {}
+        }
+      ];
+    } else {
+      ary = arguments[0];
+    }
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
-    sql = "select issuetoshipping('SO', coitem_id, $2, 0, $3::timestamptz) as series " +
-      "from coitem where obj_uuid = $1;";
-    series = plv8.execute(sql, [orderLine, quantity, asOf])[0].series;
+    for (i = 0; i < ary.length; i++) {
+      item = ary[i];
+      sql = "select issuetoshipping('SO', coitem_id, $2, $3, $4::timestamptz) as series " +
+        "from coitem where obj_uuid = $1;";
+      series = plv8.execute(sql, [item.orderLine, item.quantity, series, item.asOf])[0].series;
 
-    /* Distribute detail */
-    XM.PrivateInventory.distribute(series, options.detail);
+      /* Distribute detail */
+      XM.PrivateInventory.distribute(series, item.options.detail);
+    }
 
     return;
   };

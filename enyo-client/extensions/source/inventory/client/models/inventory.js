@@ -194,6 +194,11 @@ white:true*/
 
     });
 
+    XM.Inventory.issueToShipping = function (params, options) {
+      var obj = XM.Model.prototype;
+      obj.dispatch("XM.Inventory", "issueToShipping", params, options);
+    };
+
     // ..........................................................
     // COLLECTIONS
     //

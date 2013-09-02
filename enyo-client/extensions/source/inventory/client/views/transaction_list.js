@@ -176,7 +176,7 @@ trailing:true, white:true, strict:false*/
             options = {},
             toIssue,
             params,
-            dispOptions,
+            dispOptions = {},
             wsOptions = {},
             wsParams;
 
@@ -191,11 +191,11 @@ trailing:true, white:true, strict:false*/
             toIssue = model.get("toIssue");
             if (toIssue) {
               wsOptions.detail = model.formatDetail();
-              wsParams = [
-                model.id,
-                toIssue,
-                wsOptions
-              ];
+              wsParams = {
+                orderLine: model.id,
+                quantity: toIssue,
+                options: wsOptions
+              };
               data.push(wsParams);
             }
             workspace.doPrevious();
@@ -206,9 +206,10 @@ trailing:true, white:true, strict:false*/
           if (i === collection.length) {
             that.spinnerShow();
             dispOptions.success = function () {
+              that.requery();
               that.spinnerHide();
             };
-            that.dispatch("XM.Inventory", "issueToShipping", data, dispOptions);
+            XM.Inventory.issueToShipping(data, dispOptions);
 
           // Else if there's something here we can issue, handle it
           } else {
@@ -230,11 +231,11 @@ trailing:true, white:true, strict:false*/
               // Otherwise just use the data we have
               } else {
                 options.detail = model.formatDetail();
-                params = [
-                  model.id,
-                  toIssue,
-                  options
-                ];
+                params = {
+                  orderLine: model.id,
+                  quantity: toIssue,
+                  options: options
+                };
                 data.push(params);
                 callback();
               }
