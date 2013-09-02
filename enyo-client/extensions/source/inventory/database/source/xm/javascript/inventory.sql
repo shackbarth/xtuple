@@ -375,7 +375,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
   */
   XM.Inventory.issueToShipping = function (orderLine, quantity, options) {
     var  asOf = options.asOf || null,
-      series = 0,
+      seriesIn,
+      series,
       sql,
       ary,
       item,
@@ -391,18 +392,19 @@ select xt.install_js('XM','Inventory','xtuple', $$
         }
       ];
     } else {
-      ary = arguments[0];
+      ary = arguments;
     }
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
 
+    sql = "select issuetoshipping('SO', coitem_id, $2, $3, $4::timestamptz) as series " +
+          "from coitem where obj_uuid = $1;";
+
     /* Post the transaction */
     for (i = 0; i < ary.length; i++) {
       item = ary[i];
-      sql = "select issuetoshipping('SO', coitem_id, $2, $3, $4::timestamptz) as series " +
-        "from coitem where obj_uuid = $1;";
-      series = plv8.execute(sql, [item.orderLine, item.quantity, series, item.asOf])[0].series;
+      series = plv8.execute(sql, [item.orderLine, item.quantity, 0, item.asOf])[0].series;
 
       /* Distribute detail */
       XM.PrivateInventory.distribute(series, item.options.detail);
