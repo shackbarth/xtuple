@@ -264,8 +264,7 @@ trailing:true, white:true, strict:false*/
         return true;
       },
       parameterChanged: function (inSender, inEvent) {
-        if (inEvent.originator &&
-            inEvent.originator.name === "order") {
+        if (inEvent && inEvent.originator.name === "order") {
           this.setModel(inEvent.originator.getParameter().value);
           this.buildMenu();
         }

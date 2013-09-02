@@ -374,8 +374,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {Array} [options.detail] Distribution detail
   */
   XM.Inventory.issueToShipping = function (orderLine, quantity, options) {
-    var  asOf = options.asOf || null,
-      seriesIn,
+    var asOf,
       series,
       sql,
       ary,
