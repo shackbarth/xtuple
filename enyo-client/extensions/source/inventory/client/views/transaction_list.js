@@ -151,8 +151,9 @@ trailing:true, white:true, strict:false*/
     /** @private */
     var _canDo = function () {
       var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
-        hasModel = !_.isEmpty(this.getModel());
-      return hasPrivilege && hasModel;
+        model = this.getModel(),
+        validModel = model ? !model.get("isShipped") : false;
+      return hasPrivilege && validModel;
     };
 
     enyo.kind({
@@ -166,9 +167,9 @@ trailing:true, white:true, strict:false*/
           prerequisite: "canIssueStock" },
         {name: "issueSelectedStock", label: "_issueSelectedStock".loc(),
           prerequisite: "canIssueSelected" },
-        {name: "issueSelectedLines", label: "_issueSelectedLines".loc(),
+        {name: "issueSelected", label: "_issueSelected".loc(),
           prerequisite: "canIssueSelected" },
-        {name: "returnSelectedLines", label: "_returnSelectedLines".loc(),
+        {name: "returnSelected", label: "_returnSelected".loc(),
           prerequisite: "canReturnSelected" },
       ],
       canReturnSelected: function () {
@@ -200,9 +201,14 @@ trailing:true, white:true, strict:false*/
           hasOpenLines = this.$.list.value.length;
         return canDo && hasOpenLines;
       },
-      issueAll: function () {
+      /**
+        Helper function for transacting `issue` on an array of models
+
+        @param {Array} Models
+        @param {Boolean} Prompt user for confirmation on every model
+      */
+      issue: function (models, prompt) {
         var that = this,
-          collection = this.$.list.value,
           i = -1,
           callback,
           data = [];
@@ -239,7 +245,7 @@ trailing:true, white:true, strict:false*/
 
           i++;
           // If we've worked through all the models then forward to the server
-          if (i === collection.length) {
+          if (i === models.length) {
             that.spinnerShow();
             dispOptions.success = function () {
               that.requery();
@@ -249,14 +255,15 @@ trailing:true, white:true, strict:false*/
 
           // Else if there's something here we can issue, handle it
           } else {
-            model = collection.at(i);
+            model = models[i];
             toIssue = model.get("toIssue");
 
             // See if there's anything to issue here
             if (toIssue) {
 
-              // If distribution detail required, open a workspace to handle it
-              if (model.undistributed()) {
+              // If prompt or distribution detail required,
+              // open a workspace to handle it
+              if (prompt || model.undistributed()) {
                 that.doWorkspace({
                   workspace: "XV.IssueStockWorkspace",
                   id: model.id,
@@ -284,10 +291,50 @@ trailing:true, white:true, strict:false*/
         };
         callback();
       },
+      issueAll: function () {
+        var models = this.$.list.getValue().models;
+        this.issue(models);
+      },
+      issueSelected: function () {
+        var models = this.selectedModels();
+        this.issue(models);
+      },
+      issueSelectedStock: function () {
+        var models = this.selectedModels();
+        this.issue(models, true);
+      },
       parameterChanged: function (inSender, inEvent) {
         if (inEvent && inEvent.originator.name === "order") {
           this.setModel(inEvent.originator.getParameter().value);
           this.buildMenu();
+        }
+      },
+      returnSelected: function () {
+        var models = this.selectedModels(),
+          that = this,
+          data =  [],
+          options = {},
+          atShipping,
+          model,
+          i;
+
+        for (i = 0; i < models.length; i++) {
+          model = models[i];
+          atShipping = model.get("atShipping");
+
+          // See if there's anything to issue here
+          if (atShipping) {
+            data.push(model.id);
+          }
+        }
+                
+        if (data.length) {
+          this.spinnerShow();
+          options.success = function () {
+            that.requery();
+            that.spinnerHide();
+          };
+          XM.Inventory.returnFromShipping(data, options);
         }
       },
       /**

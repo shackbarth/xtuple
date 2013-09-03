@@ -435,18 +435,21 @@ select xt.install_js('XM','Inventory','xtuple', $$
         }
       }');
   
-    @param {String} Order line uuid
+    @param {String|Array} Order line uuid, or array of uuids
   */
   XM.Inventory.returnFromShipping = function (orderLine) {
     var sql = "select returnitemshipments(coitem_id) " +
       "from coitem where obj_uuid = $1;",
-      ret;
+      ret,
+      i;
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
-    ret = plv8.execute(sql, [orderLine])[0];
+    for (i = 0; i < arguments.length; i++) {
+      ret = plv8.execute(sql, [arguments[i]])[0];
+    }
 
     return ret;
   };

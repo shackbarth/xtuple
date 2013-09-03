@@ -197,12 +197,23 @@ white:true*/
     /**
       Static function to call issue to shipping on a set of multiple items.
 
-      @params {Object} Data
+      @params {Array} Data
       @params {Object} Options
     */
     XM.Inventory.issueToShipping = function (params, options) {
       var obj = XM.Model.prototype;
       obj.dispatch("XM.Inventory", "issueToShipping", params, options);
+    };
+
+    /**
+      Static function to call return from shipping on a set of multiple items.
+
+      @params {Array} Array of model ids
+      @params {Object} Options
+    */
+    XM.Inventory.returnFromShipping = function (params, options) {
+      var obj = XM.Model.prototype;
+      obj.dispatch("XM.Inventory", "returnFromShipping", params, options);
     };
 
     // ..........................................................
