@@ -12,7 +12,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.LayoutTree",
     kind: "XV.Tree",
-    content: "_columnsLayout".loc(),
+    content: "_currentLayout".loc(),
     /**
       Recursively builds tree based on source. This will be overriden by
       children of this widget to fit their individual needs.
@@ -20,13 +20,17 @@ regexp:true, undef:true, trailing:true, white:true */
     buildTree: function (source, tree) {
       if (!source) { return; }
       var node = tree ? tree : this.$.tree,
-        controls = source.getControls();
+        controls = source.getControls(),
+        rowCount = 0,
+        columnCount = 0;
       for (var i = 0; i < controls.length; i++) {
         var c, newComponent;
         if (controls[i].kind === "XV.ListItem") {
-          c = {kind: "XV.TreeNode", content: "_row".loc()};
+          rowCount++;
+          c = {kind: "XV.TreeNode", content: "_row".loc() + " " + rowCount};
         } else if (controls[i].kind === "XV.ListColumn") {
-          c = {kind: "XV.TreeNode", content: "_column".loc()};
+          columnCount++;
+          c = {kind: "XV.TreeNode", content: "_column".loc() + " " + columnCount};
         } else if (controls[i].kind === "XV.ListAttr") {
           c = {kind: "XV.ListAttrNode", attr: controls[i].attr};
         } else {
