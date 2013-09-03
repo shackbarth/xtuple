@@ -196,9 +196,6 @@ trailing:true, white:true, strict:false*/
           method: "doReturnStock", notify: false}
       ],
       toggleSelected: true,
-      events: {
-        onSelectionChanged: ""
-      },
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -231,10 +228,6 @@ trailing:true, white:true, strict:false*/
           ]}
         ]}
       ],
-      create: function () {
-        this.inherited(arguments);
-        this._selectedIndexes = [];
-      },
       formatScheduleDate: function (value, view, model) {
         var today = new Date(),
           isLate = XT.date.compareDate(value, today) < 1 &&
@@ -285,27 +278,6 @@ trailing:true, white:true, strict:false*/
           id: model.id,
           allowNew: false
         });
-      },
-      selectedIndexes: function () {
-        var selected = this.getSelection().selected,
-          idx = [],
-          prop;
-        for (prop in selected) {
-          if (selected.hasOwnProperty(prop)) {
-            idx.push(prop - 0);
-          }
-        }
-        return idx;
-      },
-      setupItem: function () {
-        var idx = this.selectedIndexes();
-        if (!_.isEqual(idx, this._selectedIndexes)) {
-          this._selectedIndexes = idx;
-          this.doSelectionChanged({
-            selection: this.getSelection()
-          });
-        }
-        return this.inherited(arguments);
       }
     });
 
