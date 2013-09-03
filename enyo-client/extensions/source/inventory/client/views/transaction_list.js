@@ -26,6 +26,7 @@ trailing:true, white:true, strict:false*/
       },
       handlers: {
         onListItemMenuTap: "showListItemMenu",
+        onSelectionChanged: "buildMenu"
       },
       components: [
         {name: "parameterPanel", kind: "FittableRows", classes: "left",
@@ -147,6 +148,13 @@ trailing:true, white:true, strict:false*/
       }
     });
 
+    /** @private */
+    var _canDo = function () {
+      var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
+        hasModel = !_.isEmpty(this.getModel());
+      return hasPrivilege && hasModel;
+    };
+
     enyo.kind({
       name: "XV.IssueToShipping",
       kind: "XV.TransactionList",
@@ -156,12 +164,41 @@ trailing:true, white:true, strict:false*/
       actions: [
         {name: "issueAll", label: "_issueAll".loc(),
           prerequisite: "canIssueStock" },
+        {name: "issueSelectedStock", label: "_issueSelectedStock".loc(),
+          prerequisite: "canIssueSelected" },
+        {name: "issueSelectedLines", label: "_issueSelectedLines".loc(),
+          prerequisite: "canIssueSelected" },
+        {name: "returnSelectedLines", label: "_returnSelectedLines".loc(),
+          prerequisite: "canReturnSelected" },
       ],
+      canReturnSelected: function () {
+        var canDo = _canDo.call(this),
+          models = this.selectedModels(),
+          check;
+        if (canDo) {
+          check = _.find(models, function (model) {
+            return model.get("atShipping") > 0;
+          });
+        }
+
+        return !_.isEmpty(check);
+      },
+      canIssueSelected: function () {
+        var canDo = _canDo.call(this),
+          models = this.selectedModels(),
+          check;
+        if (canDo) {
+          check = _.find(models, function (model) {
+            return model.get("toIssue") > 0;
+          });
+        }
+
+        return !_.isEmpty(check);
+      },
       canIssueStock: function () {
-        var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
-          hasModel = !_.isEmpty(this.getModel()),
+        var canDo = _canDo.call(this),
           hasOpenLines = this.$.list.value.length;
-        return hasPrivilege && hasModel && hasOpenLines;
+        return canDo && hasOpenLines;
       },
       issueAll: function () {
         var that = this,
@@ -247,6 +284,12 @@ trailing:true, white:true, strict:false*/
         };
         callback();
       },
+      parameterChanged: function (inSender, inEvent) {
+        if (inEvent && inEvent.originator.name === "order") {
+          this.setModel(inEvent.originator.getParameter().value);
+          this.buildMenu();
+        }
+      },
       /**
         Overload: Piggy back on existing handler for `onParameterChanged event`
         by forwarding this requery to `parameterChanged`.
@@ -262,11 +305,21 @@ trailing:true, white:true, strict:false*/
         this.parameterChanged(inSender, inEvent);
         return true;
       },
-      parameterChanged: function (inSender, inEvent) {
-        if (inEvent && inEvent.originator.name === "order") {
-          this.setModel(inEvent.originator.getParameter().value);
-          this.buildMenu();
+      selectedModels: function () {
+        var list = this.$.list,
+          collection = list.getValue(),
+          models = [],
+          selected,
+          prop;
+        if (collection.length) {
+          selected = list.getSelection().selected;
+          for (prop in selected) {
+            if (selected.hasOwnProperty(prop)) {
+              models.push(list.getModel(prop - 0));
+            }
+          }
         }
+        return models;
       }
     });
   };

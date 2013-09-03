@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict:false*/
-/*global XT:true, XM:true, XV:true, enyo:true, Globalize:true*/
+/*global XT:true, _:true, XV:true, enyo:true, Globalize:true*/
 
 (function () {
 
@@ -181,6 +181,7 @@ trailing:true, white:true, strict:false*/
       label: "_issueToShipping".loc(),
       collection: "XM.IssueToShippingCollection",
       parameterWidget: "XV.IssueToShippingParameters",
+      multiSelect: true,
       query: {orderBy: [
         {attribute: "lineNumber"},
         {attribute: "subNumber"}
@@ -195,6 +196,9 @@ trailing:true, white:true, strict:false*/
           method: "doReturnStock", notify: false}
       ],
       toggleSelected: true,
+      events: {
+        onSelectionChanged: ""
+      },
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -227,6 +231,10 @@ trailing:true, white:true, strict:false*/
           ]}
         ]}
       ],
+      create: function () {
+        this.inherited(arguments);
+        this._selectedIndexes = [];
+      },
       formatScheduleDate: function (value, view, model) {
         var today = new Date(),
           isLate = XT.date.compareDate(value, today) < 1 &&
@@ -277,6 +285,27 @@ trailing:true, white:true, strict:false*/
           id: model.id,
           allowNew: false
         });
+      },
+      selectedIndexes: function () {
+        var selected = this.getSelection().selected,
+          idx = [],
+          prop;
+        for (prop in selected) {
+          if (selected.hasOwnProperty(prop)) {
+            idx.push(prop - 0);
+          }
+        }
+        return idx;
+      },
+      setupItem: function () {
+        var idx = this.selectedIndexes();
+        if (!_.isEqual(idx, this._selectedIndexes)) {
+          this._selectedIndexes = idx;
+          this.doSelectionChanged({
+            selection: this.getSelection()
+          });
+        }
+        return this.inherited(arguments);
       }
     });
 
