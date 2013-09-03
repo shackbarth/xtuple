@@ -32,6 +32,7 @@ var lang = XT.stringsFor("en_US", {
   "_confirmed": "Confirmed",
   "_daily": "Daily",
   "_database": "Database",
+  "_databaseInformation": "DatabaseInformation",
   "_effectiveDate": "Effective Date",
   "_equity": "Equity",
   "_expense": "Expense",
@@ -50,6 +51,7 @@ var lang = XT.stringsFor("en_US", {
   "_resolved": "Resolved",
   "_revenue": "Revenue",
   "_salaried": "Salaried",
+  "_systemConfiguration": "System Configuration",
   "_weekly": "Weekly",
 
   // ********
@@ -93,6 +95,8 @@ var lang = XT.stringsFor("en_US", {
   "_assignDate": "Assign Date",
   "_assignedTo": "Assigned To",
   "_attach": "Attach",
+  "_authorizeNetLogin": "Authorize.Net Login",
+  "_authorizeNetTransactionKey": "Authorize.Net Transaction Key",
   "_averageCost": "Average Cost",
   "_backorder": "Accepts Backorders",
   "_balance": "Balance",
@@ -629,6 +633,7 @@ var lang = XT.stringsFor("en_US", {
   // ********
   "_alterPackDate": "Alter Pack Date",
   "_alterTransactionDates": "Alter Transartion Dates",
+  "_configureCC": "Configure Credit Cards",
   "_configureCRM": "Configure CRM",
   "_configureImportExport": "Configure Import Export",
   "_configurePM": "Configure Project",

@@ -28,14 +28,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 //https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L1193
 
   var data = require("./data"),
-    async = require("async");
+    async = require("async"),
+    authorizeNet = require('paynode').use('authorizenet');
 
   exports.transact = function (req, res) {
-    if (!X.authorizeNetClient) {
-      res.send({isError: true, message: "Authorize.Net client has not been set up"});
-      return;
-    }
-
     var uuid = req.query.creditCard,
       authorizeOnly = req.query.action === 'authorize',
       creditCardModel = new SYS.CreditCard(),
@@ -73,8 +69,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           customer: req.query.customerNumber,
           amount: Number(req.query.amount),
           orderNumber: req.query.orderNumber,
-          orderNumberSeq: 1, //TODO
-          wasPreauthorization: false, // TODO
+          orderNumberSeq: 1, //TODO: this is incremented in subsequent transactions
+          wasPreauthorization: authorizeOnly,
           status: 'C', // TODO
           type: 'C', // TODO
           originalType: 'C' // TODO
@@ -112,11 +108,32 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         return data;
       },
+      apiCredentials = {},
+      fetchAPICredentials = function (callback) {
+        creditCardModel.dispatch("XM.System", "settings",
+          [],
+          {
+            database: req.session.passport.user.organization,
+            username: req.session.passport.user.id,
+            success: function (response) {
+              apiCredentials.authorizeNetLogin = response.CCLogin;
+              apiCredentials.authorizeNetTransactionKey = response.CCPassword;
+              callback(null, response);
+            },
+            error: callback
+          });
+      },
       transactWithApi = function (callback) {
-        var creditCardData = adaptCreditCardData(creditCardModel.toJSON());
+        var authorizeNetClient,
+          creditCardData = adaptCreditCardData(creditCardModel.toJSON());
 
         try {
-          X.authorizeNetClient.performAimTransaction({
+          authorizeNetClient = authorizeNet.createClient({
+            level: authorizeNet.levels.sandbox,
+            login: apiCredentials.authorizeNetLogin,
+            tran_key: apiCredentials.authorizeNetTransactionKey
+          });
+          authorizeNetClient.performAimTransaction({
             "x_type": authorizeOnly ? "AUTH_ONLY" : "AUTH_CAPTURE",
             "x_method": "CC",
             "x_card_num": creditCardData.number,
@@ -199,6 +216,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       fetchCreditCard,
       initializeCreditCardPayment,
       saveCreditCardPayment,
+      fetchAPICredentials,
       transactWithApi,
       postCreditIfCapture,
       initializePaymentLink,

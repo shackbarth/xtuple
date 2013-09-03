@@ -30,8 +30,14 @@ white:true*/
     {
       model: "XM.databaseInformation",
       name: "_database".loc(),
-      description: "_database".loc() + " " + "_information".loc(),
+      description: "_databaseInformation".loc(),
       workspace: "XV.DatabaseInformationWorkspace"
+    },
+    {
+      model: "XM.system",
+      name: "_system".loc(),
+      description: "_systemConfiguration".loc(),
+      workspace: "XV.SystemConfigurationWorkspace"
     }
   ];
   XM.ConfigurationModel = Backbone.Model.extend({

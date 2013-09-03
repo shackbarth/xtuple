@@ -137,6 +137,7 @@
     "xm/javascript/project.sql",
     "xm/javascript/quote.sql",
     "xm/javascript/sales.sql",
+    "xm/javascript/system.sql",
     "xm/javascript/tax.sql",
     "xm/javascript/to_do.sql",
     "public/tables/comment_trigger.sql",

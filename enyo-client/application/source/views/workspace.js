@@ -284,6 +284,27 @@ Globalize:true */
   });
 
   enyo.kind({
+    name: "XV.SystemConfigurationWorkspace",
+    kind: "XV.Workspace",
+    title: "_systemConfiguration".loc(),
+    model: "XM.System",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "CCLogin",
+              label: "_authorizeNetLogin".loc()}, // TODO: generalize if/when we support more than just authorize.net
+            {kind: "XV.InputWidget", attr: "CCPassword",
+                label: "_authorizeNetTransactionKey".loc()},
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  enyo.kind({
     name: "XV.UserPreferenceWorkspace",
     kind: "XV.Workspace",
     title: "_userPreferences".loc(),
