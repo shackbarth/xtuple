@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict:false*/
-/*global XT:true, XM:true, XV:true, enyo:true, Globalize:true*/
+/*global XT:true, _:true, XV:true, enyo:true, Globalize:true*/
 
 (function () {
 
@@ -181,6 +181,7 @@ trailing:true, white:true, strict:false*/
       label: "_issueToShipping".loc(),
       collection: "XM.IssueToShippingCollection",
       parameterWidget: "XV.IssueToShippingParameters",
+      multiSelect: true,
       query: {orderBy: [
         {attribute: "lineNumber"},
         {attribute: "subNumber"}
@@ -270,16 +271,11 @@ trailing:true, white:true, strict:false*/
         }
       },
       issueStock: function (inEvent) {
-        var model = inEvent.model,
-          modelId = model.id,
-          success = function () {
-            this.getValue().convertFromProspect(modelId);
-          };
+        var model = inEvent.model;
 
         this.doWorkspace({
           workspace: "XV.IssueStockWorkspace",
           id: model.id,
-          success: success,
           allowNew: false
         });
       }
