@@ -242,7 +242,7 @@ trailing:true, white:true*/
     ]
   });
 
- // ..........................................................
+  // ..........................................................
   // PROJECT
   //
 
@@ -366,6 +366,31 @@ trailing:true, white:true*/
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "description"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
+  // LOCATION ITEM
+  //
+
+  enyo.kind({
+    name: "XV.LocationItemListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: 'item.number'}
+    ],
+    parentKey: "location",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "item.number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "item.description1", classes: "right"}
             ]}
           ]}
         ]}

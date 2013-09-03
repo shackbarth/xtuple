@@ -20,6 +20,7 @@ trailing:true, white:true*/
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
+      {name: "locationList", kind: "XV.LocationList"},
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
       {name: "plannerCodeList", kind: "XV.PlannerCodeList"},
       {name: "customerTypeList", kind: "XV.CustomerTypeList"},
@@ -41,8 +42,8 @@ trailing:true, white:true*/
       name: "inventory",
       label: "_inventory".loc(),
       panels: [
-        {name: "shipmentList", kind: "XV.ShipmentList"},
-        {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
+        {name: "shipmentList", kind: "XV.ShipmentList"}
+      //  {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
       ],
       actions: [
         {name: "issueToShipping", privilege: "issueStockToShipping", method: "issueToShipping", notify: false},

@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, Backbone:true */
 
 (function () {
   "use strict";
@@ -9,6 +9,23 @@ white:true*/
   XT.extensions.inventory.initStaticModels = function () {
     // These are hard coded collections that may be turned into tables at a later date
     var i;
+
+    // ABC Class
+    var abcClassJson = [
+      { id: "A", name: "_a".loc() },
+      { id: "B", name: "_b".loc() },
+      { id: "C", name: "_c".loc() }
+    ];
+    XM.AbcClassModel = Backbone.Model.extend({
+    });
+    XM.AbcClassCollection = Backbone.Collection.extend({
+      model: XM.AbcClassModel
+    });
+    XM.abcClasses = new XM.AbcClassCollection();
+    for (i = 0; i < abcClassJson.length; i++) {
+      var abcClass = new XM.AbcClassModel(abcClassJson[i]);
+      XM.abcClasses.add(abcClass);
+    }
 
     // Cost Method for Avg Cost Count Tags
     var countAvgCostMethodJson = [
@@ -42,6 +59,22 @@ white:true*/
       XM.postCountTagToDefault.add(postCountTagToDefault);
     }
 
+    // Control Method
+    var controlMethodJson = [
+      { id: XM.ItemSite.NO_CONTROL, name: "_none".loc() },
+      { id: XM.ItemSite.REGULAR_CONTROL, name: "_regular".loc() }
+    ];
+    XM.ControlMethodModel = Backbone.Model.extend({
+    });
+    XM.ControlMethodCollection = Backbone.Collection.extend({
+      model: XM.ControlMethodModel
+    });
+    XM.controlMethods = new XM.ControlMethodCollection();
+    for (i = 0; i < controlMethodJson.length; i++) {
+      var controlMethod = new XM.ControlMethodModel(controlMethodJson[i]);
+      XM.controlMethods.add(controlMethod);
+    }
+
     // Cost Slip Auditing
     var countSlipAuditingJson = [
       { id: "allowDups", name: "_allowDups".loc() },
@@ -59,6 +92,24 @@ white:true*/
     for (i = 0; i < countSlipAuditingJson.length; i++) {
       var countSlipAuditing = new XM.CountSlipAuditingModel(countSlipAuditingJson[i]);
       XM.countSlipAuditing.add(countSlipAuditing);
+    }
+
+    // Cost Method
+    var costMethodJson = [
+      { id: XM.ItemSite.NO_COST, name: "_none".loc() },
+      { id: XM.ItemSite.STANDARD_COST, name: "_standard".loc() },
+      { id: XM.ItemSite.AVERAGE_COST, name: "_average".loc() },
+      { id: XM.ItemSite.JOB_COST, name: "_job".loc() }
+    ];
+    XM.CostMethodModel = Backbone.Model.extend({
+    });
+    XM.CostMethodCollection = Backbone.Collection.extend({
+      model: XM.CostMethodModel
+    });
+    XM.costMethods = new XM.CostMethodCollection();
+    for (i = 0; i < costMethodJson.length; i++) {
+      var costMethod = new XM.CostMethodModel(costMethodJson[i]);
+      XM.costMethods.add(costMethod);
     }
   };
 

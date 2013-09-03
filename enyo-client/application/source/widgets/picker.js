@@ -5,6 +5,18 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   // ..........................................................
+  // ABC CLASS
+  //
+
+  enyo.kind({
+    name: "XV.AbcClassPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.abcClass",
+    valueAttribute: "id",
+    showNone: false
+  });
+
+  // ..........................................................
   // ACCOUNT TYPE
   //
 
@@ -50,6 +62,18 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // CONTROL METHOD
+  //
+
+  enyo.kind({
+    name: "XV.ControlMethodPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.controlMethod",
+    valueAttribute: "id",
+    showNone: false
+  });
+
+  // ..........................................................
   // COST CATEGORY
   //
 
@@ -61,6 +85,18 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'code'}
     ]
+  });
+
+  // ..........................................................
+  // COST METHOD
+  //
+
+  enyo.kind({
+    name: "XV.CostMethodPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.costMethod",
+    valueAttribute: "id",
+    showNone: false
   });
 
   // ..........................................................
@@ -252,6 +288,21 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // LOCATION
+  //
+
+  enyo.kind({
+    name: "XV.LocationPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.location",
+    nameAttribute: "format",
+    orderBy: [
+      {attribute: 'format'}
+    ],
+    valueAttribute: "id"
+  });
+
+  // ..........................................................
   // NUMBER POLICY
   //
 
@@ -410,6 +461,19 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ShipZonePicker",
     kind: "XV.PickerWidget",
     collection: "XM.shipZones",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+
+  // ..........................................................
+  // SITE ZONE
+  //
+
+  enyo.kind({
+    name: "XV.SiteZonePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.siteZoneRelations",
     orderBy: [
       {attribute: 'name'}
     ]

@@ -688,7 +688,7 @@
 }
 .xv-list-attr.right {
   position: absolute;
-  right: 0;
+  right: 10px;
   height: 20px;
 }
 .xv-list-attr.text-align-right {
@@ -699,6 +699,12 @@
 }
 .xv-list-attr.error {
   color: #ff0000;
+}
+.xv-list-attr.emphasis {
+  color: #009000;
+}
+.xv-list-attr.warn {
+  color: #ff9c00;
 }
 .xv-list-attr.italic {
   font-style: italic;
@@ -2515,7 +2521,7 @@ body {
 }
 .xv-list-attr.right {
   position: absolute;
-  right: 0;
+  right: 10px;
   height: 20px;
 }
 .xv-list-attr.text-align-right {

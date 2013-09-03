@@ -69,6 +69,34 @@
         }
       },
       {
+        "name": "receiveLocation",
+        "toOne": {
+          "type": "LocationRelation",
+          "column": "itemsite_recvlocation_id"
+        }
+      },
+      {
+        "name": "receiveLocationAuto",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_recvlocation_dist"
+        }
+      },
+      {
+        "name": "stockLocation",
+        "toOne": {
+          "type": "LocationRelation",
+          "column": "itemsite_location_id"
+        }
+      },
+      {
+        "name": "stockLocationAuto",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_location_dist"
+        }
+      },
+      {
         "name": "quantityOnHand",
         "attr": {
           "type": "Quantity",
@@ -78,8 +106,9 @@
       {
         "name": "detail",
         "toMany": {
+          "isNested": true,
           "type": "ItemSiteDetail",
-          "column": "obj_uuid",
+          "column": "itemsite_id",
           "inverse": "itemSite"
         }
       }
@@ -120,8 +149,8 @@
       {
         "name": "itemSite",
         "attr": {
-          "type": "String",
-          "column": "itemsite_uuid"
+          "type": "Number",
+          "column": "itemloc_itemsite_id"
         }
       },
       {

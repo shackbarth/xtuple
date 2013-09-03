@@ -1,12 +1,11 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
-/*global XT:true, XM:true, XV:true, enyo:true*/
+trailing:true, white:true, strict: false*/
+/*global XT:true, XM:true, XV:true, enyo:true, Globalize: true*/
 
 (function () {
 
   XT.extensions.inventory.initWorkspaces = function () {
-    var extensions;
 
     // ..........................................................
     // CONFIGURE
@@ -124,7 +123,8 @@ trailing:true, white:true*/
       hideRefresh: true,
       dirtyWarn: false,
       handlers: {
-        onDetailSelectionChanged: "toggleDetailSelection"
+        onDetailSelectionChanged: "toggleDetailSelection",
+        onDistributedTapped: "distributedTapped"
       },
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -148,17 +148,73 @@ trailing:true, white:true*/
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
           ]},
-          {kind: "XV.IssueToShippingDetailRelationsBox", attr: "itemSite.detail", fit: true}
+          {kind: "XV.IssueToShippingDetailRelationsBox",
+            attr: "itemSite.detail", name: "detail"}
+        ]},
+        {kind: "onyx.Popup", name: "distributePopup", centered: true,
+          onHide: "popupHidden",
+          modal: true, floating: true, components: [
+          {content: "_quantity".loc()},
+          {kind: "onyx.InputDecorator", components: [
+            {kind: "onyx.Input", name: "quantityInput"}
+          ]},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "distributeOk",
+            classes: "onyx-blue xv-popup-button"},
+          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "distributeDone",
+            classes: "xv-popup-button"},
         ]}
       ],
+      /**
+        Overload: Some special handling for start up.
+        */
       attributesChanged: function () {
         this.inherited(arguments);
         var model = this.getValue();
-        if (!this._focused && model &&
+        
+        // Focus and select qty on start up.
+        if (!this._started && model &&
           model.getStatus() === XM.Model.READY_DIRTY) {
           this.$.toIssue.focus();
           this.$.toIssue.$.input.selectContents();
-          this._focused = true;
+          this._started = true;
+        }
+
+        // Hide detail if not applicable
+        if (!model.requiresDetail()) {
+          this.$.detail.hide();
+          this.parent.parent.$.menu.refresh();
+        }
+      },
+      distributeDone: function () {
+        this._popupDone = true;
+        delete this._distModel;
+        this.$.distributePopup.hide();
+      },
+      distributeOk: function () {
+        var qty = this.$.quantityInput.getValue(),
+          dist = this._distModel;
+        qty = Globalize.parseFloat(qty);
+        dist.set("distributed", qty);
+        if (dist._validate(dist.attributes, {})) {
+          this.distributeDone();
+          this.$.detail.$.list.refresh();
+        }
+      },
+      distributedTapped: function (inSender, inEvent) {
+        var input = this.$.quantityInput,
+          qty = inEvent.model.get("distributed");
+        this._popupDone = false;
+        this._distModel = inEvent.model;
+        this.$.distributePopup.show();
+        qty = Globalize.format(qty, "n" + XT.QTY_SCALE);
+        input.setValue(qty);
+        input.focus();
+        input.selectContents();
+      },
+      popupHidden: function (inSender, inEvent) {
+        if (!this._popupDone) {
+          inEvent.originator.show();
         }
       },
       /**
@@ -166,15 +222,59 @@ trailing:true, white:true*/
       */
       toggleDetailSelection: function (inSender, inEvent) {
         var detail = inEvent.model,
-          undistributed = this.getValue().undistributed;
+          isDistributed = detail.get("distributed") > 0,
+          undistributed;
         if (!detail) { return; }
-        if (inEvent.isSelected) {
-          detail.distribute(undistributed);
-        } else {
+        if (isDistributed) {
           detail.clear();
+        } else {
+          undistributed = this.getValue().undistributed();
+          detail.distribute(undistributed);
         }
       }
     });
+
+    // ..........................................................
+    // LOCATION
+    //
+
+    enyo.kind({
+      name: "XV.LocationWorkspace",
+      kind: "XV.Workspace",
+      title: "_location".loc(),
+      model: "XM.Location",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_location".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.SiteZonePicker", attr: "siteZone"},
+              {kind: "XV.CheckboxWidget", attr: "isNetable"},
+              {kind: "XV.CheckboxWidget", attr: "isRestricted"},
+              {kind: "XV.InputWidget", attr: "aisle"},
+              {kind: "XV.InputWidget", attr: "rack"},
+              {kind: "XV.InputWidget", attr: "bin"},
+              {kind: "XV.InputWidget", attr: "location"},
+              {kind: "XV.TextArea", fit: true, attr: "description"},
+            ]}
+          ]},
+          {kind: "XV.LocationItemRelationBox", attr: "items"}
+        ]}
+      ],
+      //TODO get the following working
+      isRestrictedDidChange: function () {
+        var model = this.getValue(),
+          isRestricted = model ? model.get("isRestricted") : false;
+        if (!isRestricted) {
+          this.$.locationItemRelationBox.setDisabled(true);
+        }
+      }
+    });
+
+    XV.registerModelWorkspace("XM.Location", "XV.LocationWorkspace");
+    XV.registerModelWorkspace("XM.LocationItem", "XV.LocationWorkspace");
 
     // ..........................................................
     // SHIPMENT
@@ -214,5 +314,45 @@ trailing:true, white:true*/
     XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
     XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
 
+    // ..........................................................
+    // ITEM SITE
+    //
+
+    extensions = [
+      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_inventory".loc() },
+      {kind: "XV.ControlMethodPicker", container: "mainGroup", attr: "controlMethod"},
+      {kind: "XV.CostMethodPicker", container: "mainGroup", attr: "costMethod"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStocked"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isAutomaticAbcClassUpdates"},
+      {kind: "XV.AbcClassPicker", container: "mainGroup", attr: "abcClass"},
+      //TODO: Create an XV widget that includes an integer input field and an increase and decrease button
+      {kind: "XV.NumberWidget", container: "mainGroup", attr: "cycleCountFrequency", scale: 0},
+      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_location".loc() },
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isLocationControl"},
+      //TODO get a checkbox working for useDefaultLocation - currently a function on the model
+      //{kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isUseDefaultLocation"},
+      //{kind: "XV.InputWidget", container: "mainGroup", type: "boolean", name: "isUseDefaultLocation", label: "_isUseDefaultLocation".loc()},
+      {kind: "XV.LocationPicker", container: "mainGroup", attr: "receiveLocation"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isReceiveLocationAuto"},
+      {kind: "XV.LocationPicker", container: "mainGroup", attr: "stockLocation"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStockLocationAuto"},
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "userDefinedLocation"},
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "locationComment"},
+      //LIST - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location. Look at the privileges checkbox list.
+      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_planning".loc() },
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParameters"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "reorderLevel"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "orderToQuantity"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "minimumOrderQuantity"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "maximumOrderQuantity"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "multipleOrderQuantity"},
+      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParametersManual"},
+      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "safetyStock"},
+      {kind: "XV.NumberWidget", container: "mainGroup", attr: "leadTime", scale: 0}
+
+    ];
+
+    XV.appendExtension("XV.ItemSiteWorkspace", extensions);
+    
   };
 }());

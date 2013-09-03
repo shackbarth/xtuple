@@ -339,8 +339,10 @@
       {
         "name": "itemSiteRelations",
         "toMany": {
-          "type": "ItemSiteRelation",
-          "column": "item_id"
+          "type": "ItemItemSiteRelation",
+          "column": "item_id",
+          "inverse": "item",
+          "isNested": true
         }
       }
     ],
@@ -1124,7 +1126,7 @@
       {
         "name": "isConfigured",
         "attr": {
-          "type": "Number",
+          "type": "Boolean",
           "column": "item_config"
         }
       },

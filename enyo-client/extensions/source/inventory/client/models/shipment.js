@@ -108,6 +108,17 @@ white:true*/
 
     });
 
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ShipmentRelationCollection = XM.Collection.extend({
+
+      model: XM.ShipmentRelation
+
+    });
+
   };
 
 }());

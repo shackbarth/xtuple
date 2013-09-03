@@ -35,7 +35,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         callback({isError: true, message: "Stop trying to hack into our database"});
         return;
       }
-
+      
+      query.printFormat = true; 
       data.queryDatabase("get", query, session, callback);
     });
   };
@@ -94,54 +95,42 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
 
-      var saveBiCache = function (err, schemaResult) {
-        var schema = schemaResult && schemaResult.rows.length && schemaResult.rows[0].getschema;
+      // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
+      var randomKey = Math.random().toString(36).substr(2, 15),
+        tempDataModel = new SYS.BiCache(null, {isNew: true, database: req.session.passport.user.organization}),
+        attrs = {
+          key: randomKey,
+          query: JSON.stringify(requestDetails.query),
+          data: JSON.stringify(result.data),
+          created: new Date()
+        },
+         success = function () {
+           var biUrl = X.options.datasource.biUrl || "",
+            redirectUrl = biUrl + "&name=" + fileName +
+              "&org=" + req.session.passport.user.organization +
+			  "&datasource=" + req.headers.host + "&datakey=" + randomKey;
 
-        // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
-        var randomKey = Math.random().toString(36).substr(2, 15),
-          tempDataModel = new SYS.BiCache(null, {isNew: true, database: req.session.passport.user.organization}),
-          attrs = {
-            key: randomKey,
-            query: JSON.stringify(requestDetails.query),
-            locale: JSON.stringify(requestDetails.locale),
-            data: JSON.stringify(result.data),
-            schema: schema,
-            created: new Date()
-          },
-          success = function () {
-            var biUrl = X.options.datasource.biUrl || "",
-              redirectUrl = biUrl + "&name=" + fileName +
-                "&org=" + req.session.passport.user.organization +
-				"&datasource=" + req.headers.host + "&datakey=" + randomKey;
+          if (requestDetails.locale && requestDetails.locale.culture) {
+            res.set("Accept-Language", requestDetails.locale.culture);
+          }
+          // step 3: redirect to the report tool
+          res.redirect(redirectUrl);
+        },
+        error = function (model, err, options) {
+          res.send({
+            isError: true,
+            error: err,
+            message: err.params && err.params.error && err.params.error.message
+          });
+        };
 
-            if (requestDetails.locale && requestDetails.locale.culture) {
-              res.set("Accept-Language", requestDetails.locale.culture);
-            }
-            // step 4: redirect to the report tool
-            res.redirect(redirectUrl);
-          },
-          error = function (model, err, options) {
-            res.send({
-              isError: true,
-              error: err,
-              message: err.params && err.params.error && err.params.error.message
-            });
-          };
-
-        // step 3: save to the bicache table
+        // step 2: save to the bicache table
         tempDataModel.save(attrs, {
           success: success,
           error: error,
           database: req.session.passport.user.organization,
           username: X.options.databaseServer.user
         });
-      };
-
-      // step 2: get the schema
-      queryOptions = XT.dataSource.getAdminCredentials(req.session.passport.user.organization);
-      XT.dataSource.query("select xt.getSchema('%@', '%@');".f(requestDetails.nameSpace, modelName),
-        queryOptions,
-        saveBiCache);
     };
 
     // step 1: get the data

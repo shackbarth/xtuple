@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
-/*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, Globalize:true*/
+trailing:true, white:true, strict:false*/
+/*global XT:true, XM:true, XV:true, enyo:true, Globalize:true*/
 
 (function () {
 
@@ -17,9 +17,9 @@ trailing:true, white:true*/
       label: "_backlog".loc(),
       collection: "XM.SalesOrderLineListItemCollection",
       query: {orderBy: [
-        {attribute: 'salesOrder.number'},
-        {attribute: 'lineNumber'},
-        {attribute: 'subNumber'}
+        {attribute: "salesOrder.number"},
+        {attribute: "lineNumber"},
+        {attribute: "subNumber"}
       ]},
       components: [
         {kind: "XV.ListItem", components: [
@@ -108,7 +108,7 @@ trailing:true, white:true*/
       collection: "XM.PurchaseOrderLineCollection",
       parameterWidget: "XV.EnterReceiptParameters",
       query: {orderBy: [
-        {attribute: 'lineNumber'}
+        {attribute: "lineNumber"}
       ]},
       showDeleteAction: false,
       actions: [
@@ -148,19 +148,18 @@ trailing:true, white:true*/
           ]}
         ]}
       ],
-      formatDueDate: function (value, view, model) {
+      formatDueDate: function (value, view) {
         var today = new Date(),
           isLate = XT.date.compareDate(value, today) < 1;
         view.addRemoveClass("error", isLate);
         return value;
       },
-      formatQuantity: function (value, view, model) {
+      formatQuantity: function (value) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
       enterReceipt: function (inEvent) {
-        var model = inEvent.model,
-          modelId = model.id;
+        var model = inEvent.model;
 
         this.doWorkspace({
           workspace: "XV.EnterReceiptWorkspace",
@@ -183,15 +182,15 @@ trailing:true, white:true*/
       collection: "XM.IssueToShippingCollection",
       parameterWidget: "XV.IssueToShippingParameters",
       query: {orderBy: [
-        {attribute: 'lineNumber'},
-        {attribute: 'subNumber'}
+        {attribute: "lineNumber"},
+        {attribute: "subNumber"}
       ]},
       showDeleteAction: false,
       actions: [
         {name: "issueStock", prerequisite: "canIssueStock",
           method: "issueStock", notify: false, isViewMethod: true},
         {name: "issueLine", prerequisite: "canIssueStock",
-          method: "doIssueLine", notify: false},
+          method: "issueLine", notify: false, isViewMethod: true},
         {name: "returnLine", prerequisite: "canReturnStock",
           method: "doReturnStock", notify: false}
       ],
@@ -245,9 +244,30 @@ trailing:true, white:true*/
         }
         return value;
       },
-      formatQuantity: function (value, view, model) {
+      formatQuantity: function (value) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
+      },
+      issueLine: function (inEvent) {
+        var model = inEvent.model,
+          index = inEvent.index,
+          that = this,
+          options = {
+            success: function () {
+              that.resetActions(index);
+              that.renderRow(index);
+            }
+          };
+        // Model sets toIssue value on load and attempts to
+        // distribute detail to default if applicable. If
+        // still undistributed detail, we'll have to prompt
+        // user. Otherwise just save the model with the
+        // precalculated values.
+        if (model.undistributed()) {
+          this.issueStock(inEvent);
+        } else {
+          model.save(null, options);
+        }
       },
       issueStock: function (inEvent) {
         var model = inEvent.model,
@@ -268,6 +288,45 @@ trailing:true, white:true*/
     XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
 
     // ..........................................................
+    // LOCATION
+    //
+
+    enyo.kind({
+      name: "XV.LocationList",
+      kind: "XV.List",
+      label: "_locations".loc(),
+      collection: "XM.LocationCollection",
+      query: {orderBy: [
+        {attribute: "description"}
+      ]},
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short", components: [
+              {kind: "XV.ListAttr", attr: "format", isKey: true}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "site.code"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second left", components: [
+              {kind: "XV.ListAttr", attr: "description"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "isRestricted"}
+            ]},
+            {kind: "XV.ListColumn", classes: "last", components: [
+              {kind: "XV.ListAttr", attr: "isNetable"}
+            ]}
+          ]}
+        ]}
+      ]
+
+    });
+
+    XV.registerModelList("XM.Location", "XV.LocationList");
+    XV.registerModelList("XM.LocationItem", "XV.LocationList");
+
+    // ..........................................................
     // SHIPMENT
     //
 
@@ -283,7 +342,7 @@ trailing:true, white:true*/
         notifyMessage: "_recallShipment?".loc()
       }],
       query: {orderBy: [
-        {attribute: 'shipDate'}
+        {attribute: "shipDate"}
       ]},
       parameterWidget: "XV.ShipmentListItemParameters",
       components: [
