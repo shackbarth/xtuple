@@ -54,17 +54,6 @@
       });
     });
 
-    // release the locks, lest we mess up subsequent tests
-    after(function (done) {
-      async.each(_.toArray(submodels), function (submodel, callback) {
-        submodel.releaseLock({success: function () {
-          callback();
-        }});
-      }, function (err) {
-        done();
-      });
-    });
-
     describe('User selects to create a sales order', function () {
       it('User navigates to Sales Order-New and selects to create a new Sales order', function (done) {
         var gridRow;

@@ -376,8 +376,6 @@
     "type": "SalesCustomer",
     "table": "custinfo",
     "idSequenceName": "cust_cust_id_seq",
-    "isRest": true,
-    "lockable": true,
     "orderSequence": "CRMAccountNumber",
     "comment": "Customer Map",
     "privileges": {

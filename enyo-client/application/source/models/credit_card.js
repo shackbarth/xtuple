@@ -20,8 +20,23 @@ white:true*/
 
     defaults: {
       isActive: true
-    }
+    },
 
+    bindEvents: function () {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on('statusChange', this.statusDidChange);
+    },
+
+    // clientType must not be editable once first saved.
+    statusDidChange: function () {
+      var that = this,
+        uneditableAttributes = ["name", "address1", "address2", "city", "state",
+          "zip", "country", "monthExpired", "yearExpired", "creditCardType", "number"];
+
+      _.each(uneditableAttributes, function (attr) {
+        that.setReadOnly(attr, that.getStatus() !== XM.Model.READY_NEW);
+      });
+    }
   });
 
   // ..........................................................
