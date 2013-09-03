@@ -631,6 +631,7 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     prepareInsert: function (orm, record, params, encryptionKey) {
       var attr,
+        attributePrivileges,
         columns,
         count,
         encryptQuery,
@@ -698,11 +699,17 @@ select xt.install_js('XT','Data','xtuple', $$
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
-        canEdit = orm.privileges &&
-                  orm.privileges.attribute &&
-                  orm.privileges.attribute[prop] &&
-                  orm.privileges.attribute[prop].create ?
-                  this.checkPrivilege(orm.privileges.attribute[prop].create) : true;
+        attributePrivileges = orm.privileges && 
+          orm.privileges.attribute && 
+          orm.privileges.attribute[prop];
+
+        if(!attributePrivileges || attributePrivileges.create === undefined) {
+          canEdit = true;
+        } else if (typeof attributePrivileges.create === 'string') {
+          canEdit = this.checkPrivilege(attributePrivileges.create);
+        } else {
+          canEdit = attributePrivileges.create; /* if it's true or false */
+        }
 
         /* Handle fixed values. */
         if (attr.value !== undefined) {
@@ -835,7 +842,6 @@ select xt.install_js('XT','Data','xtuple', $$
       // TODO - Improve error handling.
         plv8.elog(ERROR, "The version being updated is not current.");
       }
-
       /* Test for pessimistic lock. */
       if (orm.lockable) {
         lock = this.tryLock(lockTable, id, {key: lockKey});
@@ -928,6 +934,7 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     prepareUpdate: function (orm, record, params, encryptionKey) {
       var attr,
+        attributePrivileges,
         columnKey,
         count,
         encryptQuery,
@@ -979,11 +986,18 @@ select xt.install_js('XT','Data','xtuple', $$
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop],
-        canEdit = orm.privileges &&
-                  orm.privileges.attribute &&
-                  orm.privileges.attribute[prop] &&
-                  orm.privileges.attribute[prop].update ?
-                  this.checkPrivilege(orm.privileges.attribute[prop].update) : true;
+
+        attributePrivileges = orm.privileges && 
+          orm.privileges.attribute && 
+          orm.privileges.attribute[prop];
+
+        if(!attributePrivileges || attributePrivileges.update === undefined) {
+          canEdit = true;
+        } else if (typeof attributePrivileges.update === 'string') {
+          canEdit = this.checkPrivilege(attributePrivileges.update);
+        } else {
+          canEdit = attributePrivileges.update; /* if it's true or false */
+        }
 
         if (canEdit && val !== undefined && !ormp.toMany) {
 
@@ -1229,7 +1243,7 @@ select xt.install_js('XT','Data','xtuple', $$
             sql = "select formatbytea(decrypt($1, setbytea($2), 'bf')) as result";
             // TODO - Handle not found error.
 
-            if (DEBUG) {
+            if (DEBUG && false) {
               XT.debug('decrypt prop =', prop);
               XT.debug('decrypt sql =', sql);
               XT.debug('decrypt values =', [record[prop], encryptionKey]);

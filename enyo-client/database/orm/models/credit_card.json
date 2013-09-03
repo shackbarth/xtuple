@@ -14,6 +14,36 @@
         "delete": false
       },
       "attribute": {
+        "name": {
+          "update": false
+        },
+        "address1": {
+          "update": false
+        },
+        "address2": {
+          "update": false
+        },
+        "city": {
+          "update": false
+        },
+        "state": {
+          "update": false
+        },
+        "zip": {
+          "update": false
+        },
+        "country": {
+          "update": false
+        },
+        "monthExpired": {
+          "update": false
+        },
+        "yearExpired": {
+          "update": false
+        },
+        "creditCardType": {
+          "update": false
+        },
         "number": {
           "update": false
         }
