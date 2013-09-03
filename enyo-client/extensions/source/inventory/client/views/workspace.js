@@ -149,6 +149,8 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.QuantityWidget", attr: "balance"},
               {kind: "XV.QuantityWidget", attr: "atShipping"},
               {kind: "onyx.GroupboxHeader", content: "_issue".loc()},
+              {kind: "XV.DateWidget", attr: "transactionDate",
+                name: "transactionDate", label: "_issueDate".loc()},
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
           ]},

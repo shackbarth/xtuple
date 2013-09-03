@@ -408,14 +408,14 @@
           "type": "Quantity",
           "column": "coitem_qtyreturned"
         }
-      }, 
+      },
       {
         "name": "balance",
         "attr": {
           "type": "Quantity",
           "column": "ship_balance"
         }
-      },  
+      },
       {
         "name": "atShipping",
         "attr": {
@@ -429,7 +429,14 @@
           "type": "Number",
           "column": "to_issue"
         }
-      }  
+      },
+      {
+        "name": "transactionDate",
+        "attr": {
+          "type": "Date",
+          "column": "transaction_date"
+        }
+      }
     ],
     "isSystem": true
   }

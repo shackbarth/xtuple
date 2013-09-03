@@ -271,12 +271,17 @@ trailing:true, white:true, strict:false*/
         }
       },
       issueStock: function (inEvent) {
-        var model = inEvent.model;
+        var model = inEvent.model,
+         transDate = model.get("transactionDate");
 
         this.doWorkspace({
           workspace: "XV.IssueStockWorkspace",
           id: model.id,
-          allowNew: false
+          allowNew: false,
+          success: function (model) {
+            // Set the transaction date to match the source
+            model.set("transactionDate", transDate);
+          }
         });
       }
     });

@@ -8,6 +8,9 @@ trailing:true, white:true, strict:false*/
   XT.extensions.inventory.initTransactionList = function () {
 
     /**
+      Expected to a have a parameter widget that contains an order and
+      a transaction date.
+
       @name XV.TransactionList
       @extends XV.SearchContainer
      */
@@ -19,6 +22,7 @@ trailing:true, white:true, strict:false*/
         notifyMessage: "",
         list: null,
         actions: null,
+        transactionDate: null,
         model: null
       },
       events: {
@@ -26,7 +30,7 @@ trailing:true, white:true, strict:false*/
       },
       handlers: {
         onListItemMenuTap: "showListItemMenu",
-        onSelectionChanged: "buildMenu"
+        onSelectionChanged: "selectionChanged"
       },
       components: [
         {name: "parameterPanel", kind: "FittableRows", classes: "left",
@@ -106,10 +110,74 @@ trailing:true, white:true, strict:false*/
         }
         this.buildMenu();
       },
+      /**
+        Capture order changed and transaction date changed events.
+        Depends on a very specific implementation of parameter widget
+        that includes `order` and `transactionDate` parameters.
+      */
+      parameterChanged: function (inSender, inEvent) {
+        var originator = inEvent ? inEvent.originator : false,
+          name = originator ? originator.name : false,
+          that = this,
+          options,
+          value;
+
+        if (name === "transactionDate") {
+          value = originator.$.input.getValue();
+          value = XT.date.applyTimezoneOffset(value, true);
+          this.setTransactionDate(value);
+          this.buildMenu();
+          return;
+        } else if (name === "order") {
+          value = originator.getParameter().value;
+          this.setModel(value);
+          this.buildMenu();
+        }
+
+        options = {
+          success: function () {
+            that.selectionChanged();
+          }
+        };
+        this.fetch(options);
+      },
       popupHidden: function (inSender, inEvent) {
         if (!this._popupDone) {
           inEvent.originator.show();
         }
+      },
+      /**
+        Overload: Piggy back on existing handler for `onParameterChanged event`
+        by forwarding this requery to `parameterChanged`.
+      */
+      requery: function (inSender, inEvent) {
+        this.parameterChanged(inSender, inEvent);
+        return true;
+      },
+      selectedModels: function () {
+        var list = this.$.list,
+          collection = list.getValue(),
+          models = [],
+          selected,
+          prop;
+        if (collection.length) {
+          selected = list.getSelection().selected;
+          for (prop in selected) {
+            if (selected.hasOwnProperty(prop)) {
+              models.push(list.getModel(prop - 0));
+            }
+          }
+        }
+        return models;
+      },
+      /**
+        Whenever a user makes a selection, rebuild the menu
+        and set the transaction date on the selected models
+        to match what has been selected here.
+      */
+      selectionChanged: function () {
+        this.transactionDateChanged();
+        this.buildMenu();
       },
       spinnerHide: function () {
         this._popupDone = true;
@@ -118,6 +186,17 @@ trailing:true, white:true, strict:false*/
       spinnerShow: function () {
         this._popupDone = false;
         this.$.spinnerPopup.show();
+      },
+      transactionDateChanged: function () {
+        var transDate = this.getTransactionDate(),
+          collection = this.$.list.getValue(),
+          i;
+
+        // Update the transaction dates on all models to match 
+        // What has been selected
+        for (i = 0; i < collection.length; i++) {
+          collection.at(i).set("transactionDate", transDate);
+        }
       }
     };
 
@@ -220,6 +299,7 @@ trailing:true, white:true, strict:false*/
           var model,
             options = {},
             toIssue,
+            transDate,
             params,
             dispOptions = {},
             wsOptions = {},
@@ -233,8 +313,11 @@ trailing:true, white:true, strict:false*/
           } else if (workspace) {
             model = workspace.getValue();
             toIssue = model.get("toIssue");
+            transDate = that.getTransactionDate();
+
             if (toIssue) {
               wsOptions.detail = model.formatDetail();
+              wsOptions.asOf = transDate;
               wsParams = {
                 orderLine: model.id,
                 quantity: toIssue,
@@ -259,6 +342,7 @@ trailing:true, white:true, strict:false*/
           } else {
             model = models[i];
             toIssue = model.get("toIssue");
+            transDate = that.getTransactionDate();
 
             // See if there's anything to issue here
             if (toIssue) {
@@ -270,11 +354,15 @@ trailing:true, white:true, strict:false*/
                   workspace: "XV.IssueStockWorkspace",
                   id: model.id,
                   callback: callback,
-                  allowNew: false
+                  allowNew: false,
+                  success: function (model) {
+                    model.set("transactionDate", transDate);
+                  }
                 });
 
               // Otherwise just use the data we have
               } else {
+                options.asOf = transDate;
                 options.detail = model.formatDetail();
                 params = {
                   orderLine: model.id,
@@ -305,12 +393,6 @@ trailing:true, white:true, strict:false*/
         var models = this.selectedModels();
         this.issue(models, true);
       },
-      parameterChanged: function (inSender, inEvent) {
-        if (inEvent && inEvent.originator.name === "order") {
-          this.setModel(inEvent.originator.getParameter().value);
-          this.buildMenu();
-        }
-      },
       returnSelected: function () {
         var models = this.selectedModels(),
           that = this,
@@ -338,37 +420,6 @@ trailing:true, white:true, strict:false*/
           };
           XM.Inventory.returnFromShipping(data, options);
         }
-      },
-      /**
-        Overload: Piggy back on existing handler for `onParameterChanged event`
-        by forwarding this requery to `parameterChanged`.
-      */
-      requery: function (inSender, inEvent) {
-        var that = this,
-          options = {
-            success: function () {
-              that.buildMenu();
-            }
-          };
-        this.fetch(options);
-        this.parameterChanged(inSender, inEvent);
-        return true;
-      },
-      selectedModels: function () {
-        var list = this.$.list,
-          collection = list.getValue(),
-          models = [],
-          selected,
-          prop;
-        if (collection.length) {
-          selected = list.getSelection().selected;
-          for (prop in selected) {
-            if (selected.hasOwnProperty(prop)) {
-              models.push(list.getModel(prop - 0));
-            }
-          }
-        }
-        return models;
       }
     });
   };

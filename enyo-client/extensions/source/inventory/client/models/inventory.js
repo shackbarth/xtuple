@@ -50,7 +50,8 @@ white:true*/
         "returned",
         "site",
         "shipment",
-        "shipped"
+        "shipped",
+        "transactionDate"
       ],
 
       name: function () {
@@ -140,7 +141,9 @@ white:true*/
           if (!resp.answer) { return; }
             
           var dispOptions = {},
-            issOptions = {},
+            issOptions = {
+              asOf: that.get("transactionDate")
+            },
             detail = that.formatDetail(),
             params = [
               that.id,

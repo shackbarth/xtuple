@@ -403,7 +403,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
     /* Post the transaction */
     for (i = 0; i < ary.length; i++) {
       item = ary[i];
-      series = plv8.execute(sql, [item.orderLine, item.quantity, 0, item.asOf])[0].series;
+      asOf = item.options ? item.options.asOf : null;
+      series = plv8.execute(sql, [item.orderLine, item.quantity, 0, asOf])[0].series;
 
       /* Distribute detail */
       XM.PrivateInventory.distribute(series, item.options.detail);
