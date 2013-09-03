@@ -514,7 +514,10 @@ trailing:true, white:true*/
             {kind: "XV.CurrencyPicker", attr: "currency"},
             {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
              label: "_margin".loc(), currencyShowing: false},
-            {kind: "XV.WeightWidget", attr: "freightWeight"}
+            {kind: "XV.WeightWidget", attr: "freightWeight"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "allocatedCredit", currency: "currency"},
+                label: "_allocatedCredit".loc(), name: "allocatedCreditWidget",
+                currencyShowing: false}
           ]},
           {kind: "FittableRows", name: "summaryColumnTwo", components: [
             {kind: "XV.MoneyWidget",

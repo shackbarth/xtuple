@@ -48,8 +48,8 @@
   },
   "main": "node-datasource/main.js",
   "scripts": {
-    "test-build": "mocha test/mocha/database/build_database.js",
-    "test": "mocha -R spec test/mocha/lib/login.js test/mocha/models/* test/mocha/kinds/*",
-    "test-datasource": "mocha -R spec test/mocha/routes/*"
+    "test-build": "./node_modules/.bin/mocha test/mocha/database/build_database.js",
+    "test": "./node_modules/.bin/mocha -R spec test/mocha/lib/login.js test/mocha/models/* test/mocha/kinds/*",
+    "test-datasource": "./node_modules/.bin/mocha -R spec test/mocha/routes/*"
   }
 }

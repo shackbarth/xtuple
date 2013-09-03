@@ -7,6 +7,7 @@ select cohead.*,
   xt.co_tax_total(cohead) as tax_total,
   xt.co_total(cohead) as total,
   xt.co_margin(cohead) as margin,
+  xt.co_allocated_credit(cohead) as allocated_credit,
     ophead_number,
     cust_number 
   from cohead

@@ -31,6 +31,7 @@
     "xt/functions/average_cost.sql",
     "xt/functions/change_password.sql",
     "xt/functions/check_password.sql",
+    "xt/functions/co_allocated_credit.sql",
     "xt/functions/co_line_at_shipping.sql",
     "xt/functions/co_line_base_price.sql",
     "xt/functions/co_line_customer_discount.sql",

@@ -488,6 +488,13 @@
         }
       },
       {
+        "name": "allocatedCredit",
+        "attr": {
+          "type": "Number",
+          "column": "allocated_credit"
+        }
+      },
+      {
         "name": "margin",
         "attr": {
           "type": "Number",

@@ -85,6 +85,7 @@ var lang = XT.stringsFor("en_US", {
   "_addresses": "Addresses",
   "_advanced" : "Advanced",
   "_alarms": "Alarms",
+  "_allocatedCredit": "Allocated Credit",
   "_allowableItems": "Allowable Items",
   "_altEmphasisColor": "Alt Emphasis Color",
   "_alternate": "Alternate",

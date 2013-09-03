@@ -1132,6 +1132,7 @@ white:true*/
       "listPrice",
       "listPriceDiscount",
       "priceUnitRatio",
+      "allocatedCredit",
       "margin",
       "site",
       "tax"
