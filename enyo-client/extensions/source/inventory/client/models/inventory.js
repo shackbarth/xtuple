@@ -50,9 +50,10 @@ white:true*/
         "returned",
         "site",
         "shipment",
-        "shipped",
-        "transactionDate"
+        "shipped"
       ],
+
+      transactionDate: null,
 
       name: function () {
         return this.get("order") + " #" + this.get("lineNumber");
@@ -142,7 +143,7 @@ white:true*/
             
           var dispOptions = {},
             issOptions = {
-              asOf: that.get("transactionDate")
+              asOf: that.transactionDate
             },
             detail = that.formatDetail(),
             params = [

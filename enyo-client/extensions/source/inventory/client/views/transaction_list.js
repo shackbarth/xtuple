@@ -195,7 +195,7 @@ trailing:true, white:true, strict:false*/
         // Update the transaction dates on all models to match 
         // What has been selected
         for (i = 0; i < collection.length; i++) {
-          collection.at(i).set("transactionDate", transDate);
+          collection.at(i).transactionDate = transDate;
         }
       }
     };
@@ -356,7 +356,7 @@ trailing:true, white:true, strict:false*/
                   callback: callback,
                   allowNew: false,
                   success: function (model) {
-                    model.set("transactionDate", transDate);
+                    model.transactionDate = transDate;
                   }
                 });
 

@@ -429,13 +429,6 @@
           "type": "Number",
           "column": "to_issue"
         }
-      },
-      {
-        "name": "transactionDate",
-        "attr": {
-          "type": "Date",
-          "column": "transaction_date"
-        }
       }
     ],
     "isSystem": true

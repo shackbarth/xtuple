@@ -15,7 +15,6 @@ select xt.create_view('xt.coitemship', $$
     ship_balance,
     at_shipping,
     null as to_issue,
-    current_date as transaction_date,
     shiphead_id
   from xt.coiteminfo as coitem
     join itemsite on itemsite_id=coitem_itemsite_id
