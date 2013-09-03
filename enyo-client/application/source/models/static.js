@@ -68,6 +68,22 @@ white:true*/
     XM.balanceMethods.add(balanceMethod);
   }
 
+  // Credit Card Type
+  var creditCardTypeJson = [
+    { id: "M", name: "_masterCard".loc() },
+    { id: "V", name: "_visa".loc() }
+  ];
+  XM.CreditCardTypeModel = Backbone.Model.extend({
+  });
+  XM.CreditCardTypeCollection = Backbone.Collection.extend({
+    model: XM.CreditCardTypeModel
+  });
+  XM.creditCardTypes = new XM.CreditCardTypeCollection();
+  for (i = 0; i < creditCardTypeJson.length; i++) {
+    var creditCardType = new XM.CreditCardTypeModel(creditCardTypeJson[i]);
+    XM.creditCardTypes.add(creditCardType);
+  }
+
   // Credit Status
   var creditStatusJson = [
     { id: "G", name: "_goodStanding".loc() },
