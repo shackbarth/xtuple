@@ -5,18 +5,6 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   // ..........................................................
-  // ABC CLASS
-  //
-
-  enyo.kind({
-    name: "XV.AbcClassPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.abcClass",
-    valueAttribute: "id",
-    showNone: false
-  });
-
-  // ..........................................................
   // ACCOUNT TYPE
   //
 
@@ -62,18 +50,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // CONTROL METHOD
-  //
-
-  enyo.kind({
-    name: "XV.ControlMethodPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.controlMethod",
-    valueAttribute: "id",
-    showNone: false
-  });
-
-  // ..........................................................
   // COST CATEGORY
   //
 
@@ -85,18 +61,6 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'code'}
     ]
-  });
-
-  // ..........................................................
-  // COST METHOD
-  //
-
-  enyo.kind({
-    name: "XV.CostMethodPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.costMethod",
-    valueAttribute: "id",
-    showNone: false
   });
 
   // ..........................................................
@@ -288,21 +252,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // LOCATION
-  //
-
-  enyo.kind({
-    name: "XV.LocationPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.location",
-    nameAttribute: "format",
-    orderBy: [
-      {attribute: 'format'}
-    ],
-    valueAttribute: "id"
-  });
-
-  // ..........................................................
   // NUMBER POLICY
   //
 
@@ -467,19 +416,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // SITE ZONE
-  //
-
-  enyo.kind({
-    name: "XV.SiteZonePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.siteZoneRelations",
-    orderBy: [
-      {attribute: 'name'}
-    ]
-  });
-
-  // ..........................................................
   // PLANNER CODE
   //
 
@@ -498,8 +434,10 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.SortPicker",
-    kind: "XV.Picker",
+    kind: "XV.PickerWidget",
     onSelect: "itemSelected",
+    showLabel: false,
+    prerender: false,
     buildList: function (comps) {
       this.$.picker.destroyClientControls();
       if (!comps) {
@@ -550,21 +488,10 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.SortTypePicker",
-    kind: "XV.Picker",
-    buildList: function (options) {
-      this.$.picker.createComponent({content: "_ascending".loc(), attr: "ascending"});
-      this.$.picker.createComponent({content: "_descending".loc(), attr: "descending"});
-    },
-    findItemByAttr: function (attr) {
-      for (var i = 0; i < this.$.picker.getComponents().length; i++) {
-        if (attr === this.$.picker.getComponents()[i].attr) {
-          return this.$.picker.getComponents()[i];
-        }
-      }
-    },
-    itemSelected: function (inSender, inEvent) {
-      this.attr = inEvent.originator.attr;
-    }
+    kind: "XV.PickerWidget",
+    showLabel: false,
+    prerender: false,
+    collection: "XM.sortTypes"
   });
 
   // ..........................................................
