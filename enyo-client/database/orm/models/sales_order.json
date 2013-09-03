@@ -18,6 +18,9 @@
         "delete": "MaintainSalesOrders"
       },
       "attribute": {
+        "allocatedCredit": {
+          "view": "ViewCreditMemos"
+        },
         "margin": {
           "view": "ShowMarginsOnSalesOrder"
         },

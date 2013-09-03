@@ -276,6 +276,7 @@ white:true*/
       "freightWeight",
       "getOrderStatusString",
       "lineItems",
+      "allocatedCredit",
       "margin",
       "miscCharge",
       "status",
@@ -1132,7 +1133,6 @@ white:true*/
       "listPrice",
       "listPriceDiscount",
       "priceUnitRatio",
-      "allocatedCredit",
       "margin",
       "site",
       "tax"
