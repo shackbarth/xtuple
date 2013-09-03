@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict:false*/
-/*global XT:true, XV:true, XM:true, _:true, enyo:true */
+/*global XT:true, XM:true, XV:true, _:true, enyo:true */
 
 (function () {
 
@@ -33,13 +33,14 @@ trailing:true, white:true, strict:false*/
           components: [
           {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
             {kind: "onyx.Button", name: "backButton", content: "_back".loc(), ontap: "close"},
-            {kind: "onyx.MenuDecorator", style: "margin: 0;", onSelect: "actionSelected", components: [
+            {kind: "onyx.MenuDecorator", style: "margin: 0;",
+              onSelect: "actionSelected", components: [
               {kind: "XV.IconButton", src: "/assets/menu-icon-gear.png",
                 content: "_actions".loc(), name: "actionButton"},
               {kind: "onyx.Menu", name: "actionMenu"}
             ]}
           ]},
-          {kind: "Scroller", name: "parameterScroller", fit: true},
+          {kind: "Scroller", name: "parameterScroller"}
         ]},
         {name: "listPanel", kind: "FittableRows", components: [
           // the onyx-menu-toolbar class keeps the popups from being hidden
@@ -56,7 +57,8 @@ trailing:true, white:true, strict:false*/
             {name: "listItemMenu", kind: "onyx.Menu", floating: true,
               onSelect: "listActionSelected", maxHeight: 500}
           ]},
-          {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0},
+          {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false,
+            panelCount: 0},
           {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
               modal: true, floating: true, scrim: true,
               onHide: "popupHidden", components: [

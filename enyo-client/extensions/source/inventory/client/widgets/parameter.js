@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
-/*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
+trailing:true, white:true, strict: false*/
+/*global XT:true, enyo:true*/
 
 (function () {
 
@@ -15,7 +15,8 @@ trailing:true, white:true*/
       name: "XV.IssueToShippingParameters",
       kind: "XV.ParameterWidget",
       components: [
-        {kind: "onyx.GroupboxHeader", content: "_issueToShipping".loc()},
+        {kind: "onyx.GroupboxHeader", content: "_parameters".loc()},
+        {name: "transactionDate", label: "_issueDate".loc(), defaultKind: "XV.DateWidget"},
         {name: "order", attr: "order", label: "_order".loc(), defaultKind: "XV.SalesOrderWidget",
         getParameter: function () {
           var param,
@@ -25,20 +26,26 @@ trailing:true, white:true*/
           if (value) {
             param = {
               attribute: "order",
-              operator: '=',
+              operator: "=",
               value: value
             };
           } else {
             param = {
               attribute: "lineNumber",
-              operator: '=',
+              operator: "=",
               value: -1
             };
           }
 
           return param;
-        }}
-      ]
+        }},
+        {name: "shipment", label: "_shipment".loc(), defaultKind: "XV.ShipmentWidget"}
+      ],
+      create: function () {
+        this.inherited(arguments);
+        this.$.transactionDate.setValue(new Date());
+        this.$.shipment.$.input.setDisabled(true);
+      }
     });
 
     // ..........................................................
