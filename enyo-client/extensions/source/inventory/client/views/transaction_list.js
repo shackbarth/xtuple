@@ -182,7 +182,6 @@ trailing:true, white:true, strict:false*/
 
           // If argument is false, this whole process was cancelled
           if (workspace === false) {
-            workspace.doPrevious();
             return;
 
           // If a workspace brought us here, process the information it obtained

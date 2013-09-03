@@ -118,6 +118,7 @@ trailing:true, white:true, strict: false*/
       kind: "XV.Workspace",
       title: "_issueStock".loc(),
       model: "XM.IssueToShipping",
+      backText: "_cancel".loc(),
       saveText: "_issue".loc(),
       hideApply: true,
       hideRefresh: true,
@@ -188,6 +189,20 @@ trailing:true, white:true, strict: false*/
           this.$.detail.hide();
           this.parent.parent.$.menu.refresh();
         }
+      },
+      /**
+        Overload to handle callback chain.
+      */
+      destroy: function () {
+        var model = this.getValue(),
+          callback = this.getCallback();
+
+        // If there's a callback then call it with false
+        // to let it know to cancel process
+        if (model.isDirty() && callback) {
+          callback(false);
+        }
+        this.inherited(arguments);
       },
       distributeDone: function () {
         this._popupDone = true;
