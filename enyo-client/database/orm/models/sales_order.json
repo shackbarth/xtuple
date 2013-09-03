@@ -22,10 +22,12 @@
           "view": "ShowMarginsOnSalesOrder"
         },
         "orderDate": {
-          "edit": "OverrideSODate"
+          "create": "OverrideSODate",
+          "update": "OverrideSODate"
         },
         "packDate": {
-          "edit": "AlterPackDate"
+          "create": "AlterPackDate",
+          "update": "AlterPackDate"
         }
       }
     },
@@ -1006,7 +1008,8 @@
       },
       "attribute": {
         "firm": {
-          "edit": "FirmSalesOrder"
+          "create": "FirmSalesOrder",
+          "update": "FirmSalesOrder"
         },
         "margin": {
           "view": "ShowMarginsOnSalesOrder"
@@ -1015,7 +1018,8 @@
           "view": "ViewCosts"
         },
         "taxType": {
-          "edit": "OverrideTax"
+          "create": "OverrideTax",
+          "update": "OverrideTax"
         },
         "markup": {
           "view": "ViewCosts"

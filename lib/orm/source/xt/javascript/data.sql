@@ -701,8 +701,8 @@ select xt.install_js('XT','Data','xtuple', $$
         canEdit = orm.privileges &&
                   orm.privileges.attribute &&
                   orm.privileges.attribute[prop] &&
-                  orm.privileges.attribute[prop].edit ?
-                  this.checkPrivilege(orm.privileges.attribute[prop].edit) : true;
+                  orm.privileges.attribute[prop].create ?
+                  this.checkPrivilege(orm.privileges.attribute[prop].create) : true;
 
         /* Handle fixed values. */
         if (attr.value !== undefined) {
@@ -982,8 +982,8 @@ select xt.install_js('XT','Data','xtuple', $$
         canEdit = orm.privileges &&
                   orm.privileges.attribute &&
                   orm.privileges.attribute[prop] &&
-                  orm.privileges.attribute[prop].edit ?
-                  this.checkPrivilege(orm.privileges.attribute[prop].edit) : true;
+                  orm.privileges.attribute[prop].update ?
+                  this.checkPrivilege(orm.privileges.attribute[prop].update) : true;
 
         if (canEdit && val !== undefined && !ormp.toMany) {
 
@@ -1239,6 +1239,8 @@ select xt.install_js('XT','Data','xtuple', $$
             if(typeof result === 'string' && result.substring(0, 2) === '\\x') {
               result = result ? hexToAlpha(result) : result;
             }
+            /* in the special case of encrypted credit card numbers, we don't give the
+              user the full decrypted number EVEN IF they have the encryption key */
             if(ormp.attr.isEncrypted === "credit_card_number" && result && result.length >= 4) {
               record[prop] = "************" + result.substring(result.length - 4);
             } else {

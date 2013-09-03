@@ -18,7 +18,8 @@
       },
       "attribute": {
         "creditStatus": {
-          "edit": "UpdateCustomerCreditStatus"
+          "create": "UpdateCustomerCreditStatus",
+          "update": "UpdateCustomerCreditStatus"
         }
       }
     },
@@ -388,7 +389,8 @@
       },
       "attribute": {
         "creditStatus": {
-          "edit": "UpdateCustomerCreditStatus"
+          "create": "UpdateCustomerCreditStatus",
+          "update": "UpdateCustomerCreditStatus"
         }
       }
     },

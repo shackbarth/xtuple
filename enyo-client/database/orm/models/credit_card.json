@@ -12,6 +12,11 @@
         "read": "ProcessCreditCards",
         "update": "ProcessCreditCards",
         "delete": false
+      },
+      "attribute": {
+        "number": {
+          "update": false
+        }
       }
     },
     "properties": [
