@@ -119,6 +119,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.CreditCardTypePicker",
     kind: "XV.PickerWidget",
+    showNone: false,
     collection: "XM.creditCardTypes"
   });
 
@@ -310,6 +311,18 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'format'}
     ],
     valueAttribute: "id"
+  });
+
+
+  // ..........................................................
+  // MONTH
+  //
+
+  enyo.kind({
+    name: "XV.MonthPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.months"
   });
 
   // ..........................................................
@@ -799,4 +812,14 @@ regexp:true, undef:true, trailing:true, white:true */
     valueAttribute: "id"
   });
 
+  // ..........................................................
+  // YEAR
+  //
+
+  enyo.kind({
+    name: "XV.YearPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.years"
+  });
 }());

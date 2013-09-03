@@ -47,11 +47,11 @@ trailing:true, white:true*/
         {kind: "XV.CountryCombobox", attr: "country", name: "country", onValueChange: "countryChanged" },
         {kind: "XV.StateCombobox", attr: "state", name: "state"},
         {kind: "XV.InputWidget", attr: "zip", label: "_postalCode".loc()},
-        {kind: "XV.CreditCardTypePicker", attr: "creditCardType"}, // TODO: could be picker
+        {kind: "XV.CreditCardTypePicker", attr: "creditCardType", label: "_type".loc()},
         {kind: "XV.CheckboxWidget", attr: "isDebit"},
         {kind: "XV.InputWidget", attr: "number"},
-        {kind: "XV.InputWidget", attr: "monthExpired"}, // TODO: could be picker
-        {kind: "XV.InputWidget", attr: "yearExpired"}, // TODO: could be picker
+        {kind: "XV.MonthPicker", attr: "monthExpired"},
+        {kind: "XV.YearPicker", attr: "yearExpired"},
         {kind: "XV.CheckboxWidget", attr: "isActive"},
         {kind: "XV.NumberWidget", attr: "sequence"}
       ]}

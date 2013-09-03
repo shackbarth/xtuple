@@ -167,6 +167,19 @@ white:true*/
     XM.ledgerAccountTypes.add(ledgerAccountType);
   }
 
+  // Month (for credit cards)
+  XM.MonthModel = Backbone.Model.extend({
+  });
+  XM.MonthCollection = Backbone.Collection.extend({
+    model: XM.MonthModel
+  });
+  XM.months = new XM.MonthCollection();
+  for (i = 1; i <= 12; i++) {
+    var monthFormat = i < 10 ? "0" + i : "" + i;
+    var month = new XM.MonthModel({id: monthFormat, name: monthFormat});
+    XM.months.add(month);
+  }
+
   // Number Policy
   K = XM.Document;
   var numberPolicyJson = [
@@ -306,6 +319,19 @@ white:true*/
   for (i = 0; i < toDoStatusJson.length; i++) {
     var toDoStatus = new XM.ToDoStatusModel(toDoStatusJson[i]);
     XM.toDoStatuses.add(toDoStatus);
+  }
+
+  // Year (for credit cards)
+  XM.YearModel = Backbone.Model.extend({
+  });
+  XM.YearCollection = Backbone.Collection.extend({
+    model: XM.YearModel
+  });
+  XM.years = new XM.YearCollection();
+  for (i = 2000; i <= 2030; i++) {
+    var yearFormat = "" + i;
+    var year = new XM.YearModel({id: yearFormat, name: yearFormat});
+    XM.years.add(year);
   }
 
 }());
