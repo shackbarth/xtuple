@@ -98,7 +98,7 @@ white:true*/
             params.attr = "_abbreviation".loc();
             params.value = currAbbr;
             err = XT.Error.clone('xt1008', { params: params });
-            model.trigger('error', model, err, options);
+            model.trigger('invalid', model, err, options);
           }
         };
         this.findExisting('abbreviation', currAbbr, checkOptions);

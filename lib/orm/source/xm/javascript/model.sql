@@ -66,8 +66,11 @@ select xt.install_js('XM','Model','xtuple', $$
     rec = data.retrieveRecord({
       nameSpace: nameSpace,
       type: type,
-      id: id
+      id: id,
+      silentError: true
     });
+
+    if (!rec) { return false; }
 
     pid = nkey ? data.getId(orm, id) : id;
     if (!pid) {

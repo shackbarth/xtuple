@@ -13,13 +13,14 @@
     smoke = require("../lib/smoke");
 
   describe('Workspaces', function () {
+    this.timeout(30 * 1000);
 
     before(function (done) {
-      this.timeout(30 * 1000);
       zombieAuth.loadApp(done);
     });
 
     it('should be set up right', function () {
+      this.timeout(30 * 1000);
       var navigator = XT.app.$.postbooks.$.navigator,
         workspace;
 
@@ -30,6 +31,7 @@
 
           describe("The workspace for " + listName, function () {
             it('should fail predictably if we save it with no data', function (done) {
+              this.timeout(30 * 1000);
               navigator.setModule(moduleIndex);
               navigator.setContentPanel(panelIndex);
               list = navigator.$.contentPanels.getActive();

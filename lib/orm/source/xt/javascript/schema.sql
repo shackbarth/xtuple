@@ -272,8 +272,9 @@ select xt.install_js('XT','Schema','xtuple', $$
         nkey = XT.Orm.naturalKey(orm),
         pkey = XT.Orm.primaryKey(orm),
         ret = {},
-        relatedSchema = {},
-        relatedSchemaKey,
+        relatedORM = {},
+        relatedKey,
+        relatedKeyProp,
         schemaColumnInfo = {},
         schemaTable = orm.table;
 
@@ -353,14 +354,16 @@ select xt.install_js('XT','Schema','xtuple', $$
           ret.properties[orm.properties[i].name].type = "object";
           ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
         } else {
-          /* Fetch the related ORM's JSON-Schema and use it's key's type. */
+
           /* TODO: Assuming "XM" here... */
-          relatedSchema = XT.Schema.getProperties({"nameSpace": "XM", "type": orm.properties[i].toOne.type});
-          for (var prop in relatedSchema.properties) {
-            if (relatedSchema.properties[prop].isKey) {
-              ret.properties[orm.properties[i].name].type = relatedSchema.properties[prop].type;
-              relatedSchemaKey = prop;
-            }
+          relatedORM = XT.Orm.fetch("XM", orm.properties[i].toOne.type, {"silentError": true});
+          relatedKey = XT.Orm.naturalKey(relatedORM) || XT.Orm.primaryKey(relatedORM);
+          relatedKeyProp = XT.Orm.getProperty(relatedORM, relatedKey);
+
+          if (relatedKeyProp && relatedKeyProp.attr && relatedKeyProp.attr.type) {
+            ret.properties[orm.properties[i].name].type = relatedKeyProp.attr.type;
+          } else {
+            plv8.elog(ERROR, "No attr.type found for ORM: " + orm.properties[i].toOne.type);
           }
 
           /* This is an array of related keys, not a full object. */
@@ -368,7 +371,7 @@ select xt.install_js('XT','Schema','xtuple', $$
           /* Using JSON-Schema $ref paths like this: */
           /* http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.5.7.2 */
           /* See also: http://www.sitepen.com/blog/2008/06/17/json-referencing-in-dojo/ */
-          ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type + "/" + relatedSchemaKey;
+          ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type + "/" + relatedKey;
         }
 
         /* Add required override based off of ORM's property. */
@@ -387,14 +390,9 @@ select xt.install_js('XT','Schema','xtuple', $$
           ret.properties[orm.properties[i].name].type = "object";
           ret.properties[orm.properties[i].name].items = {"$ref": orm.properties[i].toMany.type};
         } else {
-          /* Fetch the related ORM's JSON-Schema and use it's key's type. */
           /* TODO: Assuming "XM" here... */
-          relatedSchema = XT.Schema.getProperties({"nameSpace": "XM", "type": orm.properties[i].toMany.type});
-          for (var prop in relatedSchema.properties) {
-            if (relatedSchema.properties[prop].isKey) {
-              relatedSchemaKey = prop;
-            }
-          }
+          relatedORM = XT.Orm.fetch("XM", orm.properties[i].toMany.type, {"silentError": true});
+          relatedKey = XT.Orm.naturalKey(relatedORM) || XT.Orm.primaryKey(relatedORM);
 
           ret.properties[orm.properties[i].name].type = "array";
 
@@ -404,7 +402,7 @@ select xt.install_js('XT','Schema','xtuple', $$
           /* http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.5.7.2 */
           /* See also: http://www.sitepen.com/blog/2008/06/17/json-referencing-in-dojo/ */
           ret.properties[orm.properties[i].name].items = {
-            "$ref": orm.properties[i].toMany.type + "/" + relatedSchemaKey
+            "$ref": orm.properties[i].toMany.type + "/" + relatedKey
           };
         }
       }

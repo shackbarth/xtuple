@@ -172,7 +172,7 @@
           "isNested": true,
           "type": "ToDoAlarm",
           "column": "todoitem_id",
-          "inverse": "to_do"
+          "inverse": "toDo"
         }
       },
       {
@@ -181,7 +181,7 @@
           "isNested": true,
           "type": "ToDoComment",
           "column": "todoitem_id",
-          "inverse": "to_do"
+          "inverse": "toDo"
         }
       },
       {

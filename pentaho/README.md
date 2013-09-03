@@ -4,6 +4,18 @@ xTuple reporting is powered by Pentaho JFreeReports.  Reports can be developed u
 Pentaho Report Designer.  The business intelligence server provides the reports engine to
 serve reports.
 
+Get the Reports  
+---------------  
+Reports are located in the xtuple/xtuple repo:  
+  
+  https://github.com/xtuple/xtuple/tree/master/pentaho  
+  
+To get xtuple/xtuple:  
+    
+  git clone https://github.com/xtuple/xtuple  
+  
+If you also want to install business intelligence see https://github.com/xtuple/bi  
+
 Install Java & Maven
 --------------------
 
@@ -49,7 +61,8 @@ Edit xtuple/node-datasource/config.js defining the server URL.  For example:
 
       biUrl: "http://192.168.56.101:8080/pentaho/content/reporting/reportviewer/report.html?solution=xtuple&path=%2Fprpt&locale=en_US&userid=reports&password=password&output-target=pageable/pdf"
 
-Also, Mobile Client SSL keys must have a Common Name. Make sure common name is your URL or IP address when you run openssl req.
+Also, Mobile App SSL keys must have a Common Name. Make sure the common name is your URL   
+or IP address when you run openssl req.  
 
 	cd xtuple/node-datasource/lib/private
 	openssl genrsa -des3 -out server.key -passout pass:admin 1024

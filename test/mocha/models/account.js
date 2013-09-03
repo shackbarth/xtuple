@@ -9,7 +9,9 @@
   var crud = require('../lib/crud'),
     data = {
       recordType: "XM.Account",
+      commentType: "XM.AccountComment",
       autoTestAttributes: true,
+      testComments: true,
       createHash: {
         number: "Test_account" + Math.random(),
         name: "A test Account"

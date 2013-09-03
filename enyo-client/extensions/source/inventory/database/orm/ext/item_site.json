@@ -30,11 +30,17 @@
         }
       },
       {
+        "name": "quantityOnHand",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_qtyonhand"
+        }
+      },
+      {
         "name": "leadTime",
         "attr": {
           "type": "Number",
-          "column": "itemsite_leadtime",
-          "required": true
+          "column": "itemsite_leadtime"
         }
       },
       {
@@ -45,58 +51,59 @@
         }
       },
       {
-        "name": "automaticAbcClassUpdates",
+        "name": "isAutomaticAbcClassUpdates",
         "attr": {
           "type": "Boolean",
-          "column": "itemsite_autoabcclass",
-          "required": true
+          "column": "itemsite_autoabcclass"
         }
       },
       {
         "name": "cycleCountFrequency",
         "attr": {
           "type": "Number",
-          "column": "itemsite_cyclecountfreq",
-          "required": true
+          "column": "itemsite_cyclecountfreq"
         }
       },
       {
         "name": "issueMethod",
         "attr": {
           "type": "String",
-          "column": "itemsite_issuemethod",
-          "required": true
+          "column": "itemsite_issuemethod"
         }
       },
       {
-        "name": "stocked",
+        "name": "isStocked",
         "attr": {
           "type": "Boolean",
-          "column": "itemsite_stocked",
-          "required": true
+          "column": "itemsite_stocked"
         }
       },
       {
         "name": "safetyStock",
         "attr": {
           "type": "Number",
-          "column": "itemsite_safetystock",
-          "required": true
+          "column": "itemsite_safetystock"
         }
       },
       {
         "name": "useParameters",
         "attr": {
           "type": "Boolean",
-          "column": "itemsite_useparams",
-          "required": true
+          "column": "itemsite_useparams"
+        }
+      },
+      {
+        "name": "useParametersManual",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_useparamsmanual"
         }
       },
       {
         "name": "reorderLevel",
         "attr": {
          "type": "Number",
-         "column": "itemsite_reorderLevel"
+         "column": "itemsite_reorderlevel"
         }
       },
       {
@@ -128,7 +135,7 @@
         }
       },
       {
-        "name": "locationControl",
+        "name": "isLocationControl",
         "attr": {
           "type": "Boolean",
           "column": "itemsite_loccntrl"
@@ -137,12 +144,15 @@
       {
         "name": "receiveLocation",
         "toOne": {
-          "type": "Location",
-          "column": "itemsite_recvlocation_id"
+          "isNested": true,
+          "type": "LocationRelation",
+          "column": "itemsite_recvlocation_id",
+          "nullValue": -1,
+          "inverse": "id"
         }
       },
       {
-        "name": "receiveLocationAuto",
+        "name": "isReceiveLocationAuto",
         "attr": {
           "type": "Boolean",
           "column": "itemsite_recvlocation_dist"
@@ -151,12 +161,15 @@
       {
         "name": "stockLocation",
         "toOne": {
-          "type": "Location",
-          "column": "itemsite_location_id"
+          "isNested": true,
+          "type": "LocationRelation",
+          "column": "itemsite_location_id",
+          "nullValue": -1,
+          "inverse": "id"
         }
       },
       {
-        "name": "stockLocationAuto",
+        "name": "isStockLocationAuto",
         "attr": {
           "type": "Boolean",
           "column": "itemsite_location_dist"
@@ -165,12 +178,15 @@
       {
         "name": "issueLocation",
         "toOne": {
-          "type": "Location",
-          "column": "itemsite_issuelocation_id"
+          "isNested": true,
+          "type": "LocationRelation",
+          "column": "itemsite_issuelocation_id",
+          "nullValue": -1,
+          "inverse": "id"
         }
       },
       {
-        "name": "issueLocationAuto",
+        "name": "isIssueLocationAuto",
         "attr": {
           "type": "Boolean",
           "column": "itemsite_issuelocation_dist"

@@ -180,7 +180,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           "from xt.orm " +
           "where orm_namespace=$1" +
           " and orm_type=$2" +
-          " and not orm_ext " +
+          " and orm_ext=$4 " +
           " and orm_active " +
           " and orm_context='xtuple'  " +
           "union all " +
@@ -192,7 +192,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           " left join usrgrp on usrgrp_grp_id=grpext_grp_id " +
           "where orm_namespace=$1 " +
           " and orm_type=$2 " +
-          " and not orm_ext " +
+          " and orm_ext=$4 " +
           " and orm_active " +
           " and orm_context != 'xtuple'" +
           " and (usrext_usr_username=$3 or usrgrp_username=$3));";
@@ -200,21 +200,21 @@ select xt.install_js('XT','Orm','xtuple', $$
                "from xt.orm " +
                "where orm_namespace=$1" +
                " and orm_type=$2" +
-               " and not orm_ext " +
+               " and orm_ext=$3 " +
                " and orm_active; ";
 
     if (isSuper) {
       if (DEBUG) {
         XT.debug('fetch sql = ', superSql);
-        XT.debug('fetch values = ', [nameSpace, type]);
+        XT.debug('fetch values = ', [nameSpace, type, false]);
       }
-      res = plv8.execute(superSql, [nameSpace, type]);
+      res = plv8.execute(superSql, [nameSpace, type, false]);
     } else {
       if (DEBUG) {
         XT.debug('fetch sql = ', sql);
-        XT.debug('fetch values = ', [nameSpace, type, XT.username]);
+        XT.debug('fetch values = ', [nameSpace, type, XT.username, false]);
       }
-      res = plv8.execute(sql, [nameSpace, type, XT.username]);
+      res = plv8.execute(sql, [nameSpace, type, XT.username, false]);
     }
 
     if(!res.length) {
@@ -231,33 +231,16 @@ select xt.install_js('XT','Orm','xtuple', $$
 
     /* get extensions and merge them into the base */
     if (!ret.extensions) ret.extensions = [];
-    sql = 'select orm_json as json ' +
-          'from xt.orm ' +
-          '  join xt.ext on ext_name = orm_context ' +
-          '  left join xt.usrext on ext_id = usrext_ext_id ' +
-          'where orm_namespace=$1' +
-          ' and orm_type=$2' +
-          ' and orm_ext ' +
-          ' and orm_active ' +
-          ' and (usrext_usr_username=$3) ' +
-          'order by orm_seq';
-    superSql = 'select orm_json as json ' +
-          'from xt.orm ' +
-          'where orm_namespace=$1' +
-          ' and orm_type=$2' +
-          ' and orm_ext ' +
-          ' and orm_active ' +
-          'order by orm_seq';
 
     if (DEBUG) {
       XT.debug('fetch sql = ', sql);
-      XT.debug('fetch values = ', [nameSpace, type, XT.username]);
+      XT.debug('fetch values = ', [nameSpace, type, XT.username, true]);
     }
 
     if (isSuper) {
-      res = plv8.execute(superSql, [nameSpace, type]);
+      res = plv8.execute(superSql, [nameSpace, type, true]);
     } else {
-      res = plv8.execute(sql, [nameSpace, type, XT.username]);
+      res = plv8.execute(sql, [nameSpace, type, XT.username, true]);
     }
     if (DEBUG) {
       XT.debug('result count = ', [res.length]); 

@@ -978,7 +978,7 @@ trailing:true, white:true*/
     formatDate: function (value, view, model) {
       var isToday = !XT.date.compareDate(value, new Date());
       view.addRemoveClass("bold", isToday);
-      return value;
+      return XT.date.isEndOfTime(value) ? "" : value;
     },
     getStyle: function (model) {
       var settings = XT.session.getSettings(),

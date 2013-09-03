@@ -342,7 +342,6 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     checkPrivileges: function (nameSpace, type, record, isTopLevel) {
       isTopLevel = isTopLevel !== false ? true : false;
-
       var action =  record && record.dataState === this.CREATED_STATE ? 'create' :
                   record && record.dataState === this.DELETED_STATE ? 'delete' :
                   record && record.dataState === this.UPDATED_STATE ? 'update' : 'read',
@@ -350,8 +349,9 @@ select xt.install_js('XT','Data','xtuple', $$
         isGrantedAll = true,
         isGrantedPersonal = false,
         map = this.fetchOrm(nameSpace, type),
-        privileges = map.privileges;
-
+        privileges = map.privileges,
+        pkey,
+        old;
 
       /* If there is no ORM, this isn't a table data type so no check required. */
       if (DEBUG) {
@@ -401,7 +401,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* If we're checknig an actual record and only have personal privileges, */
       /* see if the record allows access. */
-      if (record && !isGrantedAll && isGrantedPersonal) {
+      if (record && !isGrantedAll && isGrantedPersonal && action !== "create") {
         if (DEBUG) { XT.debug('checking record level personal privileges'); }
         var that = this,
 
@@ -438,9 +438,15 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* If committing we need to ensure the record in its previous state is editable by this user. */
         if (committing && (action === 'update' || action === 'delete')) {
-          var pkey = XT.Orm.primaryKey(map),
-              old = this.retrieveRecord(nameSpace + '.' + type, record[pkey]);
-          isGrantedPersonal = checkPersonal(old);
+          pkey = XT.Orm.naturalKey(map) || XT.Orm.primaryKey(map);
+          old = this.retrieveRecord({
+            nameSpace: nameSpace,
+            type: type,
+            id: record[pkey],
+            superUser: true,
+            includeKeys: true
+          });
+          isGrantedPersonal = checkPersonal(old.data);
 
         /* Otherwise check personal privileges on the record passed. */
         } else if (action === 'read') {
@@ -1591,7 +1597,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       if (!context) {
         /* Check privileges again, this time against record specific criteria where applicable. */
-        if(!options.superUser && !this.checkPrivileges(nameSpace, type, ret)) {
+        if(!options.superUser && !this.checkPrivileges(nameSpace, type, ret.data)) {
           if (options.silentError) {
             return false;
           } else {
@@ -1611,6 +1617,7 @@ select xt.install_js('XT','Data','xtuple', $$
     /**
      *  Remove unprivileged attributes, primary and foreign keys from the data.
      *  Only removes the primary key if a natural key has been specified in the ORM.
+     *  Also format for printing using XT.format functions if printFormat=true'
      *
      * @param {String} Namespace
      * @param {String} Type
@@ -1618,6 +1625,7 @@ select xt.install_js('XT','Data','xtuple', $$
      * @param {Object} Options
      * @param {Boolean} [options.includeKeys=false] Do not remove primary and foreign keys.
      * @param {Boolean} [options.superUser=false] Do not remove unprivileged attributes.
+     * @param {Boolean} [options.printFormat=true] Format for printing.
      */
     sanitize: function (nameSpace, type, data, options) {
       options = options || {};
@@ -1631,6 +1639,7 @@ select xt.install_js('XT','Data','xtuple', $$
           orm.privileges.attribute : false,
         inclKeys = options.includeKeys,
         superUser = options.superUser,
+		printFormat = options.printFormat,
         c,
         i,
         item,
@@ -1638,7 +1647,10 @@ select xt.install_js('XT','Data','xtuple', $$
         prop,
         itemAttr,
         filteredProps,
-        val;
+        val,
+        check = function (p) {
+          return p.name === itemAttr;
+        };
 
       for (var c = 0; c < data.length; c++) {
         item = data[c];
@@ -1647,26 +1659,22 @@ select xt.install_js('XT','Data','xtuple', $$
         if (!inclKeys && nkey && nkey !== pkey) { delete item[pkey]; }
 
         for (itemAttr in item) {
-          if(!item.hasOwnProperty(itemAttr)) {
+          if (!item.hasOwnProperty(itemAttr)) {
             continue;
           }
-          filteredProps = orm.properties.filter(function (p) {
-            return p.name === itemAttr;
-          });
+          filteredProps = orm.properties.filter(check);
 
-          if(filteredProps.length === 0 && orm.extensions.length > 0) {
+          if (filteredProps.length === 0 && orm.extensions.length > 0) {
             /* Try to get the orm prop from an extension if it's not in the core*/
             orm.extensions.forEach(function (ext) {
               if (filteredProps.length === 0) {
-                filteredProps = ext.properties.filter(function (p) {
-                  return p.name === itemAttr;
-                });
+                filteredProps = ext.properties.filter(check);
               }
             });
           }
 
           /* Remove attributes not found in the ORM */
-          if(filteredProps.length === 0) {
+          if (filteredProps.length === 0) {
             delete item[itemAttr];
           } else {
             prop = filteredProps[0];
@@ -1678,6 +1686,50 @@ select xt.install_js('XT','Data','xtuple', $$
             !this.checkPrivilege(attrPriv[prop.name].view)) {
             delete item[prop.name];
           }
+
+	  	/*  Format for printing if printFormat and not an object */ 
+		if (printFormat && !prop.toOne && !prop.toMany) {
+			switch(prop.attr.type) {
+	     		case "Date":
+	     			item[itemAttr] = XT.formatDate(item[itemAttr]).formatdate;
+					break;
+	     		case "Cost":
+	     			item[itemAttr] = XT.formatCost(item[itemAttr]).formatcost.toString();
+					break;
+	     		case "Number":
+	     			item[itemAttr] = XT.formatNumeric(item[itemAttr], "").formatnumeric.toString();
+					break;
+	     		case "Currency":
+	     			item[itemAttr] = XT.formatMoney(item[itemAttr]).formatmoney.toString();
+					break;
+	     		case "SalesPrice":
+	     			item[itemAttr] = XT.formatSalesPrice(item[itemAttr]).formatsalesprice.toString();
+					break;
+	     		case "PurchasePrice":
+	     			item[itemAttr] = XT.formatPurchPrice(item[itemAttr]).formatpurchprice.toString();
+					break;
+	     		case "ExtendedPrice":
+	     			item[itemAttr] = XT.formatExtPrice(item[itemAttr]).formatextprice.toString();
+					break;
+	     		case "Quantity":
+	     			item[itemAttr] = XT.formatQty(item[itemAttr]).formatqty.toString();
+					break;
+	     		case "QuantityPer":
+	     			item[itemAttr] = XT.formatQtyPer(item[itemAttr]).formatqtyper.toString();
+					break;
+	     		case "UnitRatioScale":
+	     			item[itemAttr] = XT.formatRatio(item[itemAttr]).formatratio.toString();
+					break;
+	     		case "Percent":
+	     			item[itemAttr] = XT.formatPrcnt(item[itemAttr]).formatprcnt.toString();
+					break;
+	     		case "WeightScale":
+	     			item[itemAttr] = XT.formatWeight(item[itemAttr]).formatweight.toString();
+					break;
+	     		default:
+	     			item[itemAttr] = (item[itemAttr] || "").toString();
+	     	}
+	  }
 
           /* Handle composite types */
           if (prop.toOne && prop.toOne.isNested && item[prop.name]) {

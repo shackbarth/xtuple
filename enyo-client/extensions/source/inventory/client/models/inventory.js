@@ -35,9 +35,11 @@ white:true*/
 
       @extends XM.Model
     */
-    XM.IssueToShipping = XM.Model.extend({
+    XM.IssueToShipping = XM.Transaction.extend({
 
       recordType: "XM.IssueToShipping",
+
+      quantityAttribute: "toIssue",
 
       readOnlyAttributes: [
         "atShipping",
@@ -60,36 +62,66 @@ white:true*/
 
         // Bind events
         this.on("statusChange", this.statusDidChange);
+        this.on("change:toIssue", this.toIssueDidChange);
       },
 
       canIssueStock: function (callback) {
+        var isShipped = this.getValue("shipment.isShipped") || false,
+          hasPrivilege = XT.session.privileges.get("IssueStockToShipping");
         if (callback) {
-          callback(true);
+          callback(!isShipped && hasPrivilege);
         }
         return this;
       },
 
       canReturnStock: function (callback) {
+        var isShipped = this.getValue("shipment.isShipped") || false,
+          hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
+          atShipping = this.get("atShipping");
         if (callback) {
-          callback(false);
-        }
-        return this;
-      },
-
-      doIssueStock: function (callback) {
-        if (callback) {
-          callback(true);
+          callback(!isShipped && atShipping > 0 && hasPrivilege);
         }
         return this;
       },
 
       doReturnStock: function (callback) {
-        if (callback) {
-          callback(true);
-        }
+        var that = this,
+          options = {};
+
+        // Refresh once we've completed the work
+        options.success = function () {
+          that.fetch({
+            success: function () {
+              if (callback) {
+                callback();
+              }
+            }
+          });
+        };
+
+        this.setStatus(XM.Model.BUSY_COMMITTING);
+        this.dispatch("XM.Inventory", "returnFromShipping", [this.id], options);
+
         return this;
       },
 
+      /**
+        Calculate the balance remaining to issue.
+
+        @returns {Number}
+      */
+      issueBalance: function () {
+        var balance = this.get("balance"),
+          atShipping = this.get("atShipping"),
+          toIssue = XT.math.subtract(balance, atShipping, XT.QUANTITY_SCALE);
+        return toIssue >= 0 ? toIssue : 0;
+      },
+
+      /**
+        Overload: Calls `issueToShipping` dispatch function.
+
+        @returns {Object} Receiver
+        */
       save: function (key, value, options) {
         options = options ? _.clone(options) : {};
 
@@ -98,8 +130,10 @@ white:true*/
           options = value ? _.clone(value) : {};
         }
 
-        var that = this,
-          callback;
+        var toIssue = this.get("toIssue"),
+          that = this,
+          callback,
+          err;
         
         // Callback for after we determine quantity validity
         callback = function (resp) {
@@ -107,6 +141,7 @@ white:true*/
             
           var dispOptions = {},
             issOptions = {},
+            detail = that.formatDetail(),
             params = [
               that.id,
               that.get("toIssue"),
@@ -117,40 +152,34 @@ white:true*/
           dispOptions.success = function () {
             that.fetch(options);
           };
-          /*
+
+          // Add distribution detail if applicable
           if (detail.length) {
             issOptions.detail = detail;
           }
-          */
           that.setStatus(XM.Model.BUSY_COMMITTING);
           that.dispatch("XM.Inventory", "issueToShipping", params, dispOptions);
-
         };
 
         // Validate
-        if (this.get("toIssue") <= 0) {
-          this.trigger("invalid", this, XT.Error.clone("xt2013"), options || {});
-        } else if (!this.issueBalance() && this.get("toIssue") > 0) {
+        if (this.undistributed()) {
+          err = XT.Error.clone("xt2017");
+        } else if (toIssue <= 0) {
+          err = XT.Error.clone("xt2013");
+        } else if (!this.issueBalance() && toIssue > 0) {
           this.notify("_issueExcess".loc(), {
             type: XM.Model.QUESTION,
             callback: callback
           });
+        }
+
+        if (err) {
+          this.trigger("invalid", this, err, options || {});
         } else {
           callback({answer: true});
         }
 
         return this;
-      },
-
-      issueBalance: function () {
-        var balance = this.get("balance"),
-          atShipping = this.get("atShipping"),
-          toIssue = XT.math.subtract(balance, atShipping, XT.QUANTITY_SCALE);
-        return toIssue >= 0 ? toIssue : 0;
-      },
-
-      requiresDetail: function () {
-        return this.getValue("itemSite.locationControl");
       },
 
       statusDidChange: function () {
@@ -159,20 +188,33 @@ white:true*/
         }
       },
 
-      undistributed: function () {
-        var toIssue = this.get("toIssue"),
-          scale = XT.QUANTITY_SCALE,
-          total = 0,
-          dist;
-        if (this.requiresDetail() && toIssue) {
-          dist = _.pluck(this.get("detail").models("distributed"));
-          total = XT.math.add(dist, scale);
-          total = XT.math.subtract(total, toIssue, scale);
-        }
-        return total;
+      toIssueDidChange: function () {
+        this.distributeToDefault();
       }
 
     });
+
+    /**
+      Static function to call issue to shipping on a set of multiple items.
+
+      @params {Array} Data
+      @params {Object} Options
+    */
+    XM.Inventory.issueToShipping = function (params, options) {
+      var obj = XM.Model.prototype;
+      obj.dispatch("XM.Inventory", "issueToShipping", params, options);
+    };
+
+    /**
+      Static function to call return from shipping on a set of multiple items.
+
+      @params {Array} Array of model ids
+      @params {Object} Options
+    */
+    XM.Inventory.returnFromShipping = function (params, options) {
+      var obj = XM.Model.prototype;
+      obj.dispatch("XM.Inventory", "returnFromShipping", params, options);
+    };
 
     // ..........................................................
     // COLLECTIONS

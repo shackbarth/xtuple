@@ -12,8 +12,6 @@ var _ = require("underscore"),
 (function () {
   "use strict";
 
-
-
   exports.accountBeforeDeleteActions = [{it: 'saves the account id', action: function (data, done) {
     data.deleteData = {
       accntId: data.model.get("account"),
@@ -75,6 +73,39 @@ var _ = require("underscore"),
         assert.equal(data.model.get(key), value);
       }
     });
+  };
+
+  /**
+    For the models that have comments, we can test adding and saving
+    a mock comment. Here we create and initialize the specified comment
+    type for this model, set a commentType to pass validation, and
+    set this in the current model.
+   */
+  var setComments = function (data, callback) {
+    var comment = new XM[data.commentType.substring(3)](),
+      comments = [];
+    comment.on('change:' + comment.idAttribute, function () {
+      // comment was initialized, set commentType
+      comment.set("commentType", "General");
+      // add mock comment to array
+      comments.push(comment);
+      data.model.on('change:comments', function () {
+        // verify that comments were changed and exit
+        callback();
+      })
+      data.model.set({comments: comments});
+    });
+    // initialize the new comment
+    comment.initialize(null, {isNew: true});
+  };
+
+  /**
+    Test that the comments collection is not empty.
+  */
+  var testComments = function (data) {
+    var comments = data.model.get("comments");
+    // verify that there is a comment
+    assert.isTrue(comments.length > 0);
   };
 
   /**
@@ -228,7 +259,9 @@ var _ = require("underscore"),
 
           assert.equal(data.model.getStatusString(), 'READY_CLEAN');
           testAttributes(data);
-
+          if (data.commentType && data.testComments) {
+            testComments(data);
+          }
           callback();
         }
       };
@@ -312,7 +345,7 @@ var _ = require("underscore"),
     // Step 1: load the environment with Zombie
     //
     it('loads the client with zombie', function (done) {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
       zombieAuth.loadApp({callback: done, verbose: false /* data.verbose */});
     });
 
@@ -322,6 +355,7 @@ var _ = require("underscore"),
     it('creates the model of the appropriate record type', function () {
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
+
     });
 
     //
@@ -347,6 +381,14 @@ var _ = require("underscore"),
       data.updated = false;
       setModel(data, done);
     });
+
+    // if this model has comments, set them on the model
+    if (data.commentType) {
+      it('sets comments on the model', function (done) {
+        this.timeout(20 * 1000);
+        setComments(data, done);
+      });
+    }
 
     _.each(data.beforeSaveActions || [], function (spec) {
       it(spec.it, function (done) {

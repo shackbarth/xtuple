@@ -240,6 +240,20 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // LOCATION ITEMS
+  //
+
+  enyo.kind({
+    name: "XV.LocationItemRelationBox",
+    kind: "XV.ListGroupRelationsBox",
+    title: "_allowableItems".loc(),
+    parentKey: "location",
+    groupItemKey: "item",
+    searchList: "XV.ItemList",
+    listRelations: "XV.LocationItemListRelations"
+  });
+
+  // ..........................................................
   // OPPORTUNITY QUOTE
   //
 

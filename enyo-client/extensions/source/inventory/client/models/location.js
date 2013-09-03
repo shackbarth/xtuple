@@ -24,7 +24,9 @@ white:true*/
         return _.filter(ary, function (item) {
           return !_.isEmpty(item);
         }).join("-");
-      }
+      },
+
+      nameAttribute: "format"
     };
 
     /**
@@ -35,7 +37,31 @@ white:true*/
     */
     XM.Location = XM.Model.extend({
       
-      recordType: "XM.Location"
+      recordType: "XM.Location",
+
+      siteZoneDidChange: function () {
+        var siteZone = this.getValue("siteZone.site");
+        if (!siteZone) { return; }
+        this.set('site', siteZone);
+      },
+
+      bindEvents: function () {
+        XM.Model.prototype.bindEvents.apply(this, arguments);
+        this.on('change:siteZone', this.siteZoneDidChange);
+      }
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.LocationItem = XM.Model.extend({
+      
+      recordType: "XM.LocationItem",
+
+      parentKey: "location"
 
     });
 
@@ -62,6 +88,16 @@ white:true*/
     // ..........................................................
     // COLLECTIONS
     //
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.LocationCollection = XM.Collection.extend({
+
+      model: XM.Location
+      
+    });
 
     /**
       @class

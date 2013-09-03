@@ -8,21 +8,26 @@
 
   var crud = require('../lib/crud'),
     data = {
-      recordType: "XM.ToDo",
-      commentType: "XM.ToDoComment",
-      autoTestAttributes: true,
-      testComments: true,
       verbose: true,
+      recordType: "XM.ItemSite",
+      autoTestAttributes: true,
       createHash: {
-        name: "ToDo Name" + Math.random(),
-        dueDate: new Date()
+        uuid: "NEWTEST" + Math.random(),
+        item: {number: "CBODY1"},
+        site: {code: "ST1"},
+        isActive: true,
+        plannerCode: {code: "MRP"},
+        costCategory: {code: "MATERIALS"},
+        controlMethod: "R",
+        costMethod: "S",
+        notes: ""
       },
       updateHash: {
-        name: "Updated"
+        notes: "test notes"
       }
     };
 
-  describe('ToDo CRUD Test', function () {
+  describe.skip('Item Site CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());
