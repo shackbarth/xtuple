@@ -2,7 +2,7 @@
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
 /*global XT:true, XM:true, XV:true, describe:true, it:true,
-  console:true, before:true, module:true, require:true */
+  console:true, before:true, after:true, module:true, require:true */
 
 (function () {
   "use strict";
@@ -51,6 +51,17 @@
           submodels = submods;
           done();
         });
+      });
+    });
+
+    // release the locks, lest we mess up subsequent tests
+    after(function (done) {
+      async.each(_.toArray(submodels), function (submodel, callback) {
+        submodel.releaseLock({success: function () {
+          callback();
+        }});
+      }, function (err) {
+        done();
       });
     });
 
