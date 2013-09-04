@@ -130,8 +130,9 @@ trailing:true, white:true*/
         success = function () {
           that.doNotify({message: "_success".loc()});
         },
-        error = function () {
-          that.doNotify({message: "_error".loc()});
+        error = function (error) {
+          var message = error && error.message && error.message() ? error.message() : "_error".loc();
+          that.doNotify({message: message});
         };
 
       // TODO: notify

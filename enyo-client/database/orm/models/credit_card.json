@@ -41,6 +41,9 @@
         "yearExpired": {
           "update": false
         },
+        "isDebit": {
+          "update": false
+        },
         "creditCardType": {
           "update": false
         },

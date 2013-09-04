@@ -16,6 +16,13 @@
       customer: 95, // TTOYS
       creditCardType: "V",
       name: "John Smith",
+      address1: "123 Main Street",
+      city: "Norfolk",
+      state: "VA",
+      zip: "23510",
+      country: "USA",
+      monthExpired: "05",
+      yearExpired: "2010",
       number: "4111111111111111",
       sequence: 500
     },

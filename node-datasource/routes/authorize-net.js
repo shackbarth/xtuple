@@ -206,7 +206,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       },
       respondToClient = function (err, response) {
         if (err) {
-          res.send({isError: true, error: err});
+          res.send({isError: true, error: err, message: err.responsereasontext});
         } else {
           res.send({data: true});
         }
