@@ -35,8 +35,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         callback({isError: true, message: "Stop trying to hack into our database"});
         return;
       }
-      
-      query.printFormat = true; 
+
+      query.printFormat = true;
       data.queryDatabase("get", query, session, callback);
     });
   };
@@ -104,11 +104,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           data: JSON.stringify(result.data),
           created: new Date()
         },
-         success = function () {
-           var biUrl = X.options.datasource.biUrl || "",
+        success = function () {
+          var biUrl = X.options.datasource.biUrl || "",
             redirectUrl = biUrl + "&name=" + fileName +
               "&org=" + req.session.passport.user.organization +
-			  "&datasource=" + req.headers.host + "&datakey=" + randomKey;
+              "&datasource=" + req.headers.host + "&datakey=" + randomKey;
 
           if (requestDetails.locale && requestDetails.locale.culture) {
             res.set("Accept-Language", requestDetails.locale.culture);
@@ -124,13 +124,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           });
         };
 
-        // step 2: save to the bicache table
-        tempDataModel.save(attrs, {
-          success: success,
-          error: error,
-          database: req.session.passport.user.organization,
-          username: X.options.databaseServer.user
-        });
+      // step 2: save to the bicache table
+      tempDataModel.save(attrs, {
+        success: success,
+        error: error,
+        database: req.session.passport.user.organization,
+        username: X.options.databaseServer.user
+      });
     };
 
     // step 1: get the data
