@@ -154,6 +154,27 @@ white:true*/
 
   });
 
+  _.extend(SYS.CreditCardPayment, {
+
+    AUTHORIZED: "A",
+
+    CAPTURE: "C",
+
+    CHARGED: "C",
+
+    CREDIT: "R",
+
+    DECLINED: "D",
+
+    ERROR: "X",
+
+    REVERSE: "V",
+
+    VOID: "V"
+
+  });
+
+
   /**
     @class
 

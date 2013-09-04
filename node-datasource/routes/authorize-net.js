@@ -69,11 +69,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           customer: req.query.customerNumber,
           amount: Number(req.query.amount),
           orderNumber: req.query.orderNumber,
-          orderNumberSeq: 1, //TODO: this is incremented in subsequent transactions
+          orderNumberSeq: 1, //TODO: this must be incremented in subsequent transactions
           wasPreauthorization: authorizeOnly,
-          status: 'C', // TODO
-          type: 'C', // TODO
-          originalType: 'C' // TODO
+          status: authorizeOnly ? SYS.CreditCardPayment.AUTHORIZED : SYS.CreditCardPayment.CHARGED,
+          type: authorizeOnly ? SYS.CreditCardPayment.AUTHORIZED : SYS.CreditCardPayment.CHARGED,
+          originalType: authorizeOnly ? SYS.CreditCardPayment.AUTHORIZED : SYS.CreditCardPayment.CHARGED
         });
         creditCardPaymentModel.save(null, {
           database: req.session.passport.user.organization,
@@ -210,6 +210,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         } else {
           res.send({data: true});
         }
+      },
+      finish = function (err, response) {
+        if (err) {
+          creditCardPaymentModel.set({
+            status: SYS.CreditCardPayment.ERROR
+          });
+          creditCardPaymentModel.save(null, {
+            database: req.session.passport.user.organization,
+            username: req.session.passport.user.id,
+            success: function (model) {
+              // still want to error out here, really.
+              respondToClient(err, response);
+            },
+            error: respondToClient
+          });
+
+        } else {
+          respondToClient(err, response);
+        }
       };
 
     async.series([
@@ -221,7 +240,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       postCreditIfCapture,
       initializePaymentLink,
       savePaymentLink
-    ], respondToClient);
+    ], finish);
 
 
   };
