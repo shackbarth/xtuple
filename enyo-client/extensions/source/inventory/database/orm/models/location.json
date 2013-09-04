@@ -35,8 +35,9 @@
       },
       {
         "name": "site",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
           "column": "location_warehous_id"
         }
       },
@@ -44,7 +45,7 @@
         "name": "siteZone",
         "toOne": {
           "isNested": true,
-          "type": "SiteZone",
+          "type": "SiteZoneRelation",
           "column": "location_whsezone_id"
         }
       },
@@ -257,8 +258,7 @@
         "name": "location",
         "toOne": {
           "type": "LocationRelation",
-          "column": "locitemsite_location_id",
-          "inverse": "id"
+          "column": "locitemsite_location_id"
         }
       }
     ],
@@ -291,6 +291,7 @@
       {
         "name": "site",
         "toOne": {
+          "isNested": true,
           "type": "SiteRelation",
           "column": "whsezone_warehous_id"
         }

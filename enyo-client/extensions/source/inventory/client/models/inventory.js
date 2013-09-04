@@ -66,18 +66,20 @@ white:true*/
       },
 
       canIssueStock: function (callback) {
-        var isShipped = this.getValue("shipment.isShipped") || false;
+        var isShipped = this.getValue("shipment.isShipped") || false,
+          hasPrivilege = XT.session.privileges.get("IssueStockToShipping");
         if (callback) {
-          callback(!isShipped);
+          callback(!isShipped && hasPrivilege);
         }
         return this;
       },
 
       canReturnStock: function (callback) {
         var isShipped = this.getValue("shipment.isShipped") || false,
+          hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
           atShipping = this.get("atShipping");
         if (callback) {
-          callback(!isShipped && atShipping > 0);
+          callback(!isShipped && atShipping > 0 && hasPrivilege);
         }
         return this;
       },
@@ -143,7 +145,7 @@ white:true*/
             params = [
               that.id,
               that.get("toIssue"),
-              issOptions = {}
+              issOptions
             ];
 
           // Refresh once we've completed the work
@@ -191,6 +193,28 @@ white:true*/
       }
 
     });
+
+    /**
+      Static function to call issue to shipping on a set of multiple items.
+
+      @params {Array} Data
+      @params {Object} Options
+    */
+    XM.Inventory.issueToShipping = function (params, options) {
+      var obj = XM.Model.prototype;
+      obj.dispatch("XM.Inventory", "issueToShipping", params, options);
+    };
+
+    /**
+      Static function to call return from shipping on a set of multiple items.
+
+      @params {Array} Array of model ids
+      @params {Object} Options
+    */
+    XM.Inventory.returnFromShipping = function (params, options) {
+      var obj = XM.Model.prototype;
+      obj.dispatch("XM.Inventory", "returnFromShipping", params, options);
+    };
 
     // ..........................................................
     // COLLECTIONS
