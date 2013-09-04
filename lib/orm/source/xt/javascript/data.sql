@@ -1443,25 +1443,48 @@ select xt.install_js('XT','Data','xtuple', $$
           nameSpace: nameSpace,
           type: type
         },
-        sql = 'select * from %1$I.%2$I where %3$I in ' +
-              '(select %3$I from %1$I.%2$I where {conditions} {orderBy} {limit} {offset}) ' +
-              '{orderBy}';
+        qry,
+        ids = [],
+        idParams = [],
+        counter = 1,
+        sql1 = 'select %3$I as id from %1$I.%2$I where {conditions} {orderBy} {limit} {offset};',
+        sql2 = 'select * from %1$I.%2$I where %3$I in ({ids}) {orderBy}';
 
       /* Validate - don't bother running the query if the user has no privileges. */
       if (!this.checkPrivileges(nameSpace, type)) { return []; }
 
       /* Query the model. */
-      sql = XT.format(sql, [nameSpace.decamelize(), type.decamelize(), key]);
-      sql = sql.replace('{conditions}', clause.conditions)
-               .replace(/{orderBy}/g, clause.orderBy)
-               .replace('{limit}', limit)
-               .replace('{offset}', offset);
+      sql1 = XT.format(sql1, [nameSpace.decamelize(), type.decamelize(), key]);
+      sql1 = sql1.replace('{conditions}', clause.conditions)
+                 .replace(/{orderBy}/g, clause.orderBy)
+                 .replace('{limit}', limit)
+                 .replace('{offset}', offset);
 
       if (DEBUG) {
-        XT.debug('fetch sql = ', sql);
+        XT.debug('fetch sql1 = ', sql1);
         XT.debug('fetch values = ', clause.parameters);
       }
-      ret.data = plv8.execute(sql, clause.parameters) || [];
+      
+      /* First query for matching ids, then get entire result set. */
+      /* This improves performance over a direct query on the view due */
+      /* to the way sorting is handled by the query optimizer */
+      qry = plv8.execute(sql1, clause.parameters) || [];
+      if (!qry.length) { return [] };
+      qry.forEach(function (row) {
+        ids.push(row.id);
+        idParams.push("$" + counter);
+        counter++;
+      });
+      
+      sql2 = XT.format(sql2, [nameSpace.decamelize(), type.decamelize(), key]);
+      sql2 = sql2.replace(/{orderBy}/g, clause.orderBy)
+                 .replace('{ids}', idParams.join());
+      
+      if (DEBUG) {
+        XT.debug('fetch sql2 = ', sql2);
+        XT.debug('fetch values = ', JSON.stringify(ids));
+      }
+      ret.data = plv8.execute(sql2, ids) || [];
 
       for (var i = 0; i < ret.data.length; i++) {
         ret.data[i] = this.decrypt(nameSpace, type, ret.data[i], encryptionKey);
