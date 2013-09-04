@@ -216,7 +216,7 @@ trailing:true, white:true, strict:false*/
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
               {kind: "XV.ListAttr", attr: "costMethod"},
-              {kind: "XV.ListAttr", attr: "user"}
+              {kind: "XV.ListAttr", attr: "user.username"}
             ]}
           ]}
         ]}

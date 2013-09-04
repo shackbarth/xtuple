@@ -36,12 +36,12 @@ trailing:true, white:true*/
         {kind: "onyx.GroupboxHeader", content: "_item".loc()},
         {name: "itemNumber", label: "_number".loc(), attr: "itemSite.item.number"},
         {name: "itemDescription", label: "_description".loc(), attr: ["itemSite.item.description1", "itemSite.item.description2"]},
-        //TODO get item groups working - orms, picker
+        /*TODO get item groups working - orms, picker
         {kind: "onyx.GroupboxHeader", content: "_itemGroup".loc()},
         {name: "itemGroup", label: "_equals".loc(), attr: "itemSite.item.itemGroups",
           defaultKind: "XV.ItemGroupPicker"},
         {name: "itemGroupPattern", label: "_itemGroup".loc() + " " + "_pattern".loc(), attr: "itemSite.item.itemGroups"},
-        {kind: "onyx.GroupboxHeader", content: "_orderNumber".loc()},
+        {kind: "onyx.GroupboxHeader", content: "_orderNumber".loc()}, */
         {name: "orderNumberPattern", label: "_orderNumber".loc(), attr: "orderNumber"},
         {kind: "onyx.GroupboxHeader", content: "_costCategory".loc()},
         {name: "costCategory", label: "_equals".loc(), attr: "itemSite.costCategory",

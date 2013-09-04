@@ -178,16 +178,9 @@ white:true*/
   XM.ItemGroupItem = XM.Model.extend({
     /** @scope XM.ItemGroupItem.prototype */
 
-    recordType: 'XM.ItemGroupItem'
+    recordType: 'XM.ItemGroupItem',
 
-  });
-
-  XM.ItemGroupItemRelation = XM.Info.extend({
-    /** @scope XM.ItemGroupItemRelation.prototype */
-
-    recordType: 'XM.ItemGroupItemRelation',
-
-    editableModel: 'XM.ItemGroupItem'
+    parentKey: "itemGroup"
 
   });
 

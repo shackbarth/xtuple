@@ -186,6 +186,7 @@
     "nameSpace": "XM",
     "type": "LocationItem",
     "table": "locitem",
+    "idSequenceName": "locitem_locitem_id_seq",
     "comment": "Location Item Map",
     "properties": [
       {
