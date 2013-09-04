@@ -13,9 +13,12 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.LayoutTree",
     kind: "XV.Tree",
     content: "_currentLayout".loc(),
+    published: {
+      listAttrs: null
+    },
     /**
-      Recursively builds tree based on source. This will be overriden by
-      children of this widget to fit their individual needs.
+      Recursively builds tree based on the source which is a List component.
+      This will be overriden by children of this widget to fit their individual needs.
     */
     buildTree: function (source, tree) {
       if (!source) { return; }
@@ -32,7 +35,7 @@ regexp:true, undef:true, trailing:true, white:true */
           columnCount++;
           c = {kind: "XV.TreeNode", content: "_column".loc() + " " + columnCount};
         } else if (controls[i].kind === "XV.ListAttr") {
-          c = {kind: "XV.ListAttrNode", attr: controls[i].attr};
+          c = {kind: "XV.ListAttrNode", attr: controls[i].attr, currentList: this.getListAttrs()};
         } else {
           // this isn't the node that we're looking for
           c = null;
@@ -40,6 +43,7 @@ regexp:true, undef:true, trailing:true, white:true */
         // if this isn't a valid node, just sent the current node
         // as the parent back into the function
         newComponent = c ? node.createComponent(c) : node;
+
         // recurse back into this function with the new component
         this.buildTree(controls[i], newComponent);
       }
@@ -48,8 +52,9 @@ regexp:true, undef:true, trailing:true, white:true */
 
   /**
     @name XV.ListAttrNode
-    @class This is a Tree Node widge that is meant to server as a leaf
-    with a picker widget.
+    @class This is a TreeNode widget that is meant to serve as a leaf
+    in a tree with a picker widget. This picker holds a list of readable
+    attribute names for selection.
     @extends Node
    */
   enyo.kind({
@@ -58,13 +63,26 @@ regexp:true, undef:true, trailing:true, white:true */
     expandable: false,
     expanded: false,
     published: {
-      attr: null
+      attr: null, // this is the current attribute, used to distinguish this node
+      currentList: null // this is the list of
     },
     components: [
       {name: "icon", kind: "Image", showing: false},
       // we're naming this "caption" because we're stomping on the Node's component array
-      {kind: "XV.PickerWidget", name: "caption", label: "_attr".loc()}
+      {kind: "XV.AttributePicker", showLabel: true, name: "caption", label: "_attr".loc()}
     ],
+    create: function () {
+      this.inherited(arguments);
+      this.currentListChanged();
+    },
+    currentListChanged: function () {
+      this.inherited(arguments);
+      // this takes the current list of attributes and formats
+      //  them for use in this picker
+      this.$.caption.setComponentsList(this.getCurrentList());
+      // set the value of this picker silently
+      this.$.caption.setValue(this.getAttr(), {silent: true});
+    }
   });
 
 }());

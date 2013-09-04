@@ -433,41 +433,22 @@ regexp:true, undef:true, trailing:true, white:true */
   //
 
   enyo.kind({
-    name: "XV.SortPicker",
+    name: "XV.AttributePicker",
     kind: "XV.PickerWidget",
     onSelect: "itemSelected",
     showLabel: false,
     prerender: false,
-    buildList: function (comps) {
-      this.$.picker.destroyClientControls();
-      if (!comps) {
-        return;
-      }
-      for (var i = 0; i < comps.length; i++) {
-        this.$.picker.createComponent(comps[i]);
-      }
-      // this is a hack
-      this.$.picker.applyStyle("position", "absolute");
-      this.$.picker.applyStyle("z-index", "9999");
-      this.$.picker.render();
-    },
-    findItemByAttr: function (attr) {
-      for (var i = 0; i < this.$.picker.getComponents().length; i++) {
-        if (attr === this.$.picker.getComponents()[i].attr) {
-          return this.$.picker.getComponents()[i];
-        }
-      }
-    },
-    itemSelected: function (inSender, inEvent) {
-      this.attr = inEvent.originator.attr;
-    },
-    // TODO: This should be modified to use buildList
+    /**
+      This takes the list of attributes and sets up a
+      collection that this picker can use.
+    */
     setComponentsList: function (toSet) {
-      var comps = [], attrs = [],
+      var sortAttr,
         stringToSet,
-        objectToSet;
-      // This is taking the place of the noneText in parent
-      comps[0] = {content: "_none".loc(), attr: ""};
+        objectToSet,
+        attrs = [],
+        sorts = new XM.AttributeCollection();
+
       for (var i = 0; i < toSet.length; i++) {
         if (toSet[i].indexOf('.') !== -1) {
           attrs = toSet[i].split(".");
@@ -475,10 +456,11 @@ regexp:true, undef:true, trailing:true, white:true */
         } else {
           stringToSet = ("_" + toSet[i]).loc();
         }
-        objectToSet = {content: stringToSet, attr: toSet[i]};
-        comps.push(objectToSet);
+        objectToSet = { id: toSet[i], name: stringToSet };
+        sortAttr = new XM.AttributeModel(objectToSet);
+        sorts.add(sortAttr);
       }
-      this.buildList(comps);
+      this.setCollection(sorts);
     }
   });
 

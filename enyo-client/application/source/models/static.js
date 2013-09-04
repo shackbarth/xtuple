@@ -286,7 +286,7 @@ white:true*/
     XM.toDoStatuses.add(toDoStatus);
   }
 
-  // ToDo Status
+  // Sort Type
   var sortTypeJson = [
     { id: "ascending", name: "_ascending".loc() },
     { id: "descending", name: "_descending".loc() }
@@ -302,4 +302,9 @@ white:true*/
     XM.sortTypes.add(sortType);
   }
 
+  // Attributes for Sorting and Column Layout
+  XM.AttributeModel = Backbone.Model.extend({});
+  XM.AttributeCollection = Backbone.Collection.extend({
+    model: XM.AttributeModel
+  });
 }());
