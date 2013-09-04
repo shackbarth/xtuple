@@ -222,6 +222,7 @@ var lang = XT.stringsFor("en_US", {
   "_endBalance": "End Balance",
   "_ending": "Ending",
   "_endingLabel": "Ending Label",
+  "_enterNew": "Enter New",
   "_equals": "Equals",
   "_error": "Error",
   "_errorColor": "Error Color",

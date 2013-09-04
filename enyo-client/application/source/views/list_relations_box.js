@@ -94,7 +94,7 @@ trailing:true, white:true*/
             // XXX we could wait until this is done before popping up the workspace
 
             that.doPopupWorkspace({
-              message: "_enterNewCreditCardHere".loc(),
+              message: "_enterNew".loc(),
               workspace: "XV.CreditCardsEditor",
               model: creditCardModel,
               callback: workspaceCallback
