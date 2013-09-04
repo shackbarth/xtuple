@@ -452,7 +452,7 @@ regexp:true, undef:true, trailing:true, white:true */
       for (var i = 0; i < toSet.length; i++) {
         if (toSet[i].indexOf('.') !== -1) {
           attrs = toSet[i].split(".");
-          stringToSet = ("_" + attrs[0]).loc() + ("_" + attrs[1]).loc();
+          stringToSet = ("_" + attrs[0]).loc() + " " + ("_" + attrs[1]).loc();
         } else {
           stringToSet = ("_" + toSet[i]).loc();
         }

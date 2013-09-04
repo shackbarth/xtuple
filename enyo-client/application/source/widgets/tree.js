@@ -69,7 +69,7 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {name: "icon", kind: "Image", showing: false},
       // we're naming this "caption" because we're stomping on the Node's component array
-      {kind: "XV.AttributePicker", showLabel: true, name: "caption", label: "_attr".loc()}
+      {kind: "XV.AttributePicker", showLabel: true, name: "caption", label: "_field".loc()}
     ],
     create: function () {
       this.inherited(arguments);
