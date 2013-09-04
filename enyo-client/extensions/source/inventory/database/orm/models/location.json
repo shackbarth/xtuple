@@ -45,7 +45,7 @@
         "name": "siteZone",
         "toOne": {
           "isNested": true,
-          "type": "SiteZone",
+          "type": "SiteZoneRelation",
           "column": "location_whsezone_id"
         }
       },
@@ -74,7 +74,8 @@
         "name": "location",
         "attr": {
           "type": "String",
-          "column": "location_name"
+          "column": "location_name",
+          "required": true
         }
       },
       {
@@ -290,6 +291,7 @@
       {
         "name": "site",
         "toOne": {
+          "isNested": true,
           "type": "SiteRelation",
           "column": "whsezone_warehous_id"
         }

@@ -319,6 +319,7 @@ var lang = XT.stringsFor("en_US", {
   "_item": "Item",
   "_itemConversion": "Item Conversion",
   "_itemNumber": "Item Number",
+  "_itemGroup": "Item Group",
   "_itemSite": "Item Site",
   "_itemSites": "Item Sites",
   "_itemType": "Item Type",
