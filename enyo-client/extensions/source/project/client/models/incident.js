@@ -6,21 +6,21 @@ white:true*/
 (function () {
   "use strict";
 
-XT.extensions.project.initIncidentModels = function () {
-  
-  /**
-    @class
+  XT.extensions.project.initIncidentModels = function () {
 
-    @extends XM.Model
-  */
-  XM.IncidentProject = XM.Model.extend(
-    /** @scope XM.IncidentProject.prototype */ {
+    /**
+      @class
 
-    recordType: 'XM.IncidentProject',
+      @extends XM.Model
+    */
+    XM.IncidentProject = XM.Model.extend(
+      /** @scope XM.IncidentProject.prototype */ {
 
-    isDocumentAssignment: true
+      recordType: 'XM.IncidentProject',
 
-  });
-};
+      isDocumentAssignment: true
+
+    });
+  };
 
 }());

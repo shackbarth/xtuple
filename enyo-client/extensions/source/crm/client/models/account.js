@@ -62,6 +62,6 @@ white:true*/
       isDocumentAssignment: true
 
     });
-  }
+  };
 
 }());

@@ -20,6 +20,6 @@ white:true*/
       isDocumentAssignment: true
 
     });
-  }; 
+  };
 
 }());
