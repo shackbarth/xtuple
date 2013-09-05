@@ -68,6 +68,21 @@ white:true*/
     XM.balanceMethods.add(balanceMethod);
   }
 
+  // Credit Card Gateways
+  XM.CreditCardGatewayModel = Backbone.Model.extend({
+    getValue: function (key) {
+      return this.get(key);
+    }
+  });
+  XM.CreditCardGatewayCollection = Backbone.Collection.extend({
+    model: XM.CreditCardGatewayModel
+  });
+  XM.creditCardGateways = new XM.CreditCardGatewayCollection();
+  // new and better way
+  _.each([{ id: "Authorize.Net", name: "Authorize.Net" }], function (attrs) {
+    XM.creditCardGateways.add(new XM.CreditCardGatewayModel(attrs));
+  });
+
   // Credit Card Type
   var creditCardTypeJson = [
     { id: "M", name: "_masterCard".loc() },

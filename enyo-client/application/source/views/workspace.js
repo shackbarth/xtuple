@@ -294,8 +294,8 @@ Globalize:true */
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "CCCompany",
-                label: "_company".loc()},
+            {kind: "XV.CreditCardGatewayCombobox", attr: "CCCompany",
+                label: "_gateway".loc()},
             {kind: "XV.InputWidget", attr: "CCLogin",
               label: "_login".loc()},
             {kind: "XV.InputWidget", attr: "CCPassword",
@@ -1808,10 +1808,12 @@ Globalize:true */
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
         ], {owner: this});
 
-      this.$.salesPanels.createComponent(
-        {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards"},
-        {owner: this}
-      );
+      if (XT.session.privileges.get("ProcessCreditCards") && XT.session.settings.get("CCCompany") === "Authorize.Net") {
+        this.$.salesPanels.createComponent(
+          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards"},
+          {owner: this}
+        );
+      }
 
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([

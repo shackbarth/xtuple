@@ -6,6 +6,27 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   // ..........................................................
+  // CREDIT CARD GATEWAY
+  //
+
+  enyo.kind(
+    /** @lends XV.CreditCardGatewayCombobox# */{
+    name: "XV.CreditCardGatewayCombobox",
+    kind: "XV.ComboboxWidget",
+    events: {
+      onNotify: ""
+    },
+    collection: "XM.creditCardGateways",
+    controlValueChanged: function (inSender, inEvent) {
+      console.log(inEvent);
+      if (inEvent.value !== "Authorize.Net") {
+        this.doNotify({message: "_unsupportedGateway".loc()});
+      }
+      return this.inherited(arguments);
+    }
+  });
+
+  // ..........................................................
   // COUNTRY
   //
 
@@ -15,7 +36,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @extends XV.Combobox
    */
   enyo.kind(
-    /** @lends XV.CountryComboboxWidget# */{
+    /** @lends XV.CountryCombobox# */{
     name: "XV.CountryCombobox",
     kind: "XV.ComboboxWidget",
     collection: "XM.countries"
