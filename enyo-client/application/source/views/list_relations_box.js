@@ -42,6 +42,13 @@ trailing:true, white:true*/
       this.$.openButton.hide();
       this.createComponent({
         kind: "XV.InputWidget",
+        name: "ccv",
+        addBefore: this.$.buttonsPanel,
+        label: "_ccv".loc(),
+        showing: XT.session.settings.get("CCRequireCCV")
+      });
+      this.createComponent({
+        kind: "XV.InputWidget",
         name: "creditCardAmount",
         addBefore: this.$.buttonsPanel,
         label: "_amount".loc()
@@ -124,6 +131,7 @@ trailing:true, white:true*/
         creditCard = list.getModel(list.getFirstSelected()),
         action = inEvent.originator.name.replace("Button", ""),
         amount = this.$.creditCardAmount.value,
+        ccv = this.$.ccv.value,
         payload = {},
         success = function () {
           that.doNotify({message: "_transactionSuccessful".loc()});
@@ -136,6 +144,7 @@ trailing:true, white:true*/
           payload.creditCard = creditCard.id;
           payload.action = action;
           payload.amount = amount;
+          payload.ccv = ccv;
           payload.orderNumber = that.parent.parent.getValue().id;
           payload.customerNumber = that.parent.parent.getValue().getValue("customer.id");
           that.$.authorizeButton.setShowing(false);
@@ -143,7 +152,7 @@ trailing:true, white:true*/
           XT.dataSource.callRoute("credit-card", payload, {success: success, error: error});
         };
 
-      if (creditCard && amount) {
+      if (creditCard && amount && (ccv || !XT.session.settings.get("CCRequireCCV"))) {
         this.doNotify({
           type: XM.Model.QUESTION,
           message: "_confirmAction".loc(),
@@ -162,10 +171,11 @@ trailing:true, white:true*/
     selectionChanged: function (inSender, inEvent) {
       var list = this.$.list,
         creditCard = list.getModel(list.getFirstSelected()),
+        ccv = this.$.ccv.value,
         amount = this.$.creditCardAmount.value;
 
-      this.$.processButton.setShowing(creditCard && amount);
-      this.$.authorizeButton.setShowing(creditCard && amount);
+      this.$.processButton.setShowing(creditCard && amount && (ccv || !XT.session.settings.get("CCRequireCCV")));
+      this.$.authorizeButton.setShowing(creditCard && amount && (ccv || !XT.session.settings.get("CCRequireCCV")));
       return true;
     }
   });

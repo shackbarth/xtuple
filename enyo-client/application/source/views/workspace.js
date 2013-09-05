@@ -295,9 +295,14 @@ Globalize:true */
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "CCLogin",
-              label: "_authorizeNetLogin".loc()}, // TODO: generalize if/when we support more than just authorize.net
+              // TODO: generalize label if/when we support more than just authorize.net
+              label: "_authorizeNetLogin".loc()},
             {kind: "XV.InputWidget", attr: "CCPassword",
                 label: "_authorizeNetTransactionKey".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "CCTest",
+                label: "_testMode".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "CCRequireCCV",
+                label: "_requireCCV".loc()}
           ]}
         ]}
       ]}

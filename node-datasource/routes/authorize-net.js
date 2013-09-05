@@ -110,8 +110,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         data.firstName = rawData.name.split(' ').slice(0, -1).join(' ');
         data.lastName = rawData.name.split(' ').slice(-1).join(' ');
 
-        console.log(data);
-
         return data;
       },
       apiCredentials = {},
@@ -124,6 +122,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             success: function (response) {
               apiCredentials.authorizeNetLogin = response.CCLogin;
               apiCredentials.authorizeNetTransactionKey = response.CCPassword;
+              apiCredentials.testMode = response.CCTest;
+
+              // might as well validate the ccv here
+              if (response.CCRequireCCV && !req.query.ccv) {
+                callback({responsereasontext: "CCV is required"});
+                return;
+              }
+
               callback(null, response);
             },
             error: callback
@@ -131,15 +137,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       },
       transactWithApi = function (callback) {
         var authorizeNetClient,
-          creditCardData = adaptCreditCardData(creditCardModel.toJSON());
-
-        try {
-          authorizeNetClient = authorizeNet.createClient({
-            level: authorizeNet.levels.sandbox, // authorizeNet.levels.live
-            login: apiCredentials.authorizeNetLogin,
-            tran_key: apiCredentials.authorizeNetTransactionKey
-          });
-          authorizeNetClient.performAimTransaction({
+          creditCardData = adaptCreditCardData(creditCardModel.toJSON()),
+          transactionObj = {
             "x_type": authorizeOnly ? "AUTH_ONLY" : "AUTH_CAPTURE",
             "x_method": "CC",
             "x_card_num": creditCardData.number,
@@ -153,7 +152,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             "x_address": creditCardData.address,
             "x_state": creditCardData.state,
             "x_zip": creditCardData.zip
-          })
+          };
+
+        if (req.query.ccv) {
+          transactionObj.x_card_code = req.query.ccv;
+        }
+
+        try {
+          authorizeNetClient = authorizeNet.createClient({
+            level: apiCredentials.testMode ? authorizeNet.levels.sandbox : authorizeNet.levels.live,
+            login: apiCredentials.authorizeNetLogin,
+            tran_key: apiCredentials.authorizeNetTransactionKey
+          });
+          authorizeNetClient.performAimTransaction(transactionObj)
           .on('success', callback)
           .on('failure', function (err, result) {
             callback(err || result);
