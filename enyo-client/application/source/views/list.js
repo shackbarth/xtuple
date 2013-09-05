@@ -299,8 +299,7 @@ trailing:true, white:true*/
       }
       email = model.get('primaryEmail');
       website = model.get('webAddress');
-      // XXX unsure of support for dateFormat. Use Globalize?
-      revision = dateFormat(new Date(), "yyyy-mm-dd");
+      revision = Globalize.format(new Date(), "yyyy-MM-dd");
       end = "VCARD";
 
       stringToSave = "BEGIN:" + begin + "%0A";
