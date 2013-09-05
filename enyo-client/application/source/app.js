@@ -16,8 +16,24 @@ white:true*/
       { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" },
       { name: "signals", kind: enyo.Signals, onkeydown: "handleKeyDown" }
     ],
-    captureMagstripe: function (input) {
-      console.log("deal with ", input);
+    captureMagstripe: function (value) {
+      var parseMagstripe = function (input) {
+        var parseObj = {};
+
+        parseObj.number = input.substring(0, 16);
+        input = input.substring(18);
+        parseObj.name = input.substring(0, input.indexOf('6'));
+        parseObj.name = parseObj.name.split("¿").reverse().join(" ");
+        input = input.substring(1 + input.indexOf('6'));
+        parseObj.year = "20" + input.substring(0, 2);
+        input = input.substring(2);
+        parseObj.month = input.substring(0, 2);
+
+        return parseObj;
+      };
+
+      XT.log(parseMagstripe(value));
+      // TODO: do something
     }
   });
 
