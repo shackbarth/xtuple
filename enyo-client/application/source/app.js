@@ -10,8 +10,9 @@ white:true*/
     kind: "XV.App",
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
-      { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" }
+      { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" },
+      { name: "signals", kind: enyo.Signals, onkeydown: "handleKeyDown" }
     ]
   });
-  
+
 }());
