@@ -24,7 +24,9 @@ white:true*/
         return _.filter(ary, function (item) {
           return !_.isEmpty(item);
         }).join("-");
-      }
+      },
+
+      nameAttribute: "format"
     };
 
     /**
@@ -37,11 +39,10 @@ white:true*/
       
       recordType: "XM.Location",
 
-      //TODO get this or similar function working to set the site according to the siteZone.site value
       siteZoneDidChange: function () {
-        var K = XM.Location,
-          siteZone = this.get("siteZone");
-        this.set('site', siteZone.site);
+        var siteZone = this.getValue("siteZone.site");
+        if (!siteZone) { return; }
+        this.set('site', siteZone);
       },
 
       bindEvents: function () {

@@ -1,4 +1,4 @@
-/*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+/*jshint node:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XM:true, enyo:true, _:true, XV:true */
 
@@ -31,7 +31,7 @@ regexp:true, undef:true, trailing:true, white:true */
       if (this._isRelation !== undefined) { return this._isRelation; }
       var model = this.getOwner().getValue(),
         attr;
-        
+
       // Relation is true if it is not a number based attribute
       if (model) {
         attr = this.getAttr();
@@ -60,7 +60,7 @@ regexp:true, undef:true, trailing:true, white:true */
         nameAttribute,
         attrs = {},
         Klass;
-        
+
       // Turn on label link if applicable
       if (this.getValue() && isRelation) {
         color = "blue";
@@ -69,14 +69,14 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.label.setStyle("color: " + color);
       this.setLinkEnabled(enabled);
       this.setDisabled(enabled);
-      
+
       // Automatically open a workspace to set up a record for this role if necessary
       if (input && isRelation && !value && !options.silent) {
         model = this.getOwner().getValue();
         relation = model.getRelation(this.getAttr());
         recordType = relation.relatedModel.prototype.recordType;
         Klass = XT.getObjectByName(recordType);
-        
+
         // If it has an editable model it must be an XM.Info model
         if (Klass.prototype.editableModel) {
           Klass = XT.getObjectByName(Klass.prototype.editableModel);
@@ -89,13 +89,13 @@ regexp:true, undef:true, trailing:true, white:true */
         // Most account docs will make this upper again, but needs to be lower for user account
         attrs[documentKey] = model.get("number");
         attrs[nameAttribute] = model.get("name");
-        
+
         // Init function for new workspace. Makes sure the workspace understands
         // The account is already "converted".
         success = function () {
           this.getValue().checkConflicts = false;
         };
-        
+
         // Callback to handle result of new role
         callback = function (model) {
           if (model) {
@@ -104,7 +104,7 @@ regexp:true, undef:true, trailing:true, white:true */
             that.$.input.setChecked(false);
           }
         };
-        
+
         // Only open the workspace if `valid` is true
         openWorkspace = function (valid) {
           if (valid) {
@@ -119,7 +119,7 @@ regexp:true, undef:true, trailing:true, white:true */
             that.$.input.setChecked(false);
           }
         };
-        
+
         // Must have committed all changes before proceeding
         if (model.isDirty()) {
           this.doSavePrompt({
@@ -142,5 +142,5 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     }
   });
-  
+
 }());

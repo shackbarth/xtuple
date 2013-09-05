@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, Backbone:true */
 
 (function () {
   "use strict";
@@ -21,10 +21,10 @@ white:true*/
     XM.AbcClassCollection = Backbone.Collection.extend({
       model: XM.AbcClassModel
     });
-    XM.abcClass = new XM.AbcClassCollection();
+    XM.abcClasses = new XM.AbcClassCollection();
     for (i = 0; i < abcClassJson.length; i++) {
       var abcClass = new XM.AbcClassModel(abcClassJson[i]);
-      XM.abcClass.add(abcClass);
+      XM.abcClasses.add(abcClass);
     }
 
     // Cost Method for Avg Cost Count Tags
@@ -61,18 +61,18 @@ white:true*/
 
     // Control Method
     var controlMethodJson = [
-      { id: "N", name: "_none".loc() },
-      { id: "R", name: "_regular".loc() }
+      { id: XM.ItemSite.NO_CONTROL, name: "_none".loc() },
+      { id: XM.ItemSite.REGULAR_CONTROL, name: "_regular".loc() }
     ];
     XM.ControlMethodModel = Backbone.Model.extend({
     });
     XM.ControlMethodCollection = Backbone.Collection.extend({
       model: XM.ControlMethodModel
     });
-    XM.controlMethod = new XM.ControlMethodCollection();
+    XM.controlMethods = new XM.ControlMethodCollection();
     for (i = 0; i < controlMethodJson.length; i++) {
       var controlMethod = new XM.ControlMethodModel(controlMethodJson[i]);
-      XM.controlMethod.add(controlMethod);
+      XM.controlMethods.add(controlMethod);
     }
 
     // Cost Slip Auditing
@@ -96,20 +96,20 @@ white:true*/
 
     // Cost Method
     var costMethodJson = [
-      { id: "N", name: "_none".loc() },
-      { id: "S", name: "_standard".loc() },
-      { id: "A", name: "_average".loc() },
-      { id: "J", name: "_job".loc() }
+      { id: XM.ItemSite.NO_COST, name: "_none".loc() },
+      { id: XM.ItemSite.STANDARD_COST, name: "_standard".loc() },
+      { id: XM.ItemSite.AVERAGE_COST, name: "_average".loc() },
+      { id: XM.ItemSite.JOB_COST, name: "_job".loc() }
     ];
     XM.CostMethodModel = Backbone.Model.extend({
     });
     XM.CostMethodCollection = Backbone.Collection.extend({
       model: XM.CostMethodModel
     });
-    XM.costMethod = new XM.CostMethodCollection();
+    XM.costMethods = new XM.CostMethodCollection();
     for (i = 0; i < costMethodJson.length; i++) {
       var costMethod = new XM.CostMethodModel(costMethodJson[i]);
-      XM.costMethod.add(costMethod);
+      XM.costMethods.add(costMethod);
     }
   };
 

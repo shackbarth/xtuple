@@ -110,7 +110,7 @@ trailing:true, white:true, strict: false*/
     XV.registerModelWorkspace("XM.PurchaseOrderLine", "XV.EnterReceiptWorkspace");
 
     // ..........................................................
-    // ISSUE STOCK
+    // ISSUE TO SHIPPING
     //
 
     enyo.kind({
@@ -118,10 +118,14 @@ trailing:true, white:true, strict: false*/
       kind: "XV.Workspace",
       title: "_issueStock".loc(),
       model: "XM.IssueToShipping",
+      backText: "_cancel".loc(),
       saveText: "_issue".loc(),
       hideApply: true,
       hideRefresh: true,
       dirtyWarn: false,
+      events: {
+        onPrevious: ""
+      },
       handlers: {
         onDetailSelectionChanged: "toggleDetailSelection",
         onDistributedTapped: "distributedTapped"
@@ -183,7 +187,22 @@ trailing:true, white:true, strict: false*/
         // Hide detail if not applicable
         if (!model.requiresDetail()) {
           this.$.detail.hide();
+          this.parent.parent.$.menu.refresh();
         }
+      },
+      /**
+        Overload to handle callback chain.
+      */
+      destroy: function () {
+        var model = this.getValue(),
+          callback = this.getCallback();
+
+        // If there's a callback then call it with false
+        // to let it know to cancel process
+        if (model.isDirty() && callback) {
+          callback(false);
+        }
+        this.inherited(arguments);
       },
       distributeDone: function () {
         this._popupDone = true;
@@ -214,6 +233,19 @@ trailing:true, white:true, strict: false*/
       popupHidden: function (inSender, inEvent) {
         if (!this._popupDone) {
           inEvent.originator.show();
+        }
+      },
+      /**
+        Overload: This version of save looks for a callback. If it's
+        there then the assumption is we're doing a series of issues
+        so forward to the next one.
+      */
+      save: function () {
+        var callback = this.getCallback();
+        if (callback) {
+          callback(this);
+        } else {
+          this.inherited(arguments);
         }
       },
       /**

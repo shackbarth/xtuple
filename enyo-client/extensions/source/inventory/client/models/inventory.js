@@ -35,9 +35,11 @@ white:true*/
 
       @extends XM.Model
     */
-    XM.IssueToShipping = XM.Model.extend({
+    XM.IssueToShipping = XM.Transaction.extend({
 
       recordType: "XM.IssueToShipping",
+
+      quantityAttribute: "toIssue",
 
       readOnlyAttributes: [
         "atShipping",
@@ -64,59 +66,42 @@ white:true*/
       },
 
       canIssueStock: function (callback) {
+        var isShipped = this.getValue("shipment.isShipped") || false,
+          hasPrivilege = XT.session.privileges.get("IssueStockToShipping");
         if (callback) {
-          callback(true);
+          callback(!isShipped && hasPrivilege);
         }
         return this;
       },
 
       canReturnStock: function (callback) {
+        var isShipped = this.getValue("shipment.isShipped") || false,
+          hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
+          atShipping = this.get("atShipping");
         if (callback) {
-          callback(false);
-        }
-        return this;
-      },
-
-      /**
-        Attempt to distribute any undistributed inventory to default location.
-
-        @returns {Object} Receiver
-      */
-      distributeToDefault: function () {
-        var itemSite = this.get("itemSite"),
-          autoIssue = itemSite.get("stockLocationAuto"),
-          stockLoc,
-          toIssue,
-          undistributed,
-          detail;
-
-        if (!autoIssue) { return this; }
-
-        stockLoc = itemSite.get("stockLocation");
-        toIssue = this.get("toIssue");
-        undistributed = this.undistributed();
-        detail = _.find(itemSite.get("detail").models, function (model) {
-          return  model.get("location").id === stockLoc.id;
-        });
-        
-        if (detail) { // Might not be any inventory there now
-          detail.distribute(undistributed);
-        }
-
-        return this;
-      },
-
-      doIssueStock: function (callback) {
-        if (callback) {
-          callback(true);
+          callback(!isShipped && atShipping > 0 && hasPrivilege);
         }
         return this;
       },
 
       doReturnStock: function (callback) {
-        if (callback) {
-          callback(true);
-        }
+        var that = this,
+          options = {};
+
+        // Refresh once we've completed the work
+        options.success = function () {
+          that.fetch({
+            success: function () {
+              if (callback) {
+                callback();
+              }
+            }
+          });
+        };
+
+        this.setStatus(XM.Model.BUSY_COMMITTING);
+        this.dispatch("XM.Inventory", "returnFromShipping", [this.id], options);
+
         return this;
       },
 
@@ -130,27 +115,6 @@ white:true*/
           atShipping = this.get("atShipping"),
           toIssue = XT.math.subtract(balance, atShipping, XT.QUANTITY_SCALE);
         return toIssue >= 0 ? toIssue : 0;
-      },
-
-      /**
-        Formats distribution detail to an object that can be processed by
-        `issueToShipping` dispatch function called in `save`.
-
-        @returns {Object}
-      */
-      formatDetail: function () {
-        var ret = [],
-          details = this.getValue("itemSite.detail").models;
-        _.each(details, function (detail) {
-          var qty = detail.get("distributed");
-          if (qty) {
-            ret.push({
-              location: detail.get("location").id,
-              quantity: qty
-            });
-          }
-        });
-        return ret;
       },
 
       /**
@@ -181,7 +145,7 @@ white:true*/
             params = [
               that.id,
               that.get("toIssue"),
-              issOptions = {}
+              issOptions
             ];
 
           // Refresh once we've completed the work
@@ -218,16 +182,6 @@ white:true*/
         return this;
       },
 
-      /**
-
-        Returns with detail distribution is required.
-
-        @returns {Boolean}
-        */
-      requiresDetail: function () {
-        return this.getValue("itemSite.locationControl");
-      },
-
       statusDidChange: function () {
         if (this.getStatus() === XM.Model.READY_CLEAN) {
           this.set("toIssue", this.issueBalance());
@@ -236,32 +190,31 @@ white:true*/
 
       toIssueDidChange: function () {
         this.distributeToDefault();
-      },
-
-      /**
-        Return the quantity of items that require detail distribution.
-      
-        @returns {Number}
-      */
-      undistributed: function () {
-        var toIssue = this.get("toIssue"),
-          scale = XT.QTY_SCALE,
-          undist = 0,
-          dist;
-        // We only care about distribution on controlled items
-        if (this.requiresDetail() && toIssue) {
-          // Get the distributed values
-          dist = _.pluck(_.pluck(this.getValue("itemSite.detail").models, "attributes"), "distributed");
-          // Filter on only ones that actually have a value
-          if (dist.length) {
-            undist = XT.math.add(dist, scale);
-          }
-          undist = XT.math.subtract(toIssue, undist, scale);
-        }
-        return undist;
       }
 
     });
+
+    /**
+      Static function to call issue to shipping on a set of multiple items.
+
+      @params {Array} Data
+      @params {Object} Options
+    */
+    XM.Inventory.issueToShipping = function (params, options) {
+      var obj = XM.Model.prototype;
+      obj.dispatch("XM.Inventory", "issueToShipping", params, options);
+    };
+
+    /**
+      Static function to call return from shipping on a set of multiple items.
+
+      @params {Array} Array of model ids
+      @params {Object} Options
+    */
+    XM.Inventory.returnFromShipping = function (params, options) {
+      var obj = XM.Model.prototype;
+      obj.dispatch("XM.Inventory", "returnFromShipping", params, options);
+    };
 
     // ..........................................................
     // COLLECTIONS

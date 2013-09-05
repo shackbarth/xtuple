@@ -10,18 +10,17 @@ white:true*/
 
     var locationBehaviorFunctions = {
 
-      isUseDefaultLocation: function () {
-        return [false, true];
-      },
-
       defaults: function () {
         var K = XM.ItemSite;
-        this.set('isUseDefaultLocation', false);
         this.setReadOnly(this.get('receiveLocation'), true);
         this.setReadOnly(this.get('isReceiveLocationAuto'), true);
         this.setReadOnly(this.get('stockLocation'), true);
         this.setReadOnly(this.get('isStockLocationAuto'), true);
         this.setReadOnly(this.get('userDefinedLocation'), true);
+      },
+      /*TODO get this non-orm field into the model
+      isUseDefaultLocation: function () {
+        return [false, true];
       },
 
       isUseDefaultLocationDidChange: function () {
@@ -52,7 +51,7 @@ white:true*/
         this.setReadOnly('stockLocation', stockLocation);
         this.setReadOnly('isStockLocationAuto', isStockLocationAuto);
         this.setReadOnly('userDefinedLocation', userDefinedLocation);
-      },
+      }, */
       
       //TODO get the following function to work.
       costMethod: function () {
@@ -191,7 +190,7 @@ white:true*/
         XM.Model.prototype.bindEvents.apply(this, arguments);
         this.on('change:controlMethod', this.controlMethodDidChange);
         this.on('change:costMethod', this.costMethodDidChange);
-        this.on('change:isUseDefaultLocation', this.isUseDefaultLocationDidChange);
+      //  this.on('change:isUseDefaultLocation', this.isUseDefaultLocationDidChange);
       }
     };
 
@@ -340,30 +339,7 @@ white:true*/
         @type String
         @default 'R'
       */
-      REGULAR_CONTROL: "R",
-
-    // TO DO: Move LOT and SERIAL constants to standard edition
-
-      /**
-        Lot Control.
-
-        @static
-        @constant
-        @type String
-        @default L
-      */
-      LOT_CONTROL: "L",
-
-
-      /**
-        Serial Control
-
-        @static
-        @constant
-        @type Number
-        @default 'S'
-      */
-      SERIAL_CONTROL: "S"
+      REGULAR_CONTROL: "R"
 
     });
 

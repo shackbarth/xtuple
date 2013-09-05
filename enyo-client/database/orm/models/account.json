@@ -410,9 +410,10 @@
       },
       {
         "name":"account",
-        "attr":{
-          "type":"Number",
-          "column":"crmacct_id"
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "crmacct_id"
         }
       }
     ],

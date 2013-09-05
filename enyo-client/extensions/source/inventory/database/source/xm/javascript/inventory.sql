@@ -368,27 +368,46 @@ select xt.install_js('XM','Inventory','xtuple', $$
         }
       }');
   
-    @param {String} Order line uuid
-    @param {Number} Quantity
+    @param {String|Array} Order line uuid or array of objects
+    @param {Number|Object} Quantity or options
     @param {Date}   [options.asOf=now()] Transaction Timestamp
     @param {Array} [options.detail] Distribution detail
   */
   XM.Inventory.issueToShipping = function (orderLine, quantity, options) {
-    options = options || {};
-    var  asOf = options.asOf || null,
+    var asOf,
       series,
-      sql;
+      sql,
+      ary,
+      item,
+      i;
+
+    /* Make into an array if an array not passed */
+    if (typeof arguments[0] !== "object") {
+      ary = [
+        {
+          orderLine: orderLine,
+          quantity: quantity,
+          options: options || {}
+        }
+      ];
+    } else {
+      ary = arguments;
+    }
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
 
-    /* Post the transaction */
-    sql = "select issuetoshipping('SO', coitem_id, $2, 0, $3::timestamptz) as series " +
-      "from coitem where obj_uuid = $1;";
-    series = plv8.execute(sql, [orderLine, quantity, asOf])[0].series;
+    sql = "select issuetoshipping('SO', coitem_id, $2, $3, $4::timestamptz) as series " +
+          "from coitem where obj_uuid = $1;";
 
-    /* Distribute detail */
-    XM.PrivateInventory.distribute(series, options.detail);
+    /* Post the transaction */
+    for (i = 0; i < ary.length; i++) {
+      item = ary[i];
+      series = plv8.execute(sql, [item.orderLine, item.quantity, 0, item.asOf])[0].series;
+
+      /* Distribute detail */
+      XM.PrivateInventory.distribute(series, item.options.detail);
+    }
 
     return;
   };
@@ -416,18 +435,21 @@ select xt.install_js('XM','Inventory','xtuple', $$
         }
       }');
   
-    @param {String} Order line uuid
+    @param {String|Array} Order line uuid, or array of uuids
   */
   XM.Inventory.returnFromShipping = function (orderLine) {
     var sql = "select returnitemshipments(coitem_id) " +
       "from coitem where obj_uuid = $1;",
-      ret;
+      ret,
+      i;
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
-    ret = plv8.execute(sql, [orderLine])[0];
+    for (i = 0; i < arguments.length; i++) {
+      ret = plv8.execute(sql, [arguments[i]])[0];
+    }
 
     return ret;
   };
