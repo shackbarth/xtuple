@@ -6,6 +6,7 @@ select xt.install_js('XM','System','xtuple', $$
   var systemOptions = [
     "CCLogin",
     "CCPassword",
+    "CCCompany",
     "CCTest",
     "CCRequireCCV"
   ],

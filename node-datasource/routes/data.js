@@ -64,7 +64,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.encryptionKey = X.options.encryptionKey;
     org = session.passport.user.organization;
 
-    // Make sure ths user isn't asking for node-internal data
+    // Make sure the user isn't asking for node-internal data
     if (payload.nameSpace === 'SYS') {
       X.err("Invalid call to datasource object: ", payload.nameSpace + "." + payload.type);
       callback(true);

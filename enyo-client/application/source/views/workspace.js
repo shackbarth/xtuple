@@ -294,11 +294,12 @@ Globalize:true */
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "CCCompany",
+                label: "_company".loc()},
             {kind: "XV.InputWidget", attr: "CCLogin",
-              // TODO: generalize label if/when we support more than just authorize.net
-              label: "_authorizeNetLogin".loc()},
+              label: "_login".loc()},
             {kind: "XV.InputWidget", attr: "CCPassword",
-                label: "_authorizeNetTransactionKey".loc()},
+                label: "_password".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "CCTest",
                 label: "_testMode".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "CCRequireCCV",

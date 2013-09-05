@@ -98,8 +98,6 @@ var lang = XT.stringsFor("en_US", {
   "_assignedTo": "Assigned To",
   "_attach": "Attach",
   "_authorize": "Authorize",
-  "_authorizeNetLogin": "Authorize.Net Login",
-  "_authorizeNetTransactionKey": "Authorize.Net Transaction Key",
   "_averageCost": "Average Cost",
   "_backorder": "Accepts Backorders",
   "_balance": "Balance",

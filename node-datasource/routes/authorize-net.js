@@ -6,26 +6,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
 
-// https://localhost/dev/credit-card?creditCard=b42fdf19-5e2e-45d8-a4f8-83fb6e6e7391&action=authorize&amount=5000&orderNumber=40000
+  // sample invocation:
+  // https://localhost/dev/credit-card?creditCard=b42fdf19-5e2e-45d8-a4f8-83fb6e6e7391&action=authorize&amount=5000&orderNumber=40000
 
-// authorization only
-//https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L442
-// insert ccpay
-// go to authorize.net
-// insert copay
-
-// auth and capture
-// insert ccpay
-// go to authorize.net
-// postCCcashReceipt
-// insert copay
-
-
-
-//https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L688
-//https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L1126
-//https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L1171
-//https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp#L1193
+  // qt implementation is here:
+  //https://github.com/xtuple/qt-client/blob/master/guiclient/creditcardprocessor.cpp
 
   var data = require("./data"),
     async = require("async"),
@@ -124,7 +109,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               apiCredentials.authorizeNetTransactionKey = response.CCPassword;
               apiCredentials.testMode = response.CCTest;
 
-              // might as well validate the ccv here
+              // enforce Authorize.net only
+              if (response.CCCompany !== 'Authorize.Net') {
+                callback({responsereasontext: "Only Authorize.Net is currently supported."});
+                return;
+              }
+
+              // validate the ccv here
               if (response.CCRequireCCV && !req.query.ccv) {
                 callback({responsereasontext: "CCV is required"});
                 return;
@@ -211,7 +202,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           salesOrder: req.query.orderNumber,
           amount: amount
         });
-        //console.log(paymentLinkModel.validate(paymentLinkModel.attributes));
         paymentLinkModel.save(null, {
           database: req.session.passport.user.organization,
           username: req.session.passport.user.id,
