@@ -14,10 +14,22 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Tree",
     content: "_currentLayout".loc(),
     published: {
-      listAttrs: null
+      listAttrs: null,
+      fieldCount: 0
     },
     /**
-      Recursively builds tree based on the source which is a List component.
+      Resets the field count each time the tree is re-built without
+      messing with the recursive nature of the function.
+    */
+    createTree: function (source, tree) {
+      this.setFieldCount(0);
+      this.buildTree(source, tree);
+    },
+    /**
+      Recursively builds tree based on the source (List component). The Row and
+      Column nodes just have a text + incremented number content. The List Attribute nodes
+      accept the current attribute, the current list of available attribute choices, and the
+      allowLayout boolean from the XV.ListAttr control for creation of its picker widget.
       This will be overriden by children of this widget to fit their individual needs.
     */
     buildTree: function (source, tree) {
@@ -35,7 +47,9 @@ regexp:true, undef:true, trailing:true, white:true */
           columnCount++;
           c = {kind: "XV.TreeNode", content: "_column".loc() + " " + columnCount};
         } else if (controls[i].kind === "XV.ListAttr") {
-          c = {kind: "XV.ListAttrNode", attr: controls[i].attr, currentList: this.getListAttrs()};
+          this.fieldCount++;
+          c = {kind: "XV.ListAttrNode", attr: controls[i].attr, order: this.fieldCount,
+            currentList: this.getListAttrs(), disabled: !controls[i].allowLayout};
         } else {
           // this isn't the node that we're looking for
           c = null;
@@ -64,7 +78,8 @@ regexp:true, undef:true, trailing:true, white:true */
     expanded: false,
     published: {
       attr: null, // this is the current attribute, used to distinguish this node
-      currentList: null // this is the list of
+      currentList: null, // this is the list of available attributes
+      order: null // this is the number of the field
     },
     components: [
       {name: "icon", kind: "Image", showing: false},
@@ -74,6 +89,7 @@ regexp:true, undef:true, trailing:true, white:true */
     create: function () {
       this.inherited(arguments);
       this.currentListChanged();
+      this.$.caption.setDisabled(this.disabled);
     },
     currentListChanged: function () {
       this.inherited(arguments);

@@ -214,23 +214,57 @@ trailing:true, white:true*/
                   style: "padding-left: 0px;", isKey: true}
               ]},
               {kind: "XV.ListAttr", attr: "phone", ontap: "callPhone",
-                classes: "right hyperlink", fit: true}
+                classes: "right hyperlink", fit: true, allowLayout: true}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "jobTitle",
-                placeholder: "_noJobTitle".loc()},
+                placeholder: "_noJobTitle".loc(), allowLayout: true},
               {kind: "XV.ListAttr", attr: "primaryEmail", ontap: "sendMail",
-                classes: "right hyperlink", fit: true}
+                classes: "right hyperlink", fit: true, allowLayout: true}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
-              placeholder: "_noAccountName".loc()},
+              placeholder: "_noAccountName".loc(), allowLayout: true},
             {kind: "XV.ListAttr", attr: "address.formatShort"}
           ]}
         ]}
       ]}
     ],
+    formatFirstName: function (value, view, model) {
+      var lastName = (model.get('lastName') || "").trim(),
+        firstName = (model.get('firstName') || "").trim();
+      if (_.isEmpty(firstName) && _.isEmpty(lastName)) {
+        view.addRemoveClass("placeholder", true);
+        value = "_noName".loc();
+      } else {
+        view.addRemoveClass("bold", _.isEmpty(lastName));
+      }
+      if (this.getToggleSelected()) {
+        view.addRemoveClass("hyperlink", true);
+      }
+      return value;
+    },
+    callPhone: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        phoneNumber = model ? model.getValue('phone') : null,
+        win;
+      if (phoneNumber) {
+        win = window.open('tel://' + phoneNumber);
+        win.close();
+      }
+      return true;
+    },
+    sendMail: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        email = model ? model.getValue('primaryEmail') : null,
+        win;
+      if (email) {
+        win = window.open('mailto:' + email);
+        win.close();
+      }
+      return true;
+    },
     vCardExport: function (inEvent) {
       var collection = this.getValue(),
           imodel = inEvent.model,
@@ -251,7 +285,12 @@ trailing:true, white:true*/
           website,
           revision,
           end,
-          stringToSave;
+          stringToSave,
+          d = new Date(),
+          curr_date,
+          curr_month,
+          curr_year;
+
       if (model.get('lastName')) {
         name = model.get('lastName');
         fullName = model.get('lastName');
@@ -299,7 +338,10 @@ trailing:true, white:true*/
       }
       email = model.get('primaryEmail');
       website = model.get('webAddress');
-      revision = dateFormat(new Date(), "yyyy-mm-dd");
+      curr_date = d.getDate();
+      curr_month = d.getMonth();
+      curr_year = d.getFullYear();
+      revision = curr_year + "-" + curr_month + "-" + curr_date;
       end = "VCARD";
 
       stringToSave = "BEGIN:" + begin + "%0A";
@@ -341,40 +383,6 @@ trailing:true, white:true*/
         .f('vcfExport',
           stringToSave),
         '_newtab');
-    },
-    formatFirstName: function (value, view, model) {
-      var lastName = (model.get('lastName') || "").trim(),
-        firstName = (model.get('firstName') || "").trim();
-      if (_.isEmpty(firstName) && _.isEmpty(lastName)) {
-        view.addRemoveClass("placeholder", true);
-        value = "_noName".loc();
-      } else {
-        view.addRemoveClass("bold", _.isEmpty(lastName));
-      }
-      if (this.getToggleSelected()) {
-        view.addRemoveClass("hyperlink", true);
-      }
-      return value;
-    },
-    callPhone: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        phoneNumber = model ? model.getValue('phone') : null,
-        win;
-      if (phoneNumber) {
-        win = window.open('tel://' + phoneNumber);
-        win.close();
-      }
-      return true;
-    },
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
     }
   });
 
