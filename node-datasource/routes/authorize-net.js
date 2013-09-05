@@ -34,6 +34,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.transact = function (req, res) {
     var uuid = req.query.creditCard,
       authorizeOnly = req.query.action === 'authorize',
+      amount = Number(req.query.amount),
       creditCardModel = new SYS.CreditCard(),
       creditCardPaymentModel = new SYS.CreditCardPayment(),
       paymentLinkModel = new SYS.SalesOrderPayment(),
@@ -67,7 +68,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         creditCardPaymentModel.set({
           creditCard: uuid,
           customer: req.query.customerNumber,
-          amount: Number(req.query.amount),
+          amount: amount,
           orderNumber: req.query.orderNumber,
           orderNumberSeq: 1, //TODO: this must be incremented in subsequent transactions
           wasPreauthorization: authorizeOnly,
@@ -106,6 +107,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         data.expiry = expiry;
         data.address = address;
 
+        data.firstName = rawData.name.split(' ').slice(0, -1).join(' ');
+        data.lastName = rawData.name.split(' ').slice(-1).join(' ');
+
+        console.log(data);
+
         return data;
       },
       apiCredentials = {},
@@ -129,7 +135,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         try {
           authorizeNetClient = authorizeNet.createClient({
-            level: authorizeNet.levels.sandbox,
+            level: authorizeNet.levels.sandbox, // authorizeNet.levels.live
             login: apiCredentials.authorizeNetLogin,
             tran_key: apiCredentials.authorizeNetTransactionKey
           });
@@ -142,8 +148,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             "x_amount": req.query.amount,
             "x_description": "Credit Card Transaction",
 
-            "x_first_name": creditCardData.name, // TODO split space
-            "x_last_name": creditCardData.name,
+            "x_first_name": creditCardData.firstName,
+            "x_last_name": creditCardData.lastName,
             "x_address": creditCardData.address,
             "x_state": creditCardData.state,
             "x_zip": creditCardData.zip
@@ -163,7 +169,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           return;
         }
         creditCardModel.dispatch("XM.CreditCard", "postCashReceipt",
-          [creditCardPaymentModel.id, Number(req.query.orderNumber), "cohead", Number(req.query.amount)], // TODO
+          [creditCardPaymentModel.id, Number(req.query.orderNumber), "cohead", amount],
           {
             database: req.session.passport.user.organization,
             username: req.session.passport.user.id,
@@ -192,7 +198,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         paymentLinkModel.set({
           payment: creditCardPaymentModel,
           salesOrder: req.query.orderNumber,
-          amount: Number(req.query.amount)
+          amount: amount
         });
         //console.log(paymentLinkModel.validate(paymentLinkModel.attributes));
         paymentLinkModel.save(null, {
