@@ -18,9 +18,6 @@
         "delete": "MaintainSalesOrders"
       },
       "attribute": {
-        "allocatedCredit": {
-          "view": "ViewCreditMemos"
-        },
         "margin": {
           "view": "ShowMarginsOnSalesOrder"
         },
@@ -495,6 +492,13 @@
         "attr": {
           "type": "Number",
           "column": "allocated_credit"
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Number",
+          "column": "balance"
         }
       },
       {

@@ -516,8 +516,7 @@ trailing:true, white:true*/
              label: "_margin".loc(), currencyShowing: false},
             {kind: "XV.WeightWidget", attr: "freightWeight"},
             {kind: "XV.MoneyWidget", attr: {localValue: "allocatedCredit", currency: "currency"},
-                label: "_allocatedCredit".loc(), name: "allocatedCreditWidget",
-                currencyShowing: false}
+                label: "_allocatedCredit".loc(), currencyShowing: false}
           ]},
           {kind: "FittableRows", name: "summaryColumnTwo", components: [
             {kind: "XV.MoneyWidget",
@@ -534,7 +533,9 @@ trailing:true, white:true*/
              label: "_tax".loc(), currencyShowing: false},
             {kind: "XV.MoneyWidget",
              attr: {localValue: "total", currency: "currency"},
-             label: "_total".loc(), currencyShowing: false}
+             label: "_total".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget", attr: {localValue: "balance", currency: "currency"},
+                label: "_balance".loc(), currencyShowing: false}
           ]}
         ]}
       ]}

@@ -8,8 +8,9 @@ select cohead.*,
   xt.co_total(cohead) as total,
   xt.co_margin(cohead) as margin,
   xt.co_allocated_credit(cohead) as allocated_credit,
-    ophead_number,
-    cust_number 
+  COALESCE(xt.co_total(cohead), 0) - COALESCE(xt.co_allocated_credit(cohead), 0) as balance,
+  ophead_number,
+  cust_number 
   from cohead
     left join cust on cust_id = cohead_cust_id
     left join ophead on ophead_id = cohead_ophead_id;

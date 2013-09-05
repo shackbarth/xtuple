@@ -277,6 +277,7 @@ white:true*/
       "getOrderStatusString",
       "lineItems",
       "allocatedCredit",
+      "balance",
       "margin",
       "miscCharge",
       "status",
