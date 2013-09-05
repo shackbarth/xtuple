@@ -67,7 +67,6 @@ trailing:true, white:true*/
     },
     newItem: function () {
       var that = this,
-        // TODO: parent.parent is hackish
         customer = that.parent.parent.getValue().getValue("customer"),
         creditCardCollection = customer.get("creditCards"),
         creditCardModel = new XM.CreditCard(),
@@ -91,7 +90,6 @@ trailing:true, white:true*/
             }
             creditCardModel.initialize(null, {isNew: true});
             creditCardCollection.add(creditCardModel);
-            // XXX we could wait until this is done before popping up the workspace
 
             that.doPopupWorkspace({
               message: "_enterNew".loc(),
@@ -128,23 +126,33 @@ trailing:true, white:true*/
         amount = this.$.creditCardAmount.value,
         payload = {},
         success = function () {
-          that.doNotify({message: "_success".loc()});
+          that.doNotify({message: "_transactionSuccessful".loc()});
         },
         error = function (error) {
           var message = error && error.message && error.message() ? error.message() : "_error".loc();
           that.doNotify({message: message});
+        },
+        process = function () {
+          payload.creditCard = creditCard.id;
+          payload.action = action;
+          payload.amount = amount;
+          payload.orderNumber = that.parent.parent.getValue().id;
+          payload.customerNumber = that.parent.parent.getValue().getValue("customer.id");
+          that.$.authorizeButton.setShowing(false);
+          that.$.processButton.setShowing(false);
+          XT.dataSource.callRoute("credit-card", payload, {success: success, error: error});
         };
 
-      // TODO: notify
       if (creditCard && amount) {
-        payload.creditCard = creditCard.id;
-        payload.action = action;
-        payload.amount = amount;
-        payload.orderNumber = this.parent.parent.getValue().id;
-        payload.customerNumber = this.parent.parent.getValue().getValue("customer.id");
-        this.$.authorizeButton.setShowing(false);
-        this.$.processButton.setShowing(false);
-        XT.dataSource.callRoute("credit-card", payload, {success: success, error: error});
+        this.doNotify({
+          type: XM.Model.QUESTION,
+          message: "_confirmAction".loc(),
+          callback: function (response) {
+            if (response.answer) {
+              process();
+            }
+          }
+        });
       }
     },
     /**

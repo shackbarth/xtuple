@@ -571,6 +571,7 @@ var lang = XT.stringsFor("en_US", {
   "_total": "Total",
   "_totals": "Totals",
   "_toUnit": "To Unit",
+  "_transactionSuccessful": "Transaction Successful",
   "_trigger": "Trigger",
   "_type": "Type",
   "_unit": "Unit",
