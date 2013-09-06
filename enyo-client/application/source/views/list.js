@@ -2331,8 +2331,7 @@ trailing:true, white:true*/
     kind: "XV.NameList",
     create: function () {
       this.inherited(arguments);
-      this.createComponent({
-        kind: "XV.ListColumn", classes: "last", fit: true, components: [
+      this.createComponent({kind: "XV.ListColumn", classes: "last", fit: true, components: [
           {kind: "XV.ListAttr", attr: "description"}
         ]
       });

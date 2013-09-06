@@ -34,25 +34,25 @@ exports.base64urlUnescape = function (str) {
 
   str += new Array(5 - str.length % 4).join('=');
   return str.replace(/\-/g, '+').replace(/_/g, '/');
-}
+};
 
 exports.base64urlDecode = function (str) {
   "use strict";
 
   return new Buffer(that.base64urlUnescape(str), 'base64').toString();
-}
+};
 
 exports.base64urlEscape = function (str) {
   "use strict";
 
   return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-}
+};
 
 exports.base64urlEncode = function (str) {
   "use strict";
 
   return that.base64urlEscape(new Buffer(str).toString('base64'));
-}
+};
 
 
 /**
@@ -68,4 +68,4 @@ exports.getRandomInt = function (min, max) {
   "use strict";
 
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
