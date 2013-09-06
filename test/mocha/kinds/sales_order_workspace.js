@@ -2,7 +2,7 @@
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
 /*global XT:true, XM:true, XV:true, describe:true, it:true,
-  console:true, before:true, module:true, require:true */
+  console:true, before:true, after:true, module:true, require:true */
 
 (function () {
   "use strict";
@@ -17,7 +17,7 @@
       var submodels = {};
       async.series([
         function (callback) {
-          submodels.customerModel = new XM.CustomerProspectRelation();
+          submodels.customerModel = new XM.SalesCustomer();
           submodels.customerModel.fetch({number: "TTOYS", success: function () {
             callback();
           }});

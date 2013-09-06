@@ -28,6 +28,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     analysis = require('./analysis'),
     app = require('./app'),
     auth = require('./auth'),
+    authorizeNet = require('./authorize-net'),
     changePassword = require('./change_password'),
     clientCode = require('./client_code'),
     email = require('./email'),
@@ -82,6 +83,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Custom routes
   //
+  exports.creditCard = [ensureLogin, authorizeNet.transact];
   exports.changePassword = [ensureLogin, changePassword.changePassword];
   exports.clientCode = [ensureLogin, clientCode.clientCode];
   exports.dataFromKey = dataFromKey.dataFromKey; // don't authenticate

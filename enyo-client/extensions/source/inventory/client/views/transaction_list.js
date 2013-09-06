@@ -17,26 +17,28 @@ trailing:true, white:true, strict:false*/
       published: {
         prerequisite: "",
         notifyMessage: "",
-        list: null
+        list: null,
+        actions: null,
+        model: null
       },
       events: {
-        onNotify: ""
+        onWorkspace: ""
       },
       handlers: {
-        onListItemMenuTap: "showListItemMenu"
+        onListItemMenuTap: "showListItemMenu",
+        onSelectionChanged: "buildMenu"
       },
       components: [
         {name: "parameterPanel", kind: "FittableRows", classes: "left",
           components: [
           {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
             {kind: "onyx.Button", name: "backButton", content: "_back".loc(), ontap: "close"},
-            {kind: "onyx.MenuDecorator", components: [
+            {kind: "onyx.MenuDecorator", style: "margin: 0;", onSelect: "actionSelected", components: [
               {kind: "XV.IconButton", src: "/assets/menu-icon-gear.png",
-                content: "_actions".loc() },
-              {kind: "onyx.Menu", name: "headerMenu", ontap: "headerActionSelected" }
+                content: "_actions".loc(), name: "actionButton"},
+              {kind: "onyx.Menu", name: "actionMenu"}
             ]}
           ]},
-          {name: "leftTitle", content: "_advancedSearch".loc(), classes: "xv-parameter-title"},
           {kind: "Scroller", name: "parameterScroller", fit: true},
         ]},
         {name: "listPanel", kind: "FittableRows", components: [
@@ -54,47 +56,66 @@ trailing:true, white:true, strict:false*/
             {name: "listItemMenu", kind: "onyx.Menu", floating: true,
               onSelect: "listActionSelected", maxHeight: 500}
           ]},
-          {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0}
+          {name: "contentPanels", kind: "Panels", margin: 0, fit: true, draggable: false, panelCount: 0},
+          {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
+              modal: true, floating: true, scrim: true,
+              onHide: "popupHidden", components: [
+            {kind: "onyx.Spinner"},
+            {name: "spinnerMessage", content: "_processing".loc() + "..."}
+          ]}
         ]}
       ],
+      actionSelected: function (inSender, inEvent) {
+        var action = inEvent.originator.action,
+          method = action.method || action.name;
+
+        this[method](inSender, inEvent);
+      },
+      buildMenu: function () {
+        var actionMenu = this.$.actionMenu,
+          actions = this.getActions().slice(0),
+          that = this;
+
+        // reset the menu
+        actionMenu.destroyClientControls();
+
+        // then add whatever actions are applicable
+        _.each(actions, function (action) {
+          var name = action.name,
+            prerequisite = action.prerequisite,
+            isDisabled = prerequisite ? !that[prerequisite]() : false;
+          actionMenu.createComponent({
+            name: name,
+            kind: XV.MenuItem,
+            content: action.label || ("_" + name).loc(),
+            action: action,
+            disabled: isDisabled
+          });
+
+        });
+        actionMenu.render();
+        this.$.actionButton.setShowing(actions.length);
+      },
       create: function () {
         this.inherited(arguments);
         this.setList({list: this.getList()});
+        if (!this.getActions()) {
+          this.setActions([]);
+        }
+        this.buildMenu();
       },
-      // must be implemented by the subkind
-      executeDispatch: function () {},
-      headerActionSelected: function () {
-        var that = this,
-          execute,
-          notify;
-
-        // step 2: ask the user if they really want to do the method
-        notify = function () {
-          var notifyEvent = {
-            originator: this,
-            message: that.getNotifyMessage(),
-            type: XM.Model.QUESTION,
-            // step 3: execute the dispatch function
-            callback: _.bind(that.executeDispatch, that)
-          };
-          that.doNotify(notifyEvent);
-        };
-
-        // step 1: make sure we can do the method
-        XM.Inventory[this.getPrerequisite()](function (isAllowed) {
-          var notifyEvent;
-
-          if (isAllowed) {
-            notify();
-          } else {
-            notifyEvent = {
-              originator: this,
-              type: XM.Model.CRITICAL,
-              message: "_canNotUpdate".loc()
-            };
-            that.doNotify(notifyEvent);
-          }
-        });
+      popupHidden: function (inSender, inEvent) {
+        if (!this._popupDone) {
+          inEvent.originator.show();
+        }
+      },
+      spinnerHide: function () {
+        this._popupDone = true;
+        this.$.spinnerPopup.hide();
+      },
+      spinnerShow: function () {
+        this._popupDone = false;
+        this.$.spinnerPopup.show();
       }
     };
 
@@ -127,29 +148,225 @@ trailing:true, white:true, strict:false*/
       }
     });
 
+    /** @private */
+    var _canDo = function () {
+      var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
+        model = this.getModel(),
+        validModel = model ? !model.get("isShipped") : false;
+      return hasPrivilege && validModel;
+    };
+
     enyo.kind({
       name: "XV.IssueToShipping",
       kind: "XV.TransactionList",
       prerequisite: "canIssueStock",
       notifyMessage: "_issueAll?".loc(),
       list: "XV.IssueToShippingList",
-      create: function () {
-        this.inherited(arguments);
-        this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_issueAll".loc() });
-      },
-      executeDispatch: function () {
-        var that = this,
-          listItems = [],/* TODO_.map(that.$.list.getValue().models, function (model) {
-            return {
-              uuid: model.id,
-              quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
-              // TODO: get this off a calculated field
-            };
-          })*/
-          // TODO: verify this actually worked
-          callback = function () {};
+      actions: [
+        {name: "issueAll", label: "_issueAll".loc(),
+          prerequisite: "canIssueStock" },
+        {name: "issueSelectedStock", label: "_issueSelectedStock".loc(),
+          prerequisite: "canIssueSelected" },
+        {name: "issueSelected", label: "_issueSelected".loc(),
+          prerequisite: "canIssueSelected" },
+        {name: "returnSelected", label: "_returnSelected".loc(),
+          prerequisite: "canReturnSelected" },
+      ],
+      canReturnSelected: function () {
+        var canDo = _canDo.call(this),
+          models = this.selectedModels(),
+          check;
+        if (canDo) {
+          check = _.find(models, function (model) {
+            return model.get("atShipping") > 0;
+          });
+        }
 
-        XM.Inventory.issueStock(listItems, callback);
+        return !_.isEmpty(check);
+      },
+      canIssueSelected: function () {
+        var canDo = _canDo.call(this),
+          models = this.selectedModels(),
+          check;
+        if (canDo) {
+          check = _.find(models, function (model) {
+            return model.get("toIssue") > 0;
+          });
+        }
+
+        return !_.isEmpty(check);
+      },
+      canIssueStock: function () {
+        var canDo = _canDo.call(this),
+          hasOpenLines = this.$.list.value.length;
+        return canDo && hasOpenLines;
+      },
+      /**
+        Helper function for transacting `issue` on an array of models
+
+        @param {Array} Models
+        @param {Boolean} Prompt user for confirmation on every model
+      */
+      issue: function (models, prompt) {
+        var that = this,
+          i = -1,
+          callback,
+          data = [];
+
+        // Recursively issue everything we can
+        callback = function (workspace) {
+          var model,
+            options = {},
+            toIssue,
+            params,
+            dispOptions = {},
+            wsOptions = {},
+            wsParams;
+
+          // If argument is false, this whole process was cancelled
+          if (workspace === false) {
+            return;
+
+          // If a workspace brought us here, process the information it obtained
+          } else if (workspace) {
+            model = workspace.getValue();
+            toIssue = model.get("toIssue");
+            if (toIssue) {
+              wsOptions.detail = model.formatDetail();
+              wsParams = {
+                orderLine: model.id,
+                quantity: toIssue,
+                options: wsOptions
+              };
+              data.push(wsParams);
+            }
+            workspace.doPrevious();
+          }
+
+          i++;
+          // If we've worked through all the models then forward to the server
+          if (i === models.length) {
+            that.spinnerShow();
+            dispOptions.success = function () {
+              that.requery();
+              that.spinnerHide();
+            };
+            XM.Inventory.issueToShipping(data, dispOptions);
+
+          // Else if there's something here we can issue, handle it
+          } else {
+            model = models[i];
+            toIssue = model.get("toIssue");
+
+            // See if there's anything to issue here
+            if (toIssue) {
+
+              // If prompt or distribution detail required,
+              // open a workspace to handle it
+              if (prompt || model.undistributed()) {
+                that.doWorkspace({
+                  workspace: "XV.IssueStockWorkspace",
+                  id: model.id,
+                  callback: callback,
+                  allowNew: false
+                });
+
+              // Otherwise just use the data we have
+              } else {
+                options.detail = model.formatDetail();
+                params = {
+                  orderLine: model.id,
+                  quantity: toIssue,
+                  options: options
+                };
+                data.push(params);
+                callback();
+              }
+
+            // Nothing to issue, move on
+            } else {
+              callback();
+            }
+          }
+        };
+        callback();
+      },
+      issueAll: function () {
+        var models = this.$.list.getValue().models;
+        this.issue(models);
+      },
+      issueSelected: function () {
+        var models = this.selectedModels();
+        this.issue(models);
+      },
+      issueSelectedStock: function () {
+        var models = this.selectedModels();
+        this.issue(models, true);
+      },
+      parameterChanged: function (inSender, inEvent) {
+        if (inEvent && inEvent.originator.name === "order") {
+          this.setModel(inEvent.originator.getParameter().value);
+          this.buildMenu();
+        }
+      },
+      returnSelected: function () {
+        var models = this.selectedModels(),
+          that = this,
+          data =  [],
+          options = {},
+          atShipping,
+          model,
+          i;
+
+        for (i = 0; i < models.length; i++) {
+          model = models[i];
+          atShipping = model.get("atShipping");
+
+          // See if there's anything to issue here
+          if (atShipping) {
+            data.push(model.id);
+          }
+        }
+                
+        if (data.length) {
+          this.spinnerShow();
+          options.success = function () {
+            that.requery();
+            that.spinnerHide();
+          };
+          XM.Inventory.returnFromShipping(data, options);
+        }
+      },
+      /**
+        Overload: Piggy back on existing handler for `onParameterChanged event`
+        by forwarding this requery to `parameterChanged`.
+      */
+      requery: function (inSender, inEvent) {
+        var that = this,
+          options = {
+            success: function () {
+              that.buildMenu();
+            }
+          };
+        this.fetch(options);
+        this.parameterChanged(inSender, inEvent);
+        return true;
+      },
+      selectedModels: function () {
+        var list = this.$.list,
+          collection = list.getValue(),
+          models = [],
+          selected,
+          prop;
+        if (collection.length) {
+          selected = list.getSelection().selected;
+          for (prop in selected) {
+            if (selected.hasOwnProperty(prop)) {
+              models.push(list.getModel(prop - 0));
+            }
+          }
+        }
+        return models;
       }
     });
   };

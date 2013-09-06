@@ -6,6 +6,27 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   // ..........................................................
+  // CREDIT CARD GATEWAY
+  //
+
+  enyo.kind(
+    /** @lends XV.CreditCardGatewayCombobox# */{
+    name: "XV.CreditCardGatewayCombobox",
+    kind: "XV.ComboboxWidget",
+    events: {
+      onNotify: ""
+    },
+    collection: "XM.creditCardGateways",
+    controlValueChanged: function (inSender, inEvent) {
+      console.log(inEvent);
+      if (inEvent.value !== "Authorize.Net") {
+        this.doNotify({message: "_unsupportedGateway".loc()});
+      }
+      return this.inherited(arguments);
+    }
+  });
+
+  // ..........................................................
   // COUNTRY
   //
 
@@ -17,7 +38,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind(
     /** @lends XV.CountryCombobox# */{
     name: "XV.CountryCombobox",
-    kind: "XV.Combobox",
+    kind: "XV.ComboboxWidget",
     collection: "XM.countries"
   });
 
@@ -46,13 +67,16 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.QuoteLineCharacteristicCombobox",
     kind: "XV.ComboboxWidget",
     keyAttribute: "value",
-    components: [
-      {kind: "FittableColumns", name: "fittableColumns", components: [
-        {name: "label", content: "", classes: "xv-decorated-label", style: "width: 100px;"},
-        {name: "input", kind: "XV.Combobox", style: "width: 200px;"},
-        {name: "comboboxNote", classes: "xv-combobox-note"}
-      ]}
-    ],
+    create: function () {
+      this.inherited(arguments);
+      this.createComponent({
+        name: "comboboxNote",
+        container: this.$.fittableColumns,
+        classes: "xv-combobox-note"
+      });
+      this.$.input.applyStyle("padding-top", "8px");
+      this.$.input.applyStyle("padding-left", "8px");
+    },
     /**
       Populate the note field
 
@@ -84,9 +108,9 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.StateCombobox
     @extends XV.Combobox
    */
-  enyo.kind(/** @lends XV.StateCombobox# */{
+  enyo.kind({
     name: "XV.StateCombobox",
-    kind: "XV.Combobox",
+    kind: "XV.ComboboxWidget",
     collection: "XM.states",
     keyAttribute: "abbreviation",
     published: {
@@ -135,9 +159,10 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.UnitCombobox",
-    kind: "XV.Combobox",
+    kind: "XV.ComboboxWidget",
     collection: "XM.units",
     keyAttribute: "name",
+    showLabel: false,
     setValue: function (value, options) {
       if (value && value.id) {
         this.inherited(arguments, [value.id, options]);

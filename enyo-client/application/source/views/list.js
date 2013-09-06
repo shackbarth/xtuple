@@ -285,11 +285,7 @@ trailing:true, white:true*/
           website,
           revision,
           end,
-          stringToSave,
-          d = new Date(),
-          curr_date,
-          curr_month,
-          curr_year;
+          stringToSave;
 
       if (model.get('lastName')) {
         name = model.get('lastName');
@@ -338,10 +334,7 @@ trailing:true, white:true*/
       }
       email = model.get('primaryEmail');
       website = model.get('webAddress');
-      curr_date = d.getDate();
-      curr_month = d.getMonth();
-      curr_year = d.getFullYear();
-      revision = curr_year + "-" + curr_month + "-" + curr_date;
+      revision = Globalize.format(new Date(), "yyyy-MM-dd");
       end = "VCARD";
 
       stringToSave = "BEGIN:" + begin + "%0A";
@@ -419,6 +412,36 @@ trailing:true, white:true*/
   XV.registerModelList("XM.CostCategory", "XV.CostCategoryList");
 
   // ..........................................................
+  // CREDIT CARD
+  //
+
+  enyo.kind({
+    name: "XV.CreditCardList",
+    kind: "XV.List",
+    label: "_creditCards".loc(),
+    collection: "XM.CreditCardCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    parameterWidget: "XV.CreditCardListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.CostCategory", "XV.CostCategoryList");
+
+  // ..........................................................
   // CURRENCY
   //
 
@@ -453,7 +476,7 @@ trailing:true, white:true*/
     name: "XV.CustomerList",
     kind: "XV.List",
     label: "_customers".loc(),
-    collection: "XM.CustomerRelationCollection",
+    collection: "XM.CustomerListItemCollection",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -2339,11 +2362,10 @@ trailing:true, white:true*/
     kind: "XV.NameList",
     create: function () {
       this.inherited(arguments);
-      var component =
-      {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-        {kind: "XV.ListAttr", attr: "description"}
-      ]};
-      this.createComponent(component);
+      this.createComponent({kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListAttr", attr: "description"}
+        ]
+      });
     }
   });
 

@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true, Globalize:true */
 
@@ -205,13 +205,13 @@ white:true*/
 
           // Define the results handler
           fetchOptions.success = function () {
-            
+
             // Remove from active requests
             _activeRequests = _.filter(_activeRequests, function (request) {
               return request.currency.id !== that.id ||
                 XT.date.compareDate(asOf, request.asOf) !== 0;
             });
-            
+
             // If no results report an error
             if (!rates.length) {
               if (options.error) {
@@ -266,7 +266,7 @@ white:true*/
       params,
       err,
       request;
-      
+
       // If invalid arguments, bail
       if (!this.id || !asOf || !options.success) { return this; }
 
@@ -336,13 +336,13 @@ white:true*/
 
           // Define the results handler
           fetchOptions.success = function () {
-            
+
             // Remove from active requests
             _activeRequests = _.filter(_activeRequests, function (request) {
               return request.currency.id !== that.id ||
                 XT.date.compareDate(asOf, request.asOf) !== 0;
             });
-            
+
             // If no results report an error
             if (!rates.length) {
               if (options.error) {

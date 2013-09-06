@@ -154,6 +154,19 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // CREDIT CARD
+  //
+
+  enyo.kind({
+    name: "XV.CreditCardListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_creditCards".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"}
+    ]
+  });
+
+  // ..........................................................
   // CUSTOMER
   //
 
