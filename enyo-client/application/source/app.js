@@ -14,7 +14,7 @@ white:true*/
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
       { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" },
-      { name: "signals", kind: enyo.Signals, onkeydown: "handleKeyDown", onkeyup: "handleKeyUp" }
+      { name: "signals", kind: enyo.Signals, onkeydown: "handleKeyDown" }
     ],
     captureMagstripe: function (value) {
       var parseMagstripe = function (input) {
