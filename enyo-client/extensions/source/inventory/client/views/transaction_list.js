@@ -243,6 +243,7 @@ trailing:true, white:true, strict:false*/
       prerequisite: "canIssueStock",
       notifyMessage: "_issueAll?".loc(),
       list: "XV.IssueToShippingList",
+      issueMethod: "issueToShipping",
       actions: [
         {name: "issueAll", label: "_issueAll".loc(),
           prerequisite: "canIssueStock" },
@@ -336,7 +337,7 @@ trailing:true, white:true, strict:false*/
               that.requery();
               that.spinnerHide();
             };
-            XM.Inventory.issueToShipping(data, dispOptions);
+            XM.Inventory[this.issueMethod](data, dispOptions);
 
           // Else if there's something here we can issue, handle it
           } else {

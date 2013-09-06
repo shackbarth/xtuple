@@ -33,13 +33,15 @@ white:true*/
     /**
       @class
 
-      @extends XM.Model
+      @extends XM.Transaction
     */
     XM.IssueToShipping = XM.Transaction.extend({
 
       recordType: "XM.IssueToShipping",
 
       quantityAttribute: "toIssue",
+
+      issueMethod: "issueToShipping",
 
       readOnlyAttributes: [
         "atShipping",
@@ -162,7 +164,7 @@ white:true*/
             issOptions.detail = detail;
           }
           that.setStatus(XM.Model.BUSY_COMMITTING);
-          that.dispatch("XM.Inventory", "issueToShipping", params, dispOptions);
+          that.dispatch("XM.Inventory", this.issueMethod, params, dispOptions);
         };
 
         // Validate

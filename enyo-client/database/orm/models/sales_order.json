@@ -1541,22 +1541,8 @@
         "toOne": {
           "type": "SalesRep",
           "column": "cohead_salesrep_id",
-	  			"isNested": true
+          "isNested": true
          }
-      },
-      {
-        "name": "shiptoName",
-        "attr": {
-          "type": "String",
-          "column": "cohead_shiptoname"
-        }
-      },
-      {
-        "name": "shiptoAddress1",
-        "attr": {
-          "type": "String",
-          "column": "cohead_shiptoaddress1"
-        }
       },
       {
         "name": "billtoName",
@@ -1566,10 +1552,52 @@
         }
       },
       {
-        "name": "billtoAddress1",
+        "name": "billtoCity",
         "attr": {
           "type": "String",
-          "column": "cohead_billtoaddress1"
+          "column": "cohead_billtocity"
+        }
+      },
+      {
+        "name": "billtoState",
+        "attr": {
+          "type": "String",
+          "column": "cohead_billtostate"
+        }
+      },
+      {
+        "name": "billtoCountry",
+        "attr": {
+          "type": "String",
+          "column": "cohead_billtocountry"
+        }
+      },
+      {
+        "name": "shiptoName",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptoname"
+        }
+      },
+      {
+        "name": "shiptoCity",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptocity"
+        }
+      },
+      {
+        "name": "shiptoState",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptostate"
+        }
+      },
+      {
+        "name": "shiptoCountry",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptocountry"
         }
       }
     ],
