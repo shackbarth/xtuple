@@ -1780,6 +1780,9 @@ Globalize:true */
     name: "XV.SalesOrderWorkspace",
     kind: "XV.SalesOrderBase",
     title: "_salesOrder".loc(),
+    handlers: {
+      onMagstripeCapture: "handleMagstripeCapture"
+    },
     model: "XM.SalesOrder",
     /**
       Inserts additional components where they should be rendered.
@@ -1825,6 +1828,21 @@ Globalize:true */
           // Line Item Box
           {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems", fit: true}
         ], {owner: this});
+      }
+    },
+    handleHotKey: function (keyCode) {
+      switch (String.fromCharCode(keyCode)) {
+      case "L":
+        if (!this.$.salesOrderLineItemGridBox.disabled) {
+          this.$.salesOrderLineItemGridBox.newItem();
+        }
+        return;
+      }
+    },
+    handleMagstripeCapture: function (inSender, inEvent) {
+      if (this.$.creditCardBox && !this.$.creditCardBox.$.newButton.disabled) { // XXX sloppy
+        this.$.salesPanels.setIndex(this.$.salesPanels.getPanels().length);
+        this.$.creditCardBox.newItemWithData(inEvent.data);
       }
     },
     /**

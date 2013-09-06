@@ -9,7 +9,7 @@ white:true*/
     name: "App",
     kind: "XV.App",
     keyCapturePatterns: [
-      {method: "captureMagstripe", start: [16, 53, 16, 66], end: [191, 13]}
+      {method: "captureMagstripe", start: [16, 53, 16, 66], end: [191, 13], falsePositives: 1}
     ],
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
@@ -25,19 +25,18 @@ white:true*/
         parseObj.name = input.substring(0, input.indexOf('6'));
         parseObj.name = parseObj.name.split("¿").reverse().join(" ");
         input = input.substring(1 + input.indexOf('6'));
-        parseObj.year = "20" + input.substring(0, 2);
+        parseObj.yearExpired = "20" + input.substring(0, 2);
         input = input.substring(2);
-        parseObj.month = input.substring(0, 2);
+        parseObj.monthExpired = input.substring(0, 2);
+        parseObj.creditCardType = "M"; // TODO XXX
 
         return parseObj;
       };
 
-      XT.log(parseMagstripe(value));
-      // TODO: do something
+      this.$.postbooks.getActive().waterfall("onMagstripeCapture", {data: parseMagstripe(value)});
     },
     processHotKey: function (keyCode) {
-      var active = this.$.postbooks.getActive();
-      active.waterfall("onHotKey", {keyCode: keyCode});
+      this.$.postbooks.getActive().waterfall("onHotKey", {keyCode: keyCode});
     },
   });
 
