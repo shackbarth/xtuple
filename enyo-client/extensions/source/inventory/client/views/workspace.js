@@ -175,7 +175,7 @@ trailing:true, white:true, strict: false*/
       attributesChanged: function () {
         this.inherited(arguments);
         var model = this.getValue();
-        
+
         // Focus and select qty on start up.
         if (!this._started && model &&
           model.getStatus() === XM.Model.READY_DIRTY) {
@@ -349,7 +349,7 @@ trailing:true, white:true, strict: false*/
     // ITEM SITE
     //
 
-    extensions = [
+    var extensions = [
       {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_inventory".loc() },
       {kind: "XV.ControlMethodPicker", container: "mainGroup", attr: "controlMethod"},
       {kind: "XV.CostMethodPicker", container: "mainGroup", attr: "costMethod"},
@@ -384,6 +384,6 @@ trailing:true, white:true, strict: false*/
     ];
 
     XV.appendExtension("XV.ItemSiteWorkspace", extensions);
-    
+
   };
 }());
