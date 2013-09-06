@@ -26,7 +26,6 @@ white:true*/
   });
   XM.userPreference = new XM.UserPreference();
 
-
   /**
     @class
 
@@ -45,5 +44,19 @@ white:true*/
     ]
   });
   XM.databaseInformation = new XM.DatabaseInformation();
+
+  /**
+    @class
+
+    @extends XM.Settings
+  */
+  XM.System = XM.Settings.extend({
+    /** @scope XM.SystemConfiguration.prototype */
+
+    recordType: 'XM.System',
+
+    privileges: 'ConfigureCC' // TODO: expand once we can do more than just credit card processing here
+  });
+  XM.system = new XM.System();
 
 }());

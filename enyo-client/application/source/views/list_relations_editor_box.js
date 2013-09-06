@@ -32,6 +32,51 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // CREDIT CARDS
+  //
+  enyo.kind({
+    name: "XV.CreditCardsEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "name"},
+        {kind: "XV.InputWidget", attr: "address1"},
+        {kind: "XV.InputWidget", attr: "address2"},
+        {kind: "XV.InputWidget", attr: "city"},
+        {kind: "XV.CountryCombobox", attr: "country", name: "country", onValueChange: "countryChanged" },
+        {kind: "XV.StateCombobox", attr: "state", name: "state"},
+        {kind: "XV.InputWidget", attr: "zip", label: "_postalCode".loc()},
+        {kind: "XV.CreditCardTypePicker", attr: "creditCardType", label: "_type".loc()},
+        {kind: "XV.CheckboxWidget", attr: "isDebit"},
+        {kind: "XV.InputWidget", attr: "number"},
+        {kind: "XV.MonthPicker", attr: "monthExpired"},
+        {kind: "XV.YearPicker", attr: "yearExpired"},
+        {kind: "XV.CheckboxWidget", attr: "isActive"},
+        {kind: "XV.NumberWidget", attr: "sequence"}
+      ]}
+    ],
+    /**
+      When the country is changed we want to both do the typical event
+      (to update the model) but also set the country of the state, which
+      will limit its options.
+    */
+    countryChanged: function (inSender, inEvent) {
+      var country = this.$.country.getValue();
+      this.$.state.setCountry(country);
+    },
+  });
+
+  enyo.kind({
+    name: "XV.CreditCardsBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_creditCards".loc(),
+    editor: "XV.CreditCardsEditor",
+    parentKey: "customer",
+    listRelations: "XV.CreditCardListRelations"
+  });
+
+  // ..........................................................
   // CONTACT
   //
   enyo.kind({
@@ -469,7 +514,9 @@ trailing:true, white:true*/
             {kind: "XV.CurrencyPicker", attr: "currency"},
             {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
              label: "_margin".loc(), currencyShowing: false},
-            {kind: "XV.WeightWidget", attr: "freightWeight"}
+            {kind: "XV.WeightWidget", attr: "freightWeight"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "allocatedCredit", currency: "currency"},
+                label: "_allocatedCredit".loc(), currencyShowing: false}
           ]},
           {kind: "FittableRows", name: "summaryColumnTwo", components: [
             {kind: "XV.MoneyWidget",
@@ -486,7 +533,9 @@ trailing:true, white:true*/
              label: "_tax".loc(), currencyShowing: false},
             {kind: "XV.MoneyWidget",
              attr: {localValue: "total", currency: "currency"},
-             label: "_total".loc(), currencyShowing: false}
+             label: "_total".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget", attr: {localValue: "balance", currency: "currency"},
+                label: "_balance".loc(), currencyShowing: false}
           ]}
         ]}
       ]}

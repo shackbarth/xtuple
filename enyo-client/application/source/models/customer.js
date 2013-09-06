@@ -55,6 +55,16 @@ white:true*/
       return this;
     },
 
+    getDefaultShipto: function () {
+      if (!this.get("shiptos")) {
+        return null;
+      }
+      var defaultShipto = _.filter(this.get("shiptos").models, function (shipto) {
+        return shipto.get("isDefault");
+      });
+      return defaultShipto.length > 0 ? defaultShipto[0] : null;
+    },
+
     /**
       Retrieve the customer's price for a given item and quantity.
 
@@ -548,6 +558,40 @@ white:true*/
 
   });
 
+
+  /**
+    @class
+
+    @extends XM.AccountDocument
+  */
+  XM.SalesCustomer = XM.AccountDocument.extend({
+    /** @scope XM.SalesCustomer.prototype */
+
+    recordType: 'XM.SalesCustomer',
+
+    descriptionKey: "name"
+
+  });
+
+  // Add in item mixin
+  XM.SalesCustomer = XM.SalesCustomer.extend(XM.CustomerMixin);
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.CustomerListItem = XM.Info.extend({
+    /** @scope XM.CustomerListItem.prototype */
+
+    recordType: 'XM.CustomerListItem',
+
+    editableModel: 'XM.Customer',
+
+    descriptionKey: "name"
+
+  });
+
   /**
     @class
 
@@ -563,9 +607,6 @@ white:true*/
     descriptionKey: "name"
 
   });
-
-  // Add in item mixin
-  XM.CustomerRelation = XM.CustomerRelation.extend(XM.CustomerMixin);
 
   /**
     @class
@@ -676,6 +717,30 @@ white:true*/
   // ..........................................................
   // COLLECTIONS
   //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SalesCustomerCollection = XM.Collection.extend({
+    /** @scope XM.SalesCustomerCollection.prototype */
+
+    model: XM.SalesCustomer
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerListItemCollection = XM.Collection.extend({
+    /** @scope XM.CustomerListItemCollection.prototype */
+
+    model: XM.CustomerListItem
+
+  });
 
   /**
     @class

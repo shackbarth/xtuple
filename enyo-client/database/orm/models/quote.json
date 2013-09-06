@@ -21,10 +21,12 @@
           "view": "ShowMarginsOnSalesOrder"
         },
         "quoteDate": {
-          "edit": "OverrideSODate"
+          "create": "OverrideSODate",
+          "update": "OverrideSODate"
         },
         "packDate": {
-          "edit": "AlterPackDate"
+          "create": "AlterPackDate",
+          "update": "AlterPackDate"
         }
       }
     },
@@ -969,7 +971,8 @@
       },
       "attribute": {
         "taxType": {
-          "edit": "OverrideTax"
+          "create": "OverrideTax",
+          "update": "OverrideTax"
         },
         "margin": {
           "view": "ShowMarginsOnSalesOrder"

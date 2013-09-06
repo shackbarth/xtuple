@@ -1,0 +1,492 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CreditCard",
+    "table": "ccard",
+    "idSequenceName": "ccard_ccard_id_seq",
+    "comment": "Credit Card Map",
+    "privileges": {
+      "all": {
+        "create": "ProcessCreditCards",
+        "read": "ProcessCreditCards",
+        "update": "ProcessCreditCards",
+        "delete": false
+      },
+      "attribute": {
+        "name": {
+          "update": false
+        },
+        "address1": {
+          "update": false
+        },
+        "address2": {
+          "update": false
+        },
+        "city": {
+          "update": false
+        },
+        "state": {
+          "update": false
+        },
+        "zip": {
+          "update": false
+        },
+        "country": {
+          "update": false
+        },
+        "monthExpired": {
+          "update": false
+        },
+        "yearExpired": {
+          "update": false
+        },
+        "isDebit": {
+          "update": false
+        },
+        "creditCardType": {
+          "update": false
+        },
+        "number": {
+          "update": false
+        }
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ccard_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sequence",
+        "attr": {
+          "type": "Number",
+          "column": "ccard_seq"
+        }
+      },
+      {
+        "name": "customer",
+        "attr": {
+          "type": "Number",
+          "column": "ccard_cust_id",
+          "required": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "ccard_active"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "required": true,
+          "column": "ccard_name"
+        }
+      },
+      {
+        "name": "address1",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "required": true,
+          "column": "ccard_address1"
+        }
+      },
+      {
+        "name": "address2",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_address2"
+        }
+      },
+      {
+        "name": "city",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "required": true,
+          "column": "ccard_city"
+        }
+      },
+      {
+        "name": "state",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "required": true,
+          "column": "ccard_state"
+        }
+      },
+      {
+        "name": "zip",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "required": true,
+          "column": "ccard_zip"
+        }
+      },
+      {
+        "name": "country",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "required": true,
+          "column": "ccard_country"
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "isEncrypted": "credit_card_number",
+          "required": true,
+          "column": "ccard_number"
+        }
+      },
+      {
+        "name": "monthExpired",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "required": true,
+          "column": "ccard_month_expired"
+        }
+      },
+      {
+        "name": "yearExpired",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "required": true,
+          "column": "ccard_year_expired"
+        }
+      },
+      {
+        "name": "isDebit",
+        "attr": {
+          "type": "Boolean",
+          "column": "ccard_debit"
+        }
+      },
+      {
+        "name": "creditCardType",
+        "attr": {
+          "type": "String",
+          "column": "ccard_type",
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "CreditCard",
+    "table": "ccard",
+    "idSequenceName": "ccard_ccard_id_seq",
+    "comment": "Credit Card Map",
+    "privileges": {
+      "all": {
+        "create": "ProcessCreditCards",
+        "read": "ProcessCreditCards",
+        "update": "ProcessCreditCards",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ccard_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sequence",
+        "attr": {
+          "type": "Number",
+          "column": "ccard_seq"
+        }
+      },
+      {
+        "name": "customer",
+        "attr": {
+          "type": "Number",
+          "column": "ccard_cust_id",
+          "required": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "ccard_active"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_name"
+        }
+      },
+      {
+        "name": "address1",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_address1"
+        }
+      },
+      {
+        "name": "address2",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_address2"
+        }
+      },
+      {
+        "name": "city",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_city"
+        }
+      },
+      {
+        "name": "state",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_state"
+        }
+      },
+      {
+        "name": "zip",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_zip"
+        }
+      },
+      {
+        "name": "country",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_country"
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_number"
+        }
+      },
+      {
+        "name": "monthExpired",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_month_expired"
+        }
+      },
+      {
+        "name": "yearExpired",
+        "attr": {
+          "type": "String",
+          "isEncrypted": true,
+          "column": "ccard_year_expired"
+        }
+      },
+      {
+        "name": "isDebit",
+        "attr": {
+          "type": "Boolean",
+          "column": "ccard_debit"
+        }
+      },
+      {
+        "name": "creditCardType",
+        "attr": {
+          "type": "String",
+          "column": "ccard_type",
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "CreditCardPayment",
+    "table": "ccpay",
+    "idSequenceName": "ccpay_ccpay_id_seq",
+    "comment": "Credit Card Payment Map",
+    "privileges": {
+      "all": {
+        "create": "ProcessCreditCards",
+        "read": "ProcessCreditCards",
+        "update": "ProcessCreditCards",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ccpay_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "creditCard",
+        "toOne": {
+          "type": "CreditCard",
+          "column": "ccpay_ccard_id"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "ccpay_cust_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "ccpay_amount"
+        }
+      },
+      {
+        "name": "wasPreauthorization",
+        "attr": {
+          "type": "Boolean",
+          "column": "ccpay_auth"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_status"
+        }
+      },
+      {
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_type"
+        }
+      },
+      {
+        "name": "originalType",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_auth_charge"
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "ccpay_order_number"
+        }
+      },
+      {
+        "name": "orderNumberSeq",
+        "attr": {
+          "type": "Number",
+          "column": "ccpay_order_number_seq"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "SalesOrderPayment",
+    "table": "payco",
+    "idSequenceName": "payco_payco_id_seq",
+    "comment": "Sales Order Payment Map",
+    "privileges": {
+      "all": {
+        "create": "ProcessCreditCards",
+        "read": "ProcessCreditCards",
+        "update": "ProcessCreditCards",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "payment",
+        "toOne": {
+          "isNested": true,
+          "type": "CreditCardPayment",
+          "column": "payco_ccpay_id"
+        }
+      },
+      {
+        "name": "salesOrder",
+        "toOne": {
+          "type": "SalesOrderRelation",
+          "column": "payco_cohead_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "payco_amount"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

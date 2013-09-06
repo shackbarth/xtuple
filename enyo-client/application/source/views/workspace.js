@@ -284,6 +284,33 @@ Globalize:true */
   });
 
   enyo.kind({
+    name: "XV.SystemConfigurationWorkspace",
+    kind: "XV.Workspace",
+    title: "_systemConfiguration".loc(),
+    model: "XM.System",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
+            {kind: "XV.CreditCardGatewayCombobox", attr: "CCCompany",
+                label: "_gateway".loc()},
+            {kind: "XV.InputWidget", attr: "CCLogin",
+              label: "_login".loc()},
+            {kind: "XV.InputWidget", attr: "CCPassword",
+                label: "_password".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "CCTest",
+                label: "_testMode".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "CCRequireCCV",
+                label: "_requireCCV".loc()}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  enyo.kind({
     name: "XV.UserPreferenceWorkspace",
     kind: "XV.Workspace",
     title: "_userPreferences".loc(),
@@ -514,6 +541,7 @@ Globalize:true */
         {kind: "XV.CustomerSalesOrderListRelationsBox", attr: "salesOrderRelations"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
+        {kind: "XV.CreditCardsBox", attr: "creditCards"},
         {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerDocumentsBox", attr: "documents"}
       ]},
@@ -1469,9 +1497,7 @@ Globalize:true */
             {name: "datePanel"},
             {kind: "XV.InputWidget", attr: "getOrderStatusString", label: "_status".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
-            {kind: "XV.CustomerProspectWidget", attr: "customer",
-              showAddress: true, label: "_customer".loc(),
-              nameAttribute: ""},
+            {name: "customerWidgetContainer"},
             {kind: "XV.AddressFieldsWidget", attr:
               {name: "billtoName", line1: "billtoAddress1",
                 line2: "billtoAddress2", line3: "billtoAddress3",
@@ -1538,8 +1564,9 @@ Globalize:true */
       this.titleChanged();
     },
     customerChanged: function () {
-      var customer = this.$.customerProspectWidget.getValue(),
+      var customer = this.$.customerWidget.getValue(),
         id = customer ? customer.get("account") : -1;
+
       this.$.billtoContact.addParameter({attribute: "account", value: id}, true);
       this.$.shiptoContact.addParameter({attribute: "account", value: id}, true);
       if (customer) {
@@ -1548,6 +1575,9 @@ Globalize:true */
           attribute: "customer",
           value: customer.id
         });
+        if (this.$.creditCardWidget) {
+          this.$.creditCardWidget.addParameter({attribute: "customer", value: customer.id});
+        }
       } else {
         this.$.customerShiptoWidget.setDisabled(true);
       }
@@ -1587,6 +1617,15 @@ Globalize:true */
       components where they should be rendered.
     */
     build: function () {
+      this.createComponent({
+        kind: "XV.CustomerProspectWidget",
+        attr: "customer",
+        name: "customerWidget",
+        showAddress: true,
+        label: "_customer".loc(),
+        nameAttribute: "",
+        container: this.$.customerWidgetContainer
+      });
       this.$.datePanel.createComponents([
         {kind: "XV.DateWidget", attr: "expireDate"}
       ], {owner: this});
@@ -1746,6 +1785,15 @@ Globalize:true */
       Inserts additional components where they should be rendered.
     */
     build: function () {
+      this.createComponent({
+        kind: "XV.SalesCustomerWidget",
+        attr: "customer",
+        name: "customerWidget",
+        showAddress: true,
+        label: "_customer".loc(),
+        nameAttribute: "",
+        container: this.$.customerWidgetContainer
+      });
       this.$.datePanel.createComponents([
         {kind: "XV.CheckboxWidget", attr: "shipComplete"}
       ], {owner: this});
@@ -1759,6 +1807,14 @@ Globalize:true */
           {kind: "XV.SalesOrderCommentBox", attr: "comments"},
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
         ], {owner: this});
+
+      if (XT.session.privileges.get("ProcessCreditCards") && XT.session.settings.get("CCCompany") === "Authorize.Net") {
+        this.$.salesPanels.createComponent(
+          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards"},
+          {owner: this}
+        );
+      }
+
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
