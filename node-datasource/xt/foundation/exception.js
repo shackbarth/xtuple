@@ -1,11 +1,12 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true */
+/*global X:true, issue:true */
 
 //........................................
 // DEFINE GLOBAL FUNCTION
 //
 issue = function () {
+  "use strict";
   var args = X.$A(arguments);
   if (args.length <= 0) return;
   X.exception.handle(args[0]);
@@ -35,18 +36,18 @@ issue = function () {
     handle: function (err) {
       var type = err.type, message = err.message, stack = err.stack;
       switch (type) {
-        case X.exception.T_WARNING:
-        case X.exception.T_REPORT:
-          X.warn("Exception encountered. ", message);
-          break;
-        case X.exception.T_FATAL:
-          X.err("Error encountered. ", message);
-          process.emit('SIGINT');
-          break;
-        default:
-          X.err("Unrecoverable exception. ", message, stack);
-          process.emit('SIGINT');
-          break;
+      case X.exception.T_WARNING:
+      case X.exception.T_REPORT:
+        X.warn("Exception encountered. ", message);
+        break;
+      case X.exception.T_FATAL:
+        X.err("Error encountered. ", message);
+        process.emit('SIGINT');
+        break;
+      default:
+        X.err("Unrecoverable exception. ", message, stack);
+        process.emit('SIGINT');
+        break;
       }
     },
 

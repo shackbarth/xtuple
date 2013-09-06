@@ -23,12 +23,12 @@ white:true*/
         "order"
       ],
       */
-  
+
       canRecallShipment: function (callback) {
         var priv = this.get("isShipped") && this.get("isInvoiced") && this.get("isInvoicePosted") === false ? "RecallInvoicedShipment" : this.get("isShipped") && this.get("isInvoiced") === false ? "RecallOrders" : false;
         return _canDo.call(this, priv, callback);
       },
-      
+
       doRecallShipment: function (callback) {
         return _doDispatch.call(this, "recallShipment", callback);
       }
@@ -44,7 +44,7 @@ white:true*/
       return ret;
     };
 
-    /** @private */ 
+    /** @private */
     var _doDispatch = function (method, callback, params) {
       var that = this,
         options = {};

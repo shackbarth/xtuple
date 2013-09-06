@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, XT:true, console:true, _:true*/
+regexp:true, undef:true, strict:true, trailing:true, white:true, expr:true */
+/*global X:true, SYS: true, XM:true, XT:true, console:true, _:true*/
 
 /**
  * Connect - xTuple - PostgreSQL Store
@@ -46,8 +46,8 @@ module.exports = function (connect) {
 
     options = options || {};
     Store.call(this, options);
-    this.prefix = null == options.prefix ? 'sess:' : options.prefix;
-    this.hybridCache = null == options.hybridCache ? false : options.hybridCache;
+    this.prefix = null === options.prefix ? 'sess:' : options.prefix;
+    this.hybridCache = null === options.hybridCache ? false : options.hybridCache;
     this.sessions = {};
 
     // Load all the data from SYS.SessionStore into the Express MemoryStore for caching.

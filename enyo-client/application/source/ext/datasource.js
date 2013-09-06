@@ -115,55 +115,9 @@ white:true*/
                .send(payload);
     },
 
-    /*
-      Reset a global user's password.
-
-    @param {String} id
-    @param {Function} options.success callback
-    @param {Function} options.error callback
-    */
-    resetPassword: function (id, options) {
-      var payload = {
-          id: id,
-          newPassword: options.newPassword
-        },
-        ajax = new enyo.Ajax({
-          url: XT.getOrganizationPath() + "/reset-password",
-          success: options ? options.success : undefined,
-          error: options ? options.error : undefined
-        });
-
-      if (options.newUser) {
-        // we don't want to send false at all, because false turns
-        // into "false" over the wire which is truthy.
-        payload.newUser = options.newUser;
-      }
-
-      ajax.response(this.ajaxSuccess);
-      ajax.go(payload);
-    },
-    /*
-      Change a global password.
-
-    @param {Object} parameters
-    @param {Function} options.success callback
-    @param {Function} options.error callback
-    */
-    changePassword: function (params, options) {
-      var payload = {
-          oldPassword: params.oldPassword,
-          newPassword: params.newPassword
-        },
-        ajax = new enyo.Ajax({
-          url: XT.getOrganizationPath() + "/change-password",
-          success: options ? options.success : undefined,
-          error: options ? options.error : undefined
-        });
-
-      ajax.response(this.ajaxSuccess);
-      ajax.go(payload);
-    },
-
+    /**
+      Generic implementation of AJAX response handler
+     */
     ajaxSuccess: function (inSender, inResponse) {
       var params = {}, error;
 
@@ -182,6 +136,57 @@ white:true*/
         inSender.success.call(this, inResponse.data);
       }
     },
+    /**
+      Generic implementation of AJAX request
+     */
+    callRoute: function (path, payload, options) {
+      var ajax = new enyo.Ajax({
+        url: XT.getOrganizationPath() + "/" + path,
+        success: options ? options.success : undefined,
+        error: options ? options.error : undefined
+      });
+
+      ajax.response(this.ajaxSuccess);
+      ajax.go(payload);
+    },
+
+    /*
+      Reset a global user's password.
+
+    @param {String} id
+    @param {Function} options.success callback
+    @param {Function} options.error callback
+    */
+    resetPassword: function (id, options) {
+      var payload = {
+        id: id,
+        newPassword: options.newPassword
+      };
+
+      if (options.newUser) {
+        // we don't want to send false at all, because false turns
+        // into "false" over the wire which is truthy.
+        payload.newUser = options.newUser;
+      }
+      this.callRoute("reset-password", payload, options);
+    },
+
+    /*
+      Change a global password.
+
+    @param {Object} parameters
+    @param {Function} options.success callback
+    @param {Function} options.error callback
+    */
+    changePassword: function (params, options) {
+      var payload = {
+          oldPassword: params.oldPassword,
+          newPassword: params.newPassword
+        };
+
+      this.callRoute("change-password", payload, options);
+    },
+
     /*
       Sends a request to node to send out an email
 
@@ -194,19 +199,12 @@ white:true*/
     @param {String} payload.text
     */
     sendEmail: function (payload, options) {
-      var ajax = new enyo.Ajax({
-          url: XT.getOrganizationPath() + "/email",
-          success: options ? options.success : undefined,
-          error: options ? options.error : undefined
-        });
-
       if (payload.body && !payload.text) {
         // be flexible with the inputs. Node-emailer prefers the term text, but
         // body is fine for us as well.
         payload.text = payload.body;
       }
-      ajax.response(this.ajaxSuccess);
-      ajax.go(payload);
+      this.callRoute("email", payload, options);
     },
 
     /* @private */

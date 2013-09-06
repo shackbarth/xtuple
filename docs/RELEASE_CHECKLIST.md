@@ -9,7 +9,7 @@
 4. Update `package.json` in the `xtuple-extensions`, `private-extensions`, and `bi` repos,
    and update the extension versions *if they have changed*.
 5. Update the project version number on dogfood and create new project version number for the next sprint.
-6. Look at the open pull requests for all three repositories to make sure we have pulled everything
+6. Look at the open pull requests for all four repositories to make sure we have pulled everything
   we want for this release.
 7. Make sure the only Resolved/Open issues for XT-MOBILE correspond to pull requests that
   you have left sitting in github.
@@ -32,12 +32,14 @@ TODO: verify that the jsdoc look ok. Should this go in testing?
   end users do not need to know about, e.g. bugs that were caused and fixed all within a sprint.
 4. Commit and push changes.
 5. Tag and push the release.
+
 ```bash
-git fetch XTUPLE
-git checkout XTUPLE/tags/1_4_0
+git fetch XTUPLE 
+git checkout XTUPLE/tags/R1_4_0
 git tag -a v1.4.0 -m "xTuple Web Platform - Details here"
 git push --tags XTUPLE
 ```
+
 6. Also tag `xtuple-extensions`, `private-extensions`, and `bi`.
 7. Send out an email.
 

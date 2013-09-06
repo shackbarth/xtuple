@@ -19,19 +19,18 @@
       zombieAuth.loadApp(done);
     });
 
-    it('should fail predictably if we save them with no data', function () {
+    it('should be set up right', function () {
       this.timeout(30 * 1000);
-      describe('So we loop through them all', function () {
-        this.timeout(30 * 1000);
-        var navigator = XT.app.$.postbooks.$.navigator,
-          workspace;
+      var navigator = XT.app.$.postbooks.$.navigator,
+        workspace;
 
-        _.each(navigator.modules, function (module, moduleIndex) {
-          _.each(module.panels, function (panel, panelIndex) {
-            var listName = XT.app.$.postbooks.modules[moduleIndex].panels[panelIndex].name,
-              list;
+      _.each(navigator.modules, function (module, moduleIndex) {
+        _.each(module.panels, function (panel, panelIndex) {
+          var listName = XT.app.$.postbooks.modules[moduleIndex].panels[panelIndex].name,
+            list;
 
-            it(listName, function (done) {
+          describe("The workspace for " + listName, function () {
+            it('should fail predictably if we save it with no data', function (done) {
               this.timeout(30 * 1000);
               navigator.setModule(moduleIndex);
               navigator.setContentPanel(panelIndex);

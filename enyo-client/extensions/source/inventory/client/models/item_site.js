@@ -52,7 +52,7 @@ white:true*/
         this.setReadOnly('isStockLocationAuto', isStockLocationAuto);
         this.setReadOnly('userDefinedLocation', userDefinedLocation);
       }, */
-      
+
       //TODO get the following function to work.
       costMethod: function () {
         var K = XM.ItemSite,
@@ -61,7 +61,7 @@ white:true*/
         if (itemType === "P") {
           return costMethod = ["A", "S"];
         }
-      }, 
+      },
 
       controlMethodDidChange: function () {
         var K = XM.ItemSite,
@@ -201,7 +201,7 @@ white:true*/
       @extends XM.Model
     */
     XM.ItemSiteLocation = XM.Model.extend({
-      
+
       recordType: "XM.ItemSiteLocation"
 
     });
@@ -212,7 +212,7 @@ white:true*/
       @extends XM.Info
     */
     XM.ItemSiteInventory = XM.Info.extend({
-      
+
       recordType: "XM.ItemSiteInventory",
 
       editableModel: "XM.ItemSite"
@@ -225,7 +225,7 @@ white:true*/
       @extends XM.Model
     */
     XM.ItemSiteDetail = XM.Model.extend({
-      
+
       recordType: "XM.ItemSiteDetail",
 
       /**
@@ -254,7 +254,7 @@ white:true*/
 
         // Can not distribute negative
         qty = qty < 0 ? 0 : qty;
-        
+
         this.set("distributed", qty);
         return this;
       },
@@ -267,7 +267,7 @@ white:true*/
       }
 
     });
-  
+
     // ..........................................................
     // CLASS CONSTANTS
     //

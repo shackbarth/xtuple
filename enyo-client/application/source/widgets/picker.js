@@ -113,6 +113,17 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // CREDIT CARD TYPE
+  //
+
+  enyo.kind({
+    name: "XV.CreditCardTypePicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.creditCardTypes"
+  });
+
+  // ..........................................................
   // CURRENCY
   //
 
@@ -314,6 +325,18 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'format'}
     ],
     valueAttribute: "id"
+  });
+
+
+  // ..........................................................
+  // MONTH
+  //
+
+  enyo.kind({
+    name: "XV.MonthPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.months"
   });
 
   // ..........................................................
@@ -537,18 +560,20 @@ regexp:true, undef:true, trailing:true, white:true */
       this.attr = inEvent.originator.attr;
     },
     setComponentsList: function (toSet) {
-      var comps = [];
+      var i,
+        strArray,
+        comps = [],
+        stringToSet,
+        objectToSet;
       comps[0] = {content: "_none".loc(), attr: "none"};
-      for (var i = 0; i < toSet.length; i++) {
+      for (i = 0; i < toSet.length; i++) {
         if (toSet[i].indexOf('.') === -1) {
-          var stringToSet = "_" + toSet[i],
-            objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
+          stringToSet = "_" + toSet[i];
+          objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
           comps.push(objectToSet);
         }
         else {
-          var stringToSet,
-            objectToSet;
-          var strArray = toSet[i].split('.');
+          strArray = toSet[i].split('.');
           strArray[0] = "_" + strArray[0];
           strArray[1] = "_" + strArray[1];
           stringToSet = strArray[0].loc() + " " + strArray[1].loc();
@@ -801,4 +826,14 @@ regexp:true, undef:true, trailing:true, white:true */
     valueAttribute: "id"
   });
 
+  // ..........................................................
+  // YEAR
+  //
+
+  enyo.kind({
+    name: "XV.YearPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.years"
+  });
 }());

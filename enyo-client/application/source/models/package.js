@@ -3,6 +3,7 @@ enyo.depends(
   "address.js",
   "configure.js",
   "contact.js",
+  "credit_card.js",
   "currency.js",
   "customer.js",
   "employee.js",
