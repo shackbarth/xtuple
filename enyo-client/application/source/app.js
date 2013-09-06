@@ -14,7 +14,7 @@ white:true*/
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
       { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" },
-      { name: "signals", kind: enyo.Signals, onkeydown: "handleKeyDown" }
+      { name: "signals", kind: enyo.Signals, onkeydown: "handleKeyDown", onkeyup: "handleKeyUp" }
     ],
     captureMagstripe: function (value) {
       var parseMagstripe = function (input) {
@@ -34,7 +34,11 @@ white:true*/
 
       XT.log(parseMagstripe(value));
       // TODO: do something
-    }
+    },
+    processHotKey: function (keyCode) {
+      var active = this.$.postbooks.getActive();
+      active.waterfall("onHotKey", {keyCode: keyCode});
+    },
   });
 
 }());
