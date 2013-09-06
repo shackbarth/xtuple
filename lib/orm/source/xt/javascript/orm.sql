@@ -454,8 +454,11 @@ select xt.install_js('XT','Orm','xtuple', $$
                   plv8.elog(ERROR, "Can not add obj_uuid field because {table} is not a table.".replace("{table}", orm.table));
                 }
 
-                /* looks good. add the column */
-                query = "alter table {table} add column obj_uuid text default xt.generate_uuid();".replace("{table}", orm.table);
+                /* looks good. add the column, add inheritance and unique constraint */
+                query = "alter table {table} add column obj_uuid text default xt.generate_uuid();" +
+                        "select xt.add_inheritance({table}, 'xt.obj'); " +
+                        "select xt.add_constraint({table}, '{table}_obj_uui_id','unique(obj_uuid)', {schemaName}); ";
+                query = query.replace("{table}", orm.table).replace("{schemaName}", schemaName || 'public');
 
                 if (DEBUG) {
                   XT.debug('createView add obj_uuid sql = ', query);
