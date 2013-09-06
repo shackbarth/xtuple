@@ -28,7 +28,10 @@ white:true*/
         parseObj.yearExpired = "20" + input.substring(0, 2);
         input = input.substring(2);
         parseObj.monthExpired = input.substring(0, 2);
-        parseObj.creditCardType = "M"; // TODO XXX
+        // XXX
+        // The card type (visa etc. is not obvious based on the magstripe stream
+        // and is not actually used by Authorize.net. So skip it.
+        //parseObj.creditCardType = "M";
 
         return parseObj;
       };
