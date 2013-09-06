@@ -336,6 +336,19 @@ white:true*/
     XM.toDoStatuses.add(toDoStatus);
   }
 
+  // Year (for credit cards)
+  XM.YearModel = Backbone.Model.extend({
+  });
+  XM.YearCollection = Backbone.Collection.extend({
+    model: XM.YearModel
+  });
+  XM.years = new XM.YearCollection();
+  for (i = 2000; i <= 2030; i++) {
+    var yearFormat = "" + i;
+    var year = new XM.YearModel({id: yearFormat, name: yearFormat});
+    XM.years.add(year);
+  }
+
   // Sort Type
   var sortTypeJson = [
     { id: "ascending", name: "_ascending".loc() },
@@ -357,18 +370,5 @@ white:true*/
   XM.AttributeCollection = Backbone.Collection.extend({
     model: XM.AttributeModel
   });
-
-  // Year (for credit cards)
-  XM.YearModel = Backbone.Model.extend({
-  });
-  XM.YearCollection = Backbone.Collection.extend({
-    model: XM.YearModel
-  });
-  XM.years = new XM.YearCollection();
-  for (i = 2000; i <= 2030; i++) {
-    var yearFormat = "" + i;
-    var year = new XM.YearModel({id: yearFormat, name: yearFormat});
-    XM.years.add(year);
-  }
 
 }());
