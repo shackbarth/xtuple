@@ -368,6 +368,7 @@ var lang = XT.stringsFor("en_US", {
   "_nextNumber": "Next Number",
   "_nextCheckNumber": "Next Check Number",
   "_none": "NONE",
+  "_noSchedule": "No Schedule",
   "_notes": "Notes",
   "_notSold": "Not Sold",
   "_number": "Number",

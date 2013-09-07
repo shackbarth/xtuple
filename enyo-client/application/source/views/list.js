@@ -1,6 +1,6 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
+trailing:true, white:true, strict: false*/
 /*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, Globalize:true*/
 
 (function () {
@@ -1616,16 +1616,19 @@ trailing:true, white:true*/
                 classes: "right"}
             ]}
           ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "shiptoAddress1"}
-          ]},
-          {kind: "XV.ListColumn", classes: "descr", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "orderNotes"}
+          {kind: "XV.ListColumn", classes: "last", components: [
+            {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
+            {kind: "XV.ListAttr", formatter: "formatBillto"}
           ]}
         ]}
       ]}
     ],
+    formatBillto: function (value, view, model) {
+      var city = model.get("billtoCity"),
+        state = model.get("billtoState"),
+        country = model.get("billtoCountry");
+      return XM.Address.formatShort(city, state, country);
+    },
     formatExpireDate: function (value, view, model) {
       var isLate = model && model.get('expireDate') &&
         (XT.date.compareDate(value, new Date()) < 1);
@@ -1636,6 +1639,12 @@ trailing:true, white:true*/
       var currency = model ? model.get("currency") : false,
         scale = XT.session.locale.attributes.salesPriceScale;
       return currency ? currency.format(value, scale) : "";
+    },
+    formatShipto: function (value, view, model) {
+      var city = model.get("shiptoCity"),
+        state = model.get("shiptoState"),
+        country = model.get("shiptoCountry");
+      return XM.Address.formatShort(city, state, country);
     }
   });
 
@@ -1659,38 +1668,48 @@ trailing:true, white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+              {kind: "XV.ListAttr", attr: "getOrderStatusString",
+                style: "padding-left: 24px"},
+              {kind: "XV.ListAttr", attr: "scheduleDate",
+                formatter: "formatScheduleDate", classes: "right",
+                placeholder: "_noSchedule".loc()}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.name"}
+              {kind: "XV.ListAttr", attr: "customer.name"},
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice",
+                classes: "right"}
             ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "billtoAddress1"}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "shiptoAddress1"}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "shipVia"}
           ]},
           {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "scheduleDate"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice", classes: "right"}
-            ]}
+            {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
+            {kind: "XV.ListAttr", formatter: "formatBillto"}
           ]}
         ]}
       ]}
     ],
+    formatBillto: function (value, view, model) {
+      var city = model.get("billtoCity"),
+        state = model.get("billtoState"),
+        country = model.get("billtoCountry");
+      return XM.Address.formatShort(city, state, country);
+    },
     formatPrice: function (value, view, model) {
       var currency = model ? model.get("currency") : false,
         scale = XT.session.locale.attributes.salesPriceScale;
       return currency ? currency.format(value, scale) : "";
+    },
+    formatScheduleDate: function (value, view, model) {
+      var isLate = model && model.get('scheduleDate') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    },
+    formatShipto: function (value, view, model) {
+      var city = model.get("shiptoCity"),
+        state = model.get("shiptoState"),
+        country = model.get("shiptoCountry");
+      return XM.Address.formatShort(city, state, country);
     }
   });
 
