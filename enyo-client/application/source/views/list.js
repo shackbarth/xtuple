@@ -1640,7 +1640,7 @@ trailing:true, white:true, strict: false*/
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "customer.name"},
-              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice",
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatTotal",
                 classes: "right"}
             ]}
           ]},
@@ -1669,9 +1669,9 @@ trailing:true, white:true, strict: false*/
     formatName: function (value, view, model) {
       return model.get("shiptoName") || model.get("billtoName");
     },
-    formatPrice: function (value, view, model) {
+    formatTotal: function (value, view, model) {
       var currency = model ? model.get("currency") : false,
-        scale = XT.session.locale.attributes.salesPriceScale;
+        scale = XT.session.locale.attributes.moneyScale;
       return currency ? currency.format(value, scale) : "";
     },
 
