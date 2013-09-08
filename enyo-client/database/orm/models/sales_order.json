@@ -1475,9 +1475,14 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewSalesOrders MaintainSalesOrders",
+        "read": "ViewSalesOrders MaintainSalesOrders IssueStockToShipping",
         "update": false,
         "delete": false
+      },
+      "attribute": {
+        "total": {
+          "view": "MaintainSalesOrders ViewSalesOrders"
+        }
       }
     },
     "properties": [
@@ -1501,7 +1506,7 @@
         "name": "customer",
         "toOne": {
           "isNested": true,
-          "type": "SalesCustomer",
+          "type": "CustomerRelation",
           "column": "cohead_cust_id"
         }
       },

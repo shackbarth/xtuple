@@ -1647,8 +1647,8 @@ trailing:true, white:true, strict: false*/
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
-            {kind: "XV.ListAttr", formatter: "formatBillto"}
+            {kind: "XV.ListAttr", formatter: "formatName", classes: "italic"},
+            {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
           ]}
         ]}
       ]}
@@ -1665,6 +1665,12 @@ trailing:true, white:true, strict: false*/
       view.addRemoveClass("error", isLate);
       return value;
     },
+    /**
+      Returns Shipto Name if one exists, otherwise Billto Name.
+    */
+    formatName: function (value, view, model) {
+      return model.get("shiptoName") || model.get("billtoName");
+    },
     formatPrice: function (value, view, model) {
       var currency = model ? model.get("currency") : false,
         scale = XT.session.locale.attributes.salesPriceScale;
@@ -1675,7 +1681,21 @@ trailing:true, white:true, strict: false*/
         state = model.get("shiptoState"),
         country = model.get("shiptoCountry");
       return XM.Address.formatShort(city, state, country);
-    }
+    },
+    /**
+      Returns formatted Shipto City, State and Country if
+      Shipto Name exists, otherwise Billto location.
+    */
+    formatShiptoOrBillto: function (value, view, model) {
+      var hasShipto = model.get("shiptoName") ? true : false,
+        cityAttr = hasShipto ? "shiptoCity": "billtoCity",
+        stateAttr = hasShipto ? "shiptoState" : "billtoState",
+        countryAttr = hasShipto ? "shiptoCountry" : "billtoCountry",
+        city = model.get(cityAttr),
+        state = model.get(stateAttr),
+        country = model.get(countryAttr);
+      return XM.Address.formatShort(city, state, country);
+    }, 
   });
 
   XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
@@ -1712,8 +1732,8 @@ trailing:true, white:true, strict: false*/
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
-            {kind: "XV.ListAttr", formatter: "formatBillto"}
+            {kind: "XV.ListAttr", formatter: "formatName", classes: "italic"},
+            {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
           ]}
         ]}
       ]}
@@ -1723,6 +1743,12 @@ trailing:true, white:true, strict: false*/
         state = model.get("billtoState"),
         country = model.get("billtoCountry");
       return XM.Address.formatShort(city, state, country);
+    },
+    /**
+      Returns Shipto Name if one exists, otherwise Billto Name.
+    */
+    formatName: function (value, view, model) {
+      return model.get("shiptoName") || model.get("billtoName");
     },
     formatPrice: function (value, view, model) {
       var currency = model ? model.get("currency") : false,
@@ -1740,7 +1766,21 @@ trailing:true, white:true, strict: false*/
         state = model.get("shiptoState"),
         country = model.get("shiptoCountry");
       return XM.Address.formatShort(city, state, country);
-    }
+    },
+    /**
+      Returns formatted Shipto City, State and Country if
+      Shipto Name exists, otherwise Billto location.
+    */
+    formatShiptoOrBillto: function (value, view, model) {
+      var hasShipto = model.get("shiptoName") ? true : false,
+        cityAttr = hasShipto ? "shiptoCity": "billtoCity",
+        stateAttr = hasShipto ? "shiptoState" : "billtoState",
+        countryAttr = hasShipto ? "shiptoCountry" : "billtoCountry",
+        city = model.get(cityAttr),
+        state = model.get(stateAttr),
+        country = model.get(countryAttr);
+      return XM.Address.formatShort(city, state, country);
+    }, 
   });
 
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
