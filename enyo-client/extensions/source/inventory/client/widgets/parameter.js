@@ -1,6 +1,6 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true, strict:false*/
+trailing:true, white:true, strict: false*/
 /*global XT:true, enyo:true*/
 
 (function () {
@@ -15,7 +15,8 @@ trailing:true, white:true, strict:false*/
       name: "XV.IssueToShippingParameters",
       kind: "XV.ParameterWidget",
       components: [
-        {kind: "onyx.GroupboxHeader", content: "_issueToShipping".loc()},
+        {kind: "onyx.GroupboxHeader", content: "_parameters".loc()},
+        {name: "transactionDate", label: "_issueDate".loc(), defaultKind: "XV.DateWidget"},
         {name: "order", attr: "order", label: "_order".loc(), defaultKind: "XV.SalesOrderWidget",
         getParameter: function () {
           var param,
@@ -37,8 +38,14 @@ trailing:true, white:true, strict:false*/
           }
 
           return param;
-        }}
-      ]
+        }},
+        {name: "shipment", label: "_shipment".loc(), defaultKind: "XV.ShipmentWidget"}
+      ],
+      create: function () {
+        this.inherited(arguments);
+        this.$.transactionDate.setValue(new Date());
+        this.$.shipment.$.input.setDisabled(true);
+      }
     });
 
     // ..........................................................
@@ -90,7 +97,7 @@ trailing:true, white:true, strict:false*/
             if (!this.getValue()) {
               param = {
                 attribute: this.getAttr(),
-                operator: "=",
+                operator: '=',
                 value: true
               };
             }

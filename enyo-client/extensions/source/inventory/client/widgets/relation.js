@@ -1,19 +1,19 @@
 /*jshint node:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true, strict:false */
-/*global enyo:true*/
+/*global enyo:true */
 
 (function () {
 
   // ..........................................................
-  // ORDER RELATION
+  // SHIPMENT
   //
 
   enyo.kind({
-    name: "XV.OrderWidget",
+    name: "XV.ShipmentWidget",
     kind: "XV.RelationWidget",
-    collection: "XM.OrderRelationCollection",
+    collection: "XM.ShipmentRelationCollection",
     keyAttribute: "number",
-    list: "XV.OrderList"
+    list: "XV.ShipmentList"
   });
 
 }());
