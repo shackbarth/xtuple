@@ -1614,93 +1614,6 @@ trailing:true, white:true, strict: false*/
   XV.registerModelList("XM.PurchaseOrderListItem", "XV.PurchaseOrderList");
 
   // ..........................................................
-  // QUOTE
-  //
-
-  enyo.kind({
-    name: "XV.QuoteList",
-    kind: "XV.List",
-    label: "_quotes".loc(),
-    collection: "XM.QuoteListItemCollection",
-    parameterWidget: "XV.QuoteListParameters",
-    query: {orderBy: [
-      {attribute: 'number'}
-    ]},
-    allowPrint: true,
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true,
-                fit: true},
-              {kind: "XV.ListAttr", attr: "getQuoteStatusString",
-                style: "padding-left: 24px"},
-              {kind: "XV.ListAttr", attr: "expireDate",
-                formatter: "formatExpireDate", classes: "right",
-                placeholder: "_noExpiration".loc()}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.name"},
-              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice",
-                classes: "right"}
-            ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "XV.ListAttr", formatter: "formatName", classes: "italic"},
-            {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
-          ]}
-        ]}
-      ]}
-    ],
-    formatBillto: function (value, view, model) {
-      var city = model.get("billtoCity"),
-        state = model.get("billtoState"),
-        country = model.get("billtoCountry");
-      return XM.Address.formatShort(city, state, country);
-    },
-    formatExpireDate: function (value, view, model) {
-      var isLate = model && model.get('expireDate') &&
-        (XT.date.compareDate(value, new Date()) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
-    },
-    /**
-      Returns Shipto Name if one exists, otherwise Billto Name.
-    */
-    formatName: function (value, view, model) {
-      return model.get("shiptoName") || model.get("billtoName");
-    },
-    formatPrice: function (value, view, model) {
-      var currency = model ? model.get("currency") : false,
-        scale = XT.session.locale.attributes.salesPriceScale;
-      return currency ? currency.format(value, scale) : "";
-    },
-    formatShipto: function (value, view, model) {
-      var city = model.get("shiptoCity"),
-        state = model.get("shiptoState"),
-        country = model.get("shiptoCountry");
-      return XM.Address.formatShort(city, state, country);
-    },
-    /**
-      Returns formatted Shipto City, State and Country if
-      Shipto Name exists, otherwise Billto location.
-    */
-    formatShiptoOrBillto: function (value, view, model) {
-      var hasShipto = model.get("shiptoName") ? true : false,
-        cityAttr = hasShipto ? "shiptoCity": "billtoCity",
-        stateAttr = hasShipto ? "shiptoState" : "billtoState",
-        countryAttr = hasShipto ? "shiptoCountry" : "billtoCountry",
-        city = model.get(cityAttr),
-        state = model.get(stateAttr),
-        country = model.get(countryAttr);
-      return XM.Address.formatShort(city, state, country);
-    }, 
-  });
-
-  XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
-
-  // ..........................................................
   // SALES ORDER
   //
 
@@ -1744,6 +1657,12 @@ trailing:true, white:true, strict: false*/
         country = model.get("billtoCountry");
       return XM.Address.formatShort(city, state, country);
     },
+    formatScheduleDate: function (value, view, model) {
+      var isLate = model && model.get('scheduleDate') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    },
     /**
       Returns Shipto Name if one exists, otherwise Billto Name.
     */
@@ -1755,12 +1674,7 @@ trailing:true, white:true, strict: false*/
         scale = XT.session.locale.attributes.salesPriceScale;
       return currency ? currency.format(value, scale) : "";
     },
-    formatScheduleDate: function (value, view, model) {
-      var isLate = model && model.get('scheduleDate') &&
-        (XT.date.compareDate(value, new Date()) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
-    },
+
     formatShipto: function (value, view, model) {
       var city = model.get("shiptoCity"),
         state = model.get("shiptoState"),
@@ -1780,10 +1694,30 @@ trailing:true, white:true, strict: false*/
         state = model.get(stateAttr),
         country = model.get(countryAttr);
       return XM.Address.formatShort(city, state, country);
-    }, 
+    }
   });
 
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
+
+  // ..........................................................
+  // QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.QuoteList",
+    kind: "XV.SalesOrderList",
+    label: "_quotes".loc(),
+    collection: "XM.QuoteListItemCollection",
+    parameterWidget: "XV.QuoteListParameters",
+    formatDate: function (value, view, model) {
+      var isLate = model && model.get('expireDate') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    }
+  });
+
+  XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
 
   // ..........................................................
   // SALE TYPE

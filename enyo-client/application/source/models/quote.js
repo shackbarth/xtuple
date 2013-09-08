@@ -167,7 +167,7 @@ white:true*/
   });
 
   // Add in quote mixin
-  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteMixin);
+  XM.QuoteListItem = XM.QuoteListItem.extend(XM.SalesOrderBaseMixin);
 
   /**
     @class
