@@ -337,7 +337,7 @@ trailing:true, white:true, strict:false*/
               that.requery();
               that.spinnerHide();
             };
-            XM.Inventory[this.issueMethod](data, dispOptions);
+            XM.Inventory[that.issueMethod](data, dispOptions);
 
           // Else if there's something here we can issue, handle it
           } else {
