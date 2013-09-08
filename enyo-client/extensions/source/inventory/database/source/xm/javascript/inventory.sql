@@ -372,13 +372,13 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {Number|Object} Quantity or options
     @param {Date}   [options.asOf=now()] Transaction Timestamp
     @param {Array} [options.detail] Distribution detail
-    @param {Array} [options.type='SO'] Order type
   */
   XM.Inventory.issueToShipping = function (orderLine, quantity, options) {
     var orderType,
       asOf,
       series,
-      sql,
+      sql1,
+      sql2,
       ary,
       item,
       i;
@@ -393,15 +393,22 @@ select xt.install_js('XM','Inventory','xtuple', $$
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
 
-    sql = "select issuetoshipping($1, coitem_id, $3, $4, $5::timestamptz) as series " +
-          "from coitem where obj_uuid = $2;";
+    sql1 = "select ordtype_tblname, ordtype_code " +
+           "from xt.obj o " +
+           "  join pg_class c on o.tableoid = c.oid " +
+           "  join xt.ordtype on c.relname=ordtype_tblname " +
+           "where obj_uuid= $1;",
+
+    sql2 = "select issuetoshipping($1, {table}_id, $3, $4, $5::timestamptz) as series " +
+           "from {table} where obj_uuid = $2;";
 
     /* Post the transaction */
     for (i = 0; i < ary.length; i++) {
       item = ary[i];
       asOf = item.options ? item.options.asOf : null;
-      orderType = item.options.orderType || 'SO';
-      series = plv8.execute(sql, [orderType, item.orderLine, item.quantity, 0, asOf])[0].series;
+      orderType = plv8.execute(sql1, [item.orderLine])[0];
+      series = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
+        [orderType.ordtype_code, item.orderLine, item.quantity, 0, asOf])[0].series;
 
       /* Distribute detail */
       XM.PrivateInventory.distribute(series, item.options.detail);
