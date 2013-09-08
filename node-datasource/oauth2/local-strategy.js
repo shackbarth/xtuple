@@ -1,9 +1,9 @@
 /**
  * Module dependencies.
  */
-var passport = require('passport')
-  , util = require('util')
-  , BadRequestError = require('../../node_modules/passport-local/lib/passport-local/errors/badrequesterror');
+var passport = require('passport'),
+  util = require('util'),
+  BadRequestError = require('../../node_modules/passport-local/lib/passport-local/errors/badrequesterror');
 
 
 /**
@@ -102,7 +102,7 @@ Strategy.prototype.authenticate = function (req, options) {
     }
     return null;
   }
-}
+};
 
 
 /**

@@ -29,7 +29,8 @@
       },
       "attribute": {
         "owner": {
-          "edit": "EditOwner"
+          "create": "EditOwner",
+          "update": "EditOwner"
         }
       }
     },

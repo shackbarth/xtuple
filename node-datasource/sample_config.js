@@ -65,6 +65,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       databases: ["dev"],
       testDatabase: "" // this must remain empty for production datasources
     },
+    integration: {
+    },
     extensionRoutes: [],
     databaseServer: {
       hostname: "localhost",

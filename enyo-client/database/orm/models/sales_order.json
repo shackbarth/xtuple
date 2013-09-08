@@ -22,10 +22,12 @@
           "view": "ShowMarginsOnSalesOrder"
         },
         "orderDate": {
-          "edit": "OverrideSODate"
+          "create": "OverrideSODate",
+          "update": "OverrideSODate"
         },
         "packDate": {
-          "edit": "AlterPackDate"
+          "create": "AlterPackDate",
+          "update": "AlterPackDate"
         }
       }
     },
@@ -51,7 +53,7 @@
         "name": "customer",
         "toOne": {
           "isNested": true,
-          "type": "CustomerProspectRelation",
+          "type": "SalesCustomer",
           "column": "cohead_cust_id",
           "required": true
         }
@@ -483,6 +485,20 @@
         "attr": {
           "type": "String",
           "column": "cohead_quote_number"
+        }
+      },
+      {
+        "name": "allocatedCredit",
+        "attr": {
+          "type": "Number",
+          "column": "allocated_credit"
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Number",
+          "column": "balance"
         }
       },
       {
@@ -1006,7 +1022,8 @@
       },
       "attribute": {
         "firm": {
-          "edit": "FirmSalesOrder"
+          "create": "FirmSalesOrder",
+          "update": "FirmSalesOrder"
         },
         "margin": {
           "view": "ShowMarginsOnSalesOrder"
@@ -1015,7 +1032,8 @@
           "view": "ViewCosts"
         },
         "taxType": {
-          "edit": "OverrideTax"
+          "create": "OverrideTax",
+          "update": "OverrideTax"
         },
         "markup": {
           "view": "ViewCosts"
@@ -1483,7 +1501,7 @@
         "name": "customer",
         "toOne": {
           "isNested": true,
-          "type": "CustomerProspectRelation",
+          "type": "SalesCustomer",
           "column": "cohead_cust_id"
         }
       },
@@ -1654,6 +1672,41 @@
         "attr": {
           "type": "Number",
           "column": "ophead_number"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "SalesOrderRelation",
+    "table": "xt.coheadinfo",
+    "isRest": true,
+    "comment": "Sales Order Relation Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainSalesOrders",
+        "read": "ViewSalesOrders",
+        "update": "MaintainSalesOrders",
+        "delete": "MaintainSalesOrders"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cohead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cohead_number",
+          "isNaturalKey":true
         }
       }
     ],

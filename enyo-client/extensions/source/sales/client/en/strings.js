@@ -49,6 +49,7 @@ var lang = XT.stringsFor("en_US", {
   "_pricing": "Pricing",
   "_pricingOnLineItemEdits": "Pricing on Line Item edits",
   "_printOnSave": "Print on Save",
+  "_process": "Process",
   "_prompt": "Prompt",
   "_restrictCreditMemos": "Restrict Credit Memos to Items on their Apply-to Document",
   "_sales": "Sales",

@@ -27,7 +27,8 @@
       },
       "attribute": {
         "owner": {
-          "edit": "EditOwner"
+          "create": "EditOwner",
+          "update": "EditOwner"
         }
       }
     },
@@ -1228,7 +1229,8 @@
       },
       "attribute": {
         "owner": {
-          "edit": "EditOwner"
+          "create": "EditOwner",
+          "update": "EditOwner"
         }
       }
     },
@@ -1448,7 +1450,8 @@
       },
       "attribute": {
         "owner": {
-          "edit": "EditOwner"
+          "create": "EditOwner",
+          "update": "EditOwner"
         }
       }
     },

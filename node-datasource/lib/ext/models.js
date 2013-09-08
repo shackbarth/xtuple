@@ -131,6 +131,68 @@ white:true*/
 
     @extends XM.SimpleModel
   */
+  SYS.CreditCard = XM.SimpleModel.extend(/** @lends SYS.CreditCard.prototype */{
+
+    recordType: 'SYS.CreditCard',
+
+    idAttribute: 'uuid'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  SYS.CreditCardPayment = XM.SimpleModel.extend(/** @lends SYS.CreditCardPayment.prototype */{
+
+    recordType: 'SYS.CreditCardPayment',
+
+    idAttribute: "id",
+
+    autoFetchId: true
+
+  });
+
+  _.extend(SYS.CreditCardPayment, {
+
+    AUTHORIZED: "A",
+
+    CAPTURE: "C",
+
+    CHARGED: "C",
+
+    CREDIT: "R",
+
+    DECLINED: "D",
+
+    ERROR: "X",
+
+    REVERSE: "V",
+
+    VOID: "V"
+
+  });
+
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  SYS.SalesOrderPayment = XM.SimpleModel.extend(/** @lends SYS.SalesOrderPayment.prototype */{
+
+    recordType: 'SYS.SalesOrderPayment',
+
+    idAttribute: "uuid"
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
   SYS.Recover = XM.SimpleModel.extend(/** @lends SYS.Recover.prototype */{
 
     recordType: 'SYS.Recover',

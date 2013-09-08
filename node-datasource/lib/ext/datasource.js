@@ -342,6 +342,7 @@ if (typeof X === 'undefined') {
         };
 
       payload.username = options.username;
+      payload.encryptionKey = X.options.encryptionKey;
       payload = JSON.stringify(payload);
       query = "select xt.{method}($${payload}$$) as request"
               .replace("{method}", method)

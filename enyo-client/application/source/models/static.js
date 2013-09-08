@@ -30,8 +30,14 @@ white:true*/
     {
       model: "XM.databaseInformation",
       name: "_database".loc(),
-      description: "_database".loc() + " " + "_information".loc(),
+      description: "_databaseInformation".loc(),
       workspace: "XV.DatabaseInformationWorkspace"
+    },
+    {
+      model: "XM.system",
+      name: "_system".loc(),
+      description: "_systemConfiguration".loc(),
+      workspace: "XV.SystemConfigurationWorkspace"
     }
   ];
   XM.ConfigurationModel = Backbone.Model.extend({
@@ -60,6 +66,37 @@ white:true*/
   for (i = 0; i < balanceMethodJson.length; i++) {
     var balanceMethod = new XM.BalanceMethodModel(balanceMethodJson[i]);
     XM.balanceMethods.add(balanceMethod);
+  }
+
+  // Credit Card Gateways
+  XM.CreditCardGatewayModel = Backbone.Model.extend({
+    getValue: function (key) {
+      return this.get(key);
+    }
+  });
+  XM.CreditCardGatewayCollection = Backbone.Collection.extend({
+    model: XM.CreditCardGatewayModel
+  });
+  XM.creditCardGateways = new XM.CreditCardGatewayCollection();
+  // new and better way
+  _.each([{ id: "Authorize.Net", name: "Authorize.Net" }], function (attrs) {
+    XM.creditCardGateways.add(new XM.CreditCardGatewayModel(attrs));
+  });
+
+  // Credit Card Type
+  var creditCardTypeJson = [
+    { id: "M", name: "_masterCard".loc() },
+    { id: "V", name: "_visa".loc() }
+  ];
+  XM.CreditCardTypeModel = Backbone.Model.extend({
+  });
+  XM.CreditCardTypeCollection = Backbone.Collection.extend({
+    model: XM.CreditCardTypeModel
+  });
+  XM.creditCardTypes = new XM.CreditCardTypeCollection();
+  for (i = 0; i < creditCardTypeJson.length; i++) {
+    var creditCardType = new XM.CreditCardTypeModel(creditCardTypeJson[i]);
+    XM.creditCardTypes.add(creditCardType);
   }
 
   // Credit Status
@@ -143,6 +180,19 @@ white:true*/
   for (i = 0; i < ledgerAccountTypeJson.length; i++) {
     var ledgerAccountType = new XM.LedgerAccountTypeModel(accountTypeJson[i]);
     XM.ledgerAccountTypes.add(ledgerAccountType);
+  }
+
+  // Month (for credit cards)
+  XM.MonthModel = Backbone.Model.extend({
+  });
+  XM.MonthCollection = Backbone.Collection.extend({
+    model: XM.MonthModel
+  });
+  XM.months = new XM.MonthCollection();
+  for (i = 1; i <= 12; i++) {
+    var monthFormat = i < 10 ? "0" + i : "" + i;
+    var month = new XM.MonthModel({id: monthFormat, name: monthFormat});
+    XM.months.add(month);
   }
 
   // Number Policy
@@ -284,6 +334,19 @@ white:true*/
   for (i = 0; i < toDoStatusJson.length; i++) {
     var toDoStatus = new XM.ToDoStatusModel(toDoStatusJson[i]);
     XM.toDoStatuses.add(toDoStatus);
+  }
+
+  // Year (for credit cards)
+  XM.YearModel = Backbone.Model.extend({
+  });
+  XM.YearCollection = Backbone.Collection.extend({
+    model: XM.YearModel
+  });
+  XM.years = new XM.YearCollection();
+  for (i = 2000; i <= 2030; i++) {
+    var yearFormat = "" + i;
+    var year = new XM.YearModel({id: yearFormat, name: yearFormat});
+    XM.years.add(year);
   }
 
 }());

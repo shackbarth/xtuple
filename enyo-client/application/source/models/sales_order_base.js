@@ -276,6 +276,8 @@ white:true*/
       "freightWeight",
       "getOrderStatusString",
       "lineItems",
+      "allocatedCredit",
+      "balance",
       "margin",
       "miscCharge",
       "status",
@@ -614,7 +616,7 @@ white:true*/
       var customer = this.get("customer"),
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
         billtoAddress = billtoContact ? billtoContact.get("address") : false,
-        defaultShipto = customer ? customer.get("defaultShipto") : false,
+        defaultShipto = customer ? customer.getDefaultShipto() : false,
         billtoAttrs,
         that = this,
         unsetBilltoAddress = function () {

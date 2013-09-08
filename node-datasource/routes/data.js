@@ -61,7 +61,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
     payload.username = session.passport.user.username;
+    payload.encryptionKey = X.options.encryptionKey;
     org = session.passport.user.organization;
+
+    // Make sure the user isn't asking for node-internal data
+    if (payload.nameSpace === 'SYS') {
+      X.err("Invalid call to datasource object: ", payload.nameSpace + "." + payload.type);
+      callback(true);
+    }
 
     // Make sure functionName is one of the exposed functions.
     if (exposedFunctions.indexOf(functionName) === -1) {
