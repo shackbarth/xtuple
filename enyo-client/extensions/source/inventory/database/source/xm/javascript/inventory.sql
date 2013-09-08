@@ -443,8 +443,13 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {String|Array} Order line uuid, or array of uuids
   */
   XM.Inventory.returnFromShipping = function (orderLine) {
-    var sql = "select returnitemshipments(coitem_id) " +
-      "from coitem where obj_uuid = $1;",
+    var sql1 = "select ordtype_tblname, ordtype_code " +
+           "from xt.obj o " +
+           "  join pg_class c on o.tableoid = c.oid " +
+           "  join xt.ordtype on c.relname=ordtype_tblname " +
+           "where obj_uuid= $1;",
+      sql2 = "select returnitemshipments($1, {table}_id, 0, current_timestamp) " +
+           "from {table} where obj_uuid = $2;",
       ret,
       i;
 
@@ -453,7 +458,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     /* Post the transaction */
     for (i = 0; i < arguments.length; i++) {
-      ret = plv8.execute(sql, [arguments[i]])[0];
+      /* Resolve the table */
+      orderType = plv8.execute(sql1, [arguments[i]])[0];
+      ret = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
+        [orderType.ordtype_code, arguments[i]])[0];
     }
 
     return ret;
