@@ -164,7 +164,7 @@ white:true*/
             issOptions.detail = detail;
           }
           that.setStatus(XM.Model.BUSY_COMMITTING);
-          that.dispatch("XM.Inventory", this.issueMethod, params, dispOptions);
+          that.dispatch("XM.Inventory", that.issueMethod, params, dispOptions);
         };
 
         // Validate
