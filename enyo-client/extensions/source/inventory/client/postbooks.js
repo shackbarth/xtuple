@@ -57,7 +57,7 @@ trailing:true, white:true*/
       }
 
     };
-    XT.app.$.postbooks.insertModule(module, 4);
+    XT.app.$.postbooks.insertModule(module, 0);
 
     relevantPrivileges = [
       "ViewShipping",

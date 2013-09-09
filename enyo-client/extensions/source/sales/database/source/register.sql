@@ -1,3 +1,3 @@
 -- register extension 
 
-select xt.register_extension('sales', 'Sales extension', '/core-extensions', '', 15);
+select xt.register_extension('sales', 'Sales extension', '/core-extensions', '', 20);
