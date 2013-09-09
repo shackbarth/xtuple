@@ -1,3 +1,4 @@
+/*jshint laxcomma:true */
 // TODO - We stop on connect's session.js file because of:
 // https://github.com/senchalabs/connect/issues/641
 
@@ -45,9 +46,9 @@ exports.MemoryStore = MemoryStore;
  * Warning message for `MemoryStore` usage in production.
  */
 
-var warning = 'Warning: connection.session() MemoryStore is not\n'
-  + 'designed for a production environment, as it will leak\n'
-  + 'memory, and will not scale past a single process.';
+var warning = 'Warning: connection.session() MemoryStore is not\n' +
+  'designed for a production environment, as it will leak\n' +
+  'memory, and will not scale past a single process.';
 
 /**
  * Session:
@@ -88,7 +89,7 @@ var warning = 'Warning: connection.session() MemoryStore is not\n'
  *         .use(connect.favicon())
  *         .use(connect.cookieParser())
  *         .use(connect.session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
- *         .use(function(req, res, next){
+ *         .use(function (req, res, next){
  *           var sess = req.session;
  *           if (sess.views) {
  *             res.setHeader('Content-Type', 'text/html');
@@ -108,7 +109,7 @@ var warning = 'Warning: connection.session() MemoryStore is not\n'
  *  To regenerate the session simply invoke the method, once complete
  *  a new SID and `Session` instance will be initialized at `req.session`.
  *
- *      req.session.regenerate(function(err){
+ *      req.session.regenerate(function (err){
  *        // will have a new session here
  *      });
  *
@@ -116,7 +117,7 @@ var warning = 'Warning: connection.session() MemoryStore is not\n'
  *
  *  Destroys the session, removing `req.session`, will be re-generated next request.
  *
- *      req.session.destroy(function(err){
+ *      req.session.destroy(function (err){
  *        // cannot access session here
  *      });
  *
@@ -124,7 +125,7 @@ var warning = 'Warning: connection.session() MemoryStore is not\n'
  *
  *  Reloads the session data.
  *
- *      req.session.reload(function(err){
+ *      req.session.reload(function (err){
  *        // session updated
  *      });
  *
@@ -132,7 +133,7 @@ var warning = 'Warning: connection.session() MemoryStore is not\n'
  *
  *  Save the session.
  *
- *      req.session.save(function(err){
+ *      req.session.save(function (err){
  *        // session saved
  *      });
  *
@@ -202,7 +203,7 @@ function session(options){
   }
 
   // generates the new session
-  store.generate = function(req){
+  store.generate = function (req){
     // TODO - Override here, skip this.
     //req.sessionID = utils.uid(24);
     req.sessionID = (options.sessionIDgen && typeof options.sessionIDgen === 'function') ? options.sessionIDgen() : utils.uid(24);
@@ -210,8 +211,8 @@ function session(options){
     req.session.cookie = new Cookie(cookie);
   };
 
-  store.on('disconnect', function(){ storeReady = false; });
-  store.on('connect', function(){ storeReady = true; });
+  store.on('disconnect', function (){ storeReady = false; });
+  store.on('connect', function (){ storeReady = true; });
 
   return function session(req, res, next) {
     // self-awareness
@@ -249,7 +250,7 @@ function session(options){
     }
 
     // set-cookie
-    res.on('header', function(){
+    res.on('header', function (){
       if (!req.session) return;
       var cookie = req.session.cookie
         , proto = (req.headers['x-forwarded-proto'] || '').split(',')[0].toLowerCase().trim()
@@ -279,12 +280,12 @@ function session(options){
 
     // proxy end() to commit the session
     var end = res.end;
-    res.end = function(data, encoding){
+    res.end = function (data, encoding){
       res.end = end;
       if (!req.session) return res.end(data, encoding);
       debug('saving');
       req.session.resetMaxAge();
-      req.session.save(function(err){
+      req.session.save(function (err){
         if (err) console.error(err.stack);
         debug('saved');
         res.end(data, encoding);
@@ -310,10 +311,10 @@ function session(options){
     // generate the session object
     var pause = utils.pause(req);
     debug('fetching %s', req.sessionID);
-    store.get(req.sessionID, function(err, sess){
+    store.get(req.sessionID, function (err, sess){
       // proxy to resume() events
       var _next = next;
-      next = function(err){
+      next = function (err){
         _next(err);
         pause.resume();
       };
@@ -342,7 +343,7 @@ function session(options){
       }
     });
   };
-};
+}
 
 /**
  * Hash the given `sess` object omitting changes
@@ -354,7 +355,7 @@ function session(options){
  */
 
 function hash(sess) {
-  return crc32.signed(JSON.stringify(sess, function(key, val){
+  return crc32.signed(JSON.stringify(sess, function (key, val){
     if ('cookie' != key) return val;
   }));
 }
