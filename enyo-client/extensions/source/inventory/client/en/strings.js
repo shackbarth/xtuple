@@ -39,6 +39,7 @@ var lang = XT.stringsFor("en_US", {
   "_enableAsOfQOH": "Enable As-Of QOH Reporting",
   "_enterReceipt": "Enter Receipt",
   "_inventory": "Inventory",
+  "_inventoryHistory": "Inventory History",
 	"_inventoryDescription": "Shipping and Receiving, Inventory and Cost Management",
   "_isAutomaticAbcClassUpdates": "Allow Auto ABC Updates",
   "_isLocationControl": "Location Control",

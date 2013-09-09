@@ -264,6 +264,20 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // ITEM GROUP
+  //
+
+  enyo.kind({
+    name: "XV.ItemGroupPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.itemGroups",
+    nameAttribute: "name",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+
+  // ..........................................................
   // ITEM TYPE
   //
 

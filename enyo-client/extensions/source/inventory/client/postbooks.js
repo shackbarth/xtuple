@@ -19,6 +19,8 @@ trailing:true, white:true*/
     panels = [
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
+      {name: "itemList", kind: "XV.ItemList"},
+      {name: "itemGroup", kind: "XV.ItemGroupList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
       {name: "locationList", kind: "XV.LocationList"},
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
@@ -42,6 +44,7 @@ trailing:true, white:true*/
       name: "inventory",
       label: "_inventory".loc(),
       panels: [
+        {name: "inventoryHistoryList", kind: "XV.InventoryHistoryList"},
         {name: "shipmentList", kind: "XV.ShipmentList"}
         //{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
       ],
@@ -106,7 +109,7 @@ trailing:true, white:true*/
       //"CreateExpenseTrans",
       "RecallInvoicedShipment",
       //"ViewItemAvailabilityWorkbench",
-      //"ViewInventoryHistory",
+      "ViewInventoryHistory",
       "ViewWarehouses",
       "MaintainWarehouses",
       //"UpdateABCClass",
