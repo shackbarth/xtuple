@@ -239,6 +239,22 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // LAYOUT
+  //
+
+  enyo.kind({
+    name: "XV.LayoutPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.layouts",
+    valueAttribute: "id",
+    noneText: "_default".loc(),
+    iconClass: "icon-group",
+    iconVisible: function (model) {
+      return model.get("shared");
+    }
+  });
+
+  // ..........................................................
   // LEDGER ACCOUNT TYPE
   //
 
