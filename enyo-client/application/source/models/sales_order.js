@@ -168,6 +168,8 @@ white:true*/
 
   });
 
+  XM.SalesOrderListItem = XM.SalesOrderListItem.extend(XM.SalesOrderBaseMixin);
+
   /**
     @class
 

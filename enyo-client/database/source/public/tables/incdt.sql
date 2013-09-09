@@ -4,3 +4,5 @@ create trigger indct_owner_change after insert on public.incdt for each row exec
 
 -- add uuid column here because there are views that need this
 select xt.add_column('incdt','obj_uuid', 'text', 'default xt.generate_uuid()', 'public');
+select xt.add_inheritance('incdt', 'xt.obj');
+select xt.add_constraint('incdt', 'incdt_obj_uui_id','unique(obj_uuid)', 'public');

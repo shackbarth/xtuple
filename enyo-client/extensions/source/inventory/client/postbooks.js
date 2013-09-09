@@ -43,11 +43,11 @@ trailing:true, white:true*/
       label: "_inventory".loc(),
       panels: [
         {name: "shipmentList", kind: "XV.ShipmentList"}
-      //  {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
+        //{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
       ],
       actions: [
         {name: "issueToShipping", privilege: "issueStockToShipping", method: "issueToShipping", notify: false},
-        {name: "enterReceipt", method: "enterReceipt", notify: false}
+        //{name: "enterReceipt", method: "enterReceipt", notify: false}
       ],
       issueToShipping: function (inSender, inEvent) {
         inSender.bubbleUp("onIssueToShipping", inEvent, inSender);
