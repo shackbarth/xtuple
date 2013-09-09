@@ -189,8 +189,9 @@ var warning = 'Warning: connection.session() MemoryStore is not\n' +
  */
 
 function session(options){
-  var options = options || {}
-    , key = options.key || 'connect.sid'
+  options = options || {};
+
+  var key = options.key || 'connect.sid'
     , store = options.store || new MemoryStore
     , cookie = options.cookie || {}
     , trustProxy = options.proxy
@@ -223,7 +224,7 @@ function session(options){
     if (!storeReady) return debug('store is disconnected'), next();
 
     // pathname mismatch
-    if (0 != req.originalUrl.indexOf(cookie.path || '/')) return next();
+    if (0 !== req.originalUrl.indexOf(cookie.path || '/')) return next();
 
     // backwards compatibility for signed cookies
     // req.secret is passed from the cookie parser middleware
@@ -265,7 +266,8 @@ function session(options){
       if (!isNew && cookie.hasLongExpires) return debug('already set cookie');
 
       // browser-session length cookie
-      if (null == cookie.expires) {
+      console.log("cookie expires", cookie.expires);
+      if (null === cookie.expires) {
         if (!isNew) return debug('already set browser-session cookie');
       // compare hashes and ids
       } else if (originalHash == hash(req.session) && originalId == req.session.id) {
