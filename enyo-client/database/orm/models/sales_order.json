@@ -1666,10 +1666,10 @@
         }
       },
       {
-        "name": "shipVia",
+        "name": "status",
         "attr": {
           "type": "String",
-          "column": "cohead_shipvia"
+          "column": "cohead_status"
         }
       },
       {
