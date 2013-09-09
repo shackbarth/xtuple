@@ -1,5 +1,5 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+regexp:true, undef:true, strict:true, trailing:true, white:true, expr:true */
 /*global X:true, SYS:true, _:true, console:true*/
 
 /**
@@ -145,7 +145,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
     // A refreshToken is like a password. It currently never expires and with it, you can
     // get a new accessToken. We bcrypt the refreshToken so if our database is ever
     // compromised, the stored refreshToken hashes are worthless.
-    refreshhash = X.bcrypt.hashSync(refreshToken, salt),
+    refreshhash = X.bcrypt.hashSync(refreshToken, salt);
 
     // The accessToken is only valid for 1 hour and must be sent with each request to
     // the REST API. The bcrypt hash calculation on each request would be too expensive.
