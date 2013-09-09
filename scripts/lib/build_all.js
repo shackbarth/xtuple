@@ -151,10 +151,6 @@ var _ = require('underscore'),
       // This request doesn't make any sense.
       callback("Make up your mind.");
 
-    } else if (options.wipeViews && options.extension) {
-      // Drop-all-views is only supported for a whole-db install.
-      callback("View dropping is only supported while installing the whole database.");
-
     } else if (options.initialize &&
         options.backup &&
         options.database &&
