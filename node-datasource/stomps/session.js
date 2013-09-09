@@ -192,7 +192,7 @@ function session(options){
   options = options || {};
 
   var key = options.key || 'connect.sid'
-    , store = options.store || new MemoryStore
+    , store = options.store || new MemoryStore()
     , cookie = options.cookie || {}
     , trustProxy = options.proxy
     , storeReady = true;
@@ -266,7 +266,6 @@ function session(options){
       if (!isNew && cookie.hasLongExpires) return debug('already set cookie');
 
       // browser-session length cookie
-      console.log("cookie expires", cookie.expires);
       if (null === cookie.expires) {
         if (!isNew) return debug('already set browser-session cookie');
       // compare hashes and ids

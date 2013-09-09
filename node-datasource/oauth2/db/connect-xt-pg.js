@@ -46,8 +46,8 @@ module.exports = function (connect) {
 
     options = options || {};
     Store.call(this, options);
-    this.prefix = null == options.prefix ? 'sess:' : options.prefix;
-    this.hybridCache = null == options.hybridCache ? false : options.hybridCache;
+    this.prefix = options.prefix ? options.prefix : 'sess:';
+    this.hybridCache = options.hybridCache ? options.hybridCache : false;
     this.sessions = {};
 
     // Load all the data from SYS.SessionStore into the Express MemoryStore for caching.
@@ -291,17 +291,17 @@ module.exports = function (connect) {
                 console.trace("MemoryStore.destroy error:");
                 done && done(err);
               } else {
-                // TODO - This might throw an error because our err object does not includes a stack.
+                // TODO - This might throw an error because our err object does not include a stack.
                 // https://github.com/senchalabs/connect/blob/master/lib/middleware/errorHandler.js#L48
                 // MemoryStore destroyed, move along.
                 done && done(saveErr);
               }
             });
           } else {
-            // TODO - This might throw an error because our err object does not includes a stack.
+            // TODO - This might throw an error because our err object does not include a stack.
             // https://github.com/senchalabs/connect/blob/master/lib/middleware/errorHandler.js#L48
             // Return nothing and move along.
-            done && done(err);
+            done && done(saveErr);
           }
         };
 
@@ -456,6 +456,8 @@ module.exports = function (connect) {
    * @api public
    */
   XTPGStore.prototype.all = function (fn) {
+    var self = this;
+
     _.each(X.options.datasource.databases, function (dbval, dbkey, dblist) {
       self.loadSessions({database: dbval}, function (err) {
         if (err) {
@@ -480,6 +482,8 @@ module.exports = function (connect) {
    * @api public
    */
   XTPGStore.prototype.length = function (fn) {
+    var self = this;
+
     _.each(X.options.datasource.databases, function (dbval, dbkey, dblist) {
       self.loadSessions({database: dbval}, function (err) {
         if (err) {
