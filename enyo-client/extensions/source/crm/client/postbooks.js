@@ -59,7 +59,7 @@ trailing:true, white:true*/
         {name: "incidentList", kind: "XV.IncidentList", toggleSelected: false}
       ]
     };
-    XT.app.$.postbooks.insertModule(module, 1);
+    XT.app.$.postbooks.insertModule(module, 0);
 
     relevantPrivileges = [
       "CreateNewCurrency",
