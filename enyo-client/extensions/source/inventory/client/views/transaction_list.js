@@ -16,7 +16,9 @@ trailing:true, white:true, strict:false*/
      */
     var transactionList =  /** @lends XV.TransactionList# */ {
       name: "XV.TransactionList",
-      kind: "XV.SearchContainer",
+      kind: "Panels",
+      classes: "app enyo-unselectable",
+      arrangerKind: "CollapsingArranger",
       published: {
         prerequisite: "",
         notifyMessage: "",
@@ -26,12 +28,15 @@ trailing:true, white:true, strict:false*/
         model: null
       },
       events: {
+        onPrevious: "",
         onWorkspace: ""
       },
       handlers: {
         onListItemMenuTap: "showListItemMenu",
+        onParameterChange: "requery",
         onSelectionChanged: "selectionChanged"
       },
+      init: false,
       components: [
         {name: "parameterPanel", kind: "FittableRows", classes: "left",
           components: [
@@ -52,12 +57,14 @@ trailing:true, white:true, strict:false*/
             classes: "onyx-menu-toolbar", movedClass: "xv-toolbar-moved", components: [
             {kind: "onyx.Grabber", classes: "left-float"},
             {name: "rightLabel", content: "_search".loc(), classes: "left-float"},
-            {name: "search", kind: "onyx.InputDecorator", classes: "right-float",
-              components: [
-              {name: "searchInput", kind: "onyx.Input", style: "width: 200px;",
-                placeholder: "_search".loc(), onchange: "requery"},
-              {kind: "Image", src: "/assets/search-input-search.png"}
-            ]},
+            {name: "space", fit: true},
+            {kind: "onyx.Button", name: "printButton", showing: false,
+              content: "_print".loc(), onclick: "print"},
+            {kind: "onyx.Button", name: "refreshButton", disabled: false,
+              content: "_refresh".loc(), onclick: "requery"},
+            {kind: "onyx.Button", name: "postButton",
+              disabled: true, classes: "save", showing: false,
+              content: "_post".loc(), onclick: "post"},
             {name: "listItemMenu", kind: "onyx.Menu", floating: true,
               onSelect: "listActionSelected", maxHeight: 500}
           ]},
@@ -76,6 +83,9 @@ trailing:true, white:true, strict:false*/
           method = action.method || action.name;
 
         this[method](inSender, inEvent);
+      },
+      close: function (options) {
+        this.doPrevious();
       },
       buildMenu: function () {
         var actionMenu = this.$.actionMenu,
@@ -109,6 +119,30 @@ trailing:true, white:true, strict:false*/
           this.setActions([]);
         }
         this.buildMenu();
+      },
+      fetch: function (options) {
+        if (!this.init) { return; }
+        options = options ? _.clone(options) : {};
+        var list = this.$.list,
+          query,
+          parameterWidget,
+          parameters;
+        if (!list) { return; }
+        query = list.getQuery() || {};
+        parameterWidget = this.$.parameterWidget;
+        parameters = parameterWidget && parameterWidget.getParameters ?
+          parameterWidget.getParameters() : [];
+        options.showMore = _.isBoolean(options.showMore) ?
+          options.showMore : false;
+
+        // Build conditions
+        if (parameters.length) {
+          query.parameters = parameters;
+        } else {
+          delete query.parameters;
+        }
+        list.setQuery(query);
+        list.fetch(options);
       },
       /**
         Capture order changed and transaction date changed events.
@@ -180,6 +214,37 @@ trailing:true, white:true, strict:false*/
       selectionChanged: function () {
         this.transactionDateChanged();
         this.buildMenu();
+      },
+      /**
+        @param {Object} Options
+        @param {String} [options.list] Class name
+      */
+      setList: function (options) {
+        var component,
+        list = options.list;
+
+        component = this.createComponent({
+          name: "list",
+          container: this.$.contentPanels,
+          kind: list,
+          fit: true
+        });
+        this.$.rightLabel.setContent(component.label);
+        if (component) {
+          this.createComponent({
+            name: "parameterWidget",
+            classes: "xv-groupbox xv-parameter",
+            showSaveFilter: false,
+            defaultParameters: null,
+            container: this.$.parameterScroller,
+            kind: component.getParameterWidget(),
+            memoizeEnabled: false,
+            fit: true
+          });
+        }
+
+        this.init = true;
+        this.render();
       },
       spinnerHide: function () {
         this._popupDone = true;
@@ -286,6 +351,12 @@ trailing:true, white:true, strict:false*/
         var canDo = _canDo.call(this),
           hasOpenLines = this.$.list.value.length;
         return canDo && hasOpenLines;
+      },
+      create: function () {
+        this.inherited(arguments);
+        var button = this.$.postButton;
+        button.setContent("_ship".loc());
+        button.setShowing(true);
       },
       /**
         Helper function for transacting `issue` on an array of models
@@ -398,6 +469,9 @@ trailing:true, white:true, strict:false*/
         var models = this.selectedModels();
         this.issue(models, true);
       },
+      post: function () {
+        alert("Shipping!");
+      },
       returnSelected: function () {
         var models = this.selectedModels(),
           that = this,
@@ -428,6 +502,7 @@ trailing:true, white:true, strict:false*/
       },
       shipmentChanged: function (inSender, inEvent) {
         this.$.parameterWidget.$.shipment.setValue(inEvent.shipment);
+        this.$.postButton.setDisabled(_.isEmpty(inEvent.shipment));
       }
     });
   };
