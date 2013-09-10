@@ -77,16 +77,20 @@ create or replace function xt.patch(data_hash text) returns text as $$
     /* commit the record */
     data.commitRecord(options);
 
-    /* calculate a patch of the modifed version */
-    XT.jsonpatch.apply(prv.data, patches);
-    observer = XT.jsonpatch.observe(prv.data);
-    dataHash.includeKeys = false;
-    dataHash.id = prv.data[idKey];
-    ret = data.retrieveRecord(dataHash);
-    observer.object = ret.data;
-    delete ret.data;
-    ret.patches = XT.jsonpatch.generate(observer);
-
+    if(options.requery === false) {
+      /* The requestor doesn't care to know what the record looks like now */
+      ret = true;
+    } else {
+      /* calculate a patch of the modifed version */
+      XT.jsonpatch.apply(prv.data, patches);
+      observer = XT.jsonpatch.observe(prv.data);
+      dataHash.includeKeys = false;
+      dataHash.id = prv.data[idKey];
+      ret = data.retrieveRecord(dataHash);
+      observer.object = ret.data;
+      delete ret.data;
+      ret.patches = XT.jsonpatch.generate(observer);
+    }
     /* Unset XT.username so it isn't cached for future queries. */
     XT.username = undefined;
 
