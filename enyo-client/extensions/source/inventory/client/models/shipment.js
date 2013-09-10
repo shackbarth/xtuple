@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true */
 
 (function () {
   "use strict";
@@ -17,21 +17,7 @@ white:true*/
 
       recordType: "XM.Shipment",
 
-      numberPolicy: XM.Document.AUTO_NUMBER,
-      /*
-      readOnlyAttributes: [
-        "order"
-      ],
-      */
-
-      canRecallShipment: function (callback) {
-        var priv = this.get("isShipped") && this.get("isInvoiced") && this.get("isInvoicePosted") === false ? "RecallInvoicedShipment" : this.get("isShipped") && this.get("isInvoiced") === false ? "RecallOrders" : false;
-        return _canDo.call(this, priv, callback);
-      },
-
-      doRecallShipment: function (callback) {
-        return _doDispatch.call(this, "recallShipment", callback);
-      }
+      numberPolicy: XM.Document.AUTO_NUMBER
 
     });
 
@@ -99,7 +85,20 @@ white:true*/
 
       recordType: "XM.ShipmentListItem",
 
-      editableModel: "XM.Shipment"
+      editableModel: "XM.Shipment",
+
+      canRecallShipment: function (callback) {
+        var isShipped = this.get("isShipped"),
+          isInvoiced = this.get("isInvoiced"),
+          isInvoicePosted = this.get("isInvoicePosted"),
+          priv = isShipped && isInvoiced && !isInvoicePosted ?
+            "RecallInvoicedShipment" : isShipped && !isInvoiced ? "RecallOrders" : false;
+        return _canDo.call(this, priv, callback);
+      },
+
+      doRecallShipment: function (callback) {
+        return _doDispatch.call(this, "recallShipment", callback);
+      }
 
     });
 

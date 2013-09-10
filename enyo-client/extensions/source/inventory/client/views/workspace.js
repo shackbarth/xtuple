@@ -343,7 +343,7 @@ trailing:true, white:true, strict: false*/
     });
 
     XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
-    XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
+    XV.registerModelWorkspace("XM.ShipmentListItem", "XV.ShipmentWorkspace");
 
     // ..........................................................
     // ITEM SITE

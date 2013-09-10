@@ -337,6 +337,13 @@
           "type": "Boolean",
           "column": "invoiced"
         }
+      },
+      {
+        "name": "isInvoicePosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_posted"
+        }
       }
     ],
     "isSystem": true

@@ -270,32 +270,6 @@ trailing:true, white:true, strict:false*/
     enyo.mixin(transactionList, XV.ListMenuManagerMixin);
     enyo.kind(transactionList);
 
-    enyo.kind({
-      name: "XV.EnterReceipt",
-      kind: "XV.TransactionList",
-      prerequisite: "canEnterReceipt",
-      notifyMessage: "_receiveAll?".loc(),
-      list: "XV.EnterReceiptList",
-      create: function () {
-        this.inherited(arguments);
-        this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_receiveAll".loc() });
-      },
-      executeDispatch: function () {
-        var that = this,
-          listItems = _.map(that.$.list.getValue().models, function (model) {
-            return {
-              uuid: model.id,
-              quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
-              // TODO: get this off a calculated field
-            };
-          }),
-          // TODO: verify this actually worked
-          callback = function () {};
-
-        XM.Inventory.enterReceipt(listItems, callback);
-      }
-    });
-
     /** @private */
     var _canDo = function () {
       var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
