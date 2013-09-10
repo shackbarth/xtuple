@@ -1,4 +1,4 @@
-/* jshint laxcomma:true */
+/*jshint laxcomma:true */
 // TODO - We stop on connect's session.js file because of:
 // https://github.com/senchalabs/connect/issues/641
 
@@ -192,7 +192,7 @@ function session(options){
   options = options || {};
 
   var key = options.key || 'connect.sid'
-    , store = options.store || new MemoryStore
+    , store = options.store || new MemoryStore()
     , cookie = options.cookie || {}
     , trustProxy = options.proxy
     , storeReady = true;

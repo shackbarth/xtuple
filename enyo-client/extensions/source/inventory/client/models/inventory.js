@@ -33,13 +33,15 @@ white:true*/
     /**
       @class
 
-      @extends XM.Model
+      @extends XM.Transaction
     */
     XM.IssueToShipping = XM.Transaction.extend({
 
       recordType: "XM.IssueToShipping",
 
       quantityAttribute: "toIssue",
+
+      issueMethod: "issueToShipping",
 
       readOnlyAttributes: [
         "atShipping",
@@ -52,6 +54,8 @@ white:true*/
         "shipment",
         "shipped"
       ],
+
+      transactionDate: null,
 
       name: function () {
         return this.get("order") + " #" + this.get("lineNumber");
@@ -140,7 +144,9 @@ white:true*/
           if (!resp.answer) { return; }
             
           var dispOptions = {},
-            issOptions = {},
+            issOptions = {
+              asOf: that.transactionDate
+            },
             detail = that.formatDetail(),
             params = [
               that.id,
@@ -158,7 +164,7 @@ white:true*/
             issOptions.detail = detail;
           }
           that.setStatus(XM.Model.BUSY_COMMITTING);
-          that.dispatch("XM.Inventory", "issueToShipping", params, dispOptions);
+          that.dispatch("XM.Inventory", that.issueMethod, params, dispOptions);
         };
 
         // Validate

@@ -19,6 +19,8 @@ trailing:true, white:true*/
     panels = [
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
+      {name: "itemList", kind: "XV.ItemList"},
+      {name: "itemGroup", kind: "XV.ItemGroupList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
       {name: "locationList", kind: "XV.LocationList"},
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
@@ -42,12 +44,13 @@ trailing:true, white:true*/
       name: "inventory",
       label: "_inventory".loc(),
       panels: [
+        {name: "inventoryHistoryList", kind: "XV.InventoryHistoryList"},
         {name: "shipmentList", kind: "XV.ShipmentList"}
-      //  {name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
+        //{name: "salesOrderLineListItem", kind: "XV.SalesOrderLineListItem"}
       ],
       actions: [
         {name: "issueToShipping", privilege: "issueStockToShipping", method: "issueToShipping", notify: false},
-        {name: "enterReceipt", method: "enterReceipt", notify: false}
+        //{name: "enterReceipt", method: "enterReceipt", notify: false}
       ],
       issueToShipping: function (inSender, inEvent) {
         inSender.bubbleUp("onIssueToShipping", inEvent, inSender);
@@ -57,7 +60,7 @@ trailing:true, white:true*/
       }
 
     };
-    XT.app.$.postbooks.insertModule(module, 4);
+    XT.app.$.postbooks.insertModule(module, 0);
 
     relevantPrivileges = [
       "ViewShipping",
@@ -106,7 +109,7 @@ trailing:true, white:true*/
       //"CreateExpenseTrans",
       "RecallInvoicedShipment",
       //"ViewItemAvailabilityWorkbench",
-      //"ViewInventoryHistory",
+      "ViewInventoryHistory",
       "ViewWarehouses",
       "MaintainWarehouses",
       //"UpdateABCClass",

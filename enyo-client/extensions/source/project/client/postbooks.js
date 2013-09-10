@@ -30,7 +30,7 @@ trailing:true, white:true*/
         {name: "taskList", kind: "XV.TaskList"}
       ]
     };
-    XT.app.$.postbooks.insertModule(module, 2);
+    XT.app.$.postbooks.insertModule(module, 0);
 
     relevantPrivileges = [
       "MaintainAddresses",

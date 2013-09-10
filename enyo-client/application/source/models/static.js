@@ -85,6 +85,8 @@ white:true*/
 
   // Credit Card Type
   var creditCardTypeJson = [
+    { id: "A", name: "_amEx".loc() },
+    { id: "D", name: "_discover".loc() },
     { id: "M", name: "_masterCard".loc() },
     { id: "V", name: "_visa".loc() }
   ];

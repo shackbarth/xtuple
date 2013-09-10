@@ -72,11 +72,20 @@ trailing:true, white:true*/
       // don't want to show inactive credit cards
       this.$.list.setSuppressInactive(true);
     },
-    newItem: function () {
+    newItem: function (options) {
+      options = options || {};
       var that = this,
         customer = that.parent.parent.getValue().getValue("customer"),
         creditCardCollection = customer.get("creditCards"),
         creditCardModel = new XM.CreditCard(),
+        popupTheWorkspace = function () {
+          that.doPopupWorkspace({
+            message: "_enterNew".loc(),
+            workspace: "XV.CreditCardsEditor",
+            model: creditCardModel,
+            callback: workspaceCallback
+          });
+        },
         // when we add a credit card we're really making the change
         // to customer. Sales Order don't care. Fetch customer so
         // we have a fresh and locked record we can save.
@@ -98,32 +107,66 @@ trailing:true, white:true*/
             creditCardModel.initialize(null, {isNew: true});
             creditCardCollection.add(creditCardModel);
 
-            that.doPopupWorkspace({
-              message: "_enterNew".loc(),
-              workspace: "XV.CreditCardsEditor",
-              model: creditCardModel,
-              callback: workspaceCallback
-            });
+            popupTheWorkspace();
           }
         },
         // save the customer when the user is finished with the popup
         workspaceCallback = function (model) {
+          var validationError,
+            errorMessage;
+
           if (model === false) {
             // the user has clicked to cancel, so get rid of the credit card model
             creditCardCollection.remove(creditCardModel);
           }
           customer.on('statusChange', releaseCustomerLock);
+          validationError = customer.validate(customer.attributes);
+          if (validationError) {
+            errorMessage = validationError.message ? validationError.message() : "Error";
+            that.doNotify({message: validationError.message(), type: XM.Model.CRITICAL});
+            return;
+          }
           customer.save();
         },
         releaseCustomerLock = function () {
           if (customer.getStatus() === XM.Model.READY_CLEAN) {
             customer.off('statusChange', releaseCustomerLock);
             customer.releaseLock();
+            if (options.success) {
+              options.success();
+            }
           }
         };
 
+      if (options.overrideData) {
+        // stomp on the popping up if we already have data
+        popupTheWorkspace = function () {
+          creditCardModel.set(options.overrideData);
+          workspaceCallback();
+        };
+      }
+
       customer.on('statusChange', customerFetched);
       customer.fetch();
+    },
+    /**
+      If get get data from a magstripe to all the normal step to create
+      a new credit card but stomp on the bit that opens a popup workspace
+     */
+    newItemWithData: function (data) {
+      var that = this;
+
+      this.newItem({
+        overrideData: data,
+        success: function () {
+          that.$.list.getSelection().select(that.$.list.count - 1);
+          if (that.$.ccv.showing) {
+            that.$.ccv.focus();
+          } else {
+            that.$.creditCardAmount.focus();
+          }
+        }
+      });
     },
     processCreditCard: function (inSender, inEvent) {
       var that = this,
@@ -256,6 +299,20 @@ trailing:true, white:true*/
     title: "_history".loc(),
     listRelations: "XV.IncidentHistoryListRelations",
     canOpen: false
+  });
+
+  // ..........................................................
+  // ITEM GROUP ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ItemGroupItemBox",
+    kind: "XV.ListGroupRelationsBox",
+    title: "_items".loc(),
+    parentKey: "itemGroup",
+    groupItemKey: "item",
+    searchList: "XV.ItemList",
+    listRelations: "XV.ItemGroupItemListRelations"
   });
 
   // ..........................................................

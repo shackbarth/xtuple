@@ -299,7 +299,7 @@ trailing:true, white:true, strict: false*/
         var model = this.getValue(),
           isRestricted = model ? model.get("isRestricted") : false;
         if (!isRestricted) {
-          this.$.locationItemRelationBox.setDisabled(true);
+          this.$.locationItemRelationBox.setDisabled(true); 
         }
       }
     });
@@ -369,7 +369,7 @@ trailing:true, white:true, strict: false*/
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStockLocationAuto"},
       {kind: "XV.InputWidget", container: "mainGroup", attr: "userDefinedLocation"},
       {kind: "XV.InputWidget", container: "mainGroup", attr: "locationComment"},
-      //LIST - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location. Look at the privileges checkbox list.
+      //LIST - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location. Look at the privileges checkbox list for an example.
       {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_planning".loc() },
       {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParameters"},
       {kind: "XV.QuantityWidget", container: "mainGroup", attr: "reorderLevel"},

@@ -343,19 +343,11 @@
     },
     "properties": [
       {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "coitem_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
         "name": "uuid",
         "attr": {
           "type": "Number",
           "column": "obj_uuid",
-          "isNaturalKey": true
+          "isPrimaryKey": true
         }
       },
       {
@@ -430,14 +422,14 @@
           "type": "Quantity",
           "column": "coitem_qtyreturned"
         }
-      }, 
+      },
       {
         "name": "balance",
         "attr": {
           "type": "Quantity",
           "column": "ship_balance"
         }
-      },  
+      },
       {
         "name": "atShipping",
         "attr": {
@@ -451,7 +443,7 @@
           "type": "Number",
           "column": "to_issue"
         }
-      }  
+      }
     ],
     "isSystem": true
   }

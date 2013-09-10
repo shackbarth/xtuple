@@ -374,22 +374,18 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {Array} [options.detail] Distribution detail
   */
   XM.Inventory.issueToShipping = function (orderLine, quantity, options) {
-    var asOf,
+    var orderType,
+      asOf,
       series,
-      sql,
+      sql1,
+      sql2,
       ary,
       item,
       i;
 
     /* Make into an array if an array not passed */
     if (typeof arguments[0] !== "object") {
-      ary = [
-        {
-          orderLine: orderLine,
-          quantity: quantity,
-          options: options || {}
-        }
-      ];
+      ary = [{orderLine: orderLine, quantity: quantity, options: options || {}}];
     } else {
       ary = arguments;
     }
@@ -397,13 +393,22 @@ select xt.install_js('XM','Inventory','xtuple', $$
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
 
-    sql = "select issuetoshipping('SO', coitem_id, $2, $3, $4::timestamptz) as series " +
-          "from coitem where obj_uuid = $1;";
+    sql1 = "select ordtype_tblname, ordtype_code " +
+           "from xt.obj o " +
+           "  join pg_class c on o.tableoid = c.oid " +
+           "  join xt.ordtype on c.relname=ordtype_tblname " +
+           "where obj_uuid= $1;",
+
+    sql2 = "select issuetoshipping($1, {table}_id, $3, $4, $5::timestamptz) as series " +
+           "from {table} where obj_uuid = $2;";
 
     /* Post the transaction */
     for (i = 0; i < ary.length; i++) {
       item = ary[i];
-      series = plv8.execute(sql, [item.orderLine, item.quantity, 0, item.asOf])[0].series;
+      asOf = item.options ? item.options.asOf : null;
+      orderType = plv8.execute(sql1, [item.orderLine])[0];
+      series = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
+        [orderType.ordtype_code, item.orderLine, item.quantity, 0, asOf])[0].series;
 
       /* Distribute detail */
       XM.PrivateInventory.distribute(series, item.options.detail);
@@ -438,8 +443,13 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {String|Array} Order line uuid, or array of uuids
   */
   XM.Inventory.returnFromShipping = function (orderLine) {
-    var sql = "select returnitemshipments(coitem_id) " +
-      "from coitem where obj_uuid = $1;",
+    var sql1 = "select ordtype_tblname, ordtype_code " +
+           "from xt.obj o " +
+           "  join pg_class c on o.tableoid = c.oid " +
+           "  join xt.ordtype on c.relname=ordtype_tblname " +
+           "where obj_uuid= $1;",
+      sql2 = "select returnitemshipments($1, {table}_id, 0, current_timestamp) " +
+           "from {table} where obj_uuid = $2;",
       ret,
       i;
 
@@ -448,7 +458,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     /* Post the transaction */
     for (i = 0; i < arguments.length; i++) {
-      ret = plv8.execute(sql, [arguments[i]])[0];
+      /* Resolve the table */
+      orderType = plv8.execute(sql1, [arguments[i]])[0];
+      ret = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
+        [orderType.ordtype_code, arguments[i]])[0];
     }
 
     return ret;

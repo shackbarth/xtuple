@@ -66,7 +66,7 @@ trailing:true, white:true*/
       module.panels.push({name: "salesAnalysisPage", kind: "analysisFrame"});
     }
 
-    XT.app.$.postbooks.insertModule(module, 2);
+    XT.app.$.postbooks.insertModule(module, 0);
 
     relevantPrivileges = [
       "ConfigureSO",
