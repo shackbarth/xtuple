@@ -1,6 +1,6 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
+trailing:true, white:true, strict: false*/
 /*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, Globalize:true*/
 
 (function () {
@@ -1133,6 +1133,33 @@ trailing:true, white:true*/
   XV.registerModelList("XM.ItemRelation", "XV.ItemList");
 
   // ..........................................................
+  // ITEM GROUP
+  //
+
+  enyo.kind({
+    name: "XV.ItemGroupList",
+    kind: "XV.List",
+    label: "_itemGroups".loc(),
+    collection: "XM.ItemGroupCollection",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // ITEM SITE
   //
 
@@ -1615,64 +1642,6 @@ trailing:true, white:true*/
   XV.registerModelList("XM.PurchaseOrderListItem", "XV.PurchaseOrderList");
 
   // ..........................................................
-  // QUOTE
-  //
-
-  enyo.kind({
-    name: "XV.QuoteList",
-    kind: "XV.List",
-    label: "_quotes".loc(),
-    collection: "XM.QuoteListItemCollection",
-    parameterWidget: "XV.QuoteListParameters",
-    query: {orderBy: [
-      {attribute: 'number'}
-    ]},
-    allowPrint: true,
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true,
-                fit: true},
-              {kind: "XV.ListAttr", attr: "getQuoteStatusString",
-                style: "padding-left: 24px"},
-              {kind: "XV.ListAttr", attr: "expireDate",
-                formatter: "formatExpireDate", classes: "right",
-                placeholder: "_noExpiration".loc()}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.name"},
-              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice",
-                classes: "right"}
-            ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "shiptoAddress1"}
-          ]},
-          {kind: "XV.ListColumn", classes: "descr", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "orderNotes"}
-          ]}
-        ]}
-      ]}
-    ],
-    formatExpireDate: function (value, view, model) {
-      var isLate = model && model.get('expireDate') &&
-        (XT.date.compareDate(value, new Date()) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
-    },
-    formatPrice: function (value, view, model) {
-      var currency = model ? model.get("currency") : false,
-        scale = XT.session.locale.attributes.salesPriceScale;
-      return currency ? currency.format(value, scale) : "";
-    }
-  });
-
-  XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
-
-  // ..........................................................
   // SALES ORDER
   //
 
@@ -1690,42 +1659,93 @@ trailing:true, white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+              {kind: "XV.ListAttr", attr: "getOrderStatusString",
+                style: "padding-left: 24px"},
+              {kind: "XV.ListAttr", attr: "scheduleDate",
+                formatter: "formatScheduleDate", classes: "right",
+                placeholder: "_noSchedule".loc()}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.name"}
+              {kind: "XV.ListAttr", attr: "customer.name"},
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatTotal",
+                classes: "right"}
             ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "billtoAddress1"}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "shiptoAddress1"}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "shipVia"}
           ]},
           {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "scheduleDate"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice", classes: "right"}
-            ]}
+            {kind: "XV.ListAttr", formatter: "formatName", classes: "italic"},
+            {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
           ]}
         ]}
       ]}
     ],
-    formatPrice: function (value, view, model) {
+    formatBillto: function (value, view, model) {
+      var city = model.get("billtoCity"),
+        state = model.get("billtoState"),
+        country = model.get("billtoCountry");
+      return XM.Address.formatShort(city, state, country);
+    },
+    formatScheduleDate: function (value, view, model) {
+      var isLate = model && model.get('scheduleDate') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    },
+    /**
+      Returns Shipto Name if one exists, otherwise Billto Name.
+    */
+    formatName: function (value, view, model) {
+      return model.get("shiptoName") || model.get("billtoName");
+    },
+    formatTotal: function (value, view, model) {
       var currency = model ? model.get("currency") : false,
-        scale = XT.session.locale.attributes.salesPriceScale;
+        scale = XT.session.locale.attributes.moneyScale;
       return currency ? currency.format(value, scale) : "";
+    },
+
+    formatShipto: function (value, view, model) {
+      var city = model.get("shiptoCity"),
+        state = model.get("shiptoState"),
+        country = model.get("shiptoCountry");
+      return XM.Address.formatShort(city, state, country);
+    },
+    /**
+      Returns formatted Shipto City, State and Country if
+      Shipto Name exists, otherwise Billto location.
+    */
+    formatShiptoOrBillto: function (value, view, model) {
+      var hasShipto = model.get("shiptoName") ? true : false,
+        cityAttr = hasShipto ? "shiptoCity": "billtoCity",
+        stateAttr = hasShipto ? "shiptoState" : "billtoState",
+        countryAttr = hasShipto ? "shiptoCountry" : "billtoCountry",
+        city = model.get(cityAttr),
+        state = model.get(stateAttr),
+        country = model.get(countryAttr);
+      return XM.Address.formatShort(city, state, country);
     }
   });
 
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
+
+  // ..........................................................
+  // QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.QuoteList",
+    kind: "XV.SalesOrderList",
+    label: "_quotes".loc(),
+    collection: "XM.QuoteListItemCollection",
+    parameterWidget: "XV.QuoteListParameters",
+    formatDate: function (value, view, model) {
+      var isLate = model && model.get('expireDate') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    }
+  });
+
+  XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
 
   // ..........................................................
   // SALE TYPE

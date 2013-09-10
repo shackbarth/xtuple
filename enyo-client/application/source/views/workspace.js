@@ -1109,6 +1109,33 @@ Globalize:true */
   XV.registerModelWorkspace("XM.ItemListItem", "XV.ItemWorkspace");
 
   // ..........................................................
+  // ITEM GROUP
+  //
+
+  enyo.kind({
+    name: "XV.ItemGroupWorkspace",
+    kind: "XV.Workspace",
+    title: "_itemGroup".loc(),
+    model: "XM.ItemGroup",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]},
+        {kind: "XV.ItemGroupItemBox", attr: "items"}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ItemGroup", "XV.ItemGroupWorkspace");
+
+  // ..........................................................
   // ITEM SITE
   //
 
@@ -1780,6 +1807,9 @@ Globalize:true */
     name: "XV.SalesOrderWorkspace",
     kind: "XV.SalesOrderBase",
     title: "_salesOrder".loc(),
+    handlers: {
+      onMagstripeCapture: "handleMagstripeCapture"
+    },
     model: "XM.SalesOrder",
     /**
       Inserts additional components where they should be rendered.
@@ -1825,6 +1855,21 @@ Globalize:true */
           // Line Item Box
           {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems", fit: true}
         ], {owner: this});
+      }
+    },
+    handleHotKey: function (keyCode) {
+      switch (String.fromCharCode(keyCode)) {
+      case "L":
+        if (!this.$.salesOrderLineItemGridBox.disabled) {
+          this.$.salesOrderLineItemGridBox.newItem();
+        }
+        return;
+      }
+    },
+    handleMagstripeCapture: function (inSender, inEvent) {
+      if (this.$.creditCardBox && !this.$.creditCardBox.$.newButton.disabled) { // XXX sloppy
+        this.$.salesPanels.setIndex(this.$.salesPanels.getPanels().length);
+        this.$.creditCardBox.newItemWithData(inEvent.data);
       }
     },
     /**

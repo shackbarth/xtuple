@@ -68,8 +68,12 @@ var async = require("async"),
       },
       fetchSuccess = function (model, result) {
         var sendExtensions = function (res, extensions) {
-          extensions = _.sortBy(extensions, function (ext) {
-            return ext.loadOrder;
+          extensions.sort(function (ext1, ext2) {
+            if (ext1.loadOrder !== ext2.loadOrder) {
+              return ext1.loadOrder - ext2.loadOrder;
+            } else {
+              return ext1.name > ext2.name ? 1 : -1;
+            }
           });
           var uuids = _.map(extensions, function (ext) {
             var sortedModels = _.sortBy(ext.codeInfo, function (codeInfo) {

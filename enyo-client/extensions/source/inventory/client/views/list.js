@@ -172,6 +172,61 @@ trailing:true, white:true, strict:false*/
     XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderLine");
 
     // ..........................................................
+    // INVENTORY HISTORY REPORT
+    //
+
+    enyo.kind({
+      name: "XV.InventoryHistoryList",
+      kind: "XV.List",
+      label: "_inventoryHistory".loc(),
+      collection: "XM.InventoryHistoryCollection",
+      query: {orderBy: [
+        {attribute: 'transactionDate'}
+      ]},
+      parameterWidget: "XV.InventoryHistoryListParameters",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short", components: [
+              {kind: "XV.ListAttr", attr: "transactionDate", isKey: true}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "transactionType"},
+              {kind: "XV.ListAttr", attr: "itemSite.site.code"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second left", components: [
+              {kind: "XV.ListAttr", attr: "itemSite.item.number"},
+              {kind: "XV.ListAttr", attr: "itemSite.item.description1"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "orderType"},
+              {kind: "XV.ListAttr", attr: "orderNumber"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "unit"},
+              {kind: "XV.ListAttr", attr: "quantity"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "valueBefore"},
+              {kind: "XV.ListAttr", attr: "quantityBefore"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "valueAfter"},
+              {kind: "XV.ListAttr", attr: "quantityAfter"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "costMethod"},
+              {kind: "XV.ListAttr", attr: "user.username"}
+            ]}
+          ]}
+        ]}
+      ]
+
+    });
+
+    XV.registerModelList("XM.InventoryHistory", "XV.InventoryHistoryList");
+
+    // ..........................................................
     // ISSUE TO SHIPPING
     //
 
@@ -196,6 +251,12 @@ trailing:true, white:true, strict:false*/
           method: "doReturnStock", notify: false}
       ],
       toggleSelected: true,
+      published: {
+        shipment: null
+      },
+      events: {
+        onShipmentChanged: ""
+      },
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -228,6 +289,10 @@ trailing:true, white:true, strict:false*/
           ]}
         ]}
       ],
+      fetch: function () {
+        this.setShipment(null);
+        this.inherited(arguments);
+      },
       formatScheduleDate: function (value, view, model) {
         var today = new Date(),
           isLate = XT.date.compareDate(value, today) < 1 &&
@@ -271,13 +336,39 @@ trailing:true, white:true, strict:false*/
         }
       },
       issueStock: function (inEvent) {
-        var model = inEvent.model;
+        var model = inEvent.model,
+         transDate = model.transactionDate;
 
         this.doWorkspace({
           workspace: "XV.IssueStockWorkspace",
           id: model.id,
-          allowNew: false
+          allowNew: false,
+          success: function (model) {
+            // Set the transaction date to match the source
+            model.transactionDate = transDate;
+          }
         });
+      },
+      /**
+        Overload: used to keep track of shipment.
+      */
+      setupItem: function (inSender, inEvent) {
+        this.inherited(arguments);
+        var collection = this.getValue(),
+          listShipment = collection.at(inEvent.index).get("shipment"),
+          listShipmentId = listShipment ? listShipment.id : false,
+          shipment = this.getShipment(),
+          shipmentId = shipment ? shipment.id : false;
+        if (listShipmentId !== shipmentId) {
+          this.setShipment(listShipment);
+          // Update all rows to match
+          _.each(collection.models, function (model) {
+            model.set("shipment", listShipment);
+          });
+        }
+      },
+      shipmentChanged: function () {
+        this.doShipmentChanged({shipment: this.getShipment()});
       }
     });
 

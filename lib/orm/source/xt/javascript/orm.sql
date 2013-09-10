@@ -393,7 +393,8 @@ select xt.install_js('XT','Orm','xtuple', $$
         tableName,
         pkey,
         nkey,
-        orderBy;
+        orderBy,
+        isView;
 
       /* process properties */
       for (i = 0; i < props.length; i++) {
@@ -418,6 +419,23 @@ select xt.install_js('XT','Orm','xtuple', $$
                we risk a big performance hit on all the joins that
                would be required if uuid were in another table */
             if (attr.column  === "obj_uuid") {
+              schemaName = orm.table.indexOf(".") === -1 ? 'public' : orm.table.beforeDot();
+              tableName = orm.table.indexOf(".") === -1 ? orm.table : orm.table.afterDot();
+              
+              /* make sure this isn't a view */
+              query = "select relkind " +
+                      "from pg_class c, pg_namespace n " +
+                      "where c.relname = $1 " +
+                      " and n.nspname = $2 " +
+                      " and n.oid = c.relnamespace;"
+
+              if (DEBUG) {
+                XT.debug('createView check obj table sql = ', query);
+                XT.debug('createView values = ', [tableName, schemaName]);
+              }
+              res = plv8.execute(query, [tableName, schemaName]);
+              isView = !res[0] || res[0].relkind !== 'r';
+
               query = "select count(a.attname) " +
                       "from pg_class c, pg_namespace n, pg_attribute a, pg_type t " +
                       "where c.relname = $1 " +
@@ -427,35 +445,21 @@ select xt.install_js('XT','Orm','xtuple', $$
                       " and a.attname = 'obj_uuid' " +
                       " and a.attrelid = c.oid " +
                       " and a.atttypid = t.oid; ";
-              schemaName = orm.table.indexOf(".") === -1 ? 'public' : orm.table.beforeDot();
-              tableName = orm.table.indexOf(".") === -1 ? orm.table : orm.table.afterDot();
 
               if (DEBUG) {
                 XT.debug('createView check obj_uuid sql = ', query);
                 XT.debug('createView values = ', [tableName, schemaName]);
               }
               res = plv8.execute(query, [tableName, schemaName]);
-
+              
               if (!res[0].count) {
-                /* make sure this isn't a view */
-                query = "select relkind " +
-                        "from pg_class c, pg_namespace n " +
-                        "where c.relname = $1 " +
-                        " and n.nspname = $2 " +
-                        " and n.oid = c.relnamespace;"
-
-                if (DEBUG) {
-                  XT.debug('createView check obj table sql = ', query);
-                  XT.debug('createView values = ', [tableName, schemaName]);
-                }
-                res = plv8.execute(query, [tableName, schemaName]);
-
-                if (!res[0] || res[0].relkind !== 'r') {
+                if (isView) {
                   plv8.elog(ERROR, "Can not add obj_uuid field because {table} is not a table.".replace("{table}", orm.table));
                 }
 
-                /* looks good. add the column */
-                query = "alter table {table} add column obj_uuid text default xt.generate_uuid();".replace("{table}", orm.table);
+                /* looks good. add the column, add inheritance and unique constraint */
+                query = "alter table {table} add column obj_uuid text default xt.generate_uuid();";
+                query = query.replace("{table}", orm.table);
 
                 if (DEBUG) {
                   XT.debug('createView add obj_uuid sql = ', query);
@@ -463,6 +467,16 @@ select xt.install_js('XT','Orm','xtuple', $$
                 plv8.execute(query);
 
                 query = "comment on column {table}.obj_uuid is 'Added by xt the web-mobile package.'".replace("{table}", orm.table);
+                plv8.execute(query);
+              }
+
+              /* Add inheritance and constraints where applicable */
+              if (!isView) {
+                query = "select xt.add_inheritance('{table}', 'xt.obj'); " +
+                        "select xt.add_constraint('{tableName}', '{tableName}_obj_uui_id','unique(obj_uuid)', '{schemaName}'); ";
+                query = query.replace(/{table}/, orm.table)
+                             .replace(/{tableName}/g, tableName)
+                             .replace(/{schemaName}/, schemaName || 'public');
                 plv8.execute(query);
               }
             }
