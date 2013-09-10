@@ -69,6 +69,17 @@ white:true*/
     /**
       @class
 
+      @extends XM.Model
+    */
+    XM.ShipmentSalesOrder = XM.Model.extend({
+
+      recordType: "XM.ShipmentSalesOrder"
+
+    });
+
+    /**
+      @class
+
       @extends XM.Document
     */
     XM.ShipmentLine = XM.Document.extend({
@@ -76,6 +87,19 @@ white:true*/
       recordType: "XM.ShipmentLine",
 
       parentKey: "shipment"
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Info
+    */
+    XM.ShipmentListItem = XM.Info.extend({
+
+      recordType: "XM.ShipmentListItem",
+
+      editableModel: "XM.Shipment"
 
     });
 
@@ -105,6 +129,17 @@ white:true*/
     XM.ShipmentCollection = XM.Collection.extend({
 
       model: XM.Shipment
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ShipmentListItemCollection = XM.Collection.extend({
+
+      model: XM.ShipmentListItem
 
     });
 

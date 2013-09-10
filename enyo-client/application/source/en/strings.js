@@ -375,6 +375,7 @@ var lang = XT.stringsFor("en_US", {
   "_messageRecipient": "Message Recipient",
   "_middleName": "Middle Name",
   "_miscCharge": "Misc. Charge",
+  "_miscellaneous": "Miscellaneous",
   "_module": "Module",
   "_monthExpired": "Expiration Month",
   "_multiple": "Multiple",
@@ -621,6 +622,7 @@ var lang = XT.stringsFor("en_US", {
   "_webAddress": "Web Address",
   "_welcome": "Welcome",
   "_wholesalePrice": "Wholesale Price",
+  "_workOrder": "Work Order",
   "_xtuplePostbooks": "PostBooks",
   "_yearExpired": "Expiration Year",
 
