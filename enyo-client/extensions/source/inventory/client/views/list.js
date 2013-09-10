@@ -251,6 +251,12 @@ trailing:true, white:true, strict:false*/
           method: "doReturnStock", notify: false}
       ],
       toggleSelected: true,
+      published: {
+        shipment: null
+      },
+      events: {
+        onShipmentChanged: ""
+      },
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -283,6 +289,10 @@ trailing:true, white:true, strict:false*/
           ]}
         ]}
       ],
+      fetch: function () {
+        this.setShipment(null);
+        this.inherited(arguments);
+      },
       formatScheduleDate: function (value, view, model) {
         var today = new Date(),
           isLate = XT.date.compareDate(value, today) < 1 &&
@@ -338,6 +348,27 @@ trailing:true, white:true, strict:false*/
             model.transactionDate = transDate;
           }
         });
+      },
+      /**
+        Overload: used to keep track of shipment.
+      */
+      setupItem: function (inSender, inEvent) {
+        this.inherited(arguments);
+        var collection = this.getValue(),
+          listShipment = collection.at(inEvent.index).get("shipment"),
+          listShipmentId = listShipment ? listShipment.id : false,
+          shipment = this.getShipment(),
+          shipmentId = shipment ? shipment.id : false;
+        if (listShipmentId !== shipmentId) {
+          this.setShipment(listShipment);
+          // Update all rows to match
+          _.each(collection.models, function (model) {
+            model.set("shipment", listShipment);
+          });
+        }
+      },
+      shipmentChanged: function () {
+        this.doShipmentChanged({shipment: this.getShipment()});
       }
     });
 

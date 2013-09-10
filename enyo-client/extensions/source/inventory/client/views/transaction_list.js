@@ -132,6 +132,8 @@ trailing:true, white:true, strict:false*/
           value = originator.getParameter().value;
           this.setModel(value);
           this.buildMenu();
+        } else if (name === "shipment") {
+          return;
         }
 
         options = {
@@ -233,7 +235,7 @@ trailing:true, white:true, strict:false*/
     var _canDo = function () {
       var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
         model = this.getModel(),
-        validModel = model ? !model.get("isShipped") : false;
+        validModel = _.isObject(model) ? !model.get("isShipped") : false;
       return hasPrivilege && validModel;
     };
 
@@ -253,6 +255,9 @@ trailing:true, white:true, strict:false*/
         {name: "returnSelected", label: "_returnSelected".loc(),
           prerequisite: "canReturnSelected" },
       ],
+      handlers: {
+        onShipmentChanged: "shipmentChanged"
+      },
       canReturnSelected: function () {
         var canDo = _canDo.call(this),
           models = this.selectedModels(),
@@ -420,6 +425,9 @@ trailing:true, white:true, strict:false*/
           };
           XM.Inventory.returnFromShipping(data, options);
         }
+      },
+      shipmentChanged: function (inSender, inEvent) {
+        this.$.parameterWidget.$.shipment.setValue(inEvent.shipment);
       }
     });
   };
