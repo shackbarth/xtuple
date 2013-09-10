@@ -98,6 +98,7 @@ var lang = XT.stringsFor("en_US", {
   "_returned": "Returned",
   "_returnLine": "Return Line",
   "_safetyStock": "Safety Stock",
+  "_ship": "Ship",
   "_shippingAndReceiving": "Shipping and Receiving",
 	"_shipmentNumberPolicy": "Shipment Number Policy",
   "_siteZone": "Site Zone",
