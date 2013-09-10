@@ -354,8 +354,9 @@ trailing:true, white:true, strict:false*/
       },
       create: function () {
         this.inherited(arguments);
-        this.$.postButton.setContent("_ship".loc());
-        this.$.postButton.setShowing(true);
+        var button = this.$.postButton;
+        button.setContent("_ship".loc());
+        button.setShowing(true);
       },
       /**
         Helper function for transacting `issue` on an array of models
@@ -468,6 +469,9 @@ trailing:true, white:true, strict:false*/
         var models = this.selectedModels();
         this.issue(models, true);
       },
+      post: function () {
+        alert("Shipping!");
+      },
       returnSelected: function () {
         var models = this.selectedModels(),
           that = this,
@@ -498,6 +502,7 @@ trailing:true, white:true, strict:false*/
       },
       shipmentChanged: function (inSender, inEvent) {
         this.$.parameterWidget.$.shipment.setValue(inEvent.shipment);
+        this.$.postButton.setDisabled(_.isEmpty(inEvent.shipment));
       }
     });
   };
