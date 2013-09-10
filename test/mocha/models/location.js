@@ -16,7 +16,8 @@
         siteZone: {name: "RM1"},
         rack: "1",
         bin: "2",
-        location: "2"
+        location: "2",
+        items: {number: "YPAINT1"}
       },
       updateHash: {
         rack: "3"
