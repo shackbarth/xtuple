@@ -42,14 +42,14 @@ regexp:true, undef:true, trailing:true, white:true */
         var c, newComponent;
         if (controls[i].kind === "XV.ListItem") {
           rowCount++;
-          c = {kind: "XV.TreeNode", content: "_row".loc() + " " + rowCount};
+          c = {kind: "XV.TreeNode", content: "_row".loc() + " " + rowCount, owner: this};
         } else if (controls[i].kind === "XV.ListColumn") {
           columnCount++;
-          c = {kind: "XV.TreeNode", content: "_column".loc() + " " + columnCount};
+          c = {kind: "XV.TreeNode", content: "_column".loc() + " " + columnCount, owner: this};
         } else if (controls[i].kind === "XV.ListAttr") {
           this.fieldCount++;
           c = {kind: "XV.ListAttrNode", attr: controls[i].attr, order: this.fieldCount,
-            currentList: this.getListAttrs(), disabled: !controls[i].allowLayout};
+            currentList: this.getListAttrs(), disabled: !controls[i].allowLayout, owner: this};
         } else {
           // this isn't the node that we're looking for
           c = null;
@@ -77,15 +77,22 @@ regexp:true, undef:true, trailing:true, white:true */
     expandable: false,
     expanded: false,
     published: {
-      attr: null, // this is the current attribute, used to distinguish this node
+      attr: null, // this is the current attribute
       currentList: null, // this is the list of available attributes
-      order: null // this is the number of the field
+      order: null, // this is the number of the field
+
+    },
+    handlers: {
+      onValueChange: "valueChanged"
     },
     components: [
       {name: "icon", kind: "Image", showing: false},
       // we're naming this "caption" because we're stomping on the Node's component array
       {kind: "XV.AttributePicker", showLabel: true, name: "caption", label: "_field".loc()}
     ],
+    attrChanged: function () {
+      this.$.caption.setValue(this.getAttr(), {silent: true});
+    },
     create: function () {
       this.inherited(arguments);
       this.currentListChanged();
@@ -98,6 +105,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.caption.setComponentsList(this.getCurrentList());
       // set the value of this picker silently
       this.$.caption.setValue(this.getAttr(), {silent: true});
+    },
+    valueChanged: function (inSender, inEvent) {
+      this.setAttr(inEvent.value);
     }
   });
 
