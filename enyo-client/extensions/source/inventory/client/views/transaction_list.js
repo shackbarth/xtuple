@@ -124,14 +124,11 @@ trailing:true, white:true, strict:false*/
         if (!this.init) { return; }
         options = options ? _.clone(options) : {};
         var list = this.$.list,
-          conditions, // = this.getConditions(),
           query,
-          input,
           parameterWidget,
           parameters;
         if (!list) { return; }
         query = list.getQuery() || {};
-        //input = this.$.searchInput.getValue();
         parameterWidget = this.$.parameterWidget;
         parameters = parameterWidget && parameterWidget.getParameters ?
           parameterWidget.getParameters() : [];
@@ -139,27 +136,8 @@ trailing:true, white:true, strict:false*/
           options.showMore : false;
 
         // Build conditions
-        if (conditions || input || parameters.length) {
-
-          // Fixed conditions
-          query.parameters = conditions || [];
-
-          // Input search parameters
-          if (input && list.getSearchableAttributes().length === 0) {
-            XT.log("Error: this model has no searchable attributes by default. You have to override " +
-              "the getSearchableAttribute class method for this model if you want the simple search to work.");
-          } else if (input) {
-            query.parameters = query.parameters.concat([{
-              attribute: list.getSearchableAttributes(),
-              operator: 'MATCHES',
-              value: this.$.searchInput.getValue()
-            }]);
-          }
-
-          // Advanced parameters
-          if (parameters) {
-            query.parameters = query.parameters.concat(parameters);
-          }
+        if (parameters.length) {
+          query.parameters = parameters;
         } else {
           delete query.parameters;
         }
