@@ -122,6 +122,19 @@ white:true*/
 
     });
 
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.ShipShipmentLine = XM.Model.extend({
+
+      recordType: "XM.ShipShipmentLine",
+
+      parentKey: "shipment"
+
+    });
+
     /** @private */
     var _canDo = function (priv, callback) {
       var ret = XT.session.privileges.get(priv);

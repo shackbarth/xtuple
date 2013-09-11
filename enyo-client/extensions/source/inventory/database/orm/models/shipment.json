@@ -205,7 +205,7 @@
         "name": "lineItems",
         "toMany": {
           "isNested": true,
-          "type": "ShipmentLine",
+          "type": "ShipShipmentLine",
           "column": "shiphead_id",
           "inverse": "shipment"
         }
@@ -324,6 +324,48 @@
     "type": "ShipmentLine",
     "table": "xt.shipmentline",
     "comment": "Shipment Line Map",
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "shipment",
+        "attr": {
+          "type": "Number",
+          "column": "shiphead_id"
+        }
+      },
+      {
+        "name": "orderLine",
+        "toOne": {
+          "isNested": true,
+          "type": "SalesOrderLine",
+          "column": "obj_uuid",
+          "inverse": "uuid"
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "quantity"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ShipShipmentLine",
+    "table": "xt.shipmentline",
+    "comment": "Ship Shipment Line Map",
     "properties": [
       {
         "name": "uuid",
