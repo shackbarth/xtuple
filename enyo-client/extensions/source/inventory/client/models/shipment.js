@@ -127,7 +127,20 @@ white:true*/
     */
     XM.ShipmentSalesOrder = XM.Model.extend({
 
-      recordType: "XM.ShipmentSalesOrder"
+      recordType: "XM.ShipmentSalesOrder",
+
+      formatShipto: function () {
+        return XM.Address.format(
+          this.get('shiptoName'),
+          this.get('shiptoAddress1'),
+          this.get('shiptoAddress2'),
+          this.get('shiptoAddress3'),
+          this.get('shiptoCity'),
+          this.get('shiptoState'),
+          this.get('shiptoPostalcode'),
+          this.get('shiptoCountry')
+        ) || "";
+      }
 
     });
 
@@ -186,7 +199,7 @@ white:true*/
         options.error = function (resp) {
           if (callback) { callback(resp); }
         };
-        this.dispatch("XM.Inventory", method, params, options);
+        this.dispatch("XM.Inventory", "recallShipment", params, options);
         return this;
       }
 
@@ -242,6 +255,18 @@ white:true*/
       model: XM.ShipmentRelation
 
     });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ShipmentSalesOrderCollection = XM.Collection.extend({
+
+      model: XM.ShipmentSalesOrder
+
+    });
+
 
   };
 

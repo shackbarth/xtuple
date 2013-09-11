@@ -250,7 +250,14 @@
           "type": "CustomerRelation",
           "column": "cohead_cust_id"
         }
-      },     
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "cohead_curr_id"
+        }
+      },
       {
         "name": "billtoName",
         "attr": {

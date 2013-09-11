@@ -59,14 +59,6 @@ trailing:true, white:true, strict: false*/
     //
 
     enyo.kind({
-      name: "XV.OpenSalesOrderWidget",
-      kind: "XV.SalesOrderWidget",
-      query: {parameters: [
-        {attribute: "status", value: XM.SalesOrderBase.OPEN_STATUS},
-      ]}
-    });
-
-    enyo.kind({
       name: "XV.IssueToShippingParameters",
       kind: "XV.ParameterWidget",
       components: [

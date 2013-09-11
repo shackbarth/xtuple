@@ -360,12 +360,14 @@ trailing:true, white:true, strict: false*/
               classes: "in-panel", components: [
               {kind: "XV.DateWidget", attr: "shipDate"},
               {kind: "XV.InputWidget", attr: "number"},
-              {kind: "XV.SalesOrderWidget", attr: "order"},
+              {kind: "XV.ShipmentSalesOrderWidget", attr: "order"},
+              {kind: "XV.MoneyWidget", label: "_value".loc(),
+                attr: {localValue: "value", currency: "currency"}},
               {kind: "XV.ShipViaCombobox", attr: "shipVia"},
               {kind: "XV.MoneyWidget", label: "_freight".loc(),
-                attr: {localValue: "freight", currency: "currency"}},
-              {kind: "XV.MoneyWidget", label: "_value".loc(),
-                attr: {localValue: "value", currency: "currency"}}
+                attr: {localValue: "freight", currency: "order.currency"}},
+              {kind: "onyx.GroupboxHeader", content: "_options".loc()},
+              {kind: "XV.CheckboxWidget", label: "_printPacklist".loc()}
             ]}
           ]},
           {kind: "XV.ShipmentLineRelationsBox", fit: true, attr: "lineItems"}
