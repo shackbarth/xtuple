@@ -122,17 +122,16 @@ trailing:true, white:true*/
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
                 {kind: "XV.ListAttr", attr: "orderLine.lineNumber", classes: "bold"},
-                {kind: "XV.ListAttr", attr: "orderLine.site.code",
-                  classes: "right"},
-                {kind: "XV.ListAttr", attr: "orderLine.item.number", fit: true}
+                {kind: "XV.ListAttr", attr: "orderLine.item.number", fit: true},
+                {kind: "XV.ListAttr", attr: "orderLine.quantity",
+                  formatter: "formatQuantity", classes: "right"},
               ]},
-              {kind: "XV.ListAttr", attr: "orderLine.item.description1",
-                fit: true,  style: "text-indent: 18px;"}
-            ]},
-            {kind: "XV.ListColumn", classes: "money", components: [
-              {kind: "XV.ListAttr", attr: "orderLine.quantity",
-                formatter: "formatQuantity", style: "text-align: right"},
-              {kind: "XV.ListAttr", attr: "orderLine.quantityUnit.name"}
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "orderLine.item.description1",
+                  fit: true,  style: "text-indent: 18px;"},
+                {kind: "XV.ListAttr", attr: "orderLine.quantityUnit.name",
+                  classes: "right"}
+              ]}
             ]}
           ]}
         ]}

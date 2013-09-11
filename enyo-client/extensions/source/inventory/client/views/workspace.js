@@ -370,7 +370,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.CheckboxWidget", label: "_printPacklist".loc()}
             ]}
           ]},
-          {kind: "XV.ShipmentLineRelationsBox", fit: true, attr: "lineItems"}
+          {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
         ]}
       ]
     });
