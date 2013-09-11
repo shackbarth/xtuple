@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict:false*/
-/*global XT:true, _:true, XV:true, enyo:true, Globalize:true*/
+/*global XM:true, _:true, XT:true, XV:true, enyo:true, Globalize:true*/
 
 (function () {
 
@@ -178,20 +178,26 @@ trailing:true, white:true, strict:false*/
     enyo.kind({
       name: "XV.InventoryHistoryList",
       kind: "XV.List",
-      label: "_inventoryHistory".loc(),
+      label: "_history".loc(),
       collection: "XM.InventoryHistoryCollection",
       query: {orderBy: [
-        {attribute: 'transactionDate'}
+        {attribute: "transactionDate", descending: true},
+        {attribute: "uuid"}
       ]},
       parameterWidget: "XV.InventoryHistoryListParameters",
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "short", components: [
-              {kind: "XV.ListAttr", attr: "transactionDate", isKey: true}
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "transactionDate"},
+                {kind: "XV.ListAttr", attr: "transactionDate",
+                  formatter: "formatTime", classes: "right"}
+              ]}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "transactionType"},
+              {kind: "XV.ListAttr", attr: "transactionType",
+                formatter: "formatTransactionType"},
               {kind: "XV.ListAttr", attr: "itemSite.site.code"}
             ]},
             {kind: "XV.ListColumn", classes: "second left", components: [
@@ -199,29 +205,121 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.ListAttr", attr: "itemSite.item.description1"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "orderType"},
+              {kind: "XV.ListAttr", attr: "orderType",
+                formatter: "formatOrderType"},
               {kind: "XV.ListAttr", attr: "orderNumber"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
               {kind: "XV.ListAttr", attr: "unit"},
-              {kind: "XV.ListAttr", attr: "quantity"}
+              {kind: "XV.ListAttr", attr: "quantity",
+                formatter: "formatQuantity"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "valueBefore"},
-              {kind: "XV.ListAttr", attr: "quantityBefore"}
+              {kind: "XV.ListAttr", attr: "valueBefore",
+                formatter: "formatMoney"},
+              {kind: "XV.ListAttr", attr: "quantityBefore",
+                formatter: "formatQuantity"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "valueAfter"},
-              {kind: "XV.ListAttr", attr: "quantityAfter"}
+              {kind: "XV.ListAttr", attr: "valueAfter",
+                formatter: "formatMoney"},
+              {kind: "XV.ListAttr", attr: "quantityAfter",
+                formatter: "formatQuantity"}
             ]},
             {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "costMethod"},
+              {kind: "XV.ListAttr", attr: "costMethod",
+                formatter: "formatCostMethod"},
               {kind: "XV.ListAttr", attr: "user.username"}
             ]}
           ]}
-        ]}
-      ]
-
+        ]},
+      ],
+      formatCostMethod: function (value) {
+        switch (value)
+        {
+        case XM.ItemSite.STANDARD_COST:
+          return "_standard".loc();
+        case XM.ItemSite.AVERAGE_COST:
+          return "_average".loc();
+        case XM.ItemSite.JOB_COST:
+          return "_job".loc();
+        case XM.ItemSite.NO_COST:
+          return "_None".loc();
+        default:
+          return value;
+        }
+      },
+      formatTime: function (value) {
+        return Globalize.format(value, "t");
+      },
+      formatMoney: function (value, view) {
+        view.addRemoveClass("error", value < 0);
+        var scale = XT.session.locale.attributes.currencyScale;
+        return Globalize.format(value, "c" + scale);
+      },
+      formatOrderType: function (value) {
+        switch (value)
+        {
+        case "SO":
+          return "_salesOrder".loc();
+        case "PO":
+          return "_purchaseOrder".loc();
+        case "WO":
+          return "_workOrder".loc();
+        case "EX":
+          return "_expense".loc();
+        case "AD":
+          return "_adjustment".loc();
+        case "RX":
+          return "_materialReceipt".loc();
+        case "TO":
+          return "_transferOrder".loc();
+        case "Misc":
+          return "_miscellaneous".loc();
+        default:
+          return value;
+        }
+      },
+      formatQuantity: function (value, view) {
+        view.addRemoveClass("error", value < 0);
+        var scale = XT.session.locale.attributes.quantityScale;
+        return Globalize.format(value, "n" + scale);
+      },
+      formatTransactionType: function (value) {
+        switch (value)
+        {
+        case "SH":
+          return "_issueToShipping".loc();
+        case "RS":
+          return "_returnFromShipping".loc();
+        case "IM":
+          return "_issueMaterial".loc();
+        case "CC":
+          return "_cycleCount".loc();
+        case "RP":
+          return "_receivePurchaseOrder".loc();
+        case "RM":
+          return "_receiveMaterial".loc();
+        case "EX":
+          return "_expense".loc();
+        case "AD":
+          return "_adjustment".loc();
+        case "RX":
+          return "_materialReceipt".loc();
+        case "TW":
+          return "_siteTransfer".loc();
+        case "RB":
+          return "_receiveBreeder".loc();
+        case "IB":
+          return "_issueBreeder".loc();
+        case "RL":
+          return "_relocate".loc();
+        case "RR":
+          return "_receiveReturn".loc();
+        default:
+          return value;
+        }
+      }
     });
 
     XV.registerModelList("XM.InventoryHistory", "XV.InventoryHistoryList");
@@ -421,15 +519,17 @@ trailing:true, white:true, strict:false*/
       name: "XV.ShipmentList",
       kind: "XV.List",
       label: "_shipments".loc(),
-      collection: "XM.ShipmentCollection",
-      actions: [{
-        name: "recallShipment",
-        method: "doRecallShipment",
-        prerequisite: "canRecallShipment",
-        notifyMessage: "_recallShipment?".loc()
-      }],
+      collection: "XM.ShipmentListItemCollection",
+      actions: [
+        {name: "shipShipment", method: "shipShipment",
+          isViewMethod: true, notify: false,
+          prerequisite: "canShipShipment"},
+        {name: "recallShipment", method: "doRecallShipment",
+          prerequisite: "canRecallShipment",
+          notifyMessage: "_recallShipment?".loc()}
+      ],
       query: {orderBy: [
-        {attribute: "shipDate"}
+        {attribute: "number", descending: true, numeric: true}
       ]},
       parameterWidget: "XV.ShipmentListItemParameters",
       components: [
@@ -438,32 +538,69 @@ trailing:true, white:true, strict:false*/
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
                 {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
-                {kind: "XV.ListAttr", attr: "order.customer.name", fit: true, classes: "right"}
+                {kind: "XV.ListAttr", formatter: "formatStatus",
+                  style: "padding-left: 24px"},
+                {kind: "XV.ListAttr", attr: "shipDate", classes: "right"}
               ]},
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "orderType"},
-                {kind: "XV.ListAttr", attr: "order.number", classes: "right"}
+                {kind: "XV.ListAttr", attr: "order.number"},
+                {kind: "XV.ListAttr", attr: "shipVia",
+                  classes: "right", placeholder: "_noShipVia".loc()}
               ]}
             ]},
-            {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "shipDate"},
-              {kind: "XV.ListAttr", attr: "isShipped"}
-            ]},
-            {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "freight", formatter: "formatExtendedPrice"}
-            ]},
-            {kind: "XV.ListColumn", classes: "second", components: [
-              {kind: "XV.ListAttr", attr: "isShipped"},
-              {kind: "XV.ListAttr", att: "isInvoicePosted"}
+            {kind: "XV.ListColumn", classes: "last", components: [
+              {kind: "XV.ListAttr", attr: "order.shiptoName", classes: "italic"},
+              {kind: "XV.ListAttr", formatter: "formatShipto"}
             ]}
           ]}
         ]}
       ],
-
-      formatExtendedPrice: function (value, view, model) {
-        var currency = model ? model.getValue("currency") : false,
-          scale = XT.session.locale.attributes.extendedPriceScale;
-        return currency ? currency.format(value, scale) : "";
+      formatStatus: function (value, view, model) {
+        if (model.get("isInvoiced")) {
+          return "_invoiced".loc();
+        } else if (model.get("isShipped")) {
+          return "_shipped".loc();
+        }
+        return "_open".loc();
+      },
+      formatShipto: function (value, view, model) {
+        var order = model.get("order"),
+          city = order.get("shiptoCity"),
+          state = order.get("shiptoState"),
+          country = order.get("shiptoCountry");
+        return XM.Address.formatShort(city, state, country);
+      },
+      shipShipment: function (inEvent) {
+        var index = inEvent.index,
+          shipment = this.getValue().at(index),
+          that = this,
+          callback = function (resp) {
+            var options = {
+              success: function () {
+                // Re-render the row if showing shipped, otherwise remove it
+                var query = that.getQuery(),
+                  param,
+                  collection,
+                  model;
+                param = _.findWhere(query.parameters, {attribute: "isShipped"});
+                if (param) {
+                  collection = that.getValue();
+                  model = collection.at(index);
+                  collection.remove(model);
+                  that.fetched();
+                } else {
+                  that.renderRow(index);
+                }
+              }
+            };
+            // Refresh row if shipped
+            if (resp) { shipment.fetch(options); }
+          };
+        this.doWorkspace({
+          workspace: "XV.ShipShipmentWorkspace",
+          id: shipment.id,
+          callback: callback
+        });
       }
     });
 

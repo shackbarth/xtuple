@@ -23,6 +23,7 @@ select xt.create_view('xt.coitemship', $$
     left join shiphead on cohead_id=shiphead_order_id and shiphead_order_type='SO' and not shiphead_shipped
   where coitem_status='O'
     and item_type != 'K'
+    and coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned > 0
   order by coitem_linenumber, coitem_subnumber
 
 $$);
