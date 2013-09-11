@@ -73,9 +73,10 @@ white:true*/
         // Ship shipment after successful save
         options.success = function (model, resp, options) {
           var shipOptions = {},
+            shipDate = XT.date.applyTimezoneOffset(that.get("shipDate"), true),
             params = [
               that.id,
-              that.get("shipDate")
+              shipDate
             ];
           shipOptions.success = function (shipResp) {
             var map,
