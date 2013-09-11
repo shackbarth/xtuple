@@ -5,6 +5,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
+  var child_process = require("child_process"),
+    path = require("path");
+
   // All of the "big 4" routes are in here: get, post, patch and delete
   // They all share a lot of similar code so I've broken out queryDatabase function to reuse code.
 
@@ -76,18 +79,71 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       callback(true);
     }
 
+    var queryDatasource = function () {
+      query = queryString.f(functionName, JSON.stringify(payload));
+      queryOptions = XT.dataSource.getAdminCredentials(org);
+      XT.dataSource.query(query, queryOptions, adaptorCallback);
+    };
+
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661
     if (functionName === 'post' && binaryField) {
       binaryData = payload.data[binaryField];
       buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
-      binaryData = '\\x' + buffer.toString("hex");
-      payload.data[binaryField] = binaryData;
-    }
 
-    query = queryString.f(functionName, JSON.stringify(payload));
-    queryOptions = XT.dataSource.getAdminCredentials(org);
-    XT.dataSource.query(query, queryOptions, adaptorCallback);
+      // https://github.com/joyent/node/issues/5727
+      // http://stackoverflow.com/questions/17670395/sending-binary-images-as-buffer-from-forked-child-process-to-main-process-in-nod
+      // https://github.com/joyent/node/pull/5741
+      // https://github.com/joyent/node/issues/4374
+      // http://stackoverflow.com/questions/17861362/node-js-child-process-difference-between-spawn-fork
+      // http://blog.trevnorris.com/2013/07/child-process-multiple-file-descriptors.html
+
+      var args = [ path.join(__dirname, "../lib/ext/worker.js") ];
+      console.log(process.execPath);
+      console.log(args);
+      var child = child_process.spawn("/bin/echo", ["test"]);
+      child.on("exit", function () {
+        X.log("eeexit", arguments);
+      });
+      child.on("close", function () {
+        X.log("eeclose", arguments);
+      });
+      child.on("error", function () {
+        X.log("eeerror", arguments);
+      });
+      child.stdout.on("data", function (hexString) {
+        X.log("eemessage", arguments);
+      });
+
+      var worker = child_process.spawn(process.execPath, args, { stdio: [null, null, null, 'pipe'] });
+      X.log("spawn");
+
+      worker.on("exit", function () {
+        X.log("exit", arguments);
+      });
+      worker.on("close", function () {
+        X.log("close", arguments);
+      });
+      worker.on("error", function () {
+        X.log(arguments, "error");
+      });
+      worker.stdout.on("data", function (hexString) {
+        X.log("message", hexString.toString("utf8"));
+      });
+      worker.on("message", function (hexString) {
+        X.log(hexString);
+        payload.data[binaryField] = hexString;
+        queryDatasource();
+      });
+      //console.log(process.stdin);
+      console.log(worker.stdin);
+      worker.stdin.write("test");
+      var pipe = worker.stdio[3];
+      pipe.write("1234");
+      X.log("written");
+    } else {
+      queryDatasource();
+    }
   };
 
   /**
