@@ -214,18 +214,18 @@ trailing:true, white:true, strict: false*/
                   style: "padding-left: 0px;", isKey: true}
               ]},
               {kind: "XV.ListAttr", attr: "phone", ontap: "callPhone",
-                classes: "right hyperlink", fit: true, allowLayout: true}
+                classes: "right hyperlink", fit: true}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "jobTitle",
-                placeholder: "_noJobTitle".loc(), allowLayout: true},
+                allowLayout: true},
               {kind: "XV.ListAttr", attr: "primaryEmail", ontap: "sendMail",
                 classes: "right hyperlink", fit: true, allowLayout: true}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
-              placeholder: "_noAccountName".loc(), allowLayout: true},
+              allowLayout: true},
             {kind: "XV.ListAttr", attr: "address.formatShort"}
           ]}
         ]}
