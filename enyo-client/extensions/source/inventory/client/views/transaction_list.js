@@ -447,7 +447,7 @@ trailing:true, white:true, strict:false*/
         var that = this,
           shipment = this.$.parameterWidget.$.shipment.getValue(),
           callback = function (resp) {
-            if (resp) { that.doPrevious(); }
+            if (resp) { that.$.parameterWidget.$.order.setValue(null); }
           };
         this.doWorkspace({
           workspace: "XV.ShipShipmentWorkspace",
