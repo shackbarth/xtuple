@@ -327,7 +327,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.InputWidget", attr: "number"},
               {kind: "XV.DateWidget", attr: "shipDate"},
               {kind: "XV.CheckboxWidget", attr: "isShipped"},
-              {kind: "XV.SalesOrderWidget", attr: "order"},
+              {kind: "XV.ShipmentSalesOrderWidget", attr: "order"},
               {kind: "XV.ShipViaCombobox", attr: "shipVia"},
               {kind: "XV.InputWidget", attr: "trackingNumber"},
               {kind: "XV.MoneyWidget",
