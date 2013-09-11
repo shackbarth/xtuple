@@ -30,7 +30,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       queryString = "select xt.%@($$%@$$)",
       binaryField = payload.binaryField,
       buffer,
-      binaryData,
       adaptorCallback = function (err, res) {
         var data,
             status;
@@ -88,8 +87,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661
     if (functionName === 'post' && binaryField) {
-      binaryData = payload.data[binaryField];
-      buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
 
       // this took quite a bit of research
       // https://github.com/joyent/node/issues/5727
@@ -101,48 +98,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // http://stackoverflow.com/questions/8989780/better-way-to-make-node-not-exit
 
       var args = [ path.join(__dirname, "../lib/ext/worker.js") ];
-      /*
-      console.log(process.execPath);
-      console.log(args);
-      var child = child_process.spawn("/bin/echo", ["test"]);
-      child.on("exit", function () {
-        X.log("eeexit", arguments);
-      });
-      child.on("close", function () {
-        X.log("eeclose", arguments);
-      });
-      child.on("error", function () {
-        X.log("eeerror", arguments);
-      });
-      child.stdout.on("data", function (hexString) {
-        X.log("eemessage", arguments);
-      });
-*/
-      var worker = child_process.spawn(process.execPath, args, { stdio: [null, null, null, 'pipe'] });
-      X.log("spawn");
-
+      var worker = child_process.spawn(process.execPath, args,
+        { stdio: [null, null, null, 'pipe'] });
+      var hexValue = "";
+      var binaryData = payload.data[binaryField];
       worker.on("exit", function () {
-        X.log("exit", arguments);
-      });
-      worker.on("close", function () {
-        X.log("close", arguments);
-      });
-      worker.on("error", function () {
-        X.log(arguments, "error");
-      });
-      worker.stdout.on("data", function (hexString) {
-        X.log(hexString.toString("utf8"));
-        payload.data[binaryField] = hexString;
+        // test
+        var buffer = new Buffer(binaryData, "binary");
+
+        // end test
+        payload.data[binaryField] = "\\x" + hexValue.trim();
         queryDatasource();
       });
-      worker.on("message", function (hexString) {
-        X.log(hexString);
-        payload.data[binaryField] = hexString;
-        queryDatasource();
+      worker.stdout.on("data", function (encodedValue) {
+        // trim is necessary because we're awkwardly leveraging stdout
+        hexValue = hexValue + encodedValue.toString("utf8").trim();
       });
       var pipe = worker.stdio[3];
+      buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
       pipe.write(buffer);
-      X.log("written");
     } else {
       queryDatasource();
     }

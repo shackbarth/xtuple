@@ -7,16 +7,6 @@ pipe.pause();
 pipe.on('data', function (buffer) {
   "use strict";
   console.log(buffer.toString("hex"));
-  //process.exit(0);
+  process.exit(0);
 });
 pipe.resume();
-/*
-process.on('message', function (buffer) {
-  "use strict";
-
-  //var buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
-  console.log("here");
-  console.log(buffer.toString("hex"));
-  process.send('\\x' + buffer.toString("hex"));
-});
-*/
