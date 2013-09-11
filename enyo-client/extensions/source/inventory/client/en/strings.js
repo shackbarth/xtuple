@@ -119,6 +119,7 @@ var lang = XT.stringsFor("en_US", {
   "_showInvoiced": "Show Invoiced Shipments",
   "_showShipped": "Show Shipped",
   "_shipment": "Shipment",
+  "_shipShipment": "Ship Shipment",
   "_shipments": "Shipments",
   "_standard": "Standard",
   "_stockLocation": "Stock Location",
@@ -134,5 +135,15 @@ var lang = XT.stringsFor("en_US", {
   "_vendor": "Vendor",
   "_vendors": "Vendors",
   "_vendorType": "Vendor Type",
-  "_warnIfReceiptQtyDiffers": "Warn if PO Receipt Qty differs from receivable Qty"
+  "_warnIfReceiptQtyDiffers": "Warn if PO Receipt Qty differs from receivable Qty",
+
+  // Error Messages
+  "_improperItemSite": "Item is of type reference or control method is none.",
+  "_noSalesAssignments": "Sales assignment mappings are invalid.",
+  "_orderOnCreditHold": "Order is on credit hold.",
+  "_orderOnPackingHold": "Order is on packing hold.",
+  "_orderOnShippingHold": "Order is on shipping hold.",
+  "_shipmentNotFound": "Shipment not found.",
+  "_incompleteShipment": "Incomplete Shipment",
+  "_alreadyShipped": "Shipment already shipped."
 });

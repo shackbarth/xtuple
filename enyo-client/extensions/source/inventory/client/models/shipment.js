@@ -21,6 +21,55 @@ white:true*/
 
     });
 
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.ShipShipment = XM.Model.extend({
+
+      recordType: "XM.ShipShipment",
+
+      readOnlyAttributes: [
+        "number",
+        "order"
+      ],
+
+      save: function (key, value, options) {
+        var that = this,
+          options = {},
+          params = [
+            this.id,
+            this.get("shipDate")
+          ];
+        options.success = function (resp) {
+          var map,
+            err;
+          // Check for silent errors
+          if (resp < 0) {
+            map = {
+              "-1": "xtinv1001",
+              "-5": "xtinv1002",
+              "-8": "xtinv1008",
+              "-12": "xtinv1003",
+              "-13": "xtinv1004",
+              "-15": "xtinv1005",
+              "-50": "xtinv1006",
+              "-99": "xtinv1007"
+            }
+            resp = resp + "";
+            err = XT.Error.clone(map[resp] ? map[resp] : "xt1001");
+            that.trigger("invalid", that, err, options || {});
+          } else {
+            that.fetch();
+          }
+        }
+        this.dispatch("XM.Inventory", "shipShipment", params, options);
+        return this;
+      }
+
+    });
+
     /** @private */
     var _canDo = function (priv, callback) {
       var ret = XT.session.privileges.get(priv);
@@ -28,28 +77,6 @@ white:true*/
         callback(ret);
       }
       return ret;
-    };
-
-    /** @private */
-    var _doDispatch = function (method, callback, params) {
-      var that = this,
-        options = {};
-      params = params || [];
-      params.unshift(this.id);
-      options.success = function (resp) {
-        var fetchOpts = {};
-        fetchOpts.success = function () {
-          if (callback) { callback(resp); }
-        };
-        if (resp) {
-          that.fetch(fetchOpts);
-        }
-      };
-      options.error = function (resp) {
-        if (callback) { callback(resp); }
-      };
-      this.dispatch("XM.Inventory", method, params, options);
-      return this;
     };
 
     /**
@@ -97,7 +124,23 @@ white:true*/
       },
 
       doRecallShipment: function (callback) {
-        return _doDispatch.call(this, "recallShipment", callback);
+        var that = this,
+          options = {},
+          params = [this.id];
+        options.success = function (resp) {
+          var fetchOpts = {};
+          fetchOpts.success = function () {
+            if (callback) { callback(resp); }
+          };
+          if (resp) {
+            that.fetch(fetchOpts);
+          }
+        };
+        options.error = function (resp) {
+          if (callback) { callback(resp); }
+        };
+        this.dispatch("XM.Inventory", method, params, options);
+        return this;
       }
 
     });

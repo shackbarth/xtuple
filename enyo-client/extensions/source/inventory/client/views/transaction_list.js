@@ -84,7 +84,7 @@ trailing:true, white:true, strict:false*/
 
         this[method](inSender, inEvent);
       },
-      close: function (options) {
+      close: function () {
         this.doPrevious();
       },
       buildMenu: function () {
@@ -444,7 +444,16 @@ trailing:true, white:true, strict:false*/
         this.issue(models, true);
       },
       post: function () {
-        alert("Shipping!");
+        var that = this,
+          shipment = this.$.parameterWidget.$.shipment.getValue(),
+          callback = function (resp) {
+            if (resp) { that.doPrevious(); }
+          };
+        this.doWorkspace({
+          workspace: "XV.ShipShipmentWorkspace",
+          id: shipment.id,
+          callback: callback
+        });
       },
       returnSelected: function () {
         var models = this.selectedModels(),

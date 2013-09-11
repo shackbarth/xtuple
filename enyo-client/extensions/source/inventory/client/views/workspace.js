@@ -327,9 +327,6 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.SalesOrderWidget", attr: "order"},
               {kind: "XV.ShipViaCombobox", attr: "shipVia"},
               {kind: "XV.DateWidget", attr: "shipDate"},
-              {kind: "XV.CustomerProspectWidget", attr: "order.customer.number",
-                showAddress: true, label: "_customer".loc(),
-                nameAttribute: ""},
               {kind: "XV.MoneyWidget",
                 attr: {localValue: "freight", currency: "currency"},
                 label: "_freight".loc()},
@@ -344,6 +341,38 @@ trailing:true, white:true, strict: false*/
 
     XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
     XV.registerModelWorkspace("XM.ShipmentListItem", "XV.ShipmentWorkspace");
+
+    enyo.kind({
+      name: "XV.ShipShipmentWorkspace",
+      kind: "XV.Workspace",
+      title: "_shipShipment".loc(),
+      model: "XM.ShipShipment",
+      saveText: "_ship".loc(),
+      allowNew: false,
+      hideApply: true,
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", components: [
+              {kind: "XV.DateWidget", attr: "shipDate"},
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.SalesOrderWidget", attr: "order"},
+              {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+              {kind: "XV.MoneyWidget",
+                attr: {localValue: "freight", currency: "currency"},
+                label: "_freight".loc()}
+            ]}
+          ]},
+          {kind: "XV.ShipmentLineRelationsBox", fit: true, attr: "lineItems"}
+        ]}
+      ],
+      save: function () {
+        alert("Ship it now!");
+      }
+    });
 
     // ..........................................................
     // ITEM SITE
