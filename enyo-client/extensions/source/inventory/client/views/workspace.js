@@ -299,7 +299,7 @@ trailing:true, white:true, strict: false*/
         var model = this.getValue(),
           isRestricted = model ? model.get("isRestricted") : false;
         if (!isRestricted) {
-          this.$.locationItemRelationBox.setDisabled(true); 
+          this.$.locationItemRelationBox.setDisabled(true);
         }
       }
     });
@@ -350,6 +350,7 @@ trailing:true, white:true, strict: false*/
       saveText: "_ship".loc(),
       allowNew: false,
       hideApply: true,
+      dirtyWarn: false,
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -361,17 +362,15 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.InputWidget", attr: "number"},
               {kind: "XV.SalesOrderWidget", attr: "order"},
               {kind: "XV.ShipViaCombobox", attr: "shipVia"},
-              {kind: "XV.MoneyWidget",
-                attr: {localValue: "freight", currency: "currency"},
-                label: "_freight".loc()}
+              {kind: "XV.MoneyWidget", label: "_freight".loc(),
+                attr: {localValue: "freight", currency: "currency"}},
+              {kind: "XV.MoneyWidget", label: "_value".loc(),
+                attr: {localValue: "value", currency: "currency"}}
             ]}
           ]},
           {kind: "XV.ShipmentLineRelationsBox", fit: true, attr: "lineItems"}
         ]}
-      ],
-      save: function () {
-        alert("Ship it now!");
-      }
+      ]
     });
 
     // ..........................................................

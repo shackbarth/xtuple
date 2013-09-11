@@ -520,12 +520,14 @@ trailing:true, white:true, strict:false*/
       kind: "XV.List",
       label: "_shipments".loc(),
       collection: "XM.ShipmentListItemCollection",
-      actions: [{
-        name: "recallShipment",
-        method: "doRecallShipment",
-        prerequisite: "canRecallShipment",
-        notifyMessage: "_recallShipment?".loc()
-      }],
+      actions: [
+        {name: "shipShipment", method: "shipShipment",
+          isViewMethod: true, notify: false,
+          prerequisite: "canShipShipment"},
+        {name: "recallShipment", method: "doRecallShipment",
+          prerequisite: "canRecallShipment",
+          notifyMessage: "_recallShipment?".loc()}
+      ],
       query: {orderBy: [
         {attribute: "number", descending: true, numeric: true}
       ]},
@@ -567,6 +569,18 @@ trailing:true, white:true, strict:false*/
           state = order.get("shiptoState"),
           country = order.get("shiptoCountry");
         return XM.Address.formatShort(city, state, country);
+      },
+      shipShipment: function (inEvent) {
+        var shipment = this.getValue().at(inEvent.index),
+          callback = function (resp) {
+            // Refresh row if shipped
+            if (resp) { shipment.fetch(); }
+          };
+        this.doWorkspace({
+          workspace: "XV.ShipShipmentWorkspace",
+          id: shipment.id,
+          callback: callback
+        });
       }
     });
 

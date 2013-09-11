@@ -271,8 +271,8 @@ trailing:true, white:true, strict:false*/
     enyo.kind(transactionList);
 
     /** @private */
-    var _canDo = function () {
-      var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
+    var _canDo = function (priv) {
+      var hasPrivilege = XT.session.privileges.get(priv),
         model = this.getModel(),
         validModel = _.isObject(model) ? !model.get("isShipped") : false;
       return hasPrivilege && validModel;
@@ -298,7 +298,7 @@ trailing:true, white:true, strict:false*/
         onShipmentChanged: "shipmentChanged"
       },
       canReturnSelected: function () {
-        var canDo = _canDo.call(this),
+        var canDo = _canDo.call(this, "ReturnStockFromShipping"),
           models = this.selectedModels(),
           check;
         if (canDo) {
@@ -310,7 +310,7 @@ trailing:true, white:true, strict:false*/
         return !_.isEmpty(check);
       },
       canIssueSelected: function () {
-        var canDo = _canDo.call(this),
+        var canDo = _canDo.call(this, "IssueStockToShipping"),
           models = this.selectedModels(),
           check;
         if (canDo) {
@@ -322,7 +322,7 @@ trailing:true, white:true, strict:false*/
         return !_.isEmpty(check);
       },
       canIssueStock: function () {
-        var canDo = _canDo.call(this),
+        var canDo = _canDo.call(this, "IssueStockToShipping"),
           hasOpenLines = this.$.list.value.length;
         return canDo && hasOpenLines;
       },

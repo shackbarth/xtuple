@@ -80,7 +80,7 @@ white:true*/
 
       canReturnStock: function (callback) {
         var isShipped = this.getValue("shipment.isShipped") || false,
-          hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
+          hasPrivilege = XT.session.privileges.get("ReturnStockFromShipping"),
           atShipping = this.get("atShipping");
         if (callback) {
           callback(!isShipped && atShipping > 0 && hasPrivilege);

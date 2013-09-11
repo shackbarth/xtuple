@@ -486,7 +486,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       i;
 
     /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
+    if (!XT.Data.checkPrivilege("ReturnStockFromShipping")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
     for (i = 0; i < arguments.length; i++) {

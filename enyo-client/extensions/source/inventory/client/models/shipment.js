@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true */
+/*global XT:true, XM:true, _:true */
 
 (function () {
   "use strict";
@@ -32,40 +32,81 @@ white:true*/
 
       readOnlyAttributes: [
         "number",
-        "order"
+        "order",
+        "value"
       ],
 
+      bindEvents: function () {
+        XM.Model.prototype.bindEvents.apply(this, arguments);
+        this.on('statusChange', this.statusDidChange);
+      },
+
+      /**
+        This overload will first save any changes via usual means, then
+        call `shipShipment`.
+      */
       save: function (key, value, options) {
         var that = this,
-          options = {},
-          params = [
-            this.id,
-            this.get("shipDate")
-          ];
-        options.success = function (resp) {
-          var map,
-            err;
-          // Check for silent errors
-          if (resp < 0) {
-            map = {
-              "-1": "xtinv1001",
-              "-5": "xtinv1002",
-              "-8": "xtinv1008",
-              "-12": "xtinv1003",
-              "-13": "xtinv1004",
-              "-15": "xtinv1005",
-              "-50": "xtinv1006",
-              "-99": "xtinv1007"
-            }
-            resp = resp + "";
-            err = XT.Error.clone(map[resp] ? map[resp] : "xt1001");
-            that.trigger("invalid", that, err, options || {});
-          } else {
-            that.fetch();
-          }
+          success;
+
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          options = value ? _.clone(value) : {};
         }
-        this.dispatch("XM.Inventory", "shipShipment", params, options);
-        return this;
+
+        success = options.success;
+
+        // Ship shipment after successful save
+        options.success = function () {
+          var shipOptions = {},
+            params = [
+              that.id,
+              that.get("shipDate")
+            ];
+          shipOptions.success = function (resp) {
+            var map,
+              err,
+              fetchOptions = {
+                success: success
+              };
+            // Check for silent errors
+            if (resp < 0) {
+              map = {
+                "-1": "xtinv1001",
+                "-5": "xtinv1002",
+                "-8": "xtinv1008",
+                "-12": "xtinv1003",
+                "-13": "xtinv1004",
+                "-15": "xtinv1005",
+                "-50": "xtinv1006",
+                "-99": "xtinv1007"
+              };
+              resp = resp + "";
+              err = XT.Error.clone(map[resp] ? map[resp] : "xt1001");
+              that.trigger("invalid", that, err, options || {});
+            } else {
+              // This fetch will call original `success` function
+              that.fetch(fetchOptions);
+            }
+          };
+          that.dispatch("XM.Inventory", "shipShipment", params, shipOptions);
+          return this;
+        };
+
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          value = options;
+        }
+
+        XM.Model.prototype.save.call(this, key, value, options);
+      },
+
+      statusDidChange: function () {
+        var K = XM.Model;
+        // We want to be able to save and ship immeditately.
+        if (this.getStatus() === K.READY_CLEAN) {
+          this.setStatus(K.READY_DIRTY);
+        }
       }
 
     });
@@ -113,6 +154,12 @@ white:true*/
       recordType: "XM.ShipmentListItem",
 
       editableModel: "XM.Shipment",
+
+      canShipShipment: function (callback) {
+        var isNotShipped = !this.get("isShipped"),
+          priv = isNotShipped ? "ShipOrders" : false;
+        return _canDo.call(this, priv, callback);
+      },
 
       canRecallShipment: function (callback) {
         var isShipped = this.get("isShipped"),
