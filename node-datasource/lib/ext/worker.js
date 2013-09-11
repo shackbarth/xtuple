@@ -2,25 +2,14 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global issue:true */
 var net = require("net");
-//console.log("HERE");
 var pipe = new net.Socket({ fd: 3 });
-//process.send("123");
-//console.log("pipe is", pipe);
-pipe.on('data', function (buf) {
+pipe.pause();
+pipe.on('data', function (buffer) {
   "use strict";
-  // do whatever
-  console.log("here");
-  process.exit(0);
-  process.send("123");
+  console.log(buffer.toString("hex"));
+  //process.exit(0);
 });
-process.stdin.on('data', function (chunk) {
-  console.log("hoo");
-});
-console.log(process.stdio);
-setTimeout(function () {
-  console.log("hello");
-  process.exit(7);
-}, 2000);
+pipe.resume();
 /*
 process.on('message', function (buffer) {
   "use strict";

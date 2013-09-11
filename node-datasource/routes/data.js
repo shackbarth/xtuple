@@ -91,14 +91,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       binaryData = payload.data[binaryField];
       buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
 
+      // this took quite a bit of research
       // https://github.com/joyent/node/issues/5727
       // http://stackoverflow.com/questions/17670395/sending-binary-images-as-buffer-from-forked-child-process-to-main-process-in-nod
       // https://github.com/joyent/node/pull/5741
       // https://github.com/joyent/node/issues/4374
       // http://stackoverflow.com/questions/17861362/node-js-child-process-difference-between-spawn-fork
       // http://blog.trevnorris.com/2013/07/child-process-multiple-file-descriptors.html
+      // http://stackoverflow.com/questions/8989780/better-way-to-make-node-not-exit
 
       var args = [ path.join(__dirname, "../lib/ext/worker.js") ];
+      /*
       console.log(process.execPath);
       console.log(args);
       var child = child_process.spawn("/bin/echo", ["test"]);
@@ -114,7 +117,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       child.stdout.on("data", function (hexString) {
         X.log("eemessage", arguments);
       });
-
+*/
       var worker = child_process.spawn(process.execPath, args, { stdio: [null, null, null, 'pipe'] });
       X.log("spawn");
 
@@ -128,18 +131,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         X.log(arguments, "error");
       });
       worker.stdout.on("data", function (hexString) {
-        X.log("message", hexString.toString("utf8"));
+        X.log(hexString.toString("utf8"));
+        payload.data[binaryField] = hexString;
+        queryDatasource();
       });
       worker.on("message", function (hexString) {
         X.log(hexString);
         payload.data[binaryField] = hexString;
         queryDatasource();
       });
-      //console.log(process.stdin);
-      console.log(worker.stdin);
-      worker.stdin.write("test");
       var pipe = worker.stdio[3];
-      pipe.write("1234");
+      pipe.write(buffer);
       X.log("written");
     } else {
       queryDatasource();
