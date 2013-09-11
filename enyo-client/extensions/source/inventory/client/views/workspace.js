@@ -371,7 +371,8 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.MoneyWidget", label: "_freight".loc(),
                 attr: {localValue: "freight", currency: "order.currency"}},
               {kind: "onyx.GroupboxHeader", content: "_options".loc()},
-              {kind: "XV.CheckboxWidget", label: "_printPacklist".loc()}
+              {kind: "XV.StickyCheckboxWidget", label: "_printPacklist".loc(),
+                name: "printPacklist"}
             ]}
           ]},
           {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
