@@ -571,10 +571,30 @@ trailing:true, white:true, strict:false*/
         return XM.Address.formatShort(city, state, country);
       },
       shipShipment: function (inEvent) {
-        var shipment = this.getValue().at(inEvent.index),
+        var index = inEvent.index,
+          shipment = this.getValue().at(index),
+          that = this,
           callback = function (resp) {
+            var options = {
+              success: function () {
+                // Re-render the row if showing shipped, otherwise remove it
+                var query = that.getQuery(),
+                  param,
+                  collection,
+                  model;
+                param = _.findWhere(query.parameters, {attribute: "isShipped"});
+                if (param) {
+                  collection = that.getValue();
+                  model = collection.at(index);
+                  collection.remove(model);
+                  that.fetched();
+                } else {
+                  that.renderRow(index);
+                }
+              }
+            };
             // Refresh row if shipped
-            if (resp) { shipment.fetch(); }
+            if (resp) { shipment.fetch(options); }
           };
         this.doWorkspace({
           workspace: "XV.ShipShipmentWorkspace",
