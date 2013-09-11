@@ -17,7 +17,21 @@ white:true*/
 
       recordType: "XM.Shipment",
 
-      numberPolicy: XM.Document.AUTO_NUMBER
+      numberPolicy: XM.Document.AUTO_NUMBER,
+
+      readOnlyAttributes: [
+        "isShipped",
+        "order"
+      ],
+
+      statusDidChange: function () {
+        XM.Document.prototype.statusDidChange.apply(this, arguments);
+        if (this.getStatus() === XM.Model.READY_CLEAN) {
+          if (this.get("isShipped")) {
+            this.setReadOnly("shipDate");
+          }
+        }
+      }
 
     });
 
