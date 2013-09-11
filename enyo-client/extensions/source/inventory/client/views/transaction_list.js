@@ -84,7 +84,7 @@ trailing:true, white:true, strict:false*/
 
         this[method](inSender, inEvent);
       },
-      close: function (options) {
+      close: function () {
         this.doPrevious();
       },
       buildMenu: function () {
@@ -270,35 +270,9 @@ trailing:true, white:true, strict:false*/
     enyo.mixin(transactionList, XV.ListMenuManagerMixin);
     enyo.kind(transactionList);
 
-    enyo.kind({
-      name: "XV.EnterReceipt",
-      kind: "XV.TransactionList",
-      prerequisite: "canEnterReceipt",
-      notifyMessage: "_receiveAll?".loc(),
-      list: "XV.EnterReceiptList",
-      create: function () {
-        this.inherited(arguments);
-        this.$.headerMenu.createComponent({kind: "XV.MenuItem", content: "_receiveAll".loc() });
-      },
-      executeDispatch: function () {
-        var that = this,
-          listItems = _.map(that.$.list.getValue().models, function (model) {
-            return {
-              uuid: model.id,
-              quantity: model.get("ordered") - (model.get("received") + model.get("returned"))
-              // TODO: get this off a calculated field
-            };
-          }),
-          // TODO: verify this actually worked
-          callback = function () {};
-
-        XM.Inventory.enterReceipt(listItems, callback);
-      }
-    });
-
     /** @private */
-    var _canDo = function () {
-      var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
+    var _canDo = function (priv) {
+      var hasPrivilege = XT.session.privileges.get(priv),
         model = this.getModel(),
         validModel = _.isObject(model) ? !model.get("isShipped") : false;
       return hasPrivilege && validModel;
@@ -324,7 +298,7 @@ trailing:true, white:true, strict:false*/
         onShipmentChanged: "shipmentChanged"
       },
       canReturnSelected: function () {
-        var canDo = _canDo.call(this),
+        var canDo = _canDo.call(this, "ReturnStockFromShipping"),
           models = this.selectedModels(),
           check;
         if (canDo) {
@@ -336,7 +310,7 @@ trailing:true, white:true, strict:false*/
         return !_.isEmpty(check);
       },
       canIssueSelected: function () {
-        var canDo = _canDo.call(this),
+        var canDo = _canDo.call(this, "IssueStockToShipping"),
           models = this.selectedModels(),
           check;
         if (canDo) {
@@ -348,7 +322,7 @@ trailing:true, white:true, strict:false*/
         return !_.isEmpty(check);
       },
       canIssueStock: function () {
-        var canDo = _canDo.call(this),
+        var canDo = _canDo.call(this, "IssueStockToShipping"),
           hasOpenLines = this.$.list.value.length;
         return canDo && hasOpenLines;
       },
@@ -470,7 +444,16 @@ trailing:true, white:true, strict:false*/
         this.issue(models, true);
       },
       post: function () {
-        alert("Shipping!");
+        var that = this,
+          shipment = this.$.parameterWidget.$.shipment.getValue(),
+          callback = function (resp) {
+            if (resp) { that.$.parameterWidget.$.order.setValue(null); }
+          };
+        this.doWorkspace({
+          workspace: "XV.ShipShipmentWorkspace",
+          id: shipment.id,
+          callback: callback
+        });
       },
       returnSelected: function () {
         var models = this.selectedModels(),

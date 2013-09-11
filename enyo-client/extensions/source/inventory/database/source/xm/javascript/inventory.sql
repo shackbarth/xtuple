@@ -426,6 +426,38 @@ select xt.install_js('XM','Inventory','xtuple', $$
     }}
   };
 
+  /**
+    Ship shipment.
+    
+      select xt.post('{
+        "username": "admin",
+        "nameSpace":"XM",
+        "type":"Inventory",
+        "dispatch":{
+          "functionName":"shipShipment",
+          "parameters":["203"]
+        }
+      }');
+  
+    @param {Number} Shipment number
+    @param {Date} Ship date, default = current date
+  */
+  XM.Inventory.shipShipment = function (shipment, shipDate) {
+    var sql = "select shipshipment(shiphead_id, $2) as series " +
+      "from shiphead where shiphead_number = $1;";
+
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("ShipOrders")) { throw new handleError("Access Denied", 401); }
+
+    /* Post the transaction */
+    var ret = plv8.execute(sql, [shipment, shipDate])[0].series;
+    
+    return ret;
+  };
+  XM.Inventory.shipShipment.description = "Ship shipment";
+  XM.Inventory.shipShipment.params = {
+     shipment: { shipment: "Number", shipDate: "Ship Date" }
+  };
 
   /**
     Return shipment transactions.
@@ -454,7 +486,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       i;
 
     /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("IssueStockToShipping")) { throw new handleError("Access Denied", 401); }
+    if (!XT.Data.checkPrivilege("ReturnStockFromShipping")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
     for (i = 0; i < arguments.length; i++) {

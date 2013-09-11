@@ -4,6 +4,7 @@
     "register.sql",
     "public/tables/itemloc.sql",
     "public/tables/locitem.sql",
+    "xt/functions/shipment_value.sql",
     "xt/views/coitemship.sql",
     "xt/views/itemsitedtl.sql",
     "xt/views/locitemsite.sql",

@@ -299,7 +299,7 @@ trailing:true, white:true, strict: false*/
         var model = this.getValue(),
           isRestricted = model ? model.get("isRestricted") : false;
         if (!isRestricted) {
-          this.$.locationItemRelationBox.setDisabled(true); 
+          this.$.locationItemRelationBox.setDisabled(true);
         }
       }
     });
@@ -327,9 +327,6 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.SalesOrderWidget", attr: "order"},
               {kind: "XV.ShipViaCombobox", attr: "shipVia"},
               {kind: "XV.DateWidget", attr: "shipDate"},
-              {kind: "XV.CustomerProspectWidget", attr: "order.customer.number",
-                showAddress: true, label: "_customer".loc(),
-                nameAttribute: ""},
               {kind: "XV.MoneyWidget",
                 attr: {localValue: "freight", currency: "currency"},
                 label: "_freight".loc()},
@@ -343,7 +340,40 @@ trailing:true, white:true, strict: false*/
     });
 
     XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
-    XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
+    XV.registerModelWorkspace("XM.ShipmentListItem", "XV.ShipmentWorkspace");
+
+    enyo.kind({
+      name: "XV.ShipShipmentWorkspace",
+      kind: "XV.Workspace",
+      title: "_shipShipment".loc(),
+      model: "XM.ShipShipment",
+      saveText: "_ship".loc(),
+      allowNew: false,
+      hideApply: true,
+      dirtyWarn: false,
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", components: [
+              {kind: "XV.DateWidget", attr: "shipDate"},
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.ShipmentSalesOrderWidget", attr: "order"},
+              {kind: "XV.MoneyWidget", label: "_value".loc(),
+                attr: {localValue: "value", currency: "currency"}},
+              {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+              {kind: "XV.MoneyWidget", label: "_freight".loc(),
+                attr: {localValue: "freight", currency: "order.currency"}},
+              {kind: "onyx.GroupboxHeader", content: "_options".loc()},
+              {kind: "XV.CheckboxWidget", label: "_printPacklist".loc()}
+            ]}
+          ]},
+          {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
+        ]}
+      ]
+    });
 
     // ..........................................................
     // ITEM SITE

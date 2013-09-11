@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Shipment",
-    "table": "xt.shipheadinfo",
+    "table": "shiphead",
     "idSequenceName": "shiphead_shiphead_id_seq",
     "lockable": true,
     "lockTable": "shiphead",
@@ -11,10 +11,10 @@
     "comment": "Shipment Map",
     "privileges": {
       "all": {
-        "create": "false",
+        "create": false,
         "read": "ViewShipping",
-        "update": "false",
-        "delete": "false"
+        "update": "EnterShippingInformation",
+        "delete": false
       }
     },
     "properties": [
@@ -37,7 +37,7 @@
       {
         "name": "order",
         "toOne": {
-          "type": "SalesOrderRelation",
+          "type": "ShipmentSalesOrder",
           "column": "shiphead_order_id",
           "isNested": true
         }
@@ -106,29 +106,216 @@
           "column": "shiphead_id",
           "inverse": "shipment"
         }
-      },
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ShipShipment",
+    "table": "xt.shipheadinfo",
+    "lockable": true,
+    "isRest": true,
+    "comment": "Ship Shipment Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ShipOrders",
+        "update": "ShipOrders",
+        "delete": false
+      }
+    },
+    "properties": [
       {
-        "name": "isInvoiced",
+        "name": "id",
         "attr": {
-          "type": "Boolean",
-          "column": "isInvoiced"
+          "type": "Number",
+          "column": "shiphead_id",
+          "isPrimaryKey": true
         }
       },
       {
-        "name": "isInvoicePosted",
-        "attr": {
-          "type": "Boolean",
-          "column": "isInvoicePosted"
-        }
-      },
-      {
-        "name": "orderType",
+        "name": "number",
         "attr": {
           "type": "String",
-          "column": "shiphead_order_type"
+          "column": "shiphead_number",
+          "isNaturalKey": true
+         }
+      },
+      {
+        "name": "order",
+        "toOne": {
+          "type": "ShipmentSalesOrder",
+          "column": "shiphead_order_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "shiphead_shipvia"
+        }
+      },
+      {
+        "name": "freight",
+        "attr": {
+          "type": "Currency",
+          "column": "shiphead_freight"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "shiphead_freight_curr_id"
+        }
+      },
+      {
+        "name": "isShipped",
+        "attr": {
+          "type": "Boolean",
+          "column": "shiphead_shipped",
+          "value": false
+        }
+      },
+      {
+        "name": "shipDate",
+        "attr": {
+          "type": "Date",
+          "column": "shiphead_shipdate"
+        }
+      },
+      {
+        "name": "trackingNumber",
+        "attr": {
+          "type": "String",
+          "column": "shiphead_tracknum"
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "Money",
+          "column": "shipment_value"
+        }
+      },
+      {
+        "name": "lineItems",
+        "toMany": {
+          "isNested": true,
+          "type": "ShipmentLine",
+          "column": "shiphead_id",
+          "inverse": "shipment"
         }
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ShipmentSalesOrder",
+    "table": "cohead",
+    "comment": "Shipment Sales Order Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cohead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "Number",
+          "column": "cohead_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerRelation",
+          "column": "cohead_cust_id"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "cohead_curr_id"
+        }
+      },
+      {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "cohead_billtoname"
+        }
+      },
+      {
+        "name": "shiptoName",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptoname"
+        }
+      },
+      {
+        "name": "shiptoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptoaddress1"
+        }
+      },
+      {
+        "name": "shiptoAddress2",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptoaddress2"
+        }
+      },
+      {
+        "name": "shiptoAddress3",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptoaddress3"
+        }
+      },
+      {
+        "name": "shiptoCity",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptocity"
+        }
+      },
+      {
+        "name": "shiptoState",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptostate"
+        }
+      },
+      {
+        "name": "shiptoPostalcode",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptozipcode"
+        }
+      },
+      {
+        "name": "shiptoCountry",
+        "attr": {
+          "type": "String",
+          "column": "cohead_shiptocountry"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {
@@ -141,10 +328,9 @@
       {
         "name": "uuid",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "obj_uuid",
-          "isPrimaryKey": true,
-          "isNaturalKey": true
+          "isPrimaryKey": true
         }
       },
       {
@@ -164,14 +350,92 @@
         }
       },
       {
-        "name": "atShipping",
+        "name": "quantity",
         "attr": {
           "type": "Quantity",
-          "column": "at_shipping"
+          "column": "quantity"
         }
       }
     ],
     "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ShipmentListItem",
+    "table": "xt.shipheadinfo",
+    "isRest": true,
+    "comment": "Shipment List Item Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "shiphead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "shiphead_number",
+          "isNaturalKey": true
+         }
+      },
+      {
+        "name": "order",
+        "toOne": {
+          "isNested": true,
+          "type": "ShipmentSalesOrder",
+          "column": "shiphead_order_id"
+         }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "shiphead_shipvia"
+        }
+      },
+      {
+        "name": "isShipped",
+        "attr": {
+          "type": "Boolean",
+          "column": "shiphead_shipped"
+        }
+      },
+      {
+        "name": "shipDate",
+        "attr": {
+          "type": "Date",
+          "column": "shiphead_shipdate"
+        }
+      },
+      {
+        "name": "isInvoiced",
+        "attr": {
+          "type": "Boolean",
+          "column": "invoiced"
+        }
+      },
+      {
+        "name": "isInvoicePosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_posted"
+        }
+      }
+    ],
     "isSystem": true
   },
   {
@@ -207,25 +471,12 @@
          }
       },
       {
-        "name": "isShipped",
-        "attr": {
-          "type": "Boolean",
-          "column": "shiphead_shipped"
-        }
-      },
-      {
-        "name": "shipVia",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_shipvia"
-        }
-      },
-      {
-        "name": "trackingNumber",
-        "attr": {
-          "type": "String",
-          "column": "shiphead_tracknum"
-        }
+        "name": "order",
+        "toOne": {
+          "isNested": true,
+          "type": "ShipmentSalesOrder",
+          "column": "shiphead_order_id"
+         }
       }
     ],
     "isSystem": true
