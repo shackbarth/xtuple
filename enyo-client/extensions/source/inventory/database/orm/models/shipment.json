@@ -188,13 +188,6 @@
         }
       },
       {
-        "name": "shipCharge",
-        "toOne": {
-          "type": "ShipCharge",
-          "column": "shiphead_shipchrg_id"
-        }
-      },
-      {
         "name": "trackingNumber",
         "attr": {
           "type": "String",

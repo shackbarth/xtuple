@@ -57,20 +57,17 @@ white:true*/
         success = options.success;
 
         // Ship shipment after successful save
-        options.success = function () {
+        options.success = function (model, resp, options) {
           var shipOptions = {},
             params = [
               that.id,
               that.get("shipDate")
             ];
-          shipOptions.success = function (resp) {
+          shipOptions.success = function (shipResp) {
             var map,
-              err,
-              fetchOptions = {
-                success: success
-              };
+              err;
             // Check for silent errors
-            if (resp < 0) {
+            if (shipResp < 0) {
               map = {
                 "-1": "xtinv1001",
                 "-5": "xtinv1002",
@@ -85,8 +82,7 @@ white:true*/
               err = XT.Error.clone(map[resp] ? map[resp] : "xt1001");
               that.trigger("invalid", that, err, options || {});
             } else {
-              // This fetch will call original `success` function
-              that.fetch(fetchOptions);
+              if (success) { success(model, resp, options); }
             }
           };
           that.dispatch("XM.Inventory", "shipShipment", params, shipOptions);
@@ -147,9 +143,9 @@ white:true*/
     /**
       @class
 
-      @extends XM.Document
+      @extends XM.Model
     */
-    XM.ShipmentLine = XM.Document.extend({
+    XM.ShipmentLine = XM.Model.extend({
 
       recordType: "XM.ShipmentLine",
 

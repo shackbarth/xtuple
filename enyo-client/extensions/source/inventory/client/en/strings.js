@@ -93,7 +93,7 @@ var lang = XT.stringsFor("en_US", {
   "_purchaseOrders": "Purchase Orders",
   "_rack": "Rack",
   "_recallShipment": "Recall Shipment",
-  "_recallShipment?": "Are you shure you want to recall this shipment?. If it has been invoiced the invoice will also be deleted.",
+  "_recallShipment?": "Are you sure you want to recall this shipment?",
   "_receiptQtyTolerancePct": "By the Following Amount (%)",
   "_receive": "Receive",
   "_receiveLocation": "Receive Location",
