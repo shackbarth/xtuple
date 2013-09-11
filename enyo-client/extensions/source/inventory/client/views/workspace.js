@@ -316,6 +316,7 @@ trailing:true, white:true, strict: false*/
       kind: "XV.Workspace",
       title: "_shipment".loc(),
       model: "XM.Shipment",
+      allowPrint: true,
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
