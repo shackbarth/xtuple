@@ -226,11 +226,15 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
               allowLayout: true},
-            {kind: "XV.ListAttr", attr: "address.formatShort"}
+            {kind: "XV.ListAttr", attr: "address", formatter: "formatAddress"}
           ]}
         ]}
       ]}
     ],
+    formatAddress: function (value, view, model) {
+      var address = model.get("address");
+      return address ? address.formatShort() : "";
+    },
     formatFirstName: function (value, view, model) {
       var lastName = (model.get('lastName') || "").trim(),
         firstName = (model.get('firstName') || "").trim();
