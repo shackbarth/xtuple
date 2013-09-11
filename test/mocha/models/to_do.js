@@ -12,7 +12,6 @@
       commentType: "XM.ToDoComment",
       autoTestAttributes: true,
       testComments: true,
-      verbose: true,
       createHash: {
         name: "ToDo Name" + Math.random(),
         dueDate: new Date()

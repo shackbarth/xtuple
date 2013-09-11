@@ -216,14 +216,20 @@ create or replace function xt.post(data_hash text) returns text as $$
       /* commit the record */
       data.commitRecord(dataHash);
 
-      /* calculate a patch of the modifed version */
-      observer = XT.jsonpatch.observe(prv);
-      dataHash.superUser = true;
-      ret = data.retrieveRecord(dataHash);
-      observer.object = ret.data;
-      delete ret.data;
-      ret.patches = XT.jsonpatch.generate(observer);
-      ret = JSON.stringify(ret, null, prettyPrint);
+      XT.debug("HERE" + JSON.stringify(dataHash));
+      if (dataHash.requery === false) {
+        /* The requestor doesn't care to know what the record looks like now */
+        ret = true;
+      } else {
+        /* calculate a patch of the modifed version */
+        observer = XT.jsonpatch.observe(prv);
+        dataHash.superUser = true;
+        ret = data.retrieveRecord(dataHash);
+        observer.object = ret.data;
+        delete ret.data;
+        ret.patches = XT.jsonpatch.generate(observer);
+        ret = JSON.stringify(ret, null, prettyPrint);
+      }
 
     /* if it's a function dispatch call then execute it */
     } else if (dispatch) {
