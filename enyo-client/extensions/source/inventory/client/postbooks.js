@@ -32,7 +32,7 @@ trailing:true, white:true*/
 
 
     configurationJson = {
-      model: "XM.Inventory",
+      model: "XM.inventory",
       name: "_inventory".loc(),
       description: "_inventoryDescription".loc(),
       workspace: "XV.InventoryWorkspace"
