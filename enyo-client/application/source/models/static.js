@@ -368,9 +368,9 @@ white:true*/
   }
 
   // Attributes for Sorting and Column Layout
-  XM.AttributeModel = Backbone.Model.extend({});
+  XM.Attribute = Backbone.Model.extend({});
   XM.AttributeCollection = Backbone.Collection.extend({
-    model: XM.AttributeModel
+    model: XM.Attribute
   });
 
 }());

@@ -490,16 +490,20 @@ regexp:true, undef:true, trailing:true, white:true */
     onSelect: "itemSelected",
     showLabel: false,
     prerender: false,
+    // TODO: this is not working with static model
+    // orderBy: [
+    //   {attribute: 'name'}
+    // ],
     /**
       This takes the list of attributes and sets up a
       collection that this picker can use.
     */
     setComponentsList: function (toSet) {
-      var sortAttr,
+      var columnAttr,
         stringToSet,
         objectToSet,
         attrs = [],
-        sorts = new XM.AttributeCollection();
+        columns = new XM.AttributeCollection();
 
       for (var i = 0; i < toSet.length; i++) {
         if (toSet[i].indexOf('.') !== -1) {
@@ -509,10 +513,10 @@ regexp:true, undef:true, trailing:true, white:true */
           stringToSet = ("_" + toSet[i]).loc();
         }
         objectToSet = { id: toSet[i], name: stringToSet };
-        sortAttr = new XM.AttributeModel(objectToSet);
-        sorts.add(sortAttr);
+        columnAttr = new XM.Attribute(objectToSet);
+        columns.add(columnAttr);
       }
-      this.setCollection(sorts);
+      this.setCollection(columns);
     }
   });
 
