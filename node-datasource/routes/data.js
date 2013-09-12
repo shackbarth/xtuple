@@ -99,24 +99,40 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       var args = [ path.join(__dirname, "../lib/ext/worker.js") ];
       var worker = child_process.spawn(process.execPath, args,
-        { stdio: [null, null, null, 'pipe'] });
+        { stdio: [null, null, null, 'pipe', 'pipe'] });
       var hexValue = "";
       var binaryData = payload.data[binaryField];
       worker.on("exit", function () {
         // test
+        X.log("final", arguments);
         var buffer = new Buffer(binaryData, "binary");
+        X.fs.writeFile("./old.txt", "\\x" + buffer.toString("hex"));
+        X.fs.writeFile("./new.txt", "\\x" + hexValue.trim());
 
         // end test
         payload.data[binaryField] = "\\x" + hexValue.trim();
         queryDatasource();
       });
       worker.stdout.on("data", function (encodedValue) {
-        // trim is necessary because we're awkwardly leveraging stdout
-        hexValue = hexValue + encodedValue.toString("utf8").trim();
+        var value = encodedValue.toString("utf8");
+        if (value === 'havelength') {
+          pipe.write(buffer);
+          return;
+
+        } else if (value.indexOf("__done__") >= 0) {
+          value = value.substring(0, value.indexOf("__done__"));
+          hexValue = hexValue + value;
+          payload.data[binaryField] = "\\x" + hexValue.trim();
+          queryDatasource();
+          worker.kill();
+          return;
+        }
+        hexValue = hexValue + value;
       });
+      var lengthPipe = worker.stdio[4];
       var pipe = worker.stdio[3];
       buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
-      pipe.write(buffer);
+      lengthPipe.write("" + buffer.length);
     } else {
       queryDatasource();
     }
