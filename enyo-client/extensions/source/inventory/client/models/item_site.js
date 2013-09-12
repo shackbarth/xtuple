@@ -59,7 +59,7 @@ white:true*/
           itemType = this.get("item.itemType"),
           costMethod = this.get("costMethod");
         if (itemType === "P") {
-          return costMethod = ["A", "S"];
+          return ["A", "S"];
         }
       },
 
