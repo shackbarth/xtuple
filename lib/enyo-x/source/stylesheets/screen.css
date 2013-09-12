@@ -37,6 +37,62 @@
   box-sizing: border-box;
 }
 /**
+  Less styles for the
+*/
+/**
+  Styles related to pickers, combo boxes, and relation widgets
+*/
+/* Picker */
+.onyx-picker-decorator .onyx-button {
+  padding: 12px 8px 12px 8px;
+}
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  text-overflow: ellipsis;
+}
+.xv-pickerwidget {
+  background-color: #ffffff;
+}
+.picker-icon {
+  position: absolute;
+  right: 0;
+  margin: 0 10px 0 2px;
+  color: #000000;
+}
+.xv-picker-button {
+  text-align: left;
+}
+.xv-picker-button .picker-content {
+  max-width: 118px;
+  overflow: hidden;
+}
+.xv-picker-label {
+  color: #000000;
+  padding: 18px 8px 8px 8px;
+  text-align: right;
+  width: 130px;
+}
+/* Combo Box */
+.xv-combobox-input {
+  font-size: medium;
+  border: 0;
+  display: inline-block;
+  outline: none;
+  width: 125px;
+}
+.xv-combobox-input-with-label {
+  padding-top: 11px;
+  padding-left: 8px;
+}
+.xv-combobox-icon {
+  margin-left: 4px;
+  height: 20px !important;
+}
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
+}
+/**
   Styles relating to the groupbox and widgets contained
     by a groupbox
 */
@@ -126,7 +182,7 @@
 .xv-groupbox .xv-moneywidget .onyx-input-decorator.xv-currency-label {
   width: 65px;
 }
-.xv-groupbox .xv-moneywidget .xv-picker {
+.xv-groupbox .xv-moneywidget .xv-picker-button {
   width: 65px;
   padding: 10px 4px;
 }
@@ -844,62 +900,6 @@
 .xv-parameter-item .xv-radiogroup {
   padding: 6px;
   margin-left: 130px;
-}
-/**
-  Less styles for the
-*/
-/**
-  Styles related to pickers, combo boxes, and relation widgets
-*/
-/* Picker */
-.onyx-picker-decorator .onyx-button {
-  padding: 12px 8px 12px 8px;
-}
-.onyx-picker .onyx-menu-item {
-  text-align: left;
-  text-overflow: ellipsis;
-}
-.xv-pickerwidget {
-  background-color: #ffffff;
-}
-.picker-icon {
-  position: absolute;
-  right: 0;
-  margin: 0 10px 0 2px;
-  color: #000000;
-}
-.xv-picker-button {
-  text-align: left;
-}
-.xv-picker-button .picker-content {
-  max-width: 118px;
-  overflow: hidden;
-}
-.xv-picker-label {
-  color: #000000;
-  padding: 18px 8px 8px 8px;
-  text-align: right;
-  width: 130px;
-}
-/* Combo Box */
-.xv-combobox-input {
-  font-size: medium;
-  border: 0;
-  display: inline-block;
-  outline: none;
-  width: 125px;
-}
-.xv-combobox-input-with-label {
-  padding-top: 11px;
-  padding-left: 8px;
-}
-.xv-combobox-icon {
-  margin-left: 4px;
-  height: 20px !important;
-}
-.xv-combobox-note {
-  padding: 14px 3px 8px 3px;
-  text-align: left;
 }
 /**
   Import for Font-Awesome icons
@@ -2502,7 +2502,7 @@ body {
 }
 .xv-list-attr.right {
   position: absolute;
-  right: 10px;
+  right: 0;
   height: 20px;
 }
 .xv-list-attr.text-align-right {
