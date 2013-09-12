@@ -350,10 +350,14 @@ trailing:true, white:true, strict: false*/
       kind: "XV.Workspace",
       title: "_shipShipment".loc(),
       model: "XM.ShipShipment",
+      reportModel: "XM.Shipment",
       saveText: "_ship".loc(),
       allowNew: false,
       hideApply: true,
       dirtyWarn: false,
+      events: {
+        onPrint: ""
+      },
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -377,7 +381,20 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
         ]}
-      ]
+      ],
+      create: function (options) {
+        this.inherited(arguments);
+        if (!this.getBiAvailable()) {
+          this.$.printPacklist.setChecked(false);
+          this.$.printPacklist.setDisabled(true);
+        }
+      },
+      save: function (options) {
+        if (this.$.printPacklist.isChecked()) {
+          this.doPrint();
+        }
+        this.inherited(arguments);
+      }
     });
 
     // ..........................................................

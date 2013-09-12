@@ -259,7 +259,7 @@ trailing:true, white:true, strict:false*/
           collection = this.$.list.getValue(),
           i;
 
-        // Update the transaction dates on all models to match 
+        // Update the transaction dates on all models to match
         // What has been selected
         for (i = 0; i < collection.length; i++) {
           collection.at(i).transactionDate = transDate;
@@ -473,7 +473,7 @@ trailing:true, white:true, strict:false*/
             data.push(model.id);
           }
         }
-                
+
         if (data.length) {
           this.spinnerShow();
           options.success = function () {
