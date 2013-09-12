@@ -90,6 +90,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       modelName = type.replace("ListItem", "").replace("Relation", "");
       fileName = requestDetails.name || type.replace("ListItem", "List").replace("Relation", "List");
       fileName += ".prpt";
+      delete requestDetails.name; // no need to put this in the query
 
       if (result.isError) {
         res.send(result);

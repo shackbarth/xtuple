@@ -350,6 +350,7 @@ trailing:true, white:true, strict: false*/
       kind: "XV.Workspace",
       title: "_shipShipment".loc(),
       model: "XM.ShipShipment",
+      reportModel: "XM.Shipment",
       saveText: "_ship".loc(),
       allowNew: false,
       hideApply: true,
@@ -390,7 +391,7 @@ trailing:true, white:true, strict: false*/
       },
       save: function (options) {
         if (this.$.printPacklist.isChecked()) {
-          this.doPrint({reportName: "Packing"});
+          this.doPrint();
         }
         this.inherited(arguments);
       }
