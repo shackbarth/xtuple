@@ -99,7 +99,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // this implementation would be simplified considerably if the pipe's end() would work the way I would expect
 
-      var args = [ path.join(__dirname, "../lib/ext/worker.js") ];
+      var args = [ path.join(__dirname, "../lib/workers/binary_to_hex_worker.js") ];
       var worker = child_process.spawn(process.execPath, args,
         { stdio: [null, null, null, 'pipe', 'pipe'] });
       var hexValue = "";
