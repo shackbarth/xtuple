@@ -16,6 +16,8 @@ require("../../../lib/tools/source/foundation");
 require("../../../lib/tools/source/ext/string");
 require("../../../lib/tools/source/ext/proto/string");
 
+X.options = X.options || {};
+
 (function () {
   "use strict";
 
@@ -69,6 +71,7 @@ require("../../../lib/tools/source/ext/proto/string");
     });
 
     it('should transform binary data if asked to', function (done) {
+      this.timeout(10000);
       var binaryData = "flerg", // okay, I know this isn't really binary, but it doesn't have to be for this test
         // mock the payload
         payload = {binaryField: "binField", data: {binField: binaryData}},
