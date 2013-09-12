@@ -217,23 +217,23 @@ trailing:true, white:true, strict: false*/
                 classes: "right hyperlink", fit: true}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "jobTitle",
-                allowLayout: true},
+              {kind: "XV.ListAttr", attr: "jobTitle", allowLayout: true, showPlaceholder: true},
               {kind: "XV.ListAttr", attr: "primaryEmail", ontap: "sendMail",
-                classes: "right hyperlink", fit: true, allowLayout: true}
+                classes: "right hyperlink", fit: true}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
-              allowLayout: true},
-            {kind: "XV.ListAttr", attr: "address", formatter: "formatAddress"}
+              allowLayout: true, showPlaceholder: true},
+            {kind: "XV.ListAttr", attr: "address", formatter: "formatAddress",
+              showPlaceholder: true}
           ]}
         ]}
       ]}
     ],
     formatAddress: function (value, view, model) {
       var address = model.get("address");
-      return address ? address.formatShort() : "";
+      return address ? address.formatShort() : "_noAddress".loc();
     },
     formatFirstName: function (value, view, model) {
       var lastName = (model.get('lastName') || "").trim(),

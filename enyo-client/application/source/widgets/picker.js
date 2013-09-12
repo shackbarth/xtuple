@@ -481,7 +481,7 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // SORT
+  // ATTRIBUTE PICKER
   //
 
   enyo.kind({
