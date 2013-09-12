@@ -4,7 +4,6 @@
     "nameSpace": "XM",
     "type": "Shipment",
     "table": "shiphead",
-    "idSequenceName": "shiphead_shiphead_id_seq",
     "lockable": true,
     "lockTable": "shiphead",
     "isRest": true,
@@ -234,14 +233,6 @@
           "type": "Number",
           "column": "cohead_number",
           "isNaturalKey": true
-        }
-      },
-      {
-        "name": "customer",
-        "toOne": {
-          "isNested": true,
-          "type": "CustomerRelation",
-          "column": "cohead_cust_id"
         }
       },
       {
