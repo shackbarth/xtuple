@@ -354,6 +354,9 @@ trailing:true, white:true, strict: false*/
       allowNew: false,
       hideApply: true,
       dirtyWarn: false,
+      events: {
+        onPrint: ""
+      },
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -377,7 +380,13 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
         ]}
-      ]
+      ],
+      save: function (options) {
+        if (this.$.printPacklist.isChecked()) {
+          this.doPrint();
+        }
+        this.inherited(arguments);
+      }
     });
 
     // ..........................................................
