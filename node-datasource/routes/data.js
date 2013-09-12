@@ -97,22 +97,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // http://blog.trevnorris.com/2013/07/child-process-multiple-file-descriptors.html
       // http://stackoverflow.com/questions/8989780/better-way-to-make-node-not-exit
 
+      // this implementation would be simplified considerably if the pipe's end() would work the way I would expect
+
       var args = [ path.join(__dirname, "../lib/ext/worker.js") ];
       var worker = child_process.spawn(process.execPath, args,
         { stdio: [null, null, null, 'pipe', 'pipe'] });
       var hexValue = "";
       var binaryData = payload.data[binaryField];
-      worker.on("exit", function () {
-        // test
-        X.log("final", arguments);
-        var buffer = new Buffer(binaryData, "binary");
-        X.fs.writeFile("./old.txt", "\\x" + buffer.toString("hex"));
-        X.fs.writeFile("./new.txt", "\\x" + hexValue.trim());
-
-        // end test
-        payload.data[binaryField] = "\\x" + hexValue.trim();
-        queryDatasource();
-      });
       worker.stdout.on("data", function (encodedValue) {
         var value = encodedValue.toString("utf8");
         if (value === 'havelength') {
