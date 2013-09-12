@@ -35,6 +35,7 @@
               navigator.setModule(moduleIndex);
               navigator.setContentPanel(panelIndex);
               list = navigator.$.contentPanels.getActive();
+              //console.log(listName);
               if (!(list instanceof XV.List)) {
                 // don't test the welcome page, dashboards, etc.
                 done();
@@ -43,7 +44,18 @@
                 // don't test the configuration list, etc.
                 done();
                 return;
+              } else if (list.getValue().model.couldCreate && !list.getValue().model.couldCreate()) {
+                //console.log("no privs");
+                // don't test ShipmentList or others that disallow creation
+                done();
+                return;
+              } else if (!list.getValue().model.couldCreate && !list.getValue().model.canCreate()) {
+                //console.log("no privs");
+                // don't test ShipmentList or others that disallow creation
+                done();
+                return;
               }
+              //console.log("testing");
               navigator.newRecord({}, {originator: {}});
               workspace = XT.app.$.postbooks.getActive().$.workspace;
               smoke.saveWorkspace(workspace, function (err, model) {
