@@ -88,7 +88,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
       modelName = type.replace("ListItem", "").replace("Relation", "");
-      fileName = type.replace("ListItem", "List").replace("Relation", "List") + ".prpt";
+      fileName = requestDetails.name || type.replace("ListItem", "List").replace("Relation", "List");
+      fileName += ".prpt";
 
       if (result.isError) {
         res.send(result);
