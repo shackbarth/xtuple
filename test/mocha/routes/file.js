@@ -16,7 +16,7 @@ require("../../../lib/tools/source/foundation");
 require("../../../lib/tools/source/ext/string");
 require("../../../lib/tools/source/ext/proto/string");
 
-X.options = {};
+X.options = X.options || {};
 
 (function () {
   "use strict";
