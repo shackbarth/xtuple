@@ -17,7 +17,21 @@ white:true*/
 
       recordType: "XM.Shipment",
 
-      numberPolicy: XM.Document.AUTO_NUMBER
+      numberPolicy: XM.Document.AUTO_NUMBER,
+
+      readOnlyAttributes: [
+        "isShipped",
+        "order"
+      ],
+
+      statusDidChange: function () {
+        XM.Document.prototype.statusDidChange.apply(this, arguments);
+        if (this.getStatus() === XM.Model.READY_CLEAN) {
+          if (this.get("isShipped")) {
+            this.setReadOnly("shipDate");
+          }
+        }
+      }
 
     });
 
@@ -59,9 +73,10 @@ white:true*/
         // Ship shipment after successful save
         options.success = function (model, resp, options) {
           var shipOptions = {},
+            shipDate = XT.date.applyTimezoneOffset(that.get("shipDate"), true),
             params = [
               that.id,
-              that.get("shipDate")
+              shipDate
             ];
           shipOptions.success = function (shipResp) {
             var map,
@@ -104,6 +119,19 @@ white:true*/
           this.setStatus(K.READY_DIRTY);
         }
       }
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.ShipShipmentLine = XM.Model.extend({
+
+      recordType: "XM.ShipShipmentLine",
+
+      parentKey: "shipment"
 
     });
 

@@ -316,17 +316,20 @@ trailing:true, white:true, strict: false*/
       kind: "XV.Workspace",
       title: "_shipment".loc(),
       model: "XM.Shipment",
+      allowPrint: true,
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
-          {kind: "XV.Groupbox", name: "mainPanel", fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup",
               classes: "in-panel", fit: true, components: [
               {kind: "XV.InputWidget", attr: "number"},
-              {kind: "XV.SalesOrderWidget", attr: "order"},
-              {kind: "XV.ShipViaCombobox", attr: "shipVia"},
               {kind: "XV.DateWidget", attr: "shipDate"},
+              {kind: "XV.CheckboxWidget", attr: "isShipped"},
+              {kind: "XV.ShipmentSalesOrderWidget", attr: "order"},
+              {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+              {kind: "XV.InputWidget", attr: "trackingNumber"},
               {kind: "XV.MoneyWidget",
                 attr: {localValue: "freight", currency: "currency"},
                 label: "_freight".loc()},
@@ -334,7 +337,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
           ]},
-          {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems", fit: true}
+          {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
         ]}
       ]
     });
@@ -358,16 +361,18 @@ trailing:true, white:true, strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup",
               classes: "in-panel", components: [
-              {kind: "XV.DateWidget", attr: "shipDate"},
               {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.DateWidget", attr: "shipDate"},
               {kind: "XV.ShipmentSalesOrderWidget", attr: "order"},
               {kind: "XV.MoneyWidget", label: "_value".loc(),
                 attr: {localValue: "value", currency: "currency"}},
               {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+              {kind: "XV.InputWidget", attr: "trackingNumber"},
               {kind: "XV.MoneyWidget", label: "_freight".loc(),
                 attr: {localValue: "freight", currency: "order.currency"}},
               {kind: "onyx.GroupboxHeader", content: "_options".loc()},
-              {kind: "XV.CheckboxWidget", label: "_printPacklist".loc()}
+              {kind: "XV.StickyCheckboxWidget", label: "_printPacklist".loc(),
+                name: "printPacklist"}
             ]}
           ]},
           {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}

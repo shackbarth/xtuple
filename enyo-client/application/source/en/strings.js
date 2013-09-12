@@ -163,6 +163,7 @@ var lang = XT.stringsFor("en_US", {
   "_created": "Created",
   "_createdBy": "Created By",
   "_credit": "Credit",
+  "_creditCard": "Credit Card",
   "_creditCards": "Credit Cards",
   "_creditHolding": "On Credit Holding",
   "_creditLimit": "Credit Limit",
