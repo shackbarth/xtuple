@@ -217,20 +217,58 @@ trailing:true, white:true, strict: false*/
                 classes: "right hyperlink", fit: true}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "jobTitle",
-                placeholder: "_noJobTitle".loc()},
+              {kind: "XV.ListAttr", attr: "jobTitle", allowLayout: true, showPlaceholder: true},
               {kind: "XV.ListAttr", attr: "primaryEmail", ontap: "sendMail",
                 classes: "right hyperlink", fit: true}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
-              placeholder: "_noAccountName".loc()},
-            {kind: "XV.ListAttr", attr: "address.formatShort"}
+              allowLayout: true, showPlaceholder: true},
+            {kind: "XV.ListAttr", attr: "address", formatter: "formatAddress",
+              showPlaceholder: true}
           ]}
         ]}
       ]}
     ],
+    formatAddress: function (value, view, model) {
+      var address = model.get("address");
+      return address ? address.formatShort() : "_noAddress".loc();
+    },
+    formatFirstName: function (value, view, model) {
+      var lastName = (model.get('lastName') || "").trim(),
+        firstName = (model.get('firstName') || "").trim();
+      if (_.isEmpty(firstName) && _.isEmpty(lastName)) {
+        view.addRemoveClass("placeholder", true);
+        value = "_noName".loc();
+      } else {
+        view.addRemoveClass("bold", _.isEmpty(lastName));
+      }
+      if (this.getToggleSelected()) {
+        view.addRemoveClass("hyperlink", true);
+      }
+      return value;
+    },
+    callPhone: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        phoneNumber = model ? model.getValue('phone') : null,
+        win;
+      if (phoneNumber) {
+        win = window.open('tel://' + phoneNumber);
+        win.close();
+      }
+      return true;
+    },
+    sendMail: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        email = model ? model.getValue('primaryEmail') : null,
+        win;
+      if (email) {
+        win = window.open('mailto:' + email);
+        win.close();
+      }
+      return true;
+    },
     vCardExport: function (inEvent) {
       var collection = this.getValue(),
           imodel = inEvent.model,
@@ -252,6 +290,7 @@ trailing:true, white:true, strict: false*/
           revision,
           end,
           stringToSave;
+
       if (model.get('lastName')) {
         name = model.get('lastName');
         fullName = model.get('lastName');
@@ -341,40 +380,6 @@ trailing:true, white:true, strict: false*/
         .f('vcfExport',
           stringToSave),
         '_newtab');
-    },
-    formatFirstName: function (value, view, model) {
-      var lastName = (model.get('lastName') || "").trim(),
-        firstName = (model.get('firstName') || "").trim();
-      if (_.isEmpty(firstName) && _.isEmpty(lastName)) {
-        view.addRemoveClass("placeholder", true);
-        value = "_noName".loc();
-      } else {
-        view.addRemoveClass("bold", _.isEmpty(lastName));
-      }
-      if (this.getToggleSelected()) {
-        view.addRemoveClass("hyperlink", true);
-      }
-      return value;
-    },
-    callPhone: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        phoneNumber = model ? model.getValue('phone') : null,
-        win;
-      if (phoneNumber) {
-        win = window.open('tel://' + phoneNumber);
-        win.close();
-      }
-      return true;
-    },
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
     }
   });
 
