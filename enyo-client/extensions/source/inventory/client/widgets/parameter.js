@@ -59,14 +59,6 @@ trailing:true, white:true, strict: false*/
     //
 
     enyo.kind({
-      name: "XV.OpenSalesOrderWidget",
-      kind: "XV.SalesOrderWidget",
-      query: {parameters: [
-        {attribute: "status", value: XM.SalesOrderBase.OPEN_STATUS},
-      ]}
-    });
-
-    enyo.kind({
       name: "XV.IssueToShippingParameters",
       kind: "XV.ParameterWidget",
       components: [
@@ -148,14 +140,14 @@ trailing:true, white:true, strict: false*/
       kind: "XV.ParameterWidget",
       components: [
         {kind: "onyx.GroupboxHeader", content: "_shipments".loc()},
-        {name: "isShipped", attr: "isShipped", label: "_showUnshipped".loc(), defaultKind: "XV.CheckboxWidget",
+        {name: "isShipped", attr: "isShipped", label: "_showShipped".loc(), defaultKind: "XV.CheckboxWidget",
           getParameter: function () {
             var param;
             if (!this.getValue()) {
               param = {
                 attribute: this.getAttr(),
                 operator: '=',
-                value: true
+                value: false
               };
             }
             return param;

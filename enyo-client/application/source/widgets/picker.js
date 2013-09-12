@@ -5,18 +5,6 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   // ..........................................................
-  // ABC CLASS
-  //
-
-  enyo.kind({
-    name: "XV.AbcClassPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.abcClass",
-    valueAttribute: "id",
-    showNone: false
-  });
-
-  // ..........................................................
   // ACCOUNT TYPE
   //
 
@@ -62,18 +50,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // CONTROL METHOD
-  //
-
-  enyo.kind({
-    name: "XV.ControlMethodPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.controlMethod",
-    valueAttribute: "id",
-    showNone: false
-  });
-
-  // ..........................................................
   // COST CATEGORY
   //
 
@@ -85,18 +61,6 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'code'}
     ]
-  });
-
-  // ..........................................................
-  // COST METHOD
-  //
-
-  enyo.kind({
-    name: "XV.CostMethodPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.costMethod",
-    valueAttribute: "id",
-    showNone: false
   });
 
   // ..........................................................
@@ -504,19 +468,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // SITE ZONE
-  //
-
-  enyo.kind({
-    name: "XV.SiteZonePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.siteZoneRelations",
-    orderBy: [
-      {attribute: 'name'}
-    ]
-  });
-
-  // ..........................................................
   // PLANNER CODE
   //
 
@@ -530,58 +481,42 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // SORT
+  // ATTRIBUTE PICKER
   //
 
   enyo.kind({
-    name: "XV.SortPicker",
-    kind: "XV.Picker",
+    name: "XV.AttributePicker",
+    kind: "XV.PickerWidget",
     onSelect: "itemSelected",
-    buildList: function (comps) {
-      this.$.picker.destroyClientControls();
-      if (!comps) {
-        return;
-      }
-      for (var i = 0; i < comps.length; i++) {
-        this.$.picker.createComponent(comps[i]);
-      }
-      this.$.picker.applyStyle("position", "absolute");
-      this.$.picker.applyStyle("z-index", "9999");
-      this.$.picker.render();
-    },
-    findItemByAttr: function (attr) {
-      for (var i = 0; i < this.$.picker.getComponents().length; i++) {
-        if (attr === this.$.picker.getComponents()[i].attr) {
-          return this.$.picker.getComponents()[i];
-        }
-      }
-    },
-    itemSelected: function (inSender, inEvent) {
-      this.attr = inEvent.originator.attr;
-    },
+    showLabel: false,
+    prerender: false,
+    // TODO: this is not working with static model
+    // orderBy: [
+    //   {attribute: 'name'}
+    // ],
+    /**
+      This takes the list of attributes and sets up a
+      collection that this picker can use.
+    */
     setComponentsList: function (toSet) {
-      var i,
-        strArray,
-        comps = [],
+      var columnAttr,
         stringToSet,
-        objectToSet;
-      comps[0] = {content: "_none".loc(), attr: "none"};
-      for (i = 0; i < toSet.length; i++) {
-        if (toSet[i].indexOf('.') === -1) {
-          stringToSet = "_" + toSet[i];
-          objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
-          comps.push(objectToSet);
+        objectToSet,
+        attrs = [],
+        columns = new XM.AttributeCollection();
+
+      for (var i = 0; i < toSet.length; i++) {
+        if (toSet[i].indexOf('.') !== -1) {
+          attrs = toSet[i].split(".");
+          stringToSet = ("_" + attrs[0]).loc() + " " + ("_" + attrs[1]).loc();
+        } else {
+          stringToSet = ("_" + toSet[i]).loc();
         }
-        else {
-          strArray = toSet[i].split('.');
-          strArray[0] = "_" + strArray[0];
-          strArray[1] = "_" + strArray[1];
-          stringToSet = strArray[0].loc() + " " + strArray[1].loc();
-          objectToSet = {content: stringToSet, attr: toSet[i]};
-          comps.push(objectToSet);
-        }
+        objectToSet = { id: toSet[i], name: stringToSet };
+        columnAttr = new XM.Attribute(objectToSet);
+        columns.add(columnAttr);
       }
-      this.buildList(comps);
+      this.setCollection(columns);
     }
   });
 
@@ -591,21 +526,10 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.SortTypePicker",
-    kind: "XV.Picker",
-    buildList: function (options) {
-      this.$.picker.createComponent({content: "_ascending".loc(), attr: "ascending"});
-      this.$.picker.createComponent({content: "_descending".loc(), attr: "descending"});
-    },
-    findItemByAttr: function (attr) {
-      for (var i = 0; i < this.$.picker.getComponents().length; i++) {
-        if (attr === this.$.picker.getComponents()[i].attr) {
-          return this.$.picker.getComponents()[i];
-        }
-      }
-    },
-    itemSelected: function (inSender, inEvent) {
-      this.attr = inEvent.originator.attr;
-    }
+    kind: "XV.PickerWidget",
+    showLabel: false,
+    prerender: false,
+    collection: "XM.sortTypes"
   });
 
   // ..........................................................

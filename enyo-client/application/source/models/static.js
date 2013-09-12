@@ -351,4 +351,26 @@ white:true*/
     XM.years.add(year);
   }
 
+  // Sort Type
+  var sortTypeJson = [
+    { id: "ascending", name: "_ascending".loc() },
+    { id: "descending", name: "_descending".loc() }
+  ];
+  XM.SortTypeModel = Backbone.Model.extend({
+  });
+  XM.SortTypeCollection = Backbone.Collection.extend({
+    model: XM.SortTypeModel
+  });
+  XM.sortTypes = new XM.SortTypeCollection();
+  for (i = 0; i < sortTypeJson.length; i++) {
+    var sortType = new XM.SortTypeModel(sortTypeJson[i]);
+    XM.sortTypes.add(sortType);
+  }
+
+  // Attributes for Sorting and Column Layout
+  XM.Attribute = Backbone.Model.extend({});
+  XM.AttributeCollection = Backbone.Collection.extend({
+    model: XM.Attribute
+  });
+
 }());

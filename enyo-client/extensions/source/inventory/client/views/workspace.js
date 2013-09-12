@@ -299,7 +299,7 @@ trailing:true, white:true, strict: false*/
         var model = this.getValue(),
           isRestricted = model ? model.get("isRestricted") : false;
         if (!isRestricted) {
-          this.$.locationItemRelationBox.setDisabled(true); 
+          this.$.locationItemRelationBox.setDisabled(true);
         }
       }
     });
@@ -316,20 +316,20 @@ trailing:true, white:true, strict: false*/
       kind: "XV.Workspace",
       title: "_shipment".loc(),
       model: "XM.Shipment",
+      allowPrint: true,
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
-          {kind: "XV.Groupbox", name: "mainPanel", fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup",
               classes: "in-panel", fit: true, components: [
               {kind: "XV.InputWidget", attr: "number"},
-              {kind: "XV.SalesOrderWidget", attr: "order"},
-              {kind: "XV.ShipViaCombobox", attr: "shipVia"},
               {kind: "XV.DateWidget", attr: "shipDate"},
-              {kind: "XV.CustomerProspectWidget", attr: "order.customer.number",
-                showAddress: true, label: "_customer".loc(),
-                nameAttribute: ""},
+              {kind: "XV.CheckboxWidget", attr: "isShipped"},
+              {kind: "XV.ShipmentSalesOrderWidget", attr: "order"},
+              {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+              {kind: "XV.InputWidget", attr: "trackingNumber"},
               {kind: "XV.MoneyWidget",
                 attr: {localValue: "freight", currency: "currency"},
                 label: "_freight".loc()},
@@ -337,13 +337,65 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
           ]},
-          {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems", fit: true}
+          {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
         ]}
       ]
     });
 
     XV.registerModelWorkspace("XM.ShipmentLine", "XV.ShipmentWorkspace");
-    XV.registerModelWorkspace("XM.Shipment", "XV.ShipmentWorkspace");
+    XV.registerModelWorkspace("XM.ShipmentListItem", "XV.ShipmentWorkspace");
+
+    enyo.kind({
+      name: "XV.ShipShipmentWorkspace",
+      kind: "XV.Workspace",
+      title: "_shipShipment".loc(),
+      model: "XM.ShipShipment",
+      reportModel: "XM.Shipment",
+      saveText: "_ship".loc(),
+      allowNew: false,
+      hideApply: true,
+      dirtyWarn: false,
+      events: {
+        onPrint: ""
+      },
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", components: [
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.DateWidget", attr: "shipDate"},
+              {kind: "XV.ShipmentSalesOrderWidget", attr: "order"},
+              {kind: "XV.MoneyWidget", label: "_value".loc(),
+                attr: {localValue: "value", currency: "currency"}},
+              {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+              {kind: "XV.InputWidget", attr: "trackingNumber"},
+              {kind: "XV.MoneyWidget", label: "_freight".loc(),
+                attr: {localValue: "freight", currency: "order.currency"}},
+              {kind: "onyx.GroupboxHeader", content: "_options".loc()},
+              {kind: "XV.StickyCheckboxWidget", label: "_printPacklist".loc(),
+                name: "printPacklist"}
+            ]}
+          ]},
+          {kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
+        ]}
+      ],
+      create: function (options) {
+        this.inherited(arguments);
+        if (!this.getBiAvailable()) {
+          this.$.printPacklist.setChecked(false);
+          this.$.printPacklist.setDisabled(true);
+        }
+      },
+      save: function (options) {
+        if (this.$.printPacklist.isChecked()) {
+          this.doPrint();
+        }
+        this.inherited(arguments);
+      }
+    });
 
     // ..........................................................
     // ITEM SITE
