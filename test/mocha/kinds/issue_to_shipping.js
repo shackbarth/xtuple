@@ -72,7 +72,6 @@
         transactionList.$.parameterWidget.$.order.$.input.itemSelected(null, myEvent);
         setTimeout(function () {
           assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.SalesOrderWorkspace");
-          done();
         }, 5000);
         //now in new Sales Order Workspace
         var salesOrder = XT.app.$.postbooks.getActive().$.workspace;
@@ -84,17 +83,12 @@
         var gridRow = salesOrder.$.salesOrderLineItemGridBox.$.editableGridRow;
 
         gridRow.$.itemSiteWidget.doValueChange({value: {item: "YTRUCK1", site: "WH1"}});
+        gridRow.$.quantityWidget.doValueChange({value: 3});
         setTimeout(function () {
-          gridRow.$.quantityWidget.doValueChange({value: 3});
-          done();
+          XT.app.$.postbooks.getActive().$.workspace.save();
         }, 5000);
         setTimeout(function () {
-          XT.app.$.postbooks.getActive().$.workspace.save(); 
-          done();
-        }, 5000);
-        setTimeout(function () {
-          XT.app.$.postbooks.previous(); 
-          done();
+          XT.app.$.postbooks.previous();
         }, 5000);
       });
 
