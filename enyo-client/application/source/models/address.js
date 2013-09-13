@@ -276,7 +276,7 @@ white:true*/
         state,
         country;
 
-      if (typeof address === 'object') {
+      if (address && typeof address === 'object') {
         city = address.get('city') || '';
         state = address.get('state') || '';
         country = address.get('country') || '';

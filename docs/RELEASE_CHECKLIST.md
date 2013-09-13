@@ -6,7 +6,7 @@
 2. Update `package.json` and `enyo-client/database/source/manifest.js` with the new version number.
 3. Make sure extension versions are up-to-date in `/extension_name/client/core.js` and
   `/extension_name/database/source/manifest.js`.
-4. Update `package.json` in the `xtuple-extensions`, `private-extensions`, and `bi` repos,
+4. Update `package.json` in the `xtuple-extensions` and `private-extensions` repos,
    and update the extension versions *if they have changed*.
 5. Update the project version number on dogfood and create new project version number for the next sprint.
 6. Look at the open pull requests for all four repositories to make sure we have pulled everything
