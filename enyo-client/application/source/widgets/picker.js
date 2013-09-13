@@ -5,6 +5,17 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   // ..........................................................
+  // ABC CLASS
+  //
+
+  enyo.kind({
+    name: "XV.AbcClassPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.abcClasses",
+    valueAttribute: "id"
+  });
+
+  // ..........................................................
   // ACCOUNT TYPE
   //
 
@@ -50,6 +61,17 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // CONTROL METHOD
+  //
+
+  enyo.kind({
+    name: "XV.ControlMethodPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.controlMethods",
+    valueAttribute: "id"
+  });
+
+  // ..........................................................
   // COST CATEGORY
   //
 
@@ -61,6 +83,17 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'code'}
     ]
+  });
+
+  // ..........................................................
+  // COST METHOD
+  //
+
+  enyo.kind({
+    name: "XV.CostMethodPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.costMethods",
+    valueAttribute: "id"
   });
 
   // ..........................................................
@@ -468,13 +501,13 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // PLANNER CODE
+  // SITE ZONE
   //
 
   enyo.kind({
-    name: "XV.SitePicker",
+    name: "XV.SiteZonePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.siteRelations",
+    collection: "XM.siteZoneRelations",
     orderBy: [
       {attribute: 'code'}
     ]
