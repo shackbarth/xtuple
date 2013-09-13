@@ -380,6 +380,7 @@ var lang = XT.stringsFor("en_US", {
   "_module": "Module",
   "_monthExpired": "Expiration Month",
   "_multiple": "Multiple",
+  "_multipleOrderQuantity": "Multiple Order Quantity",
   "_name": "Name",
   "_neither": "Neither",
   "_nextNumber": "Next Number",

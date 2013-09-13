@@ -60,7 +60,8 @@
 
                 // get the attributes
                 var attrs = _.compact(_.map(child.$, function (component) {
-                  return component.attr;
+                  // don't bother testing attrs with formatters
+                  return component.formatter ? null : component.attr;
                 }));
 
                 // the query attribute counts as an attribute
