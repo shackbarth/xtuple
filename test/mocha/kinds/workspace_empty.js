@@ -36,6 +36,10 @@
               navigator.setContentPanel(panelIndex);
               list = navigator.$.contentPanels.getActive();
               //console.log(listName);
+              if (listName !== 'itemSiteList' && listName !== 'locationList') {
+                done();
+                return;
+              }
               if (!(list instanceof XV.List)) {
                 // don't test the welcome page, dashboards, etc.
                 done();

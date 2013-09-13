@@ -565,9 +565,9 @@ trailing:true, white:true, strict:false*/
       },
       formatShipto: function (value, view, model) {
         var order = model.get("order"),
-          city = order.get("shiptoCity"),
-          state = order.get("shiptoState"),
-          country = order.get("shiptoCountry");
+          city = order && order.get("shiptoCity"),
+          state = order && order.get("shiptoState"),
+          country = order && order.get("shiptoCountry");
         return XM.Address.formatShort(city, state, country);
       },
       shipShipment: function (inEvent) {
