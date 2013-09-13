@@ -14,8 +14,8 @@
 (function () {
   "use strict";
 
-  var zombieAuth = require("../lib/zombie_auth"),
-    common = require("../lib/common"),
+  var zombieAuth = require("../../lib/zombie_auth"),
+    common = require("../../lib/common"),
     _ = require("underscore"),
     assert = require("chai").assert;
 

@@ -9,8 +9,8 @@
 
   var _ = require("underscore"),
     assert = require("chai").assert,
-    zombieAuth = require("../lib/zombie_auth"),
-    smoke = require("../lib/smoke");
+    zombieAuth = require("../../lib/zombie_auth"),
+    smoke = require("../../lib/smoke");
 
   describe('Workspaces', function () {
     this.timeout(30 * 1000);

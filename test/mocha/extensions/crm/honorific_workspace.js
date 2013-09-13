@@ -8,8 +8,8 @@
   "use strict";
 
   var _ = require("underscore"),
-    zombieAuth = require("../lib/zombie_auth"),
-    smoke = require("../lib/smoke"),
+    zombieAuth = require("../../lib/zombie_auth"),
+    smoke = require("../../lib/smoke"),
     assert = require("chai").assert;
 
   describe('Honorific Workspace', function () {
