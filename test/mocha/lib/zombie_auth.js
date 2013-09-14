@@ -127,9 +127,9 @@ Simplest possible usage:
               XZ.host = host;
               XZ.database = database;
 
-              XT.log = function (message) {
+              XT.log = function (message, obj) {
                 // log if verbose mode or if the log is an error
-                if (verboseMode || (message && message.code)) {
+                if (verboseMode || (message && message.code) || obj && obj.isError) {
                   console.log(JSON.stringify(arguments));
                 }
               };

@@ -1738,6 +1738,9 @@ trailing:true, white:true, strict: false*/
   enyo.kind({
     name: "XV.QuoteList",
     kind: "XV.SalesOrderList",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
     label: "_quotes".loc(),
     collection: "XM.QuoteListItemCollection",
     parameterWidget: "XV.QuoteListParameters",
