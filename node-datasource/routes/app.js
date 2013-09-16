@@ -85,8 +85,6 @@ var async = require("async"),
               X.log("Could not find uuid for extension " + ext.description);
               return null;
             }
-
-            return sortedModels[0] ? sortedModels[0].uuid: null;
           });
           uuids = _.compact(uuids); // eliminate any null values
           getCoreUuid('js', req.session.passport.user.organization, function (err, jsUuid) {
