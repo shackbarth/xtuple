@@ -35,9 +35,8 @@
       smoke.navigateToList(XT.app, "XV.ShipmentList");
       XT.app.$.postbooks.issueToShipping();
       var transactionList = XT.app.$.postbooks.getActive();
-      setTimeout(function () {
-        assert.equal(transactionList.kind, "XV.IssueToShipping");
-      }, 2000);
+      this.timeout(2000);
+      assert.equal(transactionList.kind, "XV.IssueToShipping");
 
       //var myOriginator = transactionList.$.parameterWidget.$.order.$.input.$.searchItem;
       //var myEvent = {originator: myOriginator};
