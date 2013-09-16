@@ -12,7 +12,7 @@
     smoke = require("../../lib/smoke"),
     testData = [
       {kind: "XV.SalesOrderList", model: "XM.SalesOrder", update: "fob"},
-      //{kind: "XV.CustomerList", model: "XM.Customer", update: "notes"},
+      {kind: "XV.CustomerList", model: "XM.Customer", update: "notes"},
       {kind: "XV.ProspectList", model: "XM.Prospect", update: "notes"},
       {kind: "XV.QuoteList", model: "XM.Quote", update: "fob"}
     ];

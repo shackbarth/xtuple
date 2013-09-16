@@ -58,7 +58,7 @@
     navigate = function () {
       if (coll.getStatus() === XM.Model.READY_CLEAN) {
         coll.off('statusChange', navigate);
-        navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: 0});
+        navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: 1});
         assert.isDefined(app.$.postbooks.getActive());
         workspace = app.$.postbooks.getActive().$.workspace;
         assert.isDefined(workspace);
@@ -122,6 +122,9 @@
         };
         workspace.value.on("lockChange", lockChange);
         workspace.value.releaseLock();
+      },
+      error: function (err) {
+        assert.fail(JSON.stringify(err));
       }
     });
   };
