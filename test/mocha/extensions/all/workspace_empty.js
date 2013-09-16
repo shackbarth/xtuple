@@ -19,7 +19,7 @@
       zombieAuth.loadApp(done);
     });
 
-    it('should be set up right', function () {
+    it('should fail predictably when appropriate', function () {
       this.timeout(30 * 1000);
       var navigator = XT.app.$.postbooks.$.navigator,
         workspace;

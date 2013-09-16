@@ -50,6 +50,7 @@
 
   var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
     var coll,
+      lockChange,
       navigate,
       navigator,
       workspace;
@@ -61,11 +62,12 @@
         assert.isDefined(app.$.postbooks.getActive());
         workspace = app.$.postbooks.getActive().$.workspace;
         assert.isDefined(workspace);
-        // give the workspace time to resolve the lock (I think).
-        // TODO: setTimeout is sloppy
-        setTimeout(function () {
+        lockChange = function () {
+          workspace.value.off("lockChange", lockChange);
+          assert.isNumber(workspace.value.lock.key);
           done(workspace);
-        }, 2000);
+        };
+        workspace.value.on("lockChange", lockChange);
       }
     };
     navigator = navigateToList(app, listKind);
@@ -100,6 +102,8 @@
       done(err);
     };
 
+    assert.isTrue(workspace.value.hasLockKey(), "Cannot acquire lock key");
+
     if (!skipValidation) {
       var validation = workspace.value.validate(workspace.value.attributes);
       assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
@@ -111,11 +115,13 @@
     //});
     workspace.save({
       // wait until the list has been refreshed with this model before we return control
-      // TODO: this is probably where we'd want to insert a callback to be notified when
-      // the lock has been released.
       modelChangeDone: function () {
+        var lockChange = function () {
+          workspace.value.off("lockChange", lockChange);
+          done(null, workspace.value);
+        };
+        workspace.value.on("lockChange", lockChange);
         workspace.value.releaseLock();
-        done(null, workspace.value);
       }
     });
   };
@@ -156,7 +162,7 @@
 
   exports.updateFirstModel = function (test) {
     it('should allow a trivial update to the first model of ' + test.kind, function (done) {
-      this.timeout(30 * 1000);
+      this.timeout(20 * 1000);
       navigateToExistingWorkspace(XT.app, test.kind, function (workspace) {
         var updateObj;
         assert.equal(workspace.value.recordType, test.model);
@@ -166,8 +172,11 @@
         } else if (typeof test.update === 'object') {
           updateObj = test.update;
         }
+        workspace.value.on("lockChange", function () {console.log("tlc", arguments); });
         // TODO: again, sloppy: probably waiting for a lock key here.
+        console.log("before");
         setTimeout(function () {
+          console.log("after");
           setWorkspaceAttributes(workspace, updateObj);
           saveWorkspace(workspace, function () {
             XT.app.$.postbooks.previous();

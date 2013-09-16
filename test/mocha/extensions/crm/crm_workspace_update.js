@@ -11,7 +11,7 @@
     zombieAuth = require("../../lib/zombie_auth"),
     smoke = require("../../lib/smoke"),
     testData = [
-      {kind: "XV.HonorificList", model: "XM.Honorific", update: "code"},
+      //{kind: "XV.HonorificList", model: "XM.Honorific", update: "code"},
       {kind: "XV.AccountList", model: "XM.Account", update: "name"},
       {kind: "XV.OpportunityList", model: "XM.Opportunity", update: "name"},
       {kind: "XV.ContactList", model: "XM.Contact", update: "firstName"},
