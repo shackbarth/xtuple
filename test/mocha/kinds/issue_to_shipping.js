@@ -35,36 +35,40 @@
       smoke.navigateToList(XT.app, "XV.ShipmentList");
       XT.app.$.postbooks.issueToShipping();
       var transactionList = XT.app.$.postbooks.getActive();
-      this.timeout(2000);
-      assert.equal(transactionList.kind, "XV.IssueToShipping");
+      setTimeout(function () {
+        assert.equal(transactionList.kind, "XV.IssueToShipping");
+      }, 2000);
 
       //var myOriginator = transactionList.$.parameterWidget.$.order.$.input.$.searchItem;
       //var myEvent = {originator: myOriginator};
       //transactionList.$.parameterWidget.$.order.$.input.itemSelected(null, myEvent);
       var orderNumber = "50271";
       transactionList.$.parameterWidget.$.order.setValue(orderNumber);
-      this.timeout(2000);
+      
       var list = XT.app.$.postbooks.getActive().$.list;
       assert.equal(list, "XV.IssueToShippingList");
-      assert.equal(transactionList.model.id, orderNumber);
-      //assert.isDefined(list.value.models);
-      /*
+      setTimeout(function () {
+        assert.equal(transactionList.model.id, orderNumber);
+      }, 2000);
+      assert.isDefined(list.value.models);
+
       //Select the first line item from list
       list.select(0);
+
       assert.equal(list.selectedIndexes(), "0");
       var myOriginantor = list.$.listItem;
       var myModel = list.value.models[0];
       var myEvent = {originantor: myOriginantor, model: myModel};
-      
+      /*
       //Click the gear, Issue Stock
       setTimeout(function () {
         list.issueStock(myEvent); 
       }, 1000);
+      /*
       setTimeout(function () {
         assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.IssueStockWorkspace");
         assert.equal(XT.app.$.postbooks.getActive().$.workspace.value.get("lineNumber"), "1");
       }, 3000);
-      this.timeout(3000);
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
       //Enter Qty of 3 and Save
       /*
