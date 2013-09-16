@@ -79,8 +79,16 @@ var async = require("async"),
             var sortedModels = _.sortBy(ext.codeInfo, function (codeInfo) {
               return -1 * getVersionSize(codeInfo.version);
             });
-            return sortedModels[0].uuid;
+            if (sortedModels[0]) {
+              return sortedModels[0].uuid;
+            } else {
+              X.log("Could not find uuid for extension " + ext.description);
+              return null;
+            }
+
+            return sortedModels[0] ? sortedModels[0].uuid: null;
           });
+          uuids = _.compact(uuids); // eliminate any null values
           getCoreUuid('js', req.session.passport.user.organization, function (err, jsUuid) {
             if (err) {
               res.send({isError: true, error: err});
