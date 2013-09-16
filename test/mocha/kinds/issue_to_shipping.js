@@ -9,108 +9,81 @@
 
   var _ = require("underscore"),
     zombieAuth = require("../lib/zombie_auth"),
-    async = require("async"),
-    submodels,
     smoke = require("../lib/smoke"),
-    assert = require("chai").assert,
-    primeSubmodels = function (done) {
-      var submodels = {};
-      async.series([
-        function (callback) {
-          submodels.customerModel = new XM.SalesCustomer();
-          submodels.customerModel.fetch({number: "TTOYS", success: function () {
-            callback();
-          }});
-        },
-        function (callback) {
-          submodels.itemModel = new XM.ItemRelation();
-          submodels.itemModel.fetch({number: "BTRUCK1", success: function () {
-            callback();
-          }});
-        },
-        function (callback) {
-          submodels.siteModel = new XM.SiteRelation();
-          submodels.siteModel.fetch({code: "WH1", success: function () {
-            callback();
-          }});
-        }
-      ], function (err) {
-        done(err, submodels);
-      });
-    };
+    crud = require("../lib/crud"),
+    modelData = require("../lib/model_data"),
+    assert = require("chai").assert;
 
   describe('Issue to Shipping Transaction', function () {
-    this.timeout(20 * 1000);
-
+    //this.timeout(20 * 1000);
     before(function (done) {
-      zombieAuth.loadApp(function () {
-        primeSubmodels(function (err, submods) {
-          submodels = submods;
-          done();
-        });
+      this.timeout(30 * 1000);
+      zombieAuth.loadApp(done);
+    });
+    /*
+    it('Using CRUD to create a new sales order', function () {
+      var salesOrderData = modelData.salesOrderData;
+      salesOrderData.skipDelete = true;
+      crud.runAllCrud(modelData.salesOrderData);
+      it('should have the sales order', function () {
+        assert.isString(salesOrderData.model.id);
       });
     });
+    */
 
-    describe('describe User navigates to Issue to Shipping', function () {
-      it('User navigates to Issue to Shipping', function (done) {
-        this.timeout(30 * 1000);
-        var navigator = XT.app.$.postbooks.$.navigator;
-        navigator.setModule(2);
-        XT.app.$.postbooks.issueToShipping();
-        setTimeout(function () {
-          assert.equal(XT.app.$.postbooks.getActive().kind, "XV.IssueToShipping");
-          done();
-        }, 5000);
+    it('User navigates to Issue to Shipping', function (done) {
+      smoke.navigateToList(XT.app, "XV.ShipmentList");
+      XT.app.$.postbooks.issueToShipping();
+      var transactionList = XT.app.$.postbooks.getActive();
+      setTimeout(function () {
+        assert.equal(transactionList.kind, "XV.IssueToShipping");
+      }, 2000);
+
+      //var myOriginator = transactionList.$.parameterWidget.$.order.$.input.$.searchItem;
+      //var myEvent = {originator: myOriginator};
+      //transactionList.$.parameterWidget.$.order.$.input.itemSelected(null, myEvent);
+      var orderNumber = "50271";
+      transactionList.$.parameterWidget.$.order.setValue(orderNumber);
+      this.timeout(2000);
+      var list = XT.app.$.postbooks.getActive().$.list;
+      assert.equal(list, "XV.IssueToShippingList");
+      assert.equal(transactionList.model.id, orderNumber);
+      //assert.isDefined(list.value.models);
+      /*
+      //Select the first line item from list
+      list.select(0);
+      assert.equal(list.selectedIndexes(), "0");
+      var myOriginantor = list.$.listItem;
+      var myModel = list.value.models[0];
+      var myEvent = {originantor: myOriginantor, model: myModel};
+      
+      //Click the gear, Issue Stock
+      setTimeout(function () {
+        list.issueStock(myEvent); 
+      }, 1000);
+      setTimeout(function () {
+        assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.IssueStockWorkspace");
+        assert.equal(XT.app.$.postbooks.getActive().$.workspace.value.get("lineNumber"), "1");
+      }, 3000);
+      this.timeout(3000);
+      var workspace = XT.app.$.postbooks.getActive().$.workspace;
+      //Enter Qty of 3 and Save
+      /*
+      this.timeout(3000);
+      XT.app.$.postbooks.getActive().$.workspace.$.toIssue.setValue(3);
+      this.timeout(3000);
+      XT.app.$.postbooks.getActive().save();
+      
+      setTimeout(function () {
+        assert.equal(list.value.models[0].attributes.atShipping, 3);
+      }, 3000); 
+      XT.app.$.postbooks.getActive().$.workspace.value.on("statusChange", function (model, status) {
+          if (status === XM.Model.DESTROYED_DIRTY) {
+            done();
+          }
       });
-
-      it('User selects New from Order widget to create a new Sales Order', function (done) {
-        //order = transactionList.$.parameterWidget.$.order
-        //order.setValue("40000")
-        var transactionList = XT.app.$.postbooks.getActive();
-        var myOriginator = transactionList.$.parameterWidget.$.order.$.input.$.newItem;
-        var myEvent = {originator: myOriginator};
-        transactionList.$.parameterWidget.$.order.$.input.itemSelected(null, myEvent);
-        setTimeout(function () {
-          assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.SalesOrderWorkspace");
-        }, 5000);
-        //now in new Sales Order Workspace
-        var salesOrder = XT.app.$.postbooks.getActive().$.workspace;
-        salesOrder.$.customerWidget.doValueChange({value: "TTOYS"});
-        salesOrder.$.sitePicker.doValueChange({value: "WH1"});
-        
-        salesOrder.$.salesOrderLineItemGridBox.newItem();
-        
-        var gridRow = salesOrder.$.salesOrderLineItemGridBox.$.editableGridRow;
-
-        gridRow.$.itemSiteWidget.doValueChange({value: {item: "YTRUCK1", site: "WH1"}});
-        gridRow.$.quantityWidget.doValueChange({value: 3});
-        setTimeout(function () {
-          XT.app.$.postbooks.getActive().$.workspace.save();
-        }, 5000);
-        setTimeout(function () {
-          XT.app.$.postbooks.previous();
-        }, 5000);
-      });
-
-      it('User selects the first line item and Issues Stock', function (done) {
-        //Select a line item and click the line item action gear to issueStock
-        var list = XT.app.$.postbooks.getActive();
-        list.$.list.select(0);
-        /*
-        var myOriginantor = list.$.list.$.listItem;
-        var myModel = list.$.list.value.models[0];
-        var myEvent = {originantor: myOriginantor, model: myModel};
-        
-        list.$.list.issueStock(myEvent);
-        var issueStock = XT.app.$.postbooks.getActive().$.workspace;
-        issueStock.$.toIssue.setValue(3);
-        issueStock.save();
-        //I have to get to the model that issueAll() is on and put a listener on it to check getStatusString === 'READY CLEAN' 
-        setTimeout(function () {
-          assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.IssueStockWorkspace");
-          done();
-        }, 5000); */
-      }); 
+      */
+      done();
     });
   });
 }());
