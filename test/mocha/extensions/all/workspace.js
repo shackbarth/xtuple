@@ -7,9 +7,9 @@
 (function () {
   "use strict";
 
-  var zombieAuth = require("../lib/zombie_auth"),
+  var zombieAuth = require("../../lib/zombie_auth"),
     _ = require("underscore"),
-    common = require("../lib/common"),
+    common = require("../../lib/common"),
     assert = require("chai").assert;
 
   describe('Workspaces', function () {

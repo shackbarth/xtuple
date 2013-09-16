@@ -8,16 +8,18 @@
   "use strict";
 
   var _ = require("underscore"),
-    zombieAuth = require("../lib/zombie_auth"),
-    smoke = require("../lib/smoke"),
+    zombieAuth = require("../../lib/zombie_auth"),
+    smoke = require("../../lib/smoke"),
     testData = [
-      {kind: "XV.SalesOrderList", model: "XM.SalesOrder", update: "fob"},
-      {kind: "XV.CustomerList", model: "XM.Customer", update: "notes"},
-      {kind: "XV.ProspectList", model: "XM.Prospect", update: "notes"},
-      {kind: "XV.QuoteList", model: "XM.Quote", update: "fob"}
+      //{kind: "XV.HonorificList", model: "XM.Honorific", update: "code"},
+      {kind: "XV.AccountList", model: "XM.Account", update: "name"},
+      {kind: "XV.OpportunityList", model: "XM.Opportunity", update: "name"},
+      {kind: "XV.ContactList", model: "XM.Contact", update: "firstName"},
+      {kind: "XV.ToDoList", model: "XM.ToDo", update: "notes"},
+      {kind: "XV.IncidentList", model: "XM.Incident", update: "notes"}
     ];
 
-  describe('Sales Workspaces', function () {
+  describe('CRM Workspaces', function () {
 
     before(function (done) {
       this.timeout(30 * 1000);
