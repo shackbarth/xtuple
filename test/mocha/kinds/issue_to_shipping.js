@@ -59,33 +59,29 @@
       var myOriginantor = list.$.listItem;
       var myModel = list.value.models[0];
       var myEvent = {originantor: myOriginantor, model: myModel};
-      /*
+
       //Click the gear, Issue Stock
       setTimeout(function () {
         list.issueStock(myEvent); 
-      }, 1000);
-      /*
+      }, 3000);
+      
       setTimeout(function () {
         assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.IssueStockWorkspace");
         assert.equal(XT.app.$.postbooks.getActive().$.workspace.value.get("lineNumber"), "1");
       }, 3000);
+
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
-      //Enter Qty of 3 and Save
-      /*
-      this.timeout(3000);
-      XT.app.$.postbooks.getActive().$.workspace.$.toIssue.setValue(3);
-      this.timeout(3000);
-      XT.app.$.postbooks.getActive().save();
       
+      //Enter Qty of 3 and Save
+      setTimeout(function () {
+        XT.app.$.postbooks.getActive().$.workspace.$.toIssue.setValue(3);
+      }, 3000);
+      setTimeout(function () {
+        XT.app.$.postbooks.getActive().save();
+      }, 3000);
       setTimeout(function () {
         assert.equal(list.value.models[0].attributes.atShipping, 3);
-      }, 3000); 
-      XT.app.$.postbooks.getActive().$.workspace.value.on("statusChange", function (model, status) {
-          if (status === XM.Model.DESTROYED_DIRTY) {
-            done();
-          }
-      });
-      */
+      }, 3000);
       done();
     });
   });
