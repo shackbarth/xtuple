@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true, setTimeout:true */
+/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true */
 
 (function () {
   "use strict";
@@ -164,7 +164,9 @@
     it('should allow a trivial update to the first model of ' + test.kind, function (done) {
       this.timeout(20 * 1000);
       navigateToExistingWorkspace(XT.app, test.kind, function (workspace) {
-        var updateObj;
+        var updateObj,
+          statusChanged;
+
         assert.equal(workspace.value.recordType, test.model);
         if (typeof test.update === 'string') {
           updateObj = {};
@@ -172,17 +174,17 @@
         } else if (typeof test.update === 'object') {
           updateObj = test.update;
         }
-        workspace.value.on("lockChange", function () {console.log("tlc", arguments); });
-        // TODO: again, sloppy: probably waiting for a lock key here.
-        console.log("before");
-        setTimeout(function () {
-          console.log("after");
-          setWorkspaceAttributes(workspace, updateObj);
-          saveWorkspace(workspace, function () {
-            XT.app.$.postbooks.previous();
-            done();
-          });
-        }, 1000);
+        statusChanged = function () {
+          if (workspace.value.getStatus() === XM.Model.READY_CLEAN) {
+            workspace.value.off("statusChange", statusChanged);
+            setWorkspaceAttributes(workspace, updateObj);
+            saveWorkspace(workspace, function () {
+              XT.app.$.postbooks.previous();
+              done();
+            });
+          }
+        };
+        workspace.value.on("statusChange", statusChanged);
       });
     });
   };
