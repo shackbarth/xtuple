@@ -21,7 +21,7 @@
       }
     };
 
-  describe('Item Group CRUD Test', function () {
+  describe.skip('Item Group CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());

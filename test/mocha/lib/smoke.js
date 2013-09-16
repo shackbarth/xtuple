@@ -49,25 +49,28 @@
   };
 
   var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
-    var navigator, workspace;
+    var coll,
+      navigate,
+      navigator,
+      workspace;
 
+    navigate = function () {
+      if (coll.getStatus() === XM.Model.READY_CLEAN) {
+        coll.off('statusChange', navigate);
+        navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: 0});
+        assert.isDefined(app.$.postbooks.getActive());
+        workspace = app.$.postbooks.getActive().$.workspace;
+        assert.isDefined(workspace);
+        // give the workspace time to resolve the lock (I think).
+        // TODO: setTimeout is sloppy
+        setTimeout(function () {
+          done(workspace);
+        }, 2000);
+      }
+    };
     navigator = navigateToList(app, listKind);
-    // TODO: we have to wait until the fetch is successful. Use a collection
-    // event instead of setTimeout.
-    //navigator.$.contentPanels.getActive().value.on('all', function () {
-    //  console.log(arguments);
-    //});
-    setTimeout(function () {
-      navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: 0});
-      assert.isDefined(app.$.postbooks.getActive());
-      workspace = app.$.postbooks.getActive().$.workspace;
-      assert.isDefined(workspace);
-      // give the workspace time to resolve the lock (I think).
-      // TODO: setTimeout is sloppy
-      setTimeout(function () {
-        done(workspace);
-      }, 2000);
-    }, 2000);
+    coll = navigator.$.contentPanels.getActive().value;
+    coll.on('statusChange', navigate);
   };
 
   /**

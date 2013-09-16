@@ -128,8 +128,12 @@ Simplest possible usage:
               XZ.database = database;
 
               XT.log = function (message, obj) {
-                // log if verbose mode or if the log is an error
-                if (verboseMode || (message && message.code) || obj && obj.isError) {
+                if (obj && obj.isError) {
+                  // errors from the datasource should cause the test to fail
+                  assert.fail(JSON.stringify(obj));
+                }
+                // log if verbose mode or if the log is a warning
+                if (verboseMode || (message && message.code)) {
                   console.log(JSON.stringify(arguments));
                 }
               };
