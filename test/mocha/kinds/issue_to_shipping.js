@@ -20,16 +20,10 @@
       this.timeout(30 * 1000);
       zombieAuth.loadApp(done);
     });
-    /*
-    it('Using CRUD to create a new sales order', function () {
-      var salesOrderData = modelData.salesOrderData;
-      salesOrderData.skipDelete = true;
-      crud.runAllCrud(modelData.salesOrderData);
-      it('should have the sales order', function () {
-        assert.isString(salesOrderData.model.id);
-      });
-    });
-    */
+
+    var salesOrderData = modelData.salesOrderData;
+    salesOrderData.skipDelete = true;
+    crud.runAllCrud(modelData.salesOrderData);
 
     it('User navigates to Issue to Shipping', function (done) {
       smoke.navigateToList(XT.app, "XV.ShipmentList");
@@ -42,7 +36,7 @@
       //var myOriginator = transactionList.$.parameterWidget.$.order.$.input.$.searchItem;
       //var myEvent = {originator: myOriginator};
       //transactionList.$.parameterWidget.$.order.$.input.itemSelected(null, myEvent);
-      var orderNumber = "50271";
+      var orderNumber = salesOrderData.model.id;
       transactionList.$.parameterWidget.$.order.setValue(orderNumber);
       
       var list = XT.app.$.postbooks.getActive().$.list;
@@ -74,14 +68,16 @@
       
       //Enter Qty of 3 and Save
       setTimeout(function () {
-        XT.app.$.postbooks.getActive().$.workspace.$.toIssue.setValue(3);
+        smoke.setWorkspaceAttributes(workspace, {toIssue: 2});
       }, 3000);
+
       setTimeout(function () {
         XT.app.$.postbooks.getActive().save();
       }, 3000);
       setTimeout(function () {
         assert.equal(list.value.models[0].attributes.atShipping, 3);
       }, 3000);
+
       done();
     });
   });
