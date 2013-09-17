@@ -165,4 +165,3 @@ Simplest possible usage:
   };
 
 }());
-

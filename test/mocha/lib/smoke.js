@@ -56,9 +56,12 @@
       workspace;
 
     navigate = function () {
+      var indexToPick;
+
       if (coll.getStatus() === XM.Model.READY_CLEAN) {
         coll.off('statusChange', navigate);
-        navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: 1});
+        indexToPick = Math.min(1, navigator.$.contentPanels.getActive().value.length - 1);
+        navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: indexToPick});
         assert.isDefined(app.$.postbooks.getActive());
         workspace = app.$.postbooks.getActive().$.workspace;
         assert.isDefined(workspace);
