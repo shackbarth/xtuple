@@ -11,7 +11,6 @@ var _ = require('underscore'),
   rimraf = require('rimraf');
 
   // TODO: relax the assumption that extension builds are js only (i.e. allow extension css)
-  // TODO: more sophisticated node caching strategy?
   // TODO: right now we just give the latest versions available in the db. This might possibly change.
 
 (function () {
@@ -80,7 +79,20 @@ var _ = require('underscore'),
             return;
           }
           var manifestDetails = JSON.parse(manifestContents);
-          callback(null, constructQuery(code, extName, manifestDetails.version, "js"));
+          if (!manifestDetails.version) {
+            // if the extensions don't declare their version, default to the package version
+            fs.readFile(path.join(__dirname, "../../package.json"), "utf8", function (err, packageJson) {
+              if (err) {
+                callback(err);
+                return;
+              }
+              var packageDetails = JSON.parse(packageJson);
+              callback(null, constructQuery(code, extName, packageDetails.version, "js"));
+            });
+
+          } else {
+            callback(null, constructQuery(code, extName, manifestDetails.version, "js"));
+          }
         });
       });
     }
