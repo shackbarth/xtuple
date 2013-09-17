@@ -1661,10 +1661,17 @@ Globalize:true */
           {kind: "XV.QuoteCommentBox", attr: "comments"},
           {kind: "XV.QuoteDocumentsBox", attr: "documents"}
         ], {owner: this});
-      this.$.lineItemsPanel.createComponents([
-        // Line Item Box
-        {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true}
-      ], {owner: this});
+      if (enyo.platform.touch) {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true}
+        ], {owner: this});
+      } else {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.QuoteLineItemGridBox", attr: "lineItems", fit: true}
+        ], {owner: this});
+      }
     }
   });
 
