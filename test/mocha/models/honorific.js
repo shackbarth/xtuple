@@ -7,14 +7,13 @@
   "use strict";
 
   var crud = require("../lib/crud"),
+    modelData = require("../lib/model_data"),
     assert = require("chai").assert;
 
   var data = exports.data = {
     recordType: "XM.Honorific",
     autoTestAttributes: true,
-    createHash: {
-      code: "Herr" + Math.random()
-    },
+    createHash: modelData.honorific,
     updateHash: {
       code: "Dame" + Math.random()
     }

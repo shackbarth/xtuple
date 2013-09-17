@@ -7,7 +7,7 @@
 (function () {
   "use strict";
 
-  var zombieAuth = require("../lib/zombie_auth"),
+  var zombieAuth = require("../../lib/zombie_auth"),
     _ = require("underscore"),
     assert = require("chai").assert,
     endsWith = function (s, key) {
