@@ -508,7 +508,7 @@ trailing:true, white:true*/
       {name: "siteCode", label: "_code".loc(), attr: "site.code"},
       {name: "siteDescription", label: "_description".loc(), attr: "site.description"},
       {kind: "onyx.GroupboxHeader", content: "_classCode".loc()},
-      {name: "classCode", label: "_equals".loc(), attr: "item.classCode.id",
+      {name: "classCode", label: "_equals".loc(), attr: "item.classCode",
         defaultKind: "XV.ClassCodePicker"},
       {name: "classCodePattern", label: "_code".loc(), attr: "item.classCode.code"},
       {kind: "onyx.GroupboxHeader", content: "_costCategory".loc()},
