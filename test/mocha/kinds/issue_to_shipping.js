@@ -54,13 +54,14 @@
           setTimeout(function () {
             var workspace = XT.app.$.postbooks.getActive().$.workspace;
             assert.equal(workspace.kind, "XV.IssueStockWorkspace");
+            assert.equal(workspace.value.getStatusString(), "READY_DIRTY");
             assert.equal(workspace.value.get("lineNumber"), "1");
             //Enter Qty 2
-            smoke.setWorkspaceAttributes(workspace, {toIssue: "7"});
+            smoke.setWorkspaceAttributes(workspace, {toIssue: "7"}); //workspace.$.toIssue.doValueChange({value: 7})
             setTimeout(function () {
               assert.equal(workspace.value.get("toIssue"), "7");
               //Save
-              workspace.save(); //smoke.saveWorkspace(workspace);
+              smoke.saveWorkspace(workspace);
 
               setTimeout(function () {
                 //assert.equal(workspace.value.getStatusString(), "READY_DIRTY");
@@ -69,19 +70,18 @@
                 //Ship
                 XT.app.$.postbooks.getActive().post();
                 setTimeout(function () { 
-                  done();/* 
                   var workspace = XT.app.$.postbooks.getActive().$.workspace;
                   assert.equal(workspace.kind, "XV.ShipShipmentWorkspace");
                   //Ship
                   workspace.save({requery: false});
                   assert.equal(XT.app.$.postbooks.getActive().kind, "XV.IssueToShipping");
-                  done();*/
+                  done();
                 }, 3000);
-              }, 5000);
-            }, 4000);
-          }, 4000);
-        }, 4000); 
-      }, 4000);
+              }, 3000);
+            }, 3000);
+          }, 3000);
+        }, 3000); 
+      }, 3000);
 
     });
   });
