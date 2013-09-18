@@ -75,6 +75,17 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
     @extends XM.Model
   */
+  XM.ExtensionDependency = XM.Model.extend(/** @lends XM.ExtensionDependency.prototype */{
+
+    recordType: 'XM.ExtensionDependency'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.UserAccountExtension = XM.Model.extend(/** @lends XM.UserAccountExtension.prototype */{
 
     recordType: 'XM.UserAccountExtension'
@@ -175,6 +186,8 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('statusChange', this.statusChanged);
       this.on('change:username', this.usernameChanged);
+      this.get("grantedExtensions").on('add', this.extensionAdded, this);
+      this.get("grantedExtensions").on('statusChange', this.extensionStatusChanged, this);
       this.statusChanged();
     },
 
@@ -201,6 +214,60 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
         };
         this.findExisting("number", value, options);
       }
+    },
+
+    extensionAdded: function () {
+      var extensionsToAdd = this.validateExtensions().add;
+      console.log("ext added. must add", extensionsToAdd);
+    },
+    extensionStatusChanged: function (model, status) {
+      var that = this,
+        callback;
+
+      if (status === XM.Model.DESTROYED_DIRTY) {
+        var extensionsToRemove = this.validateExtensions().remove;
+        if (extensionsToRemove.length === 0) {
+          return;
+        }
+
+        callback = function () {
+          console.log("ext removed. must remove", extensionsToRemove);
+          _.each(extensionsToRemove, function (removee) {
+            _.each(that.get("grantedExtensions").models, function (grantedExtension) {
+              if (grantedExtension.get("extension").id === removee && !grantedExtension.isDestroyed()) {
+                grantedExtension.destroy();
+              }
+            });
+          });
+        };
+        this.notify("_mustRemoveDependentExtensions".loc(), {
+          callback: callback
+        });
+
+      }
+    },
+    validateExtensions: function () {
+      var grantedExtensions = this.get("grantedExtensions"),
+        grantedExtensionIds = _.compact(_.map(grantedExtensions.models, function (grantedExtension) {
+          return grantedExtension.isDestroyed() ? null : grantedExtension.get("extension").id;
+        })),
+        addArray = [],
+        removeArray = [];
+
+      _.each(grantedExtensions.models, function (grantedExtension) {
+        if (grantedExtension.isDestroyed()) {
+          return;
+        }
+        var dependencies = grantedExtension.getValue("extension.dependencies");
+        _.each(dependencies.models, function (dependencyObj) {
+          var dependency = dependencyObj.get("toExtension");
+          if (!_.contains(grantedExtensionIds, dependency)) {
+            addArray.push(dependency);
+            removeArray.push(grantedExtension.get("extension").id);
+          }
+        });
+      });
+      return {add: _.unique(addArray), remove: _.unique(removeArray)};
     },
 
     findExisting: function (key, value, options) {
@@ -262,7 +329,8 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
     },
 
     validate: function (attributes, options) {
-      var isNew = this.isNew();
+      var isNew = this.isNew(),
+        extensionValidation;
 
       if ((this.get("password") || this._passwordCheck) &&
           this.get("password") !== this._passwordCheck) {
@@ -282,6 +350,13 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       // clear out passwordCheck, so as not to upset the model validation
       delete this.attributes.passwordCheck;
       delete attributes.passwordCheck;
+
+
+      extensionValidation = this.validateExtensions();
+      if (extensionValidation.add.length > 0 || extensionValidation.remove.length > 0) {
+        return XT.Error.clone('xt2018', { params: {attr: extensionValidation} });
+      }
+
 
       return XM.Model.prototype.validate.call(this, attributes, options);
     }
@@ -364,6 +439,17 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
   XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.ExtensionCollection.prototype */{
 
     model: XM.Extension
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.ExtensionDependencyCollection = XM.Collection.extend(/** @lends XM.ExtensionDependencyCollection.prototype */{
+
+    model: XM.ExtensionDependency
 
   });
 

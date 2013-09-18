@@ -105,7 +105,7 @@
        "name": "toExtension",
        "attr": {
          "type": "Number",
-         "column": "extdep_from_ext_id"
+         "column": "extdep_to_ext_id"
        }
      }
     ],
