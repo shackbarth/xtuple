@@ -35,8 +35,8 @@ regexp:true, undef:true, trailing:true, white:true */
     onSelect: "itemSelected",
     showLabel: false,
     prerender: false,
-     orderBy: [
-       {attribute: 'name'}
+    orderBy: [
+      {attribute: 'name'}
     ],
     /**
       This takes the list of attributes and sets up a
