@@ -26,6 +26,9 @@ XT = typeof XT !== 'undefined' ? XT : {};
   };
 
   XT.setVersion = function (version, qualifier) {
+    // default to the core version
+    version = version || XT.session.config.version;
+
     var aboutVersionLabel = XT.app.$.postbooks.$.navigator.$.aboutVersion,
       versionText = "_version".loc() + " " + version;
 
