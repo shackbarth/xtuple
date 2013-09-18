@@ -26,6 +26,45 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // ATTRIBUTE PICKER
+  //
+
+  enyo.kind({
+    name: "XV.AttributePicker",
+    kind: "XV.PickerWidget",
+    onSelect: "itemSelected",
+    showLabel: false,
+    prerender: false,
+    orderBy: [
+      {attribute: 'name'}
+    ],
+    /**
+      This takes the list of attributes and sets up a
+      collection that this picker can use.
+    */
+    setComponentsList: function (toSet) {
+      var columnAttr,
+        stringToSet,
+        objectToSet,
+        attrs = [],
+        columns = new XM.AttributeCollection();
+
+      for (var i = 0; i < toSet.length; i++) {
+        if (toSet[i].indexOf('.') !== -1) {
+          attrs = toSet[i].split(".");
+          stringToSet = ("_" + attrs[0]).loc() + " " + ("_" + attrs[1]).loc();
+        } else {
+          stringToSet = ("_" + toSet[i]).loc();
+        }
+        objectToSet = { id: toSet[i], name: stringToSet };
+        columnAttr = new XM.Attribute(objectToSet);
+        columns.add(columnAttr);
+      }
+      this.setCollection(columns);
+    }
+  });
+
+  // ..........................................................
   // BALANCE METHOD
   //
 
@@ -511,46 +550,6 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'code'}
     ]
-  });
-
-  // ..........................................................
-  // ATTRIBUTE PICKER
-  //
-
-  enyo.kind({
-    name: "XV.AttributePicker",
-    kind: "XV.PickerWidget",
-    onSelect: "itemSelected",
-    showLabel: false,
-    prerender: false,
-    // TODO: this is not working with static model
-    // orderBy: [
-    //   {attribute: 'name'}
-    // ],
-    /**
-      This takes the list of attributes and sets up a
-      collection that this picker can use.
-    */
-    setComponentsList: function (toSet) {
-      var columnAttr,
-        stringToSet,
-        objectToSet,
-        attrs = [],
-        columns = new XM.AttributeCollection();
-
-      for (var i = 0; i < toSet.length; i++) {
-        if (toSet[i].indexOf('.') !== -1) {
-          attrs = toSet[i].split(".");
-          stringToSet = ("_" + attrs[0]).loc() + " " + ("_" + attrs[1]).loc();
-        } else {
-          stringToSet = ("_" + toSet[i]).loc();
-        }
-        objectToSet = { id: toSet[i], name: stringToSet };
-        columnAttr = new XM.Attribute(objectToSet);
-        columns.add(columnAttr);
-      }
-      this.setCollection(columns);
-    }
   });
 
   // ..........................................................
