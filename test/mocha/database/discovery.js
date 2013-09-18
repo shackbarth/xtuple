@@ -13,7 +13,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var loginData = require('../../shared/login_data'),
     database = loginData.data.org,
     host = loginData.data.webaddress || "https://localhost",
-    discoveryPath = host + "/" + database + "/discovery/v1alpha1/apis/v1alpha1/rest";
+    delimiter = host.charAt(host.length - 1) === "/" ? "" : "/",
+    discoveryPath = host + delimiter + database + "/discovery/v1alpha1/apis/v1alpha1/rest";
 
   describe('The REST discovery document', function (done) {
     it('should load', function (done) {
