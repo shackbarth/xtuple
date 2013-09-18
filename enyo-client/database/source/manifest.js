@@ -89,6 +89,7 @@
     "xt/tables/pkgscript.sql",
     "xt/tables/pkguiform.sql",
     "xt/tables/ext.sql",
+    "xt/tables/extdep.sql",
     "xt/tables/grpext.sql",
     "xt/tables/ordtype.sql",
     "xt/tables/usrext.sql",
