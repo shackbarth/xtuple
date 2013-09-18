@@ -164,6 +164,10 @@ var _ = require('underscore'),
         var isLibOrm = extension.indexOf("lib/orm") >= 0,
           isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
             extension.indexOf("extension") < 0,
+          isCoreExtension = extension.indexOf("enyo-client") >= 0 &&
+            extension.indexOf("extension") >= 0,
+          isPublicExtension = extension.indexOf("xtuple-extensions") >= 0,
+          isPrivateExtension = extension.indexOf("private-extensions") >= 0,
           dbSourceRoot = isLibOrm ?
             path.join(extension, "source") :
             path.join(extension, "database/source"),
@@ -180,9 +184,26 @@ var _ = require('underscore'),
           return;
         }
         fs.readFile(manifestFilename, "utf8", function (err, manifestString) {
-          var manifest;
+          var manifest,
+            extensionName,
+            loadOrder,
+            extensionComment,
+            extensionLocation,
+            isFirstScript = true;
           try {
             manifest = JSON.parse(manifestString);
+            extensionName = manifest.name;
+            extensionComment = manifest.comment;
+            loadOrder = manifest.loadOrder || 999;
+            if (isCoreExtension) {
+              extensionLocation = "/core-extensions";
+            } else if (isPublicExtension) {
+              extensionLocation = "/xtuple-extensions";
+            } else if (isPrivateExtension) {
+              extensionLocation = "/private-extensions";
+            }
+
+
           } catch (error) {
             // error condition: manifest file is not properly formatted
             winston.log("Manifest is not valid JSON" + manifestFilename);
@@ -207,7 +228,8 @@ var _ = require('underscore'),
                 scriptCallback(err);
                 return;
               }
-              var noticeSql = 'do $$ plv8.elog(NOTICE, "Just ran file ' + fullFilename + '"); $$ language plv8;\n',
+              var beforeNoticeSql = 'do $$ plv8.elog(NOTICE, "About to run file ' + fullFilename + '"); $$ language plv8;\n',
+                afterNoticeSql = 'do $$ plv8.elog(NOTICE, "Just ran file ' + fullFilename + '"); $$ language plv8;\n',
                 formattingError,
                 lastChar;
 
@@ -235,13 +257,22 @@ var _ = require('underscore'),
                 scriptCallback(formattingError);
               }
 
-              // we can't put noticeSql *before* scriptContents without accounting for the very first
-              // script, which is create_plv8, and which must not have any plv8 functions before it,
-              // such as a noticeSql.
-              scriptCallback(null, scriptContents += noticeSql);
+              if (!isLibOrm || !isFirstScript) {
+                // to put a noticeSql *before* scriptContents we have to account for the very first
+                // script, which is create_plv8, and which must not have any plv8 functions before it,
+                // such as a noticeSql.
+                scriptContents = beforeNoticeSql + scriptContents;
+              }
+
+              isFirstScript = false;
+
+              scriptCallback(null, scriptContents += afterNoticeSql);
             });
           };
-          async.mapSeries(manifest.databaseScripts, getScriptSql, function (err, scriptSql) {
+          async.mapSeries(manifest.databaseScripts || [], getScriptSql, function (err, scriptSql) {
+            var registerSql,
+              dependencies;
+
             if (err) {
               extensionCallback(err);
               return;
@@ -252,12 +283,26 @@ var _ = require('underscore'),
               return memo + script;
             }, "");
 
+            if (!isLibOrm && !isApplicationCore) {
+              // register extension and dependencies
+              extensionSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
+                extensionName + '"); $$ language plv8;\n' + extensionSql;
+              registerSql = "select xt.register_extension('%@', '%@', '%@', '', %@);\n"
+                .f(extensionName, extensionComment, extensionLocation, loadOrder);
+
+              dependencies = manifest.dependencies || [];
+              _.each(dependencies, function (dependency) {
+                var dependencySql = "select xt.register_extension_dependency('%@', '%@');\n"
+                  .f(extensionName, dependency);
+                extensionSql = dependencySql + extensionSql;
+              });
+              extensionSql = registerSql + extensionSql;
+            }
             if (!isLibOrm) {
               // unless it it hasn't yet been defined (ie. lib/orm),
               // running xt.js_init() is probably a good idea.
               extensionSql = jsInit + extensionSql;
             }
-
 
             if (isApplicationCore && spec.wipeViews) {
               // If we want to pre-emptively wipe out the views, the best place to do it
