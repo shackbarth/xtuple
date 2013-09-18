@@ -25,7 +25,7 @@
     salesOrderData.skipDelete = true;
     crud.runAllCrud(modelData.salesOrderData);
 
-    it('User navigates to Issue to Shipping', function (done) {
+    it('User navigates to Issue to Shipping, selects the first line item, issue stock', function (done) {
       smoke.navigateToList(XT.app, "XV.ShipmentList");
       XT.app.$.postbooks.issueToShipping();
       var transactionList = XT.app.$.postbooks.getActive();
@@ -33,7 +33,7 @@
       
 
       //Enter the order number in the order input widget
-      var orderNumber = "50271"; //salesOrderData.model.id;
+      var orderNumber = salesOrderData.model.id;
       transactionList.$.parameterWidget.$.order.setValue(orderNumber);
       
       var list = XT.app.$.postbooks.getActive().$.list;
@@ -54,20 +54,34 @@
           setTimeout(function () {
             var workspace = XT.app.$.postbooks.getActive().$.workspace;
             assert.equal(workspace.kind, "XV.IssueStockWorkspace");
-            assert.equal(workspace.value.get("lineNumber"), "1");  
+            assert.equal(workspace.value.get("lineNumber"), "1");
             //Enter Qty 2
-            smoke.setWorkspaceAttributes(workspace, {toIssue: 2});
+            smoke.setWorkspaceAttributes(workspace, {toIssue: "7"});
             setTimeout(function () {
+              assert.equal(workspace.value.get("toIssue"), "7");
               //Save
-              smoke.saveWorkspace(workspace);
+              workspace.save(); //smoke.saveWorkspace(workspace);
+
               setTimeout(function () {
-                assert.equal(workspace.value.getStatusString(), "READY_CLEAN");
-                done();
-              }, 3000);
-            }, 3000);
-          }, 3000);
-        }, 2000);
-      }, 2000);
+                //assert.equal(workspace.value.getStatusString(), "READY_DIRTY");
+                assert.equal(XT.app.$.postbooks.getActive().kind, "XV.IssueToShipping");
+                  
+                //Ship
+                XT.app.$.postbooks.getActive().post();
+                setTimeout(function () { 
+                  done();/* 
+                  var workspace = XT.app.$.postbooks.getActive().$.workspace;
+                  assert.equal(workspace.kind, "XV.ShipShipmentWorkspace");
+                  //Ship
+                  workspace.save({requery: false});
+                  assert.equal(XT.app.$.postbooks.getActive().kind, "XV.IssueToShipping");
+                  done();*/
+                }, 3000);
+              }, 5000);
+            }, 4000);
+          }, 4000);
+        }, 4000); 
+      }, 4000);
 
     });
   });
