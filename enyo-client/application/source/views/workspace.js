@@ -1615,20 +1615,6 @@ Globalize:true */
             },
             {kind: "XV.ContactWidget", attr: "shiptoContact",
               name: "shiptoContact"},
-            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
-            {kind: "XV.SitePicker", attr: "site"},
-            {kind: "XV.DateWidget", attr: "packDate"},
-            {kind: "XV.InputWidget", attr: "fob"},
-            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
-             label: "_custPO".loc()},
-            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
-            {kind: "XV.ShipZonePicker", attr: "shipZone"},
-            {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
-            {kind: "XV.TermsPicker", attr: "terms"},
-            {kind: "XV.SalesRepPicker", attr: "salesRep"},
-            {kind: "XV.PercentWidget", attr: "commission"},
-            {kind: "XV.TaxZonePicker", attr: "taxZone"},
-            {kind: "XV.SaleTypePicker", attr: "saleType"},
             {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
             {kind: "XV.TextArea", attr: "orderNotes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
@@ -1636,6 +1622,26 @@ Globalize:true */
           ]}
         ]},
         {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
+        {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.SalesRepPicker", attr: "salesRep"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "XV.SaleTypePicker", attr: "saleType"},
+            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.DateWidget", attr: "packDate"},
+            {kind: "XV.InputWidget", attr: "fob"},
+            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
+             label: "_custPO".loc()},
+            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+            {kind: "XV.ShipZonePicker", attr: "shipZone"}
+          ]}
+        ]},
         {kind: "XV.QuoteCommentBox", attr: "comments"},
         {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}
