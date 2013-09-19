@@ -381,6 +381,7 @@ var lang = XT.stringsFor("en_US", {
   "_monthExpired": "Expiration Month",
   "_multiple": "Multiple",
   "_multipleOrderQuantity": "Multiple Order Quantity",
+  "_mustRemoveDependentExtensions": "Removing Dependent Extensions",
   "_name": "Name",
   "_neither": "Neither",
   "_nextNumber": "Next Number",

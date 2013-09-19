@@ -216,10 +216,34 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       }
     },
 
+    /**
+      Add a dependency extension if necessary
+     */
     extensionAdded: function () {
-      var extensionsToAdd = this.validateExtensions().add;
-      console.log("ext added. must add", extensionsToAdd);
+      var that = this,
+        extensionsToAdd = this.validateExtensions().add;
+
+      _.each(extensionsToAdd, function (extensionToAdd) {
+        var extensionModel = new XM.Extension(),
+          assignmentModel,
+          addAssignment = function () {
+            if (extensionModel.isReady()) {
+              extensionModel.off("statusChange", addAssignment);
+              assignmentModel = new XM.UserAccountExtension({
+                extension: extensionModel
+              }, {isNew: true});
+              that.get("grantedExtensions").add(assignmentModel);
+              that.trigger("change", that);
+            }
+          };
+
+        extensionModel.on("statusChange", addAssignment);
+        extensionModel.fetch({id: extensionToAdd});
+      });
     },
+    /**
+      Remove an extension if its dependency has been removed
+    */
     extensionStatusChanged: function (model, status) {
       var that = this,
         callback;
@@ -230,8 +254,10 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
           return;
         }
 
+        /**
+          We have to destroy an extension assignment
+        */
         callback = function () {
-          console.log("ext removed. must remove", extensionsToRemove);
           _.each(extensionsToRemove, function (removee) {
             _.each(that.get("grantedExtensions").models, function (grantedExtension) {
               if (grantedExtension.get("extension").id === removee && !grantedExtension.isDestroyed()) {
@@ -243,7 +269,6 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
         this.notify("_mustRemoveDependentExtensions".loc(), {
           callback: callback
         });
-
       }
     },
     validateExtensions: function () {

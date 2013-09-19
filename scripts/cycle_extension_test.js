@@ -32,6 +32,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
     creds = config.databaseServer;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
+    // TODO: use login_data org
     creds.database = config.datasource.testDatabase;
     callback();
   };
@@ -136,6 +137,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // TODO: testCreds, actually.
       // TODO: use options.parameters
+      // TODO: test-build should build time_expense
 
       dataSource.query(sql, options, processResponse);
     };
