@@ -203,7 +203,6 @@ var _ = require('underscore'),
               extensionLocation = "/private-extensions";
             }
 
-
           } catch (error) {
             // error condition: manifest file is not properly formatted
             winston.log("Manifest is not valid JSON" + manifestFilename);

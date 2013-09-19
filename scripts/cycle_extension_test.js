@@ -172,14 +172,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 
   var finish = function (err, res) {
-    console.log("all done", arguments);
     if (err) {
       process.exit(1);
     } else {
       process.exit(0);
     }
-    //console.log(combinations.length);
-    //console.log(dependencies);
   };
 
   async.series([

@@ -1,7 +1,6 @@
 drop function if exists xt.register_extension_dependency(text, text);
 
 create or replace function xt.register_extension_dependency(from_extension text, to_extension text) returns boolean volatile as $$
-  plv8.elog(NOTICE, "from ext is", from_extension);
 
   var sqlResolve = "select ext_id from xt.ext where ext_name = $1;",
     fromId = plv8.execute(sqlResolve, [ from_extension ])[0].ext_id,

@@ -304,7 +304,6 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       }
     },
 
-
     findExisting: function (key, value, options) {
       XM.Account.findExisting("number", value.toUpperCase(), options);
     },
@@ -386,12 +385,10 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       delete this.attributes.passwordCheck;
       delete attributes.passwordCheck;
 
-
       extensionValidation = _.bind(validateExtensions, this)();
       if (extensionValidation.add.length > 0 || extensionValidation.remove.length > 0) {
         return XT.Error.clone('xt2018', { params: {attr: extensionValidation} });
       }
-
 
       return XM.Model.prototype.validate.call(this, attributes, options);
     }
