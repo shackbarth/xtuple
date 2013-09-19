@@ -131,8 +131,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         "insert into xt.usrext (usrext_usr_username, usrext_ext_id) " +
         "select '" + loginData.username + "', ext_id from xt.ext where ext_id in (" + ids + ");";
 
-      // TODO: use options.parameters
-      // TODO: test-build should build time_expense
+      // TODO: if we ever intend this script to be used by someone without full control
+      // of the filesystem we'll want to protect ourselves from sqli by using options.parameters
 
       dataSource.query(sql, options, processResponse);
     };
