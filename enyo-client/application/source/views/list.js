@@ -26,42 +26,22 @@ trailing:true, white:true, strict: false*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "primaryContact.phone", fit: true,
-                ontap: "callPhone", classes: "right hyperlink"}
+                classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
               {kind: "XV.ListAttr", attr: "primaryContact.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+                classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "primaryContact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "primaryContact.name",
               placeholder: "_noContact".loc()},
-            {kind: "XV.ListAttr", attr: "primaryContact.address.formatShort"}
+            {kind: "XV.ListAttr", attr: "primaryContact.address"}
           ]}
         ]}
       ]}
-    ],
-    callPhone: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        phoneNumber = model ? model.getValue('primaryContact.phone') : null,
-        win;
-      if (phoneNumber) {
-        win = window.open('tel://' + phoneNumber);
-        win.close();
-      }
-      return true;
-    },
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('primaryContact.primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
-    }
+    ]
   });
 
   XV.registerModelList("XM.AccountRelation", "XV.AccountList");
@@ -213,28 +193,25 @@ trailing:true, white:true, strict: false*/
                 {kind: "XV.ListAttr", attr: "lastName", fit: true,
                   style: "padding-left: 0px;", isKey: true}
               ]},
-              {kind: "XV.ListAttr", attr: "phone", ontap: "callPhone",
-                classes: "right hyperlink", fit: true}
+              {kind: "XV.ListAttr", attr: "phone", classes: "right", fit: true,
+                allowLayout: true}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "jobTitle", allowLayout: true, showPlaceholder: true},
-              {kind: "XV.ListAttr", attr: "primaryEmail", ontap: "sendMail",
-                classes: "right hyperlink", fit: true}
+              {kind: "XV.ListAttr", attr: "jobTitle", allowLayout: true,
+                showPlaceholder: true},
+              {kind: "XV.ListAttr", attr: "primaryEmail", classes: "right", fit: true,
+                allowLayout: true}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
-              allowLayout: true, showPlaceholder: true},
-            {kind: "XV.ListAttr", attr: "address", formatter: "formatAddress",
+            {kind: "XV.ListAttr", attr: "account.name", allowLayout: true,
+              showPlaceholder: true},
+            {kind: "XV.ListAttr", attr: "address", allowLayout: true,
               showPlaceholder: true}
           ]}
         ]}
       ]}
     ],
-    formatAddress: function (value, view, model) {
-      var address = model.get("address");
-      return address ? address.formatShort() : "_noAddress".loc();
-    },
     formatFirstName: function (value, view, model) {
       var lastName = (model.get('lastName') || "").trim(),
         firstName = (model.get('firstName') || "").trim();
@@ -248,26 +225,6 @@ trailing:true, white:true, strict: false*/
         view.addRemoveClass("hyperlink", true);
       }
       return value;
-    },
-    callPhone: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        phoneNumber = model ? model.getValue('phone') : null,
-        win;
-      if (phoneNumber) {
-        win = window.open('tel://' + phoneNumber);
-        win.close();
-      }
-      return true;
-    },
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
     },
     vCardExport: function (inEvent) {
       var collection = this.getValue(),
@@ -498,27 +455,17 @@ trailing:true, white:true, strict: false*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
               {kind: "XV.ListAttr", attr: "billingContact.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+                classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "billingContact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "billingContact.name",
               placeholder: "_noContact".loc()},
-            {kind: "XV.ListAttr", attr: "billingContact.address.formatShort"}
+            {kind: "XV.ListAttr", attr: "billingContact.address"}
           ]}
         ]}
       ]}
-    ],
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('billingContact.primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
-    }
+    ]
   });
 
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
@@ -574,11 +521,11 @@ trailing:true, white:true, strict: false*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
               {kind: "XV.ListAttr", attr: "contact.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+                classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "contact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "contact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
           ]}
@@ -697,28 +644,17 @@ trailing:true, white:true, strict: false*/
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+              {kind: "XV.ListAttr", attr: "contact.primaryEmail", classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "contact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "contact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
           ]}
         ]}
       ]}
-    ],
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('contact.primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
-    }
+    ]
   });
 
   XV.registerModelList("XM.EmployeeRelation", "XV.EmployeeList");
@@ -963,7 +899,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "description"}
           ]},
           {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "account.name", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "account.name"},
             {kind: "XV.ListAttr", attr: "contact.name"}
           ]},
           {kind: "XV.ListColumn", classes: "third", components: [
@@ -1276,7 +1212,7 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "account.name",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.ListAttr", attr: "contact.name"}
           ]},
@@ -1542,14 +1478,13 @@ trailing:true, white:true, strict: false*/
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+              {kind: "XV.ListAttr", attr: "contact.primaryEmail", classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "contact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "contact.name",
               placeholder: "_noContact".loc()},
-            {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
+            {kind: "XV.ListAttr", attr: "contact.address"}
           ]}
         ]}
       ]}
@@ -1578,16 +1513,6 @@ trailing:true, white:true, strict: false*/
         success: success,
         allowNew: false
       });
-    },
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('contact.primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
     }
   });
 
@@ -1677,7 +1602,7 @@ trailing:true, white:true, strict: false*/
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "XV.ListAttr", formatter: "formatName", classes: "italic"},
+            {kind: "XV.ListAttr", formatter: "formatName"},
             {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
           ]}
         ]}
@@ -2165,7 +2090,7 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "account.name",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.ListAttr", attr: "contact.name"}
           ]},
@@ -2314,28 +2239,17 @@ trailing:true, white:true, strict: false*/
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact1.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+              {kind: "XV.ListAttr", attr: "contact1.primaryEmail", classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "contact1.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "contact1.name",
               placeholder: "_noContact".loc()},
-            {kind: "XV.ListAttr", attr: "address.formatShort"}
+            {kind: "XV.ListAttr", attr: "address"}
           ]}
         ]}
       ]}
-    ],
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('contact1.primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
-    }
+    ]
   });
 
   XV.registerModelList("XM.VendorRelation", "XV.VendorList");

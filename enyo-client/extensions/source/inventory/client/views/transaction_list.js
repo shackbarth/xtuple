@@ -235,6 +235,7 @@ trailing:true, white:true, strict:false*/
             name: "parameterWidget",
             classes: "xv-groupbox xv-parameter",
             showSaveFilter: false,
+            showLayout: false,
             defaultParameters: null,
             container: this.$.parameterScroller,
             kind: component.getParameterWidget(),
