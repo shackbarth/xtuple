@@ -11,7 +11,7 @@
   describe('The zombie login process', function () {
     it('should work if we give it enough time', function (done) {
       this.timeout(10 * 60 * 1000);
-      zombieAuth.loadApp(done);
+      zombieAuth.loadApp({refreshLogin: true, callback: done});
     });
   });
 

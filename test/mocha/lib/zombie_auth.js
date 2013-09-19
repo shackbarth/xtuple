@@ -81,7 +81,7 @@ Simplest possible usage:
     host = host || "https://localhost:443";
 
     // when we run all our tests we only want to have to log in for the first one
-    if (XT.app) {
+    if (XT.app && !options.refreshLogin) {
       if (verboseMode) {
         console.log("Using pre-existing zombie session");
       }

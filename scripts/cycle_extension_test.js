@@ -10,6 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var fs = require("fs"),
     path = require("path"),
     async = require("async"),
+    Mocha = require("mocha"),
     _ = require("underscore"),
     dataSource = require('../node-datasource/lib/ext/datasource').dataSource,
     sourceDirs = ["xtuple/enyo-client/extensions/source", "xtuple-extensions/source", "private-extensions/source"],
@@ -110,17 +111,79 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     callback();
   };
 
+  var setupEnvironmentsAndRunTests = function (masterCallback) {
+    var setupEnvironment = function (combination, callback) {
+      var options = JSON.parse(JSON.stringify(creds)),
+        processResponse = function (err, result) {
+          //console.log(arguments);
+          callback();
+        },
+        ids = "",
+        sql;
+
+      _.each(combination, function (ext) {
+        ids = ids + ext.ext_id + ", ";
+      });
+      ids = ids.substring(0, ids.length - 2);
+
+      sql = "select xt.js_init();" +
+        "delete from xt.usrext where usrext_usr_username LIKE 'admin';" +
+        "insert into xt.usrext (usrext_usr_username, usrext_ext_id) " +
+        "select 'admin', ext_id from xt.ext where ext_id in (" + ids + ");";
+
+      //console.log(sql);
+
+      // TODO: testCreds, actually.
+      // TODO: use options.parameters
+
+      dataSource.query(sql, options, processResponse);
+    };
+
+    var mocha = new Mocha();
+    var runner;
+    var runTests = function (combination, callback) {
+      console.log("running tests on", JSON.stringify(_.map(combination, function (ext) {return ext.ext_name; })));
+      // https://github.com/visionmedia/mocha/wiki/Using-mocha-programmatically
+      if (runner) {
+        runner.run(callback);
+      } else {
+        mocha.addFile(path.join(__dirname, "../test/mocha/lib/login.js"));
+        runner = mocha.run(function (failures) {
+          callback(failures);
+        });
+      }
+    };
+
+    var setupEnvironmentAndRunTests = function (combination, callback) {
+      setupEnvironment(combination, function () {
+        runTests(combination, callback);
+      });
+    };
+
+    async.mapSeries(combinations, setupEnvironmentAndRunTests, function (err, res) {
+      masterCallback(err, res);
+    });
+  };
+
+
   var finish = function (err, res) {
-    console.log(combinations.length);
+    console.log("all done", arguments);
+    if (err) {
+      process.exit(1);
+    } else {
+      process.exit(0);
+    }
+    //console.log(combinations.length);
     //console.log(dependencies);
   };
+
   async.series([
     getConfiguration,
     getExtensions,
     getDependencies,
     getCombinations,
-    screenDependencies
-
+    screenDependencies,
+    setupEnvironmentsAndRunTests
   ], finish);
 
 }());
