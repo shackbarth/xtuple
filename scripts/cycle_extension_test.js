@@ -10,6 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var fs = require("fs"),
     path = require("path"),
     async = require("async"),
+    require_uncache = require("require-uncache"),
     Mocha = require("mocha"),
     _ = require("underscore"),
     dataSource = require('../node-datasource/lib/ext/datasource').dataSource,
@@ -139,15 +140,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       dataSource.query(sql, options, processResponse);
     };
 
-    var mocha = new Mocha();
+    var mocha = new Mocha({reporter: "spec"});
     var runner;
     var runTests = function (combination, callback) {
       console.log("running tests on", JSON.stringify(_.map(combination, function (ext) {return ext.ext_name; })));
       // https://github.com/visionmedia/mocha/wiki/Using-mocha-programmatically
       if (runner) {
-        runner.run(callback);
+        //runner.run(callback);
+        mocha.run(function (failures) {
+          callback(failures);
+        });
       } else {
+        // https://github.com/visionmedia/mocha/issues/445
+        mocha.suite.on('pre-require', function (context, file) {
+          console.log("uncaching");
+          require_uncache(file);
+        });
         mocha.addFile(path.join(__dirname, "../test/mocha/lib/login.js"));
+        mocha.addFile(path.join(__dirname, "../test/mocha/extensions/all/workspace_empty.js"));
         runner = mocha.run(function (failures) {
           callback(failures);
         });
@@ -160,7 +170,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     };
 
-    async.mapSeries(combinations, setupEnvironmentAndRunTests, function (err, res) {
+    async.mapSeries(combinations.slice(0, 2), setupEnvironmentAndRunTests, function (err, res) {
       masterCallback(err, res);
     });
   };
