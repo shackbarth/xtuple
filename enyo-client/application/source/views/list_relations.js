@@ -159,6 +159,9 @@ trailing:true, white:true*/
     name: "XV.CustomerShipToListRelations",
     kind: "XV.ListRelations",
     parentKey: "customer",
+    orderBy: [
+      {attribute: "number"}
+    ],
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
