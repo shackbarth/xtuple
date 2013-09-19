@@ -19,6 +19,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 
   var creds;
+  var loginData;
   var getConfiguration = function (callback) {
     var config;
 
@@ -32,8 +33,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
     creds = config.databaseServer;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
-    // TODO: use login_data org
-    creds.database = config.datasource.testDatabase;
+
+    loginData = require(path.join(__dirname, "../test/shared/login_data")).data;
+    creds.database = loginData.org;
+
     callback();
   };
 
@@ -54,16 +57,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
     dataSource.query("select extdep_from_ext_id as from_id, extdep_to_ext_id as to_id from xt.extdep;", creds, processResponse);
   };
-
-
-  /*
-  _.each(sourceDirs, function (sourceDir) {
-    var subdirs = fs.readdirSync(path.join(__dirname, "../..", sourceDir));
-    extensions.push(subdirs);
-  });
-  extensions = _.flatten(extensions);
-  console.log(extensions);
-  */
 
   var combinations = [];
   var getCombinations = function (callback) {
@@ -86,7 +79,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     var pushToCombinations = function (combo) {
-      //console.log(combo);
       combinations.push(JSON.parse(JSON.stringify(combo))); // clone
     };
     for (var i = 1; i <= extensions.length; i++) {
@@ -129,13 +121,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       ids = ids.substring(0, ids.length - 2);
 
       sql = "select xt.js_init();" +
-        "delete from xt.usrext where usrext_usr_username LIKE 'admin';" +
+        "delete from xt.usrext where usrext_usr_username LIKE '" + loginData.username + "';" +
         "insert into xt.usrext (usrext_usr_username, usrext_ext_id) " +
-        "select 'admin', ext_id from xt.ext where ext_id in (" + ids + ");";
+        "select '" + loginData.username + "', ext_id from xt.ext where ext_id in (" + ids + ");";
 
-      //console.log(sql);
-
-      // TODO: testCreds, actually.
       // TODO: use options.parameters
       // TODO: test-build should build time_expense
 
