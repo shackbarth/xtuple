@@ -115,7 +115,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   ];
   */
   var finish = function (err, res) {
-    console.log(combinations.length);
+    console.log(combinations);
   };
   async.series([
     getConfiguration,
