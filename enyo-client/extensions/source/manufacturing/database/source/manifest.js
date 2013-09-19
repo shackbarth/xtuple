@@ -1,0 +1,5 @@
+{
+  "databaseScripts": [
+    "register.sql"
+  ]
+}
