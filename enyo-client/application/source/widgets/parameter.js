@@ -652,7 +652,7 @@ trailing:true, white:true*/
       {name: "name", label: "_name".loc(), attr: "name"},
       {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
       {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_status".loc()},
+      {name: "statusHeader", kind: "onyx.GroupboxHeader", content: "_status".loc()},
       {name: "status", label: "_status".loc(), attr: "status",
         defaultKind: "XV.ProjectStatusPicker"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
@@ -666,7 +666,22 @@ trailing:true, white:true*/
       {name: "toDueDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
         filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
-    ]
+    ],
+    /**
+      Special handling for status.
+    */
+    setParameterItemValues: function (items) {
+      this.inherited(arguments);
+      var i;
+      for (i = 0; i < items.length; i++) {
+        if (items[i].name === "status" &&
+            items[i].showing === false) {
+          this.$.showCompleted.hide();
+          this.$.statusHeader.hide();
+        }
+      }
+
+    }
   });
 
   enyo.kind({
