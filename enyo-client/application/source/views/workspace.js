@@ -1509,9 +1509,66 @@ Globalize:true */
     printOnSaveSetting: "DefaultPrintSOOnSave",
     headerAttrs: ["number", "-", "billtoName"],
     published: {
-      effectiveLabel: "_orderDate".loc(),
       effectiveKey: "orderDate"
     },
+    create: function () {
+      this.inherited(arguments);
+      var effectiveKey = this.getEffectiveKey();
+      this.build();
+      this.getComponents().forEach(function (ctl) {
+        if (ctl.kind === "XV.MoneyWidget") {
+          ctl.getAttr().effective = effectiveKey; // append this property onto the object
+        }
+      });
+      this.titleChanged();
+    },
+    customerChanged: function () {
+      var customer = this.$.customerWidget.getValue(),
+        id = customer ? customer.get("account") : -1;
+
+      this.$.billtoContact.addParameter({attribute: "account", value: id}, true);
+      this.$.shiptoContact.addParameter({attribute: "account", value: id}, true);
+      if (customer) {
+        this.$.customerShiptoWidget.setDisabled(false);
+        this.$.customerShiptoWidget.addParameter({
+          attribute: "customer",
+          value: customer.id
+        });
+        if (this.$.creditCardWidget) {
+          this.$.creditCardWidget.addParameter({attribute: "customer", value: customer.id});
+        }
+      } else {
+        this.$.customerShiptoWidget.setDisabled(true);
+      }
+    },
+    attributesChanged: function () {
+      this.inherited(arguments);
+      var model = this.getValue(),
+        customer = model ? model.get("customer") : false,
+        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
+
+      this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
+      this.customerChanged();
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.name === 'customerWidget') {
+        this.customerChanged();
+      }
+    },
+    copyBilltoToShipto: function () {
+      this.getValue().copyBilltoToShipto();
+    }
+  });
+
+  // ..........................................................
+  // QUOTE
+  //
+  enyo.kind({
+    name: "XV.QuoteWorkspace",
+    kind: "XV.SalesOrderBase",
+    title: "_quote".loc(),
+    model: "XM.Quote",
     components: [
       {kind: "Panels", name: "salesPanels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1520,12 +1577,17 @@ Globalize:true */
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
-            {kind: "XV.DateWidget", name: "dateField", attr: "", label: "_orderDate".loc()},
+            {kind: "XV.DateWidget", name: "dateField", attr: "quoteDate",
+              label: "_quoteDate".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {name: "datePanel"},
-            {kind: "XV.InputWidget", attr: "getOrderStatusString", label: "_status".loc()},
+            {kind: "XV.DateWidget", attr: "expireDate"},
+            {kind: "XV.InputWidget", attr: "getOrderStatusString",
+              label: "_status".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
-            {name: "customerWidgetContainer"},
+            {kind: "XV.CustomerProspectWidget", attr: "customer",
+              name: "customerWidget", showAddress: true,
+              label: "_customer".loc(), nameAttribute: ""
+            },
             {kind: "XV.AddressFieldsWidget", attr:
               {name: "billtoName", line1: "billtoAddress1",
                 line2: "billtoAddress2", line3: "billtoAddress3",
@@ -1561,106 +1623,28 @@ Globalize:true */
              label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
             {kind: "XV.ShipZonePicker", attr: "shipZone"},
-            {name: "shippingPanel"},
             {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
             {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
             {kind: "XV.SaleTypePicker", attr: "saleType"},
-            {name: "settingsPanel"},
             {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
             {kind: "XV.TextArea", attr: "orderNotes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
             {kind: "XV.TextArea", attr: "shipNotes", fit: true}
           ]}
         ]},
-        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"}
+        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
+        {kind: "XV.QuoteCommentBox", attr: "comments"},
+        {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}
     ],
-    create: function () {
-      this.inherited(arguments);
-      var effectiveKey = this.getEffectiveKey();
-      this.build();
-      this.$.dateField.setLabel(this.getEffectiveLabel());
-      this.$.dateField.setAttr(effectiveKey);
-      this.getComponents().forEach(function (ctl) {
-        if (ctl.kind === "XV.MoneyWidget") {
-          ctl.getAttr().effective = effectiveKey; // append this property onto the object
-        }
-      });
-      this.titleChanged();
-    },
-    customerChanged: function () {
-      var customer = this.$.customerWidget.getValue(),
-        id = customer ? customer.get("account") : -1;
-
-      this.$.billtoContact.addParameter({attribute: "account", value: id}, true);
-      this.$.shiptoContact.addParameter({attribute: "account", value: id}, true);
-      if (customer) {
-        this.$.customerShiptoWidget.setDisabled(false);
-        this.$.customerShiptoWidget.addParameter({
-          attribute: "customer",
-          value: customer.id
-        });
-        if (this.$.creditCardWidget) {
-          this.$.creditCardWidget.addParameter({attribute: "customer", value: customer.id});
-        }
-      } else {
-        this.$.customerShiptoWidget.setDisabled(true);
-      }
-    },
-    attributesChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      var model = this.getValue(),
-        customer = model ? model.get("customer") : false,
-        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
-
-      this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
-      this.customerChanged();
-    },
-    controlValueChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      if (inEvent.originator.name === 'customerWidget') {
-        this.customerChanged();
-      }
-    },
-    copyBilltoToShipto: function () {
-      this.getValue().copyBilltoToShipto();
-    }
-  });
-
-  // ..........................................................
-  // QUOTE
-  //
-  enyo.kind({
-    name: "XV.QuoteWorkspace",
-    kind: "XV.SalesOrderBase",
-    title: "_quote".loc(),
-    model: "XM.Quote",
-    effectiveLabel: "_quoteDate".loc(),
-    effectiveKey: "quoteDate",
     /**
       Loops through the components array of the parent kind and inserts the addtional
       components where they should be rendered.
     */
     build: function () {
-      this.createComponent({
-        kind: "XV.CustomerProspectWidget",
-        attr: "customer",
-        name: "customerWidget",
-        showAddress: true,
-        label: "_customer".loc(),
-        nameAttribute: "",
-        container: this.$.customerWidgetContainer
-      });
-      this.$.datePanel.createComponents([
-        {kind: "XV.DateWidget", attr: "expireDate"}
-      ], {owner: this});
-      this.$.salesPanels.createComponents([
-          {kind: "XV.QuoteCommentBox", attr: "comments"},
-          {kind: "XV.QuoteDocumentsBox", attr: "documents"}
-        ], {owner: this});
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
@@ -1819,33 +1803,89 @@ Globalize:true */
       onMagstripeCapture: "handleMagstripeCapture"
     },
     model: "XM.SalesOrder",
+    components: [
+      {kind: "Panels", name: "salesPanels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.DateWidget", name: "dateField", attr: "orderDate",
+              label: "_orderDate".loc()},
+            {kind: "XV.DateWidget", attr: "scheduleDate"},
+            {kind: "XV.InputWidget", attr: "getOrderStatusString",
+              label: "_status".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
+            {kind: "XV.SalesCustomerWidget", attr: "customer",
+               name: "customerWidget", showAddress: true,
+               label: "_customer".loc(), nameAttribute: ""
+            },
+            {kind: "XV.AddressFieldsWidget", attr:
+              {name: "billtoName", line1: "billtoAddress1",
+                line2: "billtoAddress2", line3: "billtoAddress3",
+                city: "billtoCity", state: "billtoState",
+                postalCode: "billtoPostalCode", country: "billtoCountry"}
+            },
+            {classes: "xv-button-section", components: [
+              {kind: "onyx.Button", content: "_copyToShipTo".loc(),
+                name: "copyAddressButton",
+                ontap: "copyBilltoToShipto",
+                style: "margin: 4px;"}
+            ]},
+            {kind: "XV.ContactWidget", attr: "billtoContact",
+              name: "billtoContact"},
+            {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
+            {kind: "XV.CustomerShiptoWidget", attr: "shipto",
+              showAddress: true, label: "_number".loc(),
+              nameAttribute: ""},
+            {kind: "XV.AddressFieldsWidget",
+              disabled: true,
+              attr: {name: "shiptoName", line1: "shiptoAddress1",
+                line2: "shiptoAddress2", line3: "shiptoAddress3",
+                city: "shiptoCity", state: "shiptoState",
+                postalCode: "shiptoPostalCode", country: "shiptoCountry"}
+            },
+            {kind: "XV.ContactWidget", attr: "shiptoContact",
+              name: "shiptoContact"},
+            {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
+            {kind: "XV.TextArea", attr: "orderNotes", fit: true},
+            {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
+            {kind: "XV.TextArea", attr: "shipNotes", fit: true}
+          ]}
+        ]},
+        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
+        {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.SalesRepPicker", attr: "salesRep"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "XV.SaleTypePicker", attr: "saleType"},
+            {kind: "XV.HoldTypePicker", attr: "holdType"},
+            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
+            {kind: "XV.CheckboxWidget", attr: "shipComplete"},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.DateWidget", attr: "packDate"},
+            {kind: "XV.InputWidget", attr: "fob"},
+            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
+             label: "_custPO".loc()},
+            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+            {kind: "XV.ShipZonePicker", attr: "shipZone"},
+            {kind: "XV.ShippingChargePicker", attr: "shipCharge"}
+          ]}
+        ]},
+        {kind: "XV.SalesOrderCommentBox", attr: "comments"},
+        {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
+      ]}
+    ],
     /**
       Inserts additional components where they should be rendered.
     */
     build: function () {
-      this.createComponent({
-        kind: "XV.SalesCustomerWidget",
-        attr: "customer",
-        name: "customerWidget",
-        showAddress: true,
-        label: "_customer".loc(),
-        nameAttribute: "",
-        container: this.$.customerWidgetContainer
-      });
-      this.$.datePanel.createComponents([
-        {kind: "XV.CheckboxWidget", attr: "shipComplete"}
-      ], {owner: this});
-      this.$.shippingPanel.createComponents([
-        {kind: "XV.ShippingChargePicker", attr: "shipCharge"}
-      ], {owner: this});
-      this.$.settingsPanel.createComponents([
-        {kind: "XV.HoldTypePicker", attr: "holdType"}
-      ], {owner: this});
-      this.$.salesPanels.createComponents([
-          {kind: "XV.SalesOrderCommentBox", attr: "comments"},
-          {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
-        ], {owner: this});
-
       if (XT.session.privileges.get("ProcessCreditCards") && XT.session.settings.get("CCCompany") === "Authorize.Net") {
         this.$.salesPanels.createComponent(
           {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards"},
