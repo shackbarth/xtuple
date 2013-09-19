@@ -49,7 +49,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       dependencies = result.rows;
       callback();
     };
-    dataSource.query("select extdep_from_ext_id, extdep_to_ext_id from xt.extdep;", creds, processResponse);
+    dataSource.query("select extdep_from_ext_id as from_id, extdep_to_ext_id as to_id from xt.extdep;", creds, processResponse);
   };
 
 
@@ -97,7 +97,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     combinations = _.filter(combinations, function (combo) {
       var violate = false;
       _.each(dependencies, function (dependency) {
-        if (_.contains(combo, dependency.from) && !_.contains(combo, dependency.to)) {
+        var comboIds = _.map(combo, function (ext) {
+          return ext.ext_id;
+        });
+        if (_.contains(comboIds, dependency.from_id) && !_.contains(comboIds, dependency.to_id)) {
           violate = true;
           return;
         }
@@ -107,15 +110,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     callback();
   };
 
-  // TODO: get these for real from pg
-  /*
-  var dependencies = [
-    {from: "incident_plus", to: "crm"},
-    {from: "standard", to: "inventory"}
-  ];
-  */
   var finish = function (err, res) {
-    console.log(combinations);
+    console.log(combinations.length);
+    //console.log(dependencies);
   };
   async.series([
     getConfiguration,
