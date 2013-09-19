@@ -61,12 +61,12 @@
             setTimeout(function () {
               assert.equal(workspace.value.get("toIssue"), "7");
               //Save
-              smoke.saveWorkspace(workspace);
-
+              XT.app.$.postbooks.getActive().save({requery: false});
+              XT.app.$.postbooks.getActive().close();
               setTimeout(function () {
                 //assert.equal(workspace.value.getStatusString(), "READY_DIRTY");
                 assert.equal(XT.app.$.postbooks.getActive().kind, "XV.IssueToShipping");
-                  
+                /*  
                 //Ship
                 XT.app.$.postbooks.getActive().post();
                 setTimeout(function () { 
@@ -74,11 +74,11 @@
                   assert.equal(workspace.kind, "XV.ShipShipmentWorkspace");
                   //Ship
                   workspace.save({requery: false});
-                  assert.equal(XT.app.$.postbooks.getActive().kind, "XV.IssueToShipping");
+                  assert.equal(XT.app.$.postbooks.getActive().kind, "XV.IssueToShipping");*/
                   done();
-                }, 3000);
-              }, 3000);
-            }, 3000);
+                //}, 3000);
+              }, 5000);
+            }, 5000);
           }, 3000);
         }, 3000); 
       }, 3000);
