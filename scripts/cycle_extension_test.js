@@ -8,15 +8,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   var fs = require("fs"),
+    program = require('commander'),
     path = require("path"),
     async = require("async"),
     require_uncache = require("require-uncache"),
     Mocha = require("mocha"),
     _ = require("underscore"),
     dataSource = require('../node-datasource/lib/ext/datasource').dataSource,
-    sourceDirs = ["xtuple/enyo-client/extensions/source", "xtuple-extensions/source", "private-extensions/source"],
-    options = {}; // TODO: get CLI arguments
+    sourceDirs = ["xtuple/enyo-client/extensions/source", "xtuple-extensions/source", "private-extensions/source"];
 
+  var getCommandLineArguments = function (callback) {
+    program
+      .option('-c, --config [/path/to/alternate_config.js]', 'Location of datasource config file. [config.js]')
+      .parse(process.argv);
+    callback();
+  };
 
   var creds;
   var loginData;
@@ -24,10 +30,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var config;
 
     // the backup path is not relative if it starts with a slash
-    if (options.config && options.config.substring(0, 1) === '/') {
-      config = require(options.config);
-    } else if (options.config) {
-      config = require(path.join(process.cwd(), options.config));
+    if (program.config && program.config.substring(0, 1) === '/') {
+      config = require(program.config);
+    } else if (program.config) {
+      config = require(path.join(process.cwd(), program.config));
     } else {
       config = require(path.join(__dirname, "../node-datasource/config.js"));
     }
@@ -177,6 +183,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   async.series([
+    getCommandLineArguments,
     getConfiguration,
     getExtensions,
     getDependencies,
