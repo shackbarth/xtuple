@@ -59,6 +59,9 @@ select xt.install_js('XT','Orm','xtuple', $$
       nameSpace = newJson.nameSpace,
       type = newJson.type,
       context = newJson.context,
+      table = newJson.table,
+      tableNamespace = table.indexOf(".") === -1 ? 'public' : table.beforeDot(),
+      tableName = table.indexOf(".") === -1 ? table : table.afterDot(),
       schemaSql,
       schema,
       sql;
@@ -84,49 +87,30 @@ select xt.install_js('XT','Orm','xtuple', $$
     sequence = newJson.sequence ? newJson.sequence : 0;
     isExtension = newJson.isExtension ? true : false;
 
-
     /* Validate the ORM against the database types */
     schemaSql = 'select c.relname as "type", ' +
-      '  attname as "column", ' +
-      '  typcategory as "category", ' +
-      '  n.nspname as "schema", attnum ' +
-      'from pg_class c' +
-      '  join pg_namespace n on n.oid = c.relnamespace' +
-      '  join pg_attribute a on a.attrelid = c.oid ' +
-      '  join pg_type t on a.atttypid = t.oid ' +
-      ' join xt.orm on lower(orm_namespace) = n.nspname and xt.decamelize(orm_type) = c.relname and not orm_ext ' +
-      'where n.nspname = $1 ' +
-      'and c.relname = $2 ' +
-      'and relkind = \'v\' ' +
-      'and orm_context = \'xtuple\' ' +
-      'union all ' +
-      'select c.relname as "type", ' +
-      '  attname as "column", ' +
-      '  typcategory as "category", ' +
-      '  n.nspname as "schema", attnum ' +
-      'from pg_class c' +
-      '  join pg_namespace n on n.oid = c.relnamespace' +
-      '  join pg_attribute a on a.attrelid = c.oid ' +
-      '  join pg_type t on a.atttypid = t.oid ' +
-      '  join xt.orm on lower(orm_namespace) = n.nspname and xt.decamelize(orm_type) = c.relname and not orm_ext ' +
-      /*'  join xt.ext on ext_name = orm_context ' +
-      '  left join xt.usrext on ext_id = usrext_ext_id ' +
-      '  left join xt.grpext on ext_id=grpext_ext_id ' +
-      '  left join usrgrp on usrgrp_grp_id=grpext_grp_id ' +*/
-      'where n.nspname = $1 ' +
-      'and c.relname = $2 ' +
-      ' and relkind = \'v\' ' +
-      ' and orm_context != \'xtuple\' ' +
-      /*' and (usrext_usr_username = $3 or usrgrp_username = $3) ' +*/
-      ' group by c.relname, attname, typcategory, n.nspname, attnum ' +
-      'order by type, attnum',
-    schema = plv8.execute(schemaSql, [nameSpace.toLowerCase(), XT.decamelize(type)]);
+      ' attname as "column", ' +
+      ' typcategory as "category", ' + 
+      ' n.nspname as "schema", ' +
+      ' attnum from pg_class c ' +
+      ' join pg_namespace n on n.oid = c.relnamespace ' +
+      ' join pg_attribute a on a.attrelid = c.oid ' +
+      ' join pg_type t on a.atttypid = t.oid ' +
+      ' where n.nspname = $1 ' +
+      ' and c.relname = $2;';
+    
+    XT.debug(schemaSql);
+    schema = plv8.execute(schemaSql, [tableNamespace, tableName]);
 
+    schema.map(function (colSchema) {
+      XT.debug(JSON.stringify(colSchema));
+    });
     var verifyOrmType = function (ormType, columnType) {
       var ormTypeMappings = {
         "B": ["Boolean"],
         "D": ["Date"],
-        "N": ["Number"],
+        "N": ["Cost", "ExtendedPrice", "ListPrice", "Money", "Number", 
+          "Percent", "PurchasePrice", "Quantity", "SalesPrice", "UnitRatio", "Weight"],
         "S": ["String"]
       };
       var legalValues = ormTypeMappings[columnType];
@@ -136,31 +120,25 @@ select xt.install_js('XT','Orm','xtuple', $$
       return legalValues.indexOf(ormType);
     };
     newJson.properties.map(function (ormProp) {
-      var schemaColumn = schema.filter(function (schemaCol) {
-        return schemaCol.column === ormProp.name;
-      });
-      if(schemaColumn.length === 0) {
-        throw new Error(nameSpace + "." + type + " ORM property " + ormProp.name + " is not in table");
-      }
-      schemaColumn = schemaColumn[0];
-      var schemaType = schemaColumn.category;
       if(ormProp.attr) {
+        var schemaColumn = schema.filter(function (schemaCol) {
+          return schemaCol.column === ormProp.attr.column;
+        });
+        if(schemaColumn.length === 0) {
+          throw new Error(nameSpace + "." + type + " ORM property " + ormProp.attr.column
+            + " references a column not in " + tableNamespace + "." + tableName);
+        }
+        schemaColumn = schemaColumn[0];
+        var schemaType = schemaColumn.category;
         var success = verifyOrmType(ormProp.attr.type, schemaType);
         if (success < 0) {
           throw new Error(nameSpace + "." + type + " ORM property " + ormProp.name + 
-            " type " + ormProp.attr.type + " does not match table type of " + schemaType);
+            " type " + ormProp.attr.type + " does not match table column type of " + schemaType);
         }
       }
-    });/*
-    for (var key in newJson) {
-      if(newJson.hasOwnProperty(key)) {
-        var ormColumn = newJson[key];
-        XT.debug(JSON.stringify(ormColumn));
-      }
-    }
-*/
-    /* Install the ORM */
+    });
 
+    /* Install the ORM */
 
     if(oldOrm) {
       oldJson = JSON.parse(oldOrm.json);
