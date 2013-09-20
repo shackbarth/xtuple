@@ -38,6 +38,7 @@
   "devDependencies": {
     "chai":"1.5.x",
     "mocha":"1.9.x",
+    "require-uncache":"0.0.x",
     "zombie":"1.4.x",
     "vows":"0.7.x",
     "less":"1.4.2"
