@@ -62,11 +62,14 @@ trailing:true, white:true*/
       parentKey: "opportunity",
       listRelations: "XV.OpportunitySalesListRelations",
       searchList: "XV.SalesOrderList",
+      handlers: {
+        onWorkspace: "appendWorkspace"
+      },
       /**
         Intercept new workspace and add customer.
       */
       appendWorkspace: function (inSender, inEvent) {
-        return _appendWorkspace.call(this, XM.SalesCustomerRelation, inEvent);
+        return _appendWorkspace.call(this, XM.SalesCustomer, inEvent);
       }
     });
 
