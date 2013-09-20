@@ -80,6 +80,14 @@ Simplest possible usage:
     }
     host = host || "https://localhost:443";
 
+    if (options.refreshLogin) {
+      enyo = {};
+      XT = {};
+      XM = {};
+      XV = {};
+      XZ = {};
+    }
+
     // when we run all our tests we only want to have to log in for the first one
     if (XT.app) {
       if (verboseMode) {

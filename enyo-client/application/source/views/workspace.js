@@ -315,6 +315,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     kind: "XV.Workspace",
     title: "_userPreferences".loc(),
     model: "XM.UserPreference",
+    published: {
+      singletonModel: "XT.session.preferences"
+    },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [

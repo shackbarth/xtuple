@@ -48,12 +48,12 @@ var buildAll = require('../../../scripts/lib/build_all'),
       });
 
       it('should not have non-core extensions built', function (done) {
-        var sql = "select * from pg_class where relname = 'oauth2client';";
+        var sql = "select * from xt.orm where orm_context = 'time_expense';";
 
         creds.database = databaseName;
         datasource.query(sql, creds, function (err, res) {
           assert.isNull(err);
-          assert.equal(res.rowCount, 1); // SYS only
+          assert.equal(res.rowCount, 0);
           done();
         });
       });
@@ -80,12 +80,12 @@ var buildAll = require('../../../scripts/lib/build_all'),
 
     if (testInit) {
       it('should not have non-core extensions built', function (done) {
-        var sql = "select * from pg_class where relname = 'oauth2client';";
+        var sql = "select * from xt.orm where orm_context = 'time_expense';";
 
         creds.database = databaseName;
         datasource.query(sql, creds, function (err, res) {
           assert.isNull(err);
-          assert.equal(res.rowCount, 1); // SYS only
+          assert.equal(res.rowCount, 0);
           done();
         });
       });
@@ -94,7 +94,7 @@ var buildAll = require('../../../scripts/lib/build_all'),
     it('should be able to build an extension', function (done) {
       buildAll.build({
         database: databaseName,
-        extension: path.join(__dirname + '../../../../../xtuple-extensions/source/oauth2')
+        extension: path.join(__dirname + '../../../../../xtuple-extensions/source/time_expense')
       }, function (err, res) {
         assert.isNull(err);
         done();
@@ -113,12 +113,12 @@ var buildAll = require('../../../scripts/lib/build_all'),
     });
 
     it('should have the new extension built', function (done) {
-      var sql = "select * from pg_class where relname = 'oauth2client';";
+      var sql = "select * from xt.orm where orm_context = 'time_expense';";
 
       creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
-        assert.equal(res.rowCount, 2); // SYS and XM
+        assert.notEqual(res.rowCount, 0);
         done();
       });
     });
