@@ -162,7 +162,7 @@ trailing:true, white:true*/
     });
 
     // ..........................................................
-    // INCIDENT
+    // OPPORTUNITY
     //
 
     extensions = [
