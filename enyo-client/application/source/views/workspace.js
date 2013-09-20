@@ -1,7 +1,6 @@
 /*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
-/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true,
-Globalize:true */
+/*global XV:true, XM:true, _:true, enyo:true, XT:true, onyx:true*/
 
 (function () {
 
@@ -1516,7 +1515,9 @@ Globalize:true */
     },
     create: function () {
       this.inherited(arguments);
-      var effectiveKey = this.getEffectiveKey();
+      var effectiveKey = this.getEffectiveKey(),
+        settings = this.$.settingsGroup.children[0].children,
+        last = settings[settings.length - 1];
       this.build();
       this.getComponents().forEach(function (ctl) {
         if (ctl.kind === "XV.MoneyWidget") {
@@ -1531,6 +1532,10 @@ Globalize:true */
         name: "copyAddressButton",
         ontap: "copyBilltoToShipto"
       });
+
+      // If this is the relationships header, and nothing was added by extensions
+      // then just hide it.
+      if (last instanceof onyx.GroupboxHeader) { last.hide(); }
     },
     customerChanged: function () {
       var customer = this.$.customerWidget.getValue(),
@@ -1649,7 +1654,8 @@ Globalize:true */
             {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
              label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
-            {kind: "XV.ShipZonePicker", attr: "shipZone"}
+            {kind: "XV.ShipZonePicker", attr: "shipZone"},
+            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
         {kind: "XV.QuoteCommentBox", attr: "comments"},
@@ -1887,7 +1893,8 @@ Globalize:true */
              label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
             {kind: "XV.ShipZonePicker", attr: "shipZone"},
-            {kind: "XV.ShippingChargePicker", attr: "shipCharge"}
+            {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
+            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
         {kind: "XV.SalesOrderCommentBox", attr: "comments"},

@@ -5,5 +5,7 @@ enyo.depends(
   "incident.js",
   "opportunity.js",
   "project.js",
+  "quote.js",
+  "sales_order.js",
   "to_do.js"
 );

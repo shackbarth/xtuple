@@ -1,11 +1,11 @@
 [
   {
-    "context": "sales",
+    "context": "project",
     "nameSpace": "XM",
     "type": "SalesOrder",
     "table": "xt.coheadinfo",
     "isExtension": true,
-    "comment": "Extended by Sales",
+    "comment": "Extended by Project",
     "relations": [
       {
         "column": "cohead_id",
@@ -14,10 +14,18 @@
     ],
     "properties": [
       {
-        "name": "customers",
+        "name": "project",
+        "toOne": {
+          "isNested": true,
+          "type": "ProjectRelation",
+          "column": "cohead_prj_id"
+        }
+      },
+      {
+        "name": "projects",
         "toMany": {
           "isNested": true,
-          "type": "SalesOrderCustomer",
+          "type": "SalesOrderProject",
           "column": "cohead_id",
           "inverse": "source"
         }
