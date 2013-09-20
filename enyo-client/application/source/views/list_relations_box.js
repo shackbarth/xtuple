@@ -329,42 +329,4 @@ trailing:true, white:true*/
     listRelations: "XV.LocationItemListRelations"
   });
 
-  // ..........................................................
-  // OPPORTUNITY QUOTE
-  //
-
-  enyo.kind({
-    name: "XV.OpportunityQuoteListRelationsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_quotes".loc(),
-    parentKey: "opportunity",
-    listRelations: "XV.OpportunityQuoteListRelations",
-    searchList: "XV.QuoteList"
-  });
-
-  // ..........................................................
-  // OPPORTUNITY SALES ORDER
-  //
-
-  enyo.kind({
-    name: "XV.OpportunitySalesOrderListRelationsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_salesOrders".loc(),
-    parentKey: "opportunity",
-    listRelations: "XV.OpportunityQuoteListRelations", // not a bug
-    searchList: "XV.SalesOrderList"
-  });
-
-  // ..........................................................
-  // PROSPECT QUOTE
-  //
-
-  enyo.kind({
-    name: "XV.ProspectQuoteListRelationsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_quotes".loc(),
-    parentKey: "customer", // not a bug
-    listRelations: "XV.CustomerQuoteListRelations" // not a bug
-  });
-
 }());
