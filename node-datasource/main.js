@@ -13,6 +13,7 @@ SYS = {};
   "use strict";
 
   var options = require("./lib/options"),
+    authorizeNet,
     sessionOptions = {};
 
   /**
@@ -68,6 +69,18 @@ SYS = {};
   require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
+
+  // load the encryption key, or create it if it doesn't exist
+  // it should created just once, the very first time the datasoruce starts
+  var encryptionKeyFilename = './lib/private/encryption_key.txt';
+  X.fs.exists(encryptionKeyFilename, function (exists) {
+    if (exists) {
+      X.options.encryptionKey = X.fs.readFileSync(encryptionKeyFilename, "utf8");
+    } else {
+      X.options.encryptionKey = Math.random().toString(36).slice(2);
+      X.fs.writeFile(encryptionKeyFilename, X.options.encryptionKey);
+    }
+  });
 
   sessionOptions.username = X.options.databaseServer.user;
   sessionOptions.database = X.options.datasource.databases[0];
@@ -352,6 +365,7 @@ app.get('/logout', routes.logout);
 app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
 
+app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
 app.all('/:org/data-from-key', routes.dataFromKey);

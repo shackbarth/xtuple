@@ -602,7 +602,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       if (sql.statement) {
-	plv8.execute(sql.statement, sql.values);
+        plv8.execute(sql.statement, sql.values);
       }
 
       /* Handle extensions on other tables. */
@@ -617,8 +617,8 @@ select xt.install_js('XT','Data','xtuple', $$
           }
 
           if (sql.statement) {
-	    plv8.execute(sql.statement, sql.values);
-	  }
+            plv8.execute(sql.statement, sql.values);
+          }
         }
       }
 
@@ -642,6 +642,7 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     prepareInsert: function (orm, record, params, encryptionKey) {
       var attr,
+        attributePrivileges,
         columns,
         count,
         encryptQuery,
@@ -709,11 +710,17 @@ select xt.install_js('XT','Data','xtuple', $$
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
-        canEdit = orm.privileges &&
-                  orm.privileges.attribute &&
-                  orm.privileges.attribute[prop] &&
-                  orm.privileges.attribute[prop].edit ?
-                  this.checkPrivilege(orm.privileges.attribute[prop].edit) : true;
+        attributePrivileges = orm.privileges && 
+          orm.privileges.attribute && 
+          orm.privileges.attribute[prop];
+
+        if(!attributePrivileges || attributePrivileges.create === undefined) {
+          canEdit = true;
+        } else if (typeof attributePrivileges.create === 'string') {
+          canEdit = this.checkPrivilege(attributePrivileges.create);
+        } else {
+          canEdit = attributePrivileges.create; /* if it's true or false */
+        }
 
         /* Handle fixed values. */
         if (attr.value !== undefined) {
@@ -730,7 +737,8 @@ select xt.install_js('XT','Data','xtuple', $$
             if (encryptionKey) {
               encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
               encryptSql = XT.format(encryptQuery, [record[prop], encryptionKey, 'bf']);
-              val = "(" + encryptSql + ")";
+              val = record[prop] ? plv8.execute(encryptSql)[0].encrypt : null;
+              params.columns.push("%" + count + "$I");
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("$" + count);
@@ -845,7 +853,6 @@ select xt.install_js('XT','Data','xtuple', $$
       // TODO - Improve error handling.
         plv8.elog(ERROR, "The version being updated is not current.");
       }
-
       /* Test for pessimistic lock. */
       if (orm.lockable) {
         lock = this.tryLock(lockTable, id, {key: lockKey});
@@ -938,6 +945,7 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     prepareUpdate: function (orm, record, params, encryptionKey) {
       var attr,
+        attributePrivileges,
         columnKey,
         count,
         encryptQuery,
@@ -989,11 +997,18 @@ select xt.install_js('XT','Data','xtuple', $$
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop],
-        canEdit = orm.privileges &&
-                  orm.privileges.attribute &&
-                  orm.privileges.attribute[prop] &&
-                  orm.privileges.attribute[prop].edit ?
-                  this.checkPrivilege(orm.privileges.attribute[prop].edit) : true;
+
+        attributePrivileges = orm.privileges && 
+          orm.privileges.attribute && 
+          orm.privileges.attribute[prop];
+
+        if(!attributePrivileges || attributePrivileges.update === undefined) {
+          canEdit = true;
+        } else if (typeof attributePrivileges.update === 'string') {
+          canEdit = this.checkPrivilege(attributePrivileges.update);
+        } else {
+          canEdit = attributePrivileges.update; /* if it's true or false */
+        }
 
         if (canEdit && val !== undefined && !ormp.toMany) {
 
@@ -1002,8 +1017,7 @@ select xt.install_js('XT','Data','xtuple', $$
             if (encryptionKey) {
               encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
               encryptSql = XT.format(encryptQuery, [val, encryptionKey, 'bf']);
-              val = "(" + encryptSql + ")";
-
+              val = record[prop] ? plv8.execute(encryptSql)[0].encrypt : null;
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("%" + count + "$I = $" + count);
@@ -1220,7 +1234,16 @@ select xt.install_js('XT','Data','xtuple', $$
      * @returns {Object}
      */
     decrypt: function (nameSpace, type, record, encryptionKey) {
-      var orm = this.fetchOrm(nameSpace, type);
+      var result,
+        that = this,
+        hexToAlpha = function (hex) {
+          var str = '', i;
+          for (i = 2; i < hex.length; i += 2) {
+            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+          }
+          return str;
+        },
+        orm = this.fetchOrm(nameSpace, type);
 
       for (prop in record) {
         var ormp = XT.Orm.getProperty(orm, prop.camelize());
@@ -1228,21 +1251,38 @@ select xt.install_js('XT','Data','xtuple', $$
         /* Decrypt property if applicable. */
         if (ormp && ormp.attr && ormp.attr.isEncrypted) {
           if (encryptionKey) {
-            sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
+            sql = "select formatbytea(decrypt($1, setbytea($2), 'bf')) as result";
             // TODO - Handle not found error.
 
-            if (DEBUG) {
+            if (DEBUG && false) {
+              XT.debug('decrypt prop =', prop);
               XT.debug('decrypt sql =', sql);
               XT.debug('decrypt values =', [record[prop], encryptionKey]);
             }
-            record[prop] = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
+            result = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
+            /* we SOMETIMES need to translate from hex here */
+            if(typeof result === 'string' && result.substring(0, 2) === '\\x') {
+              result = result ? hexToAlpha(result) : result;
+            }
+            /* in the special case of encrypted credit card numbers, we don't give the
+              user the full decrypted number EVEN IF they have the encryption key */
+            if(ormp.attr.isEncrypted === "credit_card_number" && result && result.length >= 4) {
+              record[prop] = "************" + result.substring(result.length - 4);
+            } else {
+              record[prop] = result;
+            }
           } else {
             record[prop] = '**********';
           }
 
         /* Check recursively. */
+        } else if (ormp.toOne && ormp.toOne.isNested) {
+          that.decrypt(nameSpace, ormp.toOne.type, record[prop], encryptionKey);
+
         } else if (ormp.toMany && ormp.toMany.isNested) {
-          this.decrypt(nameSpace, ormp.toMany.type, record[prop][i]);
+          record[prop].map(function (subdata) {
+            that.decrypt(nameSpace, ormp.toMany.type, subdata, encryptionKey);
+          });
         }
       }
 
@@ -1394,6 +1434,7 @@ select xt.install_js('XT','Data','xtuple', $$
       var nameSpace = options.nameSpace,
         type = options.type,
         query = options.query || {},
+        encryptionKey = options.encryptionKey,
         orderBy = query.orderBy,
         orm = this.fetchOrm(nameSpace, type),
         parameters = query.parameters,
@@ -1451,7 +1492,7 @@ select xt.install_js('XT','Data','xtuple', $$
       ret.data = plv8.execute(sql2, ids) || [];
 
       for (var i = 0; i < ret.data.length; i++) {
-        ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
+        ret.data[i] = this.decrypt(nameSpace, type, ret.data[i], encryptionKey);
       }
 
       this.sanitize(nameSpace, type, ret.data, options);
@@ -1591,7 +1632,6 @@ select xt.install_js('XT','Data','xtuple', $$
             throw new Error("Access Denied.");
           }
         }
-
         /* Decrypt result where applicable. */
         ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }

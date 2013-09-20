@@ -1,6 +1,6 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
+trailing:true, white:true, strict: false*/
 /*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, Globalize:true*/
 
 (function () {
@@ -26,42 +26,22 @@ trailing:true, white:true*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "primaryContact.phone", fit: true,
-                ontap: "callPhone", classes: "right hyperlink"}
+                classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
               {kind: "XV.ListAttr", attr: "primaryContact.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+                classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "primaryContact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "primaryContact.name",
               placeholder: "_noContact".loc()},
-            {kind: "XV.ListAttr", attr: "primaryContact.address.formatShort"}
+            {kind: "XV.ListAttr", attr: "primaryContact.address"}
           ]}
         ]}
       ]}
-    ],
-    callPhone: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        phoneNumber = model ? model.getValue('primaryContact.phone') : null,
-        win;
-      if (phoneNumber) {
-        win = window.open('tel://' + phoneNumber);
-        win.close();
-      }
-      return true;
-    },
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('primaryContact.primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
-    }
+    ]
   });
 
   XV.registerModelList("XM.AccountRelation", "XV.AccountList");
@@ -213,24 +193,39 @@ trailing:true, white:true*/
                 {kind: "XV.ListAttr", attr: "lastName", fit: true,
                   style: "padding-left: 0px;", isKey: true}
               ]},
-              {kind: "XV.ListAttr", attr: "phone", ontap: "callPhone",
-                classes: "right hyperlink", fit: true}
+              {kind: "XV.ListAttr", attr: "phone", classes: "right", fit: true,
+                allowLayout: true}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "jobTitle",
-                placeholder: "_noJobTitle".loc()},
-              {kind: "XV.ListAttr", attr: "primaryEmail", ontap: "sendMail",
-                classes: "right hyperlink", fit: true}
+              {kind: "XV.ListAttr", attr: "jobTitle", allowLayout: true,
+                showPlaceholder: true},
+              {kind: "XV.ListAttr", attr: "primaryEmail", classes: "right", fit: true,
+                allowLayout: true}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
-              placeholder: "_noAccountName".loc()},
-            {kind: "XV.ListAttr", attr: "address.formatShort"}
+            {kind: "XV.ListAttr", attr: "account.name", allowLayout: true,
+              showPlaceholder: true},
+            {kind: "XV.ListAttr", attr: "address", allowLayout: true,
+              showPlaceholder: true}
           ]}
         ]}
       ]}
     ],
+    formatFirstName: function (value, view, model) {
+      var lastName = (model.get('lastName') || "").trim(),
+        firstName = (model.get('firstName') || "").trim();
+      if (_.isEmpty(firstName) && _.isEmpty(lastName)) {
+        view.addRemoveClass("placeholder", true);
+        value = "_noName".loc();
+      } else {
+        view.addRemoveClass("bold", _.isEmpty(lastName));
+      }
+      if (this.getToggleSelected()) {
+        view.addRemoveClass("hyperlink", true);
+      }
+      return value;
+    },
     vCardExport: function (inEvent) {
       var collection = this.getValue(),
           imodel = inEvent.model,
@@ -252,6 +247,7 @@ trailing:true, white:true*/
           revision,
           end,
           stringToSave;
+
       if (model.get('lastName')) {
         name = model.get('lastName');
         fullName = model.get('lastName');
@@ -299,7 +295,7 @@ trailing:true, white:true*/
       }
       email = model.get('primaryEmail');
       website = model.get('webAddress');
-      revision = dateFormat(new Date(), "yyyy-mm-dd");
+      revision = Globalize.format(new Date(), "yyyy-MM-dd");
       end = "VCARD";
 
       stringToSave = "BEGIN:" + begin + "%0A";
@@ -341,40 +337,6 @@ trailing:true, white:true*/
         .f('vcfExport',
           stringToSave),
         '_newtab');
-    },
-    formatFirstName: function (value, view, model) {
-      var lastName = (model.get('lastName') || "").trim(),
-        firstName = (model.get('firstName') || "").trim();
-      if (_.isEmpty(firstName) && _.isEmpty(lastName)) {
-        view.addRemoveClass("placeholder", true);
-        value = "_noName".loc();
-      } else {
-        view.addRemoveClass("bold", _.isEmpty(lastName));
-      }
-      if (this.getToggleSelected()) {
-        view.addRemoveClass("hyperlink", true);
-      }
-      return value;
-    },
-    callPhone: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        phoneNumber = model ? model.getValue('phone') : null,
-        win;
-      if (phoneNumber) {
-        win = window.open('tel://' + phoneNumber);
-        win.close();
-      }
-      return true;
-    },
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
     }
   });
 
@@ -402,6 +364,36 @@ trailing:true, white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.CostCategory", "XV.CostCategoryList");
+
+  // ..........................................................
+  // CREDIT CARD
+  //
+
+  enyo.kind({
+    name: "XV.CreditCardList",
+    kind: "XV.List",
+    label: "_creditCards".loc(),
+    collection: "XM.CreditCardCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    parameterWidget: "XV.CreditCardListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"}
           ]}
         ]}
       ]}
@@ -445,7 +437,7 @@ trailing:true, white:true*/
     name: "XV.CustomerList",
     kind: "XV.List",
     label: "_customers".loc(),
-    collection: "XM.CustomerRelationCollection",
+    collection: "XM.CustomerListItemCollection",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -463,27 +455,17 @@ trailing:true, white:true*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
               {kind: "XV.ListAttr", attr: "billingContact.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+                classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "billingContact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "billingContact.name",
               placeholder: "_noContact".loc()},
-            {kind: "XV.ListAttr", attr: "billingContact.address.formatShort"}
+            {kind: "XV.ListAttr", attr: "billingContact.address"}
           ]}
         ]}
       ]}
-    ],
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('billingContact.primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
-    }
+    ]
   });
 
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
@@ -539,11 +521,11 @@ trailing:true, white:true*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
               {kind: "XV.ListAttr", attr: "contact.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+                classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "contact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "contact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
           ]}
@@ -662,28 +644,17 @@ trailing:true, white:true*/
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+              {kind: "XV.ListAttr", attr: "contact.primaryEmail", classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "contact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "contact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
           ]}
         ]}
       ]}
-    ],
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('contact.primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
-    }
+    ]
   });
 
   XV.registerModelList("XM.EmployeeRelation", "XV.EmployeeList");
@@ -774,7 +745,7 @@ trailing:true, white:true*/
       }]
     },
     events: {
-      onCollectionChange: ""
+      onListChange: ""
     },
     components: [
       {kind: "XV.ListItem", components: [
@@ -802,8 +773,8 @@ trailing:true, white:true*/
     valueChanged: function () {
       this.inherited(arguments);
       // bind enyo event to add/remove on collection of models
-      this.getValue().on("add", this.doCollectionChange(), this);
-      this.getValue().on("remove", this.doCollectionChange(), this);
+      this.getValue().on("add", this.doListChange(), this);
+      this.getValue().on("remove", this.doListChange(), this);
     },
     /**
       Formatting function to show the shared text instead of
@@ -825,7 +796,7 @@ trailing:true, white:true*/
       inEvent.model = model;
       inEvent.done = function () {
         inEvent.delete = true;
-        that.doCollectionChange(inEvent);
+        that.doListChange(inEvent);
       };
       this.deleteItem(inEvent);
     },
@@ -928,7 +899,7 @@ trailing:true, white:true*/
             {kind: "XV.ListAttr", attr: "description"}
           ]},
           {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "account.name", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "account.name"},
             {kind: "XV.ListAttr", attr: "contact.name"}
           ]},
           {kind: "XV.ListColumn", classes: "third", components: [
@@ -1102,6 +1073,33 @@ trailing:true, white:true*/
   XV.registerModelList("XM.ItemRelation", "XV.ItemList");
 
   // ..........................................................
+  // ITEM GROUP
+  //
+
+  enyo.kind({
+    name: "XV.ItemGroupList",
+    kind: "XV.List",
+    label: "_itemGroups".loc(),
+    collection: "XM.ItemGroupCollection",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // ITEM SITE
   //
 
@@ -1214,7 +1212,7 @@ trailing:true, white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "account.name",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.ListAttr", attr: "contact.name"}
           ]},
@@ -1480,14 +1478,13 @@ trailing:true, white:true*/
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+              {kind: "XV.ListAttr", attr: "contact.primaryEmail", classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "contact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "contact.name",
               placeholder: "_noContact".loc()},
-            {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
+            {kind: "XV.ListAttr", attr: "contact.address"}
           ]}
         ]}
       ]}
@@ -1516,16 +1513,6 @@ trailing:true, white:true*/
         success: success,
         allowNew: false
       });
-    },
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('contact.primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
     }
   });
 
@@ -1584,64 +1571,6 @@ trailing:true, white:true*/
   XV.registerModelList("XM.PurchaseOrderListItem", "XV.PurchaseOrderList");
 
   // ..........................................................
-  // QUOTE
-  //
-
-  enyo.kind({
-    name: "XV.QuoteList",
-    kind: "XV.List",
-    label: "_quotes".loc(),
-    collection: "XM.QuoteListItemCollection",
-    parameterWidget: "XV.QuoteListParameters",
-    query: {orderBy: [
-      {attribute: 'number'}
-    ]},
-    allowPrint: true,
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true,
-                fit: true},
-              {kind: "XV.ListAttr", attr: "getQuoteStatusString",
-                style: "padding-left: 24px"},
-              {kind: "XV.ListAttr", attr: "expireDate",
-                formatter: "formatExpireDate", classes: "right",
-                placeholder: "_noExpiration".loc()}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.name"},
-              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice",
-                classes: "right"}
-            ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "shiptoAddress1"}
-          ]},
-          {kind: "XV.ListColumn", classes: "descr", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "orderNotes"}
-          ]}
-        ]}
-      ]}
-    ],
-    formatExpireDate: function (value, view, model) {
-      var isLate = model && model.get('expireDate') &&
-        (XT.date.compareDate(value, new Date()) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
-    },
-    formatPrice: function (value, view, model) {
-      var currency = model ? model.get("currency") : false,
-        scale = XT.session.locale.attributes.salesPriceScale;
-      return currency ? currency.format(value, scale) : "";
-    }
-  });
-
-  XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
-
-  // ..........................................................
   // SALES ORDER
   //
 
@@ -1659,42 +1588,96 @@ trailing:true, white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+              {kind: "XV.ListAttr", attr: "getOrderStatusString",
+                style: "padding-left: 24px"},
+              {kind: "XV.ListAttr", attr: "scheduleDate",
+                formatter: "formatScheduleDate", classes: "right",
+                placeholder: "_noSchedule".loc()}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.name"}
+              {kind: "XV.ListAttr", attr: "customer.name"},
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatTotal",
+                classes: "right"}
             ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "billtoAddress1"}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "shiptoAddress1"}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "shipVia"}
           ]},
           {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "scheduleDate"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice", classes: "right"}
-            ]}
+            {kind: "XV.ListAttr", formatter: "formatName"},
+            {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
           ]}
         ]}
       ]}
     ],
-    formatPrice: function (value, view, model) {
+    formatBillto: function (value, view, model) {
+      var city = model.get("billtoCity"),
+        state = model.get("billtoState"),
+        country = model.get("billtoCountry");
+      return XM.Address.formatShort(city, state, country);
+    },
+    formatScheduleDate: function (value, view, model) {
+      var isLate = model && model.get('scheduleDate') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    },
+    /**
+      Returns Shipto Name if one exists, otherwise Billto Name.
+    */
+    formatName: function (value, view, model) {
+      return model.get("shiptoName") || model.get("billtoName");
+    },
+    formatTotal: function (value, view, model) {
       var currency = model ? model.get("currency") : false,
-        scale = XT.session.locale.attributes.salesPriceScale;
+        scale = XT.session.locale.attributes.moneyScale;
       return currency ? currency.format(value, scale) : "";
+    },
+
+    formatShipto: function (value, view, model) {
+      var city = model.get("shiptoCity"),
+        state = model.get("shiptoState"),
+        country = model.get("shiptoCountry");
+      return XM.Address.formatShort(city, state, country);
+    },
+    /**
+      Returns formatted Shipto City, State and Country if
+      Shipto Name exists, otherwise Billto location.
+    */
+    formatShiptoOrBillto: function (value, view, model) {
+      var hasShipto = model.get("shiptoName") ? true : false,
+        cityAttr = hasShipto ? "shiptoCity": "billtoCity",
+        stateAttr = hasShipto ? "shiptoState" : "billtoState",
+        countryAttr = hasShipto ? "shiptoCountry" : "billtoCountry",
+        city = model.get(cityAttr),
+        state = model.get(stateAttr),
+        country = model.get(countryAttr);
+      return XM.Address.formatShort(city, state, country);
     }
   });
 
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
+
+  // ..........................................................
+  // QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.QuoteList",
+    kind: "XV.SalesOrderList",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    label: "_quotes".loc(),
+    collection: "XM.QuoteListItemCollection",
+    parameterWidget: "XV.QuoteListParameters",
+    formatDate: function (value, view, model) {
+      var isLate = model && model.get('expireDate') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    }
+  });
+
+  XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
 
   // ..........................................................
   // SALE TYPE
@@ -2107,7 +2090,7 @@ trailing:true, white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "account.name",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.ListAttr", attr: "contact.name"}
           ]},
@@ -2256,28 +2239,17 @@ trailing:true, white:true*/
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact1.primaryEmail",
-                ontap: "sendMail", classes: "right hyperlink"}
+              {kind: "XV.ListAttr", attr: "contact1.primaryEmail", classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "contact1.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "contact1.name",
               placeholder: "_noContact".loc()},
-            {kind: "XV.ListAttr", attr: "address.formatShort"}
+            {kind: "XV.ListAttr", attr: "address"}
           ]}
         ]}
       ]}
-    ],
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('contact1.primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
-    }
+    ]
   });
 
   XV.registerModelList("XM.VendorRelation", "XV.VendorList");
@@ -2331,8 +2303,7 @@ trailing:true, white:true*/
     kind: "XV.NameList",
     create: function () {
       this.inherited(arguments);
-      this.createComponent({
-        kind: "XV.ListColumn", classes: "last", fit: true, components: [
+      this.createComponent({kind: "XV.ListColumn", classes: "last", fit: true, components: [
           {kind: "XV.ListAttr", attr: "description"}
         ]
       });

@@ -15,73 +15,95 @@
       },
       "attribute": {
         "id": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "uuid": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "itemSite": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "transactionDate": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "transactionType": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "quantity": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "unit": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "orderType": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "orderNumber": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "documentNumber": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "quantityBefore": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "quantityAfter": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "unitCost": {
-          "edit": false,
+          "create": false,
+          "update": false,
           "view": "viewCosts"
         },
         "costMethod": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "valueBefore": {
-          "edit": false,
+          "create": false,
+          "update": false,
           "view": "ViewCosts"
         },
         "valueAfter": {
-          "edit": false,
+          "create": false,
+          "update": false,
           "view": "ViewCosts"
         },
         "notes": {
-          "edit": true
+          "create": true,
+          "update": true
         },
         "posted": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "analyze": {
-          "edit": true
+          "create": true,
+          "update": true
         },
         "user": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "created": {
-          "edit": false
+          "create": false,
+          "update": false
         },
         "detail": {
-          "edit": false
+          "create": false,
+          "update": false
         }
       }
     },
@@ -321,19 +343,11 @@
     },
     "properties": [
       {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "coitem_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
         "name": "uuid",
         "attr": {
           "type": "Number",
           "column": "obj_uuid",
-          "isNaturalKey": true
+          "isPrimaryKey": true
         }
       },
       {
@@ -408,14 +422,14 @@
           "type": "Quantity",
           "column": "coitem_qtyreturned"
         }
-      }, 
+      },
       {
         "name": "balance",
         "attr": {
           "type": "Quantity",
           "column": "ship_balance"
         }
-      },  
+      },
       {
         "name": "atShipping",
         "attr": {
@@ -429,7 +443,7 @@
           "type": "Number",
           "column": "to_issue"
         }
-      }  
+      }
     ],
     "isSystem": true
   }

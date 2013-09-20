@@ -21,10 +21,12 @@
           "view": "ShowMarginsOnSalesOrder"
         },
         "quoteDate": {
-          "edit": "OverrideSODate"
+          "create": "OverrideSODate",
+          "update": "OverrideSODate"
         },
         "packDate": {
-          "edit": "AlterPackDate"
+          "create": "AlterPackDate",
+          "update": "AlterPackDate"
         }
       }
     },
@@ -969,7 +971,8 @@
       },
       "attribute": {
         "taxType": {
-          "edit": "OverrideTax"
+          "create": "OverrideTax",
+          "update": "OverrideTax"
         },
         "margin": {
           "view": "ShowMarginsOnSalesOrder"
@@ -1473,6 +1476,34 @@
         }
       },
       {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtoname"
+        }
+      },
+      {
+        "name": "billtoCity",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtocity"
+        }
+      },
+      {
+        "name": "billtoState",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtostate"
+        }
+      },
+      {
+        "name": "billtoCountry",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtocountry"
+        }
+      },
+      {
         "name": "shiptoName",
         "attr": {
           "type": "String",
@@ -1480,10 +1511,24 @@
         }
       },
       {
-        "name": "shiptoAddress1",
+        "name": "shiptoCity",
         "attr": {
           "type": "String",
-          "column": "quhead_shiptoaddress1"
+          "column": "quhead_shiptocity"
+        }
+      },
+      {
+        "name": "shiptoState",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptostate"
+        }
+      },
+      {
+        "name": "shiptoCountry",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptocountry"
         }
       }
     ],

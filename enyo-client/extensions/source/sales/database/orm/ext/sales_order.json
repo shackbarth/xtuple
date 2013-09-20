@@ -1,4 +1,4 @@
-[ 
+[
   {
     "context": "sales",
     "nameSpace": "XM",
@@ -6,7 +6,7 @@
     "table": "xt.coheadinfo",
     "isExtension": true,
     "comment": "Extended by Sales",
-    "relations": [ 
+    "relations": [
       {
         "column": "cohead_id",
         "inverse": "id"
@@ -20,40 +20,6 @@
           "type": "SalesOrderCustomer",
           "column": "cohead_id",
           "inverse": "source"
-        }
-      },
-      {
-        "name": "opportunity",
-        "toOne": {
-          "isNested": true,
-          "type": "OpportunityRelation",
-          "column": "cohead_ophead_id"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "sales",
-    "nameSpace": "XM",
-    "type": "SalesOrderListItem",
-    "table": "xt.coheadinfo",
-    "isExtension": true,
-    "comment": "Extended by Sales",
-    "relations": [ 
-      {
-        "column": "cohead_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "opportunity",
-        "toOne": {
-          "isNested": true,
-          "type": "OpportunityRelation",
-          "column": "cohead_ophead_id"
         }
       }
     ],

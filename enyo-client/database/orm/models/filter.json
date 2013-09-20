@@ -39,6 +39,13 @@
         }
       },
       {
+        "name": "type",
+        "attr": {
+          "type": "String",
+          "column": "fltr_type"
+        }
+      },
+      {
         "name": "createdBy",
         "attr": {
           "type": "String",

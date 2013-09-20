@@ -12,7 +12,7 @@ white:true*/
     @extends XM.Model
   */
   XM.Filter = XM.Model.extend({
-    /** @scope XM.UserChart.prototype */
+    /** @scope XM.Filter.prototype */
 
     recordType: 'XM.Filter',
 
@@ -30,7 +30,7 @@ white:true*/
     @extends XM.Collection
   */
   XM.FilterCollection = XM.Collection.extend({
-    /** @scope XM.UserChartCollection.prototype */
+    /** @scope XM.FilterCollection.prototype */
 
     model: XM.Filter
 

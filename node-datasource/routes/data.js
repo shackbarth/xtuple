@@ -5,6 +5,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
+  var child_process = require("child_process"),
+    path = require("path");
+
   // All of the "big 4" routes are in here: get, post, patch and delete
   // They all share a lot of similar code so I've broken out queryDatabase function to reuse code.
 
@@ -27,7 +30,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       queryString = "select xt.%@($$%@$$)",
       binaryField = payload.binaryField,
       buffer,
-      binaryData,
       adaptorCallback = function (err, res) {
         var data,
             status;
@@ -61,7 +63,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
     payload.username = session.passport.user.username;
+    payload.encryptionKey = X.options.encryptionKey;
     org = session.passport.user.organization;
+
+    // Make sure the user isn't asking for node-internal data
+    if (payload.nameSpace === 'SYS') {
+      X.err("Invalid call to datasource object: ", payload.nameSpace + "." + payload.type);
+      callback(true);
+    }
 
     // Make sure functionName is one of the exposed functions.
     if (exposedFunctions.indexOf(functionName) === -1) {
@@ -69,18 +78,55 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       callback(true);
     }
 
+    var queryDatasource = function () {
+      query = queryString.f(functionName, JSON.stringify(payload));
+      queryOptions = XT.dataSource.getAdminCredentials(org);
+      XT.dataSource.query(query, queryOptions, adaptorCallback);
+    };
+
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661
     if (functionName === 'post' && binaryField) {
-      binaryData = payload.data[binaryField];
-      buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
-      binaryData = '\\x' + buffer.toString("hex");
-      payload.data[binaryField] = binaryData;
-    }
 
-    query = queryString.f(functionName, JSON.stringify(payload));
-    queryOptions = XT.dataSource.getAdminCredentials(org);
-    XT.dataSource.query(query, queryOptions, adaptorCallback);
+      // this took quite a bit of research
+      // https://github.com/joyent/node/issues/5727
+      // http://stackoverflow.com/questions/17670395/sending-binary-images-as-buffer-from-forked-child-process-to-main-process-in-nod
+      // https://github.com/joyent/node/pull/5741
+      // https://github.com/joyent/node/issues/4374
+      // http://stackoverflow.com/questions/17861362/node-js-child-process-difference-between-spawn-fork
+      // http://blog.trevnorris.com/2013/07/child-process-multiple-file-descriptors.html
+      // http://stackoverflow.com/questions/8989780/better-way-to-make-node-not-exit
+
+      // this implementation would be simplified considerably if the pipe's end() would work the way I would expect
+
+      var args = [ path.join(__dirname, "../lib/workers/binary_to_hex_worker.js") ];
+      var worker = child_process.spawn(process.execPath, args,
+        { stdio: [null, null, null, 'pipe', 'pipe'] });
+      var hexValue = "";
+      var binaryData = payload.data[binaryField];
+      worker.stdout.on("data", function (encodedValue) {
+        var value = encodedValue.toString("utf8");
+        if (value === 'havelength') {
+          pipe.write(buffer);
+          return;
+
+        } else if (value.indexOf("__done__") >= 0) {
+          value = value.substring(0, value.indexOf("__done__"));
+          hexValue = hexValue + value;
+          payload.data[binaryField] = "\\x" + hexValue.trim();
+          queryDatasource();
+          worker.kill();
+          return;
+        }
+        hexValue = hexValue + value;
+      });
+      var lengthPipe = worker.stdio[4];
+      var pipe = worker.stdio[3];
+      buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
+      lengthPipe.write("" + buffer.length);
+    } else {
+      queryDatasource();
+    }
   };
 
   /**

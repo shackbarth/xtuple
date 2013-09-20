@@ -68,15 +68,25 @@ var async = require("async"),
       },
       fetchSuccess = function (model, result) {
         var sendExtensions = function (res, extensions) {
-          extensions = _.sortBy(extensions, function (ext) {
-            return ext.loadOrder;
+          extensions.sort(function (ext1, ext2) {
+            if (ext1.loadOrder !== ext2.loadOrder) {
+              return ext1.loadOrder - ext2.loadOrder;
+            } else {
+              return ext1.name > ext2.name ? 1 : -1;
+            }
           });
           var uuids = _.map(extensions, function (ext) {
             var sortedModels = _.sortBy(ext.codeInfo, function (codeInfo) {
               return -1 * getVersionSize(codeInfo.version);
             });
-            return sortedModels[0].uuid;
+            if (sortedModels[0]) {
+              return sortedModels[0].uuid;
+            } else {
+              X.log("Could not find uuid for extension " + ext.description);
+              return null;
+            }
           });
+          uuids = _.compact(uuids); // eliminate any null values
           getCoreUuid('js', req.session.passport.user.organization, function (err, jsUuid) {
             if (err) {
               res.send({isError: true, error: err});

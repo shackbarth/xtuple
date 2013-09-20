@@ -55,6 +55,16 @@ white:true*/
       return this;
     },
 
+    getDefaultShipto: function () {
+      if (!this.get("shiptos")) {
+        return null;
+      }
+      var defaultShipto = _.filter(this.get("shiptos").models, function (shipto) {
+        return shipto.get("isDefault");
+      });
+      return defaultShipto.length > 0 ? defaultShipto[0] : null;
+    },
+
     /**
       Retrieve the customer's price for a given item and quantity.
 
@@ -427,7 +437,8 @@ white:true*/
     recordType: 'XM.CustomerShipto',
 
     defaults: {
-      isActive: true
+      isActive: true,
+      isDefault: false
     },
 
     // ..........................................................
@@ -439,37 +450,15 @@ white:true*/
       this.on('change:customer', this.customerDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
       this.on('change:isDefault', this.isDefaultDidChange);
+      this.on('change:number', this.numberDidChange);
     },
 
-    customerDidChange: function (model, value, options) {
+    customerDidChange: function () {
       var status = this.getStatus(),
         customer = this.get("customer"),
-        K = XM.Model,
-        numberArray = [],
-        shiptosCollection;
+        K = XM.Model;
 
       if (customer && status === K.READY_NEW) {
-        if (!this.get("number")) {
-          shiptosCollection = customer.get("shiptos");
-
-          //map the number attr of each model in the shiptosCollection to numberArray
-          numberArray = _.map(shiptosCollection.models, function (m) {return m.get("number"); });
-          /* The purpose of the next few lines is to automatically find the next integer number for the new shipto.
-              Sticking a + sign in front of a string will return the number version of the string as long as the
-              string contains only numbers.  If it contains non-numeric characters, it will return NaN (not a number).
-              For example, +"5" will return 5.  But +"shipto5" would return NaN.  So this while loop will continue to
-              loop as long as the string numberArray[i] contains only numeric characters.
-          */
-          numberArray.sort();
-          var i = 0,
-              j = 0;
-          while (!isNaN(+numberArray[i])) {
-            i++;
-            j = numberArray[i];
-          }
-          this.set("number", j + 1);
-        }
-
         // Set defaults from customer
         this.set("salesRep", customer.get("salesRep"));
         this.set("shipZone", customer.get("shipZone"));
@@ -491,10 +480,44 @@ white:true*/
       });
     },
 
+    numberDidChange: function () {
+      if (!this.numberIsValid()) {
+        this.trigger("invalid", this, XT.Error.clone("xt2003"), {});
+      }
+    },
+    
+    /**
+      Checks for duplicate ship to numbers.
+    */
+    numberIsValid: function () {
+      var customer = this.get("customer"),
+        shiptos,
+        shipto,
+        i;
+      if (customer) {
+        shiptos = customer.get("shiptos");
+        for (i = 0; i < shiptos.length; i++) {
+          shipto = shiptos.at(i);
+          if (shipto.id !== this.id &&
+              shipto.get("number") === this.get("number")) {
+            return false;
+          }
+        }
+      }
+      return true;
+    },
+
     salesRepDidChange: function () {
       var salesRep = this.get('salesRep');
       if (!salesRep) { return; }
       this.set('commission', salesRep.get('commission'));
+    },
+
+    validate: function () {
+      if (this.isDirty() && !this.numberIsValid()) {
+        return XT.Error.clone("xt2003");
+      }
+      return XM.Model.prototype.validate.apply(this, arguments);
     }
 
   });
@@ -548,6 +571,40 @@ white:true*/
 
   });
 
+
+  /**
+    @class
+
+    @extends XM.AccountDocument
+  */
+  XM.SalesCustomer = XM.AccountDocument.extend({
+    /** @scope XM.SalesCustomer.prototype */
+
+    recordType: 'XM.SalesCustomer',
+
+    descriptionKey: "name"
+
+  });
+
+  // Add in item mixin
+  XM.SalesCustomer = XM.SalesCustomer.extend(XM.CustomerMixin);
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.CustomerListItem = XM.Info.extend({
+    /** @scope XM.CustomerListItem.prototype */
+
+    recordType: 'XM.CustomerListItem',
+
+    editableModel: 'XM.Customer',
+
+    descriptionKey: "name"
+
+  });
+
   /**
     @class
 
@@ -563,9 +620,6 @@ white:true*/
     descriptionKey: "name"
 
   });
-
-  // Add in item mixin
-  XM.CustomerRelation = XM.CustomerRelation.extend(XM.CustomerMixin);
 
   /**
     @class
@@ -676,6 +730,30 @@ white:true*/
   // ..........................................................
   // COLLECTIONS
   //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SalesCustomerCollection = XM.Collection.extend({
+    /** @scope XM.SalesCustomerCollection.prototype */
+
+    model: XM.SalesCustomer
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerListItemCollection = XM.Collection.extend({
+    /** @scope XM.CustomerListItemCollection.prototype */
+
+    model: XM.CustomerListItem
+
+  });
 
   /**
     @class

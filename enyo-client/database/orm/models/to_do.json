@@ -28,10 +28,11 @@
       },
       "attribute": {
         "owner": {
-          "edit": "EditOwner"
+          "create": "EditOwner",
+          "update": "EditOwner"
         },
         "assignedTo": {
-          "edit": "ReassignToDoItems"
+          "update": "ReassignToDoItems"
         }
       }
     },

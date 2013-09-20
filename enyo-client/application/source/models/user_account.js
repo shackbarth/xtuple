@@ -75,6 +75,17 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
     @extends XM.Model
   */
+  XM.ExtensionDependency = XM.Model.extend(/** @lends XM.ExtensionDependency.prototype */{
+
+    recordType: 'XM.ExtensionDependency'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.UserAccountExtension = XM.Model.extend(/** @lends XM.UserAccountExtension.prototype */{
 
     recordType: 'XM.UserAccountExtension'
@@ -96,6 +107,88 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
   });
 
   /**
+    Add a dependency extension if necessary
+   */
+  var extensionAdded = function () {
+    var that = this,
+      extensionsToAdd = _.bind(validateExtensions, this)().add;
+
+    _.each(extensionsToAdd, function (extensionToAdd) {
+      var extensionModel = new XM.Extension(),
+        assignmentModel,
+        addAssignment = function () {
+          if (extensionModel.isReady()) {
+            extensionModel.off("statusChange", addAssignment);
+            // seems to work even for UserAccountRoleExtension
+            assignmentModel = new XM.UserAccountExtension({
+              extension: extensionModel
+            }, {isNew: true});
+            that.get("grantedExtensions").add(assignmentModel);
+            that.trigger("change", that);
+          }
+        };
+
+      extensionModel.on("statusChange", addAssignment);
+      extensionModel.fetch({id: extensionToAdd});
+    });
+  };
+
+  /**
+    Remove an extension if its dependency has been removed
+  */
+  var extensionStatusChanged = function (model, status) {
+    var that = this,
+      callback;
+
+    if (status === XM.Model.DESTROYED_DIRTY) {
+      var extensionsToRemove = _.bind(validateExtensions, this)().remove;
+      if (extensionsToRemove.length === 0) {
+        return;
+      }
+
+      /**
+        We have to destroy an extension assignment
+      */
+      callback = function () {
+        _.each(extensionsToRemove, function (removee) {
+          _.each(that.get("grantedExtensions").models, function (grantedExtension) {
+            if (grantedExtension.get("extension").id === removee && !grantedExtension.isDestroyed()) {
+              grantedExtension.destroy();
+            }
+          });
+        });
+      };
+      this.notify("_mustRemoveDependentExtensions".loc(), {
+        callback: callback
+      });
+    }
+  };
+
+  var validateExtensions = function () {
+    var grantedExtensions = this.get("grantedExtensions"),
+      grantedExtensionIds = _.compact(_.map(grantedExtensions.models, function (grantedExtension) {
+        return grantedExtension.isDestroyed() ? null : grantedExtension.get("extension").id;
+      })),
+      addArray = [],
+      removeArray = [];
+
+    _.each(grantedExtensions.models, function (grantedExtension) {
+      if (grantedExtension.isDestroyed()) {
+        return;
+      }
+      var dependencies = grantedExtension.getValue("extension.dependencies");
+      _.each(dependencies.models, function (dependencyObj) {
+        var dependency = dependencyObj.get("toExtension");
+        if (!_.contains(grantedExtensionIds, dependency)) {
+          addArray.push(dependency);
+          removeArray.push(grantedExtension.get("extension").id);
+        }
+      });
+    });
+    return {add: _.unique(addArray), remove: _.unique(removeArray)};
+  };
+
+  /**
     @class
 
     @extends XM.Document
@@ -105,7 +198,13 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
     recordType: 'XM.UserAccountRole',
 
-    documentKey: 'name'
+    documentKey: 'name',
+
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
+      this.get("grantedExtensions").on('statusChange', extensionStatusChanged, this);
+      this.get("grantedExtensions").on('add', extensionAdded, this);
+    }
 
   });
 
@@ -175,6 +274,8 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('statusChange', this.statusChanged);
       this.on('change:username', this.usernameChanged);
+      this.get("grantedExtensions").on('add', extensionAdded, this);
+      this.get("grantedExtensions").on('statusChange', extensionStatusChanged, this);
       this.statusChanged();
     },
 
@@ -262,7 +363,8 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
     },
 
     validate: function (attributes, options) {
-      var isNew = this.isNew();
+      var isNew = this.isNew(),
+        extensionValidation;
 
       if ((this.get("password") || this._passwordCheck) &&
           this.get("password") !== this._passwordCheck) {
@@ -282,6 +384,11 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       // clear out passwordCheck, so as not to upset the model validation
       delete this.attributes.passwordCheck;
       delete attributes.passwordCheck;
+
+      extensionValidation = _.bind(validateExtensions, this)();
+      if (extensionValidation.add.length > 0 || extensionValidation.remove.length > 0) {
+        return XT.Error.clone('xt2018', { params: {attr: extensionValidation} });
+      }
 
       return XM.Model.prototype.validate.call(this, attributes, options);
     }
@@ -364,6 +471,17 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
   XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.ExtensionCollection.prototype */{
 
     model: XM.Extension
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.ExtensionDependencyCollection = XM.Collection.extend(/** @lends XM.ExtensionDependencyCollection.prototype */{
+
+    model: XM.ExtensionDependency
 
   });
 

@@ -22,7 +22,7 @@ white:true*/
       freight = model.get("freight") || 0.0,
       scale = XT.MONEY_SCALE,
       add = XT.math.add,
-      substract = XT.math.subtract,
+      subtract = XT.math.subtract,
       subtotals = [],
       taxDetails = [],
       costs = [],
@@ -85,7 +85,7 @@ white:true*/
     freightWeight = add(weights, XT.WEIGHT_SCALE);
     subtotal = add(subtotals, scale);
     costTotal = add(costs, scale);
-    margin = substract(subtotal, costTotal, scale);
+    margin = subtract(subtotal, costTotal, scale);
     subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
     total = add(subtotals, scale);
 
@@ -276,6 +276,8 @@ white:true*/
       "freightWeight",
       "getOrderStatusString",
       "lineItems",
+      "allocatedCredit",
+      "balance",
       "margin",
       "miscCharge",
       "status",
@@ -614,7 +616,7 @@ white:true*/
       var customer = this.get("customer"),
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
         billtoAddress = billtoContact ? billtoContact.get("address") : false,
-        defaultShipto = customer ? customer.get("defaultShipto") : false,
+        defaultShipto = customer ? customer.getDefaultShipto() : false,
         billtoAttrs,
         that = this,
         unsetBilltoAddress = function () {
@@ -651,7 +653,9 @@ white:true*/
           terms: customer.get("terms"),
           taxZone: customer.get("taxZone"),
           shipVia: customer.get("shipVia"),
-          site: customer.get("preferredSite") || this.get("site"),
+          site: customer.get("preferredSite") ?
+            XM.Site.findOrCreate({code: customer.get("preferredSite").id}) : // SiteRelation -> Site
+            this.get("site"),
           currency: customer.get("currency")
         };
         if (billtoContact) {

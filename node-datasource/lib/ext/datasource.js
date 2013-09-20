@@ -46,7 +46,7 @@ if (typeof X === 'undefined') {
 
       if (X.options && X.options.datasource && X.options.datasource.pgWorker) {
         // Single worker version.
-        this.worker = require('child_process').fork(__dirname + '/pgworker.js');
+        this.worker = require('child_process').fork(X.path.join(__dirname, '../workers/pg_worker.js'));
         this.worker.on('message', function (m) {
           var callback = that.callbacks[m.id];
           delete that.callbacks[m.id];
@@ -68,7 +68,7 @@ if (typeof X === 'undefined') {
           X.err('pgWorker ' + pid + ' died (exitCode: ' + exitCode + ' signalCode: ' + signalCode + '). Cannot run any more queries.');
 
           // TODO - Figure out how to restart the worker.  This doesn't work.
-          //that.worker = require('child_process').fork(__dirname + '/pgworker.js');
+          //that.worker = require('child_process').fork(X.path.join(__dirname, '../workers/pg_worker.js'));
         });
       }
 
@@ -86,7 +86,7 @@ if (typeof X === 'undefined') {
       // this.nextWorker = 0;
       // this.workers = [];
       // for (var i=0; i < this.numWorkers; i++) {
-      //   var worker = require('child_process').fork(__dirname + '/pgworker.js');
+      //   var worker = require('child_process').fork(X.path.join(__dirname, '../workers/pg_worker.js'));
       //   this.workers.push(worker);
 
       //   worker.on('message', function (m) {
@@ -157,7 +157,7 @@ if (typeof X === 'undefined') {
      * instead of starting node with the debugger running: "sudo node --debug-brk main.js".
     */
     connected: function (query, options, callback, err, client, done, ranInit) {
-      // WARNING!!! If you make any changes here, please update pgworker.js as well.
+      // WARNING!!! If you make any changes here, please update pg_worker.js as well.
       var that = this,
         queryCallback;
 
@@ -342,6 +342,7 @@ if (typeof X === 'undefined') {
         };
 
       payload.username = options.username;
+      payload.encryptionKey = X.options.encryptionKey;
       payload = JSON.stringify(payload);
       query = "select xt.{method}($${payload}$$) as request"
               .replace("{method}", method)

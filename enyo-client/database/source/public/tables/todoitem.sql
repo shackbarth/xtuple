@@ -4,3 +4,5 @@ create trigger todoitem_owner_change after insert on todoitem for each row execu
 
 -- add uuid column here because there are views that need this
 select xt.add_column('todoitem','obj_uuid', 'text', 'default xt.generate_uuid()', 'public');
+select xt.add_inheritance('todoitem', 'xt.obj');
+select xt.add_constraint('todoitem', 'todoitem_obj_uui_id','unique(obj_uuid)', 'public');

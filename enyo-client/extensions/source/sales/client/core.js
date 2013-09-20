@@ -8,7 +8,7 @@ white:true*/
 
   XT.extensions.sales = {
     setVersion: function () {
-      XT.setVersion("1.4.3", "sales");
+      XT.setVersion("", "sales");
     }
   };
 

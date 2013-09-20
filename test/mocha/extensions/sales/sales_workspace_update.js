@@ -8,8 +8,8 @@
   "use strict";
 
   var _ = require("underscore"),
-    zombieAuth = require("../lib/zombie_auth"),
-    smoke = require("../lib/smoke"),
+    zombieAuth = require("../../lib/zombie_auth"),
+    smoke = require("../../lib/smoke"),
     testData = [
       {kind: "XV.SalesOrderList", model: "XM.SalesOrder", update: "fob"},
       {kind: "XV.CustomerList", model: "XM.Customer", update: "notes"},
@@ -24,7 +24,7 @@
       zombieAuth.loadApp(done);
     });
 
-    describe('Trivial tests', function () {
+    describe('Update tests', function () {
       _.each(testData, smoke.updateFirstModel);
     });
   });

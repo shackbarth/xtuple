@@ -281,6 +281,11 @@ var _ = require("underscore"),
     model.on('statusChange', modelCallback);
     model.on('invalid', invalid);
     model.on('notify', notify);
+    if (data.verbose) {
+      model.on('all', function () {
+        console.log("Model event", model.getStatusString(), arguments);
+      });
+    }
     model.save(null, {});
   };
 
@@ -399,6 +404,12 @@ var _ = require("underscore"),
       this.timeout(10 * 1000);
       save(data, done);
     });
+    _.each(data.afterSaveActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(data, done);
+      });
+    });
 
     //
     // Step 6: set the model with updated data
@@ -425,10 +436,12 @@ var _ = require("underscore"),
       });
     });
 
-    it('deletes the model from the database', function (done) {
-      this.timeout(10 * 1000);
-      destroy(data, done);
-    });
+    if (!data.skipDelete) {
+      it('deletes the model from the database', function (done) {
+        this.timeout(10 * 1000);
+        destroy(data, done);
+      });
+    }
 
     _.each(data.afterDeleteActions || [], function (spec) {
       it(spec.it, function (done) {

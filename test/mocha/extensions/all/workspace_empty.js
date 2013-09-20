@@ -9,8 +9,8 @@
 
   var _ = require("underscore"),
     assert = require("chai").assert,
-    zombieAuth = require("../lib/zombie_auth"),
-    smoke = require("../lib/smoke");
+    zombieAuth = require("../../lib/zombie_auth"),
+    smoke = require("../../lib/smoke");
 
   describe('Workspaces', function () {
     this.timeout(30 * 1000);
@@ -19,19 +19,18 @@
       zombieAuth.loadApp(done);
     });
 
-    it('should fail predictably if we save them with no data', function () {
+    it('should fail predictably when appropriate', function () {
       this.timeout(30 * 1000);
-      describe('So we loop through them all', function () {
-        this.timeout(30 * 1000);
-        var navigator = XT.app.$.postbooks.$.navigator,
-          workspace;
+      var navigator = XT.app.$.postbooks.$.navigator,
+        workspace;
 
-        _.each(navigator.modules, function (module, moduleIndex) {
-          _.each(module.panels, function (panel, panelIndex) {
-            var listName = XT.app.$.postbooks.modules[moduleIndex].panels[panelIndex].name,
-              list;
+      _.each(navigator.modules, function (module, moduleIndex) {
+        _.each(module.panels, function (panel, panelIndex) {
+          var listName = XT.app.$.postbooks.modules[moduleIndex].panels[panelIndex].name,
+            list;
 
-            it(listName, function (done) {
+          describe("The workspace for " + listName, function () {
+            it('should fail predictably if we save it with no data', function (done) {
               this.timeout(30 * 1000);
               navigator.setModule(moduleIndex);
               navigator.setContentPanel(panelIndex);
@@ -42,6 +41,14 @@
                 return;
               } else if (!list.getValue().model.canCreate && !list.getValue().model.couldCreate) {
                 // don't test the configuration list, etc.
+                done();
+                return;
+              } else if (list.getValue().model.couldCreate && !list.getValue().model.couldCreate()) {
+                // don't test ShipmentList or others that disallow creation
+                done();
+                return;
+              } else if (!list.getValue().model.couldCreate && !list.getValue().model.canCreate()) {
+                // don't test ShipmentList or others that disallow creation
                 done();
                 return;
               }

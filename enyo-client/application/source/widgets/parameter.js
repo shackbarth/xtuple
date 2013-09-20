@@ -108,6 +108,7 @@ trailing:true, white:true*/
     name: "XV.ContactListParameters",
     kind: "XV.ParameterWidget",
     characteristicsRole: 'isContacts',
+    showLayout: true,
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
@@ -149,6 +150,19 @@ trailing:true, white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_costCategory".loc()},
       {name: "code", label: "_code".loc(), attr: "code"}
+    ]
+  });
+
+  // ..........................................................
+  // CREDIT CARD
+  //
+
+  enyo.kind({
+    name: "XV.CreditCardListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_creditCards".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
 
@@ -494,7 +508,7 @@ trailing:true, white:true*/
       {name: "siteCode", label: "_code".loc(), attr: "site.code"},
       {name: "siteDescription", label: "_description".loc(), attr: "site.description"},
       {kind: "onyx.GroupboxHeader", content: "_classCode".loc()},
-      {name: "classCode", label: "_equals".loc(), attr: "item.classCode.id",
+      {name: "classCode", label: "_equals".loc(), attr: "item.classCode",
         defaultKind: "XV.ClassCodePicker"},
       {name: "classCodePattern", label: "_code".loc(), attr: "item.classCode.code"},
       {kind: "onyx.GroupboxHeader", content: "_costCategory".loc()},
@@ -638,7 +652,7 @@ trailing:true, white:true*/
       {name: "name", label: "_name".loc(), attr: "name"},
       {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
       {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_status".loc()},
+      {name: "statusHeader", kind: "onyx.GroupboxHeader", content: "_status".loc()},
       {name: "status", label: "_status".loc(), attr: "status",
         defaultKind: "XV.ProjectStatusPicker"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
@@ -652,7 +666,22 @@ trailing:true, white:true*/
       {name: "toDueDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
         filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
-    ]
+    ],
+    /**
+      Special handling for status.
+    */
+    setParameterItemValues: function (items) {
+      this.inherited(arguments);
+      var i;
+      for (i = 0; i < items.length; i++) {
+        if (items[i].name === "status" &&
+            items[i].showing === false) {
+          this.$.showCompleted.hide();
+          this.$.statusHeader.hide();
+        }
+      }
+
+    }
   });
 
   enyo.kind({

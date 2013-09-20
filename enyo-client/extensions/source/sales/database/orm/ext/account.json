@@ -41,5 +41,39 @@
     ],
     "sequence": 0,
     "isSystem": true
-  }  
+  },
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "AccountRelation",
+    "table": "crmacct",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "crmacct_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerRelation",
+          "column": "crmacct_cust_id"
+        }
+      },
+      {
+        "name": "prospect",
+        "toOne": {
+          "isNested": true,
+          "type": "ProspectRelation",
+          "column": "crmacct_prospect_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }
 ]

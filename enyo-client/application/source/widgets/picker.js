@@ -11,9 +11,8 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.AbcClassPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.abcClass",
-    valueAttribute: "id",
-    showNone: false
+    collection: "XM.abcClasses",
+    valueAttribute: "id"
   });
 
   // ..........................................................
@@ -24,6 +23,45 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.AccountTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.accountTypes"
+  });
+
+  // ..........................................................
+  // ATTRIBUTE PICKER
+  //
+
+  enyo.kind({
+    name: "XV.AttributePicker",
+    kind: "XV.PickerWidget",
+    onSelect: "itemSelected",
+    showLabel: false,
+    prerender: false,
+    orderBy: [
+      {attribute: 'name'}
+    ],
+    /**
+      This takes the list of attributes and sets up a
+      collection that this picker can use.
+    */
+    setComponentsList: function (toSet) {
+      var columnAttr,
+        stringToSet,
+        objectToSet,
+        attrs = [],
+        columns = new XM.AttributeCollection();
+
+      for (var i = 0; i < toSet.length; i++) {
+        if (toSet[i].indexOf('.') !== -1) {
+          attrs = toSet[i].split(".");
+          stringToSet = ("_" + attrs[0]).loc() + " " + ("_" + attrs[1]).loc();
+        } else {
+          stringToSet = ("_" + toSet[i]).loc();
+        }
+        objectToSet = { id: toSet[i], name: stringToSet };
+        columnAttr = new XM.Attribute(objectToSet);
+        columns.add(columnAttr);
+      }
+      this.setCollection(columns);
+    }
   });
 
   // ..........................................................
@@ -68,9 +106,8 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ControlMethodPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.controlMethod",
-    valueAttribute: "id",
-    showNone: false
+    collection: "XM.controlMethods",
+    valueAttribute: "id"
   });
 
   // ..........................................................
@@ -94,9 +131,8 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.CostMethodPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.costMethod",
-    valueAttribute: "id",
-    showNone: false
+    collection: "XM.costMethods",
+    valueAttribute: "id"
   });
 
   // ..........................................................
@@ -110,6 +146,17 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'name'}
     ]
+  });
+
+  // ..........................................................
+  // CREDIT CARD TYPE
+  //
+
+  enyo.kind({
+    name: "XV.CreditCardTypePicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.creditCardTypes"
   });
 
   // ..........................................................
@@ -253,6 +300,20 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // ITEM GROUP
+  //
+
+  enyo.kind({
+    name: "XV.ItemGroupPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.itemGroups",
+    nameAttribute: "name",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+
+  // ..........................................................
   // ITEM TYPE
   //
 
@@ -300,6 +361,18 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'format'}
     ],
     valueAttribute: "id"
+  });
+
+
+  // ..........................................................
+  // MONTH
+  //
+
+  enyo.kind({
+    name: "XV.MonthPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.months"
   });
 
   // ..........................................................
@@ -475,75 +548,8 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.siteZoneRelations",
     orderBy: [
-      {attribute: 'name'}
-    ]
-  });
-
-  // ..........................................................
-  // PLANNER CODE
-  //
-
-  enyo.kind({
-    name: "XV.SitePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.siteRelations",
-    orderBy: [
       {attribute: 'code'}
     ]
-  });
-
-  // ..........................................................
-  // SORT
-  //
-
-  enyo.kind({
-    name: "XV.SortPicker",
-    kind: "XV.Picker",
-    onSelect: "itemSelected",
-    buildList: function (comps) {
-      this.$.picker.destroyClientControls();
-      if (!comps) {
-        return;
-      }
-      for (var i = 0; i < comps.length; i++) {
-        this.$.picker.createComponent(comps[i]);
-      }
-      this.$.picker.applyStyle("position", "absolute");
-      this.$.picker.applyStyle("z-index", "9999");
-      this.$.picker.render();
-    },
-    findItemByAttr: function (attr) {
-      for (var i = 0; i < this.$.picker.getComponents().length; i++) {
-        if (attr === this.$.picker.getComponents()[i].attr) {
-          return this.$.picker.getComponents()[i];
-        }
-      }
-    },
-    itemSelected: function (inSender, inEvent) {
-      this.attr = inEvent.originator.attr;
-    },
-    setComponentsList: function (toSet) {
-      var comps = [];
-      comps[0] = {content: "_none".loc(), attr: "none"};
-      for (var i = 0; i < toSet.length; i++) {
-        if (toSet[i].indexOf('.') === -1) {
-          var stringToSet = "_" + toSet[i],
-            objectToSet = {content: stringToSet.loc(), attr: toSet[i]};
-          comps.push(objectToSet);
-        }
-        else {
-          var stringToSet,
-            objectToSet;
-          var strArray = toSet[i].split('.');
-          strArray[0] = "_" + strArray[0];
-          strArray[1] = "_" + strArray[1];
-          stringToSet = strArray[0].loc() + " " + strArray[1].loc();
-          objectToSet = {content: stringToSet, attr: toSet[i]};
-          comps.push(objectToSet);
-        }
-      }
-      this.buildList(comps);
-    }
   });
 
   // ..........................................................
@@ -552,21 +558,10 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.SortTypePicker",
-    kind: "XV.Picker",
-    buildList: function (options) {
-      this.$.picker.createComponent({content: "_ascending".loc(), attr: "ascending"});
-      this.$.picker.createComponent({content: "_descending".loc(), attr: "descending"});
-    },
-    findItemByAttr: function (attr) {
-      for (var i = 0; i < this.$.picker.getComponents().length; i++) {
-        if (attr === this.$.picker.getComponents()[i].attr) {
-          return this.$.picker.getComponents()[i];
-        }
-      }
-    },
-    itemSelected: function (inSender, inEvent) {
-      this.attr = inEvent.originator.attr;
-    }
+    kind: "XV.PickerWidget",
+    showLabel: false,
+    prerender: false,
+    collection: "XM.sortTypes"
   });
 
   // ..........................................................
@@ -787,4 +782,14 @@ regexp:true, undef:true, trailing:true, white:true */
     valueAttribute: "id"
   });
 
+  // ..........................................................
+  // YEAR
+  //
+
+  enyo.kind({
+    name: "XV.YearPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.years"
+  });
 }());

@@ -33,7 +33,7 @@ trailing:true, white:true*/
       {name: "priorityList", kind: "XV.PriorityList"},
       {name: "honorificList", kind: "XV.HonorificList"},
       {name: "incidentCategoryList", kind: "XV.IncidentCategoryList"},
-      {name: "incidentResoulutionList", kind: "XV.IncidentResolutionList"},
+      {name: "incidentResolutionList", kind: "XV.IncidentResolutionList"},
       {name: "incidentSeverityList", kind: "XV.IncidentSeverityList"},
       {name: "incidentEmailProfile", kind: "XV.IncidentEmailProfileList"},
       {name: "opportunitySourceList", kind: "XV.OpportunitySourceList"},
@@ -59,7 +59,7 @@ trailing:true, white:true*/
         {name: "incidentList", kind: "XV.IncidentList", toggleSelected: false}
       ]
     };
-    XT.app.$.postbooks.insertModule(module, 1);
+    XT.app.$.postbooks.insertModule(module, 0);
 
     relevantPrivileges = [
       "CreateNewCurrency",

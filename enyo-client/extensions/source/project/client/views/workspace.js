@@ -1,6 +1,6 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
+/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
+trailing:true, white:true*/
 /*global XT:true, XM:true, XV:true, enyo:true*/
 
 (function () {
@@ -39,7 +39,27 @@ trailing:true white:true*/
     ];
 
     XV.appendExtension("XV.IncidentWorkspace", extensions);
+
+    // ..........................................................
+    // QUOTE
+    //
   
+    extensions = [
+      {kind: "XV.ProjectWidget", container: "settingsGroup", attr: "project"}
+    ];
+
+    XV.appendExtension("XV.QuoteWorkspace", extensions);
+
+    // ..........................................................
+    // SALES ORDER
+    //
+  
+    extensions = [
+      {kind: "XV.ProjectWidget", container: "settingsGroup", attr: "project"}
+    ];
+
+    XV.appendExtension("XV.SalesOrderWorkspace", extensions);
+
   };
 
 }());
