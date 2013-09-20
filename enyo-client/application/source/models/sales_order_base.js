@@ -653,7 +653,9 @@ white:true*/
           terms: customer.get("terms"),
           taxZone: customer.get("taxZone"),
           shipVia: customer.get("shipVia"),
-          site: customer.get("preferredSite") || this.get("site"),
+          site: customer.get("preferredSite") ?
+            XM.Site.findOrCreate({code: customer.get("preferredSite").id}) : // SiteRelation -> Site
+            this.get("site"),
           currency: customer.get("currency")
         };
         if (billtoContact) {

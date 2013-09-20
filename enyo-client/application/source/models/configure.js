@@ -24,7 +24,6 @@ white:true*/
     dispatchCommitFunction: 'commitPreferences'
 
   });
-  XM.userPreference = new XM.UserPreference();
 
   /**
     @class

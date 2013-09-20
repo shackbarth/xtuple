@@ -316,6 +316,9 @@ Globalize:true */
     kind: "XV.Workspace",
     title: "_userPreferences".loc(),
     model: "XM.UserPreference",
+    published: {
+      singletonModel: "XT.session.preferences"
+    },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
