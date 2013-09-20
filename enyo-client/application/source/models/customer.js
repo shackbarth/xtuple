@@ -118,12 +118,13 @@ white:true*/
     },
 
     defaults: function () {
-      var settings = XT.session.getSettings();
+      var settings = XT.session.getSettings(),
+        salesRep = XM.salesReps.get(settings.get("DefaultSalesRep"));
       return {
         isActive: true,
         creditStatus: "G",
         currency: XT.baseCurrency(),
-        salesRep: settings.get("DefaultSalesRep"),
+        salesRep: salesRep ? salesRep.id : null,
         terms: settings.get("DefaultTerms"),
         shipVia: this.getShipViaValue(),
         customerType: settings.get("DefaultCustType"),
@@ -133,7 +134,7 @@ white:true*/
         autoUpdateStatus: false,
         autoHoldOrders: false,
         isFreeFormBillto: false,
-        commission: 0,
+        commission: salesRep ? salesRep.get("commission") : 0,
         discount: 0,
         blanketPurchaseOrders: false,
         usesPurchaseOrders: false,
