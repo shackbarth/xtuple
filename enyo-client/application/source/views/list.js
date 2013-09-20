@@ -745,7 +745,7 @@ trailing:true, white:true, strict: false*/
       }]
     },
     events: {
-      onCollectionChange: ""
+      onListChange: ""
     },
     components: [
       {kind: "XV.ListItem", components: [
@@ -773,8 +773,8 @@ trailing:true, white:true, strict: false*/
     valueChanged: function () {
       this.inherited(arguments);
       // bind enyo event to add/remove on collection of models
-      this.getValue().on("add", this.doCollectionChange(), this);
-      this.getValue().on("remove", this.doCollectionChange(), this);
+      this.getValue().on("add", this.doListChange(), this);
+      this.getValue().on("remove", this.doListChange(), this);
     },
     /**
       Formatting function to show the shared text instead of
@@ -796,7 +796,7 @@ trailing:true, white:true, strict: false*/
       inEvent.model = model;
       inEvent.done = function () {
         inEvent.delete = true;
-        that.doCollectionChange(inEvent);
+        that.doListChange(inEvent);
       };
       this.deleteItem(inEvent);
     },
