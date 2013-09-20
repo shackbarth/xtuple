@@ -1511,6 +1511,9 @@ Globalize:true */
     published: {
       effectiveKey: "orderDate"
     },
+    handlers: {
+      ontap: "copyBilltoToShipto"
+    },
     create: function () {
       this.inherited(arguments);
       var effectiveKey = this.getEffectiveKey();
@@ -1521,6 +1524,13 @@ Globalize:true */
         }
       });
       this.titleChanged();
+
+      this.$.billtoAddress.$.buttonColumns.createComponent({
+        kind: "onyx.Button",
+        content: "_copyToShipTo".loc(),
+        name: "copyAddressButton",
+        ontap: "copyBilltoToShipto"
+      });
     },
     customerChanged: function () {
       var customer = this.$.customerWidget.getValue(),
@@ -1545,9 +1555,10 @@ Globalize:true */
       this.inherited(arguments);
       var model = this.getValue(),
         customer = model ? model.get("customer") : false,
-        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
+        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true,
+        button = this.$.billtoAddress.$.buttonColumns.$.copyAddressButton;
 
-      this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
+      button.setDisabled(!isFreeFormShipto);
       this.customerChanged();
     },
     controlValueChanged: function (inSender, inEvent) {
@@ -1556,8 +1567,11 @@ Globalize:true */
         this.customerChanged();
       }
     },
-    copyBilltoToShipto: function () {
-      this.getValue().copyBilltoToShipto();
+    copyBilltoToShipto: function (inSender, inEvent) {
+      if (inEvent.originator.name === "copyAddressButton") {
+        this.getValue().copyBilltoToShipto();
+        return true;
+      }
     }
   });
 
@@ -1569,6 +1583,7 @@ Globalize:true */
     kind: "XV.SalesOrderBase",
     title: "_quote".loc(),
     model: "XM.Quote",
+    effectiveKey: "quoteDate",
     components: [
       {kind: "Panels", name: "salesPanels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1588,18 +1603,13 @@ Globalize:true */
               name: "customerWidget", showAddress: true,
               label: "_customer".loc(), nameAttribute: ""
             },
-            {kind: "XV.AddressFieldsWidget", attr:
+            {kind: "XV.AddressFieldsWidget",
+              name: "billtoAddress", attr:
               {name: "billtoName", line1: "billtoAddress1",
                 line2: "billtoAddress2", line3: "billtoAddress3",
                 city: "billtoCity", state: "billtoState",
                 postalCode: "billtoPostalCode", country: "billtoCountry"}
             },
-            {classes: "xv-button-section", components: [
-              {kind: "onyx.Button", content: "_copyToShipTo".loc(),
-                name: "copyAddressButton",
-                ontap: "copyBilltoToShipto",
-                style: "margin: 4px;"}
-            ]},
             {kind: "XV.ContactWidget", attr: "billtoContact",
               name: "billtoContact"},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
@@ -1607,7 +1617,7 @@ Globalize:true */
               showAddress: true, label: "_number".loc(),
               nameAttribute: ""},
             {kind: "XV.AddressFieldsWidget",
-              disabled: true,
+              name: "shiptoAddress", disabled: true,
               attr: {name: "shiptoName", line1: "shiptoAddress1",
                 line2: "shiptoAddress2", line3: "shiptoAddress3",
                 city: "shiptoCity", state: "shiptoState",
@@ -1827,18 +1837,13 @@ Globalize:true */
                name: "customerWidget", showAddress: true,
                label: "_customer".loc(), nameAttribute: ""
             },
-            {kind: "XV.AddressFieldsWidget", attr:
+            {kind: "XV.AddressFieldsWidget",
+              name: "billtoAddress", attr:
               {name: "billtoName", line1: "billtoAddress1",
                 line2: "billtoAddress2", line3: "billtoAddress3",
                 city: "billtoCity", state: "billtoState",
                 postalCode: "billtoPostalCode", country: "billtoCountry"}
             },
-            {classes: "xv-button-section", components: [
-              {kind: "onyx.Button", content: "_copyToShipTo".loc(),
-                name: "copyAddressButton",
-                ontap: "copyBilltoToShipto",
-                style: "margin: 4px;"}
-            ]},
             {kind: "XV.ContactWidget", attr: "billtoContact",
               name: "billtoContact"},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
@@ -1846,6 +1851,7 @@ Globalize:true */
               showAddress: true, label: "_number".loc(),
               nameAttribute: ""},
             {kind: "XV.AddressFieldsWidget",
+              name: "shiptoAddress",
               disabled: true,
               attr: {name: "shiptoName", line1: "shiptoAddress1",
                 line2: "shiptoAddress2", line3: "shiptoAddress3",
