@@ -11,6 +11,7 @@ trailing:true, white:true*/
     // OPPORTUNITY QUOTE
     //
 
+    /** @private */
     var _appendWorkspace = function (Klass, inEvent) {
       var that = this,
         parent,
@@ -33,6 +34,41 @@ trailing:true, white:true*/
       }
     };
 
+    /** @private 
+      Check to see if account is customer or prospect to determine whether `new` works.
+    */
+    var _updateButtons = function (isCustomerOnly) {
+      var newButton = this.$.newButton,
+        attachButton = this.$.attachButton,
+        that = this,
+        parent,
+        model,
+        options,
+        id,
+        i;
+      this._counter = (this.counter || 0) + 1;
+      i = this._counter;
+      if (!newButton.disabled) {
+        parent = this.$.list.getParent();
+        id = parent.getValue("account.number");
+        newButton.setDisabled(true); // Disable until we know more
+        attachButton.setDisabled(true);
+        options = {
+          id: id,
+          success: function () {
+            if (i < that._counter) { return; } // Ignore stale requests
+            if (model.get("customer") ||
+               (!isCustomerOnly && model.get("prospect"))) {
+              newButton.setDisabled(false);
+              attachButton.setDisabled(false);
+            }
+          }
+        };
+        model = new XM.Account();
+        model.fetch(options);
+      }
+    };
+
     enyo.kind({
       name: "XV.OpportunityQuoteListRelationsBox",
       kind: "XV.ListRelationsBox",
@@ -48,6 +84,10 @@ trailing:true, white:true*/
       */
       appendWorkspace: function (inSender, inEvent) {
         return _appendWorkspace.call(this, XM.CustomerProspectRelation, inEvent);
+      },
+      updateButtons: function () {
+        this.inherited(arguments);
+        _updateButtons.call(this);
       }
     });
 
@@ -70,6 +110,10 @@ trailing:true, white:true*/
       */
       appendWorkspace: function (inSender, inEvent) {
         return _appendWorkspace.call(this, XM.SalesCustomer, inEvent);
+      },
+      updateButtons: function () {
+        this.inherited(arguments);
+        _updateButtons.call(this, true);
       }
     });
 
