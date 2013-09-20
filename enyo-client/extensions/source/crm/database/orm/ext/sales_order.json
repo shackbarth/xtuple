@@ -1,0 +1,54 @@
+[
+  {
+    "context": "crm",
+    "nameSpace": "XM",
+    "type": "SalesOrder",
+    "table": "xt.coheadinfo",
+    "isExtension": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "cohead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "opportunity",
+        "toOne": {
+          "isNested": true,
+          "type": "OpportunityRelation",
+          "column": "cohead_ophead_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
+    "type": "SalesOrderListItem",
+    "table": "xt.coheadinfo",
+    "isExtension": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "cohead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "opportunity",
+        "toOne": {
+          "isNested": true,
+          "type": "OpportunityRelation",
+          "column": "cohead_ophead_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }
+]

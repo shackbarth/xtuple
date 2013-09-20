@@ -39,7 +39,27 @@ trailing:true, white:true*/
     ];
 
     XV.appendExtension("XV.IncidentWorkspace", extensions);
+
+    // ..........................................................
+    // QUOTE
+    //
   
+    extensions = [
+      {kind: "XV.ProjectWidget", container: "settingsGroup", attr: "project"}
+    ];
+
+    XV.appendExtension("XV.QuoteWorkspace", extensions);
+
+    // ..........................................................
+    // SALES ORDER
+    //
+  
+    extensions = [
+      {kind: "XV.ProjectWidget", container: "settingsGroup", attr: "project"}
+    ];
+
+    XV.appendExtension("XV.SalesOrderWorkspace", extensions);
+
   };
 
 }());

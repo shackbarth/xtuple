@@ -2647,6 +2647,9 @@ body {
   font-style: italic;
   color: #93a1a1;
 }
+.xv-addresswidget .xv-addresswidget-viewer.hyperlink {
+  color: #0000ff;
+}
 .xv-addresswidget .xv-addresswidget-viewer.disabled {
   color: #696969;
 }
