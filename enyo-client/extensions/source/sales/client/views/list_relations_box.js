@@ -11,6 +11,28 @@ trailing:true, white:true*/
     // OPPORTUNITY QUOTE
     //
 
+    var _appendWorkspace = function (Klass, inEvent) {
+      var that = this,
+        parent,
+        model,
+        options,
+        id;
+      if (inEvent.attributes && !inEvent.attributes.customer) {
+        parent = this.$.list.getParent();
+        id = parent.getValue("account.number");
+        options = {
+          id: id,
+          success: function () {
+            inEvent.attributes.customer = model;
+            that.doWorkspace(inEvent);
+          }
+        };
+        model = new Klass();
+        model.fetch(options);
+        return true;
+      }
+    };
+
     enyo.kind({
       name: "XV.OpportunityQuoteListRelationsBox",
       kind: "XV.ListRelationsBox",
@@ -25,25 +47,7 @@ trailing:true, white:true*/
         Intercept new workspace and add customer/prospect.
       */
       appendWorkspace: function (inSender, inEvent) {
-        var that = this,
-          parent,
-          model,
-          options,
-          id;
-        if (inEvent.attributes && !inEvent.attributes.customer) {
-          parent = this.$.list.getParent();
-          id = parent.getValue("account.number");
-          options = {
-            id: id,
-            success: function () {
-              inEvent.attributes.customer = model;
-              that.doWorkspace(inEvent);
-            }
-          };
-          model = new XM.CustomerProspectRelation();
-          model.fetch(options);
-          return true;
-        }
+        _appendWorkspace.call(this, XM.CustomerProspectRelation, inEvent);
       }
     });
 
@@ -57,7 +61,13 @@ trailing:true, white:true*/
       title: "_salesOrders".loc(),
       parentKey: "opportunity",
       listRelations: "XV.OpportunitySalesListRelations",
-      searchList: "XV.SalesOrderList"
+      searchList: "XV.SalesOrderList",
+      /**
+        Intercept new workspace and add customer.
+      */
+      appendWorkspace: function (inSender, inEvent) {
+        _appendWorkspace.call(this, XM.SalesCustomerRelation, inEvent);
+      }
     });
 
     // ..........................................................
