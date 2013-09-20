@@ -47,7 +47,7 @@ trailing:true, white:true*/
         Intercept new workspace and add customer/prospect.
       */
       appendWorkspace: function (inSender, inEvent) {
-        _appendWorkspace.call(this, XM.CustomerProspectRelation, inEvent);
+        return _appendWorkspace.call(this, XM.CustomerProspectRelation, inEvent);
       }
     });
 
@@ -66,7 +66,7 @@ trailing:true, white:true*/
         Intercept new workspace and add customer.
       */
       appendWorkspace: function (inSender, inEvent) {
-        _appendWorkspace.call(this, XM.SalesCustomerRelation, inEvent);
+        return _appendWorkspace.call(this, XM.SalesCustomerRelation, inEvent);
       }
     });
 
