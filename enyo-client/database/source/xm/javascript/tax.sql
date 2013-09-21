@@ -45,6 +45,20 @@ select xt.install_js('XM','Tax','xtuple', $$
     amount: {type: "Number", description: "Taxable Amount"}
   };
 
+  if (!XM.TaxAuthority) { XM.TaxAuthority = {}; }
+
+  XM.TaxAuthority.isDispatchable = true;
+
+  /**
+    Return whether a tax authority is referenced by another table.
+    
+    @param {String} Tax Authority Number
+  */
+  XM.TaxAuthority.used = function(id) {
+    var exceptions = ["public.crmacct"];
+    return XM.PrivateModel.used("XM.TaxAuthority", id, exceptions);
+  };
+
 }());
   
 $$ );
