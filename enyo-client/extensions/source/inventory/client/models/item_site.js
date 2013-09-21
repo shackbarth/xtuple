@@ -8,60 +8,32 @@ white:true*/
 
   XT.extensions.inventory.initItemSiteModels = function () {
 
+    var proto = XM.ItemSite.prototype;
+    proto.readOnlyAttributes = (proto.readOnlyAttributes || []).concat([
+        'receiveLocation',
+        'isReceiveLocationAuto',
+        'stockLocation',
+        'isStockLocationAuto',
+        'userDefinedLocation'
+      ]);
+    proto.defaults = _.extend(proto.defaults, {
+      abcClass: "A",
+      isAutomaticAbcClassUpdates: false,
+      cycleCountFrequency: 0,
+      isStocked: false,
+      safetyStock: 0,
+      useParameters: false,
+      useParametersManual: false,
+      reorderLevel: 0,
+      orderToQuantity: 0,
+      minimumOrderQuantity: 0,
+      multipleOrderQuantity: 0,
+      maximumOrderQuantity: 0,
+      isLocationControl: false,
+      isReceiveLocationAuto: false,
+      isIssueLocationAuto: false
+    });
     var locationBehaviorFunctions = {
-
-      defaults: function () {
-        var K = XM.ItemSite;
-        this.setReadOnly(this.get('receiveLocation'), true);
-        this.setReadOnly(this.get('isReceiveLocationAuto'), true);
-        this.setReadOnly(this.get('stockLocation'), true);
-        this.setReadOnly(this.get('isStockLocationAuto'), true);
-        this.setReadOnly(this.get('userDefinedLocation'), true);
-      },
-      /*TODO get this non-orm field into the model
-      isUseDefaultLocation: function () {
-        return [false, true];
-      },
-
-      isUseDefaultLocationDidChange: function () {
-        var K = XM.ItemSite,
-          isUseDefaultLocation = this.get('isUseDefaultLocation'),
-          isLocationControl = this.get('isLocationControl'),
-          receiveLocation = true,
-          isReceiveLocationAuto = true,
-          stockLocation = true,
-          isStockLocationAuto = true,
-          userDefinedLocation = true;
-        if (isUseDefaultLocation === true && isLocationControl === false) {
-          receiveLocation = false;
-          isReceiveLocationAuto = false;
-          stockLocation = false;
-          isStockLocationAuto = false;
-          userDefinedLocation = false;
-        }
-        else if (isUseDefaultLocation === true && isLocationControl === true) {
-          receiveLocation = false;
-          isReceiveLocationAuto = false;
-          stockLocation = false;
-          isStockLocationAuto = false;
-          userDefinedLocation = true;
-        }
-        this.setReadOnly('receiveLocation', receiveLocation);
-        this.setReadOnly('isReceiveLocationAuto', isReceiveLocationAuto);
-        this.setReadOnly('stockLocation', stockLocation);
-        this.setReadOnly('isStockLocationAuto', isStockLocationAuto);
-        this.setReadOnly('userDefinedLocation', userDefinedLocation);
-      }, */
-
-      //TODO get the following function to work.
-      costMethod: function () {
-        var K = XM.ItemSite,
-          itemType = this.get("item.itemType"),
-          costMethod = this.get("costMethod");
-        if (itemType === "P") {
-          return ["A", "S"];
-        }
-      },
 
       controlMethodDidChange: function () {
         var K = XM.ItemSite,
@@ -190,7 +162,6 @@ white:true*/
         XM.Model.prototype.bindEvents.apply(this, arguments);
         this.on('change:controlMethod', this.controlMethodDidChange);
         this.on('change:costMethod', this.costMethodDidChange);
-      //  this.on('change:isUseDefaultLocation', this.isUseDefaultLocationDidChange);
       }
     };
 

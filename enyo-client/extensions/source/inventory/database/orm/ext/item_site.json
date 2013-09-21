@@ -30,13 +30,6 @@
         }
       },
       {
-        "name": "quantityOnHand",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_qtyonhand"
-        }
-      },
-      {
         "name": "leadTime",
         "attr": {
           "type": "Number",

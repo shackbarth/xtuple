@@ -36,7 +36,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.Model
   */
   XM.ItemSite = XM.Model.extend(/** @lends XM.ItemSite.prototype */{
 
@@ -50,19 +50,10 @@ white:true*/
       isActive: true
     },
 
-    /**
-      Users must not be able to set the site except for new itemsites
-     */
-    initialize: function () {
-      XM.Model.prototype.initialize.apply(this, arguments);
-      var isReadOnly = this.getStatus() !== XM.Model.READY_NEW;
-      this.setReadOnly('item', isReadOnly);
-      this.setReadOnly('site', isReadOnly);
-    },
-
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:item change:site', this.checkDuplicatePair);
+      this.on('statusChange', this.statusDidChange);
     },
 
     /**
@@ -146,15 +137,10 @@ white:true*/
       }
     },
 
-    /**
-      Retrieve the Item Site's cost.
-
-      @returns {Object} Receiver
-    */
-    cost: function (options) {
-      var params = [this.id];
-      this.dispatch("XM.Customer", "itemPrice", params, options);
-      return this;
+    statusDidChange: function () {
+      var isReadOnly = this.getStatus() !== XM.Model.READY_NEW;
+      this.setReadOnly('item', isReadOnly);
+      this.setReadOnly('site', isReadOnly);
     }
 
   });
