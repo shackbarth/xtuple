@@ -123,19 +123,14 @@ select xt.install_js('XT','Orm','xtuple', $$
           return schemaCol.column === ormProp.attr.column;
         });
         if(schemaColumn.length === 0) {
-          /*throw new Error(nameSpace + "." + type + " ORM property " + ormProp.attr.column
-            + " references a column not in " + tableNamespace + "." + tableName);
-          */
-          plv8.elog(NOTICE, nameSpace + "." + type + " ORM property " + ormProp.attr.column
+          throw new Error(nameSpace + "." + type + " ORM property " + ormProp.attr.column
             + " references a column not in " + tableNamespace + "." + tableName);
         }
         schemaColumn = schemaColumn[0];
         var schemaType = schemaColumn.category;
         var success = verifyOrmType(ormProp.attr.type, schemaType);
         if (success < 0) {
-          /*throw new Error(nameSpace + "." + type + " ORM property " + ormProp.name + 
-            " type " + ormProp.attr.type + " does not match table column type of " + schemaType);*/
-          plv8.elog(NOTICE, nameSpace + "." + type + " ORM property " + ormProp.name + 
+          throw new Error(nameSpace + "." + type + " ORM property " + ormProp.name + 
             " type " + ormProp.attr.type + " does not match table column type of " + schemaType);
         }
       }
