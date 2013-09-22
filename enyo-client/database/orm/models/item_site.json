@@ -48,7 +48,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemSite",
-    "table": "itemsite",
+    "table": "xt.itemsiteinfo",
     "idSequenceName": "itemsite_itemsite_id_seq",
     "isRest": true,
     "lockable": true,

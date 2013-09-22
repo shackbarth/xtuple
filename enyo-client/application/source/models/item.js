@@ -505,7 +505,7 @@ white:true*/
       @type String
       @default Y
     */
-    BY_PRODUCT: 'C'
+    BY_PRODUCT: 'Y'
 
   });
 

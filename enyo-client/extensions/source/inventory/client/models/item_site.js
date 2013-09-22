@@ -8,42 +8,53 @@ white:true*/
 
   XT.extensions.inventory.initItemSiteModels = function () {
 
-    var proto = XM.ItemSite.prototype;
-    proto.readOnlyAttributes = (proto.readOnlyAttributes || []).concat([
+    var _proto = XM.ItemSite.prototype;
+    _proto.readOnlyAttributes = (_proto.readOnlyAttributes || []).concat([
         'receiveLocation',
         'isReceiveLocationAuto',
         'stockLocation',
         'isStockLocationAuto',
         'userDefinedLocation'
       ]);
-    proto.defaults = _.extend(proto.defaults, {
-      abcClass: "A",
-      isAutomaticAbcClassUpdates: false,
-      cycleCountFrequency: 0,
-      isStocked: false,
-      safetyStock: 0,
-      useParameters: false,
-      useParametersManual: false,
-      reorderLevel: 0,
-      orderToQuantity: 0,
-      minimumOrderQuantity: 0,
-      multipleOrderQuantity: 0,
-      maximumOrderQuantity: 0,
-      isLocationControl: false,
-      isReceiveLocationAuto: false,
-      isIssueLocationAuto: false
-    });
-    var bindEvents = proto.bindEvents;
-    var initialize = proto.initialize;
+    var _defaults = _proto.defaults;
+    var _bindEvents = _proto.bindEvents;
+    var _initialize = _proto.initialize;
     var ext = {
       /**
         An array of cost methods allowed for this item site.
       */
       costMethods: null,
+
+      defaults: function () {
+        var defaults = _defaults.apply(this, arguments);
+        defaults = _.extend(defaults, {
+          abcClass: "A",
+          isAutomaticAbcClassUpdates: false,
+          cycleCountFrequency: 0,
+          isStocked: false,
+          safetyStock: 0,
+          useParameters: false,
+          useParametersManual: false,
+          reorderLevel: 0,
+          orderToQuantity: 0,
+          minimumOrderQuantity: 0,
+          multipleOrderQuantity: 0,
+          maximumOrderQuantity: 0,
+          isLocationControl: false,
+          isReceiveLocationAuto: false,
+          isIssueLocationAuto: false,
+          locationType: XM.ItemSite.NO_LOCATION
+        });
+        return defaults;
+      },
+
       bindEvents: function () {
-        bindEvents.apply(this, arguments);
+        _bindEvents.apply(this, arguments);
         this.on('change:controlMethod change:item', this.controlMethodDidChange);
         this.on('change:costMethod', this.costMethodDidChange);
+        this.on('change:item', this.itemDidChange);
+        this.on('change:isLocationControl change:useDefaultLocation',
+          this.useDefaultLocationDidChange);
       },
 
       controlMethodDidChange: function () {
@@ -108,12 +119,46 @@ white:true*/
         }
 
         if (costMethod === K.JOB_COST) {
-          this.handleJobCost();
+          this.costMethodDidChange();
+        }
+      },
+
+      costMethodDidChange: function () {
+        var K = XM.ItemSite,
+          costMethod = this.get("costMethod"),
+          item = this.get("item");
+        if (!item) { return; }
+        if (costMethod === K.JOB_COST) {
+          this.setReadOnly({
+            safetyStock: true,
+            abcClass: true,
+            isAutomaticAbcClassUpdates: true,
+            cycleCountFrequency: true,
+            useParameters: true,
+            isSold: true,
+            isLocationControl: true,
+            useDefaultLocation: false,
+            restrictedLocationsAllowed: true
+          });
+
+          this.set({
+            isStocked: false,
+            safetyStock: 0,
+            abcClass: false,
+            isAutomaticAbcClassUpdates: false,
+            cycleCountFrequency: 0,
+            useParameters: false,
+            isSold: false,
+            isLocationControl: false,
+            useDefaultLocation: false
+          });
+        } else {
+          this.itemDidChange();
         }
       },
 
       initialize: function () {
-        initialize.apply(this, arguments);
+        _initialize.apply(this, arguments);
         var K = XM.ItemSite,
           settings = XT.sessision.settings,
           allowAvg = settings.get("AllowAvgCostMethod"),
@@ -133,114 +178,111 @@ white:true*/
         }
       },
 
-      costMethodDidChange: function () {
+      itemDidChange: function () {
         var K = XM.ItemSite,
           I = XM.Item,
+          item = this.get("item"),
+          itemType = item ? item.get("item") : false,
+          controlMethod = this.get("controlMethod"),
           costMethod = this.get("costMethod"),
-          isSold = false,
-          plannerCode = false,
-          isStocked = false,
-          isAutomaticAbcClassUpdates = false,
-          abcClass = false,
-          cycleCountFrequency = false,
-          isLocationControl = false,
-          receiveLocation = false,
-          isReceiveLocationAuto = false,
-          stockLocation = false,
-          isStockLocationAuto = false,
-          userDefinedLocation = false,
-          locationComment = false,
-          useParameters = false,
-          reorderLevel = false,
-          orderToQuantity = false,
-          minimumOrderQuantity = false,
-          maximumOrderQuantity = false,
-          multipleOrderQuantity = false,
-          restrictedLoctionsAllowed = false,
-          useParametersManual = false,
-          safetyStock = false,
-          leadTime = false;
-        switch (costMethod) {
-        case K.JOB_COST:
-          if (I.MANUFACTURED) {
-            isSold = true;
-            plannerCode = true;
-            isStocked = true;
-            abcClass = true;
-            isAutomaticAbcClassUpdates = true;
-            abcClass = true;
-            cycleCountFrequency = true;
-            isLocationControl = true;
-            receiveLocation = true;
-            isReceiveLocationAuto = true;
-            stockLocation = true;
-            isStockLocationAuto = true;
-            userDefinedLocation = true;
-            locationComment = true;
-            useParameters = true;
-            reorderLevel = true;
-            orderToQuantity = true;
-            minimumOrderQuantity = true;
-            maximumOrderQuantity = true;
-            multipleOrderQuantity = true;
-            restrictedLoctionsAllowed = true;
-            useParametersManual = true;
-            safetyStock = true;
-            leadTime = true;
-            this.set("isSold", false);
-            this.set("isAutomaticAbcClassUpdates", false);
-            this.set("cycleCountFrequency", 0);
-            this.set("useParameters", false);
-            this.set("isStocked", false);
-            this.set("locationControl", false);
-            this.set("safetyStock", 0);
+          settings = XT.sessision.settings,
+          allowAvg = settings.get("AllowAvgCostMethod"),
+          allowStd = settings.get("AllowStdCostMethod"),
+          allowJob = settings.get("AllowJobCostMethod"),
+          nonStockTypes = [
+            I.REFERENCE,
+            I.PLANNING,
+            I.BREEDER,
+            I.BY_PRODUCT,
+            I.CO_PRODUCT
+          ],
+          attrs;
+
+        if (!itemType) { return; }
+
+        // Set a default cost method based on item type
+        if (controlMethod === K.NO_CONTROL ||
+            itemType === I.REFERENCE || itemType === I.KIT) {
+          this.set("costMethod", K.NO_COST);
+          this.setReadOnly("costMethod", true);
+          this.costMethods = _.without(this.costMethods,
+            K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST);
+        } else {
+          if (allowStd && costMethod !== K.STANDARD_COST) {
+            this.set("costMethod", K.STANDARD_COST);
+          } else {
+            this.set("costMethod", K.AVERAGE_COST);
           }
-          else if (I.PURCHASED || I.OUTSIDE_PROCESS) {
-            isSold = false;
-            abcClass = true;
-            isAutomaticAbcClassUpdates = true;
-            cycleCountFrequency = true;
-            isStocked = true;
-            isLocationControl = true;
-            restrictedLoctionsAllowed = true;
-            safetyStock = true;
-            useParameters = true;
-            this.set("isSold", true);
-            this.set("isAutomaticAbcClassUpdates", false);
-            this.set("cycleCountFrequency", 0);
-            this.set("useParameters", false);
-            this.set("isStocked", false);
-            this.set("locationControl", false);
-            this.set("safetyStock", 0);
+          this.costMethods = _.without(this.costMethods, K.NO_COST);
+
+          if (allowStd && !_.contains(this.costMethods, K.STANDARD_COST)) {
+            this.costMethods.push(K.STANDARD_COST);
           }
-          else {
-            isStocked = true;
+          if (allowAvg && !_.contains(this.costMethods, K.AVERAGE_COST)) {
+            this.costMethods.push(K.AVERAGE_COST);
+          }
+          if (allowJob && !_.contains(this.costMethods, K.JOB_COST)) {
+            this.costMethods.push(K.JOB_COST);
           }
         }
-        this.setReadOnly("isSold", isSold);
-        this.setReadOnly("plannerCode", plannerCode);
-        this.setReadOnly("isStocked", isStocked);
-        this.setReadOnly("abcClass", abcClass);
-        this.setReadOnly("isAutomaticAbcClassUpdates", isAutomaticAbcClassUpdates);
-        this.setReadOnly("abcClass", abcClass);
-        this.setReadOnly("cycleCountFrequency", cycleCountFrequency);
-        this.setReadOnly("isLocationControl", isLocationControl);
-        this.setReadOnly("receiveLocation", receiveLocation);
-        this.setReadOnly("isReceiveLocationAuto", isReceiveLocationAuto);
-        this.setReadOnly("stockLocation", stockLocation);
-        this.setReadOnly("isStockLocationAuto", isStockLocationAuto);
-        this.setReadOnly("userDefinedLocation", userDefinedLocation);
-        this.setReadOnly("locationComment", locationComment);
-        this.setReadOnly("useParameters", useParameters);
-        this.setReadOnly("reorderLevel", reorderLevel);
-        this.setReadOnly("orderToQuantity", orderToQuantity);
-        this.setReadOnly("minimumOrderQuantity", minimumOrderQuantity);
-        this.setReadOnly("maximumOrderQuantity", maximumOrderQuantity);
-        this.setReadOnly("multipleOrderQuantity", multipleOrderQuantity);
-        this.setReadOnly("restrictedLoctionsAllowed", restrictedLoctionsAllowed);
-        this.setReadOnly("useParametersManual", useParametersManual);
-        this.setReadOnly("safetyStock", safetyStock);
-        this.setReadOnly("leadTime", leadTime);
+
+        // Settings dependent on whether inventory item or not
+        if (_.contains(nonStockTypes, itemType)) {
+          this.setReadOnly({
+            safetyStock: true,
+            abcClass: true,
+            isAutomaticAbcClassUpdates: true,
+            cycleCountFrequency: true,
+            isStocked: true,
+            useDefaultLocation: true,
+            isLocationControl: true,
+            controlMethod: true
+          });
+ 
+          attrs = {
+            isStocked: false,
+            useDefaultLocation: false,
+            isLocationControl: false
+          };
+
+          if (itemType === I.REFERENCE || itemType === I.KIT) {
+            this.setReadOny("isSold", false);
+            attrs.controlMethod = K.NO_CONTROL;
+          } else {
+            this.set("isSold", false);
+            this.setReadOny("isSold");
+            attrs.controlMethod = K.REGULAR_CONTROL;
+          }
+  
+          this.set(attrs);
+        } else {
+          this.setReadOnly({
+            safetyStock: false,
+            abcClass: false,
+            isAutomaticAbcClassUpdates: false,
+            cycleCountFrequency: false,
+            leadTime: false,
+            isSold: false,
+            isStocked: false,
+            useDefaultLocation: false,
+            isLocationControl: false,
+            controlMethod: false
+          });
+        }
+      },
+
+      useDefaultLocationDidChange: function () {
+        var useDefault = this.get("useDefaultLocation"),
+          isLocationControl = this.get("isLocationControl");
+        if (useDefault) {
+          this.setReadOnly("receiveLocation", !isLocationControl);
+          this.setReadOnly("isReceiveLocationAuto", !isLocationControl);
+          this.setReadOnly("stockLocation", !isLocationControl);
+          this.setReadOnly("isStockLocationAuto", !isLocationControl);
+          this.setReadOnly("userDefinedLocation", isLocationControl);
+        } else {
+          this.setReadOnly("userDefinedLocation");
+        }
       }
     };
 

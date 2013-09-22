@@ -3,7 +3,7 @@
     "context": "inventory",
     "nameSpace": "XM",
     "type": "ItemSite",
-    "table": "itemsite",
+    "table": "xt.itemsiteinfo",
     "isExtension": true,
     "comment": "Extended by Inventory",
     "relations": [
@@ -132,6 +132,13 @@
         "attr": {
           "type": "Boolean",
           "column": "itemsite_loccntrl"
+        }
+      },
+      {
+        "name": "useDefaultLocation",
+        "attr": {
+          "type": "Boolean",
+          "column": "use_default_loc"
         }
       },
       {

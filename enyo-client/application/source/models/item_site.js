@@ -46,8 +46,11 @@ white:true*/
       return this.getValue("item.number") + " " + this.getValue("site.code");
     },
 
-    defaults: {
-      isActive: true
+    defaults: function () {
+      return {
+        site: XT.defaultSite(),
+        isActive: true
+      };
     },
 
     bindEvents: function () {
@@ -139,8 +142,10 @@ white:true*/
 
     statusDidChange: function () {
       var isReadOnly = this.getStatus() !== XM.Model.READY_NEW;
-      this.setReadOnly('item', isReadOnly);
-      this.setReadOnly('site', isReadOnly);
+      this.setReadOnly({
+        item: isReadOnly,
+        site: isReadOnly
+      });
     }
 
   });
