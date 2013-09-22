@@ -8,7 +8,12 @@ white:true*/
 
   XT.extensions.inventory.initItemSiteModels = function () {
 
-    var _proto = XM.ItemSite.prototype;
+    var _proto = XM.ItemSite.prototype,
+      _defaults = _proto.defaults,
+      _bindEvents = _proto.bindEvents,
+      _initialize = _proto.initialize,
+      _statusDidChange = _proto.statusDidChange;
+
     _proto.readOnlyAttributes = (_proto.readOnlyAttributes || []).concat([
         'receiveLocation',
         'isReceiveLocationAuto',
@@ -16,9 +21,7 @@ white:true*/
         'isStockLocationAuto',
         'userDefinedLocation'
       ]);
-    var _defaults = _proto.defaults;
-    var _bindEvents = _proto.bindEvents;
-    var _initialize = _proto.initialize;
+
     var ext = {
       /**
         An array of cost methods allowed for this item site.
@@ -268,6 +271,14 @@ white:true*/
             isLocationControl: false,
             controlMethod: false
           });
+        }
+      },
+
+      statusDidChange: function () {
+        _statusDidChange.apply(this, arguments);
+        if (this.getStatus() === XM.Model.READY_CLEAN) {
+          this.controlMethodDidChange();
+          this.useDefaultLocationDidChange();
         }
       },
 
