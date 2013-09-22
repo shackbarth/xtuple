@@ -96,11 +96,33 @@ white:true*/
 
     // Cost Method
     var costMethodJson = [
-      { id: XM.ItemSite.NO_COST, name: "_none".loc() },
-      { id: XM.ItemSite.STANDARD_COST, name: "_standard".loc() },
-      { id: XM.ItemSite.AVERAGE_COST, name: "_average".loc() },
-      { id: XM.ItemSite.JOB_COST, name: "_job".loc() }
-    ];
+        { id: XM.ItemSite.NO_COST, name: "_none".loc() }
+      ],
+      K = XM.ItemSite,
+      settings = XT.sessision.settings,
+      allowAvg = settings.get("AllowAvgCostMethod"),
+      allowStd = settings.get("AllowStdCostMethod"),
+      allowJob = settings.get("AllowJobCostMethod");
+
+    if (allowAvg) {
+      costMethodJson.push({
+        id: K.AVERAGE_COST,
+        name: "_average".loc()
+      });
+    }
+    if (allowStd) {
+      costMethodJson.push({
+        id: K.STANDARD_COST,
+        name: "_standard".loc()
+      });
+    }
+    if (allowJob) {
+      costMethodJson.push({
+        id: K.JOB_COST,
+        name: "_job".loc()
+      });
+    }
+
     XM.CostMethodModel = Backbone.Model.extend({
     });
     XM.CostMethodCollection = Backbone.Collection.extend({

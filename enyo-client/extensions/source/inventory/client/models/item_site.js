@@ -33,18 +33,103 @@ white:true*/
       isReceiveLocationAuto: false,
       isIssueLocationAuto: false
     });
-    var locationBehaviorFunctions = {
+    var bindEvents = proto.bindEvents;
+    var initialize = proto.initialize;
+    var ext = {
+      /**
+        An array of cost methods allowed for this item site.
+      */
+      costMethods: null,
+      bindEvents: function () {
+        bindEvents.apply(this, arguments);
+        this.on('change:controlMethod change:item', this.controlMethodDidChange);
+        this.on('change:costMethod', this.costMethodDidChange);
+      },
 
       controlMethodDidChange: function () {
         var K = XM.ItemSite,
-          controlMethod = this.get("controlMethod");
-        if (controlMethod === K.NO_CONTROL) {
-          this.setReadOnly('costMethod', true);
-          this.set('costMethod', 'N');
+          I = XM.Item,
+          controlMethod = this.get("controlMethod"),
+          costMethod = this.get("costMethod"),
+          item = this.get("item"),
+          itemType = item ? item.get("itemType") : false,
+          settings = XT.sessision.settings,
+          allowAvg = settings.get("AllowAvgCostMethod"),
+          allowStd = settings.get("AllowStdCostMethod"),
+          allowJob = settings.get("AllowJobCostMethod"),
+          quantityOnHand = this.get("quantityOnHand");
+
+        /* Set default cost method */
+        if (controlMethod === K.NO_CONTROL ||
+            itemType === I.REFERENCE ||
+            itemType ===  I.KIT) {
+          this.set("costMethod", K.NO_COST);
+          this.setReadOnly("costMethod");
+          this.costMethods = [K.NO_COST];
+        } else {
+          if (allowStd &&
+              costMethod !== K.AVERAGE_COST &&
+              costMethod !== K.JOB_COST) {
+            this.set("costMethod", K.STANDARD_COST);
+          } else if (allowAvg &&
+              costMethod !== K.STANDARD_COST &&
+              costMethod !== K.JOB_COST) {
+            this.set("costMethod", K.AVERAGE_COST);
+          } else if (allowJob &&
+              costMethod !== K.AVERAGE_COST &&
+              costMethod !== K.STANDARD_COST) {
+            this.set("costMethod", K.JOB_COST);
+          }
+
+          // Cost available cost methods
+          this.costMethods = _.without(this.costMethods, K.NO_COST);
+          if (!_.contains(this.costMethods, K.STANDARD_COST) &&
+              allowStd) {
+            this.costMethods.push(K.STANDARD_COST);
+          }
+          if (!_.contains(this.costMethods, K.AVERAGE_COST) &&
+              allowAvg) {
+            this.costMethods.push(K.AVERAGE_COST);
+          }
         }
-        else if (controlMethod !== K.NO_CONTROL) {
-          this.setReadOnly('costMethod', false);
-          this.set('costMethod', 'S');
+
+        /* Determine if Job Cost is possible */
+        if ((itemType === I.MANUFACTURED ||
+            itemType === I.PURCHASED ||
+            itemType === I.OUTSIDE_PROCESS) &&
+          controlMethod !== K.NO_CONTROL &&
+          allowJob &&
+          quantityOnHand) {
+          if (!_.contains(this.costMethods, K.JOB_COST)) {
+            this.costMethods.push(K.JOB_COST);
+          }
+        } else {
+          this.costMethods = _.without(this.costMethods, K.JOB_COST);
+        }
+
+        if (costMethod === K.JOB_COST) {
+          this.handleJobCost();
+        }
+      },
+
+      initialize: function () {
+        initialize.apply(this, arguments);
+        var K = XM.ItemSite,
+          settings = XT.sessision.settings,
+          allowAvg = settings.get("AllowAvgCostMethod"),
+          allowStd = settings.get("AllowStdCostMethod"),
+          allowJob = settings.get("AllowJobCostMethod");
+
+        // Determine which cost types are allowed
+        this.costMethodsAllowed.push(K.NO_COST);
+        if (allowStd) {
+          this.costMethods.push(K.STANDARD_COST);
+        }
+        if (allowAvg) {
+          this.costMethods.push(K.AVERAGE_COST);
+        }
+        if (allowJob) {
+          this.costMethods.push(K.JOB_COST);
         }
       },
 
@@ -156,16 +241,10 @@ white:true*/
         this.setReadOnly("useParametersManual", useParametersManual);
         this.setReadOnly("safetyStock", safetyStock);
         this.setReadOnly("leadTime", leadTime);
-      },
-
-      bindEvents: function () {
-        XM.Model.prototype.bindEvents.apply(this, arguments);
-        this.on('change:controlMethod', this.controlMethodDidChange);
-        this.on('change:costMethod', this.costMethodDidChange);
       }
     };
 
-    XM.ItemSite = XM.ItemSite.extend(locationBehaviorFunctions);
+    XM.ItemSite = XM.ItemSite.extend(ext);
     /**
       @class
 

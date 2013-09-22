@@ -59,6 +59,12 @@
         "read": "ViewItemSites",
         "update": "MaintainItemSites",
         "delete": "DeleteItemSites"
+      },
+      "attribute": {
+        "quantityOnHand": {
+          "create": false,
+          "update": false
+        }
       }
     },
     "properties": [
@@ -139,6 +145,13 @@
           "type": "ItemSiteComment",
           "column": "itemsite_id",
           "inverse": "itemSite"
+        }
+      },
+      {
+        "name": "quantityOnHand",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_qtyonhand"
         }
       }
     ],
