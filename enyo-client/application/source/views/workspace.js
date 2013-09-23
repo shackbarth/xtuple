@@ -1071,6 +1071,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     kind: "XV.Workspace",
     title: "_item".loc(),
     model: "XM.Item",
+    headerAttrs: ["number", "-", "description1"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1147,6 +1148,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     kind: "XV.Workspace",
     title: "_itemSite".loc(),
     model: "XM.ItemSite",
+    headerAttrs: ["item.number", "-", "site.code"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [

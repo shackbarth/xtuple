@@ -414,13 +414,10 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.CheckboxWidget", attr: "isStocked"},
           {kind: "XV.CheckboxWidget", attr: "isAutomaticAbcClassUpdates"},
           {kind: "XV.AbcClassPicker", attr: "abcClass"},
-          //TODO: Create an XV widget that includes an integer input field and an increase and decrease button
           {kind: "XV.NumberWidget", attr: "cycleCountFrequency", scale: 0},
           {kind: "onyx.GroupboxHeader", content: "_location".loc() },
-          {kind: "XV.CheckboxWidget", attr: "isLocationControl"},
-          //TODO get a checkbox working for useDefaultLocation - currently a function on the model
-          //{kind: "XV.CheckboxWidget", attr: "isUseDefaultLocation"},
-          //{kind: "XV.InputWidget", type: "boolean", name: "isUseDefaultLocation", label: "_isUseDefaultLocation".loc()},
+          {kind: "XV.ToggleButtonWidget", attr: "isLocationControl"},
+          {kind: "XV.CheckboxWidget", attr: "useDefaultLocation"},
           {kind: "XV.LocationPicker", attr: "receiveLocation"},
           {kind: "XV.CheckboxWidget", attr: "isReceiveLocationAuto"},
           {kind: "XV.LocationPicker", attr: "stockLocation"},
@@ -435,15 +432,16 @@ trailing:true, white:true, strict: false*/
         {kind: "onyx.GroupboxHeader", content: "_planning".loc()},
         {kind: "XV.ScrollableGroupbox", name: "planningGroup", fit: true,
           classes: "in-panel", components: [
-          {kind: "XV.CheckboxWidget", attr: "useParameters"},
+          {kind: "XV.QuantityWidget", attr: "safetyStock"},
+          {kind: "XV.NumberWidget", attr: "leadTime", scale: 0},
+          {kind: "onyx.GroupboxHeader", content: "_parameters".loc() },
+          {kind: "XV.ToggleButtonWidget", attr: "useParameters"},
           {kind: "XV.QuantityWidget", attr: "reorderLevel"},
           {kind: "XV.QuantityWidget", attr: "orderToQuantity"},
           {kind: "XV.QuantityWidget", attr: "minimumOrderQuantity"},
           {kind: "XV.QuantityWidget", attr: "maximumOrderQuantity"},
           {kind: "XV.QuantityWidget", attr: "multipleOrderQuantity"},
-          {kind: "XV.CheckboxWidget", attr: "useParametersManual"},
-          {kind: "XV.QuantityWidget", attr: "safetyStock"},
-          {kind: "XV.NumberWidget", attr: "leadTime", scale: 0}
+          {kind: "XV.ToggleButtonWidget", attr: "useParametersManual"}
         ]}
       ]}
     ];

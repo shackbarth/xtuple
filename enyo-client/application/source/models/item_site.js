@@ -142,10 +142,7 @@ white:true*/
 
     statusDidChange: function () {
       var isReadOnly = this.getStatus() !== XM.Model.READY_NEW;
-      this.setReadOnly({
-        item: isReadOnly,
-        site: isReadOnly
-      });
+      this.setReadOnly(["item", "site"], isReadOnly);
     }
 
   });
