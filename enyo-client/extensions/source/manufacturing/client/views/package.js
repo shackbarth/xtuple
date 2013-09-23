@@ -1,3 +1,4 @@
 enyo.depends(
-  "list.js"
+	"list.js",
+  "transaction_list.js"
 );

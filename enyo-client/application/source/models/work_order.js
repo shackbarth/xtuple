@@ -12,11 +12,83 @@ white:true*/
 
     @extends XM.Info
   */
-  XM.WorkOrderListItem = XM.Info.extend(/** @lends XM.WorkOrderListItem.prototype */{
+  XM.WorkOrderListItem = XM.Model.extend({
+    /** @lends XM.WorkOrderListItem.prototype */
 
-    recordType: 'XM.WorkOrderListItem'
+    recordType: 'XM.WorkOrderListItem',
+
+        /**
+    Returns incident status as a localized string.
+
+    @returns {String}
+    */
+    getWorkOrderStatusString: function () {
+      var K = XM.WorkOrderListItem,
+        status = this.get('status');
+      if (status === K.RELEASED) {
+        return '_released'.loc();
+      }
+      if (status === K.EXPLODED) {
+        return '_exploded'.loc();
+      }
+      if (status === K.INPROCESS) {
+        return '_in-process'.loc();
+      }
+      if (status === K.OPEN) {
+        return '_open'.loc();
+      }
+      if (status === K.CLOSED) {
+        return '_closed'.loc();
+      }
+    }
 
   });
+
+  _.extend(XM.WorkOrderListItem, {
+    /** @scope XM.WorkOrderListItem */
+
+    /**
+      Released Status.
+
+      @static
+      @constant
+      @type String
+      @default I
+    */
+    RELEASED: 'R',
+
+    /**
+      Expoloded status.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    EXPLODED: 'E',
+
+    /**
+      In-Process status.
+
+      @static
+      @constant
+      @type String
+      @default F
+    */
+    INPROCESS: 'I',
+
+    /**
+      Open Status.
+
+      @static
+      @constant
+      @type String
+      @default I
+    */
+    OPEN: 'O',
+
+  });
+
   // ..........................................................
   // COLLECTIONS
   //

@@ -166,6 +166,75 @@
       }
  	],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "WorkOrderRelation",
+    "table": "wo",
+    "comment": "Work Relation Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainWorkOrders",
+        "read": "ViewWorkOrders MaintainWorkOrders",
+        "update": "MaintainWorkOrders",
+        "delete": "MaintainWorkOrders"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "wo_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "wo_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "subnumber",
+        "attr": {
+          "type": "Number",
+          "column": "wo_subnumber"
+         }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "wo_status"
+         }
+      },
+      {
+        "name": "itemSite",
+        "attr": {
+          "type": "Number",
+          "column": "wo_itemsite_id"
+        }
+      },
+      {
+        "name": "orderId",
+        "attr": {
+          "type": "Number",
+          "column": "wo_ordid"
+         }
+      },
+      {
+        "name": "itemCfgSeries",
+        "attr": {
+          "type": "Number",
+          "column": "wo_itemcfg_series"
+        }
+      }
+  ],
+    "isSystem": true
   }
 ]
 

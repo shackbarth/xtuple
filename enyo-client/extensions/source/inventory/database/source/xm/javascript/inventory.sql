@@ -5,6 +5,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
 (function () {
 
   if (!XM.PrivateInventory) { XM.PrivateInventory = {}; }
+
+  if (!XM.Manufacturing) { XM.Manufacturing = {}; }
   
   XM.PrivateInventory.isDispatchable = false; /* No direct access from client */
 

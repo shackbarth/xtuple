@@ -1,5 +1,10 @@
 {
+  "name": "manufacturing",
+  "comment": "Manufacturing extension",
+  "loadOrder": 99,
   "databaseScripts": [
-    "register.sql"
+    "xm/javascript/manufacturing.sql",
+    "xt/views/womatlissue.sql",
+    "xt/views/womatlissuedetail.sql"
   ]
 }

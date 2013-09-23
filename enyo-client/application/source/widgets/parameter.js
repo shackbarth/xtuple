@@ -1258,4 +1258,61 @@ trailing:true, white:true*/
     ]
   });
 
+  // ..........................................................
+  // WORK ORDER
+  //
+
+  enyo.kind({
+    name: "XV.WorkOrderListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_workOrders".loc()},
+      {name: "orderNumberPattern", label: "_orderNumber".loc(), attr: "number"},
+      {name: "site", label: "_site".loc(), attr: "itemSite.site.code", defaultKind: "XV.SitePicker"},
+      {name: "showClosed", attr: "status", label: "_showClosed".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: "C"
+            };
+          }
+          return param;
+        }
+      },
+      /*TODO
+        Has Parent Sales Order 
+        Has Closed Parent Sales Orders
+        Item Group
+      */
+      {name: "showOnlyTopLevel", attr: "orderType", label: "_showOnlyTopLevel".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: "W"
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "onyx.GroupboxHeader", content: "_item".loc()},
+      {name: "itemWidget", label: "_item".loc(), attr: "itemSite.item",
+        defaultKind: "XV.ItemWidget"},
+      {name: "description", label: "_description".loc(), attr: "itemSite.item.description1"},
+      {kind: "onyx.GroupboxHeader", content: "_plannerCode".loc()},
+      {name: "plannerCode", label: "_plannerCode".loc(), attr: "itemSite.plannerCode",
+        defaultKind: "XV.PlannerCodePicker"},
+      {name: "plannerCodePattern", label: "_plannerCode".loc() + " " + "_pattern".loc(), attr: "itemSite.plannerCode"},
+      {kind: "onyx.GroupboxHeader", content: "_classCode".loc()},
+      {name: "classCode", label: "_classCode".loc(), attr: "itemSite.item.classCode",
+        defaultKind: "XV.ClassCodePicker"},
+      {name: "classCodePattern", label: "_classCode".loc() + " " + "_pattern".loc(), attr: "itemSite.item.classCode"}
+    ]
+  });
+
 }());

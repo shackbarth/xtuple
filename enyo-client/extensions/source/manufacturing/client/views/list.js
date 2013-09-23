@@ -8,74 +8,152 @@ trailing:true, white:true, strict:false*/
   XT.extensions.manufacturing.initLists = function () {
 
     // ..........................................................
-    // BACKLOG REPORT
+    // ISSUE WORK ORDER MATERIALS
     //
 
     enyo.kind({
-      name: "XV.WorkOrderListItem",
+      name: "XV.IssueToShippingList",
       kind: "XV.List",
-      label: "_workOrderList".loc(),
-      collection: "XM.WorkOrderListItemCollection",
+      label: "_issueToShipping".loc(),
+      collection: "XM.IssueToShippingCollection",
+      parameterWidget: "XV.IssueToShippingParameters",
+      multiSelect: true,
       query: {orderBy: [
-        {attribute: "number"}
+        {attribute: "lineNumber"},
+        {attribute: "subNumber"}
       ]},
+      showDeleteAction: false,
+      actions: [
+        {name: "issueStock", prerequisite: "canIssueStock",
+          method: "issueStock", notify: false, isViewMethod: true},
+        {name: "issueLine", prerequisite: "canIssueStock",
+          method: "issueLine", notify: false, isViewMethod: true},
+        {name: "returnLine", prerequisite: "canReturnStock",
+          method: "doReturnStock", notify: false}
+      ],
+      toggleSelected: true,
+      published: {
+        shipment: null
+      },
+      events: {
+        onShipmentChanged: ""
+      },
       components: [
         {kind: "XV.ListItem", components: [
-          {kind: "FittableRows", components: [
-            {kind: "FittableColumns", name: "header", classes: "header", headerAttr: "number", components: [
-              {kind: "XV.ListColumn", classes: "short", components: [
-                {kind: "XV.ListAttr", attr: "number", isKey: true, classes: "header"}
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "lineNumber"},
+                {kind: "XV.ListAttr", attr: "itemSite.site.code",
+                  classes: "right"},
+                {kind: "XV.ListAttr", attr: "itemSite.item.number", fit: true}
               ]},
-              {kind: "XV.ListColumn", classes: "first", components: [
-                {kind: "XV.ListAttr", attr: "status", classes: "header"}
-              ]},
-              {kind: "XV.ListColumn", classes: "second", components: [
-                {kind: "XV.ListAttr", attr: "startDate", classes: "header"}
-              ]},
-              {kind: "XV.ListColumn", classes: "second", components: [
-                {kind: "XV.ListAttr", attr: "dueDate", classes: "header"}
-              ]},
-              {kind: "XV.ListColumn", classes: "second", components: [
-                {kind: "XV.ListAttr", attr: "orderType", classes: "header"}
-              ]},
-              {kind: "XV.ListColumn", classes: "second", components: [
-                {kind: "XV.ListAttr", attr: "qtyOrdered", classes: "header"}
-              ]},
-              {kind: "XV.ListColumn", classes: "last", components: [
-                {classes: "header"}
-              ]}
+              {kind: "XV.ListAttr", attr: "itemSite.item.description1",
+                fit: true,  style: "text-indent: 18px;"}
             ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListColumn", classes: "short", components: [
-                {kind: "XV.ListAttr", attr: "status"}
-              ]},
-              {kind: "XV.ListColumn", classes: "second", components: [
-                {kind: "XV.ListAttr", attr: "status", classes: "bold"},
-                {kind: "XV.ListAttr", attr: "status"}
-              ]},
-              {kind: "XV.ListColumn", classes: "second", components: [
-                {kind: "XV.ListAttr", attr: "status"},
-                {kind: "XV.ListAttr", attr: "status"}
-              ]},
-              {kind: "XV.ListColumn", classes: "second", components: [
-                {kind: "XV.ListAttr", attr: "status"},
-                {kind: "XV.ListAttr", attr: "status"}
-              ]},
-              {kind: "XV.ListColumn", classes: "second", components: [
-                {kind: "XV.ListAttr", attr: "status"}
-              ]},
-              {kind: "XV.ListColumn", classes: "second", components: [
-                {kind: "XV.ListAttr", attr: "status", classes: "bold"}
-              ]},
-              {kind: "XV.ListColumn", classes: "second", components: [
-                {kind: "XV.ListAttr", attr: "status"},
-                {kind: "XV.ListAttr", attr: "status"}
-              ]}
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "ordered",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "balance",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "atShipping",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "scheduleDate",
+                formatter: "formatScheduleDate", style: "text-align: right"}
             ]}
           ]}
         ]}
-      ]
+      ],
+      fetch: function () {
+        this.setShipment(null);
+        this.inherited(arguments);
+      },
+      formatScheduleDate: function (value, view, model) {
+        var today = new Date(),
+          isLate = XT.date.compareDate(value, today) < 1 &&
+            model.get("balance") > 0;
+        view.addRemoveClass("error", isLate);
+        return value;
+      },
+      formatLineNumber: function (value, view, model) {
+        var lineNumber = model.get("lineNumber"),
+          subnumber = model.get("subNumber");
+        if (subnumber === 0) {
+          value = lineNumber;
+        } else {
+          value = lineNumber + "." + subnumber;
+        }
+        return value;
+      },
+      formatQuantity: function (value) {
+        var scale = XT.session.locale.attributes.quantityScale;
+        return Globalize.format(value, "n" + scale);
+      },
+      issueLine: function (inEvent) {
+        var model = inEvent.model,
+          index = inEvent.index,
+          that = this,
+          options = {
+            success: function () {
+              that.resetActions(index);
+              that.renderRow(index);
+            }
+          };
+        // Model sets toIssue value on load and attempts to
+        // distribute detail to default if applicable. If
+        // still undistributed detail, we'll have to prompt
+        // user. Otherwise just save the model with the
+        // precalculated values.
+        if (model.undistributed()) {
+          this.issueStock(inEvent);
+        } else {
+          model.save(null, options);
+        }
+      },
+      issueStock: function (inEvent) {
+        var model = inEvent.model,
+         transDate = model.transactionDate;
+
+        this.doWorkspace({
+          workspace: "XV.IssueStockWorkspace",
+          id: model.id,
+          allowNew: false,
+          success: function (model) {
+            // Set the transaction date to match the source
+            model.transactionDate = transDate;
+          }
+        });
+      },
+      /**
+        Overload: used to keep track of shipment.
+      */
+      setupItem: function (inSender, inEvent) {
+        this.inherited(arguments);
+        var collection = this.getValue(),
+          listShipment = collection.at(inEvent.index).get("shipment"),
+          listShipmentId = listShipment ? listShipment.id : false,
+          shipment = this.getShipment(),
+          shipmentId = shipment ? shipment.id : false;
+        if (listShipmentId !== shipmentId) {
+          this.setShipment(listShipment);
+          // Update all rows to match
+          _.each(collection.models, function (model) {
+            model.set("shipment", listShipment);
+          });
+        }
+      },
+      shipmentChanged: function () {
+        this.doShipmentChanged({shipment: this.getShipment()});
+      }
     });
+
+    XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
 
   };
 }());

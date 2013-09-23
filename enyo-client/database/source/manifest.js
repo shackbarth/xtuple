@@ -28,6 +28,7 @@
     "public/tables/todoitem.sql",
     "public/tables/usrpref.sql",
     "public/tables/usrpriv.sql",
+    "public/tables/womatl.sql",
     "xt/functions/add_priv.sql",
     "xt/functions/average_cost.sql",
     "xt/functions/change_password.sql",

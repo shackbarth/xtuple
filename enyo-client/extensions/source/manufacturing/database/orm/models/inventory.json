@@ -1,0 +1,121 @@
+[
+  {
+    "context": "manufacturing",
+    "nameSpace": "XM",
+    "type": "IssueWorkOrderMaterial",
+    "table": "xt.womatlissue",
+    "comment": "Issue Work Order Material",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "IssueWoMaterials ReturnWoMaterials",
+        "update": "IssueWoMaterials ReturnWoMaterials",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "Number",
+          "column": "obj_uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "order",
+        "toOne": {
+          "type": "WorkOrderRelation",
+          "column": "womatl_wo_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "itemSite",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemSiteInventory",
+          "column": "womatl_itemsite_id"
+        }
+      },
+      {
+        "name": "transactionDate",
+        "attr": {
+          "type": "Date",
+          "column": "transdate"
+        }
+      },
+      {
+        "name": "status",
+        "toOne": {
+          "type": "Text",
+          "column": "womatl_status"
+        }
+      },
+      {
+        "name": "method",
+        "toOne": {
+          "type": "Text",
+          "column": "womatl_issuemethod"
+        }
+      },
+      {
+        "name": "unit",
+        "toOne": {
+          "type": "Unit",
+          "column": "womatl_uom_id"
+        }
+      },
+      {
+        "name": "qtyPer",
+        "attr": {
+          "type": "Quantity",
+          "column": "womatl_qtyper"
+        }
+      },
+      {
+        "name": "scrap",
+        "attr": {
+          "type": "Quantity",
+          "column": "womatl_scrap"
+        }
+      },
+      {
+        "name": "qtyRequired",
+        "attr": {
+          "type": "Quantity",
+          "column": "womatl_qtyreq"
+        }
+      },
+      {
+        "name": "qtyIssued",
+        "attr": {
+          "type": "Quantity",
+          "column": "womatl_qtyiss"
+        }
+      },
+      {
+        "name": "qtyWipScrapped",
+        "attr": {
+          "type": "Number",
+          "column": "womatl_qtywipscrap"
+        }
+      },
+      {
+        "name": "toIssue",
+        "attr": {
+          "type": "Number",
+          "column": "to_issue"
+        }
+      },
+      {
+        "name": "qohBefore",
+        "attr": {
+          "type": "Number",
+          "column": "qoh_before"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
