@@ -245,8 +245,8 @@ white:true*/
             "useDefaultLocation",
             "isLocationControl",
             "controlMethod"
-          });
- 
+          ]);
+
           attrs = {
             isStocked: false,
             useDefaultLocation: false,
