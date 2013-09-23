@@ -95,7 +95,7 @@
       });
       assert.isTrue(widgetFound, "Cannot find widget for attr " + key + " in workspace " + workspace.kind);
       attribute = workspace.value.get(key);
-      if (attribute.idAttribute) {
+      if (attribute.idAttribute && !value.idAttribute) {
         // the attribute has been turned into a model
         assert.equal(attribute.id, value[attribute.idAttribute]);
       } else {
