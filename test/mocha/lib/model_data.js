@@ -52,7 +52,7 @@ Here's how you can use CRUD to create a model to use for your own tests:
   };
 
   exports.customer = {
-    number: "TESTCUSTOMER" + Math.random(),
+    number: "ZZZCUSTOMER" + Math.random(),
     name: "TestCust",
     customerType: { code: "NORMAL" },
     salesRep: { number: "JSMITH" },

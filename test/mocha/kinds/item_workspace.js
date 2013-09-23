@@ -27,13 +27,8 @@
 
         assert.equal(workspace.value.recordType, "XM.Item");
         smoke.setWorkspaceAttributes(workspace, attributes);
-        workspace.value.on("statusChange", function (model, status) {
-          if (status === XM.Model.DESTROYED_DIRTY) {
-            done();
-          }
-        });
         smoke.saveWorkspace(workspace, function () {
-          smoke.deleteFromList(XT.app, attributes.number, done);
+          smoke.deleteFromList(XT.app, workspace.value, done);
         });
       });
     });
