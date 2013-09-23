@@ -67,7 +67,6 @@
         assert.isDefined(workspace);
         lockChange = function () {
           workspace.value.off("lockChange", lockChange);
-          assert.isNumber(workspace.value.lock.key);
           done(workspace);
         };
         workspace.value.on("lockChange", lockChange);
@@ -75,7 +74,11 @@
     };
     navigator = navigateToList(app, listKind);
     coll = navigator.$.contentPanels.getActive().value;
-    coll.on('statusChange', navigate);
+    if (coll.getStatus() === XM.Model.READY_CLEAN) {
+      navigate();
+    } else {
+      coll.on('statusChange', navigate);
+    }
   };
 
   /**
@@ -84,7 +87,9 @@
    */
   var setWorkspaceAttributes = exports.setWorkspaceAttributes = function (workspace, createHash) {
     _.each(createHash, function (value, key) {
-      var widgetFound = false;
+      var widgetFound = false,
+        attribute;
+
       _.each(workspace.$, function (widget) {
         if (widget.attr === key) {
           widgetFound = true;
@@ -92,7 +97,13 @@
         }
       });
       assert.isTrue(widgetFound, "Cannot find widget for attr " + key + " in workspace " + workspace.kind);
-      assert.equal(workspace.value.get(key), value);
+      attribute = workspace.value.get(key);
+      if (attribute.idAttribute && !value.idAttribute) {
+        // the attribute has been turned into a model
+        assert.equal(attribute.id, value[attribute.idAttribute]);
+      } else {
+        assert.equal(workspace.value.get(key), value);
+      }
     });
   };
 
@@ -113,8 +124,8 @@
     }
 
     workspace.value.on('invalid', invalid);
-    //workspace.value.on('all', function (model, err) {
-    //  console.log("save event", arguments);
+    //workspace.value.on('all', function (event, model, err) {
+    //  console.log("save event", event, model && model.id);
     //});
     workspace.save({
       // wait until the list has been refreshed with this model before we return control
@@ -132,38 +143,27 @@
     });
   };
 
-  exports.deleteFromList = function (app, id, done) {
+  exports.deleteFromList = function (app, model, done) {
     // back up to list
     app.$.postbooks.previous();
+    assert.equal(app.$.postbooks.getActive().kind, "XV.Navigator");
 
     // here's the list
     var list = app.$.postbooks.getActive().$.contentPanels.getActive(),
       // find the new model by id
       // TODO: what if the new model is off the page and cannot be found?
-      newModel = _.find(list.value.models, function (model) {
-        return model.get(model.idAttribute) === id;
+      listModel = _.find(list.value.models, function (m) {
+        return m.get(m.idAttribute) === model.id;
       });
 
-    // For heavy models, this new model will be the lightweight version, which
-    // itself is not going to get destroyed, so this will only work for lightweight
-    // editable models. The ideal strategy is to make all async processes in the
-    // app have a callback so we can know when they finish. Until we get there,
-    // you have to set up a listener on the heavyweight model in your implementation
-    // test to done() when it is destroyed.
-    newModel.on("statusChange", function (model, status) {
+    model.on("statusChange", function (model, status) {
       if (status === XM.Model.DESTROYED_DIRTY) {
         done();
       }
     });
 
     // delete it, by calling the function that gets called when the user ok's the delete popup
-    list.deleteItem({model: newModel
-    // The ideal strategy would look something like this:
-    //,
-    //done: function () {
-    //  done();
-    //}
-    });
+    list.deleteItem({model: listModel});
   };
 
   exports.updateFirstModel = function (test) {

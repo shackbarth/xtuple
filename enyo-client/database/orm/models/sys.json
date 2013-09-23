@@ -318,7 +318,7 @@
     "context": "xtuple",
     "nameSpace": "SYS",
     "type": "Recover",
-    "table": "recover",
+    "table": "xt.recover",
     "idSequenceName": "recover_recover_id_seq",
     "comment": "Password Recovery Table Map",
     "privileges": {

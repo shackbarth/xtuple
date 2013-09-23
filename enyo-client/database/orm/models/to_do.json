@@ -358,7 +358,7 @@
       {
         "name": "sourceType",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "alarm_source",
           "value": "TODO"
         }

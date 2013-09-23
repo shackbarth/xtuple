@@ -51,8 +51,28 @@ Here's how you can use CRUD to create a model to use for your own tests:
     salesRep: { number: "2000" },
   };
 
+  exports.customer = {
+    number: "ZZZCUSTOMER" + Math.random(),
+    name: "TestCust",
+    customerType: { code: "NORMAL" },
+    salesRep: { number: "JSMITH" },
+    shipCharge: { name: "ADDCHARGE" },
+    terms: { code: "2-10N30" }
+  };
 
-
+  exports.item = {
+    number: "ATEST" + Math.random(),
+    description1: "Item description1",
+    isActive: true,
+    itemType: "P",
+    classCode: {code: "TOYS-COMP"},
+    productCategory: {code: "CLASSIC-WOOD"},
+    inventoryUnit: {name: "CS"},
+    isFractional: true,
+    isSold: true,
+    listPrice: 0.00,
+    priceUnit: {name: "CS"}
+  };
 
   var primeSubmodels = function (done) {
     var submodels = {};
