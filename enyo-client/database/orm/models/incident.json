@@ -46,7 +46,7 @@
       {
         "name": "number",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "incdt_number",
           "isNaturalKey": true
         }
@@ -374,14 +374,14 @@
       {
         "name": "number",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "alarm_number"
         }
       },
       {
         "name": "sourceType",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "alarm_source",
           "value": "INCDT"
         }
@@ -1062,7 +1062,7 @@
       {
         "name": "number",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "incdt_number",
           "isNaturalKey": true
         }

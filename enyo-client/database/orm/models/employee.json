@@ -631,7 +631,7 @@
       {
         "name": "description",
         "attr":	{
-          "type": "Number",
+          "type": "String",
           "column": "empgrp_descrip"
         }
       },
