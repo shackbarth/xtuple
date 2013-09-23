@@ -10,19 +10,7 @@
     data = {
       recordType: "XM.Item",
       autoTestAttributes: true,
-      createHash: {
-        number: "NEWTEST" + Math.random(),
-        description1: "Item description1",
-        isActive: true,
-        itemType: "P",
-        classCode: {code: "TOYS-COMP"},
-        productCategory: {code: "CLASSIC-WOOD"},
-        inventoryUnit: {name: "CS"},
-        isFractional: true,
-        isSold: true,
-        listPrice: 0.00,
-        priceUnit: {name: "CS"}
-      },
+      createHash: require("../lib/model_data").item,
       updateHash: {
         description1: "A new description of an item"
       }
