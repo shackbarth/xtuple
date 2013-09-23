@@ -37,6 +37,7 @@ trailing:true, white:true, strict: false*/
                 label: "_allowStdCostMethod".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "AllowJobCostMethod",
                 label: "_allowJobCostMethod".loc()},
+              /*
               {kind: "XV.PickerWidget", attr: "CountAvgCostMethod",
                 label: "_countAvgCostMethod".loc(), collection: "XM.countAvgCostMethod"},
               {kind: "onyx.GroupboxHeader", content: "_physicalInventory".loc()},
@@ -44,6 +45,7 @@ trailing:true, white:true, strict: false*/
                 label: "_postCountTagToDefault".loc(), collection: "XM.postCountTagToDefault"},
               {kind: "XV.PickerWidget", attr: "CountSlipAuditing",
                 label: "_countSlipAuditing".loc(), collection: "XM.countSlipAuditing"},
+              */
               {kind: "onyx.GroupboxHeader", content: "_shippingAndReceiving".loc()},
               {kind: "XV.NumberPolicyPicker", attr: "ShipmentNumberGeneration",
                 label: "_shipmentNumberPolicy".loc()},
