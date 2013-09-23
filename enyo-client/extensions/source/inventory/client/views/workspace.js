@@ -412,18 +412,19 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ControlMethodPicker", attr: "controlMethod"},
           {kind: "XV.CostMethodPicker", attr: "costMethod"},
           {kind: "XV.CheckboxWidget", attr: "isStocked"},
-          {kind: "XV.CheckboxWidget", attr: "isAutomaticAbcClassUpdates"},
           {kind: "XV.AbcClassPicker", attr: "abcClass"},
+          {kind: "XV.ToggleButtonWidget", attr: "isAutomaticAbcClassUpdates"},
           {kind: "XV.NumberWidget", attr: "cycleCountFrequency", scale: 0},
-          {kind: "onyx.GroupboxHeader", content: "_location".loc() },
-          {kind: "XV.ToggleButtonWidget", attr: "isLocationControl"},
+          {kind: "onyx.GroupboxHeader", content: "_locationControl".loc() },
+          {kind: "XV.ToggleButtonWidget", attr: "isLocationControl",
+            label: "_multipleLocationControl".loc()},
+          {kind: "XV.InputWidget", attr: "locationComment"},
           {kind: "XV.CheckboxWidget", attr: "useDefaultLocation"},
-          {kind: "XV.LocationPicker", attr: "receiveLocation"},
-          {kind: "XV.CheckboxWidget", attr: "isReceiveLocationAuto"},
-          {kind: "XV.LocationPicker", attr: "stockLocation"},
-          {kind: "XV.CheckboxWidget", attr: "isStockLocationAuto"},
           {kind: "XV.InputWidget", attr: "userDefinedLocation"},
-          {kind: "XV.InputWidget", attr: "locationComment"}
+          {kind: "XV.LocationPicker", attr: "receiveLocation"},
+          {kind: "XV.ToggleButtonWidget", attr: "isReceiveLocationAuto"},
+          {kind: "XV.LocationPicker", attr: "stockLocation"},
+          {kind: "XV.ToggleButtonWidget", attr: "isStockLocationAuto"}
           //LIST - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location. Look at the privileges checkbox list for an example.
         ]}
       ]},
