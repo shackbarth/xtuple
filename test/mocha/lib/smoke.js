@@ -75,7 +75,11 @@
     };
     navigator = navigateToList(app, listKind);
     coll = navigator.$.contentPanels.getActive().value;
-    coll.on('statusChange', navigate);
+    if (coll.getStatus() === XM.Model.READY_CLEAN) {
+      navigate();
+    } else {
+      coll.on('statusChange', navigate);
+    }
   };
 
   /**

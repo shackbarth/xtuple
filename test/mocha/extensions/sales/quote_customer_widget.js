@@ -38,7 +38,9 @@
           assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.QuoteWorkspace");
           assert.equal(quoteWorkspace.value.getValue("customer.name"), "TestCust");
           XT.app.$.postbooks.getActive().close({force: true});
-          done();
+          setTimeout(function () {
+            done();
+          }, 3000);
         }, 3000);
       });
     });
