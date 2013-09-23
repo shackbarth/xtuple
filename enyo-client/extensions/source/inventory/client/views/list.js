@@ -180,6 +180,7 @@ trailing:true, white:true, strict:false*/
       kind: "XV.List",
       label: "_history".loc(),
       collection: "XM.InventoryHistoryCollection",
+      canAddNew: false,
       query: {orderBy: [
         {attribute: "transactionDate", descending: true},
         {attribute: "uuid"}
@@ -520,6 +521,7 @@ trailing:true, white:true, strict:false*/
       kind: "XV.List",
       label: "_shipments".loc(),
       collection: "XM.ShipmentListItemCollection",
+      canAddNew: false,
       actions: [
         {name: "shipShipment", method: "shipShipment",
           isViewMethod: true, notify: false,

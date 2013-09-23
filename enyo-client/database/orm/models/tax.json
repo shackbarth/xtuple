@@ -297,7 +297,7 @@
       {
         "name": "authority",
         "toOne": {
-          "type": "TaxAuthorityRelation",
+          "type": "TaxAuthority",
           "column": "tax_taxauth_id"
         }
       },

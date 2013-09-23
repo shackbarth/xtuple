@@ -537,22 +537,20 @@ select xt.install_js('XM','Inventory','xtuple', $$
   };
 
   XM.Inventory.options = [
-		"DefaultEventFence",    
-		"ItemSiteChangeLog",
+    "DefaultEventFence",    
+    "ItemSiteChangeLog",
     "WarehouseChangeLog",
-		"AllowAvgCostMethod",  
-		"AllowStdCostMethod",
-		"AllowJobCostMethod",
-		"CountAvgCostMethod",
-		"PostCountTagDefault",
-		"CountSlipAuditing",
-		"ShipmentNumberGeneration",
-		"NextShipmentNumber", 
-		"KitComponentInheritCOS",
-		"DisallowReceiptExcessQty",
-		"WarnIfReceiptQtyDiffers",
-		"ReceiptQtyTolerancePct",
-		"RecordPPVonReceipt" 
+    "AllowAvgCostMethod",  
+    "AllowStdCostMethod",
+    "AllowJobCostMethod",
+    "CountAvgCostMethod",
+    "ShipmentNumberGeneration",
+    "NextShipmentNumber", 
+    "KitComponentInheritCOS",
+    "DisallowReceiptExcessQty",
+    "WarnIfReceiptQtyDiffers",
+    "ReceiptQtyTolerancePct",
+    "RecordPPVonReceipt" 
   ];
   
   /* 
@@ -563,13 +561,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
   XM.Inventory.settings = function() {
     var keys = XM.Inventory.options.slice(0),
         data = Object.create(XT.Data),
-        sql = "select orderseq_number as value "
-            + "from orderseq"
-            + " where (orderseq_name=$1)",
+        sql = "select last_value + 1 as value from shipment_number_seq",
         ret = {},
         qry;
 
-    ret.NextShipmentNumber = plv8.execute("select fetchshipmentnumber();")[0].value;  
+    ret.NextShipmentNumber = plv8.execute(sql)[0].value;  
       
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
@@ -600,7 +596,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     
     /* update numbers */
     if(settings.NextShipmentNumber) {
-      plv8.execute('select setNextShipmentNumber($1)', [settings.NextShipmentNumber - 0]);
+      plv8.execute("select setval('shipment_number_seq', $1)", [settings.NextShipmentNumber - 1]);
     }
     options.remove('NextShipmentNumber'); 
 
