@@ -84,7 +84,9 @@
    */
   var setWorkspaceAttributes = exports.setWorkspaceAttributes = function (workspace, createHash) {
     _.each(createHash, function (value, key) {
-      var widgetFound = false;
+      var widgetFound = false,
+        attribute;
+
       _.each(workspace.$, function (widget) {
         if (widget.attr === key) {
           widgetFound = true;
@@ -92,7 +94,13 @@
         }
       });
       assert.isTrue(widgetFound, "Cannot find widget for attr " + key + " in workspace " + workspace.kind);
-      assert.equal(workspace.value.get(key), value);
+      attribute = workspace.value.get(key);
+      if (attribute.idAttribute) {
+        // the attribute has been turned into a model
+        assert.equal(attribute.id, value[attribute.idAttribute]);
+      } else {
+        assert.equal(workspace.value.get(key), value);
+      }
     });
   };
 

@@ -11,14 +11,7 @@
     data = {
       recordType: "XM.Customer",
       autoTestAttributes: true,
-      createHash : {
-        number: "TESTCUSTOMER" + Math.random(),
-        name: "TestCust",
-        customerType: { code: "NORMAL" },
-        salesRep: { number: "JSMITH" },
-        shipCharge: { name: "ADDCHARGE" },
-        terms: { code: "2-10N30" }
-      },
+      createHash : require("../lib/model_data").customer,
       updateHash : {
         name: "Updated Test Cust"
       },
