@@ -67,7 +67,6 @@
         assert.isDefined(workspace);
         lockChange = function () {
           workspace.value.off("lockChange", lockChange);
-          assert.isNumber(workspace.value.lock.key);
           done(workspace);
         };
         workspace.value.on("lockChange", lockChange);
