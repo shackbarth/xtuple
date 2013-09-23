@@ -27,13 +27,13 @@
         "toOne": {
           "type": "SalesOrderListItem",
           "column": "coitem_cohead_id",
-	  			"isNested": true
+          "isNested": true
         }
       },
       {
         "name": "lineNumber",
         "attr": {
-          "type": "String",
+          "type": "Number",
           "column": "coitem_linenumber"
         }
       },

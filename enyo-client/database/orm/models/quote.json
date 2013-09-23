@@ -458,7 +458,7 @@
       {
         "name": "margin",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "margin"
         }
       },
@@ -1166,7 +1166,7 @@
       {
         "name": "margin",
         "attr": {
-          "type": "String",
+          "type": "Percent",
           "column": "margin"
         }
       },
@@ -1180,7 +1180,7 @@
       {
         "name": "tax",
         "attr": {
-          "type": "String",
+          "type": "Number",
           "column": "tax"
         }
       },
@@ -1583,7 +1583,7 @@
       {
         "name": "opportunity",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "ophead_number"
         }
       }

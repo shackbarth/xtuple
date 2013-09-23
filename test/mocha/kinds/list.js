@@ -61,7 +61,8 @@
                 // get the attributes
                 var attrs = _.compact(_.map(child.$, function (component) {
                   // don't bother testing attrs with formatters
-                  return component.formatter ? null : component.attr;
+                  // TODO: where are the exceptions kept now?
+                  return component.formatter || component.attr === 'address' ? null : component.attr;
                 }));
 
                 // the query attribute counts as an attribute

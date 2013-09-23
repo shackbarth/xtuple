@@ -103,8 +103,8 @@
     }
 
     workspace.value.on('invalid', invalid);
-    //workspace.value.on('all', function (model, err) {
-    //  console.log("save event", arguments);
+    //workspace.value.on('all', function (event, model, err) {
+    //  console.log("save event", event, model && model.id);
     //});
     workspace.save({
       // wait until the list has been refreshed with this model before we return control

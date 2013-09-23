@@ -59,6 +59,11 @@ select xt.install_js('XT','Orm','xtuple', $$
       nameSpace = newJson.nameSpace,
       type = newJson.type,
       context = newJson.context,
+      table = newJson.table,
+      tableNamespace = table.indexOf(".") === -1 ? 'public' : table.beforeDot(),
+      tableName = table.indexOf(".") === -1 ? table : table.afterDot(),
+      schemaSql,
+      schema,
       sql;
 
     if(!nameSpace) throw new Error("A name space is required");
@@ -81,6 +86,61 @@ select xt.install_js('XT','Orm','xtuple', $$
 
     sequence = newJson.sequence ? newJson.sequence : 0;
     isExtension = newJson.isExtension ? true : false;
+
+    /* Validate the ORM against the database types */
+    schemaSql = 'select c.relname as "type", ' +
+      ' attname as "column", ' +
+      ' typcategory as "category", ' + 
+      ' n.nspname as "schema", ' +
+      ' attnum from pg_class c ' +
+      ' join pg_namespace n on n.oid = c.relnamespace ' +
+      ' join pg_attribute a on a.attrelid = c.oid ' +
+      ' join pg_type t on a.atttypid = t.oid ' +
+      ' where n.nspname = $1 ' +
+      ' and c.relname = $2;';
+    
+    schema = plv8.execute(schemaSql, [tableNamespace, tableName]);
+
+    var verifyOrmType = function (ormType, columnType) {
+      var ormTypeMappings = {
+        "B": ["Boolean"],
+        "D": ["Date"],
+        "N": ["Cost", "ExtendedPrice", "ListPrice", "Money", "Number", 
+          "Percent", "PurchasePrice", "Quantity", "SalesPrice", "UnitRatio", "Weight"],
+        "S": ["String"],
+        "U": ["String"], /* e.g. char */
+        "X": ["Null"]
+      };
+      var legalValues = ormTypeMappings[columnType];
+      if (!legalValues) {
+        throw new Error("Cannot fathom column type " + columnType);
+      }
+      return legalValues.indexOf(ormType);
+    };
+    newJson.properties.map(function (ormProp) {
+      if(ormProp.attr) {
+        var schemaColumn = schema.filter(function (schemaCol) {
+          return schemaCol.column === ormProp.attr.column;
+        });
+        if(schemaColumn.length === 0) {
+          if (ormProp.attr.column === 'obj_uuid') {
+            /* obj_uuid might not be inserted yet */
+            return; 
+          }
+          throw new Error(nameSpace + "." + type + " ORM property " + ormProp.attr.column
+            + " references a column not in " + tableNamespace + "." + tableName);
+        }
+        schemaColumn = schemaColumn[0];
+        var schemaType = schemaColumn.category;
+        var success = verifyOrmType(ormProp.attr.type, schemaType);
+        if (success < 0) {
+          throw new Error(nameSpace + "." + type + " ORM property " + ormProp.name + 
+            " type " + ormProp.attr.type + " does not match table column type of " + schemaType);
+        }
+      }
+    });
+
+    /* Install the ORM */
 
     if(oldOrm) {
       oldJson = JSON.parse(oldOrm.json);

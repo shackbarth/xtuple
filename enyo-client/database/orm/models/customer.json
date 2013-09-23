@@ -701,7 +701,7 @@
       {
         "name": "customer",
         "attr": {
-          "type": "Customer",
+          "type": "Number",
           "column": "charass_target_id"
         }
       },
@@ -774,7 +774,7 @@
       {
         "name": "customer",
         "attr": {
-          "type": "Customer",
+          "type": "Number",
           "column": "comment_source_id"
         }
       },
@@ -854,7 +854,7 @@
       {
         "name": "customer",
         "attr": {
-          "type": "Customer",
+          "type": "Number",
           "column": "taxreg_rel_id"
         }
       },
@@ -947,7 +947,7 @@
       {
         "name": "customer",
         "attr": {
-          "type": "Customer",
+          "type": "Number",
           "column": "shipto_cust_id"
         }
       },
@@ -2043,7 +2043,7 @@
       {
         "name": "description",
         "attr":	{
-          "type": "Number",
+          "type": "String",
           "column": "custgrp_descrip"
         }
       },

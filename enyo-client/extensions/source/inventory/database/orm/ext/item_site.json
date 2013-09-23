@@ -46,7 +46,7 @@
       {
         "name": "abcClass",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "itemsite_abcclass"
         }
       },

@@ -85,7 +85,7 @@
           "create": true,
           "update": true
         },
-        "posted": {
+        "isPosted": {
           "create": false,
           "update": false
         },
@@ -231,9 +231,9 @@
         }
       },
       {
-        "name": "posted",
+        "name": "isPosted",
         "attr": {
-          "type": "String",
+          "type": "Boolean",
           "column": "invhist_posted"
         }
       },
@@ -345,7 +345,7 @@
       {
         "name": "uuid",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "obj_uuid",
           "isPrimaryKey": true
         }
@@ -369,14 +369,14 @@
       {
         "name": "lineNumber",
         "attr": {
-          "type": "String",
+          "type": "Number",
           "column": "coitem_linenumber"
         }
       },
       {
         "name": "subNumber",
         "attr": {
-          "type": "String",
+          "type": "Number",
           "column": "coitem_subnumber"
         }
       },
@@ -440,7 +440,7 @@
       {
         "name": "toIssue",
         "attr": {
-          "type": "Number",
+          "type": "Null",
           "column": "to_issue"
         }
       }
