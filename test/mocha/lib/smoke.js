@@ -75,7 +75,11 @@
     };
     navigator = navigateToList(app, listKind);
     coll = navigator.$.contentPanels.getActive().value;
-    coll.on('statusChange', navigate);
+    if (coll.getStatus() === XM.Model.READY_CLEAN) {
+      navigate();
+    } else {
+      coll.on('statusChange', navigate);
+    }
   };
 
   /**
@@ -84,7 +88,9 @@
    */
   var setWorkspaceAttributes = exports.setWorkspaceAttributes = function (workspace, createHash) {
     _.each(createHash, function (value, key) {
-      var widgetFound = false;
+      var widgetFound = false,
+        attribute;
+
       _.each(workspace.$, function (widget) {
         if (widget.attr === key) {
           widgetFound = true;
@@ -92,7 +98,13 @@
         }
       });
       assert.isTrue(widgetFound, "Cannot find widget for attr " + key + " in workspace " + workspace.kind);
-      assert.equal(workspace.value.get(key), value);
+      attribute = workspace.value.get(key);
+      if (attribute.idAttribute && !value.idAttribute) {
+        // the attribute has been turned into a model
+        assert.equal(attribute.id, value[attribute.idAttribute]);
+      } else {
+        assert.equal(workspace.value.get(key), value);
+      }
     });
   };
 

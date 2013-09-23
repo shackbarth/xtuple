@@ -211,28 +211,14 @@ regexp:true, undef:true, trailing:true, white:true */
         components: [
           {content: "_customerOrProspect".loc()},
           {tag: "br"},
-          {kind: "onyx.Button", content: "_customer".loc(), ontap: "newCustomer",
+          {kind: "onyx.Button", name: "customerButton", content: "_customer".loc(), ontap: "popupTapped",
             classes: "onyx-blue xv-popup-button"},
-          {kind: "onyx.Button", content: "_prospect".loc(), ontap: "newProspect",
+          {kind: "onyx.Button", name: "prospectButton", content: "_prospect".loc(), ontap: "popupTapped",
             classes: "onyx-blue xv-popup-button"}
         ]
       });
       this.$.newItem.setDisabled(false);
       return ret;
-    },
-    newCustomer: function () {
-      this.$.customerOrProspectPopup.hide();
-      this.doWorkspace({
-        workspace: "XV.CustomerWorkspace",
-        allowNew: false
-      });
-    },
-    newProspect: function () {
-      this.$.customerOrProspectPopup.hide();
-      this.doWorkspace({
-        workspace: "XV.ProspectWorkspace",
-        allowNew: false
-      });
     },
     /**
      @menuItemSelected
@@ -274,7 +260,30 @@ regexp:true, undef:true, trailing:true, white:true */
       case 'newItem':
         this.$.customerOrProspectPopup.show();
       }
-    }
+    },
+    popupTapped: function (inSender, inEvent) {
+      var that = this,
+        callback = function (model) {
+          if (!model) { return; }
+          var Model = that._collection.model,
+            attrs = {},
+            value,
+            options = {};
+          options.success = function () {
+            that.setValue(value);
+          };
+          attrs[Model.prototype.idAttribute] = model.id;
+          value = Model.findOrCreate(attrs);
+          value.fetch(options);
+        };
+
+      this.$.customerOrProspectPopup.hide();
+      this.doWorkspace({
+        callback: callback,
+        workspace: inEvent.originator.name === "customerButton" ? "XV.CustomerWorkspace" : "XV.ProspectWorkspace",
+        allowNew: false
+      });
+    },
   });
 
   // ..........................................................
