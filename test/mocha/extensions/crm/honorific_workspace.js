@@ -29,7 +29,7 @@
         assert.equal(workspace.value.recordType, "XM.Honorific");
         smoke.setWorkspaceAttributes(workspace, modelData.honorific);
         smoke.saveWorkspace(workspace, function () {
-          smoke.deleteFromList(XT.app, modelData.honorific.code, done);
+          smoke.deleteFromList(XT.app, workspace.value, done);
         });
       });
     });

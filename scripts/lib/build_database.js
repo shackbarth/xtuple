@@ -71,12 +71,14 @@ var _ = require('underscore'),
       credsClone = JSON.parse(JSON.stringify(creds));
     // the calls to drop and create the database need to be run against the database "postgres"
     credsClone.database = "postgres";
+    winston.log("Dropping database " + databaseName);
     dataSource.query("drop database if exists " + databaseName + ";", credsClone, function (err, res) {
       if (err) {
         winston.error("drop db error", err.message, err.stack, err);
         callback(err);
         return;
       }
+      winston.log("Creating and restoring database " + databaseName);
       dataSource.query("create database " + databaseName + " template template1", credsClone, function (err, res) {
         if (err) {
           winston.error("create db error", err.message, err.stack, err);

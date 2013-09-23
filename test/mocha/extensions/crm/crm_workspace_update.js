@@ -83,7 +83,7 @@
             // XXX solves inexplicable race condition
             setTimeout(function () {
               done();
-            }, 500);
+            }, 3000);
           });
           container.close();
         });

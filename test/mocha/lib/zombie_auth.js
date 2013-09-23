@@ -147,6 +147,9 @@ Simplest possible usage:
                 }
               };
 
+              // these are really annoying
+              browser.window.Backbone.Relational.showWarnings = false;
+
               // clear out both is interval and the I'm-giving-up timeout
               // we really want neither to be run again.
               clearInterval(interval);
