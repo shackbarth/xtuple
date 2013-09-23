@@ -57,6 +57,11 @@ white:true*/
 
   });
 
+  XM.TaxAuthority.used = function (id, options) {
+    return XM.ModelMixin.dispatch('XM.TaxAuthority', 'used',
+      [id], options);
+  };
+
   /**
     @class
 

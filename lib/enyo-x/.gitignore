@@ -3,7 +3,5 @@ build
 *.swp
 tmp
 npm-debug.log
-\.sass-cache
 build
 deploy
-/.sass-cache/

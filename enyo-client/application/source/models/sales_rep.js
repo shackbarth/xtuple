@@ -25,6 +25,11 @@ white:true*/
 
   });
 
+  XM.SalesRep.used = function (id, options) {
+    return XM.ModelMixin.dispatch('XM.SalesRep', 'used',
+      [id], options);
+  };
+
   // ..........................................................
   // COLLECTIONS
   //
