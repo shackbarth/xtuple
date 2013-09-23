@@ -1,6 +1,6 @@
 {
-  "version": "1.4.4",
-  "databaseScripts": [
-    "register.sql"
-  ]
+  "name": "project",
+  "comment": "Project extension",
+  "loadOrder": 60,
+  "databaseScripts": []
 }

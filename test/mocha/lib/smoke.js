@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true, setTimeout:true */
+/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true */
 
 (function () {
   "use strict";
@@ -49,25 +49,37 @@
   };
 
   var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
-    var navigator, workspace;
+    var coll,
+      lockChange,
+      navigate,
+      navigator,
+      workspace;
 
+    navigate = function () {
+      var indexToPick;
+
+      if (coll.getStatus() === XM.Model.READY_CLEAN) {
+        coll.off('statusChange', navigate);
+        indexToPick = Math.min(1, navigator.$.contentPanels.getActive().value.length - 1);
+        navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: indexToPick});
+        assert.isDefined(app.$.postbooks.getActive());
+        workspace = app.$.postbooks.getActive().$.workspace;
+        assert.isDefined(workspace);
+        lockChange = function () {
+          workspace.value.off("lockChange", lockChange);
+          assert.isNumber(workspace.value.lock.key);
+          done(workspace);
+        };
+        workspace.value.on("lockChange", lockChange);
+      }
+    };
     navigator = navigateToList(app, listKind);
-    // TODO: we have to wait until the fetch is successful. Use a collection
-    // event instead of setTimeout.
-    //navigator.$.contentPanels.getActive().value.on('all', function () {
-    //  console.log(arguments);
-    //});
-    setTimeout(function () {
-      navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: 0});
-      assert.isDefined(app.$.postbooks.getActive());
-      workspace = app.$.postbooks.getActive().$.workspace;
-      assert.isDefined(workspace);
-      // give the workspace time to resolve the lock (I think).
-      // TODO: setTimeout is sloppy
-      setTimeout(function () {
-        done(workspace);
-      }, 2000);
-    }, 2000);
+    coll = navigator.$.contentPanels.getActive().value;
+    if (coll.getStatus() === XM.Model.READY_CLEAN) {
+      navigate();
+    } else {
+      coll.on('statusChange', navigate);
+    }
   };
 
   /**
@@ -76,7 +88,9 @@
    */
   var setWorkspaceAttributes = exports.setWorkspaceAttributes = function (workspace, createHash) {
     _.each(createHash, function (value, key) {
-      var widgetFound = false;
+      var widgetFound = false,
+        attribute;
+
       _.each(workspace.$, function (widget) {
         if (widget.attr === key) {
           widgetFound = true;
@@ -84,7 +98,13 @@
         }
       });
       assert.isTrue(widgetFound, "Cannot find widget for attr " + key + " in workspace " + workspace.kind);
-      assert.equal(workspace.value.get(key), value);
+      attribute = workspace.value.get(key);
+      if (attribute.idAttribute && !value.idAttribute) {
+        // the attribute has been turned into a model
+        assert.equal(attribute.id, value[attribute.idAttribute]);
+      } else {
+        assert.equal(workspace.value.get(key), value);
+      }
     });
   };
 
@@ -97,6 +117,8 @@
       done(err);
     };
 
+    assert.isTrue(workspace.value.hasLockKey(), "Cannot acquire lock key");
+
     if (!skipValidation) {
       var validation = workspace.value.validate(workspace.value.attributes);
       assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
@@ -108,11 +130,16 @@
     //});
     workspace.save({
       // wait until the list has been refreshed with this model before we return control
-      // TODO: this is probably where we'd want to insert a callback to be notified when
-      // the lock has been released.
       modelChangeDone: function () {
+        var lockChange = function () {
+          workspace.value.off("lockChange", lockChange);
+          done(null, workspace.value);
+        };
+        workspace.value.on("lockChange", lockChange);
         workspace.value.releaseLock();
-        done(null, workspace.value);
+      },
+      error: function (err) {
+        assert.fail(JSON.stringify(err));
       }
     });
   };
@@ -153,9 +180,11 @@
 
   exports.updateFirstModel = function (test) {
     it('should allow a trivial update to the first model of ' + test.kind, function (done) {
-      this.timeout(30 * 1000);
+      this.timeout(20 * 1000);
       navigateToExistingWorkspace(XT.app, test.kind, function (workspace) {
-        var updateObj;
+        var updateObj,
+          statusChanged;
+
         assert.equal(workspace.value.recordType, test.model);
         if (typeof test.update === 'string') {
           updateObj = {};
@@ -163,14 +192,17 @@
         } else if (typeof test.update === 'object') {
           updateObj = test.update;
         }
-        // TODO: again, sloppy: probably waiting for a lock key here.
-        setTimeout(function () {
-          setWorkspaceAttributes(workspace, updateObj);
-          saveWorkspace(workspace, function () {
-            XT.app.$.postbooks.previous();
-            done();
-          });
-        }, 1000);
+        statusChanged = function () {
+          if (workspace.value.getStatus() === XM.Model.READY_CLEAN) {
+            workspace.value.off("statusChange", statusChanged);
+            setWorkspaceAttributes(workspace, updateObj);
+            saveWorkspace(workspace, function () {
+              XT.app.$.postbooks.previous();
+              done();
+            });
+          }
+        };
+        workspace.value.on("statusChange", statusChanged);
       });
     });
   };

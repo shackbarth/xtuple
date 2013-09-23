@@ -1,7 +1,7 @@
 {
-  "version": "1.4.4",
-  "databaseScripts": [
-    "register.sql"
-  ]
+  "name": "sales",
+  "comment": "Sales extension",
+  "loadOrder": 20,
+  "databaseScripts": []
 }
 

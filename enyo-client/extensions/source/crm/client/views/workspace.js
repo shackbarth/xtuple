@@ -140,6 +140,26 @@ trailing:true, white:true*/
     XV.appendExtension("XV.OpportunityWorkspace", extensions);
 
     // ..........................................................
+    // QUOTE
+    //
+  
+    extensions = [
+      {kind: "XV.OpportunityWidget", container: "settingsGroup", attr: "opportunity"}
+    ];
+
+    XV.appendExtension("XV.QuoteWorkspace", extensions);
+
+    // ..........................................................
+    // SALES ORDER
+    //
+  
+    extensions = [
+      {kind: "XV.OpportunityWidget", container: "settingsGroup", attr: "opportunity"}
+    ];
+
+    XV.appendExtension("XV.SalesOrderWorkspace", extensions);
+
+    // ..........................................................
     // TO DO
     //
 

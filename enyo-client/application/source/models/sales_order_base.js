@@ -22,7 +22,7 @@ white:true*/
       freight = model.get("freight") || 0.0,
       scale = XT.MONEY_SCALE,
       add = XT.math.add,
-      substract = XT.math.subtract,
+      subtract = XT.math.subtract,
       subtotals = [],
       taxDetails = [],
       costs = [],
@@ -85,7 +85,7 @@ white:true*/
     freightWeight = add(weights, XT.WEIGHT_SCALE);
     subtotal = add(subtotals, scale);
     costTotal = add(costs, scale);
-    margin = substract(subtotal, costTotal, scale);
+    margin = subtract(subtotal, costTotal, scale);
     subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
     total = add(subtotals, scale);
 

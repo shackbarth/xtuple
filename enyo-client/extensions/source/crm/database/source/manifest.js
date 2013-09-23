@@ -1,6 +1,6 @@
 {
-  "version": "1.4.4",
-  "databaseScripts": [
-    "register.sql"
-  ]
+  "name": "crm",
+  "comment": "Corporate Relationship Management extension",
+  "loadOrder": 10,
+  "databaseScripts": []
 }

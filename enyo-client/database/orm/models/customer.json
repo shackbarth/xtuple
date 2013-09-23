@@ -979,7 +979,8 @@
         "name": "isDefault",
         "attr": {
           "type": "Boolean",
-          "column": "shipto_default"
+          "column": "shipto_default",
+          "isRequired": true
         }
       },
       {

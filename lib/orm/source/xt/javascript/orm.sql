@@ -453,7 +453,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         tableName,
         pkey,
         nkey,
-        orderBy,
+        orderBy2,
         isView;
 
       /* process properties */
@@ -591,7 +591,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           nkey = Orm.naturalKey(iorm);
           column = toMany.isNested ? type : nkey;
           col = 'array({select}) as "{alias}"',
-          orderBy = 'order by ' + pkey;
+          orderBy2 = 'order by ' + pkey;
 
            /* handle inverse */
           inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
@@ -608,7 +608,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                    .replace('{table}', table)
                    .replace('{conditions}', conditions))
                    .replace('{alias}', alias)
-                   .replace('{order}', orderBy);
+                   .replace('{order}', orderBy2);
           cols.push(col);
         }
       }

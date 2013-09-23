@@ -1,7 +1,8 @@
 {
-  "version": "1.4.4",
+  "name": "inventory",
+  "comment": "Inventory extension",
+  "loadOrder": 70,
   "databaseScripts": [
-    "register.sql",
     "public/tables/itemloc.sql",
     "public/tables/locitem.sql",
     "xt/functions/shipment_value.sql",

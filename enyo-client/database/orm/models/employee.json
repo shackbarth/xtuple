@@ -279,6 +279,7 @@
       {
         "name": "groups",
         "toMany": {
+          "isNested": true,
           "type": "EmployeeGroupGroup",
           "column": "emp_id",
           "inverse": "employee"

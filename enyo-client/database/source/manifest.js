@@ -1,5 +1,5 @@
 {
-  "version": "1.4.4",
+  "name": "_application_",
   "databaseScripts": [
     "drop_deprecated.sql",
     "xt/trigger_functions/comment_did_change.sql",
@@ -75,6 +75,7 @@
     "xt/functions/quote_total_cost.sql",
     "xt/functions/quote_margin.sql",
     "xt/functions/register_extension.sql",
+    "xt/functions/register_extension_dependency.sql",
     "xt/functions/trylock.sql",
     "xt/functions/undomerge.sql",
     "xt/tables/emlprofile.sql",
@@ -90,6 +91,7 @@
     "xt/tables/pkgscript.sql",
     "xt/tables/pkguiform.sql",
     "xt/tables/ext.sql",
+    "xt/tables/extdep.sql",
     "xt/tables/grpext.sql",
     "xt/tables/ordtype.sql",
     "xt/tables/usrext.sql",
@@ -140,6 +142,7 @@
     "xm/javascript/project.sql",
     "xm/javascript/quote.sql",
     "xm/javascript/sales.sql",
+    "xm/javascript/sales_rep.sql",
     "xm/javascript/system.sql",
     "xm/javascript/tax.sql",
     "xm/javascript/to_do.sql",

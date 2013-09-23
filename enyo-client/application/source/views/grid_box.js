@@ -173,8 +173,15 @@ Globalize:true */
     */
     valueChanged: function () {
       this.inherited(arguments);
-      var model = this.value.salesOrder;
+      var model = this.value.salesOrder || this.value.quote;
       this.$.summaryPanel.setValue(model);
     }
   });
+
+  enyo.kind({
+    name: "XV.QuoteLineItemGridBox",
+    kind: "XV.SalesOrderLineItemGridBox",
+    associatedWorkspace: "XV.QuoteLineWorkspace"
+  });
+
 }());

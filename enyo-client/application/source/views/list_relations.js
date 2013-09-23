@@ -159,6 +159,9 @@ trailing:true, white:true*/
     name: "XV.CustomerShipToListRelations",
     kind: "XV.ListRelations",
     parentKey: "customer",
+    orderBy: [
+      {attribute: "number"}
+    ],
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -452,81 +455,6 @@ trailing:true, white:true*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "item.number", classes: "bold"},
               {kind: "XV.ListAttr", attr: "item.description1", classes: "right"}
-            ]}
-          ]}
-        ]}
-      ]}
-    ]
-  });
-
-  // ..........................................................
-  // OPPORTUNITY QUOTE
-  //
-
-  enyo.kind({
-    name: "XV.OpportunityQuoteListRelations",
-    kind: "XV.ListRelations",
-    orderBy: [
-      {attribute: 'number', descending: true}
-    ],
-    parentKey: "opportunity",
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "shipVia", classes: "right"}
-            ]}
-          ]}
-        ]}
-      ]}
-    ]
-  });
-
-  // ..........................................................
-  // CUSTOMER/PROSPECT SALESORDER
-  //
-
-  enyo.kind({
-    name: "XV.CustomerSalesOrderListRelations",
-    kind: "XV.ListRelations",
-    orderBy: [
-      {attribute: 'number', descending: true}
-    ],
-    parentKey: "customer",
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "shipVia", classes: "right"}
-            ]}
-          ]}
-        ]}
-      ]}
-    ]
-  });
-
-  // ..........................................................
-  // CUSTOMER/PROSPECT QUOTE/SALESORDER
-  //
-
-  enyo.kind({
-    name: "XV.CustomerQuoteListRelations",
-    kind: "XV.ListRelations",
-    orderBy: [
-      {attribute: 'number', descending: true}
-    ],
-    parentKey: "customer",
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "shipVia", classes: "right"}
             ]}
           ]}
         ]}

@@ -1342,8 +1342,7 @@ select xt.install_js('XT','Data','xtuple', $$
     /**
      * Get the primary key id for an object based on a passed in natural key.
      *
-     * @param {String} Namespace
-     * @param {String} Type
+     * @param {Object} Orm
      * @param {String} Natural key value
      */
     getId: function (orm, value) {
@@ -1374,6 +1373,43 @@ select xt.install_js('XT','Data','xtuple', $$
         return ret[0].id;
       } else {
         throw new handleError("Primary Key Not Found", 400);
+      }
+    },
+
+    /**
+     * Get the natural key id for an object based on a passed in primary key.
+     *
+     * @param {Object} Orm
+     * @param {Number|String} Primary key value
+     */
+    getNaturalId: function (orm, value) {
+      var ncol = XT.Orm.naturalKey(orm, true),
+        pcol = XT.Orm.primaryKey(orm, true),
+        query,
+        ret,
+        sql;
+
+      if (orm.table.indexOf(".") > 0) {
+        namespace = orm.table.beforeDot();
+        table = orm.table.afterDot();
+        query = "select %1$I as id from %2$I.%3$I where %4$I = $1";
+        sql = XT.format(query, [ncol, namespace, table, pcol]);
+      } else {
+        query = "select %1$I as id from %2$I where %3$I = $1";
+        sql = XT.format(query, [ncol, orm.table, pcol]);
+      }
+
+      if (DEBUG) {
+        XT.debug('getNaturalId sql =', sql);
+        XT.debug('getNaturalId values =', [value]);
+      }
+
+      ret = plv8.execute(sql, [value]);
+
+      if (ret.length) {
+        return ret[0].id;
+      } else {
+        throw new handleError("Natural Key Not Found", 400);
       }
     },
 
