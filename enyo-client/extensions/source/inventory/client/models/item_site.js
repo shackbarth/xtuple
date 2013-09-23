@@ -45,8 +45,7 @@ white:true*/
           maximumOrderQuantity: 0,
           isLocationControl: false,
           isReceiveLocationAuto: false,
-          isIssueLocationAuto: false,
-          locationType: XM.ItemSite.NO_LOCATION
+          isIssueLocationAuto: false
         });
         return defaults;
       },
@@ -107,7 +106,7 @@ white:true*/
           }
         }
 
-        /* Determine if Job Cost is possible */
+        // Determine if Job Cost is possible
         if ((itemType === I.MANUFACTURED ||
             itemType === I.PURCHASED ||
             itemType === I.OUTSIDE_PROCESS) &&
@@ -286,11 +285,13 @@ white:true*/
         var useDefault = this.get("useDefaultLocation"),
           isLocationControl = this.get("isLocationControl");
         if (useDefault) {
-          this.setReadOnly("receiveLocation", !isLocationControl);
-          this.setReadOnly("isReceiveLocationAuto", !isLocationControl);
-          this.setReadOnly("stockLocation", !isLocationControl);
-          this.setReadOnly("isStockLocationAuto", !isLocationControl);
-          this.setReadOnly("userDefinedLocation", isLocationControl);
+          this.setReadOnly({
+            receiveLocation: !isLocationControl,
+            isReceiveLocationAuto: !isLocationControl,
+            stockLocation: !isLocationControl,
+            isStockLocationAuto: !isLocationControl,
+            userDefinedLocation: isLocationControl
+          });
         } else {
           this.setReadOnly("userDefinedLocation");
         }
