@@ -9,16 +9,12 @@
 
   var zombieAuth = require("../../lib/zombie_auth"),
     _ = require("underscore"),
-    async = require("async"),
     smoke = require("../../lib/smoke"),
     assert = require("chai").assert;
 
   describe('Quote Workspace', function () {
     this.timeout(20 * 1000);
 
-    //
-    // We'll want to have TTOYS, BTRUCK1, and WH1 onhand and ready for the test to work.
-    //
     before(function (done) {
       zombieAuth.loadApp(done);
     });
@@ -44,42 +40,6 @@
           XT.app.$.postbooks.getActive().close({force: true});
           done();
         }, 3000);
-
-        /*
-        //
-        // Set the customer from the appropriate workspace widget
-        //
-        var createHash = {
-          customer: submodels.customerModel
-        };
-        smoke.setWorkspaceAttributes(workspace, createHash);
-        assert.equal(workspace.value.get("shiptoCity"), "Walnut Hills");
-        // In sales order, setting the line item fields will set off a series
-        // of asynchronous calls. Once the "total" field is computed, we
-        // know that the workspace is ready to save.
-        // It's good practice to set this trigger *before* we change the line
-        // item fields, so that we're 100% sure we're ready for the responses.
-
-        workspace.value.on("statusChange", function (model, status) {
-          if (status === XM.Model.DESTROYED_DIRTY) {
-            done();
-          }
-        });
-        workspace.value.on("change:total", function () {
-          smoke.saveWorkspace(workspace, function (err, model) {
-            assert.isNull(err);
-            smoke.deleteFromList(XT.app, model.id, done);
-          });
-        });
-
-        //
-        // Set the line item fields
-        //
-        workspace.$.salesOrderLineItemGridBox.newItem();
-        gridRow = workspace.$.salesOrderLineItemGridBox.$.editableGridRow;
-        gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
-        gridRow.$.quantityWidget.doValueChange({value: 5});
-        */
       });
     });
   });
