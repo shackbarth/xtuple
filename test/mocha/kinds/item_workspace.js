@@ -22,12 +22,7 @@
     describe('User selects to create an item', function () {
       it('User navigates to Item-New and selects to create a new Item', function (done) {
         this.timeout(30 * 1000);
-        var attributes = {
-            number: "TEST" + Math.random(),
-            productCategory: XM.productCategories.models[0],
-            classCode: XM.classCodes.models[0],
-            inventoryUnit: XM.units.models[0]
-          },
+        var attributes = require("../lib/model_data").item,
           workspace = smoke.navigateToNewWorkspace(XT.app, "XV.ItemList");
 
         assert.equal(workspace.value.recordType, "XM.Item");

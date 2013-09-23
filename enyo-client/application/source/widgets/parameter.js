@@ -284,7 +284,8 @@ trailing:true, white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_employeeGroup".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(),
+        attr: "description"}
     ]
   });
 
