@@ -876,7 +876,7 @@ white:true*/
 
         if (response.answer) {
           // Callback for each check
-          custOptions.succes = function (canPurchase) {
+          custOptions.success = function (canPurchase) {
             counter--;
             if (canPurchase) { results.push(id); }
 
