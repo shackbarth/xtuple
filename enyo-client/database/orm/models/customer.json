@@ -215,7 +215,7 @@
         "name": "shiptos",
         "toMany": {
           "isNested": true,
-          "type": "SalesCustomerShiptoRelation",
+          "type": "CustomerShipto",
           "column": "cust_id",
           "inverse": "customer"
         }
