@@ -23,8 +23,7 @@
     describe('User selects to create an honorific', function () {
       it('User navigates to Honorific-New and selects to create a new Honorific', function (done) {
         this.timeout(30 * 1000);
-        var code = "Herr" + Math.random(),
-          workspace = smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList");
+        var workspace = smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList");
 
         assert.equal(workspace.value.recordType, "XM.Honorific");
         smoke.setWorkspaceAttributes(workspace, modelData.honorific);
