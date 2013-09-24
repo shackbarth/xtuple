@@ -152,7 +152,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           require_uncache(file);
         });
         mocha.addFile(path.join(__dirname, "../test/mocha/lib/login.js"));
-        mocha.addFile(path.join(__dirname, "../test/mocha/extensions/all/workspace_empty.js"));
+        //mocha.addFile(path.join(__dirname, "../test/mocha/extensions/all/workspace_empty.js"));
         mocha.run(function (failures) {
           callback(failures);
         });

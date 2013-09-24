@@ -12,10 +12,7 @@
       commentType: "XM.ContactComment",
       autoTestAttributes: true,
       testComments: true,
-      createHash: {
-        firstName: "Michael",
-        primaryEmail: "modonnell@xtuple.com"
-      },
+      createHash: require("../lib/model_data").contact,
       updateHash: {
         firstName: "Mike"
       }
