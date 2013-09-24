@@ -1,12 +1,14 @@
 select xt.create_view('xt.itemsiteinfo', $$
-   select *,
+   select i.*,
      case
-       when itemsite_location_id != -1 or length(itemsite_location) > 0 then true
+       when i.itemsite_location_id != -1 or length(i.itemsite_location) > 0 then true
        else false
      end as "use_default_loc",
-     round(itemcost(itemsite_id), 6) as "unit_cost",
-     case when itemsite_supply_itemsite_id is null then false else true end as planned_transfers
-   from itemsite;
+     round(itemcost(i.itemsite_id), 6) as "unit_cost",
+     case when i.itemsite_supply_itemsite_id is null then false else true end as planned_transfers,
+     s.itemsite_warehous_id as supply_warehous_id
+   from itemsite i
+     left join itemsite s on s.itemsite_id = i.itemsite_id;
 $$, false);
 
 create or replace rule "_INSERT" as on insert to xt.itemsiteinfo do instead
@@ -118,7 +120,10 @@ insert into itemsite (
   coalesce(new.itemsite_costmethod, 'N'),
   coalesce(new.itemsite_value, 0),
   coalesce(new.itemsite_ordergroup_first, false),
-  new.itemsite_supply_itemsite_id,
+  (select itemsite_id
+    from itemsite
+    where itemsite_item_id = new.itemsite_item_id
+      and itemsite_warehous_id = new.supply_warehous_id),
   coalesce(new.itemsite_planning_type, 'N'),
   coalesce(new.itemsite_wosupply, false),
   coalesce(new.itemsite_posupply, false),
@@ -174,7 +179,11 @@ update itemsite set
   itemsite_autoreg=new.itemsite_autoreg,
   itemsite_costmethod=new.itemsite_costmethod,
   itemsite_ordergroup_first=new.itemsite_ordergroup_first,
-  itemsite_supply_itemsite_id=new.itemsite_supply_itemsite_id,
+  itemsite_supply_itemsite_id=(
+    select itemsite_id
+    from itemsite
+    where itemsite_item_id = old.itemsite_item_id
+      and itemsite_warehous_id = new.supply_warehous_id),
   itemsite_planning_type=new.itemsite_planning_type,
   itemsite_wosupply=new.itemsite_wosupply,
   itemsite_posupply=new.itemsite_posupply,

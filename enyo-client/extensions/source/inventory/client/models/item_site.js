@@ -24,6 +24,7 @@ white:true*/
         'multipleOrderQuantity',
         'orderToQuantity',
         'reorderLevel',
+        'supplySite',
         'userDefinedLocation',
         'useParametersManual'
       ]);
