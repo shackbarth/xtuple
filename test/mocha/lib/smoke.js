@@ -35,7 +35,7 @@
     Finds the list in the panels and opens up a new workspace from that list.
   */
   var navigateToNewWorkspace = exports.navigateToNewWorkspace = function (app, listKind, done) {
-    var navigator, workspaceContainer, model;
+    var navigator, workspaceContainer, model, autoRegex, eventName, idChanged;
 
     navigator = navigateToList(app, listKind);
     //
@@ -47,17 +47,20 @@
     assert.equal(workspaceContainer.kind, "XV.WorkspaceContainer");
     model = workspaceContainer.$.workspace.value;
 
-    if (model.id) {
-      done(workspaceContainer);
-    } else {
-      var eventName = "change:" + model.idAttribute;
-      var idChanged = function () {
+
+    autoRegex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER;
+    if (model instanceof XM.Document && model.numberPolicy.match(autoRegex)) {
+      // wait for the model to fetch its id if appropriate
+      eventName = "change:" + model.idAttribute;
+      idChanged = function () {
         if (model.id) {
           model.off(eventName, idChanged);
           done(workspaceContainer);
         }
       };
       model.on(eventName, idChanged);
+    } else {
+      done(workspaceContainer);
     }
   };
 
