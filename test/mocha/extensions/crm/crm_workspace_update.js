@@ -41,7 +41,7 @@
         * Test the INCDT-19869 fix.
         * http://www.xtuple.org/xtincident/view/default/19869
         */
-      describe('INCDT-19869: Lock not released when "New" is tapped in workspace', function () {
+      describe.skip('INCDT-19869: Lock not released when "New" is tapped in workspace', function () {
         var workspace, container, model, id;
 
         beforeEach(function (done) {
