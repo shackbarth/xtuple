@@ -14,7 +14,8 @@
       {kind: "XV.SalesOrderList", model: "XM.SalesOrder", update: "fob"},
       {kind: "XV.CustomerList", model: "XM.Customer", update: "notes"},
       {kind: "XV.ProspectList", model: "XM.Prospect", update: "notes"},
-      {kind: "XV.QuoteList", model: "XM.Quote", update: "fob"}
+      {kind: "XV.QuoteList", model: "XM.Quote", update: "fob"},
+      {kind: "XV.ItemList", model: "XM.Item", update: "notes"}
     ];
 
   describe('Sales Workspaces', function () {
