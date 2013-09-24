@@ -34,8 +34,8 @@
   /**
     Finds the list in the panels and opens up a new workspace from that list.
   */
-  var navigateToNewWorkspace = exports.navigateToNewWorkspace = function (app, listKind) {
-    var navigator, workspaceContainer;
+  var navigateToNewWorkspace = exports.navigateToNewWorkspace = function (app, listKind, done) {
+    var navigator, workspaceContainer, model;
 
     navigator = navigateToList(app, listKind);
     //
@@ -45,7 +45,20 @@
     workspaceContainer = app.$.postbooks.getActive();
     assert.isDefined(workspaceContainer);
     assert.equal(workspaceContainer.kind, "XV.WorkspaceContainer");
-    return workspaceContainer;
+    model = workspaceContainer.$.workspace.value;
+
+    if (model.id) {
+      done(workspaceContainer);
+    } else {
+      var eventName = "change:" + model.idAttribute;
+      var idChanged = function () {
+        if (model.id) {
+          model.off(eventName, idChanged);
+          done(workspaceContainer);
+        }
+      };
+      model.on(eventName, idChanged);
+    }
   };
 
   var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
