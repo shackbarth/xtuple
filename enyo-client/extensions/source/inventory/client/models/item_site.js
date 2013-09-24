@@ -15,16 +15,24 @@ white:true*/
       _statusDidChange = _proto.statusDidChange;
 
     _proto.readOnlyAttributes = (_proto.readOnlyAttributes || []).concat([
+        'abcClass',
+        'controlMethod',
+        'costMethod',
+        'cycleCountFrequency',
         'receiveLocation',
+        'isAutomaticAbcClassUpdates',
+        'isLocationControl',
         'isReceiveLocationAuto',
-        'stockLocation',
+        'isStocked',
         'isStockLocationAuto',
         'maximumOrderQuantity',
         'minimumOrderQuantity',
         'multipleOrderQuantity',
         'orderToQuantity',
         'reorderLevel',
-        'supplySite',
+        'safetyStock',
+        'stockLocation',
+        'useDefaultLocation',
         'userDefinedLocation',
         'useParametersManual'
       ]);
@@ -40,10 +48,13 @@ white:true*/
       costMethods: null,
 
       defaults: function () {
-        var defaults = _defaults.apply(this, arguments);
+        var defaults = _defaults.apply(this, arguments),
+          K = XM.ItemSite;
         defaults = _.extend(defaults, {
           abcClass: "A",
           isAutomaticAbcClassUpdates: false,
+          controlMethod: K.REGULAR_CONTROL,
+          costMethod: K.NO_COST,
           cycleCountFrequency: 0,
           isStocked: false,
           safetyStock: 0,
@@ -90,9 +101,10 @@ white:true*/
 
         _.each(costMethods, function (costMethod) {
           // Only process valid methods
-          if ((costMethod === K.STANDARD_COST && allowStd) ||
-              (costMethod === K.AVERAGE_COST && allowAvg) ||
-              (costMethod === K.JOB_COST && allowJob)) {
+          if (costMethod === K.NO_COST ||
+             (costMethod === K.STANDARD_COST && allowStd) ||
+             (costMethod === K.AVERAGE_COST && allowAvg) ||
+             (costMethod === K.JOB_COST && allowJob)) {
 
             // Update the array if it's not there
             if (!_.contains(that.costMethods, costMethod)) {
@@ -111,11 +123,13 @@ white:true*/
 
       bindEvents: function () {
         _bindEvents.apply(this, arguments);
-        this.on('change:controlMethod change:item', this.controlMethodDidChange);
-        this.on('change:costMethod', this.costMethodDidChange);
-        this.on('change:item', this.itemDidChange);
-        this.on('change:isLocationControl change:useDefaultLocation',
-          this.useDefaultLocationDidChange);
+        this.on('change:controlMethod change:item', this.controlMethodDidChange)
+            .on('change:costMethod', this.costMethodDidChange)
+            .on('change:item', this.itemDidChange)
+            .on('change:isStocked', this.isStockedDidChange)
+            .on('change:useParameters', this.useParametersDidChange)
+            .on('change:isLocationControl change:useDefaultLocation',
+                this.useDefaultLocationDidChange);
       },
 
       controlMethodDidChange: function () {
@@ -135,76 +149,44 @@ white:true*/
         if (controlMethod === K.NO_CONTROL ||
             itemType === I.REFERENCE ||
             itemType ===  I.KIT) {
-          this.set("costMethod", K.NO_COST);
-          this.setReadOnly("costMethod");
-          this.addCostMethod(K.NO_COST);
-          this.removeCostMethod([K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST]);
+          this.addCostMethod(K.NO_COST)
+              .removeCostMethod([K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST])
+              .set("costMethod", K.NO_COST)
+              .setReadOnly("costMethod");
         } else {
-          if (allowStd &&
-              costMethod !== K.AVERAGE_COST &&
-              costMethod !== K.JOB_COST) {
-            this.set("costMethod", K.STANDARD_COST);
-          } else if (allowAvg &&
-              costMethod !== K.STANDARD_COST &&
-              costMethod !== K.JOB_COST) {
-            this.set("costMethod", K.AVERAGE_COST);
-          } else if (allowJob &&
-              costMethod !== K.AVERAGE_COST &&
-              costMethod !== K.STANDARD_COST) {
-            this.set("costMethod", K.JOB_COST);
+          // Set available cost methods
+          this.removeCostMethod(K.NO_COST)
+              .addCostMethod([K.STANDARD_COST, K.AVERAGE_COST])
+              .setReadOnly("costMethod", false);
+
+          // Determine if Job Cost is possible
+          if ((itemType === I.MANUFACTURED ||
+              itemType === I.PURCHASED ||
+              itemType === I.OUTSIDE_PROCESS) &&
+            controlMethod !== K.NO_CONTROL &&
+            allowJob && !quantityOnHand) {
+            this.addCostMethod(K.JOB_COST);
+          } else {
+            this.removeCostMethod(K.JOB_COST);
           }
 
-          // Set available cost methods
-          this.removeCostMethod(K.NO_COST);
-          this.addCostMethod([K.STANDARD_COST, K.AVERAGE_COST]);
-        }
-
-        // Determine if Job Cost is possible
-        if ((itemType === I.MANUFACTURED ||
-            itemType === I.PURCHASED ||
-            itemType === I.OUTSIDE_PROCESS) &&
-          controlMethod !== K.NO_CONTROL &&
-          allowJob &&
-          quantityOnHand) {
-          this.addCostMethod(K.JOB_COST);
-        } else {
-          this.removeCostMethod(K.JOB_COST);
-        }
-
-        if (costMethod === K.JOB_COST) {
-          this.costMethodDidChange();
+          if (costMethod === K.NO_COST) {
+            if (allowStd) {
+              this.set("costMethod", K.STANDARD_COST);
+            } else if (allowAvg) {
+              this.set("costMethod", K.AVERAGE_COST);
+            } else if (allowJob) {
+              this.set("costMethod", K.JOB_COST);
+            }
+          }
         }
       },
 
       costMethodDidChange: function () {
         var K = XM.ItemSite,
-          costMethod = this.get("costMethod"),
-          item = this.get("item");
-        if (!item) { return; }
+          costMethod = this.get("costMethod");
         if (costMethod === K.JOB_COST) {
-          this.setReadOnly([
-            "safetyStock",
-            "abcClass",
-            "isAutomaticAbcClassUpdates",
-            "cycleCountFrequency",
-            "useParameters",
-            "isSold",
-            "isLocationControl",
-            "restrictedLocationsAllowed"
-          ]);
-          this.setReadOnly("useDefaultLocation", false);
-
-          this.set({
-            isStocked: false,
-            safetyStock: 0,
-            abcClass: false,
-            isAutomaticAbcClassUpdates: false,
-            cycleCountFrequency: 0,
-            useParameters: false,
-            isSold: false,
-            isLocationControl: false,
-            useDefaultLocation: false
-          });
+          this.toggleInventorySettings(false);
         } else {
           this.itemDidChange();
         }
@@ -220,11 +202,7 @@ white:true*/
         var K = XM.ItemSite,
           I = XM.Item,
           item = this.get("item"),
-          itemType = item ? item.get("item") : false,
-          controlMethod = this.get("controlMethod"),
-          costMethod = this.get("costMethod"),
-          settings = XT.session.settings,
-          allowStd = settings.get("AllowStdCostMethod"),
+          itemType = item ? item.get("itemType") : false,
           nonStockTypes = [
             I.REFERENCE,
             I.PLANNING,
@@ -232,68 +210,54 @@ white:true*/
             I.BY_PRODUCT,
             I.CO_PRODUCT
           ],
-          attrs;
-
-        if (!itemType) { return; }
-
-        // Set a default cost method based on item type
-        if (controlMethod === K.NO_CONTROL ||
-            itemType === I.REFERENCE || itemType === I.KIT) {
-          this.set("costMethod", K.NO_COST);
-          this.setReadOnly("costMethod", true);
-          this.removeCostMethod([K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST]);
-        } else {
-          if (allowStd && costMethod !== K.STANDARD_COST) {
-            this.set("costMethod", K.STANDARD_COST);
-          } else {
-            this.set("costMethod", K.AVERAGE_COST);
-          }
-          this.removeCostMethod(K.NO_COST)
-              .addCostMethod([K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST]);
-        }
+          isInventory = !_.contains(nonStockTypes, itemType);
 
         // Settings dependent on whether inventory item or not
-        if (_.contains(nonStockTypes, itemType)) {
-          this.setReadOnly([
-            "safetyStock",
-            "abcClass",
-            "isAutomaticAbcClassUpdates",
-            "cycleCountFrequency",
-            "isStocked",
-            "useDefaultLocation",
-            "isLocationControl",
-            "controlMethod"
-          ]);
-
-          attrs = {
-            isStocked: false,
-            useDefaultLocation: false,
-            isLocationControl: false
-          };
-
-          if (itemType === I.REFERENCE || itemType === I.KIT) {
-            this.setReadOny("isSold", false);
-            attrs.controlMethod = K.NO_CONTROL;
+        this.toggleInventorySettings(isInventory);
+        this.setReadOnly("controlMethod", !isInventory);
+        if (!isInventory) {
+          // Handle special non-stock item type cases
+          if (!itemType || itemType === I.REFERENCE) {
+            this.setReadOnly("isSold", false)
+                .set("controlMethod", K.NO_CONTROL);
+          } else if (itemType === I.KIT) {
+            this.setReadOnly("isSold", false)
+                .set({controlMethod: K.NO_CONTROL, isSold: true});
           } else {
-            this.set("isSold", false);
-            this.setReadOny("isSold");
-            attrs.controlMethod = K.REGULAR_CONTROL;
+            this.setReadOnly("isSold")
+                .set({isSold: false, controlMethod: K.REGULAR_CONTROL});
           }
-  
-          this.set(attrs);
-        } else {
-          this.setReadOnly([
-            "safetyStock",
+        }
+      },
+
+      isStockedDidChange: function () {
+        var isStocked = this.get("isStocked"),
+          useParameters = this.get("useParameters");
+        this.setReadOnly("isStocked", !isStocked || !useParameters);
+      },
+
+      toggleInventorySettings: function (isInventory) {
+        this.setReadOnly([
             "abcClass",
-            "isAutomaticAbcClassUpdates",
             "cycleCountFrequency",
-            "leadTime",
-            "isSold",
-            "isStocked",
-            "useDefaultLocation",
+            "isAutomaticAbcClassUpdates",
             "isLocationControl",
-            "controlMethod"
-          ], false);
+            "isStocked",
+            "restrictedLocationsAllowed",
+            "safetyStock",
+            "useDefaultLocation"
+          ], !isInventory);
+
+        // If not inventory, force some settings
+        if (!isInventory) {
+          this.set({
+            cycleCountFrequency: 0,
+            isAutomaticAbcClassUpdates: false,
+            isLocationControl: false,
+            isStocked: false,
+            safetyStock: 0,
+            useDefaultLocation: false
+          });
         }
       },
 
@@ -350,6 +314,18 @@ white:true*/
           "isStockLocationAuto"
         ], !isLocationControl || !useDefault);
         this.setReadOnly("userDefinedLocation", isLocationControl || !useDefault);
+      },
+
+      useParametersDidChange: function () {
+        this.setReadOnly([
+          "orderToQuantity",
+          "minimumOrderQuantity",
+          "multipleOrderQuantity",
+          "maximumOrderQuantity",
+          "useParametersManual"
+        ], !this.get("useParameters"));
+
+        this.isStockedDidChange();
       }
     };
 
