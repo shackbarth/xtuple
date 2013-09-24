@@ -17,6 +17,7 @@ trailing:true, white:true*/
     //
 
     panels = [
+      {name: "workOrderList", kind: "XV.WorkOrderList"}
     ];
     XT.app.$.postbooks.appendPanels("setup", panels);
 
@@ -37,10 +38,10 @@ trailing:true, white:true*/
         {name: "workOrderList", kind: "XV.WorkOrderList"}
       ],
       actions: [
-        {name: "issueWoMaterial", privilege: "issueWoMaterials", method: "issueWoMaterial", notify: false}
+        {name: "issueMaterial", privilege: "issueWoMaterials", method: "issueMaterial", notify: false}
       ],
-      issueWoMaterial: function (inSender, inEvent) {
-        inSender.bubbleUp("onIssueWoMaterial", inEvent, inSender);
+      issueMaterial: function (inSender, inEvent) {
+        inSender.bubbleUp("onIssueMaterial", inEvent, inSender);
       }
 
     };
@@ -53,9 +54,9 @@ trailing:true, white:true*/
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
 
     // Postbooks level handler for the thing that is neither fish nor fowl
-    XT.app.$.postbooks.handlers.onIssueWoMaterial = "issueWoMaterial";
-    XT.app.$.postbooks.issueWoMaterial = function (inSender, inEvent) {
-      var panel = this.createComponent({kind: "XV.IssueWoMaterials"});
+    XT.app.$.postbooks.handlers.onIssueMaterial = "issueMaterial";
+    XT.app.$.postbooks.issueMaterial = function (inSender, inEvent) {
+      var panel = this.createComponent({kind: "XV.IssueMaterial"});
 
       panel.render();
       this.reflow();

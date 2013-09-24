@@ -12,24 +12,24 @@ trailing:true, white:true, strict:false*/
     //
 
     enyo.kind({
-      name: "XV.IssueToShippingList",
+      name: "XV.IssueMaterialList",
       kind: "XV.List",
-      label: "_issueToShipping".loc(),
-      collection: "XM.IssueToShippingCollection",
-      parameterWidget: "XV.IssueToShippingParameters",
+      label: "_issueMaterial".loc(),
+      collection: "XM.IssueMaterialCollection",
+      parameterWidget: "XV.IssueMaterialParameters",
       multiSelect: true,
       query: {orderBy: [
-        {attribute: "lineNumber"},
-        {attribute: "subNumber"}
+        {attribute: "order.number"},
+        {attribute: "order.subnumber"}
       ]},
       showDeleteAction: false,
       actions: [
-        {name: "issueStock", prerequisite: "canIssueStock",
+        {name: "issueMaterial", prerequisite: "canIssueMaterial",
           method: "issueStock", notify: false, isViewMethod: true},
-        {name: "issueLine", prerequisite: "canIssueStock",
+        {name: "issueLine", prerequisite: "canIssueMaterial",
           method: "issueLine", notify: false, isViewMethod: true},
-        {name: "returnLine", prerequisite: "canReturnStock",
-          method: "doReturnStock", notify: false}
+        {name: "returnLine", prerequisite: "canReturnMaterial",
+          method: "doReturnMaterial", notify: false}
       ],
       toggleSelected: true,
       published: {
@@ -74,6 +74,7 @@ trailing:true, white:true, strict:false*/
         this.setShipment(null);
         this.inherited(arguments);
       },
+      /*
       formatScheduleDate: function (value, view, model) {
         var today = new Date(),
           isLate = XT.date.compareDate(value, today) < 1 &&
@@ -81,6 +82,7 @@ trailing:true, white:true, strict:false*/
         view.addRemoveClass("error", isLate);
         return value;
       },
+
       formatLineNumber: function (value, view, model) {
         var lineNumber = model.get("lineNumber"),
           subnumber = model.get("subNumber");
@@ -91,6 +93,7 @@ trailing:true, white:true, strict:false*/
         }
         return value;
       },
+      */
       formatQuantity: function (value) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
@@ -116,12 +119,13 @@ trailing:true, white:true, strict:false*/
           model.save(null, options);
         }
       },
-      issueStock: function (inEvent) {
+      /*
+      issueMaterial: function (inEvent) {
         var model = inEvent.model,
          transDate = model.transactionDate;
 
         this.doWorkspace({
-          workspace: "XV.IssueStockWorkspace",
+          workspace: "XV.IssueMaterialWorkspace",
           id: model.id,
           allowNew: false,
           success: function (model) {
@@ -129,10 +133,11 @@ trailing:true, white:true, strict:false*/
             model.transactionDate = transDate;
           }
         });
-      },
+      },*/
       /**
         Overload: used to keep track of shipment.
       */
+      /*
       setupItem: function (inSender, inEvent) {
         this.inherited(arguments);
         var collection = this.getValue(),
@@ -147,13 +152,13 @@ trailing:true, white:true, strict:false*/
             model.set("shipment", listShipment);
           });
         }
-      },
+      },*/
       shipmentChanged: function () {
         this.doShipmentChanged({shipment: this.getShipment()});
       }
     });
 
-    XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
+    XV.registerModelList("XM.WorkOrderRelation", "XV.WorkOrderListItem");
 
   };
 }());

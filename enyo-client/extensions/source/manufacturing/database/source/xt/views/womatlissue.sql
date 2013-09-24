@@ -1,11 +1,9 @@
 select xt.create_view('xt.womatlissue', $$
 
   select 
-    *,
-    current_date AS transdate,
+    womatl.*,
     itemsite_qtyonhand AS qoh_before,
-    null AS to_issue,
-    womatl.obj_uuid
+    null::numeric AS to_issue
   from womatl
     join itemsite on itemsite_id=womatl_itemsite_id
     join item on itemsite_item_id=item_id

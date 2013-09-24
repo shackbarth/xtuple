@@ -10,20 +10,20 @@ white:true*/
   /**
     @class
 
-    @extends XM.Info
+    @extends XM.Model
   */
-  XM.WorkOrderListItem = XM.Model.extend({
-    /** @lends XM.WorkOrderListItem.prototype */
+  XM.WorkOrder = XM.Model.extend({
+    /** @lends XM.WorkOrder.prototype */
 
-    recordType: 'XM.WorkOrderListItem',
+    recordType: 'XM.WorkOrder',
 
-        /**
+    /**
     Returns incident status as a localized string.
 
     @returns {String}
     */
     getWorkOrderStatusString: function () {
-      var K = XM.WorkOrderListItem,
+      var K = XM.WorkOrder,
         status = this.get('status');
       if (status === K.RELEASED) {
         return '_released'.loc();
@@ -41,6 +41,36 @@ white:true*/
         return '_closed'.loc();
       }
     }
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.WorkOrderRelation = XM.Info.extend({
+    /** @lends XM.WorkOrderRelation.prototype */
+
+    recordType: 'XM.WorkOrderRelation',
+
+    editableModel: 'XM.WorkOrder',
+
+    descriptionKey: "number"
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.WorkOrderListItem = XM.Info.extend({
+    /** @lends XM.WorkOrderListItem.prototype */
+
+    recordType: 'XM.WorkOrderListItem',
+
+    editableModel: 'XM.WorkOrder'
 
   });
 
@@ -101,6 +131,17 @@ white:true*/
   XM.WorkOrderListItemCollection = XM.Collection.extend(/** @lends XM.WorkOrderListItemCollection.prototype */{
 
     model: XM.WorkOrderListItem
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.WorkOrderRelationCollection = XM.Collection.extend(/** @lends XM.WorkOrderRelationCollection.prototype */{
+
+    model: XM.WorkOrderRelation
 
   });
 

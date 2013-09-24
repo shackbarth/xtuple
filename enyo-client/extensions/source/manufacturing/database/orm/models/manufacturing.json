@@ -2,7 +2,7 @@
   {
     "context": "manufacturing",
     "nameSpace": "XM",
-    "type": "IssueWorkOrderMaterial",
+    "type": "IssueMaterial",
     "table": "xt.womatlissue",
     "comment": "Issue Work Order Material",
     "privileges": {
@@ -17,7 +17,7 @@
       {
         "name": "uuid",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "obj_uuid",
           "isPrimaryKey": true
         }
@@ -39,29 +39,23 @@
         }
       },
       {
-        "name": "transactionDate",
-        "attr": {
-          "type": "Date",
-          "column": "transdate"
-        }
-      },
-      {
         "name": "status",
-        "toOne": {
-          "type": "Text",
+        "attr": {
+          "type": "String",
           "column": "womatl_status"
         }
       },
       {
         "name": "method",
-        "toOne": {
-          "type": "Text",
+        "attr": {
+          "type": "String",
           "column": "womatl_issuemethod"
         }
       },
       {
         "name": "unit",
         "toOne": {
+          "isNested": true,
           "type": "Unit",
           "column": "womatl_uom_id"
         }

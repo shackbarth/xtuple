@@ -1,7 +1,7 @@
 select xt.create_view('xt.womatlissuedetail', $$
 
   select 
-    womatlpost_id as shipment,
+    womatlpost_id as issued_materials,
     womatl_id as order_line,
     case when invdetail_location_id = -1 then null else invdetail_location_id end as location,
     invdetail_ls_id as trace,

@@ -7,15 +7,23 @@ trailing:true, white:true, strict:false*/
 
   XT.extensions.manufacturing.initTransactionList = function () {
 
+    /** @private */
+    var _canDo = function (priv) {
+      var hasPrivilege = XT.session.privileges.get(priv),
+        model = this.getModel(),
+        validModel = _.isObject(model) ? !model.get("isShipped") : false;
+      return hasPrivilege && validModel;
+    };
+
     enyo.kind({
-      name: "XV.IssueToShipping",
+      name: "XV.IssueMaterial",
       kind: "XV.TransactionList",
-      prerequisite: "canIssueStock",
+      prerequisite: "canIssueMaterial",
       notifyMessage: "_issueAll?".loc(),
-      list: "XV.IssueToShippingList",
+      list: "XV.IssueMaterialList",
       actions: [
         {name: "issueAll", label: "_issueAll".loc(),
-          prerequisite: "canIssueStock" },
+          prerequisite: "canIssueMaterial" },
         {name: "issueSelectedStock", label: "_issueSelectedStock".loc(),
           prerequisite: "canIssueSelected" },
         {name: "issueSelected", label: "_issueSelected".loc(),
@@ -27,19 +35,19 @@ trailing:true, white:true, strict:false*/
         onShipmentChanged: "shipmentChanged"
       },
       canReturnSelected: function () {
-        var canDo = _canDo.call(this, "ReturnStockFromShipping"),
+        var canDo = _canDo.call(this, "ReturnMaterial"),
           models = this.selectedModels(),
           check;
         if (canDo) {
           check = _.find(models, function (model) {
-            return model.get("atShipping") > 0;
+            return model.get("qtyRequired") > 0;
           });
         }
 
         return !_.isEmpty(check);
       },
       canIssueSelected: function () {
-        var canDo = _canDo.call(this, "IssueStockToShipping"),
+        var canDo = _canDo.call(this, "IssueMaterial"),
           models = this.selectedModels(),
           check;
         if (canDo) {
@@ -50,15 +58,15 @@ trailing:true, white:true, strict:false*/
 
         return !_.isEmpty(check);
       },
-      canIssueStock: function () {
-        var canDo = _canDo.call(this, "IssueStockToShipping"),
+      canIssueMaterial: function () {
+        var canDo = _canDo.call(this, "IssueMaterial"),
           hasOpenLines = this.$.list.value.length;
         return canDo && hasOpenLines;
       },
       create: function () {
         this.inherited(arguments);
         var button = this.$.postButton;
-        button.setContent("_ship".loc());
+        button.setContent("_post".loc());
         button.setShowing(true);
       },
       /**
@@ -130,7 +138,7 @@ trailing:true, white:true, strict:false*/
               // open a workspace to handle it
               if (prompt || model.undistributed()) {
                 that.doWorkspace({
-                  workspace: "XV.IssueStockWorkspace",
+                  workspace: "XV.IssueMaterialWorkspace",
                   id: model.id,
                   callback: callback,
                   allowNew: false,
@@ -172,18 +180,6 @@ trailing:true, white:true, strict:false*/
         var models = this.selectedModels();
         this.issue(models, true);
       },
-      post: function () {
-        var that = this,
-          shipment = this.$.parameterWidget.$.shipment.getValue(),
-          callback = function (resp) {
-            if (resp) { that.$.parameterWidget.$.order.setValue(null); }
-          };
-        this.doWorkspace({
-          workspace: "XV.ShipShipmentWorkspace",
-          id: shipment.id,
-          callback: callback
-        });
-      },
       returnSelected: function () {
         var models = this.selectedModels(),
           that = this,
@@ -211,11 +207,11 @@ trailing:true, white:true, strict:false*/
           };
           XM.Inventory.returnFromShipping(data, options);
         }
-      },
+      }/*,
       shipmentChanged: function (inSender, inEvent) {
         this.$.parameterWidget.$.shipment.setValue(inEvent.shipment);
         this.$.postButton.setDisabled(_.isEmpty(inEvent.shipment));
-      }
+      }*/
     });
   };
 
