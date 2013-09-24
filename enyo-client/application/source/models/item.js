@@ -10,7 +10,7 @@ white:true*/
     Mixin for item classes
   */
   XM.ItemMixin = {
-    
+
     /**
     Returns item type as a localized string.
 
@@ -48,7 +48,7 @@ white:true*/
       }
       return '_error'.loc();
     },
-    
+
     /**
       Requests on array of material issue units from the server.
 
@@ -217,7 +217,7 @@ white:true*/
     }
 
   });
-  
+
   /** @private */
   var _isSoldDidChange = function () {
     var isNotSold = !(this.get('isSold') || false);
@@ -272,7 +272,7 @@ white:true*/
       }
       _isSoldDidChange.apply(this);
     },
-    
+
     itemTypeDidChange: function () {
       var K = XM.Item,
         itemType = this.get("itemType"),
@@ -356,7 +356,7 @@ white:true*/
 
       // TODO: if not purchased or privs, set sources to read only
       // privs = ViewItemSources or MaintainItemSources
-      
+
       // TODO: Check inventory situation if changing to non-inventory type
     },
 
@@ -522,7 +522,7 @@ white:true*/
     editableModel: 'XM.Item'
 
   });
-  
+
   XM.ItemListItem = XM.ItemListItem.extend(XM.ItemMixin);
 
   /**
@@ -560,6 +560,18 @@ white:true*/
     /** @scope XM.ItemCharacteristic.prototype */
 
     recordType: 'XM.ItemCharacteristic'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.ItemItemSiteRelation = XM.Model.extend({
+    /** @scope XM.ItemItemSiteRelation.prototype */
+
+    recordType: 'XM.ItemItemSiteRelation'
 
   });
 
@@ -761,6 +773,18 @@ white:true*/
     /** @scope XM.ItemRelationCollection.prototype */
 
     model: XM.ItemRelation
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ItemItemSiteRelationCollection = XM.Collection.extend({
+    /** @scope XM.ItemItemSiteRelationCollection.prototype */
+
+    model: XM.ItemItemSiteRelation
 
   });
 
