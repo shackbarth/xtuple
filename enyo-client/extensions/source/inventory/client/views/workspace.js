@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict: false*/
-/*global XT:true, XM:true, XV:true, enyo:true, Globalize: true*/
+/*global XT:true, XM:true, XV:true, enyo:true, Globalize: true, _:true*/
 
 (function () {
 
@@ -454,6 +454,61 @@ trailing:true, white:true, strict: false*/
     ];
 
     XV.appendExtension("XV.ItemSiteWorkspace", extensions);
+
+    // Add in handling for cost methods
+    var _proto = XV.ItemSiteWorkspace.prototype,
+      _create = _proto.create,
+      _recordIdChanged = _proto.recordIdChanged,
+      _newRecord = _proto.newRecord;
+
+    var ext = {
+      create: function () {
+        _create.apply(this, arguments);
+
+        // Modify the filter on the cost method picker to
+        // Check with valid cost methods on the model
+        this.$.costMethodPicker.filter = function (models) {
+          var ret = [],
+            costMethods;
+          if (this._model) {
+            costMethods = this._model.costMethods;
+            ret = _.filter(models, function (model) {
+              return _.contains(costMethods, model.id);
+            });
+          }
+          return ret;
+        };
+      },
+      setupPicker: function () {
+        var picker = this.$.costMethodPicker,
+          model = this.getValue();
+
+        // Remove any binding
+        if (picker._model) {
+          picker._model.off("costMethodsChange", this.refreshCostMethods, this);
+          delete picker._model;
+        }
+        
+        // Add a new one
+        if (model && model.id) {
+          model.on("costMethodsChange", this.refreshCostMethods, this);
+          picker._model = model; // Cache for future reference
+        }
+      },
+      newRecord: function () {
+        _newRecord.apply(this, arguments);
+        this.setupPicker();
+      },
+      recordIdChanged: function () {
+        _recordIdChanged.apply(this, arguments);
+        this.setupPicker();
+      },
+      refreshCostMethods: function () {
+        this.$.costMethodPicker.buildList();
+      }
+    };
+
+    enyo.mixin(_proto, ext);
 
   };
 }());

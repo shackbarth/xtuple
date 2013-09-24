@@ -31,7 +31,11 @@ white:true*/
 
     var ext = {
       /**
-        An array of cost methods allowed for this item site.
+        An array of cost methods allowed for this item site. Should
+        not be edited directly
+
+        @seealso addCostMethod
+        @ssealso removeCostMethod
       */
       costMethods: null,
 
@@ -57,6 +61,54 @@ white:true*/
         return defaults;
       },
 
+      /**
+        Add a cost method to the `costMethods` array. Triggers
+        a `costMethodsChange` event.
+
+        @param {String|Array} Cost Method or array of cost methods
+        @param {Object} Options
+        @returns Receiver
+        @seealso removeCostMethod
+      */
+      addCostMethod: function (costMethods, options) {
+        var K = XM.ItemSite,
+          that = this,
+          settings = XT.session.settings,
+          allowAvg = settings.get("AllowAvgCostMethod"),
+          allowStd = settings.get("AllowStdCostMethod"),
+          allowJob = settings.get("AllowJobCostMethod"),
+          changed = false;
+
+        if (!this.costMethods) {
+          this.costMethods = [];
+          changed = true;
+        }
+
+        if (typeof costMethods === "string") {
+          costMethods = [costMethods];
+        }
+
+        _.each(costMethods, function (costMethod) {
+          // Only process valid methods
+          if ((costMethod === K.STANDARD_COST && allowStd) ||
+              (costMethod === K.AVERAGE_COST && allowAvg) ||
+              (costMethod === K.JOB_COST && allowJob)) {
+
+            // Update the array if it's not there
+            if (!_.contains(that.costMethods, costMethod)) {
+              that.costMethods.push(costMethod);
+              changed = true;
+            }
+          }
+        });
+
+        // Notify the change
+        if (changed) {
+          this.trigger("costMethodsChange", this, this.costMethods, options);
+        }
+        return this;
+      },
+
       bindEvents: function () {
         _bindEvents.apply(this, arguments);
         this.on('change:controlMethod change:item', this.controlMethodDidChange);
@@ -73,11 +125,11 @@ white:true*/
           costMethod = this.get("costMethod"),
           item = this.get("item"),
           itemType = item ? item.get("itemType") : false,
+          quantityOnHand = this.get("quantityOnHand"),
           settings = XT.session.settings,
           allowAvg = settings.get("AllowAvgCostMethod"),
           allowStd = settings.get("AllowStdCostMethod"),
-          allowJob = settings.get("AllowJobCostMethod"),
-          quantityOnHand = this.get("quantityOnHand");
+          allowJob = settings.get("AllowJobCostMethod");
 
         /* Set default cost method */
         if (controlMethod === K.NO_CONTROL ||
@@ -85,7 +137,8 @@ white:true*/
             itemType ===  I.KIT) {
           this.set("costMethod", K.NO_COST);
           this.setReadOnly("costMethod");
-          this.costMethods = [K.NO_COST];
+          this.addCostMethod(K.NO_COST);
+          this.removeCostMethod([K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST]);
         } else {
           if (allowStd &&
               costMethod !== K.AVERAGE_COST &&
@@ -101,16 +154,9 @@ white:true*/
             this.set("costMethod", K.JOB_COST);
           }
 
-          // Cost available cost methods
-          this.costMethods = _.without(this.costMethods, K.NO_COST);
-          if (!_.contains(this.costMethods, K.STANDARD_COST) &&
-              allowStd) {
-            this.costMethods.push(K.STANDARD_COST);
-          }
-          if (!_.contains(this.costMethods, K.AVERAGE_COST) &&
-              allowAvg) {
-            this.costMethods.push(K.AVERAGE_COST);
-          }
+          // Set available cost methods
+          this.removeCostMethod(K.NO_COST);
+          this.addCostMethod([K.STANDARD_COST, K.AVERAGE_COST]);
         }
 
         // Determine if Job Cost is possible
@@ -120,11 +166,9 @@ white:true*/
           controlMethod !== K.NO_CONTROL &&
           allowJob &&
           quantityOnHand) {
-          if (!_.contains(this.costMethods, K.JOB_COST)) {
-            this.costMethods.push(K.JOB_COST);
-          }
+          this.addCostMethod(K.JOB_COST);
         } else {
-          this.costMethods = _.without(this.costMethods, K.JOB_COST);
+          this.removeCostMethod(K.JOB_COST);
         }
 
         if (costMethod === K.JOB_COST) {
@@ -168,23 +212,8 @@ white:true*/
 
       initialize: function () {
         _initialize.apply(this, arguments);
-        var K = XM.ItemSite,
-          settings = XT.session.settings,
-          allowAvg = settings.get("AllowAvgCostMethod"),
-          allowStd = settings.get("AllowStdCostMethod"),
-          allowJob = settings.get("AllowJobCostMethod");
-
-        // Determine which cost types are allowed
-        this.costMethods = [K.NO_COST];
-        if (allowStd) {
-          this.costMethods.push(K.STANDARD_COST);
-        }
-        if (allowAvg) {
-          this.costMethods.push(K.AVERAGE_COST);
-        }
-        if (allowJob) {
-          this.costMethods.push(K.JOB_COST);
-        }
+        var K = XM.ItemSite;
+        this.addCostMethod([K.NO_COST, K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST]);
       },
 
       itemDidChange: function () {
@@ -195,9 +224,7 @@ white:true*/
           controlMethod = this.get("controlMethod"),
           costMethod = this.get("costMethod"),
           settings = XT.session.settings,
-          allowAvg = settings.get("AllowAvgCostMethod"),
           allowStd = settings.get("AllowStdCostMethod"),
-          allowJob = settings.get("AllowJobCostMethod"),
           nonStockTypes = [
             I.REFERENCE,
             I.PLANNING,
@@ -214,25 +241,15 @@ white:true*/
             itemType === I.REFERENCE || itemType === I.KIT) {
           this.set("costMethod", K.NO_COST);
           this.setReadOnly("costMethod", true);
-          this.costMethods = _.without(this.costMethods,
-            K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST);
+          this.removeCostMethod([K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST]);
         } else {
           if (allowStd && costMethod !== K.STANDARD_COST) {
             this.set("costMethod", K.STANDARD_COST);
           } else {
             this.set("costMethod", K.AVERAGE_COST);
           }
-          this.costMethods = _.without(this.costMethods, K.NO_COST);
-
-          if (allowStd && !_.contains(this.costMethods, K.STANDARD_COST)) {
-            this.costMethods.push(K.STANDARD_COST);
-          }
-          if (allowAvg && !_.contains(this.costMethods, K.AVERAGE_COST)) {
-            this.costMethods.push(K.AVERAGE_COST);
-          }
-          if (allowJob && !_.contains(this.costMethods, K.JOB_COST)) {
-            this.costMethods.push(K.JOB_COST);
-          }
+          this.removeCostMethod(K.NO_COST)
+              .addCostMethod([K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST]);
         }
 
         // Settings dependent on whether inventory item or not
@@ -278,6 +295,41 @@ white:true*/
             "controlMethod"
           ], false);
         }
+      },
+
+      /**
+        Add a cost method to the `costMethods` array. Triggers
+        a `costMethodsChange` event.
+
+        @param {String|Array} Cost Method or array of cost methods
+        @param {Object} Options
+        @returns Receiver
+        @seealso removeCostMethod
+      */
+      removeCostMethod: function (costMethods, options) {
+        var that = this,
+          changed = false;
+
+        if (typeof costMethods === "string") {
+          costMethods = [costMethods];
+        }
+
+        _.each(costMethods, function (costMethod) {
+          // Ignore if not in the array
+          if (_.contains(that.costMethods, costMethod)) {
+
+            // Make the change
+            that.costMethods = _.without(that.costMethods, costMethod);
+            changed = true;
+          }
+        });
+
+        // Notify
+        if (changed) {
+          this.trigger("costMethodsChange", this, this.costMethods, options);
+        }
+
+        return this;
       },
 
       statusDidChange: function () {
