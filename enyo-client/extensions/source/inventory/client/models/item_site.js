@@ -215,8 +215,9 @@ white:true*/
         // Settings dependent on whether inventory item or not
         this.toggleInventorySettings(isInventory);
         this.setReadOnly("controlMethod", !isInventory);
+
+        // Handle special non-stock item type cases
         if (!isInventory) {
-          // Handle special non-stock item type cases
           if (!itemType || itemType === I.REFERENCE) {
             this.setReadOnly("isSold", false)
                 .set("controlMethod", K.NO_CONTROL);
@@ -233,7 +234,7 @@ white:true*/
       isStockedDidChange: function () {
         var isStocked = this.get("isStocked"),
           useParameters = this.get("useParameters");
-        this.setReadOnly("isStocked", !isStocked || !useParameters);
+        this.setReadOnly("reorderLevel", !isStocked || !useParameters);
       },
 
       toggleInventorySettings: function (isInventory) {
