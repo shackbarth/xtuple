@@ -486,7 +486,7 @@ white:true*/
         this.trigger("invalid", this, XT.Error.clone("xt2003"), {});
       }
     },
-    
+
     /**
       Checks for duplicate ship to numbers.
     */
@@ -535,6 +535,22 @@ white:true*/
     /** @scope XM.CustomerShiptoRelation */
 
     recordType: 'XM.CustomerShiptoRelation',
+
+    editableModel: 'XM.CustomerShipto',
+
+    documentKey: 'number'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.SalesCustomerShiptoRelation = XM.Document.extend({
+    /** @scope XM.CustomerShiptoRelation */
+
+    recordType: 'XM.SalesCustomerShiptoRelation',
 
     editableModel: 'XM.CustomerShipto',
 
