@@ -71,24 +71,22 @@
     * http://www.xtuple.org/xtincident/view/default/21110
     */
   describe('INCDT-21110: Record remains locked when Back->Discard selected', function () {
-    var workspace, container, model, id, moduleContainer;
+    var workspaceContainer, workspace, model, id, moduleContainer;
 
     beforeEach(function (done) {
       this.timeout(10 * 1000);
 
-      smoke.navigateToExistingWorkspace(XT.app, "XV.ClassCodeList", function (_workspace) {
-        assert.notEqual(container, XT.app.$.postbooks.getActive());
+      smoke.navigateToExistingWorkspace(XT.app, "XV.ClassCodeList", function (_workspaceContainer) {
+        workspaceContainer = _workspaceContainer;
+
         moduleContainer = XT.app.$.postbooks;
-        container = XT.app.$.postbooks.getActive();
 
-        assert.isDefined(_workspace);
-        assert.isDefined(_workspace.getValue());
-        assert.isDefined(container);
-        assert.isDefined(container.$.workspace);
+        assert.equal(workspaceContainer, XT.app.$.postbooks.getActive());
+        assert.isDefined(workspaceContainer.$.workspace);
 
-        assert.equal(_workspace, container.$.workspace);
-
-        workspace = _workspace;
+        workspace = workspaceContainer.$.workspace;
+        assert.isDefined(workspace);
+        assert.isDefined(workspace.getValue());
         id = workspace.getValue().id;
         model = workspace.getValue();
 
@@ -113,9 +111,9 @@
         // XXX solves inexplicable race condition
         setTimeout(function () {
           done();
-        }, 1000);
+        }, 4000);
       });
-      container.close();
+      workspaceContainer.close();
     });
     it('test base case', function () {
 
@@ -158,7 +156,7 @@
           if (!model.isDirty()) { return; }
 
           model.off("statusChange", handleAfterEdit);
-          container.$.backButton.bubble("onclick");
+          workspaceContainer.$.backButton.bubble("onclick");
         };
 
       model.on("statusChange", handleBeforeEdit);

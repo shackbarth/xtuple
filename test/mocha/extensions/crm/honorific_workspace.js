@@ -23,12 +23,14 @@
     describe('User selects to create an honorific', function () {
       it('User navigates to Honorific-New and selects to create a new Honorific', function (done) {
         this.timeout(30 * 1000);
-        var workspace = smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList");
+        smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList", function (workspaceContainer) {
+          var workspace = workspaceContainer.$.workspace;
 
-        assert.equal(workspace.value.recordType, "XM.Honorific");
-        smoke.setWorkspaceAttributes(workspace, modelData.honorific);
-        smoke.saveWorkspace(workspace, function () {
-          smoke.deleteFromList(XT.app, workspace.value, done);
+          assert.equal(workspace.value.recordType, "XM.Honorific");
+          smoke.setWorkspaceAttributes(workspace, modelData.honorific);
+          smoke.saveWorkspace(workspace, function () {
+            smoke.deleteFromList(XT.app, workspace.value, done);
+          });
         });
       });
     });

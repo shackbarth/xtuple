@@ -21,27 +21,30 @@
 
     describe('Customer Prospect Widget', function () {
       it('should allow users to create a new customer', function (done) {
-        var quoteWorkspace = smoke.navigateToNewWorkspace(XT.app, "XV.QuoteList"),
-          customerWorkspace;
+        smoke.navigateToNewWorkspace(XT.app, "XV.QuoteList", function (workspaceContainer) {
 
-        assert.equal(quoteWorkspace.value.recordType, "XM.Quote");
+          var quoteWorkspace = workspaceContainer.$.workspace,
+            customerWorkspace;
 
-        //quoteWorkspace.$.customerWidget.$.customerButton.tap({});
-        quoteWorkspace.$.customerWidget.popupTapped({}, {originator: {name: "customerButton"}});
-        customerWorkspace = XT.app.$.postbooks.getActive().$.workspace;
-        assert.equal(customerWorkspace.kind, "XV.CustomerWorkspace");
+          assert.equal(quoteWorkspace.value.recordType, "XM.Quote");
 
-        smoke.setWorkspaceAttributes(customerWorkspace, require("../../lib/model_data").customer);
-        assert.isUndefined(customerWorkspace.value.validate(customerWorkspace.value.attributes));
-        XT.app.$.postbooks.getActive().saveAndClose();
-        setTimeout(function () { // yeah yeah yeah
-          assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.QuoteWorkspace");
-          assert.equal(quoteWorkspace.value.getValue("customer.name"), "TestCust");
-          XT.app.$.postbooks.getActive().close({force: true});
-          setTimeout(function () {
-            done();
+          //quoteWorkspace.$.customerWidget.$.customerButton.tap({});
+          quoteWorkspace.$.customerWidget.popupTapped({}, {originator: {name: "customerButton"}});
+          customerWorkspace = XT.app.$.postbooks.getActive().$.workspace;
+          assert.equal(customerWorkspace.kind, "XV.CustomerWorkspace");
+
+          smoke.setWorkspaceAttributes(customerWorkspace, require("../../lib/model_data").customer);
+          assert.isUndefined(customerWorkspace.value.validate(customerWorkspace.value.attributes));
+          XT.app.$.postbooks.getActive().saveAndClose();
+          setTimeout(function () { // yeah yeah yeah
+            assert.equal(XT.app.$.postbooks.getActive().$.workspace.kind, "XV.QuoteWorkspace");
+            assert.equal(quoteWorkspace.value.getValue("customer.name"), "TestCust");
+            XT.app.$.postbooks.getActive().close({force: true});
+            setTimeout(function () {
+              done();
+            }, 3000);
           }, 3000);
-        }, 3000);
+        });
       });
     });
   });

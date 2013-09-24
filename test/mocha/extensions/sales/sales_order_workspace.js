@@ -39,7 +39,7 @@
       });
     };
 
-  describe.skip('Sales Order Workspace', function () {
+  describe('Sales Order Workspace', function () {
     this.timeout(20 * 1000);
 
     //
@@ -56,41 +56,43 @@
 
     describe('User selects to create a sales order', function () {
       it('User navigates to Sales Order-New and selects to create a new Sales order', function (done) {
-        var gridRow;
+        smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList", function (workspaceContainer) {
+          var workspace = workspaceContainer.$.workspace,
+            gridRow;
 
-        var workspace = smoke.navigateToNewWorkspace(XT.app, "XV.SalesOrderList");
-        assert.equal(workspace.value.recordType, "XM.SalesOrder");
+          assert.equal(workspace.value.recordType, "XM.SalesOrder");
 
-        //
-        // Set the customer from the appropriate workspace widget
-        //
-        var createHash = {
-          customer: submodels.customerModel
-        };
-        smoke.setWorkspaceAttributes(workspace, createHash);
-        assert.equal(workspace.value.get("shiptoCity"), "Walnut Hills");
-        // In sales order, setting the line item fields will set off a series
-        // of asynchronous calls. Once the "total" field is computed, we
-        // know that the workspace is ready to save.
-        // It's good practice to set this trigger *before* we change the line
-        // item fields, so that we're 100% sure we're ready for the responses.
-        workspace.value.on("change:total", function () {
-          smoke.saveWorkspace(workspace, function (err, model) {
-            assert.isNull(err);
-            // TODO: sloppy
-            setTimeout(function () {
-              smoke.deleteFromList(XT.app, model, done);
-            }, 2000);
+          //
+          // Set the customer from the appropriate workspace widget
+          //
+          var createHash = {
+            customer: submodels.customerModel
+          };
+          smoke.setWorkspaceAttributes(workspace, createHash);
+          assert.equal(workspace.value.get("shiptoCity"), "Walnut Hills");
+          // In sales order, setting the line item fields will set off a series
+          // of asynchronous calls. Once the "total" field is computed, we
+          // know that the workspace is ready to save.
+          // It's good practice to set this trigger *before* we change the line
+          // item fields, so that we're 100% sure we're ready for the responses.
+          workspace.value.on("change:total", function () {
+            smoke.saveWorkspace(workspace, function (err, model) {
+              assert.isNull(err);
+              // TODO: sloppy
+              setTimeout(function () {
+                smoke.deleteFromList(XT.app, model, done);
+              }, 2000);
+            });
           });
-        });
 
-        //
-        // Set the line item fields
-        //
-        workspace.$.salesOrderLineItemGridBox.newItem();
-        gridRow = workspace.$.salesOrderLineItemGridBox.$.editableGridRow;
-        gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
-        gridRow.$.quantityWidget.doValueChange({value: 5});
+          //
+          // Set the line item fields
+          //
+          workspace.$.salesOrderLineItemGridBox.newItem();
+          gridRow = workspace.$.salesOrderLineItemGridBox.$.editableGridRow;
+          gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
+          gridRow.$.quantityWidget.doValueChange({value: 5});
+        });
       });
     });
   });
