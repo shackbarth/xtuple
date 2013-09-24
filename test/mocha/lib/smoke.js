@@ -162,6 +162,8 @@
   };
 
   exports.deleteFromList = function (app, model, done) {
+    var statusChange;
+
     // back up to list
     app.$.postbooks.previous();
     assert.equal(app.$.postbooks.getActive().kind, "XV.Navigator");
@@ -174,11 +176,14 @@
         return m.get(m.idAttribute) === model.id;
       });
 
-    model.on("statusChange", function (model, status) {
+    statusChange = function (model, status) {
       if (status === XM.Model.DESTROYED_DIRTY) {
+        model.off("statusChange", statusChange);
+        assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
         done();
       }
-    });
+    };
+    model.on("statusChange", statusChange);
 
     // delete it, by calling the function that gets called when the user ok's the delete popup
     list.deleteItem({model: listModel});
@@ -187,9 +192,10 @@
   exports.updateFirstModel = function (test) {
     it('should allow a trivial update to the first model of ' + test.kind, function (done) {
       this.timeout(20 * 1000);
-      navigateToExistingWorkspace(XT.app, test.kind, function (workspace) {
+      navigateToExistingWorkspace(XT.app, test.kind, function (workspaceContainer) {
         var updateObj,
-          statusChanged;
+          statusChanged,
+          workspace = workspaceContainer.$.workspace;
 
         assert.equal(workspace.value.recordType, test.model);
         if (typeof test.update === 'string') {
@@ -204,6 +210,7 @@
             setWorkspaceAttributes(workspace, updateObj);
             saveWorkspace(workspace, function () {
               XT.app.$.postbooks.previous();
+              assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
               done();
             });
           }

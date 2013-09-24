@@ -28,7 +28,10 @@
         smoke.navigateToNewWorkspace(XT.app, "XV.ContactList", function (workspaceContainer) {
 
           var workspace = workspaceContainer.$.workspace,
-            model = workspace.value;
+            model = workspace.value,
+            charWidget,
+            charModel,
+            contactCharModel;
 
           assert.equal(model.recordType, "XM.Contact");
           smoke.setWorkspaceAttributes(workspace, modelData.contact);
@@ -37,39 +40,50 @@
           // Add a characteristic
           //
           assert.equal(model.get("characteristics").length, 0);
-          var charWidget = workspace.$.contactCharacteristicsWidget;
+          charWidget = workspace.$.contactCharacteristicsWidget;
           charWidget.newItem();
           // XXX it'd be better to do this through enyo
-          var charModel = _.find(XM.characteristics.models, function (m) {
+          charModel = _.find(XM.characteristics.models, function (m) {
             return m.id === 'Birthday';
           });
           assert.isObject(charModel);
-          var contactCharModel = charWidget.value.models[0];
+          contactCharModel = charWidget.value.models[0];
           contactCharModel.set({
             characteristic: charModel,
             value: "Tuesday"
           });
 
-
+          //
+          // On the second save: exit
+          //
           var modelResaved = function (m, status) {
             if (status === XM.Model.READY_CLEAN) {
               model.off("statusChange", modelResaved);
-              done();
+              workspaceContainer.close();
+
+              setTimeout(function () {
+                assert(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
+                done();
+              }, 5000);
 
             }
           };
 
-
+          //
+          // On the first save: try deleting the characteristic and resaving
+          //
           var modelSaved = function (m, status) {
+            var charItem, picker, deleteItem;
+
             if (status === XM.Model.READY_CLEAN) {
               model.off("statusChange", modelSaved);
               assert.equal(model.get("characteristics").length, 1);
 
-              var charItem = charWidget.$.repeater.children[0].$.characteristicItem;
+              charItem = charWidget.$.repeater.children[0].$.characteristicItem;
               assert.isObject(charItem);
 
-              var picker = charItem.$.characteristicPicker.$.picker;
-              var deleteItem = _.find(picker.$, function (item) {
+              picker = charItem.$.characteristicPicker.$.picker;
+              deleteItem = _.find(picker.$, function (item) {
                 return item.value === null;
               });
               assert.isFunction(deleteItem.tap);
