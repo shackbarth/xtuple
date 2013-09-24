@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict: false*/
-/*global XT:true, enyo:true*/
+/*global XT:true, enyo:true, _:true*/
 
 (function () {
 
@@ -40,7 +40,18 @@ trailing:true, white:true, strict: false*/
       kind: "XV.PickerWidget",
       collection: "XM.costMethods",
       valueAttribute: "id",
-      showNone: false
+      showNone: false,
+      filter: function (models) {
+        var ret = [],
+          costMethods;
+        if (this._model) {
+          costMethods = this._model.costMethods;
+          ret = _.filter(models, function (model) {
+            return _.contains(costMethods, model.id);
+          });
+        }
+        return ret;
+      }
     });
 
   };

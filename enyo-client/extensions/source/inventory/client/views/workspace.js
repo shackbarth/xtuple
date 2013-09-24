@@ -457,28 +457,10 @@ trailing:true, white:true, strict: false*/
 
     // Add in handling for cost methods
     var _proto = XV.ItemSiteWorkspace.prototype,
-      _create = _proto.create,
       _recordIdChanged = _proto.recordIdChanged,
       _newRecord = _proto.newRecord;
 
     var ext = {
-      create: function () {
-        _create.apply(this, arguments);
-
-        // Modify the filter on the cost method picker to
-        // Check with valid cost methods on the model
-        this.$.costMethodPicker.filter = function (models) {
-          var ret = [],
-            costMethods;
-          if (this._model) {
-            costMethods = this._model.costMethods;
-            ret = _.filter(models, function (model) {
-              return _.contains(costMethods, model.id);
-            });
-          }
-          return ret;
-        };
-      },
       setupPicker: function () {
         var picker = this.$.costMethodPicker,
           model = this.getValue();
