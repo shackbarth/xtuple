@@ -698,7 +698,7 @@
      {
        "name": "status",
        "attr": {
-         "type": "status",
+         "type": "String",
          "column": "prjtask_status"
        }
      }
@@ -797,7 +797,7 @@
      {
        "name": "status",
        "attr": {
-         "type": "status",
+         "type": "String",
          "column": "prjtask_status"
        }
      }
@@ -1891,14 +1891,14 @@
       {
         "name": "number",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "alarm_number"
         }
       },
       {
         "name": "sourceType",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "alarm_source",
           "value": "TA"
         }

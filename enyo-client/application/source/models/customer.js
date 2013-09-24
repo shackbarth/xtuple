@@ -20,7 +20,7 @@ white:true*/
     canPurchase: function (item, scheduleDate, options) {
       if (!item || !scheduleDate || !options || !options.success) { return; }
       var params,
-        shiptoId = options.shipto ? options.shipto.id : -1;
+        shiptoId = options.shipto ? options.shipto.id : null;
       params = [this.id, item.id, scheduleDate, shiptoId];
       this.dispatch("XM.Customer", "canPurchase", params, options);
       return this;
@@ -118,12 +118,13 @@ white:true*/
     },
 
     defaults: function () {
-      var settings = XT.session.getSettings();
+      var settings = XT.session.getSettings(),
+        salesRep = XM.salesReps.get(settings.get("DefaultSalesRep"));
       return {
         isActive: true,
         creditStatus: "G",
         currency: XT.baseCurrency(),
-        salesRep: settings.get("DefaultSalesRep"),
+        salesRep: salesRep ? salesRep.id : null,
         terms: settings.get("DefaultTerms"),
         shipVia: this.getShipViaValue(),
         customerType: settings.get("DefaultCustType"),
@@ -133,7 +134,7 @@ white:true*/
         autoUpdateStatus: false,
         autoHoldOrders: false,
         isFreeFormBillto: false,
-        commission: 0,
+        commission: salesRep ? salesRep.get("commission") : 0,
         discount: 0,
         blanketPurchaseOrders: false,
         usesPurchaseOrders: false,
@@ -485,7 +486,7 @@ white:true*/
         this.trigger("invalid", this, XT.Error.clone("xt2003"), {});
       }
     },
-    
+
     /**
       Checks for duplicate ship to numbers.
     */
@@ -534,6 +535,22 @@ white:true*/
     /** @scope XM.CustomerShiptoRelation */
 
     recordType: 'XM.CustomerShiptoRelation',
+
+    editableModel: 'XM.CustomerShipto',
+
+    documentKey: 'number'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.SalesCustomerShiptoRelation = XM.Document.extend({
+    /** @scope XM.CustomerShiptoRelation */
+
+    recordType: 'XM.SalesCustomerShiptoRelation',
 
     editableModel: 'XM.CustomerShipto',
 

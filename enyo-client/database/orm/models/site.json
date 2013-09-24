@@ -318,7 +318,7 @@
       {
         "name": "code",
         "attr": {
-          "type": "SiteRelation",
+          "type": "String",
           "column": "warehous_code",
           "isNaturalKey":true
         }

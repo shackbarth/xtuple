@@ -493,7 +493,7 @@
       {
         "name": "number",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "incdt_number",
           "isNaturalKey":true
         }

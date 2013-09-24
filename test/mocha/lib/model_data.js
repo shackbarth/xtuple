@@ -32,8 +32,47 @@ Here's how you can use CRUD to create a model to use for your own tests:
     _ = require("underscore"),
   assert = require("chai").assert;
 
+  //
+  // Data for each business object under test
+  //
+
+  exports.contact = {
+    firstName: "Michael" + Math.random(),
+    primaryEmail: "modonnell@xtuple.com"
+  };
+
+  exports.customer = {
+    number: "ZZZCUSTOMER" + Math.random(),
+    name: "TestCust",
+    customerType: { code: "NORMAL" },
+    salesRep: { number: "JSMITH" },
+    shipCharge: { name: "ADDCHARGE" },
+    terms: { code: "2-10N30" }
+  };
+
   exports.honorific = {
     code: "Herr" + Math.random()
+  };
+
+  exports.item = {
+    number: "ATEST" + Math.random(),
+    description1: "Item description1",
+    isActive: true,
+    itemType: "P",
+    classCode: {code: "TOYS-COMP"},
+    productCategory: {code: "CLASSIC-WOOD"},
+    inventoryUnit: {name: "CS"},
+    isFractional: true,
+    isSold: true,
+    listPrice: 0.00,
+    priceUnit: {name: "CS"}
+  };
+
+  var quote = exports.quote = {
+    calculateFreight: true,
+    customer: { number: "TTOYS" },
+    terms: { code: "2-10N30" },
+    salesRep: { number: "2000" },
   };
 
   var salesOrder = exports.salesOrder = {
@@ -44,15 +83,12 @@ Here's how you can use CRUD to create a model to use for your own tests:
     wasQuote: true
   };
 
-  var quote = exports.quote = {
-    calculateFreight: true,
-    customer: { number: "TTOYS" },
-    terms: { code: "2-10N30" },
-    salesRep: { number: "2000" },
-  };
 
 
 
+  //
+  // More complicated business logic for quote and sales order saving
+  //
 
   var primeSubmodels = function (done) {
     var submodels = {};

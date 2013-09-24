@@ -57,7 +57,7 @@
       {
         "name": "orderNumber",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "cohist_ordernumber"
         }
       },

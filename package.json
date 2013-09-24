@@ -39,6 +39,7 @@
     "chai":"1.5.x",
     "mocha":"1.9.x",
     "require-uncache":"0.0.x",
+    "html5": "0.3.13",
     "zombie":"1.4.x",
     "vows":"0.7.x",
     "less":"1.4.2"
@@ -50,7 +51,7 @@
   "main": "node-datasource/main.js",
   "scripts": {
     "test-build": "./node_modules/.bin/mocha test/mocha/build/build_app.js",
-    "test": "./node_modules/.bin/mocha -R spec test/mocha/lib/login.js test/mocha/models/* test/mocha/kinds/* test/mocha/database/* test/mocha/extensions/*",
+    "test": "./node_modules/.bin/mocha -R spec test/mocha/lib/login.js test/mocha/models/* test/mocha/database/* test/mocha/extensions/*",
     "test-datasource": "./node_modules/.bin/mocha -R spec test/mocha/routes/*"
   }
 }

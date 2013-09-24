@@ -35,7 +35,6 @@ select xt.install_js('XM','Sales','xtuple', $$
     "UpdatePriceLineEdit",
     "IgnoreCustDisc",
     "CustomerChangeLog",
-    "DefaultShipFormId",
     "DefaultShipViaId",
     "DefaultBalanceMethod",
     "DefaultCustType",
@@ -176,7 +175,8 @@ select xt.install_js('XM','Sales','xtuple', $$
             + "from orderseq"
             + " where (orderseq_name=$1)",
         ret = {},
-        qry;
+        qry,
+        orm;
     
     ret.NextSalesOrderNumber = plv8.execute(sql, ['SoNumber'])[0].value;
     ret.NextQuoteNumber = plv8.execute(sql, ['QuNumber'])[0].value;
@@ -184,6 +184,19 @@ select xt.install_js('XM','Sales','xtuple', $$
     ret.NextInvoiceNumber = plv8.execute(sql, ['InvcNumber'])[0].value;
     
     ret = XT.extend(ret, data.retrieveMetrics(keys));
+
+    /* Special processing for primary key based values */
+    orm = XT.Orm.fetch("XM", "CustomerType");
+    ret.DefaultCustType = data.getNaturalId(orm, ret.DefaultCustType);
+
+    orm = XT.Orm.fetch("XM", "SalesRep");
+    ret.DefaultSalesRep = data.getNaturalId(orm, ret.DefaultSalesRep);
+
+    orm = XT.Orm.fetch("XM", "ShipVia");
+    ret.DefaultShipViaId = data.getNaturalId(orm, ret.DefaultShipViaId);
+
+    orm = XT.Orm.fetch("XM", "Terms");
+    ret.DefaultTerms = data.getNaturalId(orm, ret.DefaultTerms);
 
     return JSON.stringify(ret);
   }
@@ -228,12 +241,33 @@ select xt.install_js('XM','Sales','xtuple', $$
       plv8.execute('select setNextInvcNumber($1)', [settings['NextInvoiceNumber'] - 0]);
     }
     options.remove('NextInvoiceNumber');
-  
-  /* update remaining options as metrics
+
+    /* update remaining options as metrics
        first make sure we pass an object that only has valid metric options for this type */
     for(var i = 0; i < options.length; i++) {
       var prop = options[i];
       if(settings[prop] !== undefined) metrics[prop] = settings[prop];
+    }
+
+    /* Special processing for primary key based values */
+    if (metrics.DefaultCustType) {
+      orm = XT.Orm.fetch("XM", "CustomerType");
+      metrics.DefaultCustType = data.getId(orm, metrics.DefaultCustType);
+    }
+
+    if (metrics.DefaultSalesRep) {
+      orm = XT.Orm.fetch("XM", "SalesRep");
+      metrics.DefaultSalesRep = data.getId(orm, metrics.DefaultSalesRep);
+    }
+
+    if (metrics.DefaultShipViaId) {
+      orm = XT.Orm.fetch("XM", "ShipVia");
+      metrics.DefaultShipViaId = data.getId(orm, metrics.DefaultShipViaId);
+    }
+
+    if (metrics.DefaultTerms) {
+      orm = XT.Orm.fetch("XM", "Terms");
+      metrics.DefaultTerms = data.getId(orm, metrics.DefaultTerms);
     }
  
     return data.commitMetrics(metrics);

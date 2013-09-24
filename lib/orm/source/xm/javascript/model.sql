@@ -2,9 +2,12 @@ select xt.install_js('XM','Model','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple.
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  XM.Model = {};
+  if (!XM.Model) { XM.Model = {}; }
 
   XM.Model.isDispatchable = true;
+
+  if (!XM.PrivateModel)  { XM.PrivateModel = {}; }
+  XM.PrivateModel.isDispatchable = false;
 
   /**
     Pass in a record type and get the next id for that type
@@ -149,13 +152,19 @@ select xt.install_js('XM','Model','xtuple', $$
         }
 
     return result ? result.id : 0;
-  }
+  };
 
   /**
-    Return whether a model is referenced by another table.
+    Used to determine whether a model is used or not.
+
+    @param {String} Record Type
+    @param {String|Number} Id
+    @param {Array} Array of schema qualified foreign key table names that are exceptions
+    @private
   */
-  XM.Model.used = function(recordType, id) {
-    var nameSpace = recordType.beforeDot(),
+  XM.PrivateModel.used = function(recordType, id, exceptions) {
+      exceptions = exceptions || [];
+      var nameSpace = recordType.beforeDot(),
       type = recordType.afterDot(),
       map = XT.Orm.fetch(nameSpace, type),
       data = Object.create(XT.Data),
@@ -218,8 +227,15 @@ select xt.install_js('XM','Model','xtuple', $$
       });
     }
 
+    /* Remove exceptions */
+    fkeys = fkeys.filter(function (key) {
+      var name = key.schemaname + '.' + key.tablename;
+      return !exceptions.contains(name);
+    });
+
     if (DEBUG) { XT.debug('XM.Model.used keys length:', fkeys.length) }
     if (DEBUG) { XT.debug('XM.Model.used keys:', JSON.stringify(fkeys)) }
+    
     for (i = 0; i < fkeys.length; i++) {
       /* Validate */
 
@@ -243,5 +259,13 @@ select xt.install_js('XM','Model','xtuple', $$
 
     return false
   }
+
+  /**
+    Return whether a model is referenced by another table.
+  */
+  XM.Model.used = function(recordType, id) {
+    return XM.PrivateModel.used(recordType, id);
+  };
+  
 $$ );
 
