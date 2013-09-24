@@ -483,7 +483,7 @@ var lang = XT.stringsFor("en_US", {
   "_quoteLine": "Quote Line",
   "_quotes": "Quotes",
   "_purchaseOrder": "Purchase Order",
-  "_regular": "REGULAR",
+  "_regular": "Regular",
   "_recurrences": "Recurrences",
   "_recurring": "Recurring",
   "_reEnterPassword": "Re-Enter Password",

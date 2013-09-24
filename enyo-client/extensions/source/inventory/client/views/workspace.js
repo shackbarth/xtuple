@@ -414,18 +414,7 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.CheckboxWidget", attr: "isStocked"},
           {kind: "XV.AbcClassPicker", attr: "abcClass"},
           {kind: "XV.ToggleButtonWidget", attr: "isAutomaticAbcClassUpdates"},
-          {kind: "XV.NumberWidget", attr: "cycleCountFrequency", scale: 0},
-          {kind: "onyx.GroupboxHeader", content: "_locationControl".loc() },
-          {kind: "XV.ToggleButtonWidget", attr: "isLocationControl",
-            label: "_multipleLocationControl".loc()},
-          {kind: "XV.InputWidget", attr: "locationComment"},
-          {kind: "XV.CheckboxWidget", attr: "useDefaultLocation"},
-          {kind: "XV.InputWidget", attr: "userDefinedLocation"},
-          {kind: "XV.LocationPicker", attr: "receiveLocation"},
-          {kind: "XV.ToggleButtonWidget", attr: "isReceiveLocationAuto"},
-          {kind: "XV.LocationPicker", attr: "stockLocation"},
-          {kind: "XV.ToggleButtonWidget", attr: "isStockLocationAuto"}
-          //LIST - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location. Look at the privileges checkbox list for an example.
+          {kind: "XV.NumberWidget", attr: "cycleCountFrequency", scale: 0}
         ]}
       ]},
       {kind: "XV.Groupbox", name: "planningPanel", title: "_planning".loc(),
@@ -444,7 +433,24 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.QuantityWidget", attr: "multipleOrderQuantity"},
           {kind: "XV.ToggleButtonWidget", attr: "useParametersManual"}
         ]}
-      ]}
+      ]},
+      {kind: "XV.Groupbox", name: "locationPanel", title: "_locationControl".loc(),
+        container: "panels", components: [
+        {kind: "onyx.GroupboxHeader", content: "_locationControl".loc()},
+        {kind: "XV.ScrollableGroupbox", name: "locationGroup", fit: true,
+          classes: "in-panel", components: [
+          {kind: "XV.ToggleButtonWidget", attr: "isLocationControl",
+            label: "_multipleLocationControl".loc()},
+          {kind: "XV.InputWidget", attr: "locationComment"},
+          {kind: "XV.CheckboxWidget", attr: "useDefaultLocation"},
+          {kind: "XV.InputWidget", attr: "userDefinedLocation"},
+          {kind: "XV.LocationPicker", attr: "receiveLocation"},
+          {kind: "XV.ToggleButtonWidget", attr: "isReceiveLocationAuto"},
+          {kind: "XV.LocationPicker", attr: "stockLocation"},
+          {kind: "XV.ToggleButtonWidget", attr: "isStockLocationAuto"}
+          //LIST - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location. Look at the privileges checkbox list for an example.
+        ]}
+      ]},
     ];
 
     XV.appendExtension("XV.ItemSiteWorkspace", extensions);

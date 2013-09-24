@@ -4,8 +4,9 @@ select xt.create_view('xt.itemsiteinfo', $$
        when itemsite_location_id != -1 or length(itemsite_location) > 0 then true
        else false
      end as "use_default_loc",
-     round(itemcost(itemsite_id), 6) as "unit_cost"
-   from itemsite; ;
+     round(itemcost(itemsite_id), 6) as "unit_cost",
+     case when itemsite_supply_itemsite_id is null then false else true end as planned_transfers
+   from itemsite;
 $$, false);
 
 create or replace rule "_INSERT" as on insert to xt.itemsiteinfo do instead
