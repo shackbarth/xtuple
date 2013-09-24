@@ -35,17 +35,17 @@
     Finds the list in the panels and opens up a new workspace from that list.
   */
   var navigateToNewWorkspace = exports.navigateToNewWorkspace = function (app, listKind) {
-    var navigator, workspace;
+    var navigator, workspaceContainer;
 
     navigator = navigateToList(app, listKind);
     //
     // Create a new record
     //
     navigator.newRecord({}, {originator: {}});
-    assert.isDefined(app.$.postbooks.getActive());
-    workspace = app.$.postbooks.getActive().$.workspace;
-    assert.isDefined(workspace);
-    return workspace;
+    workspaceContainer = app.$.postbooks.getActive();
+    assert.isDefined(workspaceContainer);
+    assert.equal(workspaceContainer.kind, "XV.WorkspaceContainer");
+    return workspaceContainer;
   };
 
   var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
@@ -53,6 +53,7 @@
       lockChange,
       navigate,
       navigator,
+      workspaceContainer,
       workspace;
 
     navigate = function () {
@@ -62,12 +63,13 @@
         coll.off('statusChange', navigate);
         indexToPick = Math.min(1, navigator.$.contentPanels.getActive().value.length - 1);
         navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: indexToPick});
-        assert.isDefined(app.$.postbooks.getActive());
-        workspace = app.$.postbooks.getActive().$.workspace;
+        workspaceContainer = app.$.postbooks.getActive();
+        assert.isDefined(workspaceContainer);
+        workspace = workspaceContainer.$.workspace;
         assert.isDefined(workspace);
         lockChange = function () {
           workspace.value.off("lockChange", lockChange);
-          done(workspace);
+          done(workspaceContainer);
         };
         workspace.value.on("lockChange", lockChange);
       }
