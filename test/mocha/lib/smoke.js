@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true */
+/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true, setTimeout */
 
 (function () {
   "use strict";
@@ -180,7 +180,11 @@
       if (status === XM.Model.DESTROYED_DIRTY) {
         model.off("statusChange", statusChange);
         assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
-        done();
+        // XXX we have to wait for the list to know the model is gone,
+        // or else the next test might pick it up in BUSY_FETCHING status
+        setTimeout(function () {
+          done();
+        }, 3000);
       }
     };
     model.on("statusChange", statusChange);
