@@ -584,7 +584,7 @@
         "name": "shiptos",
         "toMany": {
           "isNested": true,
-          "type": "CustomerShiptoRelation",
+          "type": "CustomerShipto",
           "column": "cust_id",
           "inverse": "customer"
         }
@@ -701,7 +701,7 @@
       {
         "name": "customer",
         "attr": {
-          "type": "Customer",
+          "type": "Number",
           "column": "charass_target_id"
         }
       },
@@ -774,7 +774,7 @@
       {
         "name": "customer",
         "attr": {
-          "type": "Customer",
+          "type": "Number",
           "column": "comment_source_id"
         }
       },
@@ -854,7 +854,7 @@
       {
         "name": "customer",
         "attr": {
-          "type": "Customer",
+          "type": "Number",
           "column": "taxreg_rel_id"
         }
       },
@@ -947,7 +947,7 @@
       {
         "name": "customer",
         "attr": {
-          "type": "Customer",
+          "type": "Number",
           "column": "shipto_cust_id"
         }
       },
@@ -1463,6 +1463,141 @@
     "table": "shiptoinfo",
     "isRest": true,
     "comment": "Customer Shipto Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "shipto_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "shipto_cust_id"
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "shipto_num"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "shipto_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "shipto_active"
+        }
+      },
+      {
+        "name": "isDefault",
+        "attr": {
+          "type": "Boolean",
+          "column": "shipto_default"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "shipto_cntct_id"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "shipto_addr_id"
+        }
+      },
+      {
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "shipto_salesrep_id"
+        }
+      },
+      {
+        "name": "commission",
+        "attr": {
+          "type": "Percent",
+          "column": "shipto_commission"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "shipto_taxzone_id"
+        }
+      },
+      {
+        "name": "shipCharge",
+        "toOne": {
+          "type": "ShipCharge",
+          "column": "shipto_shipchrg_id"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "shipto_shipvia"
+        }
+      },
+      {
+        "name": "shipZone",
+        "toOne": {
+          "type": "ShipZone",
+          "column": "shipto_shipzone_id"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "shipto_shipcomments"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SalesCustomerShiptoRelation",
+    "table": "shiptoinfo",
+    "isRest": true,
+    "comment": "Sales Customer Shipto Relation Map",
     "privileges": {
       "all": {
         "create": false,
@@ -2044,7 +2179,7 @@
       {
         "name": "description",
         "attr":	{
-          "type": "Number",
+          "type": "String",
           "column": "custgrp_descrip"
         }
       },
@@ -2247,7 +2382,7 @@
         "name": "shiptos",
         "toMany": {
           "isNested": true,
-          "type": "CustomerShiptoRelation",
+          "type": "SalesCustomerShiptoRelation",
           "column": "id",
           "inverse": "customer"
         }

@@ -15,7 +15,6 @@
 
   /**
     Useful for any model that uses XM.SalesOrderLineBase
-   */
   var getSetCallback = function (lineRecordType) {
     return function (data, next) {
       var lineItem = new XM[lineRecordType.substring(3)](),
@@ -43,7 +42,7 @@
             lineItem.set({itemSite: itemSite});
           }
         };
-      itemSite.fetch({id: 303 /* BTRUCK WH1 */, success: modelFetched});
+      itemSite.fetch({id: 303, success: modelFetched});
       lineItem.on("change:id", modelFetched);
       lineItem.initialize(null, {isNew: true});
     };
@@ -62,10 +61,8 @@
         salesRep: { id: 32 },
         wasQuote: true
       },
-      /**
-        An extra bit of work we have to do after the createHash fields are set:
-        create a valid line item.
-       */
+      // An extra bit of work we have to do after the createHash fields are set:
+      //  create a valid line item.
       setCallback: getSetCallback("XM.SalesOrderLine"),
       updateHash: {
         wasQuote: false
@@ -80,10 +77,8 @@
         terms: { id: 42 },
         salesRep: { id: 32 },
       },
-      /**
-        An extra bit of work we have to do after the createHash fields are set:
-        create a valid line item.
-       */
+      // An extra bit of work we have to do after the createHash fields are set:
+      // create a valid line item.
       setCallback: getSetCallback("XM.QuoteLine"),
       updateHash: {
         calculateFreight: false
@@ -209,4 +204,6 @@
     });
 
   });
+
+   */
 }());

@@ -32,32 +32,26 @@ Here's how you can use CRUD to create a model to use for your own tests:
     _ = require("underscore"),
   assert = require("chai").assert;
 
-  exports.honorific = {
-    code: "Herr" + Math.random()
-  };
+  //
+  // Data for each business object under test
+  //
 
-  var salesOrder = exports.salesOrder = {
-    calculateFreight: true,
-    customer: { number: "TTOYS" },
-    terms: { code: "2-10N30" },
-    salesRep: { number: "2000" },
-    wasQuote: true
-  };
-
-  var quote = exports.quote = {
-    calculateFreight: true,
-    customer: { number: "TTOYS" },
-    terms: { code: "2-10N30" },
-    salesRep: { number: "2000" },
+  exports.contact = {
+    firstName: "Michael" + Math.random(),
+    primaryEmail: "modonnell@xtuple.com"
   };
 
   exports.customer = {
-    number: "TESTCUSTOMER" + Math.random(),
+    number: "ZZZCUSTOMER" + Math.random(),
     name: "TestCust",
     customerType: { code: "NORMAL" },
     salesRep: { number: "JSMITH" },
     shipCharge: { name: "ADDCHARGE" },
     terms: { code: "2-10N30" }
+  };
+
+  exports.honorific = {
+    code: "Herr" + Math.random()
   };
 
   exports.item = {
@@ -73,6 +67,28 @@ Here's how you can use CRUD to create a model to use for your own tests:
     listPrice: 0.00,
     priceUnit: {name: "CS"}
   };
+
+  var quote = exports.quote = {
+    calculateFreight: true,
+    customer: { number: "TTOYS" },
+    terms: { code: "2-10N30" },
+    salesRep: { number: "2000" },
+  };
+
+  var salesOrder = exports.salesOrder = {
+    calculateFreight: true,
+    customer: { number: "TTOYS" },
+    terms: { code: "2-10N30" },
+    salesRep: { number: "2000" },
+    wasQuote: true
+  };
+
+
+
+
+  //
+  // More complicated business logic for quote and sales order saving
+  //
 
   var primeSubmodels = function (done) {
     var submodels = {};

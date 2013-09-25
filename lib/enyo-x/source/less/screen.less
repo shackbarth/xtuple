@@ -101,6 +101,11 @@ body {
   min-width: 50%;
 }
 
+.scroll-ios {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .developer-ui-container {
   .box-shadow(#333 4px 4px 10px -4px);
   .border-top-right-radius(10px);
@@ -226,6 +231,7 @@ body {
 }
 
 .xv-startup-panel {
+  background: @dark-gray;
   .xv-startup-divider {
     width: 70%;
     margin: 0 auto 8px auto;

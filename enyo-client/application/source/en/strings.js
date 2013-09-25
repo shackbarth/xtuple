@@ -526,6 +526,7 @@ var lang = XT.stringsFor("en_US", {
   "_shipTo": "Ship To",
   "_shiptoAddress1": "Ship To Address",
   "_shiptoName": "Ship To Name",
+  "_shiptoPhone": "Ship To Phone",
   "_shipZone": "Ship Zone",
   "_shipZones": "Ship Zones",
   "_shippingNotes": "Shipping Notes",
