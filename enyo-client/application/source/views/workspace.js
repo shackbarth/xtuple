@@ -1157,7 +1157,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.ItemWidget", attr: "item"},
-            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.OptionalSitePicker", attr: "site"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.PlannerCodePicker", attr: "plannerCode"},
             {kind: "XV.CostCategoryPicker", attr: "costCategory"},

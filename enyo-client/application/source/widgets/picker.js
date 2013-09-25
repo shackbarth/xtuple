@@ -695,7 +695,13 @@ regexp:true, undef:true, trailing:true, white:true */
       } else {
         this.inherited(arguments, [false]);
       }
-    }
+    },
+  });
+
+  enyo.kind({
+    name: "XV.OptionalSitePicker",
+    kind: "XV.SitePicker",
+    showNone: true
   });
 
   // ..........................................................

@@ -12,7 +12,8 @@ white:true*/
       _defaults = _proto.defaults,
       _bindEvents = _proto.bindEvents,
       _initialize = _proto.initialize,
-      _statusDidChange = _proto.statusDidChange;
+      _statusDidChange = _proto.statusDidChange,
+      _validate = _proto.validate;
 
     _proto.readOnlyAttributes = (_proto.readOnlyAttributes || []).concat([
         'abcClass',
@@ -327,6 +328,34 @@ white:true*/
         ], !this.get("useParameters"));
 
         this.isStockedDidChange();
+      },
+
+      validate: function () {
+        var ret = _validate.apply(this, arguments),
+          K = XM.ItemSite,
+          quantityOnHand = this.get("quantityOnHand"),
+          costMethod = this.get("costMethod"),
+          isStocked = this.get("isStocked"),
+          reorderLevel = this.get("reorderLevel"),
+          isActive = this.get("isActive"),
+          itemIsActive = this.getValue("item.isActive"),
+          error;
+        if (ret) { return ret; }
+
+        if (quantityOnHand < 0 && costMethod === K.AVERAGE_COST) {
+          error = "xt2019";
+        } else if (isStocked && reorderLevel <= 0) {
+          error = "xt2020";
+        } else if (isActive && !itemIsActive) {
+          error = "xt2021";
+        } else if (isActive && quantityOnHand > 0) {
+          error = "xt2022";
+        }
+
+        if (error) {
+          return XT.Error.clone(error);
+        }
+
       }
     };
 

@@ -48,7 +48,6 @@ white:true*/
 
     defaults: function () {
       return {
-        site: XT.defaultSite(),
         isActive: true
       };
     },
