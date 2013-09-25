@@ -432,10 +432,12 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.LocationPicker", attr: "receiveLocation"},
           {kind: "XV.ToggleButtonWidget", attr: "isReceiveLocationAuto"},
           {kind: "XV.LocationPicker", attr: "stockLocation"},
-          {kind: "XV.ToggleButtonWidget", attr: "isStockLocationAuto"}
-          //LIST - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location. Look at the privileges checkbox list for an example.
+          {kind: "XV.ToggleButtonWidget", attr: "isStockLocationAuto"},
+          {kind: "onyx.GroupboxHeader", content: "_restrictedLocationsAllowed".loc() },
+          {kind: "XV.ItemSiteRestrictedLocationAssignmentBox",
+            attr: "restrictedLocationsAllowed", name: "restrictedLocations" }
         ]}
-      ]},
+      ]}
     ];
 
     XV.appendExtension("XV.ItemSiteWorkspace", extensions);

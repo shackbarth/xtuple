@@ -207,7 +207,7 @@
         }
       },
       {
-        "name": "restrictedLoctionsAllowed",
+        "name": "restrictedLocationsAllowed",
         "toMany": {
           "isNested": true,
           "type": "ItemSiteLocation",

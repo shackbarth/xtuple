@@ -111,6 +111,8 @@ var lang = XT.stringsFor("en_US", {
   "_relocate": "Relocate",
   "_reorderLevel": "Reorder Level",
   "_reporting": "Reporting",
+  "_restrictedLocations": "Restricted Locations",
+  "_restrictedLocationsAllowed": "Restricted Locations Allowed",
   "_returned": "Returned",
   "_returnFromShipping": "Return From Shipping",
   "_returnLine": "Return Line",
