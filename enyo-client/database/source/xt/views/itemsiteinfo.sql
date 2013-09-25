@@ -8,7 +8,7 @@ select xt.create_view('xt.itemsiteinfo', $$
      case when i.itemsite_supply_itemsite_id is null then false else true end as planned_transfers,
      s.itemsite_warehous_id as supply_warehous_id
    from itemsite i
-     left join itemsite s on s.itemsite_id = i.itemsite_id;
+     left join itemsite s on s.itemsite_id = i.itemsite_supply_itemsite_id;
 $$, false);
 
 create or replace rule "_INSERT" as on insert to xt.itemsiteinfo do instead
