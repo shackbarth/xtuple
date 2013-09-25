@@ -41,6 +41,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     databaseOnly: program.databaseonly
   }, function (err, res) {
     console.log(err || res);
+    process.exit(err ? 1 : 0);
   });
 
 }());

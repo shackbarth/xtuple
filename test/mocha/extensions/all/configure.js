@@ -9,9 +9,9 @@
 
   var _ = require("underscore"),
     assert = require("chai").assert,
-    zombieAuth = require("../lib/zombie_auth"),
+    zombieAuth = require("../../lib/zombie_auth"),
     async = require("async"),
-    smoke = require("../lib/smoke");
+    smoke = require("../../lib/smoke");
 
   describe('Configuration Workspaces', function () {
     this.timeout(30 * 1000);
@@ -34,7 +34,7 @@
         var workspaceContainer;
 
         i++;
-        list.itemTap({}, {index: i});
+        list.itemTap({}, {index: i, originator: {}});
         workspaceContainer = XT.app.$.postbooks.getActive();
         assert.equal(workspaceContainer.kind, "XV.WorkspaceContainer");
         workspaceContainer.close();
