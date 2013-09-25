@@ -78,22 +78,16 @@
 
       smoke.navigateToExistingWorkspace(XT.app, "XV.ClassCodeList", function (_workspaceContainer) {
         workspaceContainer = _workspaceContainer;
-
         moduleContainer = XT.app.$.postbooks;
-
         assert.equal(workspaceContainer, XT.app.$.postbooks.getActive());
-        assert.isDefined(workspaceContainer.$.workspace);
 
         workspace = workspaceContainer.$.workspace;
-        assert.isDefined(workspace);
-        assert.isDefined(workspace.getValue());
         id = workspace.getValue().id;
         model = workspace.getValue();
 
         assert.isTrue(model.hasLockKey(), "model should have lock");
         assert.isFalse(model.isNew());
 
-        model.off("lockChange");
         done();
       });
     });
