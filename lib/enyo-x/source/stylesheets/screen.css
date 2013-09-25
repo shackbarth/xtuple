@@ -2216,6 +2216,10 @@ body {
 .wide > * {
   min-width: 50%;
 }
+.scroll-ios {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
 .developer-ui-container {
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
   -moz-box-shadow: #333333 4px 4px 10px -4px;
@@ -2326,6 +2330,9 @@ body {
 }
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #dddddd;
+}
+.xv-startup-panel {
+  background: #333333;
 }
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
