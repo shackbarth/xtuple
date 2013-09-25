@@ -6,7 +6,7 @@
 //var XVOWS = XVOWS || {};
 //(function () {
 //  "use strict";
-
+/*
 var crud = require('../lib/crud'),
 		assert = require('chai').assert,
 		expect = require('chai').expect,
@@ -27,12 +27,12 @@ var crud = require('../lib/crud'),
 describe('CRM Account', function (){
   this.timeout(20 * 1000);
   var account;
-  
-  before(function(done){
+
+  before(function (done){
     var takeTheDefaults = function () {
       var initCallback = function () {
         //console.log(account.getStatusString());
-        if(account.isReady()) {
+        if (account.isReady()) {
           done();
         }
       };
@@ -40,12 +40,12 @@ describe('CRM Account', function (){
       account = new XM.Account(),
       account.on('statusChange', initCallback);
 
-      //account.on("all", function() {console.log(JSON.stringify(arguments))});
+      //account.on("all", function () {console.log(JSON.stringify(arguments))});
       account.initialize(null, {isNew: true});
     };
     zombieAuth.loadApp(takeTheDefaults);
   });
-  
+
   describe('Verify New CRM Account', function () {
     it ('should default Active', function (){
       assert.equal(account.getValue("isActive"), true);
@@ -54,9 +54,9 @@ describe('CRM Account', function (){
     it ('Type Organization is default', function () {
       assert.equal(account.getValue("accountType"), "O");
     });
-  
-    it ('Owner is login user name', function() {
-  
+
+    it ('Owner is login user name', function () {
+
       try {
         loginData = require('../../shared/loginData');
       } catch (err) {
@@ -68,3 +68,4 @@ describe('CRM Account', function (){
     });
   });
 });
+*/

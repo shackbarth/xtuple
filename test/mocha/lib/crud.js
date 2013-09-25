@@ -92,7 +92,7 @@ var _ = require("underscore"),
       data.model.on('change:comments', function () {
         // verify that comments were changed and exit
         callback();
-      })
+      });
       data.model.set({comments: comments});
     });
     // initialize the new comment
