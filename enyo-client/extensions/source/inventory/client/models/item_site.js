@@ -301,7 +301,9 @@ white:true*/
       statusDidChange: function () {
         _statusDidChange.apply(this, arguments);
         if (this.getStatus() === XM.Model.READY_CLEAN) {
+          this.itemDidChange();
           this.controlMethodDidChange();
+          this.costMethodDidChange();
           this.useDefaultLocationDidChange();
         }
       },
