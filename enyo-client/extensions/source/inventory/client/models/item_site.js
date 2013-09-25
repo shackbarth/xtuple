@@ -316,6 +316,7 @@ white:true*/
           "isStockLocationAuto"
         ], !isLocationControl || !useDefault);
         this.setReadOnly("userDefinedLocation", isLocationControl || !useDefault);
+        this.setReadOnly("restrictedLocationsAllowed", !isLocationControl);
       },
 
       useParametersDidChange: function () {
