@@ -17,10 +17,6 @@ white:true*/
 
     recordType: 'XM.WorkOrder',
 
-    formatWoNumber: function () {
-      return this.get("number") + "-" + this.get("subnumber");
-    },
-
     /**
     Returns incident status as a localized string.
 
@@ -58,11 +54,7 @@ white:true*/
 
     recordType: 'XM.WorkOrderRelation',
 
-    editableModel: 'XM.WorkOrder',
-
-    formatWoNumber: function () {
-      return this.get("number") + "-" + this.get("subnumber");
-    }
+    editableModel: 'XM.WorkOrder'
 
   });
 
@@ -76,11 +68,7 @@ white:true*/
 
     recordType: 'XM.WorkOrderListItem',
 
-    editableModel: 'XM.WorkOrder',
-
-    formatWoNumber: function () {
-      return this.get("number") + "-" + this.get("subnumber");
-    }
+    editableModel: 'XM.WorkOrder'
 
   });
 

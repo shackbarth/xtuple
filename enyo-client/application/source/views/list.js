@@ -2271,7 +2271,7 @@ trailing:true, white:true, strict: false*/
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "formatWoNumber", isKey: true, fit: true}
+            {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
           ]},
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [

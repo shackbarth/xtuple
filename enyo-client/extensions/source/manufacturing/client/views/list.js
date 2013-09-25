@@ -32,12 +32,6 @@ trailing:true, white:true, strict:false*/
           method: "doReturnMaterial", notify: false}
       ],
       toggleSelected: true,
-      published: {
-        shipment: null
-      },
-      events: {
-        onShipmentChanged: ""
-      },
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -71,7 +65,6 @@ trailing:true, white:true, strict:false*/
         ]}
       ],
       fetch: function () {
-        this.setShipment(null);
         this.inherited(arguments);
       },
       /*
@@ -114,11 +107,11 @@ trailing:true, white:true, strict:false*/
         // user. Otherwise just save the model with the
         // precalculated values.
         if (model.undistributed()) {
-          this.issueStock(inEvent);
+          this.issueMaterial(inEvent);
         } else {
           model.save(null, options);
         }
-      },
+      }
       /*
       issueMaterial: function (inEvent) {
         var model = inEvent.model,
@@ -153,12 +146,9 @@ trailing:true, white:true, strict:false*/
           });
         }
       },*/
-      shipmentChanged: function () {
-        this.doShipmentChanged({shipment: this.getShipment()});
-      }
     });
 
-    XV.registerModelList("XM.WorkOrderRelation", "XV.WorkOrderListItem");
+    XV.registerModelList("XM.WorkOrderRelation", "XV.IssueMaterialList");
 
   };
 }());

@@ -23,11 +23,19 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "number",
         "attr": {
           "type": "Number",
           "column": "wo_number",
-          "isNaturalKey": true
+          "isNaturalKey": false      
         }
       },
       {
@@ -191,11 +199,19 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "number",
         "attr": {
           "type": "Number",
           "column": "wo_number",
-          "isNaturalKey": true
+          "isNaturalKey": false
         }
       },
       {
@@ -359,11 +375,19 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "number",
         "attr": {
           "type": "Number",
           "column": "wo_number",
-          "isNaturalKey": true
+          "isNaturalKey": false
         }
       },
       {
