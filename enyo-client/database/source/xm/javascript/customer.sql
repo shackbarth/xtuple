@@ -20,7 +20,7 @@ select xt.install_js('XM','Customer','xtuple', $$
   XM.Customer.canPurchase = function (customerId, itemId, scheduleDate, shiptoId) {
     var sql = 'select customerCanPurchase(item_id, cust_id, $3, $4::date) as canpurchase ' +
               'from custinfo, item where item_number = $1 and cust_number = $2;';
-    shiptoId = XT.Data.getId(XT.Orm.fetch('XM','CustomerShipto'), shiptoId);
+    shiptoId = shiptoId && XT.Data.getId(XT.Orm.fetch('XM','CustomerShipto'), shiptoId);
     return plv8.execute(sql, [itemId, customerId, shiptoId, scheduleDate])[0].canpurchase;
   };
   

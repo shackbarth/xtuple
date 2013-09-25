@@ -34,18 +34,34 @@
   /**
     Finds the list in the panels and opens up a new workspace from that list.
   */
-  var navigateToNewWorkspace = exports.navigateToNewWorkspace = function (app, listKind) {
-    var navigator, workspace;
+  var navigateToNewWorkspace = exports.navigateToNewWorkspace = function (app, listKind, done) {
+    var navigator, workspaceContainer, model, autoRegex, eventName, idChanged;
 
     navigator = navigateToList(app, listKind);
     //
     // Create a new record
     //
     navigator.newRecord({}, {originator: {}});
-    assert.isDefined(app.$.postbooks.getActive());
-    workspace = app.$.postbooks.getActive().$.workspace;
-    assert.isDefined(workspace);
-    return workspace;
+    workspaceContainer = app.$.postbooks.getActive();
+    assert.isDefined(workspaceContainer);
+    assert.equal(workspaceContainer.kind, "XV.WorkspaceContainer");
+    model = workspaceContainer.$.workspace.value;
+
+
+    autoRegex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER;
+    if (model instanceof XM.Document && model.numberPolicy.match(autoRegex)) {
+      // wait for the model to fetch its id if appropriate
+      eventName = "change:" + model.idAttribute;
+      idChanged = function () {
+        if (model.id) {
+          model.off(eventName, idChanged);
+          done(workspaceContainer);
+        }
+      };
+      model.on(eventName, idChanged);
+    } else {
+      done(workspaceContainer);
+    }
   };
 
   var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
@@ -53,6 +69,7 @@
       lockChange,
       navigate,
       navigator,
+      workspaceContainer,
       workspace;
 
     navigate = function () {
@@ -62,12 +79,13 @@
         coll.off('statusChange', navigate);
         indexToPick = Math.min(1, navigator.$.contentPanels.getActive().value.length - 1);
         navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: indexToPick});
-        assert.isDefined(app.$.postbooks.getActive());
-        workspace = app.$.postbooks.getActive().$.workspace;
+        workspaceContainer = app.$.postbooks.getActive();
+        assert.isDefined(workspaceContainer);
+        workspace = workspaceContainer.$.workspace;
         assert.isDefined(workspace);
         lockChange = function () {
           workspace.value.off("lockChange", lockChange);
-          done(workspace);
+          done(workspaceContainer);
         };
         workspace.value.on("lockChange", lockChange);
       }
@@ -144,6 +162,8 @@
   };
 
   exports.deleteFromList = function (app, model, done) {
+    var statusChange;
+
     // back up to list
     app.$.postbooks.previous();
     assert.equal(app.$.postbooks.getActive().kind, "XV.Navigator");
@@ -156,11 +176,14 @@
         return m.get(m.idAttribute) === model.id;
       });
 
-    model.on("statusChange", function (model, status) {
+    statusChange = function (model, status) {
       if (status === XM.Model.DESTROYED_DIRTY) {
+        model.off("statusChange", statusChange);
+        assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
         done();
       }
-    });
+    };
+    model.on("statusChange", statusChange);
 
     // delete it, by calling the function that gets called when the user ok's the delete popup
     list.deleteItem({model: listModel});
@@ -169,9 +192,10 @@
   exports.updateFirstModel = function (test) {
     it('should allow a trivial update to the first model of ' + test.kind, function (done) {
       this.timeout(20 * 1000);
-      navigateToExistingWorkspace(XT.app, test.kind, function (workspace) {
+      navigateToExistingWorkspace(XT.app, test.kind, function (workspaceContainer) {
         var updateObj,
-          statusChanged;
+          statusChanged,
+          workspace = workspaceContainer.$.workspace;
 
         assert.equal(workspace.value.recordType, test.model);
         if (typeof test.update === 'string') {
@@ -186,6 +210,7 @@
             setWorkspaceAttributes(workspace, updateObj);
             saveWorkspace(workspace, function () {
               XT.app.$.postbooks.previous();
+              assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
               done();
             });
           }

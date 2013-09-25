@@ -41,27 +41,26 @@
         * Test the INCDT-19869 fix.
         * http://www.xtuple.org/xtincident/view/default/19869
         */
-      describe('INCDT-19869: Lock not released when "New" is tapped in workspace', function () {
-        var workspace, container, model, id;
+      describe.skip('INCDT-19869: Lock not released when "New" is tapped in workspace', function () {
+        var workspaceContainer, model, id;
 
         beforeEach(function (done) {
           this.timeout(30 * 1000);
 
-          smoke.navigateToExistingWorkspace(XT.app, "XV.IncidentList", function (_workspace) {
-            assert.notEqual(container, XT.app.$.postbooks.getActive());
-            container = XT.app.$.postbooks.getActive();
+          smoke.navigateToExistingWorkspace(XT.app, "XV.IncidentList", function (_workspaceContainer) {
+            var workspace;
 
-            assert.isDefined(_workspace);
-            assert.isDefined(_workspace.getValue());
-            assert.isDefined(container);
-            assert.isDefined(container.$.workspace);
+            assert.notEqual(workspaceContainer, XT.app.$.postbooks.getActive());
+            workspaceContainer = _workspaceContainer;
+            assert.isDefined(workspaceContainer);
+            assert.equal(workspaceContainer, XT.app.$.postbooks.getActive());
 
-            assert.equal(_workspace, container.$.workspace);
+            workspace = workspaceContainer.$.workspace;
+            assert.isDefined(workspace);
+            assert.isDefined(workspace.getValue());
 
-            workspace = _workspace;
             id = workspace.getValue().id;
             model = workspace.getValue();
-            //model = XM.IncidentListItem.findOrCreate({ id: id });
 
             assert.isTrue(model.hasLockKey());
             assert.isFalse(model.isNew());
@@ -70,7 +69,7 @@
           });
         });
         afterEach(function (done) {
-          this.timeout(5 * 1000);
+          this.timeout(7 * 1000);
 
           // maybe one of the tests already released the lock
           if (!model.hasLockKey()) {
@@ -83,9 +82,9 @@
             // XXX solves inexplicable race condition
             setTimeout(function () {
               done();
-            }, 3000);
+            }, 5000);
           });
-          container.close();
+          workspaceContainer.close();
         });
         it('test base case', function () {
 
@@ -96,7 +95,7 @@
             assert.isFalse(model.hasLockKey());
             done();
           });
-          container.saveAndNew();
+          workspaceContainer.saveAndNew();
         });
       });
     });
