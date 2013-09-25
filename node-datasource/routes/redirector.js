@@ -15,7 +15,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       host = host.substring(0, host.indexOf(':'));
     }
 
-    var redirectPort = X.options.datasource.proxyPort || X.options.datasource.port
+    var redirectPort = X.options.datasource.proxyPort || X.options.datasource.port;
+
     if ( redirectPort  === 443 ) {
       res.redirect("https://" + host + req.url);
     } else {
