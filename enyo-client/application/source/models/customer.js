@@ -20,7 +20,7 @@ white:true*/
     canPurchase: function (item, scheduleDate, options) {
       if (!item || !scheduleDate || !options || !options.success) { return; }
       var params,
-        shiptoId = options.shipto ? options.shipto.id : -1;
+        shiptoId = options.shipto ? options.shipto.id : null;
       params = [this.id, item.id, scheduleDate, shiptoId];
       this.dispatch("XM.Customer", "canPurchase", params, options);
       return this;
@@ -486,7 +486,7 @@ white:true*/
         this.trigger("invalid", this, XT.Error.clone("xt2003"), {});
       }
     },
-    
+
     /**
       Checks for duplicate ship to numbers.
     */
@@ -535,6 +535,22 @@ white:true*/
     /** @scope XM.CustomerShiptoRelation */
 
     recordType: 'XM.CustomerShiptoRelation',
+
+    editableModel: 'XM.CustomerShipto',
+
+    documentKey: 'number'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.SalesCustomerShiptoRelation = XM.Document.extend({
+    /** @scope XM.CustomerShiptoRelation */
+
+    recordType: 'XM.SalesCustomerShiptoRelation',
 
     editableModel: 'XM.CustomerShipto',
 

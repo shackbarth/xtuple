@@ -2,13 +2,16 @@
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true,
-  describe:true, before:true, enyo:true, it:true, _:true, console:true */
+  describe:true, before:true, enyo:true, it:true, _:true, console:true,
+  beforeEach:true, afterEach:true, setTimeout:true, setInterval:true,
+  clearInterval:true*/
 
 (function () {
   "use strict";
 
   var zombieAuth = require("../../lib/zombie_auth"),
     _ = require("underscore"),
+    smoke = require("../../lib/smoke"),
     common = require("../../lib/common"),
     assert = require("chai").assert;
 
@@ -60,6 +63,98 @@
           });
         }
       });
+    });
+  });
+
+  /**
+    * Test the INCDT-21110 fix.
+    * http://www.xtuple.org/xtincident/view/default/21110
+    */
+  describe('INCDT-21110: Record remains locked when Back->Discard selected', function () {
+    var workspaceContainer, workspace, model, id, moduleContainer;
+
+    beforeEach(function (done) {
+      this.timeout(10 * 1000);
+
+      smoke.navigateToExistingWorkspace(XT.app, "XV.ClassCodeList", function (_workspaceContainer) {
+        workspaceContainer = _workspaceContainer;
+        moduleContainer = XT.app.$.postbooks;
+        assert.equal(workspaceContainer, XT.app.$.postbooks.getActive());
+
+        workspace = workspaceContainer.$.workspace;
+        id = workspace.getValue().id;
+        model = workspace.getValue();
+
+        assert.isTrue(model.hasLockKey(), "model should have lock");
+        assert.isFalse(model.isNew());
+
+        done();
+      });
+    });
+    afterEach(function (done) {
+      this.timeout(10 * 1000);
+
+      // maybe one of the tests already released the lock
+      if (!model.hasLockKey()) {
+        done();
+        return;
+      }
+      model.on("lockChange", function () {
+        model.off("lockChange");
+        assert.isFalse(model.hasLockKey());
+        // XXX solves inexplicable race condition
+        setTimeout(function () {
+          done();
+        }, 4000);
+      });
+      workspaceContainer.close();
+    });
+    it('test base case', function () {
+
+    });
+    it('test lock condition on "close and discard"', function (done) {
+        /**
+          * This test presupposes that we have obtained the lock. When the
+          * lock has been released, the test completes.
+          */
+      var handleLockChange = function () {
+          model.off("lockChange", handleLockChange);
+          assert.isFalse(model.hasLockKey());
+          done();
+        },
+        /**
+          * Guard on notifyPopup; when the notifyPopup is showing, 'tap' the
+          * popup's "Discard" button.
+          */
+        notifyPopupInterval = setInterval(function () {
+          if (!moduleContainer.$.notifyPopup.showing) { return; }
+
+          clearInterval(notifyPopupInterval);
+          model.on("lockChange", handleLockChange);
+          moduleContainer.notifyTap(null, { originator: { name: "notifyNo" }});
+        }, 100),
+        /**
+          * When the model is READY_CLEAN, edit the value of inputWidget
+          */
+        handleBeforeEdit = function () {
+          if (model.isDirty()) { return; }
+
+          model.off("statusChange", handleBeforeEdit);
+          workspace.$.inputWidget.setValue("a valid name");
+        },
+        /**
+          * When the model becomes dirty as a result of the edit, 'tap' the
+          * container's "Back" button.
+          */
+        handleAfterEdit = function () {
+          if (!model.isDirty()) { return; }
+
+          model.off("statusChange", handleAfterEdit);
+          workspaceContainer.$.backButton.bubble("onclick");
+        };
+
+      model.on("statusChange", handleBeforeEdit);
+      model.on("statusChange", handleAfterEdit);
     });
   });
 }());

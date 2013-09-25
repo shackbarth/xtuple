@@ -667,7 +667,7 @@
       {
         "name": "userAccountRole",
         "attr": {
-          "type": "UserAccountRole",
+          "type": "Number",
           "column": "grppriv_grp_id"
         }
       },
