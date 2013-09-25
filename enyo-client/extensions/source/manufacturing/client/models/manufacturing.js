@@ -28,7 +28,7 @@ white:true*/
       transactionDate: null,
 
       formatWoNumber: function () {
-        return this.get("order") + "-" + this.get("subnumber");
+        return this.get("order.number") + "-" + this.get("order.subnumber");
       },
 
       bindEvents: function () {

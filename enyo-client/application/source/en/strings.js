@@ -365,6 +365,7 @@ var lang = XT.stringsFor("en_US", {
   "_manager": "Manager",
   "_mainAddress": "Main Address",
   "_manufactured": "Manufactured",
+  "_manufacturing": "Manufacturing",
   "_map": "Map",
   "_margin": "Margin",
   "_markup": "Markup",
@@ -540,6 +541,7 @@ var lang = XT.stringsFor("en_US", {
   "_showCompleted": "Show Complete",
   "_showCompletedOnly": "Show Complete Only",
   "_showExpired": "Show Expired",
+  "_showOnlyTopLevel": "Show Only Top Level",
   "_showUnReleased": "Show Unreleased",
   "_showInactive": "Show Inactive",
   "_sold": "Sold",
@@ -633,6 +635,7 @@ var lang = XT.stringsFor("en_US", {
   "_welcome": "Welcome",
   "_wholesalePrice": "Wholesale Price",
   "_workOrder": "Work Order",
+  "_workOrders": "Work Orders",
   "_xtuplePostbooks": "PostBooks",
   "_yearExpired": "Expiration Year",
 
