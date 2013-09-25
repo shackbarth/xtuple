@@ -432,8 +432,14 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.LocationPicker", attr: "receiveLocation"},
           {kind: "XV.ToggleButtonWidget", attr: "isReceiveLocationAuto"},
           {kind: "XV.LocationPicker", attr: "stockLocation"},
-          {kind: "XV.ToggleButtonWidget", attr: "isStockLocationAuto"},
-          {kind: "onyx.GroupboxHeader", content: "_restrictedLocationsAllowed".loc() },
+          {kind: "XV.ToggleButtonWidget", attr: "isStockLocationAuto"}
+        ]}
+      ]},
+      {kind: "XV.Groupbox", name: "restrictedPanel", title: "_restrictedLocations".loc(),
+        container: "panels", components: [
+        {kind: "onyx.GroupboxHeader", content: "_restrictedLocationsAllowed".loc()},
+        {kind: "XV.ScrollableGroupbox", name: "restrictedGroup",
+          classes: "in-panel", components: [
           {kind: "XV.ItemSiteRestrictedLocationAssignmentBox",
             attr: "restrictedLocationsAllowed", name: "restrictedLocations" }
         ]}

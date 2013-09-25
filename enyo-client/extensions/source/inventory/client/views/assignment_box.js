@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true,
 white:true*/
-/*global enyo:true, XM:true, XV:true, XT:true */
+/*global enyo:true, XT:true */
 
 /** @module XV */
 
@@ -20,15 +20,12 @@ white:true*/
       segments: ["locations".loc()],
       translateLabels: false,
       nameAttribute: "format",
-      totalCollectionName: "XM.LocationCollection",
-      type: "itemSite",
-      getAssignmentModel: function (itemSite) {
-        return new XM.ItemSiteLocation({
-          itemSite: itemSite
-        }, {isNew: true});
-      }
+      modelName: "XM.ItemSiteLocation",
+      totalCollectionName: "XM.LocationRelationCollection",
+      query: {parameters: [{attribute: "isRestricted", value: true}]},
+      type: "location"
     });
 
-  }
+  };
 
 }());

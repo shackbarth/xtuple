@@ -177,6 +177,13 @@
           "type": "String",
           "column": "location_descrip"
         }
+      },
+      {
+        "name": "isRestricted",
+        "attr": {
+          "type": "Boolean",
+          "column": "location_restrict"
+        }
       }
     ],
     "isSystem": true
