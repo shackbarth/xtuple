@@ -238,6 +238,7 @@
     "type": "ItemSiteLocation",
     "table": "xt.locitemsite",
     "comment": "Item Site Location Map",
+    "idSequenceName": "locitem_locitem_id_seq",
     "properties": [
       {
         "name": "id",
