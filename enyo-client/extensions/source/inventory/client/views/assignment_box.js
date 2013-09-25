@@ -22,8 +22,31 @@ white:true*/
       nameAttribute: "format",
       modelName: "XM.ItemSiteLocation",
       totalCollectionName: "XM.LocationRelationCollection",
-      query: {parameters: [{attribute: "isRestricted", value: true}]},
-      type: "location"
+      type: "location",
+      published: {
+        site: null
+      },
+      fetch: function () {
+        // Only run this if we have site information
+        var site = this.getSite();
+        if (site) {
+          this.inherited(arguments);
+        }
+      },
+      queryChanged: function () {
+        this.fetch();
+      },
+      siteChanged: function () {
+        var site = this.getSite();
+        if (site) {
+          this.setQuery({
+            parameters: [
+              {attribute: "isRestricted", value: true},
+              {attribute: "site", value: site}
+            ]
+          });
+        }
+      }
     });
 
   };

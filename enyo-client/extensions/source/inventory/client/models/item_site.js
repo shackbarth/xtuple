@@ -152,7 +152,8 @@ white:true*/
           this.addCostMethod(K.NO_COST)
               .removeCostMethod([K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST])
               .set("costMethod", K.NO_COST)
-              .setReadOnly("costMethod");
+              .setReadOnly("costMethod")
+              .toggleInventorySettings(false);
         } else {
           // Set available cost methods
           this.removeCostMethod(K.NO_COST)
@@ -179,6 +180,8 @@ white:true*/
               this.set("costMethod", K.JOB_COST);
             }
           }
+          
+          this.itemDidChange(); // Will check item type for inventory setting
         }
       },
 
@@ -254,6 +257,7 @@ white:true*/
             useDefaultLocation: false
           });
         }
+        return this;
       },
 
       /**

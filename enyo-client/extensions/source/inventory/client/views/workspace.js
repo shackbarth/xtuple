@@ -438,7 +438,7 @@ trailing:true, white:true, strict: false*/
       {kind: "XV.Groupbox", name: "restrictedPanel", title: "_restrictedLocations".loc(),
         container: "panels", components: [
         {kind: "onyx.GroupboxHeader", content: "_restrictedLocationsAllowed".loc()},
-        {kind: "XV.ScrollableGroupbox", name: "restrictedGroup",
+        {kind: "XV.ScrollableGroupbox", name: "restrictedGroup", fit: true,
           classes: "in-panel", components: [
           {kind: "XV.ItemSiteRestrictedLocationAssignmentBox",
             attr: "restrictedLocationsAllowed", name: "restrictedLocations" }
@@ -451,9 +451,34 @@ trailing:true, white:true, strict: false*/
     // Add in handling for cost methods
     var _proto = XV.ItemSiteWorkspace.prototype,
       _recordIdChanged = _proto.recordIdChanged,
-      _newRecord = _proto.newRecord;
+      _newRecord = _proto.newRecord,
+      _statusChanged = _proto.statusChanged;
 
     var ext = {
+      newRecord: function () {
+        _newRecord.apply(this, arguments);
+        this.setupPicker();
+        this.setupRestricted();
+      },
+      recordIdChanged: function () {
+        _recordIdChanged.apply(this, arguments);
+        this.setupPicker();
+      },
+      refreshCostMethods: function () {
+        this.$.costMethodPicker.buildList();
+      },
+      refreshRestricted: function () {
+        this.$.restrictedLocations.setSite(this.getValue().get("site"));
+      },
+      statusChanged: function () {
+        _statusChanged.apply(this, arguments);
+        var value = this.getValue(),
+          status = value ? value.getStatus() : false;
+
+        if (status === XM.Model.READY_CLEAN) {
+          this.refreshRestricted();
+        }
+      },
       setupPicker: function () {
         var picker = this.$.costMethodPicker,
           model = this.getValue();
@@ -470,16 +495,21 @@ trailing:true, white:true, strict: false*/
           picker._model = model; // Cache for future reference
         }
       },
-      newRecord: function () {
-        _newRecord.apply(this, arguments);
-        this.setupPicker();
-      },
-      recordIdChanged: function () {
-        _recordIdChanged.apply(this, arguments);
-        this.setupPicker();
-      },
-      refreshCostMethods: function () {
-        this.$.costMethodPicker.buildList();
+      setupRestricted: function () {
+        var restricted = this.$.restrictedLocations,
+          model = this.getValue();
+
+        // Remove any binding
+        if (restricted._model) {
+          restricted._model.off("change:site", this.refreshRestricted, this);
+          delete restricted._model;
+        }
+        
+        // Add a new one
+        if (model && model.id) {
+          model.on("change:site", this.refreshRestricted, this);
+          restricted._model = model; // Cache for future reference
+        }
       }
     };
 
