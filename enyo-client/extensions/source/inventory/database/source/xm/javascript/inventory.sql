@@ -218,7 +218,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
   };
 
 
-  if (!XM.Inventory) { XM.Inventory = {}; }
+  if (!XM.Inventory) { XM.Inventory = {options: []}; }
   
   XM.Inventory.isDispatchable = true;
 
@@ -536,22 +536,16 @@ select xt.install_js('XM','Inventory','xtuple', $$
      shipment: { type: "String", description: "Shipment Number" }
   };
 
-  XM.Inventory.options = [
-    "DefaultEventFence",    
+  XM.Inventory.options = XM.Inventory.options.concat([
     "ItemSiteChangeLog",
     "WarehouseChangeLog",
     "AllowAvgCostMethod",  
     "AllowStdCostMethod",
     "AllowJobCostMethod",
-    "CountAvgCostMethod",
     "ShipmentNumberGeneration",
-    "NextShipmentNumber", 
-    "KitComponentInheritCOS",
-    "DisallowReceiptExcessQty",
-    "WarnIfReceiptQtyDiffers",
-    "ReceiptQtyTolerancePct",
-    "RecordPPVonReceipt" 
-  ];
+    "NextShipmentNumber",
+    "KitComponentInheritCOS"
+  ]);
   
   /* 
   Return Inventory configuration settings.
@@ -609,6 +603,26 @@ select xt.install_js('XM','Inventory','xtuple', $$
  
     return data.commitMetrics(metrics);
   };
+
+  /**
+    Returns an object indicating which cost methods are used.
+    
+    @returns Object
+  */
+  XM.Inventory.usedCostMethods = function() {
+    var sql = "select count(*) > 0 as used from itemsite where itemsite_costmethod = $1",
+      data = Object.create(XT.Data),
+      used = {};
+        
+    /* check privileges */
+    if(!data.checkPrivilege('ConfigureIM')) throw new Error('Access Denied');
+
+    used.average = plv8.execute(sql, ['A'])[0].used;
+    used.standard = plv8.execute(sql, ['S'])[0].used;
+    used.job = plv8.execute(sql, ['J'])[0].used;
+
+    return used;
+  }
 
 }());
   

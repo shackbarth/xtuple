@@ -22,9 +22,6 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
-              {kind: "onyx.GroupboxHeader", content: "_reporting".loc()},
-              {kind: "XV.NumberWidget", attr: "DefaultEventFence",
-                label: "_defaultEventFence".loc(), formatting: false},
               {kind: "onyx.GroupboxHeader", content: "_changeLog".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "WarehouseChangeLog",
                 label: "_postSiteChanges".loc()},
@@ -36,31 +33,19 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ToggleButtonWidget", attr: "AllowStdCostMethod",
                 label: "_allowStdCostMethod".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "AllowJobCostMethod",
-                label: "_allowJobCostMethod".loc()},
-              /*
-              {kind: "XV.PickerWidget", attr: "CountAvgCostMethod",
-                label: "_countAvgCostMethod".loc(), collection: "XM.countAvgCostMethod"},
-              {kind: "onyx.GroupboxHeader", content: "_physicalInventory".loc()},
-              {kind: "XV.PickerWidget", attr: "PostCountTagToDefault",
-                label: "_postCountTagToDefault".loc(), collection: "XM.postCountTagToDefault"},
-              {kind: "XV.PickerWidget", attr: "CountSlipAuditing",
-                label: "_countSlipAuditing".loc(), collection: "XM.countSlipAuditing"},
-              */
-              {kind: "onyx.GroupboxHeader", content: "_shippingAndReceiving".loc()},
+                label: "_allowJobCostMethod".loc()}
+            ]}
+          ]},
+          {kind: "XV.Groupbox", name: "shippingPanel", title: "_shipping".loc(), components: [
+            {kind: "XV.ScrollableGroupbox", name: "shippingGroup", fit: true,
+              classes: "in-panel", components: [
+              {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
               {kind: "XV.NumberPolicyPicker", attr: "ShipmentNumberGeneration",
                 label: "_shipmentNumberPolicy".loc()},
               {kind: "XV.NumberWidget", attr: "NextShipmentNumber",
                 label: "_nextShipmentNumber".loc(), formatting: false},
               {kind: "XV.ToggleButtonWidget", attr: "KitComponentInheritCOS",
-                label: "_kitComponentInheritCOS".loc()},
-              {kind: "XV.ToggleButtonWidget", attr: "DisallowReceiptExcessQty",
-                label: "_disableReceiptExcessQty".loc()},
-              {kind: "XV.ToggleButtonWidget", attr: "WarnIfReceiptQtyDiffers",
-                label: "_warnIfReceiptQtyDiffers".loc()},
-              {kind: "XV.NumberWidget", attr: "ReceiptQtyTolerancePct",
-                label: "_receiptQtyTolerancePct".loc(), formatting: false},
-              {kind: "XV.ToggleButtonWidget", attr: "RecordPPVonReceipt",
-                label: "_recordPPVOnReceipt".loc()}
+                label: "_kitComponentInheritCOS".loc()}
             ]}
           ]}
         ]}
