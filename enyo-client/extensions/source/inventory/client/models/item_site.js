@@ -127,7 +127,6 @@ white:true*/
         this.on('change:controlMethod change:item', this.controlMethodDidChange)
             .on('change:costMethod', this.costMethodDidChange)
             .on('change:item', this.itemDidChange)
-            .on('change:isStocked', this.isStockedDidChange)
             .on('change:useParameters', this.useParametersDidChange)
             .on('change:isLocationControl change:useDefaultLocation',
                 this.useDefaultLocationDidChange);
@@ -232,12 +231,6 @@ white:true*/
         }
       },
 
-      isStockedDidChange: function () {
-        var isStocked = this.get("isStocked"),
-          useParameters = this.get("useParameters");
-        this.setReadOnly("reorderLevel", !isStocked || !useParameters);
-      },
-
       toggleInventorySettings: function (isInventory) {
         this.setReadOnly([
             "abcClass",
@@ -305,6 +298,7 @@ white:true*/
           this.controlMethodDidChange();
           this.costMethodDidChange();
           this.useDefaultLocationDidChange();
+          this.useParametersDidChange();
         }
       },
 
@@ -322,14 +316,13 @@ white:true*/
 
       useParametersDidChange: function () {
         this.setReadOnly([
+          "reorderLevel",
           "orderToQuantity",
           "minimumOrderQuantity",
           "multipleOrderQuantity",
           "maximumOrderQuantity",
           "useParametersManual"
         ], !this.get("useParameters"));
-
-        this.isStockedDidChange();
       },
 
       validate: function () {
