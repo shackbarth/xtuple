@@ -17,7 +17,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     var redirectPort = X.options.datasource.proxyPort || X.options.datasource.port;
 
-    if ( redirectPort  === 443 ) {
+    if (redirectPort  === 443) {
       res.redirect("https://" + host + req.url);
     } else {
       res.redirect("https://" + host + ":" + redirectPort + req.url);
