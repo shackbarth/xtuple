@@ -73,8 +73,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           " where locitemsite_itemsite_id = $2);",
           qry = plv8.execute(locSql, [uuid, info.itemsite_id]);
         if (!qry.length) {
-          throw new handleError("Location " + uuid + " is not valid.");
-        }
+          throw new handleError("Location " + uuid + " is not valid."); }
         return qry[0].location_id;
       };
 
@@ -339,6 +338,119 @@ select xt.install_js('XM','Inventory','xtuple', $$
     options: {type: "Object", description: "Other attributes", attributes: {
       detail: {type: "Array", description: "Distribution detail" }
     }}
+  };
+
+  /**
+    Issue Material.
+    
+      select xt.post('{
+        "username": "admin",
+        "nameSpace":"XM",
+        "type":"Inventory",
+        "dispatch":{
+          "functionName":"issueMaterial",
+          "parameters":[
+            "95c30aba-883a-41da-e780-1d844a1dc112",
+            1,
+            {
+              "asOf": "2013-07-03T13:52:55.964Z",
+              "detail": [
+                {
+                  "location": "84cf43d5-8a44-4a2b-f709-4f415ca51a52",
+                  "quantity": 8
+                },
+                {
+                  "location": "d756682c-eda3-445d-eaef-4dce793b0dcf",
+                  "quantity": 2
+                }
+              ]
+            }
+          ]
+        }
+      }');
+  
+    @param {String|Array} Order line uuid or array of objects
+    @param {Number|Object} Quantity or options
+    @param {Date}   [options.asOf=now()] Transaction Timestamp
+    @param {Array} [options.detail] Distribution detail
+  */
+  XM.Inventory.issueMaterial = function (orderLine, quantity, options) {
+    var asOf,
+      series,
+      sql,
+      ary,
+      item,
+      i;
+
+    /* Make into an array if an array not passed */
+    if (typeof arguments[0] !== "object") {
+      ary = [{orderLine: orderLine, quantity: quantity, options: options || {}}];
+    } else {
+      ary = arguments;
+    }
+
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("IssueWoMaterials")) { throw new handleError("Access Denied", 401); }
+
+    sql = "select issuewomaterial(womatl_id, $2::numeric, $3::integer, $4::timestamptz) as series " +
+           "from womatl where obj_uuid = $1;";           
+
+    /* Post the transaction */
+    for (i = 0; i < ary.length; i++) {
+      item = ary[i];
+      asOf = item.options ? item.options.asOf : null;
+      series = plv8.execute(sql, [item.orderLine, item.quantity, 0, asOf])[0].series;
+
+      /* Distribute detail */
+      XM.PrivateInventory.distribute(series, item.options.detail);
+    }
+
+    return;
+  };
+  XM.Inventory.issueMaterial.description = "Issue Materials.";
+  XM.Inventory.issueMaterial.params = {
+    orderLine: { type: "String", description: "Order line UUID" },
+    quantity: {type: "Number", description: "Quantity" },
+    options: {type: "Object", description: "Other attributes", attributes: {
+      asOf: {type: "Date", description: "Transaction Timestamp. Default to now()."},
+      detail: {type: "Array", description: "Distribution detail" }
+    }}
+  };
+
+  /**
+    Return material transactions.
+    
+      select xt.post('{
+        "username": "admin",
+        "nameSpace":"XM",
+        "type":"Inventory",
+        "dispatch":{
+          "functionName":"returnFromShipping",
+          "parameters":["95c30aba-883a-41da-e780-1d844a1dc112"]
+        }
+      }');
+  
+    @param {String|Array} Order line uuid, or array of uuids
+  */
+  XM.Inventory.returnMaterial = function (orderLine) {
+    var sql = "select returnwomaterial(womatl_id, womatl_qtyiss, current_timestamp) " +
+           "from womatl where obj_uuid = $1;",
+      ret,
+      i;
+
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("ReturnWoMaterials")) { throw new handleError("Access Denied", 401); }
+
+    /* Post the transaction */
+    for (i = 0; i < arguments.length; i++) {
+      ret = plv8.execute(sql, [arguments[i]])[0];
+    }
+
+    return ret;
+  };
+  XM.Inventory.returnMaterial.description = "Return shipment transactions.";
+  XM.Inventory.returnMaterial.params = {
+    orderLine: { type: "String", description: "Order line UUID" }
   };
 
   /**

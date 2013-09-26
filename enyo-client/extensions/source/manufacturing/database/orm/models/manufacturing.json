@@ -96,6 +96,13 @@
         }
       },
       {
+        "name": "balance",
+        "attr": {
+          "type": "Number",
+          "column": "balance"
+        }
+      },
+      {
         "name": "toIssue",
         "attr": {
           "type": "Number",

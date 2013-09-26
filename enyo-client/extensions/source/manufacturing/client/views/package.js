@@ -1,4 +1,7 @@
 enyo.depends(
 	"list.js",
-  "transaction_list.js"
+	"list_relations.js",
+	"list_relations_box.js",
+  "transaction_list.js",
+  "workspace.js"
 );

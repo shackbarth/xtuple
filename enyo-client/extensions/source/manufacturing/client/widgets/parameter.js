@@ -18,16 +18,16 @@ trailing:true, white:true, strict: false*/
         {kind: "onyx.GroupboxHeader", content: "_parameters".loc()},
         {name: "transactionDate", label: "_issueDate".loc(),
           defaultKind: "XV.DateWidget"},
-        {name: "order", attr: "uuid", label: "_order".loc(),
+        {name: "order", attr: "order", label: "_order".loc(),
           defaultKind: "XV.OpenWorkOrderWidget",
-        /*getParameter: function () {
+        getParameter: function () {
           var param,
            value = this.getValue();
 
           // If no order build a query that returns nothing
           if (value) {
             param = {
-              attribute: "order",
+              attribute: "order.uuid",
               operator: "=",
               value: value
             };
@@ -40,7 +40,7 @@ trailing:true, white:true, strict: false*/
           }
 
           return param;
-        }*/}
+        }}
       ],
       create: function () {
         this.inherited(arguments);

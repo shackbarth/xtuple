@@ -71,7 +71,7 @@ white:true*/
         };
 
         this.setStatus(XM.Model.BUSY_COMMITTING);
-        this.dispatch("XM.Manufacturing", "returnMaterial", [this.id], options);
+        this.dispatch("XM.Inventory", "returnMaterial", [this.id], options);
 
         return this;
       },
@@ -131,7 +131,7 @@ white:true*/
             issOptions.detail = detail;
           }
           that.setStatus(XM.Model.BUSY_COMMITTING);
-          that.dispatch("XM.Manufacturing", that.issueMethod, params, dispOptions);
+          that.dispatch("XM.Inventory", that.issueMethod, params, dispOptions);
         };
 
         // Validate
@@ -175,7 +175,7 @@ white:true*/
     */
     XM.Manufacturing.issueMaterial = function (params, options) {
       var obj = XM.Model.prototype;
-      obj.dispatch("XM.Manufacturing", "issueMaterial", params, options);
+      obj.dispatch("XM.Inventory", "issueMaterial", params, options);
     };
 
     /**
@@ -186,7 +186,7 @@ white:true*/
     */
     XM.Manufacturing.returnMaterial = function (params, options) {
       var obj = XM.Model.prototype;
-      obj.dispatch("XM.Manufacturing", "returnMaterial", params, options);
+      obj.dispatch("XM.Inventory", "returnMaterial", params, options);
     };
 
     // ..........................................................

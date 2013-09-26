@@ -57,17 +57,15 @@ trailing:true, white:true, strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_order".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup",
               classes: "in-panel", fit: true, components: [
-              {kind: "XV.SalesOrderWidget", attr: "order"},
-              {kind: "XV.ShipmentWidget", attr: "shipment"},
+              {kind: "XV.WorkOrderWidget", attr: "order"},
               {kind: "onyx.GroupboxHeader", content: "_item".loc()},
               {kind: "XV.ItemSiteWidget", attr:
                 {item: "itemSite.item", site: "itemSite.site"}
               },
-              {kind: "XV.QuantityWidget", attr: "ordered"},
-              {kind: "XV.QuantityWidget", attr: "shipped"},
-              {kind: "XV.QuantityWidget", attr: "returned"},
-              {kind: "XV.QuantityWidget", attr: "balance"},
-              {kind: "XV.QuantityWidget", attr: "atShipping"},
+              {kind: "XV.QuantityWidget", attr: "qtyRequired"},
+              {kind: "XV.QuantityWidget", attr: "qtyIssued"},
+              //{kind: "XV.QuantityWidget", attr: "returned"},
+              //{kind: "XV.QuantityWidget", attr: "balance"},
               {kind: "onyx.GroupboxHeader", content: "_issue".loc()},
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}

@@ -25,7 +25,7 @@ trailing:true, white:true, strict:false*/
       showDeleteAction: false,
       actions: [
         {name: "issueMaterial", prerequisite: "canIssueMaterial",
-          method: "issueStock", notify: false, isViewMethod: true},
+          method: "issueMaterial", notify: false, isViewMethod: true},
         {name: "issueLine", prerequisite: "canIssueMaterial",
           method: "issueLine", notify: false, isViewMethod: true},
         {name: "returnLine", prerequisite: "canReturnMaterial",
@@ -37,7 +37,6 @@ trailing:true, white:true, strict:false*/
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "lineNumber"},
                 {kind: "XV.ListAttr", attr: "itemSite.site.code",
                   classes: "right"},
                 {kind: "XV.ListAttr", attr: "itemSite.item.number", fit: true}
@@ -46,7 +45,7 @@ trailing:true, white:true, strict:false*/
                 fit: true,  style: "text-indent: 18px;"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
-              {kind: "XV.ListAttr", attr: "ordered",
+              {kind: "XV.ListAttr", attr: "qtyRequired",
                 formatter: "formatQuantity", style: "text-align: right"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
@@ -54,7 +53,7 @@ trailing:true, white:true, strict:false*/
                 formatter: "formatQuantity", style: "text-align: right"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
-              {kind: "XV.ListAttr", attr: "atShipping",
+              {kind: "XV.ListAttr", attr: "qtyIssued",
                 formatter: "formatQuantity", style: "text-align: right"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
@@ -67,7 +66,7 @@ trailing:true, white:true, strict:false*/
       fetch: function () {
         this.inherited(arguments);
       },
-      /*
+
       formatScheduleDate: function (value, view, model) {
         var today = new Date(),
           isLate = XT.date.compareDate(value, today) < 1 &&
@@ -76,17 +75,6 @@ trailing:true, white:true, strict:false*/
         return value;
       },
 
-      formatLineNumber: function (value, view, model) {
-        var lineNumber = model.get("lineNumber"),
-          subnumber = model.get("subNumber");
-        if (subnumber === 0) {
-          value = lineNumber;
-        } else {
-          value = lineNumber + "." + subnumber;
-        }
-        return value;
-      },
-      */
       formatQuantity: function (value) {
         var scale = XT.session.locale.attributes.quantityScale;
         return Globalize.format(value, "n" + scale);
@@ -111,8 +99,7 @@ trailing:true, white:true, strict:false*/
         } else {
           model.save(null, options);
         }
-      }
-      /*
+      },
       issueMaterial: function (inEvent) {
         var model = inEvent.model,
          transDate = model.transactionDate;
@@ -126,7 +113,7 @@ trailing:true, white:true, strict:false*/
             model.transactionDate = transDate;
           }
         });
-      },*/
+      }
       /**
         Overload: used to keep track of shipment.
       */

@@ -11,7 +11,8 @@ trailing:true, white:true, strict:false*/
     var _canDo = function (priv) {
       var hasPrivilege = XT.session.privileges.get(priv),
         model = this.getModel(),
-        validModel = _.isObject(model) ? !model.get("isShipped") : false;
+        //validModel = _.isObject(model) ? !model.get("isShipped") : false;
+        validModel = _.isObject(model);
       return hasPrivilege && validModel;
     };
 
@@ -123,7 +124,7 @@ trailing:true, white:true, strict:false*/
               that.requery();
               that.spinnerHide();
             };
-            XM.Inventory.issueToShipping(data, dispOptions);
+            XM.Manufacturing.issueMaterial(data, dispOptions);
 
           // Else if there's something here we can issue, handle it
           } else {
