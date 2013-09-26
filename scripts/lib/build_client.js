@@ -145,6 +145,8 @@ var _ = require('underscore'),
         if (err) {
           callback(err);
           return;
+        } else if (files.length < 4) {
+          callback("Error: was not able to build all core files. Built files are: " + JSON.stringify(files));
         }
         readFile = function (filename, callback) {
           var callbackAdaptor = function (err, contents) {
