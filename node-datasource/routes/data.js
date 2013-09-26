@@ -6,7 +6,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   var child_process = require("child_process"),
-    path = require("path");
+    path = require("path"),
+    RJSON = X.options.client.rjson ? require("rjson") : undefined;
 
   // All of the "big 4" routes are in here: get, post, patch and delete
   // They all share a lot of similar code so I've broken out queryDatabase function to reuse code.
@@ -46,6 +47,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // and we want to normalize that here so that the data is in response.data
           try {
             data = JSON.parse(res.rows[0][functionName]);
+            data = X.options.client.rjson ? RJSON.pack(data) : data;
           } catch (error) {
             data = {isError: true, status: "Cannot parse data"};
           }

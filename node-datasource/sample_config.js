@@ -9,7 +9,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     processName: "node-datasource",
     allowMultipleInstances: true,
     client: {
-      freeDemo: false
+      freeDemo: false,
+      rjson: true
     },
     datasource: {
       debugging: false,

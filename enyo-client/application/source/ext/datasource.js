@@ -2,7 +2,7 @@
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true, enyo:true
-  document:true, setTimeout:true, document:true */
+  document:true, setTimeout:true, document:true, RJSON:true */
 
 (function () {
   "use strict";
@@ -74,7 +74,9 @@ white:true*/
             return;
           }
 
-          dataHash = response.data;
+          dataHash = XT.session.config.rjson ?
+            /* if rjson */ RJSON.unpack(response.data) :
+            /* if raw   */ response.data;
 
           // Handle no data on a single record retrieve as error
           if (method === "get" && options.id &&

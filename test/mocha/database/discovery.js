@@ -7,7 +7,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var zombie = require("zombie"),
     mocha = require("mocha"),
-    assert = require("chai").assert;
+    assert = require("chai").assert,
+    RJSON = require("rjson");
 
 
   var loginData = require('../../shared/login_data'),
@@ -23,7 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var doc;
 
         assert.ok(browser.success);
-        doc = JSON.parse(browser.text("body"));
+        doc = RJSON.unpack(JSON.parse(browser.text("body")));
         assert.isString(doc.discoveryVersion);
         assert.isObject(doc.schemas.Country);
         assert.isObject(doc.services.Sales);
