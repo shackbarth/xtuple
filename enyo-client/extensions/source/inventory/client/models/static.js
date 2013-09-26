@@ -95,12 +95,14 @@ white:true*/
     }
 
     // Cost Method
-    var costMethodJson = [
-      { id: XM.ItemSite.NO_COST, name: "_none".loc() },
-      { id: XM.ItemSite.STANDARD_COST, name: "_standard".loc() },
-      { id: XM.ItemSite.AVERAGE_COST, name: "_average".loc() },
-      { id: XM.ItemSite.JOB_COST, name: "_job".loc() }
-    ];
+    var K = XM.ItemSite,
+      costMethodJson = [
+        {id: K.NO_COST, name: "_none".loc() },
+        {id: K.AVERAGE_COST, name: "_average".loc()},
+        {id: K.STANDARD_COST, name: "_standard".loc()},
+        {id: K.JOB_COST, name: "_job".loc()}
+      ];
+
     XM.CostMethodModel = Backbone.Model.extend({
     });
     XM.CostMethodCollection = Backbone.Collection.extend({

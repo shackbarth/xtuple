@@ -8,193 +8,358 @@ white:true*/
 
   XT.extensions.inventory.initItemSiteModels = function () {
 
-    var locationBehaviorFunctions = {
+    var _proto = XM.ItemSite.prototype,
+      _defaults = _proto.defaults,
+      _bindEvents = _proto.bindEvents,
+      _initialize = _proto.initialize,
+      _statusDidChange = _proto.statusDidChange,
+      _validate = _proto.validate;
+
+    _proto.readOnlyAttributes = (_proto.readOnlyAttributes || []).concat([
+        'abcClass',
+        'controlMethod',
+        'costMethod',
+        'cycleCountFrequency',
+        'receiveLocation',
+        'isAutomaticAbcClassUpdates',
+        'isLocationControl',
+        'isReceiveLocationAuto',
+        'isStocked',
+        'isStockLocationAuto',
+        'maximumOrderQuantity',
+        'minimumOrderQuantity',
+        'multipleOrderQuantity',
+        'orderToQuantity',
+        'reorderLevel',
+        'safetyStock',
+        'stockLocation',
+        'useDefaultLocation',
+        'userDefinedLocation',
+        'useParametersManual'
+      ]);
+
+    var ext = {
+      /**
+        An array of cost methods allowed for this item site. Should
+        not be edited directly
+
+        @seealso addCostMethod
+        @ssealso removeCostMethod
+      */
+      costMethods: null,
 
       defaults: function () {
-        var K = XM.ItemSite;
-        this.setReadOnly(this.get('receiveLocation'), true);
-        this.setReadOnly(this.get('isReceiveLocationAuto'), true);
-        this.setReadOnly(this.get('stockLocation'), true);
-        this.setReadOnly(this.get('isStockLocationAuto'), true);
-        this.setReadOnly(this.get('userDefinedLocation'), true);
-      },
-      /*TODO get this non-orm field into the model
-      isUseDefaultLocation: function () {
-        return [false, true];
+        var defaults = _defaults.apply(this, arguments),
+          K = XM.ItemSite;
+        defaults = _.extend(defaults, {
+          abcClass: "A",
+          isAutomaticAbcClassUpdates: false,
+          controlMethod: K.REGULAR_CONTROL,
+          costMethod: K.NO_COST,
+          cycleCountFrequency: 0,
+          isStocked: false,
+          safetyStock: 0,
+          useParameters: false,
+          useParametersManual: false,
+          reorderLevel: 0,
+          orderToQuantity: 0,
+          minimumOrderQuantity: 0,
+          multipleOrderQuantity: 0,
+          maximumOrderQuantity: 0,
+          isLocationControl: false,
+          isReceiveLocationAuto: false,
+          isIssueLocationAuto: false
+        });
+        return defaults;
       },
 
-      isUseDefaultLocationDidChange: function () {
-        var K = XM.ItemSite,
-          isUseDefaultLocation = this.get('isUseDefaultLocation'),
-          isLocationControl = this.get('isLocationControl'),
-          receiveLocation = true,
-          isReceiveLocationAuto = true,
-          stockLocation = true,
-          isStockLocationAuto = true,
-          userDefinedLocation = true;
-        if (isUseDefaultLocation === true && isLocationControl === false) {
-          receiveLocation = false;
-          isReceiveLocationAuto = false;
-          stockLocation = false;
-          isStockLocationAuto = false;
-          userDefinedLocation = false;
-        }
-        else if (isUseDefaultLocation === true && isLocationControl === true) {
-          receiveLocation = false;
-          isReceiveLocationAuto = false;
-          stockLocation = false;
-          isStockLocationAuto = false;
-          userDefinedLocation = true;
-        }
-        this.setReadOnly('receiveLocation', receiveLocation);
-        this.setReadOnly('isReceiveLocationAuto', isReceiveLocationAuto);
-        this.setReadOnly('stockLocation', stockLocation);
-        this.setReadOnly('isStockLocationAuto', isStockLocationAuto);
-        this.setReadOnly('userDefinedLocation', userDefinedLocation);
-      }, */
+      /**
+        Add a cost method to the `costMethods` array. Triggers
+        a `costMethodsChange` event.
 
-      //TODO get the following function to work.
-      costMethod: function () {
+        @param {String|Array} Cost Method or array of cost methods
+        @param {Object} Options
+        @returns Receiver
+        @seealso removeCostMethod
+      */
+      addCostMethod: function (costMethods, options) {
         var K = XM.ItemSite,
-          itemType = this.get("item.itemType"),
-          costMethod = this.get("costMethod");
-        if (itemType === "P") {
-          return ["A", "S"];
+          that = this,
+          settings = XT.session.settings,
+          allowAvg = settings.get("AllowAvgCostMethod"),
+          allowStd = settings.get("AllowStdCostMethod"),
+          allowJob = settings.get("AllowJobCostMethod"),
+          changed = false;
+
+        if (!this.costMethods) {
+          this.costMethods = [];
+          changed = true;
         }
+
+        if (typeof costMethods === "string") {
+          costMethods = [costMethods];
+        }
+
+        _.each(costMethods, function (costMethod) {
+          // Only process valid methods
+          if (costMethod === K.NO_COST ||
+             (costMethod === K.STANDARD_COST && allowStd) ||
+             (costMethod === K.AVERAGE_COST && allowAvg) ||
+             (costMethod === K.JOB_COST && allowJob)) {
+
+            // Update the array if it's not there
+            if (!_.contains(that.costMethods, costMethod)) {
+              that.costMethods.push(costMethod);
+              changed = true;
+            }
+          }
+        });
+
+        // Notify the change
+        if (changed) {
+          this.trigger("costMethodsChange", this, this.costMethods, options);
+        }
+        return this;
+      },
+
+      bindEvents: function () {
+        _bindEvents.apply(this, arguments);
+        this.on('change:controlMethod change:item', this.controlMethodDidChange)
+            .on('change:costMethod', this.costMethodDidChange)
+            .on('change:item', this.itemDidChange)
+            .on('change:useParameters', this.useParametersDidChange)
+            .on('change:isLocationControl change:useDefaultLocation',
+                this.useDefaultLocationDidChange);
       },
 
       controlMethodDidChange: function () {
         var K = XM.ItemSite,
-          controlMethod = this.get("controlMethod");
-        if (controlMethod === K.NO_CONTROL) {
-          this.setReadOnly('costMethod', true);
-          this.set('costMethod', 'N');
-        }
-        else if (controlMethod !== K.NO_CONTROL) {
-          this.setReadOnly('costMethod', false);
-          this.set('costMethod', 'S');
+          I = XM.Item,
+          controlMethod = this.get("controlMethod"),
+          costMethod = this.get("costMethod"),
+          item = this.get("item"),
+          itemType = item ? item.get("itemType") : false,
+          quantityOnHand = this.get("quantityOnHand"),
+          settings = XT.session.settings,
+          allowAvg = settings.get("AllowAvgCostMethod"),
+          allowStd = settings.get("AllowStdCostMethod"),
+          allowJob = settings.get("AllowJobCostMethod");
+
+        /* Set default cost method */
+        if (controlMethod === K.NO_CONTROL ||
+            itemType === I.REFERENCE ||
+            itemType ===  I.KIT) {
+          this.addCostMethod(K.NO_COST)
+              .removeCostMethod([K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST])
+              .set("costMethod", K.NO_COST)
+              .setReadOnly("costMethod")
+              .toggleInventorySettings(false);
+        } else {
+          // Set available cost methods
+          this.removeCostMethod(K.NO_COST)
+              .addCostMethod([K.STANDARD_COST, K.AVERAGE_COST])
+              .setReadOnly("costMethod", false);
+
+          // Determine if Job Cost is possible
+          if ((itemType === I.MANUFACTURED ||
+              itemType === I.PURCHASED ||
+              itemType === I.OUTSIDE_PROCESS) &&
+            controlMethod !== K.NO_CONTROL &&
+            allowJob && !quantityOnHand) {
+            this.addCostMethod(K.JOB_COST);
+          } else {
+            this.removeCostMethod(K.JOB_COST);
+          }
+
+          if (costMethod === K.NO_COST) {
+            if (allowStd) {
+              this.set("costMethod", K.STANDARD_COST);
+            } else if (allowAvg) {
+              this.set("costMethod", K.AVERAGE_COST);
+            } else if (allowJob) {
+              this.set("costMethod", K.JOB_COST);
+            }
+          }
+          
+          this.itemDidChange(); // Will check item type for inventory setting
         }
       },
 
       costMethodDidChange: function () {
         var K = XM.ItemSite,
-          I = XM.Item,
-          costMethod = this.get("costMethod"),
-          isSold = false,
-          plannerCode = false,
-          isStocked = false,
-          isAutomaticAbcClassUpdates = false,
-          abcClass = false,
-          cycleCountFrequency = false,
-          isLocationControl = false,
-          receiveLocation = false,
-          isReceiveLocationAuto = false,
-          stockLocation = false,
-          isStockLocationAuto = false,
-          userDefinedLocation = false,
-          locationComment = false,
-          useParameters = false,
-          reorderLevel = false,
-          orderToQuantity = false,
-          minimumOrderQuantity = false,
-          maximumOrderQuantity = false,
-          multipleOrderQuantity = false,
-          restrictedLoctionsAllowed = false,
-          useParametersManual = false,
-          safetyStock = false,
-          leadTime = false;
-        switch (costMethod) {
-        case K.JOB_COST:
-          if (I.MANUFACTURED) {
-            isSold = true;
-            plannerCode = true;
-            isStocked = true;
-            abcClass = true;
-            isAutomaticAbcClassUpdates = true;
-            abcClass = true;
-            cycleCountFrequency = true;
-            isLocationControl = true;
-            receiveLocation = true;
-            isReceiveLocationAuto = true;
-            stockLocation = true;
-            isStockLocationAuto = true;
-            userDefinedLocation = true;
-            locationComment = true;
-            useParameters = true;
-            reorderLevel = true;
-            orderToQuantity = true;
-            minimumOrderQuantity = true;
-            maximumOrderQuantity = true;
-            multipleOrderQuantity = true;
-            restrictedLoctionsAllowed = true;
-            useParametersManual = true;
-            safetyStock = true;
-            leadTime = true;
-            this.set("isSold", false);
-            this.set("isAutomaticAbcClassUpdates", false);
-            this.set("cycleCountFrequency", 0);
-            this.set("useParameters", false);
-            this.set("isStocked", false);
-            this.set("locationControl", false);
-            this.set("safetyStock", 0);
-          }
-          else if (I.PURCHASED || I.OUTSIDE_PROCESS) {
-            isSold = false;
-            abcClass = true;
-            isAutomaticAbcClassUpdates = true;
-            cycleCountFrequency = true;
-            isStocked = true;
-            isLocationControl = true;
-            restrictedLoctionsAllowed = true;
-            safetyStock = true;
-            useParameters = true;
-            this.set("isSold", true);
-            this.set("isAutomaticAbcClassUpdates", false);
-            this.set("cycleCountFrequency", 0);
-            this.set("useParameters", false);
-            this.set("isStocked", false);
-            this.set("locationControl", false);
-            this.set("safetyStock", 0);
-          }
-          else {
-            isStocked = true;
-          }
+          costMethod = this.get("costMethod");
+        if (costMethod === K.JOB_COST) {
+          this.toggleInventorySettings(false);
+        } else {
+          this.itemDidChange();
         }
-        this.setReadOnly("isSold", isSold);
-        this.setReadOnly("plannerCode", plannerCode);
-        this.setReadOnly("isStocked", isStocked);
-        this.setReadOnly("abcClass", abcClass);
-        this.setReadOnly("isAutomaticAbcClassUpdates", isAutomaticAbcClassUpdates);
-        this.setReadOnly("abcClass", abcClass);
-        this.setReadOnly("cycleCountFrequency", cycleCountFrequency);
-        this.setReadOnly("isLocationControl", isLocationControl);
-        this.setReadOnly("receiveLocation", receiveLocation);
-        this.setReadOnly("isReceiveLocationAuto", isReceiveLocationAuto);
-        this.setReadOnly("stockLocation", stockLocation);
-        this.setReadOnly("isStockLocationAuto", isStockLocationAuto);
-        this.setReadOnly("userDefinedLocation", userDefinedLocation);
-        this.setReadOnly("locationComment", locationComment);
-        this.setReadOnly("useParameters", useParameters);
-        this.setReadOnly("reorderLevel", reorderLevel);
-        this.setReadOnly("orderToQuantity", orderToQuantity);
-        this.setReadOnly("minimumOrderQuantity", minimumOrderQuantity);
-        this.setReadOnly("maximumOrderQuantity", maximumOrderQuantity);
-        this.setReadOnly("multipleOrderQuantity", multipleOrderQuantity);
-        this.setReadOnly("restrictedLoctionsAllowed", restrictedLoctionsAllowed);
-        this.setReadOnly("useParametersManual", useParametersManual);
-        this.setReadOnly("safetyStock", safetyStock);
-        this.setReadOnly("leadTime", leadTime);
       },
 
-      bindEvents: function () {
-        XM.Model.prototype.bindEvents.apply(this, arguments);
-        this.on('change:controlMethod', this.controlMethodDidChange);
-        this.on('change:costMethod', this.costMethodDidChange);
-      //  this.on('change:isUseDefaultLocation', this.isUseDefaultLocationDidChange);
+      initialize: function () {
+        _initialize.apply(this, arguments);
+        var K = XM.ItemSite;
+        this.addCostMethod([K.NO_COST, K.STANDARD_COST, K.AVERAGE_COST, K.JOB_COST]);
+      },
+
+      itemDidChange: function () {
+        var K = XM.ItemSite,
+          I = XM.Item,
+          item = this.get("item"),
+          itemType = item ? item.get("itemType") : false,
+          nonStockTypes = [
+            I.REFERENCE,
+            I.PLANNING,
+            I.BREEDER,
+            I.BY_PRODUCT,
+            I.CO_PRODUCT
+          ],
+          isInventory = !_.contains(nonStockTypes, itemType);
+
+        // Settings dependent on whether inventory item or not
+        this.toggleInventorySettings(isInventory);
+        this.setReadOnly("controlMethod", !isInventory);
+
+        // Handle special non-stock item type cases
+        if (!isInventory) {
+          if (!itemType || itemType === I.REFERENCE) {
+            this.setReadOnly("isSold", false)
+                .set("controlMethod", K.NO_CONTROL);
+          } else if (itemType === I.KIT) {
+            this.setReadOnly("isSold", false)
+                .set({controlMethod: K.NO_CONTROL, isSold: true});
+          } else {
+            this.setReadOnly("isSold")
+                .set({isSold: false, controlMethod: K.REGULAR_CONTROL});
+          }
+        }
+      },
+
+      toggleInventorySettings: function (isInventory) {
+        this.setReadOnly([
+            "abcClass",
+            "cycleCountFrequency",
+            "isAutomaticAbcClassUpdates",
+            "isLocationControl",
+            "isStocked",
+            "restrictedLocationsAllowed",
+            "safetyStock",
+            "useDefaultLocation"
+          ], !isInventory);
+
+        // If not inventory, force some settings
+        if (!isInventory) {
+          this.set({
+            cycleCountFrequency: 0,
+            isAutomaticAbcClassUpdates: false,
+            isLocationControl: false,
+            isStocked: false,
+            safetyStock: 0,
+            useDefaultLocation: false
+          });
+        }
+        return this;
+      },
+
+      /**
+        Add a cost method to the `costMethods` array. Triggers
+        a `costMethodsChange` event.
+
+        @param {String|Array} Cost Method or array of cost methods
+        @param {Object} Options
+        @returns Receiver
+        @seealso removeCostMethod
+      */
+      removeCostMethod: function (costMethods, options) {
+        var that = this,
+          changed = false;
+
+        if (typeof costMethods === "string") {
+          costMethods = [costMethods];
+        }
+
+        _.each(costMethods, function (costMethod) {
+          // Ignore if not in the array
+          if (_.contains(that.costMethods, costMethod)) {
+
+            // Make the change
+            that.costMethods = _.without(that.costMethods, costMethod);
+            changed = true;
+          }
+        });
+
+        // Notify
+        if (changed) {
+          this.trigger("costMethodsChange", this, this.costMethods, options);
+        }
+
+        return this;
+      },
+
+      statusDidChange: function () {
+        _statusDidChange.apply(this, arguments);
+        if (this.getStatus() === XM.Model.READY_CLEAN) {
+          this.itemDidChange();
+          this.controlMethodDidChange();
+          this.costMethodDidChange();
+          this.useDefaultLocationDidChange();
+          this.useParametersDidChange();
+        }
+      },
+
+      useDefaultLocationDidChange: function () {
+        var useDefault = this.get("useDefaultLocation"),
+          isLocationControl = this.get("isLocationControl");
+        this.setReadOnly([
+          "receiveLocation",
+          "isReceiveLocationAuto",
+          "stockLocation",
+          "isStockLocationAuto"
+        ], !isLocationControl || !useDefault);
+        this.setReadOnly("userDefinedLocation", isLocationControl || !useDefault);
+        this.setReadOnly("restrictedLocationsAllowed", !isLocationControl);
+      },
+
+      useParametersDidChange: function () {
+        this.setReadOnly([
+          "reorderLevel",
+          "orderToQuantity",
+          "minimumOrderQuantity",
+          "multipleOrderQuantity",
+          "maximumOrderQuantity",
+          "useParametersManual"
+        ], !this.get("useParameters"));
+      },
+
+      validate: function () {
+        var ret = _validate.apply(this, arguments),
+          K = XM.ItemSite,
+          quantityOnHand = this.get("quantityOnHand"),
+          costMethod = this.get("costMethod"),
+          isStocked = this.get("isStocked"),
+          reorderLevel = this.get("reorderLevel"),
+          isActive = this.get("isActive"),
+          itemIsActive = this.getValue("item.isActive"),
+          error;
+        if (ret) { return ret; }
+
+        if (quantityOnHand < 0 && costMethod === K.AVERAGE_COST) {
+          error = "xt2019";
+        } else if (isStocked && reorderLevel <= 0) {
+          error = "xt2020";
+        } else if (isActive && !itemIsActive) {
+          error = "xt2021";
+        } else if (isActive && quantityOnHand > 0) {
+          error = "xt2022";
+        }
+
+        if (error) {
+          return XT.Error.clone(error);
+        }
+
       }
     };
 
-    XM.ItemSite = XM.ItemSite.extend(locationBehaviorFunctions);
+    XM.ItemSite = XM.ItemSite.extend(ext);
     /**
       @class
 

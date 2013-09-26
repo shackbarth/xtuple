@@ -72,6 +72,9 @@
   text-align: right;
   width: 130px;
 }
+.xv-picker-label.disabled {
+  color: #696969;
+}
 /* Combo Box */
 .xv-combobox-input {
   font-size: medium;
@@ -2778,10 +2781,16 @@ body {
   padding: 8px;
   text-align: right;
 }
+.xv-label.disabled {
+  color: #696969;
+}
 .xv-decorated-label {
   width: 130px;
   padding: 14px 8px 8px 8px;
   text-align: right;
+}
+.xv-decorated-label.disabled {
+  color: #696969;
 }
 .xv-short-textarea .xv-textarea-input {
   min-height: 0px;

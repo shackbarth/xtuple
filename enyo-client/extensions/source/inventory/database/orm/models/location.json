@@ -144,6 +144,14 @@
         }
       },
       {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "location_warehous_id"
+        }
+      },
+      {
         "name": "aisle",
         "attr": {
           "type": "String",
@@ -176,6 +184,13 @@
         "attr": {
           "type": "String",
           "column": "location_descrip"
+        }
+      },
+      {
+        "name": "isRestricted",
+        "attr": {
+          "type": "Boolean",
+          "column": "location_restrict"
         }
       }
     ],
@@ -231,6 +246,7 @@
     "type": "ItemSiteLocation",
     "table": "xt.locitemsite",
     "comment": "Item Site Location Map",
+    "idSequenceName": "locitem_locitem_id_seq",
     "properties": [
       {
         "name": "id",

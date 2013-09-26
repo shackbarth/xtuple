@@ -3,7 +3,7 @@
     "context": "inventory",
     "nameSpace": "XM",
     "type": "ItemSite",
-    "table": "itemsite",
+    "table": "xt.itemsiteinfo",
     "isExtension": true,
     "comment": "Extended by Inventory",
     "relations": [
@@ -27,13 +27,6 @@
           "type": "String",
           "column": "itemsite_costmethod",
           "required": true
-        }
-      },
-      {
-        "name": "quantityOnHand",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_qtyonhand"
         }
       },
       {
@@ -142,6 +135,13 @@
         }
       },
       {
+        "name": "useDefaultLocation",
+        "attr": {
+          "type": "Boolean",
+          "column": "use_default_loc"
+        }
+      },
+      {
         "name": "receiveLocation",
         "toOne": {
           "isNested": true,
@@ -207,7 +207,7 @@
         }
       },
       {
-        "name": "restrictedLoctionsAllowed",
+        "name": "restrictedLocationsAllowed",
         "toMany": {
           "isNested": true,
           "type": "ItemSiteLocation",

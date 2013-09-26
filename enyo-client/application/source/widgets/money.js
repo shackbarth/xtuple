@@ -128,6 +128,7 @@ regexp:true, undef:true, trailing:true, white:true */
         currencyDisabled = this.getCurrencyDisabled();
       this.$.input.setDisabled(disabled);
       this.$.picker.setDisabled(disabled || currencyDisabled);
+      this.$.label.addRemoveClass("disabled", this.getDisabled());
     },
 
     /**
