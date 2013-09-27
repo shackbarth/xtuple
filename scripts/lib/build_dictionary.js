@@ -15,6 +15,7 @@ if (typeof XT === 'undefined') {
     async = require("async"),
     datasource = require("../../node-datasource/lib/ext/datasource").dataSource,
     fs = require("fs"),
+    creds,
     path = require("path");
 
   var translations = {};
@@ -105,14 +106,124 @@ if (typeof XT === 'undefined') {
     });
   };
 
-  async.series([
-    getAllFilenames,
-    getAllTranslations
-  ], function (err, results) {
-    if (err) {
-      console.log("error:", err);
-      return;
-    }
-    console.log("success", results);
-  });
+  var englishDictionaryId;
+  var getEnglishDictionary = function (callback) {
+    var sql = "select dict_id from xt.dict where dict_language_name = 'en_US';",
+      createSql = "insert into xt.dict (dict_language_name) values ('en_US')";
+
+    datasource.query(sql, creds, function (err, results) {
+      if (err) {
+        callback(err);
+        return;
+      }
+      if (results.rowCount === 0) {
+        // need to create the dictionary
+        datasource.query(createSql, creds, function (err, results) {
+          datasource.query(sql, creds, function (err, results) {
+            if (err) {
+              callback(err);
+              return;
+            }
+            englishDictionaryId = results.rows[0].dict_id;
+            callback();
+          });
+        });
+      } else {
+        englishDictionaryId = results.rows[0].dict_id;
+        callback();
+      }
+    });
+  };
+
+  var getEnglishDictionaryData = function (callback) {
+    // TODO: real SQL
+    datasource.query("select dict_id from xt.dict", creds, function (err, results) {
+      if (err) {
+        callback(err);
+        return;
+      }
+      // TODO: sort both arrays
+      var data = _.map(results.rows, function (row) {
+        // TODO: implement transform
+        return row;
+      });
+      var dataKeys = _.map(data, function (datum) {
+        // TODO: implement transform
+        return datum.key;
+      });
+
+      var callbacksExpected = 0;
+      var callbacksReceived = 0;
+      _.each(translations, function (value, key) {
+        var sql,
+          options,
+          alreadyPresent = _.indexOf(dataKeys, key, true) >= 0;
+
+        if (alreadyPresent && data[key] === value) {
+          // We already have this one. Do nothing.
+
+        } else if (alreadyPresent) {
+          // the translation has been updated
+          // TODO
+
+        } else {
+          // this is a new translation
+          sql = "insert into dictentry " +
+            "(dictentry_dict_id, dictentry_key, dictentry_translation) " +
+            " values ($1, $2, $3);";
+
+          options = JSON.parse(JSON.stringify(creds));
+          options.parameters = [
+            englishDictionaryId,
+            key,
+            value
+          ];
+          callbacksExpected++;
+
+          datasource.query(sql, options, function (err, results) {
+            callbacksReceived++;
+            if (err) {
+              callback(err);
+              return;
+            }
+            if (callbacksExpected === callbacksReceived) {
+              callback();
+            }
+          });
+
+        }
+        if (callbacksExpected === 0) {
+          callback();
+        }
+      });
+
+      callback();
+    });
+  };
+
+  var buildDictionary = exports.buildDictionary = function (_creds) {
+    creds = _creds;
+    async.series([
+      getAllFilenames,
+      getAllTranslations,
+      getEnglishDictionary,
+      getEnglishDictionaryData
+    ], function (err, results) {
+      if (err) {
+        console.log("error:", err);
+        return;
+      }
+      console.log("success", results);
+    });
+  };
+
+  var localSpecs = {
+    hostname: "localhost",
+    port: 5432,
+    user: "admin",
+    password: "admin",
+    database: "dev"
+  };
+  buildDictionary(localSpecs);
+
 }());
