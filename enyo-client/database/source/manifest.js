@@ -78,6 +78,8 @@
     "xt/functions/register_extension_dependency.sql",
     "xt/functions/trylock.sql",
     "xt/functions/undomerge.sql",
+    "xt/tables/dict.sql",
+    "xt/tables/dictentry.sql",
     "xt/tables/emlprofile.sql",
     "xt/tables/filter.sql",
     "xt/tables/incdtemlprofile.sql",

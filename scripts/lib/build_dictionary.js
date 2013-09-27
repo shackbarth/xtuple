@@ -13,6 +13,7 @@ if (typeof XT === 'undefined') {
 
   var _ = require("underscore"),
     async = require("async"),
+    datasource = require("../../node-datasource/lib/ext/datasource").dataSource,
     fs = require("fs"),
     path = require("path");
 
