@@ -137,32 +137,28 @@ if (typeof XT === 'undefined') {
 
   var getEnglishDictionaryData = function (callback) {
     // TODO: real SQL
-    datasource.query("select dict_id from xt.dict", creds, function (err, results) {
+    datasource.query("select * from xt.dictentry where dictentry_dict_id = " + englishDictionaryId + ";",
+        creds, function (err, results) {
       if (err) {
         callback(err);
         return;
       }
-      // TODO: sort both arrays
-      var data = _.map(results.rows, function (row) {
-        // TODO: implement transform
-        return row;
-      });
-      var dataKeys = _.map(data, function (datum) {
-        // TODO: implement transform
-        return datum.key;
-      });
+      var dataKeys = _.reduce(results.rows, function (memo, row) {
+        memo[row.dictentry_key] = row.dictentry_translation;
+        return memo;
+      }, {});
 
       var callbacksExpected = 0;
       var callbacksReceived = 0;
       _.each(translations, function (value, key) {
         var sql,
           options,
-          alreadyPresent = _.indexOf(dataKeys, key, true) >= 0;
+          dbTranslation = dataKeys[key];
 
-        if (alreadyPresent && data[key] === value) {
+        if (dbTranslation && dbTranslation === value) {
           // We already have this one. Do nothing.
 
-        } else if (alreadyPresent) {
+        } else if (dbTranslation) {
           // the translation has been updated
           // TODO
 
@@ -181,23 +177,21 @@ if (typeof XT === 'undefined') {
           callbacksExpected++;
 
           datasource.query(sql, options, function (err, results) {
-            callbacksReceived++;
             if (err) {
               callback(err);
               return;
             }
+            callbacksReceived++;
             if (callbacksExpected === callbacksReceived) {
               callback();
             }
           });
-
-        }
-        if (callbacksExpected === 0) {
-          callback();
         }
       });
-
-      callback();
+      console.log(callbacksExpected);
+      if (callbacksExpected === 0) {
+        callback();
+      }
     });
   };
 
