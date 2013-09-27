@@ -1071,6 +1071,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     kind: "XV.Workspace",
     title: "_item".loc(),
     model: "XM.Item",
+    headerAttrs: ["number", "-", "description1"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1084,6 +1085,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "description2"},
             {kind: "XV.ItemTypePicker", attr: "itemType", showNone: false},
             {kind: "XV.ClassCodePicker", attr: "classCode"},
+            {kind: "XV.FreightClassPicker", attr: "freightClass"},
             {kind: "XV.UnitPicker", attr: "inventoryUnit"},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
             {kind: "XV.CheckboxWidget", attr: "isPicklist"},
@@ -1147,6 +1149,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     kind: "XV.Workspace",
     title: "_itemSite".loc(),
     model: "XM.ItemSite",
+    headerAttrs: ["item.number", "-", "site.code"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1155,7 +1158,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.ItemWidget", attr: "item"},
-            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.OptionalSitePicker", attr: "site"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.PlannerCodePicker", attr: "plannerCode"},
             {kind: "XV.CostCategoryPicker", attr: "costCategory"},
