@@ -16,24 +16,32 @@ if (typeof XT === 'undefined') {
     fs = require("fs"),
     path = require("path");
 
+  var translations = {};
   // accommodate old string import mechanism
   XT.stringsFor = function (language, hash) {
-    console.log(hash);
+    _.each(hash, function (value, key) {
+      // TODO: we should also validate that the key is not defined twice,
+      // unless both definitions are in extensions
+      if (translations[key] && translations[key] !== value) {
+        throw new Error("key " + key + " is defined with two different translations");
+      }
+
+      translations[key] = value;
+    });
   };
   XT.locale = {setLanguage: function () {}};
   // end accommodation
 
   var extensionDirs = [
-    {repo: "xtuple-extensions", path: "xtuple-extensions/source", isExtension: true},
-    {repo: "private-extensions", path: "private-extensions/source", isExtension: true},
-    {path: "xtuple/enyo-client/application/source"},
-    {path: "xtuple/enyo-client/extensions/source", isExtension: true},
     {path: "xtuple/lib/backbone-x/source"},
     {path: "xtuple/lib/enyo-x/source"},
-    {path: "xtuple/lib/tools/source"}
+    {path: "xtuple/lib/tools/source"},
+    {path: "xtuple/enyo-client/application/source"},
+    {path: "xtuple/enyo-client/extensions/source", isExtension: true},
+    {repo: "xtuple-extensions", path: "xtuple-extensions/source", isExtension: true},
+    {repo: "private-extensions", path: "private-extensions/source", isExtension: true}
   ];
   var getFilenames = function (spec, callback) {
-    // TODO: don't look if the repo isn't there
     var fullPath = path.join(__dirname, "../../..", spec.path);
     var filenames;
 
@@ -70,19 +78,29 @@ if (typeof XT === 'undefined') {
   };
 
   var getTranslations = function (filename, callback) {
-    fs.readFile(filename, function (err, data) {
-      if (err) {
+    fs.exists(filename, function (exists) {
+      if (!exists) {
         // No problem. The file must not be defined.
         callback();
         return;
       }
-      require(filename);
-      callback();
+      try {
+        require(filename);
+      } catch (error) {
+        callback(error);
+        return;
+      }
+      callback(null, "Imported translations from " + filename);
     });
   };
   var getAllTranslations = function (callback) {
     async.map(filenames, getTranslations, function (err, results) {
-      callback();
+      if (err) {
+        callback(err);
+        return;
+      }
+      console.log("" + Object.keys(translations).length, "translated phrases and words");
+      callback(null, results);
     });
   };
 
@@ -94,7 +112,6 @@ if (typeof XT === 'undefined') {
       console.log("error:", err);
       return;
     }
-    console.log("success");
-    console.log(filenames);
+    console.log("success", results);
   });
 }());
