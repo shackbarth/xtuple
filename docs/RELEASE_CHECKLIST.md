@@ -24,7 +24,8 @@ TODO: verify that the jsdoc look ok. Should this go in testing?
 1. Jump to the frozen branch.
 2. Add the version number and date to `RELEASE.md` if it has not been done already.
 3. Run `node getReleaseNotes.js` from `private-extensions/source/incident_plus/scripts/` to generate
-  some code that you should run in the JS console against production dogfood. That will in turn
+  a function to be run against the production dogfood database. Once you are logged into the production xTuple
+  application, run this function in the JS console in the browser. That will in turn
   generate some code that you should plug into the `README.md` file. Delete out the incidents that
   end users do not need to know about, e.g. bugs that were caused and fixed all within a sprint.
 4. Commit and push changes.
