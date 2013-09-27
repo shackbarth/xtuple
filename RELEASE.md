@@ -1,3 +1,231 @@
+1.4.4 (2013/09/27)
+==================
+
+Features and bugfixes
+---------------------
+
+- Implemented
+  issue #[18833](http://www.xtuple.org/xtincident/view/bugs/18833)
+  _Would like user customizable content on lists_
+- Implemented
+  issue #[19647](http://www.xtuple.org/xtincident/view/bugs/19647)
+  _Report dates and currency must be localizable_
+- Fixed
+  issue #[19858](http://www.xtuple.org/xtincident/view/bugs/19858)
+  _*Unable to delete a Project Task from Project Tasks screen_
+- Fixed
+  issue #[20449](http://www.xtuple.org/xtincident/view/bugs/20449)
+  _Incidents gives error when CRM is only extension_
+- Implemented
+  issue #[20677](http://www.xtuple.org/xtincident/view/bugs/20677)
+  _Create Location object_
+- Implemented
+  issue #[20683](http://www.xtuple.org/xtincident/view/bugs/20683)
+  _Backlog Report_
+- Implemented
+  issue #[20684](http://www.xtuple.org/xtincident/view/bugs/20684)
+  _Create Shipments List object and views with return action_
+- Implemented
+  issue #[20734](http://www.xtuple.org/xtincident/view/bugs/20734)
+  _Issue to Shipping_
+- Fixed
+  issue #[20800](http://www.xtuple.org/xtincident/view/bugs/20800)
+  _*Delete option is active for contacts attached to ToDoitem/Opportunity_
+- Fixed
+  issue #[20927](http://www.xtuple.org/xtincident/view/bugs/20927)
+  _Install script says finished when it is not_
+- Fixed
+  issue #[20954](http://www.xtuple.org/xtincident/view/bugs/20954)
+  _Problems in report data from data-from-key_
+- Fixed
+  issue #[21093](http://www.xtuple.org/xtincident/view/bugs/21093)
+  _*No error message is displayed on selecting to delete an item with item site created for it_
+- Fixed
+  issue #[21176](http://www.xtuple.org/xtincident/view/bugs/21176)
+  _*Unable to save comments for a To do item_
+- Fixed
+  issue #[21189](http://www.xtuple.org/xtincident/view/bugs/21189)
+  _Files over 1MB does not appear to complete upload_
+- Implemented
+  issue #[21251](http://www.xtuple.org/xtincident/view/bugs/21251)
+  _Add credit card processing support to Sales Order_
+- Fixed
+  issue #[21277](http://www.xtuple.org/xtincident/view/bugs/21277)
+  _T/E mobile not enforcing view other rules._
+- Fixed
+  issue #[21306](http://www.xtuple.org/xtincident/view/bugs/21306)
+  _Menu presentation order unpredictable_
+- Fixed
+  issue #[21316](http://www.xtuple.org/xtincident/view/bugs/21316)
+  _Time and Expense uneditable when unapproved_
+- Completed
+  issue #[21327](http://www.xtuple.org/xtincident/view/bugs/21327)
+  _Sales cubes dimension and measure terminology_
+- Completed
+  issue #[21360](http://www.xtuple.org/xtincident/view/bugs/21360)
+  _add monthly calendar to sales cubes_
+- Completed
+  issue #[21361](http://www.xtuple.org/xtincident/view/bugs/21361)
+  _Should be able to save Sales Analysis query_
+- Fixed
+  issue #[21368](http://www.xtuple.org/xtincident/view/bugs/21368)
+  _Worksheets bring in wrong customer reference_
+- Fixed
+  issue #[21385](http://www.xtuple.org/xtincident/view/bugs/21385)
+  _TE Worksheet List does not filter on on Date_
+- Fixed
+  issue #[21399](http://www.xtuple.org/xtincident/view/bugs/21399)
+  _Can't find worksheet total hours_
+- Fixed
+  issue #[21403](http://www.xtuple.org/xtincident/view/bugs/21403)
+  _Worksheets should default to self as the Employee_
+- Fixed
+  issue #[21407](http://www.xtuple.org/xtincident/view/bugs/21407)
+  _Field missing on Worksheet:  hourly cost_
+- Fixed
+  issue #[21427](http://www.xtuple.org/xtincident/view/bugs/21427)
+  _Inventory Extension adding expense category to setup menu_
+- Fixed
+  issue #[21432](http://www.xtuple.org/xtincident/view/bugs/21432)
+  _forgot password error_
+- Fixed
+  issue #[21439](http://www.xtuple.org/xtincident/view/bugs/21439)
+  _Picker is too wide on money widgets_
+- Fixed
+  issue #[21442](http://www.xtuple.org/xtincident/view/bugs/21442)
+  _Site Defaults in Mobile Web are not honoring user defaults_
+- Fixed
+  issue #[21453](http://www.xtuple.org/xtincident/view/bugs/21453)
+  _Firefox is blocking mobile help content_
+- Fixed
+  issue #[21455](http://www.xtuple.org/xtincident/view/bugs/21455)
+  _Sort is not working for Sort and Layout Attribute Pickers_
+- Fixed
+  issue #[21478](http://www.xtuple.org/xtincident/view/bugs/21478)
+  _*Selecting to create new Shipment record displays insufficient privileges dialog_
+- Fixed
+  issue #[21482](http://www.xtuple.org/xtincident/view/bugs/21482)
+  _*Omnibus: Blank screen is displayed on selecting to print any record/records list_
+- Fixed
+  issue #[21495](http://www.xtuple.org/xtincident/view/bugs/21495)
+  _Cannot Search for Incident Contact_
+- Fixed
+  issue #[21497](http://www.xtuple.org/xtincident/view/bugs/21497)
+  _Time Expense has dependency on Sales_
+- Fixed
+  issue #[21498](http://www.xtuple.org/xtincident/view/bugs/21498)
+  _Users can not save time sheet if no prvilege_
+- Fixed
+  issue #[21524](http://www.xtuple.org/xtincident/view/bugs/21524)
+  _Printing Admin Account causes unhandled Error_
+- Fixed
+  issue #[21532](http://www.xtuple.org/xtincident/view/bugs/21532)
+  _Cannot open an existing Item_
+
+
+1.4.3 (2013/09/11)
+==================
+
+Features and bugfixes
+---------------------
+- Implemented
+  issue #[18488](http://www.xtuple.org/xtincident/view/bugs/18488)
+  _Add sort option to Mobile client_
+- Fixed
+  issue #[19395](http://www.xtuple.org/xtincident/view/bugs/19395)
+  _*Unable to delete a contact with no address_
+- Fixed
+  issue #[19680](http://www.xtuple.org/xtincident/view/bugs/19680)
+  _Email profiles are not editable_
+- Fixed
+  issue #[19966](http://www.xtuple.org/xtincident/view/bugs/19966)
+  _*It is possible to create a Quote without any line item_
+- Fixed
+  issue #[19992](http://www.xtuple.org/xtincident/view/bugs/19992)
+  _*New quote created from a Customer does not populates the customer number  automatically in 'Customer' field of quote screen_
+- Fixed
+  issue #[19993](http://www.xtuple.org/xtincident/view/bugs/19993)
+  _*Detach button in the Quotes panel of a customer is not functional_
+- Implemented
+  issue #[20445](http://www.xtuple.org/xtincident/view/bugs/20445)
+  _Login Page should have "Forgot Password" link/functionality_
+- Fixed
+  issue #[20458](http://www.xtuple.org/xtincident/view/bugs/20458)
+  _Editing Worksheet Time Billable does not save_
+- Fixed
+  issue #[20460](http://www.xtuple.org/xtincident/view/bugs/20460)
+  _Posting a Worksheet does not appear to do anything_
+- Implemented
+  issue #[20782](http://www.xtuple.org/xtincident/view/bugs/20782)
+  _add vCard export functionality for contacts_
+- Implemented
+  issue #[20851](http://www.xtuple.org/xtincident/view/bugs/20851)
+  _REST support for field-level queries_
+- Fixed
+  issue #[20909](http://www.xtuple.org/xtincident/view/bugs/20909)
+  _ListRelationsEditorBox fails if you delete an intermediate item_
+- Fixed
+  issue #[20960](http://www.xtuple.org/xtincident/view/bugs/20960)
+  _Cannot create new Site_
+- Fixed
+  issue #[20961](http://www.xtuple.org/xtincident/view/bugs/20961)
+  _Deleting a Site does not work_
+- Completed
+  issue #[20987](http://www.xtuple.org/xtincident/view/bugs/20987)
+  _Pentaho tenant to include server IP_
+- Implemented
+  issue #[21046](http://www.xtuple.org/xtincident/view/bugs/21046)
+  _Add context messaging tools for Mobile Web UI (Sales Analysis)_
+- Fixed
+  issue #[21097](http://www.xtuple.org/xtincident/view/bugs/21097)
+  _*Selecting to edit and save an item site displays irrelevant message_
+- Fixed
+  issue #[21112](http://www.xtuple.org/xtincident/view/bugs/21112)
+  _*Omnibus: Action icon button doesn't respond on clicking when 'Advanced Search' panel is open for the list of records_
+- Fixed
+  issue #[21120](http://www.xtuple.org/xtincident/view/bugs/21120)
+  _*Observation: Selecting to save the Tax rate with currency set to default displays 'currency is required' message irrelevantly_
+- Fixed
+  issue #[21121](http://www.xtuple.org/xtincident/view/bugs/21121)
+  _*Selecting 'Save' in the Tax Rate screen without selecting the Tax Code doesn't displays any error message_
+- Fixed
+  issue #[21123](http://www.xtuple.org/xtincident/view/bugs/21123)
+  _Multi-Site option should not be allowed off if there are Multi-sites_
+- Fixed
+  issue #[21158](http://www.xtuple.org/xtincident/view/bugs/21158)
+  _*translation required for effective and expiry date warning messages_
+- Fixed
+  issue #[21201](http://www.xtuple.org/xtincident/view/bugs/21201)
+  _*Delete option is active for Used contacts_
+- Fixed
+  issue #[21234](http://www.xtuple.org/xtincident/view/bugs/21234)
+  _*It is possible to edit and save the Billing rate currency of the Time And Expense sheets of an Approved worksheet_
+- Fixed
+  issue #[21256](http://www.xtuple.org/xtincident/view/bugs/21256)
+  _Project does not save with filter_
+- Fixed
+  issue #[21276](http://www.xtuple.org/xtincident/view/bugs/21276)
+  _mobile TE scrolling_
+- Fixed
+  issue #[21289](http://www.xtuple.org/xtincident/view/bugs/21289)
+  _A user who only has personal privileges can not create records_
+- Fixed
+  issue #[21302](http://www.xtuple.org/xtincident/view/bugs/21302)
+  _Task assignments not working on worksheets_
+- Fixed
+  issue #[21359](http://www.xtuple.org/xtincident/view/bugs/21359)
+  _Worksheet list unacceptably slow_
+- Fixed
+  issue #[21374](http://www.xtuple.org/xtincident/view/bugs/21374)
+  _Last saved filter doesn't default_
+- Fixed
+  issue #[21375](http://www.xtuple.org/xtincident/view/bugs/21375)
+  _Default search criteria appearing on widget searches_
+- Fixed
+  issue #[21395](http://www.xtuple.org/xtincident/view/bugs/21395)
+  _Selecting worksheets sometimes opens wrong selection_
+
+
 1.4.2 (2013/08/23)
 ==================
 
@@ -265,7 +493,7 @@ Critical deployment changes
 ---------------------------
 * We have moved the test folder from the node-datasource directory.
   You will want to move by hand the two gitignored files in there:
-  demo-test.backup, and login_data.js. Then, you can rmdir the 
+  demo-test.backup, and login_data.js. Then, you can rmdir the
   `node-datasource/test` folder and all its subfolders.
 * The init_scripts and the command-line ORM installer are gone.
   You will have to use /scripts/build_app.js for your installation needs.
@@ -384,7 +612,7 @@ Features and bugfixes
 Features and bugfixes
 ----------------
 * Fix critical user login problem
-- Fixed 
+- Fixed
   issue #[20505](http://www.xtuple.org/xtincident/view/bugs/20505)
   _Remove print menus and buttons until Pentaho service available on cloud deployment._
 

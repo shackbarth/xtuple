@@ -71,6 +71,7 @@ trailing:true, white:true*/
     relevantPrivileges = [
       "ConfigureSO",
       "ConfigureCC",
+      "ProcessCreditCards",
       "MaintainCustomerMasters",
       "MaintainFreightClasses",
       "MaintainCustomerGroups",
