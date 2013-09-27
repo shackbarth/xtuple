@@ -2053,6 +2053,32 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   XV.registerModelWorkspace("XM.Shift", "XV.ShiftWorkspace");
 
   // ..........................................................
+  // SHIP VIA
+  //
+
+  enyo.kind({
+    name: "XV.ShipViaWorkspace",
+    kind: "XV.Workspace",
+    title: "_shipVia".loc(),
+    model: "XM.ShipVia",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ShipVia", "XV.ShipViaWorkspace");
+
+  // ..........................................................
   // SHIP ZONE
   //
 
