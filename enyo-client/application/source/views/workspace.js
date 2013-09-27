@@ -1085,6 +1085,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "description2"},
             {kind: "XV.ItemTypePicker", attr: "itemType", showNone: false},
             {kind: "XV.ClassCodePicker", attr: "classCode"},
+            {kind: "XV.FreightClassPicker", attr: "freightClass"},
             {kind: "XV.UnitPicker", attr: "inventoryUnit"},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
             {kind: "XV.CheckboxWidget", attr: "isPicklist"},

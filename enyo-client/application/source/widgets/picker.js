@@ -193,6 +193,17 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // FREIGHT CLASS
+  //
+
+  enyo.kind({
+    name: "XV.FreightClassPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.freightClasses",
+    nameAttribute: "code"
+  });
+
+  // ..........................................................
   // HOLD TYPE
   //
 
