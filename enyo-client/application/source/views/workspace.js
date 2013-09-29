@@ -1929,6 +1929,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems", fit: true}
         ], {owner: this});
       }
+
+      //this.$.shipViaCombobox.$.fittableColumns.createComponents([{name: "injectionPoint", content: "INJ", addBefore: null}], {owner: this});
     },
     handleHotKey: function (keyCode) {
       switch (String.fromCharCode(keyCode)) {
