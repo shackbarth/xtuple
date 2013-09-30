@@ -181,6 +181,13 @@ trailing:true, white:true, strict:false*/
         var models = this.selectedModels();
         this.issue(models, true);
       },
+      post: function () {
+        var model = this.model;
+        this.doWorkspace({
+          workspace: "XV.PostProductionWorkspace",
+          id: model.id
+        });
+      },
       returnSelected: function () {
         var models = this.selectedModels(),
           that = this,

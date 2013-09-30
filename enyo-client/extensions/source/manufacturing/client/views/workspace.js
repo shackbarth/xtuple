@@ -183,5 +183,32 @@ trailing:true, white:true, strict: false*/
       }
     });
 
+    // ..........................................................
+    // POST PRODUCTION
+    //
+
+    enyo.kind({
+      name: "XV.PostProductionWorkspace",
+      kind: "XV.Workspace",
+      title: "_shipment".loc(),
+      model: "XM.WorkOrder",
+      allowPrint: true,
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.DateWidget", attr: "dueDate"},
+              {kind: "XV.CheckboxWidget", attr: "status"}
+            ]}
+          ]}
+          //{kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
+        ]}
+      ]
+    });
+
   };
 }());

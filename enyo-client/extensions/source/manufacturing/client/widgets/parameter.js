@@ -8,7 +8,7 @@ trailing:true, white:true, strict: false*/
   XT.extensions.manufacturing.initParameters = function () {
 
     // ..........................................................
-    // ISSUE TO SHIPPING
+    // ISSUE MATERIAL
     //
 
     enyo.kind({
