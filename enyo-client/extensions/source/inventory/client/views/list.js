@@ -344,7 +344,7 @@ trailing:true, white:true, strict:false*/
       actions: [
         {name: "issueStock", prerequisite: "canIssueStock",
           method: "issueStock", notify: false, isViewMethod: true},
-        {name: "issueLine", prerequisite: "canIssueLine",
+        {name: "issueLine", prerequisite: "canIssueStock",
           method: "issueLine", notify: false, isViewMethod: true},
         {name: "returnLine", prerequisite: "canReturnStock",
           method: "doReturnStock", notify: false}
