@@ -2,12 +2,6 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true */
 
-// accommodate old string import mechanism
-if (typeof XT === 'undefined') {
-  XT = {};
-}
-// end accommodation
-
 (function () {
   "use strict";
 
@@ -18,39 +12,40 @@ if (typeof XT === 'undefined') {
     creds,
     path = require("path");
 
-  var translations = {};
-  // accommodate old string import mechanism
-  XT.stringsFor = function (language, hash) {
-    _.each(hash, function (value, key) {
-      // TODO: we should also validate that the key is not defined twice,
-      // unless both definitions are in extensions
-      if (translations[key] && translations[key] !== value) {
-        throw new Error("key " + key + " is defined with two different translations");
-      }
-
-      translations[key] = value;
-    });
-  };
-  XT.locale = {setLanguage: function () {}};
-  // end accommodation
-
-  var extensionSpecs = [
+  var fileSpecs = [
     {path: "xtuple/lib/backbone-x/source"},
     {path: "xtuple/lib/enyo-x/source"},
     {path: "xtuple/lib/tools/source"},
-    {path: "xtuple/enyo-client/application/source"},
-    {path: "xtuple/enyo-client/extensions/source", isExtension: true},
-    {repo: "xtuple-extensions", path: "xtuple-extensions/source", isExtension: true},
-    {repo: "private-extensions", path: "private-extensions/source", isExtension: true}
+    {path: "xtuple/enyo-client/application/source"}
   ];
+
+  var getRegisteredExtensions = function (callback) {
+    var sql = "select * from xt.ext;";
+
+    datasource.query(sql, creds, function (err, results) {
+      var registeredExtensions = _.map(results.rows, function (result) {
+        var extensionPath = result.ext_location === "/core-extensions" ?
+          "xtuple/enyo-client/extensions" :
+          result.ext_location.substring(0);
+
+        return {
+          path: path.join(extensionPath, "source", result.ext_name),
+          extensionId: result.ext_id
+        };
+      });
+      fileSpecs = _.union(fileSpecs, registeredExtensions);
+      callback();
+    });
+  };
+
   var getFilenames = function (spec, callback) {
     var fullPath = path.join(__dirname, "../../..", spec.path);
     var filenames;
 
-    if (spec.isExtension) {
+    if (spec.extensionId) {
       fs.readdir(fullPath, function (err, files) {
-        if (err && spec.repo) {
-          // probably the repo just isn't installed
+        if (err && spec.extensionId) {
+          // this extension probably has no translations
           callback();
           return;
         } else if (err) {
@@ -71,9 +66,10 @@ if (typeof XT === 'undefined') {
   };
 
   var getAllFilenames = function (callback) {
-    async.map(extensionSpecs, getFilenames, callback);
+    async.map(fileSpecs, getFilenames, callback);
   };
 
+  var translations = [];
   var getTranslations = function (spec, callback) {
     fs.exists(spec.filename, function (exists) {
       if (!exists) {
@@ -81,20 +77,26 @@ if (typeof XT === 'undefined') {
         callback();
         return;
       }
-      try {
-        require(spec.filename);
-      } catch (error) {
-        callback(error);
-        return;
-      }
+      var strings = require(spec.filename).strings;
+      _.each(strings, function (value, key) {
+        // TODO: we should also validate that the key is not defined twice,
+        // unless both definitions are in extensions
+        if (translations[key] && translations[key].value !== value) {
+          throw new Error("key " + key + " is defined with two different translations");
+        }
+
+        translations[key] = {value: value, extension: spec.extensionId};
+        console.log(translations[key]);
+      });
+
       callback(null, "Imported translations from " + spec.filename);
     });
   };
   var getAllTranslations = function (callback) {
-    var filesToTranslate = _.flatten(_.map(extensionSpecs, function (spec) {
+    var filesToTranslate = _.flatten(_.map(fileSpecs, function (spec) {
       return _.map(spec.filenames, function (filename) {
         return {
-          isExtension: spec.isExtension,
+          extensionId: spec.extensionId || null,
           filename: filename
         };
       });
@@ -154,12 +156,12 @@ if (typeof XT === 'undefined') {
 
       var callbacksExpected = 0;
       var callbacksReceived = 0;
-      _.each(translations, function (value, key) {
+      _.each(translations, function (translation, key) {
         var sql,
           options,
           dbTranslation = dataKeys[key];
 
-        if (dbTranslation && dbTranslation === value) {
+        if (dbTranslation && dbTranslation === translation.value) {
           // We already have this one. Do nothing.
 
         } else if (dbTranslation) {
@@ -169,14 +171,15 @@ if (typeof XT === 'undefined') {
         } else {
           // this is a new translation
           sql = "insert into dictentry " +
-            "(dictentry_dict_id, dictentry_key, dictentry_translation) " +
-            " values ($1, $2, $3);";
+            "(dictentry_dict_id, dictentry_key, dictentry_translation, dictentry_ext_id) " +
+            " values ($1, $2, $3, $4);";
 
           options = JSON.parse(JSON.stringify(creds));
           options.parameters = [
             englishDictionaryId,
             key,
-            value
+            translation.value,
+            translation.extension
           ];
           callbacksExpected++;
 
@@ -202,6 +205,7 @@ if (typeof XT === 'undefined') {
   var buildDictionary = exports.buildDictionary = function (_creds) {
     creds = _creds;
     async.series([
+      getRegisteredExtensions,
       getAllFilenames,
       getAllTranslations,
       getEnglishDictionary,
