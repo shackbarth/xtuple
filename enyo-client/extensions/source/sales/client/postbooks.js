@@ -21,6 +21,7 @@ trailing:true, white:true*/
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
       {name: "saleTypeList", kind: "XV.SaleTypeList"},
+      {name: "shipViaList", kind: "XV.ShipViaList"},
       {name: "shipZoneList", kind: "XV.ShipZoneList"},
       {name: "salesRepList", kind: "XV.SalesRepList"},
       {name: "taxAssignmentList", kind: "XV.TaxAssignmentList"},
@@ -71,6 +72,7 @@ trailing:true, white:true*/
     relevantPrivileges = [
       "ConfigureSO",
       "ConfigureCC",
+      "ProcessCreditCards",
       "MaintainCustomerMasters",
       "MaintainFreightClasses",
       "MaintainCustomerGroups",
