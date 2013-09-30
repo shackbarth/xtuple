@@ -34,7 +34,7 @@ if (typeof XT === 'undefined') {
   XT.locale = {setLanguage: function () {}};
   // end accommodation
 
-  var extensionDirs = [
+  var extensionSpecs = [
     {path: "xtuple/lib/backbone-x/source"},
     {path: "xtuple/lib/enyo-x/source"},
     {path: "xtuple/lib/tools/source"},
@@ -57,46 +57,50 @@ if (typeof XT === 'undefined') {
           callback(new Error("Cannot access path " + fullPath));
           return;
         }
-        callback(null, _.map(files, function (file) {
+
+        spec.filenames = _.map(files, function (file) {
           return path.join(fullPath, file, "client/en/strings.js");
-        }));
+        });
+        callback();
 
       });
     } else {
-      callback(null, [path.join(fullPath, "en/strings.js")]);
+      spec.filenames = [path.join(fullPath, "en/strings.js")];
+      callback();
     }
   };
 
-  var filenames;
   var getAllFilenames = function (callback) {
-    async.map(extensionDirs, getFilenames, function (err, results) {
-      if (err) {
-        callback(err);
-        return;
-      }
-      filenames = _.flatten(results);
-      callback();
-    });
+    async.map(extensionSpecs, getFilenames, callback);
   };
 
-  var getTranslations = function (filename, callback) {
-    fs.exists(filename, function (exists) {
+  var getTranslations = function (spec, callback) {
+    fs.exists(spec.filename, function (exists) {
       if (!exists) {
         // No problem. The file must not be defined.
         callback();
         return;
       }
       try {
-        require(filename);
+        require(spec.filename);
       } catch (error) {
         callback(error);
         return;
       }
-      callback(null, "Imported translations from " + filename);
+      callback(null, "Imported translations from " + spec.filename);
     });
   };
   var getAllTranslations = function (callback) {
-    async.map(filenames, getTranslations, function (err, results) {
+    var filesToTranslate = _.flatten(_.map(extensionSpecs, function (spec) {
+      return _.map(spec.filenames, function (filename) {
+        return {
+          isExtension: spec.isExtension,
+          filename: filename
+        };
+      });
+    }));
+
+    async.map(filesToTranslate, getTranslations, function (err, results) {
       if (err) {
         callback(err);
         return;
