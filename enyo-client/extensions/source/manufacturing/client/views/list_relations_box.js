@@ -16,7 +16,7 @@ trailing:true, white:true*/
       kind: "XV.ListRelationsBox",
       title: "_detail".loc(),
       parentKey: "itemSite",
-      listRelations: "XV.IssueMaterialListRelations",
+      listRelations: "XV.IssueMaterialDetailListRelations",
       canOpen: false,
       events: {
         onDetailSelectionChanged: ""

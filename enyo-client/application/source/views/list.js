@@ -2319,11 +2319,8 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ListColumn", classes: "last", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "itemSite.item.inventoryUnit"},
-              {kind: "XV.ListAttr", attr: "qtyOrdered"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "itemSite.item.inventoryUnit"},
+              {kind: "XV.ListAttr", attr: "itemSite.item.inventoryUnit.name"},
+              {kind: "XV.ListAttr", attr: "qtyOrdered"},
               {kind: "XV.ListAttr", attr: "qtyReceived"}
             ]}
           ]}

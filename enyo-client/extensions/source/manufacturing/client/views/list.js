@@ -135,7 +135,9 @@ trailing:true, white:true, strict:false*/
       },*/
     });
 
-    XV.registerModelList("XM.WorkOrderRelation", "XV.IssueMaterialList");
+    //XV.registerModelList("XM.WorkOrderRelation", "XV.IssueMaterialList");
+    //XV.registerModelList("XM.ItemSiteInventory", "XV.IssueMaterialList");
+    //XV.registerModelList("XM.ItemSiteDetail", "XV.IssueMaterialList");
 
   };
 }());

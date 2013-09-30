@@ -32,11 +32,11 @@ trailing:true, white:true, strict:false*/
         {name: "returnSelected", label: "_returnSelected".loc(),
           prerequisite: "canReturnSelected" },
       ],
-      handlers: {
-        onShipmentChanged: "shipmentChanged"
-      },
+      //handlers: {
+      //  onShipmentChanged: "shipmentChanged"
+      //},
       canReturnSelected: function () {
-        var canDo = _canDo.call(this, "ReturnMaterial"),
+        var canDo = _canDo.call(this, "ReturnWoMaterials"),
           models = this.selectedModels(),
           check;
         if (canDo) {
@@ -48,7 +48,7 @@ trailing:true, white:true, strict:false*/
         return !_.isEmpty(check);
       },
       canIssueSelected: function () {
-        var canDo = _canDo.call(this, "IssueMaterial"),
+        var canDo = _canDo.call(this, "IssueWoMaterials"),
           models = this.selectedModels(),
           check;
         if (canDo) {
@@ -60,7 +60,7 @@ trailing:true, white:true, strict:false*/
         return !_.isEmpty(check);
       },
       canIssueMaterial: function () {
-        var canDo = _canDo.call(this, "IssueMaterial"),
+        var canDo = _canDo.call(this, "IssueWoMaterials"),
           hasOpenLines = this.$.list.value.length;
         return canDo && hasOpenLines;
       },
@@ -186,16 +186,16 @@ trailing:true, white:true, strict:false*/
           that = this,
           data =  [],
           options = {},
-          atShipping,
+          qtyIssued,
           model,
           i;
 
         for (i = 0; i < models.length; i++) {
           model = models[i];
-          atShipping = model.get("atShipping");
+          qtyIssued = model.get("qtyIssued");
 
           // See if there's anything to issue here
-          if (atShipping) {
+          if (qtyIssued) {
             data.push(model.id);
           }
         }
@@ -206,7 +206,7 @@ trailing:true, white:true, strict:false*/
             that.requery();
             that.spinnerHide();
           };
-          XM.Inventory.returnFromShipping(data, options);
+          XM.Manufacturing.returnMaterial(data, options);
         }
       }/*,
       shipmentChanged: function (inSender, inEvent) {

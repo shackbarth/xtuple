@@ -92,6 +92,8 @@ var lang = XT.stringsFor("en_US", {
   "_processing": "Processing",
   "_purchaseOrder": "Purchase Order",
   "_purchaseOrders": "Purchase Orders",
+  "_qtyRequired": "Required",
+  "_qtyIssued": "Issued",
   "_rack": "Rack",
   "_recallShipment": "Recall Shipment",
   "_recallShipment?": "Are you sure you want to recall this shipment?",

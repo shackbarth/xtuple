@@ -89,7 +89,7 @@ white:true*/
       },
 
       /**
-        Overload: Calls `issueToShipping` dispatch function.
+        Overload: Calls `issueMaterial` dispatch function.
 
         @returns {Object} Receiver
         */

@@ -70,7 +70,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
           ]},
-          {kind: "XV.IssueToShippingDetailRelationsBox",
+          {kind: "XV.IssueMaterialDetailRelationsBox",
             attr: "itemSite.detail", name: "detail"}
         ]},
         {kind: "onyx.Popup", name: "distributePopup", centered: true,
