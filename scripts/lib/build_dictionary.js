@@ -13,7 +13,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     path = require("path");
 
   var fileSpecs = [
-    {path: "xtuple/lib/backbone-x/source"},
     {path: "xtuple/lib/enyo-x/source"},
     {path: "xtuple/lib/tools/source"},
     {path: "xtuple/enyo-client/application/source"}
@@ -86,7 +85,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
 
         translations[key] = {value: value, extension: spec.extensionId};
-        console.log(translations[key]);
       });
 
       callback(null, "Imported translations from " + spec.filename);
