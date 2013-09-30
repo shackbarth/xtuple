@@ -73,7 +73,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
           " where locitemsite_itemsite_id = $2);",
           qry = plv8.execute(locSql, [uuid, info.itemsite_id]);
         if (!qry.length) {
-          throw new handleError("Location " + uuid + " is not valid."); }
+          throw new handleError("Location " + uuid + " is not valid."); 
+        }
         return qry[0].location_id;
       };
 
