@@ -38,37 +38,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   var getFilenames = function (spec, callback) {
-    var fullPath = path.join(__dirname, "../../..", spec.path);
-    var filenames;
+    var basePath = path.join(__dirname, "../../..", spec.path),
+      stringsPath = spec.extensionId ? "client/en/strings.js" : "en/strings.js",
+      fullPath = path.join(basePath, stringsPath);
 
-    if (spec.extensionId) {
-      fs.readdir(fullPath, function (err, files) {
-        if (err && spec.extensionId) {
-          // this extension probably has no translations
-          callback();
-          return;
-        } else if (err) {
-          callback(new Error("Cannot access path " + fullPath));
-          return;
-        }
-
-        spec.filenames = _.map(files, function (file) {
-          return path.join(fullPath, file, "client/en/strings.js");
-        });
-        callback();
-
-      });
-    } else {
-      spec.filenames = [path.join(fullPath, "en/strings.js")];
-      callback();
-    }
+    spec.filename = fullPath;
+    callback();
   };
 
   var getAllFilenames = function (callback) {
     async.map(fileSpecs, getFilenames, callback);
   };
 
-  var translations = [];
+  var translations = {};
   var getTranslations = function (spec, callback) {
     fs.exists(spec.filename, function (exists) {
       if (!exists) {
@@ -91,16 +73,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
   var getAllTranslations = function (callback) {
-    var filesToTranslate = _.flatten(_.map(fileSpecs, function (spec) {
-      return _.map(spec.filenames, function (filename) {
-        return {
-          extensionId: spec.extensionId || null,
-          filename: filename
-        };
-      });
-    }));
+    console.log(fileSpecs);
 
-    async.map(filesToTranslate, getTranslations, function (err, results) {
+    async.map(fileSpecs, getTranslations, function (err, results) {
       if (err) {
         callback(err);
         return;
@@ -193,7 +168,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           });
         }
       });
-      console.log(callbacksExpected);
       if (callbacksExpected === 0) {
         callback();
       }
