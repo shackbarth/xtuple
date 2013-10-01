@@ -42,7 +42,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     recover = require('./recover'),
     restDiscovery = require('./restDiscovery'),
     restRouter = require('./restRouter'),
-    strings = require('./strings'),
     vcfExport = require('./vcfExport');
 
   //
@@ -95,7 +94,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.report = [ensureLogin, report.report];
   exports.analysis = [ensureLogin, analysis.analysis];
   exports.resetPassword = [ensureLogin, changePassword.resetPassword];
-  exports.strings = [ensureLogin, strings.strings];
   exports.vcfExport = [ensureLogin, vcfExport.vcfExport];
 
 }());

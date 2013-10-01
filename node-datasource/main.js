@@ -375,7 +375,6 @@ app.all('/:org/export', routes.exxport);
 app.get('/:org/file', routes.file);
 app.get('/:org/report', routes.report);
 app.get('/:org/reset-password', routes.resetPassword);
-app.get('/:org/client/build/strings', routes.app);
 app.all('/:org/vcfExport', routes.vcfExport);
 
 

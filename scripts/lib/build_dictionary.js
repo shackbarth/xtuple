@@ -9,31 +9,32 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     fs = require("fs"),
     path = require("path"),
     createQuery = function (strings, context) {
-      return "select xt.set_dictionary_strings($$%@$$, '%@');".f(JSON.stringify(strings), context || "_null_");
+      return "select xt.set_dictionary($$%@$$, '%@');".f(JSON.stringify(strings), context || "_null_");
     };
 
   exports.getDictionarySql = function (extension, callback) {
     var isLibOrm = extension.indexOf("lib/orm") >= 0,
       isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
         extension.indexOf("extension") < 0,
-      dictionaryHash,
+      clientHash,
+      databaseHash,
       filename;
 
     if (isLibOrm) {
-      // arbitrary convention: the builder for lib/orm will
-      // smash the tools, enyo-x, and app core strings together
-      dictionaryHash = _.extend(
-        require(path.join(extension, "../enyo-x/source/en/strings.js")).strings,
-        require(path.join(extension, "../tools/source/en/strings.js")).strings,
-        require(path.join(extension, "../../enyo-client/application/source/en/strings.js")).strings
-      );
-      callback(null, createQuery(dictionaryHash));
+      // don't do anything with strings in lib/orm, because the dictionary table
+      // might not exist yet.
+      callback(null, "");
 
     } else if (isApplicationCore) {
-      // arbitrary convention: the builder for enyo-client
-      // will take care of the database strings
-      dictionaryHash = require(path.join(extension, "database/source/en/strings.js")).strings;
-      callback(null, createQuery(dictionaryHash, "_database_"));
+      // smash the tools, enyo-x, and app core strings together into one query
+      // put the database strings into another query
+      clientHash = _.extend(
+        require(path.join(extension, "../lib/enyo-x/source/en/strings.js")).strings,
+        require(path.join(extension, "../lib/tools/source/en/strings.js")).strings,
+        require(path.join(extension, "application/source/en/strings.js")).strings
+      );
+      databaseHash = require(path.join(extension, "database/source/en/strings.js")).strings;
+      callback(null, createQuery(clientHash) + createQuery(databaseHash, "_database_"));
 
     } else {
       // return the extension strings if they exist
