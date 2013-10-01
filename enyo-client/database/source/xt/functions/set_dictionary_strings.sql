@@ -24,12 +24,12 @@ create or replace function xt.set_dictionary_strings(strings text, context text)
       " values ($1, $2, $3, $4, $5);";
     englishRow = plv8.execute(sqlEnglish);
 
+  /* determine the extension Id, or null if it's core */
   if (context !== '_database_' && context !== '_null_') {
-    plv8.elog(NOTICE, "context is", context);
-    plv8.elog(NOTICE, "sql is", sqlExtension);
     extensionId = plv8.execute(sqlExtension, [context])[0].ext_id;
   }
 
+  /* determine the ID of the english language dictionary */
   if(englishRow.length > 0) {
     englishId = englishRow[0].dict_id;
   } else {
@@ -37,13 +37,16 @@ create or replace function xt.set_dictionary_strings(strings text, context text)
     englishRow = plv8.execute(sqlEnglish);
     englishId = englishRow[0].dict_id;
   }
-  dbStrings = plv8.execute(sqlSelect, [ englishId ]);
 
+  /* Get the translations that are currently in the dictionary */
+  dbStrings = plv8.execute(sqlSelect, [ englishId ]);
+  /* Turn those translations into an object */
   var dataKeys = {};
   for (i = 0; i < dbStrings.length; i++) {
     dataKeys[dbStrings[i].dictentry_key] = dbStrings[i].dictentry_translation;
   }
 
+  /* for each input, see if it's already in the dictionary, and act appropriately */
   for (key in inputStrings) {
     if(inputStrings.hasOwnProperty(key)) {
       value = inputStrings[key];

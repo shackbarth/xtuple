@@ -20,7 +20,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   var getDictionarySql = exports.getDictionarySql = function (extension, callback) {
-    console.log("get dictionary sql", extension);
     var isLibOrm = extension.indexOf("lib/orm") >= 0,
       isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
         extension.indexOf("extension") < 0,
@@ -31,7 +30,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       extensionName;
 
     if (isLibOrm) {
-      dictionaryHash = _.union(
+      dictionaryHash = _.extend(
         require(path.join(extension, "../enyo-x/source/en/strings.js")).strings,
         require(path.join(extension, "../tools/source/en/strings.js")).strings
       );
@@ -48,7 +47,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       fs.exists(filename, function (exists) {
         if (exists) {
           extensionName = path.basename(extension).replace("/", "");
-          console.log("ext name is", extensionName);
           callback(null, createQuery(require(filename).strings, extensionName));
         } else {
           // no problem. Maybe there is just no strings file

@@ -391,7 +391,6 @@ var _ = require('underscore'),
             getClientSql(extension, callback);
           }
         ], function (err, results) {
-          console.log(extension, "results length", results);
           masterCallback(err, _.reduce(results, function (memo, sql) {
             return memo + sql;
           }, ""));
