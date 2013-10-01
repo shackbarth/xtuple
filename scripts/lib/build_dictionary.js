@@ -12,45 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     creds,
     path = require("path");
 
-  var fileSpecs = [
-    {path: "xtuple/lib/enyo-x/source"},
-    {path: "xtuple/lib/tools/source"},
-    {path: "xtuple/enyo-client/application/source"},
-    {path: "xtuple/enyo-client/database/source", isDatabase: true}
-  ];
-
-  var getRegisteredExtensions = function (callback) {
-    var sql = "select * from xt.ext;";
-
-    datasource.query(sql, creds, function (err, results) {
-      var registeredExtensions = _.map(results.rows, function (result) {
-        var extensionPath = result.ext_location === "/core-extensions" ?
-          "xtuple/enyo-client/extensions" :
-          result.ext_location.substring(0);
-
-        return {
-          path: path.join(extensionPath, "source", result.ext_name),
-          extensionId: result.ext_id
-        };
-      });
-      fileSpecs = _.union(fileSpecs, registeredExtensions);
-      callback();
-    });
-  };
-
-  var getFilenames = function (spec, callback) {
-    var basePath = path.join(__dirname, "../../..", spec.path),
-      stringsPath = spec.extensionId ? "client/en/strings.js" : "en/strings.js",
-      fullPath = path.join(basePath, stringsPath);
-
-    spec.filename = fullPath;
-    callback();
-  };
-
-  var getAllFilenames = function (callback) {
-    async.map(fileSpecs, getFilenames, callback);
-  };
-
+  var fileSpecs;
   var translations = {};
   var getTranslations = function (spec, callback) {
     fs.exists(spec.filename, function (exists) {
@@ -61,9 +23,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       var strings = require(spec.filename).strings;
       _.each(strings, function (value, key) {
-        // TODO: we should also validate that the key is not defined twice,
-        // unless both definitions are in extensions
         if (translations[key] && translations[key].value !== value) {
+          // XXX this doesn't do much good because we process each extension at a time
           throw new Error("key " + key + " is defined with two different translations");
         }
 
@@ -86,38 +47,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  var englishDictionaryId;
-  var getEnglishDictionary = function (callback) {
-    var sql = "select dict_id from xt.dict where dict_language_name = 'en_US';",
-      createSql = "insert into xt.dict (dict_language_name) values ('en_US')";
-
-    datasource.query(sql, creds, function (err, results) {
-      if (err) {
-        callback(err);
-        return;
-      }
-      if (results.rowCount === 0) {
-        // need to create the dictionary
-        datasource.query(createSql, creds, function (err, results) {
-          datasource.query(sql, creds, function (err, results) {
-            if (err) {
-              callback(err);
-              return;
-            }
-            englishDictionaryId = results.rows[0].dict_id;
-            callback();
-          });
-        });
-      } else {
-        englishDictionaryId = results.rows[0].dict_id;
-        callback();
-      }
-    });
-  };
-
   var getEnglishDictionaryData = function (callback) {
     // TODO: real SQL
-    datasource.query("select * from xt.dictentry where dictentry_dict_id = " + englishDictionaryId + ";",
+    datasource.query("select * from xt.dictentry where dictentry_dict_id = ;",
         creds, function (err, results) {
       if (err) {
         callback(err);
@@ -150,7 +82,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
           options = JSON.parse(JSON.stringify(creds));
           options.parameters = [
-            englishDictionaryId,
+            //englishDictionaryId,
             key,
             translation.value,
             translation.extension,
@@ -176,23 +108,44 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  var buildDictionary = exports.buildDictionary = function (_creds) {
-    creds = _creds;
-    async.series([
-      getRegisteredExtensions,
-      getAllFilenames,
-      getAllTranslations,
-      getEnglishDictionary,
-      getEnglishDictionaryData
-    ], function (err, results) {
-      if (err) {
-        console.log("error:", err);
-        return;
-      }
-      console.log("success", results);
-    });
+  var createQuery = function (strings, context) {
+    return "select xt.set_dictionary_strings($$%@$$, '%@');".f(JSON.stringify(strings), context || "_null_");
   };
 
+  var getDictionarySql = exports.getDictionarySql = function (extension, callback) {
+    var isLibOrm = extension.indexOf("lib/orm") >= 0,
+      isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
+        extension.indexOf("extension") < 0,
+      clientHash,
+      databaseHash,
+      dictionaryHash;
+
+    if (isLibOrm) {
+      dictionaryHash = _.union(
+        require(path.join(extension, "../enyo-x/source/en/strings.js")).strings,
+        require(path.join(extension, "../tools/source/en/strings.js")).strings
+      );
+      callback(null, createQuery(dictionaryHash));
+    } else if (isApplicationCore) {
+      clientHash = require(path.join(extension, "source/en/strings.js")).strings;
+      databaseHash = require(path.join(extension, "../database/source/en/strings.js")).strings;
+
+      callback(null, createQuery(clientHash) + createQuery(databaseHash, "_database_"));
+
+    } else {
+      var filename = path.join(extension, "client/source/en/strings.js");
+      fs.exists(filename, function (exists) {
+        var extensionName = path.basename(extension);
+        callback(null, createQuery(require(filename).strings, path.basename(extension)));
+      });
+    }
+  };
+
+  getDictionarySql("/home/shackbarth/git/xtuple/lib/orm", function (err, results) {
+    console.log(err, results);
+  });
+
+/*
   var localSpecs = {
     hostname: "localhost",
     port: 5432,
@@ -201,5 +154,5 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     database: "dev"
   };
   buildDictionary(localSpecs);
-
+*/
 }());

@@ -44,7 +44,6 @@ var _ = require('underscore'),
           credsClone = JSON.parse(JSON.stringify(creds)),
           existsSql = "select relname from pg_class where relname = 'ext'",
           extSql = "SELECT * FROM xt.ext ORDER BY ext_load_order",
-          // TODO: we could get these extensions dynamically by looking at the filesystem.
           defaultExtensions = [
             { ext_location: '/core-extensions', ext_name: 'crm' },
             { ext_location: '/core-extensions', ext_name: 'inventory' },
@@ -172,7 +171,6 @@ var _ = require('underscore'),
       buildSpecs.clientOnly = options.clientOnly;
       buildSpecs.databaseOnly = options.databaseOnly;
       buildSpecs.queryDirect = options.queryDirect;
-      // TODO: as above, the extensions could be found dynamically
       buildSpecs.extensions = [
         path.join(__dirname, '../../lib/orm'),
         path.join(__dirname, '../../enyo-client'),

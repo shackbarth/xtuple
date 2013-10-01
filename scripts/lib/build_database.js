@@ -9,6 +9,7 @@ var _ = require('underscore'),
   exec = require('child_process').exec,
   fs = require('fs'),
   ormInstaller = require('./orm'),
+  dictionaryBuilder = require('./build_dictionary'),
   clientBuilder = require('./build_client'),
   path = require('path'),
   pg = require('pg'),
@@ -374,27 +375,25 @@ var _ = require('underscore'),
         dictates that *all* source for all extensions should be run before *any*
         orm queries for any extensions, but that is not the way it works here.
        */
-      // TODO: async.series would work nicely here
-      var getAllSql = function (extension, callback) {
-        getExtensionSql(extension, function (err, sql) {
-          if (err) {
-            callback(err);
-            return;
+      var getAllSql = function (extension, masterCallback) {
+
+        async.series([
+          function (callback) {
+            getExtensionSql(extension, callback);
+          },
+          function (callback) {
+            dictionaryBuilder.getDictionarySql(extension, callback);
+          },
+          function (callback) {
+            getOrmSql(extension, callback);
+          },
+          function (callback) {
+            getClientSql(extension, callback);
           }
-          getOrmSql(extension, function (err, ormSql) {
-            if (err) {
-              callback(err);
-              return;
-            }
-            getClientSql(extension, function (err, clientSql) {
-              clientSql = jsInit + clientSql;
-              if (err) {
-                callback(err);
-                return;
-              }
-              callback(null, sql + ormSql + clientSql);
-            });
-          });
+        ], function (err, results) {
+          masterCallback(err, _.reduce(results, function (memo, sql) {
+            return memo + sql;
+          }, ""));
         });
       };
 
