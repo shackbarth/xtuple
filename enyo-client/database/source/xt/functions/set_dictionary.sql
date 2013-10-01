@@ -1,6 +1,6 @@
 drop function if exists xt.set_dictionary_strings(text, text);
 
-create or replace function xt.set_dictionary_strings(strings text, context text) 
+create or replace function xt.set_dictionary(strings text, context text) 
     returns boolean volatile as $$
 
   var sqlEnglish = "select dict_id from xt.dict where dict_language_name = 'en_US';",

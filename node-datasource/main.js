@@ -365,17 +365,18 @@ app.get('/logout', routes.logout);
 app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
 
+app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
 app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
-app.all('/:org/vcfExport', routes.vcfExport);
 app.get('/:org/file', routes.file);
 app.get('/:org/report', routes.report);
-app.get('/:org/analysis', routes.analysis);
 app.get('/:org/reset-password', routes.resetPassword);
+app.get('/:org/client/build/strings', routes.app);
+app.all('/:org/vcfExport', routes.vcfExport);
 
 
 //

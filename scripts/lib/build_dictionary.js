@@ -16,34 +16,32 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var isLibOrm = extension.indexOf("lib/orm") >= 0,
       isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
         extension.indexOf("extension") < 0,
-      clientHash,
-      databaseHash,
       dictionaryHash,
-      filename,
-      extensionName;
+      filename;
 
     if (isLibOrm) {
-      // smash the tools and enyo-x strings together
+      // arbitrary convention: the builder for lib/orm will
+      // smash the tools, enyo-x, and app core strings together
       dictionaryHash = _.extend(
         require(path.join(extension, "../enyo-x/source/en/strings.js")).strings,
-        require(path.join(extension, "../tools/source/en/strings.js")).strings
+        require(path.join(extension, "../tools/source/en/strings.js")).strings,
+        require(path.join(extension, "../../enyo-client/application/source/en/strings.js")).strings
       );
       callback(null, createQuery(dictionaryHash));
 
     } else if (isApplicationCore) {
-      // return the client hash in a different sql function as the db hash, because
-      // the db hash needs isDatabase set to true
-      clientHash = require(path.join(extension, "application/source/en/strings.js")).strings;
-      databaseHash = require(path.join(extension, "database/source/en/strings.js")).strings;
-      callback(null, createQuery(clientHash) + createQuery(databaseHash, "_database_"));
+      // arbitrary convention: the builder for enyo-client
+      // will take care of the database strings
+      dictionaryHash = require(path.join(extension, "database/source/en/strings.js")).strings;
+      callback(null, createQuery(dictionaryHash, "_database_"));
 
     } else {
       // return the extension strings if they exist
       filename = path.join(extension, "client/en/strings.js");
       fs.exists(filename, function (exists) {
         if (exists) {
-          extensionName = path.basename(extension).replace("/", "");
-          callback(null, createQuery(require(filename).strings, extensionName));
+          callback(null, createQuery(require(filename).strings,
+            path.basename(extension).replace("/", "")));
         } else {
           // no problem. Maybe there is just no strings file
           callback(null, '');
