@@ -10,7 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     allowMultipleInstances: true,
     client: {
       freeDemo: false,
-      rjson: true
+      encoding: "rjson"
     },
     datasource: {
       debugging: false,
