@@ -6,5 +6,6 @@ select xt.add_column('dictentry','dictentry_key', 'text');
 select xt.add_column('dictentry','dictentry_usr_username', 'text');
 select xt.add_column('dictentry','dictentry_date', 'date');
 select xt.add_column('dictentry','dictentry_translation', 'text');
+select xt.add_column('dictentry','dictentry_is_database', 'boolean');
 
 comment on table xt.dictentry is 'Dictionary entry for linguist';

@@ -15,7 +15,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var fileSpecs = [
     {path: "xtuple/lib/enyo-x/source"},
     {path: "xtuple/lib/tools/source"},
-    {path: "xtuple/enyo-client/application/source"}
+    {path: "xtuple/enyo-client/application/source"},
+    {path: "xtuple/enyo-client/database/source", isDatabase: true}
   ];
 
   var getRegisteredExtensions = function (callback) {
@@ -66,7 +67,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           throw new Error("key " + key + " is defined with two different translations");
         }
 
-        translations[key] = {value: value, extension: spec.extensionId};
+        translations[key] = {value: value, extension: spec.extensionId, isDatabase: spec.isDatabase || false};
       });
 
       callback(null, "Imported translations from " + spec.filename);
@@ -144,15 +145,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         } else {
           // this is a new translation
           sql = "insert into dictentry " +
-            "(dictentry_dict_id, dictentry_key, dictentry_translation, dictentry_ext_id) " +
-            " values ($1, $2, $3, $4);";
+            "(dictentry_dict_id, dictentry_key, dictentry_translation, dictentry_ext_id, dictentry_is_database) " +
+            " values ($1, $2, $3, $4, $5);";
 
           options = JSON.parse(JSON.stringify(creds));
           options.parameters = [
             englishDictionaryId,
             key,
             translation.value,
-            translation.extension
+            translation.extension,
+            translation.isDatabase
           ];
           callbacksExpected++;
 
