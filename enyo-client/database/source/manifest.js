@@ -76,6 +76,7 @@
     "xt/functions/quote_margin.sql",
     "xt/functions/register_extension.sql",
     "xt/functions/register_extension_dependency.sql",
+    "xt/functions/set_dictionary_strings.sql",
     "xt/functions/trylock.sql",
     "xt/functions/undomerge.sql",
     "xt/tables/dict.sql",
