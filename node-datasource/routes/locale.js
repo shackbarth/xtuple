@@ -10,15 +10,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   exports.locale = function (req, res) {
     var sql = 'select xt.post($${"nameSpace":"XT","type":"Session",' +
-     '"dispatch":{"functionName":"locale","parameters":null},"username":"%@"}$$)'
-     .f(req.session.passport.user.username);
+       '"dispatch":{"functionName":"locale","parameters":null},"username":"%@"}$$)'
+       .f(req.session.passport.user.username),
+      org = req.session.passport.user.organization,
+      queryOptions = XT.dataSource.getAdminCredentials(org),
+      dataObj;
 
-    var org = req.session.passport.user.organization;
-    var queryOptions = XT.dataSource.getAdminCredentials(org);
     XT.dataSource.query(sql, queryOptions, function (err, results) {
       var data = results.rows[0].post;
-      res.send("var locale = " + data);
+      if (req.query.debug) {
+        // let them get their strings from the client if in debug mode
+        dataObj = JSON.parse(data);
+        dataObj.strings = [];
+        data = JSON.stringify(dataObj);
+      }
+      res.send("XT = typeof XT !== 'undefined' ? XT : {};\nXT.locale = " + data);
     });
-
   };
 }());

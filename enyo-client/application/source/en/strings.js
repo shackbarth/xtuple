@@ -1,6 +1,7 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 strict:true, trailing:true, white:true */
+/*global XT:true */
 
 // Place strings you want to localize here.  In your app, use the key and
 // localize it using "key string".loc().  HINT: For your key names, use the
@@ -11,7 +12,7 @@ strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  exports.strings = {
+  var lang = XT.stringsFor("en_US", {
 
     // ********
     // Models
@@ -836,5 +837,9 @@ strict:true, trailing:true, white:true */
     "_updateFractional": "The quantity ordered and unit of measure selected will result in a fractional inventory qty for this item. This item does not allow fractional quantities; the quantity will be updated accordingly.",
     "_updatePrice?": "You have changed the price basis, do you want to update the Price?",
     "_whatToDo": "What would you like to do?"
-  };
+  });
+
+  if (typeof exports !== 'undefined') {
+    exports.language = lang;
+  }
 }());

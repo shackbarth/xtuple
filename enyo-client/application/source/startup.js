@@ -32,16 +32,6 @@ white:true*/
   });
 
   XT.StartupTask.create({
-    taskName: "loadSessionLocale",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XT.session.loadSessionObjects(XT.session.LOCALE, options);
-    }
-  });
-
-  XT.StartupTask.create({
     taskName: "loadSessionPreferences",
     task: function () {
       var options = {

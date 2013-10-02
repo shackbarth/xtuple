@@ -1,6 +1,7 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 strict:true, trailing:true, white:true */
+/*global XT:true */
 
 // Place strings you want to localize here.  In your app, use the key and
 // localize it using "key string".loc().  HINT: For your key names, use the
@@ -11,7 +12,7 @@ strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  exports.strings = {
+  var lang = XT.stringsFor("en_US", {
     "_xtdb_attachQuoteToOpportunity1": "The selected Quote cannot be attached because the Quote cannot be found.",
     "_xtdb_attachQuoteToOpportunity2": "The selected Quote cannot be attached because the Opportunity cannot be found.",
     "_xtdb_attachQuoteToOpportunity3": "The selected Quote cannot be attached because it is already associated with an Opportunity. You must detach this Quote before you may attach it.",
@@ -409,5 +410,9 @@ strict:true, trailing:true, white:true */
     "_xtdb_woClockIn10": "Work Order %1 has at least one Item in its Bill of Materials with the Push issue method that has not yet been issued. You must issue all Push Items to this Work Order.",
     "_xtdb_woClockIn11": "Work Order %1 has at least one Item in its Bill of Materials with the Push issue method that does not have the required quantity issued. You must issue all Push Items to this Work Order.",
     "_xtdb_woClockIn12": "Work Order %1 is closed.",
-  };
+  });
+
+  if (typeof exports !== 'undefined') {
+    exports.language = lang;
+  }
 }());

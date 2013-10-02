@@ -8,6 +8,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var _ = require("underscore"),
     fs = require("fs"),
     path = require("path"),
+    locale = require("../../lib/tools/source/locale"),
     createQuery = function (strings, context) {
       return "select xt.set_dictionary($$%@$$, '%@');".f(JSON.stringify(strings), context || "_null_");
     };
@@ -21,19 +22,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       filename;
 
     if (isLibOrm) {
-      // don't do anything with strings in lib/orm, because the dictionary table
-      // might not exist yet.
-      callback(null, "");
+      // smash the tools and enyo-x strings together into one query
+      clientHash = _.extend(
+        require(path.join(extension, "../enyo-x/source/en/strings.js")).language.strings,
+        require(path.join(extension, "../tools/source/en/strings.js")).language.strings
+      );
+      callback(null, createQuery(clientHash));
 
     } else if (isApplicationCore) {
-      // smash the tools, enyo-x, and app core strings together into one query
+      // put the client strings into one query
       // put the database strings into another query
-      clientHash = _.extend(
-        require(path.join(extension, "../lib/enyo-x/source/en/strings.js")).strings,
-        require(path.join(extension, "../lib/tools/source/en/strings.js")).strings,
-        require(path.join(extension, "application/source/en/strings.js")).strings
-      );
-      databaseHash = require(path.join(extension, "database/source/en/strings.js")).strings;
+      clientHash = require(path.join(extension, "application/source/en/strings.js")).language.strings;
+      databaseHash = require(path.join(extension, "database/source/en/strings.js"));
       callback(null, createQuery(clientHash) + createQuery(databaseHash, "_database_"));
 
     } else {
@@ -41,7 +41,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       filename = path.join(extension, "client/en/strings.js");
       fs.exists(filename, function (exists) {
         if (exists) {
-          callback(null, createQuery(require(filename).strings,
+          callback(null, createQuery(require(filename).language.strings,
             path.basename(extension).replace("/", "")));
         } else {
           // no problem. Maybe there is just no strings file
