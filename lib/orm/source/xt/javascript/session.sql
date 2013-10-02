@@ -43,7 +43,7 @@ select xt.install_js('XT','Session','xtuple', $$
       /* no result. The user probably does not exist */
       throw "No result for locale. Username probably does not exist in the instance database";
     } else if (rec.language && rec.country) {
-      culture = rec.language + '-' + rec.country;
+      culture = rec.language + '_' + rec.country;
     } else if (rec.language) {
       culture = rec.language;
     }
@@ -53,10 +53,10 @@ select xt.install_js('XT','Session','xtuple', $$
     /* might as well request the translations in here too */
     strings = plv8.execute(dictionarySql, [culture]);
     if(strings.length === 0) {
-      strings = plv8.execute(dictionarySql, ["en-US"]);
+      strings = plv8.execute(dictionarySql, ["en_US"]);
     }
     rec.strings = strings.map(function (row) {
-      return row.dict_strings; 
+      return JSON.parse(row.dict_strings);
     });
 
     /* TODO: only ask for the pertinent extensions */

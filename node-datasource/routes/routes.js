@@ -36,6 +36,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     data = require('./data'),
     dataFromKey = require('./data_from_key'),
     file = require('./file'),
+    locale = require('./locale'),
     passport = require('passport'),
     redirector = require('./redirector'),
     report = require('./report'),
@@ -90,6 +91,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.email = [ensureLogin, email.email];
   exports.exxport = [ensureLogin, exxport.exxport];
   exports.file = [ensureLogin, file.file];
+  exports.locale = [ensureLogin, locale.locale];
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];
   exports.analysis = [ensureLogin, analysis.analysis];
