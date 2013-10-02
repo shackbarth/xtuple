@@ -392,6 +392,10 @@ var _ = require('underscore'),
             getOrmSql(extension, callback);
           },
           function (callback) {
+            // the client needs jsInit and might not have it by now
+            callback(null, jsInit);
+          },
+          function (callback) {
             getClientSql(extension, callback);
           }
         ], function (err, results) {

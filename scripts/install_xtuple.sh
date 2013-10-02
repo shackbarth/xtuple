@@ -427,9 +427,6 @@ pull_modules() {
     echo "}" >> login_data.js
 	log "Created testing login_data.js"
 
-	cdir ../../enyo-client/extensions
-    cp sample_debug.js debug.js
-	log "Created debug.js"
 }
 
 init_everythings() {

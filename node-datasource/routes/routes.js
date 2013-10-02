@@ -49,6 +49,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // Authentication-related routes
   //
   exports.app = [ensureLogin, app.serveApp];
+  exports.debug = [ensureLogin, app.serveDebug];
   exports.login = auth.login;
   exports.loginForm = auth.loginForm;
   exports.logout = auth.logout;

@@ -24,6 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         dataObj.strings = [];
         data = JSON.stringify(dataObj);
       }
+      res.set('Content-Type', 'text/javascript');
       res.send("XT = typeof XT !== 'undefined' ? XT : {};\nXT.locale = " + data);
     });
   };

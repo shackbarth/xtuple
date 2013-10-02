@@ -322,14 +322,6 @@ require('./oauth2/passport');
 var that = this;
 
 app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
-app.get('/:org/debug', function (req, res, next) {
-  "use strict";
-  if (!req.session.passport.user) {
-    routes.logout(req, res);
-  } else {
-    res.render('debug', { org: req.session.passport.user.organization });
-  }
-});
 _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
   "use strict";
   app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
@@ -364,6 +356,7 @@ app.post('/login/scopeSubmit', routes.scope);
 app.get('/logout', routes.logout);
 app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
+app.get('/:org/debug', routes.debug);
 
 app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
