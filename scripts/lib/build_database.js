@@ -382,6 +382,10 @@ var _ = require('underscore'),
             getExtensionSql(extension, callback);
           },
           function (callback) {
+            if (spec.clientOnly) {
+              callback(null, "");
+              return;
+            }
             dictionaryBuilder.getDictionarySql(extension, callback);
           },
           function (callback) {
