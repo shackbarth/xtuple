@@ -1,11 +1,12 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 strict:true, trailing:true, white:true */
+/*global XT:true */
 
 (function () {
   "use strict";
 
-  exports.strings = {
+  var lang = XT.stringsFor("en_US", {
     "_a": "A",
     "_abcClass": "ABC Class",
     "_aisle": "Aisle",
@@ -151,5 +152,9 @@ strict:true, trailing:true, white:true */
     "_shipmentNotFound": "Shipment not found.",
     "_incompleteShipment": "Incomplete Shipment",
     "_alreadyShipped": "Shipment already shipped."
-  };
+  });
+
+  if (typeof exports !== 'undefined') {
+    exports.language = lang;
+  }
 }());

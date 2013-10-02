@@ -1,11 +1,12 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 strict:true, trailing:true, white:true */
+/*global XT:true */
 
 (function () {
   "use strict";
 
-  exports.strings = {
+  var lang = XT.stringsFor("en_US", {
     "_acceptsBackOrders": "Accepts Back Orders",
     "_acceptsPartialShipments": "Accepts Partial Shipments",
     "_allowASAPShipSchedules": "Allow ASAP Schedule Dates",
@@ -67,5 +68,9 @@ strict:true, trailing:true, white:true */
     "_useCalculatedFreightPricing": "Use calculated Freight values by default",
     "_usePromiseDates": "Enable Promise Dates",
     "_viewSalesHistory": "View Sales History"
-  };
+  });
+
+  if (typeof exports !== 'undefined') {
+    exports.language = lang;
+  }
 }());

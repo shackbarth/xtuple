@@ -1,11 +1,12 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 strict:true, trailing:true, white:true */
+/*global XT:true */
 
 (function () {
   "use strict";
 
-  exports.strings = {
+  var lang = XT.stringsFor("en_US", {
     "_crm": "CRM",
     "_crmDescription": "Corporate Relationship Management",
     "_highPriority": "High Priority",
@@ -14,5 +15,9 @@ strict:true, trailing:true, white:true */
     "_openIncidents": "Open Incidents",
     "_maintainEmailProfiles": "Maintain Email Profiles",
     "_viewEmailProfiles": "View Email Profiles"
-  };
+  });
+
+  if (typeof exports !== 'undefined') {
+    exports.language = lang;
+  }
 }());
