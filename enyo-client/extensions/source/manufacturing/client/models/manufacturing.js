@@ -28,6 +28,8 @@ white:true*/
         "balance"
       ],
 
+      transactionDate: null,
+
       bindEvents: function () {
         XM.Model.prototype.bindEvents.apply(this, arguments);
         this.on('statusChange', this.statusDidChange);
@@ -114,7 +116,9 @@ white:true*/
       issueMethod: "issueMaterial",
 
       readOnlyAttributes: [
-        "qtyPer"
+        "qtyPer",
+        "qtyRequired",
+        "qtyIssued"
       ],
 
       transactionDate: null,

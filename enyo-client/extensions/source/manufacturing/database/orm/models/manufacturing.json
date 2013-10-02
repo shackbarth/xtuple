@@ -131,10 +131,10 @@
     "idSequenceName": "wo_wo_id_seq",
     "privileges": {
       "all": {
-        "create": "MaintainWorkOrders",
+        "create": false,
         "read": "ViewWorkOrders MaintainWorkOrders",
         "update": "MaintainWorkOrders",
-        "delete": "MaintainWorkOrders"
+        "delete": false
       }
     },
     "properties": [

@@ -1,7 +1,7 @@
 select xt.create_view('xt.woinfo', $$
 
 select wo.*, 
-    null::numeric AS balance,
+    case when (wo_qtyrcv > wo_qtyord) then 0 else (wo_qtyord - wo_qtyrcv) end AS balance,
     null::numeric AS qty_to_post
   from wo;
 

@@ -36,7 +36,7 @@ trailing:true, white:true, strict: false*/
     enyo.kind({
       name: "XV.IssueMaterialWorkspace",
       kind: "XV.Workspace",
-      title: "_issueStock".loc(),
+      title: "_issueMaterial".loc(),
       model: "XM.IssueMaterial",
       backText: "_cancel".loc(),
       saveText: "_issue".loc(),
@@ -64,8 +64,6 @@ trailing:true, white:true, strict: false*/
               },
               {kind: "XV.QuantityWidget", attr: "qtyRequired"},
               {kind: "XV.QuantityWidget", attr: "qtyIssued"},
-              //{kind: "XV.QuantityWidget", attr: "returned"},
-              //{kind: "XV.QuantityWidget", attr: "balance"},
               {kind: "onyx.GroupboxHeader", content: "_issue".loc()},
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
             ]}
@@ -214,10 +212,6 @@ trailing:true, white:true, strict: false*/
               },
               {kind: "XV.InputWidget", attr: "status"},
               {kind: "XV.InputWidget", attr: "cosMethod"},
-              {kind: "XV.QuantityWidget", attr: "qtyOrdered"},
-              {kind: "XV.QuantityWidget", attr: "qtyRequired"},
-              {kind: "XV.QuantityWidget", attr: "balance"},
-              {kind: "XV.QuantityWidget", attr: "qtyToPost"},
               {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
               {kind: "XV.TextArea", attr: "productionNotes", fit: true},
               {kind: "onyx.GroupboxHeader", content: "_options".loc()},
@@ -226,12 +220,32 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.StickyCheckboxWidget", label: "_closeWorkOrderAfterPosting".loc(),
                 name: "closeWorkOrderAfterPosting"},
               {kind: "XV.StickyCheckboxWidget", label: "_scrapOnPost".loc(),
-                name: "scrapOnPost"}
+                name: "scrapOnPost"},
+              {kind: "XV.QuantityWidget", attr: "qtyOrdered"},
+              {kind: "XV.QuantityWidget", attr: "qtyReceived"},
+              {kind: "XV.QuantityWidget", attr: "balance"},
+              {kind: "onyx.GroupboxHeader", content: "_post".loc()},
+              {kind: "XV.QuantityWidget", attr: "qtyToPost", name: "qtyToPost"}
             ]}
           ]}
           //{kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
         ]}
-      ]/*,
+      ],
+      /**
+        Overload: Some special handling for start up.
+        */
+      attributesChanged: function () {
+        this.inherited(arguments);
+        var model = this.getValue();
+
+        // Focus and select qty on start up.
+        if (!this._started && model &&
+          model.getStatus() === XM.Model.READY_DIRTY) {
+          this.$.qtyToPost.focus();
+          this.$.qtyToPost.$.input.selectContents();
+          this._started = true;
+        }
+      }/*,
       create: function (options) {
         this.inherited(arguments);
         if (!this.getBiAvailable()) {
