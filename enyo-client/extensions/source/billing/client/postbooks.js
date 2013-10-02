@@ -15,16 +15,21 @@ trailing:true, white:true*/
         name: billing.name,
         label: "_billing".loc(),
         panels: [
-          {kind: "XV.BillingDashboard"}
+          {kind: "XV.CustomerList"}
         ]
       },
       relevantPrivileges = [
         "CreateNewSalesCategory",
         "ViewSalesCategory",
-        "MaintainSalesCategory"
+        "MaintainSalesCategory",
+
+        "MaintainCustomerMasters",
+        "MaintainCustomerGroups",
+        "ViewCustomerMasters",
+        "ViewCustomerGroups"
       ],
       configuration = {
-        model: "XM.Billing",
+        model: "XM.billing",
         name: "_billing".loc(),
         description: "_billingDescription".loc(),
         workspace: "XV.BillingWorkspace"
@@ -40,4 +45,4 @@ trailing:true, white:true*/
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };
 
-}());
+  }());

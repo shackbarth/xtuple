@@ -431,6 +431,7 @@ pull_modules() {
     rm -f debug.js
     echo "enyo.depends(" > debug.js
     echo "  '/dev/core-extensions/source/crm/client/package.js'," >> debug.js
+    echo "  '/dev/core-extensions/source/billing/client/package.js'," >> debug.js
     echo "  '/dev/core-extensions/source/inventory/client/package.js'," >> debug.js
     echo "  '/dev/core-extensions/source/project/client/package.js'," >> debug.js
     echo "  '/dev/core-extensions/source/sales/client/package.js'" >> debug.js
