@@ -19,6 +19,8 @@ trailing:true, white:true*/
         ]
       },
       relevantPrivileges = [
+        "ConfigureBilling",
+
         "CreateNewSalesCategory",
         "ViewSalesCategory",
         "MaintainSalesCategory",
