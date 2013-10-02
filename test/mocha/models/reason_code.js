@@ -8,14 +8,16 @@
 
   var crud = require('../lib/crud'),
     data = {
-          recordType: "XM.ReasonCode",
-          autoTestAttributes: true,
-          createHash: {
-            name: "" + Math.random(),
-          },
-          updateHash: {
-          }
-        };
+      recordType: "XM.ReasonCode",
+      autoTestAttributes: true,
+      createHash: {
+        code: "Reason" + Math.random(),
+        description: "Description of reason"
+      },
+      updateHash: {
+        description: "New Description"
+      }
+    };
 
   describe('Reason Code CRUD Test', function () {
     crud.runAllCrud(data);

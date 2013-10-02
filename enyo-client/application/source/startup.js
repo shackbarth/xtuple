@@ -142,6 +142,7 @@ white:true*/
   XT.cacheCollection("XM.taxCodes", "XM.TaxCodeCollection");
   XT.cacheCollection("XM.units", "XM.UnitCollection");
   XT.cacheCollection("XM.filters", "XM.FilterCollection");
+  XT.cacheCollection("XM.reasonCodes", "XM.ReasonCodeCollection");
 
   /**
     These ones are a little custom and need to be done longhand.

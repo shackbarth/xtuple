@@ -13,7 +13,7 @@
         "create": true,
         "read": true,
         "update": true,
-        "delete": true
+        "delete": "MaintainReasonCodes"
       }
     },
     "properties": [
@@ -38,6 +38,13 @@
         "attr": {
           "type": "String",
           "column": "rsncode_descrip"
+        }
+      },
+      {
+        "name": "documentType",
+        "attr": {
+          "type": "String",
+          "column": "rsncode_doctype"
         }
       }
     ],
