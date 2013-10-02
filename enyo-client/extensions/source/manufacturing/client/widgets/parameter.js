@@ -33,7 +33,7 @@ trailing:true, white:true, strict: false*/
             };
           } else {
             param = {
-              attribute: "lineNumber",
+              attribute: "order.uuid",
               operator: "=",
               value: -1
             };

@@ -11,6 +11,98 @@ white:true*/
     /**
       @class
 
+      @extends XM.Document
+    */
+    XM.PostProduction = XM.Model.extend({
+
+      recordType: "XM.PostProduction",
+
+      readOnlyAttributes: [
+        "number",
+        "dueDate",
+        "itemSite",
+        "status",
+        "cosMethod",
+        "qtyOrdered",
+        "qtyRequired",
+        "balance"
+      ],
+
+      bindEvents: function () {
+        XM.Model.prototype.bindEvents.apply(this, arguments);
+        this.on('statusChange', this.statusDidChange);
+      },
+
+      /**
+        This overload will first save any changes via usual means, then
+        call `postProduction`.
+      */
+      save: function (key, value, options) {
+        var that = this,
+          success;
+
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          options = value ? _.clone(value) : {};
+        }
+
+        success = options.success;
+
+        // Post production after successful save
+        options.success = function (model, resp, options) {
+          var postOptions = {},
+            postDate = XT.date.applyTimezoneOffset(that.get("dueDate"), true),
+            params = [
+              that.id,
+              that.get("qtyToPost")
+            ];
+          postOptions.success = function (postResp) {
+            var map,
+              err;
+            // Check for silent errors
+            if (postResp < 0) {
+              map = {
+                "-1": "xtinv1001",
+                "-5": "xtinv1002",
+                "-8": "xtinv1008",
+                "-12": "xtinv1003",
+                "-13": "xtinv1004",
+                "-15": "xtinv1005",
+                "-50": "xtinv1006",
+                "-99": "xtinv1007"
+              };
+              resp = resp + "";
+              err = XT.Error.clone(map[resp] ? map[resp] : "xt1001");
+              that.trigger("invalid", that, err, options || {});
+            } else {
+              if (success) { success(model, resp, options); }
+            }
+          };
+          that.dispatch("XM.Inventory", "postProduction", params, postOptions);
+          return this;
+        };
+
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          value = options;
+        }
+
+        XM.Model.prototype.save.call(this, key, value, options);
+      },
+
+      statusDidChange: function () {
+        var K = XM.Model;
+        // We want to be able to save and post immeditately.
+        if (this.getStatus() === K.READY_CLEAN) {
+          this.setStatus(K.READY_DIRTY);
+        }
+      }
+
+    });
+
+    /**
+      @class
+
       @extends XM.Transaction
     */
     XM.IssueMaterial = XM.Transaction.extend({
@@ -168,7 +260,7 @@ white:true*/
     });
 
     /**
-      Static function to call issue to shipping on a set of multiple items.
+      Static function to call issue material on a set of multiple items.
 
       @params {Array} Data
       @params {Object} Options
@@ -179,7 +271,7 @@ white:true*/
     };
 
     /**
-      Static function to call return from shipping on a set of multiple items.
+      Static function to call return material on a set of multiple items.
 
       @params {Array} Array of model ids
       @params {Object} Options

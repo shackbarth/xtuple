@@ -5,12 +5,16 @@
     "type": "WorkOrder",
     "table": "wo",
     "comment": "Work Order Map",
+    "isRest": true,
+    "lockable": true,
+    "lockTable": "wo",
+    "idSequenceName": "wo_wo_id_seq",
     "privileges": {
       "all": {
-        "create": false,
+        "create": "MaintainWorkOrders",
         "read": "ViewWorkOrders MaintainWorkOrders",
-        "update": false,
-        "delete": false
+        "update": "MaintainWorkOrders",
+        "delete": "MaintainWorkOrders"
       }
     },
     "properties": [
@@ -172,7 +176,7 @@
           "column": "wo_username"
         }
       }
-  ],
+    ],
     "isSystem": true
   },
   {
@@ -348,7 +352,7 @@
           "column": "wo_username"
         }
       }
- 	],
+ 	  ],
     "isSystem": true
   },
   {
@@ -425,7 +429,7 @@
           "column": "wo_itemcfg_series"
         }
       }
-  ],
+    ],
     "isSystem": true
   }
 ]

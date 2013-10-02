@@ -31,6 +31,19 @@ trailing:true, white:true*/
       }
     });
 
+    // ..........................................................
+    // POST LINE
+    //
+
+    enyo.kind({
+      name: "XV.WorkOrderMaterialRelationsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_lineItems".loc(),
+      parentKey: "workOrder",
+      listRelations: "XV.WorkOrderMaterialLineListRelations",
+      canOpen: false
+    });
+
   };
 
 }());

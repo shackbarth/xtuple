@@ -32,6 +32,12 @@ trailing:true, white:true, strict:false*/
           method: "doReturnMaterial", notify: false}
       ],
       toggleSelected: true,
+      published: {
+        status: null
+      },
+      events: {
+        onOrderChanged: ""
+      },
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -113,7 +119,7 @@ trailing:true, white:true, strict:false*/
             model.transactionDate = transDate;
           }
         });
-      }
+      },
       /**
         Overload: used to keep track of shipment.
       */
@@ -133,6 +139,9 @@ trailing:true, white:true, strict:false*/
           });
         }
       },*/
+      orderChanged: function () {
+        this.doOrderChanged({order: this.getOrder()});
+      }
     });
 
     //XV.registerModelList("XM.WorkOrderRelation", "XV.IssueMaterialList");

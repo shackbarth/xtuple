@@ -5,7 +5,7 @@ trailing:true, white:true, strict: false*/
 
 (function () {
 
-  XT.extensions.inventory.initWorkspaces = function () {
+  XT.extensions.manufacturing.initWorkspaces = function () {
 
     // ..........................................................
     // CONFIGURE
@@ -14,7 +14,7 @@ trailing:true, white:true, strict: false*/
     enyo.kind({
       name: "XV.ManufacturingWorkspace",
       kind: "XV.Workspace",
-      title: "_configure".loc() + " " + "_inventory".loc(),
+      title: "_configure".loc() + " " + "_manufacturing".loc(),
       model: "XM.Manufacturing",
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -190,9 +190,16 @@ trailing:true, white:true, strict: false*/
     enyo.kind({
       name: "XV.PostProductionWorkspace",
       kind: "XV.Workspace",
-      title: "_shipment".loc(),
-      model: "XM.WorkOrder",
-      allowPrint: true,
+      title: "_postProduction".loc(),
+      model: "XM.PostProduction",
+      reportModel: "XM.WorkOrder",
+      saveText: "_post".loc(),
+      allowNew: false,
+      hideApply: true,
+      dirtyWarn: false,
+      events: {
+        onPrint: ""
+      },
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -202,12 +209,42 @@ trailing:true, white:true, strict: false*/
               classes: "in-panel", fit: true, components: [
               {kind: "XV.InputWidget", attr: "number"},
               {kind: "XV.DateWidget", attr: "dueDate"},
-              {kind: "XV.CheckboxWidget", attr: "status"}
+              {kind: "XV.ItemSiteWidget", attr:
+                {item: "itemSite.item", site: "itemSite.site"}
+              },
+              {kind: "XV.InputWidget", attr: "status"},
+              {kind: "XV.InputWidget", attr: "cosMethod"},
+              {kind: "XV.QuantityWidget", attr: "qtyOrdered"},
+              {kind: "XV.QuantityWidget", attr: "qtyRequired"},
+              {kind: "XV.QuantityWidget", attr: "balance"},
+              {kind: "XV.QuantityWidget", attr: "qtyToPost"},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "XV.TextArea", attr: "productionNotes", fit: true},
+              {kind: "onyx.GroupboxHeader", content: "_options".loc()},
+              {kind: "XV.StickyCheckboxWidget", label: "_backflushMaterials".loc(),
+                name: "backflushMaterials"},
+              {kind: "XV.StickyCheckboxWidget", label: "_closeWorkOrderAfterPosting".loc(),
+                name: "closeWorkOrderAfterPosting"},
+              {kind: "XV.StickyCheckboxWidget", label: "_scrapOnPost".loc(),
+                name: "scrapOnPost"}
             ]}
           ]}
           //{kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
         ]}
-      ]
+      ]/*,
+      create: function (options) {
+        this.inherited(arguments);
+        if (!this.getBiAvailable()) {
+          this.$.printPacklist.setChecked(false);
+          this.$.printPacklist.setDisabled(true);
+        }
+      },
+      save: function (options) {
+        if (this.$.printPacklist.isChecked()) {
+          this.doPrint();
+        }
+        this.inherited(arguments);
+      }*/
     });
 
   };

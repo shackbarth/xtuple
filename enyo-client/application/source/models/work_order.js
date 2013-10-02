@@ -40,6 +40,18 @@ white:true*/
       if (status === K.CLOSED) {
         return '_closed'.loc();
       }
+    },
+
+    /**
+      Calculate the balance remaining to issue.
+
+      @returns {Number}
+    */
+    postBalance: function () {
+      var qtyOrdered = this.get("qtyOrdered"),
+        qtyReceived = this.get("qtyReceived"),
+        toPost = XT.math.subtract(qtyReceived, qtyOrdered, XT.QUANTITY_SCALE);
+      return toPost >= 0 ? toPost : 0;
     }
 
   });

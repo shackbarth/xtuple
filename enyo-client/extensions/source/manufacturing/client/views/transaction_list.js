@@ -32,9 +32,9 @@ trailing:true, white:true, strict:false*/
         {name: "returnSelected", label: "_returnSelected".loc(),
           prerequisite: "canReturnSelected" },
       ],
-      //handlers: {
-      //  onShipmentChanged: "shipmentChanged"
-      //},
+      handlers: {
+        onShipmentChanged: "shipmentChanged"
+      },
       canReturnSelected: function () {
         var canDo = _canDo.call(this, "ReturnWoMaterials"),
           models = this.selectedModels(),
@@ -69,6 +69,7 @@ trailing:true, white:true, strict:false*/
         var button = this.$.postButton;
         button.setContent("_post".loc());
         button.setShowing(true);
+        //button.setDisabled(false);
       },
       /**
         Helper function for transacting `issue` on an array of models
@@ -182,10 +183,16 @@ trailing:true, white:true, strict:false*/
         this.issue(models, true);
       },
       post: function () {
+        /*var that = this,
+          shipment = this.$.parameterWidget.$.shipment.getValue(),
+          callback = function (resp) {
+            if (resp) { that.$.parameterWidget.$.order.setValue(null); }
+          };*/
         var model = this.model;
         this.doWorkspace({
           workspace: "XV.PostProductionWorkspace",
           id: model.id
+        //  callback: callback
         });
       },
       returnSelected: function () {
@@ -215,11 +222,25 @@ trailing:true, white:true, strict:false*/
           };
           XM.Manufacturing.returnMaterial(data, options);
         }
-      }/*,
-      shipmentChanged: function (inSender, inEvent) {
+      },
+      statusChanged: function (inSender, inEvent) {
         this.$.parameterWidget.$.shipment.setValue(inEvent.shipment);
         this.$.postButton.setDisabled(_.isEmpty(inEvent.shipment));
-      }*/
+      },
+      parameterChanged: function (inSender, inEvent) {
+        this.inherited(arguments);
+        var originator = inEvent ? inEvent.originator : false,
+          name = originator ? originator.name : false,
+          that = this;
+        if (name === "order" && this.model !== -1) {
+          if (inEvent.originator.$.input.getValue().id === that.model.id) {
+            this.$.postButton.setDisabled(false);
+          }
+        } else {
+          this.$.postButton.setDisabled(true);
+        }
+        //this.$.postButton.setDisabled(false);
+      }
     });
   };
 

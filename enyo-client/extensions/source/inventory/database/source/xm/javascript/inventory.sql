@@ -455,6 +455,40 @@ select xt.install_js('XM','Inventory','xtuple', $$
   };
 
   /**
+    Post production.
+    
+      select xt.post('{
+        "username": "admin",
+        "nameSpace":"XM",
+        "type":"Inventory",
+        "dispatch":{
+          "functionName":"shipShipment",
+          "parameters":["203"]
+        }
+      }');
+  
+    @param {Number} Shipment number
+    @param {Date} Ship date, default = current date
+  */
+  XM.Inventory.postProduction = function (workOrder, quantity) {
+    var sql = "select postproduction(wo_id, $2, true, 0, current_timestamp) as series " +
+      "from wo where obj_uuid = $1;";
+
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("PostProduction")) { throw new handleError("Access Denied", 401); }
+
+    /* Post the transaction */
+    var ret = plv8.execute(sql, [workOrder, quantity])[0].series;
+    
+    return ret;
+  };
+  XM.Inventory.postProduction.description = "Post production";
+  XM.Inventory.postProduction.params = {
+     workOrder: { type: "String", description: "Order line UUID" },
+     quantity: {type: "Number", description: "Quantity" }
+  };
+
+  /**
     Issue to shipping.
     
       select xt.post('{

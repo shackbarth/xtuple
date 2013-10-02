@@ -12,7 +12,7 @@ white:true*/
 
       @extends XM.Settings
     */
-    XM.Manufacturing = XM.Settings.extend(/** @lends XM.Inventory.Settings.prototype */ {
+    XM.Manufacturing = XM.Settings.extend(/** @lends XM.Manufacturing.Settings.prototype */ {
 
       recordType: 'XM.Manufacturing',
 

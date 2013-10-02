@@ -105,6 +105,43 @@ trailing:true, white:true*/
       }
     });
 
+    // ..........................................................
+    // WORK ORDER MATERIAL LINE
+    //
+
+    enyo.kind({
+      name: "XV.WorkOrderMaterialLineListRelations",
+      kind: "XV.ListRelations",
+      orderBy: [
+        {attribute: "lineNumber"}
+      ],
+      parentKey: "shipment",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "orderLine.lineNumber", classes: "bold"},
+                {kind: "XV.ListAttr", attr: "orderLine.item.number", fit: true},
+                {kind: "XV.ListAttr", attr: "orderLine.quantity",
+                  formatter: "formatQuantity", classes: "right"},
+              ]},
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "orderLine.item.description1",
+                  fit: true,  style: "text-indent: 18px;"},
+                {kind: "XV.ListAttr", attr: "orderLine.quantityUnit.name",
+                  classes: "right"}
+              ]}
+            ]}
+          ]}
+        ]}
+      ],
+      formatQuantity: function (value) {
+        var scale = XT.session.locale.attributes.quantityScale;
+        return Globalize.format(value, "n" + scale);
+      }
+    });
+
   };
 
 }());
