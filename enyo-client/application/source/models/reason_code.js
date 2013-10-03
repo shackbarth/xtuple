@@ -16,7 +16,9 @@ white:true*/
 
     recordType: 'XM.ReasonCode',
 
-    documentKey: 'code'
+    documentKey: 'code',
+
+    enforceUpperKey: false
 
   });
 
