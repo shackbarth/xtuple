@@ -48,7 +48,10 @@ Globalize:true */
     ],
     valueChanged: function () {
       var model = this.getValue(),
-        quantity, discount;
+        quantity = model.get("quantity"),
+        discount = model.get("discount"),
+        price = model.get("price"),
+        locale = XT.session.locale;
 
       if (!model) {
         return;
@@ -59,19 +62,18 @@ Globalize:true */
       this.$.itemDescription.setContent(model.getValue("item.description1"));
       this.$.siteCode.setContent(model.getValue("site.code"));
 
-      quantity = model.get("quantity") ? Globalize.format(XT.math.round(model.get("quantity"), XT.QTY_SCALE), "n" + XT.QTY_SCALE) : "_required".loc();
+      this.$.quantity.addRemoveClass("xv-error", !quantity);
+      quantity = _.isNumber(quantity) ? Globalize.format(quantity, "n" + locale.get("quantityScale")) : "_required".loc();
       this.$.quantity.setContent(quantity);
-      this.$.quantity.addRemoveClass("xv-error", !model.getValue("quantity"));
 
       this.$.quantityUnit.setContent(model.getValue("quantityUnit.name"));
-      discount = model.get("discount") ? Globalize.format(XT.math.round(model.get("discount"), XT.PERCENT_SCALE) * 100, "n" + XT.PERCENT_SCALE) : "";
+      discount = _.isNumber(discount) ? Globalize.format(discount, "p" + XT.PERCENT_SCALE) : "";
       this.$.discount.setContent(discount);
 
-      this.$.price.setContent(Globalize.format(XT.math.round(model.get("price"), XT.SALES_PRICE_SCALE), "n" + XT.SALES_PRICE_SCALE) || "_required".loc());
-      this.$.itemNumber.addRemoveClass("xv-error", !model.getValue("price"));
+      this.$.price.addRemoveClass("xv-error", !_.isNumber(price));
+      this.$.price.setContent(Globalize.format(price, "n" + locale.get("salesPriceScale")) || "_required".loc());
       this.$.priceUnit.setContent(model.getValue("priceUnit.name"));
-      this.$.extendedPrice.setContent(Globalize.format(XT.math.round(model.get("extendedPrice"),
-        XT.EXTENDED_PRICE_SCALE), "n" + XT.EXTENDED_PRICE_SCALE));
+      this.$.extendedPrice.setContent(Globalize.format(model.get("extendedPrice"), "n" + locale.get("extendedPriceScale")));
 
       this.$.scheduleDate.setContent(Globalize.format(XT.date.applyTimezoneOffset(model.get("scheduleDate"), true), "d"));
     }
