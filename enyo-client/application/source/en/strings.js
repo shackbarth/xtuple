@@ -58,7 +58,6 @@ strict:true, trailing:true, white:true */
     // ********
     // Labels
     // ********
-
     "_above": "Above",
     "_abbreviation": "Abbreviation",
     "_abbreviationLong": "Abbreviation Long",
@@ -523,6 +522,7 @@ strict:true, trailing:true, white:true */
     "_shipComplete": "Ship Complete",
     "_shipForm": "Shipping Form",
     "_shipVia": "Ship Via",
+    "_shipVias": "Ship Vias",
     "_shipTo": "Ship To",
     "_shiptoAddress1": "Ship To Address",
     "_shiptoName": "Ship To Name",

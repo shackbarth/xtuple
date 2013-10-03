@@ -1798,6 +1798,34 @@ trailing:true, white:true, strict: false*/
   });
 
   // ..........................................................
+  // SHIP VIA
+  //
+
+  enyo.kind({
+    name: "XV.ShipViaList",
+    kind: "XV.List",
+    label: "_shipVias".loc(),
+    collection: "XM.ShipViaCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  XV.registerModelList("XM.ShipVia", "XV.ShipViaList");
+
+  // ..........................................................
   // SHIP ZONE
   //
 

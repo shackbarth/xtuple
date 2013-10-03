@@ -8,7 +8,7 @@ select coitem.*,
   xt.co_line_list_price(coitem) as list_price,
   xt.co_line_list_price_discount(coitem) as list_price_discount,
   xt.co_line_customer_discount(coitem) as cust_discount,
-  xt.co_line_extended_price(coitem) as ext_price, 
+  xt.co_line_extended_price(coitem) as ext_price,
   xt.co_line_ship_balance(coitem) as ship_balance,
   xt.co_line_at_shipping(coitem) as at_shipping,
   xt.co_line_margin(coitem) as margin,
@@ -94,10 +94,10 @@ insert into coitem (
   new.coitem_cos_accnt_id,
   coalesce(new.coitem_qtyreserved, 0),
   new.coitem_subnumber,
-  new.coitem_firm,
+  coalesce(new.coitem_firm, false),
   new.coitem_rev_accnt_id,
   coalesce(new.coitem_pricemode, 'D'),
-  new.obj_uuid
+  coalesce(new.obj_uuid, xt.generate_uuid())
 from itemsite
 where itemsite_item_id=new.coitem_item_id
   and itemsite_warehous_id=new.coitem_warehous_id;

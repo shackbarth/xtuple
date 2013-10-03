@@ -466,6 +466,9 @@ init_everythings() {
 		log "######################################################"
 		return 3
 	fi
+
+	cdir $XT_DIR
+	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
 	
 	log ""
 	log "######################################################"
@@ -488,9 +491,6 @@ init_everythings() {
 		log "cd /usr/local/src/xtuple/node-datasource/"
 		log "sudo node main.js"
 	fi
-	
-	cdir $XT_DIR
-	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
 }
 
 if [ $USERINIT ]

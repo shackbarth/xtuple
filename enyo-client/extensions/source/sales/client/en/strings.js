@@ -44,6 +44,7 @@ strict:true, trailing:true, white:true */
     "_pricingOnLineItemEdits": "Pricing on Line Item edits",
     "_printOnSave": "Print on Save",
     "_process": "Process",
+    "_processCreditCards": "Process Credit Cards",
     "_prompt": "Prompt",
     "_restrictCreditMemos": "Restrict Credit Memos to Items on their Apply-to Document",
     "_sales": "Sales",
