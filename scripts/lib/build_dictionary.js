@@ -9,12 +9,11 @@ if (typeof XT === 'undefined') {
 (function () {
   "use strict";
 
-
   var _ = require("underscore"),
     async = require("async"),
     fs = require("fs"),
-    path = require("path"),
     locale = require("../../lib/tools/source/locale"),
+    path = require("path"),
     createQuery = function (strings, context, language) {
       return "select xt.set_dictionary($$%@$$, '%@', '%@');"
         .f(JSON.stringify(strings),
@@ -35,6 +34,10 @@ if (typeof XT === 'undefined') {
       databaseHash,
       filename;
 
+    if (!XT.stringsFor) {
+      XT.getLanguage = locale.getLanguage;
+      XT.stringsFor = locale.stringsFor;
+    }
     if (isLibOrm) {
       // smash the tools and enyo-x strings together into one query
       clientHash = _.extend(
