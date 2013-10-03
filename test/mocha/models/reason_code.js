@@ -54,6 +54,13 @@
           // verify that the cached reason codes load on startup
           assert.ok(XM.reasonCodes);
 
+          //verify priviledges
+          var privList = data.model.privileges.all;
+          assert.ok(privList.read);
+          assert.equal(privList.create, "MaintainReasonCodes");
+          assert.equal(privList.update, "MaintainReasonCodes");
+          assert.equal(privList.delete, "MaintainReasonCodes");
+
           next();
         }
       }],

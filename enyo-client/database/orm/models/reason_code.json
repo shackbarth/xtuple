@@ -10,9 +10,9 @@
     "comment": "Reason Code Map",
     "privileges": {
       "all": {
-        "create": true,
+        "create": "MaintainReasonCodes",
         "read": true,
-        "update": true,
+        "update": "MaintainReasonCodes",
         "delete": "MaintainReasonCodes"
       }
     },
