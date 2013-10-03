@@ -32,7 +32,7 @@
           assert.equal(data.model.idAttribute, "code");
 
           // verify model is lockable
-          assert.ok(data.model.lockable);
+          assert.isTrue(data.model.lockable);
 
           // verify constant values
           assert.equal(XM.ReasonCode.CREDIT_MEMO, "ARCM");
