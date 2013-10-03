@@ -1903,7 +1903,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
-        {kind: "XV.SalesOrderCommentBox", attr: "comments"},
+        {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
+          attr: "comments"},
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
     ],
@@ -1913,7 +1914,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     build: function () {
       if (XT.session.privileges.get("ProcessCreditCards") && XT.session.settings.get("CCCompany") === "Authorize.Net") {
         this.$.salesPanels.createComponent(
-          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards"},
+          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards",
+            addBefore: this.$.salesOrderCommentBox},
           {owner: this}
         );
       }
