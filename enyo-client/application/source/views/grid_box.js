@@ -1,7 +1,6 @@
 /*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
-/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true,
-Globalize:true */
+newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, strict: false*/
+/*global XV:true, _:true, enyo:true, XT:true, Globalize:true */
 
 (function () {
 
@@ -48,7 +47,10 @@ Globalize:true */
     ],
     valueChanged: function () {
       var model = this.getValue(),
-        quantity, discount;
+        quantity = model.get("quantity"),
+        discount = model.get("discount"),
+        price = model.get("price"),
+        locale = XT.session.locale;
 
       if (!model) {
         return;
@@ -59,19 +61,18 @@ Globalize:true */
       this.$.itemDescription.setContent(model.getValue("item.description1"));
       this.$.siteCode.setContent(model.getValue("site.code"));
 
-      quantity = model.get("quantity") ? Globalize.format(XT.math.round(model.get("quantity"), XT.QTY_SCALE), "n" + XT.QTY_SCALE) : "_required".loc();
+      this.$.quantity.addRemoveClass("xv-error", !quantity);
+      quantity = _.isNumber(quantity) ? Globalize.format(quantity, "n" + locale.get("quantityScale")) : "_required".loc();
       this.$.quantity.setContent(quantity);
-      this.$.quantity.addRemoveClass("xv-error", !model.getValue("quantity"));
 
       this.$.quantityUnit.setContent(model.getValue("quantityUnit.name"));
-      discount = model.get("discount") ? Globalize.format(XT.math.round(model.get("discount"), XT.PERCENT_SCALE) * 100, "n" + XT.PERCENT_SCALE) : "";
+      discount = _.isNumber(discount) ? Globalize.format(discount, "p" + XT.PERCENT_SCALE) : "";
       this.$.discount.setContent(discount);
 
-      this.$.price.setContent(Globalize.format(XT.math.round(model.get("price"), XT.SALES_PRICE_SCALE), "n" + XT.SALES_PRICE_SCALE) || "_required".loc());
-      this.$.itemNumber.addRemoveClass("xv-error", !model.getValue("price"));
+      this.$.price.addRemoveClass("xv-error", !_.isNumber(price));
+      this.$.price.setContent(Globalize.format(price, "n" + locale.get("salesPriceScale")) || "_required".loc());
       this.$.priceUnit.setContent(model.getValue("priceUnit.name"));
-      this.$.extendedPrice.setContent(Globalize.format(XT.math.round(model.get("extendedPrice"),
-        XT.EXTENDED_PRICE_SCALE), "n" + XT.EXTENDED_PRICE_SCALE));
+      this.$.extendedPrice.setContent(Globalize.format(model.get("extendedPrice"), "n" + locale.get("extendedPriceScale")));
 
       this.$.scheduleDate.setContent(Globalize.format(XT.date.applyTimezoneOffset(model.get("scheduleDate"), true), "d"));
     }
@@ -107,7 +108,8 @@ Globalize:true */
       ]},
       {classes: "xv-grid-column quantity", components: [
         {kind: "XV.QuantityWidget", attr: "quantity", name: "quantityWidget"},
-        {kind: "XV.UnitCombobox", attr: "quantityUnit", name: "quantityUnitPicker" }
+        {kind: "XV.UnitCombobox", attr: "quantityUnit", name: "quantityUnitPicker",
+          tabStop: false }
       ]},
       {classes: "xv-grid-column discount", components: [
         {kind: "XV.PercentWidget", name: "discount", attr: "discount" }
@@ -116,7 +118,8 @@ Globalize:true */
         {kind: "XV.MoneyWidget", attr:
           {localValue: "price", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.SALES_PRICE_SCALE},
-        {kind: "XV.UnitCombobox", attr: "priceUnit", name: "priceUnitPicker"},
+        {kind: "XV.UnitCombobox", attr: "priceUnit", name: "priceUnitPicker",
+          tabStop: false},
         {kind: "XV.MoneyWidget", attr:
           {localValue: "extendedPrice", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
