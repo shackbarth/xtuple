@@ -9,10 +9,10 @@
     "comment": "Sales Category Information",
     "privileges": {
       "all": {
-        "create": "MaintainSalesCategory",
+        "create": "MaintainSalesCategories",
         "read": true,
-        "update": "MaintainSalesCategory",
-        "delete": "MaintainSalesCategory"
+        "update": "MaintainSalesCategories",
+        "delete": "MaintainSalesCategories"
       }
     },
     "properties": [

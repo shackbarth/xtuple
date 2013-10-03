@@ -12,5 +12,7 @@ var lang = XT.stringsFor("en_US", {
 
   "_billing": "Billing",
   "_billingDescription": "Corporate Relationship Management",
-  "_salesCategory": "Sales Category"
+  "_salesCategory": "Sales Category",
+  "_salesCategories": "Sales Categories",
+  "_maintainSalesCategory": "Maintain Sales Category"
 });

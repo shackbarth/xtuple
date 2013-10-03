@@ -1,3 +1,2 @@
 enyo.depends(
-  "chart.js"
 );
