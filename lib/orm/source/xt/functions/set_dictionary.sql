@@ -18,7 +18,7 @@ create or replace function xt.set_dictionary(strings text, context text)
       " values ('en_US', $1, $2, $3);";
 
   /* determine the extension ID, or null if it's core */
-  if (context !== '_database_' && context !== '_null_') {
+  if (context !== '_database_' && context !== '_core_') {
     extensionId = plv8.execute(sqlExtension, [context])[0].ext_id;
   }
 
