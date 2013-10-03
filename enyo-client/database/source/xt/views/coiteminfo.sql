@@ -97,7 +97,7 @@ insert into coitem (
   coalesce(new.coitem_firm, false),
   new.coitem_rev_accnt_id,
   coalesce(new.coitem_pricemode, 'D'),
-  new.obj_uuid
+  coalesce(new.obj_uuid, xt.generate_uuid())
 from itemsite
 where itemsite_item_id=new.coitem_item_id
   and itemsite_warehous_id=new.coitem_warehous_id;
