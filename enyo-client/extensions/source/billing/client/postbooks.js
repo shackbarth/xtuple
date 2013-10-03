@@ -41,13 +41,10 @@ trailing:true, white:true*/
         {name: "salesCategoryList", kind: "XV.SalesCategoryList"}
       ];
 
-    console.log("adding billing setupPanels...");
     XT.app.$.postbooks.appendPanels("setup", setupPanels);
 
     // TODO
     XM.configurations.add(new XM.ConfigurationModel(configuration));
-
-    console.log("billing.name: " + billing.name);
 
     XT.app.$.postbooks.insertModule(module, 0);
     XT.session.addRelevantPrivileges(billing.name, relevantPrivileges);
