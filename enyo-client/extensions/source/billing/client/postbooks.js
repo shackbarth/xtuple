@@ -19,12 +19,13 @@ trailing:true, white:true*/
         ]
       },
       relevantPrivileges = [
-        "ConfigureBilling",
+        // XM.Billing
+        "ConfigureAR",
 
-        "CreateNewSalesCategory",
-        "ViewSalesCategory",
-        "MaintainSalesCategory",
+        // XM.SalesCategory
+        "MaintainSalesCategories",
 
+        // Customer
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
         "ViewCustomerMasters",
@@ -37,14 +38,16 @@ trailing:true, white:true*/
         workspace: "XV.BillingWorkspace"
       },
       setupPanels = [
-        {kind: "XV.SalesCategoryList"}
+        {name: "salesCategoryList", kind: "XV.SalesCategoryList"}
       ];
 
+    XT.app.$.postbooks.appendPanels("setup", setupPanels);
+
+    // TODO
     XM.configurations.add(new XM.ConfigurationModel(configuration));
 
-    XT.app.$.postbooks.appendPanels("setup", setupPanels);
     XT.app.$.postbooks.insertModule(module, 0);
-    XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
+    XT.session.addRelevantPrivileges(billing.name, relevantPrivileges);
   };
 
-  }());
+}());

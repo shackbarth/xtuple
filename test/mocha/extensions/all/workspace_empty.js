@@ -32,6 +32,11 @@
           describe("The workspace for " + listName, function () {
             it('should fail predictably if we save it with no data', function (done) {
               this.timeout(30 * 1000);
+
+              console.log(listName);
+              console.log(moduleIndex);
+              console.log(panelIndex);
+
               navigator.setModule(moduleIndex);
               navigator.setContentPanel(panelIndex);
               list = navigator.$.contentPanels.getActive();

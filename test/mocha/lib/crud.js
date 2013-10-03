@@ -355,7 +355,6 @@ var _ = require("underscore"),
     it('creates the model of the appropriate record type', function () {
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
-
     });
 
     //

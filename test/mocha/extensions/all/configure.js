@@ -29,7 +29,7 @@
       smoke.navigateToList(XT.app, "XV.ConfigurationsList");
       navigator = XT.app.$.postbooks.$.navigator;
       list = navigator.$.contentPanels.getActive();
-      assert.equal(list.value.length, 5);
+      assert.greaterThan(list.value.length, 0);
       async.mapSeries(list.value.models, function (listItem, callback) {
         var workspaceContainer;
 

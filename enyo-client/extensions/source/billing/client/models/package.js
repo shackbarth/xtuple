@@ -1,4 +1,4 @@
 enyo.depends(
-  "sales.js",
-  "configure.js"
+  "configure.js",
+  "sales.js"
 );
