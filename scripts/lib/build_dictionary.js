@@ -26,25 +26,24 @@ if (typeof XT === 'undefined') {
     var isLibOrm = extension.indexOf("lib/orm") >= 0,
       isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
         extension.indexOf("extension") < 0,
-      stringsHash,
+      clientHash,
+      databaseHash,
       filename;
 
     if (isLibOrm) {
-      // smash the tools and enyo-x, and application core strings together into one query
-      // strictly speaking we should build the application core strings during the application
-      // core build, but we would need to take care not to wipe these out.
-      stringsHash = _.extend(
+      // smash the tools and enyo-x strings together into one query
+      clientHash = _.extend(
         require(path.join(extension, "../enyo-x/source/en/strings.js")).language.strings,
-        require(path.join(extension, "../tools/source/en/strings.js")).language.strings,
-        require(path.join(extension, "../../enyo-client/application/source/en/strings.js")).language.strings
+        require(path.join(extension, "../tools/source/en/strings.js")).language.strings
       );
-      callback(null, createQuery(stringsHash));
+      callback(null, createQuery(clientHash, "_framework_"));
 
     } else if (isApplicationCore) {
-      // build the database strings. It's an arbitrary decision that enyo-client = database
-      // and lib/orm = client.
-      stringsHash = require(path.join(extension, "database/source/en/strings.js")).language.strings;
-      callback(null, createQuery(stringsHash, "_database_"));
+      // put the client strings into one query
+      // put the database strings into another query
+      clientHash = require(path.join(extension, "application/source/en/strings.js")).language.strings;
+      databaseHash = require(path.join(extension, "database/source/en/strings.js")).language.strings;
+      callback(null, createQuery(clientHash) + createQuery(databaseHash, "_database_"));
 
     } else {
       // return the extension strings if they exist
@@ -108,7 +107,27 @@ if (typeof XT === 'undefined') {
 
   };
 
-
+  //
+  // Group similar english and foreign rows together
+  //
+  var marryLists = function (list) {
+    var englishList = _.filter(list, function (row) {
+      return row.dict_language_name === "en_US";
+    });
+    var foreignList = _.difference(list, englishList);
+    var marriedList = _.map(englishList, function (englishRow) {
+      var foreignRow = _.find(foreignList, function (foreignRow) {
+        return foreignRow.ext_name === englishRow.ext_name &&
+          foreignRow.dict_is_database === englishRow.dict_is_database &&
+          foreignRow.dict_is_framework === englishRow.dict_is_framework;
+      });
+      return {
+        source: englishRow,
+        target: foreignRow
+      };
+    });
+    return marriedList;
+  };
   /**
     @param {String} database. The database name, such as "dev"
     @param {String} apiKey. Your Google Translate API key. Leave blank for no autotranslation
@@ -117,34 +136,60 @@ if (typeof XT === 'undefined') {
    */
   exports.exportEnglish = function (database, apiKey, destinationLang, masterCallback) {
     var creds = require("../../node-datasource/config").databaseServer,
-      sql = "select dict_strings, dict_is_database, ext_name from xt.dict left join xt.ext on dict_ext_id = ext_id where dict_language_name = 'en_US'";
+      sql = "select dict_strings, dict_is_database, dict_is_framework, " +
+        "dict_language_name, ext_name from xt.dict " +
+        "left join xt.ext on dict_ext_id = ext_id " +
+        "where dict_language_name = 'en_US'";
 
+    if (destinationLang) {
+      sql = sql + " or dict_language_name = $1";
+      creds.parameters = [destinationLang];
+    }
+
+    sql = sql + ";";
     creds.database = database;
     dataSource.query(sql, creds, function (err, res) {
-
-      var processExtension = function (row, extensionCallback) {
+      var processExtension = function (rowMap, extensionCallback) {
+        var row = rowMap.source;
+        var foreignStrings = rowMap.target ? JSON.parse(rowMap.target.dict_strings) : [];
         var stringsArray = _.map(JSON.parse(row.dict_strings), function (value, key) {
           return {value: value, key: key};
         });
         var processString = function (stringObj, stringCallback) {
-          autoTranslate(stringObj.value, apiKey, destinationLang, function (err, target) {
+          //
+          // If this translation has already been made into the target language, put that
+          // translation into the dictionary file and do not bother autotranslating.
+          //
+          var preExistingTranslation = _.find(foreignStrings, function (foreignString, foreignKey) {
+            return foreignString && foreignKey === stringObj.key;
+          });
+          if (preExistingTranslation) {
             stringCallback(null, {
               key: stringObj.key,
               source: stringObj.value,
-              target: target
+              target: preExistingTranslation
             });
-          });
+          } else {
+            autoTranslate(stringObj.value, apiKey, destinationLang, function (err, target) {
+              stringCallback(null, {
+                key: stringObj.key,
+                source: stringObj.value,
+                target: target
+              });
+            });
+          }
         };
         async.map(stringsArray, processString, function (err, strings) {
           extensionCallback(null, {
-            extension: row.dict_is_database ? "_database_" : row.ext_name || "_core_",
+            extension: row.dict_is_database ? "_database_" :
+              row.dict_is_framework ? "_framework_" :
+              row.ext_name || "_core_",
             strings: strings
           });
-
         });
-
       };
-      async.map(res.rows, processExtension, function (err, extensions) {
+      var marriedRows = marryLists(res.rows);
+      async.map(marriedRows, processExtension, function (err, extensions) {
         var output = {
           language: destinationLang || "",
           extensions: extensions
@@ -152,6 +197,7 @@ if (typeof XT === 'undefined') {
         var exportFilename = path.join(__dirname, "../private",
           (destinationLang || "blank") + "_dictionary.js");
         console.log("Exporting to", exportFilename);
+        //console.log("Exporting ", JSON.stringify(output, undefined, 2));
         fs.writeFile(exportFilename, JSON.stringify(output, undefined, 2), function (err, result) {
           masterCallback(err, result);
         });
