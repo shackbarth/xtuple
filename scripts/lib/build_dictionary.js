@@ -15,8 +15,11 @@ if (typeof XT === 'undefined') {
     fs = require("fs"),
     path = require("path"),
     locale = require("../../lib/tools/source/locale"),
-    createQuery = function (strings, context) {
-      return "select xt.set_dictionary($$%@$$, '%@');".f(JSON.stringify(strings), context || "_core_");
+    createQuery = function (strings, context, language) {
+      return "select xt.set_dictionary($$%@$$, '%@', '%@');"
+        .f(JSON.stringify(strings),
+          context || "_core_",
+          language || "en_US");
     };
 
   exports.getDictionarySql = function (extension, callback) {
@@ -68,6 +71,10 @@ if (typeof XT === 'undefined') {
       callback(null, "");
     }
 
+    if (destinationLang.indexOf("_") >= 0) {
+      // strip off the locale for google
+      destinationLang = destinationLang.substring(0, destinationLang.indexOf("_"));
+    }
 
     var query = {
         source: "en",
@@ -99,6 +106,13 @@ if (typeof XT === 'undefined') {
 
   };
 
+
+  /**
+    @param {String} database. The database name, such as "dev"
+    @param {String} apiKey. Your Google Translate API key. Leave blank for no autotranslation
+    @param {String} destinationLang. In form "es_MX".
+    @param {Function} masterCallback
+   */
   exports.exportEnglish = function (database, apiKey, destinationLang, masterCallback) {
     var creds = require("../../node-datasource/config").databaseServer,
       sql = "select dict_strings, dict_is_database, ext_name from xt.dict left join xt.ext on dict_ext_id = ext_id where dict_language_name = 'en_US'";
@@ -107,10 +121,6 @@ if (typeof XT === 'undefined') {
     dataSource.query(sql, creds, function (err, res) {
 
       var processExtension = function (row, extensionCallback) {
-        if (row.ext_name !== "incident_plus") {
-          extensionCallback(null, {});
-          return;
-        }
         var stringsArray = _.map(JSON.parse(row.dict_strings), function (value, key) {
           return {value: value, key: key};
         });
@@ -134,15 +144,47 @@ if (typeof XT === 'undefined') {
       };
       async.map(res.rows, processExtension, function (err, extensions) {
         var output = {
-          language: "",
+          language: destinationLang || "",
           extensions: extensions
         };
         console.log(JSON.stringify(output, undefined, 2));
-        fs.writeFile("dictionary.out", JSON.stringify(output, undefined, 2));
+        fs.writeFile((destinationLang || "blank") + "_dictionary.js", JSON.stringify(output, undefined, 2));
         masterCallback();
 
       });
     });
+  };
+
+  exports.importDictionary = function (database, filename, masterCallback) {
+    var creds = require("../../node-datasource/config").databaseServer;
+    creds.database = database;
+
+    filename = path.join(process.cwd(), filename);
+
+    fs.readFile(filename, "utf8", function (err, contents) {
+      if (err) {
+        masterCallback(err);
+        return;
+      }
+      var dictionary = JSON.parse(contents);
+      var processExtension = function (extension, extensionCallback) {
+        var context = extension.extension;
+        var strings = _.reduce(extension.strings, function (memo, trans) {
+          memo[trans.key] = trans.target;
+          return memo;
+        }, {});
+        var sql = createQuery(strings, context, dictionary.language);
+
+        dataSource.query(sql, creds, function (err, res) {
+          extensionCallback(err, res);
+        });
+      };
+      async.each(dictionary.extensions, processExtension, function (err, results) {
+        masterCallback(err, results);
+      });
+    });
+
+
   };
 
 }());
