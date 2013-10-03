@@ -17,6 +17,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       dataObj;
 
     XT.dataSource.query(sql, queryOptions, function (err, results) {
+      if (err) {
+        res.send({isError: true, message: err.message});
+        return;
+      }
       var data = results.rows[0].post;
       if (req.query.debug) {
         // let them get their strings from the client if in debug mode

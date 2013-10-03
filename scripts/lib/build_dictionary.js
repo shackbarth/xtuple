@@ -22,6 +22,11 @@ if (typeof XT === 'undefined') {
           language || "en_US");
     };
 
+  /**
+    Looks (by convention) in en/strings.js of the extension for the
+    English strings and asyncronously returns the sql command to put
+    that hash into the database.
+   */
   exports.getDictionarySql = function (extension, callback) {
     var isLibOrm = extension.indexOf("lib/orm") >= 0,
       isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
@@ -60,11 +65,22 @@ if (typeof XT === 'undefined') {
     }
   };
 
+
+  //
+  // The below code supports importing and exporting of dictionaries.
+  // This functionality can be accessed through the command line via
+  // the ./scripts/export_database.js and ./scripts/import_database.js
+  // files.
+  //
+
   var dataSource = require('../../node-datasource/lib/ext/datasource').dataSource;
   var querystring = require("querystring");
   var request = require("request");
 
-  // ask google
+  // Ask Google
+  // note that if we haven't been given an API key then the control flow
+  // will still come through here, but we'll just return the empty string
+  // synchronously.
   var autoTranslate = function (text, apiKey, destinationLang, callback) {
     if (!apiKey || !destinationLang || !text) {
       // the user doesn't want to autotranslate
@@ -109,6 +125,9 @@ if (typeof XT === 'undefined') {
 
   //
   // Group similar english and foreign rows together
+  // This will help us generate a dictionary file if there's
+  // already a partway- or fully- implemented translation already
+  // sitting in the database.
   //
   var marryLists = function (list) {
     var englishList = _.filter(list, function (row) {
@@ -128,6 +147,7 @@ if (typeof XT === 'undefined') {
     });
     return marriedList;
   };
+
   /**
     @param {String} database. The database name, such as "dev"
     @param {String} apiKey. Your Google Translate API key. Leave blank for no autotranslation
@@ -144,9 +164,9 @@ if (typeof XT === 'undefined') {
     if (destinationLang) {
       sql = sql + " or dict_language_name = $1";
       creds.parameters = [destinationLang];
-    }
-
+    } // else the user wants a blank template, so no need to search for pre-existing translations
     sql = sql + ";";
+
     creds.database = database;
     dataSource.query(sql, creds, function (err, res) {
       var processExtension = function (rowMap, extensionCallback) {
@@ -164,12 +184,14 @@ if (typeof XT === 'undefined') {
             return foreignString && foreignKey === stringObj.key;
           });
           if (preExistingTranslation) {
+            // this has already been translated. No need to talk to Google etc.
             stringCallback(null, {
               key: stringObj.key,
               source: stringObj.value,
               target: preExistingTranslation
             });
           } else {
+            // ask google (or not)
             autoTranslate(stringObj.value, apiKey, destinationLang, function (err, target) {
               stringCallback(null, {
                 key: stringObj.key,
@@ -188,24 +210,28 @@ if (typeof XT === 'undefined') {
           });
         });
       };
+
+      // group together english and foreign strings of the same extension
       var marriedRows = marryLists(res.rows);
       async.map(marriedRows, processExtension, function (err, extensions) {
         var output = {
           language: destinationLang || "",
           extensions: extensions
         };
+        // filename convention is ./scripts/private/es_MX_dictionary.js
         var exportFilename = path.join(__dirname, "../private",
           (destinationLang || "blank") + "_dictionary.js");
         console.log("Exporting to", exportFilename);
-        //console.log("Exporting ", JSON.stringify(output, undefined, 2));
         fs.writeFile(exportFilename, JSON.stringify(output, undefined, 2), function (err, result) {
           masterCallback(err, result);
         });
-
       });
     });
   };
 
+  /**
+    Takes a dictionary definition file and inserts the data into the database
+   */
   exports.importDictionary = function (database, filename, masterCallback) {
     var creds = require("../../node-datasource/config").databaseServer;
     creds.database = database;
@@ -234,8 +260,6 @@ if (typeof XT === 'undefined') {
         masterCallback(err, results);
       });
     });
-
-
   };
 
 }());
