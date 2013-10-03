@@ -6,7 +6,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 //
 // This file really just parses the arguments, and sends the real work
-// off to lib/build.js.
+// off to scripts/lib/build_all.js.
 //
 
 (function () {

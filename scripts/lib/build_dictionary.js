@@ -26,24 +26,25 @@ if (typeof XT === 'undefined') {
     var isLibOrm = extension.indexOf("lib/orm") >= 0,
       isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
         extension.indexOf("extension") < 0,
-      clientHash,
-      databaseHash,
+      stringsHash,
       filename;
 
     if (isLibOrm) {
-      // smash the tools and enyo-x strings together into one query
-      clientHash = _.extend(
+      // smash the tools and enyo-x, and application core strings together into one query
+      // strictly speaking we should build the application core strings during the application
+      // core build, but we would need to take care not to wipe these out.
+      stringsHash = _.extend(
         require(path.join(extension, "../enyo-x/source/en/strings.js")).language.strings,
-        require(path.join(extension, "../tools/source/en/strings.js")).language.strings
+        require(path.join(extension, "../tools/source/en/strings.js")).language.strings,
+        require(path.join(extension, "../../enyo-client/application/source/en/strings.js")).language.strings
       );
-      callback(null, createQuery(clientHash));
+      callback(null, createQuery(stringsHash));
 
     } else if (isApplicationCore) {
-      // put the client strings into one query
-      // put the database strings into another query
-      clientHash = require(path.join(extension, "application/source/en/strings.js")).language.strings;
-      databaseHash = require(path.join(extension, "database/source/en/strings.js")).language.strings;
-      callback(null, createQuery(clientHash) + createQuery(databaseHash, "_database_"));
+      // build the database strings. It's an arbitrary decision that enyo-client = database
+      // and lib/orm = client.
+      stringsHash = require(path.join(extension, "database/source/en/strings.js")).language.strings;
+      callback(null, createQuery(stringsHash, "_database_"));
 
     } else {
       // return the extension strings if they exist
@@ -69,6 +70,7 @@ if (typeof XT === 'undefined') {
     if (!apiKey || !destinationLang || !text) {
       // the user doesn't want to autotranslate
       callback(null, "");
+      return;
     }
 
     if (destinationLang.indexOf("_") >= 0) {
@@ -147,9 +149,12 @@ if (typeof XT === 'undefined') {
           language: destinationLang || "",
           extensions: extensions
         };
-        console.log(JSON.stringify(output, undefined, 2));
-        fs.writeFile((destinationLang || "blank") + "_dictionary.js", JSON.stringify(output, undefined, 2));
-        masterCallback();
+        var exportFilename = path.join(__dirname, "../private",
+          (destinationLang || "blank") + "_dictionary.js");
+        console.log("Exporting to", exportFilename);
+        fs.writeFile(exportFilename, JSON.stringify(output, undefined, 2), function (err, result) {
+          masterCallback(err, result);
+        });
 
       });
     });
