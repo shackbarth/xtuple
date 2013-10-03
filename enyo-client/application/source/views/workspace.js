@@ -1963,6 +1963,33 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   XV.registerModelWorkspace("XM.SalesOrderListItem", "XV.SalesOrderWorkspace");
 
   // ..........................................................
+  // REASON CODE
+  //
+
+  enyo.kind({
+    name: "XV.ReasonCodeWorkspace",
+    kind: "XV.Workspace",
+    title: "_reasonCode".loc(),
+    model: "XM.ReasonCode",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.ReasonCodeDocumentTypePicker", attr: "documentType"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ReasonCode", "XV.ReasonCodeWorkspace");
+
+  // ..........................................................
   // SALES REP
   //
 
