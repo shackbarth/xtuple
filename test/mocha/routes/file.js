@@ -11,10 +11,11 @@ var assert = require("chai").assert,
   fileRoute = require("../../../node-datasource/routes/file"),
   dataRoute = require("../../../node-datasource/routes/data");
 
-require("../../../node-datasource/xt");
+require("../../../node-datasource/xt/database");
 require("../../../lib/tools/source/foundation");
 require("../../../lib/tools/source/ext/string");
 require("../../../lib/tools/source/ext/proto/string");
+require("../../../node-datasource/lib/ext/datasource");
 
 X.options = X.options || {};
 

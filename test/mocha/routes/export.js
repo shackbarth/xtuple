@@ -11,7 +11,6 @@ var assert = require("chai").assert,
   exportRoute = require("../../../node-datasource/routes/export"),
   dataRoute = require("../../../node-datasource/routes/data");
 
-
 require("../../../node-datasource/xt/database");
 require("../../../lib/tools/source/foundation");
 require("../../../lib/tools/source/ext/string");
