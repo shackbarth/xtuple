@@ -9,6 +9,7 @@ var _ = require('underscore'),
   exec = require('child_process').exec,
   fs = require('fs'),
   ormInstaller = require('./orm'),
+  dictionaryBuilder = require('./build_dictionary'),
   clientBuilder = require('./build_client'),
   path = require('path'),
   pg = require('pg'),
@@ -374,27 +375,33 @@ var _ = require('underscore'),
         dictates that *all* source for all extensions should be run before *any*
         orm queries for any extensions, but that is not the way it works here.
        */
-      // TODO: async.series would work nicely here
-      var getAllSql = function (extension, callback) {
-        getExtensionSql(extension, function (err, sql) {
-          if (err) {
-            callback(err);
-            return;
-          }
-          getOrmSql(extension, function (err, ormSql) {
-            if (err) {
-              callback(err);
+      var getAllSql = function (extension, masterCallback) {
+
+        async.series([
+          function (callback) {
+            getExtensionSql(extension, callback);
+          },
+          function (callback) {
+            if (spec.clientOnly) {
+              callback(null, "");
               return;
             }
-            getClientSql(extension, function (err, clientSql) {
-              clientSql = jsInit + clientSql;
-              if (err) {
-                callback(err);
-                return;
-              }
-              callback(null, sql + ormSql + clientSql);
-            });
-          });
+            dictionaryBuilder.getDictionarySql(extension, callback);
+          },
+          function (callback) {
+            getOrmSql(extension, callback);
+          },
+          function (callback) {
+            // the client needs jsInit and might not have it by now
+            callback(null, jsInit);
+          },
+          function (callback) {
+            getClientSql(extension, callback);
+          }
+        ], function (err, results) {
+          masterCallback(err, _.reduce(results, function (memo, sql) {
+            return memo + sql;
+          }, ""));
         });
       };
 
@@ -501,4 +508,36 @@ var _ = require('underscore'),
       });
     });
   };
+
+
+  //
+  // Another option: unregister the extension
+  //
+  exports.unregister = function (specs, creds, masterCallback) {
+    var extension = path.basename(specs[0].extensions[0]),
+      unregisterSql = ["delete from xt.usrext where usrext_id in " +
+        "(select usrext_id from xt.usrext inner join xt.ext on usrext_ext_id = ext_id where ext_name = $1);",
+
+        "delete from xt.clientcode where clientcode_id in " +
+        "(select clientcode_id from xt.clientcode inner join xt.ext on clientcode_ext_id = ext_id where ext_name = $1);",
+
+        "delete from xt.extdep where extdep_id in " +
+        "(select extdep_id from xt.extdep inner join xt.ext " +
+        "on extdep_from_ext_id = ext_id or extdep_to_ext_id = ext_id where ext_name = $1);",
+
+        "delete from xt.ext where ext_name = $1;"];
+
+    winston.info("Unregistering extension:", extension);
+    var unregisterEach = function (spec, callback) {
+      var options = JSON.parse(JSON.stringify(creds));
+      options.database = spec.database;
+      options.parameters = [extension];
+      var queryEach = function (sql, sqlCallback) {
+        dataSource.query(sql, options, sqlCallback);
+      };
+      async.eachSeries(unregisterSql, queryEach, callback);
+    };
+    async.each(specs, unregisterEach, masterCallback);
+  };
+
 }());
