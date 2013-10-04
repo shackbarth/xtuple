@@ -288,6 +288,26 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   }
 
   /**
+    Wrapper for plv8.execute() for calling postgres functions. 
+    If the postgres function returns an error in the form of
+    a negative integer, this function finds the appropriate 
+    translation and throws that error.
+    @param {String} sql
+    @param {Array} params
+   */
+  XT.executeFunction = function (sql, params) {
+    var ret = plv8.execute(sql, params);
+
+    if(typeof ret === 'number' && ret < 0) {
+      plv8.elog(NOTICE, "Error!");
+      return ret;
+    } else {
+      return ret;
+    }
+  };
+
+
+  /**
    * Wrap PostgreSQL's format() function to format SQL Injection safe queires or general strings.
    * http://www.postgresql.org/docs/9.1/interactive/functions-string.html#FUNCTIONS-STRING-OTHER
    *

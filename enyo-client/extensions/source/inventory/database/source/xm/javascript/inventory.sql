@@ -407,7 +407,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       item = ary[i];
       asOf = item.options ? item.options.asOf : null;
       orderType = plv8.execute(sql1, [item.orderLine])[0];
-      series = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
+      series = XT.executeFunction(sql2.replace(/{table}/g, orderType.ordtype_tblname),
         [orderType.ordtype_code, item.orderLine, item.quantity, 0, asOf])[0].series;
 
       /* Distribute detail */
