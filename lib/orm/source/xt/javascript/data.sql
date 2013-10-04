@@ -1377,7 +1377,8 @@ select xt.install_js('XT','Data','xtuple', $$
       if(ret.length) {
         return ret[0].id;
       } else {
-        throw new handleError("Primary Key Not Found", 400);
+        throw new handleError("Primary Key not found on " + orm.table + 
+          " where " + ncol + " = " + value, 400);
       }
     },
 

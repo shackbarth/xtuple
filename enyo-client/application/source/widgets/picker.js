@@ -5,17 +5,6 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   // ..........................................................
-  // ABC CLASS
-  //
-
-  enyo.kind({
-    name: "XV.AbcClassPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.abcClasses",
-    valueAttribute: "id"
-  });
-
-  // ..........................................................
   // ACCOUNT TYPE
   //
 
@@ -100,17 +89,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // CONTROL METHOD
-  //
-
-  enyo.kind({
-    name: "XV.ControlMethodPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.controlMethods",
-    valueAttribute: "id"
-  });
-
-  // ..........................................................
   // COST CATEGORY
   //
 
@@ -122,17 +100,6 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'code'}
     ]
-  });
-
-  // ..........................................................
-  // COST METHOD
-  //
-
-  enyo.kind({
-    name: "XV.CostMethodPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.costMethods",
-    valueAttribute: "id"
   });
 
   // ..........................................................
@@ -223,6 +190,17 @@ regexp:true, undef:true, trailing:true, white:true */
     iconVisible: function (model) {
       return model.get("shared");
     }
+  });
+
+  // ..........................................................
+  // FREIGHT CLASS
+  //
+
+  enyo.kind({
+    name: "XV.FreightClassPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.freightClasses",
+    nameAttribute: "code"
   });
 
   // ..........................................................
@@ -728,7 +706,13 @@ regexp:true, undef:true, trailing:true, white:true */
       } else {
         this.inherited(arguments, [false]);
       }
-    }
+    },
+  });
+
+  enyo.kind({
+    name: "XV.OptionalSitePicker",
+    kind: "XV.SitePicker",
+    showNone: true
   });
 
   // ..........................................................

@@ -9,7 +9,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     processName: "node-datasource",
     allowMultipleInstances: true,
     client: {
-      freeDemo: false
+      freeDemo: false,
+      encoding: "rjson"
     },
     datasource: {
       debugging: false,
@@ -22,6 +23,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       bindAddress: "localhost",
       redirectPort: 80,
       maintenancePort: 442,
+      // proxyPort is the port the app will be redirected to 
+      // this is useful if there is a proxy in front of the app listening 
+      // on a different port
+      proxyPort: null,
       port: 443,
       keyFile: "./lib/private/key.pem",
       certFile: "./lib/private/server.crt",

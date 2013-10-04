@@ -18,66 +18,44 @@ white:true*/
 
       privileges: 'ConfigureIM',
 
-      validate: function (attributes, options) {
-        // XXX not sure if number widgets can fail in this way.
-        var params = { type: "_number".loc() };
-        if (attributes.NextShipmentNumber !== undefined &&
-            isNaN(attributes.NextShipmentNumber)) {
-          params.attr = "_shipment".loc() + " " + "_number".loc();
-          return XT.Error.clone('xt1003', { params: params });
-        }
-      }
-    });
+      readOnlyAttributes: [
+        "AllowAvgCostMethod",
+        "AllowStdCostMethod",
+        "AllowJobCostMethod"
+      ],
 
-    //
-    // CLASS FUNCTIONS
-    //
-    _.extend(XM.Inventory, {
-
-      canIssueStock: function (callback) {
-        var canDo = true; // TODO Is this always true?
-        callback(canDo);
-        return canDo;
+      bindEvents: function () {
+        XM.Settings.prototype.bindEvents.apply(this, arguments);
+        this.on('statusChange', this.statusDidChange);
       },
 
-      canEnterReceipt: function (callback) {
-        var canDo = XT.session.privileges.get("EnterReceipts");
-        callback(canDo);
-        return canDo;
-      },
-
-      issueStock: function () {
-        // TODO
-      },
-
-      /**
-        @param {Array} lineItemsDetail
-        @param {String} lineItemsDetail[n].uuid
-        @param {Number} lineItemsDetail[n].quantity
-       */
-      enterReceipt: function (lineItemsDetail, callback) {
-        var options = {
-            error: callback,
-            success: function (resp) {
-              if (callback) {
-                callback(null, resp);
-              }
-            }
-          },
-          payload = {
-            nameSpace: "XM",
-            type: "Inventory",
-            dispatch: {
-              functionName: "enterReceipt",
-              parameters: [lineItemsDetail]
+      statusDidChange: function () {
+        var that = this,
+          options = {
+            isJSON: true,
+            success: function (used) {
+              that.setReadOnly("AllowAvgCostMethod", used.average);
+              that.setReadOnly("AllowStdCostMethod", used.standard);
+              that.setReadOnly("AllowJobCostMethod", used.job);
             }
           };
+        if (this.getStatus() === XM.Model.READY_CLEAN) {
+          this.dispatch("XM.Inventory", "usedCostMethods", null, options);
+        }
+      },
 
-        XT.dataSource.request(null, "post", payload, options);
+      validate: function () {
+        var error = XM.Settings.prototype.validate.apply(this, arguments);
+        if (error) { return error; }
+
+        if (!this.get("AllowAvgCostMethod") &&
+            !this.get("AllowStdCostMethod") &&
+            !this.get("AllowJobCostMethod")) {
+          // TO DO: Throw must have at least one cost method error
+        }
       }
 
     });
-
 
     XM.inventory = new XM.Inventory();
 

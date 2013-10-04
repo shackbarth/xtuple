@@ -71,7 +71,7 @@ white:true*/
     /**
       @class
 
-      @extends XM.Info
+      @extends XM.Model
       @extends XM.LocationMixin
     */
     XM.LocationRelation = XM.Model.extend({
@@ -84,6 +84,17 @@ white:true*/
 
     // Add in location mixin
     XM.LocationRelation = XM.LocationRelation.extend(XM.LocationMixin);
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.ItemSiteLocation = XM.Model.extend({
+      
+      recordType: "XM.ItemSiteLocation"
+
+    });
 
     // ..........................................................
     // COLLECTIONS

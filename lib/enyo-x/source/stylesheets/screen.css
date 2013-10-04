@@ -63,7 +63,7 @@
   text-align: left;
 }
 .xv-picker-button .picker-content {
-  max-width: 118px;
+  max-width: 100px;
   overflow: hidden;
 }
 .xv-picker-label {
@@ -71,6 +71,9 @@
   padding: 18px 8px 8px 8px;
   text-align: right;
   width: 130px;
+}
+.xv-picker-label.disabled {
+  color: #696969;
 }
 /* Combo Box */
 .xv-combobox-input {
@@ -349,7 +352,7 @@
 
 }
 .xv-grid-box.panel {
-  width: 840px;
+  width: 765px;
 }
 .xv-grid-box .enyo-list-page > *:first-child .xv-grid-row {
   border-top: 0px;
@@ -400,7 +403,7 @@
 }
 .xv-grid-box .xv-grid-row .grid-item {
   vertical-align: top;
-  width: 250px;
+  width: 175px;
 }
 .xv-grid-box .xv-grid-row .quantity {
   vertical-align: top;
@@ -2216,6 +2219,10 @@ body {
 .wide > * {
   min-width: 50%;
 }
+.scroll-ios {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
 .developer-ui-container {
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
   -moz-box-shadow: #333333 4px 4px 10px -4px;
@@ -2326,6 +2333,9 @@ body {
 }
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #dddddd;
+}
+.xv-startup-panel {
+  background: #333333;
 }
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
@@ -2771,10 +2781,16 @@ body {
   padding: 8px;
   text-align: right;
 }
+.xv-label.disabled {
+  color: #696969;
+}
 .xv-decorated-label {
   width: 130px;
   padding: 14px 8px 8px 8px;
   text-align: right;
+}
+.xv-decorated-label.disabled {
+  color: #696969;
 }
 .xv-short-textarea .xv-textarea-input {
   min-height: 0px;

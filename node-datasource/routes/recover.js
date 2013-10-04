@@ -59,7 +59,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var recoverModel = new SYS.Recover(),
           setRecovery;
 
-        if (results.length === 0) {
+        if (!results || results.length === 0) {
           // XXX Ben recommends we don't show our hand here.
           res.render('forgot_password', { message: [errorMessage], databases: X.options.datasource.databases });
           return;

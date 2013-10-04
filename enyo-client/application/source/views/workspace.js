@@ -1071,6 +1071,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     kind: "XV.Workspace",
     title: "_item".loc(),
     model: "XM.Item",
+    headerAttrs: ["number", "-", "description1"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1084,6 +1085,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "description2"},
             {kind: "XV.ItemTypePicker", attr: "itemType", showNone: false},
             {kind: "XV.ClassCodePicker", attr: "classCode"},
+            {kind: "XV.FreightClassPicker", attr: "freightClass"},
             {kind: "XV.UnitPicker", attr: "inventoryUnit"},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
             {kind: "XV.CheckboxWidget", attr: "isPicklist"},
@@ -1147,6 +1149,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     kind: "XV.Workspace",
     title: "_itemSite".loc(),
     model: "XM.ItemSite",
+    headerAttrs: ["item.number", "-", "site.code"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1155,7 +1158,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.ItemWidget", attr: "item"},
-            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.OptionalSitePicker", attr: "site"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.PlannerCodePicker", attr: "plannerCode"},
             {kind: "XV.CostCategoryPicker", attr: "costCategory"},
@@ -1900,7 +1903,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
-        {kind: "XV.SalesOrderCommentBox", attr: "comments"},
+        {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
+          attr: "comments"},
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
     ],
@@ -1910,7 +1914,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     build: function () {
       if (XT.session.privileges.get("ProcessCreditCards") && XT.session.settings.get("CCCompany") === "Authorize.Net") {
         this.$.salesPanels.createComponent(
-          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards"},
+          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards",
+            addBefore: this.$.salesOrderCommentBox},
           {owner: this}
         );
       }
@@ -2049,6 +2054,32 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   });
 
   XV.registerModelWorkspace("XM.Shift", "XV.ShiftWorkspace");
+
+  // ..........................................................
+  // SHIP VIA
+  //
+
+  enyo.kind({
+    name: "XV.ShipViaWorkspace",
+    kind: "XV.Workspace",
+    title: "_shipVia".loc(),
+    model: "XM.ShipVia",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ShipVia", "XV.ShipViaWorkspace");
 
   // ..........................................................
   // SHIP ZONE

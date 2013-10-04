@@ -6,7 +6,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 //
 // This file really just parses the arguments, and sends the real work
-// off to lib/build.js.
+// off to scripts/lib/build_all.js.
 //
 
 (function () {
@@ -23,6 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-i, --initialize', 'Initialize database. Must be used with the -b flag.')
     .option('-k, --keepsql', 'Do not delete the temporary sql files that represent the payload of the build.')
     .option('-q, --querydirect', 'Query the database directly, without delegating to psql.')
+    .option('-u, --unregister', 'Unregister an extension.')
     .option('-w, --wipeviews', 'Drop the views and the orm registrations pre-emptively.')
     .option('-y, --clientonly', 'Only rebuild the client.')
     .option('-z, --databaseonly', 'Only rebuild the database.')
@@ -30,17 +31,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   build({
     backup: program.backup,
-    database: program.database,
     config: program.config,
+    database: program.database,
     extension: program.extension,
     initialize: program.initialize,
     keepSql: program.keepsql,
     queryDirect: program.querydirect,
+    unregister: program.unregister,
     wipeViews: program.wipeviews,
     clientOnly: program.clientonly,
     databaseOnly: program.databaseonly
   }, function (err, res) {
-    console.log(err || res);
+    console.log(err || res || "Success!");
+    process.exit(err ? 1 : 0);
   });
 
 }());

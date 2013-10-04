@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict: false*/
-/*global XT:true, XM:true, XV:true, enyo:true, Globalize: true*/
+/*global XT:true, XM:true, XV:true, enyo:true, Globalize: true, _:true*/
 
 (function () {
 
@@ -22,9 +22,6 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
-              {kind: "onyx.GroupboxHeader", content: "_reporting".loc()},
-              {kind: "XV.NumberWidget", attr: "DefaultEventFence",
-                label: "_defaultEventFence".loc(), formatting: false},
               {kind: "onyx.GroupboxHeader", content: "_changeLog".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "WarehouseChangeLog",
                 label: "_postSiteChanges".loc()},
@@ -36,31 +33,19 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ToggleButtonWidget", attr: "AllowStdCostMethod",
                 label: "_allowStdCostMethod".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "AllowJobCostMethod",
-                label: "_allowJobCostMethod".loc()},
-              /*
-              {kind: "XV.PickerWidget", attr: "CountAvgCostMethod",
-                label: "_countAvgCostMethod".loc(), collection: "XM.countAvgCostMethod"},
-              {kind: "onyx.GroupboxHeader", content: "_physicalInventory".loc()},
-              {kind: "XV.PickerWidget", attr: "PostCountTagToDefault",
-                label: "_postCountTagToDefault".loc(), collection: "XM.postCountTagToDefault"},
-              {kind: "XV.PickerWidget", attr: "CountSlipAuditing",
-                label: "_countSlipAuditing".loc(), collection: "XM.countSlipAuditing"},
-              */
-              {kind: "onyx.GroupboxHeader", content: "_shippingAndReceiving".loc()},
+                label: "_allowJobCostMethod".loc()}
+            ]}
+          ]},
+          {kind: "XV.Groupbox", name: "shippingPanel", title: "_shipping".loc(), components: [
+            {kind: "XV.ScrollableGroupbox", name: "shippingGroup", fit: true,
+              classes: "in-panel", components: [
+              {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
               {kind: "XV.NumberPolicyPicker", attr: "ShipmentNumberGeneration",
                 label: "_shipmentNumberPolicy".loc()},
               {kind: "XV.NumberWidget", attr: "NextShipmentNumber",
                 label: "_nextShipmentNumber".loc(), formatting: false},
               {kind: "XV.ToggleButtonWidget", attr: "KitComponentInheritCOS",
-                label: "_kitComponentInheritCOS".loc()},
-              {kind: "XV.ToggleButtonWidget", attr: "DisallowReceiptExcessQty",
-                label: "_disableReceiptExcessQty".loc()},
-              {kind: "XV.ToggleButtonWidget", attr: "WarnIfReceiptQtyDiffers",
-                label: "_warnIfReceiptQtyDiffers".loc()},
-              {kind: "XV.NumberWidget", attr: "ReceiptQtyTolerancePct",
-                label: "_receiptQtyTolerancePct".loc(), formatting: false},
-              {kind: "XV.ToggleButtonWidget", attr: "RecordPPVonReceipt",
-                label: "_recordPPVOnReceipt".loc()}
+                label: "_kitComponentInheritCOS".loc()}
             ]}
           ]}
         ]}
@@ -404,40 +389,131 @@ trailing:true, white:true, strict: false*/
     //
 
     var extensions = [
-      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_inventory".loc() },
-      {kind: "XV.ControlMethodPicker", container: "mainGroup", attr: "controlMethod"},
-      {kind: "XV.CostMethodPicker", container: "mainGroup", attr: "costMethod"},
-      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStocked"},
-      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isAutomaticAbcClassUpdates"},
-      {kind: "XV.AbcClassPicker", container: "mainGroup", attr: "abcClass"},
-      //TODO: Create an XV widget that includes an integer input field and an increase and decrease button
-      {kind: "XV.NumberWidget", container: "mainGroup", attr: "cycleCountFrequency", scale: 0},
-      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_location".loc() },
-      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isLocationControl"},
-      //TODO get a checkbox working for useDefaultLocation - currently a function on the model
-      //{kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isUseDefaultLocation"},
-      //{kind: "XV.InputWidget", container: "mainGroup", type: "boolean", name: "isUseDefaultLocation", label: "_isUseDefaultLocation".loc()},
-      {kind: "XV.LocationPicker", container: "mainGroup", attr: "receiveLocation"},
-      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isReceiveLocationAuto"},
-      {kind: "XV.LocationPicker", container: "mainGroup", attr: "stockLocation"},
-      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "isStockLocationAuto"},
-      {kind: "XV.InputWidget", container: "mainGroup", attr: "userDefinedLocation"},
-      {kind: "XV.InputWidget", container: "mainGroup", attr: "locationComment"},
-      //LIST - RESTRICTED LOCATIONS restrictedLocationsAllowed from xm.item_site_location. Look at the privileges checkbox list for an example.
-      {kind: "onyx.GroupboxHeader", container: "mainGroup", content: "_planning".loc() },
-      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParameters"},
-      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "reorderLevel"},
-      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "orderToQuantity"},
-      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "minimumOrderQuantity"},
-      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "maximumOrderQuantity"},
-      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "multipleOrderQuantity"},
-      {kind: "XV.CheckboxWidget", container: "mainGroup", attr: "useParametersManual"},
-      {kind: "XV.QuantityWidget", container: "mainGroup", attr: "safetyStock"},
-      {kind: "XV.NumberWidget", container: "mainGroup", attr: "leadTime", scale: 0}
-
+      {kind: "XV.Groupbox", name: "inventoryPanel", title: "_inventory".loc(),
+        container: "panels", components: [
+        {kind: "onyx.GroupboxHeader", content: "_inventory".loc()},
+        {kind: "XV.ScrollableGroupbox", name: "inventoryGroup", fit: true,
+          classes: "in-panel", components: [
+          {kind: "XV.ControlMethodPicker", attr: "controlMethod"},
+          {kind: "XV.CostMethodPicker", attr: "costMethod"},
+          {kind: "XV.CheckboxWidget", attr: "isStocked"},
+          {kind: "XV.AbcClassPicker", attr: "abcClass"},
+          {kind: "XV.ToggleButtonWidget", attr: "isAutomaticAbcClassUpdates"},
+          {kind: "XV.NumberWidget", attr: "cycleCountFrequency", scale: 0}
+        ]}
+      ]},
+      {kind: "XV.Groupbox", name: "planningPanel", title: "_planning".loc(),
+        container: "panels", components: [
+        {kind: "onyx.GroupboxHeader", content: "_planning".loc()},
+        {kind: "XV.ScrollableGroupbox", name: "planningGroup", fit: true,
+          classes: "in-panel", components: [
+          {kind: "XV.QuantityWidget", attr: "safetyStock"},
+          {kind: "XV.NumberWidget", attr: "leadTime", scale: 0},
+          {kind: "onyx.GroupboxHeader", content: "_parameters".loc() },
+          {kind: "XV.ToggleButtonWidget", attr: "useParameters"},
+          {kind: "XV.QuantityWidget", attr: "reorderLevel"},
+          {kind: "XV.QuantityWidget", attr: "orderToQuantity"},
+          {kind: "XV.QuantityWidget", attr: "minimumOrderQuantity"},
+          {kind: "XV.QuantityWidget", attr: "maximumOrderQuantity"},
+          {kind: "XV.QuantityWidget", attr: "multipleOrderQuantity"},
+          {kind: "XV.ToggleButtonWidget", attr: "useParametersManual"}
+        ]}
+      ]},
+      {kind: "XV.Groupbox", name: "locationPanel", title: "_locationControl".loc(),
+        container: "panels", components: [
+        {kind: "onyx.GroupboxHeader", content: "_locationControl".loc()},
+        {kind: "XV.ScrollableGroupbox", name: "locationGroup", fit: true,
+          classes: "in-panel", components: [
+          {kind: "XV.ToggleButtonWidget", attr: "isLocationControl",
+            label: "_multipleLocationControl".loc()},
+          {kind: "XV.InputWidget", attr: "locationComment"},
+          {kind: "XV.CheckboxWidget", attr: "useDefaultLocation"},
+          {kind: "XV.InputWidget", attr: "userDefinedLocation"},
+          {kind: "XV.LocationPicker", attr: "receiveLocation"},
+          {kind: "XV.ToggleButtonWidget", attr: "isReceiveLocationAuto"},
+          {kind: "XV.LocationPicker", attr: "stockLocation"},
+          {kind: "XV.ToggleButtonWidget", attr: "isStockLocationAuto"}
+        ]}
+      ]},
+      {kind: "XV.Groupbox", name: "restrictedPanel", title: "_restrictedLocations".loc(),
+        container: "panels", components: [
+        {kind: "onyx.GroupboxHeader", content: "_restrictedLocationsAllowed".loc()},
+        {kind: "XV.ScrollableGroupbox", name: "restrictedGroup", fit: true,
+          classes: "in-panel", components: [
+          {kind: "XV.ItemSiteRestrictedLocationAssignmentBox",
+            attr: "restrictedLocationsAllowed", name: "restrictedLocations" }
+        ]}
+      ]}
     ];
 
     XV.appendExtension("XV.ItemSiteWorkspace", extensions);
+
+    // Add in handling for cost methods
+    var _proto = XV.ItemSiteWorkspace.prototype,
+      _recordIdChanged = _proto.recordIdChanged,
+      _newRecord = _proto.newRecord,
+      _statusChanged = _proto.statusChanged;
+
+    var ext = {
+      newRecord: function () {
+        _newRecord.apply(this, arguments);
+        this.setupPicker();
+        this.setupRestricted();
+      },
+      recordIdChanged: function () {
+        _recordIdChanged.apply(this, arguments);
+        this.setupPicker();
+      },
+      refreshCostMethods: function () {
+        this.$.costMethodPicker.buildList();
+      },
+      refreshRestricted: function () {
+        this.$.restrictedLocations.setSite(this.getValue().get("site"));
+      },
+      statusChanged: function () {
+        _statusChanged.apply(this, arguments);
+        var value = this.getValue(),
+          status = value ? value.getStatus() : false;
+
+        if (status === XM.Model.READY_CLEAN) {
+          this.refreshRestricted();
+        }
+      },
+      setupPicker: function () {
+        var picker = this.$.costMethodPicker,
+          model = this.getValue();
+
+        // Remove any binding
+        if (picker._model) {
+          picker._model.off("costMethodsChange", this.refreshCostMethods, this);
+          delete picker._model;
+        }
+        
+        // Add a new one
+        if (model && model.id) {
+          model.on("costMethodsChange", this.refreshCostMethods, this);
+          picker._model = model; // Cache for future reference
+        }
+      },
+      setupRestricted: function () {
+        var restricted = this.$.restrictedLocations,
+          model = this.getValue();
+
+        // Remove any binding
+        if (restricted._model) {
+          restricted._model.off("change:site", this.refreshRestricted, this);
+          delete restricted._model;
+        }
+        
+        // Add a new one
+        if (model && model.id) {
+          model.on("change:site", this.refreshRestricted, this);
+          restricted._model = model; // Cache for future reference
+        }
+      }
+    };
+
+    enyo.mixin(_proto, ext);
 
   };
 }());

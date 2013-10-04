@@ -17,47 +17,45 @@ var buildAll = require('../../../scripts/lib/build_all'),
 
     var config = require(path.join(__dirname, "../../../node-datasource/config.js")),
       creds = config.databaseServer,
-      testInit = true, // false is faster, true is more thorough
       databaseName = config.datasource.testDatabase;
 
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
     creds.username = creds.user; // adapt our lingo to orm installer lingo
 
-    if (testInit) {
-      it('should build without error on a brand-new database', function (done) {
-        buildAll.build({
-          database: databaseName,
-          initialize: true,
-          // TODO: use postbooks backup
-          backup: path.join(__dirname, "../lib/demo-test.backup")
-        }, function (err, res) {
-          assert.isNull(err);
-          done();
-        });
+    it('should build without error on a brand-new database', function (done) {
+      buildAll.build({
+        database: databaseName,
+        initialize: true,
+        // TODO: use postbooks backup
+        backup: path.join(__dirname, "../lib/demo-test.backup")
+      }, function (err, res) {
+        assert.isNull(err);
+        done();
       });
+    });
 
-      it('should have core extensions built', function (done) {
-        var sql = "select * from pg_class where relname = 'contact_project';";
+    it('should have core extensions built', function (done) {
+      var sql = "select * from pg_class where relname = 'contact_project';";
 
-        creds.database = databaseName;
-        datasource.query(sql, creds, function (err, res) {
-          assert.isNull(err);
-          assert.equal(res.rowCount, 1);
-          done();
-        });
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNull(err);
+        assert.equal(res.rowCount, 1);
+        done();
       });
+    });
 
-      it('should not have non-core extensions built', function (done) {
-        var sql = "select * from xt.orm where orm_context = 'time_expense';";
+    it('should not have non-core extensions built', function (done) {
+      var sql = "select * from xt.orm where orm_context = 'time_expense';";
 
-        creds.database = databaseName;
-        datasource.query(sql, creds, function (err, res) {
-          assert.isNull(err);
-          assert.equal(res.rowCount, 0);
-          done();
-        });
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNull(err);
+        assert.equal(res.rowCount, 0);
+        done();
       });
-    }
+    });
+
     it('should rebuild without error on an existing database', function (done) {
       buildAll.build({
         database: databaseName
@@ -78,18 +76,16 @@ var buildAll = require('../../../scripts/lib/build_all'),
       });
     });
 
-    if (testInit) {
-      it('should not have non-core extensions built', function (done) {
-        var sql = "select * from xt.orm where orm_context = 'time_expense';";
+    it('should not have non-core extensions built', function (done) {
+      var sql = "select * from xt.orm where orm_context = 'time_expense';";
 
-        creds.database = databaseName;
-        datasource.query(sql, creds, function (err, res) {
-          assert.isNull(err);
-          assert.equal(res.rowCount, 0);
-          done();
-        });
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNull(err);
+        assert.equal(res.rowCount, 0);
+        done();
       });
-    }
+    });
 
     it('should be able to build an extension', function (done) {
       buildAll.build({
