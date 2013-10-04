@@ -402,12 +402,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     sql2 = "select {table}_id as id " +
            "from {table} where obj_uuid = $1;";
-/*
-    sql2 = "select issuetoshipping($1, {table}_id, $3, $4, $5::timestamptz) as series " +
-           "from {table} where obj_uuid = $2;";
-*/
+
     /* Post the transaction */
-    plv8.elog(NOTICE, "About to post");
     for (i = 0; i < ary.length; i++) {
       item = ary[i];
       asOf = item.options ? item.options.asOf : null;
@@ -415,7 +411,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       id = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
         [item.orderLine])[0].id;
       series = XT.executeFunction("issuetoshipping",
-        ["MEH" + orderType.ordtype_code, id, item.quantity, 0, asOf],
+        ["MEH" + orderType.ordtype_code, id, item.quantity, 0, asOf], /* XXX remove MEH */
         [null, null, null, null, "timestamptz"]);
 
       /* Distribute detail */
