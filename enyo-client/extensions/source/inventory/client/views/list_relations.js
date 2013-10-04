@@ -73,7 +73,7 @@ trailing:true, white:true*/
         if (value) { return value.format(); }
       },
       formatQuantity: function (value) {
-        var scale = XT.session.locale.attributes.quantityScale;
+        var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
       rowChanged: function (model) {
@@ -137,7 +137,7 @@ trailing:true, white:true*/
         ]}
       ],
       formatQuantity: function (value) {
-        var scale = XT.session.locale.attributes.quantityScale;
+        var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       }
     });

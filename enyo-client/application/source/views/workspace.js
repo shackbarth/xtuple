@@ -1903,7 +1903,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
-        {kind: "XV.SalesOrderCommentBox", attr: "comments"},
+        {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
+          attr: "comments"},
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
     ],
@@ -1913,7 +1914,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
     build: function () {
       if (XT.session.privileges.get("ProcessCreditCards") && XT.session.settings.get("CCCompany") === "Authorize.Net") {
         this.$.salesPanels.createComponent(
-          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards"},
+          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards",
+            addBefore: this.$.salesOrderCommentBox},
           {owner: this}
         );
       }
@@ -2052,6 +2054,32 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   });
 
   XV.registerModelWorkspace("XM.Shift", "XV.ShiftWorkspace");
+
+  // ..........................................................
+  // SHIP VIA
+  //
+
+  enyo.kind({
+    name: "XV.ShipViaWorkspace",
+    kind: "XV.Workspace",
+    title: "_shipVia".loc(),
+    model: "XM.ShipVia",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ShipVia", "XV.ShipViaWorkspace");
 
   // ..........................................................
   // SHIP ZONE

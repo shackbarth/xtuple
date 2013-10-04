@@ -19,6 +19,8 @@ if (typeof X === 'undefined') {
 (function () {
   "use strict";
 
+  var RJSON = require("rjson");
+
   exports.dataSource = XT.dataSource = X.Database.create({
     requestNum: 0,
     callbacks: {},
@@ -31,6 +33,25 @@ if (typeof X === 'undefined') {
         database: organization,
         password: X.options.databaseServer.password
       };
+    },
+
+    /**
+    * Encode the server's response into the encoding specified by the client
+    * @see enyo-client/application/source/ext/datasource.js#decodeResponse
+    */
+    encodeResponse: function (result, encoding) {
+      if (!encoding) {
+        return result;
+      }
+      else if (encoding === "rjson") {
+        return RJSON.pack(result);
+      }
+      else {
+        return {
+          isError: true,
+          status: "Encoding [" + encoding + "] not recognized."
+        };
+      }
     },
 
     /**

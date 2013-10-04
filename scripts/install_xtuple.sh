@@ -427,15 +427,6 @@ pull_modules() {
     echo "}" >> login_data.js
 	log "Created testing login_data.js"
 
-	cdir ../../enyo-client/extensions
-    rm -f debug.js
-    echo "enyo.depends(" > debug.js
-    echo "  '/dev/core-extensions/source/crm/client/package.js'," >> debug.js
-    echo "  '/dev/core-extensions/source/inventory/client/package.js'," >> debug.js
-    echo "  '/dev/core-extensions/source/project/client/package.js'," >> debug.js
-    echo "  '/dev/core-extensions/source/sales/client/package.js'" >> debug.js
-    echo ");" >> debug.js
-	log "Created debug.js"
 }
 
 init_everythings() {

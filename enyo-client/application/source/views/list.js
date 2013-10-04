@@ -1047,7 +1047,7 @@ trailing:true, white:true, strict: false*/
     formatPrice: function (value, view, model) {
       var sold = model.get("isSold");
       if (XT.session.privileges.get("ViewListPrices") && sold) {
-        var scale = XT.session.locale.attributes.salesPriceScale;
+        var scale = XT.locale.salesPriceScale;
         return Globalize.format(value, "c" + scale);
       }
       view.addRemoveClass("placeholder", true);
@@ -1233,7 +1233,7 @@ trailing:true, white:true, strict: false*/
     ],
     formatAmount: function (value, view, model) {
       var currency = model ? model.get("currency") : false,
-        scale = XT.session.locale.attributes.moneyScale;
+        scale = XT.locale.moneyScale;
       return currency ? currency.format(value, scale) : "";
     },
     formatTargetClose: function (value, view, model) {
@@ -1372,12 +1372,12 @@ trailing:true, white:true, strict: false*/
     },
     formatHours: function (value, view, model) {
       view.addRemoveClass("error", value < 0);
-      var scale = XT.session.locale.attributes.quantityScale;
+      var scale = XT.locale.quantityScale;
       return Globalize.format(value, "n" + scale) + " " + "_hrs".loc();
     },
     formatExpenses: function (value, view, model) {
       view.addRemoveClass("error", value < 0);
-      var scale = XT.session.locale.attributes.currencyScale;
+      var scale = XT.locale.currencyScale;
       return Globalize.format(value, "c" + scale);
     }
   });
@@ -1561,7 +1561,7 @@ trailing:true, white:true, strict: false*/
     /*
     formatPrice: function (value, view, model) {
       var currency = model ? model.get("currency") : false,
-        scale = XT.session.locale.attributes.salesPriceScale;
+        scale = XT.locale.salesPriceScale;
       return currency ? currency.format(value, scale) : "";
     } */
   });
@@ -1628,7 +1628,7 @@ trailing:true, white:true, strict: false*/
     },
     formatTotal: function (value, view, model) {
       var currency = model ? model.get("currency") : false,
-        scale = XT.session.locale.attributes.moneyScale;
+        scale = XT.locale.moneyScale;
       return currency ? currency.format(value, scale) : "";
     },
 
@@ -1796,6 +1796,34 @@ trailing:true, white:true, strict: false*/
       ]}
     ]
   });
+
+  // ..........................................................
+  // SHIP VIA
+  //
+
+  enyo.kind({
+    name: "XV.ShipViaList",
+    kind: "XV.List",
+    label: "_shipVias".loc(),
+    collection: "XM.ShipViaCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  XV.registerModelList("XM.ShipVia", "XV.ShipViaList");
 
   // ..........................................................
   // SHIP ZONE
