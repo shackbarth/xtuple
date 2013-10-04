@@ -6,6 +6,7 @@ create or replace function xt.set_dictionary(strings text, context text, languag
   var isDatabase = (context === '_database_') ? true : false,
     isFramework = (context === '_framework_') ? true : false,
     sqlExtension = "select ext_id from xt.ext where ext_name = $1",
+    extensions,
     extensionId = null,
     sqlCount = "select count(*) as count from xt.dict where dict_language_name = $1 " +
       "and (dict_ext_id = $2 or (dict_ext_id is null and $2 is null)) and dict_is_database = $3 " +
@@ -22,7 +23,13 @@ create or replace function xt.set_dictionary(strings text, context text, languag
 
   /* determine the extension ID, or null if it's core */
   if (context !== '_database_' && context !== '_core_' && context !== '_framework_') {
-    extensionId = plv8.execute(sqlExtension, [context])[0].ext_id;
+    extensions = plv8.execute(sqlExtension, [context]);
+    if (extensions.length === 0) {
+      /* The extension in the translation file is not registered in the db. 
+        Do not bother to import it */
+      return;
+    }
+    extensionId = extensions[0].ext_id;
   }
 
   count = plv8.execute(sqlCount, [language, extensionId, isDatabase, isFramework])[0].count;
