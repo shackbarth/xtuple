@@ -412,12 +412,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
       item = ary[i];
       asOf = item.options ? item.options.asOf : null;
       orderType = plv8.execute(sql1, [item.orderLine])[0];
-      plv8.elog(NOTICE, "About to post2", item.orderLine);
-      plv8.elog(NOTICE, orderType.ordtype_code);
-      plv8.elog(NOTICE, sql2.replace(/{table}/g, orderType.ordtype_tblname));
       id = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
         [item.orderLine])[0].id;
-      plv8.elog(NOTICE, "About to post3");
       series = XT.executeFunction("issuetoshipping",
         ["MEH" + orderType.ordtype_code, id, item.quantity, 0, asOf],
         [null, null, null, null, "timestamptz"]);

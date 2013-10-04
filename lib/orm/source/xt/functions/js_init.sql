@@ -288,9 +288,9 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   }
 
 
-  var errorToString (functionName, errorCode) {
-
-  }
+  var errorToString = function(functionName, errorCode) {
+    return functionName + errorCode;
+  };
 
   /**
     Wrapper for plv8.execute() for calling postgres functions. 
