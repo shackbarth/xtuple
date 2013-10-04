@@ -34,6 +34,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     email = require('./email'),
     exxport = require('./export'),
     data = require('./data'),
+    olapData = require('./olapdata'),
     dataFromKey = require('./data_from_key'),
     file = require('./file'),
     passport = require('passport'),
@@ -66,6 +67,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.get = [ensureLogin, data.get];
   exports.patch = [ensureLogin, data.patch];
   exports.post = [ensureLogin, data.post];
+  
+  //
+  //  OLAP query route
+  //
+  exports.queryOlapCatalog = [ensureLogin, olapData.queryOlapCatalog];
 
   //
   // REST API Routes

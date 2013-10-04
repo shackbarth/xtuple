@@ -67,6 +67,8 @@ SYS = {};
 
   // load some more required files
   require("./lib/ext/datasource");
+  require("./olapcatalog");
+  require("./lib/ext/olapsource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
 
@@ -376,6 +378,7 @@ app.get('/:org/file', routes.file);
 app.get('/:org/report', routes.report);
 app.get('/:org/analysis', routes.analysis);
 app.get('/:org/reset-password', routes.resetPassword);
+app.get('/:org/queryOlap', routes.queryOlapCatalog);
 
 
 //
