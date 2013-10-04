@@ -34,8 +34,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     email = require('./email'),
     exxport = require('./export'),
     data = require('./data'),
+    olapData = require('./olapdata'),
     dataFromKey = require('./data_from_key'),
     file = require('./file'),
+    locale = require('./locale'),
     passport = require('passport'),
     redirector = require('./redirector'),
     report = require('./report'),
@@ -48,6 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // Authentication-related routes
   //
   exports.app = [ensureLogin, app.serveApp];
+  exports.debug = [ensureLogin, app.serveDebug];
   exports.login = auth.login;
   exports.loginForm = auth.loginForm;
   exports.logout = auth.logout;
@@ -66,6 +69,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.get = [ensureLogin, data.get];
   exports.patch = [ensureLogin, data.patch];
   exports.post = [ensureLogin, data.post];
+  
+  //
+  //  OLAP query route
+  //
+  exports.queryOlapCatalog = [ensureLogin, olapData.queryOlapCatalog];
 
   //
   // REST API Routes
@@ -90,6 +98,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.email = [ensureLogin, email.email];
   exports.exxport = [ensureLogin, exxport.exxport];
   exports.file = [ensureLogin, file.file];
+  exports.locale = [ensureLogin, locale.locale];
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];
   exports.analysis = [ensureLogin, analysis.analysis];
