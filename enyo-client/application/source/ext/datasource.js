@@ -2,7 +2,7 @@
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true, enyo:true
-  document:true, setTimeout:true, document:true */
+  document:true, setTimeout:true, document:true, RJSON:true */
 
 (function () {
   "use strict";
@@ -47,6 +47,32 @@ white:true*/
         'commitPreferences', param, options);
     },
 
+    /**
+     * Decode the server's response to a bona fide Javascript object.
+     * @see node-datasource/routes/data.js#encodeResponse
+     *
+     * @param {Object}  response  the server's response object
+     * @param {Object}  options   the request options
+     *
+     * @return {Object} the server's response as a Javascript object.
+     */
+    decodeResponse: function (response, options) {
+      var encoding = options.encoding || XT.session.config.encoding;
+
+      if (!encoding) {
+        return response;
+      }
+      else if (encoding === "rjson") {
+        return RJSON.unpack(response);
+      }
+      else {
+        return {
+          isError: true,
+          status: "Encoding [" + encoding + "] not recognized."
+        };
+      }
+    },
+
     /*
     Server request
 
@@ -74,7 +100,7 @@ white:true*/
             return;
           }
 
-          dataHash = response.data;
+          dataHash = that.decodeResponse(response, options).data;
 
           // Handle no data on a single record retrieve as error
           if (method === "get" && options.id &&
@@ -108,6 +134,10 @@ white:true*/
             options.success.call(that, obj, attrs, options);
           }
         };
+
+      _(payload).extend({
+        encoding: options.encoding || XT.session.config.encoding
+      });
 
       return XT.Request
                .handle(method)

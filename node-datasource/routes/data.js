@@ -30,6 +30,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       queryString = "select xt.%@($$%@$$)",
       binaryField = payload.binaryField,
       buffer,
+      result,
       adaptorCallback = function (err, res) {
         var data,
             status;
@@ -49,11 +50,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           } catch (error) {
             data = {isError: true, status: "Cannot parse data"};
           }
-          callback({
-            data: data,
-            status: res.status,
-            debug: res.debug
-          });
+          callback(
+            XT.dataSource.encodeResponse({
+              data: data,
+              status: res.status,
+              debug: res.debug
+            },
+            payload.encoding)
+          );
         } else {
           callback({
             isError: true,

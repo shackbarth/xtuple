@@ -3,7 +3,6 @@ enyo.depends(
   "../lib/tools",
   "../lib/backbone-x",
   "../lib/enyo-x",
-  "en",
   "ext",
   "models",
   "widgets",

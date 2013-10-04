@@ -112,8 +112,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               "&org=" + req.session.passport.user.organization +
               "&datasource=" + req.headers.host + "&datakey=" + randomKey;
 
-          if (requestDetails.locale && requestDetails.locale.culture) {
-            res.set("Accept-Language", requestDetails.locale.culture);
+          if (requestDetails.culture) {
+            res.set("Accept-Language", requestDetails.culture);
           }
           // step 3: redirect to the report tool
           res.redirect(redirectUrl);
