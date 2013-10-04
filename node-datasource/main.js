@@ -67,6 +67,8 @@ SYS = {};
 
   // load some more required files
   require("./lib/ext/datasource");
+  require("./olapcatalog");
+  require("./lib/ext/olapsource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
 
@@ -369,8 +371,8 @@ app.get('/:org/file', routes.file);
 app.get('/:org/locale', routes.locale);
 app.get('/:org/report', routes.report);
 app.get('/:org/reset-password', routes.resetPassword);
+app.get('/:org/queryOlap', routes.queryOlapCatalog);
 app.all('/:org/vcfExport', routes.vcfExport);
-
 
 //
 // Load all extension-defined routes. By convention the paths,
