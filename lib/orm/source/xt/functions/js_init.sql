@@ -287,6 +287,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     }
   }
 
+
+  var errorToString (functionName, errorCode) {
+
+  }
+
   /**
     Wrapper for plv8.execute() for calling postgres functions. 
     If the postgres function returns an error in the form of
@@ -295,14 +300,34 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     @param {String} sql
     @param {Array} params
    */
-  XT.executeFunction = function (sql, params) {
-    var ret = plv8.execute(sql, params);
+  XT.executeFunction = function (functionName, params, casts) {
+    var cast,
+      errorString,
+      i,
+      param;
 
-    if(typeof ret === 'number' && ret < 0) {
-      plv8.elog(NOTICE, "Error!");
-      return ret;
+    /* TODO: sqli */
+    var sql = "select " + functionName + "(";
+    for (i = 0; i < params.length; i++) {
+      param = params[i];
+      cast = casts[i];
+      if (i > 0) {
+        sql = sql + ",";
+      }
+      sql = sql + "$" + (i + 1);
+      if(cast) {
+        sql = sql + "::" + cast;
+      }
+
+    }
+    sql = sql + ") as result";
+
+    var result = plv8.execute(sql, params)[0].result;
+    if(typeof result === 'number' && result < 0) {
+      errorString = errorToString(functionName, result);
+      throw new handleError(errorString, 424); 
     } else {
-      return ret;
+      return result;
     }
   };
 

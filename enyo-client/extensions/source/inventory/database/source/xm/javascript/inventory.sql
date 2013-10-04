@@ -381,6 +381,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       sql2,
       ary,
       item,
+      id,
       i;
 
     /* Make into an array if an array not passed */
@@ -399,16 +400,27 @@ select xt.install_js('XM','Inventory','xtuple', $$
            "  join xt.ordtype on c.relname=ordtype_tblname " +
            "where obj_uuid= $1;",
 
+    sql2 = "select {table}_id as id " +
+           "from {table} where obj_uuid = $1;";
+/*
     sql2 = "select issuetoshipping($1, {table}_id, $3, $4, $5::timestamptz) as series " +
            "from {table} where obj_uuid = $2;";
-
+*/
     /* Post the transaction */
+    plv8.elog(NOTICE, "About to post");
     for (i = 0; i < ary.length; i++) {
       item = ary[i];
       asOf = item.options ? item.options.asOf : null;
       orderType = plv8.execute(sql1, [item.orderLine])[0];
-      series = XT.executeFunction(sql2.replace(/{table}/g, orderType.ordtype_tblname),
-        [orderType.ordtype_code, item.orderLine, item.quantity, 0, asOf])[0].series;
+      plv8.elog(NOTICE, "About to post2", item.orderLine);
+      plv8.elog(NOTICE, orderType.ordtype_code);
+      plv8.elog(NOTICE, sql2.replace(/{table}/g, orderType.ordtype_tblname));
+      id = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
+        [item.orderLine])[0].id;
+      plv8.elog(NOTICE, "About to post3");
+      series = XT.executeFunction("issuetoshipping",
+        ["MEH" + orderType.ordtype_code, id, item.quantity, 0, asOf],
+        [null, null, null, null, "timestamptz"]);
 
       /* Distribute detail */
       XM.PrivateInventory.distribute(series, item.options.detail);
