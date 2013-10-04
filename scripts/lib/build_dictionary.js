@@ -239,7 +239,10 @@ if (typeof XT === 'undefined') {
     var creds = require("../../node-datasource/config").databaseServer;
     creds.database = database;
 
-    filename = path.join(process.cwd(), filename);
+    // the filename relative unless it starts with a slash
+    if (filename.substring(0, 1) !== '/') {
+      filename = path.join(process.cwd(), filename);
+    }
 
     fs.readFile(filename, "utf8", function (err, contents) {
       if (err) {
