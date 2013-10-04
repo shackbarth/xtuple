@@ -53,9 +53,12 @@ X.options = X.options || {};
         };
 
       // inject our mock query into the global variable
-      XT.dataSource = {query: queryFunction, getAdminCredentials: function () {
-        return {};
-      }};
+      _(XT.dataSource).extend({
+        query: queryFunction,
+        getAdminCredentials: function () {
+          return { };
+        }
+      });
 
       fileRoute.file(req, res);
     });
