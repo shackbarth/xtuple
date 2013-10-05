@@ -138,6 +138,7 @@
     "xm/javascript/project.sql",
     "xm/javascript/quote.sql",
     "xm/javascript/sales.sql",
+    "xm/javascript/sales_order.sql",
     "xm/javascript/sales_rep.sql",
     "xm/javascript/system.sql",
     "xm/javascript/tax.sql",
