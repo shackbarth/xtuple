@@ -136,6 +136,7 @@
     "xm/javascript/item.sql",
     "xm/javascript/item_site.sql",
     "xm/javascript/project.sql",
+    "xm/javascript/prospect.sql",
     "xm/javascript/quote.sql",
     "xm/javascript/sales.sql",
     "xm/javascript/sales_order.sql",
