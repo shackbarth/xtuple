@@ -121,6 +121,16 @@ select xt.install_js('XM','Customer','xtuple', $$
     return result; 
   }
 
+  /**
+    Return whether a tax authority is referenced by another table.
+    
+    @param {String} Tax Authority Number
+  */
+  XM.Customer.used = function(id) {
+    var exceptions = ["public.crmacct"];
+    return XM.PrivateModel.used("XM.Customer", id, exceptions);
+  };
+
 }());
   
 $$ );
