@@ -485,8 +485,10 @@ trailing:true, white:true, strict:false*/
         }
       },
       shipmentChanged: function (inSender, inEvent) {
+        var disabled = _.isEmpty(inEvent.shipment) ||
+                       !XT.session.privileges.get("ShipOrders");
         this.$.parameterWidget.$.shipment.setValue(inEvent.shipment);
-        this.$.postButton.setDisabled(_.isEmpty(inEvent.shipment));
+        this.$.postButton.setDisabled(disabled);
       }
     });
   };
