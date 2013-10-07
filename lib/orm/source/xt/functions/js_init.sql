@@ -437,7 +437,6 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       dictResult = plv8.execute(dictSql, [culture]);
       XT.dbStrings[culture] = JSON.parse(dictResult[0].dict_strings.toLowerCase());
     }
-    /* errorCode = errorCode - 1; XXX */
     /* this is the convention under which the translations are stored */
     stringsKey = "_xtdb_" + functionName + (-1 * errorCode);
 
