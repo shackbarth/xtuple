@@ -29,42 +29,54 @@
       zombieAuth.loadApp(appLoaded);
     });
 
-    describe('XV ReasonCodePicker', function () {
-      it('should have their attrs set up correctly', function () {
+    describe('test reason code picker', function () {
+      it('verify that the list has all test values when no document type is specified', function () {
         var child,
           key = "ReasonCodePicker",
-          collName,
           master = new enyo.Control();
 
-        // create the picker
+        // create the reason code picker
         child = master.createComponent({
           kind: "XV." + key,
           name: key
         });
         assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
 
-        // verify that there is a backing model
-        collName = child.getCollection();
-        assert.isNotNull(collName, 'XV.' + key + ' has no collection behind it');
-        var collection = _.isObject(this.collection) ? child.collection :
-            XT.getObjectByName(child.collection);
-        assert.isNotNull(collection, 'XV.' + key + ' does not have a valid collection name');
+        describe('test filtering on reason code picker', function () {
+          // add some mock data to the reason codes
+          var K = XM.ReasonCode,
+            nullModel = new XM.ReasonCode({id: "1", code: "test1", documentType: null}),
+            debitModel = new XM.ReasonCode({id: "2", code: "test2", documentType: K.DEBIT_MEMO}),
+            creditModel = new XM.ReasonCode({id: "3", code: "test3", documentType: K.CREDIT_MEMO});
+          XM.reasonCodes.add(nullModel);
+          XM.reasonCodes.add(debitModel);
+          XM.reasonCodes.add(creditModel);
 
-        // test that filters work properly when credit memo the reason code
-        K = XM.ReasonCode;
-        var reasonCodeTestJson = [
-          {id: "1", code: "test1".loc(), documentType: null},
-          {id: "2", code: "test2".loc(), documentType: K.DEBIT_MEMO},
-          {id: "3", code: "test3".loc(), documentType: K.CREDIT_MEMO},
-        ];
-        for (i = 0; i < reasonCodeTestJson.length; i++) {
-          var testCode = new XM.ReasonCodeModel(reasonCodeTestJson[i]);
-          XM.reasonCodes.add(testCode);
-        }
-        child.setDocumentType(XM.ReasonCode.CREDIT_MEMO);
-        child.buildList();
-        var list = child.getListModels();
-        console.log(list);
+          it('verify that the list has all test values when no document type is specified', function () {
+            child.setDocumentType("");
+            child.buildList();
+            var list = child.getListModels();
+            assert.isTrue(_.contains(list, nullModel));
+            assert.isTrue(_.contains(list, creditModel));
+            assert.isTrue(_.contains(list, debitModel));
+          });
+
+          it('verify that the list filters correctly when credit memo is the document type', function () {
+            child.setDocumentType(XM.ReasonCode.CREDIT_MEMO);
+            child.buildList();
+            var list = child.getListModels();
+            assert.isTrue(_.contains(list, nullModel));
+            assert.isTrue(_.contains(list, creditModel));
+          });
+
+          it('verify that the list filters correctly when debit memo is the document type', function () {
+            child.setDocumentType(XM.ReasonCode.DEBIT_MEMO);
+            child.buildList();
+            var list = child.getListModels();
+            assert.isTrue(_.contains(list, nullModel));
+            assert.isTrue(_.contains(list, debitModel));
+          });
+        });
       });
     });
   });
