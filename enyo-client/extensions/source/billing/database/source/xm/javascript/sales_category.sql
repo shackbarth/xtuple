@@ -2,12 +2,10 @@ select xt.install_js('XM', 'SalesCategory', 'billing', $$
 
 (function () {
 
-  XM.SalesCategory || (XM.SalesCategory = { });
-
   /**
    * @augments XM.SalesCategory
    */
-  XT.extend(XM.SalesCategory, {
+  XM.SalesCategory = XT.extend(XM.SalesCategory || { }, {
 
     isDispatchable: true,
 
