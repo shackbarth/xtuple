@@ -50,36 +50,7 @@
             XT.getObjectByName(child.collection);
         assert.isNotNull(collection, 'XV.' + key + ' does not have a valid collection name');
 
-        // verify that the name attribute is valid
-        // this is a little tricky, because the static models are Backbone models, not XM models
-        if (collection && child.nameAttribute) {
-          var models = collection.models;
-          if (models.length !== 0) {
-            var name = _.find(models, function (m) {
-              return m.getValue ? m.getValue(child.nameAttribute) : m.get(child.nameAttribute);
-            });
-            assert.ok(name, 'XV.' + key + ' does not have a valid name attribute');
-          }
-        }
 
-        var list = child.$.picker.getComponents();
-        // if they specify to not show a none text, then it shouldn't be there
-        if (!child.showNone) {
-          assert.isUndefined(_.find(list, function (c) {
-            return !c.value && c.content === child.noneText;
-          }));
-        } else {
-          assert.ok(_.find(list, function (c) {
-            return !c.value && c.content === child.noneText;
-          }));
-        }
-
-        // if the specify not to show a label, then don't
-        if (!child.showLabel) {
-          assert.isFalse(child.$.label.showing);
-        } else {
-          assert.isTrue(child.$.label.showing);
-        }
       });
     });
   });

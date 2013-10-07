@@ -50,7 +50,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         quantity = model.get("quantity"),
         discount = model.get("discount"),
         price = model.get("price"),
-        locale = XT.session.locale;
+        locale = XT.locale;
 
       if (!model) {
         return;
@@ -62,7 +62,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       this.$.siteCode.setContent(model.getValue("site.code"));
 
       this.$.quantity.addRemoveClass("xv-error", !quantity);
-      quantity = _.isNumber(quantity) ? Globalize.format(quantity, "n" + locale.get("quantityScale")) : "_required".loc();
+      quantity = _.isNumber(quantity) ? Globalize.format(quantity, "n" + locale.quantityScale) : "_required".loc();
       this.$.quantity.setContent(quantity);
 
       this.$.quantityUnit.setContent(model.getValue("quantityUnit.name"));
@@ -70,9 +70,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       this.$.discount.setContent(discount);
 
       this.$.price.addRemoveClass("xv-error", !_.isNumber(price));
-      this.$.price.setContent(Globalize.format(price, "n" + locale.get("salesPriceScale")) || "_required".loc());
+      this.$.price.setContent(Globalize.format(price, "n" + locale.salesPriceScale) || "_required".loc());
       this.$.priceUnit.setContent(model.getValue("priceUnit.name"));
-      this.$.extendedPrice.setContent(Globalize.format(model.get("extendedPrice"), "n" + locale.get("extendedPriceScale")));
+      this.$.extendedPrice.setContent(Globalize.format(model.get("extendedPrice"), "n" + locale.extendedPriceScale));
 
       this.$.scheduleDate.setContent(Globalize.format(XT.date.applyTimezoneOffset(model.get("scheduleDate"), true), "d"));
     }

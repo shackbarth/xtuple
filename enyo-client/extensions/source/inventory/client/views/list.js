@@ -82,7 +82,7 @@ trailing:true, white:true, strict:false*/
       ],
       formatPrice: function (value, view, model) {
         var currency = model ? model.getValue("salesOrder.currency") : false,
-          scale = XT.session.locale.attributes.salesPriceScale;
+          scale = XT.locale.salesPriceScale;
         return currency ? currency.format(value, scale) : "";
       },
       formatLineNumber: function (value, view, model) {
@@ -155,7 +155,7 @@ trailing:true, white:true, strict:false*/
         return value;
       },
       formatQuantity: function (value) {
-        var scale = XT.session.locale.attributes.quantityScale;
+        var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
       enterReceipt: function (inEvent) {
@@ -255,7 +255,7 @@ trailing:true, white:true, strict:false*/
       },
       formatMoney: function (value, view) {
         view.addRemoveClass("error", value < 0);
-        var scale = XT.session.locale.attributes.currencyScale;
+        var scale = XT.locale.currencyScale;
         return Globalize.format(value, "c" + scale);
       },
       formatOrderType: function (value) {
@@ -283,7 +283,7 @@ trailing:true, white:true, strict:false*/
       },
       formatQuantity: function (value, view) {
         view.addRemoveClass("error", value < 0);
-        var scale = XT.session.locale.attributes.quantityScale;
+        var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
       formatTransactionType: function (value) {
@@ -410,7 +410,7 @@ trailing:true, white:true, strict:false*/
         return value;
       },
       formatQuantity: function (value) {
-        var scale = XT.session.locale.attributes.quantityScale;
+        var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
       issueLine: function (inEvent) {

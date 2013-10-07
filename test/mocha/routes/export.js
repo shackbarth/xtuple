@@ -11,10 +11,11 @@ var assert = require("chai").assert,
   exportRoute = require("../../../node-datasource/routes/export"),
   dataRoute = require("../../../node-datasource/routes/data");
 
-require("../../../node-datasource/xt");
+require("../../../node-datasource/xt/database");
 require("../../../lib/tools/source/foundation");
 require("../../../lib/tools/source/ext/string");
 require("../../../lib/tools/source/ext/proto/string");
+require("../../../node-datasource/lib/ext/datasource");
 
 X.options = {
   databaseServer: {}
@@ -53,9 +54,12 @@ X.options = {
         };
 
       // inject our mock query into the global variable
-      XT.dataSource = {query: queryFunction, getAdminCredentials: function () {
-        return {};
-      }};
+      _(XT.dataSource).extend({
+        query: queryFunction,
+        getAdminCredentials: function () {
+          return { };
+        }
+      });
 
       exportRoute.exxport(req, res);
     });
