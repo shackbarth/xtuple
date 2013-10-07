@@ -9,9 +9,9 @@ select xt.install_js('XM','SalesRep','xtuple', $$
   XM.SalesRep.isDispatchable = true;
 
   /**
-    Return whether a tax authority is referenced by another table.
+    Return whether a sales rep is referenced by another table.
     
-    @param {String} Tax Authority Number
+    @param {String} Sales Rep Number
   */
   XM.SalesRep.used = function(id) {
     var exceptions = ["public.crmacct"];

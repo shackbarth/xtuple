@@ -4,12 +4,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 var _ = require('underscore'),
   async = require('async'),
-  buildDatabase = require("./build_database").buildDatabase,
+  build_database = require("./build_database"),
+  buildDatabase = build_database.buildDatabase,
   buildClient = require("./build_client").buildClient,
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
   path = require('path'),
+  unregister = build_database.unregister,
   winston = require('winston');
 
 /*
@@ -42,7 +44,6 @@ var _ = require('underscore'),
           credsClone = JSON.parse(JSON.stringify(creds)),
           existsSql = "select relname from pg_class where relname = 'ext'",
           extSql = "SELECT * FROM xt.ext ORDER BY ext_load_order",
-          // TODO: we could get these extensions dynamically by looking at the filesystem.
           defaultExtensions = [
             { ext_location: '/core-extensions', ext_name: 'billing' },
             { ext_location: '/core-extensions', ext_name: 'crm' },
@@ -171,7 +172,6 @@ var _ = require('underscore'),
       buildSpecs.clientOnly = options.clientOnly;
       buildSpecs.databaseOnly = options.databaseOnly;
       buildSpecs.queryDirect = options.queryDirect;
-      // TODO: as above, the extensions could be found dynamically
       buildSpecs.extensions = [
         path.join(__dirname, '../../lib/orm'),
         path.join(__dirname, '../../enyo-client'),
@@ -189,7 +189,7 @@ var _ = require('underscore'),
         " a database, and use no extensions, and use both the init and the backup flags");
 
     } else if (options.extension) {
-      // the user has specified an extension to build
+      // the user has specified an extension to build or unregister
       // extensions are assumed to be specified relative to the cwd
       buildSpecs = _.map(databases, function (database) {
         // the extension is not relative if it starts with a slash
@@ -206,9 +206,13 @@ var _ = require('underscore'),
           extensions: [extension]
         };
       });
-      // synchronous...
-      buildAll(buildSpecs, creds, callback);
 
+      if (options.unregister) {
+        unregister(buildSpecs, creds, callback);
+      } else {
+        // synchronous build
+        buildAll(buildSpecs, creds, callback);
+      }
     } else {
       // build all registered extensions for the database
       async.map(databases, getRegisteredExtensions, function (err, results) {

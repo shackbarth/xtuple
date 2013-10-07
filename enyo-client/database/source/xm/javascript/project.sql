@@ -2,7 +2,7 @@ select xt.install_js('XM','Project','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  XM.Project = {};
+  if (!XM.Project) { XM.Project = {}; }
   
   XM.Project.isDispatchable = true;
   
