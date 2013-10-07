@@ -411,7 +411,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       id = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
         [item.orderLine])[0].id;
       series = XT.executeFunction("issuetoshipping",
-        ["MEH" + orderType.ordtype_code, id, item.quantity, 0, asOf], /* XXX remove MEH */
+        [orderType.ordtype_code, id, item.quantity, 0, asOf],
         [null, null, null, null, "timestamptz"]);
 
       /* Distribute detail */
