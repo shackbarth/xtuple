@@ -82,7 +82,7 @@ trailing:true, white:true, strict:false*/
       ],
       formatPrice: function (value, view, model) {
         var currency = model ? model.getValue("salesOrder.currency") : false,
-          scale = XT.session.locale.attributes.salesPriceScale;
+          scale = XT.locale.salesPriceScale;
         return currency ? currency.format(value, scale) : "";
       },
       formatLineNumber: function (value, view, model) {
@@ -155,7 +155,7 @@ trailing:true, white:true, strict:false*/
         return value;
       },
       formatQuantity: function (value) {
-        var scale = XT.session.locale.attributes.quantityScale;
+        var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
       enterReceipt: function (inEvent) {
@@ -255,7 +255,7 @@ trailing:true, white:true, strict:false*/
       },
       formatMoney: function (value, view) {
         view.addRemoveClass("error", value < 0);
-        var scale = XT.session.locale.attributes.currencyScale;
+        var scale = XT.locale.currencyScale;
         return Globalize.format(value, "c" + scale);
       },
       formatOrderType: function (value) {
@@ -283,7 +283,7 @@ trailing:true, white:true, strict:false*/
       },
       formatQuantity: function (value, view) {
         view.addRemoveClass("error", value < 0);
-        var scale = XT.session.locale.attributes.quantityScale;
+        var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
       formatTransactionType: function (value) {
@@ -347,13 +347,14 @@ trailing:true, white:true, strict:false*/
         {name: "issueLine", prerequisite: "canIssueStock",
           method: "issueLine", notify: false, isViewMethod: true},
         {name: "returnLine", prerequisite: "canReturnStock",
-          method: "doReturnStock", notify: false}
+          method: "returnStock", notify: false, isViewMethod: true}
       ],
       toggleSelected: true,
       published: {
         shipment: null
       },
       events: {
+        onProcessingChanged: "",
         onShipmentChanged: ""
       },
       components: [
@@ -410,43 +411,160 @@ trailing:true, white:true, strict:false*/
         return value;
       },
       formatQuantity: function (value) {
-        var scale = XT.session.locale.attributes.quantityScale;
+        var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
-      issueLine: function (inEvent) {
-        var model = inEvent.model,
-          index = inEvent.index,
-          that = this,
-          options = {
-            success: function () {
-              that.resetActions(index);
-              that.renderRow(index);
+      /**
+        Helper function for transacting `issue` on an array of models
+
+        @param {Array} Models
+        @param {Boolean} Prompt user for confirmation on every model
+      */
+      issue: function (models, prompt) {
+        var that = this,
+          i = -1,
+          callback,
+          data = [];
+
+        // Recursively issue everything we can
+        callback = function (workspace) {
+          var model,
+            options = {},
+            toIssue,
+            transDate,
+            params,
+            dispOptions = {},
+            wsOptions = {},
+            wsParams;
+
+          // If argument is false, this whole process was cancelled
+          if (workspace === false) {
+            return;
+
+          // If a workspace brought us here, process the information it obtained
+          } else if (workspace) {
+            model = workspace.getValue();
+            toIssue = model.get("toIssue");
+            transDate = model.transactionDate;
+
+            if (toIssue) {
+              wsOptions.detail = model.formatDetail();
+              wsOptions.asOf = transDate;
+              wsParams = {
+                orderLine: model.id,
+                quantity: toIssue,
+                options: wsOptions
+              };
+              data.push(wsParams);
             }
+            workspace.doPrevious();
+          }
+
+          i++;
+          // If we've worked through all the models then forward to the server
+          if (i === models.length) {
+            that.doProcessingChanged({isProcessing: true});
+            dispOptions.success = function () {
+              that.doProcessingChanged({isProcessing: false});
+            };
+            XM.Inventory.issueToShipping(data, dispOptions);
+
+          // Else if there's something here we can issue, handle it
+          } else {
+            model = models[i];
+            toIssue = model.get("toIssue");
+            transDate = model.transactionDate;
+
+            // See if there's anything to issue here
+            if (toIssue) {
+
+              // If prompt or distribution detail required,
+              // open a workspace to handle it
+              if (prompt || model.undistributed()) {
+                that.doWorkspace({
+                  workspace: "XV.IssueStockWorkspace",
+                  id: model.id,
+                  callback: callback,
+                  allowNew: false,
+                  success: function (model) {
+                    model.transactionDate = transDate;
+                  }
+                });
+
+              // Otherwise just use the data we have
+              } else {
+                options.asOf = transDate;
+                options.detail = model.formatDetail();
+                params = {
+                  orderLine: model.id,
+                  quantity: toIssue,
+                  options: options
+                };
+                data.push(params);
+                callback();
+              }
+
+            // Nothing to issue, move on
+            } else {
+              callback();
+            }
+          }
+        };
+        callback();
+      },
+      issueAll: function () {
+        var models = this.getValue().models;
+        this.issue(models);
+      },
+      issueLine: function () {
+        var models = this.selectedModels();
+        this.issue(models);
+      },
+      issueStock: function () {
+        var models = this.selectedModels();
+        this.issue(models, true);
+      },
+      returnStock: function () {
+        var models = this.selectedModels(),
+          that = this,
+          data =  [],
+          options = {},
+          atShipping,
+          model,
+          i;
+
+        for (i = 0; i < models.length; i++) {
+          model = models[i];
+          atShipping = model.get("atShipping");
+
+          // See if there's anything to issue here
+          if (atShipping) {
+            data.push(model.id);
+          }
+        }
+
+        if (data.length) {
+          that.doProcessingChanged({isProcessing: true});
+          options.success = function () {
+            that.doProcessingChanged({isProcessing: false});
           };
-        // Model sets toIssue value on load and attempts to
-        // distribute detail to default if applicable. If
-        // still undistributed detail, we'll have to prompt
-        // user. Otherwise just save the model with the
-        // precalculated values.
-        if (model.undistributed()) {
-          this.issueStock(inEvent);
-        } else {
-          model.save(null, options);
+          XM.Inventory.returnFromShipping(data, options);
         }
       },
-      issueStock: function (inEvent) {
-        var model = inEvent.model,
-         transDate = model.transactionDate;
-
-        this.doWorkspace({
-          workspace: "XV.IssueStockWorkspace",
-          id: model.id,
-          allowNew: false,
-          success: function (model) {
-            // Set the transaction date to match the source
-            model.transactionDate = transDate;
+      selectedModels: function () {
+        var collection = this.getValue(),
+          models = [],
+          selected,
+          prop;
+        if (collection.length) {
+          selected = this.getSelection().selected;
+          for (prop in selected) {
+            if (selected.hasOwnProperty(prop)) {
+              models.push(this.getModel(prop - 0));
+            }
           }
-        });
+        }
+        return models;
       },
       /**
         Overload: used to keep track of shipment.

@@ -31,7 +31,7 @@ X = {};
   X.crypto       = require("crypto");
   X.bcrypt       = require("bcrypt");
   X.pg           = require("pg");
-  X.str          = require("mstring");
+  X.xmla         = require('xmla4js/src/Xmla.js');
 
   /**
    Returns the global X

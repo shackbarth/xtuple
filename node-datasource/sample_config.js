@@ -78,6 +78,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       port: 5432,
       user: "admin",
       password: "admin"
-    }
-  };
+    },
+    biServer: {
+        hostname: "localhost",
+        port: 8080,
+        catalog: "xTuple",
+        tenantname: "default",
+        keyFile: "./lib/rest-keys/server.key"
+      }
+    };
 }());
