@@ -15,6 +15,7 @@ white:true*/
         sock = XT.dataSource._sock,
         notify = this._notify,
         handle = this._handle,
+        errorMessage,
         payload = {
           payload: data
         },
@@ -25,11 +26,17 @@ white:true*/
       } else {
         callback = function (response) {
           if (response && response.isError) {
-            // handle error status centrally here
+            // handle error status centrally here before we return to the caller
 
-            XT.log("Response error1 ", response);
-            XT.log("Response error2 ", response.status.message);
-            XT.log("Response error3 ", response.message);
+            XT.log("Response error1 ", response); // XXX
+            errorMessage = response.status ? response.status.message : response.message;
+            if (errorMessage) {
+              XT.app.$.postbooks.notify(null, {
+                type: XM.Model.CRITICAL,
+                message: errorMessage
+              });
+            }
+
             if (response.code === "SESSION_NOT_FOUND") {
               // The session couldn't be validated by the datasource.
               // XXX might be dead code
