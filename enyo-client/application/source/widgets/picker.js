@@ -463,6 +463,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.reasonCodes",
     showNone: false,
+    nameAttribute: "code",
     published: {
       documentType: null
     },

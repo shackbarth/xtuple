@@ -40,10 +40,10 @@
 
           if (XV.inheritsFrom(value.prototype, "XV.Picker") &&
               // don't test abstract kinds
-              !_.contains(['PickerWidget', 'AttributePicker'], key)) {
+              !_.contains(['PickerWidget', 'AttributePicker', 'ExpenseCategoryPicker'], key)) {
 
             describe('XV.' + key, function () {
-              it('should have their attrs set up right', function () {
+              it('should have their attrs set up correctly', function () {
                 // create the picker
                 child = master.createComponent({
                   kind: "XV." + key,
@@ -51,13 +51,9 @@
                 });
                 assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
 
-                // verify that there is a backing model
-                collName = child.getCollection();
-                assert.isNotNull(collName, 'XV.' + key + ' has no collection behind it');
-                var collection = _.isObject(this.collection) ? child.collection :
-                    XT.getObjectByName(child.collection);
-                assert.isNotNull(collection);
-
+                // test that filters work properly when credit memo the reason code
+                child.setDocumentType(XM.ReasonCode.CREDIT_MEMO);
+                var list = child.getListModels();
               });
             });
           }
