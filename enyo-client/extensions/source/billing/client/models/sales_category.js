@@ -67,7 +67,6 @@ white:true*/
        */
       hasDeactivateActionPrerequisite: function (enableActionCallback) {
         this.meta.once('change:isDeactivateAllowed', function (self, allowed) {
-          console.log('determined change:isDeactivateAllowed :: ' + allowed);
           enableActionCallback(allowed);
         }, this);
 
