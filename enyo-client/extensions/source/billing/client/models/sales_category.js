@@ -7,9 +7,11 @@ white:true*/
   'use strict';
 
   XT.extensions.billing.initSalesCategoryModel = function () {
+
     /**
      * @class XM.SalesCategory
      * @extends XM.Document
+     * @author Travis Webb <travis@xtuple.com>
      */
     XM.SalesCategory = XM.Document.extend(
       /** @scope XM.SalesCategory.prototype */ {
@@ -17,21 +19,32 @@ white:true*/
       recordType: 'XM.SalesCategory',
       documentKey: 'name',
 
+      /**
+       * @member {Backbone.Model}
+       * Used to listen on metadata change events without disturbing the
+       * underlying.
+       */
+      meta: null,
+
       initialize: function () {
-        //XM.Model.apply(this, arguments);
+        XM.Document.prototype.initialize.apply(this, arguments);
         this.meta = new Backbone.Model();
       },
 
       /**
-       * @private
-       * Determines if this is a child of an unposted invoice. Uses 'dispatch' 
-       * to invoke queryUnpostedInvoice
+       * Determines if this is a child of an unposted invoice.
+       *
+       * @fires XM.Model#dispatch
+       * @fires XM.SalesCategory#change:unpostedInvoices
        *
        * @see XM.SalesCategory#isDeactivateAllowed
        * @see XM.SalesCategory#queryUnpostedInvoice
-       * @callback cb
        */
       queryUnpostedInvoice: function () {
+        /**
+         * Invoke the queryUnpostedInvoice remote procedure call
+         * @event XM.Model#dispatch
+         */
         this.dispatch('XM.SalesCategory', 'queryUnpostedInvoiceRPC', [this.id], {
           success: _.bind(function (rpcResult) {
             this.meta.set('unpostedInvoices', rpcResult || [ ]);
@@ -41,13 +54,11 @@ white:true*/
       },
 
       /**
-       * Trigger isDeactivateAllowed event. Determine if we can deactivate this
-       * SalesCategory. Return false if there exist unposted invoices that
-       * reference this and true otherwise.
+       * Determine if we can deactivate this SalesCategory. Return false if
+       * there exist unposted invoices that reference this and true otherwise.
        *
-       * @see XV.SalesCategoryList#actions
+       * @fires XM.SalesCategory#change:isDeactivateAllowed
        * @see XM.SalesCategory#queryUnpostedInvoice
-       * @callback cb
        */
       isDeactivateAllowed: function () {
         this.meta.once('change:unpostedInvoices', function (self, invoices) {
@@ -62,6 +73,7 @@ white:true*/
        * prerequisite; passes the result of 'isDeactivateAllowed' into the
        * supplied callback.
        *
+       * @see XV.SalesCategoryList#actions
        * @see XM.SalesCategory#isDeactivateAllowed
        * @callback enableActionCallback
        */
@@ -79,7 +91,6 @@ white:true*/
      * @extends XM.Collection
      */
     XM.SalesCategoryCollection = XM.Collection.extend({
-      /** @scope XM.SalesCategory.prototype */
       model: XM.SalesCategory
     });
 

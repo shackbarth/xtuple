@@ -38,7 +38,8 @@
         "attr": {
           "type": "String",
           "column": "salescat_name",
-          "required": true
+          "required": true,
+          "isNaturalKey": true
         }
       },
       {
