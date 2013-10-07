@@ -50,7 +50,21 @@
             XT.getObjectByName(child.collection);
         assert.isNotNull(collection, 'XV.' + key + ' does not have a valid collection name');
 
-
+        // test that filters work properly when credit memo the reason code
+        K = XM.ReasonCode;
+        var reasonCodeTestJson = [
+          {id: "1", code: "test1".loc(), documentType: null},
+          {id: "2", code: "test2".loc(), documentType: K.DEBIT_MEMO},
+          {id: "3", code: "test3".loc(), documentType: K.CREDIT_MEMO},
+        ];
+        for (i = 0; i < reasonCodeTestJson.length; i++) {
+          var testCode = new XM.ReasonCodeModel(reasonCodeTestJson[i]);
+          XM.reasonCodes.add(testCode);
+        }
+        child.setDocumentType(XM.ReasonCode.CREDIT_MEMO);
+        child.buildList();
+        var list = child.getListModels();
+        console.log(list);
       });
     });
   });
