@@ -31,6 +31,7 @@ X = {};
   X.crypto       = require("crypto");
   X.bcrypt       = require("bcrypt");
   X.pg           = require("pg");
+  X.str          = require("mstring");
 
   /**
    Returns the global X

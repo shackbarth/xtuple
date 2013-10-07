@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "SalesCategory",
     "table": "salescat",
+    "idSequenceName": "salescat_salescat_id_seq",
     "isRest": true,
     "lockable": true,
     "comment": "Sales Category Information",
@@ -36,14 +37,16 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "salescat_name"
+          "column": "salescat_name",
+          "required": true
         }
       },
       {
         "name": "description",
         "attr": {
           "type": "String",
-          "column": "salescat_descrip"
+          "column": "salescat_descrip",
+          "required": true
         }
       }
     ],

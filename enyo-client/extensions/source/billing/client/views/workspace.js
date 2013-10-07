@@ -7,9 +7,6 @@ trailing:true, white:true*/
 
   XT.extensions.billing.initWorkspaces = function () {
 
-    // ..........................................................
-    // CONFIGURE
-    //
     enyo.kind({
       name: "XV.BillingWorkspace",
       kind: "XV.Workspace",
@@ -27,6 +24,28 @@ trailing:true, white:true*/
       ]
     });
 
+    enyo.kind({
+      name: "XV.SalesCategoryWorkspace",
+      kind: "XV.Workspace",
+      title: "_salesCategory".loc(),
+      model: "XM.SalesCategory",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", components: [
+              {kind: "XV.InputWidget", attr: "name"},
+              {kind: "XV.InputWidget", attr: "description"},
+              {kind: "XV.CheckboxWidget", attr: "isActive"}
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
+    XV.registerModelWorkspace("XM.SalesCategory", "XV.SalesCategoryWorkspace");
   };
 
 }());

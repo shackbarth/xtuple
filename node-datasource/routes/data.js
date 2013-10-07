@@ -43,6 +43,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             status: err.status || {code: 500, message: "Internal Server Error" }
           });
         } else if (res && res.rows && res.rows.length > 0) {
+          console.log(res.rows[0].post);
           // the data comes back in an awkward res.rows[0].request form,
           // and we want to normalize that here so that the data is in response.data
           try {
