@@ -447,20 +447,20 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {Date} Ship date, default = current date
   */
   XM.Inventory.shipShipment = function (shipment, shipDate) {
-    var sql = "select shipshipment(shiphead_id, $2) as series " +
+    var sql = "select shiphead_id " +
       "from shiphead where shiphead_number = $1;";
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("ShipOrders")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
-    var ret = plv8.execute(sql, [shipment, shipDate])[0].series;
-    
-    return ret;
+    var shipmentId = plv8.execute(sql, [shipment])[0].shiphead_id;
+    return XT.executeFunction("shipshipment", [shipmentId, shipDate]);
   };
   XM.Inventory.shipShipment.description = "Ship shipment";
   XM.Inventory.shipShipment.params = {
-     shipment: { shipment: "Number", shipDate: "Ship Date" }
+     shipment: { type: "String", description: "Shipment natural key" },
+     shipDate: { type: "Date", description: "Ship Date" }
   };
 
   /**

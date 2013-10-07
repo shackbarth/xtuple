@@ -28,7 +28,6 @@ white:true*/
           if (response && response.isError) {
             // handle error status centrally here before we return to the caller
 
-            XT.log("Response error1 ", response); // XXX
             errorMessage = response.status ? response.status.message : response.message;
             if (errorMessage) {
               XT.app.$.postbooks.notify(null, {

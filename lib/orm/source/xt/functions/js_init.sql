@@ -449,8 +449,13 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     If the postgres function returns an error in the form of
     a negative integer, this function finds the appropriate 
     translation and throws that error.
-    @param {String} sql
+
+    NOTE that you should not pass unsanitized user input into
+    the functionName or the casts variables.
+
+    @param {String} functionName.
     @param {Array} params
+    @param {Array} casts. Optional. Array of strings
    */
   XT.executeFunction = function (functionName, params, casts) {
     var cast,
@@ -458,11 +463,10 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       i,
       param;
 
-    /* TODO: sqli */
     var sql = "select " + functionName + "(";
     for (i = 0; i < params.length; i++) {
       param = params[i];
-      cast = casts[i];
+      cast = casts && casts[i];
       if (i > 0) {
         sql = sql + ",";
       }
