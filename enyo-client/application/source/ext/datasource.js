@@ -22,7 +22,7 @@ white:true*/
         callback;
 
       if (!notify || !(notify instanceof Function)) {
-        callback = XT.K;
+        callback = function () {};
       } else {
         callback = function (response) {
           if (response && response.isError) {
