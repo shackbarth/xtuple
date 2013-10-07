@@ -46,7 +46,7 @@
             return m.id === XM.ReasonCode.CREDIT_MEMO;
           }));
           assert.ok(_.find(XM.reasonCodeDocumentTypes.models, function (m) {
-            return m.id === XM.ReasonCode.CREDIT_MEMO;
+            return m.id === XM.ReasonCode.DEBIT_MEMO;
           }));
 
           // verify that the ReasonCodeCollection exists
@@ -56,7 +56,7 @@
 
           //verify priviledges
           var privList = data.model.privileges.all;
-          assert.ok(privList.read);
+          assert.isTrue(privList.read);
           assert.equal(privList.create, "MaintainReasonCodes");
           assert.equal(privList.update, "MaintainReasonCodes");
           assert.equal(privList.delete, "MaintainReasonCodes");
