@@ -485,7 +485,7 @@ regexp:true, undef:true, trailing:true, white:true */
       if (docType) {
         this.filter = function (models) {
           var ret = _.filter(models, function (m) {
-            return m.getValue("documentType") === docType || !m.getValue("documentType") ;
+            return m.getValue("documentType") === docType || !m.getValue("documentType");
           });
           return ret;
         };

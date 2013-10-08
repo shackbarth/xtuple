@@ -47,6 +47,8 @@
           });
 
           it('verify that XM.reasonCodeDocumentTypes contains the constants', function () {
+            assert.isTrue(XM.reasonCodeDocumentTypes.length === 2);
+
             assert.ok(_.find(XM.reasonCodeDocumentTypes.models, function (m) {
               return m.id === XM.ReasonCode.CREDIT_MEMO;
             }));
