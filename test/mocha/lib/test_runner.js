@@ -148,26 +148,38 @@
       // Verify Privileges
       //
       _.each(spec.privileges, function (priv, key) {
-        var pertinentMethods;
-        switch (key) {
-        case "createUpdateDelete":
-          pertinentMethods = ["canCreate", "canUpdate", "canDelete"];
-          break;
-        case "read":
-          pertinentMethods = ["canRead"];
-          break;
-        }
+        var methodMap = {
+            createUpdateDelete: ["canCreate", "canUpdate", "canDelete"],
+            createUpdate: ["canCreate", "canUpdate"],
+            create: ["canCreate"],
+            read: ["canRead"],
+            update: ["canUpdate"],
+            delete: ["canDelete"]
+          },
+          pertinentMethods = methodMap[key];
 
-        it("has can perform action " + priv + " to perform action " + key, function () {
+        var updatePriv = spec.privileges.update ||
+          spec.privileges.createUpdate ||
+          spec.privileges.createUpdateDelete;
+
+        it("needs " + priv + " privilege to perform action " + key, function () {
           var Klass = XT.getObjectByName(spec.recordType);
 
           if (typeof priv === 'string') {
             assert.isDefined(pertinentMethods); // make sure we're testing for the priv
             XT.session.privileges.attributes[priv] = false;
+            if (key === "read" && updatePriv) {
+              // update privs are sufficient for read, so we have to toggle those too
+              XT.session.privileges.attributes[updatePriv] = false;
+            }
             _.each(pertinentMethods, function (pertinentMethod) {
               assert.isFalse(Klass[pertinentMethod]());
             });
             XT.session.privileges.attributes[priv] = true;
+            if (key === "read" && updatePriv) {
+              // update privs are sufficient for read, so we have to toggle those too
+              XT.session.privileges.attributes[updatePriv] = true;
+            }
             _.each(pertinentMethods, function (pertinentMethod) {
               assert.isTrue(Klass[pertinentMethod]());
             });
@@ -189,9 +201,12 @@
       // Test that the collection exists
       //
       it("backs the " + spec.collectionType + " collection", function () {
-        var Collection = XT.getObjectByName(spec.collectionType);
+        var Collection = XT.getObjectByName(spec.collectionType),
+          modelPrototype = Collection.prototype.model.prototype,
+          editableModel = modelPrototype.editableModel || modelPrototype.recordType;
+
         assert.isFunction(Collection);
-        assert.equal(Collection.prototype.model.prototype.recordType, spec.recordType);
+        assert.equal(editableModel, spec.recordType);
       });
 
       //

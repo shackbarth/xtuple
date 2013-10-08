@@ -225,7 +225,7 @@
   };
 
   exports.runUICrud = function (spec) {
-    it('Can be created through the app UI', function (done) {
+    it('can be created through the app UI', function (done) {
       this.timeout(30 * 1000);
       navigateToNewWorkspace(XT.app, spec.listKind, function (workspaceContainer) {
         var workspace = workspaceContainer.$.workspace;

@@ -32,6 +32,37 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     updateHash: "code"
   };
 
+  exports.item = {
+    recordType: "XM.Item",
+    collectionType: "XM.ItemListItemCollection",
+    cacheName: false,
+    listKind: "XV.ItemList",
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "number",
+    enforceUpperKey: true,
+    attributes: ["number", "description1"], // TODO: more
+    extensions: ["crm", "sales", "inventory", "project"], // TODO: billing
+    privileges: {
+      createUpdate: "MaintainItemMasters",
+      read: "ViewItemMasters",
+      delete: "DeleteItemMasters"
+    },
+    createHash: {
+      number: "ATEST" + Math.random(),
+      description1: "Item description1",
+      isActive: true,
+      itemType: "P",
+      classCode: {code: "TOYS-COMP"},
+      productCategory: {code: "CLASSIC-WOOD"},
+      inventoryUnit: {name: "CS"},
+      isFractional: true,
+      isSold: true,
+      listPrice: 0.00,
+      priceUnit: {name: "CS"}
+    },
+    updateHash: "description1"
+  };
 
   exports.shipVia = {
     recordType: "XM.ShipVia",
