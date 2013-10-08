@@ -279,6 +279,11 @@ white:true*/
 
   });
 
+  XM.Customer.used = function (id, options) {
+    return XM.ModelMixin.dispatch('XM.Customer', 'used',
+      [id], options);
+  };
+
   /**
     @class
 
