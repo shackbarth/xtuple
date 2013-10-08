@@ -161,7 +161,7 @@
     });
   };
 
-  exports.deleteFromList = function (app, model, done) {
+  var deleteFromList = exports.deleteFromList = function (app, model, done) {
     var statusChange;
 
     // back up to list
@@ -224,4 +224,18 @@
     });
   };
 
+  exports.runUICrud = function (spec) {
+    it('Can be created through the app UI', function (done) {
+      this.timeout(30 * 1000);
+      navigateToNewWorkspace(XT.app, spec.list, function (workspaceContainer) {
+        var workspace = workspaceContainer.$.workspace;
+
+        assert.equal(workspace.value.recordType, spec.recordType);
+        setWorkspaceAttributes(workspace, spec.createHash);
+        saveWorkspace(workspace, function () {
+          deleteFromList(XT.app, workspace.value, done);
+        });
+      });
+    });
+  };
 }());

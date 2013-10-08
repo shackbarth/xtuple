@@ -56,18 +56,21 @@ var _ = require("underscore"),
       if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
         // if the data is a model and the test hash looks like {account: {number: "1000"}}
         assert.equal(data.model.get(key).id, value[data.model.get(key).idAttribute]);
-      } else if (key === data.model.documentKey &&
-          data.model.enforceUpperKey === true) {
+
+      } else if (key === data.model.documentKey && data.model.enforceUpperKey === true) {
           // this is the document key, so it should have been made upper case
         assert.equal(data.model.get(key), value.toUpperCase());
+
       } else if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
         // if the data is a model and the test hash looks like {contact: 7}
         assert.equal(data.model.get(key).id, value);
+
       } else if (_.isDate(data.model.get(key))) {
         // comparing dates requires a bit of finesse
         // TODO: get this to work with timezoneoffset
         // date comparison is disabled until we do
         //assert.equal(Globalize.format(new Date(data.model.get(key)), "d"), Globalize.format(new Date(value), "d"));
+
       } else {
         // default case, such as comparing strings to strings etc.
         assert.equal(data.model.get(key), value);

@@ -33,22 +33,6 @@ Here's how you can use CRUD to create a model to use for your own tests:
   assert = require("chai").assert;
 
 
-  //
-  // The modern framework
-  //
-  exports.shipVia = {
-    recordType: "XM.ShipVia",
-    instanceOf: "XM.Document",
-    isLockable: true,
-    idAttribute: "code",
-    createHash: {
-      code: "TESTSHIPVIA" + Math.random(),
-      description: "Test Ship Via"
-    },
-    updateHash: {
-      description: "TEST" + Math.random()
-    }
-  };
 
 
 
