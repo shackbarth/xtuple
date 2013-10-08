@@ -459,21 +459,22 @@ regexp:true, undef:true, trailing:true, white:true */
       // Filter for site picker. Limit list of models if item sites
       // are specified
       var filter = function (models, options) {
-        var ids;
-        if (this.itemSites.length) {
-          // Consolidate all the site ids
-          ids = _.pluck(_.compact(_.pluck(_.pluck(this.itemSites.models, "attributes"), 'site')), 'id');
-          return _.filter(models, function (model) {
-            return _.contains(ids, model.id);
-          });
-        }
-        return models;
-      },
+          var ids;
+          if (this.itemSites.length) {
+            // Consolidate all the site ids
+            ids = _.pluck(_.compact(_.pluck(_.pluck(this.itemSites.models, "attributes"), 'site')), 'id');
+            return _.filter(models, function (model) {
+              return _.contains(ids, model.id);
+            });
+          }
+          return models;
+        },
         callback,
         that = this;
 
       this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
       this.$.sitePicker.filter = filter;
+      this.$.sitePicker.$.pickerButton.setAttribute("tabIndex", -1);
 
       if (this.getHorizontalOrientation()) {
         this.$.fittableContainer.setLayoutKind("FittableColumnsLayout");

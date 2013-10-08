@@ -528,6 +528,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       series,
       sql1,
       sql2,
+      sql3,
       ary,
       item,
       i;
@@ -551,6 +552,8 @@ select xt.install_js('XM','Inventory','xtuple', $$
     sql2 = "select issuetoshipping($1, {table}_id, $3, $4, $5::timestamptz) as series " +
            "from {table} where obj_uuid = $2;";
 
+    sql3 = "select current_date != $1 as invalid";
+
     /* Post the transaction */
     for (i = 0; i < ary.length; i++) {
       item = ary[i];
@@ -558,6 +561,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
       orderType = plv8.execute(sql1, [item.orderLine])[0];
       series = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
         [orderType.ordtype_code, item.orderLine, item.quantity, 0, asOf])[0].series;
+
+      if (asOf && plv8.execute(sql3, [asOf])[0].invalid &&
+          !XT.Data.checkPrivilege("AlterTransactionDates")) {
+        throw new handleError("Insufficient privileges to alter transaction date", 401);
+      }
 
       /* Distribute detail */
       XM.PrivateInventory.distribute(series, item.options.detail);

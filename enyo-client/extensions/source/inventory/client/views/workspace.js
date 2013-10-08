@@ -224,17 +224,16 @@ trailing:true, white:true, strict: false*/
         }
       },
       /**
-        Overload: This version of save looks for a callback. If it's
-        there then the assumption is we're doing a series of issues
-        so forward to the next one.
+        Overload: This version of save just validates the model and forwards
+        on to callback. Designed specifically to work with `XV.IssueToShippingList`.
       */
       save: function () {
-        var callback = this.getCallback();
-        if (callback) {
-          callback(this);
-        } else {
-          this.inherited(arguments);
-        }
+        var callback = this.getCallback(),
+          model = this.getValue(),
+          workspace = this;
+        model.validate(function (isValid) {
+          if (isValid) { callback(workspace); }
+        });
       },
       /**
         If detail has been selected or deselected, handle default distribution.

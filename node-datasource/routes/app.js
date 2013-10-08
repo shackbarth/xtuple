@@ -3,6 +3,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, SYS:true, XT:true, _:true */
 
 var async = require("async"),
+  path = require("path"),
   routes = require("./routes");
 
 (function () {
@@ -50,12 +51,13 @@ var async = require("async"),
     return versionSize;
   };
 
+
   /**
    Figures out what extensions the user is entitled to. Queries to determine
    client code UUIDs for core and those extensions. Sends on to the app view
    to render.
    */
-  exports.serveApp = function (req, res) {
+  var serveApp = exports.serveApp = function (req, res) {
     if (!req.session.passport.user) {
       routes.logout(req, res);
       return;
@@ -87,6 +89,9 @@ var async = require("async"),
             }
           });
           uuids = _.compact(uuids); // eliminate any null values
+          var extensionPaths = _.compact(_.map(extensions, function (ext) {
+            return path.join(ext.location, "source", ext.name);
+          }));
           getCoreUuid('js', req.session.passport.user.organization, function (err, jsUuid) {
             if (err) {
               res.send({isError: true, error: err});
@@ -97,11 +102,12 @@ var async = require("async"),
                 res.send({isError: true, error: err});
                 return;
               }
-              res.render('app', {
+              res.render(req.viewName || 'app', {
                 org: req.session.passport.user.organization,
                 coreJs: jsUuid,
                 coreCss: cssUuid,
-                extensions: uuids
+                extensions: uuids,
+                extensionPaths: extensionPaths
               });
             });
           });
@@ -166,4 +172,8 @@ var async = require("async"),
     });
   };
 
+  exports.serveDebug = function (req, res) {
+    req.viewName = "debug";
+    serveApp(req, res);
+  };
 }());

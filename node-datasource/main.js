@@ -69,6 +69,11 @@ SYS = {};
   require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
+  
+  if (typeof X.options.biServer !== 'undefined') {
+    require("./olapcatalog");
+    require("./lib/ext/olapsource");
+  }
 
   // load the encryption key, or create it if it doesn't exist
   // it should created just once, the very first time the datasoruce starts
@@ -322,14 +327,6 @@ require('./oauth2/passport');
 var that = this;
 
 app.use(express.favicon(__dirname + '/views/login/assets/favicon.ico'));
-app.get('/:org/debug', function (req, res, next) {
-  "use strict";
-  if (!req.session.passport.user) {
-    routes.logout(req, res);
-  } else {
-    res.render('debug', { org: req.session.passport.user.organization });
-  }
-});
 _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
   "use strict";
   app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
@@ -364,19 +361,21 @@ app.post('/login/scopeSubmit', routes.scope);
 app.get('/logout', routes.logout);
 app.get('/:org/logout', routes.logout);
 app.get('/:org/app', routes.app);
+app.get('/:org/debug', routes.debug);
 
+app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
 app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
-app.all('/:org/vcfExport', routes.vcfExport);
 app.get('/:org/file', routes.file);
+app.get('/:org/locale', routes.locale);
 app.get('/:org/report', routes.report);
-app.get('/:org/analysis', routes.analysis);
 app.get('/:org/reset-password', routes.resetPassword);
-
+app.get('/:org/queryOlap', routes.queryOlapCatalog);
+app.all('/:org/vcfExport', routes.vcfExport);
 
 //
 // Load all extension-defined routes. By convention the paths,
