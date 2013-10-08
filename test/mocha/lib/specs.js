@@ -11,11 +11,28 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     _ = require("underscore"),
   assert = require("chai").assert;
 
+  exports.honorific = {
+    recordType: "XM.Honorific",
+    collectionType: "XM.HonorificCollection",
+    cacheName: "XM.honorifics",
+    listKind: "XV.HonorificList",
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "code",
+    enforceUpperKey: false,
+    attributes: ["code"],
+    extensions: ["crm", "project"],
+    privileges: {
+      createUpdateDelete: "MaintainTitles",
+      read: true
+    },
+    createHash: {
+      code: "Herr" + Math.random()
+    },
+    updateHash: "code"
+  };
 
 
-  //
-  // The modern framework
-  //
   exports.shipVia = {
     recordType: "XM.ShipVia",
     collectionType: "XM.ShipViaCollection",
@@ -25,7 +42,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     isLockable: true,
     idAttribute: "code",
     enforceUpperKey: false,
-    attributes: ["description"],
+    attributes: ["code", "description"],
     extensions: ["sales", "inventory"],
     //extensions: ["sales", "billing", "inventory"], TODO
     privileges: {
@@ -36,9 +53,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       code: "TestShipVia" + Math.random(),
       description: "Test Ship Via"
     },
-    updateHash: {
-      description: "TEST" + Math.random()
-    }
+    updateHash: "description"
   };
 
 }());

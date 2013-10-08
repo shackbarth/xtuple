@@ -19,6 +19,13 @@
 
   _.each(specs, function (spec) {
     describe(spec.recordType, function () {
+      if (_.isString(spec.updateHash)) {
+        var updatableField = spec.updateHash;
+        spec.updateHash = {};
+        spec.updateHash[updatableField] = "Test" + Math.random();
+      }
+
+
       //
       // Run CRUD model tests
       //
