@@ -34,15 +34,15 @@ white:true*/
     //
     _.extend(XM.Manufacturing, {
 
-      canIssueMaterial: function (callback) {
+      canIssueItem: function (callback) {
         var canDo = true; // TODO Is this always true?
         callback(canDo);
         return canDo;
       },
 
-      issueMaterial: function () {
+      issueItem: function () {
         // TODO
-        console.log("models/configure.js (XM.Manufacturing.issueMaterial)");
+        console.log("models/configure.js (XM.Manufacturing.issueItem)");
       }
 
     });

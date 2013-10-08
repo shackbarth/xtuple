@@ -13,7 +13,7 @@ trailing:true, white:true, strict:false*/
 
     enyo.kind({
       name: "XV.IssueMaterialList",
-      kind: "XV.List",
+      kind: "XV.TransactionList",
       label: "_issueMaterial".loc(),
       collection: "XM.IssueMaterialCollection",
       parameterWidget: "XV.IssueMaterialParameters",
@@ -23,17 +23,11 @@ trailing:true, white:true, strict:false*/
         {attribute: "order.subnumber"}
       ]},
       showDeleteAction: false,
-      actions: [
-        {name: "issueMaterial", prerequisite: "canIssueMaterial",
-          method: "issueMaterial", notify: false, isViewMethod: true},
-        {name: "issueLine", prerequisite: "canIssueMaterial",
-          method: "issueLine", notify: false, isViewMethod: true},
-        {name: "returnLine", prerequisite: "canReturnMaterial",
-          method: "returnMaterial", notify: false, isViewMethod: true}
-      ],
       toggleSelected: true,
       published: {
-        status: null
+        status: null,
+        transModule: XM.Manufacturing,
+        transWorkspace: "XV.IssueMaterialWorkspace"
       },
       events: {
         onProcessingChanged: "",
@@ -89,12 +83,7 @@ trailing:true, white:true, strict:false*/
         var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
-      /**
-        Helper function for transacting `issue` on an array of models
-
-        @param {Array} Models
-        @param {Boolean} Prompt user for confirmation on every model
-      */
+      /*
       issue: function (models, prompt) {
         var that = this,
           i = -1,

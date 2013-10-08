@@ -18,18 +18,18 @@ trailing:true, white:true, strict:false*/
 
     enyo.kind({
       name: "XV.IssueMaterial",
-      kind: "XV.TransactionListContainers",
-      prerequisite: "canIssueMaterial",
+      kind: "XV.TransactionListContainer",
+      prerequisite: "canIssueItem",
       notifyMessage: "_issueAll?".loc(),
       list: "XV.IssueMaterialList",
       actions: [
         {name: "issueAll", label: "_issueAll".loc(),
-          prerequisite: "canIssueMaterial" }
+          prerequisite: "canIssueItem" }
       ],
       handlers: {
         onShipmentChanged: "shipmentChanged"
       },
-      canIssueMaterial: function () {
+      canIssueItem: function () {
         var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
           model = this.getModel(),
           validModel = _.isObject(model) ? true : false,

@@ -56,7 +56,7 @@ white:true*/
 
       quantityAttribute: "toIssue",
 
-      issueMethod: "issueMaterial",
+      issueMethod: "issueItem",
 
       readOnlyAttributes: [
         "qohBefore",
@@ -87,7 +87,7 @@ white:true*/
         this.on("change:toIssue", this.toIssueDidChange);
       },
 
-      canIssueMaterial: function (callback) {
+      canIssueItem: function (callback) {
         var hasPrivilege = XT.session.privileges.get("IssueWoMaterials");
         if (callback) {
           callback(hasPrivilege);
@@ -95,7 +95,7 @@ white:true*/
         return this;
       },
 
-      canReturnMaterial: function (callback) {
+      canReturnItem: function (callback) {
         var hasPrivilege = XT.session.privileges.get("ReturnWoMaterials");
         if (callback) {
           callback(hasPrivilege);
@@ -170,7 +170,7 @@ white:true*/
       @params {Array} Data
       @params {Object} Options
     */
-    XM.Manufacturing.issueMaterial = function (params, options) {
+    XM.Manufacturing.issueItem = function (params, options) {
       var obj = XM.Model.prototype;
       obj.dispatch("XM.Inventory", "issueMaterial", params, options);
     };
@@ -181,7 +181,7 @@ white:true*/
       @params {Array} Array of model ids
       @params {Object} Options
     */
-    XM.Manufacturing.returnMaterial = function (params, options) {
+    XM.Manufacturing.returnItem = function (params, options) {
       var obj = XM.Model.prototype;
       obj.dispatch("XM.Inventory", "returnMaterial", params, options);
     };
