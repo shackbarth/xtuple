@@ -88,27 +88,6 @@ white:true*/
         return this;
       },
 
-      doReturnStock: function (callback) {
-        var that = this,
-          options = {};
-
-        // Refresh once we've completed the work
-        options.success = function () {
-          that.fetch({
-            success: function () {
-              if (callback) {
-                callback();
-              }
-            }
-          });
-        };
-
-        this.setStatus(XM.Model.BUSY_COMMITTING);
-        this.dispatch("XM.Inventory", "returnFromShipping", [this.id], options);
-
-        return this;
-      },
-
       /**
         Calculate the balance remaining to issue.
 
@@ -122,67 +101,37 @@ white:true*/
       },
 
       /**
-        Overload: Calls `issueToShipping` dispatch function.
+        Unlike most validations on models, this one accepts a callback
+        into which will be forwarded a boolean response. Errors will
+        trigger `invalid`.
 
+        @param {Function} Callback
         @returns {Object} Receiver
         */
-      save: function (key, value, options) {
-        options = options ? _.clone(options) : {};
-
-        // Handle both `"key", value` and `{key: value}` -style arguments.
-        if (_.isEmpty(key)) {
-          options = value ? _.clone(value) : {};
-        }
-
+      validate: function (callback) {
         var toIssue = this.get("toIssue"),
-          that = this,
-          callback,
           err;
-        
-        // Callback for after we determine quantity validity
-        callback = function (resp) {
-          if (!resp.answer) { return; }
-            
-          var dispOptions = {},
-            issOptions = {
-              asOf: that.transactionDate
-            },
-            detail = that.formatDetail(),
-            params = [
-              that.id,
-              that.get("toIssue"),
-              issOptions
-            ];
-
-          // Refresh once we've completed the work
-          dispOptions.success = function () {
-            that.fetch(options);
-          };
-
-          // Add distribution detail if applicable
-          if (detail.length) {
-            issOptions.detail = detail;
-          }
-          that.setStatus(XM.Model.BUSY_COMMITTING);
-          that.dispatch("XM.Inventory", that.issueMethod, params, dispOptions);
-        };
 
         // Validate
         if (this.undistributed()) {
           err = XT.Error.clone("xt2017");
         } else if (toIssue <= 0) {
           err = XT.Error.clone("xt2013");
-        } else if (!this.issueBalance() && toIssue > 0) {
+        } else if (toIssue > this.issueBalance()) {
           this.notify("_issueExcess".loc(), {
             type: XM.Model.QUESTION,
-            callback: callback
+            callback: function (resp) {
+              callback(resp.answer);
+            }
           });
+          return this;
         }
 
         if (err) {
-          this.trigger("invalid", this, err, options || {});
+          this.trigger("invalid", this, err, {});
+          callback(false);
         } else {
-          callback({answer: true});
+          callback(true);
         }
 
         return this;

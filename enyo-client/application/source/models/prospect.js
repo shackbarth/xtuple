@@ -27,6 +27,11 @@ white:true*/
 
   });
 
+  XM.Prospect.used = function (id, options) {
+    return XM.ModelMixin.dispatch('XM.Prospect', 'used',
+      [id], options);
+  };
+
   /**
     @class
 

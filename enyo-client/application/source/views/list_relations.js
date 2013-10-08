@@ -508,23 +508,23 @@ trailing:true, white:true*/
     formatExtendedPrice: function (value, view, model) {
       var parent = model.getParent(),
         currency = parent ? parent.get("currency") : false,
-        scale = XT.session.locale.attributes.extendedPriceScale;
+        scale = XT.locale.extendedPriceScale;
       return currency ? currency.format(value, scale) : "";
     },
     formatPercentage: function (value, view, model) {
       var parent = model.getParent(),
         currency = parent ? parent.get("currency") : false,
-        scale = XT.session.locale.attributes.percentPriceScale;
+        scale = XT.locale.percentPriceScale;
       return currency ? currency.format(value, scale) : "";
     },
     formatPrice: function (value, view, model) {
       var parent = model.getParent(),
         currency = parent ? parent.get("currency") : false,
-        scale = XT.session.locale.attributes.salesPriceScale;
+        scale = XT.locale.salesPriceScale;
       return currency ? currency.format(value, scale) : "";
     },
     formatQuantity: function (value, view, model) {
-      var scale = XT.session.locale.attributes.quantityScale;
+      var scale = XT.locale.quantityScale;
       return Globalize.format(value, "n" + scale);
     }
   });
