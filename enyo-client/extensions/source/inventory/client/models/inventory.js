@@ -52,7 +52,8 @@ white:true*/
         "returned",
         "site",
         "shipment",
-        "shipped"
+        "shipped",
+        "unit"
       ],
 
       transactionDate: null,

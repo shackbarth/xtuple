@@ -18,7 +18,7 @@ trailing:true, white:true, strict: false*/
         {kind: "onyx.GroupboxHeader", content: "_parameters".loc()},
         {name: "transactionDate", label: "_issueDate".loc(),
           defaultKind: "XV.DateWidget"},
-        {name: "order", attr: "order", label: "_order".loc(),
+        {name: "order", attr: "order", label: "_workOrder".loc(),
           defaultKind: "XV.OpenWorkOrderWidget",
         getParameter: function () {
           var param,

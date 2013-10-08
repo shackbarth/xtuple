@@ -22,7 +22,23 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
-              {kind: "onyx.GroupboxHeader", content: "_reporting".loc()}
+              {kind: "onyx.GroupboxHeader", content: "_workOrder".loc()},
+              {kind: "XV.NumberPolicyPicker", attr: "WONumberGeneration",
+                label: "_number".loc() + " " + "_policy".loc()},
+              {kind: "XV.NumberWidget", attr: "NextWorkOrderNumber",
+                label: "_nextNumber".loc(), formatting: false},
+              {kind: "XV.ToggleButtonWidget", attr: "AutoExplodeWO",
+                label: "_autoExplodeWO".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "WorkOrderChangeLog",
+                label: "_workOrderChangeLog".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "PostMaterialVariances",
+                label: "_postMaterialVariances".loc()},
+              {kind: "XV.PickerWidget", attr: "explodeWOEffective",
+                label: "_explodeWorkOrderEffective".loc(), collection: "XM.explodeWOEffective"},
+              {kind: "XV.PickerWidget", attr: "woExplosionLevel",
+                label: "_woExplosionLevel".loc(), collection: "XM.woExplosionLevel"},
+              {kind: "XV.PickerWidget", attr: "jobItemCosDefault",
+                label: "_jobItemCosDefault".loc(), collection: "XM.jobItemCosDefault"}
             ]}
           ]}
         ]}
@@ -62,10 +78,11 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ItemSiteWidget", attr:
                 {item: "itemSite.item", site: "itemSite.site"}
               },
+              {kind: "XV.InputWidget", attr: "unit.name"},
               {kind: "XV.QuantityWidget", attr: "qtyRequired"},
               {kind: "XV.QuantityWidget", attr: "qtyIssued"},
               {kind: "onyx.GroupboxHeader", content: "_issue".loc()},
-              {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"},
+              {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue", classes: "bold"},
             ]}
           ]},
           {kind: "XV.IssueMaterialDetailRelationsBox",

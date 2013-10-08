@@ -15,12 +15,12 @@ trailing:true, white:true*/
     // ..........................................................
     // APPLICATION
     //
-
+    /*
     panels = [
-      {name: "workOrderList", kind: "XV.WorkOrderList"}
+      //Bill of Materials
     ];
     XT.app.$.postbooks.appendPanels("setup", panels);
-
+    */
 
     configurationJson = {
       model: "XM.manufacturing",
@@ -45,10 +45,11 @@ trailing:true, white:true*/
       }
 
     };
-    XT.app.$.postbooks.insertModule(module, 0);
+    XT.app.$.postbooks.insertModule(module, 90);
 
     relevantPrivileges = [
       "IssueWoMaterials",
+      "PostProduction",
       "ReturnWoMaterials"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);

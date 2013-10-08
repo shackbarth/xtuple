@@ -55,9 +55,9 @@
       {
         "name": "unit",
         "toOne": {
-          "isNested": true,
           "type": "Unit",
-          "column": "womatl_uom_id"
+          "column": "womatl_uom_id",
+          "isNested": true
         }
       },
       {

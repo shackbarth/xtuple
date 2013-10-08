@@ -1,4 +1,5 @@
 enyo.depends(
 	"configure.js",
-  "manufacturing.js"
+  "manufacturing.js",
+  "static.js"
 );

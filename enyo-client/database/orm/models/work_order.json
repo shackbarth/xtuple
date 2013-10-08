@@ -4,11 +4,10 @@
     "nameSpace": "XM",
     "type": "WorkOrder",
     "table": "wo",
-    "comment": "Work Order Map",
     "isRest": true,
     "lockable": true,
-    "lockTable": "wo",
     "idSequenceName": "wo_wo_id_seq",
+    "comment": "Work Order Map",
     "privileges": {
       "all": {
         "create": "MaintainWorkOrders",

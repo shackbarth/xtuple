@@ -116,12 +116,21 @@ white:true*/
       issueMethod: "issueMaterial",
 
       readOnlyAttributes: [
+        "qohBefore",
         "qtyPer",
         "qtyRequired",
-        "qtyIssued"
+        "qtyIssued",
+        "unit.name"
       ],
 
       transactionDate: null,
+
+      qohAfter: function () {
+        var qohBefore = this.get("qohBefore"),
+          toIssue = this.get("toIssue"),
+          qohAfter = XT.math.subtract(qohBefore, toIssue, XT.QUANTITY_SCALE);
+        return  qohAfter;
+      },
 
       formatWoNumber: function () {
         return this.get("order.number") + "-" + this.get("order.subnumber");
@@ -238,7 +247,7 @@ white:true*/
         } else if (!this.issueBalance() && toIssue > 0) {
           this.notify("_issueExcess".loc(), {
             type: XM.Model.QUESTION,
-            callback: callback
+            callback: callback()
           });
         }
 
@@ -259,6 +268,7 @@ white:true*/
 
       toIssueDidChange: function () {
         this.distributeToDefault();
+        this.qohAfter();
       }
 
     });

@@ -16,17 +16,17 @@ white:true*/
 
       recordType: 'XM.Manufacturing',
 
-      privileges: 'ConfigureIM' /*,
+      privileges: 'ConfigureWO',
 
       validate: function (attributes, options) {
         // XXX not sure if number widgets can fail in this way.
         var params = { type: "_number".loc() };
-        if (attributes.NextShipmentNumber !== undefined &&
-            isNaN(attributes.NextShipmentNumber)) {
-          params.attr = "_shipment".loc() + " " + "_number".loc();
+        if (attributes.NextWorkOrderNumber !== undefined &&
+            isNaN(attributes.NextWorkOrderNumber)) {
+          params.attr = "_workOrder".loc() + " " + "_number".loc();
           return XT.Error.clone('xt1003', { params: params });
         }
-      }*/
+      }
     });
 
     //
