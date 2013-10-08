@@ -67,10 +67,13 @@ SYS = {};
 
   // load some more required files
   require("./lib/ext/datasource");
-  require("./olapcatalog");
-  require("./lib/ext/olapsource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
+  
+  if (typeof X.options.biServer !== 'undefined') {
+    require("./olapcatalog");
+    require("./lib/ext/olapsource");
+  }
 
   // load the encryption key, or create it if it doesn't exist
   // it should created just once, the very first time the datasoruce starts
