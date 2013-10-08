@@ -1,0 +1,46 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "BankAccount",
+    "table": "bankaccnt",
+    "isRest": true,
+    "idSequenceName": "bankaccnt_bankaccnt_id_seq",
+    "lockable": true,
+    "comment": "Bank Account Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "bankaccnt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
