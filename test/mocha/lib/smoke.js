@@ -19,7 +19,7 @@
     //
     _.each(navigator.modules, function (module, moduleIndex) {
       _.each(module.panels, function (panel, panelIndex) {
-        if (panel.kind === listKind) {
+        if (listKind && panel.kind === listKind) {
           myModuleIndex = moduleIndex;
           myPanelIndex = panelIndex;
         }
@@ -227,7 +227,7 @@
   exports.runUICrud = function (spec) {
     it('Can be created through the app UI', function (done) {
       this.timeout(30 * 1000);
-      navigateToNewWorkspace(XT.app, spec.list, function (workspaceContainer) {
+      navigateToNewWorkspace(XT.app, spec.listKind, function (workspaceContainer) {
         var workspace = workspaceContainer.$.workspace;
 
         assert.equal(workspace.value.recordType, spec.recordType);

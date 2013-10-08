@@ -3,7 +3,9 @@
   newcap:true, noarg:true, undef:true */
 /*global XT:true, XM:true, XV:true, exports:true, describe:true, it:true, require:true */
 
+
 // TODO: test "used"
+// i.e.: A XM.ShipVia object can not be deleted if it has been assigned as the default customer ship via in sales settings.
 
 
 (function () {
@@ -16,22 +18,17 @@
     _ = require("underscore");
 
   _.each(specs, function (spec) {
-
-
-
     describe(spec.recordType, function () {
-      //
-      // Smoke Crud
-      //
-      // TODO
-      //smoke.runUICrud(spec);
-
       //
       // Run CRUD model tests
       //
       crud.runAllCrud(spec);
 
-      //model = spec.model;
+      //
+      // Smoke Crud
+      //
+      smoke.runUICrud(spec);
+
       //
       // Verify lockability
       //
@@ -87,6 +84,9 @@
       //
       // Make sure we're testing the enforceUpperCase (the asserts themselves are in CRUD)
       //
+      it((spec.enforceUpperKey ? "Enforces" : "Does not enforce") + " uppercasing the key", function () {
+        assert.equal(spec.model.enforceUpperKey, spec.enforceUpperKey);
+      });
       if (!_.isBoolean(spec.enforceUpperKey)) {
         it("has its enforceUpperKey convention defined in the test spec", function () {
           assert.fail();
@@ -199,7 +199,8 @@
 
       } else if (spec.cacheName === false) {
         /*
-        TODO
+        TODO: probably the best thing to do is to loop through the caches and make sure
+        that none of them are backed by spec.recordType
         it("is not cached", function () {
 
         });
