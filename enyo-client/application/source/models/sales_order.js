@@ -35,6 +35,11 @@ white:true*/
     }
   });
 
+  XM.SalesOrder.used = function (id, options) {
+    return XM.ModelMixin.dispatch('XM.SalesOrder', 'used',
+      [id], options);
+  };
+
   /**
     @class
 

@@ -69,6 +69,11 @@ SYS = {};
   require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
+  
+  if (typeof X.options.biServer !== 'undefined') {
+    require("./olapcatalog");
+    require("./lib/ext/olapsource");
+  }
 
   // load the encryption key, or create it if it doesn't exist
   // it should created just once, the very first time the datasoruce starts
@@ -369,8 +374,8 @@ app.get('/:org/file', routes.file);
 app.get('/:org/locale', routes.locale);
 app.get('/:org/report', routes.report);
 app.get('/:org/reset-password', routes.resetPassword);
+app.get('/:org/queryOlap', routes.queryOlapCatalog);
 app.all('/:org/vcfExport', routes.vcfExport);
-
 
 //
 // Load all extension-defined routes. By convention the paths,

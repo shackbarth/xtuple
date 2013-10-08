@@ -379,8 +379,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
       series,
       sql1,
       sql2,
+      sql3,
       ary,
       item,
+      id,
       i;
 
     /* Make into an array if an array not passed */
@@ -399,16 +401,26 @@ select xt.install_js('XM','Inventory','xtuple', $$
            "  join xt.ordtype on c.relname=ordtype_tblname " +
            "where obj_uuid= $1;",
 
-    sql2 = "select issuetoshipping($1, {table}_id, $3, $4, $5::timestamptz) as series " +
-           "from {table} where obj_uuid = $2;";
+    sql2 = "select {table}_id as id " +
+           "from {table} where obj_uuid = $1;";
+
+    sql3 = "select current_date != $1 as invalid";
 
     /* Post the transaction */
     for (i = 0; i < ary.length; i++) {
       item = ary[i];
       asOf = item.options ? item.options.asOf : null;
       orderType = plv8.execute(sql1, [item.orderLine])[0];
-      series = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
-        [orderType.ordtype_code, item.orderLine, item.quantity, 0, asOf])[0].series;
+      id = plv8.execute(sql2.replace(/{table}/g, orderType.ordtype_tblname),
+        [item.orderLine])[0].id;
+      series = XT.executeFunction("issuetoshipping",
+        [orderType.ordtype_code, id, item.quantity, 0, asOf],
+        [null, null, null, null, "timestamptz"]);
+
+      if (asOf && plv8.execute(sql3, [asOf])[0].invalid &&
+          !XT.Data.checkPrivilege("AlterTransactionDates")) {
+        throw new handleError("Insufficient privileges to alter transaction date", 401);
+      }
 
       /* Distribute detail */
       XM.PrivateInventory.distribute(series, item.options.detail);
@@ -443,20 +455,20 @@ select xt.install_js('XM','Inventory','xtuple', $$
     @param {Date} Ship date, default = current date
   */
   XM.Inventory.shipShipment = function (shipment, shipDate) {
-    var sql = "select shipshipment(shiphead_id, $2) as series " +
+    var sql = "select shiphead_id " +
       "from shiphead where shiphead_number = $1;";
 
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("ShipOrders")) { throw new handleError("Access Denied", 401); }
 
     /* Post the transaction */
-    var ret = plv8.execute(sql, [shipment, shipDate])[0].series;
-    
-    return ret;
+    var shipmentId = plv8.execute(sql, [shipment])[0].shiphead_id;
+    return XT.executeFunction("shipshipment", [shipmentId, shipDate]);
   };
   XM.Inventory.shipShipment.description = "Ship shipment";
   XM.Inventory.shipShipment.params = {
-     shipment: { shipment: "Number", shipDate: "Ship Date" }
+     shipment: { type: "String", description: "Shipment natural key" },
+     shipDate: { type: "Date", description: "Ship Date" }
   };
 
   /**

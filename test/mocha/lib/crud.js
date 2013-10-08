@@ -1,12 +1,11 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
+/*global _:true, console:true, XM:true, require:true, assert:true,
 setTimeout:true, clearTimeout:true, exports:true, it:true */
 
 var _ = require("underscore"),
   zombieAuth = require("./zombie_auth"),
-  Globalize = require("../../../lib/tools/lib/globalize/lib/globalize"),
   assert = require("chai").assert;
 
 (function () {
@@ -180,8 +179,7 @@ var _ = require("underscore"),
     @param {Function} callback
   */
   var init = exports.init = function (data, callback) {
-    var that = this,
-      timeoutId,
+    var timeoutId,
       model = data.model,
       auto_regex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER,
       assertAndCallback = function () {
@@ -189,7 +187,7 @@ var _ = require("underscore"),
         assert.isNotNull(data.model.id);
         callback();
       },
-      modelCallback = function (model, value) {
+      modelCallback = function (model) {
         if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
           // Check that the AUTO...NUMBER property has been set.
           if (model.get(model.documentKey)) {
@@ -237,8 +235,7 @@ var _ = require("underscore"),
     @param {Function} callback
   */
   var save = exports.save = function (data, callback) {
-    var that = this,
-      timeoutId,
+    var timeoutId,
       model = data.model,
       invalid = function (model, error) {
         assert.fail(JSON.stringify(error) || "Unspecified error", "");
@@ -253,7 +250,8 @@ var _ = require("underscore"),
       },
       modelCallback = function () {
         var status = model.getStatus(),
-          K = XM.Model;
+          K = XM.Model,
+          options = {};
         if (status === K.READY_CLEAN) {
           clearTimeout(timeoutId);
           model.off('statusChange', modelCallback);
@@ -261,11 +259,18 @@ var _ = require("underscore"),
           model.off('notify', notify);
 
           assert.equal(data.model.getStatusString(), 'READY_CLEAN');
+
           testAttributes(data);
           if (data.commentType && data.testComments) {
             testComments(data);
           }
-          callback();
+
+          // Model should not be used at this point
+          options.success = function (used) {
+            assert.equal(used, 0);
+            callback();
+          };
+          model.used(options);
         }
       };
 
@@ -312,8 +317,7 @@ var _ = require("underscore"),
     @param {Object} callback
   */
   var destroy = exports.destroy = function (data, callback) {
-    var that = this,
-      timeoutId,
+    var timeoutId,
       model = data.model,
       modelCallback = function () {
         var status = model.getStatus(),
