@@ -14,14 +14,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   X.olapCatalog = X.Object.extend({
   
     className: "X.olapCatalog",
-    
-    baseUrl: "http://" + X.options.biServer.hostname + ":" + X.options.biServer.port + "/pentaho/Xmla",
+    hostname: X.options.biServer.hostname || "localhost",
+    port: X.options.biServer.port || 8080,
     
     xmlaConnect: new X.xmla.Xmla({
         async: true,
         properties: {
             DataSourceInfo: "Provider=Mondrian;DataSource=Pentaho",
-            Catalog: X.options.biServer.catalog
+            Catalog: X.options.biServer.catalog || "xTuple",
           },
           listeners: {
             events: X.xmla.Xmla.EVENT_ERROR,

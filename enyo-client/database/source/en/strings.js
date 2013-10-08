@@ -256,6 +256,7 @@ strict:true, trailing:true, white:true */
     "_xtdb_insertIntoGLSeries1": "Cannot add to a G/L Series because the Account is NULL or -1.",
     "_xtdb_insertIntoGLSeries4": "Cannot add to a G/L Series because the Accounting Period is closed.",
     "_xtdb_issueToShipping10": "The Next Shipment Number has not been set in the Configure S/R window. Set that value and try issuing to shipping again.",
+    "_xtdb_issueToShipping11": "Not a supported order type.",
     "_xtdb_issueToShipping12": "The selected Sales Order is on Credit Hold and must be taken off of Credit Hold before any inventory may be issued to it.",
     "_xtdb_issueToShipping13": "The selected Sales Order is on Packing Hold and must be taken off of Packing Hold before any inventory may be issued to it.",
     "_xtdb_issueToShipping14": "The selected Sales Order is on Return Hold. The Customer must return all materials for a related Return Authorization before any inven tory may be issued to this Order.",
