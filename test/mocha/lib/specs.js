@@ -42,7 +42,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     idAttribute: "number",
     enforceUpperKey: true,
     attributes: ["number", "description1"], // TODO: more
-    extensions: ["crm", "sales", "inventory", "project"], // TODO: billing
+    extensions: ["billing", "crm", "sales", "inventory", "project"],
     privileges: {
       createUpdate: "MaintainItemMasters",
       read: "ViewItemMasters",
@@ -74,8 +74,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["code", "description"],
-    extensions: ["sales", "inventory"],
-    //extensions: ["sales", "billing", "inventory"], TODO
+    extensions: ["billing", "inventory", "sales"],
     privileges: {
       createUpdateDelete: "MaintainShipVias",
       read: true
@@ -83,6 +82,28 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     createHash: {
       code: "TestShipVia" + Math.random(),
       description: "Test Ship Via"
+    },
+    updateHash: "description"
+  };
+
+  exports.terms = {
+    recordType: "XM.Terms",
+    collectionType: "XM.TermsCollection",
+    cacheName: "XM.terms",
+    listKind: "XV.TermsList",
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "code",
+    enforceUpperKey: false,
+    attributes: ["code", "termsType"],
+    extensions: ["billing", "inventory", "sales"],
+    privileges: {
+      createUpdateDelete: "MaintainTerms",
+      read: true
+    },
+    createHash: {
+      code: "TestTerms" + Math.random(),
+      description: "Test Terms"
     },
     updateHash: "description"
   };

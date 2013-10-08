@@ -19,18 +19,18 @@ trailing:true, white:true*/
         ]
       },
       relevantPrivileges = [
-        // XM.Billing
         "ConfigureAR",
-        "MaintainReasonCodes",
-
-        // XM.SalesCategory
-        "MaintainSalesCategories",
-
-        // Customer
+        "DeleteItemMasters",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
+        "MaintainItemMasters",
+        "MaintainReasonCodes",
+        "MaintainSalesCategories",
+        "MaintainShipVias",
+        "MaintainTerms",
         "ViewCustomerMasters",
-        "ViewCustomerGroups"
+        "ViewCustomerGroups",
+        "ViewItemMasters"
       ],
       configuration = {
         model: "XM.billing",
@@ -40,7 +40,8 @@ trailing:true, white:true*/
       },
       setupPanels = [
         {name: "reasonCodeList", kind: "XV.ReasonCodeList"},
-        {name: "salesCategoryList", kind: "XV.SalesCategoryList"}
+        {name: "salesCategoryList", kind: "XV.SalesCategoryList"},
+        {name: "termsList", kind: "XV.TermsList"},
       ];
 
     XT.app.$.postbooks.appendPanels("setup", setupPanels);
