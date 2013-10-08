@@ -26,7 +26,8 @@ trailing:true, white:true*/
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
       {name: "plannerCodeList", kind: "XV.PlannerCodeList"},
       {name: "customerTypeList", kind: "XV.CustomerTypeList"},
-      {name: "expenseCategoryList", kind: "XV.ExpenseCategoryList"}
+      {name: "expenseCategoryList", kind: "XV.ExpenseCategoryList"},
+      {name: "reasonCodeList", kind: "XV.ReasonCodeList"}
     ];
     XT.app.$.postbooks.appendPanels("setup", panels);
 
@@ -78,6 +79,7 @@ trailing:true, white:true*/
       "MaintainItemSites",
       "MaintainLocations",
       "MaintainPackingListBatch",
+      "MaintainReasonCodes",
       "MaintainShipVias",
       "MaintainSiteTypes",
       "MaintainWarehouses",

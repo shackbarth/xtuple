@@ -51,4 +51,15 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.VendorTypeCollection = XM.Collection.extend(/** @lends XM.VendorTypeCollection.prototype */{
+
+    model: XM.VendorType
+
+  });
+
 }());
