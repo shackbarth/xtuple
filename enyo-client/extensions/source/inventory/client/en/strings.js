@@ -86,7 +86,6 @@ strict:true, trailing:true, white:true */
     "_postToDefaultLocation": "Post to Default Loc.",
     "_physicalInventory": "Physical Inventory (Counting)",
     "_printPacklist": "Print Packlist",
-    "_processing": "Processing",
     "_purchaseOrder": "Purchase Order",
     "_purchaseOrders": "Purchase Orders",
     "_rack": "Rack",

@@ -2356,13 +2356,19 @@ trailing:true, white:true, strict: false*/
   enyo.kind({
     name: "XV.NameDescriptionList",
     kind: "XV.NameList",
-    create: function () {
-      this.inherited(arguments);
-      this.createComponent({kind: "XV.ListColumn", classes: "last", fit: true, components: [
-          {kind: "XV.ListAttr", attr: "description"}
-        ]
-      });
-    }
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
   });
 
   enyo.kind({
