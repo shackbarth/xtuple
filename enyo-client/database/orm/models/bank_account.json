@@ -39,6 +39,46 @@
           "type": "String",
           "column": "bankaccnt_descrip"
         }
+      },
+      {
+        "name": "bankName",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_bankname"
+        }
+      },
+      {
+        "name": "accountNumber",
+        "attr": {
+          "type": "String",,
+          "column": "bankaccnt_accntnumber"
+        }
+      },
+      {
+        "name": "currency",
+        "attr": {
+          "type": "Currency",
+          "column": "bankaccnt_curr_id"
+        }
+      },
+      {
+        "name": "isUsedByBilling",
+        "attr": {
+          "type": "Boolean",
+          "column": "bankaccnt_ar"}
+      },
+      {
+        "name": "isUsedByPayments",
+        "attr": {
+          "type": "Boolean",
+          "column": "bankaccnt_ap"}
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_notes"
+        }
       }
     ],
     "isSystem": true

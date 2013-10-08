@@ -39,7 +39,7 @@
             master = new enyo.Control();
 
           if (XV.inheritsFrom(value.prototype, "XV.Picker") &&
-              // don't test abstract kinds
+              // don't test abstract kinds, or widgets with "picker" in name that aren't pickers
               !_.contains(['PickerWidget', 'AttributePicker', 'ExpenseCategoryPicker'], key)) {
 
             describe('XV.' + key, function () {
