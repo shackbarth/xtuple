@@ -5,14 +5,14 @@ trailing:true, white:true, strict:false*/
 
 (function () {
 
-  XT.extensions.inventory.initTransactionList = function () {
+  XT.extensions.inventory.initTransactionListContainer = function () {
 
     enyo.kind({
       name: "XV.IssueToShipping",
-      kind: "XV.TransactionList",
+      kind: "XV.TransactionListContainer",
       prerequisite: "canIssueStock",
       notifyMessage: "_issueAll?".loc(),
-      list: "XV.IssueToShippingListContainer",
+      list: "XV.IssueToShippingList",
       actions: [
         {name: "issueAll", label: "_issueAll".loc(),
           prerequisite: "canIssueStock" }

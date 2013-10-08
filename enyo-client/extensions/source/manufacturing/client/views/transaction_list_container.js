@@ -5,7 +5,7 @@ trailing:true, white:true, strict:false*/
 
 (function () {
 
-  XT.extensions.manufacturing.initTransactionList = function () {
+  XT.extensions.manufacturing.initTransactionListContainer = function () {
 
     /** @private */
     var _canDo = function (priv) {
@@ -18,7 +18,7 @@ trailing:true, white:true, strict:false*/
 
     enyo.kind({
       name: "XV.IssueMaterial",
-      kind: "XV.TransactionListContainers",
+      kind: "XV.TransactionListContainer",
       prerequisite: "canIssueMaterial",
       notifyMessage: "_issueAll?".loc(),
       list: "XV.IssueMaterialList",

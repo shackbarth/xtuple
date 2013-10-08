@@ -560,9 +560,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     if (!XT.Data.checkPrivilege("IssueWoMaterials")) { throw new handleError("Access Denied", 401); }
 
     sql = "select issuewomaterial(womatl_id, $2::numeric, $3::integer, $4::timestamptz) as series " +
-           "from womatl where obj_uuid = $1;";  
-
-    sql2 = "select current_date != $1 as invalid";         
+           "from womatl where obj_uuid = $1;";           
 
     /* Post the transaction */
     for (i = 0; i < ary.length; i++) {
