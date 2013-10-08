@@ -18,12 +18,20 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
   //
   exports.shipVia = {
     recordType: "XM.ShipVia",
+    collectionType: "XM.ShipViaCollection",
+    cacheName: "XM.shipVias",
     listKind: "XV.ShipViaList",
     instanceOf: "XM.Document",
     isLockable: true,
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["description"],
+    extensions: ["sales", "inventory"],
+    //extensions: ["sales", "billing", "inventory"], TODO
+    privileges: {
+      createUpdateDelete: "MaintainShipVias",
+      read: true
+    },
     createHash: {
       code: "TestShipVia" + Math.random(),
       description: "Test Ship Via"

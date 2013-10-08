@@ -3,6 +3,9 @@
   newcap:true, noarg:true, undef:true */
 /*global XT:true, XM:true, XV:true, exports:true, describe:true, it:true, require:true */
 
+// TODO: test "used"
+
+
 (function () {
   "use strict";
 
@@ -14,10 +17,13 @@
 
   _.each(specs, function (spec) {
 
+
+
     describe(spec.recordType, function () {
       //
       // Smoke Crud
       //
+      // TODO
       //smoke.runUICrud(spec);
 
       //
@@ -101,6 +107,110 @@
         });
       }
 
+      //
+      // Verify privileges are declared correctly by the extensions
+      //
+      _.each(spec.privileges, function (priv) {
+        if (typeof priv === 'string') {
+          _.each(spec.extensions, function (extension) {
+            it("has privilege " + priv + " declared by the " + extension + " extension", function () {
+              var matchedPriv = _.filter(XT.session.relevantPrivileges, function (sessionPriv) {
+                return sessionPriv.privilege === priv && sessionPriv.module === extension;
+              });
+              assert.equal(1, matchedPriv.length);
+            });
+          });
+          it("has privilege " + priv + " not declared by any other extensions", function () {
+            var matchedPriv = _.filter(XT.session.relevantPrivileges, function (sessionPriv) {
+              return sessionPriv.privilege === priv && !_.contains(spec.extensions, sessionPriv.module);
+            });
+            assert.equal(0, matchedPriv.length);
+          });
+
+          //
+          // Make sure the privilege is translated
+          //
+          it("has privilege " + priv + " that is translated in the strings file", function () {
+            var privLoc = "_" + XT.String.camelize(priv);
+            assert.notEqual(XT.String.loc(privLoc), privLoc);
+          });
+        }
+      });
+
+      //
+      // Verify Privileges
+      //
+      _.each(spec.privileges, function (priv, key) {
+        var pertinentMethods;
+        switch (key) {
+        case "createUpdateDelete":
+          pertinentMethods = ["canCreate", "canUpdate", "canDelete"];
+          break;
+        case "read":
+          pertinentMethods = ["canRead"];
+          break;
+        }
+
+        it("has can perform action " + priv + " to perform action " + key, function () {
+          var Klass = XT.getObjectByName(spec.recordType);
+
+          if (typeof priv === 'string') {
+            assert.isDefined(pertinentMethods); // make sure we're testing for the priv
+            XT.session.privileges.attributes[priv] = false;
+            _.each(pertinentMethods, function (pertinentMethod) {
+              assert.isFalse(Klass[pertinentMethod]());
+            });
+            XT.session.privileges.attributes[priv] = true;
+            _.each(pertinentMethods, function (pertinentMethod) {
+              assert.isTrue(Klass[pertinentMethod]());
+            });
+
+          } else if (_.isBoolean(priv)) {
+            _.each(pertinentMethods, function (pertinentMethod) {
+              assert.equal(Klass[pertinentMethod](), priv);
+            });
+
+          } else {
+            it("has privilege " + priv + " that's a string or boolean in the test spec", function () {
+              assert.fail();
+            });
+          }
+        });
+      });
+
+      //
+      // Test that the collection exists
+      //
+      it("backs the " + spec.collectionType + " collection", function () {
+        var Collection = XT.getObjectByName(spec.collectionType);
+        assert.isFunction(Collection);
+        assert.equal(Collection.prototype.model.prototype.recordType, spec.recordType);
+      });
+
+      //
+      // Test that the cache exists
+      //
+      if (spec.cacheName) {
+        it("is cached as " + spec.cacheName, function () {
+          var cache = XT.getObjectByName(spec.cacheName);
+          assert.isObject(cache);
+          assert.equal(cache.model.prototype.recordType, spec.recordType);
+        });
+
+      } else if (spec.cacheName === false) {
+        /*
+        TODO
+        it("is not cached", function () {
+
+        });
+        */
+      } else {
+        it("has a cache (or false for no cache) specified in the test spec", function () {
+          assert.fail();
+        });
+      }
+      // TODO: verify that the cache is made available by certain extensions and not others
+      // TODO: verify that the list is made available by certain extensions and not others
 
     });
   });

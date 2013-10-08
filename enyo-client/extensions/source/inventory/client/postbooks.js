@@ -120,6 +120,7 @@ trailing:true, white:true*/
       "MaintainLocations",
       "AlterTransactionDates",
       //"MaintainExternalShipping",
+      "MaintainShipVias",
       "MaintainSiteTypes",
       "ViewSiteTypes"
     ];

@@ -79,6 +79,7 @@ trailing:true, white:true*/
       "MaintainQuotes",
       "MaintainSalesOrders",
       "MaintainSalesReps",
+      "MaintainShipVias",
       "MaintainShipZones",
       "MaintainTaxAssignments",
       "MaintainTaxClasses",
