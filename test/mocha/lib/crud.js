@@ -362,7 +362,6 @@ var _ = require("underscore"),
     it('can be created', function () {
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
-
     });
 
     //
