@@ -373,4 +373,20 @@ white:true*/
     model: XM.Attribute
   });
 
+  // Reason Code Document Types
+  K = XM.ReasonCode;
+  var reasonDocTypeJson = [
+    { id: K.DEBIT_MEMO, name: "_debitMemo".loc() },
+    { id: K.CREDIT_MEMO, name: "_creditMemo".loc() }
+  ];
+  XM.ReasonDocTypeModel = Backbone.Model.extend({});
+  XM.ReasonDocTypeCollection = Backbone.Collection.extend({
+    model: XM.ReasonDocTypeModel
+  });
+  XM.reasonCodeDocumentTypes = new XM.ReasonDocTypeCollection();
+  for (i = 0; i < reasonDocTypeJson.length; i++) {
+    var reasonDocType = new XM.ReasonDocTypeModel(reasonDocTypeJson[i]);
+    XM.reasonCodeDocumentTypes.add(reasonDocType);
+  }
+
 }());

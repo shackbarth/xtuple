@@ -21,6 +21,7 @@ enyo.depends(
   "purchase_order.js",
   "sales_order_base.js",
   "quote.js",
+  "reason_code.js",
   "sales_order.js",
   "sales_rep.js",
   "sales_history.js",
