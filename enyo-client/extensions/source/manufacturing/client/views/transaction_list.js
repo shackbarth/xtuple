@@ -1,85 +1,95 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict:false*/
-/*global XT:true, XM:true, _:true, enyo:true */
+/*global XM:true, _:true, XT:true, XV:true, enyo:true, Globalize:true*/
 
 (function () {
 
-  XT.extensions.manufacturing.initTransactionList = function () {
+  XT.extensions.manufacturing.initTransactionLists = function () {
 
-    /** @private */
-    var _canDo = function (priv) {
-      var hasPrivilege = XT.session.privileges.get(priv),
-        model = this.getModel(),
-        //validModel = _.isObject(model) ? !model.get("isShipped") : false;
-        validModel = _.isObject(model);
-      return hasPrivilege && validModel;
-    };
+    // ..........................................................
+    // ISSUE WORK ORDER MATERIALS
+    //
 
     enyo.kind({
-      name: "XV.IssueMaterial",
-      kind: "XV.TransactionListContainer",
-      prerequisite: "canIssueItem",
-      notifyMessage: "_issueAll?".loc(),
-      list: "XV.IssueMaterialList",
-      actions: [
-        {name: "issueAll", label: "_issueAll".loc(),
-          prerequisite: "canIssueItem" }
+      name: "XV.IssueMaterialList",
+      kind: "XV.TransactionList",
+      label: "_issueMaterial".loc(),
+      collection: "XM.IssueMaterialCollection",
+      parameterWidget: "XV.IssueMaterialParameters",
+      multiSelect: true,
+      query: {orderBy: [
+        {attribute: "order.number"},
+        {attribute: "order.subnumber"}
+      ]},
+      showDeleteAction: false,
+      toggleSelected: true,
+      published: {
+        status: null,
+        transModule: XM.Manufacturing,
+        transWorkspace: "XV.IssueMaterialWorkspace"
+      },
+      events: {
+        onProcessingChanged: "",
+        onOrderChanged: ""
+      },
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "itemSite.site.code",
+                  classes: "right"},
+                {kind: "XV.ListAttr", attr: "itemSite.item.number", fit: true}
+              ]},
+              {kind: "XV.ListAttr", attr: "itemSite.item.description1",
+                fit: true,  style: "text-indent: 18px;"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "unit.name", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "qtyRequired",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "qtyIssued",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money bold", components: [
+              {kind: "XV.ListAttr", attr: "balance",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "scheduleDate",
+                formatter: "formatScheduleDate", style: "text-align: right"}
+            ]}
+          ]}
+        ]}
       ],
-      handlers: {
-        onShipmentChanged: "shipmentChanged"
-      },
-      canIssueItem: function () {
-        var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
-          model = this.getModel(),
-          validModel = _.isObject(model) ? true : false,
-          hasOpenLines = this.$.list.value.length;
-        return hasPrivilege && validModel && hasOpenLines;
-      },
-      create: function () {
+      fetch: function () {
         this.inherited(arguments);
-        var button = this.$.postButton;
-        button.setContent("_post".loc());
-        button.setShowing(true);
       },
-      issueAll: function () {
-        this.$.list.issueAll();
+
+      formatScheduleDate: function (value, view, model) {
+        var today = new Date(),
+          isLate = XT.date.compareDate(value, today) < 1 &&
+            model.get("balance") > 0;
+        view.addRemoveClass("error", isLate);
+        return value;
       },
-      issueSelected: function () {
-        var models = this.selectedModels();
-        this.issue(models);
+
+      formatQuantity: function (value) {
+        var scale = XT.locale.quantityScale;
+        return Globalize.format(value, "n" + scale);
       },
-      issueSelectedStock: function () {
-        var models = this.selectedModels();
-        this.issue(models, true);
-      },
-      post: function () {
-        var that = this,
-          model = that.model,
-          callback = function (resp) {
-            if (resp) { that.$.parameterWidget.$.order.setValue(null); }
-          };
-        this.doWorkspace({
-          workspace: "XV.PostProductionWorkspace",
-          id: model.id,
-          callback: callback
-        });
-      },
-      parameterChanged: function (inSender, inEvent) {
-        this.inherited(arguments);
-        var originator = inEvent ? inEvent.originator : false,
-          name = originator ? originator.name : false,
-          that = this;
-        if (name === "order" && this.model !== -1) {
-          if (inEvent.originator.$.input.getValue().id === that.model.id) {
-            this.$.postButton.setDisabled(false);
-          }
-        } else {
-          this.$.postButton.setDisabled(true);
-        }
-        //this.$.postButton.setDisabled(false);
+
+      orderChanged: function () {
+        this.doOrderChanged({order: this.getOrder()});
       }
     });
-  };
 
+    XV.registerModelList("XM.WorkOrderRelation", "XV.WorkOrderList");
+
+  };
 }());
