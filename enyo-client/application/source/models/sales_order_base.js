@@ -602,10 +602,11 @@ white:true*/
       takes all the info from the billto and copies it to the shipto.
     */
     copyBilltoToShipto: function () {
-      var i;
+      var shiptoAttrArray = this.shiptoAttrArray.slice(1), // Don't need shipto
+        i;
       this.unset("shipto");
-      for (i = 0; i < this.shiptoAttrArray.length; i++) {
-        this.set(this.shiptoAttrArray[i], this.get(this.billtoAttrArray[i]));
+      for (i = 0; i < shiptoAttrArray.length; i++) {
+        this.set(shiptoAttrArray[i], this.get(this.billtoAttrArray[i]));
       }
     },
 
@@ -1296,7 +1297,8 @@ white:true*/
         updatePolicy = settings.get("UpdatePriceLineEdit"),
         parent = this.getParent(),
         customer = parent ? parent.get("customer") : false,
-        currency = parent ? parent.get("currency") :false;
+        currency = parent ? parent.get("currency") :false,
+        listPrice;
 
       // If no parent, don't bother
       if (!parent) { return; }
@@ -1309,8 +1311,11 @@ white:true*/
 
         // Prospects always get the list price
         if (customer.getValue("status") === XM.CustomerProspectRelation.PROSPECT_STATUS) {
-          this.set("price", item.get("listPrice"));
-          this.set("customerPrice", item.get("listPrice"));
+          listPrice = item.get("listPrice");
+          this.set({
+            price: listPrice,
+            customerPrice: listPrice
+          });
           return;
         }
         // Determine whether updating net price or only customer price

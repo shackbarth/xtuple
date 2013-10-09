@@ -120,7 +120,15 @@ select xt.install_js('XT','Session','xtuple', $$
     @returns {Object}
   */
   XT.Session.preferences = function() {
-    var sql = "SELECT * FROM xt.userpref WHERE userpref_usr_username = $1",
+    var sql = "select * from xt.userpref where userpref_usr_username = $1 " +
+              "and userpref_name != 'PreferredWarehouse' " +
+              "union " + 
+              /* Sorry, we've just got to share this one... */
+              "select usrpref_id, usrpref_username, usrpref_name, warehous_code " +
+              "from usrpref " +
+              " join whsinfo on usrpref_value = warehous_id::text " +
+              "where usrpref_username = $1 "
+              "and usrpref_name = 'PreferredWarehouse';";
       result = plv8.execute(sql, [XT.username]),
       resultObj = {};
 
@@ -145,19 +153,34 @@ select xt.install_js('XT','Session','xtuple', $$
     /* Compose our commit settings by applying the patch to what we already have */
     patches.map(function (patch) {
       var sql,
+        name = patch.path.substring(1),
         updateSql = "UPDATE xt.userpref SET userpref_value = $1 WHERE userpref_usr_username = $2 AND userpref_name = $3;",
-        insertSql = "INSERT INTO xt.userpref (userpref_value, userpref_usr_username, userpref_name) VALUES ($1, $2, $3);";
+        insertSql = "INSERT INTO xt.userpref (userpref_value, userpref_usr_username, userpref_name) VALUES ($1, $2, $3);",
+        /* Handle the ugly exception */
+        updateSqlSite = "UPDATE usrpref SET usrpref_value = (select warehous_id from whsinfo where warehous_code = $1) WHERE usrpref_username = $2 AND usrpref_name = $3;",
+        insertSqlSite = "INSERT INTO usrpref (usrpref_value, usrpref_username, usrpref_name) VALUES ($1, $2, $3);";
 
-      if (patch.op === 'add') {
-        sql = insertSql;
-      } else if(patch.op === 'replace') {
-        sql = updateSql;
+      if (name !== "PreferredWarehouse") {
+        if (patch.op === 'add') {
+          sql = insertSql;
+        } else if(patch.op === 'replace') {
+          sql = updateSql;
+        } else {
+          /* no other operation is supported at the moment */
+          return;
+        }
       } else {
-        /* no other operation is supported at the moment */
-        return;
+        if (patch.op === 'add') {
+          sql = insertSqlSite;
+        } else if(patch.op === 'replace') {
+          sql = updateSqlSite;
+        } else {
+          /* no other operation is supported at the moment */
+          return;
+        }
       }
 
-      plv8.execute(sql, [patch.value, XT.username, patch.path.substring(1)]);
+      plv8.execute(sql, [patch.value, XT.username, name]);
     });
     return true;
   }
