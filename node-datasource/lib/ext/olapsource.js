@@ -25,7 +25,7 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true */
     query: function (query, jwt, callback) {
       this.xmlaConnect.executeTabular({
         statement: query,
-        url : this.baseUrl + "?assertion=" + jwt.jwt,
+        url : "http://" + this.hostname + ":" + this.port + "/pentaho/Xmla?assertion=" + jwt.jwt,
         success: function (xmla, options, xmlaResponse) {
             callback(xmlaResponse); // back to callback in olapdata
           },

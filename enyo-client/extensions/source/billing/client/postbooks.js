@@ -21,6 +21,7 @@ trailing:true, white:true*/
       relevantPrivileges = [
         // XM.Billing
         "ConfigureAR",
+        "MaintainReasonCodes",
 
         // XM.SalesCategory
         "MaintainSalesCategories",
@@ -38,6 +39,7 @@ trailing:true, white:true*/
         workspace: "XV.BillingWorkspace"
       },
       setupPanels = [
+        {name: "reasonCodeList", kind: "XV.ReasonCodeList"},
         {name: "salesCategoryList", kind: "XV.SalesCategoryList"}
       ];
 

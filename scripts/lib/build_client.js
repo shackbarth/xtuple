@@ -158,7 +158,10 @@ var _ = require('underscore'),
           callback(err);
           return;
         } else if (files.length < 4) {
-          callback("Error: was not able to build all core files. Built files are: " + JSON.stringify(files));
+          callback("Error: was not able to build all core files. Built files are: " +
+            JSON.stringify(files) +
+            ". Try running the enyo deploy by itself in enyo-client/application/tools " +
+            "and if that fails there's probably a problem in your package files.");
         }
         readFile = function (filename, callback) {
           var callbackAdaptor = function (err, contents) {
