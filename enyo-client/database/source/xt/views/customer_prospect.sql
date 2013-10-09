@@ -10,8 +10,8 @@ select xt.create_view('xt.customer_prospect', $$
     join crmacct on crmacct_cust_id=cust_id   
   union   
   select prospect_id as id, prospect_active as active, prospect_number as number,   
-    prospect_name as name, null as type, prospect_cntct_id as contact, null as cust_ffshipto,   
-    null as cust_ffbillto, basecurrid() as cust_curr_id, null as cust_terms_id,   
+    prospect_name as name, null as type, prospect_cntct_id as contact, true as cust_ffshipto,   
+    true as cust_ffbillto, basecurrid() as cust_curr_id, null as cust_terms_id,   
     null as cust_creditstatus, prospect_salesrep_id as salesrep_id, null as cust_commprcnt,   
     null as cust_discntprcnt, prospect_taxzone_id as taxzone_id, null as cust_shipchrg_id,   
     prospect_comments as comments, prospect_warehous_id as site, 
