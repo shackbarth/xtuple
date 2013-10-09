@@ -157,7 +157,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ToDo",
-    "table": "todoitem",
+    "table": "xt.todoiteminfo",
     "isExtension": true,
     "comment": "Extended by Crm",
     "relations": [
@@ -209,7 +209,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ToDoListItem",
-    "table": "todoitem",
+    "table": "xt.todoiteminfo",
     "isExtension": true,
     "comment": "Extended by Crm",
     "relations": [
