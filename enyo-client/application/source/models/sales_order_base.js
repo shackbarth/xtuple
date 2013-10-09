@@ -602,10 +602,11 @@ white:true*/
       takes all the info from the billto and copies it to the shipto.
     */
     copyBilltoToShipto: function () {
-      var i;
+      var shiptoAttrArray = this.shiptoAttrArray.slice(1), // Don't need shipto
+        i;
       this.unset("shipto");
-      for (i = 0; i < this.shiptoAttrArray.length; i++) {
-        this.set(this.shiptoAttrArray[i], this.get(this.billtoAttrArray[i]));
+      for (i = 0; i < shiptoAttrArray.length; i++) {
+        this.set(shiptoAttrArray[i], this.get(this.billtoAttrArray[i]));
       }
     },
 
