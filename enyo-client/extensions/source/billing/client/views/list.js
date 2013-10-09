@@ -14,38 +14,19 @@ trailing:true, white:true*/
       collection: "XM.SalesCategoryCollection",
       query: {
         orderBy: [
-          {attribute: 'isActive'},
+          {attribute: 'isActive', descending: true},
           {attribute: 'name'}
         ]
       },
       actions: [{
         name: "deactivate",
-        prerequisite: "hasDeactivateActionPrerequisite",
-        method: "handleDeactivateAction",
-        isViewMethod: true
+        prerequisite: "canDeactivate",
+        method: "handleDeactivate",
+        //isViewMethod: true
       }],
       components: [
-        {kind: "XV.ListItem", components: [
-          {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "first", components: [
-              {kind: "XV.ListAttr", attr: "name", isKey: true},
-              {kind: "XV.ListAttr", attr: "description"}
-            ]},
-            {kind: "XV.ListAttr", attr: "isActive"}
-          ]}
-        ]}
-      ],
-      handleDeactivateAction: function (inEvent) {
-        var model = inEvent.model;
-
-        this.log(inEvent);
-
-        model.on("all", enyo.bind(this, "handleDeactivateSuccess"));
-        model.save("isActive", false);
-      },
-      handleDeactivateSuccess: function (model, value, options) {
-        this.log(model);
-      }
+        {name: "listItem", kind: "XV.SalesCategoryListItem"}
+      ]
     });
 
     XV.registerModelList("XM.SalesCategory", "XV.SalesCategoryList");

@@ -1,6 +1,6 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
-white:true*/
+white:true, expr:true */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
 (function () {
@@ -20,70 +20,122 @@ white:true*/
       documentKey: 'name',
 
       /**
-       * @member {Backbone.Model}
-       * Used to listen on metadata change events without disturbing the
-       * underlying.
-       */
-      meta: null,
-
-      initialize: function () {
-        XM.Document.prototype.initialize.apply(this, arguments);
-        this.meta = new Backbone.Model();
-      },
-
-      /**
-       * Determines if this is a child of an unposted invoice.
+       * Determines whether this is a child of an unposted invoice.
        *
-       * @fires XM.Model#dispatch
-       * @fires XM.SalesCategory#change:unpostedInvoices
-       *
-       * @see XM.SalesCategory#isDeactivateAllowed
-       * @see XM.SalesCategory#queryUnpostedInvoice
+       * @see XM.SalesCategory#canDeactivate
+       * @see XM.SalesCategory#queryUnpostedInvoices
        */
-      queryUnpostedInvoice: function () {
-        /**
-         * Invoke the queryUnpostedInvoice remote procedure call
-         * @event XM.Model#dispatch
-         */
-        this.dispatch('XM.SalesCategory', 'queryUnpostedInvoiceRPC', [this.id], {
-          success: _.bind(function (rpcResult) {
-            this.meta.set('unpostedInvoices', rpcResult || [ ]);
-          }, this),
-          error: _.bind(this.meta.set, this, 'isDeactivateAllowed', false)
+      getUnpostedInvoices: function () {
+        this.dispatch('XM.SalesCategory', 'queryUnpostedInvoices', [this.id], {
+          /**
+           * Forward the dispatch/rpc response as an event for whoever may be
+           * interested in listening for it.
+           * @fires XM.SalesCategory#set:unpostedInvoices
+           */
+          success: _.bind(this.trigger, this, 'set:unpostedInvoices'),
+          /**
+           * On error, an event informs listeners that canDeactivate
+           * is set to false.
+           * @fires XM.SalesCategory#set:canDeactivate
+           */
+          error:   _.bind(this.trigger, this, 'set:canDeactivate', false)
         });
       },
 
       /**
-       * Determine if we can deactivate this SalesCategory. Return false if
-       * there exist unposted invoices that reference this and true otherwise.
+       * Apply additional constraints for the isActive field. Specifically, if
+       * isActive is true, automatically disable editing.
        *
-       * @fires XM.SalesCategory#change:isDeactivateAllowed
-       * @see XM.SalesCategory#queryUnpostedInvoice
+       * @override
+       * @see XM.ModelMixin#canEdit
        */
-      isDeactivateAllowed: function () {
-        this.meta.once('change:unpostedInvoices', function (self, invoices) {
-          this.meta.set('isDeactivateAllowed', invoices.length === 0);
+      canEdit: function (attr) {
+        return _.all([
+          (attr !== 'isActive' || this.get('isActive') === false),
+          this._super('canEdit', attr)
+        ]);
+      },
+
+      /**
+       * Determine whether we can deactivate this SalesCategory.
+       *
+       * @param {Function} [callback=this.trigger]  invoked when canDeactivate 
+       *    has been determined.
+       *
+       * @listens set:unpostedInvoice
+       * @fires XM.SalesCategory#set:canDeactivate
+       * @callback after
+       * @see XM.SalesCategory#getUnpostedInvoices
+       */
+      canDeactivate: function (callback) {
+        console.log("canDeactivate");
+        /**
+         * Check base 'canDeactivate' conditions to determine whether querying
+         * the server will be necessary.
+         *
+         * @private @inner @function
+         * @returns {Boolean} true if all conditions met, false otherwise
+         */
+        var prequalify = _(_.all).bind(this, [
+          this.get('isActive'),
+          this.canEdit('isActive'),
+          this.hasLockKey(),
+          this.canUpdate()
+        ]);
+
+        _(callback).wrap(function (callback, canDeactivate) {
+          console.log("canDeactivate determined: " + canDeactivate);
+          this.trigger('set:canDeactivate', canDeactivate);
+          if (_.isFunction(callback)) {
+            callback(canDeactivate);
+          }
         }, this);
 
-        this.queryUnpostedInvoice();
+        // if I don't prequalify for canDeactivate, fail immediately.
+        if (!prequalify()) {
+          return callback(false);
+        }
+
+        this.once('set:unpostedInvoices', function (unpostedInvoices) {
+          callback(prequalify() && !unpostedInvoices);
+        }, this);
+
+        this.getUnpostedInvoices();
       },
 
       /**
        * Intended to be invoked by the SalesCategoryList deactivate action
-       * prerequisite; passes the result of 'isDeactivateAllowed' into the
+       * prerequisite; passes the result of 'canDeactivate' into the
        * supplied callback.
        *
-       * @see XV.SalesCategoryList#actions
-       * @see XM.SalesCategory#isDeactivateAllowed
+       * @listens set:canDeactivate
        * @callback enableActionCallback
+       * @see XV.SalesCategoryList#actions
+       * @see XM.SalesCategory#canDeactivate
        */
       hasDeactivateActionPrerequisite: function (enableActionCallback) {
-        this.meta.once('change:isDeactivateAllowed', function (self, allowed) {
-          enableActionCallback(allowed);
-        }, this);
+        this.once('set:canDeactivate', enableActionCallback);
+        this.canDeactivate();
+      },
 
-        this.isDeactivateAllowed();
+      /**
+       * Extend XM.Model.save to include the ability to mutate the model without
+       * fetching an Editable version of it.
+       *
+       * @override
+       * @see XM.Model#save
+       * [@linkcode Backbone.Model.save()]{http://backbonejs.org/docs/backbone.html#section-56}
+       */
+      save: function (key, val, options) {
+        console.log("SalesCategory#save()");
+        console.log(this.changed);
+        Backbone.Model.prototype.save.apply(this, key, val, options);
+      },
+
+      handleDeactivate: function () {
+        console.log(arguments);
       }
+
     });
 
     /**
