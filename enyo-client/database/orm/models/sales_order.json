@@ -1666,6 +1666,13 @@
         }
       },
       {
+        "name": "orderDate",
+        "attr": {
+          "type": "Date",
+          "column": "cohead_orderdate"
+        }
+      },
+      {
         "name": "status",
         "attr": {
           "type": "String",
@@ -1677,6 +1684,13 @@
         "attr": {
           "type": "String",
           "column": "cohead_shipvia"
+        }
+      },
+      {
+        "name": "total",
+        "attr": {
+          "type": "Money",
+          "column": "total"
         }
       },
       {

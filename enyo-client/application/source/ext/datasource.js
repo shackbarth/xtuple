@@ -7,6 +7,74 @@ white:true*/
 (function () {
   "use strict";
 
+  XT.Request = {
+    /** @scope XT.Request.prototype */
+
+    send: function (data) {
+      var details = XT.session.details,
+        sock = XT.dataSource._sock,
+        notify = this._notify,
+        handle = this._handle,
+        errorMessage,
+        payload = {
+          payload: data
+        },
+        callback;
+
+      if (!notify || !(notify instanceof Function)) {
+        callback = function () {};
+      } else {
+        callback = function (response) {
+          if (response && response.isError) {
+            // handle error status centrally here before we return to the caller
+
+            errorMessage = response.status ? response.status.message : response.message;
+            if (errorMessage) {
+              XT.app.$.postbooks.notify(null, {
+                type: XM.Model.CRITICAL,
+                message: errorMessage
+              });
+            }
+
+            if (response.code === "SESSION_NOT_FOUND") {
+              // The session couldn't be validated by the datasource.
+              // XXX might be dead code
+              XT.logout();
+            }
+
+          }
+
+          notify(response);
+        };
+      }
+
+      // attach the session details to the payload
+      payload = _.extend(payload, details);
+
+      if (XT.session.config.debugging) {
+        XT.log("Socket sending: %@".replace("%@", handle), payload);
+      }
+
+      sock.json.emit(handle, payload, callback);
+
+      return this;
+    },
+
+    handle: function (event) {
+      this._handle = event;
+      return this;
+    },
+
+    notify: function (method) {
+      var args = Array.prototype.slice.call(arguments).slice(1);
+      this._notify = function (response) {
+        args.unshift(response);
+        method.apply(null, args);
+      };
+      return this;
+    }
+  };
+
   XT.DataSource = {
     // TODO - Old way.
     //datasourceUrl: DOCUMENT_HOSTNAME,
