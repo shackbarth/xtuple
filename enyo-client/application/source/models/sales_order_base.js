@@ -1297,7 +1297,8 @@ white:true*/
         updatePolicy = settings.get("UpdatePriceLineEdit"),
         parent = this.getParent(),
         customer = parent ? parent.get("customer") : false,
-        currency = parent ? parent.get("currency") :false;
+        currency = parent ? parent.get("currency") :false,
+        listPrice;
 
       // If no parent, don't bother
       if (!parent) { return; }
@@ -1310,8 +1311,11 @@ white:true*/
 
         // Prospects always get the list price
         if (customer.getValue("status") === XM.CustomerProspectRelation.PROSPECT_STATUS) {
-          this.set("price", item.get("listPrice"));
-          this.set("customerPrice", item.get("listPrice"));
+          listPrice = item.get("listPrice");
+          this.set({
+            price: listPrice,
+            customerPrice: listPrice
+          });
           return;
         }
         // Determine whether updating net price or only customer price
