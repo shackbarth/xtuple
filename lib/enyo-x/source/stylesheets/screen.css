@@ -720,61 +720,6 @@
   display: none;
   margin-top: -4px;
 }
-.xv-list-attr {
-  padding: 5px;
-  font-size: .8em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #000000;
-  background-color: #ffffff;
-}
-.xv-list-attr.header {
-  padding: 4px;
-  background: #8d8d8d;
-  font-size: .7em;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-.xv-list-attr.footer {
-  padding: 4px;
-  background: #8d8d8d;
-  font-size: .7em;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #000000;
-}
-.xv-list-attr.right {
-  position: absolute;
-  right: 10px;
-  height: 20px;
-}
-.xv-list-attr.text-align-right {
-  text-align: right;
-}
-.xv-list-attr.bold {
-  font-weight: bold;
-}
-.xv-list-attr.error {
-  color: #ff0000;
-}
-.xv-list-attr.emphasis {
-  color: #009000;
-}
-.xv-list-attr.warn {
-  color: #ff9c00;
-}
-.xv-list-attr.italic {
-  font-style: italic;
-}
-.xv-list-attr.placeholder {
-  font-style: italic;
-  color: #93a1a1;
-}
-.xv-list-attr.hyperlink {
-  color: blue;
-}
 /* Navigator */
 .xv-navigator-header {
   font-size: small;
@@ -2527,7 +2472,7 @@ body {
 }
 .xv-list-attr.right {
   position: absolute;
-  right: 0;
+  right: 10px;
   height: 20px;
 }
 .xv-list-attr.text-align-right {
@@ -2538,6 +2483,12 @@ body {
 }
 .xv-list-attr.error {
   color: #ff0000;
+}
+.xv-list-attr.emphasis {
+  color: #009000;
+}
+.xv-list-attr.warn {
+  color: #ff9c00;
 }
 .xv-list-attr.italic {
   font-style: italic;
