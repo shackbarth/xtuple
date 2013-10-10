@@ -726,6 +726,7 @@ strict:true, trailing:true, white:true */
     "_maintainSalesReps": "Maintain Sales Reps",
     "_maintainSiteTypes": "Maintain Site Types",
     "_maintainShifts": "Maintain Shifts",
+    "_maintainShipVias": "Maintain Ship Vias",
     "_maintainStates": "Maintain States",
     "_maintainUOMs": "Maintain Units of Measure",
     "_maintainUsers": "Maintain Users",

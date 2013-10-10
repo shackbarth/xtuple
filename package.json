@@ -53,7 +53,7 @@
   "main": "node-datasource/main.js",
   "scripts": {
     "test-build": "./node_modules/.bin/mocha -R spec test/mocha/build/build_app.js",
-    "test": "./node_modules/.bin/mocha -R spec test/mocha/lib/login.js test/mocha/models/* test/mocha/database/* test/mocha/extensions/*",
+    "test": "./node_modules/.bin/mocha -R spec test/mocha/lib/login.js test/mocha/models/* test/mocha/database/* test/mocha/extensions/* test/mocha/lib/test_runner.js",
     "test-datasource": "./node_modules/.bin/mocha -R spec test/mocha/routes/*"
   }
 }
