@@ -95,7 +95,15 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     isLockable: true,
     idAttribute: "code",
     enforceUpperKey: false,
-    attributes: ["code", "termsType"],
+    attributes: ["code", "cutOffDay", "description", "dueDays", "discountDays", "discountPercent",
+      "isUsedByBilling", "isUsedByPayments", "termsType"],
+    defaults: {
+      dueDays: 0,
+      discountDays: 0,
+      cutOffDay: 0,
+      isUsedByBilling: false,
+      isUsedByPayments: false
+    },
     extensions: ["billing", "inventory", "sales"],
     privileges: {
       createUpdateDelete: "MaintainTerms",
