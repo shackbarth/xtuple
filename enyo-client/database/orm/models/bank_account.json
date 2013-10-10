@@ -50,14 +50,14 @@
       {
         "name": "accountNumber",
         "attr": {
-          "type": "String",,
+          "type": "String",
           "column": "bankaccnt_accntnumber"
         }
       },
       {
         "name": "currency",
         "attr": {
-          "type": "Currency",
+          "type": "Number",
           "column": "bankaccnt_curr_id"
         }
       },
