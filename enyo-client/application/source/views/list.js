@@ -227,8 +227,7 @@ trailing:true, white:true, strict: false*/
       return value;
     },
     vCardExport: function (inEvent) {
-      var collection = this.getValue(),
-          imodel = inEvent.model,
+      var imodel = inEvent.model,
           model = imodel,
           begin,
           version,
@@ -1666,6 +1665,15 @@ trailing:true, white:true, strict: false*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    events: {
+      onNotify: ""
+    },
+    actions: [{
+      name: "convert",
+      method: "convertQuote",
+      isViewMethod: true,
+      notify: false
+    }],
     label: "_quotes".loc(),
     collection: "XM.QuoteListItemCollection",
     parameterWidget: "XV.QuoteListParameters",
@@ -1674,6 +1682,54 @@ trailing:true, white:true, strict: false*/
         (XT.date.compareDate(value, new Date()) < 1);
       view.addRemoveClass("error", isLate);
       return value;
+    },
+    convertQuote: function (inEvent) {
+      var model = inEvent.model,
+        customer = model.get("customer"),
+        K = XM.CustomerProspectRelation,
+        that = this,
+
+        // In case we are converting a prospect
+        convertToCustomer = function (resp) {
+          if (!resp.answer) { return; }
+          var success = function () {
+            this.getValue().convertFromProspect(customer.id);
+          };
+
+          that.doWorkspace({
+            workspace: "XV.CustomerWorkspace",
+            attributes: {
+              number: customer.get("number"),
+              name: customer.get("name")
+            },
+            success: success,
+            callback: convertToSalesOrder,
+            allowNew: false
+          });
+        },
+
+        // A callback in case we had to convert to a customer first
+        convertToSalesOrder = function () {
+          var success = function () {
+              this.getValue().convertFromQuote(model.id);
+            };
+
+          that.doWorkspace({
+            workspace: "XV.SalesOrderWorkspace",
+            success: success,
+            allowNew: false
+          });
+        };
+
+      if (customer.get("status") === K.PROSPECT_STATUS) {
+        this.doNotify({
+          type: XM.Model.QUESTION,
+          callback: convertToCustomer,
+          message: "_convertProspect".loc()
+        });
+      } else {
+        convertToSalesOrder();
+      }
     }
   });
 

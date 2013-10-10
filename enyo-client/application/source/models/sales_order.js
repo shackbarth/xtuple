@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true */
+/*global XT:true, XM:true, _:true */
 
 (function () {
 
@@ -32,7 +32,72 @@ white:true*/
       defaults.wasQuote = false;
 
       return defaults;
-    }
+    },
+
+    convertFromQuote: function (id) {
+      var quote = new XM.Quote(),
+        fetchOptions = {},
+        that = this;
+      // this id is the natural key, which is the number
+      // for both sales order and quote
+      fetchOptions.id = id;
+
+      fetchOptions.success = function () {
+        var expireDate = quote.get("expireDate"),
+          obj,
+          removeUuid = function (obj) {
+            // If array loop through each and process
+            if (_.isArray(obj)) {
+              _.each(obj, function (item) {
+                removeUuid(item);
+              });
+            // If object remove uuid, then process all properties
+            } else if (_.isObject(obj)) {
+              delete obj.uuid;
+              _.each(obj, function (value) {
+                // If array, dive down
+                if (_.isArray(value)) {
+                  removeUuid(value);
+                }
+              });
+            }
+          };
+
+        if (expireDate < XT.date.today()) {
+          that.trigger("invalid", XT.Error.clone(), that, {});
+        }
+        // TODO make sure customer is not prospect
+        // TODO if cust on hold, check hold priv, CreateSOForHoldCustomer
+        // TODO if cust on warn, check warn priv, CreateSOForWarnCustomer
+        // TODO if uses po and not blanket po, check for dups
+        // TODO if quote and so exist with this number, get another
+
+        obj = quote.toJSON();
+        obj.orderDate = XT.date.today();
+        delete obj.quoteDate;
+        delete obj.expireDate;
+        obj.wasQuote = true;
+        obj.quoteNumber = obj.number;
+        removeUuid(obj);
+        that.parse(obj);
+        that.set(obj);
+        that.off('change:customer', that.customerDidChange);
+        that.fetchRelated("customer", {
+          success: function () {
+            that.on('change:customer', that.customerDidChange);
+            that.revertStatus();
+            that.checkConflicts = false;
+          }
+        });
+
+        // TODO: Trigger on save that either closes or deletes quote
+      };
+      fetchOptions.error = function () {
+        XT.log("Fetch failed in convertFromQuote");
+      };
+      this.setStatus(XM.Model.BUSY_FETCHING);
+      quote.fetch(fetchOptions);
+    },
   });
 
   XM.SalesOrder.used = function (id, options) {
