@@ -19,10 +19,9 @@
 
   _.each(specs, function (spec) {
     describe(spec.recordType, function () {
-      if (_.isString(spec.updateHash)) {
-        var updatableField = spec.updateHash;
+      if (_.isString(spec.updatableField)) {
         spec.updateHash = {};
-        spec.updateHash[updatableField] = "Test" + Math.random();
+        spec.updateHash[spec.updatableField] = "Test" + Math.random();
       }
 
 
@@ -39,19 +38,9 @@
       //
       // Verify lockability
       //
-      if (spec.isLockable === true) {
-        it("is lockable", function () {
-          assert.isTrue(spec.model.lockable);
-        });
-      } else if (spec.isLockable === false) {
-        it("is not lockable", function () {
-          assert.isFalse(spec.model.lockable);
-        });
-      } else {
-        it("has its lockability defined in the test spec", function () {
-          assert.fail();
-        });
-      }
+      it(spec.isLockable ? "is lockable" : "is not lockable", function () {
+        assert.equal(spec.isLockable, spec.model.lockable);
+      });
 
       //
       // Verify inheritance
@@ -121,19 +110,19 @@
         if (typeof priv === 'string') {
           _.each(spec.extensions, function (extension) {
             it("has privilege " + priv + " declared by the " + extension + " extension", function () {
-              var matchedPriv = _.filter(XT.session.relevantPrivileges, function (sessionPriv) {
-                return sessionPriv.privilege === priv && sessionPriv.module === extension;
-              });
-              assert.equal(1, matchedPriv.length);
+              assert.isDefined(_.findWhere(XT.session.relevantPrivileges,
+                {privilege: priv, module: extension}));
             });
           });
+          /*
+          XXX this could get tripped up by non-core extensions
           it("has privilege " + priv + " not declared by any other extensions", function () {
             var matchedPriv = _.filter(XT.session.relevantPrivileges, function (sessionPriv) {
               return sessionPriv.privilege === priv && !_.contains(spec.extensions, sessionPriv.module);
             });
             assert.equal(0, matchedPriv.length);
           });
-
+          */
           //
           // Make sure the privilege is translated
           //
@@ -165,7 +154,7 @@
         it("needs " + priv + " privilege to perform action " + key, function () {
           var Klass = XT.getObjectByName(spec.recordType);
 
-          if (typeof priv === 'string') {
+          if (_.isString(priv)) {
             assert.isDefined(pertinentMethods); // make sure we're testing for the priv
             XT.session.privileges.attributes[priv] = false;
             if (key === "read" && updatePriv) {
@@ -219,7 +208,7 @@
           assert.equal(cache.model.prototype.recordType, spec.recordType);
         });
 
-      } else if (spec.cacheName === false) {
+      } else if (spec.cacheName === null) {
         /*
         TODO: probably the best thing to do is to loop through the caches and make sure
         that none of them are backed by spec.recordType
@@ -228,7 +217,7 @@
         });
         */
       } else {
-        it("has a cache (or false for no cache) specified in the test spec", function () {
+        it("has a cache (or null for no cache) specified in the test spec", function () {
           assert.fail();
         });
       }

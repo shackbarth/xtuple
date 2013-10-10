@@ -29,13 +29,13 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     createHash: {
       code: "Herr" + Math.random()
     },
-    updateHash: "code"
+    updatableField: "code"
   };
 
   exports.item = {
     recordType: "XM.Item",
     collectionType: "XM.ItemListItemCollection",
-    cacheName: false,
+    cacheName: null,
     listKind: "XV.ItemList",
     instanceOf: "XM.Document",
     isLockable: true,
@@ -61,7 +61,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       listPrice: 0.00,
       priceUnit: {name: "CS"}
     },
-    updateHash: "description1"
+    updatableField: "description1"
   };
 
   exports.shipVia = {
@@ -84,7 +84,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       code: "TestShipVia" + Math.random(),
       description: "Test Ship Via"
     },
-    updateHash: "description"
+    updatableField: "description"
   };
 
 }());
