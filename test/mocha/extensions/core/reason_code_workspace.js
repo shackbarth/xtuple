@@ -13,20 +13,20 @@
     smoke = require("../../lib/smoke"),
     assert = require("chai").assert;
 
-  describe('Honorific Workspace', function () {
+  describe.skip('Reason Code Workspace', function () {
 
     before(function (done) {
       this.timeout(30 * 1000);
       zombieAuth.loadApp(done);
     });
 
-    describe('User selects to create an honorific', function () {
-      it('User navigates to Honorific-New and selects to create a new Honorific', function (done) {
+    describe('User selects to create a reason code', function () {
+      it('User navigates to Reason Code-New and selects to create a new Reason Code', function (done) {
         this.timeout(30 * 1000);
-        smoke.navigateToNewWorkspace(XT.app, "XV.HonorificList", function (workspaceContainer) {
+        smoke.navigateToNewWorkspace(XT.app, "XV.ReasonCodeList", function (workspaceContainer) {
           var workspace = workspaceContainer.$.workspace;
 
-          assert.equal(workspace.value.recordType, "XM.Honorific");
+          assert.equal(workspace.value.recordType, "XM.ReasonCode");
           smoke.setWorkspaceAttributes(workspace, modelData.honorific);
           smoke.saveWorkspace(workspace, function () {
             smoke.deleteFromList(XT.app, workspace.value, done);
