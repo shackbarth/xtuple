@@ -45,19 +45,21 @@ white:true*/
       fetchOptions.success = function () {
         var expireDate = quote.get("expireDate"),
           obj,
-          removeUuid = function (obj) {
+          updateUuid = function (obj) {
             // If array loop through each and process
             if (_.isArray(obj)) {
               _.each(obj, function (item) {
-                removeUuid(item);
+                updateUuid(item);
               });
             // If object remove uuid, then process all properties
             } else if (_.isObject(obj)) {
-              delete obj.uuid;
+              if (obj.uuid) {
+                obj.uuid = XT.generateUUID();
+              }
               _.each(obj, function (value) {
                 // If array, dive down
                 if (_.isArray(value)) {
-                  removeUuid(value);
+                  updateUuid(value);
                 }
               });
             }
@@ -78,7 +80,7 @@ white:true*/
         delete obj.expireDate;
         obj.wasQuote = true;
         obj.quoteNumber = obj.number;
-        removeUuid(obj);
+        updateUuid(obj);
         that.parse(obj);
         that.set(obj);
         that.off('change:customer', that.customerDidChange);
