@@ -1711,7 +1711,14 @@ trailing:true, white:true, strict: false*/
         // A callback in case we had to convert to a customer first
         convertToSalesOrder = function () {
           var success = function () {
-              this.getValue().convertFromQuote(model.id);
+              var gridBox = this.$.salesOrderLineItemGridBox;
+              this.getValue().convertFromQuote(model.id, {
+                success: function () {
+                  // Hack to force grid to refresh. Why doesn't it on its own?
+                  gridBox.valueChanged();
+                  gridBox.setDisabled(false);
+                }
+              });
             };
 
           that.doWorkspace({

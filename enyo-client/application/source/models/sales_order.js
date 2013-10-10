@@ -34,7 +34,7 @@ white:true*/
       return defaults;
     },
 
-    convertFromQuote: function (id) {
+    convertFromQuote: function (id, options) {
       var quote = new XM.Quote(),
         fetchOptions = {},
         that = this;
@@ -85,10 +85,13 @@ white:true*/
         that.set(obj);
         that.off('change:customer', that.customerDidChange);
         that.fetchRelated("customer", {
-          success: function () {
+          success: function (model, resp, reloptions) {
             that.on('change:customer', that.customerDidChange);
             that.revertStatus();
             that.checkConflicts = false;
+            if (options && options.success) {
+              options.success(model, resp, reloptions);
+            }
           }
         });
 
