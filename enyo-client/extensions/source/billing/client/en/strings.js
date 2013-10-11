@@ -1,18 +1,25 @@
-// ==========================================================================
-// Project:   XT` Strings
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
-// ==========================================================================
-/*globals XT */
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true,
+latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
+strict:true, trailing:true, white:true */
+/*global XT:true */
 
-var lang = XT.stringsFor("en_US", {
+(function () {
+  "use strict";
 
-  // ********
-  // Labels
-  // ********
+  var lang = XT.stringsFor("en_US", {
 
-  "_billing": "Billing",
-  "_billingDescription": "Corporate Relationship Management",
-  "_salesCategory": "Sales Category",
-  "_salesCategories": "Sales Categories",
-  "_maintainSalesCategory": "Maintain Sales Category"
-});
+    // ********
+    // Labels
+    // ********
+
+    "_billing": "Billing",
+    "_billingDescription": "Corporate Relationship Management",
+    "_salesCategory": "Sales Category",
+    "_salesCategories": "Sales Categories",
+    "_maintainSalesCategory": "Maintain Sales Category"
+  });
+
+  if (typeof exports !== 'undefined') {
+    exports.language = lang;
+  }
+}());
