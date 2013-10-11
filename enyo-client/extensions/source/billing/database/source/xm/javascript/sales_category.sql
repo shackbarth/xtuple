@@ -51,7 +51,6 @@ select xt.install_js('XM', 'SalesCategory', 'billing', $$
       description: "Is SalesCategory referenced by an unposted invoice?",
     })
   });
-
 })();
 
 $$ );
