@@ -30,17 +30,25 @@
     });
 
     describe('test reason code picker', function () {
-      it('verify that the list has all test values when no document type is specified', function () {
-        var child,
-          key = "ReasonCodePicker",
-          master = new enyo.Control();
+      var child,
+        key = "ReasonCodePicker",
+        master = new enyo.Control();
 
+      before('create the component', function () {
         // create the reason code picker
         child = master.createComponent({
           kind: "XV." + key,
           name: key
         });
         assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
+      });
+
+      it('verify that the list has all test values when no document type is specified', function () {
+        describe('test attributes of picker', function () {
+          it('verify none text is correct', function () {
+            assert.isTrue("Any", child.noneText);
+          });
+        });
 
         describe('test filtering on reason code picker', function () {
           // add some mock data to the reason codes
