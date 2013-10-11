@@ -745,6 +745,7 @@ strict:true, trailing:true, white:true */
     "_maintainPersonalProjects": "Maintain Personal Projects",
     "_maintainPersonalToDoItems": "Maintain Personal To-Do Items",
     "_maintainPreferencesSelf": "Maintain Personal Preferences",
+    "_maintainReasonCodes": "Maintain Reason Codes",
     "_maintainTaxAssignments": "Maintain Tax Assignments",
     "_maintainTaxClasses": "Maintain Tax Classes",
     "_maintainTaxCodes": "MaintainTaxCodes",
