@@ -13,7 +13,7 @@
     smoke = require("../../lib/smoke"),
     assert = require("chai").assert;
 
-  describe('Reason Code Workspace', function () {
+  describe.skip('Reason Code Workspace', function () {
 
     before(function (done) {
       this.timeout(30 * 1000);

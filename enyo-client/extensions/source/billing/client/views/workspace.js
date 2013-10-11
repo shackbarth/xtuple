@@ -7,6 +7,7 @@ trailing:true, white:true*/
 
   XT.extensions.billing.initWorkspaces = function () {
 
+  /*
     enyo.kind({
       name: "XV.BillingWorkspace",
       kind: "XV.Workspace",
@@ -23,6 +24,7 @@ trailing:true, white:true*/
         ]}
       ]
     });
+  */
 
     enyo.kind({
       name: "XV.SalesCategoryWorkspace",
@@ -47,5 +49,4 @@ trailing:true, white:true*/
 
     XV.registerModelWorkspace("XM.SalesCategory", "XV.SalesCategoryWorkspace");
   };
-
 }());
