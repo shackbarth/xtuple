@@ -10,6 +10,7 @@ trailing:true, white:true*/
     // ..........................................................
     // CONFIGURE
     //
+/*
     enyo.kind({
       name: "XV.BillingWorkspace",
       kind: "XV.Workspace",
@@ -27,6 +28,6 @@ trailing:true, white:true*/
       ]
     });
 
+  */
   };
-
 }());
