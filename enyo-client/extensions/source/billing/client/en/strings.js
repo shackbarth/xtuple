@@ -8,9 +8,9 @@ strict:true, trailing:true, white:true */
 
   var lang = XT.stringsFor("en_US", {
 
-  // ********
-  // Labels
-  // ********
+    // ********
+    // Labels
+    // ********
 
     "_billing": "Billing",
     "_billingDescription": "Corporate Relationship Management",

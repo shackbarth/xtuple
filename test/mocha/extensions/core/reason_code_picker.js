@@ -16,7 +16,10 @@
   var zombieAuth = require("../../lib/zombie_auth"),
     common = require("../../lib/common"),
     _ = require("underscore"),
-    assert = require("chai").assert;
+    assert = require("chai").assert,
+    child,
+    key,
+    master;
 
   describe('XV ReasonCodePicker', function () {
     this.timeout(45 * 1000);
@@ -30,11 +33,11 @@
     });
 
     describe('test reason code picker', function () {
-      var child,
-        key = "ReasonCodePicker",
+
+      before(function () {
+        key = "ReasonCodePicker";
         master = new enyo.Control();
 
-      before('create the component', function () {
         // create the reason code picker
         child = master.createComponent({
           kind: "XV." + key,
@@ -44,21 +47,21 @@
       });
 
       it('verify that the list has all test values when no document type is specified', function () {
-        describe('test attributes of picker', function () {
-          it('verify none text is correct', function () {
-            assert.isTrue("Any", child.noneText);
-          });
-        });
 
         describe('test filtering on reason code picker', function () {
-          // add some mock data to the reason codes
-          var K = XM.ReasonCode,
-            nullModel = new XM.ReasonCode({id: "1", code: "test1", documentType: null}),
-            debitModel = new XM.ReasonCode({id: "2", code: "test2", documentType: K.DEBIT_MEMO}),
+
+          var K, nullModel, debitModel, creditModel;
+
+          before(function () {
+            // add some mock data to the reason codes
+            K = XM.ReasonCode;
+            nullModel = new XM.ReasonCode({id: "1", code: "test1", documentType: null});
+            debitModel = new XM.ReasonCode({id: "2", code: "test2", documentType: K.DEBIT_MEMO});
             creditModel = new XM.ReasonCode({id: "3", code: "test3", documentType: K.CREDIT_MEMO});
-          XM.reasonCodes.add(nullModel);
-          XM.reasonCodes.add(debitModel);
-          XM.reasonCodes.add(creditModel);
+            XM.reasonCodes.add(nullModel);
+            XM.reasonCodes.add(debitModel);
+            XM.reasonCodes.add(creditModel);
+          });
 
           it('verify that the list has all test values when no document type is specified', function () {
             child.setDocumentType("");
