@@ -31,7 +31,7 @@
           });
 
           it('verify that XM.reasonCodeDocumentTypes contains the constants', function () {
-            assert.isTrue(XM.reasonCodeDocumentTypes.length === 2);
+            assert.equal(XM.reasonCodeDocumentTypes.length, 2);
 
             assert.ok(_.find(XM.reasonCodeDocumentTypes.models, function (m) {
               return m.id === XM.ReasonCode.CREDIT_MEMO;
@@ -47,9 +47,7 @@
       afterSaveActions: [{
         it: "verify saved reason code is in cached collection",
         action: function (data, next) {
-          assert.ok(_.find(XM.reasonCodes.models, function (m) {
-            return m.id === data.model.id;
-          }));
+          assert.isTrue(_.contains(XM.reasonCodes.models, data.model));
           next();
         }
       }],
