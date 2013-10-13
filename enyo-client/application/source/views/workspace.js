@@ -229,6 +229,40 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   XV.registerModelWorkspace("XM.AccountListItem", "XV.AccountWorkspace");
 
   // ..........................................................
+  // BANK ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.BankAccountWorkspace",
+    kind: "XV.Workspace",
+    title: "_bankAccount".loc(),
+    model: "XM.BankAccount",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.InputWidget", attr: "bankName"},
+            {kind: "XV.InputWidget", attr: "accountNumber"},
+            {kind: "XV.BankAccountTypePicker", attr: "bankAccountType"},
+            {kind: "XV.CurrencyPicker", attr: "currency"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByBilling"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByPayments"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.BankAccountRelation", "XV.BankAccountWorkspace");
+
+  // ..........................................................
   // CLASS CODE
   //
 

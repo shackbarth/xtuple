@@ -86,6 +86,35 @@ trailing:true, white:true, strict: false*/
   });
 
   // ..........................................................
+  // BANK ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.BankAccountList",
+    kind: "XV.List",
+    label: "_bankAccounts".loc(),
+    collection: "XM.BankAccountRelationCollection",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.BankAccountRelation", "XV.BankAccountList")
+
+  // ..........................................................
   // CLASS CODE
   //
 

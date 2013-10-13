@@ -9,20 +9,43 @@ white:true*/
   /**
     @class
 
-    @extends XM.AccountDocument
+    @extends XM.Document
   */
   XM.BankAccount = XM.Document.extend({
     /** @scope XM.BankAccount.prototype */
 
     recordType: 'XM.BankAccount',
 
-    documentKey: 'code',
+    documentKey: 'name',
 
-    enforceUpperKey: false
+    enforceUpperKey: false,
+
+    defaults: function () {
+      return {
+        bankAccountType: XM.BankAccount.CASH,
+        currency: XT.baseCurrency(),
+        isUsedByBilling: false,
+        isUsedByPayments: false
+      };
+    }
 
   });
 
-  _.extend(XM.BankAccount, /** @lends XM.ReasonCode# */{
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.BankAccountRelation = XM.Info.extend({
+    /** @scope XM.BankAccountRelation.prototype */
+
+    recordType: 'XM.BankAccountRelation',
+
+    editableModel: 'XM.BankAccount'
+
+  });
+
+  _.extend(XM.BankAccount, /** @lends XM.BankAccount# */{
 
     // ..........................................................
     // CONSTANTS
@@ -32,17 +55,25 @@ white:true*/
       @static
       @constant
       @type String
-      @default ""
+      @default "C"
     */
-    //: "",P
+    CASH: 'C',
 
     /**
       @static
       @constant
       @type String
-      @default ""
+      @default "K"
     */
-    //: "",
+    CHECKING: 'K',
+
+    /**
+      @static
+      @constant
+      @type String
+      @default "R"
+    */
+    CREDIT_CARD: 'R',
 
   });
 
@@ -59,6 +90,18 @@ white:true*/
     /** @scope XM.BankAccountCollection.prototype */
 
     model: XM.BankAccount
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.BankAccountRelationCollection = XM.Collection.extend({
+    /** @scope XM.BankAccountRelationCollection.prototype */
+
+    model: XM.BankAccountRelation
 
   });
 

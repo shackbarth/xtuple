@@ -134,6 +134,8 @@ white:true*/
   XT.cacheCollection("XM.filters", "XM.FilterCollection");
   XT.cacheCollection("XM.reasonCodes", "XM.ReasonCodeCollection");
   XT.cacheCollection("XM.vendorTypes", "XM.VendorTypeCollection");
+  XT.cacheCollection("XM.bankAccounts", "XM.BankAccountCollection");
+  XT.cacheCollection("XM.bankAccountRelations", "XM.BankAccountRelationCollection");
 
   /**
     These ones are a little custom and need to be done longhand.

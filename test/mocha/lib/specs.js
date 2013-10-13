@@ -110,4 +110,32 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     updatableField: "description"
   };
 
+  exports.bankAccount = {
+    recordType: "XM.BankAccount",
+    collectionType: "XM.BankAccountCollection",
+    cacheName: "XM.bankAccounts",
+    listKind: "XV.BankAccountList",
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "name",
+    enforceUpperKey: false,
+    attributes: ["name", "description", "bankName", "accountNumber", "bankAccountType", "isUsedByBilling",
+      "isUsedByPayments", "notes", "currency"],
+    extensions: ["sales", "billing"],
+    privileges: {
+      createUpdateDelete: "MaintainBankAccounts",
+      read: true
+    },
+    createHash: {
+      name: "TestBankAccount" + Math.random(),
+      description: "Test bank account",
+      bankName: "TestBankName",
+      accountNumber: Math.random(),
+      isUsedByBilling: true,
+      isUsedByPayments: true,
+      notes: "Test bank account notes"
+    },
+    updatableField: "description"
+  };
+
 }());
