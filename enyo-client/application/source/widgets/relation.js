@@ -725,9 +725,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.WorkOrderWidget",
     kind: "XV.RelationWidget",
     collection: "XM.WorkOrderRelationCollection",
-    keyAttribute: "uuid",
-    //nameAttribute: "formatWoNumber",
-    //descripAttribute: "formatWoNumber",
+    keyAttribute: "number",
     list: "XV.WorkOrderList"
   });
 

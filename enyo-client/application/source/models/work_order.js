@@ -52,10 +52,6 @@ white:true*/
         qtyReceived = this.get("qtyReceived"),
         toPost = XT.math.subtract(qtyReceived, qtyOrdered, XT.QUANTITY_SCALE);
       return toPost >= 0 ? toPost : 0;
-    },
-
-    formatWoNumber: function () {
-      return this.get("number") + "-" + this.get("subnumber");
     }
 
   });
@@ -70,11 +66,7 @@ white:true*/
 
     recordType: 'XM.WorkOrderRelation',
 
-    editableModel: 'XM.WorkOrder',
-
-    formatWoNumber: function () {
-      return this.get("number") + "-" + this.get("subnumber");
-    }
+    editableModel: 'XM.WorkOrder'
 
   });
 

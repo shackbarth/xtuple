@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "WorkOrder",
-    "table": "wo",
+    "table": "xt.woinfo",
     "isRest": true,
     "lockable": true,
     "idSequenceName": "wo_wo_id_seq",
@@ -26,27 +26,12 @@
         }
       },
       {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
         "name": "number",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "wo_number",
-          "isNaturalKey": false      
+          "isNaturalKey": true
         }
-      },
-      {
-        "name": "subnumber",
-        "attr": {
-          "type": "Number",
-          "column": "wo_subnumber"
-         }
       },
       {
         "name": "status",

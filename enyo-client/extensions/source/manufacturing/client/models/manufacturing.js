@@ -75,10 +75,6 @@ white:true*/
         return  qohAfter;
       },
 
-      formatWoNumber: function () {
-        return this.get("order.number") + "-" + this.get("order.subnumber");
-      },
-
       bindEvents: function () {
         XM.Model.prototype.bindEvents.apply(this, arguments);
 

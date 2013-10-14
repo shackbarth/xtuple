@@ -1,9 +1,33 @@
 select xt.create_view('xt.woinfo', $$
 
-select wo.*, 
-    case when (wo_qtyrcv > wo_qtyord) then 0 else (wo_qtyord - wo_qtyrcv) end AS balance,
-    null::numeric AS qty_to_post
-  from wo;
+select   
+  wo_id,
+  formatwonumber(wo_id) AS wo_number,
+  wo_status,
+  wo_itemsite_id,
+  wo_startdate,
+  wo_duedate,
+  wo_ordtype,
+  wo_ordid,
+  wo_qtyord,
+  wo_qtyrcv,
+  wo_adhoc,
+  wo_itemcfg_series,
+  wo_imported,
+  wo_wipvalue,
+  wo_postedvalue,
+  wo_prodnotes,
+  wo_prj_id,
+  wo_priority,
+  wo_brdvalue,
+  wo_bom_rev_id,
+  wo_boo_rev_id,
+  wo_cosmethod,
+  wo_womatl_id,
+  wo_username, 
+  case when (wo_qtyrcv > wo_qtyord) then 0 else (wo_qtyord - wo_qtyrcv) end AS balance,
+  null::numeric AS qty_to_post
+from wo;
 
 $$, false);
 
@@ -11,8 +35,6 @@ create or replace rule "_INSERT" as on insert to xt.woinfo do instead
 
 insert into wo (
   wo_id,
-  wo_number,
-  wo_subnumber,
   wo_status,
   wo_itemsite_id,
   wo_startdate,
@@ -37,8 +59,6 @@ insert into wo (
   wo_username
 ) values (
   new.wo_id ,
-  new.wo_number,
-  new.wo_subnumber,
   new.wo_status,
   new.wo_itemsite_id,
   new.wo_startdate,
@@ -67,8 +87,6 @@ create or replace rule "_UPDATE" as on update to xt.woinfo do instead
 
 update wo set
   wo_id = new.wo_id,
-  wo_number = new.wo_number,
-  wo_subnumber = new.wo_subnumber,
   wo_status = new.wo_status,
   wo_itemsite_id = new.wo_itemsite_id,
   wo_startdate = new.wo_startdate,

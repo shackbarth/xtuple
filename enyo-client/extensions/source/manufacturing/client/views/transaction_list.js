@@ -19,8 +19,7 @@ trailing:true, white:true, strict:false*/
       parameterWidget: "XV.IssueMaterialParameters",
       multiSelect: true,
       query: {orderBy: [
-        {attribute: "order.number"},
-        {attribute: "order.subnumber"}
+        {attribute: "order.number"}
       ]},
       showDeleteAction: false,
       toggleSelected: true,
@@ -52,12 +51,12 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.ListAttr", attr: "qtyRequired",
                 formatter: "formatQuantity", style: "text-align: right"}
             ]},
-            {kind: "XV.ListColumn", classes: "money", components: [
-              {kind: "XV.ListAttr", attr: "qtyIssued",
-                formatter: "formatQuantity", style: "text-align: right"}
-            ]},
             {kind: "XV.ListColumn", classes: "money bold", components: [
               {kind: "XV.ListAttr", attr: "balance",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "qtyIssued",
                 formatter: "formatQuantity", style: "text-align: right"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [

@@ -10,12 +10,7 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
 
   enyo.kind({
     name: "XV.OpenWorkOrderWidget",
-    kind: "XV.WorkOrderWidget"/*,
-    query: {
-      parameters: [
-        {attribute: "number", value: XM.WorkOrder.formatWoNumber}
-      ]
-    }*/
+    kind: "XV.WorkOrderWidget"
   });
 
 }());
