@@ -27,8 +27,22 @@ white:true*/
         isUsedByBilling: false,
         isUsedByPayments: false
       };
-    }
+    },
 
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on('statusChange', this.statusDidChange);
+    },
+
+    /**
+      The currency attribute should be read only when a bank account
+      is loaded from the database for editing.
+    */
+    statusDidChange: function () {
+      if (this.getStatus() === XM.Model.READY_CLEAN) {
+        this.setReadOnly("currency");
+      }
+    }
   });
 
   /**

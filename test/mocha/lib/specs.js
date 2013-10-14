@@ -131,11 +131,74 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       description: "Test bank account",
       bankName: "TestBankName",
       accountNumber: Math.random(),
-      isUsedByBilling: true,
-      isUsedByPayments: true,
       notes: "Test bank account notes"
     },
-    updatableField: "description"
+    updatableField: "description",
+    beforeSetActions: [{
+      // TODO: handle better with test runner
+      it: "verify setup of model",
+      action: function (data, next) {
+        it('verify constant values', function () {
+          assert.equal(XM.BankAccount.CASH, "C");
+          assert.equal(XM.BankAccount.CHECKING, "K");
+          assert.equal(XM.BankAccount.CREDIT_CARD, "R");
+        });
+
+        it('verify that XM.reasonCodeDocumentTypes contains the constants', function () {
+          assert.equal(XM.bankAccountTypes.length, 3);
+
+          assert.ok(_.find(XM.bankAccountTypes.models, function (m) {
+            return m.id === XM.BankAccount.CASH;
+          }));
+          assert.ok(_.find(XM.bankAccountTypes.models, function (m) {
+            return m.id === XM.BankAccount.CHECKING;
+          }));
+          assert.ok(_.find(XM.bankAccountTypes.models, function (m) {
+            return m.id === XM.BankAccount.CREDIT_CARD;
+          }));
+        });
+
+        next();
+      }
+    }],
+    afterSaveActions: [{
+      // TODO: this could probably be handled in test runner
+      it: "verify default values are saved",
+      action: function (data, next) {
+        assert.equal(data.model.get("currency"), XT.baseCurrency());
+        assert.equal(data.model.get("isUsedByBilling"), false);
+        assert.equal(data.model.get("isUsedByPayments"), false);
+        next();
+      }
+    },
+    {
+      it: "verify saved bankAccount is in cached collection",
+      action: function (data, next) {
+        assert.isTrue(_.contains(XM.bankAccounts.models, data.model));
+        next();
+      }
+    },
+    {
+      it: "verify currency is readonly",
+      action: function (data, next) {
+        assert.isTrue(_.contains(data.model.readOnlyAttributes, "currency"));
+        next();
+      }
+    }]
   };
 
+  // exports.bankAccountRelations = {
+  //   recordType: "XM.BankAccountRelation",
+  //   collectionType: "XM.BankAccountRelationCollection",
+  //   cacheName: "XM.bankAccountRelations",
+  //   instanceOf: "XM.Info",
+  //   listKind: "XV.BankAccountList",
+  //   attributes: ["name", "description", "isUsedByBilling", "isUsedByPayments", "currency"],
+  //   extensions: ["sales", "billing"],
+  //   privileges: {
+  //     createUpdateDelete: false,
+  //     read: true
+  //   },
+  //   runSmoke: false
+  // };
 }());

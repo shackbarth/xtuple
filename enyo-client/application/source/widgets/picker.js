@@ -84,7 +84,7 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.bankAccountRelations",
     filter: function (models) {
       var ret = _.filter(models, function (m) {
-        return m.isUsedByBilling;
+        return m.get("isUsedByBilling");
       });
       return ret;
     }

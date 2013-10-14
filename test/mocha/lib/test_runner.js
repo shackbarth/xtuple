@@ -24,7 +24,6 @@
         spec.updateHash[spec.updatableField] = "Test" + Math.random();
       }
 
-
       //
       // Run CRUD model tests
       //
@@ -33,7 +32,9 @@
       //
       // Smoke Crud
       //
-      smoke.runUICrud(spec);
+      if (spec.runSmoke !== false) {
+        smoke.runUICrud(spec);
+      }
 
       //
       // Verify lockability

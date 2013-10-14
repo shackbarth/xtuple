@@ -76,24 +76,22 @@
 
               it('verify that noneText attribute is valid', function () {
                 var list = child.$.picker.getComponents();
-                // if they specify to not show a none text, then it shouldn't be there
-                if (!child.showNone) {
-                  assert.isUndefined(_.find(list, function (c) {
+                if (child.showNone) {
+                  assert.ok(_.find(list, function (c) {
                     return !c.value && c.content === child.noneText;
                   }));
                 } else {
-                  assert.ok(_.find(list, function (c) {
+                  assert.isUndefined(_.find(list, function (c) {
                     return !c.value && c.content === child.noneText;
                   }));
                 }
               });
 
               it('verify showLabel attribute is valid', function () {
-                // if the specify not to show a label, then don't
-                if (!child.showLabel) {
-                  assert.isFalse(child.$.label.showing);
-                } else {
+                if (child.showLabel) {
                   assert.isTrue(child.$.label.showing);
+                } else {
+                  assert.isFalse(child.$.label.showing);
                 }
               });
             });
