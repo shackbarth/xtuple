@@ -32,9 +32,7 @@
       //
       // Smoke Crud
       //
-      if (spec.runSmoke !== false) {
-        smoke.runUICrud(spec);
-      }
+      smoke.runUICrud(spec);
 
       //
       // Verify lockability

@@ -22,6 +22,7 @@ trailing:true, white:true*/
         // XM.Billing
         "ConfigureAR",
         "MaintainReasonCodes",
+        "MaintainShipVias",
 
         // XM.BankAccount
         "MaintainBankAccounts",

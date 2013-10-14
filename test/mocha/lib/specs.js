@@ -74,8 +74,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["code", "description"],
-    extensions: ["sales", "inventory"],
-    //extensions: ["sales", "billing", "inventory"], TODO
+    extensions: ["sales", "inventory", "billing"],
     privileges: {
       createUpdateDelete: "MaintainShipVias",
       read: true
@@ -107,7 +106,36 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       description: "Test Reason Code",
       documentType: "ARDM"
     },
-    updatableField: "description"
+    updatableField: "description",
+    beforeSetActions: [{
+      it: "verify setup of model",
+      action: function (data, next) {
+        it('verify constant values', function () {
+          assert.equal(XM.ReasonCode.CREDIT_MEMO, "ARCM");
+          assert.equal(XM.ReasonCode.DEBIT_MEMO, "ARDM");
+        });
+
+        it('verify that XM.reasonCodeDocumentTypes contains the constants', function () {
+          assert.equal(XM.reasonCodeDocumentTypes.length, 2);
+
+          assert.ok(_.find(XM.reasonCodeDocumentTypes.models, function (m) {
+            return m.id === XM.ReasonCode.CREDIT_MEMO;
+          }));
+          assert.ok(_.find(XM.reasonCodeDocumentTypes.models, function (m) {
+            return m.id === XM.ReasonCode.DEBIT_MEMO;
+          }));
+        });
+
+        next();
+      }
+    }],
+    afterSaveActions: [{
+      it: "verify saved reason code is in cached collection",
+      action: function (data, next) {
+        assert.isTrue(_.contains(XM.reasonCodes.models, data.model));
+        next();
+      }
+    }],
   };
 
   exports.bankAccount = {
@@ -165,7 +193,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       // TODO: this could probably be handled in test runner
       it: "verify default values are saved",
       action: function (data, next) {
-        assert.equal(data.model.get("currency"), XT.baseCurrency());
+        assert.equal(data.model.get("currency").id, XT.baseCurrency().id);
         assert.equal(data.model.get("isUsedByBilling"), false);
         assert.equal(data.model.get("isUsedByPayments"), false);
         next();
@@ -187,18 +215,19 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     }]
   };
 
+  // TODO: Add support for relations to test runner
   // exports.bankAccountRelations = {
   //   recordType: "XM.BankAccountRelation",
   //   collectionType: "XM.BankAccountRelationCollection",
   //   cacheName: "XM.bankAccountRelations",
   //   instanceOf: "XM.Info",
+  //   idAttribute: "name",
   //   listKind: "XV.BankAccountList",
   //   attributes: ["name", "description", "isUsedByBilling", "isUsedByPayments", "currency"],
   //   extensions: ["sales", "billing"],
   //   privileges: {
   //     createUpdateDelete: false,
   //     read: true
-  //   },
-  //   runSmoke: false
+  //   }
   // };
 }());
