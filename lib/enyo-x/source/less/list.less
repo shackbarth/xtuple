@@ -2,6 +2,7 @@
   Styles relating to Lists
 */
 
+/* List */
 .xv-list {
   background-color: @white;
   .xv-list-item {
@@ -43,6 +44,16 @@
       }
       &.descr {
         width: 15.56em;
+      }
+      &.icon {
+        width: 1.5em;
+      }
+      .list-icon {
+        padding: 2px;
+        color: @charcoal;
+        vertical-align: sub;
+        border: 1px solid @lightest-gray;
+        .border-radius(2px);
       }
     }
     &.item-selected {
@@ -91,6 +102,62 @@
   float: right;
   display: none;
   margin-top: -4px;
+}
+
+.xv-list-attr {
+  padding: 5px;
+  font-size: .8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: @black;
+  background-color: @white;
+  &.header {
+    padding: 4px;
+    background: @gray;
+    font-size: .7em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: @white;
+  }
+  &.footer {
+    padding: 4px;
+    background: @gray;
+    font-size: .7em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: @black;
+  }
+  &.right {
+    position: absolute;
+    right: 10px;
+    height: 20px;
+  }
+  &.text-align-right {
+    text-align: right;
+  }
+  &.bold {
+    font-weight: bold;
+  }
+  &.error {
+    color: @bright-red;
+  }
+  &.emphasis {
+    color: @green;
+  }
+  &.warn {
+    color: @light-orange;
+  }
+  &.italic {
+    font-style: italic;
+  }
+  &.placeholder {
+    font-style: italic;
+    color: @blue-gray;
+  }
+  &.hyperlink {
+    color: blue;
+  }
 }
 
 /* Navigator */
