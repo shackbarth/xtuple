@@ -29,19 +29,18 @@
      */
     handleIsActiveChange: function (inModel, inValue) {
       this.log(arguments);
-
     },
-
-
 
     /**
      * When a model is set on this component, bind to it.
      * TODO promote into some superclass
      */
     modelChanged: function () {
-      if (!model) return;
+      this.log(this.model);
+      if (!this.model) return;
 
-      new XT.getObjectByName(this.view)({
+      //new XT.getObjectByName(this.view)({
+      new XM.SalesCategoryView({
         model: this.model,
         $el: this,
         el: this.hasNode(),

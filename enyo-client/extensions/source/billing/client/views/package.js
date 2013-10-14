@@ -1,4 +1,5 @@
 enyo.depends(
+  "SalesCategoryView.js",
   "list.js",
   "workspace.js",
   "list_relations.js",
