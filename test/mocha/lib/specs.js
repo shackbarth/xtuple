@@ -87,4 +87,27 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     updatableField: "description"
   };
 
+  exports.reasonCode = {
+    recordType: "XM.ReasonCode",
+    collectionType: "XM.ReasonCodeCollection",
+    cacheName: "XM.reasonCodes",
+    listKind: "XV.ReasonCodeList",
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "code",
+    enforceUpperKey: false,
+    attributes: ["code", "description", "documentType"],
+    extensions: ["inventory"], // TODO billing
+    privileges: {
+      createUpdateDelete: "MaintainReasonCodes",
+      read: true
+    },
+    createHash: {
+      code: "TestReasonCode" + Math.random(),
+      description: "Test Reason Code",
+      documentType: "ARDM"
+    },
+    updatableField: "description"
+  };
+
 }());
