@@ -330,7 +330,7 @@
         "name": "characteristics",
         "toMany": {
           "isNested": true,
-          "type": "TaskCharacteristic",
+          "type": "TaskListItemCharacteristic",
           "column": "prjtask_id",
           "inverse": "task"
         }

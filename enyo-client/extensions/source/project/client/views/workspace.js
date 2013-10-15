@@ -18,6 +18,17 @@ trailing:true, white:true*/
     ];
 
     XV.appendExtension("XV.AccountWorkspace", extensions);
+
+    // ..........................................................
+    // CHARACTERISTIC
+    //
+  
+    extensions = [
+      {kind: "XV.ToggleButtonWidget", attr: "isProjects",
+        label: "_projects".loc(), container: "rolesGroup"},
+    ];
+
+    XV.appendExtension("XV.CharacteristicWorkspace", extensions);
   
     // ..........................................................
     // CONTACT
