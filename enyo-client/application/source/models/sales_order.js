@@ -35,74 +35,30 @@ white:true*/
     },
 
     convertFromQuote: function (id, options) {
-      var quote = new XM.Quote(),
-        fetchOptions = {},
+      var dispOptions = {},
         that = this;
-      // this id is the natural key, which is the number
-      // for both sales order and quote
-      fetchOptions.id = id;
+      
+      dispOptions.success = function (data) {
+         // Change date strings to dates
+        that.parse(data);
 
-      fetchOptions.success = function () {
-        var expireDate = quote.get("expireDate"),
-          obj,
-          updateUuid = function (obj) {
-            // If array loop through each and process
-            if (_.isArray(obj)) {
-              _.each(obj, function (item) {
-                updateUuid(item);
-              });
-            // If object remove uuid, then process all properties
-            } else if (_.isObject(obj)) {
-              if (obj.uuid) {
-                obj.uuid = XT.generateUUID();
-              }
-              _.each(obj, function (value) {
-                // If array, dive down
-                if (_.isArray(value)) {
-                  updateUuid(value);
-                }
-              });
-            }
-          };
+        // Set data on our new order
+        that.set(data);
 
-        if (expireDate < XT.date.today()) {
-          that.trigger("invalid", XT.Error.clone(), that, {});
+        // We can edit now
+        that.revertStatus();
+
+        // Follow through
+        if (options && options.success) {
+          options.success(that);
         }
-        // TODO make sure customer is not prospect
-        // TODO if cust on hold, check hold priv, CreateSOForHoldCustomer
-        // TODO if cust on warn, check warn priv, CreateSOForWarnCustomer
-        // TODO if uses po and not blanket po, check for dups
-        // TODO if quote and so exist with this number, get another
-
-        obj = quote.toJSON();
-        obj.orderDate = XT.date.today();
-        delete obj.quoteDate;
-        delete obj.expireDate;
-        obj.wasQuote = true;
-        obj.quoteNumber = obj.number;
-        updateUuid(obj);
-        that.parse(obj);
-        that.set(obj);
-        that.off('change:customer', that.customerDidChange);
-        that.fetchRelated("customer", {
-          success: function (model, resp, reloptions) {
-            that.on('change:customer', that.customerDidChange);
-            that.revertStatus();
-            that.checkConflicts = false;
-            if (options && options.success) {
-              options.success(model, resp, reloptions);
-            }
-          }
-        });
-
-        // TODO: Trigger on save that either closes or deletes quote
       };
-      fetchOptions.error = function () {
+      dispOptions.error = function () {
         XT.log("Fetch failed in convertFromQuote");
       };
       this.setStatus(XM.Model.BUSY_FETCHING);
-      quote.fetch(fetchOptions);
-    },
+      this.dispatch("XM.convertFromQuote", [id], dispOptions);
+    }
   });
 
   XM.SalesOrder.used = function (id, options) {

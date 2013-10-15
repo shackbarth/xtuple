@@ -174,6 +174,19 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     return human = spaced.charAt(0).toUpperCase() + spaced.slice(1);
   }
 
+  /**
+    Sets date to midnight of the current day.
+
+    @returns Receiver
+  */
+  Date.prototype.toMidnight: function () {
+    this.setHours(0);
+    this.setMinutes(0);
+    this.setSeconds(0);
+    this.setMilliseconds(0);
+    return this;
+  }
+
   // ..........................................................
   // XT
   //
@@ -260,6 +273,15 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     }
     else if(typeof obj === "string") return obj.decamelize();
     return ret;
+  }
+
+  /**
+    Returns today's date at midnight.
+    returns {Date}
+  */
+  XT.today: function () {
+    var today = new Date();
+    return today.toMidnight();
   }
 
   /**
@@ -397,7 +419,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     {"fromFunction":"reserveSoLineBalance","fromId":-3,"toFunction":"reserveSoLineQty","toId":-3},
     {"fromFunction":"woClockIn","fromId":-1,"toFunction":"explodeWo","toId":-1},
     {"fromFunction":"woClockIn","fromId":-2,"toFunction":"explodeWo","toId":-2},
-    {"fromFunction":"woClockIn","fromId":-3,"toFunction":"explodeWo","toId":-3},
+    {"fromFunction":"woClockIn","fromId":-3,"toFunction":"explodeWo","toId":-3}
   ];
 
   var getUserCulture = function() {
@@ -443,6 +465,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     var returnVal = XT.dbStrings[culture][stringsKey.toLowerCase()];
     return returnVal || "Undocumented error: " + functionName + " " + errorCode;
   };
+  XT.errorToString = errorToString;
 
   /**
     Wrapper for plv8.execute() for calling postgres functions. 

@@ -4,6 +4,7 @@
     "drop_deprecated.sql",
     "xt/trigger_functions/comment_did_change.sql",
     "xt/trigger_functions/owner_record_did_change.sql",
+    "xt/trigger_functions/sales_order_did_change.sql",
     "xt/trigger_functions/taxtype_record_did_change.sql",
     "xt/trigger_functions/usr_did_change.sql",
     "xt/trigger_functions/usrpref_did_change.sql",
