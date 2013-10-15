@@ -74,7 +74,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["code", "description"],
-    extensions: ["sales", "inventory", "billing"],
+    extensions: ["sales", "inventory"],
+    //extensions: ["sales", "inventory", "billing"],
     privileges: {
       createUpdateDelete: "MaintainShipVias",
       read: true
@@ -149,7 +150,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     enforceUpperKey: false,
     attributes: ["name", "description", "bankName", "accountNumber", "bankAccountType", "isUsedByBilling",
       "isUsedByPayments", "notes", "currency"],
-    extensions: ["sales", "billing"],
+    extensions: ["sales"],
+    //extensions: ["sales", "billing"],
     privileges: {
       createUpdateDelete: "MaintainBankAccounts",
       read: true
