@@ -21,6 +21,8 @@ white:true*/
     XT.cacheCollection("XM.siteRelations", "XM.SiteRelationCollection", "code");
     XT.cacheCollection("XM.siteTypes", "XM.SiteTypeCollection", "name");
     XT.cacheCollection("XM.terms", "XM.TermsCollection");
+    XT.cacheCollection("XM.bankAccounts", "XM.BankAccountCollection");
+    XT.cacheCollection("XM.bankAccountRelations", "XM.BankAccountRelationCollection");
   };
 
 }());
