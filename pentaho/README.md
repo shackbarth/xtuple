@@ -4,7 +4,7 @@ xTuple reporting is powered by Pentaho JFreeReports.  Reports can be developed u
 Pentaho Report Designer.  The business intelligence server provides the reports engine to
 serve reports.
 
-Get the Reports  
+Get the Reports
 ---------------  
 Reports are located in the xtuple/xtuple repo:  
   
