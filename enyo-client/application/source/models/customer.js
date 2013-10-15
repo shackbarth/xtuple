@@ -113,7 +113,7 @@ white:true*/
 
     conversionMap: {
       name: "name",
-      primaryContact: "contact",
+      primaryContact: "billingContact",
       secondaryContact: "correspondenceContact"
     },
 

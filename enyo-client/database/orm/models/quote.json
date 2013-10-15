@@ -1574,10 +1574,24 @@
         }
       },
       {
+        "name": "quoteDate",
+        "attr": {
+          "type": "Date",
+          "column": "quhead_quotedate"
+        }
+      },
+      {
         "name": "shipVia",
         "attr": {
           "type": "String",
           "column": "quhead_shipvia"
+        }
+      },
+      {
+        "name": "total",
+        "attr": {
+          "type": "Money",
+          "column": "total"
         }
       },
       {

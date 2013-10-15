@@ -26,7 +26,6 @@
       var appLoaded = function () {
         done();
       };
-
       zombieAuth.loadApp(appLoaded);
     });
 
@@ -36,29 +35,33 @@
         _.each(XV, function (value, key) {
           var child,
             collName,
+            collection,
             master = new enyo.Control();
 
           if (XV.inheritsFrom(value.prototype, "XV.Picker") &&
-              // don't test abstract kinds
+              // don't test abstract kinds, non-picker widgets with picker in name
               !_.contains(['PickerWidget', 'AttributePicker', 'ExpenseCategoryPicker'], key)) {
 
             describe('XV.' + key, function () {
-              it('should have their attrs set up correctly', function () {
+              before(function () {
                 // create the picker
                 child = master.createComponent({
                   kind: "XV." + key,
                   name: key
                 });
                 assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
+              });
 
-                // verify that there is a backing model
+              it('verify that there is a backing model for the picker', function () {
                 collName = child.getCollection();
                 assert.isNotNull(collName, 'XV.' + key + ' has no collection behind it');
-                var collection = _.isObject(this.collection) ? child.collection :
+
+                collection = _.isObject(this.collection) ? child.collection :
                     XT.getObjectByName(child.collection);
                 assert.isNotNull(collection, 'XV.' + key + ' does not have a valid collection name');
+              });
 
-                // verify that the name attribute is valid
+              it('verify that the name attribute is valid', function () {
                 // this is a little tricky, because the static models are Backbone models, not XM models
                 if (collection && child.nameAttribute) {
                   var models = collection.models;
@@ -69,7 +72,9 @@
                     assert.ok(name, 'XV.' + key + ' does not have a valid name attribute');
                   }
                 }
+              });
 
+              it('verify that noneText attribute is valid', function () {
                 var list = child.$.picker.getComponents();
                 // if they specify to not show a none text, then it shouldn't be there
                 if (!child.showNone) {
@@ -81,7 +86,9 @@
                     return !c.value && c.content === child.noneText;
                   }));
                 }
+              });
 
+              it('verify showLabel attribute is valid', function () {
                 // if the specify not to show a label, then don't
                 if (!child.showLabel) {
                   assert.isFalse(child.$.label.showing);
