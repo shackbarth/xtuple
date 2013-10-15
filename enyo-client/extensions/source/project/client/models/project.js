@@ -49,6 +49,48 @@ white:true*/
       isDocumentAssignment: true
 
     });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.ProjectCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.ProjectCharacteristic.prototype */ {
+
+      recordType: 'XM.ProjectCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.ProjectTaskCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.ProjectTaskCharacteristic.prototype */ {
+
+      recordType: 'XM.ProjectTaskCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.TaskCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.TaskCharacteristic.prototype */ {
+
+      recordType: 'XM.TaskCharacteristic'
+
+    });
+
+    // Add to context attributes
+    var ary = XM.Characteristic.prototype.contextAttributes;
+    ary.push("isProjects");
+    ary.push("isTasks");
+
   };
 
 }());

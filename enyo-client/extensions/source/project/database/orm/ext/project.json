@@ -221,9 +221,70 @@
           "column": "prj_id",
           "inverse": "source"
         }
-      }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectCharacteristic",
+          "column": "prj_id",
+          "inverse": "project"
+        }
+      }     
     ],
     "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "ProjectTask",
+    "table": "prjtask",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "prjtask_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectTaskCharacteristic",
+          "column": "prjtask_id",
+          "inverse": "projectTask"
+        }
+      }     
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Task",
+    "table": "prjtask",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "prjtask_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "TaskCharacteristic",
+          "column": "prjtask_id",
+          "inverse": "task"
+        }
+      }     
+    ],
     "isSystem": true
   },
   {

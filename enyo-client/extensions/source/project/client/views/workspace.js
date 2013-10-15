@@ -41,6 +41,18 @@ trailing:true, white:true*/
     XV.appendExtension("XV.IncidentWorkspace", extensions);
 
     // ..........................................................
+    // PROJECT
+    //
+  
+    extensions = [
+      {kind: "XV.ProjectCharacteristicsWidget", container: "mainGroup",
+        attr: "characteristics"}
+    ];
+
+    XV.appendExtension("XV.ProjectWorkspace", extensions);
+
+
+    // ..........................................................
     // QUOTE
     //
   
@@ -59,6 +71,17 @@ trailing:true, white:true*/
     ];
 
     XV.appendExtension("XV.SalesOrderWorkspace", extensions);
+
+    // ..........................................................
+    // TASK
+    //
+  
+    extensions = [
+      {kind: "XV.TaskCharacteristicsWidget", container: "mainGroup",
+        attr: "characteristics"}
+    ];
+
+    XV.appendExtension("XV.TaskWorkspace", extensions);
 
   };
 
