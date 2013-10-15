@@ -67,6 +67,18 @@ white:true*/
 
       @extends XM.CharacteristicAssignment
     */
+    XM.ProjectListItemCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.ProjectListItemCharacteristic.prototype */ {
+
+      recordType: 'XM.ProjectListItemCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
     XM.ProjectTaskCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectTaskCharacteristic.prototype */ {
 
@@ -83,6 +95,18 @@ white:true*/
       /** @scope XM.TaskCharacteristic.prototype */ {
 
       recordType: 'XM.TaskCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.TaskListItemCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.TaskListItemCharacteristic.prototype */ {
+
+      recordType: 'XM.TaskListItemCharacteristic'
 
     });
 

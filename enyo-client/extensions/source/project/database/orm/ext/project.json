@@ -232,7 +232,32 @@
         }
       }     
     ],
-    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "ProjectListItem",
+    "table": "prj",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "prj_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectListItemCharacteristic",
+          "column": "prj_id",
+          "inverse": "project"
+        }
+      }     
+    ],
     "isSystem": true
   },
   {
@@ -265,6 +290,32 @@
     "context": "project",
     "nameSpace": "XM",
     "type": "Task",
+    "table": "prjtask",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "prjtask_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "TaskCharacteristic",
+          "column": "prjtask_id",
+          "inverse": "task"
+        }
+      }     
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "TaskListItem",
     "table": "prjtask",
     "isExtension": true,
     "comment": "Extended by Project",
