@@ -1287,19 +1287,6 @@ trailing:true, white:true*/
         Has Closed Parent Sales Orders
         Item Group
       */
-      {name: "showOnlyTopLevel", attr: "orderType", label: "_showOnlyTopLevel".loc(), defaultKind: "XV.CheckboxWidget",
-        getParameter: function () {
-          var param;
-          if (!this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '!=',
-              value: "W"
-            };
-          }
-          return param;
-        }
-      },
       {kind: "onyx.GroupboxHeader", content: "_item".loc()},
       {name: "itemWidget", label: "_item".loc(), attr: "itemSite.item",
         defaultKind: "XV.ItemWidget"},

@@ -27,13 +27,13 @@ trailing:true, white:true, strict: false*/
           // If no order build a query that returns nothing
           if (value) {
             param = {
-              attribute: "order.uuid",
+              attribute: "order.number",
               operator: "=",
               value: value
             };
           } else {
             param = {
-              attribute: "order.uuid",
+              attribute: "order.number",
               operator: "=",
               value: -1
             };

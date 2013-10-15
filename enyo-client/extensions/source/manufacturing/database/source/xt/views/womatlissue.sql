@@ -2,6 +2,8 @@ select xt.create_view('xt.womatlissue', $$
 
   select 
     womatl.*,
+    item_id AS womatl_item_id,
+    itemsite_warehous_id AS womatl_warehous_id,
     itemsite_qtyonhand AS qoh_before,
     case when (womatl_qtyiss > womatl_qtyreq) then 0 else (womatl_qtyreq - womatl_qtyiss) end AS balance,
     null::numeric AS to_issue

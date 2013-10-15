@@ -22,8 +22,7 @@ white:true*/
         "dueDate",
         "itemSite",
         "status",
-        "cosMethod",
-        "qtyOrdered",
+        "ordered",
         "qtyRequired",
         "balance"
       ],

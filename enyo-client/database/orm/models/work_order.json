@@ -45,7 +45,26 @@
         "toOne": {
           "isNested": true,
           "type": "ItemSiteRelation",
-          "column": "wo_itemsite_id"
+          "column": "wo_itemsite_id",
+          "required": true
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "wo_item_id",
+          "required": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "wo_warehous_id",
+          "required": true
         }
       },
       {
@@ -63,28 +82,14 @@
          }
       },
       {
-        "name": "orderType",
-        "attr": {
-          "type": "String",
-          "column": "wo_ordtype"
-         }
-      },
-      {
-        "name": "orderId",
-        "attr": {
-          "type": "Number",
-          "column": "wo_ordid"
-         }
-      },
-      {
-        "name": "qtyOrdered",
+        "name": "ordered",
         "attr": {
           "type": "Number",
           "column": "wo_qtyord"
          }
       },
       {
-        "name": "qtyReceived",
+        "name": "quantityReceived",
         "attr": {
           "type": "Number",
           "column": "wo_qtyrcv"
@@ -95,20 +100,6 @@
         "attr": {
           "type": "Boolean",
           "column": "wo_adhoc"
-        }
-      },
-      {
-        "name": "itemCfgSeries",
-        "attr": {
-          "type": "Number",
-          "column": "wo_itemcfg_series"
-        }
-      },
-      {
-        "name": "isImported",
-        "attr": {
-          "type": "Boolean",
-          "column": "wo_imported"
         }
       },
       {
@@ -126,7 +117,7 @@
         }
       },
       {
-        "name": "productionNotes",
+        "name": "notes",
         "attr": {
           "type": "String",
           "column": "wo_prodnotes"
@@ -137,20 +128,6 @@
         "attr": {
           "type": "Number",
           "column": "wo_priority"
-        }
-      },
-      {
-        "name": "brdValue",
-        "attr": {
-          "type": "Cost",
-          "column": "wo_brdvalue"
-        }
-      },
-      {
-        "name": "cosMethod",
-        "attr": {
-          "type": "String",
-          "column": "wo_cosmethod"
         }
       },
       {
@@ -167,7 +144,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "WorkOrderListItem",
-    "table": "wo",
+    "table": "xt.woinfo",
     "comment": "Work Order List Item Map",
     "privileges": {
       "all": {
@@ -187,19 +164,11 @@
         }
       },
       {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
         "name": "number",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "wo_number",
-          "isNaturalKey": false
+          "isNaturalKey": true
         }
       },
       {
@@ -221,7 +190,26 @@
         "toOne": {
           "isNested": true,
           "type": "ItemSiteRelation",
-          "column": "wo_itemsite_id"
+          "column": "wo_itemsite_id",
+          "required": true
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "wo_item_id",
+          "required": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "wo_warehous_id",
+          "required": true
         }
       },
       {
@@ -239,28 +227,14 @@
          }
       },
       {
-        "name": "orderType",
-        "attr": {
-          "type": "String",
-          "column": "wo_ordtype"
-         }
-      },
-      {
-        "name": "orderId",
-        "attr": {
-          "type": "Number",
-          "column": "wo_ordid"
-         }
-      },
-      {
-        "name": "qtyOrdered",
+        "name": "ordered",
         "attr": {
           "type": "Number",
           "column": "wo_qtyord"
          }
       },
       {
-        "name": "qtyReceived",
+        "name": "quantityReceived",
         "attr": {
           "type": "Number",
           "column": "wo_qtyrcv"
@@ -271,20 +245,6 @@
         "attr": {
           "type": "Boolean",
           "column": "wo_adhoc"
-        }
-      },
-      {
-        "name": "itemCfgSeries",
-        "attr": {
-          "type": "Number",
-          "column": "wo_itemcfg_series"
-        }
-      },
-      {
-        "name": "isImported",
-        "attr": {
-          "type": "Boolean",
-          "column": "wo_imported"
         }
       },
       {
@@ -301,32 +261,18 @@
           "column": "wo_postedvalue"
         }
       },
-     	{
-        "name": "productionNotes",
+      {
+        "name": "notes",
         "attr": {
           "type": "String",
           "column": "wo_prodnotes"
         }
       },
-     	{
+      {
         "name": "priority",
         "attr": {
           "type": "Number",
           "column": "wo_priority"
-        }
-      },
-      {
-        "name": "brdValue",
-        "attr": {
-          "type": "Cost",
-          "column": "wo_brdvalue"
-        }
-      },
-      {
-        "name": "cosMethod",
-        "attr": {
-          "type": "String",
-          "column": "wo_cosmethod"
         }
       },
       {
@@ -336,14 +282,14 @@
           "column": "wo_username"
         }
       }
- 	  ],
+    ],
     "isSystem": true
   },
   {
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "WorkOrderRelation",
-    "table": "wo",
+    "table": "xt.woinfo",
     "comment": "Work Relation Map",
     "privileges": {
       "all": {
@@ -363,19 +309,11 @@
         }
       },
       {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
         "name": "number",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "wo_number",
-          "isNaturalKey": false
+          "isNaturalKey": true
         }
       },
       {
@@ -394,23 +332,27 @@
       },
       {
         "name": "itemSite",
-        "attr": {
-          "type": "Number",
-          "column": "wo_itemsite_id"
+        "toOne": {
+          "isNested": true,
+          "type": "ItemSiteRelation",
+          "column": "wo_itemsite_id",
+          "required": true
         }
       },
       {
-        "name": "orderId",
-        "attr": {
-          "type": "Number",
-          "column": "wo_ordid"
-         }
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "wo_item_id"
+        }
       },
       {
-        "name": "itemCfgSeries",
-        "attr": {
-          "type": "Number",
-          "column": "wo_itemcfg_series"
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "wo_warehous_id"
         }
       }
     ],

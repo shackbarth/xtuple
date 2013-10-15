@@ -39,6 +39,22 @@
         }
       },
       {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "womatl_item_id"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "womatl_warehous_id"
+        }
+      },
+      {
         "name": "status",
         "attr": {
           "type": "String",
@@ -65,6 +81,13 @@
         "attr": {
           "type": "Quantity",
           "column": "womatl_qtyper"
+        }
+      },
+      {
+        "name": "qtyFixed",
+        "attr": {
+          "type": "Quantity",
+          "column": "womatl_qtyfxd"
         }
       },
       {
@@ -170,6 +193,22 @@
         }
       },
       {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "wo_item_id"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "wo_warehous_id"
+        }
+      },
+      {
         "name": "startDate",
         "attr": {
           "type": "Date",
@@ -184,28 +223,14 @@
          }
       },
       {
-        "name": "orderType",
-        "attr": {
-          "type": "String",
-          "column": "wo_ordtype"
-         }
-      },
-      {
-        "name": "orderId",
-        "attr": {
-          "type": "Number",
-          "column": "wo_ordid"
-         }
-      },
-      {
-        "name": "qtyOrdered",
+        "name": "ordered",
         "attr": {
           "type": "Number",
           "column": "wo_qtyord"
          }
       },
       {
-        "name": "qtyReceived",
+        "name": "quantityReceived",
         "attr": {
           "type": "Number",
           "column": "wo_qtyrcv"
@@ -216,20 +241,6 @@
         "attr": {
           "type": "Boolean",
           "column": "wo_adhoc"
-        }
-      },
-      {
-        "name": "itemCfgSeries",
-        "attr": {
-          "type": "Number",
-          "column": "wo_itemcfg_series"
-        }
-      },
-      {
-        "name": "isImported",
-        "attr": {
-          "type": "Boolean",
-          "column": "wo_imported"
         }
       },
       {
@@ -247,7 +258,7 @@
         }
       },
       {
-        "name": "productionNotes",
+        "name": "notes",
         "attr": {
           "type": "String",
           "column": "wo_prodnotes"
@@ -258,20 +269,6 @@
         "attr": {
           "type": "Number",
           "column": "wo_priority"
-        }
-      },
-      {
-        "name": "brdValue",
-        "attr": {
-          "type": "Cost",
-          "column": "wo_brdvalue"
-        }
-      },
-      {
-        "name": "cosMethod",
-        "attr": {
-          "type": "String",
-          "column": "wo_cosmethod"
         }
       },
       {

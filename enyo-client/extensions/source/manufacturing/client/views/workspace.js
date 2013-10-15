@@ -227,7 +227,6 @@ trailing:true, white:true, strict: false*/
                 {item: "itemSite.item", site: "itemSite.site"}
               },
               {kind: "XV.InputWidget", attr: "status"},
-              {kind: "XV.InputWidget", attr: "cosMethod"},
               {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
               {kind: "XV.TextArea", attr: "productionNotes", fit: true},
               {kind: "onyx.GroupboxHeader", content: "_options".loc()},
@@ -237,8 +236,8 @@ trailing:true, white:true, strict: false*/
                 name: "closeWorkOrderAfterPosting"},
               {kind: "XV.StickyCheckboxWidget", label: "_scrapOnPost".loc(),
                 name: "scrapOnPost"},
-              {kind: "XV.QuantityWidget", attr: "qtyOrdered"},
-              {kind: "XV.QuantityWidget", attr: "qtyReceived"},
+              {kind: "XV.QuantityWidget", attr: "ordered"},
+              {kind: "XV.QuantityWidget", attr: "quantityReceived"},
               {kind: "XV.QuantityWidget", attr: "balance"},
               {kind: "onyx.GroupboxHeader", content: "_post".loc()},
               {kind: "XV.QuantityWidget", attr: "qtyToPost", name: "qtyToPost"}
