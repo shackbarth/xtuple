@@ -1,11 +1,33 @@
-(function () {
+XT.extensions.billing.initSalesCategoryView = function () {
 
-  XM.SalesCategoryView = XM.ModelView.extend({
+  /**
+   * View of a SalesCategory business object.
+   * @author travis@xtuple.com
+   */
+  XM.SalesCategoryView = XM.EnyoView.extend({
 
-    events: XM.ModelView.events.extend({
-      'change:canDeactivate': 'onCanDeactivateChange',
-      'change:isActive': 'onIsActiveChange'
-    })
+    events: {
+      'change:canDeactivate': 'onCanDeactivateChanged',
+      'change:isActive': 'onIsActiveChanged'
+    },
+
+    item: {
+      template: [
+        [ {attr: 'name'}, {attr: 'description'} ]
+      ],
+      //actions:
+
+    },
+
+    list: {
+      // query
+      // TODO
+    },
+
+    workspace: {
+      // TODO
+    }
+
   });
 
-})();
+};

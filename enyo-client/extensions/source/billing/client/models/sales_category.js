@@ -9,7 +9,7 @@ white:true, expr:true */
   /**
    * @class XM.SalesCategory
    * @extends XM.Document
-   * @author Travis Webb <travis@xtuple.com>
+   * @author travis@xtuple.com
    */
   XM.SalesCategory = XM.Document.extend({
     recordType: 'XM.SalesCategory',
@@ -26,15 +26,15 @@ white:true, expr:true */
         /**
          * Forward the dispatch/rpc response as an event for whoever may be
          * interested in listening for it.
-         * @fires XM.SalesCategory#set:unpostedInvoices
+         * @fires XM.SalesCategory#change:unpostedInvoices
          */
-        success: _.bind(this.trigger, this, 'set:unpostedInvoices'),
+        success: _.bind(this.trigger, this, 'change:unpostedInvoices'),
         /**
          * On error, an event informs listeners that canDeactivate
          * is set to false.
-         * @fires XM.SalesCategory#onCanDeactivateChange
+         * @fires XM.SalesCategory#change:canDeactivate
          */
-        error:   _.bind(this.trigger, this, 'onCanDeactivateChange', false)
+        error:   _.bind(this.trigger, this, 'change:canDeactivate', false)
       });
     },
 
@@ -45,12 +45,14 @@ white:true, expr:true */
      * @override
      * @see XM.ModelMixin#canEdit
      */
+    /*
     canEdit: function (attr) {
       return _.all([
         (attr !== 'isActive' || this.get('isActive') === false),
         this._super('canEdit', attr)
       ]);
     },
+    */
 
     /**
      * Determine whether we can deactivate this SalesCategory.
@@ -58,13 +60,12 @@ white:true, expr:true */
      * @param {Function} [callback=this.trigger]  invoked when canDeactivate 
      *    has been determined.
      *
-     * @listens set:unpostedInvoices
-     * @fires XM.SalesCategory#onCanDeactivateChange
+     * @listens change:unpostedInvoices
+     * @fires XM.SalesCategory#change:canDeactivate
      * @callback after
      * @see XM.SalesCategory#getUnpostedInvoices
      */
     canDeactivate: function (callback) {
-      console.log("canDeactivate");
       /**
        * Check base 'canDeactivate' conditions to determine whether querying
        * the server will be necessary.
@@ -80,7 +81,7 @@ white:true, expr:true */
       ]);
 
       _(callback).wrap(function (callback, canDeactivate) {
-        this.trigger('onCanDeactivateChange', canDeactivate);
+        this.trigger('change:canDeactivate', canDeactivate);
         if (_.isFunction(callback)) {
           callback(canDeactivate);
         }
@@ -91,7 +92,7 @@ white:true, expr:true */
         return callback(false);
       }
 
-      this.once('set:unpostedInvoices', function (unpostedInvoices) {
+      this.once('change:unpostedInvoices', function (unpostedInvoices) {
         callback(prequalify() && !unpostedInvoices);
       }, this);
 
@@ -103,13 +104,13 @@ white:true, expr:true */
      * prerequisite; passes the result of 'canDeactivate' into the
      * supplied callback.
      *
-     * @listens onCanDeactivateChange
+     * @listens change:canDeactivate
      * @callback enableActionCallback
      * @see XV.SalesCategoryList#actions
      * @see XM.SalesCategory#canDeactivate
      */
     hasDeactivateActionPrerequisite: function (enableActionCallback) {
-      this.once('onCanDeactivateChange', enableActionCallback);
+      this.once('change:canDeactivate', enableActionCallback);
       this.canDeactivate();
     },
 
@@ -123,10 +124,12 @@ white:true, expr:true */
      */
     save: function (key, val, options) {
       console.log("SalesCategory#save()");
-      this.once('lock:acquire', function () {
-        console.log("acquired lock");
+      this.once('lock:obtain', function () {
+        console.log("obtained lock");
         Backbone.Model.prototype.save.apply(this, arguments);
       }, this);
+
+      this.obtainLock();
     },
 
     /**

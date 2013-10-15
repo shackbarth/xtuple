@@ -1,51 +1,36 @@
-(function () {
+XT.extensions.billing.initSalesCategoryListItem = function () {
 
+  /**
+   * Sales Category List Item Widget.
+   * @author travis@xtuple.com
+   */
   enyo.kind({
     name: 'XV.SalesCategoryListItem',
     kind: 'XV.ListItem',
-    view: 'XM.SalesCategoryView',
-
-    published: {
-      model: null
-    },
+    modelView: 'SalesCategoryView',
 
     /**
      * @see XM.SalesCategoryView
      * @listens XM.SalesCategoryView#events
      */
     handlers: {
-      'onCanDeactivateChange': 'handleCanDeactivateChange',
-      'onIsActiveChange':      'handleIsActiveChange' 
+      onCanDeactivateChange: 'canDeactivateChanged',
+      onIsActiveChange:      'isActiveChanged',
     },
 
     /**
      * @listens onCanDeactivateChange
      */
-    handleCanDeactivateChange: function (inModel, inValue) {
+    canDeactivateChanged: function (inModel, inValue) {
       this.log(arguments);
     },
+
     /**
      * @listens onIsActiveChange
      */
-    handleIsActiveChange: function (inModel, inValue) {
+    isActiveChanged: function (inModel, inValue) {
       this.log(arguments);
-    },
-
-    /**
-     * When a model is set on this component, bind to it.
-     * TODO promote into some superclass
-     */
-    modelChanged: function () {
-      this.log(this.model);
-      if (!this.model) return;
-
-      //new XT.getObjectByName(this.view)({
-      new XM.SalesCategoryView({
-        model: this.model,
-        $el: this,
-        el: this.hasNode(),
-      });
     }
-  });
 
-})();
+  });
+};

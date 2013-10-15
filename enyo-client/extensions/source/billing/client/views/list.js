@@ -3,8 +3,7 @@ latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
 /*global XT:true, XV:true, enyo:true*/
 
-(function () {
-  'use strict';
+XT.extensions.billing.initLists = function () {
 
   enyo.kind({
     name: 'XV.SalesCategoryList',
@@ -23,15 +22,10 @@ trailing:true, white:true*/
       method: 'deactivate'
     }],
     components: [
-      {kind: 'XV.ListItemDecorator', components: [
-        {name: 'listItem', kind: 'XV.SalesCategoryListItem'}
-      ]}
+      {kind: 'XV.SalesCategoryListItem', name: 'listItem', decorated: true}
     ]
   });
 
-  XT.extensions.billing.initLists = function () {
-    XV.registerModelList('XM.SalesCategory', 'XV.SalesCategoryList');
-  };
-
-}());
+  XV.registerModelList('XM.SalesCategory', 'XV.SalesCategoryList');
+};
 
