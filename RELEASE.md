@@ -1,3 +1,160 @@
+1.4.5 (2013/10/11)
+==================
+- Fixed
+  issue #[19869](http://www.xtuple.org/xtincident/view/bugs/19869)
+  _*Omnibus: Locked record is displayed on selecting to open a contact after discarding new contact screen opened from it _
+- Fixed
+  issue #[19957](http://www.xtuple.org/xtincident/view/bugs/19957)
+  _Selecting to create a new Customer/Prospect from the customer field of Quote screen doesn't populates the customer automatically_
+- Fixed
+  issue #[20000](http://www.xtuple.org/xtincident/view/bugs/20000)
+  _* It is not possible to delete the customer SHIP-TO on reopening the customer_
+- Fixed
+  issue #[20012](http://www.xtuple.org/xtincident/view/bugs/20012)
+  _*Selected sales representative commission rate is not displayed automatically on the Customer screen_
+- Fixed
+  issue #[20064](http://www.xtuple.org/xtincident/view/bugs/20064)
+  _*Ship-To Number search screen is not labeled_
+- Fixed
+  issue #[20071](http://www.xtuple.org/xtincident/view/bugs/20071)
+  _Saving while Customer Ship-To is open gives error then causes other issues_
+- Fixed
+  issue #[20173](http://www.xtuple.org/xtincident/view/bugs/20173)
+  _*It is not possible to assign a Tax Authority to a Tax Code_
+- Fixed
+  issue #[20196](http://www.xtuple.org/xtincident/view/bugs/20196)
+  _*Data Source error is displayed on selecting to search the item sites screen with 'Class Code' filter_
+- Duplicate
+  issue #[20198](http://www.xtuple.org/xtincident/view/bugs/20198)
+  _*'Mask' and 'Validator' fields present under characteristic of type 'Text' are not functional_
+- Implemented
+  issue #[20311](http://www.xtuple.org/xtincident/view/bugs/20311)
+  _Welcome screen iframe does not scroll on iOS devices. CSS fix attached. ASM#5469_
+- Reopened
+  issue #[20332](http://www.xtuple.org/xtincident/view/bugs/20332)
+  _Error Adding a Sales Order to an Opportunity_
+- Implemented
+  issue #[20682](http://www.xtuple.org/xtincident/view/bugs/20682)
+  _Inventory History Report_
+- No Change Required
+  issue #[20885](http://www.xtuple.org/xtincident/view/bugs/20885)
+  _Time Expense Version has Incorrect title_
+- Fixed
+  issue #[20888](http://www.xtuple.org/xtincident/view/bugs/20888)
+  _Class Code List updates after a Discard_
+- Fixed
+  issue #[20981](http://www.xtuple.org/xtincident/view/bugs/20981)
+  _BI Readme steps updated_
+- Fixed
+  issue #[20994](http://www.xtuple.org/xtincident/view/bugs/20994)
+  _Clicking on Advanced Search displays History_
+- Fixed
+  issue #[21008](http://www.xtuple.org/xtincident/view/bugs/21008)
+  _*CRM Dashboard charts are duplicated on selecting to refresh_
+- Fixed
+  issue #[21062](http://www.xtuple.org/xtincident/view/bugs/21062)
+  _Using Help Pullout Tab gives Java Console Error_
+- Fixed
+  issue #[21110](http://www.xtuple.org/xtincident/view/bugs/21110)
+  _*Omnibus: Record is locked for some time on selecting 'Save and New' or 'New' button from the record screen_
+- Fixed
+  issue #[21114](http://www.xtuple.org/xtincident/view/bugs/21114)
+  _*observation: Unable to delete a Sales Representative_
+- Fixed
+  issue #[21181](http://www.xtuple.org/xtincident/view/bugs/21181)
+  _*New Quotes/Sales Orders created from the Opportunity screen are not displayed as attached to the Opportunity_
+- Fixed
+  issue #[21182](http://www.xtuple.org/xtincident/view/bugs/21182)
+  _*Omnibus: Selecting to delete a characteristic and save the record displays irrelevant dialog_
+- Fixed
+  issue #[21230](http://www.xtuple.org/xtincident/view/bugs/21230)
+  _*Employee screen doesn't save the Group attached to it_
+- Fixed
+  issue #[21232](http://www.xtuple.org/xtincident/view/bugs/21232)
+  _*Translation is required for the description label in the 'Advanced Search' panel of Employee Group list_
+- Duplicate
+  issue #[21248](http://www.xtuple.org/xtincident/view/bugs/21248)
+  _* Translation is required for the timeExpense label in About screen_
+- Fixed
+  issue #[21270](http://www.xtuple.org/xtincident/view/bugs/21270)
+  _*Translation is required for the  label in About screen_
+- Fixed
+  issue #[21383](http://www.xtuple.org/xtincident/view/bugs/21383)
+  _Found/Fixed in lists are not populated on Advanced Search_
+- Fixed
+  issue #[21396](http://www.xtuple.org/xtincident/view/bugs/21396)
+  _Misbehavior in Time/Expense editor panels_
+- Fixed
+  issue #[21401](http://www.xtuple.org/xtincident/view/bugs/21401)
+  _Gear on worksheet list inconsistent_
+- Fixed
+  issue #[21402](http://www.xtuple.org/xtincident/view/bugs/21402)
+  _All new records prompt to discard on iPad_
+- No Change Required
+  issue #[21415](http://www.xtuple.org/xtincident/view/bugs/21415)
+  _Attaching an Incident or Contact to an Account will not save_
+- Fixed
+  issue #[21419](http://www.xtuple.org/xtincident/view/bugs/21419)
+  _Worksheet owned by person who created it_
+- Fixed
+  issue #[21425](http://www.xtuple.org/xtincident/view/bugs/21425)
+  _List box editor doesn't validate_
+- Fixed
+  issue #[21437](http://www.xtuple.org/xtincident/view/bugs/21437)
+  _Pickers not populating on configuration_
+- Fixed
+  issue #[21440](http://www.xtuple.org/xtincident/view/bugs/21440)
+  _*Delete option is inactive for Tax Authorities_
+- Fixed
+  issue #[21451](http://www.xtuple.org/xtincident/view/bugs/21451)
+  _Timesheet remembers my location every time_
+- Fixed
+  issue #[21454](http://www.xtuple.org/xtincident/view/bugs/21454)
+  _Search box pushed off the screen_
+- Fixed
+  issue #[21473](http://www.xtuple.org/xtincident/view/bugs/21473)
+  _Unable to login Standard if Inventory or Sales is not enabled_
+- Fixed
+  issue #[21479](http://www.xtuple.org/xtincident/view/bugs/21479)
+  _*'View Inventory History' privilege under 'Inventory' module requires translation_
+- Fixed
+  issue #[21480](http://www.xtuple.org/xtincident/view/bugs/21480)
+  _*Transaction Date, Transaction Type and Order Type options in the Sort By list of 'Inventory History' require translation_
+- Implemented
+  issue #[21487](http://www.xtuple.org/xtincident/view/bugs/21487)
+  _grid entry in quote_
+- Fixed
+  issue #[21496](http://www.xtuple.org/xtincident/view/bugs/21496)
+  _*It is possible to select a project in 'Complete' status to create a time/expense sheet_
+- Fixed
+  issue #[21500](http://www.xtuple.org/xtincident/view/bugs/21500)
+  _Icons on pickers overlap text when scrolling_
+- Fixed
+  issue #[21505](http://www.xtuple.org/xtincident/view/bugs/21505)
+  _Mobile object names inconsistent with precedent_
+- Fixed
+  issue #[21515](http://www.xtuple.org/xtincident/view/bugs/21515)
+  _*Incorrect Project Task is displayed in the Time/Expense sheet of a worksheet_
+- Fixed
+  issue #[21540](http://www.xtuple.org/xtincident/view/bugs/21540)
+  _Characteristics don't get disabled_
+- Fixed
+  issue #[21541](http://www.xtuple.org/xtincident/view/bugs/21541)
+  _*Unable to update the Schedule date of a Quote_
+- Fixed
+  issue #[21565](http://www.xtuple.org/xtincident/view/bugs/21565)
+  _Selecting new time entry brings up prior entry_
+- Implemented
+  issue #[21581](http://www.xtuple.org/xtincident/view/bugs/21581)
+  _Add freight class picker to item workspace_
+- Fixed
+  issue #[21605](http://www.xtuple.org/xtincident/view/bugs/21605)
+  _Document linkages are only showing up on one side_
+- Fixed
+  issue #[21627](http://www.xtuple.org/xtincident/view/bugs/21627)
+  _Sales analysis (and other) object name problem_
+
+
 1.4.4 (2013/09/27)
 ==================
 
