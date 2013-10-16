@@ -2,6 +2,55 @@
   {
     "context": "project",
     "nameSpace": "XM",
+    "type": "ProjectType",
+    "table": "prjtype",
+    "idSequenceName": "prjtype_prjtype_id_seq",
+    "comment": "Project Type Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainProjectTypes",
+        "read": true,
+        "update": "MaintainProjectTypes",
+        "delete": "MaintainProjectTypes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "prjtype_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "prjtype_code",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "prjtype_active"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "prjtype_descr"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
     "type": "AccountProject",
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",

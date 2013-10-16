@@ -7,6 +7,37 @@ white:true*/
   "use strict";
 
   XT.extensions.project.initProjectModels = function () {
+
+    var _proto = XM.Project.prototype,
+      _defaults = _proto.defaults;
+
+    _proto.defaults = function () {
+      var defaults = _.isFunction(_defaults) ? _defaults() : defaults;
+      // Add first active project type
+      defaults.projectType = _.find(XM.projectTypes.models, function (model) {
+        return model.get("isActive");
+      });
+      return defaults;
+    };
+    /**
+      @class
+
+      @extends XM.Document
+    */
+    XM.ProjectType = XM.Document.extend(
+      /** @scope XM.ProjectType.prototype */ {
+
+      recordType: 'XM.ProjectType',
+
+      documentKey: 'code',
+
+      enforceUpperKey: false,
+
+      defaults: {
+        isActive: true
+      }
+
+    });
   
     /**
       @class
@@ -110,10 +141,21 @@ white:true*/
 
     });
 
-    // Add to context attributes
-    var ary = XM.Characteristic.prototype.contextAttributes;
-    ary.push("isProjects");
-    ary.push("isTasks");
+    // ..........................................................
+    // COLLECTIONS
+    //
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ProjectTypeCollection = XM.Collection.extend({
+      /** @scope XM.ProjectTypeCollection.prototype */
+
+      model: XM.ProjectType
+
+    });
 
   };
 
