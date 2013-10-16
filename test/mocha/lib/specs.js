@@ -154,7 +154,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     //extensions: ["sales", "billing"],
     privileges: {
       createUpdateDelete: "MaintainBankAccounts",
-      read: true
+      read: "ViewBankAccounts"
     },
     createHash: {
       name: "TestBankAccount" + Math.random(),
