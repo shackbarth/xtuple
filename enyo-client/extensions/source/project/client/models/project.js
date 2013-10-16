@@ -49,6 +49,72 @@ white:true*/
       isDocumentAssignment: true
 
     });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.ProjectCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.ProjectCharacteristic.prototype */ {
+
+      recordType: 'XM.ProjectCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.ProjectListItemCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.ProjectListItemCharacteristic.prototype */ {
+
+      recordType: 'XM.ProjectListItemCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.ProjectTaskCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.ProjectTaskCharacteristic.prototype */ {
+
+      recordType: 'XM.ProjectTaskCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.TaskCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.TaskCharacteristic.prototype */ {
+
+      recordType: 'XM.TaskCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.TaskListItemCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.TaskListItemCharacteristic.prototype */ {
+
+      recordType: 'XM.TaskListItemCharacteristic'
+
+    });
+
+    // Add to context attributes
+    var ary = XM.Characteristic.prototype.contextAttributes;
+    ary.push("isProjects");
+    ary.push("isTasks");
+
   };
 
 }());
