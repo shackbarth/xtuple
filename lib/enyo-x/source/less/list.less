@@ -49,14 +49,14 @@
       background: @item-hilite-background;
       .xv-list-attr {
         color: @white;
-        background: none;
+        //background: none;
         &.placeholder {
           font-style: italic;
           color: @sky-blue;
         }
         &.hyperlink {
           color: @bright-orange;
-          background: transparent;
+          //background: transparent;
         }
       }
       .xv-list-attr {
@@ -67,14 +67,14 @@
       .xv-list-column {
         .xv-list-attr {
           color: @white;
-          background: none;
+          //background: none;
           &.placeholder {
             font-style: italic;
             color: SkyBlue;
           }
           &.hyperlink {
             color: @bright-orange;
-            background: transparent;
+            //background: transparent;
           }
         }
       }
@@ -88,9 +88,11 @@
 }
 
 .xv-list-gear-icon-button {
-  float: right;
-  display: none;
-  margin-top: -4px;
+  cursor: pointer;
+  position: absolute;
+  right: 4px;
+  margin-top: -3px;
+
 }
 
 .xv-list-attr {
@@ -100,7 +102,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: @black;
-  background-color: @white;
+  //background-color: @white;
   &.header {
     padding: 4px;
     background: @gray;

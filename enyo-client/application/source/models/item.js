@@ -86,7 +86,6 @@ white:true*/
     */
     taxType: function (taxZone, options) {
       options = options ? options : {};
-      options.isJSON = true;
       var params = [this.id, taxZone ? taxZone.id : null];
       this.dispatch("XM.Item", "taxType", params, options);
       return this;

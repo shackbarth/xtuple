@@ -22,10 +22,13 @@ XT.extensions.billing.initLists = function () {
       method: 'deactivate'
     }],
     components: [
-      {kind: 'XV.SalesCategoryListItem', name: 'listItem', decorated: true}
+      {kind: 'XV.ListItemDecorator', components: [
+        {name: 'listItem', kind: 'XV.SalesCategoryListItem'}
+      ]}
     ]
   });
 
   XV.registerModelList('XM.SalesCategory', 'XV.SalesCategoryList');
+
 };
 
