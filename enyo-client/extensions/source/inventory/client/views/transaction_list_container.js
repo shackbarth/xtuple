@@ -15,12 +15,12 @@ trailing:true, white:true, strict:false*/
       list: "XV.IssueToShippingList",
       actions: [
         {name: "issueAll", label: "_issueAll".loc(),
-          prerequisite: "canIssueStock" }
+          prerequisite: "canIssueItem" }
       ],
       handlers: {
         onShipmentChanged: "shipmentChanged"
       },
-      canIssueStock: function () {
+      canIssueItem: function () {
         var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
           model = this.getModel(),
           validModel = _.isObject(model) ? !model.get("isShipped") : false,

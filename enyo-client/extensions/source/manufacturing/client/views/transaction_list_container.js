@@ -45,14 +45,6 @@ trailing:true, white:true, strict:false*/
       issueAll: function () {
         this.$.list.issueAll();
       },
-      issueSelected: function () {
-        var models = this.selectedModels();
-        this.issue(models);
-      },
-      issueSelectedStock: function () {
-        var models = this.selectedModels();
-        this.issue(models, true);
-      },
       post: function () {
         var that = this,
           model = that.model,
