@@ -56,7 +56,7 @@ trailing:true, white:true*/
     //
   
     extensions = [
-      {kind: "XV.ProjectTypePicker", container: "mainGroup",
+      {kind: "XV.ProjectTypePicker", container: "overviewControl",
         attr: "projectType", addBefore: "projectStatusPicker"},
       {kind: "XV.ProjectCharacteristicsWidget", container: "mainGroup",
         attr: "characteristics"}
