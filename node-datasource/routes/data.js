@@ -48,9 +48,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           try {
             data = JSON.parse(res.rows[0][functionName]);
           } catch (error) {
-            console.log("error");
-            console.log(res.rows[0][functionName]);
-            console.log(JSON.stringify(res.rows[0][functionName]));
             data = {isError: true, status: "Cannot parse data"};
           }
           callback(
