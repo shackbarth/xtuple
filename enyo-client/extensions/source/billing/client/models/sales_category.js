@@ -40,22 +40,6 @@ white:true, expr:true */
     },
 
     /**
-     * Apply additional constraints for the isActive field. Specifically, if
-     * isActive is true, automatically disable editing.
-     *
-     * @override
-     * @see XM.ModelMixin#canEdit
-     */
-    /*
-    canEdit: function (attr) {
-      return _.all([
-        (attr !== 'isActive' || this.get('isActive') === false),
-        this._super('canEdit', attr)
-      ]);
-    },
-    */
-
-    /**
      * Determine whether we can deactivate this SalesCategory.
      *
      * @param {Function} [callback=this.trigger]  invoked when canDeactivate 
@@ -75,27 +59,31 @@ white:true, expr:true */
        * @returns {Boolean} true if all conditions met, false otherwise
        */
       var prequalify = _(_.all).bind(this, [
-        this.get('isActive'),
-        this.canEdit('isActive'),
-        this.hasLockKey(),
-        this.canUpdate()
-      ]);
+          this.get('isActive'),
+          this.canEdit('isActive'),
+          this.hasLockKey(),
+          this.canUpdate()
+        ]),
+        /**
+         * Invoked after it is determined if there are unposted invoices that
+         * reference this model.
+         * @callback
+         */
+        afterUnpostedInvoicesChange = function (unpostedInvoices) {
+          var canDeactivate = prequalify() && !unpostedInvoices;
+          this.trigger('change:canDeactivate', canDeactivate);
 
-      _(callback).wrap(function (callback, canDeactivate) {
-        this.trigger('change:canDeactivate', canDeactivate);
-        if (_.isFunction(callback)) {
-          callback(canDeactivate);
-        }
-      }, this);
+          if (_.isFunction(callback)) {
+            callback(canDeactivate);
+          }
+        };
 
       // if I don't prequalify for canDeactivate, fail immediately.
       if (!prequalify()) {
         return callback(false);
       }
 
-      this.once('change:unpostedInvoices', function (unpostedInvoices) {
-        callback(prequalify() && !unpostedInvoices);
-      }, this);
+      this.once('change:unpostedInvoices', afterUnpostedInvoicesChange);
 
       this.getUnpostedInvoices();
     },
