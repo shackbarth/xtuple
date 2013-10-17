@@ -66,6 +66,9 @@
   max-width: 100px;
   overflow: hidden;
 }
+.xv-picker-button.disabled {
+  color: #696969;
+}
 .xv-picker-label {
   color: #000000;
   padding: 18px 8px 8px 8px;
