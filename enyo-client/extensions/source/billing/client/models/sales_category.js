@@ -14,6 +14,7 @@ white:true, expr:true */
   XM.SalesCategory = XM.Document.extend({
     recordType: 'XM.SalesCategory',
     idAttribute: 'name',
+    documentKey: 'name',
 
     /**
      * Determines whether this is a child of an unposted invoice.
@@ -115,30 +116,25 @@ white:true, expr:true */
     },
 
     /**
-     * Extend XM.Model.save to include the ability to mutate the model without
-     * fetching an Editable version of it.
-     *
-     * @override
-     * @see XM.Model#save
-     * [@linkcode Backbone.Model.save()]{http://backbonejs.org/docs/backbone.html#section-56}
-     */
-    save: function (key, val, options) {
-      console.log("SalesCategory#save()");
-      this.once('lock:obtain', function () {
-        console.log("obtained lock");
-        Backbone.Model.prototype.save.apply(this, arguments);
-      }, this);
-
-      this.obtainLock();
-    },
-
-    /**
      * Deactivate this SalesCategory.
      */
     deactivate: function () {
-      this.save({ isActive: false });
-    }
+      var afterSave = function (model) {
+          model.releaseLock();
+        },
+        afterFetch = function (model) {
+          // model is already deactivated
+          if (!model.get('isActive')) {
+            model.releaseLock();
+            return;
+          }
+          model.save({ isActive: false }, {
+            success: afterSave
+          });
+        };
 
+      this.fetch({ success: afterFetch });
+    }
   });
 
   /**

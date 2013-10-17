@@ -4,11 +4,9 @@
  * Default ListItem styles when using a ModelDecorator.
  */
 .xv-list .xv-model-decorator > .xv-list-item {
-  min-height: 32px;
 
   .xv-list-column {
     width: 10em;
-    //.xv-list-item > .xv-list-column.short;
 
     &.xv-list-attr {
       /**
@@ -21,8 +19,17 @@
         cursor: pointer;
       }
       &.xm-attribute-name {
-        font-style: italic;
+        .xv-list-attr > .bold;
       }
     }
+  }
+  &.item-selected {
+    .xv-list-attr {
+      color: white;
+      &.xm-attribute-id {
+        color: @bright-orange;
+      }
+    }
+
   }
 }

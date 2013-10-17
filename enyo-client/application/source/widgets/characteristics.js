@@ -161,7 +161,7 @@ white:true*/
     model: "XM.QuoteLineCharacteristic",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
-      {kind: "Repeater", count: 0, onSetupItem: "setupItem", components: [
+      {kind: "Repeater", count: 0, components: [
         {kind: "XV.QuoteLineCharacteristicItem", name: "characteristicItem"}
       ]},
     ],
