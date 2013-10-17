@@ -1,3 +1,3 @@
 enyo.depends(
-    "SalesCategoryListItem.js"
+  "list_item.js"
 );
