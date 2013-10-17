@@ -721,6 +721,7 @@ strict:true, trailing:true, white:true */
     "_maintainPackingListBatch": "Maintain Packing List Batch",
     "_maintainProductCategories": "Maintain Product Categories",
     "_maintainQuotes": "Maintain Quotes",
+    "_maintainReasonCodes": "Maintain Reason Codes",
     "_maintainSalesOrders": "Maintain Sales Orders",
     "_maintainSaleTypes": "Maintain Sale Types",
     "_maintainSalesReps": "Maintain Sales Reps",
