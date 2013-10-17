@@ -9,7 +9,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
 
   var async = require("async"),
     _ = require("underscore"),
-  assert = require("chai").assert;
+    assert = require("chai").assert;
 
   exports.honorific = {
     recordType: "XM.Honorific",
@@ -125,7 +125,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       discountDays: 0,
       cutOffDay: 0,
       isUsedByBilling: false,
-      isUsedByPayments: false
+      isUsedByPayments: false,
+      termsType: "D"
     },
     extensions: ["billing", "inventory", "sales"],
     privileges: {
@@ -136,7 +137,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       code: "TestTerms" + Math.random(),
       description: "Test Terms"
     },
-    updateHash: "description"
+    updatableField: "description",
+    additionalTests: require("../specs/terms").additionalTests
   };
 
 }());

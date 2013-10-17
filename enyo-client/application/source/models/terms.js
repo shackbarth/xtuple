@@ -18,7 +18,54 @@ white:true*/
 
     documentKey: 'code',
 
-    enforceUpperKey: false
+    enforceUpperKey: false,
+
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
+      this.on("change:termsType", this.termsTypeDidChange);
+    },
+
+    termsTypeDidChange: function (model, termsType) {
+
+      this.setReadOnly("cutOffDay", termsType === XM.Terms.DAYS);
+
+      if (termsType === XM.Terms.DAYS) {
+
+      } else if (termsType === XM.Terms.PROXIMO) {
+        this.set("dueDays", 1);
+        this.set("discountDays", 1);
+      }
+    },
+
+    /**
+      Enforce dueDate rules based on terms type. Otherwise validate per usual.
+     */
+    validate: function (attributes) {
+      var dueDays = this.get("dueDays"),
+        cutOffDate = this.get("cutOffDay");
+
+      if (this.get("termsType") === XM.Terms.DAYS) {
+
+
+      } else if (this.get("termsType") === XM.Terms.PROXIMO) {
+        if (!_.isNumber(dueDays) || dueDays % 1 !== 0 || dueDays < 0 || dueDays > 31) {
+          return XT.Error.clone('xt1004', { params: "due days" + dueDays }); // XXX TODO: better error
+        }
+        if (!_.isNumber(cutOffDate) || cutOffDate % 1 !== 0 || cutOffDate < 0 || cutOffDate > 31) {
+          return XT.Error.clone('xt1004', { params: "cd" + cutOffDate }); // XXX TODO: better error
+        }
+      }
+
+      return XM.Model.prototype.validate.apply(this, arguments);
+    }
+
+  });
+
+  _.extend(XM.Terms, {
+
+    DAYS: "D",
+
+    PROXIMO: "P"
 
   });
 
@@ -33,5 +80,6 @@ white:true*/
     model: XM.Terms
 
   });
+
 
 }());
