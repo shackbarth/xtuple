@@ -540,13 +540,13 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
-        {kind: "XV.CustomerQuoteListRelationsBox", attr: "quoteRelations"},
-        {kind: "XV.CustomerSalesOrderListRelationsBox", attr: "salesOrderRelations"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.CreditCardsBox", attr: "creditCards"},
         {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
-        {kind: "XV.CustomerDocumentsBox", attr: "documents"}
+        {kind: "XV.CustomerDocumentsBox", attr: "documents"},
+        {kind: "XV.CustomerQuoteListRelationsBox", attr: "quoteRelations"},
+        {kind: "XV.CustomerSalesOrderListRelationsBox", attr: "salesOrderRelations"},
       ]},
       // TODO: move this to notify system
       {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,

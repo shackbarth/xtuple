@@ -2,6 +2,7 @@
   Styles relating to Lists
 */
 
+/* List */
 .xv-list {
   background-color: @white;
   .xv-list-item {
@@ -43,6 +44,16 @@
       }
       &.descr {
         width: 15.56em;
+      }
+      &.icon {
+        width: 1.5em;
+      }
+      .list-icon {
+        padding: 2px;
+        color: @charcoal;
+        vertical-align: sub;
+        border: 1px solid @lightest-gray;
+        .border-radius(2px);
       }
     }
     &.item-selected {
