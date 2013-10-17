@@ -1688,11 +1688,11 @@ trailing:true, white:true, strict: false*/
         customer = model.get("customer"),
         K = XM.CustomerProspectRelation,
 
+        // In case we are converting a prospect
         afterCustomerSave = function () {
           this.getValue().convertFromProspect(customer.id);
         },
 
-        // In case we are converting a prospect
         convertToCustomer = _.bind(function (resp) {
           if (!resp.answer) { return; }
 
@@ -1721,7 +1721,7 @@ trailing:true, white:true, strict: false*/
           });
         },
 
-        // A callback in case we had to convert to a customer first
+        // Where the real work happens
         convertToSalesOrder = _.bind(function () {
           this.doWorkspace({
             workspace: "XV.SalesOrderWorkspace",
