@@ -782,6 +782,7 @@ strict:true, trailing:true, white:true */
     "_viewAllOpportunities": "View All Opportunities",
     "_viewAllProjects": "View All Projects",
     "_viewAllToDoItems": "View All To-Do Items",
+    "_viewBankAccounts": "View Bank Accounts",
     "_viewCharacteristics": "View Characteristics",
     "_viewCostCategories": "View Cost Categories",
     "_viewCosts": "View Costs",

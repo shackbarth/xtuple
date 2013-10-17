@@ -142,7 +142,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
   exports.bankAccount = {
     recordType: "XM.BankAccount",
     collectionType: "XM.BankAccountCollection",
-    cacheName: "XM.bankAccounts",
+    cacheName: null, // there is no cache for BankAccount
     listKind: "XV.BankAccountList",
     instanceOf: "XM.Document",
     isLockable: true,
@@ -150,11 +150,11 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     enforceUpperKey: false,
     attributes: ["name", "description", "bankName", "accountNumber", "bankAccountType", "isUsedByBilling",
       "isUsedByPayments", "notes", "currency"],
-    extensions: ["sales"],
+    extensions: ["sales", "billing"],
     //extensions: ["sales", "billing"],
     privileges: {
       createUpdateDelete: "MaintainBankAccounts",
-      read: true
+      read: "MaintainBankAccounts"
     },
     createHash: {
       name: "TestBankAccount" + Math.random(),
@@ -164,8 +164,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       notes: "Test bank account notes"
     },
     updatableField: "description",
+    // TODO: Move these actions into test runner
     beforeSetActions: [{
-      // TODO: handle better with test runner
       it: "verify setup of model",
       action: function (data, next) {
         it('verify constant values', function () {
@@ -202,13 +202,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       }
     },
     {
-      it: "verify saved bankAccount is in cached collection",
-      action: function (data, next) {
-        assert.isTrue(_.contains(XM.bankAccounts.models, data.model));
-        next();
-      }
-    },
-    {
       it: "verify currency is readonly",
       action: function (data, next) {
         assert.isTrue(_.contains(data.model.readOnlyAttributes, "currency"));
@@ -217,7 +210,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     }]
   };
 
-  // TODO: Add support for relations to test runner
+  // TODO: Need to retrofit test_runner to test relations
   // exports.bankAccountRelations = {
   //   recordType: "XM.BankAccountRelation",
   //   collectionType: "XM.BankAccountRelationCollection",
@@ -230,6 +223,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
   //   privileges: {
   //     createUpdateDelete: false,
   //     read: true
-  //   }
+  //   },
+  //   skipSmoke: true,
+  //   skipCrud: true
   // };
 }());
