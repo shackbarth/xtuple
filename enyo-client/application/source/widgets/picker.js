@@ -64,6 +64,33 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // BANK ACCOUNT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.BankAccountTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.bankAccountTypes",
+    showNone: false
+  });
+
+  // ..........................................................
+  // BILLING BANK ACCOUNT PICKER
+  //
+
+  enyo.kind({
+    name: "XV.BillingBankAccountPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.bankAccountRelations",
+    filter: function (models) {
+      var ret = _.filter(models, function (m) {
+        return m.get("isUsedByBilling");
+      });
+      return ret;
+    }
+  });
+
+  // ..........................................................
   // CHARACTERISTIC TYPE
   //
 

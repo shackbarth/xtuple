@@ -22,6 +22,10 @@ trailing:true, white:true*/
         // XM.Billing
         "ConfigureAR",
         "MaintainReasonCodes",
+        "MaintainShipVias",
+
+        // XM.BankAccount
+        "MaintainBankAccounts",
 
         // XM.SalesCategory
         "MaintainSalesCategories",
@@ -39,6 +43,7 @@ trailing:true, white:true*/
         workspace: "XV.BillingWorkspace"
       },
       setupPanels = [
+        {name: "bankAccountList", kind: "XV.BankAccountList"},
         {name: "reasonCodeList", kind: "XV.ReasonCodeList"},
         {name: "salesCategoryList", kind: "XV.SalesCategoryList"}
       ];

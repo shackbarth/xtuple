@@ -24,16 +24,19 @@
         spec.updateHash[spec.updatableField] = "Test" + Math.random();
       }
 
-
       //
       // Run CRUD model tests
       //
-      crud.runAllCrud(spec);
+      if (!spec.skipCrud) {
+        crud.runAllCrud(spec);
+      }
 
       //
       // Smoke Crud
       //
-      smoke.runUICrud(spec);
+      if (!spec.skipSmoke) {
+        smoke.runUICrud(spec);
+      }
 
       //
       // Verify lockability
@@ -221,6 +224,7 @@
           assert.fail();
         });
       }
+
       // TODO: verify that the cache is made available by certain extensions and not others
       // TODO: verify that the list is made available by certain extensions and not others
 

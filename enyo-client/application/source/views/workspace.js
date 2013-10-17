@@ -229,6 +229,40 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   XV.registerModelWorkspace("XM.AccountListItem", "XV.AccountWorkspace");
 
   // ..........................................................
+  // BANK ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.BankAccountWorkspace",
+    kind: "XV.Workspace",
+    title: "_bankAccount".loc(),
+    model: "XM.BankAccount",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.InputWidget", attr: "bankName"},
+            {kind: "XV.InputWidget", attr: "accountNumber"},
+            {kind: "XV.BankAccountTypePicker", attr: "bankAccountType"},
+            {kind: "XV.CurrencyPicker", attr: "currency"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByBilling"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByPayments"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.BankAccountRelation", "XV.BankAccountWorkspace");
+
+  // ..........................................................
   // CLASS CODE
   //
 
@@ -2705,16 +2739,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.CharacteristicTypePicker", name: "typePicker", attr: "characteristicType"},
             {kind: "XV.CheckboxWidget", attr: "isSearchable"},
-            {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contact".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_account".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incident".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_item".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunity".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employees".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true},
+            {kind: "XV.TextArea", attr: "notes", fit: true, name: "notesHeader"},
             {name: "advancedPanel", showing: false, components: [
               {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
               {kind: "XV.InputWidget", attr: "mask"},
@@ -2722,7 +2748,22 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             ]}
           ]}
         ]},
-        {kind: "XV.CharacteristicOptionBox", name: "optionsPanel", attr: "options", showing: false}
+        {kind: "XV.Groupbox", name: "rolesPanel", title: "_roles".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "rolesGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_addresses".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contacts".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_accounts".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incidents".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_items".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunities".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employees".loc()},
+          ]}
+        ]},
+        {kind: "XV.CharacteristicOptionBox", name: "optionsPanel",
+          attr: "options", showing: false}
       ]}
     ],
     /**
