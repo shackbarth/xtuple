@@ -10,7 +10,7 @@ trailing:true, white:true, strict:false*/
     enyo.kind({
       name: "XV.IssueToShipping",
       kind: "XV.TransactionListContainer",
-      prerequisite: "canIssueStock",
+      prerequisite: "canIssueItem",
       notifyMessage: "_issueAll?".loc(),
       list: "XV.IssueToShippingList",
       actions: [

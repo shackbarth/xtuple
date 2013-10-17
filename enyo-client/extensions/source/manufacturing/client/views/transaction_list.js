@@ -17,20 +17,13 @@ trailing:true, white:true, strict:false*/
       label: "_issueMaterial".loc(),
       collection: "XM.IssueMaterialCollection",
       parameterWidget: "XV.IssueMaterialParameters",
-      multiSelect: true,
       query: {orderBy: [
         {attribute: "order.number"}
       ]},
-      showDeleteAction: false,
-      toggleSelected: true,
       published: {
         status: null,
         transModule: XM.Manufacturing,
         transWorkspace: "XV.IssueMaterialWorkspace"
-      },
-      events: {
-        onProcessingChanged: "",
-        onOrderChanged: ""
       },
       components: [
         {kind: "XV.ListItem", components: [

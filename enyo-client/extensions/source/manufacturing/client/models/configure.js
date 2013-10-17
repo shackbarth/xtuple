@@ -29,25 +29,6 @@ white:true*/
       }
     });
 
-    //
-    // CLASS FUNCTIONS
-    //
-    _.extend(XM.Manufacturing, {
-
-      canIssueItem: function (callback) {
-        var canDo = true; // TODO Is this always true?
-        callback(canDo);
-        return canDo;
-      },
-
-      issueItem: function () {
-        // TODO
-        console.log("models/configure.js (XM.Manufacturing.issueItem)");
-      }
-
-    });
-
-
     XM.manufacturing = new XM.Manufacturing();
 
   };

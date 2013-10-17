@@ -134,6 +134,7 @@ white:true*/
               callback(resp.answer);
             }
           });
+          return this;
         }
 
         if (err) {
