@@ -168,7 +168,7 @@ white:true*/
     */
     XM.Manufacturing.issueItem = function (params, options) {
       var obj = XM.Model.prototype;
-      obj.dispatch("XM.Inventory", "issueMaterial", params, options);
+      obj.dispatch("XM.Manufacturing", "issueMaterial", params, options);
     };
 
     /**
@@ -179,7 +179,7 @@ white:true*/
     */
     XM.Manufacturing.returnItem = function (params, options) {
       var obj = XM.Model.prototype;
-      obj.dispatch("XM.Inventory", "returnMaterial", params, options);
+      obj.dispatch("XM.Manufacturing", "returnMaterial", params, options);
     };
 
     // ..........................................................
