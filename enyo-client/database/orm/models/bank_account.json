@@ -11,7 +11,7 @@
     "privileges": {
       "all": {
         "create": "MaintainBankAccounts",
-        "read": "ViewBankAccounts",
+        "read": "MaintainBankAccounts",
         "update": "MaintainBankAccounts",
         "delete": "MaintainBankAccounts"
       }

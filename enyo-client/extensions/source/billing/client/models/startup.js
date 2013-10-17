@@ -7,7 +7,6 @@ white:true*/
   "use strict";
 
   XT.extensions.billing.initStartup = function () {
-    XT.cacheCollection("XM.bankAccounts", "XM.BankAccountCollection");
     XT.cacheCollection("XM.bankAccountRelations", "XM.BankAccountRelationCollection");
   };
 

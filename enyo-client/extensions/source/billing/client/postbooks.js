@@ -25,7 +25,6 @@ trailing:true, white:true*/
         "MaintainShipVias",
 
         // XM.BankAccount
-        "ViewBankAccounts",
         "MaintainBankAccounts",
 
         // XM.SalesCategory

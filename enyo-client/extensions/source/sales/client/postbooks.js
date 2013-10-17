@@ -99,7 +99,6 @@ trailing:true, white:true*/
       "ProcessCreditCards",
       "ShowMarginsOnSalesOrder",
       "UpdateCustomerCreditStatus",
-      "ViewBankAccounts",
       "ViewCosts",
       "ViewCustomerMasters",
       "ViewFreightClasses",
