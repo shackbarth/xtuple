@@ -5,8 +5,6 @@ select xt.install_js('XM','Inventory','xtuple', $$
 (function () {
 
   if (!XM.PrivateInventory) { XM.PrivateInventory = {}; }
-
-  if (!XM.Manufacturing) { XM.Manufacturing = {}; }
   
   XM.PrivateInventory.isDispatchable = false; /* No direct access from client */
 
@@ -342,76 +340,6 @@ select xt.install_js('XM','Inventory','xtuple', $$
   };
 
   /**
-    Return material transactions.
-    
-      select xt.post('{
-        "username": "admin",
-        "nameSpace":"XM",
-        "type":"Inventory",
-        "dispatch":{
-          "functionName":"returnFromShipping",
-          "parameters":["95c30aba-883a-41da-e780-1d844a1dc112"]
-        }
-      }');
-  
-    @param {String|Array} Order line uuid, or array of uuids
-  */
-  XM.Inventory.returnMaterial = function (orderLine) {
-    var sql = "select returnwomaterial(womatl_id, womatl_qtyiss, current_timestamp) " +
-           "from womatl where obj_uuid = $1;",
-      ret,
-      i;
-
-    /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("ReturnWoMaterials")) { throw new handleError("Access Denied", 401); }
-
-    /* Post the transaction */
-    for (i = 0; i < arguments.length; i++) {
-      ret = plv8.execute(sql, [arguments[i]])[0];
-    }
-
-    return ret;
-  };
-  XM.Inventory.returnMaterial.description = "Return shipment transactions.";
-  XM.Inventory.returnMaterial.params = {
-    orderLine: { type: "String", description: "Order line UUID" }
-  };
-
-  /**
-    Post production.
-    
-      select xt.post('{
-        "username": "admin",
-        "nameSpace":"XM",
-        "type":"Inventory",
-        "dispatch":{
-          "functionName":"shipShipment",
-          "parameters":["203"]
-        }
-      }');
-  
-    @param {Number} Shipment number
-    @param {Date} Ship date, default = current date
-  */
-  XM.Inventory.postProduction = function (workOrder, quantity) {
-    var sql = "select postproduction(wo_id, $2, true, 0, current_timestamp) as series " +
-      "from wo where obj_uuid = $1;";
-
-    /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("PostProduction")) { throw new handleError("Access Denied", 401); }
-
-    /* Post the transaction */
-    var ret = plv8.execute(sql, [workOrder, quantity])[0].series;
-    
-    return ret;
-  };
-  XM.Inventory.postProduction.description = "Post production";
-  XM.Inventory.postProduction.params = {
-     workOrder: { type: "String", description: "Order line UUID" },
-     quantity: {type: "Number", description: "Quantity" }
-  };
-
-  /**
     Issue to shipping.
     
       select xt.post('{
@@ -498,91 +426,6 @@ select xt.install_js('XM','Inventory','xtuple', $$
   };
   XM.Inventory.issueToShipping.description = "Issue to Shipping.";
   XM.Inventory.issueToShipping.params = {
-    orderLine: { type: "String", description: "Order line UUID" },
-    quantity: {type: "Number", description: "Quantity" },
-    options: {type: "Object", description: "Other attributes", attributes: {
-      asOf: {type: "Date", description: "Transaction Timestamp. Default to now()."},
-      detail: {type: "Array", description: "Distribution detail" }
-    }}
-  };
-
-  /**
-    Issue Material.
-    
-      select xt.post('{
-        "username": "admin",
-        "nameSpace":"XM",
-        "type":"Inventory",
-        "dispatch":{
-          "functionName":"issueMaterial",
-          "parameters":[
-            "95c30aba-883a-41da-e780-1d844a1dc112",
-            1,
-            {
-              "asOf": "2013-07-03T13:52:55.964Z",
-              "detail": [
-                {
-                  "location": "84cf43d5-8a44-4a2b-f709-4f415ca51a52",
-                  "quantity": 8
-                },
-                {
-                  "location": "d756682c-eda3-445d-eaef-4dce793b0dcf",
-                  "quantity": 2
-                }
-              ]
-            }
-          ]
-        }
-      }');
-  
-    @param {String|Array} Order line uuid or array of objects
-    @param {Number|Object} Quantity or options
-    @param {Date}   [options.asOf=now()] Transaction Timestamp
-    @param {Array} [options.detail] Distribution detail
-  */
-  XM.Inventory.issueMaterial = function (orderLine, quantity, options) {
-    var asOf,
-      series,
-      sql,
-      sql2,
-      ary,
-      item,
-      i;
-
-    /* Make into an array if an array not passed */
-    if (typeof arguments[0] !== "object") {
-      ary = [{orderLine: orderLine, quantity: quantity, options: options || {}}];
-    } else {
-      ary = arguments;
-    }
-
-    /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("IssueWoMaterials")) { throw new handleError("Access Denied", 401); }
-
-    sql = "select issuewomaterial(womatl_id, $2::numeric, $3::integer, $4::timestamptz) as series " +
-           "from womatl where obj_uuid = $1;";  
-
-    sql2 = "select current_date != $1 as invalid";         
-
-    /* Post the transaction */
-    for (i = 0; i < ary.length; i++) {
-      item = ary[i];
-      asOf = item.options ? item.options.asOf : null;
-      series = plv8.execute(sql, [item.orderLine, item.quantity, 0, asOf])[0].series;
-
-      if (asOf && plv8.execute(sql2, [asOf])[0].invalid &&
-          !XT.Data.checkPrivilege("AlterTransactionDates")) {
-        throw new handleError("Insufficient privileges to alter transaction date", 401);
-      }
-
-      /* Distribute detail */
-      XM.PrivateInventory.distribute(series, item.options.detail);
-    }
-
-    return;
-  };
-  XM.Inventory.issueMaterial.description = "Issue Materials.";
-  XM.Inventory.issueMaterial.params = {
     orderLine: { type: "String", description: "Order line UUID" },
     quantity: {type: "Number", description: "Quantity" },
     options: {type: "Object", description: "Other attributes", attributes: {
