@@ -13,8 +13,8 @@ white:true*/
 
     // Explode Work Order's Effective as of
     var explodeWOEffectiveJson = [
-      { id: "S", name: "_workOrderStartDate".loc() },
-      { id: "E", name: "_dateOfExplosion".loc() }
+      { id: XM.WorkOrder.START_DATE, name: "_workOrderStartDate".loc() },
+      { id: XM.WorkOrder.EXPLOSION_DATE, name: "_dateOfExplosion".loc() }
     ];
     XM.ExplodeWOEffectiveModel = Backbone.Model.extend({
     });
@@ -29,8 +29,8 @@ white:true*/
 
     // Default Work Order Explosion Level
     var wOExplosionLevelJson = [
-      { id: "S", name: "_singleLevel".loc() },
-      { id: "M", name: "_multipleLevel".loc() }
+      { id: XM.WorkOrder.SINGLE_LEVEL, name: "_singleLevel".loc() },
+      { id: XM.WorkOrder.MULTIPLE_LEVEL, name: "_multipleLevel".loc() }
     ];
     XM.WOExplosionLevelModel = Backbone.Model.extend({
     });
@@ -45,8 +45,8 @@ white:true*/
 
     // Job Items Work Order Cost Recognition Defaults
     var jobItemCosDefaultJson = [
-      { id: "D", name: "_toDate".loc() },
-      { id: "P", name: "_proportional".loc() }
+      { id: XM.WorkOrder.TO_DATE, name: "_toDate".loc() },
+      { id: XM.WorkOrder.PROPORTIONAL, name: "_proportional".loc() }
     ];
     XM.JobItemCosDefaultModel = Backbone.Model.extend({
     });

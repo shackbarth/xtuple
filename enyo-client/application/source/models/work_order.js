@@ -93,7 +93,7 @@ white:true*/
       @static
       @constant
       @type String
-      @default I
+      @default R
     */
     RELEASED: 'R',
 
@@ -103,7 +103,7 @@ white:true*/
       @static
       @constant
       @type String
-      @default N
+      @default E
     */
     EXPLODED: 'E',
 
@@ -113,7 +113,7 @@ white:true*/
       @static
       @constant
       @type String
-      @default F
+      @default I
     */
     INPROCESS: 'I',
 
@@ -123,9 +123,69 @@ white:true*/
       @static
       @constant
       @type String
-      @default I
+      @default S
     */
     OPEN: 'O',
+
+    /**
+      Start Date.
+
+      @static
+      @constant
+      @type String
+      @default S
+    */
+    START_DATE: 'S',
+
+    /**
+      Explosion Date.
+
+      @static
+      @constant
+      @type String
+      @default E
+    */
+    EXPLOSION_DATE: 'E',
+
+    /**
+      Single Level.
+
+      @static
+      @constant
+      @type String
+      @default S
+    */
+    SINGLE_LEVEL: 'S',
+
+    /**
+      Multiple Level.
+
+      @static
+      @constant
+      @type String
+      @default M
+    */
+    MULTIPLE_LEVEL: 'M',
+
+    /**
+      To Date.
+
+      @static
+      @constant
+      @type String
+      @default D
+    */
+    TO_DATE: 'D',
+
+    /**
+      Proportional.
+
+      @static
+      @constant
+      @type String
+      @default P
+    */
+    PROPORTIONAL: 'P'
 
   });
 
