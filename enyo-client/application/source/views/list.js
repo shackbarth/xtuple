@@ -1687,46 +1687,48 @@ trailing:true, white:true, strict: false*/
       var model = inEvent.model,
         customer = model.get("customer"),
         K = XM.CustomerProspectRelation,
-        that = this,
+
+        afterCustomerSave = function () {
+          this.getValue().convertFromProspect(customer.id);
+        },
 
         // In case we are converting a prospect
-        convertToCustomer = function (resp) {
+        convertToCustomer = _.bind(function (resp) {
           if (!resp.answer) { return; }
-          var success = function () {
-            this.getValue().convertFromProspect(customer.id);
-          };
 
-          that.doWorkspace({
+          this.doWorkspace({
             workspace: "XV.CustomerWorkspace",
             attributes: {
               number: customer.get("number"),
               name: customer.get("name")
             },
-            success: success,
+            success: afterCustomerSave,
             callback: convertToSalesOrder,
             allowNew: false
+          });
+        }, this),
+
+        afterQuoteConverted = function () {
+          // Hack to force grid to refresh. Why doesn't it on its own?
+          var gridBox = this.$.salesOrderLineItemGridBox;
+          gridBox.valueChanged();
+          gridBox.setDisabled(false);
+        },
+
+        afterSalesOrderCreated = function () {
+          this.getValue().convertFromQuote(model.id, {
+            success: _.bind(afterQuoteConverted, this)
           });
         },
 
         // A callback in case we had to convert to a customer first
-        convertToSalesOrder = function () {
-          var success = function () {
-              var gridBox = this.$.salesOrderLineItemGridBox;
-              this.getValue().convertFromQuote(model.id, {
-                success: function () {
-                  // Hack to force grid to refresh. Why doesn't it on its own?
-                  gridBox.valueChanged();
-                  gridBox.setDisabled(false);
-                }
-              });
-            };
-
-          that.doWorkspace({
+        convertToSalesOrder = _.bind(function () {
+          this.doWorkspace({
             workspace: "XV.SalesOrderWorkspace",
-            success: success,
+            success: afterSalesOrderCreated,
             allowNew: false
           });
-        };
+        }, this);
 
       if (customer.get("status") === K.PROSPECT_STATUS) {
         this.doNotify({

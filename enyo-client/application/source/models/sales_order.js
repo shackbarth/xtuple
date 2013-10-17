@@ -35,29 +35,23 @@ white:true*/
     },
 
     convertFromQuote: function (id, options) {
-      var dispOptions = {},
-        that = this;
-      
-      dispOptions.success = function (data) {
-         // Change date strings to dates
-        that.parse(data);
+      var success = _.bind(function (data) {
+           // Change date strings to dates
+          this.parse(data);
 
-        // Set data on our new order
-        that.set(data);
+          // Set data on our new order
+          this.set(data);
 
-        // We can edit now
-        that.revertStatus();
+          // We can edit now
+          this.revertStatus();
 
-        // Follow through
-        if (options && options.success) {
-          options.success(that);
-        }
-      };
-      dispOptions.error = function () {
-        XT.log("Fetch failed in convertFromQuote");
-      };
+          // Follow through
+          if (options && options.success) {
+            options.success(this);
+          }
+        }, this);
       this.setStatus(XM.Model.BUSY_FETCHING);
-      this.dispatch("XM.convertFromQuote", [id], dispOptions);
+      this.dispatch("XM.SalesOrder", "convertFromQuote", [id], {success: success});
     }
   });
 
