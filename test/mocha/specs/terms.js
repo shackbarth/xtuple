@@ -20,6 +20,14 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       assert.equal(XM.Terms.PROXIMO, "P");
     });
     // TODO: these proximo tests should be nested inside
+
+/*
+TODO:
+When the terms type is set to XM.Terms.DAYS
+Validation should check that the dueDays attribute is any positive integer.
+the cutOffDate day should be set to read only = true.
+*/
+
     it("when the terms type is set to proximo", function (done) {
       var initComplete = function () {
         model.set(require("../lib/specs").terms.createHash);
