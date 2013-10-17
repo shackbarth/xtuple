@@ -179,7 +179,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
     @returns Receiver
   */
-  Date.prototype.toMidnight: function () {
+  Date.prototype.toMidnight = function () {
     this.setHours(0);
     this.setMinutes(0);
     this.setSeconds(0);
@@ -279,7 +279,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     Returns today's date at midnight.
     returns {Date}
   */
-  XT.today: function () {
+  XT.today = function () {
     var today = new Date();
     return today.toMidnight();
   }

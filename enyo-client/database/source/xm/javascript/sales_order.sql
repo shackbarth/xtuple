@@ -23,22 +23,25 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
     @private
   */
   var _updateUuid = function (obj) {
-    // If array loop through each and process
-    if (_.isArray(obj)) {
-      _.each(obj, function (item) {
-        updateUuid(item);
+    var prop;
+    /* If array loop through each and process */
+    if (XT.typeOf(obj) === "array") {
+      obj.forEach(function (item) {
+        _updateUuid(item);
       });
-    // If object remove uuid, then process all properties
-    } else if (_.isObject(obj)) {
+    /* If object remove uuid, then process all properties */
+    } else if (XT.typeOf(obj) === "object") {
       if (obj.uuid) {
         obj.uuid = XT.generateUUID();
       }
-      _.each(obj, function (value) {
-        // If array, dive down
-        if (_.isArray(value)) {
-          updateUuid(value);
+      for (prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+          // If array, dive down
+          if (XT.typeOf(obj[prop]) === "array") {
+            _updateUuid(obj[prop]);
+          }
         }
-      });
+      };
     }
   };
 
@@ -59,13 +62,13 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
              "  when cust_creditstatus = 'H' and not checkPrivilege('CreateSOForHoldCustomer') then -4" +
              "  when cust_creditstatus = 'W' and not checkPrivilege('CreateSOForWarnCustomer')then -5" +
              "  when coalesce(quhead_expire, endOfTime()) < current_date then -6 " +
-             "  default 1 " +
+             "  else 1 " +
              "  end as result " +
              "from quhead " +
              " left join custinfo on quhead_cust_id=cust_id " +
               " left join prospect on quhead_cust_id=prospect_id " +
-             " left join quitem on quitem_quhead_id=quhead_id and quitem_warehous_id is null" +
-             "where quhead_number = $1;",
+             " left join quitem on quitem_quhead_id=quhead_id and quitem_order_warehous_id is null " +
+             "where quhead_number=$1;",
       sql2 = "select cohead_id " +
              "from quhead " +
              " join cohead on cohead_cust_id=quhead_cust_id " +
@@ -81,9 +84,18 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
       plv8.elog(ERROR, "Access Denied.");
     }
 
-    result = plv8.execute(sql, [id])[0];
+    result = plv8.execute(sql1, [id])[0].result;
 
     if (result > 0) {
+
+      /* Start by getting the quote */
+      quote = data.retrieveRecord({
+        nameSpace: "XM",
+        type: "Quote",
+        id: id,
+        superUser: true
+      });
+    
       /* Need to convert from customer/prospect to customer */
       customer = data.retrieveRecord({
         nameSpace: "XM",
@@ -107,19 +119,11 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
       throw new handleError(errorString, 424); 
     }
 
-    /* Start by getting the quote */
-    quote = data.retrieveRecord({
-      nameSpace: "XM",
-      type: "Quote",
-      id: id,
-      superUser: true
-    });
-
     /* If number is already used, get another */
-    if (plv8.execute(sql3, [id])[0].length) {
+    if (plv8.execute(sql3, [id]).length) {
       id = plv8.execute("select fetchsonumber() as num;")[0].num;
     }
-
+    
     /* Effetively copy the quote, but manipulate a few 
        data points along the way */
     salesOrder = XT.extend(quote.data, {
@@ -127,14 +131,14 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
       orderDate: XT.today(),
       customer: customer.data,
       wasQuote: true,
-      quoteNumber: quote.get("number"),
+      quoteNumber: quote.data.number,
       quoteDate: undefined,
       expireDate: undefined
     });
-
+plv8.elog(NOTICE, "6");
     /* Recursively replace original UUIDs */
     _updateUuid(salesOrder);
-
+plv8.elog(NOTICE, "7");
     return salesOrder;
   };
 
