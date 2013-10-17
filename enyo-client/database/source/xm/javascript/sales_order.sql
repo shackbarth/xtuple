@@ -43,7 +43,8 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
   };
 
   /**
-    Return a sales order object from a quote.
+    Return a sales order object from a quote. Does not
+    take any action on the original quote
     
     @param {String} Quote Number
     @returns {Object}
@@ -51,28 +52,61 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
   XM.SalesOrder.convertFromQuote = function(id) {
     var data = Object.create(XT.Data),
       orm = data.fetchOrm("XM", "Quote"),
+      sql1 = "select case " +
+             "  when quitem_id is not null then -1" +
+             "  when prospect_id is null and cust_id is null then -2 " +
+             "  when prospect_id is not null then -3 " +
+             "  when cust_creditstatus = 'H' and not checkPrivilege('CreateSOForHoldCustomer') then -4" +
+             "  when cust_creditstatus = 'W' and not checkPrivilege('CreateSOForWarnCustomer')then -5" +
+             "  when coalesce(quhead_expire, endOfTime()) < current_date then -6 " +
+             "  default 1 " +
+             "  end as result " +
+             "from quhead " +
+             " left join custinfo on quhead_cust_id=cust_id " +
+              " left join prospect on quhead_cust_id=prospect_id " +
+             " left join quitem on quitem_quhead_id=quhead_id and quitem_warehous_id is null" +
+             "where quhead_number = $1;",
+      sql2 = "select cohead_id " +
+             "from quhead " +
+             " join cohead on cohead_cust_id=quhead_cust_id " +
+             "             and upper(cohead_custponumber)=upper(quhead_custponumber) " +
+             "where quhead_number=$1",
+      sql3 = "select cohead_id from cohead where cohead_number=$1;",
       salesOrder,
       customer,
-      quote;
+      quote,
+      result;
 
     if (!data.checkPrivilege("ConvertQuotes")) {
-     plv8.elog(ERROR, "Access Denied.");
+      plv8.elog(ERROR, "Access Denied.");
     }
 
-    if (quote.expireDate < XT.today()) {
-      ret = XT.Error.clone('xt2022');
-    }
-      // TODO make sure customer is not prospect
-      // TODO if cust on hold, check hold priv, CreateSOForHoldCustomer
-      // TODO if cust on warn, check warn priv, CreateSOForWarnCustomer
-      // TODO if uses po and not blanket po, check for dups
-      // TODO if quote and so exist with this number, get another
+    result = plv8.execute(sql, [id])[0];
 
-    if (err) {
-      errorString = XT.errorToString(functionName, result);
+    if (result > 0) {
+      /* Need to convert from customer/prospect to customer */
+      customer = data.retrieveRecord({
+        nameSpace: "XM",
+        type: "SalesCustomer",
+        id: quote.data.customer.number,
+        superUser: true
+      });
+
+      /* Check for blanket PO conflict */
+      if (customer.data.usesPurchaseOrders &&
+         !customer.data.blanketPurchaseOrders) {
+        if (plv8.execute(sql2, [id]).length > 0) {
+          result = -7;
+        }
+      }
+    }
+
+    /* Check for errors */
+    if (result < 0) {
+      errorString = XT.errorToString("convertQuote", result, [id]);
       throw new handleError(errorString, 424); 
     }
-    
+
     /* Start by getting the quote */
     quote = data.retrieveRecord({
       nameSpace: "XM",
@@ -81,17 +115,15 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
       superUser: true
     });
 
-    /* Need to convert from customer/prospect to customer */
-    customer = data.retrieveRecord({
-      nameSpace: "XM",
-      type: "CustomerRelation",
-      id: quote.data.customer.number,
-      superUser: true
-    });
+    /* If number is already used, get another */
+    if (plv8.execute(sql3, [id])[0].length) {
+      id = plv8.execute("select fetchsonumber() as num;")[0].num;
+    }
 
     /* Effetively copy the quote, but manipulate a few 
        data points along the way */
     salesOrder = XT.extend(quote.data, {
+      number: id,
       orderDate: XT.today(),
       customer: customer.data,
       wasQuote: true,
@@ -100,7 +132,7 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
       expireDate: undefined
     });
 
-    /* Recursively reploce original UUIDs */
+    /* Recursively replace original UUIDs */
     _updateUuid(salesOrder);
 
     return salesOrder;

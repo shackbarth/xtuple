@@ -422,7 +422,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     {"fromFunction":"woClockIn","fromId":-3,"toFunction":"explodeWo","toId":-3}
   ];
 
-  var getUserCulture = function() {
+  XT.getUserCulture = function() {
     var sql = "select lang_abbr2 || '_' || country_abbr as \"culture\" " +
       "from locale " +
       "join usr on usr_locale_id = locale_id " +
@@ -432,7 +432,8 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     return plv8.execute(sql, [XT.username])[0].culture;
   };
 
-  var errorToString = function(functionName, errorCode) {
+  XT.errorToString = function(functionName, errorCode, params) {
+    params = params || [];
     var culture,
       dictSql,
       dictResult,
@@ -452,7 +453,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
     /* cache the strings in JSON in XT.dbStrings */
     XT.dbStrings = XT.dbStrings || {};
-    culture = getUserCulture();
+    culture = XT.getUserCulture();
     if(!XT.dbStrings[culture]) {
       /* need to load in the strings for this culture into the database */
       dictSql = "select dict_strings from xt.dict where dict_is_database = true and dict_language_name = $1;";
@@ -463,9 +464,9 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     stringsKey = "_xtdb_" + functionName + (-1 * errorCode);
 
     var returnVal = XT.dbStrings[culture][stringsKey.toLowerCase()];
+
     return returnVal || "Undocumented error: " + functionName + " " + errorCode;
   };
-  XT.errorToString = errorToString;
 
   /**
     Wrapper for plv8.execute() for calling postgres functions. 
@@ -503,7 +504,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
     var result = plv8.execute(sql, params)[0].result;
     if(typeof result === 'number' && result < 0) {
-      errorString = errorToString(functionName, result);
+      errorString = XT.errorToString(functionName, result);
       throw new handleError(errorString, 424); 
     } else {
       return result;
