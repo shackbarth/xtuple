@@ -59,7 +59,8 @@ regexp:true, undef:true, trailing:true, white:true */
         documentKey,
         nameAttribute,
         attrs = {},
-        Klass;
+        Klass,
+        map;
 
       // Turn on label link if applicable
       if (this.getValue() && isRelation) {
@@ -81,14 +82,17 @@ regexp:true, undef:true, trailing:true, white:true */
         if (Klass.prototype.editableModel) {
           Klass = XT.getObjectByName(Klass.prototype.editableModel);
           documentKey = Klass.prototype.documentKey;
-          nameAttribute = Klass.prototype.nameAttribute || "name";
+          map = Klass.prototype.conversionMap;
         } else {
           documentKey = relation.relatedModel.prototype.documentKey;
-          nameAttribute = relation.relatedModel.prototype.nameAttribute || "name";
+          map = relation.relatedModel.prototype.conversionMap;
         }
         // Most account docs will make this upper again, but needs to be lower for user account
         attrs[documentKey] = model.get("number");
-        attrs[nameAttribute] = model.get("name");
+        // Map other attribute candidates
+        _.each(map, function (value, key) {
+          attrs[value] = model.get(key);
+        });
 
         // Init function for new workspace. Makes sure the workspace understands
         // The account is already "converted".

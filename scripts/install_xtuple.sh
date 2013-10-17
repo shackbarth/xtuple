@@ -456,7 +456,7 @@ init_everythings() {
 	log "Created salt"
 	openssl genrsa -des3 -out server.key -passout pass:xtuple 1024 2>1 | tee -a $LOG_FILE
 	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple 2>1 | tee -a $LOG_FILE
-	openssl req -batch -new -key key.pem -out server.csr 2>1 | tee -a $LOG_FILE
+	openssl req -batch -new -key key.pem -out server.csr -subj '/CN=localhost' 2>1 | tee -a $LOG_FILE
 	openssl x509 -req -days 365 -in server.csr -signkey key.pem -out server.crt 2>1 | tee -a $LOG_FILE
 	if [ $? -ne 0 ]
 	then
