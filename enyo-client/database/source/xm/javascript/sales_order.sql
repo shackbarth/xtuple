@@ -135,10 +135,10 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
       quoteDate: undefined,
       expireDate: undefined
     });
-plv8.elog(NOTICE, "6");
+
     /* Recursively replace original UUIDs */
     _updateUuid(salesOrder);
-plv8.elog(NOTICE, "7");
+
     return salesOrder;
   };
 
