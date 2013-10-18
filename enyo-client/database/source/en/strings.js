@@ -49,6 +49,7 @@ strict:true, trailing:true, white:true */
     "_xtdb_convertQuote4": "Quote #%1 is for a Customer that has been placed on a Credit Hold and you do not have privilege to create Sales Orders for Customers on Credit Hold. The selected Customer must be taken off of Credit Hold before you may create convert this Quote.",
     "_xtdb_convertQuote5": "Quote #%1 is for a Customer that has been placed on a Credit Warning and you do not have privilege to create Sales Orders for Customers on Credit Warning. The selected Customer must be taken off of Credit Warning before you may create convert this Quote.",
     "_xtdb_convertQuote6": "Quote #%1 has expired and can not be converted.",
+    "_xtdb_convertQuote7": "Quote #%1 has references a PO number that has already been used.",
     "_xtdb_copyItemSite1": "Could not copy the Item Site because it does not appear to exist.",
     "_xtdb_copyItemSite2": "Could not copy the Item Site because the warehouse for the new Item Site record does not appear to exist.",
     "_xtdb_copyItemSite3": "You do not have sufficient privilege to create an Item Site.",
