@@ -196,6 +196,13 @@
     ],
     "properties": [
       {
+        "name": "projectType",
+        "toOne": {
+          "type": "ProjectType",
+          "column": "prj_prjtype_id"
+        }
+      },
+      {
         "name": "opportunities",
         "toMany": {
           "isNested": true,
@@ -248,6 +255,13 @@
       }
     ],
     "properties": [
+      {
+        "name": "projectType",
+        "toOne": {
+          "type": "ProjectType",
+          "column": "prj_id"
+        }
+      },
       {
         "name": "characteristics",
         "toMany": {

@@ -5,26 +5,28 @@ white:true*/
 
 (function () {
 
-  // ..........................................................
-  // PROJECT
-  //
+  XT.extensions.project.initCharacteristicWidgets = function () {
+    // ..........................................................
+    // PROJECT
+    //
 
-  enyo.kind({
-    name: "XV.ProjectCharacteristicsWidget",
-    kind: "XV.CharacteristicsWidget",
-    model: "XM.AccountCharacteristic",
-    which: "isProjects"
-  });
+    enyo.kind({
+      name: "XV.ProjectCharacteristicsWidget",
+      kind: "XV.CharacteristicsWidget",
+      model: "XM.AccountCharacteristic",
+      which: "isProjects"
+    });
 
-  // ..........................................................
-  // TASK
-  //
+    // ..........................................................
+    // TASK
+    //
 
-  enyo.kind({
-    name: "XV.TaskCharacteristicsWidget",
-    kind: "XV.CharacteristicsWidget",
-    model: "XM.ContactCharacteristic",
-    which: "isTasks"
-  });
+    enyo.kind({
+      name: "XV.TaskCharacteristicsWidget",
+      kind: "XV.CharacteristicsWidget",
+      model: "XM.ContactCharacteristic",
+      which: "isTasks"
+    });
+  }
 
 }());

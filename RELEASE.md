@@ -1,3 +1,7 @@
+1.x.x (???/xx/xx)
+
+This version requires version 4.2.0 or higher of xTuple PostBooks or commercial edition database.
+
 1.4.5 (2013/10/11)
 ==================
 - Fixed

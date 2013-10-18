@@ -1,6 +1,7 @@
 {
   "name": "_application_",
   "databaseScripts": [
+    "version_check.sql",
     "drop_deprecated.sql",
     "xt/trigger_functions/comment_did_change.sql",
     "xt/trigger_functions/owner_record_did_change.sql",
