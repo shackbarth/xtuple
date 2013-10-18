@@ -54,26 +54,6 @@ white:true*/
       return defaults;
     },
 
-    convertFromQuote: function (id, options) {
-      var success = _.bind(function (data) {
-           // Change date strings to dates
-          this.parse(data);
-
-          // Set data on our new order
-          this.set(data);
-
-          // We can edit now
-          this.revertStatus();
-
-          // Follow through
-          if (options && options.success) {
-            options.success(this);
-          }
-        }, this);
-      this.setStatus(XM.Model.BUSY_FETCHING);
-      this.dispatch("XM.SalesOrder", "convertFromQuote", [id], {success: success});
-    },
-
     customerDidChange: function () {
       XM.SalesOrderBase.prototype.customerDidChange.apply(this, arguments);
       var creditStatus = _checkCredit.call(this),
@@ -97,10 +77,33 @@ white:true*/
     }
   });
 
-  XM.SalesOrder.used = function (id, options) {
-    return XM.ModelMixin.dispatch('XM.SalesOrder', 'used',
-      [id], options);
-  };
+  // ..........................................................
+  // CLASS METHODS
+  //
+  _.extend(XM.SalesOrder, /** @lends XM.SalesOrderBase# */{
+    /**
+      Pass a quote id and receive a sales order in the success callback.
+
+      @param {String} Quote number
+      @param {Object} Options
+      @param {Function} [options.success] Success callback
+      @param {Function} [options.error] Error callback
+    */
+    convertFromQuote: function (id, options) {
+      var success = options.success,
+        proto = this.prototype;
+      options.success = function (data) {
+        data = proto.parse(data);
+        success(data);
+      };
+      proto.dispatch("XM.SalesOrder", "convertFromQuote", [id], options);
+    },
+
+    used: function (id, options) {
+      return XM.ModelMixin.dispatch('XM.SalesOrder', 'used',
+        [id], options);
+    }
+  });
 
   /**
     @class

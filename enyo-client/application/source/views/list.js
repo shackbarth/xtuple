@@ -1688,6 +1688,7 @@ trailing:true, white:true, strict: false*/
         that = this,
         customer = model.get("customer"),
         K = XM.CustomerProspectRelation,
+        attrs,
 
         // In case we are converting a prospect
         convertToCustomer = function (resp) {
@@ -1710,6 +1711,13 @@ trailing:true, white:true, strict: false*/
         },
 
         convertToSalesOrder = function () {
+          XM.SalesOrder.convertFromQuote(model.id, {
+            success: afterQuoteConvertedSuccess
+          });
+        },
+
+        afterQuoteConvertedSuccess = function (resp) {
+          attrs = resp;
           that.doWorkspace({
             workspace: "XV.SalesOrderWorkspace",
             success: afterSalesOrderCreated,
@@ -1718,17 +1726,18 @@ trailing:true, white:true, strict: false*/
         },
 
         afterSalesOrderCreated = function () {
-          this.getValue().convertFromQuote(model.id, {
-            success: _.bind(afterQuoteConverted, this)
-          });
-        },
+          var value = this.getValue(),
+            gridBox = this.$.salesOrderLineItemGridBox;
 
-        afterQuoteConverted = function () {
-          // Hack to force grid to refresh. Why doesn't it on its own?
-          var gridBox = this.$.salesOrderLineItemGridBox;
+          value.setStatus(XM.Model.BUSY_FETCHING);
+          value.set(attrs);
+          value.revertStatus();
+
+          //Hack to force grid to refresh. Why doesn't it on its own?
           gridBox.valueChanged();
           gridBox.setDisabled(false);
         };
+
 
       // Get the process started one way or another
       if (customer.get("status") === K.PROSPECT_STATUS) {
