@@ -2386,6 +2386,13 @@ body {
   padding-left: 10px;
   float: right;
 }
+.xv-action-icon .onyx-icon-button {
+  margin-top: 0px;
+}
+.xv-sort-icon .onyx-icon-button {
+  margin-top: 7px;
+  margin-bottom: -3px;
+}
 .xv-sort-popup {
   background-color: #ffffff;
   color: #000000;
