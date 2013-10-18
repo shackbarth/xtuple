@@ -18,7 +18,23 @@ white:true*/
 
     documentKey: 'number',
 
-    idAttribute: 'number'
+    idAttribute: 'number',
+
+    defaults: function () {
+      return {
+        invoiceDate: new Date(),
+        isPosted: false,
+        isVoid: false,
+        isPrinted: false,
+        commission: 0
+      };
+    },
+
+    readOnlyAttributes: [
+      "isPosted",
+      "isVoid",
+      "isPrinted"
+    ]
 
   });
 

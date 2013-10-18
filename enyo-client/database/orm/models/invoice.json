@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Invoice",
-    "table": "invchead",
+    "table": "xt.invcheadinfo",
     "isRest": true,
     "idSequenceName": "invchead_invchead_id_seq",
     "lockable": true,
@@ -38,6 +38,14 @@
         "attr": {
           "type": "Date",
           "column": "invchead_invcdate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPrinted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_printed",
           "required": true
         }
       },
@@ -141,7 +149,44 @@
           "type": "SalesRep",
           "column": "invchead_salesrep_id"
         }
+      },
+      {
+        "name": "commission",
+        "attr": {
+          "type": "Percent",
+          "column": "invchead_commission",
+          "required": true
+        }
+      },
+      {
+        "name": "saleType",
+        "toOne": {
+          "type": "SaleType",
+          "column": "invchead_saletype_id"
+        }
+      },
+      {
+        "name": "customerPurchaseOrderNumber",
+        "attr": {
+          "type": "String",
+          "column": "invchead_ordernumber"
+        }
+      },
+      {
+        "name": "taxZome",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "invchead_taxzone_id"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "invchead_notes"
+        }
       }
+
     ],
     "isSystem": true
   }

@@ -112,6 +112,7 @@
     "xt/views/cust_doc.sql",
     "xt/views/incdtinfo.sql",
     "xt/views/incdtxt.sql",
+    "xt/views/invcheadinfo.sql",
     "xt/views/iteminfo.sql",
     "xt/views/itemsiteinfo.sql",
     "xt/views/opheadinfo.sql",

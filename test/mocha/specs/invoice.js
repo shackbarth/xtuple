@@ -155,6 +155,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     > String "customerPurchaseOrderNumber"
     > TaxZone "taxZone"
     > String "notes"
+
+    --DONE TO HERE--
+
     > InvoiceRelation "recurringInvoice"
     > Money "allocatedCredit" the sum of all allocated credits
     > Money "outandingCredit" the sum of all unallocated credits, not including cash receipts pending

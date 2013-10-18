@@ -47,7 +47,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       read: "ViewMiscInvoices"
     },
     createHash: {
-      number: "InvoiceTest" + Math.random()
+      number: "InvoiceTest" + Math.random(),
+      customer: {number: "TTOYS"}
     },
     updatableField: "notes",
     additionalTests: require("../specs/invoice").additionalTests
