@@ -2445,13 +2445,30 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.TermsTypePicker", attr: "termsType"},
-            {kind: "XV.NumberWidget", attr: "dueDays"},
-            {kind: "XV.NumberWidget", attr: "discountDays"},
-            {kind: "XV.NumberWidget", attr: "cutOffDay"}
+            {kind: "XV.NumberWidget", name: "dueDays", attr: "dueDays"},
+            {kind: "XV.NumberWidget", name: "discountDays", attr: "discountDays"},
+            {kind: "XV.NumberWidget", name: "cutOffDay", attr: "cutOffDay"}
           ]}
         ]}
       ]}
-    ]
+    ],
+    // XXX would be better if we only responded to changes to termstype specifically
+    attributesChanged: function () {
+      var termsType = this.getValue().get("termsType");
+      this.inherited(arguments);
+
+      this.$.cutOffDay.setShowing(termsType === XM.Terms.PROXIMO);
+
+      if (termsType === XM.Terms.DAYS) {
+        this.$.dueDays.setLabel("_dueDays".loc());
+        this.$.discountDays.setLabel("_discountDays".loc());
+      } else if (termsType === XM.Terms.PROXIMO) {
+        this.$.dueDays.setLabel("_dueDay".loc());
+        this.$.discountDays.setLabel("_discountDay".loc());
+
+      }
+
+    }
   });
 
   XV.registerModelWorkspace("XM.Terms", "XV.TermsWorkspace");

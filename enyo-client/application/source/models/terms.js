@@ -20,36 +20,87 @@ white:true*/
 
     enforceUpperKey: false,
 
+    defaults: function () {
+      return {
+        dueDays: 0,
+        discountDays: 0,
+        cutOffDay: 0,
+        isUsedByBilling: false,
+        isUsedByPayments: false,
+        termsType: XM.Terms.DAYS
+      };
+    },
+
     bindEvents: function () {
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on("change:termsType", this.termsTypeDidChange);
+      this.termsTypeDidChange();
     },
 
-    calculateDueDate: function (startDate) {
+    /**
+      Kick off the terms type did change at the outset to apply defaults
+     */
+    initialize: function () {
+      XM.Document.prototype.initialize.apply(this, arguments);
+    },
+
+    /**
+      If the termsType is XM.Terms.DAYS then the due date is the start date + the terms discountDays
+      If the termsType is XM.Terms.PROXIMO then
+        - If the start date day <= the terms cutoff day the discount day is discountDays day of the current month
+        - Otherwise the due date is the discountDay day of the next month
+    */
+    calculateDiscountDate: function (startDate) {
       var termsType = this.get("termsType"),
-        dueDate = startDate,
-        cutOffDay = this.get("cutOffDay");
+        returnDate = startDate,
+        cutOffDay = this.get("cutOffDay"),
+        discountDays = this.get("discountDays");
 
       if (termsType === XM.Terms.DAYS) {
-        dueDate.setDate(dueDate.getDate() + this.get("dueDays"));
-      } else if (termsType === XM.Terms.PROXIMO && dueDate.getDate() <= cutOffDay) {
+        returnDate.setDate(returnDate.getDate() + this.get("dueDays"));
+      } else if (termsType === XM.Terms.PROXIMO && returnDate.getDate() <= cutOffDay) {
         // we made the cut-off date, so return this month
-        dueDate.setDate(cutOffDay);
+        returnDate.setDate(discountDays);
       } else if (termsType === XM.Terms.PROXIMO) {
         // we did not make the cut-off date, so return next month
-        dueDate.setMonth(dueDate.getMonth() + 1);
-        dueDate.setDate(cutOffDay);
+        returnDate.setMonth(returnDate.getMonth() + 1);
+        returnDate.setDate(discountDays);
       }
-      return dueDate;
+      return returnDate;
     },
 
+    /**
+      If the termsType is XM.Terms.DAYS then the due date is the start date + the terms dueDays
+      If the termsType is XM.Terms.PROXIMO then
+        - If the start date day <= the terms cutoff day the due date is the dueDays day of the current month
+        - Otherwise the due date is the dueDays day of the next month
+    */
+    calculateDueDate: function (startDate) {
+      var termsType = this.get("termsType"),
+        returnDate = startDate,
+        cutOffDay = this.get("cutOffDay"),
+        dueDays = this.get("dueDays");
+
+      if (termsType === XM.Terms.DAYS) {
+        returnDate.setDate(returnDate.getDate() + this.get("dueDays"));
+      } else if (termsType === XM.Terms.PROXIMO && returnDate.getDate() <= cutOffDay) {
+        // we made the cut-off date, so return this month
+        returnDate.setDate(dueDays);
+      } else if (termsType === XM.Terms.PROXIMO) {
+        // we did not make the cut-off date, so return next month
+        returnDate.setMonth(returnDate.getMonth() + 1);
+        returnDate.setDate(dueDays);
+      }
+      return returnDate;
+    },
 
     termsTypeDidChange: function (model, termsType) {
 
-      this.setReadOnly("cutOffDay", termsType === XM.Terms.DAYS);
+      this.setReadOnly("cutOffDay", termsType !== XM.Terms.PROXIMO);
 
       if (termsType === XM.Terms.DAYS) {
-
+        this.set("dueDays", 0);
+        this.set("discountDays", 0);
       } else if (termsType === XM.Terms.PROXIMO) {
         this.set("dueDays", 1);
         this.set("discountDays", 1);

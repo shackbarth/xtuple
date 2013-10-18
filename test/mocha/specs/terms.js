@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
+/*global XV:true, XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
 setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, beforeEach:true */
 
 (function () {
@@ -9,6 +9,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
   var async = require("async"),
     _ = require("underscore"),
+    smoke = require("../lib/smoke"),
     assert = require("chai").assert,
     model;
 
@@ -45,7 +46,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       model.set({dueDays: 132});
       assert.isUndefined(JSON.stringify(model.validate(model.attributes)));
     });
-    it("the cutOffDate day should be set to read only = true", function () {
+    it("the cutOffDay should be set to read only = true", function () {
       assert.equal(model.isReadOnly("cutOffDay"), true);
     });
     it("when the terms type is set to PROXIMO", function () {
@@ -116,40 +117,102 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       var startDateEarly = new Date("5/12/13"),
         startDateMiddle = new Date("5/20/13"),
         startDateLate = new Date("5/22/13"),
-        thisDueDate = new Date("5/20/13"),
-        nextDueDate = new Date("6/20/13");
+        thisDueDate = new Date("5/25/13"),
+        nextDueDate = new Date("6/25/13");
 
       model.set("termsType", XM.Terms.PROXIMO);
       model.set({cutOffDay: 20});
+      model.set({dueDays: 25});
       assert.equal(model.calculateDueDate(startDateEarly).getTime(), thisDueDate.getTime());
       assert.equal(model.calculateDueDate(startDateMiddle).getTime(), thisDueDate.getTime());
       assert.equal(model.calculateDueDate(startDateLate).getTime(), nextDueDate.getTime());
     });
+    it("XM.Terms should include a prototype function calculateDiscountDate() that accepts a start date " +
+        "and returns a date by doing the following:", function () {
+      assert.isDefined(model.calculateDiscountDate);
+    });
+    it("If the termsType is XM.Terms.DAYS then the discount date is the start date + the terms discountDays", function () {
+      var startDate = new Date("5/12/13"),
+        nextWeek = new Date("5/19/13");
 
-  /*
-* XM.Terms should include a prototype function "calculateDiscountDate" that accepts a start date and returns a date by doing the following:
-  > If the termsType is XM.Terms.DAYS then the due date is the start date + the terms discountDays
-  > If the termsType is XM.Terms.PROXIMO then
-    - If the start date day <= the terms cutoff day the discount day is discountDays day of the current month
-    - Otherwise the due date is the discountDay day of the next month
+      model.set("termsType", XM.Terms.DAYS);
+      model.set({dueDays: 7});
+      assert.equal(model.calculateDueDate(startDate).getTime(), nextWeek.getTime());
 
-* There should be a picker called XV.TermsTypePicker that references XM.termsTypes and does not show the "None" option.
-* XM.TermsCollection based on XM.Collection class should exist.
-* A cached collection called XM.terms should be created on application startup when Sales or Billing is installed.
-* A List view that presents the XM.Terms collection sholud be exist in the core application.
-* The list view should be added to setup by the Sales and Billing extensions.
-* Tapping the new buttion in the list view should open a Terms Workspace backed by new XM.Terms object.
-* Users with appropriate privileges should be able to create and edit Terms from the list.
-* The "dueDays", "discountDays" and "cutoffDays" attributes should be mapped to spin boxes.
-* When the terms type selected is XM.Terms.DAYS:
-  > the dueDays spin box should allow values between 0 and 999
-  > the label for dueDays should be "Due Days".
-  > the label for discountDays should be "Discount Days".
-* When the terms type selected is XM.Terms.PROXIMO
-  > the dueDays spin box should allow values between 0 and 31.
-  > the label for dueDays should be "Due Day."
-  > the label for discountDays should be "Discount Day."
-* The cutoffDays should map to a spin box allowing values between 0 and 31.
+    });
+    it("If the termsType is XM.Terms.PROXIMO then " +
+        "If the start date day <= the terms cutoff day the due date is the discountDays day of the current month " +
+        "Otherwise the discount date is the discountDays day of the next month", function () {
+      var startDateEarly = new Date("5/12/13"),
+        startDateMiddle = new Date("5/19/13"),
+        startDateLate = new Date("5/22/13"),
+        thisDiscountDate = new Date("5/24/13"),
+        nextDiscountDate = new Date("6/24/13");
+
+      model.set("termsType", XM.Terms.PROXIMO);
+      model.set({cutOffDay: 19});
+      model.set({discountDays: 24});
+      assert.equal(model.calculateDiscountDate(startDateEarly).getTime(), thisDiscountDate.getTime());
+      assert.equal(model.calculateDiscountDate(startDateMiddle).getTime(), thisDiscountDate.getTime());
+      assert.equal(model.calculateDiscountDate(startDateLate).getTime(), nextDiscountDate.getTime());
+    });
+
+
+    it("There should be a picker called XV.TermsTypePicker that references " +
+        "XM.termsTypes and does not show the \"None\" option", function () {
+
+      var picker;
+
+      assert.isDefined(XV.TermsTypePicker);
+      picker = new XV.TermsTypePicker();
+      assert.equal(picker.getCollection(), "XM.termsTypes");
+      assert.isFalse(picker.getShowNone());
+    });
+    it("XM.TermsCollection based on XM.Collection class should exist", function () {
+      assert.isDefined(XM.TermsCollection);
+      //assert.isTrue(XM.TermsCollection instanceof XM.Collection);
+    });
+    // TODO test: The list view should be added to setup by the Sales and Billing extensions.
+    it("When the terms type selected is XM.Terms.DAYS", function (done) {
+      smoke.navigateToNewWorkspace(XT.app, "XV.TermsList", function (workspaceContainer) {
+        workspaceContainer.$.workspace.value.set({termsType: XM.Terms.DAYS});
+        done();
+      });
+    });
+    // TODO: The "dueDays", "discountDays" and "cutoffDays" attributes should be mapped to spin boxes.
+    // TODO: the dueDays spin box should allow values between 0 and 999
+    it("the label for dueDays should be 'Due Days'", function () {
+      var workspace = XT.app.$.postbooks.getActive().$.workspace;
+      assert.equal(workspace.$.dueDays.$.label.getContent(), XT.String.loc("_dueDays") + ":");
+    });
+    it("the label for discountDays should be 'Discount Days'", function () {
+      var workspace = XT.app.$.postbooks.getActive().$.workspace;
+      assert.equal(workspace.$.discountDays.$.label.getContent(), XT.String.loc("_discountDays") + ":");
+    });
+    it("The cutoffDay widget should be hidden", function () {
+      var workspace = XT.app.$.postbooks.getActive().$.workspace;
+      assert.isFalse(workspace.$.cutOffDay.getShowing());
+    });
+    it("When the terms type selected is XM.Terms.PROXIMO", function () {
+      var workspace = XT.app.$.postbooks.getActive().$.workspace;
+      workspace.value.set({termsType: XM.Terms.PROXIMO});
+    });
+    it("The cutoffDay widget should be visible", function () {
+      var workspace = XT.app.$.postbooks.getActive().$.workspace;
+      assert.isTrue(workspace.$.cutOffDay.getShowing());
+    });
+    // TODO: the dueDays spin box should allow values between 0 and 31.
+    // TODO: The cutoffDays should map to a spin box allowing values between 0 and 31.
+    it("the label for dueDays should be 'Due Day'", function () {
+      var workspace = XT.app.$.postbooks.getActive().$.workspace;
+      assert.equal(workspace.$.dueDays.$.label.getContent(), XT.String.loc("_dueDay") + ":");
+    });
+    it("the label for discountDays should be 'Discount Day'", function () {
+      var workspace = XT.app.$.postbooks.getActive().$.workspace;
+      assert.equal(workspace.$.discountDays.$.label.getContent(), XT.String.loc("_discountDay") + ":");
+    });
+
+     /*
 * A core Picker called XV.BillingTermsPicker sholud be created that only lists terms where "isUsedByBilling" is true.
 * Workspaces for the following objects should use the XV.BillingTermsPicker: Customer, Prospect, Quote, Sales Order, Invoice, Return (Credit Memo).
 */

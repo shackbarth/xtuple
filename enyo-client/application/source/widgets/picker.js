@@ -684,6 +684,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.TermsTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.termsTypes",
+    showNone: false,
     nameAttribute: "name"
   });
 
