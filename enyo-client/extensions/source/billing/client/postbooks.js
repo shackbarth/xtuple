@@ -15,7 +15,8 @@ trailing:true, white:true*/
         name: billing.name,
         label: "_billing".loc(),
         panels: [
-          {kind: "XV.CustomerList"}
+          {name: "customerList", kind: "XV.CustomerList"},
+          {name: "invoiceList", kind: "XV.InvoiceList"}
         ]
       },
       relevantPrivileges = [

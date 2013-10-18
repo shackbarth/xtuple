@@ -112,7 +112,7 @@ trailing:true, white:true, strict: false*/
     ]
   });
 
-  XV.registerModelList("XM.BankAccountRelation", "XV.BankAccountList")
+  XV.registerModelList("XM.BankAccountRelation", "XV.BankAccountList");
 
   // ..........................................................
   // CLASS CODE
@@ -1025,6 +1025,27 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "description"}
           ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
+  // INVOICE
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceList",
+    kind: "XV.List",
+    label: "_invoices".loc(),
+    collection: "XM.InvoiceListItemCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "number", isKey: true}
         ]}
       ]}
     ]

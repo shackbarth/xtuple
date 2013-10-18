@@ -169,7 +169,7 @@
         "name": "customerPurchaseOrderNumber",
         "attr": {
           "type": "String",
-          "column": "invchead_ordernumber"
+          "column": "invchead_ponumber"
         }
       },
       {
@@ -187,6 +187,83 @@
         }
       }
 
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceListItem",
+    "table": "xt.invcheadinfo",
+    "isRest": true,
+    "idSequenceName": "invchead_invchead_id_seq",
+    "lockable": true,
+    "comment": "Invoice List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "MaintainMiscInvoices ViewMiscInvoices",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invchead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "invchead_invcnumber",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "invoiceDate",
+        "attr": {
+          "type": "Date",
+          "column": "invchead_invcdate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPrinted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_printed",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_posted",
+          "required": true
+        }
+      },
+      {
+        "name": "isVoid",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_void",
+          "required": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "invchead_cust_id",
+          "required": true
+        }
+      }
     ],
     "isSystem": true
   }

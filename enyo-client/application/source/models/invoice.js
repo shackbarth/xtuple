@@ -38,4 +38,35 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.InvoiceListItem = XM.Info.extend({
+    /** @scope XM.InvoiceListItem.prototype */
+
+    recordType: 'XM.InvoiceListItem',
+
+    editableModel: 'XM.Invoice'
+
+  });
+
+  // ..........................................................
+  // COLLECTIONS
+  //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.InvoiceListItemCollection = XM.Collection.extend({
+    /** @scope XM.InvoiceListItemCollection.prototype */
+
+    model: XM.InvoiceListItem
+
+  });
+
+
 }());

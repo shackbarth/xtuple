@@ -122,9 +122,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
   > Boolean "printed"
   > CustomerRelation "customer"
   > Date "invoiceDate"
-  > Money "total"
+XXX  > Money "total"
   > Boolean "isPosted"
-  > Boolean "isOpen"
+XXX  > Boolean "isOpen"
   > Boolean "isVoid"
 * Only users that have "ViewMiscInvoices" or "MaintainMiscInvoices" may read XV.InvoiceListItem.
 * XM.InvoiceListItem is not editable.
