@@ -4,7 +4,7 @@ xTuple reporting is powered by Pentaho JFreeReports.  Reports can be developed u
 Pentaho Report Designer.  The business intelligence server provides the reports engine to
 serve reports.
 
-Get the Reports  
+Get the Reports
 ---------------  
 Reports are located in the xtuple/xtuple repo:  
   
@@ -35,6 +35,25 @@ Install Reports
 	export BISERVER_HOME= ~/ErpBI-x.x.x
 	cd xtuple/pentaho/datasource
 	./build.sh
+	
+Create Server SSL Keys
+----------------------
+A self-signed SSL certificate is provided with a common name of "localhost".  This
+is useful for private test systems, but public systems should use a signed certificate.  If you use
+a self-signed certificate note that you may need to click on the shield in the top right corner of
+Google Chrome when using BI facilities.
+
+To use a signed certificate copy the certificate and key to the following folder:
+
+	ErpBI-x.x.x/biserver-ce/ssl-keys
+	
+and run the following where server.crt and server.key are your signed certificate
+and key:
+
+	openssl pkcs12 -export -out server.pkcs12 -in server.crt -inkey server.key
+	keytool -importkeystore -srckeystore server.pkcs12 -srcstoretype PKCS12 -destkeystore server.jks -deststoretype JKS
+	keytool -export -alias 1 -file server.cer -storepass changeit -keystore server.jks
+	keytool -import -alias 1 -v -trustcacerts -file server.cer -keypass changeit -storepass changeit -keystore cacerts.jks
 
 Start Server
 ------------
@@ -59,7 +78,7 @@ Connect Mobile App to Server
 ----------------------------
 Edit xtuple/node-datasource/config.js defining the server URL.  For example:
 
-      biUrl: "http://192.168.56.101:8080/pentaho/content/reporting/reportviewer/report.html?solution=xtuple&path=%2Fprpt&locale=en_US&userid=reports&password=password&output-target=pageable/pdf"
+      biUrl: "https://localhost:8443/pentaho/content/reporting/reportviewer/report.html?solution=xtuple&path=%2Fprpt&locale=en_US&userid=reports&password=password&output-target=pageable/pdf"
 
 Also, Mobile App SSL keys must have a Common Name. Make sure the common name is your URL   
 or IP address when you run openssl req.  
