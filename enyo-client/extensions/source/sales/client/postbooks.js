@@ -70,9 +70,11 @@ trailing:true, white:true*/
     XT.app.$.postbooks.insertModule(module, 0);
 
     relevantPrivileges = [
+      "AlterPackDate",
       "ConfigureSO",
       "ConfigureCC",
-      "ProcessCreditCards",
+      "CreateSOForHoldCustomer",
+      "CreateSOForWarnCustomer",
       "MaintainCustomerMasters",
       "MaintainFreightClasses",
       "MaintainCustomerGroups",
@@ -91,7 +93,9 @@ trailing:true, white:true*/
       "MaintainTerms",
       "MaintainSaleTypes",
       "OverridePrice",
+      "OverrideSODate",
       "OverrideTax",
+      "ProcessCreditCards",
       "ShowMarginsOnSalesOrder",
       "UpdateCustomerCreditStatus",
       "ViewCosts",

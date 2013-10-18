@@ -1685,14 +1685,15 @@ trailing:true, white:true, strict: false*/
     },
     convertQuote: function (inEvent) {
       var model = inEvent.model,
+        that = this,
         customer = model.get("customer"),
         K = XM.CustomerProspectRelation,
 
         // In case we are converting a prospect
-        convertToCustomer = _.bind(function (resp) {
+        convertToCustomer = function (resp) {
           if (!resp.answer) { return; }
 
-          this.doWorkspace({
+          that.doWorkspace({
             workspace: "XV.CustomerWorkspace",
             attributes: {
               number: customer.get("number"),
@@ -1702,19 +1703,19 @@ trailing:true, white:true, strict: false*/
             callback: convertToSalesOrder,
             allowNew: false
           });
-        }, this),
+        },
 
         afterCustomerCreated = function () {
           this.getValue().convertFromProspect(customer.id);
         },
 
-        convertToSalesOrder = _.bind(function () {
-          this.doWorkspace({
+        convertToSalesOrder = function () {
+          that.doWorkspace({
             workspace: "XV.SalesOrderWorkspace",
             success: afterSalesOrderCreated,
             allowNew: false
           });
-        }, this),
+        },
 
         afterSalesOrderCreated = function () {
           this.getValue().convertFromQuote(model.id, {

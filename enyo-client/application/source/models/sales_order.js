@@ -6,6 +6,26 @@ white:true*/
 (function () {
 
   "use strict";
+ 
+  var CREDIT_OK = 0;
+  var CREDIT_WARN = 1;
+  var CREDIT_HOLD = 2;
+  var _checkCredit = function () {
+    var creditStatus = this.getValue("customer.creditStatus"),
+      K = XM.Customer,
+      privs = XT.session.privileges;
+
+    if (this.isNew() && creditStatus !== K.CREDIT_GOOD) {
+      if (creditStatus === K.CREDIT_WARN &&
+        !privs.get("CreateSOForWarnCustomer")) {
+        return CREDIT_WARN;
+      } else if (creditStatus === K.CREDIT_HOLD &&
+        !privs.get("CreateSOForHoldCustomer")) {
+        return CREDIT_HOLD;
+      }
+    }
+    return CREDIT_OK;
+  };
 
   /**
     @class
@@ -52,6 +72,28 @@ white:true*/
         }, this);
       this.setStatus(XM.Model.BUSY_FETCHING);
       this.dispatch("XM.SalesOrder", "convertFromQuote", [id], {success: success});
+    },
+
+    customerDidChange: function () {
+      XM.SalesOrderBase.prototype.apply(this, arguments);
+      var creditStatus = _checkCredit.call(this),
+        warn = XM.Model.WARNING;
+      if (creditStatus === CREDIT_WARN) {
+        this.notify("_creditWarn".loc(), { type: warn });
+      } else if (creditStatus === CREDIT_HOLD) {
+        this.notify("_creditHold".loc(), { type: warn });
+      }
+    },
+
+    validate: function () {
+      var creditStatus = _checkCredit.call(this);
+      if (creditStatus === CREDIT_WARN) {
+        return XT.Error.clone('xt2022');
+      } else if (creditStatus === CREDIT_HOLD) {
+        return XT.Error.clone('xt2023');
+      }
+
+      return XM.SalesOrderBase.prototype.validate(this, arguments);
     }
   });
 
