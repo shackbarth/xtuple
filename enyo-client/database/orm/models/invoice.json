@@ -1,0 +1,148 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Invoice",
+    "table": "invchead",
+    "isRest": true,
+    "idSequenceName": "invchead_invchead_id_seq",
+    "lockable": true,
+    "comment": "Invoice Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainMiscInvoices",
+        "read": "ViewMiscInvoices",
+        "update": "MaintainMiscInvoices",
+        "delete": "MaintainMiscInvoices"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invchead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "invchead_invcnumber",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "invoiceDate",
+        "attr": {
+          "type": "Date",
+          "column": "invchead_invcdate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_posted",
+          "required": true
+        }
+      },
+      {
+        "name": "isVoid",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_void",
+          "required": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "SalesCustomer",
+          "column": "invchead_cust_id",
+          "required": true
+        }
+      },
+      {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_name"
+        }
+      },
+      {
+        "name": "billtoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_address1"
+        }
+      },
+      {
+        "name": "billtoAddress2",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_address2"
+        }
+      },
+      {
+        "name": "billtoAddress3",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_address3"
+        }
+      },
+      {
+        "name": "billtoCity",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_city"
+        }
+      },
+      {
+        "name": "billtoState",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_state"
+        }
+      },
+      {
+        "name": "billtoPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_zipcode"
+        }
+      },
+      {
+        "name": "billtoCountry",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_country"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "invchead_curr_id"
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "invchead_terms_id"
+        }
+      },
+      {
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "invchead_salesrep_id"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

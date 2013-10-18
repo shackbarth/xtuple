@@ -12,6 +12,7 @@ enyo.depends(
   "file.js",
   "filter.js",
   "incident.js",
+  "invoice.js",
   "item.js",
   "item_site.js",
   "ledger_account.js",

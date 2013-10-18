@@ -32,6 +32,27 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     updatableField: "code"
   };
 
+  exports.invoice = {
+    recordType: "XM.Invoice",
+    collectionType: "XM.InvoiceListItemCollection",
+    cacheName: null,
+    listKind: "XV.InvoiceList",
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "number",
+    enforceUpperKey: true,
+    extensions: ["billing"],
+    privileges: {
+      createUpdateDelete: "MaintainMiscInvoice",
+      read: "ViewMiscInvoices"
+    },
+    createHash: {
+      number: "InvoiceTest" + Math.random()
+    },
+    updatableField: "notes",
+    additionalTests: require("../specs/invoice").additionalTests
+  };
+
   exports.item = {
     recordType: "XM.Item",
     collectionType: "XM.ItemListItemCollection",
