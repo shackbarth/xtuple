@@ -2481,7 +2481,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.TermsTypePicker", attr: "termsType"},
             {kind: "XV.NumberWidget", name: "dueDays", attr: "dueDays"},
             {kind: "XV.NumberWidget", name: "discountDays", attr: "discountDays"},
-            {kind: "XV.NumberWidget", name: "cutOffDay", attr: "cutOffDay"}
+            {kind: "XV.NumberWidget", name: "cutOffDay", attr: "cutOffDay"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByBilling"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByPayments"}
           ]}
         ]}
       ]}
@@ -2499,9 +2501,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
       } else if (termsType === XM.Terms.PROXIMO) {
         this.$.dueDays.setLabel("_dueDay".loc());
         this.$.discountDays.setLabel("_discountDay".loc());
-
       }
-
     }
   });
 

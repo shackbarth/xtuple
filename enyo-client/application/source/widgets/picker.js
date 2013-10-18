@@ -63,7 +63,6 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.balanceMethods"
   });
 
-
   // ..........................................................
   // BILLING TERMS
   //

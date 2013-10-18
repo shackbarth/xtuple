@@ -229,11 +229,9 @@
       // TODO: verify that the cache is made available by certain extensions and not others
       // TODO: verify that the list is made available by certain extensions and not others
 
-
       if (spec.additionalTests) {
         spec.additionalTests();
       }
-
 
     });
   });

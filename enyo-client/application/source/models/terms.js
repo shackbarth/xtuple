@@ -31,17 +31,13 @@ white:true*/
       };
     },
 
+    /**
+      Bind on termsType and kick off that bound function at the outset to apply defaults
+     */
     bindEvents: function () {
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on("change:termsType", this.termsTypeDidChange);
       this.termsTypeDidChange();
-    },
-
-    /**
-      Kick off the terms type did change at the outset to apply defaults
-     */
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
     },
 
     /**

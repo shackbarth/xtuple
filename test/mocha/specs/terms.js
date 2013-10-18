@@ -164,7 +164,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       assert.isDefined(XM.TermsCollection);
       //assert.isTrue(XM.TermsCollection instanceof XM.Collection);
     });
-    // TODO test: The list view should be added to setup by the Sales and Billing extensions.
     it("When the terms type selected is XM.Terms.DAYS", function (done) {
       smoke.navigateToNewWorkspace(XT.app, "XV.TermsList", function (workspaceContainer) {
         workspaceContainer.$.workspace.value.set({termsType: XM.Terms.DAYS});
