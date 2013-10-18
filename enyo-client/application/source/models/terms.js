@@ -25,6 +25,25 @@ white:true*/
       this.on("change:termsType", this.termsTypeDidChange);
     },
 
+    calculateDueDate: function (startDate) {
+      var termsType = this.get("termsType"),
+        dueDate = startDate,
+        cutOffDay = this.get("cutOffDay");
+
+      if (termsType === XM.Terms.DAYS) {
+        dueDate.setDate(dueDate.getDate() + this.get("dueDays"));
+      } else if (termsType === XM.Terms.PROXIMO && dueDate.getDate() <= cutOffDay) {
+        // we made the cut-off date, so return this month
+        dueDate.setDate(cutOffDay);
+      } else if (termsType === XM.Terms.PROXIMO) {
+        // we did not make the cut-off date, so return next month
+        dueDate.setMonth(dueDate.getMonth() + 1);
+        dueDate.setDate(cutOffDay);
+      }
+      return dueDate;
+    },
+
+
     termsTypeDidChange: function (model, termsType) {
 
       this.setReadOnly("cutOffDay", termsType === XM.Terms.DAYS);
@@ -42,17 +61,22 @@ white:true*/
      */
     validate: function (attributes) {
       var dueDays = this.get("dueDays"),
-        cutOffDate = this.get("cutOffDay");
+        cutOffDay = this.get("cutOffDay"),
+        params;
 
       if (this.get("termsType") === XM.Terms.DAYS) {
-
-
+        if (!_.isNumber(dueDays) || dueDays % 1 !== 0 || dueDays < 0) {
+          params = {attr: "_dueDays".loc(), value: dueDays};
+          return XT.Error.clone('xt1013', { params: params });
+        }
       } else if (this.get("termsType") === XM.Terms.PROXIMO) {
         if (!_.isNumber(dueDays) || dueDays % 1 !== 0 || dueDays < 0 || dueDays > 31) {
-          return XT.Error.clone('xt1004', { params: "due days" + dueDays }); // XXX TODO: better error
+          params = {attr: "_dueDays".loc(), value: dueDays};
+          return XT.Error.clone('xt1013', { params: params });
         }
-        if (!_.isNumber(cutOffDate) || cutOffDate % 1 !== 0 || cutOffDate < 0 || cutOffDate > 31) {
-          return XT.Error.clone('xt1004', { params: "cd" + cutOffDate }); // XXX TODO: better error
+        if (!_.isNumber(cutOffDay) || cutOffDay % 1 !== 0 || cutOffDay < 0 || cutOffDay > 31) {
+          params = {attr: "_cutOffDate".loc(), value: cutOffDay};
+          return XT.Error.clone('xt1013', { params: params });
         }
       }
 
