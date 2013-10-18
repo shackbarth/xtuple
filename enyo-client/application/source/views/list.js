@@ -2345,6 +2345,55 @@ trailing:true, white:true, strict: false*/
 
   XV.registerModelList("XM.VendorRelation", "XV.VendorList");
 
+  // ..........................................................
+  // WORK ORDER
+  //
+
+  enyo.kind({
+    name: "XV.WorkOrderList",
+    kind: "XV.List",
+    label: "_workOrders".loc(),
+    collection: "XM.WorkOrderListItemCollection",
+    parameterWidget: "XV.WorkOrderListParameters",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "status",
+                style: "padding-left: 24px"},
+              {kind: "XV.ListAttr", attr: "itemSite.item.number", classes: "bold", style: "padding-left: 12px"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "itemSite.site.code", style: "padding-left: 12px"},
+              {kind: "XV.ListAttr", attr: "itemSite.item.description1", classes: "italic"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "dueDate", classes: "right"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "itemSite.item.inventoryUnit.name"},
+              {kind: "XV.ListAttr", attr: "qtyOrdered"},
+              {kind: "XV.ListAttr", attr: "qtyReceived"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.WorkOrderListItem", "XV.WorkOrderList");
+
   enyo.kind({
     name: "XV.NameList",
     kind: "XV.List",

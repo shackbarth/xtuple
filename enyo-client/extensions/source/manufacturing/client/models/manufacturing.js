@@ -6,27 +6,42 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.extensions.inventory.initInventoryModels = function () {
+  XT.extensions.manufacturing.initManufacturingModels = function () {
 
     /**
       @class
 
-      @extends XM.Model
+      @extends XM.Document
     */
-    XM.InventoryHistory = XM.Model.extend({
+    XM.PostProduction = XM.Model.extend({
 
-      recordType: "XM.InventoryHistory"
+      recordType: "XM.PostProduction",
 
-    });
+      readOnlyAttributes: [
+        "number",
+        "dueDate",
+        "itemSite",
+        "status",
+        "ordered",
+        "quantityReceived",
+        "qtyRequired",
+        "balance"
+      ],
 
-    /**
-      @class
+      transactionDate: null,
 
-      @extends XM.Model
-    */
-    XM.InventoryDetail = XM.Model.extend({
+      bindEvents: function () {
+        XM.Model.prototype.bindEvents.apply(this, arguments);
+        this.on('statusChange', this.statusDidChange);
+      },
 
-      recordType: "XM.InventoryDetail"
+      statusDidChange: function () {
+        var K = XM.Model;
+        // We want to be able to save and post immeditately.
+        if (this.getStatus() === K.READY_CLEAN) {
+          this.setStatus(K.READY_DIRTY);
+        }
+      }
 
     });
 
@@ -35,31 +50,29 @@ white:true*/
 
       @extends XM.Transaction
     */
-    XM.IssueToShipping = XM.Transaction.extend({
+    XM.IssueMaterial = XM.Transaction.extend({
 
-      recordType: "XM.IssueToShipping",
+      recordType: "XM.IssueMaterial",
 
       quantityAttribute: "toIssue",
 
       issueMethod: "issueItem",
 
       readOnlyAttributes: [
-        "atShipping",
-        "balance",
-        "item",
-        "order",
-        "ordered",
-        "returned",
-        "site",
-        "shipment",
-        "shipped",
-        "unit"
+        "qohBefore",
+        "qtyPer",
+        "qtyRequired",
+        "qtyIssued",
+        "unit.name"
       ],
 
       transactionDate: null,
 
-      name: function () {
-        return this.get("order") + " #" + this.get("lineNumber");
+      qohAfter: function () {
+        var qohBefore = this.get("qohBefore"),
+          toIssue = this.get("toIssue"),
+          qohAfter = XT.math.subtract(qohBefore, toIssue, XT.QUANTITY_SCALE);
+        return  qohAfter;
       },
 
       bindEvents: function () {
@@ -71,20 +84,17 @@ white:true*/
       },
 
       canIssueItem: function (callback) {
-        var isShipped = this.getValue("shipment.isShipped") || false,
-          hasPrivilege = XT.session.privileges.get("IssueStockToShipping");
+        var hasPrivilege = XT.session.privileges.get("IssueWoMaterials");
         if (callback) {
-          callback(!isShipped && hasPrivilege);
+          callback(hasPrivilege);
         }
         return this;
       },
 
       canReturnItem: function (callback) {
-        var isShipped = this.getValue("shipment.isShipped") || false,
-          hasPrivilege = XT.session.privileges.get("ReturnStockFromShipping"),
-          atShipping = this.get("atShipping");
+        var hasPrivilege = XT.session.privileges.get("ReturnWoMaterials");
         if (callback) {
-          callback(!isShipped && atShipping > 0 && hasPrivilege);
+          callback(hasPrivilege);
         }
         return this;
       },
@@ -95,9 +105,9 @@ white:true*/
         @returns {Number}
       */
       issueBalance: function () {
-        var balance = this.get("balance"),
-          atShipping = this.get("atShipping"),
-          toIssue = XT.math.subtract(balance, atShipping, XT.QUANTITY_SCALE);
+        var qtyRequired = this.get("qtyRequired"),
+          qtyIssued = this.get("qtyIssued"),
+          toIssue = XT.math.subtract(qtyRequired, qtyIssued, XT.QUANTITY_SCALE);
         return toIssue >= 0 ? toIssue : 0;
       },
 
@@ -146,30 +156,31 @@ white:true*/
 
       toIssueDidChange: function () {
         this.distributeToDefault();
+        this.qohAfter();
       }
 
     });
 
     /**
-      Static function to call issue to shipping on a set of multiple items.
+      Static function to call issue material on a set of multiple items.
 
       @params {Array} Data
       @params {Object} Options
     */
-    XM.Inventory.issueItem = function (params, options) {
+    XM.Manufacturing.issueItem = function (params, options) {
       var obj = XM.Model.prototype;
-      obj.dispatch("XM.Inventory", "issueToShipping", params, options);
+      obj.dispatch("XM.Manufacturing", "issueMaterial", params, options);
     };
 
     /**
-      Static function to call return from shipping on a set of multiple items.
+      Static function to call return material on a set of multiple items.
 
       @params {Array} Array of model ids
       @params {Object} Options
     */
-    XM.Inventory.returnItem = function (params, options) {
+    XM.Manufacturing.returnItem = function (params, options) {
       var obj = XM.Model.prototype;
-      obj.dispatch("XM.Inventory", "returnFromShipping", params, options);
+      obj.dispatch("XM.Manufacturing", "returnMaterial", params, options);
     };
 
     // ..........................................................
@@ -181,20 +192,9 @@ white:true*/
 
       @extends XM.Collection
     */
-    XM.InventoryHistoryCollection = XM.Collection.extend({
+    XM.IssueMaterialCollection = XM.Collection.extend({
 
-      model: XM.InventoryHistory
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Collection
-    */
-    XM.IssueToShippingCollection = XM.Collection.extend({
-
-      model: XM.IssueToShipping
+      model: XM.IssueMaterial
 
     });
 

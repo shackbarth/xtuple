@@ -5,33 +5,31 @@ trailing:true, white:true, strict:false*/
 
 (function () {
 
-  XT.extensions.inventory.initTransactionList = function () {
+  XT.extensions.manufacturing.initTransactionLists = function () {
 
     // ..........................................................
-    // ISSUE TO SHIPPING
+    // ISSUE WORK ORDER MATERIALS
     //
 
     enyo.kind({
-      name: "XV.IssueToShippingList",
+      name: "XV.IssueMaterialList",
       kind: "XV.TransactionList",
-      label: "_issueToShipping".loc(),
-      collection: "XM.IssueToShippingCollection",
-      parameterWidget: "XV.IssueToShippingParameters",
+      label: "_issueMaterial".loc(),
+      collection: "XM.IssueMaterialCollection",
+      parameterWidget: "XV.IssueMaterialParameters",
       query: {orderBy: [
-        {attribute: "lineNumber"},
-        {attribute: "subNumber"}
+        {attribute: "order.number"}
       ]},
       published: {
-        shipment: null,
-        transModule: XM.Inventory,
-        transWorkspace: "XV.IssueStockWorkspace"
+        status: null,
+        transModule: XM.Manufacturing,
+        transWorkspace: "XV.IssueMaterialWorkspace"
       },
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "lineNumber"},
                 {kind: "XV.ListAttr", attr: "itemSite.site.code",
                   classes: "right"},
                 {kind: "XV.ListAttr", attr: "itemSite.item.number", fit: true}
@@ -43,15 +41,15 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.ListAttr", attr: "unit.name", style: "text-align: right"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
-              {kind: "XV.ListAttr", attr: "ordered",
+              {kind: "XV.ListAttr", attr: "qtyRequired",
                 formatter: "formatQuantity", style: "text-align: right"}
             ]},
-            {kind: "XV.ListColumn", classes: "money", components: [
+            {kind: "XV.ListColumn", classes: "money bold", components: [
               {kind: "XV.ListAttr", attr: "balance",
                 formatter: "formatQuantity", style: "text-align: right"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
-              {kind: "XV.ListAttr", attr: "atShipping",
+              {kind: "XV.ListAttr", attr: "qtyIssued",
                 formatter: "formatQuantity", style: "text-align: right"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
@@ -62,9 +60,9 @@ trailing:true, white:true, strict:false*/
         ]}
       ],
       fetch: function () {
-        this.setShipment(null);
         this.inherited(arguments);
       },
+
       formatScheduleDate: function (value, view, model) {
         var today = new Date(),
           isLate = XT.date.compareDate(value, today) < 1 &&
@@ -72,44 +70,18 @@ trailing:true, white:true, strict:false*/
         view.addRemoveClass("error", isLate);
         return value;
       },
-      formatLineNumber: function (value, view, model) {
-        var lineNumber = model.get("lineNumber"),
-          subnumber = model.get("subNumber");
-        if (subnumber === 0) {
-          value = lineNumber;
-        } else {
-          value = lineNumber + "." + subnumber;
-        }
-        return value;
-      },
+
       formatQuantity: function (value) {
         var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       },
-      /**
-        Overload: used to keep track of shipment.
-      */
-      setupItem: function (inSender, inEvent) {
-        this.inherited(arguments);
-        var collection = this.getValue(),
-          listShipment = collection.at(inEvent.index).get("shipment"),
-          listShipmentId = listShipment ? listShipment.id : false,
-          shipment = this.getShipment(),
-          shipmentId = shipment ? shipment.id : false;
-        if (listShipmentId !== shipmentId) {
-          this.setShipment(listShipment);
-          // Update all rows to match
-          _.each(collection.models, function (model) {
-            model.set("shipment", listShipment);
-          });
-        }
-      },
-      shipmentChanged: function () {
-        this.doShipmentChanged({shipment: this.getShipment()});
+
+      orderChanged: function () {
+        this.doOrderChanged({order: this.getOrder()});
       }
     });
 
-    XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
-  };
+    XV.registerModelList("XM.WorkOrderRelation", "XV.WorkOrderList");
 
+  };
 }());
