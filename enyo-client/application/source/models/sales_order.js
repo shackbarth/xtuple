@@ -75,7 +75,7 @@ white:true*/
     },
 
     customerDidChange: function () {
-      XM.SalesOrderBase.prototype.apply(this, arguments);
+      XM.SalesOrderBase.prototype.customerDidChange.apply(this, arguments);
       var creditStatus = _checkCredit.call(this),
         warn = XM.Model.WARNING;
       if (creditStatus === CREDIT_WARN) {
@@ -93,7 +93,7 @@ white:true*/
         return XT.Error.clone('xt2023');
       }
 
-      return XM.SalesOrderBase.prototype.validate(this, arguments);
+      return XM.SalesOrderBase.prototype.validate.apply(this, arguments);
     }
   });
 
