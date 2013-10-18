@@ -438,7 +438,8 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       dictSql,
       dictResult,
       errorMap = [true],
-      stringsKey;
+      stringsKey,
+      i = 1;
 
     /* Trace the error code down to the underlying error based on our errorMap */
     while (errorMap.length) {
@@ -464,6 +465,12 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     stringsKey = "_xtdb_" + functionName + (-1 * errorCode);
 
     var returnVal = XT.dbStrings[culture][stringsKey.toLowerCase()];
+
+    /* Replace parameters if applicable */
+    params.forEach(function(param) {
+      returnVal = returnVal.replace("%" + i, param);
+      i++;
+    })
 
     return returnVal || "Undocumented error: " + functionName + " " + errorCode;
   };
