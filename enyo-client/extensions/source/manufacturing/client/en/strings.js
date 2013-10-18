@@ -15,8 +15,13 @@
   "use strict";
 
   var lang = XT.stringsFor("en_US", {
+    "_backflushMaterials": "Backflush Materials",
+    "_closeWorkOrderAfterPosting": "Close Work Order After Posting",
     "_qtyIssued": "Qty Issued",
-    "_qtyRequired": "Qty Required"
+    "_qtyReceived": "Qty Received",
+    "_qtyRequired": "Qty Required",
+    "_qtyToPost": "Qty to Post",
+    "_scrapOnPost": "Scrap on Post"
   });
 
   if (typeof exports !== 'undefined') {
