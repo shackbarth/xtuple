@@ -12,11 +12,24 @@ strict:true, trailing:true, white:true */
     // Labels
     // ********
 
+    "_accountsReceivable": "Accounts Receivable",
+    "_autoCloseARIncident": "Auto Close Incidents when Invoid Paid",
+    "_autoCreditWarnLateCustomers": "Credit warn Customers when Late",
     "_billing": "Billing",
     "_billingDescription": "Corporate Relationship Management",
+    "_creditTaxDiscount": "Credit Taxes for Early Payment Discounts",
+    "_defaultAutoCreditWarnGraceDays": "Default Grace Period Days",
+    "_enableCustomerDeposits": "Enable Customer Deposits",
+    "_hideApplyToBalance": "Hide Apply to Balance",
     "_salesCategory": "Sales Category",
     "_salesCategories": "Sales Categories",
-    "_maintainSalesCategory": "Maintain Sales Category"
+    "_maintainSalesCategory": "Maintain Sales Category",
+    "_nextARMemoNumber": "Next Receivables Memo",
+    "_nextCashRcptNumber": "Next Cash Receipt",
+    "_recurringInvoiceBuffer": "Recurring Invoice Buffer Days",
+    "_defaultARIncidentStatus": "Default Incident Category"
+
+
   });
 
   if (typeof exports !== 'undefined') {

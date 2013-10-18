@@ -2,5 +2,7 @@
   "name": "billing",
   "comment": "Billing extension",
   "loadOrder": 30,
-  "databaseScripts": []
+  "databaseScripts": [
+    "xm/javascript/billing.sql"
+  ]
 }
