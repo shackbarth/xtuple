@@ -1689,10 +1689,6 @@ trailing:true, white:true, strict: false*/
         K = XM.CustomerProspectRelation,
 
         // In case we are converting a prospect
-        afterCustomerSave = function () {
-          this.getValue().convertFromProspect(customer.id);
-        },
-
         convertToCustomer = _.bind(function (resp) {
           if (!resp.answer) { return; }
 
@@ -1702,18 +1698,23 @@ trailing:true, white:true, strict: false*/
               number: customer.get("number"),
               name: customer.get("name")
             },
-            success: afterCustomerSave,
+            success: afterCustomerCreated,
             callback: convertToSalesOrder,
             allowNew: false
           });
         }, this),
 
-        afterQuoteConverted = function () {
-          // Hack to force grid to refresh. Why doesn't it on its own?
-          var gridBox = this.$.salesOrderLineItemGridBox;
-          gridBox.valueChanged();
-          gridBox.setDisabled(false);
+        afterCustomerCreated = function () {
+          this.getValue().convertFromProspect(customer.id);
         },
+
+        convertToSalesOrder = _.bind(function () {
+          this.doWorkspace({
+            workspace: "XV.SalesOrderWorkspace",
+            success: afterSalesOrderCreated,
+            allowNew: false
+          });
+        }, this),
 
         afterSalesOrderCreated = function () {
           this.getValue().convertFromQuote(model.id, {
@@ -1721,15 +1722,14 @@ trailing:true, white:true, strict: false*/
           });
         },
 
-        // Where the real work happens
-        convertToSalesOrder = _.bind(function () {
-          this.doWorkspace({
-            workspace: "XV.SalesOrderWorkspace",
-            success: afterSalesOrderCreated,
-            allowNew: false
-          });
-        }, this);
+        afterQuoteConverted = function () {
+          // Hack to force grid to refresh. Why doesn't it on its own?
+          var gridBox = this.$.salesOrderLineItemGridBox;
+          gridBox.valueChanged();
+          gridBox.setDisabled(false);
+        };
 
+      // Get the process started one way or another
       if (customer.get("status") === K.PROSPECT_STATUS) {
         this.doNotify({
           type: XM.Model.QUESTION,
