@@ -17,8 +17,9 @@
   var lang = XT.stringsFor("en_US", {
     "_backflushMaterials": "Backflush Materials",
     "_closeWorkOrderAfterPosting": "Close Work Order After Posting",
+    "_postProduction": "Post Production",
     "_qtyIssued": "Qty Issued",
-    "_qtyReceived": "Qty Received",
+    "_quantityReceived": "Qty Received",
     "_qtyRequired": "Qty Required",
     "_qtyToPost": "Qty to Post",
     "_scrapOnPost": "Scrap on Post"

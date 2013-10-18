@@ -23,6 +23,7 @@ white:true*/
         "itemSite",
         "status",
         "ordered",
+        "quantityReceived",
         "qtyRequired",
         "balance"
       ],
