@@ -41,9 +41,10 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     isLockable: true,
     idAttribute: "number",
     enforceUpperKey: true,
+    attributes: ["number"], // TODO
     extensions: ["billing"],
     privileges: {
-      createUpdateDelete: "MaintainMiscInvoice",
+      createUpdateDelete: "MaintainMiscInvoices",
       read: "ViewMiscInvoices"
     },
     createHash: {

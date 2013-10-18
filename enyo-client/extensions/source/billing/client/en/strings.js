@@ -16,7 +16,9 @@ strict:true, trailing:true, white:true */
     "_billingDescription": "Corporate Relationship Management",
     "_salesCategory": "Sales Category",
     "_salesCategories": "Sales Categories",
-    "_maintainSalesCategory": "Maintain Sales Category"
+    "_maintainMiscInvoices": "Maintain Invoices",
+    "_maintainSalesCategory": "Maintain Sales Category",
+    "_viewMiscInvoices": "View Invoices"
   });
 
   if (typeof exports !== 'undefined') {

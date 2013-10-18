@@ -25,13 +25,15 @@ trailing:true, white:true*/
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
         "MaintainItemMasters",
+        "MaintainMiscInvoices",
         "MaintainReasonCodes",
         "MaintainSalesCategories",
         "MaintainShipVias",
         "MaintainTerms",
         "ViewCustomerMasters",
         "ViewCustomerGroups",
-        "ViewItemMasters"
+        "ViewItemMasters",
+        "ViewMiscInvoices"
       ],
       configuration = {
         model: "XM.billing",
