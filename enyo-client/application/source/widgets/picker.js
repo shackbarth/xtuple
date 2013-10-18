@@ -63,6 +63,26 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.balanceMethods"
   });
 
+
+  // ..........................................................
+  // BILLING TERMS
+  //
+
+  enyo.kind({
+    name: "XV.BillingTermsPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.terms",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ],
+    filter: function (models) {
+      return _.filter(models, function (m) {
+        return m.getValue("isUsedByBilling");
+      });
+    }
+  });
+
   // ..........................................................
   // CHARACTERISTIC TYPE
   //

@@ -34,7 +34,7 @@
       //
       // Smoke Crud
       //
-      //smoke.runUICrud(spec); XXX
+      smoke.runUICrud(spec);
 
       //
       // Verify lockability

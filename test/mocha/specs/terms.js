@@ -90,13 +90,10 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       model.set({dueDays: 31});
       assert.isUndefined(JSON.stringify(model.validate(model.attributes)));
     });
-
     it("There should be a collection of static XM.termsTypes using the above 2 constants", function () {
       assert.isDefined(XM.termsTypes);
       assert.equal(XM.termsTypes.length, 2);
     });
-
-
     // TODO: nest in require
     it("XM.Terms should include a prototype function calculateDueDate() that accepts a start date " +
         "and returns a date by doing the following:", function () {
@@ -109,7 +106,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       model.set("termsType", XM.Terms.DAYS);
       model.set({dueDays: 7});
       assert.equal(model.calculateDueDate(startDate).getTime(), nextWeek.getTime());
-
     });
     it("If the termsType is XM.Terms.PROXIMO then " +
         "If the start date day <= the terms cutoff day the due date is the dueDays day of the current month " +
@@ -138,7 +134,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       model.set("termsType", XM.Terms.DAYS);
       model.set({dueDays: 7});
       assert.equal(model.calculateDueDate(startDate).getTime(), nextWeek.getTime());
-
     });
     it("If the termsType is XM.Terms.PROXIMO then " +
         "If the start date day <= the terms cutoff day the due date is the discountDays day of the current month " +
@@ -156,11 +151,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       assert.equal(model.calculateDiscountDate(startDateMiddle).getTime(), thisDiscountDate.getTime());
       assert.equal(model.calculateDiscountDate(startDateLate).getTime(), nextDiscountDate.getTime());
     });
-
-
     it("There should be a picker called XV.TermsTypePicker that references " +
         "XM.termsTypes and does not show the \"None\" option", function () {
-
       var picker;
 
       assert.isDefined(XV.TermsTypePicker);
@@ -187,7 +179,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     });
     it("the label for discountDays should be 'Discount Days'", function () {
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
-      assert.equal(workspace.$.discountDays.$.label.getContent(), XT.String.loc("_discountDays") + ":");
+      assert.equal(workspace.$.discountDays.$.label.getContent(),
+        XT.String.loc("_discountDays") + ":");
     });
     it("The cutoffDay widget should be hidden", function () {
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
@@ -209,18 +202,34 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     });
     it("the label for discountDays should be 'Discount Day'", function () {
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
-      assert.equal(workspace.$.discountDays.$.label.getContent(), XT.String.loc("_discountDay") + ":");
+      assert.equal(workspace.$.discountDays.$.label.getContent(),
+        XT.String.loc("_discountDay") + ":");
     });
+    it("A core Picker called XV.BillingTermsPicker should be created that only lists " +
+        "terms where 'isUsedByBilling' is true", function () {
+      var picker;
+      assert.isDefined(XV.BillingTermsPicker);
 
-     /*
-* A core Picker called XV.BillingTermsPicker sholud be created that only lists terms where "isUsedByBilling" is true.
-* Workspaces for the following objects should use the XV.BillingTermsPicker: Customer, Prospect, Quote, Sales Order, Invoice, Return (Credit Memo).
-*/
+      picker = new XV.BillingTermsPicker();
+      _.each(picker._collection.models, function (model) {
+        assert.isTrue(model.get("isUsedByBilling"));
+      });
+    });
+    it("Workspaces for the following objects should use the XV.BillingTermsPicker: " +
+        "Customer, Quote, Sales Order, Invoice, Return (Credit Memo)", function () {
+      var workspaces = ["XV.CustomerWorkspace", "XV.QuoteWorkspace",
+        "XV.SalesOrderWorkspace", /* TODO "XV.InvoiceWorkspace", "XV.ReturnWorkspace" */];
 
+      _.each(workspaces, function (workspaceName) {
+        var Klass = XT.getObjectByName(workspaceName),
+          workspace = new Klass();
+
+        assert.isTrue(_.contains(_.map(workspace.$, function (widget) {
+          return widget.kind;
+        }), "XV.BillingTermsPicker"));
+      });
+    });
   };
 
-
-
   exports.additionalTests = additionalTests;
-
 }());

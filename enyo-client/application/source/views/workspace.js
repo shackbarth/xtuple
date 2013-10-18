@@ -527,7 +527,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.CheckboxWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormBillto", label: "_freeFormBill".loc()},
             {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
-            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
             {kind: "XV.CheckboxWidget", attr: "usesPurchaseOrders"},
@@ -1648,7 +1648,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
           {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
@@ -1884,7 +1884,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
           {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
