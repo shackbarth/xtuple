@@ -29,7 +29,6 @@ strict:true, trailing:true, white:true */
     "_recurringInvoiceBuffer": "Recurring Invoice Buffer Days",
     "_defaultARIncidentStatus": "Default Incident Category"
 
-
   });
 
   if (typeof exports !== 'undefined') {

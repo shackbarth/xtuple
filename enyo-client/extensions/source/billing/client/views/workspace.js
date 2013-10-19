@@ -40,7 +40,7 @@ trailing:true, white:true*/
 
               {kind: "XV.ToggleButtonWidget", attr: "AutoCreditWarnLateCustomers",
                 label: "_autoCreditWarnLateCustomers".loc()},
-              {kind: "XV.NumberWidget", attr: "DefaultAutoCreditWarnGraceDays",
+              {kind: "XV.NumberSpinnerWidget", attr: "DefaultAutoCreditWarnGraceDays",
                 label: "_defaultAutoCreditWarnGraceDays".loc()},
               {kind: "XV.NumberWidget", attr: "RecurringInvoiceBuffer",
                 label: "_recurringInvoiceBuffer".loc()},

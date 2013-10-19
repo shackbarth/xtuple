@@ -37,7 +37,7 @@
   box-sizing: border-box;
 }
 /**
-  Less styles for the
+  Less styles for the picker widget
 */
 /**
   Styles related to pickers, combo boxes, and relation widgets
@@ -918,6 +918,21 @@
 }
 .xv-tree .xv-tree-node .xv-pickerwidget .xv-picker-label {
   width: 50px;
+}
+/**
+  Misc styles for widgets
+*/
+/**
+  Styles relating to misc widgets
+*/
+.spinner .buttons {
+  display: block;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+}
+.spinner .slider {
+  margin: 15px 10px;
 }
 /**
   Import for Font-Awesome icons

@@ -41,7 +41,7 @@ select xt.install_js('XM','Billing','xtuple', $$
 
   XM.Billing.isDispatchable = true;
 
-  /*
+  /**
     Return Billing configuration settings.
 
     @returns {Object}
@@ -54,19 +54,19 @@ select xt.install_js('XM','Billing','xtuple', $$
       qry,
       orm;
 
-      ret.NextARMemoNumber = plv8.execute('select currentARMemoNumber()', [])[0].value;
-      ret.NextCashRcptNumber = plv8.execute('select currentCashRcptNumber()',[])[0].value;
+    ret.NextARMemoNumber = plv8.execute('select currentARMemoNumber()', [])[0].value;
+    ret.NextCashRcptNumber = plv8.execute('select currentCashRcptNumber()',[])[0].value;
 
     ret = XT.extend(ret, data.retrieveMetrics(keys));
     return JSON.stringify(ret);
   }
 
-  /*
-  Update Billing configuration settings. Only valid options as defined in the array
-  XM.Billing.options will be processed.
+  /**
+    Update Billing configuration settings. Only valid options as defined in the array
+    XM.Billing.options will be processed.
 
-   @param {Object} settings
-   @returns {Boolean}
+    @param {Object} settings
+    @returns {Boolean}
   */
   XM.Billing.commitSettings = function(patches) {
     var sql, settings, options = XM.Billing.options.slice(0),
@@ -81,14 +81,12 @@ select xt.install_js('XM','Billing','xtuple', $$
       plv8.elog(NOTICE, 'Malformed patch document');
     }
 
-    // > The NextARMemoNumber value should call the setNextARMemoNumber database function.
-    // > The NextCashRcptNumber value should call the setNextCashRcptNumber database function.
-    if(settings['NextARMemoNumber']) {
+    if (settings['NextARMemoNumber']) {
       plv8.execute('select setNextARMemoNumber($1)', [settings['NextARMemoNumber'] - 0]);
     }
     options.remove('NextARMemoNumber');
 
-    if(settings['NextCashRcptNumber']) {
+    if (settings['NextCashRcptNumber']) {
       plv8.execute('select setNextCashRcptNumber($1)', [settings['NextCashRcptNumber'] - 0]);
     }
     options.remove('NextCashRcptNumber');
