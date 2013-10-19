@@ -374,6 +374,19 @@ select xt.install_js('XT','Orm','xtuple', $$
     Returns matching property from the propreties array in an ORM map.
 
     @param {Object} ORM
+    @param {String} Property name
+    @returns String
+  */
+  XT.Orm.getType = function (orm, name) {
+    var prop = XT.Orm.getProperty(orm, name);
+    return prop.attr ? prop.attr.type : 
+      prop.toOne ? prop.toOne.type : prop.toMany.type;
+  };
+
+  /**
+    Returns matching property from the propreties array in an ORM map.
+
+    @param {Object} ORM
     @param {String} property
     @returns Object
   */

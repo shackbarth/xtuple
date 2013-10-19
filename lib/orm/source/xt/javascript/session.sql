@@ -351,7 +351,8 @@ select xt.install_js('XT','Session','xtuple', $$
       if (propertyIsValid(orm, name)) {
         column = {
           name: name,
-          category: recs[i].category
+          category: recs[i].category,
+          type: XT.Orm.getType(orm, name)
         }
         result[type]['columns'].push(column);
       }
