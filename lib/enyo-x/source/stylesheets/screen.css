@@ -82,6 +82,7 @@
 .xv-combobox .enyo-fittable-columns-layout .icon-sort {
   display: inline-block;
   padding-top: 10px;
+  color: #357ec7;
 }
 .xv-combobox-input {
   font-size: medium;
@@ -457,7 +458,6 @@
   width: 90px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator input {
-  text-align: left;
   width: 80px;
   font-size: 13px;
 }
@@ -496,7 +496,6 @@
   width: 90px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
-  text-align: left;
   width: 80px;
   font-size: 13px;
 }
@@ -505,7 +504,6 @@
   width: 30px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column.line-number .xv-numberwidget .onyx-input-decorator input {
-  text-align: left;
   width: 20px;
   font-size: 13px;
 }
@@ -514,22 +512,22 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .xv-combobox-input {
   font-size: 13px;
-  width: 50px;
+  width: 55px;
 }
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .xv-combobox-icon {
-  width: 20px;
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .enyo-fittable-columns-layout .icon-sort {
+  padding-top: 3px;
+  padding-left: 10px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator {
   padding: 0;
   width: 90px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
-  text-align: left;
   width: 80px;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
-  width: 150px;
+  width: 120px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input {
   width: 100px;
@@ -556,7 +554,7 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
   border-bottom: 0;
-  padding: 0;
+  padding-top: 6px;
 }
 .xv-grid-box.xv-groupbox .xv-sales-summary-panel {
   border: none;
@@ -2549,6 +2547,12 @@ body {
 /*
   XV Widgets
 */
+.icon-folder-open-alt {
+  color: #357ec7;
+}
+.icon-calendar {
+  color: #357ec7;
+}
 .xv-numberwidget input {
   text-align: right;
 }
@@ -2695,7 +2699,7 @@ body {
 }
 .xv-decorated-label {
   width: 130px;
-  padding: 10px 8px 8px 8px;
+  padding: 14px 8px 8px 8px;
   text-align: right;
 }
 .xv-decorated-label.disabled {
