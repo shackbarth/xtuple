@@ -65,10 +65,19 @@
 
   .xv-relationwidget, .xv-datewidget, .xv-numberwidget {
     .onyx-input-decorator {
+      padding-top: 9px;
       width: 170px;
     }
     input {
       width: 120px;
+    }
+    .xv-decorated-label {
+      width: 130px;
+      padding: 10px 8px 8px 8px;
+      text-align: right;
+      &.disabled {
+        color: @dim-gray;
+      }
     }
   }
 
