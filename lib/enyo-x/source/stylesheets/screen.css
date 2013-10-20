@@ -425,13 +425,13 @@
   text-align: right;
   width: 90px;
 }
-.xv-grid-box .xv-grid-row .schedule {
+.xv-grid-box .xv-grid-row .date {
   vertical-align: top;
-  width: 110px;
+  width: 80px;
 }
 .xv-grid-box .xv-grid-row .user {
   vertical-align: top;
-  width: 100px;
+  width: 60px;
 }
 .xv-grid-box .xv-grid-row.readonly {
   background: #f8f8ff;

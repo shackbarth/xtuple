@@ -71,6 +71,7 @@ strict:true, trailing:true, white:true */
     "_active": "Active",
     "_actual": "Actual",
     "_actualClose": "Actual Close",
+    "_actualDate": "Actual Date",
     "_actualExpenses": "Actual Expenses",
     "_actualExpensesTotal": "Total Expenses Actual",
     "_actualHours": "Actual Hours",

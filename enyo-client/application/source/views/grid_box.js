@@ -13,11 +13,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     classes: "xv-grid-row",
     components: [
       {classes: "xv-grid-header grid-item", content: "_number".loc() },
-      {classes: "xv-grid-header grid-item", content: "_user".loc()},
+      {classes: "xv-grid-header user", content: "_user".loc()},
       {classes: "xv-grid-header quantity", content: "_hours".loc()},
-      {classes: "xv-grid-header quantity", content: "_expenses".loc()},
-      {classes: "xv-grid-header schedule", content: "_schedDate".loc()},
-      {classes: "xv-grid-header schedule", content: "_actualDate".loc()}
+      {classes: "xv-grid-header price", content: "_expenses".loc()},
+      {classes: "xv-grid-header date", content: "_schedDate".loc()},
+      {classes: "xv-grid-header date", content: "_actualDate".loc()}
     ]
   });
 
@@ -41,11 +41,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         {name: "budgetedExpenses"},
         {name: "actualExpenses"}
       ]},
-      {classes: "xv-grid-column schedule", components: [
+      {classes: "xv-grid-column date", components: [
         {name: "startDate"},
         {name: "dueDate"}
       ]},
-      {classes: "xv-grid-column schedule", components: [
+      {classes: "xv-grid-column date", components: [
         {name: "assignDate"},
         {name: "completeDate"}
       ]}
@@ -110,11 +110,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
           {localValue: "actualExpenses", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.MONEY_SCALE}
       ]},
-      {classes: "xv-grid-column schedule", components: [
+      {classes: "xv-grid-column date", components: [
         {kind: "XV.DateWidget", attr: "startDate"},
         {kind: "XV.DateWidget", attr: "dueDate"}
       ]},
-      {classes: "xv-grid-column schedule", components: [
+      {classes: "xv-grid-column date", components: [
         {kind: "XV.DateWidget", attr: "assignDate"},
         {kind: "XV.DateWidget", attr: "completeDate"}
       ]},
@@ -179,7 +179,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       {classes: "xv-grid-header quantity", content: "_quantity".loc()},
       {classes: "xv-grid-header discount", content: "_discount".loc()},
       {classes: "xv-grid-header price", content: "_price".loc()},
-      {classes: "xv-grid-header schedule", content: "_schedDate".loc()}
+      {classes: "xv-grid-header date", content: "_schedDate".loc()}
     ]
   });
 
@@ -207,7 +207,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         {name: "priceUnit"},
         {name: "extendedPrice"}
       ]},
-      {classes: "xv-grid-column schedule", components: [
+      {classes: "xv-grid-column date", components: [
         {name: "scheduleDate"}
       ]}
     ],
@@ -290,7 +290,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
           {localValue: "extendedPrice", currency: ""},
           currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
       ]},
-      {classes: "xv-grid-column schedule", components: [
+      {classes: "xv-grid-column date", components: [
         {kind: "XV.DateWidget", attr: "scheduleDate"}
       ]},
       {classes: "xv-grid-column grid-actions", components: [
