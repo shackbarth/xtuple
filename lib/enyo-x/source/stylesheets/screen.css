@@ -382,10 +382,10 @@
 .xv-grid-box .xv-grid-row .xv-grid-header {
   background-color: #8d8d8d;
   color: #ffffff;
-  font-size: 12px;
+  font-size: .8em;
   font-weight: bold;
   text-transform: uppercase;
-  border-bottom: 1px solid #aaaaaa;
+  padding: 4px 10px;
 }
 .xv-grid-box .xv-grid-row .xv-grid-header.last {
   border-right: none;
