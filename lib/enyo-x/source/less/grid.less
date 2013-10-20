@@ -9,6 +9,10 @@
     width: 765px;
   }
 
+  .xv-grid-groupbox-header {
+    border-bottom: none;
+  }
+
   .enyo-list-page {
     > *:first-child {
       .xv-grid-row {
@@ -27,6 +31,7 @@
   */
   .xv-grid-row {
     font-size: 12px;
+    background-color: @gray;
     border-top: 1px solid @silver;
     > * {
       display: inline-block;
@@ -37,14 +42,12 @@
       This is the grid header row
     */
     .xv-grid-header {
-      background-color: @charcoal;
+      background-color: @gray;
       color: @white;
       font-size: 12px;
       font-weight: bold;
       text-transform: uppercase;
-      border-top: none;
-      border-right: 1px solid @header-gray;
-      border-bottom: 1px solid @header-gray;
+      border-bottom: 1px solid @silver;
       &.last {
         border-right: none;
       }
@@ -72,19 +75,26 @@
     }
     .quantity {
       vertical-align: top;
+      text-align: right;
       width: 100px;
     }
     .discount {
       vertical-align: top;
+      text-align: right;
       width: 90px;
     }
     .price {
       vertical-align: top;
+      text-align: right;
       width: 90px;
     }
     .schedule {
       vertical-align: top;
       width: 110px;
+    }
+    .user {
+      vertical-align: top;
+      width: 100px;
     }
 
     &.readonly {

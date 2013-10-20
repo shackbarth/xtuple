@@ -357,6 +357,9 @@
 .xv-grid-box.panel {
   width: 765px;
 }
+.xv-grid-box .xv-grid-groupbox-header {
+  border-bottom: none;
+}
 .xv-grid-box .enyo-list-page > *:first-child .xv-grid-row {
   border-top: 0px;
 }
@@ -365,6 +368,7 @@
 }
 .xv-grid-box .xv-grid-row {
   font-size: 12px;
+  background-color: #8d8d8d;
   border-top: 1px solid #aaaaaa;
   vertical-align: top;
   /**
@@ -376,14 +380,12 @@
   display: inline-block;
 }
 .xv-grid-box .xv-grid-row .xv-grid-header {
-  background-color: #555555;
+  background-color: #8d8d8d;
   color: #ffffff;
   font-size: 12px;
   font-weight: bold;
   text-transform: uppercase;
-  border-top: none;
-  border-right: 1px solid #4c4c4c;
-  border-bottom: 1px solid #4c4c4c;
+  border-bottom: 1px solid #aaaaaa;
 }
 .xv-grid-box .xv-grid-row .xv-grid-header.last {
   border-right: none;
@@ -410,19 +412,26 @@
 }
 .xv-grid-box .xv-grid-row .quantity {
   vertical-align: top;
+  text-align: right;
   width: 100px;
 }
 .xv-grid-box .xv-grid-row .discount {
   vertical-align: top;
+  text-align: right;
   width: 90px;
 }
 .xv-grid-box .xv-grid-row .price {
   vertical-align: top;
+  text-align: right;
   width: 90px;
 }
 .xv-grid-box .xv-grid-row .schedule {
   vertical-align: top;
   width: 110px;
+}
+.xv-grid-box .xv-grid-row .user {
+  vertical-align: top;
+  width: 100px;
 }
 .xv-grid-box .xv-grid-row.readonly {
   background: #f8f8ff;

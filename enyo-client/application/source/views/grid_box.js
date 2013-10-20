@@ -29,7 +29,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         {name: "number"},
         {name: "name"}
       ]},
-      {classes: "xv-grid-column grid-item", components: [
+      {classes: "xv-grid-column user", components: [
         {name: "owner"},
         {name: "assignedTo"},
       ]},
@@ -56,8 +56,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       if (model) {
         this.$.number.setContent(model.get("number") || "_required".loc());
         this.$.name.setContent(model.get("name") || "_required".loc());
-        this.$.owner.setContent(model.getValue("owner.properName") || "");
-        this.$.assignedTo.setContent(model.getValue("assignedTo.properName") || "");
+        this.$.owner.setContent(model.getValue("owner.username") || "");
+        this.$.assignedTo.setContent(model.getValue("assignedTo.username") || "");
         this.$.budgetedHours.setContent(this.formatQuantity(model.get("budgetedHours")));
         this.$.actualHours.setContent(this.formatQuantity(model.get("actualHours")));
         this.$.budgetedExpenses.setContent(this.formatMoney(model.get("budgetedExpenses")));
@@ -140,7 +140,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     kind: "XV.GridBox",
     associatedWorkspace: "XV.ProjectTaskWorkspace",
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc(),
+        classes: "xv-grid-groupbox-header"},
       {kind: "XV.ProjectTaskHeaders"},
       {kind: "XV.Scroller", name: "mainGroup", horizontal: "hidden", fit: true, components: [
         {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list",
@@ -318,7 +319,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     kind: "XV.GridBox",
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc(),
+        classes: "xv-grid-groupbox-header"},
       {kind: "XV.SalesOrderLineItemHeaders"},
       {kind: "XV.Scroller", name: "mainGroup", horizontal: "hidden", fit: true, components: [
         {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list",
