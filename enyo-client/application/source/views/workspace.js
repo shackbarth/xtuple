@@ -1,5 +1,6 @@
 /*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
+newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true,
+strict: false*/
 /*global XV:true, XM:true, _:true, enyo:true, XT:true, onyx:true*/
 
 (function () {
@@ -1371,7 +1372,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {name: "overviewControl", components:[
+            {name: "overviewControl", components: [
               {kind: "XV.InputWidget", attr: "number"},
               {kind: "XV.InputWidget", attr: "name"},
               {kind: "XV.ProjectStatusPicker", attr: "status"},
@@ -1391,11 +1392,24 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             ]}
           ]}
         ]},
-        {kind: "XV.ProjectTasksBox", attr: "tasks"},
         {kind: "XV.ProjectCommentBox", attr: "comments"},
         {kind: "XV.ContactDocumentsBox", attr: "documents"}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      if (enyo.platform.touch) {
+        this.$.panels.createComponents([
+          {kind: "XV.ProjectTasksBox", attr: "tasks",
+            addBefore: this.$.projectCommentBox}
+        ], {owner: this});
+      } else {
+        this.$.panels.createComponents([
+          {kind: "XV.ProjectTasksGridBox", attr: "tasks",
+            addBefore: this.$.projectCommentBox}
+        ], {owner: this});
+      }
+    }
   };
 
   projectHash = enyo.mixin(projectHash, XV.accountNotifyContactMixin);

@@ -4,6 +4,171 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
 
 (function () {
 
+  // ..........................................................
+  // PROJECT
+  //
+
+  enyo.kind({
+    name: "XV.ProjectTaskHeaders",
+    classes: "xv-grid-row",
+    components: [
+      {classes: "xv-grid-header grid-item", content: "_number".loc() },
+      {classes: "xv-grid-header grid-item", content: "_user".loc()},
+      {classes: "xv-grid-header quantity", content: "_hours".loc()},
+      {classes: "xv-grid-header quantity", content: "_expenses".loc()},
+      {classes: "xv-grid-header schedule", content: "_schedDate".loc()},
+      {classes: "xv-grid-header schedule", content: "_actualDate".loc()}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.ProjectTaskReadOnlyGridRow",
+    kind: "XV.ReadOnlyGridRow",
+    components: [
+      {classes: "xv-grid-column grid-item", components: [
+        {name: "number"},
+        {name: "name"}
+      ]},
+      {classes: "xv-grid-column grid-item", components: [
+        {name: "owner"},
+        {name: "assignedTo"},
+      ]},
+      {classes: "xv-grid-column quantity", components: [
+        {name: "budgetedHours"},
+        {name: "actualHours"},
+      ]},
+      {classes: "xv-grid-column price", components: [
+        {name: "budgetedExpenses"},
+        {name: "actualExpenses"}
+      ]},
+      {classes: "xv-grid-column schedule", components: [
+        {name: "startDate"},
+        {name: "dueDate"}
+      ]},
+      {classes: "xv-grid-column schedule", components: [
+        {name: "assignDate"},
+        {name: "completeDate"}
+      ]}
+    ],
+    valueChanged: function () {
+      var model = this.getValue();
+
+      if (model) {
+        this.$.number.setContent(model.get("number") || "_required".loc());
+        this.$.name.setContent(model.get("name") || "_required".loc());
+        this.$.owner.setContent(model.getValue("owner.properName") || "");
+        this.$.assignedTo.setContent(model.getValue("assignedTo.properName") || "");
+        this.$.budgetedHours.setContent(this.formatQuantity(model.get("budgetedHours")));
+        this.$.actualHours.setContent(this.formatQuantity(model.get("actualHours")));
+        this.$.budgetedExpenses.setContent(this.formatMoney(model.get("budgetedExpenses")));
+        this.$.actualExpenses.setContent(this.formatMoney(model.get("actualExpenses")));
+        this.$.startDate.setContent(this.formatDate(model.get("startDate")));
+        this.$.dueDate.setContent(this.formatDate(model.get("dueDate")));
+        this.$.assignDate.setContent(this.formatDate(model.get("assignDate")));
+        this.$.completeDate.setContent(this.formatDate(model.get("completeDate")));
+      }
+    },
+
+    formatDate: function (value, view, model) {
+      return value ? Globalize.format(XT.date.applyTimezoneOffset(value, true), "d") : "";
+    },
+
+    formatMoney: function (value, view, model) {
+      var currency = XT.baseCurrency(),
+        scale = XT.locale.moneyScale;
+      return currency.format(value, scale);
+    },
+
+    formatQuantity: function (value, view, model) {
+      return Globalize.format(value, "n" + XT.locale.quantityScale);
+    }
+  });
+
+  enyo.kind({
+    name: "XV.ProjectTaskGridRow",
+    kind: "XV.GridRow",
+    components: [
+      // each field is grouped with its column header so that the alignment always
+      // works out. All but the first column header will be invisible.
+      {classes: "xv-grid-column grid-item", components: [
+        {kind: "XV.InputWidget", attr: "number"},
+        {kind: "XV.InputWidget", attr: "name"}
+      ]},
+      {classes: "xv-grid-column grid-item", components: [
+        {kind: "XV.UserAccountWidget", attr: "owner"},
+        {kind: "XV.UserAccountWidget", attr: "assignedTo"}
+      ]},
+      {classes: "xv-grid-column quantity", components: [
+        {kind: "XV.QuantityWidget", attr: "budgetedHours"},
+        {kind: "XV.QuantityWidget", attr: "actualHours"}
+      ]},
+      {classes: "xv-grid-column price", components: [
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "budgetedExpenses", currency: ""},
+          currencyDisabled: true, currencyShowing: false, scale: XT.MONEY_SCALE},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "actualExpenses", currency: ""},
+          currencyDisabled: true, currencyShowing: false, scale: XT.MONEY_SCALE}
+      ]},
+      {classes: "xv-grid-column schedule", components: [
+        {kind: "XV.DateWidget", attr: "startDate"},
+        {kind: "XV.DateWidget", attr: "dueDate"}
+      ]},
+      {classes: "xv-grid-column schedule", components: [
+        {kind: "XV.DateWidget", attr: "assignDate"},
+        {kind: "XV.DateWidget", attr: "completeDate"}
+      ]},
+      {classes: "xv-grid-column grid-actions", components: [
+        {components: [
+          {kind: "enyo.Button",
+            classes: "icon-plus xv-gridbox-button",
+            name: "addGridRowButton",
+            onkeyup: "addButtonKeyup" },
+          {kind: "enyo.Button", attributes: {tabIndex: "-1"},
+            classes: "icon-search xv-gridbox-button",
+            name: "expandGridRowButton" },
+          {kind: "enyo.Button", attributes: {tabIndex: "-1"},
+            classes: "icon-remove-sign xv-gridbox-button",
+            name: "deleteGridRowButton" }
+        ]}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.ProjectTasksGridBox",
+    kind: "XV.GridBox",
+    associatedWorkspace: "XV.ProjectTaskWorkspace",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
+      {kind: "XV.ProjectTaskHeaders"},
+      {kind: "XV.Scroller", name: "mainGroup", horizontal: "hidden", fit: true, components: [
+        {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list",
+            onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
+          { kind: "XV.ProjectTaskReadOnlyGridRow", name: "aboveGridRow"}
+        ]},
+        {kind: "XV.ProjectTaskGridRow", name: "editableGridRow", showing: false},
+        {kind: "List", name: "belowGridList", classes: "xv-below-grid-list",
+            onSetupItem: "setupRowBelow", ontap: "gridRowTapBelow", components: [
+          {kind: "XV.ProjectTaskReadOnlyGridRow", name: "belowGridRow"}
+        ]},
+      ]},
+      {
+        kind: "FittableColumns",
+        name: "navigationButtonPanel",
+        classes: "xv-groupbox-buttons",
+        components: [
+          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+            content: "_new".loc(), classes: "xv-groupbox-button-single"}
+        ]
+      }
+    ]
+  });
+
+  // ..........................................................
+  // SALES ORDER / QUOTE
+  //
+
   enyo.kind({
     name: "XV.SalesOrderLineItemHeaders",
     classes: "xv-grid-row",
@@ -185,7 +350,19 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       this.inherited(arguments);
       var model = this.value.salesOrder || this.value.quote;
       this.$.summaryPanel.setValue(model);
-    }
+    },
+
+    gridRowTapEither: function (index, indexStart) {
+      this.inherited(arguments);
+
+      // focus on the first editable widget
+      var row = this.$.editableGridRow.$;
+      if (row.itemSiteWidget.getDisabled()) {
+        row.quantityWidget.focus();
+      } else {
+        row.itemSiteWidget.focus();
+      }
+    },
   });
 
   enyo.kind({
