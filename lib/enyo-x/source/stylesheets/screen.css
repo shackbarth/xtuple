@@ -87,6 +87,10 @@
 .xv-combobox .enyo-fittable-columns-layout .xv-decorated-label {
   padding-top: 10px;
 }
+.xv-combobox .enyo-fittable-columns-layout .xv-combobox-input {
+  padding-top: 10px;
+  padding-right: 4px;
+}
 .xv-combobox-input {
   font-size: medium;
   border: 0;
@@ -515,11 +519,14 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .xv-combobox-input {
   font-size: 13px;
-  width: 55px;
+  width: 60px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .enyo-fittable-columns-layout .icon-sort {
-  padding-top: 3px;
+  padding-top: 5px;
   padding-left: 10px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .enyo-fittable-columns-layout .xv-combobox-input {
+  padding-top: 3px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator {
   padding: 0;
@@ -2603,6 +2610,12 @@ body {
 .xv-addresswidget-combobox-decorator .enyo-fittable-columns-layout .icon-sort {
   padding-top: 2px;
   padding-left: 30px;
+}
+.xv-addresswidget-combobox-decorator .enyo-fittable-columns-layout .xv-decorated-label {
+  padding-top: 2px;
+}
+.xv-addresswidget-combobox-decorator .enyo-fittable-columns-layout .xv-combobox-input {
+  padding-top: 2px;
 }
 .xv-addresswidget-input {
   width: 100%;
