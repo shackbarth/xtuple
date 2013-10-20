@@ -213,14 +213,18 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     ],
     valueChanged: function () {
       var model = this.getValue(),
-        quantity = model.get("quantity"),
-        discount = model.get("discount"),
-        price = model.get("price"),
-        locale = XT.locale;
+        locale = XT.locale,
+        quantity,
+        discount,
+        price;
 
-      if (!model) {
-        return;
-      }
+      if (!model) { return; }
+
+      quantity = model.get("quantity");
+      discount = model.get("discount");
+      price = model.get("price");
+      locale = XT.locale;
+
       this.$.lineNumber.setContent(model.get("lineNumber"));
       this.$.itemNumber.setContent(model.getValue("item.number") || "_required".loc());
       this.$.itemNumber.addRemoveClass("xv-error", !model.getValue("item.number"));
