@@ -84,6 +84,9 @@
   padding-top: 10px;
   color: #357ec7;
 }
+.xv-combobox .enyo-fittable-columns-layout .xv-decorated-label {
+  padding-top: 10px;
+}
 .xv-combobox-input {
   font-size: medium;
   border: 0;
