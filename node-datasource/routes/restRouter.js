@@ -23,8 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.nameSpace = "XT";
     payload.type = "Discovery";
     payload.dispatch = {
-      functionName: "getIsRestORMs",
-      isJSON: true
+      functionName: "getIsRestORMs"
     };
 
     // Dummy up session.
@@ -57,7 +56,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.type = "Discovery";
     payload.dispatch = {
       functionName: "getResources",
-      isJSON: true,
       parameters: [null, rootUrl]
     };
 
