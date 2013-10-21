@@ -69,6 +69,39 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.InvoiceLine = XM.Model.extend({
+    /** @scope XM.InvoiceLine.prototype */
+
+    recordType: 'XM.InvoiceLine',
+
+    idAttribute: 'uuid',
+
+    defaults: function () {
+      return {
+        site: XT.defaultSite()
+      };
+    },
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.InvoiceLineTax = XM.Model.extend({
+    /** @scope XM.InvoiceLineTax.prototype */
+
+    recordType: 'XM.InvoiceLineTax',
+
+    idAttribute: 'uuid'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.InvoiceContact = XM.Model.extend({
     /** @scope XM.InvoiceContact.prototype */
 

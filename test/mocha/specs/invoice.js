@@ -63,48 +63,65 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.isTrue(XM.InvoiceItem.prototype.isDocumentAssignment);
       });
     });
+    it("A nested only model called XM.InvoiceLineTax extending XM.Model should exist with " +
+        " attributes uuid, taxType, taxCode, and amount", function () {
+      var attrs = ["uuid", "taxType", "taxCode", "amount"],
+        model;
+
+      assert.isFunction(XM.InvoiceLineTax);
+      model = new XM.InvoiceLineTax();
+      assert.isTrue(model instanceof XM.Model);
+      assert.equal(model.idAttribute, "uuid");
+      assert.equal(_.difference(attrs, model.getAttributeNames()).length, 0);
+    });
+    /*
+      Not under test:
+      XM.InvoiceLineTax can be created, updated and deleted.
+      A view should be used underlying XM.InvoiceLineTax that does "nothing" after insert,
+      update or delete (existing table triggers for line items will take care of
+      populating this data correctly).
+    */
+    it("A nested only model called XM.InvoiceLine extending XM.Model should exist", function () {
+      var model;
+
+      assert.isFunction(XM.InvoiceLine);
+      model = new XM.InvoiceLine();
+      assert.isTrue(model instanceof XM.Model);
+      assert.equal(model.idAttribute, "uuid");
+    });
+    /*
+      Not under test:
+    * XM.InvoiceLine should include the following attributes:
+      > String "uuid" that is the idAttribute
+      > Number "lineNumber" required
+      > Item "item"
+      > Site "site" default = XT.defaultSite()
+      > String "customerPartNumber"
+      > Boolean "isMiscellaneous" = false if item number set, true if not.
+      > String "itemNumber"
+      > String "itemDescription"
+      > SalesCategory "salesCategory"
+      > Quantity "quantity"
+      > Unit "quantityUnit"
+      > Number "quantityUnitRatio"
+      > Quantity "billed"
+      > Number "customerPrice"
+      > SalesPrice "price"
+      > Unit "priceUnit"
+      > Number "priceUnitRatio"
+      > ExtendedPrice "extendedPrice" = billed * quantityUnitRatio * (price / priceUnitRatio)
+      > Number "notes"
+      > TaxType "taxType"
+      > Money "taxTotal" = sum of all taxes
+      > InvoiceLineTax "taxes"
+    */
+
+
   };
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-
-
-
-
-* A nested only model called XM.InvoiceLineTax extending XM.Model should exist.
-* XM.InvoiceLineTax should include the following attributes:
-  > String "uuid" that is the idAttribute
-  > TaxType "taxType"
-  > TaxCode "taxCode"
-  > Money "amount"
-* XM.InvoiceLineTax can be created, updated and deleted.
-* A view should be used underlying XM.InvoiceLineTax that does "nothing" after insert, update or delete (existing table triggers for line items will take care of populating this data correctly).
-
-* A nested only model called XM.InvoiceLine extending XM.Model should exist.
-* XM.InvoiceLine should include the following attributes:
-  > String "uuid" that is the idAttribute
-  > Number "lineNumber" required
-  > Item "item"
-  > Site "site" default = XT.defaultSite()
-  > String "customerPartNumber"
-  > Boolean "isMiscellaneous" = false if item number set, true if not.
-  > String "itemNumber"
-  > String "itemDescription"
-  > SalesCategory "salesCategory"
-  > Quantity "quantity"
-  > Unit "quantityUnit"
-  > Number "quantityUnitRatio"
-  > Quantity "billed"
-  > Number "customerPrice"
-  > SalesPrice "price"
-  > Unit "priceUnit"
-  > Number "priceUnitRatio"
-  > ExtendedPrice "extendedPrice" = billed * quantityUnitRatio * (price / priceUnitRatio)
-  > Number "notes"
-  > TaxType "taxType"
-  > Money "taxTotal" = sum of all taxes
-  > InvoiceLineTax "taxes"
 * XM.InvoiceLine should include a property "sellingUnits" that is an array of available selling units of measure based on the selected item.
 * When the item is changed the following should be updated from item information:
   > sellingUnits

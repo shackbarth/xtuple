@@ -332,5 +332,255 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceLine",
+    "table": "xt.invciteminfo",
+    "isRest": true,
+    "idSequenceName": "invcitem_invcitem_id_seq",
+    "comment": "Invoice Line Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainMiscInvoices",
+        "read": "ViewMiscInvoices",
+        "update": "MaintainMiscInvoices",
+        "delete": "MaintainMiscInvoices"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invcitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "lineNumber",
+        "attr": {
+          "type": "Number",
+          "column": "invcitem_id"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "type": "Item",
+          "column": "invcitem_item_id"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "Site",
+          "column": "invcitem_warehous_id"
+        }
+      },
+      {
+        "name": "customerPartNumber",
+        "attr": {
+          "type": "String",
+          "column": "invcitem_custpn"
+        }
+      },
+      {
+        "name": "isMiscellaneous",
+        "attr": {
+          "type": "Boolean",
+          "column": "invcitem_is_misc"
+        }
+      },
+      {
+        "name": "itemNumber",
+        "attr": {
+          "type": "String",
+          "column": "invcitem_number"
+        }
+      },
+      {
+        "name": "itemDescription",
+        "attr": {
+          "type": "String",
+          "column": "invcitem_descrip"
+        }
+      },
+      {
+        "name": "salesCategory",
+        "toOne": {
+          "type": "SalesCategory",
+          "column": "invcitem_salescat_id"
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "invcitem_ordered"
+        }
+      },
+      {
+        "name": "quantityUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "invcitem_qty_uom_id"
+        }
+      },
+      {
+        "name": "quantityUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "invcitem_qty_invuomratio"
+        }
+      },
+      {
+        "name": "billed",
+        "attr": {
+          "type": "Quantity",
+          "column": "invcitem_ordered"
+        }
+      },
+      {
+        "name": "customerPrice",
+        "attr": {
+          "type": "Number",
+          "column": "invcitem_custprice"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "SalesPrice",
+          "column": "invcitem_price"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "invcitem_price_uom_id"
+        }
+      },
+      {
+        "name": "priceUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "invcitem_price_invuomratio"
+        }
+      },
+      {
+        "name": "extendedPrice",
+        "attr": {
+          "type": "ExtendedPrice",
+          "column": "invcitem_ext_price"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "invcitem_notes"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "invcitem_taxtype_id"
+        }
+      },
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Money",
+          "column": "invcitem_tax_total"
+        }
+      },
+      {
+        "name": "taxes",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceLineTax",
+          "column": "invcitem_id",
+          "inverse": "parent"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceLineTax",
+    "table": "xt.invcitemtaxinfo",
+    "isRest": true,
+    "idSequenceName": "invcitemtax_invcitemtax_id_seq",
+    "comment": "Invoice Line Tax Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "taxhist_taxtype_id"
+        }
+      },
+      {
+        "name": "taxCode",
+        "toOne": {
+          "type": "TaxCode",
+          "column": "taxhist_tax_id",
+          "required": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_parent_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_tax"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]
