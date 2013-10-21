@@ -386,6 +386,28 @@
 .xv-grid-box .xv-scroller {
   background: #f8f8ff;
 }
+.xv-grid-box .xv-grid-attr.bold {
+  font-weight: bold;
+}
+.xv-grid-box .xv-grid-attr.error {
+  color: #ff0000;
+}
+.xv-grid-box .xv-grid-attr.emphasis {
+  color: #009000;
+}
+.xv-grid-box .xv-grid-attr.warn {
+  color: #ff9c00;
+}
+.xv-grid-box .xv-grid-attr.italic {
+  font-style: italic;
+}
+.xv-grid-box .xv-grid-attr.placeholder {
+  font-style: italic;
+  color: #93a1a1;
+}
+.xv-grid-box .xv-grid-attr.hyperlink {
+  color: blue;
+}
 .xv-grid-box .xv-grid-row {
   font-size: 12px;
   background-color: #8d8d8d;

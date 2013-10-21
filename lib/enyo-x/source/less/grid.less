@@ -25,6 +25,31 @@
     background: @ghost
   }
 
+  .xv-grid-attr {
+    &.bold {
+    font-weight: bold;
+    }
+    &.error {
+      color: @bright-red;
+    }
+    &.emphasis {
+      color: @green;
+    }
+    &.warn {
+      color: @light-orange;
+    }
+    &.italic {
+      font-style: italic;
+    }
+    &.placeholder {
+      font-style: italic;
+      color: @blue-gray;
+    }
+    &.hyperlink {
+      color: blue;
+    }
+  }
+
   /**
     This is the most general grid row that
     is not specific to read-only or selected
