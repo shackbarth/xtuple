@@ -1,9 +1,9 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true, expr:true */
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, Backbone:true, _:true */
 
-(function () {
+XT.extensions.billing.initSalesCategoryModel = function () {
   'use strict';
 
   /**
@@ -51,27 +51,28 @@ white:true, expr:true */
      * @see XM.SalesCategory#getUnpostedInvoices
      */
     canDeactivate: function (callback) {
-      /**
-       * Check base 'canDeactivate' conditions to determine whether querying
-       * the server will be necessary.
-       *
-       * @private @inner @function
-       * @returns {Boolean} true if all conditions met, false otherwise
-       */
-      var prequalify = _(_.all).bind(this, [
+      var that = this,
+       /**
+        * Check base 'canDeactivate' conditions to determine whether querying
+        * the server will be necessary.
+        *
+        * @private @inner @function
+        * @returns {Boolean} true if all conditions met, false otherwise
+        */
+        prequalify = _(_.all).bind(this, [
           this.get('isActive'),
           this.canEdit('isActive'),
-          this.hasLockKey(),
           this.canUpdate()
         ]),
+
         /**
+         * @callback
          * Invoked after it is determined if there are unposted invoices that
          * reference this model.
-         * @callback
          */
         afterUnpostedInvoicesChange = function (unpostedInvoices) {
           var canDeactivate = prequalify() && !unpostedInvoices;
-          this.trigger('change:canDeactivate', canDeactivate);
+          that.trigger('change:canDeactivate', canDeactivate);
 
           if (_.isFunction(callback)) {
             callback(canDeactivate);
@@ -84,7 +85,6 @@ white:true, expr:true */
       }
 
       this.once('change:unpostedInvoices', afterUnpostedInvoicesChange);
-
       this.getUnpostedInvoices();
     },
 
@@ -120,7 +120,6 @@ white:true, expr:true */
             success: afterSave
           });
         };
-
       this.fetch({ success: afterFetch });
     }
   });
@@ -133,9 +132,5 @@ white:true, expr:true */
     model: XM.SalesCategory
   });
 
-  XT.extensions.billing.initSalesCategoryModel = function () {
-    XT.cacheCollection('XM.salesCategories', 'XM.SalesCategoryCollection');
-  };
-
-}());
-
+  XT.cacheCollection('XM.salesCategories', 'XM.SalesCategoryCollection');
+};

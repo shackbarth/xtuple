@@ -6,7 +6,8 @@
 (function () {
   "use strict";
 
-  var crud = require('../lib/crud'),
+  var assert = require("chai").assert,
+    crud = require('../lib/crud'),
     data = {
       recordType : "XM.SalesCategory",
       autoTestAttributes : true,
@@ -16,12 +17,38 @@
         isActive: true
       },
       updateHash : {
-        description: "Changed Descrip"
+        description: "Changed Descrip",
+        isActive: false
       }
     };
 
   describe('SaleType CRUD Test', function () {
     crud.runAllCrud(data);
-  });
-}());
 
+    it('test deactivate with no unposted invoices', function (done) {
+      this.timeout(5000);
+
+      var sc = new XM.SalesCategory({
+        name: 'test1',
+        description: 'test1 desc',
+        isActive: true
+      });
+
+      sc.once('change:canDeactivate', function (canDeactivate) {
+        if (canDeactivate) {
+          done();
+        }
+        else {
+          assert.fail();
+        }
+      });
+
+      sc.canDeactivate();
+    });
+
+    it('test deactivate with unposted invoices', function (done) {
+      this.timeout(20000);
+      // TODO 
+    });
+  });
+})();

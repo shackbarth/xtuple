@@ -7,30 +7,12 @@ trailing:true, white:true*/
 
   XT.extensions.billing.initWorkspaces = function () {
 
-  /*
-    enyo.kind({
-      name: "XV.BillingWorkspace",
-      kind: "XV.Workspace",
-      title: "_configure".loc() + " " + "_billing".loc(),
-      model: "XM.Billing",
-      components: [
-        {kind: "Panels", arrangerKind: "CarouselArranger", fit: true, components: [
-          {kind: "XV.Groupbox", name: "mainPanel", components: [
-            {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-                classes: "in-panel", components: [
-              // TODO decorate
-            ]}
-          ]}
-        ]}
-      ]
-    });
-  */
-
     enyo.kind({
       name: "XV.SalesCategoryWorkspace",
       kind: "XV.Workspace",
+      view: "XM.SalesCategoryView",
       title: "_salesCategory".loc(),
-      model: "XM.SalesCategory",
+
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -40,11 +22,43 @@ trailing:true, white:true*/
               classes: "in-panel", components: [
               {kind: "XV.InputWidget", attr: "name"},
               {kind: "XV.InputWidget", attr: "description"},
-              {kind: "XV.CheckboxWidget", attr: "isActive"}
+              {kind: "XV.CheckboxWidget", name: 'isActive', attr: "isActive", disabled: true}
             ]}
           ]}
         ]}
-      ]
+      ],
+
+      /**
+       * @see XM.SalesCategoryView
+       * @listens XM.SalesCategoryView#events
+       */
+      handlers: {
+        onCanDeactivateChange: 'canDeactivateChanged',
+        onModelReadyClean:     'modelReady'
+      },
+
+      /**
+       * @listens onModelReadyClean
+       */
+      modelReady: function (inSender, inEvent) {
+        if (this.value.get('isActive')) {
+          inEvent.result.canDeactivate();
+        }
+        else {
+          this.$.isActive.setDisabled(!this.value.canEdit('isActive'));
+        }
+
+        return true;
+      },
+
+      /**
+       * @listens onCanDeactivateChange
+       */
+      canDeactivateChanged: function (inSender, canDeactivate) {
+        this.$.isActive.setDisabled(!canDeactivate);
+
+        return true;
+      }
     });
 
     XV.registerModelWorkspace("XM.SalesCategory", "XV.SalesCategoryWorkspace");
