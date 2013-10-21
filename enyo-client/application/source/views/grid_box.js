@@ -67,24 +67,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         this.$.assignDate.setContent(this.formatDate(model.get("assignDate")));
         this.$.completeDate.setContent(this.formatDate(model.get("completeDate")));
       }
-    },
-
-    formatDate: function (value, view, model) {
-      return value ? Globalize.format(XT.date.applyTimezoneOffset(value, true), "d") : "";
-    },
-
-    formatDueDate: function (value, view, model) {
-      return value ? Globalize.format(XT.date.applyTimezoneOffset(value, true), "d") : "";
-    },
-
-    formatMoney: function (value, view, model) {
-      var currency = XT.baseCurrency(),
-        scale = XT.locale.moneyScale;
-      return currency.format(value, scale);
-    },
-
-    formatQuantity: function (value, view, model) {
-      return Globalize.format(value, "n" + XT.locale.quantityScale);
     }
   });
 
@@ -191,65 +173,36 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.SalesOrderLineItemReadOnlyGridRow",
     kind: "XV.ReadOnlyGridRow",
     components: [
-      {classes: "xv-grid-column line-number", components: [
-        {name: "lineNumber"}
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "line-number", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "lineNumber"}
       ]},
-      {classes: "xv-grid-column grid-item", components: [
-        {name: "itemNumber"},
-        {name: "itemDescription"},
-        {name: "siteCode"},
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "grid-item", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "item.number"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "item.description1"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "site.code"},
       ]},
-      {classes: "xv-grid-column quantity", components: [
-        {name: "quantity"},
-        {name: "quantityUnit"}
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "quantity", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "quantity"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "quantityUnit.name"}
       ]},
-      {classes: "xv-grid-column discount", components: [
-        {name: "discount"}
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "discount", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "discount"}
       ]},
-      {classes: "xv-grid-column price", components: [
-        {name: "price"},
-        {name: "priceUnit"},
-        {name: "extendedPrice"}
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "price", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "price"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "priceUnit.name"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "extendedPrice"}
       ]},
-      {classes: "xv-grid-column date", components: [
-        {name: "scheduleDate"}
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "date", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "scheduleDate"}
       ]}
-    ],
-    valueChanged: function () {
-      var model = this.getValue(),
-        locale = XT.locale,
-        quantity,
-        discount,
-        price;
-
-      if (!model) { return; }
-
-      quantity = model.get("quantity");
-      discount = model.get("discount");
-      price = model.get("price");
-      locale = XT.locale;
-
-      this.$.lineNumber.setContent(model.get("lineNumber"));
-      this.$.itemNumber.setContent(model.getValue("item.number") || "_required".loc());
-      this.$.itemNumber.addRemoveClass("xv-error", !model.getValue("item.number"));
-      this.$.itemDescription.setContent(model.getValue("item.description1"));
-      this.$.siteCode.setContent(model.getValue("site.code"));
-
-      this.$.quantity.addRemoveClass("xv-error", !quantity);
-      quantity = _.isNumber(quantity) ? Globalize.format(quantity, "n" + locale.quantityScale) : "_required".loc();
-      this.$.quantity.setContent(quantity);
-
-      this.$.quantityUnit.setContent(model.getValue("quantityUnit.name"));
-      discount = _.isNumber(discount) ? Globalize.format(discount, "p" + XT.PERCENT_SCALE) : "";
-      this.$.discount.setContent(discount);
-
-      this.$.price.addRemoveClass("xv-error", !_.isNumber(price));
-      this.$.price.setContent(Globalize.format(price, "n" + locale.salesPriceScale) || "_required".loc());
-      this.$.priceUnit.setContent(model.getValue("priceUnit.name"));
-      this.$.extendedPrice.setContent(Globalize.format(model.get("extendedPrice"), "n" + locale.extendedPriceScale));
-
-      this.$.scheduleDate.setContent(Globalize.format(XT.date.applyTimezoneOffset(model.get("scheduleDate"), true), "d"));
-    }
+    ]
   });
 
   //

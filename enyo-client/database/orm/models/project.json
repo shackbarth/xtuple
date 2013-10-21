@@ -91,7 +91,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prj_due_date",
           "required": true
         }
@@ -595,7 +595,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prj_due_date"
         }
       },
@@ -870,7 +870,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prj_due_date"
         }
       },
@@ -1328,7 +1328,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prjtask_due_date",
           "required": true
         }
@@ -1550,7 +1550,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prjtask_due_date",
           "required": true
         }
@@ -1797,7 +1797,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prjtask_due_date"
         }
       },

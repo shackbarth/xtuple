@@ -104,9 +104,9 @@ select xt.install_js('XT','Orm','xtuple', $$
     var verifyOrmType = function (ormType, columnType) {
       var ormTypeMappings = {
         "B": ["Boolean"],
-        "D": ["Date"],
-        "N": ["Cost", "ExtendedPrice", "ListPrice", "Money", "Number", 
-          "Percent", "PurchasePrice", "Quantity", "SalesPrice", "UnitRatio", "Weight"],
+        "D": ["Date","DueDate"],
+        "N": ["Cost", "ExtendedPrice", "Money", "Number", "Percent",
+          "PurchasePrice", "Quantity", "QuantityPer", "SalesPrice", "UnitRatio", "Weight"],
         "S": ["String"],
         "U": ["String"], /* e.g. char */
         "X": ["Null"]
