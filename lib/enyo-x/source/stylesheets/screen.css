@@ -153,8 +153,10 @@
 }
 .xv-groupbox .onyx-input-decorator {
   border: 0;
+  margin-left: -8px;
 }
 .xv-groupbox .onyx-input-decorator input {
+  padding-top: 2px;
   width: 150px;
 }
 .xv-groupbox .onyx-picker-decorator .onyx-button {
@@ -169,6 +171,7 @@
 .xv-groupbox .xv-relationwidget input,
 .xv-groupbox .xv-datewidget input,
 .xv-groupbox .xv-numberwidget input {
+  padding-top: 0;
   width: 120px;
 }
 .xv-groupbox .xv-relationwidget .xv-decorated-label,
