@@ -89,6 +89,32 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       assert.isTrue(lineModel instanceof XM.Model);
       assert.equal(lineModel.idAttribute, "uuid");
     });
+    /*
+      Not under test:
+    * XM.InvoiceLine should include the following attributes:
+      > String "uuid" that is the idAttribute
+      > Number "lineNumber" required
+      > ItemRelation "item"
+      > SiteRelation "site" default = XT.defaultSite()
+      > String "customerPartNumber"
+      > Boolean "isMiscellaneous" = false if item number set, true if not.
+      > String "itemNumber"
+      > String "itemDescription"
+      > SalesCategory "salesCategory"
+      > Quantity "quantity"
+      > Unit "quantityUnit"
+      > Number "quantityUnitRatio"
+      > Quantity "billed"
+      > Number "customerPrice"
+      > SalesPrice "price"
+      > Unit "priceUnit"
+      > Number "priceUnitRatio"
+      > ExtendedPrice "extendedPrice" = billed * quantityUnitRatio * (price / priceUnitRatio)
+      > Number "notes"
+      > TaxType "taxType"
+      > Money "taxTotal" = sum of all taxes
+      > InvoiceLineTax "taxes"
+    */
     it("should include a property \"sellingUnits\" that is an array of available selling " +
         "units of measure based on the selected item", function () {
       var lineModel = new XM.InvoiceLine();
@@ -129,34 +155,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.equal(lineModel.get("quantityUnitRatio"), 1);
         assert.equal(lineModel.get("taxType").id, "Taxable");
         done();
-      }, 3000); // TODO: use an event
+      }, 3000); // TODO: use an event. headache because we have to wait for several
     });
-    /*
-      Not under test:
-    * XM.InvoiceLine should include the following attributes:
-      > String "uuid" that is the idAttribute
-      > Number "lineNumber" required
-      > ItemRelation "item"
-      > SiteRelation "site" default = XT.defaultSite()
-      > String "customerPartNumber"
-      > Boolean "isMiscellaneous" = false if item number set, true if not.
-      > String "itemNumber"
-      > String "itemDescription"
-      > SalesCategory "salesCategory"
-      > Quantity "quantity"
-      > Unit "quantityUnit"
-      > Number "quantityUnitRatio"
-      > Quantity "billed"
-      > Number "customerPrice"
-      > SalesPrice "price"
-      > Unit "priceUnit"
-      > Number "priceUnitRatio"
-      > ExtendedPrice "extendedPrice" = billed * quantityUnitRatio * (price / priceUnitRatio)
-      > Number "notes"
-      > TaxType "taxType"
-      > Money "taxTotal" = sum of all taxes
-      > InvoiceLineTax "taxes"
-    */
 
 
   };
