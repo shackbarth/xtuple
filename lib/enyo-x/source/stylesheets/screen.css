@@ -121,6 +121,9 @@
   padding: 0;
   margin: 0;
 }
+.xv-groupbox .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
 .xv-groupbox .in-panel > *:first-child {
   border-top-color: #aaaaaa;
   border-top: none;
@@ -162,9 +165,6 @@
 .xv-groupbox .xv-datewidget input,
 .xv-groupbox .xv-numberwidget input {
   width: 120px;
-}
-.xv-groupbox .xv-numberwidget input {
-  width: 150px;
 }
 .xv-groupbox .xv-moneywidget {
   background-color: #ffffff;
@@ -925,14 +925,27 @@
 /**
   Styles relating to misc widgets
 */
+.xv-numberwidget input {
+  text-align: right;
+  width: 150px;
+}
 .spinner .buttons {
   display: block;
   padding: 0;
+  margin: 1px 0 1px 0;
   width: 20px;
   height: 20px;
 }
 .spinner .slider {
-  margin: 15px 10px;
+  margin: 15px 15px;
+  width: 100px;
+}
+.spinner.xv-numberwidget .onyx-input-decorator {
+  width: 100px;
+}
+.spinner.xv-numberwidget input {
+  width: 50px;
+  text-align: left;
 }
 /**
   Import for Font-Awesome icons
@@ -2656,9 +2669,6 @@ body {
 /*
   XV Widgets
 */
-.xv-numberwidget input {
-  text-align: right;
-}
 .xv-addresswidget {
   background-color: #ffffff;
   padding: 4px;

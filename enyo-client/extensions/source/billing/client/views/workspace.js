@@ -42,7 +42,7 @@ trailing:true, white:true*/
                 label: "_autoCreditWarnLateCustomers".loc()},
               {kind: "XV.NumberSpinnerWidget", attr: "DefaultAutoCreditWarnGraceDays",
                 label: "_defaultAutoCreditWarnGraceDays".loc()},
-              {kind: "XV.NumberWidget", attr: "RecurringInvoiceBuffer",
+              {kind: "XV.NumberSpinnerWidget", attr: "RecurringInvoiceBuffer",
                 label: "_recurringInvoiceBuffer".loc()},
               {kind: "XV.IncidentCategoryPicker", attr: "DefaultARIncidentStatus",
                 label: "_defaultARIncidentStatus".loc()},
