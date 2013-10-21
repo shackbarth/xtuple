@@ -4,12 +4,6 @@
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true,
   describe:true, before:true, enyo:true, it:true, _:true, console:true */
 
-// NOTE! This test will fail in an extensionless build. This failure represents
-// a low-burning bug in the app, that many kinds are defined but not instantiable
-// in the core itself, usually because they rely on pickers that rely on caches
-// that don't exist. We don't see this problem in the app because those kinds
-// are hidden without the pertinent extension.
-
 (function () {
   "use strict";
 
@@ -49,7 +43,6 @@
       it('verify that the list has all test values when no document type is specified', function () {
 
         describe('test filtering on reason code picker', function () {
-
           var K, nullModel, debitModel, creditModel;
 
           before(function () {

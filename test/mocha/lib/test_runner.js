@@ -7,6 +7,7 @@
 // TODO: test "used"
 // i.e.: A XM.ShipVia object can not be deleted if it has been assigned as the default customer ship via in sales settings.
 
+// TODO: test defaults
 
 (function () {
   "use strict";
@@ -24,16 +25,19 @@
         spec.updateHash[spec.updatableField] = "Test" + Math.random();
       }
 
-
       //
       // Run CRUD model tests
       //
-      crud.runAllCrud(spec);
+      if (!spec.skipCrud) {
+        crud.runAllCrud(spec);
+      }
 
       //
       // Smoke Crud
       //
-      smoke.runUICrud(spec);
+      if (!spec.skipSmoke) {
+        smoke.runUICrud(spec);
+      }
 
       //
       // Verify lockability
@@ -221,8 +225,13 @@
           assert.fail();
         });
       }
+
       // TODO: verify that the cache is made available by certain extensions and not others
       // TODO: verify that the list is made available by certain extensions and not others
+
+      if (spec.additionalTests) {
+        spec.additionalTests();
+      }
 
     });
   });

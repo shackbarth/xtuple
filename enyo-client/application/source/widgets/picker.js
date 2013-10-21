@@ -64,6 +64,52 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // BILLING TERMS
+  //
+
+  enyo.kind({
+    name: "XV.BillingTermsPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.terms",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ],
+    filter: function (models) {
+      return _.filter(models, function (m) {
+        return m.getValue("isUsedByBilling");
+      });
+    }
+  });
+
+  // ..........................................................
+  // BANK ACCOUNT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.BankAccountTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.bankAccountTypes",
+    showNone: false
+  });
+
+  // ..........................................................
+  // BILLING BANK ACCOUNT PICKER
+  //
+
+  enyo.kind({
+    name: "XV.BillingBankAccountPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.bankAccountRelations",
+    filter: function (models) {
+      var ret = _.filter(models, function (m) {
+        return m.get("isUsedByBilling");
+      });
+      return ret;
+    }
+  });
+
+  // ..........................................................
   // CHARACTERISTIC TYPE
   //
 
@@ -684,6 +730,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.TermsTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.termsTypes",
+    showNone: false,
     nameAttribute: "name"
   });
 

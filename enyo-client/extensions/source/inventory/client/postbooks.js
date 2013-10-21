@@ -17,17 +17,18 @@ trailing:true, white:true*/
     //
 
     panels = [
-      {name: "siteList", kind: "XV.SiteList"},
-      {name: "siteTypeList", kind: "XV.SiteTypeList"},
+      {name: "costCategoryList", kind: "XV.CostCategoryList"},
+      {name: "customerTypeList", kind: "XV.CustomerTypeList"},
+      {name: "expenseCategoryList", kind: "XV.ExpenseCategoryList"},
       {name: "itemList", kind: "XV.ItemList"},
       {name: "itemGroupList", kind: "XV.ItemGroupList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
       {name: "locationList", kind: "XV.LocationList"},
-      {name: "costCategoryList", kind: "XV.CostCategoryList"},
       {name: "plannerCodeList", kind: "XV.PlannerCodeList"},
-      {name: "customerTypeList", kind: "XV.CustomerTypeList"},
-      {name: "expenseCategoryList", kind: "XV.ExpenseCategoryList"},
-      {name: "reasonCodeList", kind: "XV.ReasonCodeList"}
+      {name: "reasonCodeList", kind: "XV.ReasonCodeList"},
+      {name: "siteList", kind: "XV.SiteList"},
+      {name: "siteTypeList", kind: "XV.SiteTypeList"},
+      {name: "termsList", kind: "XV.TermsList"}
     ];
     XT.app.$.postbooks.appendPanels("setup", panels);
 
@@ -82,6 +83,7 @@ trailing:true, white:true*/
       "MaintainReasonCodes",
       "MaintainShipVias",
       "MaintainSiteTypes",
+      "MaintainTerms",
       "MaintainWarehouses",
       "RecallInvoicedShipment",
       "RecallOrders",

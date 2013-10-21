@@ -389,4 +389,21 @@ white:true*/
     XM.reasonCodeDocumentTypes.add(reasonDocType);
   }
 
+  // Bank Account Types
+  K = XM.BankAccount;
+  var bankAccountTypeJson = [
+    { id: K.CASH, name: "_cash".loc() },
+    { id: K.CHECKING, name: "_checking".loc() },
+    { id: K.CREDIT_CARD, name: "_creditCard".loc() }
+  ];
+  XM.BankAccountTypeModel = Backbone.Model.extend({});
+  XM.BankAccountTypeCollection = Backbone.Collection.extend({
+    model: XM.BankAccountTypeModel
+  });
+  XM.bankAccountTypes = new XM.BankAccountTypeCollection();
+  for (i = 0; i < bankAccountTypeJson.length; i++) {
+    var bankAccountType = new XM.BankAccountTypeModel(bankAccountTypeJson[i]);
+    XM.bankAccountTypes.add(bankAccountType);
+  }
+
 }());

@@ -18,6 +18,7 @@ trailing:true, white:true*/
     //
 
     panels = [
+      {name: "bankAccountList", kind: "XV.BankAccountList"},
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
       {name: "saleTypeList", kind: "XV.SaleTypeList"},
@@ -73,6 +74,7 @@ trailing:true, white:true*/
       "ConfigureSO",
       "ConfigureCC",
       "DeleteItemMasters",
+      "MaintainBankAccounts",
       "MaintainCustomerGroups",
       "MaintainCustomerMasters",
       "MaintainFreightClasses",
