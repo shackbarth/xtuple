@@ -12,14 +12,12 @@
     _ = require("underscore"),
     assert = require("chai").assert,
     child,
-    key,
     master;
 
   describe('XV ReasonCodePicker', function () {
     this.timeout(45 * 1000);
 
     before(function (done) {
-      // setup for the date widget
       var appLoaded = function () {
         done();
       };
@@ -29,15 +27,14 @@
     describe('test reason code picker', function () {
 
       before(function () {
-        key = "ReasonCodePicker";
         master = new enyo.Control();
 
         // create the reason code picker
         child = master.createComponent({
-          kind: "XV." + key,
-          name: key
+          kind: "XV.ReasonCodePicker",
+          name: "ReasonCodePicker"
         });
-        assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
+        assert.equal(master.$.ReasonCodePicker.kind, 'XV.ReasonCodePicker', "Error instantiating XV.ReasonCodePicker");
       });
 
       it('verify that the list has all test values when no document type is specified', function () {
