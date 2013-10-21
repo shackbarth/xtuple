@@ -20,7 +20,7 @@ strict:true, trailing:true, white:true */
     "_creditTaxDiscount": "Credit Taxes for Early Payment Discounts",
     "_defaultAutoCreditWarnGraceDays": "Default Grace Period Days",
     "_enableCustomerDeposits": "Enable Customer Deposits",
-    "_hideApplyToBalance": "Hide Apply to Balance",
+    "_hideApplyToBalance": "Hide 'Apply to Balance' Action",
     "_salesCategory": "Sales Category",
     "_salesCategories": "Sales Categories",
     "_maintainSalesCategory": "Maintain Sales Category",

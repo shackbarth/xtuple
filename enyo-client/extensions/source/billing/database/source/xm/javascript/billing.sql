@@ -54,8 +54,8 @@ select xt.install_js('XM','Billing','xtuple', $$
       qry,
       orm;
 
-    ret.NextARMemoNumber = plv8.execute('select currentARMemoNumber()', [])[0].value;
-    ret.NextCashRcptNumber = plv8.execute('select currentCashRcptNumber()',[])[0].value;
+    ret.NextARMemoNumber = plv8.execute('select currentARMemoNumber() as value', [])[0].value;
+    ret.NextCashRcptNumber = plv8.execute('select currentCashRcptNumber() as value',[])[0].value;
 
     ret = XT.extend(ret, data.retrieveMetrics(keys));
     return JSON.stringify(ret);
