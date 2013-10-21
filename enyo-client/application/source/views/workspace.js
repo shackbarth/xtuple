@@ -561,7 +561,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.CheckboxWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormBillto", label: "_freeFormBill".loc()},
             {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
-            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
             {kind: "XV.CheckboxWidget", attr: "usesPurchaseOrders"},
@@ -1684,7 +1684,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
           {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
@@ -1920,7 +1920,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
           {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
@@ -2481,13 +2481,30 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.TermsTypePicker", attr: "termsType"},
-            {kind: "XV.NumberWidget", attr: "dueDays"},
-            {kind: "XV.NumberWidget", attr: "discountDays"},
-            {kind: "XV.NumberWidget", attr: "cutOffDay"}
+            {kind: "XV.NumberWidget", name: "dueDays", attr: "dueDays"},
+            {kind: "XV.NumberWidget", name: "discountDays", attr: "discountDays"},
+            {kind: "XV.NumberWidget", name: "cutOffDay", attr: "cutOffDay"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByBilling"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByPayments"}
           ]}
         ]}
       ]}
-    ]
+    ],
+    // XXX would be better if we only responded to changes to termstype specifically
+    attributesChanged: function () {
+      var termsType = this.getValue().get("termsType");
+      this.inherited(arguments);
+
+      this.$.cutOffDay.setShowing(termsType === XM.Terms.PROXIMO);
+
+      if (termsType === XM.Terms.DAYS) {
+        this.$.dueDays.setLabel("_dueDays".loc());
+        this.$.discountDays.setLabel("_discountDays".loc());
+      } else if (termsType === XM.Terms.PROXIMO) {
+        this.$.dueDays.setLabel("_dueDay".loc());
+        this.$.discountDays.setLabel("_discountDay".loc());
+      }
+    }
   });
 
   XV.registerModelWorkspace("XM.Terms", "XV.TermsWorkspace");

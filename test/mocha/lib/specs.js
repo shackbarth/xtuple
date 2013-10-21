@@ -9,7 +9,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
 
   var async = require("async"),
     _ = require("underscore"),
-  assert = require("chai").assert;
+    assert = require("chai").assert;
 
   exports.honorific = {
     recordType: "XM.Honorific",
@@ -42,7 +42,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     idAttribute: "number",
     enforceUpperKey: true,
     attributes: ["number", "description1"], // TODO: more
-    extensions: ["crm", "sales", "inventory", "project"], // TODO: billing
+    extensions: ["billing", "crm", "sales", "inventory", "project"],
     privileges: {
       createUpdate: "MaintainItemMasters",
       read: "ViewItemMasters",
@@ -74,8 +74,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["code", "description"],
-    extensions: ["sales", "inventory"],
-    //extensions: ["sales", "inventory", "billing"],
+    extensions: ["billing", "inventory", "sales"],
     privileges: {
       createUpdateDelete: "MaintainShipVias",
       read: true
@@ -208,6 +207,38 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
         next();
       }
     }]
+  };
+
+  exports.terms = {
+    recordType: "XM.Terms",
+    collectionType: "XM.TermsCollection",
+    cacheName: "XM.terms",
+    listKind: "XV.TermsList",
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "code",
+    enforceUpperKey: false,
+    attributes: ["code", "cutOffDay", "description", "dueDays", "discountDays", "discountPercent",
+      "isUsedByBilling", "isUsedByPayments", "termsType"],
+    defaults: {
+      dueDays: 0,
+      discountDays: 0,
+      cutOffDay: 0,
+      isUsedByBilling: false,
+      isUsedByPayments: false,
+      termsType: "D"
+    },
+    extensions: ["billing", "inventory", "sales"],
+    privileges: {
+      createUpdateDelete: "MaintainTerms",
+      read: true
+    },
+    createHash: {
+      code: "TestTerms" + Math.random(),
+      description: "Test Terms"
+    },
+    updatableField: "description",
+    additionalTests: require("../specs/terms").additionalTests
   };
 
   // TODO: Need to retrofit test_runner to test relations

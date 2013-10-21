@@ -64,6 +64,25 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // BILLING TERMS
+  //
+
+  enyo.kind({
+    name: "XV.BillingTermsPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.terms",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ],
+    filter: function (models) {
+      return _.filter(models, function (m) {
+        return m.getValue("isUsedByBilling");
+      });
+    }
+  });
+
+  // ..........................................................
   // BANK ACCOUNT TYPE
   //
 
@@ -711,6 +730,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.TermsTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.termsTypes",
+    showNone: false,
     nameAttribute: "name"
   });
 
