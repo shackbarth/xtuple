@@ -102,36 +102,42 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           done();
         }
       };
-      itemModel = new XM.Item();
+      itemModel = new XM.ItemRelation();
       itemModel.on("statusChange", statusChanged);
       itemModel.fetch({number: "BTRUCK1"});
     });
     it("When the item is changed the following should be updated from item information: " +
         " sellingUnits, quantityUnit, quantityUnitRatio, priceUnit, priceUnitRatio, unitCost " +
-        "taxType, and calculatePrice should be executed", function (done) {
+        "and taxType. Also calculatePrice should be executed", function (done) {
       this.timeout(4000);
       var lineModel = new XM.InvoiceLine();
 
       assert.equal(lineModel.sellingUnits.length, 0);
       assert.isNull(lineModel.get("quantityUnit"));
+      assert.isNull(lineModel.get("priceUnit"));
+      assert.isNull(lineModel.get("taxType"));
+      assert.isUndefined(lineModel.get("unitCost"));
       lineModel.set({item: itemModel});
 
       setTimeout(function () {
         assert.equal(lineModel.sellingUnits.length, 1);
         assert.equal(lineModel.sellingUnits.models[0].id, "EA");
         assert.equal(lineModel.get("quantityUnit").id, "EA");
+        assert.equal(lineModel.get("priceUnit").id, "EA");
+        assert.equal(lineModel.get("unitCost"), 2.5704);
+        assert.equal(lineModel.get("priceUnitRatio"), 1);
+        assert.equal(lineModel.get("quantityUnitRatio"), 1);
+        assert.equal(lineModel.get("taxType").id, "Taxable");
         done();
       }, 3000); // TODO: use an event
-
-
     });
     /*
       Not under test:
     * XM.InvoiceLine should include the following attributes:
       > String "uuid" that is the idAttribute
       > Number "lineNumber" required
-      > Item "item"
-      > Site "site" default = XT.defaultSite()
+      > ItemRelation "item"
+      > SiteRelation "site" default = XT.defaultSite()
       > String "customerPartNumber"
       > Boolean "isMiscellaneous" = false if item number set, true if not.
       > String "itemNumber"

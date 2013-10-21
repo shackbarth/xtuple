@@ -86,8 +86,12 @@ white:true*/
     //
     bindEvents: function (attributes, options) {
       XM.Model.prototype.bindEvents.apply(this, arguments);
-      this.on("relational:change:item", this.itemDidChange); // TODO: shouldn't need this
+      this.on("relational:change:item", this.itemDidChange); // TODO: shouldn't need these
+      this.on('relational:change:priceUnit', this.priceUnitDidChange);
+      this.on('relational:change:quantityUnit', this.quantityUnitDidChange);
       this.on("change:item", this.itemDidChange);
+      this.on('change:priceUnit', this.priceUnitDidChange);
+      this.on('change:quantityUnit', this.quantityUnitDidChange);
     },
 
     defaults: function () {
@@ -104,15 +108,51 @@ white:true*/
     //
     // Model-specific functions
     //
+    calculateExtendedPrice: function () {
+    },
     calculatePrice: function () {
-
     },
 
     // temp until we refactor these together
     fetchSellingUnits: XM.SalesOrderLineBase.prototype.fetchSellingUnits,
+    priceUnitDidChange: XM.SalesOrderLineBase.prototype.priceUnitDidChange,
+    quantityUnitDidChange: XM.SalesOrderLineBase.prototype.quantityUnitDidChange,
+    recalculateParent: XM.SalesOrderLineBase.prototype.recalculateParent,
 
+    // refactor potential: this function is largely similar to the one on XM.SalesOrderLine
     itemDidChange: function () {
+      //var isWholesaleCost = XT.session.settings.get("WholesalePriceCosting"),  not using this
+      var that = this,
+        options = {},
+        parent = this.getParent(),
+        taxZone = parent ? parent.get("taxZone") : undefined,
+        item = this.get("item"),
+        unitCost = item.get("standardCost");
+
+      // Reset values
+      this.unset("priceUnitRatio");
+      this.unset("taxType");
       this.fetchSellingUnits();
+
+      // Fetch and update tax type
+      options.success = function (id) {
+        var taxType = XM.taxTypes.get(id);
+        if (taxType) {
+          that.set("taxType", taxType);
+        } else {
+          that.unset("taxType");
+        }
+      };
+
+      item.taxType(taxZone, options);
+
+      // Reset Unit Cost
+      //this.off("unitCost", this.unitCostDidChange);
+      this.set("unitCost", unitCost);
+      //this.on("unitCost", this.unitCostDidChange);
+
+
+      this.calculatePrice();
     }
 
 

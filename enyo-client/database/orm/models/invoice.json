@@ -377,7 +377,7 @@
         "name": "item",
         "toOne": {
           "isNested": true,
-          "type": "Item",
+          "type": "ItemRelation",
           "column": "invcitem_item_id",
           "required": true
         }
@@ -386,7 +386,7 @@
         "name": "site",
         "toOne": {
           "isNested": true,
-          "type": "Site",
+          "type": "SiteRelation",
           "column": "invcitem_warehous_id",
           "required": true
         }
