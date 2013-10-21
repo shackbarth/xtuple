@@ -256,8 +256,7 @@ trailing:true, white:true, strict: false*/
       return value;
     },
     vCardExport: function (inEvent) {
-      var collection = this.getValue(),
-          imodel = inEvent.model,
+      var imodel = inEvent.model,
           model = imodel,
           begin,
           version,
@@ -1695,6 +1694,15 @@ trailing:true, white:true, strict: false*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    events: {
+      onNotify: ""
+    },
+    actions: [{
+      name: "convert",
+      method: "convertQuote",
+      isViewMethod: true,
+      notify: false
+    }],
     label: "_quotes".loc(),
     collection: "XM.QuoteListItemCollection",
     parameterWidget: "XV.QuoteListParameters",
@@ -1703,6 +1711,61 @@ trailing:true, white:true, strict: false*/
         (XT.date.compareDate(value, new Date()) < 1);
       view.addRemoveClass("error", isLate);
       return value;
+    },
+    convertQuote: function (inEvent) {
+      var model = inEvent.model,
+        customer = model.get("customer"),
+        K = XM.CustomerProspectRelation,
+        that = this,
+
+        // In case we are converting a prospect
+        convertToCustomer = function (resp) {
+          if (!resp.answer) { return; }
+          var success = function () {
+            this.getValue().convertFromProspect(customer.id);
+          };
+
+          that.doWorkspace({
+            workspace: "XV.CustomerWorkspace",
+            attributes: {
+              number: customer.get("number"),
+              name: customer.get("name")
+            },
+            success: success,
+            callback: convertToSalesOrder,
+            allowNew: false
+          });
+        },
+
+        // A callback in case we had to convert to a customer first
+        convertToSalesOrder = function () {
+          var success = function () {
+              var gridBox = this.$.salesOrderLineItemGridBox;
+              this.getValue().convertFromQuote(model.id, {
+                success: function () {
+                  // Hack to force grid to refresh. Why doesn't it on its own?
+                  gridBox.valueChanged();
+                  gridBox.setDisabled(false);
+                }
+              });
+            };
+
+          that.doWorkspace({
+            workspace: "XV.SalesOrderWorkspace",
+            success: success,
+            allowNew: false
+          });
+        };
+
+      if (customer.get("status") === K.PROSPECT_STATUS) {
+        this.doNotify({
+          type: XM.Model.QUESTION,
+          callback: convertToCustomer,
+          message: "_convertProspect".loc()
+        });
+      } else {
+        convertToSalesOrder();
+      }
     }
   });
 
@@ -2337,6 +2400,55 @@ trailing:true, white:true, strict: false*/
   });
 
   XV.registerModelList("XM.VendorRelation", "XV.VendorList");
+
+  // ..........................................................
+  // WORK ORDER
+  //
+
+  enyo.kind({
+    name: "XV.WorkOrderList",
+    kind: "XV.List",
+    label: "_workOrders".loc(),
+    collection: "XM.WorkOrderListItemCollection",
+    parameterWidget: "XV.WorkOrderListParameters",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "status",
+                style: "padding-left: 24px"},
+              {kind: "XV.ListAttr", attr: "itemSite.item.number", classes: "bold", style: "padding-left: 12px"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "itemSite.site.code", style: "padding-left: 12px"},
+              {kind: "XV.ListAttr", attr: "itemSite.item.description1", classes: "italic"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "dueDate", classes: "right"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "itemSite.item.inventoryUnit.name"},
+              {kind: "XV.ListAttr", attr: "qtyOrdered"},
+              {kind: "XV.ListAttr", attr: "qtyReceived"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.WorkOrderListItem", "XV.WorkOrderList");
 
   enyo.kind({
     name: "XV.NameList",
