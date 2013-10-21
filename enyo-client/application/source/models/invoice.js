@@ -52,6 +52,105 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Characteristic
+  */
+  XM.InvoiceCharacteristic = XM.CharacteristicAssignment.extend({
+    /** @scope XM.InvoiceCharacteristic.prototype */
+
+    recordType: 'XM.InvoiceCharacteristic'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.InvoiceContact = XM.Model.extend({
+    /** @scope XM.InvoiceContact.prototype */
+
+    recordType: 'XM.InvoiceContact',
+
+    isDocumentAssignment: true
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.InvoiceAccount = XM.Model.extend({
+    /** @scope XM.InvoiceAccount.prototype */
+
+    recordType: 'XM.InvoiceAccount',
+
+    isDocumentAssignment: true
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.InvoiceCustomer = XM.Model.extend({
+    /** @scope XM.InvoiceCustomer.prototype */
+
+    recordType: 'XM.InvoiceCustomer',
+
+    isDocumentAssignment: true
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.InvoiceFile = XM.Model.extend({
+    /** @scope XM.InvoiceFile.prototype */
+
+    recordType: 'XM.InvoiceFile',
+
+    isDocumentAssignment: true
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.InvoiceUrl = XM.Model.extend({
+    /** @scope XM.InvoiceUrl.prototype */
+
+    recordType: 'XM.InvoiceUrl',
+
+    isDocumentAssignment: true
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.InvoiceItem = XM.Model.extend({
+    /** @scope XM.InvoiceItem.prototype */
+
+    recordType: 'XM.InvoiceItem',
+
+    isDocumentAssignment: true
+
+  });
+
+
+
+
   // ..........................................................
   // COLLECTIONS
   //

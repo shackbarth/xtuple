@@ -14,29 +14,63 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     model;
 
   exports.additionalTests = function () {
+    it.skip("the system settings options CCValidDays which will default as 7 if " +
+        "none are defined in the database", function () {
+      assert.equal(XT.session.settings.get("CCValidDays"), 7);
+    });
 
+    it("XM.Characteristic to include \"isInvoices\" as a context attribute", function () {
+      var characteristic = new XM.Characteristic();
+      assert.isBoolean(characteristic.get("isInvoices"));
+    });
+
+    it("A nested only model XM.InvoiceCharacteristic should exist according to " +
+        "convention for characteristic assignments", function () {
+      var model;
+
+      assert.isFunction(XM.InvoiceCharacteristic);
+      model = new XM.InvoiceCharacteristic();
+      assert.isTrue(model instanceof XM.CharacteristicAssignment);
+    });
+
+    describe("Nested only models should exist according to convention for " +
+        "many-to-many document associations", function () {
+      it("XM.InvoiceContact", function () {
+        assert.isFunction(XM.InvoiceContact);
+        assert.isTrue(XM.InvoiceContact.prototype.isDocumentAssignment);
+      });
+      it("XM.InvoiceAccount", function () {
+        assert.isFunction(XM.InvoiceAccount);
+        assert.isTrue(XM.InvoiceAccount.prototype.isDocumentAssignment);
+      });
+      it("XM.InvoiceCustomer", function () {
+        assert.isFunction(XM.InvoiceCustomer);
+        assert.isTrue(XM.InvoiceCustomer.prototype.isDocumentAssignment);
+
+      });
+      it("XM.InvoiceFile", function () {
+        assert.isFunction(XM.InvoiceFile);
+        assert.isTrue(XM.InvoiceFile.prototype.isDocumentAssignment);
+
+      });
+      it("XM.InvoiceUrl", function () {
+        assert.isFunction(XM.InvoiceUrl);
+        assert.isTrue(XM.InvoiceUrl.prototype.isDocumentAssignment);
+
+      });
+      it("XM.InvoiceItem", function () {
+        assert.isFunction(XM.InvoiceItem);
+        assert.isTrue(XM.InvoiceItem.prototype.isDocumentAssignment);
+      });
+    });
   };
-
-
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-* Include the following system settings options:
-  > CCValidDays which will default as 7 if none are defined in the database
 
-* Extend XM.Characteristic to include "isInvoice" as a context attribute.
 
-* A nested only model should exist according to convention for characteristic assignments:
-  > XM.InvoiceCharacteristic
 
-* Nested only models should exist according to convention for many-to-many document associations:
-  > XM.InvoiceContact
-  > XM.InvoiceAccount
-  > XM.InvoiceCustomer
-  > XM.InvoiceFile
-  > XM.InvoiceUrl
-  > XM.InvoiceItem
 
 * A nested only model called XM.InvoiceLineTax extending XM.Model should exist.
 * XM.InvoiceLineTax should include the following attributes:
