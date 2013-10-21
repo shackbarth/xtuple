@@ -375,7 +375,7 @@
 
 }
 .xv-grid-box.panel {
-  width: 765px;
+  width: 700px;
 }
 .xv-grid-box .enyo-list-page > *:first-child .xv-grid-row {
   border-top: 0px;
@@ -405,17 +405,18 @@
   font-size: .8em;
   font-weight: bold;
   text-transform: uppercase;
-  padding: 4px 10px;
+  padding-top: 4px;
 }
 .xv-grid-box .xv-grid-row .xv-grid-header.last {
   border-right: none;
 }
 .xv-grid-box .xv-grid-row > * {
-  padding: 7px 10px;
+  padding: 6px 4px;
 }
 .xv-grid-box .xv-grid-row .line-number {
   vertical-align: top;
   width: 30px;
+  text-align: right;
 }
 .xv-grid-box .xv-grid-row .grid-actions {
   display: block;
@@ -462,6 +463,7 @@
   border: 1px solid #f49200;
   border-top: 1px solid #f49200;
   border-bottom: 1px solid #f49200;
+  padding-left: 7px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
   padding: 0;
@@ -473,7 +475,6 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
   padding-top: 6px;
-  padding-left: 6px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
   height: 20px;
@@ -545,7 +546,6 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input {
   width: 85%;
-  padding-left: 4px;
   padding-right: 4px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-subinput {
@@ -564,7 +564,7 @@
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
   text-indent: 0;
   padding-bottom: 0;
-  margin-left: -3px;
+  margin-left: -8px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
   display: none;

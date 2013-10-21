@@ -6,7 +6,7 @@
 /* Entire box including the grid and the summary panel */
 .xv-grid-box {
   &.panel {
-    width: 765px;
+    width: 700px;
   }
 
   .enyo-list-page {
@@ -47,18 +47,19 @@
       font-size: .8em;
       font-weight: bold;
       text-transform: uppercase;
-      padding: 4px 10px;
+      padding-top: 4px;
       &.last {
         border-right: none;
       }
     }
     > * {
-      padding: 7px 10px;
+      padding: 6px 4px;
     }
 
     .line-number {
       vertical-align: top;
       width: 30px;
+      text-align: right;
     }
     .grid-actions {
       display: block;
@@ -107,13 +108,13 @@
       border: 1px solid @bright-orange;
       border-top: 1px solid @bright-orange;
       border-bottom: 1px solid @bright-orange;
+      padding-left: 7px;
       .xv-grid-column {
         .onyx-input-decorator {
           .tightened-input-decorator;
         }
         .onyx-picker-decorator {
           padding-top: 6px;
-          padding-left: 6px;
           .onyx-button {
             height: 20px;
             padding-top: 3px;
@@ -179,7 +180,6 @@
           }
           .onyx-input {
             width: 85%;
-            padding-left: 4px;
             padding-right: 4px;
           }
         }
@@ -199,7 +199,7 @@
         .xv-relationwidget-description {
           text-indent: 0;
           padding-bottom: 0;
-          margin-left: -3px;
+          margin-left: -8px;
         }
         .xv-relationwidget-secondarydescription {
           display: none;

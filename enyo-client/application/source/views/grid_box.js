@@ -16,7 +16,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       {classes: "xv-grid-header user", content: "_user".loc()},
       {classes: "xv-grid-header quantity", content: "_hours".loc()},
       {classes: "xv-grid-header price", content: "_expenses".loc()},
-      {classes: "xv-grid-header date", content: "_schedDate".loc()},
+      {classes: "xv-grid-header date", content: "_scheduled".loc()},
       {classes: "xv-grid-header date", content: "_actualDate".loc()}
     ]
   });
@@ -70,6 +70,10 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     },
 
     formatDate: function (value, view, model) {
+      return value ? Globalize.format(XT.date.applyTimezoneOffset(value, true), "d") : "";
+    },
+
+    formatDueDate: function (value, view, model) {
       return value ? Globalize.format(XT.date.applyTimezoneOffset(value, true), "d") : "";
     },
 
@@ -179,7 +183,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       {classes: "xv-grid-header quantity", content: "_quantity".loc()},
       {classes: "xv-grid-header discount", content: "_discount".loc()},
       {classes: "xv-grid-header price", content: "_price".loc()},
-      {classes: "xv-grid-header date", content: "_schedDate".loc()}
+      {classes: "xv-grid-header date", content: "_scheduled".loc()}
     ]
   });
 
