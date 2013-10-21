@@ -90,7 +90,7 @@
     }
     .date {
       vertical-align: top;
-      width: 80px;
+      width: 105px;
     }
     .user {
       vertical-align: top;
@@ -113,6 +113,7 @@
         }
         .onyx-picker-decorator {
           padding-top: 6px;
+          padding-left: 6px;
           .onyx-button {
             height: 20px;
             padding-top: 3px;
@@ -128,9 +129,9 @@
           padding-top: 0;
           .onyx-input-decorator {
             padding: 0;
-            width: 105px;
+            width: 100%;
             input {
-              width: 80px;
+              width: 85%;
               font-size: 13px;
             }
           }
@@ -174,18 +175,20 @@
         }
         .xv-relationwidget {
           .onyx-input-decorator {
-            width: 120px;
+            width: 100%;
           }
           .onyx-input {
-            width: 100px;
+            width: 85%;
+            padding-left: 4px;
+            padding-right: 4px;
           }
         }
         .xv-subinput {
-          width: 80px;
+          width: 100%;
         }
         .xv-input {
           padding-top: 6px;
-          width: 80px;
+          width: 100%;
         }
         .xv-label {
           display: none;
@@ -196,6 +199,7 @@
         .xv-relationwidget-description {
           text-indent: 0;
           padding-bottom: 0;
+          margin-left: -3px;
         }
         .xv-relationwidget-secondarydescription {
           display: none;
@@ -238,11 +242,11 @@
   }
 }
 
-.tightened-input-decorator (@width: 90px) {
+.tightened-input-decorator (@width: 100%) {
   padding: 0;
   width: @width;
   input {
-    width: (@width - 10px);
+    width: (@width);
     font-size: 13px;
   }
 }

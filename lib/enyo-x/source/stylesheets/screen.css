@@ -447,7 +447,7 @@
 }
 .xv-grid-box .xv-grid-row .date {
   vertical-align: top;
-  width: 80px;
+  width: 105px;
 }
 .xv-grid-box .xv-grid-row .user {
   vertical-align: top;
@@ -465,14 +465,15 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
   padding: 0;
-  width: 90px;
+  width: 100%;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator input {
-  width: 80px;
+  width: 100%;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
   padding-top: 6px;
+  padding-left: 6px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
   height: 20px;
@@ -489,10 +490,10 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
   padding: 0;
-  width: 105px;
+  width: 100%;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
-  width: 80px;
+  width: 85%;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .xv-input {
@@ -503,10 +504,10 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator {
   padding: 0;
-  width: 90px;
+  width: 100%;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
-  width: 80px;
+  width: 100%;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column.line-number .xv-numberwidget .onyx-input-decorator {
@@ -514,7 +515,7 @@
   width: 30px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column.line-number .xv-numberwidget .onyx-input-decorator input {
-  width: 20px;
+  width: 30px;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox {
@@ -533,24 +534,26 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator {
   padding: 0;
-  width: 90px;
+  width: 100%;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
-  width: 80px;
+  width: 100%;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
-  width: 120px;
+  width: 100%;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input {
-  width: 100px;
+  width: 85%;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-subinput {
-  width: 80px;
+  width: 100%;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
   padding-top: 6px;
-  width: 80px;
+  width: 100%;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label {
   display: none;
@@ -561,6 +564,7 @@
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
   text-indent: 0;
   padding-bottom: 0;
+  margin-left: -3px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
   display: none;
