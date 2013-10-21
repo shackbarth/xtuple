@@ -72,15 +72,51 @@ white:true*/
   XM.InvoiceLine = XM.Model.extend({
     /** @scope XM.InvoiceLine.prototype */
 
+    //
+    // Attributes
+    //
     recordType: 'XM.InvoiceLine',
 
     idAttribute: 'uuid',
+
+    sellingUnits: undefined,
+
+    //
+    // Core functions
+    //
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on("relational:change:item", this.itemDidChange); // TODO: shouldn't need this
+      this.on("change:item", this.itemDidChange);
+    },
 
     defaults: function () {
       return {
         site: XT.defaultSite()
       };
     },
+
+    initialize: function (attributes, options) {
+      XM.Model.prototype.initialize.apply(this, arguments);
+      this.sellingUnits = new XM.UnitCollection();
+    },
+
+    //
+    // Model-specific functions
+    //
+    calculatePrice: function () {
+
+    },
+
+    // temp until we refactor these together
+    fetchSellingUnits: XM.SalesOrderLineBase.prototype.fetchSellingUnits,
+
+    itemDidChange: function () {
+      this.fetchSellingUnits();
+    }
+
+
+
   });
 
   /**

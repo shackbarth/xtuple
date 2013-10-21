@@ -82,12 +82,48 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       populating this data correctly).
     */
     it("A nested only model called XM.InvoiceLine extending XM.Model should exist", function () {
-      var model;
+      var lineModel;
 
       assert.isFunction(XM.InvoiceLine);
-      model = new XM.InvoiceLine();
-      assert.isTrue(model instanceof XM.Model);
-      assert.equal(model.idAttribute, "uuid");
+      lineModel = new XM.InvoiceLine();
+      assert.isTrue(lineModel instanceof XM.Model);
+      assert.equal(lineModel.idAttribute, "uuid");
+    });
+    it("should include a property \"sellingUnits\" that is an array of available selling " +
+        "units of measure based on the selected item", function () {
+      var lineModel = new XM.InvoiceLine();
+      assert.isObject(lineModel.sellingUnits);
+    });
+    var itemModel;
+    it("we're going to need an item", function (done) {
+      var statusChanged = function () {
+        if (itemModel.isReady()) {
+          itemModel.off("statusChange", statusChanged);
+          done();
+        }
+      };
+      itemModel = new XM.Item();
+      itemModel.on("statusChange", statusChanged);
+      itemModel.fetch({number: "BTRUCK1"});
+    });
+    it("When the item is changed the following should be updated from item information: " +
+        " sellingUnits, quantityUnit, quantityUnitRatio, priceUnit, priceUnitRatio, unitCost " +
+        "taxType, and calculatePrice should be executed", function (done) {
+      this.timeout(4000);
+      var lineModel = new XM.InvoiceLine();
+
+      assert.equal(lineModel.sellingUnits.length, 0);
+      assert.isNull(lineModel.get("quantityUnit"));
+      lineModel.set({item: itemModel});
+
+      setTimeout(function () {
+        assert.equal(lineModel.sellingUnits.length, 1);
+        assert.equal(lineModel.sellingUnits.models[0].id, "EA");
+        assert.equal(lineModel.get("quantityUnit").id, "EA");
+        done();
+      }, 3000); // TODO: use an event
+
+
     });
     /*
       Not under test:
@@ -122,16 +158,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-* XM.InvoiceLine should include a property "sellingUnits" that is an array of available selling units of measure based on the selected item.
-* When the item is changed the following should be updated from item information:
-  > sellingUnits
-  > quantityUnit
-  > quantityUnitRatio
-  > priceUnit
-  > priceUnitRatio
-  > unitCost
-  > taxType
-  > "calculatePrice" should be executed
 * If the quantityUnit or SellingUnit are changed, "calculatePrice" should be run.
 * If price or billing change, extendedPrice should be recalculated.
 * If item is unset, the above values should be cleared.
