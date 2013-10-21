@@ -279,10 +279,50 @@ white:true*/
 
   });
 
-  XM.Customer.used = function (id, options) {
-    return XM.ModelMixin.dispatch('XM.Customer', 'used',
-      [id], options);
-  };
+  // ..........................................................
+  // CLASS METHODS
+  //
+  _.extend(XM.Customer, /** @lends XM.Customer# */{
+
+    used: function (id, options) {
+      return XM.ModelMixin.dispatch('XM.Customer', 'used', [id], options);
+    },
+
+    // ..........................................................
+    // CONSTANTS
+    //
+
+    /**
+      Customer is credit is in good standing.
+
+      @static
+      @constant
+      @type String
+      @default G
+    */
+    CREDIT_GOOD: "G",
+
+    /**
+      Customer is on credit warn.
+
+      @static
+      @constant
+      @type String
+      @default W
+    */
+    CREDIT_WARN: "W",
+
+    /**
+      Customer is on credit hold.
+
+      @static
+      @constant
+      @type String
+      @default H
+    */
+    CREDIT_HOLD: "H"
+
+  });
 
   /**
     @class
