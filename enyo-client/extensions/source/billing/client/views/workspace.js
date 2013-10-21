@@ -26,14 +26,14 @@ trailing:true, white:true*/
                 label: "_nextARMemoNumber".loc(), formatting: false},
               {kind: "XV.NumberWidget", attr: "NextCashRcptNumber",
                 label: "_nextCashRcptNumber".loc(), formatting: false},
-              {kind: "XV.ToggleButtonWidget", attr: "HideApplyToBalance",
+              {kind: "XV.ToggleButtonWidget", name: "hideApplyToBalance", attr: "HideApplyToBalance",
                 label: "_hideApplyToBalance".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "EnableCustomerDeposits",
                 label: "_enableCustomerDeposits".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "CreditTaxDiscount",
                 label: "_creditTaxDiscount".loc(), formatting: false},
               {kind: "XV.AddressFieldsWidget",
-                name: "billtoAddress", attr:
+                name: "address", attr:
                 {name: "remitto_name", line1: "remitto_address1",
                   line2: "remitto_address2", line3: "remitto_address3",
                   city: "remitto_city", state: "remitto_state",

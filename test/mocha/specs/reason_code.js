@@ -10,8 +10,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
-    assert = require("chai").assert,
-    model;
+    assert = require("chai").assert;
 
   var additionalTests = function () {
     it('verify constant values', function () {
@@ -33,7 +32,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
     it('verify that the list has all test values when no document type is specified', function () {
 
-      describe('test filtering on ReasonCodePicker', function () {
+      describe('test filtering on Reason Code Picker', function () {
         var K, picker, nullModel, debitModel, creditModel;
 
         before(function () {
@@ -53,7 +52,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         it('verify that the list has all test values when no document type is specified', function () {
           picker.setDocumentType("");
           picker.buildList();
-          var list = picker.getListModels();
+          var list = picker._collection.models;
           assert.isTrue(_.contains(list, nullModel));
           assert.isTrue(_.contains(list, creditModel));
           assert.isTrue(_.contains(list, debitModel));
@@ -62,7 +61,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         it('verify that the list filters correctly when credit memo is the document type', function () {
           picker.setDocumentType(XM.ReasonCode.CREDIT_MEMO);
           picker.buildList();
-          var list = picker.getListModels();
+          var list = picker._collection.models;
           assert.isTrue(_.contains(list, nullModel));
           assert.isTrue(_.contains(list, creditModel));
         });
@@ -70,7 +69,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         it('verify that the list filters correctly when debit memo is the document type', function () {
           picker.setDocumentType(XM.ReasonCode.DEBIT_MEMO);
           picker.buildList();
-          var list = picker.getListModels();
+          var list = picker._collection.models;
           assert.isTrue(_.contains(list, nullModel));
           assert.isTrue(_.contains(list, debitModel));
         });

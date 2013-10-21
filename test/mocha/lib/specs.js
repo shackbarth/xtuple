@@ -50,12 +50,18 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     additionalTests: require("../specs/bank_account").additionalTests
   };
 
-  // exports.configureBilling = {
-  //   skipCrud: true,
-  //   skipSmoke: true,
-  //   recordType: "XM.Billing",
-  //   additionalTests: function () {}
-  // };
+  exports.configureBilling = {
+    recordType: "XM.Billing",
+    skipCrud: true,
+    skipSmoke: true,
+    skipModelConfig: true,
+    privileges: {
+      read: "ConfigureAR",
+      createUpdate: "ConfigureAR",
+      delete: false
+    },
+    additionalTests: require("../specs/configure_billing").additionalTests
+  };
 
   exports.honorific = {
     recordType: "XM.Honorific",
