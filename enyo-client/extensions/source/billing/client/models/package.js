@@ -1,4 +1,4 @@
 enyo.depends(
   "configure.js",
-  "sales.js"
+  "sales_category.js"
 );
