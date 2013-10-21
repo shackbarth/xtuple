@@ -32,12 +32,15 @@ trailing:true, white:true*/
                 label: "_enableCustomerDeposits".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "CreditTaxDiscount",
                 label: "_creditTaxDiscount".loc(), formatting: false},
-
-              // address widget
-              // remitto_name, remitto_address1, remitto_address2, remitto_address3,
-              // remitto_city, remitto_state, remitto_zipcode, remitto_country,
-              // remitto_phone
-
+              {kind: "XV.AddressFieldsWidget",
+                name: "billtoAddress", attr:
+                {name: "remitto_name", line1: "remitto_address1",
+                  line2: "remitto_address2", line3: "remitto_address3",
+                  city: "remitto_city", state: "remitto_state",
+                  postalCode: "remitto_zipcode", country: "remitto_country"}
+              },
+              {kind: "XV.InputWidget", attr: "remitto_phone",
+                label: "_phone".loc(), formatting: false},
               {kind: "XV.ToggleButtonWidget", attr: "AutoCreditWarnLateCustomers",
                 label: "_autoCreditWarnLateCustomers".loc()},
               {kind: "XV.NumberSpinnerWidget", attr: "DefaultAutoCreditWarnGraceDays",
