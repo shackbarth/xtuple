@@ -8,6 +8,32 @@
 /*
   These variables will show in css as their hex values
 */
+/**
+ * Default ListItem styles when using a ModelDecorator.
+ */
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column {
+  width: 10em;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr {
+  /**
+        * Default styling for a model's id (as designated by 'idAttribute')
+        */
+
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-id {
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-name {
+  font-weight: bold;
+}
+.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr {
+  color: white;
+}
+.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr.xm-attribute-id {
+  color: #f49200;
+}
 /* Helper classes for css3 */
 .clearfix {
   *zoom: 1;
@@ -649,9 +675,9 @@
 }
 .xv-list .xv-list-item {
   background-color: #ffffff;
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding: 3px;
   border-bottom: 1px solid #dddddd;
+  min-height: 32px;
 }
 @include box-sizing(border-box);
 .xv-list .xv-list-item.header {
@@ -698,11 +724,10 @@
   border-radius: 2px;
 }
 .xv-list .xv-list-item.item-selected {
-  background: #226b9a url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
+  background: url(/assets/item-hilite.png) repeat-x bottom;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr {
   color: #ffffff;
-  background: none;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
   font-style: italic;
@@ -710,31 +735,14 @@
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
   color: #f49200;
-  background: transparent;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.header {
   background: #99ccff;
 }
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr {
-  color: #ffffff;
-  background: none;
-}
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.placeholder {
-  font-style: italic;
-  color: SkyBlue;
-}
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.hyperlink {
-  color: #f49200;
-  background: transparent;
-}
-.xv-list-item > * {
-  display: inline-block;
-  vertical-align: middle;
-}
-.xv-list-gear-icon-button {
-  float: right;
-  display: none;
-  margin-top: -4px;
+.xv-list .xv-list-item .xv-list-item-gear {
+  position: absolute;
+  right: 4px;
+  z-index: 999;
 }
 .xv-list-attr {
   padding: 5px;
@@ -743,7 +751,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: #000000;
-  background-color: #ffffff;
 }
 .xv-list-attr.header {
   padding: 4px;
@@ -2233,6 +2240,29 @@ ul.icons-ul > li .icon-li {
 }
 .icon-share-sign:before {
   content: "\f14d";
+}
+* .font-onyx {
+  /**
+     * Icon size set per Onyx standard:
+     * https://github.com/enyojs/onyx/blob/master/source/Icon.js#L5
+     */
+
+  width: 32px;
+  height: 32px;
+  padding: 3px;
+}
+* .font-onyx i {
+  text-align: center;
+  font-size: 26px;
+  color: #dddddd;
+  text-shadow: 3px 3px 5px rgba(34, 34, 34, 0.97), 0px 0px 3px rgba(34, 34, 34, 0.97);
+}
+.font-onyx.icon.button:not(.disabled) {
+  cursor: pointer;
+}
+.font-onyx.icon.button:not(.disabled):active i {
+  color: white;
+  text-shadow: 2px 2px 5px #0099ff, -2px -2px 5px #0099ff, 2px -2px 5px #0099ff, -2px 2px 5px #0099ff;
 }
 body {
   font-family: "arial", "arial black";
