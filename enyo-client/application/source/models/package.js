@@ -1,6 +1,7 @@
 enyo.depends(
   "account.js",
   "address.js",
+  "bank_account.js",
   "configure.js",
   "contact.js",
   "credit_card.js",
@@ -21,6 +22,7 @@ enyo.depends(
   "purchase_order.js",
   "sales_order_base.js",
   "quote.js",
+  "reason_code.js",
   "sales_order.js",
   "sales_rep.js",
   "sales_history.js",

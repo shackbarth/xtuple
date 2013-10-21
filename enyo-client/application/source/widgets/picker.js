@@ -64,6 +64,52 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // BILLING TERMS
+  //
+
+  enyo.kind({
+    name: "XV.BillingTermsPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.terms",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ],
+    filter: function (models) {
+      return _.filter(models, function (m) {
+        return m.getValue("isUsedByBilling");
+      });
+    }
+  });
+
+  // ..........................................................
+  // BANK ACCOUNT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.BankAccountTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.bankAccountTypes",
+    showNone: false
+  });
+
+  // ..........................................................
+  // BILLING BANK ACCOUNT PICKER
+  //
+
+  enyo.kind({
+    name: "XV.BillingBankAccountPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.bankAccountRelations",
+    filter: function (models) {
+      var ret = _.filter(models, function (m) {
+        return m.get("isUsedByBilling");
+      });
+      return ret;
+    }
+  });
+
+  // ..........................................................
   // CHARACTERISTIC TYPE
   //
 
@@ -455,6 +501,57 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // REASON CODES
+  //
+
+  enyo.kind({
+    name: "XV.ReasonCodePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.reasonCodes",
+    showNone: false,
+    nameAttribute: "code",
+    published: {
+      documentType: null
+    },
+    create: function () {
+      this.inherited(arguments);
+      this.documentTypeChanged();
+    },
+    /**
+      If documentType is set to XM.ReasonCode.CREDIT_MEMO, then only reason codes
+      with null or CREDIT_MEMO values on the document type attribute should be shown
+      on the picker list.
+
+      If documentType is set to XM.ReasonCode.DEBIT_MEMO, then only reason codes with
+      null or DEBIT_MEMO values on the document type attribute should be shown on the
+      picker list.
+    */
+    documentTypeChanged: function () {
+      var docType = this.getDocumentType();
+      if (docType) {
+        this.filter = function (models) {
+          var ret = _.filter(models, function (m) {
+            return m.getValue("documentType") === docType || !m.getValue("documentType");
+          });
+          return ret;
+        };
+        this.buildList();
+      }
+    },
+  });
+
+  // ..........................................................
+  // REASON CODE DOCUMENT TYPE
+  //
+  enyo.kind({
+    name: "XV.ReasonCodeDocumentTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.reasonCodeDocumentTypes",
+    noneText: "Any"
+
+  });
+
+  // ..........................................................
   // TODO STATUS
   //
 
@@ -633,6 +730,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.TermsTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.termsTypes",
+    showNone: false,
     nameAttribute: "name"
   });
 
@@ -659,7 +757,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.VendorTypePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.vendorType",
+    collection: "XM.vendorTypes",
     nameAttribute: "code"
   });
 

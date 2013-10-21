@@ -541,7 +541,6 @@ exports.authorization = [
       payload.type = "Discovery";
       payload.dispatch = {
         functionName: "getAuth",
-        isJSON: true,
         parameters: [null, rootUrl]
       };
 

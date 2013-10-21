@@ -25,7 +25,6 @@ strict:true, trailing:true, white:true */
     "_cutOffDay": "Cutoff Day",
     "_dateControl": "Date Control",
     "_disableSalesOrderPriceOverride": "Disallow Override of Sale Price on Sales Order",
-    "_discountDays": "Discount Days",
     "_doNotUpdate": "Do Not Update",
     "_enableSOShipping": "Enable Shipping Interface from Sales Order screen",
     "_firmSalesOrdersWhenAddedToPackingList": "Firm Sales Orders when added to Packing List Batch",
