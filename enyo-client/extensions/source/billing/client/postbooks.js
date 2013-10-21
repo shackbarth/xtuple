@@ -21,6 +21,7 @@ trailing:true, white:true*/
       relevantPrivileges = [
         "ConfigureAR",
         "DeleteItemMasters",
+        "MaintainBankAccounts",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
         "MaintainItemMasters",

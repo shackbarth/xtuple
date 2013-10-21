@@ -19,6 +19,7 @@
       var initializeWidget = function () {
         K = enyo.kind({kind: XV.NumberSpinnerWidget});
         widget = new K();
+        assert.isDefined(XV.NumberSpinnerWidget);
         done();
       };
       zombieAuth.loadApp(initializeWidget);

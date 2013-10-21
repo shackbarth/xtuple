@@ -23,7 +23,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     attributes: ["name", "description", "bankName", "accountNumber", "bankAccountType", "isUsedByBilling",
       "isUsedByPayments", "notes", "currency"],
     extensions: ["sales", "billing"],
-    //extensions: ["sales", "billing"],
     privileges: {
       createUpdateDelete: "MaintainBankAccounts",
       read: "MaintainBankAccounts"
@@ -36,51 +35,27 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       notes: "Test bank account notes"
     },
     updatableField: "description",
-    // TODO: Move these actions into test runner
-    beforeSetActions: [{
-      it: "verify setup of model",
-      action: function (data, next) {
-        it('verify constant values', function () {
-          assert.equal(XM.BankAccount.CASH, "C");
-          assert.equal(XM.BankAccount.CHECKING, "K");
-          assert.equal(XM.BankAccount.CREDIT_CARD, "R");
-        });
-
-        it('verify that XM.reasonCodeDocumentTypes contains the constants', function () {
-          assert.equal(XM.bankAccountTypes.length, 3);
-
-          assert.ok(_.find(XM.bankAccountTypes.models, function (m) {
-            return m.id === XM.BankAccount.CASH;
-          }));
-          assert.ok(_.find(XM.bankAccountTypes.models, function (m) {
-            return m.id === XM.BankAccount.CHECKING;
-          }));
-          assert.ok(_.find(XM.bankAccountTypes.models, function (m) {
-            return m.id === XM.BankAccount.CREDIT_CARD;
-          }));
-        });
-
-        next();
-      }
-    }],
-    afterSaveActions: [{
-      // TODO: this could probably be handled in test runner
-      it: "verify default values are saved",
-      action: function (data, next) {
-        assert.equal(data.model.get("currency").id, XT.baseCurrency().id);
-        assert.equal(data.model.get("isUsedByBilling"), false);
-        assert.equal(data.model.get("isUsedByPayments"), false);
-        next();
-      }
+    defaults: {
+      //currency: XT.baseCurrency(),
+      isUsedByBilling: false,
+      isUsedByPayments: false
     },
-    {
+    afterSaveActions: [{
       it: "verify currency is readonly",
       action: function (data, next) {
         assert.isTrue(_.contains(data.model.readOnlyAttributes, "currency"));
         next();
       }
-    }]
+    }],
+    additionalTests: require("../specs/bank_account").additionalTests
   };
+
+  // exports.configureBilling = {
+  //   skipCrud: true,
+  //   skipSmoke: true,
+  //   recordType: "XM.Billing",
+  //   additionalTests: function () {}
+  // };
 
   exports.honorific = {
     recordType: "XM.Honorific",
@@ -145,7 +120,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["code", "description", "documentType"],
-    extensions: ["inventory"], // TODO billing
+    extensions: ["inventory", "billing"],
     privileges: {
       createUpdateDelete: "MaintainReasonCodes",
       read: true
@@ -156,28 +131,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       documentType: "ARDM"
     },
     updatableField: "description",
-    beforeSetActions: [{
-      it: "verify setup of model",
-      action: function (data, next) {
-        it('verify constant values', function () {
-          assert.equal(XM.ReasonCode.CREDIT_MEMO, "ARCM");
-          assert.equal(XM.ReasonCode.DEBIT_MEMO, "ARDM");
-        });
-
-        it('verify that XM.reasonCodeDocumentTypes contains the constants', function () {
-          assert.equal(XM.reasonCodeDocumentTypes.length, 2);
-
-          assert.ok(_.find(XM.reasonCodeDocumentTypes.models, function (m) {
-            return m.id === XM.ReasonCode.CREDIT_MEMO;
-          }));
-          assert.ok(_.find(XM.reasonCodeDocumentTypes.models, function (m) {
-            return m.id === XM.ReasonCode.DEBIT_MEMO;
-          }));
-        });
-
-        next();
-      }
-    }],
+    additionalTests: require("../specs/reason_code").additionalTests,
     afterSaveActions: [{
       it: "verify saved reason code is in cached collection",
       action: function (data, next) {
