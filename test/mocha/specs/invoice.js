@@ -23,23 +23,35 @@ TODO: invoiceLine ORM:
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
     assert = require("chai").assert,
-    jsdoc,
     model;
 
   exports.additionalTests = function () {
-    it.skip(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
-        "the system settings options CCValidDays which will default as 7 if none are defined in the database", function () {
+    /**
+      @member &nbsp;
+      @memberof Invoice.prototype
+      @description The system settings options CCValidDays which will default as 7 if
+        none are defined in the database
+    */
+    it.skip("CCValidDays is 7", function () {
       assert.equal(XT.session.settings.get("CCValidDays"), 7);
     });
 
-    it(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
-        "XM.Characteristic to include \"isInvoices\" as a context attribute", function () {
+    /**
+      @member &nbsp;
+      @memberof Invoice.prototype
+      @description XM.Characteristic to include "isInvoices" as a context attribute
+    */
+    it("Characteristic includes isInvoices", function () {
       var characteristic = new XM.Characteristic();
       assert.isBoolean(characteristic.get("isInvoices"));
     });
 
-    it(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
-        "convention for characteristic assignments", function () {
+    /**
+      @member InvoiceCharacteristic
+      @memberof Invoice.prototype
+      @description Follows the convention for characteristic assignments
+    */
+    it("convention for characteristic assignments", function () {
       var model;
 
       assert.isFunction(XM.InvoiceCharacteristic);
@@ -47,10 +59,15 @@ TODO: invoiceLine ORM:
       assert.isTrue(model instanceof XM.CharacteristicAssignment);
     });
 
-    describe(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
-        "Nested only models should exist according to convention for many-to-many document associations", function () {
-      it(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
-          "XM.InvoiceContact", function () {
+    /**
+      @member &nbsp;
+      @memberof Invoice.prototype
+      @description Nested only models should exist according to convention
+        for many-to-many document associations: InvoiceContact, InvoiceAccount,
+          InvoiceCustomer, InvoiceFile, InvoiceUrl, InvoiceItem
+    */
+    describe("Document associations", function () {
+      it("XM.InvoiceContact", function () {
         assert.isFunction(XM.InvoiceContact);
         assert.isTrue(XM.InvoiceContact.prototype.isDocumentAssignment);
       });
@@ -78,8 +95,13 @@ TODO: invoiceLine ORM:
         assert.isTrue(XM.InvoiceItem.prototype.isDocumentAssignment);
       });
     });
-    it(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
-        "A nested only model called XM.InvoiceLineTax extending XM.Model should exist with attributes uuid, taxType, taxCode, and amount", function () {
+    /**
+      @member InvoiceLineTax
+      @memberof Invoice.prototype
+      @description A nested only model extending XM.Model
+        with attributes uuid, taxType, taxCode, and amount.
+    */
+    it("has InvoiceLineTax as a nested model", function () {
       var attrs = ["uuid", "taxType", "taxCode", "amount"],
         model;
 
@@ -96,20 +118,30 @@ TODO: invoiceLine ORM:
       update or delete (existing table triggers for line items will take care of
       populating this data correctly).
     */
-    it(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
-        "A nested only model called XM.InvoiceLine extending XM.Model should exist", function () {
-      var lineModel;
 
+
+    /**
+      @member InvoiceLine
+      @memberof Invoice.prototype
+      @description A nested only model extending XM.Model
+    */
+    it("A nested only model called XM.InvoiceLine extending XM.Model should exist", function () {
+      var lineModel;
       assert.isFunction(XM.InvoiceLine);
       lineModel = new XM.InvoiceLine();
       assert.isTrue(lineModel instanceof XM.Model);
       assert.equal(lineModel.idAttribute, "uuid");
     });
-    /*
-      @class
-      @memberof invoice.prototype
-      InvoiceLine should contain
-        @member {String} "uuid" that is the idAttribute
+    /**
+      @member InvoiceLine.uuid
+      @memberof Invoice.prototype.InvoiceLine
+      @description The uuid idAttribute
+    */
+    it.skip("InvoiceLine should include attributes", function () {
+      // TODO
+    });
+      /*
+        @member {String} InvoiceLine.uuid that is the idAttribute
         @member {Number} "lineNumber" required
         @member {ItemRelation} "item"
         @member {SiteRelation} "site" default = XT.defaultSite()
@@ -131,11 +163,7 @@ TODO: invoiceLine ORM:
         @member {TaxType} "taxType"
         @member {Money} "taxTotal" = sum of all taxes
         @member {InvoiceLineTax} "taxes"
-    */
-    var attrs;
-    it.skip("InvoiceLine should include attributes", function () {
-      // TODO
-    });
+      */
     it("should include a property \"sellingUnits\" that is an array of available selling " +
         "units of measure based on the selected item", function () {
       var lineModel = new XM.InvoiceLine();

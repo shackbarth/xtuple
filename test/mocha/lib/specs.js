@@ -4,6 +4,13 @@ white:true*/
 /*global XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
 setTimeout:true, clearTimeout:true, exports:true, it:true */
 
+
+/*
+  To generate spec documentation:
+  cd scripts
+  ./generateSpecs.sh
+*/
+
 (function () {
   "use strict";
 
@@ -33,9 +40,10 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
   };
 
   /**
-    @class
-
     Here is some high-level description of what an invoice is supposed to do.
+    @class
+    @alias Invoice
+
   */
   exports.invoice = {
     recordType: "XM.Invoice",
