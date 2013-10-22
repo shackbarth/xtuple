@@ -1,13 +1,14 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XM:true, Backbone:true, _:true */
 
 (function () {
   "use strict";
 
   // These are hard coded collections that may be turned into tables at a later date
-  var i;
+  var i,
+    K;
 
   // Account Type
   var accountTypeJson = [
@@ -102,10 +103,11 @@ white:true*/
   }
 
   // Credit Status
+  K = XM.Customer;
   var creditStatusJson = [
-    { id: "G", name: "_goodStanding".loc() },
-    { id: "W", name: "_creditWarning".loc() },
-    { id: "H", name: "_creditHolding".loc() }
+    { id: K.CREDIT_GOOD, name: "_goodStanding".loc() },
+    { id: K.CREDIT_WARN, name: "_creditWarning".loc() },
+    { id: K.CREDIT_HOLD, name: "_creditHolding".loc() }
   ];
   XM.CreditStatusModel = Backbone.Model.extend({
   });
@@ -119,7 +121,7 @@ white:true*/
   }
 
   // Incident Status (TODO: There is actually already a table for this one...)
-  var K = XM.Incident;
+  K = XM.Incident;
   var incidentStatusJson = [
     { id: K.NEW, name: "_new".loc() },
     { id: K.FEEDBACK, name: "_feedback".loc() },

@@ -1714,16 +1714,14 @@ trailing:true, white:true, strict: false*/
     },
     convertQuote: function (inEvent) {
       var model = inEvent.model,
+        that = this,
         customer = model.get("customer"),
         K = XM.CustomerProspectRelation,
-        that = this,
+        attrs,
 
         // In case we are converting a prospect
         convertToCustomer = function (resp) {
           if (!resp.answer) { return; }
-          var success = function () {
-            this.getValue().convertFromProspect(customer.id);
-          };
 
           that.doWorkspace({
             workspace: "XV.CustomerWorkspace",
@@ -1731,32 +1729,46 @@ trailing:true, white:true, strict: false*/
               number: customer.get("number"),
               name: customer.get("name")
             },
-            success: success,
+            success: afterCustomerCreated,
             callback: convertToSalesOrder,
             allowNew: false
           });
         },
 
-        // A callback in case we had to convert to a customer first
-        convertToSalesOrder = function () {
-          var success = function () {
-              var gridBox = this.$.salesOrderLineItemGridBox;
-              this.getValue().convertFromQuote(model.id, {
-                success: function () {
-                  // Hack to force grid to refresh. Why doesn't it on its own?
-                  gridBox.valueChanged();
-                  gridBox.setDisabled(false);
-                }
-              });
-            };
+        afterCustomerCreated = function () {
+          this.getValue().convertFromProspect(customer.id);
+        },
 
+        convertToSalesOrder = function () {
+          XM.SalesOrder.convertFromQuote(model.id, {
+            success: afterQuoteConvertedSuccess
+          });
+        },
+
+        afterQuoteConvertedSuccess = function (resp) {
+          attrs = resp;
           that.doWorkspace({
             workspace: "XV.SalesOrderWorkspace",
-            success: success,
+            success: afterSalesOrderCreated,
             allowNew: false
           });
+        },
+
+        afterSalesOrderCreated = function () {
+          var value = this.getValue(),
+            gridBox = this.$.salesOrderLineItemGridBox;
+
+          value.setStatus(XM.Model.BUSY_FETCHING);
+          value.set(attrs);
+          value.revertStatus();
+
+          //Hack to force grid to refresh. Why doesn't it on its own?
+          gridBox.valueChanged();
+          gridBox.setDisabled(false);
         };
 
+
+      // Get the process started one way or another
       if (customer.get("status") === K.PROSPECT_STATUS) {
         this.doNotify({
           type: XM.Model.QUESTION,
