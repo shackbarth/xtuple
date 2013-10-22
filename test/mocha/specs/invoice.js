@@ -212,11 +212,20 @@ TODO: invoiceLine ORM:
 
 
   };
+  /**
+    @member -
+    @memberof InvoiceLine.prototype
+    @description The price will be recalculated when the units change.
+  */
+  it("If the quantityUnit or SellingUnit are changed, \"calculatePrice\" should be run.", function () {
+    // TODO
+  });
+
+
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-* If the quantityUnit or SellingUnit are changed, "calculatePrice" should be run.
 * If price or billing change, extendedPrice should be recalculated.
 * If item is unset, the above values should be cleared.
 #HINT: See Sales Order implementation
