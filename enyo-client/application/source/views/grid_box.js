@@ -25,49 +25,37 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.ProjectTaskReadOnlyGridRow",
     kind: "XV.ReadOnlyGridRow",
     components: [
-      {classes: "xv-grid-column grid-item", components: [
-        {name: "number"},
-        {name: "name"}
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "xv-grid-column grid-item", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "number"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "name"}
       ]},
-      {classes: "xv-grid-column user", components: [
-        {name: "owner"},
-        {name: "assignedTo"},
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "xv-grid-column user", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "owner.username"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "assignedTo.username"},
       ]},
-      {classes: "xv-grid-column quantity", components: [
-        {name: "budgetedHours"},
-        {name: "actualHours"},
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "xv-grid-column quantity", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "budgetedHours"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "actualHours"},
       ]},
-      {classes: "xv-grid-column price", components: [
-        {name: "budgetedExpenses"},
-        {name: "actualExpenses"}
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "xv-grid-column price", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "budgetedExpenses"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "actualExpenses"}
       ]},
-      {classes: "xv-grid-column date", components: [
-        {name: "startDate"},
-        {name: "dueDate"}
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "xv-grid-column date", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "startDate"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "dueDate"}
       ]},
-      {classes: "xv-grid-column date", components: [
-        {name: "assignDate"},
-        {name: "completeDate"}
+      {kind: "XV.ReadOnlyGridColumn",
+        classes: "xv-grid-column date", components: [
+        {kind: "XV.ReadOnlyGridAttr", attr: "assignDate"},
+        {kind: "XV.ReadOnlyGridAttr", attr: "completeDate"}
       ]}
-    ],
-    valueChanged: function () {
-      var model = this.getValue();
-
-      if (model) {
-        this.$.number.setContent(model.get("number") || "_required".loc());
-        this.$.name.setContent(model.get("name") || "_required".loc());
-        this.$.owner.setContent(model.getValue("owner.username") || "");
-        this.$.assignedTo.setContent(model.getValue("assignedTo.username") || "");
-        this.$.budgetedHours.setContent(this.formatQuantity(model.get("budgetedHours")));
-        this.$.actualHours.setContent(this.formatQuantity(model.get("actualHours")));
-        this.$.budgetedExpenses.setContent(this.formatMoney(model.get("budgetedExpenses")));
-        this.$.actualExpenses.setContent(this.formatMoney(model.get("actualExpenses")));
-        this.$.startDate.setContent(this.formatDate(model.get("startDate")));
-        this.$.dueDate.setContent(this.formatDate(model.get("dueDate")));
-        this.$.assignDate.setContent(this.formatDate(model.get("assignDate")));
-        this.$.completeDate.setContent(this.formatDate(model.get("completeDate")));
-      }
-    }
+    ]
   });
 
   enyo.kind({
@@ -124,32 +112,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   enyo.kind({
     name: "XV.ProjectTasksGridBox",
     kind: "XV.GridBox",
-    associatedWorkspace: "XV.ProjectTaskWorkspace",
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc(),
-        classes: "xv-grid-groupbox-header"},
-      {kind: "XV.ProjectTaskHeaders"},
-      {kind: "XV.Scroller", name: "mainGroup", horizontal: "hidden", fit: true, components: [
-        {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list",
-            onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
-          { kind: "XV.ProjectTaskReadOnlyGridRow", name: "aboveGridRow"}
-        ]},
-        {kind: "XV.ProjectTaskGridRow", name: "editableGridRow", showing: false},
-        {kind: "List", name: "belowGridList", classes: "xv-below-grid-list",
-            onSetupItem: "setupRowBelow", ontap: "gridRowTapBelow", components: [
-          {kind: "XV.ProjectTaskReadOnlyGridRow", name: "belowGridRow"}
-        ]},
-      ]},
-      {
-        kind: "FittableColumns",
-        name: "navigationButtonPanel",
-        classes: "xv-groupbox-buttons",
-        components: [
-          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
-            content: "_new".loc(), classes: "xv-groupbox-button-single"}
-        ]
-      }
-    ]
+    title: "_tasks".loc(),
+    header: "XV.ProjectTaskHeaders",
+    readOnlyRow: "XV.ProjectTaskReadOnlyGridRow",
+    editableRow: "XV.ProjectTaskGridRow",
+    associatedWorkspace: "XV.ProjectTaskWorkspace"
   });
 
   // ..........................................................

@@ -293,6 +293,7 @@
         The expected type of the property. Should be any of the following:
           * String
           * Date
+          * DueDate
           * Boolean
           * Number
           * Money

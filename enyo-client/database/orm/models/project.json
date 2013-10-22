@@ -925,42 +925,42 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Number",
+          "type": "Quantity",
           "column": "prj_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Number",
+          "type": "Quantity",
           "column": "prj_hours_actual"
         }
       },
       {
         "name": "balanceHours",
         "attr": {
-          "type": "Number",
+          "type": "Quantity",
           "column": "prj_hours_balance"
         }
       },
       {
         "name": "budgetedExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prj_exp_budget"
         }
       },
       {
         "name": "actualExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prj_exp_actual"
         }
       },
       {
         "name": "balanceExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prj_exp_balance"
         }
       }
@@ -1293,28 +1293,28 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Number",
+          "type": "Quantity",
           "column": "prjtask_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Number",
+          "type": "Quantity",
           "column": "prjtask_hours_actual"
         }
       },
       {
         "name": "budgetedExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_budget"
         }
       },
       {
         "name": "actualExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_actual"
         }
       },
@@ -1515,28 +1515,28 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Number",
+          "type": "Quantity",
           "column": "prjtask_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Number",
+          "type": "Quantity",
           "column": "prjtask_hours_actual"
         }
       },
       {
         "name": "budgetedExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_budget"
         }
       },
       {
         "name": "actualExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_actual"
         }
       },
@@ -1769,28 +1769,28 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Number",
+          "type": "Quantity",
           "column": "prjtask_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Number",
+          "type": "Quantity",
           "column": "prjtask_hours_actual"
         }
       },
       {
         "name": "budgetedExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_budget"
         }
       },
       {
         "name": "actualExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_actual"
         }
       },
