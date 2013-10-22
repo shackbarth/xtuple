@@ -21,7 +21,7 @@
       }
     };
 
-  describe('SaleType CRUD Test', function () {
+  describe('XM.ShipCharge CRUD Test', function () {
     crud.runAllCrud(data);
   });
 }());
