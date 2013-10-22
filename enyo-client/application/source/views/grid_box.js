@@ -9,32 +9,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   //
 
   enyo.kind({
-    name: "XV.ProjectTaskHeaders",
-    classes: "xv-grid-row",
-    components: [
-      {classes: "xv-grid-header grid-item", content: "_number".loc() },
-      {classes: "xv-grid-header user", content: "_user".loc()},
-      {classes: "xv-grid-header quantity", content: "_hours".loc()},
-      {classes: "xv-grid-header price", content: "_expenses".loc()},
-      {classes: "xv-grid-header date", content: "_scheduled".loc()},
-      {classes: "xv-grid-header date", content: "_actualDate".loc()}
-    ]
-  });
-
-  enyo.kind({
-    name: "XV.ProjectTaskReadOnlyGridRow",
-    kind: "XV.ReadOnlyGridRow",
-    columns: [
-      {classes: "grid-item", attributes: ["number", "name"]},
-      {classes: "user", attributes: ["owner.username", "assignedTo.username"]},
-      {classes: "quantity", attributes: ["budgetedHours", "actualHours"]},
-      {classes: "price", attributes: ["budgetedExpenses", "actualExpenses"]},
-      {classes: "date", attributes: ["startDate", "dueDate"]},
-      {classes: "date", attributes: ["assignDate", "completeDate"]}
-    ]
-  });
-
-  enyo.kind({
     name: "XV.ProjectTaskGridRow",
     kind: "XV.GridRow",
     components: [
@@ -89,8 +63,20 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.ProjectTasksGridBox",
     kind: "XV.GridBox",
     title: "_tasks".loc(),
-    header: "XV.ProjectTaskHeaders",
-    readOnlyRow: "XV.ProjectTaskReadOnlyGridRow",
+    columns: [
+      {classes: "grid-item", content: "_number".loc(),
+        attrs: ["number", "name"]},
+      {classes: "user", content: "_user".loc(),
+        attrs: ["owner.username", "assignedTo.username"]},
+      {classes: "quantity", content: "_hours".loc(),
+        attrs: ["budgetedHours", "actualHours"]},
+      {classes: "price", content: "_expenses".loc(),
+        attrs: ["budgetedExpenses", "actualExpenses"]},
+      {classes: "date", content: "_scheduled".loc(),
+        attrs: ["startDate", "dueDate"]},
+      {classes: "date", content: "_actualDate".loc(),
+        attrs: ["assignDate", "completeDate"]}
+    ],
     editableRow: "XV.ProjectTaskGridRow",
     associatedWorkspace: "XV.ProjectTaskWorkspace"
   });
@@ -98,32 +84,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   // ..........................................................
   // SALES ORDER / QUOTE
   //
-
-  enyo.kind({
-    name: "XV.SalesOrderLineItemHeaders",
-    classes: "xv-grid-row",
-    components: [
-      {classes: "xv-grid-header line-number", content: "#" },
-      {classes: "xv-grid-header grid-item", content: "_item".loc()},
-      {classes: "xv-grid-header quantity", content: "_quantity".loc()},
-      {classes: "xv-grid-header discount", content: "_discount".loc()},
-      {classes: "xv-grid-header price", content: "_price".loc()},
-      {classes: "xv-grid-header date", content: "_scheduled".loc()}
-    ]
-  });
-
-  enyo.kind({
-    name: "XV.SalesOrderLineItemReadOnlyGridRow",
-    kind: "XV.ReadOnlyGridRow",
-    columns: [
-      {classes: "line-number", attributes: ["lineNumber"]},
-      {classes: "grid-item", attributes: ["item.number", "item.description1", "site.code"]},
-      {classes: "quantity", attributes: ["quantity", "quantityUnit.name"]},
-      {classes: "discount", attributes: ["discount"]},
-      {classes: "price", attributes: ["price", "priceUnit.name", "extendedPrice"]},
-      {classes: "date", attributes: ["scheduleDate"]}
-    ]
-  });
 
   //
   // The implementation of GridRow and GridBox is here in the workspace kind.
@@ -199,8 +159,20 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.SalesOrderLineItemGridBox",
     kind: "XV.GridBox",
     title: "_lineItems".loc(),
-    header: "XV.SalesOrderLineItemHeaders",
-    readOnlyRow: "XV.SalesOrderLineItemReadOnlyGridRow",
+    columns: [
+      {classes: "line-number", content: "#",
+        attrs: ["lineNumber"]},
+      {classes: "grid-item", content: "_item".loc(),
+        attrs: ["item.number", "item.description1", "site.code"]},
+      {classes: "quantity", content: "_quantity".loc(),
+        attrs: ["quantity", "quantityUnit.name"]},
+      {classes: "discount", content: "_discount".loc(),
+        attrs: ["discount"]},
+      {classes: "price", content: "_price".loc(),
+        attrs: ["price", "priceUnit.name", "extendedPrice"]},
+      {classes: "date", content: "_scheduled".loc(),
+        attrs: ["scheduleDate"]}
+    ],
     editableRow: "XV.SalesOrderLineItemGridRow",
     summary: "SalesSummaryPanel",
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
