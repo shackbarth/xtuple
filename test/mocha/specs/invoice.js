@@ -27,21 +27,21 @@ TODO: invoiceLine ORM:
 
   exports.additionalTests = function () {
     /**
-      @member &nbsp;
+      @member -
       @memberof Invoice.prototype
-      @description The system settings options CCValidDays which will default as 7 if
-        none are defined in the database
+      @description There is a setting "Valid Credit Card Days"
+      @default 7
     */
-    it.skip("CCValidDays is 7", function () {
+    it.skip("The system settings option CCValidDays will default to 7 if not already in the db", function () {
       assert.equal(XT.session.settings.get("CCValidDays"), 7);
     });
 
     /**
-      @member &nbsp;
+      @member -
       @memberof Invoice.prototype
-      @description XM.Characteristic to include "isInvoices" as a context attribute
+      @description Characteristics can be assigned as being for invoices
     */
-    it("Characteristic includes isInvoices", function () {
+    it("XM.Characteristic includes isInvoices as a context attribute", function () {
       var characteristic = new XM.Characteristic();
       assert.isBoolean(characteristic.get("isInvoices"));
     });
@@ -49,7 +49,7 @@ TODO: invoiceLine ORM:
     /**
       @member InvoiceCharacteristic
       @memberof Invoice.prototype
-      @description Follows the convention for characteristic assignments
+      @description Follows the convention for characteristics
     */
     it("convention for characteristic assignments", function () {
       var model;
@@ -60,13 +60,12 @@ TODO: invoiceLine ORM:
     });
 
     /**
-      @member &nbsp;
+      @member -
       @memberof Invoice.prototype
-      @description Nested only models should exist according to convention
-        for many-to-many document associations: InvoiceContact, InvoiceAccount,
-          InvoiceCustomer, InvoiceFile, InvoiceUrl, InvoiceItem
+      @description Documents should exist to connect an invoice to:
+        Contact, Account, Customer, File, Url, Item
     */
-    describe("Document associations", function () {
+    describe("Nested-only Document associations per the document convention", function () {
       it("XM.InvoiceContact", function () {
         assert.isFunction(XM.InvoiceContact);
         assert.isTrue(XM.InvoiceContact.prototype.isDocumentAssignment);
@@ -78,17 +77,14 @@ TODO: invoiceLine ORM:
       it("XM.InvoiceCustomer", function () {
         assert.isFunction(XM.InvoiceCustomer);
         assert.isTrue(XM.InvoiceCustomer.prototype.isDocumentAssignment);
-
       });
       it("XM.InvoiceFile", function () {
         assert.isFunction(XM.InvoiceFile);
         assert.isTrue(XM.InvoiceFile.prototype.isDocumentAssignment);
-
       });
       it("XM.InvoiceUrl", function () {
         assert.isFunction(XM.InvoiceUrl);
         assert.isTrue(XM.InvoiceUrl.prototype.isDocumentAssignment);
-
       });
       it("XM.InvoiceItem", function () {
         assert.isFunction(XM.InvoiceItem);
@@ -98,10 +94,10 @@ TODO: invoiceLine ORM:
     /**
       @member InvoiceLineTax
       @memberof Invoice.prototype
-      @description A nested only model extending XM.Model
+      @description An that contains the tax of an invoice line.
         with attributes uuid, taxType, taxCode, and amount.
     */
-    it("has InvoiceLineTax as a nested model", function () {
+    it("has InvoiceLineTax as a nested-only model extending XM.Model", function () {
       var attrs = ["uuid", "taxType", "taxCode", "amount"],
         model;
 
