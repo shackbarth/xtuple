@@ -2338,7 +2338,7 @@ body {
   padding: 16px 12px;
 }
 .item.onyx-selected {
-  background-color: #226b9a;
+  background-color: #357ec7;
 }
 .onyx-button.save {
   background-color: #35a8ee;
@@ -2359,7 +2359,7 @@ body {
   text-shadow: none;
 }
 .text-shadow-0 {
-  text-shadow: 0px 0px #000000;
+  text-shadow: 0 0 #000000;
 }
 .xt-app {
   position: absolute;
@@ -2443,6 +2443,22 @@ body {
 .xv-my-account-popup .onyx-input {
   padding-left: 10px;
   float: right;
+}
+.xv-gridbox-button {
+  color: #357ec7;
+  font-size: 18px;
+  border: none;
+  background: white;
+}
+.xv-date-icon {
+  opacity: .8;
+}
+.xv-action-icon .onyx-icon-button {
+  margin-top: 0;
+}
+.xv-sort-icon .onyx-icon-button {
+  margin-top: 7px;
+  margin-bottom: -3px;
 }
 .xv-sort-popup {
   background-color: #ffffff;
@@ -2722,7 +2738,7 @@ body {
   color: #696969;
 }
 .xv-short-textarea .xv-textarea-input {
-  min-height: 0px;
+  min-height: 0;
 }
 .xv-textarea-input {
   width: 90%;
