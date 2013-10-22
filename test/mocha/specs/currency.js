@@ -17,7 +17,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     var usd, eur, gbp, btc, baseCurrency;
 
     beforeEach(function () {
-      usd = XM.Currency.findOrCreate('USD');
+      //usd = XM.Currency.findOrCreate('USD');
       eur = XM.Currency.findOrCreate('EUR');
       gbp = XM.Currency.findOrCreate('GBP');
       baseCurrency = usd;
