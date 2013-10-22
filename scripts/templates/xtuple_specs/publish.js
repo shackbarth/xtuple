@@ -506,7 +506,7 @@ exports.publish = function (taffyData, opts, tutorials) {
     Object.keys(helper.longnameToUrl).forEach(function (longname) {
         var myClasses = helper.find(classes, {longname: longname});
         if (myClasses.length) {
-            generate('Class: ' + myClasses[0].name, myClasses, helper.longnameToUrl[longname]);
+            generate('Business Object: ' + myClasses[0].name, myClasses, helper.longnameToUrl[longname]);
         }
 
         var myModules = helper.find(modules, {longname: longname});
