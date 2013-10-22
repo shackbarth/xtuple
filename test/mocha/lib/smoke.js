@@ -1,12 +1,14 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true, setTimeout */
+/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true,
+ * setTimeout:true, Backbone:true */
 
 (function () {
   "use strict";
 
   var _ = require("underscore"),
+    Backbone = require("backbone-relational"),
     assert = require("chai").assert;
 
   var navigateToList = exports.navigateToList = function (app, listKind) {
@@ -65,37 +67,41 @@
   };
 
   var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
-    var coll,
-      lockChange,
-      navigate,
-      navigator,
-      workspaceContainer,
-      workspace;
+    var navigator = navigateToList(app, listKind),
+      coll = navigator.$.contentPanels.getActive().value,
+      openWorkspace = function () {
+        var list = navigator.$.contentPanels.getActive(),
+          indexToPick = Math.min(1, list.value.length - 1),
+          model = list.getModel(indexToPick),
+          workspaceContainer,
+          workspace,
+          waitForLock = function (_model, lock) {
+            var workspaceContainer = app.$.postbooks.getActive(),
+              workspace = workspaceContainer.$.workspace;
 
-    navigate = function () {
-      var indexToPick;
+            if (workspace && workspace.value && workspace.value.getLockKey() &&
+                _model.id === model.id) {
+              XM.Tuplespace.off();
+              done(workspaceContainer);
+            }
+          };
 
-      if (coll.getStatus() === XM.Model.READY_CLEAN) {
-        coll.off('statusChange', navigate);
-        indexToPick = Math.min(1, navigator.$.contentPanels.getActive().value.length - 1);
-        navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: indexToPick});
-        workspaceContainer = app.$.postbooks.getActive();
-        assert.isDefined(workspaceContainer);
-        workspace = workspaceContainer.$.workspace;
-        assert.isDefined(workspace);
-        lockChange = function () {
-          workspace.value.off("lockChange", lockChange);
-          done(workspaceContainer);
-        };
-        workspace.value.on("lockChange", lockChange);
-      }
-    };
-    navigator = navigateToList(app, listKind);
-    coll = navigator.$.contentPanels.getActive().value;
+        /**
+         * Allows us to begin listening before the workspace is created
+         * for perfect accuracy with no setTimeout or setInterval.
+         */
+        XM.Tuplespace.on('lock:obtain lockChange', waitForLock);
+
+        navigator.doWorkspace({
+          workspace: list.getWorkspace(),
+          id: model.id
+        });
+      };
+
     if (coll.getStatus() === XM.Model.READY_CLEAN) {
-      navigate();
+      openWorkspace();
     } else {
-      coll.on('statusChange', navigate);
+      coll.once('status:READY_CLEAN', openWorkspace);
     }
   };
 
@@ -129,10 +135,9 @@
     Save the model through the workspace and make sure it saved ok.
    */
   var saveWorkspace = exports.saveWorkspace = function (workspace, done, skipValidation) {
-    var invalid = function (model, err) {
-      workspace.value.off('invalid', invalid);
+    workspace.value.once('invalid', function (model, err) {
       done(err);
-    };
+    });
 
     assert.isTrue(workspace.value.hasLockKey(), "Cannot acquire lock key");
 
@@ -141,18 +146,15 @@
       assert.isUndefined(validation, "Failed validation with error: " + JSON.stringify(validation));
     }
 
-    workspace.value.on('invalid', invalid);
     //workspace.value.on('all', function (event, model, err) {
     //  console.log("save event", event, model && model.id);
     //});
     workspace.save({
       // wait until the list has been refreshed with this model before we return control
       modelChangeDone: function () {
-        var lockChange = function () {
-          workspace.value.off("lockChange", lockChange);
+        workspace.value.once("lockChange", function () {
           done(null, workspace.value);
-        };
-        workspace.value.on("lockChange", lockChange);
+        });
         workspace.value.releaseLock();
       },
       error: function (err) {
@@ -176,18 +178,14 @@
         return m.get(m.idAttribute) === model.id;
       });
 
-    statusChange = function (model, status) {
-      if (status === XM.Model.DESTROYED_DIRTY) {
-        model.off("statusChange", statusChange);
-        assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
-        // XXX we have to wait for the list to know the model is gone,
-        // or else the next test might pick it up in BUSY_FETCHING status
-        setTimeout(function () {
-          done();
-        }, 3000);
-      }
-    };
-    model.on("statusChange", statusChange);
+    model.on('status:DESTROYED_DIRTY', function (model, status) {
+      assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
+      // XXX we have to wait for the list to know the model is gone,
+      // or else the next test might pick it up in BUSY_FETCHING status
+      setTimeout(function () {
+        done();
+      }, 3000);
+    });
 
     // delete it, by calling the function that gets called when the user ok's the delete popup
     list.deleteItem({model: listModel});
@@ -208,18 +206,14 @@
         } else if (typeof test.update === 'object') {
           updateObj = test.update;
         }
-        statusChanged = function () {
-          if (workspace.value.getStatus() === XM.Model.READY_CLEAN) {
-            workspace.value.off("statusChange", statusChanged);
-            setWorkspaceAttributes(workspace, updateObj);
-            saveWorkspace(workspace, function () {
-              XT.app.$.postbooks.previous();
-              assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
-              done();
-            });
-          }
-        };
-        workspace.value.on("statusChange", statusChanged);
+        workspace.value.once('status:READY_CLEAN', function () {
+          setWorkspaceAttributes(workspace, updateObj);
+          saveWorkspace(workspace, function () {
+            XT.app.$.postbooks.previous();
+            assert.equal(XT.app.$.postbooks.getActive().kind, "XV.Navigator");
+            done();
+          });
+        });
       });
     });
   };
