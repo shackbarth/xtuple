@@ -6,6 +6,26 @@ white:true*/
 (function () {
 
   "use strict";
+ 
+  var CREDIT_OK = 0;
+  var CREDIT_WARN = 1;
+  var CREDIT_HOLD = 2;
+  var _checkCredit = function () {
+    var creditStatus = this.getValue("customer.creditStatus"),
+      K = XM.Customer,
+      privs = XT.session.privileges;
+
+    if (this.isNew() && creditStatus !== K.CREDIT_GOOD) {
+      if (creditStatus === K.CREDIT_WARN &&
+        !privs.get("CreateSOForWarnCustomer")) {
+        return CREDIT_WARN;
+      } else if (creditStatus === K.CREDIT_HOLD &&
+        !privs.get("CreateSOForHoldCustomer")) {
+        return CREDIT_HOLD;
+      }
+    }
+    return CREDIT_OK;
+  };
 
   /**
     @class
@@ -34,81 +54,56 @@ white:true*/
       return defaults;
     },
 
-    convertFromQuote: function (id, options) {
-      var quote = new XM.Quote(),
-        fetchOptions = {},
-        that = this;
-      // this id is the natural key, which is the number
-      // for both sales order and quote
-      fetchOptions.id = id;
-
-      fetchOptions.success = function () {
-        var expireDate = quote.get("expireDate"),
-          obj,
-          updateUuid = function (obj) {
-            // If array loop through each and process
-            if (_.isArray(obj)) {
-              _.each(obj, function (item) {
-                updateUuid(item);
-              });
-            // If object remove uuid, then process all properties
-            } else if (_.isObject(obj)) {
-              if (obj.uuid) {
-                obj.uuid = XT.generateUUID();
-              }
-              _.each(obj, function (value) {
-                // If array, dive down
-                if (_.isArray(value)) {
-                  updateUuid(value);
-                }
-              });
-            }
-          };
-
-        if (expireDate < XT.date.today()) {
-          that.trigger("invalid", XT.Error.clone(), that, {});
-        }
-        // TODO make sure customer is not prospect
-        // TODO if cust on hold, check hold priv, CreateSOForHoldCustomer
-        // TODO if cust on warn, check warn priv, CreateSOForWarnCustomer
-        // TODO if uses po and not blanket po, check for dups
-        // TODO if quote and so exist with this number, get another
-
-        obj = quote.toJSON();
-        obj.orderDate = XT.date.today();
-        delete obj.quoteDate;
-        delete obj.expireDate;
-        obj.wasQuote = true;
-        obj.quoteNumber = obj.number;
-        updateUuid(obj);
-        that.parse(obj);
-        that.set(obj);
-        that.off('change:customer', that.customerDidChange);
-        that.fetchRelated("customer", {
-          success: function (model, resp, reloptions) {
-            that.on('change:customer', that.customerDidChange);
-            that.revertStatus();
-            that.checkConflicts = false;
-            if (options && options.success) {
-              options.success(model, resp, reloptions);
-            }
-          }
-        });
-
-        // TODO: Trigger on save that either closes or deletes quote
-      };
-      fetchOptions.error = function () {
-        XT.log("Fetch failed in convertFromQuote");
-      };
-      this.setStatus(XM.Model.BUSY_FETCHING);
-      quote.fetch(fetchOptions);
+    customerDidChange: function () {
+      XM.SalesOrderBase.prototype.customerDidChange.apply(this, arguments);
+      var creditStatus = _checkCredit.call(this),
+        warn = XM.Model.WARNING;
+      if (creditStatus === CREDIT_WARN) {
+        this.notify("_creditWarn".loc(), { type: warn });
+      } else if (creditStatus === CREDIT_HOLD) {
+        this.notify("_creditHold".loc(), { type: warn });
+      }
     },
+
+    validate: function () {
+      var creditStatus = _checkCredit.call(this);
+      if (creditStatus === CREDIT_WARN) {
+        return XT.Error.clone('xt2022');
+      } else if (creditStatus === CREDIT_HOLD) {
+        return XT.Error.clone('xt2023');
+      }
+
+      return XM.SalesOrderBase.prototype.validate.apply(this, arguments);
+    }
   });
 
-  XM.SalesOrder.used = function (id, options) {
-    return XM.ModelMixin.dispatch('XM.SalesOrder', 'used',
-      [id], options);
-  };
+  // ..........................................................
+  // CLASS METHODS
+  //
+  _.extend(XM.SalesOrder, /** @lends XM.SalesOrderBase# */{
+    /**
+      Pass a quote id and receive a sales order in the success callback.
+
+      @param {String} Quote number
+      @param {Object} Options
+      @param {Function} [options.success] Success callback
+      @param {Function} [options.error] Error callback
+    */
+    convertFromQuote: function (id, options) {
+      var success = options.success,
+        proto = this.prototype;
+      options.success = function (data) {
+        data = proto.parse(data);
+        success(data);
+      };
+      proto.dispatch("XM.SalesOrder", "convertFromQuote", [id], options);
+    },
+
+    used: function (id, options) {
+      return XM.ModelMixin.dispatch('XM.SalesOrder', 'used',
+        [id], options);
+    }
+  });
 
   /**
     @class
