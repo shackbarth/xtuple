@@ -278,33 +278,12 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   enyo.kind({
     name: "XV.SalesOrderLineItemGridBox",
     kind: "XV.GridBox",
+    title: "_lineItems".loc(),
+    header: "XV.SalesOrderLineItemHeaders",
+    readOnlyRow: "XV.SalesOrderLineItemReadOnlyGridRow",
+    editableRow: "XV.SalesOrderLineItemGridRow",
+    summary: "SalesSummaryPanel",
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc(),
-        classes: "xv-grid-groupbox-header"},
-      {kind: "XV.SalesOrderLineItemHeaders"},
-      {kind: "XV.Scroller", name: "mainGroup", horizontal: "hidden", fit: true, components: [
-        {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list",
-            onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
-          { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
-        ]},
-        {kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false},
-        {kind: "List", name: "belowGridList", classes: "xv-below-grid-list",
-            onSetupItem: "setupRowBelow", ontap: "gridRowTapBelow", components: [
-          {kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "belowGridRow"}
-        ]},
-      ]},
-      {
-        kind: "FittableColumns",
-        name: "navigationButtonPanel",
-        classes: "xv-groupbox-buttons",
-        components: [
-          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
-            content: "_new".loc(), classes: "xv-groupbox-button-single"}
-        ]
-      },
-      {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
-    ],
 
     /**
       Set the current model into Summary Panel.
