@@ -420,13 +420,6 @@
         }
       },
       {
-        "name": "salesCategory",
-        "toOne": {
-          "type": "SalesCategory",
-          "column": "invcitem_salescat_id"
-        }
-      },
-      {
         "name": "quantity",
         "attr": {
           "type": "Quantity",

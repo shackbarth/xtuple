@@ -7,24 +7,38 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 (function () {
   "use strict";
 
+
+/*
+TODO: invoiceLine ORM:
+
+      {
+        "name": "salesCategory",
+        "toOne": {
+          "type": "SalesCategory",
+          "column": "invcitem_salescat_id"
+        }
+      },
+*/
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
     assert = require("chai").assert,
+    jsdoc,
     model;
 
   exports.additionalTests = function () {
-    it.skip("the system settings options CCValidDays which will default as 7 if " +
-        "none are defined in the database", function () {
+    it.skip(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
+        "the system settings options CCValidDays which will default as 7 if none are defined in the database", function () {
       assert.equal(XT.session.settings.get("CCValidDays"), 7);
     });
 
-    it("XM.Characteristic to include \"isInvoices\" as a context attribute", function () {
+    it(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
+        "XM.Characteristic to include \"isInvoices\" as a context attribute", function () {
       var characteristic = new XM.Characteristic();
       assert.isBoolean(characteristic.get("isInvoices"));
     });
 
-    it("A nested only model XM.InvoiceCharacteristic should exist according to " +
+    it(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
         "convention for characteristic assignments", function () {
       var model;
 
@@ -33,9 +47,10 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       assert.isTrue(model instanceof XM.CharacteristicAssignment);
     });
 
-    describe("Nested only models should exist according to convention for " +
-        "many-to-many document associations", function () {
-      it("XM.InvoiceContact", function () {
+    describe(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
+        "Nested only models should exist according to convention for many-to-many document associations", function () {
+      it(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
+          "XM.InvoiceContact", function () {
         assert.isFunction(XM.InvoiceContact);
         assert.isTrue(XM.InvoiceContact.prototype.isDocumentAssignment);
       });
@@ -63,8 +78,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.isTrue(XM.InvoiceItem.prototype.isDocumentAssignment);
       });
     });
-    it("A nested only model called XM.InvoiceLineTax extending XM.Model should exist with " +
-        " attributes uuid, taxType, taxCode, and amount", function () {
+    it(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
+        "A nested only model called XM.InvoiceLineTax extending XM.Model should exist with attributes uuid, taxType, taxCode, and amount", function () {
       var attrs = ["uuid", "taxType", "taxCode", "amount"],
         model;
 
@@ -81,7 +96,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       update or delete (existing table triggers for line items will take care of
       populating this data correctly).
     */
-    it("A nested only model called XM.InvoiceLine extending XM.Model should exist", function () {
+    it(/** @constant  @default  @alias &nbsp;  @memberof invoice.prototype */jsdoc =
+        "A nested only model called XM.InvoiceLine extending XM.Model should exist", function () {
       var lineModel;
 
       assert.isFunction(XM.InvoiceLine);
@@ -90,31 +106,36 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       assert.equal(lineModel.idAttribute, "uuid");
     });
     /*
-      Not under test:
-    * XM.InvoiceLine should include the following attributes:
-      > String "uuid" that is the idAttribute
-      > Number "lineNumber" required
-      > ItemRelation "item"
-      > SiteRelation "site" default = XT.defaultSite()
-      > String "customerPartNumber"
-      > Boolean "isMiscellaneous" = false if item number set, true if not.
-      > String "itemNumber"
-      > String "itemDescription"
-      > SalesCategory "salesCategory"
-      > Quantity "quantity"
-      > Unit "quantityUnit"
-      > Number "quantityUnitRatio"
-      > Quantity "billed"
-      > Number "customerPrice"
-      > SalesPrice "price"
-      > Unit "priceUnit"
-      > Number "priceUnitRatio"
-      > ExtendedPrice "extendedPrice" = billed * quantityUnitRatio * (price / priceUnitRatio)
-      > Number "notes"
-      > TaxType "taxType"
-      > Money "taxTotal" = sum of all taxes
-      > InvoiceLineTax "taxes"
+      @class
+      @memberof invoice.prototype
+      InvoiceLine should contain
+        @member {String} "uuid" that is the idAttribute
+        @member {Number} "lineNumber" required
+        @member {ItemRelation} "item"
+        @member {SiteRelation} "site" default = XT.defaultSite()
+        @member {String} "customerPartNumber"
+        @member {Boolean} "isMiscellaneous" = false if item number set, true if not.
+        @member {String} "itemNumber"
+        @member {String} "itemDescription"
+        @member {SalesCategory} "salesCategory"
+        @member {Quantity} "quantity"
+        @member {Unit} "quantityUnit"
+        @member {Number} "quantityUnitRatio"
+        @member {Quantity} "billed"
+        @member {Number} "customerPrice"
+        @member {SalesPrice} "price"
+        @member {Unit} "priceUnit"
+        @member {Number} "priceUnitRatio"
+        @member {ExtendedPrice} "extendedPrice" = billed * quantityUnitRatio * (price / priceUnitRatio)
+        @member {Number} "notes"
+        @member {TaxType} "taxType"
+        @member {Money} "taxTotal" = sum of all taxes
+        @member {InvoiceLineTax} "taxes"
     */
+    var attrs;
+    it.skip("InvoiceLine should include attributes", function () {
+      // TODO
+    });
     it("should include a property \"sellingUnits\" that is an array of available selling " +
         "units of measure based on the selected item", function () {
       var lineModel = new XM.InvoiceLine();

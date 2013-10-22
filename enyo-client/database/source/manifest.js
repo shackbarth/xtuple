@@ -22,6 +22,7 @@
     "public/tables/grppriv.sql",
     "public/tables/incdt.sql",
     "public/tables/invcitem.sql",
+    "public/tables/invcitemtax.sql",
     "public/tables/itemsite.sql",
     "public/tables/metric.sql",
     "public/tables/poitem.sql",

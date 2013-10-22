@@ -32,6 +32,11 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     updatableField: "code"
   };
 
+  /**
+    @class
+
+    Here is some high-level description of what an invoice is supposed to do.
+  */
   exports.invoice = {
     recordType: "XM.Invoice",
     collectionType: "XM.InvoiceListItemCollection",
@@ -54,6 +59,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     updatableField: "notes",
     additionalTests: require("../specs/invoice").additionalTests
   };
+
+  /**
+   @lends invoice
+    Some invoice stuff
+   */
+  var invoiceDetail = "foo";
 
   exports.item = {
     recordType: "XM.Item",
