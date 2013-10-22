@@ -41,20 +41,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       {classes: "xv-grid-column date", components: [
         {kind: "XV.DateWidget", attr: "assignDate"},
         {kind: "XV.DateWidget", attr: "completeDate"}
-      ]},
-      {classes: "xv-grid-column grid-actions", components: [
-        {components: [
-          {kind: "enyo.Button",
-            classes: "icon-plus xv-gridbox-button",
-            name: "addGridRowButton",
-            onkeyup: "addButtonKeyup" },
-          {kind: "enyo.Button", attributes: {tabIndex: "-1"},
-            classes: "icon-search xv-gridbox-button",
-            name: "expandGridRowButton" },
-          {kind: "enyo.Button", attributes: {tabIndex: "-1"},
-            classes: "icon-remove-sign xv-gridbox-button",
-            name: "deleteGridRowButton" }
-        ]}
       ]}
     ]
   });
@@ -77,7 +63,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       {classes: "date", content: "_actualDate".loc(),
         attrs: ["assignDate", "completeDate"]}
     ],
-    editableRow: "XV.ProjectTaskGridRow",
+    editor: "XV.ProjectTaskGridRow",
     associatedWorkspace: "XV.ProjectTaskWorkspace"
   });
 
@@ -133,20 +119,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       ]},
       {classes: "xv-grid-column date", components: [
         {kind: "XV.DateWidget", attr: "scheduleDate"}
-      ]},
-      {classes: "xv-grid-column grid-actions", components: [
-        {components: [
-          {kind: "enyo.Button",
-            classes: "icon-plus xv-gridbox-button",
-            name: "addGridRowButton",
-            onkeyup: "addButtonKeyup" },
-          {kind: "enyo.Button", attributes: {tabIndex: "-1"},
-            classes: "icon-search xv-gridbox-button",
-            name: "expandGridRowButton" },
-          {kind: "enyo.Button", attributes: {tabIndex: "-1"},
-            classes: "icon-remove-sign xv-gridbox-button",
-            name: "deleteGridRowButton" }
-        ]}
       ]}
     ]
   };
@@ -173,7 +145,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       {classes: "date", content: "_scheduled".loc(),
         attrs: ["scheduleDate"]}
     ],
-    editableRow: "XV.SalesOrderLineItemGridRow",
+    editor: "XV.SalesOrderLineItemGridRow",
     summary: "SalesSummaryPanel",
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
     parentKey: "salesOrder",
