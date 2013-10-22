@@ -1,6 +1,7 @@
 {
   "name": "_application_",
   "databaseScripts": [
+    "version_check.sql",
     "drop_deprecated.sql",
     "xt/trigger_functions/comment_did_change.sql",
     "xt/trigger_functions/owner_record_did_change.sql",
@@ -28,6 +29,8 @@
     "public/tables/todoitem.sql",
     "public/tables/usrpref.sql",
     "public/tables/usrpriv.sql",
+    "public/tables/wo.sql",
+    "public/tables/womatl.sql",
     "xt/functions/add_priv.sql",
     "xt/functions/average_cost.sql",
     "xt/functions/change_password.sql",
@@ -123,6 +126,7 @@
     "xt/views/site.sql",
     "xt/views/todoiteminfo.sql",
     "xt/views/usrinfo.sql",
+    "xt/views/woinfo.sql",
     "xt/tables/usrlite.sql",
     "xm/javascript/account.sql",
     "xm/javascript/address.sql",

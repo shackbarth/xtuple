@@ -106,7 +106,7 @@
     /**
     * Test INCDT-21540 fix
     */
-    describe('INCDT-21540: Characteristics appear editable when they shouldn\'t be', function () {
+    describe.skip('INCDT-21540: Characteristics appear editable when they shouldn\'t be', function () {
       var workspaceContainer, workspace, model, id, moduleContainer, originalPrivileges;
 
       beforeEach(function () {

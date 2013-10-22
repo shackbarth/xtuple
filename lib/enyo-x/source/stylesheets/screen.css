@@ -66,6 +66,9 @@
   max-width: 100px;
   overflow: hidden;
 }
+.xv-picker-button.disabled {
+  color: #696969;
+}
 .xv-picker-label {
   color: #000000;
   padding: 18px 8px 8px 8px;
@@ -640,6 +643,7 @@
 /**
   Styles relating to Lists
 */
+/* List */
 .xv-list {
   background-color: #ffffff;
 }
@@ -680,6 +684,18 @@
 }
 .xv-list .xv-list-item .xv-list-column.descr {
   width: 15.56em;
+}
+.xv-list .xv-list-item .xv-list-column.icon {
+  width: 1.5em;
+}
+.xv-list .xv-list-item .xv-list-column .list-icon {
+  padding: 2px;
+  color: #555555;
+  vertical-align: sub;
+  border: 1px solid #eeeeee;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 .xv-list .xv-list-item.item-selected {
   background: #226b9a url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
@@ -2407,148 +2423,6 @@ body {
 /*
   XV Views
 */
-/* List */
-.xv-list {
-  background-color: #ffffff;
-}
-.xv-list .xv-list-item {
-  background-color: #ffffff;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid #dddddd;
-}
-@include box-sizing(border-box);
-.xv-list .xv-list-item.header {
-  padding-top: 0;
-}
-.xv-list .xv-list-item.inactive {
-  background-color: #8d8d8d;
-  color: #000000;
-}
-.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
-  background-color: #8d8d8d;
-}
-.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
-  color: #8d8d8d;
-}
-.xv-list .xv-list-item .xv-list-column.short {
-  width: 9em;
-}
-.xv-list .xv-list-item .xv-list-column.first {
-  width: 19em;
-}
-.xv-list .xv-list-item .xv-list-column.second {
-  width: 10em;
-}
-.xv-list .xv-list-item .xv-list-column.third {
-  width: 4.5em;
-}
-.xv-list .xv-list-item .xv-list-column.money {
-  width: 5em;
-}
-.xv-list .xv-list-item .xv-list-column.descr {
-  width: 15.56em;
-}
-.xv-list .xv-list-item .xv-list-column.icon {
-  width: 1.5em;
-}
-.xv-list .xv-list-item .xv-list-column .list-icon {
-  padding: 2px;
-  color: #555555;
-  vertical-align: sub;
-  border: 1px solid #eeeeee;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-}
-.xv-list .xv-list-item.item-selected {
-  background: #226b9a url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr {
-  color: #ffffff;
-  background: none;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
-  font-style: italic;
-  color: #99ccff;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
-  color: #f49200;
-  background: transparent;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.header {
-  background: #99ccff;
-}
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr {
-  color: #ffffff;
-  background: none;
-}
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.placeholder {
-  font-style: italic;
-  color: SkyBlue;
-}
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.hyperlink {
-  color: #f49200;
-  background: transparent;
-}
-.xv-list-item > * {
-  display: inline-block;
-  vertical-align: middle;
-}
-.xv-list-gear-icon-button {
-  float: right;
-  display: none;
-  margin-top: -4px;
-}
-.xv-list-attr {
-  padding: 5px;
-  font-size: .8em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #000000;
-  background-color: #ffffff;
-}
-.xv-list-attr.header {
-  padding: 4px;
-  background: #8d8d8d;
-  font-size: .7em;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-.xv-list-attr.footer {
-  padding: 4px;
-  background: #8d8d8d;
-  font-size: .7em;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #000000;
-}
-.xv-list-attr.right {
-  position: absolute;
-  right: 0;
-  height: 20px;
-}
-.xv-list-attr.text-align-right {
-  text-align: right;
-}
-.xv-list-attr.bold {
-  font-weight: bold;
-}
-.xv-list-attr.error {
-  color: #ff0000;
-}
-.xv-list-attr.italic {
-  font-style: italic;
-}
-.xv-list-attr.placeholder {
-  font-style: italic;
-  color: #93a1a1;
-}
-.xv-list-attr.hyperlink {
-  color: blue;
-}
 /* Navigator */
 .xv-navigator-header {
   font-size: small;

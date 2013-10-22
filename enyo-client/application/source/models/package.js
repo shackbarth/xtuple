@@ -35,5 +35,6 @@ enyo.depends(
   "user_account.js",
   "user_chart.js",
   "static.js",
-  "vendor.js"
+  "vendor.js",
+  "work_order.js"
 );

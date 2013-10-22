@@ -574,13 +574,13 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
-        {kind: "XV.CustomerQuoteListRelationsBox", attr: "quoteRelations"},
-        {kind: "XV.CustomerSalesOrderListRelationsBox", attr: "salesOrderRelations"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.CreditCardsBox", attr: "creditCards"},
         {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
-        {kind: "XV.CustomerDocumentsBox", attr: "documents"}
+        {kind: "XV.CustomerDocumentsBox", attr: "documents"},
+        {kind: "XV.CustomerQuoteListRelationsBox", attr: "quoteRelations"},
+        {kind: "XV.CustomerSalesOrderListRelationsBox", attr: "salesOrderRelations"},
       ]},
       // TODO: move this to notify system
       {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
@@ -1405,22 +1405,24 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number"},
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.ProjectStatusPicker", attr: "status"},
-            {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-            {kind: "XV.DateWidget", attr: "dueDate"},
-            {kind: "XV.DateWidget", attr: "startDate"},
-            {kind: "XV.DateWidget", attr: "assignDate"},
-            {kind: "XV.DateWidget", attr: "completeDate"},
-            {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-            {kind: "XV.UserAccountWidget", attr: "owner"},
-            {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true},
-            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-            {kind: "XV.AccountWidget", attr: "account"},
-            {kind: "XV.ContactWidget", attr: "contact"}
+            {name: "overviewControl", components:[
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.InputWidget", attr: "name"},
+              {kind: "XV.ProjectStatusPicker", attr: "status"},
+              {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+              {kind: "XV.DateWidget", attr: "dueDate"},
+              {kind: "XV.DateWidget", attr: "startDate"},
+              {kind: "XV.DateWidget", attr: "assignDate"},
+              {kind: "XV.DateWidget", attr: "completeDate"},
+              {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+              {kind: "XV.UserAccountWidget", attr: "owner"},
+              {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "XV.TextArea", attr: "notes", fit: true},
+              {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+              {kind: "XV.AccountWidget", attr: "account"},
+              {kind: "XV.ContactWidget", attr: "contact"}
+            ]}
           ]}
         ]},
         {kind: "XV.ProjectTasksBox", attr: "tasks"},
