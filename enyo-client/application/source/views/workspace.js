@@ -1405,7 +1405,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {name: "overviewControl", components:[
+            {name: "overviewControl", components: [
               {kind: "XV.InputWidget", attr: "number"},
               {kind: "XV.InputWidget", attr: "name"},
               {kind: "XV.ProjectStatusPicker", attr: "status"},
@@ -2481,9 +2481,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.TermsTypePicker", attr: "termsType"},
-            {kind: "XV.NumberWidget", name: "dueDays", attr: "dueDays"},
-            {kind: "XV.NumberWidget", name: "discountDays", attr: "discountDays"},
-            {kind: "XV.NumberWidget", name: "cutOffDay", attr: "cutOffDay"},
+            {kind: "XV.NumberSpinnerWidget", name: "dueDays", attr: "dueDays"},
+            {kind: "XV.NumberSpinnerWidget", name: "discountDays", attr: "discountDays"},
+            {kind: "XV.NumberSpinnerWidget", name: "cutOffDay", attr: "cutOffDay"},
             {kind: "XV.CheckboxWidget", attr: "isUsedByBilling"},
             {kind: "XV.CheckboxWidget", attr: "isUsedByPayments"}
           ]}

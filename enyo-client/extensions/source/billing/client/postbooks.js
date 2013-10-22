@@ -21,6 +21,7 @@ trailing:true, white:true*/
       relevantPrivileges = [
         "ConfigureAR",
         "DeleteItemMasters",
+        "MaintainBankAccounts",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
         "MaintainItemMasters",
@@ -47,9 +48,7 @@ trailing:true, white:true*/
 
     XT.app.$.postbooks.appendPanels("setup", setupPanels);
 
-    // TODO
-    //XM.configurations.add(new XM.ConfigurationModel(configuration));
-
+    XM.configurations.add(new XM.ConfigurationModel(configuration));
     XT.app.$.postbooks.insertModule(module, 0);
     XT.session.addRelevantPrivileges(billing.name, relevantPrivileges);
   };
