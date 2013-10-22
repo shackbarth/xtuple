@@ -67,11 +67,22 @@
   var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
     var coll,
       lockChange,
-      navigate,
-      navigator,
       workspaceContainer,
-      workspace;
+      workspace,
+      navigator = navigateToList(app, listKind),
+      list = navigator.$.contentPanels.getActive(),
+      navigate = function (model, status, options) {
+        XM.Tuplespace.on('all', function (e) {
+          console.log(e);
+        });
+        navigator.doWorkspace({
+          workspace: list.getWorkspace(),
+          id: model.id
+        });
+      };
 
+
+    /*
     navigate = function () {
       var indexToPick;
 
@@ -90,12 +101,12 @@
         workspace.value.on("lockChange", lockChange);
       }
     };
-    navigator = navigateToList(app, listKind);
+    */
     coll = navigator.$.contentPanels.getActive().value;
     if (coll.getStatus() === XM.Model.READY_CLEAN) {
       navigate();
     } else {
-      coll.on('statusChange', navigate);
+      coll.once('status:READY_CLEAN', navigate);
     }
   };
 
