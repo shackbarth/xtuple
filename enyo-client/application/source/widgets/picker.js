@@ -208,6 +208,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.CreditStatusPicker",
     kind: "XV.PickerWidget",
+    showNone: false,
     collection: "XM.creditStatuses"
   });
 
