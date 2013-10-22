@@ -204,15 +204,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     editableRow: "XV.SalesOrderLineItemGridRow",
     summary: "SalesSummaryPanel",
     associatedWorkspace: "XV.SalesOrderLineWorkspace",
-
-    /**
-      Set the current model into Summary Panel.
-    */
-    valueChanged: function () {
-      this.inherited(arguments);
-      var model = this.value.salesOrder || this.value.quote;
-      this.$.summaryPanel.setValue(model);
-    },
+    parentKey: "salesOrder",
 
     gridRowTapEither: function (index, indexStart) {
       this.inherited(arguments);
@@ -230,7 +222,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   enyo.kind({
     name: "XV.QuoteLineItemGridBox",
     kind: "XV.SalesOrderLineItemGridBox",
-    associatedWorkspace: "XV.QuoteLineWorkspace"
+    associatedWorkspace: "XV.QuoteLineWorkspace",
+    parentKey: "quote"
   });
 
 }());
