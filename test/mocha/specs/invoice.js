@@ -95,7 +95,10 @@ TODO: invoiceLine ORM:
       @member InvoiceLineTax
       @memberof Invoice.prototype
       @description An that contains the tax of an invoice line.
-        with attributes uuid, taxType, taxCode, and amount.
+      @property {String} uuid The ID attribute
+      @property {TaxType} taxType
+      @property {TaxCode} taxCode
+      @property {Money} amount
     */
     it("has InvoiceLineTax as a nested-only model extending XM.Model", function () {
       var attrs = ["uuid", "taxType", "taxCode", "amount"],
@@ -119,7 +122,29 @@ TODO: invoiceLine ORM:
     /**
       @member InvoiceLine
       @memberof Invoice.prototype
-      @description A nested only model extending XM.Model
+      @description Represents a line of an invoice.
+      @property {String} uuid The ID attribute
+      @property {Number} lineNumber required
+      @property {ItemRelation} item
+      @property {SiteRelation} site defaults to the system default site
+      @property {String} customerPartNumber
+      @property {Boolean} isMiscellaneous false if item number set, true if not.
+      @property {String} itemNumber
+      @property {String} itemDescription
+      @property {SalesCategory} salesCategory
+      @property {Quantity} quantity
+      @property {Unit} quantityUnit
+      @property {Number} quantityUnitRatio
+      @property {Quantity} billed
+      @property {Number} customerPrice
+      @property {SalesPrice} price
+      @property {Unit} priceUnit
+      @property {Number} priceUnitRatio
+      @property {ExtendedPrice} extendedPrice billed * quantityUnitRatio * (price / priceUnitRatio)
+      @property {Number} notes
+      @property {TaxType} taxType
+      @property {Money} taxTotal sum of all taxes
+      @property {InvoiceLineTax} taxes
     */
     it("A nested only model called XM.InvoiceLine extending XM.Model should exist", function () {
       var lineModel;
@@ -128,38 +153,9 @@ TODO: invoiceLine ORM:
       assert.isTrue(lineModel instanceof XM.Model);
       assert.equal(lineModel.idAttribute, "uuid");
     });
-    /**
-      @member InvoiceLine.uuid
-      @memberof Invoice.prototype.InvoiceLine
-      @description The uuid idAttribute
-    */
     it.skip("InvoiceLine should include attributes", function () {
       // TODO
     });
-      /*
-        @member {String} InvoiceLine.uuid that is the idAttribute
-        @member {Number} "lineNumber" required
-        @member {ItemRelation} "item"
-        @member {SiteRelation} "site" default = XT.defaultSite()
-        @member {String} "customerPartNumber"
-        @member {Boolean} "isMiscellaneous" = false if item number set, true if not.
-        @member {String} "itemNumber"
-        @member {String} "itemDescription"
-        @member {SalesCategory} "salesCategory"
-        @member {Quantity} "quantity"
-        @member {Unit} "quantityUnit"
-        @member {Number} "quantityUnitRatio"
-        @member {Quantity} "billed"
-        @member {Number} "customerPrice"
-        @member {SalesPrice} "price"
-        @member {Unit} "priceUnit"
-        @member {Number} "priceUnitRatio"
-        @member {ExtendedPrice} "extendedPrice" = billed * quantityUnitRatio * (price / priceUnitRatio)
-        @member {Number} "notes"
-        @member {TaxType} "taxType"
-        @member {Money} "taxTotal" = sum of all taxes
-        @member {InvoiceLineTax} "taxes"
-      */
     it("should include a property \"sellingUnits\" that is an array of available selling " +
         "units of measure based on the selected item", function () {
       var lineModel = new XM.InvoiceLine();
