@@ -35,7 +35,6 @@ TODO: invoiceLine ORM:
     it.skip("The system settings option CCValidDays will default to 7 if not already in the db", function () {
       assert.equal(XT.session.settings.get("CCValidDays"), 7);
     });
-
     /**
       @member -
       @memberof Invoice.prototype
@@ -45,11 +44,11 @@ TODO: invoiceLine ORM:
       var characteristic = new XM.Characteristic();
       assert.isBoolean(characteristic.get("isInvoices"));
     });
-
     /**
       @member InvoiceCharacteristic
       @memberof Invoice.prototype
       @description Follows the convention for characteristics
+      @see Characteristic
     */
     it("convention for characteristic assignments", function () {
       var model;
@@ -58,7 +57,6 @@ TODO: invoiceLine ORM:
       model = new XM.InvoiceCharacteristic();
       assert.isTrue(model instanceof XM.CharacteristicAssignment);
     });
-
     /**
       @member -
       @memberof Invoice.prototype
@@ -93,8 +91,8 @@ TODO: invoiceLine ORM:
     });
     /**
       @member InvoiceLineTax
-      @memberof Invoice.prototype
-      @description An that contains the tax of an invoice line.
+      @memberof InvoiceLine.prototype
+      @description Contains the tax of an invoice line.
       @property {String} uuid The ID attribute
       @property {TaxType} taxType
       @property {TaxCode} taxCode
@@ -110,19 +108,19 @@ TODO: invoiceLine ORM:
       assert.equal(model.idAttribute, "uuid");
       assert.equal(_.difference(attrs, model.getAttributeNames()).length, 0);
     });
-    /*
-      Not under test:
-      XM.InvoiceLineTax can be created, updated and deleted.
-      A view should be used underlying XM.InvoiceLineTax that does "nothing" after insert,
-      update or delete (existing table triggers for line items will take care of
-      populating this data correctly).
-    */
-
-
+    it.skip("XM.InvoiceLineTax can be created, updated and deleted", function () {
+      // TODO
+    });
+    it.skip("A view should be used underlying XM.InvoiceLineTax that does nothing " +
+        "after insert, update or delete (existing table triggers for line items will " +
+        "take care of populating this data correctly)", function () {
+      // TODO
+    });
     /**
-      @member InvoiceLine
-      @memberof Invoice.prototype
-      @description Represents a line of an invoice.
+      @class
+      @alias InvoiceLine
+      @description Represents a line of an invoice. Only ever used within the context of an
+        invoice.
       @property {String} uuid The ID attribute
       @property {Number} lineNumber required
       @property {ItemRelation} item
@@ -146,7 +144,7 @@ TODO: invoiceLine ORM:
       @property {Money} taxTotal sum of all taxes
       @property {InvoiceLineTax} taxes
     */
-    it("A nested only model called XM.InvoiceLine extending XM.Model should exist", function () {
+    var invoiceLine = it("A nested only model called XM.InvoiceLine extending XM.Model should exist", function () {
       var lineModel;
       assert.isFunction(XM.InvoiceLine);
       lineModel = new XM.InvoiceLine();
@@ -156,6 +154,12 @@ TODO: invoiceLine ORM:
     it.skip("InvoiceLine should include attributes", function () {
       // TODO
     });
+    /**
+      @member -
+      @memberof InvoiceLine.prototype
+      @description InvoiceLine keeps track of the available selling units of measure
+      based on the selected item, in the "sellingUnits" property
+    */
     it("should include a property \"sellingUnits\" that is an array of available selling " +
         "units of measure based on the selected item", function () {
       var lineModel = new XM.InvoiceLine();
@@ -173,9 +177,16 @@ TODO: invoiceLine ORM:
       itemModel.on("statusChange", statusChanged);
       itemModel.fetch({number: "BTRUCK1"});
     });
-    it("When the item is changed the following should be updated from item information: " +
-        " sellingUnits, quantityUnit, quantityUnitRatio, priceUnit, priceUnitRatio, unitCost " +
-        "and taxType. Also calculatePrice should be executed", function (done) {
+    /**
+      @member -
+      @memberof InvoiceLine.prototype
+      @description When the item is changed the following should be updated from item information:
+        sellingUnits, quantityUnit, quantityUnitRatio, priceUnit, priceUnitRatio, unitCost
+        and taxType. Then, the price should be recalculated.
+    */
+    it("itemDidChange should recalculate sellingUnits, quantityUnit, quantityUnitRatio, " +
+        "priceUnit, priceUnitRatio, unitCost " +
+        "and taxType. Also calculatePrice should be executed.", function (done) {
       this.timeout(4000);
       var lineModel = new XM.InvoiceLine();
 
