@@ -24,37 +24,13 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   enyo.kind({
     name: "XV.ProjectTaskReadOnlyGridRow",
     kind: "XV.ReadOnlyGridRow",
-    components: [
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "xv-grid-column grid-item", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "number"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "name"}
-      ]},
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "xv-grid-column user", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "owner.username"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "assignedTo.username"},
-      ]},
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "xv-grid-column quantity", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "budgetedHours"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "actualHours"},
-      ]},
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "xv-grid-column price", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "budgetedExpenses"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "actualExpenses"}
-      ]},
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "xv-grid-column date", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "startDate"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "dueDate"}
-      ]},
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "xv-grid-column date", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "assignDate"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "completeDate"}
-      ]}
+    columns: [
+      {classes: "grid-item", attributes: ["number", "name"]},
+      {classes: "user", attributes: ["owner.username", "assignedTo.username"]},
+      {classes: "quantity", attributes: ["budgetedHours", "actualHours"]},
+      {classes: "price", attributes: ["budgetedExpenses", "actualExpenses"]},
+      {classes: "date", attributes: ["startDate", "dueDate"]},
+      {classes: "date", attributes: ["assignDate", "completeDate"]}
     ]
   });
 
@@ -139,36 +115,13 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   enyo.kind({
     name: "XV.SalesOrderLineItemReadOnlyGridRow",
     kind: "XV.ReadOnlyGridRow",
-    components: [
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "line-number", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "lineNumber"}
-      ]},
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "grid-item", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "item.number"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "item.description1"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "site.code"},
-      ]},
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "quantity", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "quantity"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "quantityUnit.name"}
-      ]},
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "discount", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "discount"}
-      ]},
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "price", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "price"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "priceUnit.name"},
-        {kind: "XV.ReadOnlyGridAttr", attr: "extendedPrice"}
-      ]},
-      {kind: "XV.ReadOnlyGridColumn",
-        classes: "date", components: [
-        {kind: "XV.ReadOnlyGridAttr", attr: "scheduleDate"}
-      ]}
+    columns: [
+      {classes: "line-number", attributes: ["lineNumber"]},
+      {classes: "grid-item", attributes: ["item.number", "item.description1", "site.code"]},
+      {classes: "quantity", attributes: ["quantity", "quantityUnit.name"]},
+      {classes: "discount", attributes: ["discount"]},
+      {classes: "price", attributes: ["price", "priceUnit.name", "extendedPrice"]},
+      {classes: "date", attributes: ["scheduleDate"]}
     ]
   });
 
