@@ -1,60 +1,115 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true, strict:false*/
-/*global XT:true, XM:true, _:true, enyo:true */
+/*global XM:true, _:true, XT:true, XV:true, enyo:true, Globalize:true*/
 
 (function () {
 
   XT.extensions.inventory.initTransactionList = function () {
 
+    // ..........................................................
+    // ISSUE TO SHIPPING
+    //
+
     enyo.kind({
-      name: "XV.IssueToShipping",
+      name: "XV.IssueToShippingList",
       kind: "XV.TransactionList",
-      prerequisite: "canIssueStock",
-      notifyMessage: "_issueAll?".loc(),
-      list: "XV.IssueToShippingList",
-      actions: [
-        {name: "issueAll", label: "_issueAll".loc(),
-          prerequisite: "canIssueStock" }
+      label: "_issueToShipping".loc(),
+      collection: "XM.IssueToShippingCollection",
+      parameterWidget: "XV.IssueToShippingParameters",
+      query: {orderBy: [
+        {attribute: "lineNumber"},
+        {attribute: "subNumber"}
+      ]},
+      published: {
+        shipment: null,
+        transModule: XM.Inventory,
+        transWorkspace: "XV.IssueStockWorkspace"
+      },
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "lineNumber"},
+                {kind: "XV.ListAttr", attr: "itemSite.site.code",
+                  classes: "right"},
+                {kind: "XV.ListAttr", attr: "itemSite.item.number", fit: true}
+              ]},
+              {kind: "XV.ListAttr", attr: "itemSite.item.description1",
+                fit: true,  style: "text-indent: 18px;"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "unit.name", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "ordered",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "balance",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "atShipping",
+                formatter: "formatQuantity", style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "scheduleDate",
+                formatter: "formatScheduleDate", style: "text-align: right"}
+            ]}
+          ]}
+        ]}
       ],
-      handlers: {
-        onShipmentChanged: "shipmentChanged"
-      },
-      canIssueStock: function () {
-        var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
-          model = this.getModel(),
-          validModel = _.isObject(model) ? !model.get("isShipped") : false,
-          hasOpenLines = this.$.list.value.length;
-        return hasPrivilege && validModel && hasOpenLines;
-      },
-      create: function () {
+      fetch: function () {
+        this.setShipment(null);
         this.inherited(arguments);
-        var button = this.$.postButton;
-        button.setContent("_ship".loc());
-        button.setShowing(true);
       },
-      issueAll: function () {
-        this.$.list.issueAll();
+      formatScheduleDate: function (value, view, model) {
+        var today = new Date(),
+          isLate = XT.date.compareDate(value, today) < 1 &&
+            model.get("balance") > 0;
+        view.addRemoveClass("error", isLate);
+        return value;
       },
-      post: function () {
-        var that = this,
-          shipment = this.$.parameterWidget.$.shipment.getValue(),
-          callback = function (resp) {
-            if (resp) { that.$.parameterWidget.$.order.setValue(null); }
-          };
-        this.doWorkspace({
-          workspace: "XV.ShipShipmentWorkspace",
-          id: shipment.id,
-          callback: callback
-        });
+      formatLineNumber: function (value, view, model) {
+        var lineNumber = model.get("lineNumber"),
+          subnumber = model.get("subNumber");
+        if (subnumber === 0) {
+          value = lineNumber;
+        } else {
+          value = lineNumber + "." + subnumber;
+        }
+        return value;
       },
-      shipmentChanged: function (inSender, inEvent) {
-        var disabled = _.isEmpty(inEvent.shipment) ||
-                       !XT.session.privileges.get("ShipOrders");
-        this.$.parameterWidget.$.shipment.setValue(inEvent.shipment);
-        this.$.postButton.setDisabled(disabled);
+      formatQuantity: function (value) {
+        var scale = XT.locale.quantityScale;
+        return Globalize.format(value, "n" + scale);
+      },
+      /**
+        Overload: used to keep track of shipment.
+      */
+      setupItem: function (inSender, inEvent) {
+        this.inherited(arguments);
+        var collection = this.getValue(),
+          listShipment = collection.at(inEvent.index).get("shipment"),
+          listShipmentId = listShipment ? listShipment.id : false,
+          shipment = this.getShipment(),
+          shipmentId = shipment ? shipment.id : false;
+        if (listShipmentId !== shipmentId) {
+          this.setShipment(listShipment);
+          // Update all rows to match
+          _.each(collection.models, function (model) {
+            model.set("shipment", listShipment);
+          });
+        }
+      },
+      shipmentChanged: function () {
+        this.doShipmentChanged({shipment: this.getShipment()});
       }
     });
+
+    XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
   };
 
 }());
