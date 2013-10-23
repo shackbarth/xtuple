@@ -15,6 +15,7 @@
     "_billingDescription": "Corporate Relationship Management",
     "_creditTaxDiscount": "Credit Taxes for Early Payment Discounts",
     "_defaultAutoCreditWarnGraceDays": "Default Grace Period Days",
+    "_editAROpenItem": "Edit Receivables",
     "_enableCustomerDeposits": "Enable Customer Deposits",
     "_hideApplyToBalance": "Hide 'Apply to Balance' Action",
     "_salesCategory": "Sales Category",
@@ -23,7 +24,8 @@
     "_nextARMemoNumber": "Next Receivables Memo",
     "_nextCashRcptNumber": "Next Cash Receipt",
     "_recurringInvoiceBuffer": "Recurring Invoice Buffer Days",
-    "_defaultARIncidentStatus": "Default Incident Category"
+    "_defaultARIncidentStatus": "Default Incident Category",
+    "_viewAROpenItems": "View Receivables"
 
   });
 

@@ -1,0 +1,142 @@
+[
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "Receivable",
+    "table": "aropen",
+    "idSequenceName": "aropen_aropen_id_seq",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Receivable Information",
+    "privileges": {
+      "all": {
+        "create": "EditAROpenItem",
+        "read": "ViewAROpenItems",
+        "update": "EditAROpenItem",
+        "delete": "EditAROpenItem"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "SalesCustomer",
+          "column": "aropen_cust_id",
+          "required": true
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "aropen_docdate",
+          "required": true
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "aropen_duedate",
+          "required": true
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "aropen_terms_id"
+        }
+      },
+      {
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "aropen_salesrep_id"
+        }
+      },
+      {
+        "name": "documentType",
+        "attr": {
+          "type": "String",
+          "column": "aropen_doctype"
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "aropen_docnumber"
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "aropen_ordernumber"
+        }
+      },
+      {
+        "name": "reasonCode",
+        "toOne": {
+          "type": "ReasonCode",
+          "column": "aropen_rsncode_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "aropen_amount",
+          "required": true
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "aropen_curr_id",
+          "required": true
+        }
+      },
+      {
+        "name": "paid",
+        "attr": {
+          "type": "Money",
+          "column": "aropen_paid"
+        }
+      },
+      {
+        "name": "commission",
+        "attr": {
+          "type": "Money",
+          "column": "aropen_commission_due"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "aropen_notes"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

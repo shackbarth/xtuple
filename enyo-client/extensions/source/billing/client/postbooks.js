@@ -21,6 +21,7 @@ trailing:true, white:true*/
       relevantPrivileges = [
         "ConfigureAR",
         "DeleteItemMasters",
+        "EditAROpenItem",
         "MaintainBankAccounts",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
@@ -29,6 +30,7 @@ trailing:true, white:true*/
         "MaintainSalesCategories",
         "MaintainShipVias",
         "MaintainTerms",
+        "ViewAROpenItems",
         "ViewCustomerMasters",
         "ViewCustomerGroups",
         "ViewItemMasters"

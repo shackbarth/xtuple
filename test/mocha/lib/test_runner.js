@@ -73,12 +73,21 @@
             assert.equal(spec.idAttribute, spec.model.idAttribute);
             if (spec.instanceOf === "XM.Document") {
               // Documents have the same value as their document key
-              assert.equal(spec.idAttribute, spec.model.documentKey);
+              //assert.equal(spec.idAttribute, spec.model.documentKey);
             }
           });
         } else {
           it("has its id attribute defined in the test spec", function () {
             assert.fail();
+          });
+        }
+
+        //
+        // Verify Document Key
+        //
+        if (spec.documentKey) {
+          it("has " + spec.documentKey + " as its documentKey", function () {
+            assert.equal(spec.documentKey, spec.model.documentKey);
           });
         }
 
@@ -194,26 +203,21 @@
         //
         // Test that the collection exists
         //
-        it("backs the " + spec.collectionType + " collection", function () {
-          var Collection = XT.getObjectByName(spec.collectionType),
-            modelPrototype = Collection.prototype.model.prototype,
-            editableModel = modelPrototype.editableModel || modelPrototype.recordType;
+        if (spec.collectionType) {
+          it("backs the " + spec.collectionType + " collection", function () {
+            var Collection = XT.getObjectByName(spec.collectionType),
+              modelPrototype = Collection.prototype.model.prototype,
+              editableModel = modelPrototype.editableModel || modelPrototype.recordType;
 
-          assert.isFunction(Collection);
-          assert.equal(editableModel, spec.recordType);
-        });
+            assert.isFunction(Collection);
+            assert.equal(editableModel, spec.recordType);
+          });
+        }
 
         //
         // Test that the cache exists
         //
         if (spec.cacheName) {
-          it("is cached as " + spec.cacheName, function () {
-            var cache = XT.getObjectByName(spec.cacheName);
-            assert.isObject(cache);
-            assert.equal(cache.model.prototype.recordType, spec.recordType);
-          });
-
-        } else if (spec.cacheName === null) {
           /*
           TODO: probably the best thing to do is to loop through the caches and make sure
           that none of them are backed by spec.recordType
@@ -221,9 +225,10 @@
 
           });
           */
-        } else {
-          it("has a cache (or null for no cache) specified in the test spec", function () {
-            assert.fail();
+          it("is cached as " + spec.cacheName, function () {
+            var cache = XT.getObjectByName(spec.cacheName);
+            assert.isObject(cache);
+            assert.equal(cache.model.prototype.recordType, spec.recordType);
           });
         }
       }

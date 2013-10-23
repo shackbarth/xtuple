@@ -147,6 +147,39 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     }],
   };
 
+  exports.receivable = {
+    recordType: "XM.Receivable",
+    //listKind: "XV.ReasonCodeList",
+    enforceUpperKey: true,
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "uuid",
+    documentKey: "documentNumber",
+    attributes: ["uuid", "documentDate", "customer", "dueDate",
+      "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
+      "reasonCode", "amount", "currency", "paid", "notes"],
+    // TODO: balance", taxes", "taxTotal", "applications", "commission"],
+    extensions: ["billing"],
+    privileges: {
+      createUpdateDelete: "EditAROpenItem",
+      read: "ViewAROpenItems"
+    },
+    createHash: {
+      uuid: "TestReceivableId" + Math.random(),
+      customer: {number: "TTOYS"},
+      documentDate: new Date(),
+      dueDate: new Date(),
+      amount: 0,
+      currency: {abbreviation: "USD"},
+      documentNumber: "DocumentNumber" + Math.random()
+    },
+    updatableField: "notes",
+    defaults: {
+      //currency: XT.baseCurrency()
+    },
+    additionalTests: require("../specs/receivable").additionalTests
+  };
+
   exports.shipVia = {
     recordType: "XM.ShipVia",
     collectionType: "XM.ShipViaCollection",
