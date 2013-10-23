@@ -1,7 +1,8 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true, setTimeout */
+/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true,
+  setTimeout:true, XG:true */
 
 (function () {
   "use strict";
@@ -19,7 +20,7 @@
     //
     _.each(navigator.modules, function (module, moduleIndex) {
       _.each(module.panels, function (panel, panelIndex) {
-        if (panel.kind === listKind) {
+        if (listKind && panel.kind === listKind) {
           myModuleIndex = moduleIndex;
           myPanelIndex = panelIndex;
         }
@@ -65,37 +66,56 @@
   };
 
   var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
-    var coll,
-      lockChange,
-      navigate,
-      navigator,
-      workspaceContainer,
-      workspace;
+    var workspaceContainer,
+      workspace,
+      navigator = navigateToList(app, listKind),
+      list = navigator.$.contentPanels.getActive(),
+      collection = list.value,
 
-    navigate = function () {
-      var indexToPick;
+      /**
+       * Open workspace backed by the given model.
+       * @param model
+       */
+      navigate = function (model, status, options) {
+        /**
+         * This lets us begin listening for events from workspace.value before
+         * that value exists.
+         * @listens lock:obtain
+         */
+        XG.Tuplespace.once('lock:obtain', function (_model, lock) {
+          // console.log('\na ' + _model.recordType + ' obtained lock!');
 
-      if (coll.getStatus() === XM.Model.READY_CLEAN) {
-        coll.off('statusChange', navigate);
-        indexToPick = Math.min(1, navigator.$.contentPanels.getActive().value.length - 1);
-        navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: indexToPick});
-        workspaceContainer = app.$.postbooks.getActive();
-        assert.isDefined(workspaceContainer);
-        workspace = workspaceContainer.$.workspace;
-        assert.isDefined(workspace);
-        lockChange = function () {
-          workspace.value.off("lockChange", lockChange);
+          workspaceContainer = app.$.postbooks.getActive();
+          assert.isDefined(workspaceContainer);
+
+          workspace = workspaceContainer.$.workspace;
+          assert.isDefined(workspace);
+          assert.isDefined(workspace.value);
+
+          if (_model.id !== workspace.value.id) {
+            return;
+          }
+
           done(workspaceContainer);
-        };
-        workspace.value.on("lockChange", lockChange);
-      }
-    };
-    navigator = navigateToList(app, listKind);
-    coll = navigator.$.contentPanels.getActive().value;
-    if (coll.getStatus() === XM.Model.READY_CLEAN) {
-      navigate();
+        });
+
+        /**
+         * Create workspace.
+         * @fires onWorkspace
+         */
+        navigator.doWorkspace({
+          workspace: list.getWorkspace(),
+          id: model.id
+        });
+      };
+
+    /**
+     * Navigate to workspace of first model in the list.
+     */
+    if (collection.getStatus() === XM.Model.READY_CLEAN) {
+      navigate(collection.at(0));
     } else {
-      coll.on('statusChange', navigate);
+      collection.once('status:READY_CLEAN', navigate);
     }
   };
 
@@ -119,6 +139,11 @@
       if (attribute.idAttribute && !value.idAttribute) {
         // the attribute has been turned into a model
         assert.equal(attribute.id, value[attribute.idAttribute]);
+
+      } else if (key === workspace.value.idAttribute && workspace.value.enforceUpperKey) {
+        // the model uppercases the key
+        assert.equal(workspace.value.get(key), value.toUpperCase());
+
       } else {
         assert.equal(workspace.value.get(key), value);
       }
@@ -161,7 +186,7 @@
     });
   };
 
-  exports.deleteFromList = function (app, model, done) {
+  var deleteFromList = exports.deleteFromList = function (app, model, done) {
     var statusChange;
 
     // back up to list
@@ -224,4 +249,18 @@
     });
   };
 
+  exports.runUICrud = function (spec) {
+    it('can be created through the app UI', function (done) {
+      this.timeout(30 * 1000);
+      navigateToNewWorkspace(XT.app, spec.listKind, function (workspaceContainer) {
+        var workspace = workspaceContainer.$.workspace;
+
+        assert.equal(workspace.value.recordType, spec.recordType);
+        setWorkspaceAttributes(workspace, spec.createHash);
+        saveWorkspace(workspace, function () {
+          deleteFromList(XT.app, workspace.value, done);
+        });
+      });
+    });
+  };
 }());

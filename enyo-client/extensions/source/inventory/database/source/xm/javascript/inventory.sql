@@ -10,8 +10,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
   /**
     Distribute location and/or trace detail for one or many inventory transactions.
-    For good or for ill, this function attempts to exactly replicate the behavior of
-    distributeInventory.cpp in the C++ client.
+    For good or for ill, this function attempts to exactly replicate the behavior of distributeInventory.cpp in the C++ client.
     
     Example:
 
@@ -571,7 +570,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
-    return JSON.stringify(ret);
+    return ret;
   };
   
   /* 

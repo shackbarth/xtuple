@@ -33,7 +33,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.type = "Discovery";
     payload.dispatch = {
       functionName: "getList",
-      isJSON: true,
       parameters: [model, "https://" + req.headers.host + "/"] // TODO get rootURL
     };
 
@@ -78,7 +77,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.type = "Discovery";
     payload.dispatch = {
       functionName: "getDiscovery",
-      isJSON: true,
       parameters: [model, "https://" + req.headers.host + "/"] // TODO get rootURL
     };
 
