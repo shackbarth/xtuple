@@ -370,7 +370,7 @@
         "name": "lineNumber",
         "attr": {
           "type": "Number",
-          "column": "invcitem_id"
+          "column": "invcitem_linenumber"
         }
       },
       {
