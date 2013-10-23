@@ -1,7 +1,8 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true, setTimeout */
+/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true,
+  setTimeout:true, XG:true */
 
 (function () {
   "use strict";
@@ -65,37 +66,56 @@
   };
 
   var navigateToExistingWorkspace = exports.navigateToExistingWorkspace = function (app, listKind, done) {
-    var coll,
-      lockChange,
-      navigate,
-      navigator,
-      workspaceContainer,
-      workspace;
+    var workspaceContainer,
+      workspace,
+      navigator = navigateToList(app, listKind),
+      list = navigator.$.contentPanels.getActive(),
+      collection = list.value,
 
-    navigate = function () {
-      var indexToPick;
+      /**
+       * Open workspace backed by the given model.
+       * @param model
+       */
+      navigate = function (model, status, options) {
+        /**
+         * This lets us begin listening for events from workspace.value before
+         * that value exists.
+         * @listens lock:obtain
+         */
+        XG.Tuplespace.once('lock:obtain', function (_model, lock) {
+          // console.log('\na ' + _model.recordType + ' obtained lock!');
 
-      if (coll.getStatus() === XM.Model.READY_CLEAN) {
-        coll.off('statusChange', navigate);
-        indexToPick = Math.min(1, navigator.$.contentPanels.getActive().value.length - 1);
-        navigator.itemTap({}, {list: navigator.$.contentPanels.getActive(), index: indexToPick});
-        workspaceContainer = app.$.postbooks.getActive();
-        assert.isDefined(workspaceContainer);
-        workspace = workspaceContainer.$.workspace;
-        assert.isDefined(workspace);
-        lockChange = function () {
-          workspace.value.off("lockChange", lockChange);
+          workspaceContainer = app.$.postbooks.getActive();
+          assert.isDefined(workspaceContainer);
+
+          workspace = workspaceContainer.$.workspace;
+          assert.isDefined(workspace);
+          assert.isDefined(workspace.value);
+
+          if (_model.id !== workspace.value.id) {
+            return;
+          }
+
           done(workspaceContainer);
-        };
-        workspace.value.on("lockChange", lockChange);
-      }
-    };
-    navigator = navigateToList(app, listKind);
-    coll = navigator.$.contentPanels.getActive().value;
-    if (coll.getStatus() === XM.Model.READY_CLEAN) {
-      navigate();
+        });
+
+        /**
+         * Create workspace.
+         * @fires onWorkspace
+         */
+        navigator.doWorkspace({
+          workspace: list.getWorkspace(),
+          id: model.id
+        });
+      };
+
+    /**
+     * Navigate to workspace of first model in the list.
+     */
+    if (collection.getStatus() === XM.Model.READY_CLEAN) {
+      navigate(collection.at(0));
     } else {
-      coll.on('statusChange', navigate);
+      collection.once('status:READY_CLEAN', navigate);
     }
   };
 

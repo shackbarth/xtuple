@@ -20,9 +20,10 @@ white:true*/
       bindEvents: function () {
         XM.Settings.prototype.bindEvents.apply(this, arguments);
         this.on('statusChange', this.statusDidChange);
-      },
+      }
+
     });
-    
+
     XM.billing = new XM.Billing();
   };
 })();
