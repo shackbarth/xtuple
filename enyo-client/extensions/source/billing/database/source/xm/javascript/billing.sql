@@ -58,7 +58,7 @@ select xt.install_js('XM','Billing','xtuple', $$
     ret.NextCashRcptNumber = plv8.execute('select currentCashRcptNumber() as value',[])[0].value;
 
     ret = XT.extend(ret, data.retrieveMetrics(keys));
-    return JSON.stringify(ret);
+    return ret;
   }
 
   /**

@@ -42,7 +42,7 @@ select xt.install_js('XM','Account','xtuple', $$
       }
     }
     
-    return JSON.stringify(retVal);
+    return retVal;
   }
 
   XM.Account.used = function(id) {

@@ -54,7 +54,7 @@ select xt.install_js('XM','item_site','xtuple', $$
              .replace('{p3}', clause.parameters.length + 3);
     clause.parameters = clause.parameters.concat([customerId, shiptoId, effectiveDate]);
     if (DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
-    return JSON.stringify(plv8.execute(sql, clause.parameters));
+    return plv8.execute(sql, clause.parameters);
   };
 
 }());
