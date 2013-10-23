@@ -10,7 +10,7 @@ white:true*/
   var i,
     K;
 
-  // Credit Status
+  // Receivable Types
   K = XM.Receivable;
   var receivableTypeJson = [
     { id: K.INVOICE, name: "_invoice".loc() },
