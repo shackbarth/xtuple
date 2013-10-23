@@ -356,7 +356,7 @@ setup_postgres() {
 	cdir $BASEDIR/postgres
 	wget http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
 	wait
-	NEWESTVERSION=$(cat rss | grep -o /03%20PostBooks-databases/4.[0-9].[0-9]/postbooks_demo-4.[0-9].[0-9].backup/download | grep -o 4.[0-9].[0-9] | head -1)
+  NEWESTVERSION=`cat rss | grep -o '03%20PostBooks-databases\/4.[0-9].[0-9]\(RC\)\?\/postbooks_demo-4.[0-9].[0-9]\(RC\)\?.backup\/download' | grep -o '4.[0-9].[0-9]\(RC\)\?' | head -1`
 	rm rss
 
 	if [ -z "$NEWESTVERSION" ]
