@@ -21,6 +21,21 @@ XT.extensions.billing.initReceivableModel = function () {
         currency: XT.baseCurrency()
       };
     },
+
+    // * When customer is set on XM.Receivable the terms, currency, and salesRep should be copied from the customer and commission should be recalculated.
+    // * When the amount is changed commission should be recalculated as customer.commission * amount.
+    // * When the document date or terms is changed the dueDate sholud be recalculated using the terms "calculateDueDate" function.
+    // * When the status of a receivable changes to READY_CLEAN, the following attributes should be changed to read only:
+    //   > customer
+    //   > documentDate
+    //   > documentType
+    //   > documentNumber
+    //   > terms
+    // * When child tax records are added or removed, the taxTotal should be recalculated.
+
+    // * Validation
+    //   > The amount must be greater than zero.
+    //   > The taxTotal may not be greater than the amount.
   });
 
   XM.ReceivableMixin = {

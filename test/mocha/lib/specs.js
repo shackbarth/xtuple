@@ -159,8 +159,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     documentKey: "documentNumber",
     attributes: ["uuid", "documentDate", "customer", "dueDate",
       "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
-      "reasonCode", "amount", "currency", "paid", "notes"],
-    // TODO: balance", taxes", "taxTotal", "applications", "commission"],
+      "reasonCode", "amount", "currency", "paid", "notes", "taxes"],
+    // TODO: balance", "taxTotal", "applications", "commission"],
     requiredAttributes: ["currency", "customer", "documentDate", "dueDate", "amount"],
     extensions: ["billing"],
     privileges: {
@@ -182,30 +182,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     },
     additionalTests: require("../specs/receivable").additionalTests
   };
-
-  exports.receivableTax = {
-    recordType: "XM.ReceivableTax",
-    skipSmoke: true,
-    skipCrud: true,
-    collectionType: null,
-    cacheName: null,
-    //enforceUpperKey: true,
-    instanceOf: "XM.Model",
-    //isLockable: true,
-    idAttribute: "uuid",
-    attributes: ["uuid", "taxCode", "amount"],
-    extensions: ["billing"],
-    privileges: {
-      createUpdateDelete: true,
-      read: true
-    },
-    createHash: {
-      uuid: "ReceivableTaxId" + Math.random(),
-      amount: 0
-    },
-    updatableField: "amount"
-  };
-
 
   exports.shipVia = {
     recordType: "XM.ShipVia",

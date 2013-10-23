@@ -130,6 +130,15 @@
         }
       },
       {
+        "name": "taxes",
+        "toMany": {
+          "isNested": true,
+          "type": "ReceivableTax",
+          "column": "aropen_id",
+          "inverse": "tax"
+        }
+      },
+      {
         "name": "notes",
         "attr": {
           "type": "String",
@@ -150,8 +159,8 @@
       "all": {
         "create": true,
         "read": true,
-        "update": true,
-        "delete": true
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -169,6 +178,13 @@
           "type": "String",
           "column": "obj_uuid",
           "isNaturalKey": true
+        }
+      },
+      {
+        "name": "tax",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_parent_id"
         }
       },
       {
