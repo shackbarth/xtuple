@@ -125,14 +125,21 @@ white:true*/
       var that = this,
         options = {},
         parent = this.getParent(),
-        taxZone = parent ? parent.get("taxZone") : undefined,
+        taxZone = parent && parent.get("taxZone"),
         item = this.get("item"),
-        unitCost = item.get("standardCost");
+        unitCost = item && item.get("standardCost");
 
       // Reset values
       this.unset("priceUnitRatio");
       this.unset("taxType");
       this.fetchSellingUnits();
+
+      // Reset Unit Cost
+      //this.off("unitCost", this.unitCostDidChange);
+      this.set("unitCost", unitCost);
+      //this.on("unitCost", this.unitCostDidChange);
+
+      if (!item) { return; }
 
       // Fetch and update tax type
       options.success = function (id) {
@@ -145,12 +152,6 @@ white:true*/
       };
 
       item.taxType(taxZone, options);
-
-      // Reset Unit Cost
-      //this.off("unitCost", this.unitCostDidChange);
-      this.set("unitCost", unitCost);
-      //this.on("unitCost", this.unitCostDidChange);
-
 
       this.calculatePrice();
     }

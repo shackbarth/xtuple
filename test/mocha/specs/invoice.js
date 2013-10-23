@@ -184,11 +184,12 @@ TODO: invoiceLine ORM:
         sellingUnits, quantityUnit, quantityUnitRatio, priceUnit, priceUnitRatio, unitCost
         and taxType. Then, the price should be recalculated.
     */
+    var lineModel;
     it("itemDidChange should recalculate sellingUnits, quantityUnit, quantityUnitRatio, " +
         "priceUnit, priceUnitRatio, unitCost " +
         "and taxType. Also calculatePrice should be executed.", function (done) {
       this.timeout(4000);
-      var lineModel = new XM.InvoiceLine();
+      lineModel = new XM.InvoiceLine();
 
       assert.equal(lineModel.sellingUnits.length, 0);
       assert.isNull(lineModel.get("quantityUnit"));
@@ -209,26 +210,50 @@ TODO: invoiceLine ORM:
         done();
       }, 3000); // TODO: use an event. headache because we have to wait for several
     });
+    /**
+      @member -
+      @memberof InvoiceLine.prototype
+      @description The price will be recalculated when the units change.
+    */
+    it("If the quantityUnit or SellingUnit are changed, \"calculatePrice\" should be run.", function () {
+      // TODO
+    });
+    /**
+      @member -
+      @memberof InvoiceLine.prototype
+      @description If price or billing change, extendedPrice should be recalculated.
+    */
+    it("If price or billing change, extendedPrice should be recalculated.", function () {
+      // TODO
+    });
+    /**
+      @member -
+      @memberof InvoiceLine.prototype
+      @description When item is unset, all item-related values should be cleared.
+    */
+    it("If item is unset, the above values should be cleared.", function (done) {
+      // relies on the fact that the item was set above to something
+      this.timeout(4000);
+      lineModel.set({item: null});
+
+      setTimeout(function () {
+        assert.equal(lineModel.sellingUnits.length, 0);
+        assert.isNull(lineModel.get("quantityUnit"));
+        assert.isNull(lineModel.get("priceUnit"));
+        assert.isNull(lineModel.get("unitCost"));
+        assert.isNull(lineModel.get("taxType"));
+        done();
+      }, 3000); // TODO: use an event. headache because we have to wait for several
+    });
 
 
   };
-  /**
-    @member -
-    @memberof InvoiceLine.prototype
-    @description The price will be recalculated when the units change.
-  */
-  it("If the quantityUnit or SellingUnit are changed, \"calculatePrice\" should be run.", function () {
-    // TODO
-  });
 
 
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-* If price or billing change, extendedPrice should be recalculated.
-* If item is unset, the above values should be cleared.
-#HINT: See Sales Order implementation
 * When the item "isFractional" attribute === true, decimal numbers should be allowed for quantity and billed values, otherwise only whole numbers should be allowed.
 * When billed is changed extendedPrice should be recalculated.
 * Ordered and Billed should only allow positive values.
