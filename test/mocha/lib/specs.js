@@ -159,7 +159,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
       "reasonCode", "amount", "currency", "paid", "notes"],
     // TODO: balance", taxes", "taxTotal", "applications", "commission"],
-    requiredAttributes: ["currency"],
+    requiredAttributes: ["currency", "customer", "documentDate", "dueDate", "amount"],
     extensions: ["billing"],
     privileges: {
       createUpdateDelete: "EditAROpenItem",

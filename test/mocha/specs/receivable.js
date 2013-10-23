@@ -72,7 +72,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.isTrue(model.isCredit());
       });
 
-    // * A nested only model called XM.ReceivableTax extending XM.Model should be created in the billing extension.
+    // * A nested only model called XM.ReceivableTax extending XM.Model should be created in the billing extension"
     // * XM.ReceivableTax should include the following attributes:
     //     > String "uuid" that is the idAttribute
     //     > TaxCode "taxCode"
@@ -93,20 +93,10 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     //     > Money "baseAmount"
     // * XM.ReceivableApplications is read only
 
-
-
-    // *
-    // * XM.Receivable should include the following attributes:
-
-    //     > Currency "currency" required, defaults to base currency
-
     //     > Money "balance", calculated value of amount - paid
     //     > Money "taxTotal", calculated sum of taxes
-
     //     > ReceivableTax "taxes"
     //     > ReceivableApplication "applications"
-
-    // * The numbering policy on XM.Receivable should be XM.Document.AUTO_NUMBER.
 
     // * The order number sequence is "ARMemoNumber"
     // * The "ViewAROpenItems" and "EditAROpenItem" privileges should be added to XM.SalesCustomer read privileges.
@@ -194,7 +184,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     // * Clicking the "New" button for the recievable list should reveal multiple menu options including "Credit Memo" and "Debit Memo"
     // * Selecting to create a new Credit Memo or Debit Memo will open the XM.Receivable workspace with the appropriate document type preselected.
     // * There should be a printed report definition for the receivables list.
-
   };
 
   exports.additionalTests = additionalTests;
