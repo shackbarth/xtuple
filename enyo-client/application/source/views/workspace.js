@@ -1097,6 +1097,32 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
   XV.registerModelWorkspace("XM.IncidentSeverity", "XV.IncidentSeverityWorkspace");
 
   // ..........................................................
+  // INVOICE
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceWorkspace",
+    kind: "XV.Workspace",
+    title: "_invoice".loc(),
+    model: "XM.Invoice",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.SalesCustomerWidget", attr: "customer"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.InvoiceListItem", "XV.InvoiceWorkspace");
+
+  // ..........................................................
   // ITEM
   //
 

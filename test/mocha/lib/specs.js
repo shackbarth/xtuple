@@ -4,6 +4,13 @@ white:true*/
 /*global XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
 setTimeout:true, clearTimeout:true, exports:true, it:true */
 
+
+/*
+  To generate spec documentation:
+  cd scripts
+  ./generateSpecs.sh
+*/
+
 (function () {
   "use strict";
 
@@ -63,17 +70,48 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     additionalTests: require("../specs/configure_billing").additionalTests
   };
 
+  /**
+    A title, such as Mr. or Mrs.
+    @class
+    @alias Honorific
+  */
   exports.honorific = {
     recordType: "XM.Honorific",
     collectionType: "XM.HonorificCollection",
+    /**
+      @member -
+      @memberof Honorific.prototype
+      @description The honorific collection is cached.
+    */
     cacheName: "XM.honorifics",
     listKind: "XV.HonorificList",
     instanceOf: "XM.Document",
+    /**
+      @member -
+      @memberof Honorific.prototype
+      @description Honorifics are lockable.
+    */
     isLockable: true,
+    /**
+      @member -
+      @memberof Honorific.prototype
+      @description The ID attribute is "code", which will not be automatically uppercased.
+    */
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["code"],
+    /**
+      @member -
+      @memberof Honorific.prototype
+      @description Used in the crm and project modules
+    */
     extensions: ["crm", "project"],
+    /**
+      @member -
+      @memberof Honorific.prototype
+      @description Honorifics can be read by anyone but can only be created, updated,
+        or deleted by users with the "MaintainTitles" privilege.
+    */
     privileges: {
       createUpdateDelete: "MaintainTitles",
       read: true
@@ -83,6 +121,68 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     },
     updatableField: "code"
   };
+
+  /**
+    Here is some high-level description of what an invoice is supposed to do.
+    @class
+    @alias Invoice
+  */
+  exports.invoice = {
+    skipSmoke: true, // XXX
+    recordType: "XM.Invoice",
+    collectionType: "XM.InvoiceListItemCollection",
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description The invoice collection is not cached.
+    */
+    cacheName: null,
+    listKind: "XV.InvoiceList",
+    instanceOf: "XM.Document",
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description Invoice is lockable.
+    */
+    isLockable: true,
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description The ID attribute is "number", which will be automatically uppercased.
+    */
+    idAttribute: "number",
+    enforceUpperKey: true,
+    attributes: ["number"], // TODO
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description Used in the billing module
+    */
+    extensions: ["billing"],
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description Users can create, update, and delete invoices if they have the
+        MaintainMiscInvoices privilege, and they can read invoices if they have
+        the ViewMiscInvoices privilege.
+    */
+    privileges: {
+      createUpdateDelete: "MaintainMiscInvoices",
+      read: "ViewMiscInvoices"
+    },
+    createHash: {
+      number: "33InvoiceTest" + Math.random(),
+      customer: {number: "TTOYS"}
+    },
+    updatableField: "notes",
+    additionalTests: require("../specs/invoice").additionalTests
+  };
+
+  /**
+   @lends invoice
+    Some invoice stuff
+   */
+  var invoiceDetail = "foo";
 
   exports.item = {
     recordType: "XM.Item",
