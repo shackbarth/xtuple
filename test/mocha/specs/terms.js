@@ -14,12 +14,29 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     model;
 
   var additionalTests = function () {
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description The Terms type will contain Days
+    */
     it("has the terms type constant DAYS", function () {
       assert.equal(XM.Terms.DAYS, "D");
     });
+
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description The Terms type will contain Proximo
+    */
     it("has the terms type constant PROXIMO", function () {
       assert.equal(XM.Terms.PROXIMO, "P");
     });
+
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description Terms Type Days should be allowed to be set.
+    */
     it("when the terms type is set to DAYS", function (done) {
       var initComplete = function () {
         model.set(require("../lib/specs").terms.createHash);
@@ -31,6 +48,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       model.on("statusChange", initComplete);
       model.initialize(null, {isNew: true});
     });
+
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description When terms type is Days, Due Days will be a positive number.
+    */
     // TODO: these days tests should be nested inside
     it("Validation should check that the dueDays attribute is any positive integer", function () {
       model.set({dueDays: "Not a number"});
@@ -46,22 +69,58 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       model.set({dueDays: 132});
       assert.isUndefined(JSON.stringify(model.validate(model.attributes)));
     });
+
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description When terms type is Days, the Cut Off Day is Read-Only.
+    */
     it("the cutOffDay should be set to read only = true", function () {
       assert.equal(model.isReadOnly("cutOffDay"), true);
     });
+
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description The Terms type Proximo should be allowed to be set.
+    */
     it("when the terms type is set to PROXIMO", function () {
       model.set("termsType", XM.Terms.PROXIMO);
     });
+
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description When terms type is Proximo, the Due Date is set to 1.
+    */
     // TODO: these proximo tests should be nested inside
     it("the dueDay attribute should change to 1", function () {
       assert.equal(model.get("dueDays"), 1);
     });
+
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description When terms type is Proximo, the Discount Day is set to 1.
+    */
     it("the discountDay attribute should change to 1", function () {
       assert.equal(model.get("discountDays"), 1);
     });
+
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description When terms type is Proximo, the Cut Off Day is editable.
+    */
     it("cutOffDay should be set to read only = false", function () {
       assert.equal(model.isReadOnly("cutOffDay"), false);
     });
+
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description When term type is Proximo, the Cut Off Day will allow values between and including 0 and 31.
+    */
     it("The cutoffDay attribute should validate only integers between 0 and 31", function () {
       model.set({cutOffDay: "Not a number"});
       assert.isObject(model.validate(model.attributes));
@@ -76,6 +135,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       model.set({cutOffDay: 31});
       assert.isUndefined(JSON.stringify(model.validate(model.attributes)));
     });
+
+    /**
+      @member -
+      @memberof Terms.prototype
+      @description When term type is Proximo, the Due Date will allow values between and including 0 and 31.
+    */
     it("Validation should check that the dueDays attribute is only integers between 0 and 31", function () {
       model.set({dueDays: "Not a number"});
       assert.isObject(model.validate(model.attributes));
