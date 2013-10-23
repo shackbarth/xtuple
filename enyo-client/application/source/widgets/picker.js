@@ -333,7 +333,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.LocationPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.location",
+    collection: "XM.locations",
     nameAttribute: "format",
     orderBy: [
       {attribute: 'format'}

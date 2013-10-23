@@ -32,19 +32,19 @@ trailing:true, white:true, strict:false*/
               {kind: "FittableColumns", components: [
                 {kind: "XV.ListAttr", attr: "itemSite.site.code",
                   classes: "right"},
-                {kind: "XV.ListAttr", attr: "itemSite.item.number", fit: true}
+                {kind: "XV.ListAttr", attr: "itemSite.item.number", fit: true, isKey: true}
               ]},
-              {kind: "XV.ListAttr", attr: "itemSite.item.description1",
-                fit: true,  style: "text-indent: 18px;"}
+              {kind: "XV.ListAttr", attr: "itemSite.item.description1", fit: true}
             ]},
             {kind: "XV.ListColumn", components: [
-              {kind: "XV.ListAttr", attr: "unit.name", style: "text-align: right"}
+              {kind: "XV.ListAttr", attr: "unit.name", style: "text-align: right"},
+              {kind: "XV.ListAttr", attr: "getIssueMethodString"}
             ]},
             {kind: "XV.ListColumn", classes: "money", components: [
               {kind: "XV.ListAttr", attr: "qtyRequired",
                 formatter: "formatQuantity", style: "text-align: right"}
             ]},
-            {kind: "XV.ListColumn", classes: "money bold", components: [
+            {kind: "XV.ListColumn", classes: "money", components: [
               {kind: "XV.ListAttr", attr: "balance",
                 formatter: "formatQuantity", style: "text-align: right"}
             ]},

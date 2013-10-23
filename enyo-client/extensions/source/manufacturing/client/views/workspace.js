@@ -67,14 +67,14 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ItemSiteWidget", attr:
                 {item: "itemSite.item", site: "itemSite.site"}
               },
-              {kind: "XV.InputWidget", attr: "unit.name"},
+              {kind: "XV.InputWidget", attr: "unit.name", label: "_materialUnit".loc()},
               {kind: "XV.QuantityWidget", attr: "qtyRequired"},
               {kind: "XV.QuantityWidget", attr: "qtyIssued"},
               {kind: "onyx.GroupboxHeader", content: "_issue".loc()},
               {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue", classes: "bold"},
             ]}
           ]},
-          {kind: "XV.IssueMaterialDetailRelationsBox",
+          {kind: "XV.IssueStockDetailRelationsBox",
             attr: "itemSite.detail", name: "detail"}
         ]},
         {kind: "onyx.Popup", name: "distributePopup", centered: true,
@@ -102,14 +102,9 @@ trailing:true, white:true, strict: false*/
       kind: "XV.Workspace",
       title: "_postProduction".loc(),
       model: "XM.PostProduction",
-      reportModel: "XM.WorkOrder",
+      //reportModel: "XM.WorkOrder",
       saveText: "_post".loc(),
       allowNew: false,
-      hideApply: true,
-      dirtyWarn: false,
-      events: {
-        onPrint: ""
-      },
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -122,12 +117,11 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ItemSiteWidget", attr:
                 {item: "itemSite.item", site: "itemSite.site"}
               },
-              {kind: "XV.InputWidget", attr: "status"},
+              {kind: "XV.InputWidget", attr: "getWorkOrderStatusString", label: "_status".loc()},
               {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
               {kind: "XV.TextArea", attr: "productionNotes", fit: true},
               {kind: "onyx.GroupboxHeader", content: "_options".loc()},
-              {kind: "XV.StickyCheckboxWidget", label: "_backflushMaterials".loc(),
-                name: "backflushMaterials"},
+              {kind: "XV.CheckboxWidget", attr: "isBackflushMaterials"},
               {kind: "XV.StickyCheckboxWidget", label: "_closeWorkOrderAfterPosting".loc(),
                 name: "closeWorkOrderAfterPosting"},
               {kind: "XV.StickyCheckboxWidget", label: "_scrapOnPost".loc(),
@@ -136,40 +130,32 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.QuantityWidget", attr: "quantityReceived"},
               {kind: "XV.QuantityWidget", attr: "balance"},
               {kind: "onyx.GroupboxHeader", content: "_post".loc()},
-              {kind: "XV.QuantityWidget", attr: "qtyToPost", name: "qtyToPost"}
+              {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"}
             ]}
-          ]}
-          //{kind: "XV.ShipmentLineRelationsBox", attr: "lineItems"}
+          ]},
+          {kind: "XV.PostProductionCreateLotSerialBox", attr: "trace"}
+        ]},
+        {kind: "onyx.Popup", name: "distributePopup", centered: true,
+          onHide: "popupHidden",
+          modal: true, floating: true, components: [
+          {content: "_quantity".loc()},
+          {kind: "onyx.InputDecorator", components: [
+            {kind: "onyx.Input", name: "quantityInput"}
+          ]},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "distributeOk",
+            classes: "onyx-blue xv-popup-button"},
+          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "distributeDone",
+            classes: "xv-popup-button"},
         ]}
       ],
-      /**
-        Overload: Some special handling for start up.
-        */
-      attributesChanged: function () {
-        this.inherited(arguments);
+      save: function () {
         var model = this.getValue();
-
-        // Focus and select qty on start up.
-        if (!this._started && model &&
-          model.getStatus() === XM.Model.READY_DIRTY) {
-          this.$.qtyToPost.focus();
-          this.$.qtyToPost.$.input.selectContents();
-          this._started = true;
-        }
-      }/*,
-      create: function (options) {
-        this.inherited(arguments);
-        if (!this.getBiAvailable()) {
-          this.$.printPacklist.setChecked(false);
-          this.$.printPacklist.setDisabled(true);
-        }
-      },
-      save: function (options) {
-        if (this.$.printPacklist.isChecked()) {
-          this.doPrint();
-        }
-        this.inherited(arguments);
-      }*/
+        XM.Manufacturing.postProduction({
+          workOrder: model.id,
+          quantity: model.get("toIssue")
+        }, {});
+      }
     });
 
   };

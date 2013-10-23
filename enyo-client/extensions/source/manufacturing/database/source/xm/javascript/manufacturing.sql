@@ -164,6 +164,58 @@ select xt.install_js('XM','Manufacturing','xtuple', $$
     }}
   };
 
+  XM.Manufacturing.postProduction = function (workOrder, quantity, options) {
+    var asOf,
+      series,
+      sql,
+      sql2,
+      ary,
+      item,
+      i;
+
+    /* Make into an array if an array not passed */
+    if (typeof arguments[0] !== "object") {
+      ary = [{workOrder: workOrder, quantity: quantity, options: options || {}}];
+    } else {
+      ary = arguments;
+    }
+
+    /* Make sure user can do this */
+    if (!XT.Data.checkPrivilege("PostProduction")) { throw new handleError("Access Denied", 401); }
+
+    sql = "select postproduction(wo_id, $2, true, 0, current_timestamp) as series " +
+      "from wo where wo_number = $1;";
+
+    sql2 = "select current_date != $1 as invalid";  
+
+    /* Post the transaction */
+    for (i = 0; i < ary.length; i++) {
+      item = ary[i];
+      asOf = item.options ? item.options.asOf : null;
+      series = plv8.execute(sql, [item.workOrder, item.quantity, 0, asOf])[0].series;
+
+      if (asOf && plv8.execute(sql2, [asOf])[0].invalid &&
+          !XT.Data.checkPrivilege("AlterTransactionDates")) {
+        throw new handleError("Insufficient privileges to alter transaction date", 401);
+      }
+
+      /* Distribute detail */
+      XM.PrivateInventory.distribute(series, item.options.detail);
+    }
+
+    return;
+  };
+  XM.Manufacturing.postProduction.description = "Post production";
+  XM.Manufacturing.postProduction.params = {
+     workOrder: { type: "String", description: "Order line UUID" },
+     quantity: {type: "Number", description: "Quantity" },
+     options: {type: "Object", description: "Other attributes", attributes: {
+      asOf: {type: "Date", description: "Transaction Timestamp. Default to now()."},
+      detail: {type: "Array", description: "Distribution detail" },
+      backflush: {type: "Boolean", description: "Backflush Materials" }
+    }}
+  };
+
   /**
     Return material transactions.
     
@@ -199,40 +251,6 @@ select xt.install_js('XM','Manufacturing','xtuple', $$
   XM.Manufacturing.returnMaterial.description = "Return shipment transactions.";
   XM.Manufacturing.returnMaterial.params = {
     orderLine: { type: "String", description: "Order line UUID" }
-  };
-
-  /**
-    Post production.
-    
-      select xt.post('{
-        "username": "admin",
-        "nameSpace":"XM",
-        "type":"Manufacturing",
-        "dispatch":{
-          "functionName":"shipShipment",
-          "parameters":["203"]
-        }
-      }');
-  
-    @param {Number} Shipment number
-    @param {Date} Ship date, default = current date
-  */
-  XM.Manufacturing.postProduction = function (workOrder, quantity) {
-    var sql = "select postproduction(wo_id, $2, true, 0, current_timestamp) as series " +
-      "from wo where obj_uuid = $1;";
-
-    /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("PostProduction")) { throw new handleError("Access Denied", 401); }
-
-    /* Post the transaction */
-    var ret = plv8.execute(sql, [workOrder, quantity])[0].series;
-    
-    return ret;
-  };
-  XM.Manufacturing.postProduction.description = "Post production";
-  XM.Manufacturing.postProduction.params = {
-     workOrder: { type: "String", description: "Order line UUID" },
-     quantity: {type: "Number", description: "Quantity" }
   };
 
 }());

@@ -2,6 +2,66 @@
   {
     "context": "manufacturing",
     "nameSpace": "XM",
+    "type": "CreateTrace",
+    "table": "xt.createtraceinfo",
+    "comment": "Create Lot Serial Location Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "itemSite",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_id"
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Number",
+          "column": "quantity"
+        }
+      },
+      {
+        "name": "lotSerial",
+        "attr": {
+          "type": "String",
+          "column": "ls_number"
+        }
+      },
+      {
+        "name": "location",
+        "attr": {
+          "type": "String",
+          "column": "location"
+        }
+      },
+      {
+        "name": "expireDate",
+        "attr": {
+          "type": "Date",
+          "column": "expire_date"
+        }
+      },
+      {
+        "name": "characteristic",
+        "attr": {
+          "type": "String",
+          "column": "characteristic"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "manufacturing",
+    "nameSpace": "XM",
     "type": "IssueMaterial",
     "table": "xt.womatlissue",
     "comment": "Issue Work Order Material",
@@ -146,7 +206,7 @@
     "context": "manufacturing",
     "nameSpace": "XM",
     "type": "PostProduction",
-    "table": "xt.woinfo",
+    "table": "xt.postproductioninfo",
     "comment": "Work Order Map",
     "isRest": true,
     "lockable": true,
@@ -188,7 +248,7 @@
         "name": "itemSite",
         "toOne": {
           "isNested": true,
-          "type": "ItemSiteRelation",
+          "type": "ItemSiteInventory",
           "column": "wo_itemsite_id"
         }
       },
@@ -286,10 +346,26 @@
         }
       },
       {
-        "name": "qtyToPost",
+        "name": "toIssue",
         "attr": {
           "type": "Number",
           "column": "qty_to_post"
+        }
+      },
+      {
+        "name": "isBackflushMaterials",
+        "attr": {
+          "type": "Boolean",
+          "column": "backflush_materials"
+        }
+      },
+      {
+        "name": "trace",
+        "toMany": {
+          "isNested": true,
+          "type": "CreateTrace",
+          "column": "wo_itemsite_id",
+          "inverse": "itemSite"
         }
       }
     ],

@@ -18,7 +18,7 @@ white:true*/
     recordType: 'XM.WorkOrder',
 
     /**
-    Returns incident status as a localized string.
+    Returns Work Order status as a localized string.
 
     @returns {String}
     */

@@ -11,7 +11,18 @@ white:true*/
     /**
       @class
 
-      @extends XM.Document
+      @extends XM.Model
+    */
+    XM.CreateTrace = XM.Model.extend({
+
+      recordType: "XM.CreateTrace"
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
     */
     XM.PostProduction = XM.Model.extend({
 
@@ -22,6 +33,7 @@ white:true*/
         "dueDate",
         "itemSite",
         "status",
+        "getWorkOrderStatusString",
         "ordered",
         "quantityReceived",
         "qtyRequired",
@@ -36,11 +48,79 @@ white:true*/
       },
 
       statusDidChange: function () {
-        var K = XM.Model;
+        var K = XM.Model,
+          isBackflushMaterials = this.get("isBackflushMaterials");
         // We want to be able to save and post immeditately.
         if (this.getStatus() === K.READY_CLEAN) {
           this.setStatus(K.READY_DIRTY);
         }
+        this.setReadOnly("isBackflushMaterials", isBackflushMaterials);
+      },
+
+      /**
+      Returns Work Order status as a localized string.
+
+      @returns {String}
+      */
+      getWorkOrderStatusString: function () {
+        var K = XM.WorkOrder,
+          status = this.get('status');
+        if (status === K.RELEASED) {
+          return '_released'.loc();
+        }
+        if (status === K.EXPLODED) {
+          return '_exploded'.loc();
+        }
+        if (status === K.INPROCESS) {
+          return '_in-process'.loc();
+        }
+        if (status === K.OPEN) {
+          return '_open'.loc();
+        }
+        if (status === K.CLOSED) {
+          return '_closed'.loc();
+        }
+      },
+
+      /**
+        This overload will first save any changes via usual means, then
+        call `postProduction`.
+      */
+      save: function (key, value, options) {
+        var that = this,
+          success;
+
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          options = value ? _.clone(value) : {};
+        }
+
+        success = options.success;
+
+        // Post Production after successful save
+        options.success = function (model, resp, options) {
+          var postOptions = {},
+            postDate = XT.date.applyTimezoneOffset(that.get("dueDate"), true),
+            params = [
+              that.id,
+              postDate
+            ];
+          postOptions.success = function (postResp) {
+            if (success) { success(model, resp, options); }
+          };
+          postOptions.error = function () {
+            // The datasource takes care of reporting the error to the user
+          };
+          that.dispatch("XM.Manufacturing", "postProduction", params, postOptions);
+          return this;
+        };
+
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          value = options;
+        }
+
+        XM.Model.prototype.save.call(this, key, value, options);
       }
 
     });
@@ -67,6 +147,25 @@ white:true*/
       ],
 
       transactionDate: null,
+
+      /**
+      Returns issue method as a localized string.
+
+      @returns {String}
+      */
+      getIssueMethodString: function () {
+        var K = XM.IssueMaterial,
+          method = this.get('method');
+        if (method === K.PULL) {
+          return '_pull'.loc();
+        }
+        if (method === K.PUSH) {
+          return '_push'.loc();
+        }
+        if (method === K.MIXED) {
+          return '_mixed'.loc();
+        }
+      },
 
       qohAfter: function () {
         var qohBefore = this.get("qohBefore"),
@@ -161,6 +260,40 @@ white:true*/
 
     });
 
+    _.extend(XM.IssueMaterial, {
+        /** @scope XM.IssueMaterial */
+
+        /**
+          Mixed Issue Method.
+
+          @static
+          @constant
+          @type String
+          @default M
+        */
+        MIXED: 'M',
+
+        /**
+          Pull Issue Method.
+
+          @static
+          @constant
+          @type String
+          @default L
+        */
+        PULL: 'L',
+
+        /**
+          Push Issue Method.
+
+          @static
+          @constant
+          @type String
+          @default S
+        */
+        PUSH: 'S'
+      });
+
     /**
       Static function to call issue material on a set of multiple items.
 
@@ -181,6 +314,17 @@ white:true*/
     XM.Manufacturing.returnItem = function (params, options) {
       var obj = XM.Model.prototype;
       obj.dispatch("XM.Manufacturing", "returnMaterial", params, options);
+    };
+
+    /**
+      Static function to call return material on a set of multiple items.
+
+      @params {Array} Array of model ids
+      @params {Object} Options
+    */
+    XM.Manufacturing.postProduction = function (params, options) {
+      var obj = XM.Model.prototype;
+      obj.dispatch("XM.Manufacturing", "postProduction", params, options);
     };
 
     // ..........................................................

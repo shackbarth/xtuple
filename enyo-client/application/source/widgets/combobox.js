@@ -60,6 +60,33 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // LOCATION
+  //
+
+  enyo.kind({
+    name: "XV.LocationCombobox",
+    kind: "XV.ComboboxWidget",
+    collection: "XM.locations",
+    label: "_location".loc(),
+    nameAttribute: "format",
+    orderBy: [
+      {attribute: 'format'}
+    ],
+    valueAttribute: "id"
+  });
+
+  // ..........................................................
+  // LOT / SERIAL (TRACE)
+  //
+
+  enyo.kind({
+    name: "XV.TraceCombobox",
+    kind: "XV.ComboboxWidget",
+    collection: "XM.traceRelations",
+    label: "_trace".loc()
+  });
+
+  // ..........................................................
   // QUOTE LINE CHARACTERISTIC
   //
 
