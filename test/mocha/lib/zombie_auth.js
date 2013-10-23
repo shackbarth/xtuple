@@ -1,10 +1,11 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, XM:true, XV:true, XZ:true, enyo:true */
+/*global XT:true, XM:true, XV:true, XZ:true, enyo:true, XG:true */
 
 // global objects
 enyo = {};
 XT = {};
+XG = {};
 XM = {};
 XV = {};
 XZ = {}; // xTuple Zombie. Used to help zombie within the context of these tests.
@@ -128,6 +129,7 @@ Simplest possible usage:
 
               // add the global objects to our global namespace
               enyo = browser.window.enyo;
+              XG = browser.window.XG;
               XM = browser.window.XM;
               XT = browser.window.XT;
               XV = browser.window.XV;
