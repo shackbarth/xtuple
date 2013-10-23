@@ -41,6 +41,17 @@
 
       if (!spec.skipModelConfig) {
         //
+        // Verify required fields
+        //
+        if (spec.requiredAttributes) {
+          _.each(spec.requiredAttributes, function (attr) {
+            it("the " + attr + " attribute is required", function () {
+              assert.include(spec.model.requiredAttributes, attr);
+            });
+          });
+        }
+
+        //
         // Verify lockability
         //
         it(spec.isLockable ? "is lockable" : "is not lockable", function () {

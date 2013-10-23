@@ -43,7 +43,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     afterSaveActions: [{
       it: "verify currency is readonly",
       action: function (data, next) {
-        assert.isTrue(_.contains(data.model.readOnlyAttributes, "currency"));
+        assert.include(data.model.readOnlyAttributes, "currency");
         next();
       }
     }],
@@ -159,6 +159,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
       "reasonCode", "amount", "currency", "paid", "notes"],
     // TODO: balance", taxes", "taxTotal", "applications", "commission"],
+    requiredAttributes: ["currency"],
     extensions: ["billing"],
     privileges: {
       createUpdateDelete: "EditAROpenItem",

@@ -18,13 +18,59 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       function () {
         assert.isDefined(XM.Receivable);
         //assert.isTrue(XM.Receivable instanceof XM.Document);
+        model = new XM.Receivable();
+        model.initialize(null, {isNew: true});
+        assert.isDefined(model);
+      });
+
+    it("The numbering policy on XM.Receivable should be XM.Document.AUTO_NUMBER", function () {
+      assert.equal(XM.Receivable.numberPolicySetting, XM.Document.AUTO_NUMBER);
     });
 
-    // 21628
+    it("XM.Receivable should be extended to include the following contstants:" +
+      "XM.Receivable.INVOICE = 'I', XM.Receivable.DEBIT_MEMO = 'D', XM.Receivable.CREDIT_MEMO = 'C'" +
+      "XM.Receivable.CUSTOMER_DEPOSIT = 'R'", function () {
+        assert.equal(XM.Receivable.INVOICE, "I");
+        assert.equal(XM.Receivable.DEBIT_MEMO, "D");
+        assert.equal(XM.Receivable.CREDIT_MEMO, "C");
+        assert.equal(XM.Receivable.CUSTOMER_DEPOSIT, "R");
+      });
 
-    // A Mixin called XM.ReceivableMixin should exist
-    // XM.ReceivableMixin should have a function "isDebit" that returns a boolean true if the value the documentType attribute is XM.Receivable.DEBIT_MEMO or XM.Receivable.INVOICE, otherwise false
-    // XM.ReceivableMixin should have a function "isCredit" that returns a boolean true if the value the documentType attribute is XM.Receivable.CREDIT_MEMO or XM.Receivable.CUSTOMER_DEPOSIT, otherwise false.
+    it("The above constants should be added to a static collection called XM.receivableTypes", function () {
+      assert.isDefined(XM.receivableTypes);
+    });
+
+    it("Currency attribute defaults to base currency", function () {
+      assert.equal(model.get("currency"), XT.baseCurrency());
+    });
+
+    it("A Mixin called XM.ReceivableMixin should exist", function () {
+      assert.isDefined(XM.ReceivableMixin);
+    });
+
+    it('XM.Receivable should be extended by XM.ReceivableMixin', function () {
+      //assert.isTrue(XM.ReceivableMixin instanceof XM.Receivable);
+    });
+
+    it("XM.ReceivableMixin should have a function isDebit " +
+      "that returns a boolean true if the value the documentType attribute " +
+      "is XM.Receivable.DEBIT_MEMO or XM.Receivable.INVOICE, otherwise false", function () {
+
+        assert.isDefined(XM.ReceivableMixin.isDebit);
+        assert.isFalse(model.isDebit());
+        model.set("documentType", XM.Receivable.DEBIT_MEMO);
+        assert.isTrue(model.isDebit());
+      });
+
+    it("XM.ReceivableMixin should have a function isCredit " +
+      "that returns a boolean true if the value the documentType attribute " +
+      "is XM.Receivable.CREDIT_MEMO or XM.Receivable.CUSTOMER_DEPOSIT, otherwise false.", function () {
+
+        assert.isDefined(XM.ReceivableMixin.isCredit);
+        assert.isFalse(model.isCredit());
+        model.set("documentType", XM.Receivable.CREDIT_MEMO);
+        assert.isTrue(model.isCredit());
+      });
 
     // * A nested only model called XM.ReceivableTax extending XM.Model should be created in the billing extension.
     // * XM.ReceivableTax should include the following attributes:
@@ -48,13 +94,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     // * XM.ReceivableApplications is read only
 
 
-    // * XM.Receivable should be extended to include the following contstants:
-    //  > XM.Receivable.INVOICE = 'I'
-    //  > XM.Receivable.DEBIT_MEMO = 'D'
-    //  > XM.Receivable.CREDIT_MEMO = 'C'
-    //  > XM.Receivable.CUSTOMER_DEPOSIT = 'R'
-    // * The above constants should be added to a static collection called XM.receivableTypes
-    // * XM.Receivable should be extended by XM.ReceivableMixin
+
+    // *
     // * XM.Receivable should include the following attributes:
 
     //     > Currency "currency" required, defaults to base currency
