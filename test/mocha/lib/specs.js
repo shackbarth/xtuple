@@ -150,6 +150,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
   exports.receivable = {
     recordType: "XM.Receivable",
     //listKind: "XV.ReasonCodeList",
+    collectionType: null,
+    cacheName: null,
     enforceUpperKey: true,
     instanceOf: "XM.Document",
     isLockable: true,
@@ -180,6 +182,30 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     },
     additionalTests: require("../specs/receivable").additionalTests
   };
+
+  exports.receivableTax = {
+    recordType: "XM.ReceivableTax",
+    skipSmoke: true,
+    skipCrud: true,
+    collectionType: null,
+    cacheName: null,
+    //enforceUpperKey: true,
+    instanceOf: "XM.Model",
+    //isLockable: true,
+    idAttribute: "uuid",
+    attributes: ["uuid", "taxCode", "amount"],
+    extensions: ["billing"],
+    privileges: {
+      createUpdateDelete: true,
+      read: true
+    },
+    createHash: {
+      uuid: "ReceivableTaxId" + Math.random(),
+      amount: 0
+    },
+    updatableField: "amount"
+  };
+
 
   exports.shipVia = {
     recordType: "XM.ShipVia",

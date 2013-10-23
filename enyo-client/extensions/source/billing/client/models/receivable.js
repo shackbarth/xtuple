@@ -94,4 +94,8 @@ XT.extensions.billing.initReceivableModel = function () {
 
   });
 
+  XM.ReceivableTax = XM.Model.extend({
+    recordType: 'XM.ReceivableTax'
+  });
+
 };
