@@ -9,61 +9,44 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   //
 
   enyo.kind({
-    name: "XV.ProjectTaskGridRow",
-    kind: "XV.GridRow",
-    components: [
-      // each field is grouped with its column header so that the alignment always
-      // works out. All but the first column header will be invisible.
-      {classes: "xv-grid-column grid-item", components: [
-        {kind: "XV.InputWidget", attr: "number"},
-        {kind: "XV.InputWidget", attr: "name"}
-      ]},
-      {classes: "xv-grid-column grid-item", components: [
-        {kind: "XV.UserAccountWidget", attr: "owner"},
-        {kind: "XV.UserAccountWidget", attr: "assignedTo"}
-      ]},
-      {classes: "xv-grid-column quantity", components: [
-        {kind: "XV.QuantityWidget", attr: "budgetedHours"},
-        {kind: "XV.QuantityWidget", attr: "actualHours"}
-      ]},
-      {classes: "xv-grid-column price", components: [
-        {kind: "XV.MoneyWidget", attr:
-          {localValue: "budgetedExpenses", currency: ""},
-          currencyDisabled: true, currencyShowing: false, scale: XT.MONEY_SCALE},
-        {kind: "XV.MoneyWidget", attr:
-          {localValue: "actualExpenses", currency: ""},
-          currencyDisabled: true, currencyShowing: false, scale: XT.MONEY_SCALE}
-      ]},
-      {classes: "xv-grid-column date", components: [
-        {kind: "XV.DateWidget", attr: "startDate"},
-        {kind: "XV.DateWidget", attr: "dueDate"}
-      ]},
-      {classes: "xv-grid-column date", components: [
-        {kind: "XV.DateWidget", attr: "assignDate"},
-        {kind: "XV.DateWidget", attr: "completeDate"}
-      ]}
-    ]
-  });
-
-  enyo.kind({
     name: "XV.ProjectTasksGridBox",
     kind: "XV.GridBox",
     title: "_tasks".loc(),
     columns: [
-      {classes: "grid-item", content: "_number".loc(),
-        attrs: ["number", "name"]},
-      {classes: "user", content: "_user".loc(),
-        attrs: ["owner.username", "assignedTo.username"]},
-      {classes: "quantity", content: "_hours".loc(),
-        attrs: ["budgetedHours", "actualHours"]},
-      {classes: "price", content: "_expenses".loc(),
-        attrs: ["budgetedExpenses", "actualExpenses"]},
-      {classes: "date", content: "_scheduled".loc(),
-        attrs: ["startDate", "dueDate"]},
-      {classes: "date", content: "_actualDate".loc(),
-        attrs: ["assignDate", "completeDate"]}
+      {classes: "grid-item", content: "_number".loc(), rows: [
+        {attr: "number"},
+        {attr: "name"}
+      ]},
+      {classes: "user", content: "_user".loc(), rows: [
+        {attr: "owner",
+          readOnlyAttr: "owner.username"},
+        {attr: "assignedTo",
+          readOnlyAttr: "assignedTo.username"}
+      ]},
+      {classes: "quantity", content: "_hours".loc(), rows: [
+        {attr: "budgetedHours"},
+        {attr: "actualHours"}
+      ]},
+      {classes: "price", content: "_expenses".loc(), rows: [
+        {attr: "budgetedExpenses",
+          editor: {kind: "XV.MoneyWidget",
+            attr: {localValue: "budgetedExpenses", currency: ""},
+            currencyDisabled: true, currencyShowing: false}},
+        {attr: "actualExpenses",
+          editor: {kind: "XV.MoneyWidget",
+            attr: {localValue: "actualExpenses", currency: ""},
+            currencyDisabled: true, currencyShowing: false}}
+      ]},
+      {classes: "date", content: "_scheduled".loc(), rows: [
+        {attr: "startDate"},
+        {attr: "dueDate"}
+      ]},
+      {classes: "date", content: "_actualDate".loc(), rows: [
+        {attr: "assignDate"},
+        {attr: "completeDate"}
+      ]}
     ],
-    editor: "XV.ProjectTaskGridRow",
+    model: "XM.ProjectTask",
     associatedWorkspace: "XV.ProjectTaskWorkspace"
   });
 
