@@ -36,7 +36,7 @@
       // Smoke Crud
       //
       if (!spec.skipSmoke) {
-        //smoke.runUICrud(spec); // XXX TODO put back
+        smoke.runUICrud(spec);
       }
 
       if (!spec.skipModelConfig) {

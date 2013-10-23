@@ -128,6 +128,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     @alias Invoice
   */
   exports.invoice = {
+    skipSmoke: true, // XXX
     recordType: "XM.Invoice",
     collectionType: "XM.InvoiceListItemCollection",
     /**
@@ -170,7 +171,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       read: "ViewMiscInvoices"
     },
     createHash: {
-      number: "InvoiceTest" + Math.random(),
+      number: "33InvoiceTest" + Math.random(),
       customer: {number: "TTOYS"}
     },
     updatableField: "notes",
