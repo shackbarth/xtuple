@@ -148,7 +148,7 @@ select xt.install_js('XM','Sales','xtuple', $$
         currency: row.freightdata_currency
       });
     }
-    return JSON.stringify(results);
+    return results;
   };
   XM.Sales.freightDetail.description = "Returns an array of freight detail records based on input";
   XM.Sales.freightDetail.params = {
@@ -198,7 +198,7 @@ select xt.install_js('XM','Sales','xtuple', $$
     orm = XT.Orm.fetch("XM", "Terms");
     ret.DefaultTerms = data.getNaturalId(orm, ret.DefaultTerms);
 
-    return JSON.stringify(ret);
+    return ret;
   }
 
   /*

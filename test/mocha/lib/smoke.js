@@ -139,6 +139,11 @@
       if (attribute.idAttribute && !value.idAttribute) {
         // the attribute has been turned into a model
         assert.equal(attribute.id, value[attribute.idAttribute]);
+
+      } else if (key === workspace.value.idAttribute && workspace.value.enforceUpperKey) {
+        // the model uppercases the key
+        assert.equal(workspace.value.get(key), value.toUpperCase());
+
       } else {
         assert.equal(workspace.value.get(key), value);
       }

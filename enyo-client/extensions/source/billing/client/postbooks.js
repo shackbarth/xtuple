@@ -15,7 +15,8 @@ trailing:true, white:true*/
         name: billing.name,
         label: "_billing".loc(),
         panels: [
-          {kind: "XV.CustomerList"}
+          {name: "customerList", kind: "XV.CustomerList"},
+          {name: "invoiceList", kind: "XV.InvoiceList"}
         ]
       },
       relevantPrivileges = [
@@ -25,13 +26,15 @@ trailing:true, white:true*/
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
         "MaintainItemMasters",
+        "MaintainMiscInvoices",
         "MaintainReasonCodes",
         "MaintainSalesCategories",
         "MaintainShipVias",
         "MaintainTerms",
         "ViewCustomerMasters",
         "ViewCustomerGroups",
-        "ViewItemMasters"
+        "ViewItemMasters",
+        "ViewMiscInvoices"
       ],
       configuration = {
         model: "XM.billing",

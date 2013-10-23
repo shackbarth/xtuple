@@ -570,7 +570,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
-    return JSON.stringify(ret);
+    return ret;
   };
   
   /* 

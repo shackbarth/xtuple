@@ -330,6 +330,7 @@ strict:true, trailing:true, white:true */
     "_isEvent": "Event",
     "_isFractional": "Fractional",
     "_isIncidents": "Incidents",
+    "_isInvoices": "Invoices",
     "_isItemWeight": "Item Weight",
     "_isItems": "Items",
     "_isMessage": "Message",

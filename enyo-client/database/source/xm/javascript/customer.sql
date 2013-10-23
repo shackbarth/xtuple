@@ -75,7 +75,7 @@ select xt.install_js('XM','Customer','xtuple', $$
     result = plv8.execute(sql, [itemId, customerId, shiptoId, quantity, quantityUnitId, priceUnitId, currencyId, effective, asOf])[0].result;
 
     result = { price: result.itemprice_price, type: result.itemprice_type };
-    return JSON.stringify(result); 
+    return result; 
   }
 
   /**

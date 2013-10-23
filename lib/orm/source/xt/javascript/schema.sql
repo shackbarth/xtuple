@@ -426,6 +426,10 @@ select xt.install_js('XT','Schema','xtuple', $$
       if (orm.properties[i].attr && orm.properties[i].attr.column) {
         /* Loop through the returned schemaColumnInfo attributes and add them. */
         for (var attrname in schemaColumnInfo[orm.properties[i].attr.column]) {
+          if (!ret.properties[orm.properties[i].name]) {
+            /* This can happen if the same column name is errantly referenced in different properties */
+            throw new Error("Cannot get property " + orm.properties[i].name + " on ORM " + orm.nameSpace + "." + orm.type);
+          }
           ret.properties[orm.properties[i].name][attrname] = schemaColumnInfo[orm.properties[i].attr.column][attrname];
         }
       }
