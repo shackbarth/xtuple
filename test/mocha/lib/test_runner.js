@@ -82,10 +82,6 @@
         if (spec.idAttribute) {
           it("has " + spec.idAttribute + " as its idAttribute", function () {
             assert.equal(spec.idAttribute, spec.model.idAttribute);
-            if (spec.instanceOf === "XM.Document") {
-              // Documents have the same value as their document key
-              //assert.equal(spec.idAttribute, spec.model.documentKey);
-            }
           });
         } else {
           it("has its id attribute defined in the test spec", function () {
@@ -223,12 +219,26 @@
             assert.isFunction(Collection);
             assert.equal(editableModel, spec.recordType);
           });
+        } else if (spec.collectionType === null) {
+          // TODO: loop through the existing collections and make sure that
+          // none are backed by spec.recordType
+        } else {
+          it("has no colletion specified in the test spec", function () {
+            assert.fail();
+          });
         }
 
         //
         // Test that the cache exists
         //
         if (spec.cacheName) {
+          it("is cached as " + spec.cacheName, function () {
+            var cache = XT.getObjectByName(spec.cacheName);
+            assert.isObject(cache);
+            assert.equal(cache.model.prototype.recordType, spec.recordType);
+          });
+
+        } else if (spec.cacheName === null) {
           /*
           TODO: probably the best thing to do is to loop through the caches and make sure
           that none of them are backed by spec.recordType
@@ -236,10 +246,9 @@
 
           });
           */
-          it("is cached as " + spec.cacheName, function () {
-            var cache = XT.getObjectByName(spec.cacheName);
-            assert.isObject(cache);
-            assert.equal(cache.model.prototype.recordType, spec.recordType);
+        } else {
+          it("has a cache (or null for no cache) specified in the test spec", function () {
+            assert.fail();
           });
         }
       }
