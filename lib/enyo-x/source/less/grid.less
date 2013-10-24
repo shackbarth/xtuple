@@ -6,8 +6,16 @@
 /* Entire box including the grid and the summary panel */
 .xv-grid-box {
 
-  &.panel {
+  &.small-panel {
+    width: 600px;
+  }
+
+  &.medium-panel {
     width: 700px;
+  }
+
+  &.large-panel {
+    width: 800px;
   }
 
   .enyo-list-page {
@@ -117,7 +125,7 @@
       text-align: right;
       width: 100px;
     }
-    .discount {
+    .percent {
       vertical-align: top;
       text-align: right;
       width: 90px;
@@ -133,7 +141,7 @@
     }
     .user {
       vertical-align: top;
-      width: 60px;
+      width: 100px;
     }
 
     &.readonly {
@@ -198,6 +206,7 @@
           }
         }
         .xv-moneywidget {
+          padding-bottom: 0;
           .onyx-input-decorator {
             .tightened-input-decorator;
           }
@@ -205,10 +214,18 @@
         .xv-relationwidget {
           .onyx-input-decorator {
             width: 100%;
+            padding-top: 6px;
           }
           .onyx-input {
             width: 85%;
             padding-right: 4px;
+          }
+        }
+        .xv-useraccount-widget {
+          // Hack: we shouldn't have to force this.
+          .xv-subinput {
+            width: 80px;
+            height: 16px;
           }
         }
         .xv-subinput {
@@ -233,7 +250,6 @@
         }
         .xv-private-item-site-widget {
           border-bottom: 0;
-          padding-top: 6px;
         }
       }
     }

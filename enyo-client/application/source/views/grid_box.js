@@ -11,6 +11,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   enyo.kind({
     name: "XV.ProjectTasksGridBox",
     kind: "XV.GridBox",
+    classes: "large-panel",
     title: "_tasks".loc(),
     columns: [
       {classes: "grid-item", content: "_number".loc(), rows: [
@@ -74,6 +75,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   enyo.kind({
     name: "XV.SalesOrderLineItemGridBox",
     kind: "XV.GridBox",
+    classes: "medium-panel",
     title: "_lineItems".loc(),
     columns: [
       {classes: "line-number", content: "#", rows: [
