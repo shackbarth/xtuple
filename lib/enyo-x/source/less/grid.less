@@ -5,6 +5,7 @@
 
 /* Entire box including the grid and the summary panel */
 .xv-grid-box {
+
   &.panel {
     width: 700px;
   }
@@ -17,12 +18,16 @@
     }
   }
 
+  .xv-grid-row {
+    border: none;
+  }
+
   .xv-above-grid-list {
     border: 0px;
   }
 
   .xv-scroller {
-    background: @ghost
+    background: @ghost;
   }
 
   .xv-grid-attr {
@@ -49,6 +54,14 @@
       color: blue;
     }
   }
+
+  .xv-gridbox-button {
+    color: @slate-blue;
+    font-size: 18px;
+    border: none;
+    background: transparent;
+  }
+
 
   /**
     This is the most general grid row that
@@ -89,7 +102,9 @@
     .grid-actions {
       display: block;
       padding-left: 30px;
-      width: 276px !important;
+      border-radius: 4px;
+      border-width: 0;
+      background: @earl-grey;
       > * {
         display: inline-block;
         width: 100%;
