@@ -34,7 +34,11 @@ white:true*/
       "isPosted",
       "isVoid",
       "isPrinted"
-    ]
+    ],
+
+    calculateTotals: function () {
+      // TODO
+    }
 
   });
 
@@ -88,19 +92,17 @@ white:true*/
     //
     bindEvents: function (attributes, options) {
       XM.Model.prototype.bindEvents.apply(this, arguments);
-      this.on("relational:change:item", this.itemDidChange); // TODO: shouldn't need these
-      this.on('relational:change:priceUnit', this.priceUnitDidChange);
-      this.on('relational:change:quantityUnit', this.quantityUnitDidChange);
-      this.on('relational:change:' + this.parentKey, this.parentDidChange);
       this.on("change:item", this.itemDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
+      this.on('change:isMiscellaneous', this.isMiscellaneousDidChange);
     },
 
     defaults: function () {
       return {
-        site: XT.defaultSite()
+        site: XT.defaultSite(),
+        isMiscellaneous: false
       };
     },
 
@@ -110,6 +112,16 @@ white:true*/
     },
 
     //
+    // Shared code with sales order
+    // temp until we refactor these together
+    //
+    fetchSellingUnits: XM.SalesOrderLineBase.prototype.fetchSellingUnits,
+    priceUnitDidChange: XM.SalesOrderLineBase.prototype.priceUnitDidChange,
+    quantityUnitDidChange: XM.SalesOrderLineBase.prototype.quantityUnitDidChange,
+    recalculateParent: XM.SalesOrderLineBase.prototype.recalculateParent,
+    save: XM.SalesOrderLineBase.prototype.save,
+
+    //
     // Model-specific functions
     //
     calculateExtendedPrice: function () {
@@ -117,12 +129,22 @@ white:true*/
     calculatePrice: function () {
     },
 
-    // temp until we refactor these together
-    fetchSellingUnits: XM.SalesOrderLineBase.prototype.fetchSellingUnits,
-    priceUnitDidChange: XM.SalesOrderLineBase.prototype.priceUnitDidChange,
-    quantityUnitDidChange: XM.SalesOrderLineBase.prototype.quantityUnitDidChange,
-    recalculateParent: XM.SalesOrderLineBase.prototype.recalculateParent,
-    save: XM.SalesOrderLineBase.prototype.save,
+    isMiscellaneousDidChange: function () {
+      var isMisc = this.get("isMiscellaneous");
+      if (isMisc) {
+        //this.set({item: null}); ???
+        this.setReadOnly("item", true);
+        this.setReadOnly("itemNumber", false);
+        this.setReadOnly("itemDescription", false);
+        this.setReadOnly("salesCategory", false);
+      } else {
+        //this.set({itemNumber: null, itemDescription: null, salesCategory: null}); ???
+        this.setReadOnly("item", false);
+        this.setReadOnly("itemNumber", true);
+        this.setReadOnly("itemDescription", true);
+        this.setReadOnly("salesCategory", true);
+      }
+    },
 
     // refactor potential: this function is largely similar to the one on XM.SalesOrderLine
     itemDidChange: function () {
@@ -155,8 +177,6 @@ white:true*/
 
       this.calculatePrice();
     },
-
-
     //Refactor potential: this is similar to sales order line item, but
     // skips the scheduleDate calculations
     parentDidChange: function () {
@@ -174,13 +194,15 @@ white:true*/
         this.set("lineNumber", maxLineNumber + 1);
       }
     },
-    /**
-      Refactor potential: this is like the one on sales order line base, but
-      includes a checks billed as well
-     */
+    // Refactor potential: this is like the one on sales order line base, but
+    // checks billed as well, and validates isMiscellaneous
     validate: function () {
-      var quantity = this.get("quantity"),
-        billed = this.get("billed");
+      var that = this,
+        quantity = this.get("quantity"),
+        billed = this.get("billed"),
+        isMiscellaneous = this.get("isMiscellaneous"),
+        extraRequiredFields,
+        requiredFieldsError;
 
       // Check billed
       if ((billed || 0) <= 0) {
@@ -197,6 +219,24 @@ white:true*/
           (Math.round(quantity) !== quantity || Math.round(billed) !== billed)) {
         return XT.Error.clone('xt2014');
       }
+
+      // Checks item values line up with isMiscellaneous
+      extraRequiredFields = isMiscellaneous ? ["itemNumber", "itemDescription", "salesCategory"] : ["item"];
+
+      _.each(extraRequiredFields, function (req) {
+        var value = that.get(req),
+          params = {recordType: that.recordType};
+
+        if (value === undefined || value === null || value === "") {
+          params.attr = ("_" + req).loc();
+          requiredFieldsError = XT.Error.clone('xt1004', { params: params });
+        }
+      });
+      if (requiredFieldsError) {
+        return requiredFieldsError;
+
+      }
+
 
       return XM.Document.prototype.validate.apply(this, arguments);
     }

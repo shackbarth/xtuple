@@ -7,18 +7,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 (function () {
   "use strict";
 
-
-/*
-TODO: invoiceLine ORM:
-
-      {
-        "name": "salesCategory",
-        "toOne": {
-          "type": "SalesCategory",
-          "column": "invcitem_salescat_id"
-        }
-      },
-*/
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
@@ -352,18 +340,50 @@ TODO: invoiceLine ORM:
       assert.equal(lineModel.get("lineNumber"), 2);
       // TODO: be more thorough
     });
-
+    /**
+      @member -
+      @memberof InvoiceLine.prototype
+      @description The user can define a line item as being miscellaneous or not. Miscellaneous means
+        that they can enter a free-form itemNumber, itemDescription, and salesCategory. If the item
+        is not miscellaneous then they must choose an item instead.
+    */
+    it("When isMiscellaneous is false, item is editable and itemNumber, itemDescription " +
+        " and salesCategory are read only", function () {
+      lineModel.set({isMiscellaneous: false});
+      assert.isFalse(lineModel.isReadOnly("item"));
+      //assert.isTrue(lineModel.isReadOnly("itemNumber"));
+      //assert.isTrue(lineModel.isReadOnly("itemDescription"));
+      //assert.isTrue(lineModel.isReadOnly("salesCategory"));
+    });
+    it("When isMiscellaneous is true, item is read only and itemNumber, itemDescription " +
+        " and salesCategory are editable.", function () {
+      lineModel.set({isMiscellaneous: true});
+      assert.isTrue(lineModel.isReadOnly("item"));
+      assert.isFalse(lineModel.isReadOnly("itemNumber"));
+      assert.isFalse(lineModel.isReadOnly("itemDescription"));
+      assert.isFalse(lineModel.isReadOnly("salesCategory"));
+    });
+    it("If isMiscellaneous === false, then validation makes sure an item is set.", function () {
+      lineModel.set({isMiscellaneous: false, item: null});
+      assert.isObject(lineModel.validate(lineModel.attributes));
+      lineModel.set({item: bpaint});
+      assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
+    });
+    it("If isMiscellaneous === true then validation makes sure the itemNumber, itemDescription and " +
+        "salesCategory are set", function () {
+      lineModel.set({isMiscellaneous: true, itemDescription: null});
+      assert.isObject(lineModel.validate(lineModel.attributes));
+      lineModel.set({itemNumber: "P", itemDescription: "Paint", salesCategory: new XM.SalesCategory()});
+      assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
+    });
 
   };
+
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-* When isMiscellaneous is false, item is editable and itemNumber, itemDescription and salesCategory are read only.
-* When isMiscellaneous is true, item is read only and itemNumber, itemDescription and salesCategory are editable.
 * Validation:
-  > If "isMiscellaneous" === true, then an item must be set.
-  > If "isMiscellaneous" === false itemNumber, itemDescrciption and salesCategory must be set.
 
 * XM.InvoiceLine should have a "calculatePrice" function that retrieves a price from the customer.itemPrice dispatch function based on the "billed" value.
 
