@@ -123,9 +123,10 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
             currencyDisabled: true, currencyShowing: false,
             scale: XT.EXTENDED_PRICE_SCALE}}
       ]},
-      {classes: "date", content: "_scheduled".loc(),
-        rows: ["scheduleDate"],
-        editor: {kind: "XV.DateWidget", attr: "scheduleDate"}}
+      {classes: "date", content: "_scheduled".loc(), rows: [
+        {readOnlyAttr: "scheduleDate",
+          editor: {kind: "XV.DateWidget", attr: "scheduleDate"}}
+      ]}
     ],
     editorMixin: salesOrderGridRow,
     summary: "XV.SalesSummaryPanel",
