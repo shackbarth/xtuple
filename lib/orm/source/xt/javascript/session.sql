@@ -71,7 +71,7 @@ select xt.install_js('XT','Session','xtuple', $$
       return JSON.parse(row.dict_strings);
     });
 
-    return JSON.stringify(rec);
+    return rec;
   }
 
   /**
@@ -87,11 +87,11 @@ select xt.install_js('XT','Session','xtuple', $$
       if (XM.hasOwnProperty(type) &&
           XM[type].settings &&
           typeof XM[type].settings === 'function') {
-        settings = XT.extend(settings, JSON.parse(XM[type].settings()));
+        settings = XT.extend(settings, XM[type].settings());
       }
     }
 
-    return JSON.stringify(settings);
+    return settings;
   }
 
   /**
@@ -111,7 +111,7 @@ select xt.install_js('XT','Session','xtuple', $$
               ') grppriv on (grppriv_priv_id=priv_id); '
       rec = plv8.execute(sql, [ XT.username ] );
 
-    return rec.length ? JSON.stringify(rec) : '{}';
+    return rec.length ? rec : {};
   }
 
 
@@ -137,7 +137,7 @@ select xt.install_js('XT','Session','xtuple', $$
     result.map(function (res) {
       resultObj[res.userpref_name] = res.userpref_value;
     });
-    return JSON.stringify(resultObj);
+    return resultObj;
   }
 
   /*
@@ -381,7 +381,7 @@ select xt.install_js('XT','Session','xtuple', $$
       }
     }
 
-    return JSON.stringify(result);
+    return result;
   }
 
 $$ );

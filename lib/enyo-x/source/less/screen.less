@@ -36,13 +36,16 @@
 @bright-red: #ff0000;
 @green: #009000;
 @light-orange: #ff9c00;
+@item-hilite-background: url(/assets/item-hilite.png) repeat-x bottom;
+
+@import "model-decorator.less";
 
 /* Helper classes for css3 */
 
 @import "mixins.less";
 
 /**
-  Less styles for the
+  Less styles for the picker widget
 */
 @import "picker.less";
 
@@ -73,9 +76,15 @@
 @import "pullout.less";
 
 /**
+  Misc styles for widgets
+*/
+@import "widgets.less";
+
+/**
   Import for Font-Awesome icons
 */
 @import "../../lib/font-awesome/less/font-awesome.less";
+@import "../../lib/font-onyx/lib/Icon.less";
 
 body {
   font-family: "arial", "arial black";
@@ -177,7 +186,7 @@ body {
    text-shadow: none;
 }
 .text-shadow-0 {
-  text-shadow: 0px 0px @black;
+  text-shadow: 0 0 @black;
 }
 // end hack
 
@@ -272,7 +281,7 @@ body {
 
 .xv-action-icon {
   .onyx-icon-button {
-    margin-top: 0px;
+    margin-top: 0;
   }
 }
 
@@ -641,7 +650,7 @@ body {
 
 .xv-short-textarea {
   .xv-textarea-input {
-    min-height: 0px;
+    min-height: 0;
   }
 }
 .xv-textarea-input {

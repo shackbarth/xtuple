@@ -267,7 +267,8 @@ white:true*/
           freight: 0,
           miscCharge: 0,
           total: 0,
-          site: XT.defaultSite().toJSON()
+          site: XT.defaultSite().toJSON(),
+          currency: XT.baseCurrency().id
         };
 
       // the name of this field is different for different business objects
@@ -661,7 +662,7 @@ white:true*/
           site: customer.get("preferredSite") ?
             XM.Site.findOrCreate({code: customer.get("preferredSite").id}) : // SiteRelation -> Site
             this.get("site"),
-          currency: customer.get("currency")
+          currency: customer.get("currency") || this.get("currency")
         };
         if (billtoContact) {
           _.extend(billtoAttrs, {

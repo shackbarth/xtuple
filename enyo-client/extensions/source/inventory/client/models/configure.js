@@ -32,7 +32,6 @@ white:true*/
       statusDidChange: function () {
         var that = this,
           options = {
-            isJSON: true,
             success: function (used) {
               that.setReadOnly("AllowAvgCostMethod", used.average);
               that.setReadOnly("AllowStdCostMethod", used.standard);

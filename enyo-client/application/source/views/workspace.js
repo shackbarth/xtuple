@@ -230,6 +230,40 @@ strict: false*/
   XV.registerModelWorkspace("XM.AccountListItem", "XV.AccountWorkspace");
 
   // ..........................................................
+  // BANK ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.BankAccountWorkspace",
+    kind: "XV.Workspace",
+    title: "_bankAccount".loc(),
+    model: "XM.BankAccount",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.InputWidget", attr: "bankName"},
+            {kind: "XV.InputWidget", attr: "accountNumber"},
+            {kind: "XV.BankAccountTypePicker", attr: "bankAccountType"},
+            {kind: "XV.CurrencyPicker", attr: "currency"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByBilling"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByPayments"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.BankAccountRelation", "XV.BankAccountWorkspace");
+
+  // ..........................................................
   // CLASS CODE
   //
 
@@ -528,7 +562,7 @@ strict: false*/
             {kind: "XV.CheckboxWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormBillto", label: "_freeFormBill".loc()},
             {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
-            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
             {kind: "XV.CheckboxWidget", attr: "usesPurchaseOrders"},
@@ -1062,6 +1096,32 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.IncidentSeverity", "XV.IncidentSeverityWorkspace");
+
+  // ..........................................................
+  // INVOICE
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceWorkspace",
+    kind: "XV.Workspace",
+    title: "_invoice".loc(),
+    model: "XM.Invoice",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.SalesCustomerWidget", attr: "customer"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.InvoiceListItem", "XV.InvoiceWorkspace");
 
   // ..........................................................
   // ITEM
@@ -1664,7 +1724,7 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
           {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
@@ -1900,7 +1960,7 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
           {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
@@ -1979,6 +2039,33 @@ strict: false*/
 
   XV.registerModelWorkspace("XM.SalesOrderRelation", "XV.SalesOrderWorkspace");
   XV.registerModelWorkspace("XM.SalesOrderListItem", "XV.SalesOrderWorkspace");
+
+  // ..........................................................
+  // REASON CODE
+  //
+
+  enyo.kind({
+    name: "XV.ReasonCodeWorkspace",
+    kind: "XV.Workspace",
+    title: "_reasonCode".loc(),
+    model: "XM.ReasonCode",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.ReasonCodeDocumentTypePicker", attr: "documentType"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ReasonCode", "XV.ReasonCodeWorkspace");
 
   // ..........................................................
   // SALES REP
@@ -2434,13 +2521,30 @@ strict: false*/
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.TermsTypePicker", attr: "termsType"},
-            {kind: "XV.NumberWidget", attr: "dueDays"},
-            {kind: "XV.NumberWidget", attr: "discountDays"},
-            {kind: "XV.NumberWidget", attr: "cutOffDay"}
+            {kind: "XV.NumberSpinnerWidget", name: "dueDays", attr: "dueDays"},
+            {kind: "XV.NumberSpinnerWidget", name: "discountDays", attr: "discountDays"},
+            {kind: "XV.NumberSpinnerWidget", name: "cutOffDay", attr: "cutOffDay"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByBilling"},
+            {kind: "XV.CheckboxWidget", attr: "isUsedByPayments"}
           ]}
         ]}
       ]}
-    ]
+    ],
+    // XXX would be better if we only responded to changes to termstype specifically
+    attributesChanged: function () {
+      var termsType = this.getValue().get("termsType");
+      this.inherited(arguments);
+
+      this.$.cutOffDay.setShowing(termsType === XM.Terms.PROXIMO);
+
+      if (termsType === XM.Terms.DAYS) {
+        this.$.dueDays.setLabel("_dueDays".loc());
+        this.$.discountDays.setLabel("_discountDays".loc());
+      } else if (termsType === XM.Terms.PROXIMO) {
+        this.$.dueDays.setLabel("_dueDay".loc());
+        this.$.discountDays.setLabel("_discountDay".loc());
+      }
+    }
   });
 
   XV.registerModelWorkspace("XM.Terms", "XV.TermsWorkspace");

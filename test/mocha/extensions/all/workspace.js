@@ -70,7 +70,7 @@
     * Test the INCDT-21110 fix.
     * http://www.xtuple.org/xtincident/view/default/21110
     */
-  describe('INCDT-21110: Record remains locked when Back->Discard selected', function () {
+  describe.skip('INCDT-21110: Record remains locked when Back->Discard selected', function () {
     var workspaceContainer, workspace, model, id, moduleContainer;
 
     beforeEach(function (done) {
