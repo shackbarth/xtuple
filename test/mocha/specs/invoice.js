@@ -388,7 +388,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     /**
       @member InvoiceTax
       @memberof Invoice.prototype
-      @description Invoice-level tax information
+      @description Invoice tax adjustments
       @property {String} uuid
       @property {TaxCode} taxCode
       @property {Money} amount
@@ -432,77 +432,71 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       assert.isTrue(XM.InvoiceAllocation.canUpdate());
       assert.isTrue(XM.InvoiceAllocation.canDelete());
     });
+    /**
+      @member InvoiceListItem
+      @memberof Invoice.prototype
+      @description List-view summary information for an invoice
+      @property {String} number
+      @property {Boolean} isPrinted XXX changed from printed
+      @property {CustomerRelation} customer
+      @property {Date} invoiceDate
+      @property {Money} total
+      @property {Boolean} isPosted
+      @property {Boolean} isOpen
+      @property {Boolean} isVoid
+    */
+    it("A model called XM.InvoiceListItem extending XM.Info should exist", function () {
+      // XXX  > Money "total"
+      // XXX  > Boolean "isOpen" // = posted(?) but not closed. requires left join on receivable table
+      assert.isFunction(XM.InvoiceListItem);
+      var invoiceListItemModel = new XM.InvoiceListItem(),
+        attrs = ["number", "isPrinted", "customer", "invoiceDate", "total", "isPosted", "isOpen", "isVoid"];
+
+      assert.isTrue(invoiceListItemModel instanceof XM.Info);
+      assert.equal(invoiceListItemModel.idAttribute, "number");
+      console.log(invoiceListItemModel.getAttributeNames());
+      assert.equal(_.difference(attrs, invoiceListItemModel.getAttributeNames()).length, 0);
+    });
+    it("Only users that have ViewMiscInvoices or MaintainMiscInvoices may read XV.InvoiceListItem", function () {
+      XT.session.privileges.attributes.ViewMiscInvoices = false;
+      XT.session.privileges.attributes.MaintainMiscInvoices = false;
+      assert.isFalse(XM.InvoiceListItem.canRead());
+
+      XT.session.privileges.attributes.ViewMiscInvoices = true;
+      XT.session.privileges.attributes.MaintainMiscInvoices = false;
+      assert.isTrue(XM.InvoiceListItem.canRead());
+
+      XT.session.privileges.attributes.ViewMiscInvoices = false;
+      XT.session.privileges.attributes.MaintainMiscInvoices = true;
+      assert.isTrue(XM.InvoiceListItem.canRead());
+    });
+    it("XM.InvoiceListItem is not editable", function () {
+      assert.isFalse(XM.InvoiceListItem.canCreate());
+      assert.isFalse(XM.InvoiceListItem.canUpdate());
+      assert.isFalse(XM.InvoiceListItem.canDelete());
+    });
+
+
+    // XXX TODO
+    // XM.InvoiceListItem includes a "post" function that dispatches a XM.Invoice.post function to the server
+    // XM.InvoiceListItem includes a "void" function that dispatches a XM.Invoice.void function to the server
+
+
 
 
   };
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
-
-
-* A model called XM.InvoiceListItem extending XM.Info should exist.
-* XM.InvoiceListItem should include the following attributes:
-  > String "number" that is the idAttribute
-  > Boolean "printed"
-  > CustomerRelation "customer"
-  > Date "invoiceDate"
-XXX  > Money "total"
-  > Boolean "isPosted"
-XXX  > Boolean "isOpen"
-  > Boolean "isVoid"
-* Only users that have "ViewMiscInvoices" or "MaintainMiscInvoices" may read XV.InvoiceListItem.
-* XM.InvoiceListItem is not editable.
-* XM.InvoiceListItem includes a "post" function that dispatches a XM.Invoice.post function to the server
-* XM.InvoiceListItem includes a "void" function that dispatches a XM.Invoice.void function to the server
-
-
-* XM.Invoice should include the following attributes:
-    > String "number" that is the documentKey and idAttribute
-    > Date "invoiceDate" required default today
-    > Boolean "isPosted" required, defaulting to false, read only
-    > Boolean "isVoid" required, defaulting to false, read only
-    > SalesCustomer "customer" required
-    > String "billtoName"
-    > String "billtoAddress1"
-    > String "billtoAddress2"
-    > String "billtoAddress3"
-    > String "billtoCity"
-    > String "billtoState"
-    > String "billtoPostalCode"
-    > String "billtoCountry"
-    > String "billtoPhone"
-    > Currency "currency"
-    > Terms "terms"
-    > SalesRep "salesRep"
-    > Percent "commission" required, default 0
-    > SaleType "saleType"
-    > String "customerPurchaseOrderNumber"
-    > TaxZone "taxZone"
-    > String "notes"
-
-    --DONE TO HERE--
-
-    > InvoiceRelation "recurringInvoice"
-    > Money "allocatedCredit" the sum of all allocated credits
-    > Money "outandingCredit" the sum of all unallocated credits, not including cash receipts pending
-    > Money "subtotal" the sum of the extended price of all line items
-    > Money "taxTotal" the sum of all taxes inluding line items, freight and tax adjustments
-    > Money "miscCharge" read only (will be re-implemented as editable by Ledger)
-    > Money "total" the calculated total of subtotal + freight + tax + miscCharge
-    > Money "balance" the sum of total - allocatedCredit - authorizedCredit - oustandingCredit.
+    XXX @parameter {InvoiceRelation} recurringInvoice
+    XXX is the sourceType in xt.doc INV ? (I is item)
+    @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
+    XXX authorized credit? @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - oustandingCredit.
       - If sum calculates to less than zero, then the balance is zero.
-    > InvoiceAllocation "allocations"
-    > InvoiceTax "taxAdjustments"
-    > InvoiceLine "lineItems"
-    > InvoiceCharacteristic "characteristics"
-    > InvoiceContact "contacts"
-    > InvoiceAccount "accounts"
-    > InvoiceCustomer "customers"
-    > InvoiceFile "files"
-    > InvoiceUrl "urls"
-    > InvoiceItem "items"
-* Only users that have "ViewMiscInvoices" or "MaintainMiscInvoices" may read XV.Invoice.
-* Only users that have "MaintainMiscInvoices" may create, update and delete XV.InvoiceListItem.
+    TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
+
+
+
 * Invoices that are posted may not be deleted.
 * When the customer changes on XM.Invoice, the following customer data should be populated from the customer:
   > billtoName (= customer.name)

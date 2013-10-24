@@ -1,6 +1,16 @@
 select xt.create_view('xt.invcheadinfo', $$
 
 select invchead.*,
+  xt.invc_allocated_credit(invchead) as allocated_credit,
+  xt.invc_outstanding_credit(invchead) as outstanding_credit,
+  xt.invc_subtotal(invchead) as subtotal,
+  xt.invc_tax_total(invchead) as tax_total,
+  xt.invc_total(invchead) as total,
+  GREATEST(0.0, COALESCE(xt.invc_total(invchead), 0) 
+    - COALESCE(xt.invc_allocated_credit(invchead), 0)
+    - COALESCE(xt.invc_outstanding_credit(invchead), 0)
+    -- XXX TODO also subtract authorizedcredit
+    ) as balance,
   cust_number 
   from invchead
   left join cust on cust_id = invchead_cust_id;
