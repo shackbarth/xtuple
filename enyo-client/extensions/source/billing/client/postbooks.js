@@ -20,6 +20,7 @@ trailing:true, white:true*/
         ]
       },
       relevantPrivileges = [
+        "ApplyARMemos",
         "ConfigureAR",
         "DeleteItemMasters",
         "MaintainBankAccounts",

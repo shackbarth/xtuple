@@ -59,6 +59,20 @@ white:true*/
   /**
     @class
 
+    @extends XM.Model
+  */
+  XM.InvoiceAllocation = XM.Model.extend({
+    /** @scope XM.InvoiceAllocation.prototype */
+
+    recordType: 'XM.InvoiceAllocation',
+
+    idAttribute: 'uuid'
+
+  });
+
+  /**
+    @class
+
     @extends XM.Info
   */
   XM.InvoiceListItem = XM.Info.extend({

@@ -385,10 +385,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       // TODO
       assert.fail();
     });
-
     /**
       @member InvoiceTax
-      @memberof InvoiceLine.prototype
+      @memberof Invoice.prototype
       @description Invoice-level tax information
       @property {String} uuid
       @property {TaxCode} taxCode
@@ -400,7 +399,38 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         attrs = ["uuid", "taxCode", "amount"];
 
       assert.isTrue(invoiceTaxModel instanceof XM.Model);
+      assert.equal(invoiceTaxModel.idAttribute, "uuid");
       assert.equal(_.difference(attrs, invoiceTaxModel.getAttributeNames()).length, 0);
+    });
+    /**
+      @member InvoiceAllocation
+      @memberof Invoice.prototype
+      @description Invoice-level allocation information
+      @property {String} uuid
+      @property {String} invoice // XXX String or Number?
+      @property {Money} amount
+      @property {Currency} currency
+    */
+    it("A nested only model called XM.InvoiceAllocation extending XM.Model should exist", function () {
+      assert.isFunction(XM.InvoiceAllocation);
+      var invoiceAllocationModel = new XM.InvoiceAllocation(),
+        attrs = ["uuid", "invoice", "amount", "currency"];
+
+      assert.isTrue(invoiceAllocationModel instanceof XM.Model);
+      assert.equal(invoiceAllocationModel.idAttribute, "uuid");
+      assert.equal(_.difference(attrs, invoiceAllocationModel.getAttributeNames()).length, 0);
+    });
+    it("XM.InvoiceAllocation should only be updateable by users with the ApplyARMemos privilege.", function () {
+      XT.session.privileges.attributes.ApplyARMemos = false;
+      assert.isFalse(XM.InvoiceAllocation.canCreate());
+      assert.isTrue(XM.InvoiceAllocation.canRead());
+      assert.isFalse(XM.InvoiceAllocation.canUpdate());
+      assert.isFalse(XM.InvoiceAllocation.canDelete());
+      XT.session.privileges.attributes.ApplyARMemos = true;
+      assert.isTrue(XM.InvoiceAllocation.canCreate());
+      assert.isTrue(XM.InvoiceAllocation.canRead());
+      assert.isTrue(XM.InvoiceAllocation.canUpdate());
+      assert.isTrue(XM.InvoiceAllocation.canDelete());
     });
 
 
@@ -409,15 +439,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-
-* A nested only model called XM.InvoiceAllocation extending XM.Model should exist.
-* XM.InvoiceAllocation should include the following attributes:
-  > String "uuid" that is the idAttribute
-  > String "invoice"
-  > Money "amount"
-  > Currency "currency"
-* XM.InvoiceAllocation should only be updateable by users with the "ApplyARMemos" privilege.
-#HINT: The document type is fixed value "I" on the aropenalloc table which this model should reference
 
 * A model called XM.InvoiceListItem extending XM.Info should exist.
 * XM.InvoiceListItem should include the following attributes:
