@@ -697,6 +697,7 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.UserAccountWidget",
+    classes: "xv-useraccount-widget",
     kind: "XV.RelationWidget",
     collection: "XM.UserAccountRelationCollection",
     list: "XV.UserAccountList",

@@ -27,9 +27,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       ]},
       {classes: "quantity", content: "_hours".loc(), rows: [
         {readOnlyAttr: "budgetedHours",
-          editor: {kind: "XV.QuantityWidget", attr: "budgetedHours"}},
+          editor: {kind: "XV.HoursWidget", attr: "budgetedHours"}},
         {readOnlyAttr: "actualHours",
-          editor: {kind: "XV.QuantityWidget", attr: "actualHours"}}
+          editor: {kind: "XV.HoursWidget", attr: "actualHours"}}
       ]},
       {classes: "price", content: "_expenses".loc(), rows: [
         {readOnlyAttr: "budgetedExpenses",
@@ -102,7 +102,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
           editor: {kind: "XV.UnitCombobox", attr: "quantityUnit",
             name: "quantityUnitPicker", tabStop: false }}
       ]},
-      {classes: "discount", content: "_discount".loc(), rows: [
+      {classes: "percent", content: "_discount".loc(), rows: [
         {readOnlyAttr: "discount",
           editor: {kind: "XV.PercentWidget", name: "discount",
             attr: "discount" }}

@@ -925,21 +925,21 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Quantity",
+          "type": "Hours",
           "column": "prj_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Quantity",
+          "type": "Hours",
           "column": "prj_hours_actual"
         }
       },
       {
         "name": "balanceHours",
         "attr": {
-          "type": "Quantity",
+          "type": "Hours",
           "column": "prj_hours_balance"
         }
       },
@@ -1293,14 +1293,14 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Quantity",
+          "type": "Hours",
           "column": "prjtask_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Quantity",
+          "type": "Hours",
           "column": "prjtask_hours_actual"
         }
       },
@@ -1515,14 +1515,14 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Quantity",
+          "type": "Hours",
           "column": "prjtask_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Quantity",
+          "type": "Hours",
           "column": "prjtask_hours_actual"
         }
       },
@@ -1769,14 +1769,14 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Quantity",
+          "type": "Hours",
           "column": "prjtask_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Quantity",
+          "type": "Hours",
           "column": "prjtask_hours_actual"
         }
       },

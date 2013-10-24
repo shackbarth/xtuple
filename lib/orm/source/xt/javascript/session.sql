@@ -26,9 +26,11 @@ select xt.install_js('XT','Session','xtuple', $$
             + 'coalesce(locale_qtyper_scale, 6) as "quantityPerScale", '
             + 'coalesce(locale_uomratio_scale, 6) as "unitRatioScale", '
             + 'coalesce(locale_percent_scale, 2) as "percentScale", '
-            + 'coalesce(locale_weight_scale, 2) as "weightScale" '
+            + 'coalesce(locale_weight_scale, 2) as "weightScale", '
+            + 'coalesce(localeext_hours_scale, 2) as "hoursScale" '
             + 'from locale '
             + 'join usr on usr_locale_id = locale_id '
+            + 'left join xt.localeext on locale_id=localeext_id '
             + 'left join lang on locale_lang_id = lang_id '
             + 'left join country on locale_country_id = country_id '
             + 'where usr_username = $1 ',

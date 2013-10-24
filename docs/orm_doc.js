@@ -295,6 +295,7 @@
           * Date
           * DueDate
           * Boolean
+          * Hours
           * Number
           * Money
           * Cost
