@@ -345,6 +345,58 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "InvoiceTax",
+    "table": "invcheadtax",
+    "isRest": true,
+    "idSequenceName": "invcheadtax_invcheadtax_id_seq",
+    "comment": "Invoice Tax Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "taxCode",
+        "toOne": {
+          "type": "TaxCode",
+          "column": "taxhist_tax_id",
+          "required": true
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_tax"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "InvoiceLine",
     "table": "xt.invciteminfo",
     "isRest": true,
@@ -601,6 +653,7 @@
         }
       }
     ],
+    "isNestedOnly": true,
     "isSystem": true
   }
 ]

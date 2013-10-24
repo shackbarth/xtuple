@@ -207,6 +207,10 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         sellingUnits, quantityUnit, quantityUnitRatio, priceUnit, priceUnitRatio, unitCost
         and taxType. Then, the price should be recalculated.
     */
+    it("XM.InvoiceLine should have a fetchSellingUnits function that updates " +
+        "sellingUnits based on the item selected", function () {
+      assert.isFunction(lineModel.fetchSellingUnits);
+    });
     it("itemDidChange should recalculate sellingUnits, quantityUnit, quantityUnitRatio, " +
         "priceUnit, priceUnitRatio, " +
         "and taxType. Also calculatePrice should be executed.", function (done) {
@@ -376,24 +380,35 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       lineModel.set({itemNumber: "P", itemDescription: "Paint", salesCategory: new XM.SalesCategory()});
       assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
     });
+    it.skip("XM.InvoiceLine should have a calculatePrice function that retrieves a price from the " +
+        "customer.itemPrice dispatch function based on the billed value.", function () {
+      // TODO
+      assert.fail();
+    });
+
+    /**
+      @member InvoiceTax
+      @memberof InvoiceLine.prototype
+      @description Invoice-level tax information
+      @property {String} uuid
+      @property {TaxCode} taxCode
+      @property {Money} amount
+    */
+    it("A nested only model called XM.InvoiceTax extending XM.Model should exist", function () {
+      assert.isFunction(XM.InvoiceTax);
+      var invoiceTaxModel = new XM.InvoiceTax(),
+        attrs = ["uuid", "taxCode", "amount"];
+
+      assert.isTrue(invoiceTaxModel instanceof XM.Model);
+      assert.equal(_.difference(attrs, invoiceTaxModel.getAttributeNames()).length, 0);
+    });
+
 
   };
-
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-* Validation:
-
-* XM.InvoiceLine should have a "calculatePrice" function that retrieves a price from the customer.itemPrice dispatch function based on the "billed" value.
-
-* XM.InvoiceLine should have a "fetchSellingUnits" function that updates "sellingUnits" based on the item selected.
-
-* A nested only model called XM.InvoiceTax extending XM.Model should exist.
-* XM.InvoiceTax should include the following attributes:
-  > String "uuid" that is the idAttribute
-  > TaxCode "taxCode"
-  > Money "amount"
 
 * A nested only model called XM.InvoiceAllocation extending XM.Model should exist.
 * XM.InvoiceAllocation should include the following attributes:

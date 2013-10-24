@@ -45,6 +45,20 @@ white:true*/
   /**
     @class
 
+    @extends XM.Model
+  */
+  XM.InvoiceTax = XM.Model.extend({
+    /** @scope XM.InvoiceTax.prototype */
+
+    recordType: 'XM.InvoiceTax',
+
+    idAttribute: 'uuid'
+
+  });
+
+  /**
+    @class
+
     @extends XM.Info
   */
   XM.InvoiceListItem = XM.Info.extend({
