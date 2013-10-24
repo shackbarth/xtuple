@@ -351,9 +351,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         " and salesCategory are read only", function () {
       lineModel.set({isMiscellaneous: false});
       assert.isFalse(lineModel.isReadOnly("item"));
-      //assert.isTrue(lineModel.isReadOnly("itemNumber"));
-      //assert.isTrue(lineModel.isReadOnly("itemDescription"));
-      //assert.isTrue(lineModel.isReadOnly("salesCategory"));
+      assert.isTrue(lineModel.isReadOnly("itemNumber"));
+      assert.isTrue(lineModel.isReadOnly("itemDescription"));
+      assert.isTrue(lineModel.isReadOnly("salesCategory"));
     });
     it("When isMiscellaneous is true, item is read only and itemNumber, itemDescription " +
         " and salesCategory are editable.", function () {

@@ -97,6 +97,8 @@ white:true*/
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
       this.on('change:isMiscellaneous', this.isMiscellaneousDidChange);
+
+      this.isMiscellaneousDidChange();
     },
 
     defaults: function () {
