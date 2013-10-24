@@ -4,6 +4,7 @@
   "loadOrder": 30,
   "databaseScripts": [
     "xm/javascript/billing.sql",
-    "xm/javascript/sales_category.sql"
+    "xm/javascript/sales_category.sql",
+    "xt/views/receivable_invoice_return.sql"
   ]
 }
