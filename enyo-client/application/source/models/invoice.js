@@ -87,6 +87,20 @@ white:true*/
   /**
     @class
 
+    @extends XM.Info
+  */
+  XM.InvoiceRelation = XM.Info.extend({
+    /** @scope XM.InvoiceRelation.prototype */
+
+    recordType: 'XM.InvoiceRelation',
+
+    editableModel: 'XM.Invoice'
+
+  });
+
+  /**
+    @class
+
     @extends XM.Characteristic
   */
   XM.InvoiceCharacteristic = XM.CharacteristicAssignment.extend({
@@ -386,6 +400,18 @@ white:true*/
     /** @scope XM.InvoiceListItemCollection.prototype */
 
     model: XM.InvoiceListItem
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.InvoiceRelationCollection = XM.Collection.extend({
+    /** @scope XM.InvoiceRelationCollection.prototype */
+
+    model: XM.InvoiceRelation
 
   });
 

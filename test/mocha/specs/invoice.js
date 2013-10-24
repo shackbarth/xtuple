@@ -475,6 +475,38 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       assert.isFalse(XM.InvoiceListItem.canUpdate());
       assert.isFalse(XM.InvoiceListItem.canDelete());
     });
+    /**
+      @member InvoiceRelation
+      @memberof Invoice.prototype
+      @description Summary information for an invoice
+      @property {String} number
+      @property {CustomerRelation} customer
+      @property {Date} invoiceDate
+      @property {Boolean} isPosted
+      @property {Boolean} isOpen
+      @property {Boolean} isVoid
+    */
+    it("A model called XM.InvoiceRelation extending XM.Info should exist with " +
+        "attributes number (the idAttribute) " +
+        "customer, invoiceDate, isPosted, isOpen, and isVoid", function () {
+      assert.isFunction(XM.InvoiceRelation);
+      var invoiceRelationModel = new XM.InvoiceRelation(),
+        attrs = ["number", "customer", "invoiceDate", "isPosted", "isOpen", "isVoid"];
+
+      assert.isTrue(invoiceRelationModel instanceof XM.Info);
+      assert.equal(invoiceRelationModel.idAttribute, "number");
+      console.log(invoiceRelationModel.getAttributeNames());
+      assert.equal(_.difference(attrs, invoiceRelationModel.getAttributeNames()).length, 0);
+
+    });
+    it("All users with the billing extension may read XV.InvoiceRelation.", function () {
+      assert.isTrue(XM.InvoiceRelation.canRead());
+    });
+    it("XM.InvoiceRelation is not editable.", function () {
+      assert.isFalse(XM.InvoiceRelation.canCreate());
+      assert.isFalse(XM.InvoiceRelation.canUpdate());
+      assert.isFalse(XM.InvoiceRelation.canDelete());
+    });
 
 
     // XXX TODO
@@ -596,16 +628,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
 ***** CHANGES MADE BY BILLING EXTENSION ******
 
-* A model called XM.InvoiceRelation extending XM.Info should exist.
-* XM.InvoiceRelation should include the following attributes:
-  > String "number" that is the idAttribute
-  > CustomerRelation "customer"
-  > Date "invoiceDate"
-  > Boolean "isPosted"
-  > Boolean "isOpen"
-  > Boolean "isVoid"
-* All users with the billing extension may read XV.InvoiceListItem.
-* XM.InvoiceListItem is not editable.
 
 * Add "Invoices" list to Billing module
 * Add "Invoices" list to Sales modules

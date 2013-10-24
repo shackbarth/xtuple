@@ -201,6 +201,13 @@
         }
       },
       {
+        "name": "recurringInvoice",
+        "toOne": {
+          "type": "InvoiceRelation",
+          "column": "invchead_recurring_invchead_id"
+        }
+      },
+      {
         "name": "allocatedCredit",
         "attr": {
           "type": "Money",
@@ -406,6 +413,75 @@
         "attr": {
           "type": "Money",
           "column": "total"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "invchead_cust_id",
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceRelation",
+    "table": "xt.invcheadinfo",
+    "isRest": true,
+    "idSequenceName": "invchead_invchead_id_seq",
+    "lockable": true,
+    "comment": "Invoice Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invchead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "invchead_invcnumber",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "invoiceDate",
+        "attr": {
+          "type": "Date",
+          "column": "invchead_invcdate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_posted",
+          "required": true
+        }
+      },
+      {
+        "name": "isVoid",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_void",
+          "required": true
         }
       },
       {
