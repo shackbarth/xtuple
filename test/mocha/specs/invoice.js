@@ -289,6 +289,36 @@ TODO: invoiceLine ORM:
     /**
       @member -
       @memberof InvoiceLine.prototype
+      @description When billed is changed extendedPrice should be recalculated.
+    */
+    it.skip("When billed is changed extendedPrice should be recalculated", function () {
+      // TODO
+      assert.fail();
+    });
+    /**
+      @member -
+      @memberof InvoiceLine.prototype
+      @description The "ordered" and "billed" amounts must be positive
+    */
+    it("Ordered should only allow positive values", function () {
+      lineModel.set({quantity: -1});
+      assert.isObject(lineModel.validate(lineModel.attributes));
+      lineModel.set({quantity: 0});
+      assert.isObject(lineModel.validate(lineModel.attributes));
+      lineModel.set({quantity: 2});
+      assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
+    });
+    it("Billed should only allow positive values", function () {
+      lineModel.set({billed: -1});
+      assert.isObject(lineModel.validate(lineModel.attributes));
+      lineModel.set({billed: 0});
+      assert.isObject(lineModel.validate(lineModel.attributes));
+      lineModel.set({billed: 2});
+      assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
+    });
+    /**
+      @member -
+      @memberof InvoiceLine.prototype
       @description When item is unset, all item-related values should be cleared.
     */
     it("If item is unset, the above values should be cleared.", function (done) {
@@ -304,19 +334,31 @@ TODO: invoiceLine ORM:
         done();
       }, 3000); // TODO: use an event. headache because we have to wait for several
     });
+    /**
+      @member -
+      @memberof InvoiceLine.prototype
+      @description User requires the "OverrideTax" privilege to edit the tax type.
+    */
+    it.skip("User requires the OverrideTax privilege to edit the tax type", function () {
+      // TODO
+      //HINT: Default tax type must be enforced by a trigger on the database if no privilege.
+      assert.fail();
+    });
+    it("lineNumber must auto-number itself sequentially", function () {
+      var dummyModel = new XM.InvoiceLine();
+      assert.isUndefined(lineModel.get("lineNumber"));
+      invoiceModel.get("lineItems").add(dummyModel);
+      invoiceModel.get("lineItems").add(lineModel);
+      assert.equal(lineModel.get("lineNumber"), 2);
+      // TODO: be more thorough
+    });
+
 
   };
-
-
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-* When billed is changed extendedPrice should be recalculated.
-* Ordered and Billed should only allow positive values.
-* User requires the "OverrideTax" privilege to edit the tax type.
-#HINT: Default tax type must be enforced by a trigger on the database if no privilege.
-* lineNumber must auto-number itself sequentially.
 * When isMiscellaneous is false, item is editable and itemNumber, itemDescription and salesCategory are read only.
 * When isMiscellaneous is true, item is read only and itemNumber, itemDescription and salesCategory are editable.
 * Validation:

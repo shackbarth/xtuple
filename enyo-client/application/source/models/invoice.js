@@ -81,6 +81,8 @@ white:true*/
 
     sellingUnits: undefined,
 
+    parentKey: "invoice",
+
     //
     // Core functions
     //
@@ -89,9 +91,11 @@ white:true*/
       this.on("relational:change:item", this.itemDidChange); // TODO: shouldn't need these
       this.on('relational:change:priceUnit', this.priceUnitDidChange);
       this.on('relational:change:quantityUnit', this.quantityUnitDidChange);
+      this.on('relational:change:' + this.parentKey, this.parentDidChange);
       this.on("change:item", this.itemDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
+      this.on('change:' + this.parentKey, this.parentDidChange);
     },
 
     defaults: function () {
@@ -152,6 +156,24 @@ white:true*/
       this.calculatePrice();
     },
 
+
+    //Refactor potential: this is similar to sales order line item, but
+    // skips the scheduleDate calculations
+    parentDidChange: function () {
+      var parent = this.getParent(),
+       lineNumber = this.get("lineNumber"),
+       lineNumberArray,
+       maxLineNumber;
+
+      // Set next line number to be 1 more than the highest living model
+      if (parent && !lineNumber) {
+        lineNumberArray = _.compact(_.map(parent.get("lineItems").models, function (model) {
+          return model.isDestroyed() ? null : model.get("lineNumber");
+        }));
+        maxLineNumber = lineNumberArray.length > 0 ? Math.max.apply(null, lineNumberArray) : 0;
+        this.set("lineNumber", maxLineNumber + 1);
+      }
+    },
     /**
       Refactor potential: this is like the one on sales order line base, but
       includes a checks billed as well
