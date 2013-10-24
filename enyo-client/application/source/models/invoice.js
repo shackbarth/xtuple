@@ -118,6 +118,7 @@ white:true*/
     priceUnitDidChange: XM.SalesOrderLineBase.prototype.priceUnitDidChange,
     quantityUnitDidChange: XM.SalesOrderLineBase.prototype.quantityUnitDidChange,
     recalculateParent: XM.SalesOrderLineBase.prototype.recalculateParent,
+    save: XM.SalesOrderLineBase.prototype.save,
 
     // refactor potential: this function is largely similar to the one on XM.SalesOrderLine
     itemDidChange: function () {
@@ -134,11 +135,6 @@ white:true*/
       this.unset("taxType");
       this.fetchSellingUnits();
 
-      // Reset Unit Cost
-      //this.off("unitCost", this.unitCostDidChange);
-      this.set("unitCost", unitCost);
-      //this.on("unitCost", this.unitCostDidChange);
-
       if (!item) { return; }
 
       // Fetch and update tax type
@@ -154,10 +150,34 @@ white:true*/
       item.taxType(taxZone, options);
 
       this.calculatePrice();
+    },
+
+    /**
+      Refactor potential: this is like the one on sales order line base, but
+      includes a checks billed as well
+     */
+    validate: function () {
+      var quantity = this.get("quantity"),
+        billed = this.get("billed");
+
+      // Check billed
+      if ((billed || 0) <= 0) {
+        return XT.Error.clone('xt2013'); // TODO: generalize error message
+      }
+
+      // Check quantity
+      if ((quantity || 0) <= 0) {
+        return XT.Error.clone('xt2013');
+      }
+
+      // Check order quantity against fractional setting
+      if (!this._unitIsFractional &&
+          (Math.round(quantity) !== quantity || Math.round(billed) !== billed)) {
+        return XT.Error.clone('xt2014');
+      }
+
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
-
-
-
   });
 
   /**

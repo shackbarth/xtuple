@@ -22,8 +22,7 @@ TODO: invoiceLine ORM:
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
-    assert = require("chai").assert,
-    model;
+    assert = require("chai").assert;
 
   exports.additionalTests = function () {
     /**
@@ -165,17 +164,53 @@ TODO: invoiceLine ORM:
       var lineModel = new XM.InvoiceLine();
       assert.isObject(lineModel.sellingUnits);
     });
-    var itemModel;
-    it("we're going to need an item", function (done) {
+    var invoiceModel;
+    it("prepare invoice model", function (done) {
       var statusChanged = function () {
-        if (itemModel.isReady()) {
-          itemModel.off("statusChange", statusChanged);
+        if (invoiceModel.isReady()) {
+          invoiceModel.off("statusChange", statusChanged);
           done();
         }
       };
-      itemModel = new XM.ItemRelation();
-      itemModel.on("statusChange", statusChanged);
-      itemModel.fetch({number: "BTRUCK1"});
+      invoiceModel = new XM.Invoice();
+      invoiceModel.on("statusChange", statusChanged);
+      invoiceModel.initialize(null, {isNew: true});
+    });
+    var bpaint;
+    it("prepare bpaint model", function (done) {
+      var statusChanged = function () {
+        if (bpaint.isReady()) {
+          bpaint.off("statusChange", statusChanged);
+          done();
+        }
+      };
+      bpaint = new XM.ItemRelation();
+      bpaint.on("statusChange", statusChanged);
+      bpaint.fetch({number: "BPAINT1"});
+    });
+    var btruck;
+    it("prepare btruck model", function (done) {
+      var statusChanged = function () {
+        if (btruck.isReady()) {
+          btruck.off("statusChange", statusChanged);
+          done();
+        }
+      };
+      btruck = new XM.ItemRelation();
+      btruck.on("statusChange", statusChanged);
+      btruck.fetch({number: "BTRUCK1"});
+    });
+    var lineModel;
+    it("prepare line model", function (done) {
+      var statusChanged = function () {
+        if (lineModel.isReady()) {
+          lineModel.off("statusChange", statusChanged);
+          done();
+        }
+      };
+      lineModel = new XM.InvoiceLine();
+      lineModel.on("statusChange", statusChanged);
+      lineModel.initialize(null, {isNew: true});
     });
     /**
       @member -
@@ -184,26 +219,22 @@ TODO: invoiceLine ORM:
         sellingUnits, quantityUnit, quantityUnitRatio, priceUnit, priceUnitRatio, unitCost
         and taxType. Then, the price should be recalculated.
     */
-    var lineModel;
     it("itemDidChange should recalculate sellingUnits, quantityUnit, quantityUnitRatio, " +
-        "priceUnit, priceUnitRatio, unitCost " +
+        "priceUnit, priceUnitRatio, " +
         "and taxType. Also calculatePrice should be executed.", function (done) {
       this.timeout(4000);
-      lineModel = new XM.InvoiceLine();
 
       assert.equal(lineModel.sellingUnits.length, 0);
       assert.isNull(lineModel.get("quantityUnit"));
       assert.isNull(lineModel.get("priceUnit"));
       assert.isNull(lineModel.get("taxType"));
-      assert.isUndefined(lineModel.get("unitCost"));
-      lineModel.set({item: itemModel});
+      lineModel.set({item: btruck});
 
       setTimeout(function () {
         assert.equal(lineModel.sellingUnits.length, 1);
         assert.equal(lineModel.sellingUnits.models[0].id, "EA");
         assert.equal(lineModel.get("quantityUnit").id, "EA");
         assert.equal(lineModel.get("priceUnit").id, "EA");
-        assert.equal(lineModel.get("unitCost"), 2.5704);
         assert.equal(lineModel.get("priceUnitRatio"), 1);
         assert.equal(lineModel.get("quantityUnitRatio"), 1);
         assert.equal(lineModel.get("taxType").id, "Taxable");
@@ -229,6 +260,35 @@ TODO: invoiceLine ORM:
     /**
       @member -
       @memberof InvoiceLine.prototype
+      @description Quantity and billed values can be fractional only if the item allows it
+    */
+    it("When the item isFractional attribute === false, decimal numbers should not be allowed " +
+        "for quantity and billed values.", function () {
+      lineModel.set({billed: 1, quantity: 1.5});
+      assert.isObject(lineModel.validate(lineModel.attributes));
+      lineModel.set({quantity: 2});
+      assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
+      lineModel.set({billed: 1.5});
+      assert.isObject(lineModel.validate(lineModel.attributes));
+      lineModel.set({billed: 2});
+      assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
+    });
+    it("When the item isFractional attribute === true, decimal numbers should be allowed " +
+        "for quantity values.", function (done) {
+      lineModel.set({item: bpaint, quantity: 1.5});
+      setTimeout(function () {
+        assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
+        done();
+      }, 1900); // wait for line._isItemFractional to get updated from the item
+    });
+    it("When the item isFractional attribute === true, decimal numbers should be allowed " +
+        "for billed values.", function () {
+      lineModel.set({billed: 1.5, quantity: 2});
+      assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
+    });
+    /**
+      @member -
+      @memberof InvoiceLine.prototype
       @description When item is unset, all item-related values should be cleared.
     */
     it("If item is unset, the above values should be cleared.", function (done) {
@@ -240,12 +300,10 @@ TODO: invoiceLine ORM:
         assert.equal(lineModel.sellingUnits.length, 0);
         assert.isNull(lineModel.get("quantityUnit"));
         assert.isNull(lineModel.get("priceUnit"));
-        assert.isNull(lineModel.get("unitCost"));
         assert.isNull(lineModel.get("taxType"));
         done();
       }, 3000); // TODO: use an event. headache because we have to wait for several
     });
-
 
   };
 
@@ -254,7 +312,6 @@ TODO: invoiceLine ORM:
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-* When the item "isFractional" attribute === true, decimal numbers should be allowed for quantity and billed values, otherwise only whole numbers should be allowed.
 * When billed is changed extendedPrice should be recalculated.
 * Ordered and Billed should only allow positive values.
 * User requires the "OverrideTax" privilege to edit the tax type.

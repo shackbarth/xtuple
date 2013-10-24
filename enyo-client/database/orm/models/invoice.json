@@ -185,6 +185,15 @@
           "type": "String",
           "column": "invchead_notes"
         }
+      },
+      {
+        "name": "lineItems",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceLine",
+          "column": "invchead_id",
+          "inverse": "invoice"
+        }
       }
 
     ],
@@ -364,6 +373,13 @@
           "type": "String",
           "column": "obj_uuid",
           "isNaturalKey": true
+        }
+      },
+      {
+        "name": "invoice",
+        "attr": {
+          "type": "Number",
+          "column": "invcitem_invchead_id"
         }
       },
       {
