@@ -8,6 +8,32 @@
 /*
   These variables will show in css as their hex values
 */
+/**
+ * Default ListItem styles when using a ModelDecorator.
+ */
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column {
+  width: 10em;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr {
+  /**
+        * Default styling for a model's id (as designated by 'idAttribute')
+        */
+
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-id {
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-name {
+  font-weight: bold;
+}
+.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr {
+  color: white;
+}
+.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr.xm-attribute-id {
+  color: #f49200;
+}
 /* Helper classes for css3 */
 .clearfix {
   *zoom: 1;
@@ -37,7 +63,7 @@
   box-sizing: border-box;
 }
 /**
-  Less styles for the
+  Less styles for the picker widget
 */
 /**
   Styles related to pickers, combo boxes, and relation widgets
@@ -124,6 +150,9 @@
   padding: 0;
   margin: 0;
 }
+.xv-groupbox .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
 .xv-groupbox .in-panel > *:first-child {
   border-top-color: #aaaaaa;
   border-top: none;
@@ -165,9 +194,6 @@
 .xv-groupbox .xv-datewidget input,
 .xv-groupbox .xv-numberwidget input {
   width: 120px;
-}
-.xv-groupbox .xv-numberwidget input {
-  width: 150px;
 }
 .xv-groupbox .xv-moneywidget {
   background-color: #ffffff;
@@ -649,9 +675,9 @@
 }
 .xv-list .xv-list-item {
   background-color: #ffffff;
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding: 3px;
   border-bottom: 1px solid #dddddd;
+  min-height: 32px;
 }
 @include box-sizing(border-box);
 .xv-list .xv-list-item.header {
@@ -698,11 +724,10 @@
   border-radius: 2px;
 }
 .xv-list .xv-list-item.item-selected {
-  background: #226b9a url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
+  background: url(/assets/item-hilite.png) repeat-x bottom;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr {
   color: #ffffff;
-  background: none;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
   font-style: italic;
@@ -710,31 +735,14 @@
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
   color: #f49200;
-  background: transparent;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.header {
   background: #99ccff;
 }
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr {
-  color: #ffffff;
-  background: none;
-}
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.placeholder {
-  font-style: italic;
-  color: SkyBlue;
-}
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.hyperlink {
-  color: #f49200;
-  background: transparent;
-}
-.xv-list-item > * {
-  display: inline-block;
-  vertical-align: middle;
-}
-.xv-list-gear-icon-button {
-  float: right;
-  display: none;
-  margin-top: -4px;
+.xv-list .xv-list-item .xv-list-item-gear {
+  position: absolute;
+  right: 4px;
+  z-index: 999;
 }
 .xv-list-attr {
   padding: 5px;
@@ -743,7 +751,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: #000000;
-  background-color: #ffffff;
 }
 .xv-list-attr.header {
   padding: 4px;
@@ -934,6 +941,34 @@
 }
 .xv-tree .xv-tree-node .xv-pickerwidget .xv-picker-label {
   width: 50px;
+}
+/**
+  Misc styles for widgets
+*/
+/**
+  Styles relating to misc widgets
+*/
+.xv-numberwidget input {
+  text-align: right;
+  width: 150px;
+}
+.spinner .buttons {
+  display: block;
+  padding: 0;
+  margin: 1px 0 1px 0;
+  width: 20px;
+  height: 20px;
+}
+.spinner .slider {
+  margin: 15px 15px;
+  width: 100px;
+}
+.spinner.xv-numberwidget .onyx-input-decorator {
+  width: 100px;
+}
+.spinner.xv-numberwidget input {
+  width: 50px;
+  text-align: left;
 }
 /**
   Import for Font-Awesome icons
@@ -2206,6 +2241,29 @@ ul.icons-ul > li .icon-li {
 .icon-share-sign:before {
   content: "\f14d";
 }
+* .font-onyx {
+  /**
+     * Icon size set per Onyx standard:
+     * https://github.com/enyojs/onyx/blob/master/source/Icon.js#L5
+     */
+
+  width: 32px;
+  height: 32px;
+  padding: 3px;
+}
+* .font-onyx i {
+  text-align: center;
+  font-size: 26px;
+  color: #dddddd;
+  text-shadow: 3px 3px 5px rgba(34, 34, 34, 0.97), 0px 0px 3px rgba(34, 34, 34, 0.97);
+}
+.font-onyx.icon.button:not(.disabled) {
+  cursor: pointer;
+}
+.font-onyx.icon.button:not(.disabled):active i {
+  color: white;
+  text-shadow: 2px 2px 5px #0099ff, -2px -2px 5px #0099ff, 2px -2px 5px #0099ff, -2px 2px 5px #0099ff;
+}
 body {
   font-family: "arial", "arial black";
   font-size: 100%;
@@ -2280,7 +2338,7 @@ body {
   padding: 16px 12px;
 }
 .item.onyx-selected {
-  background-color: #226b9a;
+  background-color: #357ec7;
 }
 .onyx-button.save {
   background-color: #35a8ee;
@@ -2301,7 +2359,7 @@ body {
   text-shadow: none;
 }
 .text-shadow-0 {
-  text-shadow: 0px 0px #000000;
+  text-shadow: 0 0 #000000;
 }
 .xt-app {
   position: absolute;
@@ -2385,6 +2443,22 @@ body {
 .xv-my-account-popup .onyx-input {
   padding-left: 10px;
   float: right;
+}
+.xv-gridbox-button {
+  color: #357ec7;
+  font-size: 18px;
+  border: none;
+  background: white;
+}
+.xv-date-icon {
+  opacity: .8;
+}
+.xv-action-icon .onyx-icon-button {
+  margin-top: 0;
+}
+.xv-sort-icon .onyx-icon-button {
+  margin-top: 7px;
+  margin-bottom: -3px;
 }
 .xv-sort-popup {
   background-color: #ffffff;
@@ -2515,9 +2589,6 @@ body {
 /*
   XV Widgets
 */
-.xv-numberwidget input {
-  text-align: right;
-}
 .xv-addresswidget {
   background-color: #ffffff;
   padding: 4px;
@@ -2667,7 +2738,7 @@ body {
   color: #696969;
 }
 .xv-short-textarea .xv-textarea-input {
-  min-height: 0px;
+  min-height: 0;
 }
 .xv-textarea-input {
   width: 90%;

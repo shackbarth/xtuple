@@ -61,7 +61,7 @@ select xt.install_js('XM','crm','crm', $$
 
     ret = XT.extend(ret, data.retrieveMetrics(keys));
     
-    return JSON.stringify(ret);
+    return ret;
   }
 
   /* 

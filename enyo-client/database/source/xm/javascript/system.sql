@@ -40,7 +40,7 @@ select xt.install_js('XM','System','xtuple', $$
     
     ret = data.retrieveMetrics(keys);
 
-    return JSON.stringify(ret);
+    return ret;
   }
   
   /* 

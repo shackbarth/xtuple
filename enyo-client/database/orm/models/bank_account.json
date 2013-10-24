@@ -1,0 +1,154 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "BankAccount",
+    "table": "bankaccnt",
+    "isRest": true,
+    "idSequenceName": "bankaccnt_bankaccnt_id_seq",
+    "lockable": true,
+    "comment": "Bank Account Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainBankAccounts",
+        "read": "MaintainBankAccounts",
+        "update": "MaintainBankAccounts",
+        "delete": "MaintainBankAccounts"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "bankaccnt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_descrip"
+        }
+      },
+      {
+        "name": "bankName",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_bankname"
+        }
+      },
+      {
+        "name": "accountNumber",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_accntnumber"
+        }
+      },
+      {
+        "name": "bankAccountType",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_type"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "bankaccnt_curr_id"
+        }
+      },
+      {
+        "name": "isUsedByBilling",
+        "attr": {
+          "type": "Boolean",
+          "column": "bankaccnt_ar"}
+      },
+      {
+        "name": "isUsedByPayments",
+        "attr": {
+          "type": "Boolean",
+          "column": "bankaccnt_ap"}
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_notes"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "BankAccountRelation",
+    "table": "bankaccnt",
+    "isRest": true,
+    "comment": "Bank Account Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+    {
+      "name": "id",
+      "attr": {
+        "type": "Number",
+        "column": "bankaccnt_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "bankaccnt_name",
+        "isNaturalKey": true
+      }
+    },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "bankaccnt_descrip"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "bankaccnt_curr_id"
+        }
+      },
+      {
+        "name": "isUsedByBilling",
+        "attr": {
+          "type": "Boolean",
+          "column": "bankaccnt_ar"}
+      },
+      {
+        "name": "isUsedByPayments",
+        "attr": {
+          "type": "Boolean",
+          "column": "bankaccnt_ap"}
+      }
+    ],
+    "isSystem": true
+  }
+]

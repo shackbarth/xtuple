@@ -38,7 +38,7 @@ select xt.install_js('XM','Manufacturing','xtuple', $$
       
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
-    return JSON.stringify(ret);
+    return ret;
   };
   
   /* 
