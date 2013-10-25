@@ -12,6 +12,58 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     smoke = require("../lib/smoke"),
     assert = require("chai").assert;
 
+  var invoiceModel,
+    lineModel,
+    ttoys,
+    vcol,
+    bpaint,
+    btruck;
+
+  var initializeModel = function (model, Klass, done) {
+    var statusChanged = function () {
+      if (model.isReady()) {
+        model.off("statusChange", statusChanged);
+        done(null, model);
+      }
+    };
+    model = new Klass();
+    model.on("statusChange", statusChanged);
+    model.initialize(null, {isNew: true});
+  };
+  var fetchModel = function (model, Klass, hash, done) {
+    var statusChanged = function () {
+      if (model.isReady()) {
+        model.off("statusChange", statusChanged);
+        done(null, model);
+      }
+    };
+    model = new Klass();
+    model.on("statusChange", statusChanged);
+    model.fetch(hash);
+  };
+  var prepareBtruckModel = function (done) {
+    var statusChanged = function () {
+      if (btruck.isReady()) {
+        btruck.off("statusChange", statusChanged);
+        done();
+      }
+    };
+    btruck = new XM.ItemRelation();
+    btruck.on("statusChange", statusChanged);
+    btruck.fetch({number: "BTRUCK1"});
+  };
+  var prepareLineModel = function (done) {
+    var statusChanged = function () {
+      if (lineModel.isReady()) {
+        lineModel.off("statusChange", statusChanged);
+        done();
+      }
+    };
+    lineModel = new XM.InvoiceLine();
+    lineModel.on("statusChange", statusChanged);
+    lineModel.initialize(null, {isNew: true});
+  };
+
   exports.additionalTests = function () {
     /**
       @member -
@@ -79,60 +131,32 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       });
     });
     describe("InvoiceLine", function () {
-      var invoiceModel,
-        lineModel,
-        bpaint,
-        btruck;
-      var prepareInvoiceModel = function (done) {
-        var statusChanged = function () {
-          if (invoiceModel.isReady()) {
-            invoiceModel.off("statusChange", statusChanged);
-            done();
-          }
-        };
-        invoiceModel = new XM.Invoice();
-        invoiceModel.on("statusChange", statusChanged);
-        invoiceModel.initialize(null, {isNew: true});
-      };
-      var prepareBpaintModel = function (done) {
-        var statusChanged = function () {
-          if (bpaint.isReady()) {
-            bpaint.off("statusChange", statusChanged);
-            done();
-          }
-        };
-        bpaint = new XM.ItemRelation();
-        bpaint.on("statusChange", statusChanged);
-        bpaint.fetch({number: "BPAINT1"});
-      };
-      var prepareBtruckModel = function (done) {
-        var statusChanged = function () {
-          if (btruck.isReady()) {
-            btruck.off("statusChange", statusChanged);
-            done();
-          }
-        };
-        btruck = new XM.ItemRelation();
-        btruck.on("statusChange", statusChanged);
-        btruck.fetch({number: "BTRUCK1"});
-      };
-      var prepareLineModel = function (done) {
-        var statusChanged = function () {
-          if (lineModel.isReady()) {
-            lineModel.off("statusChange", statusChanged);
-            done();
-          }
-        };
-        lineModel = new XM.InvoiceLine();
-        lineModel.on("statusChange", statusChanged);
-        lineModel.initialize(null, {isNew: true});
-      };
       before(function (done) {
         async.parallel([
-          prepareBpaintModel,
-          prepareBtruckModel,
-          prepareInvoiceModel,
-          prepareLineModel
+          function (done) {
+            fetchModel(bpaint, XM.ItemRelation, {number: "BPAINT1"}, function (err, model) {
+              bpaint = model;
+              done();
+            });
+          },
+          function (done) {
+            fetchModel(btruck, XM.ItemRelation, {number: "BTRUCK1"}, function (err, model) {
+              btruck = model;
+              done();
+            });
+          },
+          function (done) {
+            initializeModel(invoiceModel, XM.Invoice, function (err, model) {
+              invoiceModel = model;
+              done();
+            });
+          },
+          function (done) {
+            initializeModel(lineModel, XM.InvoiceLine, function (err, model) {
+              lineModel = model;
+              done();
+            });
+          }
         ], done);
       });
       /**
@@ -398,6 +422,22 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       });
     });
     describe("XM.Invoice", function () {
+      before(function (done) {
+        async.parallel([
+          function (done) {
+            fetchModel(ttoys, XM.SalesCustomer, {number: "TTOYS"}, function (err, model) {
+              ttoys = model;
+              done();
+            });
+          },
+          function (done) {
+            fetchModel(vcol, XM.SalesCustomer, {number: "VCOL"}, function (err, model) {
+              vcol = model;
+              done();
+            });
+          }
+        ], done);
+      });
       /**
         @member InvoiceTax
         @memberof Invoice.prototype
@@ -506,7 +546,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
         assert.isTrue(invoiceRelationModel instanceof XM.Info);
         assert.equal(invoiceRelationModel.idAttribute, "number");
-        console.log(invoiceRelationModel.getAttributeNames());
         assert.equal(_.difference(attrs, invoiceRelationModel.getAttributeNames()).length, 0);
 
       });
@@ -518,11 +557,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.isFalse(XM.InvoiceRelation.canUpdate());
         assert.isFalse(XM.InvoiceRelation.canDelete());
       });
-    });
-
-    // XXX TODO
-    // XM.InvoiceListItem includes a "post" function that dispatches a XM.Invoice.post function to the server
-    // XM.InvoiceListItem includes a "void" function that dispatches a XM.Invoice.void function to the server
 
     /**
       @member -
@@ -531,28 +565,63 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         the customer, along with the salesRep, commission, terms, taxZone, and currency. The billto
         fields will be read-only if the customer does not allow free-form billto.
     */
-    /*
-* When the customer changes on XM.Invoice, the following customer data should be populated from the customer:
-  > billtoName (= customer.name)
-  > billtoAddress1, billtoAddress2, billtoAddress3, billtoCity, billtoState, billtoPostalCode, billtoCountry should be populated by customer.billingContact.address.
-  > salesRep
-  > commission
-  > terms
-  > taxZone
-  > currency
-  > billtoPhone (= customer.billingContact.phone)
-  > The following fields will be set to read only if the customer does not allow free form billto:
-    - billtoName
-    - billtoAddress1
-    - billtoAddress2
-    - billtoAddress3
-    - billtoCity
-    - billtoState
-    - billtoPostalCode
-    - billtoCountry
-    - billtoPhone
-  > If the customer attribute is empty, the above fields should be unset.
-*/
+      it("When the customer changes on XM.Invoice, the following customer data should be " +
+          "populated from the customer: billtoName (= customer.name), billtoAddress1, " +
+          "billtoAddress2, billtoAddress3, billtoCity, billtoState, billtoPostalCode, " +
+          "billtoCountry should be populated by customer.billingContact.address." +
+          "salesRep, commission, terms, taxZone, currency, billtoPhone " +
+          "(= customer.billingContact.phone)", function () {
+        assert.isUndefined(invoiceModel.get("billtoName"));
+        invoiceModel.set({customer: ttoys});
+        assert.equal(invoiceModel.get("billtoName"), "Tremendous Toys Incorporated");
+        assert.equal(invoiceModel.get("billtoAddress2"), "101 Toys Place");
+        assert.equal(invoiceModel.get("billtoPhone"), "703-931-4269");
+        assert.equal(invoiceModel.getValue("salesRep.name"), "Sam Masters");
+        assert.equal(invoiceModel.getValue("commission"), 0.075);
+        assert.equal(invoiceModel.getValue("terms.code"), "2-10N30");
+        assert.equal(invoiceModel.getValue("taxZone.code"), "VA TAX");
+        assert.equal(invoiceModel.getValue("currency.abbreviation"), "USD");
+
+      });
+      it.skip("The following fields will be set to read only if the customer does not allow " +
+          "free form billto: billtoName, billtoAddress1, billtoAddress2, billtoAddress3 " +
+          "billtoCity, billtoState, billtoPostalCode, billtoCountry, billtoPhone", function () {
+        assert.isFalse(invoiceModel.isReadOnly("billtoName"));
+        assert.isFalse(invoiceModel.isReadOnly("billtoAddress3"));
+        assert.isFalse(invoiceModel.isReadOnly("billtoPhone"));
+        invoiceModel.set({customer: vcol});
+        assert.isTrue(invoiceModel.isReadOnly("billtoName"));
+        assert.isTrue(invoiceModel.isReadOnly("billtoAddress3"));
+        assert.isTrue(invoiceModel.isReadOnly("billtoPhone"));
+
+      });
+      it("If the customer attribute is empty, the above fields should be unset.", function () {
+        assert.isString(invoiceModel.get("billtoName"));
+        invoiceModel.set({customer: null});
+        assert.isUndefined(invoiceModel.get("billtoName"));
+        assert.isUndefined(invoiceModel.get("billtoAddress2"));
+        assert.isUndefined(invoiceModel.get("billtoPhone"));
+        assert.isNull(invoiceModel.get("salesRep"));
+        assert.isNull(invoiceModel.get("terms"));
+        assert.isNull(invoiceModel.get("taxZone"));
+        assert.isNull(invoiceModel.get("currency"));
+      });
+
+
+
+
+
+
+
+
+
+
+    });
+
+    // XXX TODO
+    // XM.InvoiceListItem includes a "post" function that dispatches a XM.Invoice.post function to the server
+    // XM.InvoiceListItem includes a "void" function that dispatches a XM.Invoice.void function to the server
+
 
   };
 /*

@@ -14,6 +14,9 @@ white:true*/
   XM.Invoice = XM.Document.extend({
     /** @scope XM.Invoice.prototype */
 
+    //
+    // Attributes
+    //
     recordType: 'XM.Invoice',
 
     documentKey: 'number',
@@ -36,10 +39,103 @@ white:true*/
       "isPrinted"
     ],
 
+    // like sales order, minus contact info
+    billtoAttrArray: [
+      "billtoName",
+      "billtoAddress1",
+      "billtoAddress2",
+      "billtoAddress3",
+      "billtoCity",
+      "billtoState",
+      "billtoPostalCode",
+      "billtoCountry",
+      "billtoPhone",
+    ],
+
+    //
+    // Core functions
+    //
+    bindEvents: function (attributes, options) {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
+      this.on("change:customer", this.customerDidChange);
+    },
+
+    //
+    // Model-specific functions
+    //
+
+    // Refactor potential: sales_order_base minus shipto stuff minus prospect stuff
+    applyCustomerSettings: function () {
+      var customer = this.get("customer"),
+        isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false;
+
+      this.setReadOnly("lineItems", !customer);
+
+      // Set read only state for free form billto
+      this.setReadOnly(this.billtoAttrArray, !isFreeFormBillto);
+    },
+
     calculateTotals: function () {
       // TODO
-    }
+    },
 
+    // Refactor potential: taken largely from sales_order_base
+    customerDidChange: function (model, value, options) {
+      var customer = this.get("customer"),
+        billtoContact = customer && customer.get("billingContact"),
+        billtoAddress = billtoContact && billtoContact.get("address"),
+        billtoAttrs,
+        that = this,
+        unsetBilltoAddress = function () {
+          that.unset("billtoName")
+              .unset("billtoAddress1")
+              .unset("billtoAddress2")
+              .unset("billtoAddress3")
+              .unset("billtoCity")
+              .unset("billtoState")
+              .unset("billtoPostalCode")
+              .unset("billtoCountry");
+        };
+
+      this.applyCustomerSettings();
+
+      // Set customer default data
+      if (customer) {
+        billtoAttrs = {
+          billtoName: customer.get("name"),
+          salesRep: customer.get("salesRep"),
+          commission: customer.get("commission"),
+          terms: customer.get("terms"),
+          taxZone: customer.get("taxZone"),
+          currency: customer.get("currency") || this.get("currency"),
+          billtoPhone: billtoContact.getValue("phone")
+        };
+        if (billtoAddress) {
+          _.extend(billtoAttrs, {
+            billtoAddress1: billtoAddress.getValue("line1"),
+            billtoAddress2: billtoAddress.getValue("line2"),
+            billtoAddress3: billtoAddress.getValue("line3"),
+            billtoCity: billtoAddress.getValue("city"),
+            billtoState: billtoAddress.getValue("state"),
+            billtoPostalCode: billtoAddress.getValue("postalCode"),
+            billtoCountry: billtoAddress.getValue("country"),
+          });
+        } else {
+          unsetBilltoAddress();
+        }
+        this.set(billtoAttrs);
+      } else {
+        unsetBilltoAddress();
+        this.unset("salesRep")
+            .unset("commission")
+            .unset("terms")
+            .unset("taxZone")
+            .unset("shipVia")
+            .unset("currency")
+            .unset("billtoPhone");
+
+      }
+    },
   });
 
   /**
