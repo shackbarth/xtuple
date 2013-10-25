@@ -16,9 +16,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     columns: [
       {classes: "grid-item", content: "_number".loc(), rows: [
         {readOnlyAttr: "number",
-          editor: {kind: "XV.InputWidget", attr: "number"}},
+          editor: {kind: "XV.InputWidget", attr: "number",
+            placeholder: "number".loc()}},
         {readOnlyAttr: "name",
-          editor: {kind: "XV.InputWidget", attr: "name"}}
+          editor: {kind: "XV.InputWidget", attr: "name",
+            placeholder: "name".loc()}}
       ]},
       {classes: "user", content: "_user".loc(), rows: [
         {readOnlyAttr: "owner.username",
@@ -133,19 +135,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     editorMixin: salesOrderGridRow,
     summary: "XV.SalesSummaryPanel",
     workspace: "XV.SalesOrderLineWorkspace",
-    parentKey: "salesOrder",
-
-    gridRowTapEither: function (index, indexStart) {
-      this.inherited(arguments);
-
-      // focus on the first editable widget
-      var row = this.$.editableGridRow.$;
-      if (row.itemSiteWidget.getDisabled()) {
-        row.quantityWidget.focus();
-      } else {
-        row.itemSiteWidget.focus();
-      }
-    },
+    parentKey: "salesOrder"
   });
 
   var quoteGridRow = {};
