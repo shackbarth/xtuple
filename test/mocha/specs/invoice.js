@@ -446,7 +446,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       @property {Boolean} isVoid
     */
     it("A model called XM.InvoiceListItem extending XM.Info should exist", function () {
-      // XXX  > Money "total"
       // XXX  > Boolean "isOpen" // = posted(?) but not closed. requires left join on receivable table
       assert.isFunction(XM.InvoiceListItem);
       var invoiceListItemModel = new XM.InvoiceListItem(),
@@ -454,7 +453,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
       assert.isTrue(invoiceListItemModel instanceof XM.Info);
       assert.equal(invoiceListItemModel.idAttribute, "number");
-      console.log(invoiceListItemModel.getAttributeNames());
       assert.equal(_.difference(attrs, invoiceListItemModel.getAttributeNames()).length, 0);
     });
     it("Only users that have ViewMiscInvoices or MaintainMiscInvoices may read XV.InvoiceListItem", function () {
@@ -513,22 +511,14 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     // XM.InvoiceListItem includes a "post" function that dispatches a XM.Invoice.post function to the server
     // XM.InvoiceListItem includes a "void" function that dispatches a XM.Invoice.void function to the server
 
-
-
-
-  };
-/*
-
-***** CHANGES MADE TO CORE APPLICATION ******
-    XXX is the sourceType in xt.doc INV ? (I is item)
-    @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
-    XXX authorized credit? @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - oustandingCredit.
-      - If sum calculates to less than zero, then the balance is zero.
-    TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
-
-
-
-* Invoices that are posted may not be deleted.
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description When the customer changes, the billto information should be populated from
+        the customer, along with the salesRep, commission, terms, taxZone, and currency. The billto
+        fields will be read-only if the customer does not allow free-form billto.
+    */
+    /*
 * When the customer changes on XM.Invoice, the following customer data should be populated from the customer:
   > billtoName (= customer.name)
   > billtoAddress1, billtoAddress2, billtoAddress3, billtoCity, billtoState, billtoPostalCode, billtoCountry should be populated by customer.billingContact.address.
@@ -549,6 +539,25 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     - billtoCountry
     - billtoPhone
   > If the customer attribute is empty, the above fields should be unset.
+*/
+
+  };
+/*
+
+***** CHANGES MADE TO CORE APPLICATION ******
+    XXX is the sourceType in xt.doc INV ? (I is item)
+    @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
+    XXX authorized credit? @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - oustandingCredit.
+      - If sum calculates to less than zero, then the balance is zero.
+    TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
+
+
+
+    TODO * Invoices that are posted may not be deleted.
+
+
+
+
 
 * When currency or invoice date is changed outstanding credit should be recalculated.
 * When invoice date is changed allocated credit should be recalculated.
