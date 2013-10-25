@@ -283,6 +283,27 @@
         }
       }
     ],
+    "extensions": [
+      {
+        "table": "xt.localeext",
+        "relations": [
+          {
+            "column": "localeext_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "hoursScale",
+            "attr": {
+              "type": "Number",
+              "column": "localeext_hours_scale"
+            }
+          }
+        ],
+        "isSystem": true
+      }
+    ],
     "isSystem": true
   },
   {

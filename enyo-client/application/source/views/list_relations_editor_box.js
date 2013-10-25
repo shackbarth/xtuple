@@ -263,7 +263,9 @@ trailing:true, white:true*/
   XV.QuoteLineMixin = {
     create: function () {
       this.inherited(arguments);
-      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+      if (this.$.promiseDate) {
+        this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+      }
 
       // Loop through the components and set the specific attribute information for the Money widgets
       this.getComponents().forEach(function (e) {
@@ -290,7 +292,7 @@ trailing:true, white:true*/
         parent.off("change:quoteDate", this.quoteDateChanged, this);
         this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
       }
-      XV.EditorMixin.setValue.apply(this, arguments);
+      XV.RelationsEditor.prototype.setValue.apply(this, arguments);
       // Add new bindings
       if (this.value) {
         parent = value.getParent();
@@ -347,7 +349,7 @@ trailing:true, white:true*/
         parent.off("change:orderDate", this.salesOrderDateChanged, this);
         this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
       }
-      XV.EditorMixin.setValue.apply(this, arguments);
+      XV.RelationsEditor.prototype.setValue.apply(this, arguments);
       // Add new bindings
       if (this.value) {
         parent = value.getParent();

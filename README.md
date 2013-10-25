@@ -33,6 +33,7 @@ View the [Release Notes](RELEASE.md) to see a change log.
 ### Additional Resources
 
   * [Setting up an Ubuntu Virtual Machine](https://github.com/xtuple/xtuple/wiki/Setting-up-an-Ubuntu-Virtual-Machine)
+  * [Creating a Virtual Development Environment using Vagrant](https://github.com/xtuple/xtuple-vagrant/blob/master/README.md)
   * [Architectural Overview](https://github.com/xtuple/xtuple/wiki/Overview)
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)
   * [API documentation](http://xtuple.com/jsdoc)
