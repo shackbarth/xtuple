@@ -42,8 +42,7 @@ regexp:true, undef:true, trailing:true, white:true */
             onfocus: "receiveFocus"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-            {kind: "onyx.IconButton", src: "/assets/triangle-down-large.png",
-              classes: "xv-relationwidget-icon"},
+            {kind: "onyx.IconButton", classes: "icon-folder-open-alt"},
             {name: 'popupMenu', floating: true, kind: "onyx.Menu",
               components: [
               {kind: "XV.MenuItem", name: 'searchItem', content: "_search".loc()},
@@ -698,6 +697,7 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.UserAccountWidget",
+    classes: "xv-useraccount-widget",
     kind: "XV.RelationWidget",
     collection: "XM.UserAccountRelationCollection",
     list: "XV.UserAccountList",

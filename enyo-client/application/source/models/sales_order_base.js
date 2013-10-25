@@ -227,15 +227,19 @@ white:true*/
     Mixin for shared quote or sales order functions.
   */
   XM.SalesOrderBaseMixin = {
+    isActive: function () {
+      var K = XM.SalesOrderBase,
+        status = this.get("status");
+      return status === K.OPEN_STATUS;
+    },
+
     /**
     Returns quote or sales order status as a localized string.
 
     @returns {String}
     */
     getOrderStatusString: function () {
-      var K = XM.SalesOrderBase,
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+      return this.isActive() ? "_open".loc() : "_closed".loc();
     }
   };
 
