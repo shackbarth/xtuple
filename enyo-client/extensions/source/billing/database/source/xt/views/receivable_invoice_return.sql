@@ -13,8 +13,8 @@ select xt.create_view('xt.receivable_invoice_return', $$
     aropen_curr_id as currency,
     aropen_paid as paid,
     0 as balance,
-    0 as baseAmount,
-    0 as basePaid,
+    0 as base_amount,
+    0 as base_paid,
     aropen_notes as notes
   from aropen
   union

@@ -21,4 +21,24 @@ XT.extensions.billing.initLists = function () {
   });
 
   XV.registerModelList('XM.SalesCategory', 'XV.SalesCategoryList');
+
+  // ..........................................................
+  // RECEIVABLES
+  //
+
+  enyo.kind({
+    name: "XV.ReceivableList",
+    kind: "XV.List",
+    label: "_receivables".loc(),
+    collection: "XM.ReceivableListItemCollection",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "documentNumber"}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList('XM.Receivable', 'XV.ReceivableList');
 };

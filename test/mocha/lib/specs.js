@@ -249,7 +249,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
 
   exports.receivable = {
     recordType: "XM.Receivable",
-    //listKind: "XV.ReasonCodeList",
+    skipSmoke: true,
+    listKind: "XV.ReceivableListItem",
     collectionType: null,
     cacheName: null,
     enforceUpperKey: true,
@@ -272,7 +273,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       customer: {number: "TTOYS"},
       documentDate: new Date(),
       dueDate: new Date(),
-      amount: 0,
+      amount: 100,
       currency: {abbreviation: "USD"},
       documentNumber: "DocumentNumber" + Math.random()
     },
@@ -280,6 +281,18 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     defaults: {
       //currency: XT.baseCurrency()
     },
+    afterSaveActions: [{
+      it: "When the status of a receivable changes to READY_CLEAN (edit), the following attributes: " +
+      "customer, documentDate, documentType, documentNumber, terms should be readOnly",
+      action: function (data, next) {
+        assert.include(data.model.readOnlyAttributes, "customer");
+        assert.include(data.model.readOnlyAttributes, "documentDate");
+        assert.include(data.model.readOnlyAttributes, "documentType");
+        assert.include(data.model.readOnlyAttributes, "documentNumber");
+        assert.include(data.model.readOnlyAttributes, "terms");
+        next();
+      }
+    }],
     additionalTests: require("../specs/receivable").additionalTests
   };
 

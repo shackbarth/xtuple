@@ -7,8 +7,7 @@ white:true*/
   "use strict";
 
   // These are hard coded collections that may be turned into tables at a later date
-  var i,
-    K;
+  var i, K;
 
   // Receivable Types
   K = XM.Receivable;
