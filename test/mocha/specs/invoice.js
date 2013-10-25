@@ -557,14 +557,13 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.isFalse(XM.InvoiceRelation.canUpdate());
         assert.isFalse(XM.InvoiceRelation.canDelete());
       });
-
-    /**
-      @member -
-      @memberof Invoice.prototype
-      @description When the customer changes, the billto information should be populated from
-        the customer, along with the salesRep, commission, terms, taxZone, and currency. The billto
-        fields will be read-only if the customer does not allow free-form billto.
-    */
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description When the customer changes, the billto information should be populated from
+          the customer, along with the salesRep, commission, terms, taxZone, and currency. The billto
+          fields will be read-only if the customer does not allow free-form billto.
+      */
       it("When the customer changes on XM.Invoice, the following customer data should be " +
           "populated from the customer: billtoName (= customer.name), billtoAddress1, " +
           "billtoAddress2, billtoAddress3, billtoCity, billtoState, billtoPostalCode, " +
@@ -581,9 +580,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.equal(invoiceModel.getValue("terms.code"), "2-10N30");
         assert.equal(invoiceModel.getValue("taxZone.code"), "VA TAX");
         assert.equal(invoiceModel.getValue("currency.abbreviation"), "USD");
-
       });
-      it.skip("The following fields will be set to read only if the customer does not allow " +
+      it("The following fields will be set to read only if the customer does not allow " +
           "free form billto: billtoName, billtoAddress1, billtoAddress2, billtoAddress3 " +
           "billtoCity, billtoState, billtoPostalCode, billtoCountry, billtoPhone", function () {
         assert.isFalse(invoiceModel.isReadOnly("billtoName"));
@@ -593,7 +591,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.isTrue(invoiceModel.isReadOnly("billtoName"));
         assert.isTrue(invoiceModel.isReadOnly("billtoAddress3"));
         assert.isTrue(invoiceModel.isReadOnly("billtoPhone"));
-
       });
       it("If the customer attribute is empty, the above fields should be unset.", function () {
         assert.isString(invoiceModel.get("billtoName"));
@@ -606,10 +603,72 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.isNull(invoiceModel.get("taxZone"));
         assert.isNull(invoiceModel.get("currency"));
       });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description When currency or invoice date is changed outstanding credit should be recalculated.
+      */
+      it.skip("When currency or invoice date is changed outstanding credit should be recalculated", function () {
 
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description When invoice date is changed allocated credit should be recalculated.
+      */
+      it.skip("When the invoice date is changed allocated credit should be recalculated", function () {
 
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description When subtotal, totalTax or miscCharge are changed, the total should be recalculated.
+      */
+      it.skip("When subtotal, totalTax or miscCharge are changed, the total should be recalculated", function () {
 
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description TotalTax should be recalculated when taxZone changes or taxAdjustments are added or removed.
+      */
+      it.skip("TotalTax should be recalculated when taxZone changes or taxAdjustments are added or removed.", function () {
 
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description When an invoice is loaded where "isPosted" is true, then the following attributes will be made read only:
+          lineItems, number, invoiceDate, terms, salesrep, commission, taxZone, saleType
+      */
+      it.skip("When an invoice is loaded where isPosted is true, then the following " +
+          "attributes will be made read only: lineItems, number, invoiceDate, terms, " +
+          "salesrep, commission, taxZone, saleType", function () {
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Balance should be recalculated when total, allocatedCredit, or outstandingCredit are changed.
+      */
+      it.skip("Balance should be recalculated when total, allocatedCredit, or outstandingCredit are changed", function () {
+
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description AllocatedCredit should be recalculated when XM.InvoiceAllocation records are added or removed.
+      */
+      it.skip("AllocatedCredit should be recalculated when XM.InvoiceAllocation records are added or removed", function () {
+
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description When allocatedCredit or lineItems exist, currency should become read only.
+      */
+      it.skip("When allocatedCredit or lineItems exist, currency should become read only.", function () {
+        //TODO: write code
+      });
 
 
 
@@ -617,47 +676,22 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
 
     });
-
-    // XXX TODO
-    // XM.InvoiceListItem includes a "post" function that dispatches a XM.Invoice.post function to the server
-    // XM.InvoiceListItem includes a "void" function that dispatches a XM.Invoice.void function to the server
-
-
   };
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
+    // XXX TODO
+    // XM.InvoiceListItem includes a "post" function that dispatches a XM.Invoice.post function to the server
+    // XM.InvoiceListItem includes a "void" function that dispatches a XM.Invoice.void function to the server
     XXX is the sourceType in xt.doc INV ? (I is item)
     @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
     XXX authorized credit? @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - oustandingCredit.
       - If sum calculates to less than zero, then the balance is zero.
     TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
-
-
-
+    TODO: I'm not doing tax calculations correctly
     TODO * Invoices that are posted may not be deleted.
 
 
-
-
-
-* When currency or invoice date is changed outstanding credit should be recalculated.
-* When invoice date is changed allocated credit should be recalculated.
-* When subtotal, totalTax or miscCharge are changed, the total should be recalculated.
-* totalTax should be recalculated when taxZone changes or taxAdjustments are added or removed.
-* When an invoice is loaded where "isPosted" is true, then the following attributes will be made read only:
-  > lineItems
-  > number
-  > invoiceDate
-  > terms
-  > salesrep
-  > commission
-  > taxZone
-  > saleType
-
-* balance should be recalculated when total, allocatedCredit, or outstandingCredit are changed.
-* allocatedCredit should be recalculated when XM.InvoiceAllocation records are added or removed.
-* When allocatedCredit or lineItems exist, currency should become read only.
 * XM.Invoice should check the setting for "InvcNumberGeneration" to determine numbering policy.
 * Save validation:
   > The total must not be less than zero.

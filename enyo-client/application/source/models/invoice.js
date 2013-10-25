@@ -58,11 +58,28 @@ white:true*/
     bindEvents: function (attributes, options) {
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on("change:customer", this.customerDidChange);
+      this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
+      this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
+      this.on("change:invoiceDate add:allocations remove:allocations", this.calculateAllocatedCredit);
+      this.on("change:subtotal change:totalTax change:miscCharge", this.calculateTotals);
+      this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
+      this.on("change:total change:allocatedCredit change:outstandingCredit", this.calculateBalance);
+      this.on('allocatedCredit', this.allocatedCreditDidChange);
+      this.on('statusChange', this.statusDidChange);
     },
+
+    //
+    // Shared code with sales order
+    // temp until we refactor these together
+    //
+    lineItemsDidChange: XM.SalesOrderBase.prototype.lineItemsDidChange,
 
     //
     // Model-specific functions
     //
+    allocatedCreditDidChange: function () {
+      this.setReadOnly("currency", this.get("allocatedCredit"));
+    },
 
     // Refactor potential: sales_order_base minus shipto stuff minus prospect stuff
     applyCustomerSettings: function () {
@@ -75,7 +92,36 @@ white:true*/
       this.setReadOnly(this.billtoAttrArray, !isFreeFormBillto);
     },
 
+    applyIsPostedRules: function () {
+      var isPosted = this.get("isPosted");
+
+      this.setReadOnly("lineItems", isPosted);
+      this.setReadOnly("number", isPosted);
+      this.setReadOnly("invoiceDate", isPosted);
+      this.setReadOnly("terms", isPosted);
+      this.setReadOnly("salesRep", isPosted);
+      this.setReadOnly("commission", isPosted);
+      this.setReadOnly("taxZone", isPosted);
+      this.setReadOnly("saleType", isPosted);
+    },
+
+    calculateAllocatedCredit: function () {
+      // TODO
+    },
+
+    calculateBalance: function () {
+      // TODO
+    },
+
+    calculateOutstandingCredit: function () {
+      // TODO
+    },
+
     calculateTotals: function () {
+      // TODO
+    },
+
+    calculateTotalTax: function () {
       // TODO
     },
 
@@ -136,6 +182,16 @@ white:true*/
 
       }
     },
+
+    statusDidChange: function () {
+      var status = this.getStatus();
+      XM.SalesOrderBase.prototype.statusDidChange.apply(this, arguments);
+      if (status === XM.Model.READY_CLEAN) {
+        this.applyIsPostedRules();
+        this.allocatedCreditDidChange();
+      }
+    }
+
   });
 
   /**
