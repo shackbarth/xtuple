@@ -520,7 +520,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
-    XXX @parameter {InvoiceRelation} recurringInvoice
     XXX is the sourceType in xt.doc INV ? (I is item)
     @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
     XXX authorized credit? @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - oustandingCredit.
