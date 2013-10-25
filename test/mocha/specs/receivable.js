@@ -11,7 +11,10 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
     assert = require("chai").assert,
-    model, taxModel, applicationModel, listModel;
+    model, taxModel,
+    applicationModel, listModel,
+    listModelCollection,
+    modelTaxCollection;
 
   var additionalTests = function () {
     // it.skip("The 'ViewAROpenItems' and 'EditAROpenItem' privileges should be added to XM.SalesCustomer read privileges", function () {
@@ -23,6 +26,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
       describe("XM.Receivable",
         function () {
           before(function () {
+            assert.isDefined(XM.Receivable);
             model = new XM.Receivable();
             assert.isTrue(model instanceof XM.Document);
             model.initialize(null, {isNew: true});
@@ -30,7 +34,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
 
           it("A model extending XM.Document should exist in the billing extension",
             function () {
-              assert.isDefined(XM.Receivable);
               assert.isDefined(model);
             });
 
@@ -41,8 +44,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
               assert.equal(model.get("balance"), 10);
             });
 
-          it.skip("The numbering policy should be XM.Document.AUTO_NUMBER", function () {
-            assert.equal(XM.Receivable.numberPolicySetting, XM.Document.AUTO_NUMBER);
+          it("The numbering policy should be XM.Document.AUTO_NUMBER", function () {
+            assert.equal(model.numberPolicySetting, XM.Document.AUTO_NUMBER);
           });
 
           it("Should be extended to include the following constants:" +
@@ -216,16 +219,19 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     });
 
     describe("XM.ReceivableListItem", function () {
-      before(function (done) {
-        listModel = new XM.ReceivableListItem();
-        listModel.fetch({uuid: "6087", success: done()});
+      before(function () {
+
       });
 
       it("A model called XM.ReceivableListItem should exist in the billing extension", function (done) {
         assert.isDefined(XM.ReceivableListItem);
+        listModel = new XM.ReceivableListItem();
+        listModel.fetch({uuid: "6087", success: done()});
+
+        listModelCollection = new XM.ReceivableListItemCollection();
       });
 
-      it.skip("XM.ReceivableListItem extends XM.Model", function () {
+      it("XM.ReceivableListItem extends XM.Model", function () {
         assert.isTrue(listModel instanceof XM.Model);
       });
 
@@ -259,21 +265,22 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         });
       });
 
-      it.skip("XM.ReceivableListItemCollection based on XM.Collection class should exist", function () {
-        assert.fail(true, true, "not implemented");
+      it("XM.ReceivableListItemCollection based on XM.Collection class should exist", function () {
+        assert.isDefined(listModelCollection);
+        assert.isTrue(listModelCollection instanceof XM.Collection);
       });
 
-      it.skip("A List view that represents the XM.ReceivableListItem collection should exist in the billing extension", function () {
-        assert.fail(true, true, "not implemented");
-      });
     });
 
     describe("XM.ReceivableList", function () {
       before(function () {
-        assert.isDefined("XM.ReceivableList");
+        assert.isDefined(XM.ReceivableList);
       });
 
-      it.skip("A List view that represents the XM.ReceivableListItemCollection collection should exist in the billing extension", function () {});
+      it("A List view that represents the XM.ReceivableListItem collection should exist in the billing extension", function () {
+        assert.equal(XM.ReceivableList.collection, "XM.ReceivableListItemCollection");
+      });
+
       it.skip("No attribute will be designated as the key", function () {});
       it.skip("The list should include headers", function () {});
       it.skip("The list should include a footer with a total amount in base currency", function () {});

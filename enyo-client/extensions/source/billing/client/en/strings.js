@@ -25,6 +25,8 @@
     "_maintainSalesCategory": "Maintain Sales Category",
     "_nextARMemoNumber": "Next Receivables Memo",
     "_nextCashRcptNumber": "Next Cash Receipt",
+    "_receivable": "Receivable",
+    "_receivables": "Receivables",
     "_recurringInvoiceBuffer": "Recurring Invoice Buffer Days",
     "_viewAROpenItems": "View Receivables",
     "_viewMiscInvoices": "View Invoices"

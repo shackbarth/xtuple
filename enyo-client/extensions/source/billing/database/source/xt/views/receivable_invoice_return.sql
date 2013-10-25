@@ -35,6 +35,7 @@ select xt.create_view('xt.receivable_invoice_return', $$
     0 as base_paid,
     invchead_notes as notes
   from invchead
+  where invchead_posted = false
   union
   select cmhead_id as id,
     cmhead_number as natural_key,
@@ -53,4 +54,6 @@ select xt.create_view('xt.receivable_invoice_return', $$
     0 as base_paid,
     cmhead_comments as notes
   from cmhead
+  where cmhead_posted = false
+
 $$);
