@@ -16,6 +16,7 @@
     smoke = require('./smoke'),
     specs = require('./specs'),
     assert = require("chai").assert,
+    zombieAuth = require("./zombie_auth"),
     _ = require("underscore");
 
   _.each(specs, function (spec) {
@@ -30,6 +31,15 @@
       //
       if (!spec.skipCrud) {
         crud.runAllCrud(spec);
+      } else {
+        // even if we skip CRUD we have to create a model
+        it('can be loaded with a zombie session', function (done) {
+          this.timeout(40 * 1000);
+          zombieAuth.loadApp({callback: done, verbose: false /* data.verbose */});
+        });
+        it('can be created', function () {
+          spec.model = new XM[spec.recordType.substring(3)]();
+        });
       }
 
       //

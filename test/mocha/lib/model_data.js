@@ -105,7 +105,7 @@ Here's how you can use CRUD to create a model to use for your own tests:
   /**
     Useful for any model that uses XM.SalesOrderLineBase
    */
-  var getBeforeSaveAction = function (lineRecordType) {
+  var getBeforeSaveAction = exports.getBeforeSaveAction = function (lineRecordType) {
     return function (data, next) {
       var lineItem = new XM[lineRecordType.substring(3)](),
         itemInitialized = function (submodels) {

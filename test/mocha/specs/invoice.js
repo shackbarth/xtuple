@@ -377,6 +377,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         invoiceModel.get("lineItems").add(dummyModel);
         invoiceModel.get("lineItems").add(lineModel);
         assert.equal(lineModel.get("lineNumber"), 2);
+        invoiceModel.get("lineItems").remove(dummyModel);
         // TODO: be more thorough
       });
       /**
@@ -419,6 +420,16 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           "customer.itemPrice dispatch function based on the billed value.", function () {
         // TODO
         assert.fail();
+      });
+    });
+    describe("XM.InvoiceListItem", function () {
+      it("XM.InvoiceListItem includes a post function that dispatches a XM.Invoice.post function to the server", function () {
+        var model = new XM.InvoiceListItem();
+        assert.isFunction(model.post);
+      });
+      it("XM.InvoiceListItem includes a void function that dispatches a XM.Invoice.void function to the server", function () {
+        var model = new XM.InvoiceListItem();
+        assert.isFunction(model.post);
       });
     });
     describe("XM.Invoice", function () {
@@ -667,11 +678,27 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @description When allocatedCredit or lineItems exist, currency should become read only.
       */
       it.skip("When allocatedCredit or lineItems exist, currency should become read only.", function () {
-        //TODO: write code
+
       });
-
-
-
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description To save, the invoice total must not be less than zero and there must be at least one line item.
+      */
+      it("Save validation: The total must not be less than zero", function () {
+        invoiceModel.set({customer: ttoys, number: "98765"});
+        assert.isUndefined(JSON.stringify(invoiceModel.validate(invoiceModel.attributes)));
+        invoiceModel.set({total: -1});
+        assert.isObject(invoiceModel.validate(invoiceModel.attributes));
+        invoiceModel.set({total: 1});
+        assert.isUndefined(JSON.stringify(invoiceModel.validate(invoiceModel.attributes)));
+      });
+      it("Save validation: There must be at least one line item.", function () {
+        var lineItems = invoiceModel.get("lineItems");
+        assert.isUndefined(JSON.stringify(invoiceModel.validate(invoiceModel.attributes)));
+        lineItems.remove(lineItems.at(0));
+        assert.isObject(invoiceModel.validate(invoiceModel.attributes));
+      });
 
 
 
@@ -681,21 +708,14 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
 ***** CHANGES MADE TO CORE APPLICATION ******
     // XXX TODO
-    // XM.InvoiceListItem includes a "post" function that dispatches a XM.Invoice.post function to the server
-    // XM.InvoiceListItem includes a "void" function that dispatches a XM.Invoice.void function to the server
     XXX is the sourceType in xt.doc INV ? (I is item)
-    @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
     XXX authorized credit? @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - oustandingCredit.
       - If sum calculates to less than zero, then the balance is zero.
     TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
     TODO: I'm not doing tax calculations correctly
     TODO * Invoices that are posted may not be deleted.
+    XXX XM.Invoice should check the setting for "InvcNumberGeneration" to determine numbering policy. this is in sales?!
 
-
-* XM.Invoice should check the setting for "InvcNumberGeneration" to determine numbering policy.
-* Save validation:
-  > The total must not be less than zero.
-  > There must be at least one line item.
 
 * XM.Invoice includes a function "calculateAuthorizedCredit" that
   > Makes a call to the server requesting the total authorized credit for a given

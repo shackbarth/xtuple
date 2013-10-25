@@ -36,7 +36,8 @@ white:true*/
     readOnlyAttributes: [
       "isPosted",
       "isVoid",
-      "isPrinted"
+      "isPrinted",
+      "miscCharge"
     ],
 
     // like sales order, minus contact info
@@ -190,6 +191,36 @@ white:true*/
         this.applyIsPostedRules();
         this.allocatedCreditDidChange();
       }
+    },
+
+    // very similar to sales order, but minus shipto and prospect checks
+    validate: function () {
+      var customer = this.get("customer"),
+        total = this.get("total"),
+        lineItems = this.get("lineItems"),
+        validItems,
+        error;
+
+      error = XM.Document.prototype.validate.apply(this, arguments);
+      if (error) { return error; }
+
+      if (total < 0) {
+        return XT.Error.clone('xt2011');
+      }
+
+      // Check for line items has to consider models that
+      // are marked for deletion, but not yet saved.
+      // The prevStatus is used because the current
+      // status is BUSY_COMMITTING once save has begun.
+      validItems = _.filter(lineItems.models, function (item) {
+        return item._prevStatus !== XM.Model.DESTROYED_DIRTY;
+      });
+
+      if (!validItems.length) {
+        return XT.Error.clone('xt2012');
+      }
+
+      return;
     }
 
   });
@@ -232,7 +263,21 @@ white:true*/
 
     recordType: 'XM.InvoiceListItem',
 
-    editableModel: 'XM.Invoice'
+    editableModel: 'XM.Invoice',
+
+    post: function () {
+      this.dispatch("XM.Invoice", "post", [this.id], {
+        success: function () { console.log("success!"); },
+        error: function () { console.log("error!"); }
+      });
+    },
+
+    void: function () {
+      this.dispatch("XM.Invoice", "void", [this.id], {
+        success: function () { console.log("success!"); },
+        error: function () { console.log("error!"); }
+      });
+    }
 
   });
 

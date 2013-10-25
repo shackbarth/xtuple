@@ -169,6 +169,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     @parameter {InvoiceItem} items
   */
   exports.invoice = {
+    skipCrud: true, // XXX
     skipSmoke: true, // XXX
     recordType: "XM.Invoice",
     collectionType: "XM.InvoiceListItemCollection",
@@ -232,6 +233,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       customer: {number: "TTOYS"}
     },
     updatableField: "notes",
+    beforeSaveActions: [{it: 'sets up a valid line item',
+      action: require("./model_data").getBeforeSaveAction("XM.InvoiceLine")}],
     additionalTests: require("../specs/invoice").additionalTests
   };
 
