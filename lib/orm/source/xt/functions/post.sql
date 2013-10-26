@@ -247,7 +247,12 @@ create or replace function xt.post(data_hash text) returns text as $$
       }
 
       ret = obj.isDispatchable ? method() : false;
-      ret = dispatch.isJSON ? JSON.stringify(ret, null, prettyPrint) : ret;
+
+      /**
+       * Remove the requirement of passing 'isJSON' around.
+       * Based on underscore: http://underscorejs.org/docs/underscore.html#section-88
+       */
+      ret = JSON.stringify(ret, null, prettyPrint);
     }
 
     /* Unset XT.username so it isn't cached for future queries. */

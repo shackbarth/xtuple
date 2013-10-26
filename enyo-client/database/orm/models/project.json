@@ -91,7 +91,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prj_due_date",
           "required": true
         }
@@ -595,7 +595,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prj_due_date"
         }
       },
@@ -870,7 +870,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prj_due_date"
         }
       },
@@ -925,42 +925,42 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Number",
+          "type": "Hours",
           "column": "prj_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Number",
+          "type": "Hours",
           "column": "prj_hours_actual"
         }
       },
       {
         "name": "balanceHours",
         "attr": {
-          "type": "Number",
+          "type": "Hours",
           "column": "prj_hours_balance"
         }
       },
       {
         "name": "budgetedExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prj_exp_budget"
         }
       },
       {
         "name": "actualExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prj_exp_actual"
         }
       },
       {
         "name": "balanceExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prj_exp_balance"
         }
       }
@@ -1293,28 +1293,28 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Number",
+          "type": "Hours",
           "column": "prjtask_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Number",
+          "type": "Hours",
           "column": "prjtask_hours_actual"
         }
       },
       {
         "name": "budgetedExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_budget"
         }
       },
       {
         "name": "actualExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_actual"
         }
       },
@@ -1328,7 +1328,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prjtask_due_date",
           "required": true
         }
@@ -1515,28 +1515,28 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Number",
+          "type": "Hours",
           "column": "prjtask_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Number",
+          "type": "Hours",
           "column": "prjtask_hours_actual"
         }
       },
       {
         "name": "budgetedExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_budget"
         }
       },
       {
         "name": "actualExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_actual"
         }
       },
@@ -1550,7 +1550,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prjtask_due_date",
           "required": true
         }
@@ -1769,35 +1769,35 @@
       {
         "name": "budgetedHours",
         "attr": {
-          "type": "Number",
+          "type": "Hours",
           "column": "prjtask_hours_budget"
         }
       },
       {
         "name": "actualHours",
         "attr": {
-          "type": "Number",
+          "type": "Hours",
           "column": "prjtask_hours_actual"
         }
       },
       {
         "name": "budgetedExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_budget"
         }
       },
       {
         "name": "actualExpenses",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "prjtask_exp_actual"
         }
       },
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "prjtask_due_date"
         }
       },

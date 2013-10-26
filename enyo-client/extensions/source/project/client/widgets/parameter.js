@@ -18,6 +18,18 @@ trailing:true, white:true*/
     ];
 
     XV.appendExtension("XV.IncidentListParameters", extensions);
+
+    // ..........................................................
+    // PROJECT
+    //
+
+    XV.ProjectListParameters.prototype.characteristicsRole = 'isProjects';
+
+    // ..........................................................
+    // TASK
+    //
+
+    XV.ProjectTaskListParameters.prototype.characteristicsRole = 'isTasks';
   };
 
 }());

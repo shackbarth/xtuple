@@ -93,6 +93,9 @@ white:true*/
       {kind: "XV.QuoteLineCharacteristicCombobox", name: "combobox", attr: "value", showLabel: false},
       {name: "price"}
     ],
+    disabledChanged: function (oldValue) {
+      this.$.combobox.setDisabled(this.disabled);
+    },
     /**
       The price display is bound to the price attribute of the model, although we only want
       to show it if the quote line's item isSold
@@ -172,6 +175,9 @@ white:true*/
       this.inherited(arguments);
       // just undo the super-class function.
       this.show();
+    },
+    disabledChanged: function () {
+      // Over-ride: there is no "new" button here.
     },
     setValue: function (value) {
       this.inherited(arguments);

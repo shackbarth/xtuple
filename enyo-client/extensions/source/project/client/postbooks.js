@@ -17,7 +17,8 @@ trailing:true, white:true*/
       {name: "classCodeList", kind: "XV.ClassCodeList"},
       {name: "unitList", kind: "XV.UnitList"},
       {name: "stateList", kind: "XV.StateList"},
-      {name: "countryList", kind: "XV.CountryList"}
+      {name: "countryList", kind: "XV.CountryList"},
+      {name: "projectTypeList", kind: "XV.ProjectTypeList"}
     ];
 
     XT.app.$.postbooks.appendPanels("setup", panels);

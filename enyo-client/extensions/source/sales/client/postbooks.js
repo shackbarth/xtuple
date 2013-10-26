@@ -18,6 +18,7 @@ trailing:true, white:true*/
     //
 
     panels = [
+      {name: "bankAccountList", kind: "XV.BankAccountList"},
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
       {name: "saleTypeList", kind: "XV.SaleTypeList"},
@@ -70,15 +71,21 @@ trailing:true, white:true*/
     XT.app.$.postbooks.insertModule(module, 0);
 
     relevantPrivileges = [
+      "AlterPackDate",
       "ConfigureSO",
       "ConfigureCC",
-      "ProcessCreditCards",
+      "DeleteItemMasters",
+      "MaintainBankAccounts",
+      "MaintainCustomerGroups",
+      "CreateSOForHoldCustomer",
+      "CreateSOForWarnCustomer",
       "MaintainCustomerMasters",
       "MaintainFreightClasses",
-      "MaintainCustomerGroups",
+      "MaintainItemMasters",
       "MaintainQuotes",
       "MaintainSalesOrders",
       "MaintainSalesReps",
+      "MaintainShipVias",
       "MaintainShipZones",
       "MaintainTaxAssignments",
       "MaintainTaxClasses",
@@ -91,13 +98,16 @@ trailing:true, white:true*/
       "MaintainTerms",
       "MaintainSaleTypes",
       "OverridePrice",
+      "OverrideSODate",
       "OverrideTax",
+      "ProcessCreditCards",
       "ShowMarginsOnSalesOrder",
       "UpdateCustomerCreditStatus",
       "ViewCosts",
       "ViewCustomerMasters",
       "ViewFreightClasses",
       "ViewCustomerGroups",
+      "ViewItemMasters",
       "ViewQuotes",
       "ViewTaxAssignments",
       "ViewTaxClasses",

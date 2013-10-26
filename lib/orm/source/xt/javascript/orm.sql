@@ -104,9 +104,9 @@ select xt.install_js('XT','Orm','xtuple', $$
     var verifyOrmType = function (ormType, columnType) {
       var ormTypeMappings = {
         "B": ["Boolean"],
-        "D": ["Date"],
-        "N": ["Cost", "ExtendedPrice", "ListPrice", "Money", "Number", 
-          "Percent", "PurchasePrice", "Quantity", "SalesPrice", "UnitRatio", "Weight"],
+        "D": ["Date","DueDate"],
+        "N": ["Cost", "ExtendedPrice", "Hours", "Money", "Number", "Percent",
+          "PurchasePrice", "Quantity", "QuantityPer", "SalesPrice", "UnitRatio", "Weight"],
         "S": ["String"],
         "U": ["String"], /* e.g. char */
         "X": ["Null"]
@@ -368,6 +368,19 @@ select xt.install_js('XT','Orm','xtuple', $$
     }
 
     return false;
+  };
+
+  /**
+    Returns matching property from the propreties array in an ORM map.
+
+    @param {Object} ORM
+    @param {String} Property name
+    @returns String
+  */
+  XT.Orm.getType = function (orm, name) {
+    var prop = XT.Orm.getProperty(orm, name);
+    return prop.attr ? prop.attr.type : 
+      prop.toOne ? prop.toOne.type : prop.toMany.type;
   };
 
   /**

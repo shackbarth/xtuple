@@ -38,7 +38,11 @@ white:true*/
 
     parentKey: "quote",
 
-    lineCharacteristicRecordType: "XM.QuoteLineCharacteristic"
+    lineCharacteristicRecordType: "XM.QuoteLineCharacteristic",
+
+    isActive: function () {
+      this.getValue("quote.isActive");
+    }
 
   });
 
