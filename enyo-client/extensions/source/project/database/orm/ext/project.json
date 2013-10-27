@@ -237,53 +237,31 @@
           "column": "prj_id",
           "inverse": "project"
         }
-      }     
+      },
+      {
+        "name": "workflow",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectWorkflow",
+          "column": "prj_id",
+          "inverse": "parent"
+        }
+      }
     ],
     "isSystem": true
   },
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "ProjectToDo",
-    "table": "xt.todoiteminfo",
-    "idSequenceName": "todoitem_todoitem_id_seq",
-    "isRest": true,
-    "lockable": true,
-    "lockTable": "todoitem",
-    "comment": "ToDo Map",
-    "privileges": {
-      "all": {
-        "create": "MaintainAllToDoItems",
-        "read": "ViewAllToDoItems",
-        "update": "MaintainAllToDoItems",
-        "delete": "MaintainAllToDoItems"
-      },
-      "personal": {
-        "create": "MaintainPersonalToDoItems",
-        "read": "ViewPersonalToDoItems",
-        "update": "MaintainPersonalToDoItems",
-        "delete": "MaintainPersonalToDoItems",
-        "properties": [
-          "owner.username",
-          "assignedTo.username"
-        ]
-      },
-      "attribute": {
-        "owner": {
-          "create": "EditOwner",
-          "update": "EditOwner"
-        },
-        "assignedTo": {
-          "update": "ReassignToDoItems"
-        }
-      }
-    },
+    "type": "ProjectWorkflow",
+    "table": "xt.prjwf",
+    "comment": "Project Workflow Map",
     "properties": [
       {
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "todoitem_id",
+          "column": "wf_id",
           "isPrimaryKey": true
         }
       },
@@ -296,10 +274,25 @@
         }
       },
       {
+        "name": "parent",
+        "attr": {
+          "type": "Number",
+          "column": "wf_parent_id",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "parentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wf_parent_status"
+        }
+      },
+      {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "todoitem_name",
+          "column": "wf_name",
           "required": true
         }
       },
@@ -307,58 +300,35 @@
         "name": "description",
         "attr": {
           "type": "String",
-          "column": "todoitem_description"
-        }
-      },
-      {
-        "name": "account",
-        "toOne": {
-          "isNested": true,
-          "type": "AccountRelation",
-          "column": "todoitem_crmacct_id"
-        }
-      },
-      {
-        "name": "contact",
-        "toOne": {
-          "isNested": true,
-          "type": "ContactRelation",
-          "column": "todoitem_cntct_id"
+          "column": "wf_description"
         }
       },
       {
         "name": "status",
         "attr": {
           "type": "String",
-          "column": "todoitem_status"
-        }
-      },
-      {
-        "name": "statusProxy",
-        "attr": {
-          "type": "String",
-          "column": "status_proxy"
+          "column": "wf_status"
         }
       },
       {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "todoitem_active"
+          "column": "wf_active"
         }
       },
       {
         "name": "startDate",
         "attr": {
           "type": "Date",
-          "column": "todoitem_start_date"
+          "column": "wf_start_date"
         }
       },
       {
         "name": "dueDate",
         "attr": {
           "type": "Date",
-          "column": "todoitem_due_date",
+          "column": "wf_due_date",
           "required": true
         }
       },
@@ -366,28 +336,28 @@
         "name": "assignDate",
         "attr": {
           "type": "Date",
-          "column": "todoitem_assigned_date"
+          "column": "wf_assigned_date"
         }
       },
       {
         "name": "completeDate",
         "attr": {
           "type": "Date",
-          "column": "todoitem_completed_date"
+          "column": "wf_completed_date"
         }
       },
       {
         "name": "notes",
         "attr": {
           "type": "String",
-          "column": "todoitem_notes"
+          "column": "wf_notes"
         }
       },
       {
         "name": "priority",
         "toOne": {
           "type": "Priority",
-          "column": "todoitem_priority_id"
+          "column": "wf_priority_id"
         }
       },
       {
@@ -395,7 +365,7 @@
         "toOne": {
           "isNested": true,
           "type": "UserAccountRelation",
-          "column": "todoitem_owner_username",
+          "column": "wf_owner_username",
           "inverse": "username"
         }
       },
@@ -404,80 +374,8 @@
         "toOne": {
           "isNested": true,
           "type": "UserAccountRelation",
-          "column": "todoitem_username",
+          "column": "wf_assigned_username",
           "inverse": "username"
-        }
-      },
-      {
-        "name": "alarms",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoAlarm",
-          "column": "todoitem_id",
-          "inverse": "toDo"
-        }
-      },
-      {
-        "name": "comments",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoComment",
-          "column": "todoitem_id",
-          "inverse": "toDo"
-        }
-      },
-      {
-        "name": "accounts",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoAccount",
-          "column": "todoitem_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "contacts",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoContact",
-          "column": "todoitem_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "items",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoItem",
-          "column": "todoitem_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "files",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoFile",
-          "column": "todoitem_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "urls",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoUrl",
-          "column": "todoitem_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "toDos",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoToDo",
-          "column": "todoitem_id",
-          "inverse": "source"
         }
       }
     ],
