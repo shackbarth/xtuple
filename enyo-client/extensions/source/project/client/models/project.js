@@ -38,6 +38,18 @@ white:true*/
       }
 
     });
+
+    /**
+      @class
+
+      @extends XM.Workflow
+    */
+    XM.ProjectWorkflow = XM.Workflow.extend(
+      /** @scope XM.ProjectWorkflow.prototype */ {
+
+      recordType: 'XM.ProjectWorkflow'
+
+    });
   
     /**
       @class
