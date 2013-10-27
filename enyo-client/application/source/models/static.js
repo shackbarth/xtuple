@@ -217,24 +217,6 @@ white:true*/
     XM.numberPolicies.add(numberPolicy);
   }
 
-  // Project Status
-  K = XM.Project;
-  var projectStatusJson = [
-    { id: K.CONCEPT, name: "_concept".loc() },
-    { id: K.IN_PROCESS, name: "_inProcess".loc() },
-    { id: K.COMPLETED, name: "_completed".loc() }
-  ];
-  XM.ProjectStatusModel = Backbone.Model.extend({
-  });
-  XM.ProjectStatusCollection = Backbone.Collection.extend({
-    model: XM.ProjectStatusModel
-  });
-  XM.projectStatuses = new XM.ProjectStatusCollection();
-  for (i = 0; i < projectStatusJson.length; i++) {
-    var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
-    XM.projectStatuses.add(projectStatus);
-  }
-
   // Characteristic Type
   K = XM.Characteristic;
   var characteristicTypeJson = [

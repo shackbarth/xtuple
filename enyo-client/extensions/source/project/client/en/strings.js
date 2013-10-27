@@ -7,6 +7,15 @@ strict:true, trailing:true, white:true */
   "use strict";
 
   var lang = XT.stringsFor("en_US", {
+    "_project": "Project",
+    "_projectAssignedTo": "Project Assigned To",
+    "_projectOwner": "Project Owner",
+    "_projectRelations": "Projects",
+    "_projectStatus": "Project Status",
+    "_projectTask": "Project Task",
+    "_projectTasks": "Project Tasks",
+    "_projectTaskStatus": "Project Task Status",
+    "_projects": "Projects",
     "_projectType": "Project Type",
     "_projectTypes": "Project Types"
   });

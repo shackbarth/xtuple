@@ -9,5 +9,6 @@ enyo.depends(
   "quote.js",
   "sales_order.js",
   "to_do.js",
+  "static.js",
   "startup.js"
 );

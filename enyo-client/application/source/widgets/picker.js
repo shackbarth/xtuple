@@ -490,17 +490,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-
-  // ..........................................................
-  // PROJECT STATUS
-  //
-
-  enyo.kind({
-    name: "XV.ProjectStatusPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.projectStatuses"
-  });
-
+  
   // ..........................................................
   // REASON CODES
   //
