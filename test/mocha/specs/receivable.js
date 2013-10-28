@@ -58,11 +58,11 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
               assert.equal(XM.Receivable.CUSTOMER_DEPOSIT, "R");
             });
 
-          it.skip("The above constants should be added to a static collection called XM.receivableTypes", function () {
+          it("The above constants should be added to a static collection called XM.receivableTypes", function () {
             assert.isDefined(XM.receivableTypes);
           });
 
-          it.skip('verify that XM.receivableTypes contains the constants', function () {
+          it('verify that XM.receivableTypes contains the constants', function () {
             assert.equal(XM.receivableTypes.length, 4);
 
             var ids = _.pluck(XM.receivableTypes.models, "id");
@@ -148,12 +148,21 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
             // });
           });
 
-          // * A dispatchable function should exist on the database called XM.Receivable.createCreditMemo that accepts a JSON credit memo attributes object, including taxes, and posts it.
-          // * A dispatchable function should exist on the database called XM.Receivable.createDebitMemo that accepts a JSON debit memo attributes object, including taxes, and posts it.
-          // # HINT: On previous two functions you must 1) insert an aropen record 2) insert tax records 3) run the createarcreditmemo or createardebitmemo function that will process all posting activity. Cross check results on the aropen and aropentax tables with the same transaction performed by the Qt client to make sure all columns are populated completely and consistently.
-          // * When save is called on the XM.Receivable model and the status is READY_NEW:
-          //   > If the documentType is XM.Receivable.CREDIT_MEMO then the function XM.Receivable.createCretidMemo should be dispatched
-          //   > If the documentType is XM.Receivable.DEBIT_MEMO then the function XM.Receivable.createDebitMemo should be dispatched
+          // # HINT: On previous two functions you must 1) insert an aropen record 2) insert tax records 3)
+          // run the createarcreditmemo or createardebitmemo function that will process all posting activity.
+          // Cross check results on the aropen and aropentax tables with the same transaction performed by the
+          // Qt client to make sure all columns are populated completely and consistently.
+          it.skip("A dispatchable function should exist on the database called XM.Receivable.createCreditMemo " +
+           "that accepts a JSON credit memo attributes object, including taxes, and posts it.", function () {});
+          it.skip("A dispatchable function should exist on the database called XM.Receivable.createDebitMemo " +
+            "that accepts a JSON debit memo attributes object, including taxes, and posts it.", function () {});
+
+          it.skip("When save is called on the XM.Receivable model and the status is READY_NEW: ", function () {
+            it.skip("If the documentType is XM.Receivable.CREDIT_MEMO then the function XM.Receivable.createCretidMemo " +
+              "should be dispatched", function () {});
+            it.skip("If the documentType is XM.Receivable.DEBIT_MEMO then the function XM.Receivable.createDebitMemo " +
+              "should be dispatched", function () {});
+          });
         });
     });
 
