@@ -318,6 +318,8 @@ strict:true, trailing:true, white:true */
     "_incidentStatus": "Status",
     "_incidentUpdated": "The following incident has been UPDATED",
     "_inventoryHistory": "Inventory History",
+    "_invoice": "Invoice",
+    "_invoices": "Invoices",
     "_initials": "Initials",
     "_inventoryUnit": "Inventory Unit",
     "_isActive": "Active",

@@ -368,14 +368,35 @@ white:true*/
 
     editableModel: 'XM.Invoice',
 
-    post: function () {
+    canDelete: function (callback) {
+      callback(XT.session.privileges.get("MaintainMiscInvoices") && !this.get("isPosted"));
+    },
+
+    canPost: function (callback) {
+      callback(XT.session.privileges.get("PostMiscInvoices") || false);
+    },
+
+    canVoid: function (callback) {
+      callback(XT.session.privileges.get("VoidMiscInvoices") || false);
+    },
+
+    canPrint: function (callback) {
+      callback(XT.session.privileges.get("PrintInvoices") || false);
+    },
+
+    doPost: function () {
       this.dispatch("XM.Invoice", "post", [this.id], {
         success: function () { console.log("success!"); },
         error: function () { console.log("error!"); }
       });
     },
 
-    void: function () {
+    doPrint: function () {
+      // TODO
+      console.log("Print me!");
+    },
+
+    doVoid: function () {
       this.dispatch("XM.Invoice", "void", [this.id], {
         success: function () { console.log("success!"); },
         error: function () { console.log("error!"); }

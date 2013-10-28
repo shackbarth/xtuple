@@ -378,11 +378,11 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     describe("XM.InvoiceListItem", function () {
       it("XM.InvoiceListItem includes a post function that dispatches a XM.Invoice.post function to the server", function () {
         var model = new XM.InvoiceListItem();
-        assert.isFunction(model.post);
+        assert.isFunction(model.doPost);
       });
       it("XM.InvoiceListItem includes a void function that dispatches a XM.Invoice.void function to the server", function () {
         var model = new XM.InvoiceListItem();
-        assert.isFunction(model.post);
+        assert.isFunction(model.doVoid);
       });
     });
     describe("XM.Invoice", function () {
@@ -473,14 +473,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @property {Date} invoiceDate
         @property {Money} total
         @property {Boolean} isPosted
-        @property {Boolean} isOpen
         @property {Boolean} isVoid
       */
       it("A model called XM.InvoiceListItem extending XM.Info should exist", function () {
-        // XXX  > Boolean "isOpen" // = posted(?) but not closed. requires left join on receivable table
         assert.isFunction(XM.InvoiceListItem);
         var invoiceListItemModel = new XM.InvoiceListItem(),
-          attrs = ["number", "isPrinted", "customer", "invoiceDate", "total", "isPosted", /* XXX "isOpen",*/ "isVoid"];
+          attrs = ["number", "isPrinted", "customer", "invoiceDate", "total", "isPosted", "isVoid"];
 
         assert.isTrue(invoiceListItemModel instanceof XM.Info);
         assert.equal(invoiceListItemModel.idAttribute, "number");
@@ -512,15 +510,14 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @property {CustomerRelation} customer
         @property {Date} invoiceDate
         @property {Boolean} isPosted
-        @property {Boolean} isOpen
         @property {Boolean} isVoid
       */
       it("A model called XM.InvoiceRelation extending XM.Info should exist with " +
           "attributes number (the idAttribute) " +
-          "customer, invoiceDate, isPosted, isOpen, and isVoid", function () {
+          "customer, invoiceDate, isPosted, and isVoid", function () {
         assert.isFunction(XM.InvoiceRelation);
         var invoiceRelationModel = new XM.InvoiceRelation(),
-          attrs = ["number", "customer", "invoiceDate", "isPosted", /* XXX "isOpen", */"isVoid"];
+          attrs = ["number", "customer", "invoiceDate", "isPosted", "isVoid"];
 
         assert.isTrue(invoiceRelationModel instanceof XM.Info);
         assert.equal(invoiceRelationModel.idAttribute, "number");
@@ -560,7 +557,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.equal(invoiceModel.getValue("currency.abbreviation"), "USD");
       });
       it("The following fields will be set to read only if the customer does not allow " +
-          "free form billto: billtoName, billtoAddress1, billtoAddress2, billtoAddress3 " +
+          "free form billto: billtoName, billtoAddress1, billtoAddress2, billtoAddress3, " +
           "billtoCity, billtoState, billtoPostalCode, billtoCountry, billtoPhone", function () {
         assert.isFalse(invoiceModel.isReadOnly("billtoName"));
         assert.isFalse(invoiceModel.isReadOnly("billtoAddress3"));
@@ -654,9 +651,27 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @description When an invoice is loaded where "isPosted" is true, then the following attributes will be made read only:
           lineItems, number, invoiceDate, terms, salesrep, commission, taxZone, saleType
       */
-      it.skip("When an invoice is loaded where isPosted is true, then the following " +
+      it("When an invoice is loaded where isPosted is true, then the following " +
           "attributes will be made read only: lineItems, number, invoiceDate, terms, " +
-          "salesrep, commission, taxZone, saleType", function () {
+          "salesrep, commission, taxZone, saleType", function (done) {
+        var postedInvoice = new XM.Invoice(),
+          statusChanged = function () {
+            if (postedInvoice.isReady()) {
+              postedInvoice.off("statusChange", statusChanged);
+              assert.isTrue(postedInvoice.isReadOnly("lineItems"));
+              assert.isTrue(postedInvoice.isReadOnly("number"));
+              assert.isTrue(postedInvoice.isReadOnly("invoiceDate"));
+              assert.isTrue(postedInvoice.isReadOnly("terms"));
+              assert.isTrue(postedInvoice.isReadOnly("salesRep"));
+              assert.isTrue(postedInvoice.isReadOnly("commission"));
+              assert.isTrue(postedInvoice.isReadOnly("taxZone"));
+              assert.isTrue(postedInvoice.isReadOnly("saleType"));
+              done();
+            }
+          };
+
+        postedInvoice.on("statusChange", statusChanged);
+        postedInvoice.fetch({number: "60133"});
       });
       /**
         @member -
@@ -722,6 +737,42 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           done();
         }, 1900);
       });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Invoices that are posted may not be deleted.
+      */
+      it("Invoices that are posted may not be deleted", function (done) {
+        var postedInvoice = new XM.InvoiceListItem(),
+          statusChanged = function () {
+            if (postedInvoice.isReady()) {
+              postedInvoice.off("statusChange", statusChanged);
+              assert.isTrue(XT.session.privileges.get("MaintainMiscInvoices"));
+              postedInvoice.canDelete(function (result) {
+                assert.isFalse(result);
+                done();
+              });
+            }
+          };
+
+        postedInvoice.on("statusChange", statusChanged);
+        postedInvoice.fetch({number: "60133"});
+      });
+
+    // XXX TODO
+    /*
+    TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
+    TODO: I'm not doing tax calculations correctly
+
+  TODO:
+  * XM.Invoice includes a function "calculateTax" that
+    > Gathers line item, freight and adjustments
+    > Groups by and sums and rounds to XT.MONEY_SCALE for each tax code
+    > Sums the sum of each tax code and sets totalTax to the result
+    */
+    });
+    describe("Invoice List View", function () {
+
 
 
     });
@@ -729,19 +780,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
-    // XXX TODO
-    TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
-    TODO: I'm not doing tax calculations correctly
-    TODO * Invoices that are posted may not be deleted.
 
-
-
-* XM.Invoice includes a function "calculateTax" that
-  > Gathers line item, freight and adjustments
-  > Groups by and sums and rounds to XT.MONEY_SCALE for each tax code
-  > Sums the sum of each tax code and sets totalTax to the result
-
-* A list view should exist called XV.InvoiceList
 * XV.InvoiceList should support the following actions
   > Delete unposted invoices where the user has the "MaintainMiscInvoices" privilege
   > Post unposted invoices where the user has the "PostMiscInvoices" privilege

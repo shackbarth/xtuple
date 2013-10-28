@@ -1041,14 +1041,39 @@ trailing:true, white:true, strict: false*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    actions: [
+      {name: "delete", prerequisite: "canDelete", method: "doDelete" },
+      {name: "void", prerequisite: "canVoid", method: "doVoid" },
+      {name: "print", prerequisite: "canPrint", method: "doPrint" }
+    ],
     components: [
       {kind: "XV.ListItem", components: [
-        {kind: "XV.ListColumn", classes: "last", components: [
-          {kind: "XV.ListAttr", attr: "number", isKey: true}
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "isPrinted", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "invoiceDate"},
+              {kind: "XV.ListAttr", attr: "customer.number",
+                classes: "right"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "total",
+              placeholder: "_noContact".loc()},
+            {kind: "XV.ListAttr", attr: "isPosted", formatter: "formatPosted"}
+          ]}
         ]}
       ]}
-    ]
+    ],
+    formatPosted: function (value) {
+      return value ? "_posted".loc() : "";
+    },
   });
+  XV.registerModelList("XM.InvoiceRelation", "XV.InvoiceList");
 
   // ..........................................................
   // ITEM
