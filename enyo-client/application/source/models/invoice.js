@@ -373,11 +373,12 @@ white:true*/
     },
 
     canPost: function (callback) {
-      callback(XT.session.privileges.get("PostMiscInvoices") || false);
+      callback(XT.session.privileges.get("PostMiscInvoices") && !this.get("isPosted"));
     },
 
     canVoid: function (callback) {
-      callback(XT.session.privileges.get("VoidMiscInvoices") || false);
+      var response = XT.session.privileges.get("VoidMiscInvoices") && this.get("isPosted");
+      callback(response || false);
     },
 
     canPrint: function (callback) {

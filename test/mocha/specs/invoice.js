@@ -772,20 +772,103 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     */
     });
     describe("Invoice List View", function () {
-
-
-
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Users can perform the following actions from the list: Delete unposted
+          invoices where the user has the MaintainMiscInvoices privilege, Post unposted
+          invoices where the user has the "PostMiscInvoices" privilege, Void posted invoices
+          where the user has the "VoidMiscInvoices" privilege, Print invoice forms where
+          the user has the "PrintInvoices" privilege.
+      */
+      it("Delete unposted invoices where the user has the MaintainMiscInvoices privilege", function (done) {
+        var model = new XM.InvoiceListItem();
+        model.canDelete(function (response) {
+          assert.isTrue(response);
+          done();
+        });
+      });
+      it("Cannot delete unposted invoices where the user has no MaintainMiscInvoices privilege", function (done) {
+        var model = new XM.InvoiceListItem();
+        XT.session.privileges.attributes.MaintainMiscInvoices = false;
+        model.canDelete(function (response) {
+          assert.isFalse(response);
+          XT.session.privileges.attributes.MaintainMiscInvoices = true;
+          done();
+        });
+      });
+      it("Post unposted invoices where the user has the PostMiscInvoices privilege", function (done) {
+        var model = new XM.InvoiceListItem();
+        model.canPost(function (response) {
+          assert.isTrue(response);
+          done();
+        });
+      });
+      it("Cannot post invoices where the user has no PostMiscInvoices privilege", function (done) {
+        var model = new XM.InvoiceListItem();
+        XT.session.privileges.attributes.PostMiscInvoices = false;
+        model.canPost(function (response) {
+          assert.isFalse(response);
+          done();
+        });
+      });
+      it("Cannot post invoices that are already posted", function (done) {
+        var model = new XM.InvoiceListItem();
+        model.set({isPosted: true});
+        XT.session.privileges.attributes.PostMiscInvoices = true;
+        model.canPost(function (response) {
+          assert.isFalse(response);
+          done();
+        });
+      });
+      it("Void posted invoices where the user has the VoidMiscInvoices privilege", function (done) {
+        var model = new XM.InvoiceListItem();
+        model.set({isPosted: true});
+        XT.session.privileges.attributes.VoidMiscInvoices = true;
+        model.canVoid(function (response) {
+          assert.isTrue(response);
+          done();
+        });
+      });
+      it("Cannot void invoices where the user has no VoidMiscInvoices privilege", function (done) {
+        var model = new XM.InvoiceListItem();
+        model.set({isPosted: true});
+        XT.session.privileges.attributes.VoidMiscInvoices = false;
+        model.canVoid(function (response) {
+          assert.isFalse(response);
+          done();
+        });
+      });
+      it("Cannot void invoices that are not already posted", function (done) {
+        var model = new XM.InvoiceListItem();
+        model.set({isPosted: false});
+        XT.session.privileges.attributes.VoidMiscInvoices = true;
+        model.canVoid(function (response) {
+          assert.isFalse(response);
+          done();
+        });
+      });
+      it("Print invoices where the user has the PrintInvoices privilege", function (done) {
+        var model = new XM.InvoiceListItem();
+        model.canPrint(function (response) {
+          assert.isTrue(response);
+          done();
+        });
+      });
+      it("Cannot print invoices where the user has no PrintInvoices privilege", function (done) {
+        var model = new XM.InvoiceListItem();
+        XT.session.privileges.attributes.PrintInvoices = false;
+        model.canPrint(function (response) {
+          assert.isFalse(response);
+          done();
+        });
+      });
     });
   };
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-* XV.InvoiceList should support the following actions
-  > Delete unposted invoices where the user has the "MaintainMiscInvoices" privilege
-  > Post unposted invoices where the user has the "PostMiscInvoices" privilege
-  > Void posted invoices where the user has the "VoidMiscInvoices" privilege
-  > Print invoice forms where the user has the "PrintInvoices" privilege.
 * The invoice list should support multiple selections
 * The invoice list should use a parameter widget that has the following options:
   > Invoices
