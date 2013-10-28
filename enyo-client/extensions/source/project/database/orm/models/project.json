@@ -396,7 +396,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "project",
     "nameSpace": "XM",
     "type": "ProjectWorkflow",
     "table": "xt.prjwf",
@@ -499,6 +499,99 @@
         }
       },
       {
+        "name": "sequence",
+        "attr": {
+          "type": "Number",
+          "column": "wf_sequence"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wf_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wf_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "predecessors",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectWorkflowPredecessor",
+          "column": "wf_id",
+          "inverse": "successor"
+        }
+      },
+      {
+        "name": "successors",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectWorkflowSuccessor",
+          "column": "wf_id",
+          "inverse": "predecessor"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "ProjectWorkflowRelation",
+    "table": "xt.prjwf",
+    "comment": "Project Workflow Relation Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "wf_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "Number",
+          "column": "wf_parent_id",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "wf_name",
+          "required": true
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "wf_status"
+        }
+      },
+      {
         "name": "owner",
         "toOne": {
           "isNested": true,
@@ -517,6 +610,93 @@
         }
       }
     ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "ProjectWorkflowPredecessor",
+    "table": "xt.prjwfdep",
+    "comment": "Project Workflow Predecessor Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "wfdep_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "successor",
+        "attr": {
+          "type": "Number",
+          "column": "wfdep_target_id",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "predecessor",
+        "toOne": {
+          "isNested": true,
+          "type": "ProjectWorkflowRelation",
+          "column": "wfdep_source_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "ProjectWorkflowSuccessor",
+    "table": "xt.prjwfdep",
+    "comment": "Project Workflow Successor Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "wfdep_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "predecessor",
+        "attr": {
+          "type": "Number",
+          "column": "wfdep_source_id",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "successor",
+        "toOne": {
+          "isNested": true,
+          "type": "ProjectWorkflowRelation",
+          "column": "wfdep_target_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {

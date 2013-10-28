@@ -652,6 +652,45 @@ white:true*/
       recordType: 'XM.ProjectWorkflow'
 
     });
+
+    /**
+      @class
+
+      @extends XM.Workflow
+    */
+    XM.ProjectWorkflowRelation = XM.Info.extend(
+      /** @scope XM.ProjectWorkflow.prototype */ {
+
+      recordType: 'XM.ProjectWorkflowRelation',
+
+      editableModel: 'XM.ProjectWorkflow'
+
+    });
+
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.ProjectWorkflowPredecessor = XM.Model.extend(
+      /** @scope XM.ProjectWorkflowPredecessor.prototype */ {
+
+      recordType: 'XM.ProjectWorkflowPredecessor'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.ProjectWorkflowSuccessor = XM.Model.extend(
+      /** @scope XM.ProjectWorkflowSuccessor.prototype */ {
+
+      recordType: 'XM.ProjectWorkflowSuccessor'
+
+    });
   
     /**
       @class

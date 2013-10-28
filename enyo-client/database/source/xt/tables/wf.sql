@@ -14,5 +14,6 @@ select xt.add_column('wf','wf_owner_username', 'text');
 select xt.add_column('wf','wf_assigned_username', 'text');
 select xt.add_column('wf','wf_parent_id', 'integer');
 select xt.add_column('wf','wf_parent_status', 'text');
+select xt.add_column('wf','wf_sequence', 'integer', 'not null default 0');
 
 comment on table xt.wf is 'Workflow extension table';

@@ -66,6 +66,7 @@ trailing:true, white:true, strict:false*/
           {kind: "XV.InputWidget", attr: "description"},
           {kind: "XV.WorkflowStatusPicker", attr: "status"},
           {kind: "XV.PriorityPicker", attr: "priority", showNone: false},
+          {kind: "XV.NumberSpinnerWidget", attr: "sequence"},
           {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
           {kind: "XV.DateWidget", attr: "dueDate"},
           {kind: "XV.DateWidget", attr: "startDate"},
@@ -79,7 +80,8 @@ trailing:true, white:true, strict:false*/
             noneText: "_noChange".loc(), label: "_newProjectStatus".loc()},
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
-        ]}
+        ]},
+        {kind: "XV.ProjectWorkflowSuccessorsWidget", attr: "successors"}
       ]
     });
 
