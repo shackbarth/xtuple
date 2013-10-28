@@ -41,28 +41,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     model.on("statusChange", statusChanged);
     model.fetch(hash);
   };
-  var prepareBtruckModel = function (done) {
-    var statusChanged = function () {
-      if (btruck.isReady()) {
-        btruck.off("statusChange", statusChanged);
-        done();
-      }
-    };
-    btruck = new XM.ItemRelation();
-    btruck.on("statusChange", statusChanged);
-    btruck.fetch({number: "BTRUCK1"});
-  };
-  var prepareLineModel = function (done) {
-    var statusChanged = function () {
-      if (lineModel.isReady()) {
-        lineModel.off("statusChange", statusChanged);
-        done();
-      }
-    };
-    lineModel = new XM.InvoiceLine();
-    lineModel.on("statusChange", statusChanged);
-    lineModel.initialize(null, {isNew: true});
-  };
 
   exports.additionalTests = function () {
     /**
@@ -72,7 +50,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       @default 7
     */
     describe("Setup for Invoice", function () {
-      it.skip("The system settings option CCValidDays will default to 7 if not already in the db", function () {
+      it("The system settings option CCValidDays will default to 7 if not already in the db", function () {
         assert.equal(XT.session.settings.get("CCValidDays"), 7);
       });
       /**
@@ -221,7 +199,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.isTrue(lineModel instanceof XM.Model);
         assert.equal(lineModel.idAttribute, "uuid");
       });
-      it.skip("InvoiceLine should include attributes", function () {
+      it.skip("InvoiceLine should include attributes x, y, and z", function () {
         // TODO
       });
       /**
