@@ -18,6 +18,7 @@
     "ejs": "0.8.x",
     "express": "3.1.x",
     "json-patch": "git://github.com/xtuple/JSON-Patch.git",
+    "less": "~1.5.0",
     "nodemailer": "0.3.x",
     "oauth2orize": "0.1.x",
     "oauth2orize-jwt-bearer": "0.1.x",
@@ -32,10 +33,10 @@
     "request": "2.14.x",
     "rimraf": "2.2.x",
     "rjson": "~0.2.4",
-    "socket.io":"0.9.x",
-    "underscore":"1.4.x",
-    "winston":"0.7.x",
-    "xml4js": "git://github.com/rpbouman/xmla4js.git"
+    "socket.io": "0.9.x",
+    "underscore": "1.4.x",
+    "winston": "0.7.x",
+    "xml4js": "git://github.com/rpbouman/xmla4js.git",
   },
   "devDependencies": {
     "chai": "1.5.x",
