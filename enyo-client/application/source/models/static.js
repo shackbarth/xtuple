@@ -390,4 +390,22 @@ white:true*/
     XM.bankAccountTypes.add(bankAccountType);
   }
 
+  // Workflow Status
+  K = XM.Workflow;
+  var workflowStatusJson = [
+    { id: K.PENDING, name: "_pending".loc() },
+    { id: K.IN_PROCESS, name: "_inProcess".loc() },
+    { id: K.COMPLETED, name: "_completed".loc() },
+    { id: K.DEFERRED, name: "_deferred".loc() },
+  ];
+  XM.WorkflowStatusModel = Backbone.Model.extend({});
+  XM.WorkflowStatusCollection = Backbone.Collection.extend({
+    model: XM.WorkflowStatusModel
+  });
+  XM.workflowStatuses = new XM.WorkflowStatusCollection();
+  for (i = 0; i < workflowStatusJson.length; i++) {
+    var workflowStatus = new XM.ToDoStatusModel(workflowStatusJson[i]);
+    XM.workflowStatuses.add(workflowStatus);
+  }
+
 }());

@@ -4,7 +4,6 @@ select xt.add_column('wf','wf_id', 'serial', 'primary key');
 select xt.add_column('wf','wf_name', 'text');
 select xt.add_column('wf','wf_description', 'text');
 select xt.add_column('wf','wf_status', 'text', 'not null');
-select xt.add_column('wf','wf_active', 'boolean', 'not null default true');
 select xt.add_column('wf','wf_start_date', 'date');
 select xt.add_column('wf','wf_due_date', 'date');
 select xt.add_column('wf','wf_assigned_date', 'date');

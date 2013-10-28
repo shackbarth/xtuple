@@ -19,7 +19,6 @@ white:true*/
 
     defaults: function () {
       return {
-        isActive: true,
         owner: XM.currentUser,
         assignedTo: XM.currentUser,
         status: XM.Workflow.PENDING
@@ -52,20 +51,26 @@ white:true*/
     @returns {String}
     */
     getWorkflowStatusString: function () {
-      var K = XM.ToDo,
+      var K = XM.Workflow,
         status = this.get('status');
 
       switch (status)
       {
       case K.PENDING:
         return '_pending'.loc();
-      case K.DEFERRED:
-        return '_deferred'.loc();
       case K.IN_PROCESS:
         return '_inProcess'.loc();
       case K.COMPLETED:
         return '_completed'.loc();
+      case K.DEFERRED:
+        return '_deferred'.loc();
       }
+    },
+
+    isActive: function () {
+      var status = this.get("status"),
+        K = XM.Workflow;
+      return status === K.PENDING || status === K.IN_PROCESS;
     },
 
     statusDidChange: function (model, value, options) {
@@ -84,7 +89,6 @@ white:true*/
         if (!completeDate) {
           this.set("completeDate", XT.date.today());
         }
-        this.set("isActive", false);
       }
     }
 

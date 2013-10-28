@@ -49,10 +49,44 @@ trailing:true, white:true, strict:false*/
       name: "XV.ProjectTasksBox",
       kind: "XV.ListRelationsEditorBox",
       classes: "xv-list-relations-box",
-      title: "_projectTasks".loc(),
+      title: "_tasks".loc(),
       editor: "XV.ProjectTaskEditor",
       parentKey: "project",
       listRelations: "XV.ProjectTaskListRelations",
+      fitButtons: false
+    });
+
+    enyo.kind({
+      name: "XV.ProjectWorkflowEditor",
+      kind: "XV.RelationsEditor",
+      components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+          classes: "in-panel", components: [
+          {kind: "XV.InputWidget", attr: "name"},
+          {kind: "XV.InputWidget", attr: "description"},
+          {kind: "XV.WorkflowStatusPicker", attr: "status"},
+          {kind: "XV.PriorityPicker", attr: "priority"},
+          {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+          {kind: "XV.DateWidget", attr: "dueDate"},
+          {kind: "XV.DateWidget", attr: "startDate"},
+          {kind: "XV.DateWidget", attr: "assignDate"},
+          {kind: "XV.DateWidget", attr: "completeDate"},
+          {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+          {kind: "XV.UserAccountWidget", attr: "owner"},
+          {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+          {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+          {kind: "XV.TextArea", attr: "notes", fit: true}
+        ]}
+      ]
+    });
+
+    enyo.kind({
+      name: "XV.ProjectWorkflowBox",
+      kind: "XV.ListRelationsEditorBox",
+      title: "_workflow".loc(),
+      editor: "XV.ProjectWorkflowEditor",
+      parentKey: "project",
+      listRelations: "XV.ProjectWorkflowListRelations",
       fitButtons: false
     });
 

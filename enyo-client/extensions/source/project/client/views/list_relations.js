@@ -120,6 +120,31 @@ trailing:true, white:true*/
       formatExpenses: XV.ProjectList.prototype.formatExpenses
     });
 
+    enyo.kind({
+      name: "XV.ProjectWorkflowListRelations",
+      kind: "XV.ListRelations",
+      orderBy: [
+        {attribute: "dueDate"}
+      ],
+      parentKey: "project",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "name", classes: "bold"},
+                {kind: "XV.ListAttr", attr: "dueDate", fit: true,
+                  formatter: "formatDueDate",
+                  classes: "right"}
+              ]},
+              {kind: "XV.ListAttr", attr: "description"}
+            ]}
+          ]}
+        ]}
+      ],
+      formatDueDate: XV.ProjectList.prototype.formatDueDate
+    });
+
   };
 
 }());

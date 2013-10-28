@@ -17,7 +17,8 @@ strict:true, trailing:true, white:true */
     "_projectTaskStatus": "Project Task Status",
     "_projects": "Projects",
     "_projectType": "Project Type",
-    "_projectTypes": "Project Types"
+    "_projectTypes": "Project Types",
+    "_projectWorkflow": "Project Workflow"
   });
 
   if (typeof exports !== 'undefined') {

@@ -96,14 +96,19 @@ trailing:true, white:true, strict:false*/
       ],
       create: function () {
         this.inherited(arguments);
+        var panels = this.$.panels;
         if (enyo.platform.touch) {
-          this.$.panels.createComponents([
+          panels.createComponents([
             {kind: "XV.ProjectTasksBox", attr: "tasks",
+              addBefore: this.$.projectCommentBox},
+            {kind: "XV.ProjectWorkflowBox", attr: "workflow",
               addBefore: this.$.projectCommentBox}
           ], {owner: this});
         } else {
-          this.$.panels.createComponents([
+          panels.createComponents([
             {kind: "XV.ProjectTasksGridBox", attr: "tasks",
+              addBefore: this.$.projectCommentBox},
+            {kind: "XV.ProjectWorkflowGridBox", attr: "workflow",
               addBefore: this.$.projectCommentBox}
           ], {owner: this});
         }
@@ -202,6 +207,38 @@ trailing:true, white:true, strict:false*/
             ]}
           ]},
           {kind: "XV.TaskCommentBox", attr: "comments"}
+        ]}
+      ]
+    });
+
+    enyo.kind({
+      name: "XV.ProjectWorkflowWorkspace",
+      kind: "XV.Workspace",
+      title: "_projectWorkflow".loc(),
+      model: "XM.ProjectWorkflow",
+      modelAmnesty: true,
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          classes: "xv-top-panel", fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+              classes: "in-panel", components: [
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.InputWidget", attr: "name"},
+              {kind: "XV.ProjectStatusPicker", attr: "status"},
+              {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+              {kind: "XV.DateWidget", attr: "dueDate"},
+              {kind: "XV.DateWidget", attr: "startDate"},
+              {kind: "XV.DateWidget", attr: "assignDate"},
+              {kind: "XV.DateWidget", attr: "completeDate"},
+              {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+              {kind: "XV.UserAccountWidget", attr: "owner"},
+              {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "XV.TextArea", attr: "notes", fit: true}
+            ]}
+          ]}
         ]}
       ]
     });

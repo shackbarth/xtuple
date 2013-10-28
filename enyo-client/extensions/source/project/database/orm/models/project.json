@@ -456,13 +456,6 @@
         }
       },
       {
-        "name": "isActive",
-        "attr": {
-          "type": "Boolean",
-          "column": "wf_active"
-        }
-      },
-      {
         "name": "startDate",
         "attr": {
           "type": "Date",
@@ -473,8 +466,7 @@
         "name": "dueDate",
         "attr": {
           "type": "Date",
-          "column": "wf_due_date",
-          "required": true
+          "column": "wf_due_date"
         }
       },
       {

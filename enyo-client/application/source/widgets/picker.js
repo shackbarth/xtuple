@@ -856,6 +856,17 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // WORKFLOW STATUS
+  //
+
+  enyo.kind({
+    name: "XV.WorkflowStatusPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.workflowStatuses"
+  });
+
+  // ..........................................................
   // YEAR
   //
 

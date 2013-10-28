@@ -20,10 +20,10 @@ trailing:true, white:true, strict:false*/
         {classes: "grid-item", content: "_number".loc(), rows: [
           {readOnlyAttr: "number",
             editor: {kind: "XV.InputWidget", attr: "number",
-              placeholder: "number".loc()}},
+              placeholder: "_number".loc()}},
           {readOnlyAttr: "name",
             editor: {kind: "XV.InputWidget", attr: "name",
-              placeholder: "name".loc()}}
+              placeholder: "_name".loc()}}
         ]},
         {classes: "user", content: "_user".loc(), rows: [
           {readOnlyAttr: "owner.username",
@@ -61,6 +61,42 @@ trailing:true, white:true, strict:false*/
         ]}
       ],
       workspace: "XV.ProjectTaskWorkspace"
+    });
+
+    enyo.kind({
+      name: "XV.ProjectWorkflowGridBox",
+      kind: "XV.GridBox",
+      classes: "small-panel",
+      title: "_workflow".loc(),
+      columns: [
+        {classes: "grid-item", content: "_name".loc(), rows: [
+          {readOnlyAttr: "name",
+            editor: {kind: "XV.InputWidget", attr: "name",
+              placeholder: "_name".loc()}},
+          {readOnlyAttr: "description",
+            editor: {kind: "XV.InputWidget", attr: "description",
+              placeholder: "_description".loc()}}
+        ]},
+        {classes: "user", content: "_user".loc(), rows: [
+          {readOnlyAttr: "owner.username",
+            editor: {kind: "XV.UserAccountWidget", attr: "owner"}},
+          {readOnlyAttr: "assignedTo.username",
+            editor: {kind: "XV.UserAccountWidget", attr: "assignedTo"}},
+        ]},
+        {classes: "date", content: "_scheduled".loc(), rows: [
+          {readOnlyAttr: "startDate",
+            editor: {kind: "XV.DateWidget", attr: "startDate"}},
+          {readOnlyAttr: "dueDate",
+            editor: {kind: "XV.DateWidget", attr: "dueDate"}}
+        ]},
+        {classes: "date", content: "_actualDate".loc(), rows: [
+          {readOnlyAttr: "assignDate",
+            editor: {kind: "XV.DateWidget", attr: "assignDate"}},
+          {readOnlyAttr: "completeDate",
+            editor: {kind: "XV.DateWidget", attr: "completeDate"}}
+        ]}
+      ],
+      workspace: "XV.ProjectWorkflowWorkspace"
     });
 
   };

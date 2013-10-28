@@ -643,6 +643,7 @@ strict:true, trailing:true, white:true */
     "_webAddress": "Web Address",
     "_welcome": "Welcome",
     "_wholesalePrice": "Wholesale Price",
+    "_workflow": "Workflow",
     "_workOrder": "Work Order",
     "_workOrders": "Work Orders",
     "_xtuplePostbooks": "PostBooks",
