@@ -23,7 +23,9 @@ trailing:true, white:true, strict:false*/
               placeholder: "_number".loc()}},
           {readOnlyAttr: "name",
             editor: {kind: "XV.InputWidget", attr: "name",
-              placeholder: "_name".loc()}}
+              placeholder: "_name".loc()}},
+          {readOnlyAttr: "getProjectStatusString",
+            editor: {kind: "XV.ProjectStatusPicker", attr: "status"}}
         ]},
         {classes: "user", content: "_user".loc(), rows: [
           {readOnlyAttr: "owner.username",
@@ -75,13 +77,17 @@ trailing:true, white:true, strict:false*/
               placeholder: "_name".loc()}},
           {readOnlyAttr: "description",
             editor: {kind: "XV.InputWidget", attr: "description",
-              placeholder: "_description".loc()}}
+              placeholder: "_description".loc()}},
+          {readOnlyAttr: "getWorkflowStatusString",
+            editor: {kind: "XV.WorkflowStatusPicker", attr: "status"}}
         ]},
         {classes: "user", content: "_user".loc(), rows: [
           {readOnlyAttr: "owner.username",
             editor: {kind: "XV.UserAccountWidget", attr: "owner"}},
           {readOnlyAttr: "assignedTo.username",
             editor: {kind: "XV.UserAccountWidget", attr: "assignedTo"}},
+          {readOnlyAttr: "priority.name",
+            editor: {kind: "XV.PriorityPicker", attr: "priority"}}
         ]},
         {classes: "date", content: "_scheduled".loc(), rows: [
           {readOnlyAttr: "startDate",

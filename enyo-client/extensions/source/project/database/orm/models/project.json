@@ -465,7 +465,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "wf_due_date"
         }
       },

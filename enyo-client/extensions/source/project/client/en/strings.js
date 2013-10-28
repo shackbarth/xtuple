@@ -7,6 +7,9 @@ strict:true, trailing:true, white:true */
   "use strict";
 
   var lang = XT.stringsFor("en_US", {
+    "_completionAction": "Completion Action",
+    "_newProjectStatus": "New Project Status",
+    "_noChange": "No Change",
     "_project": "Project",
     "_projectAssignedTo": "Project Assigned To",
     "_projectManagement": "Project Management",

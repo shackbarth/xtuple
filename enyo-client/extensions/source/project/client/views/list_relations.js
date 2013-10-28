@@ -137,7 +137,11 @@ trailing:true, white:true*/
                   formatter: "formatDueDate",
                   classes: "right"}
               ]},
-              {kind: "XV.ListAttr", attr: "description"}
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "getWorkflowStatusString"},
+                {kind: "XV.ListAttr", attr: "assignedTo.username", fit: true,
+                  classes: "right"}
+              ]}
             ]}
           ]}
         ]}

@@ -74,6 +74,9 @@ trailing:true, white:true, strict:false*/
           {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
           {kind: "XV.UserAccountWidget", attr: "owner"},
           {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+          {kind: "onyx.GroupboxHeader", content: "_completionAction".loc()},
+          {kind: "XV.ProjectStatusPicker", attr: "parentStatus",
+            noneText: "_noChange".loc(), label: "_newProjectStatus".loc()},
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]}

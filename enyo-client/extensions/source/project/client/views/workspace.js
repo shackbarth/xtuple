@@ -247,9 +247,10 @@ trailing:true, white:true, strict:false*/
             {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
-              {kind: "XV.InputWidget", attr: "number"},
               {kind: "XV.InputWidget", attr: "name"},
-              {kind: "XV.ProjectStatusPicker", attr: "status"},
+              {kind: "XV.InputWidget", attr: "description"},
+              {kind: "XV.WorkflowStatusPicker", attr: "status"},
+              {kind: "XV.PriorityPicker", attr: "priority", showNone: false},
               {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
               {kind: "XV.DateWidget", attr: "dueDate"},
               {kind: "XV.DateWidget", attr: "startDate"},
@@ -258,6 +259,9 @@ trailing:true, white:true, strict:false*/
               {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
               {kind: "XV.UserAccountWidget", attr: "owner"},
               {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+              {kind: "onyx.GroupboxHeader", content: "_completionAction".loc()},
+              {kind: "XV.ProjectStatusPicker", attr: "parentStatus",
+                noneText: "_noChange".loc(), label: "_newProjectStatus".loc()},
               {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
