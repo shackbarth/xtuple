@@ -78,6 +78,8 @@ white:true*/
       var status = this.get("status"),
         completeDate = this.get("completeDate"),
         startDate = this.get("startDate"),
+        parent = this.get("parent"),
+        parentStatus = this.get("parentStatus"),
         K = XM.Workflow;
 
       if (status === K.IN_PROCESS) {
@@ -89,6 +91,9 @@ white:true*/
       } else if (status === K.COMPLETED) {
         if (!completeDate) {
           this.set("completeDate", XT.date.today());
+        }
+        if (parent && parentStatus) {
+          parent.set("status", parentStatus);
         }
       }
     }
