@@ -1,12 +1,12 @@
-select xt.install_js('XM','Project','project', $$
+select xt.install_js('XM','ProjectManagement','project', $$
   /* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
      See www.xtuple.com/CPAL for the full text of the software license. */
 
-  if (!XM.Project) { XM.Project = {}; }
+  if (!XM.ProjectManagement) { XM.ProjectManagement = {}; }
   
-  XM.Project.isDispatchable = true;
+  XM.ProjectManagement.isDispatchable = true;
 
-  XM.Project.options = [
+  XM.ProjectManagement.options = [
     "DefaultPriority"
   ];
 
@@ -15,53 +15,39 @@ select xt.install_js('XM','Project','project', $$
 
   @returns {Object}
   */
-  XM.Project.settings = function() {
-    var keys = XM.Project.options.slice(0),
-        data = Object.create(XT.Data),
-        ret = {},
-        qry,
-        orm;
+  XM.ProjectManagement.settings = function() {
+    var keys = XM.ProjectManagement.options.slice(0),
+        data = Object.create(XT.Data);
 
-    ret = XT.extend(ret, data.retrieveMetrics(keys));
-
-    /* Special processing for primary key based values */
-    orm = XT.Orm.fetch("XM", "Priority");
-    ret.DefaultPriority = data.getNaturalId(orm, ret.DefaultPriority);
-
-    return ret;
+    return data.retrieveMetrics(keys);
   };
 
-    /*
-  Update Project configuration settings. Only valid options as defined in the array
+   /*
+  Update Project Management configuration settings. Only valid options as defined in the array
   XM.Project.options will be processed.
 
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.Project.commitSettings = function(patches) {
+  XM.ProjectManagement.commitSettings = function(patches) {
     var sql,
-      settings,
-      options = XM.Project.options.slice(0),
+      K = XM.ProjectManagement,
       data = Object.create(XT.Data),
-      metrics = {};
-
+      settings = K.settings(),
+      options = K.options.slice(0),
+      metrics = {},
+      i;
+   
     /* Compose our commit settings by applying the patch to what we already have */
-    settings = JSON.parse(XM.Project.settings());
     if (!XT.jsonpatch.apply(settings, patches)) {
       plv8.elog(NOTICE, 'Malformed patch document');
     }
 
     /* update remaining options as metrics
        first make sure we pass an object that only has valid metric options for this type */
-    for(var i = 0; i < options.length; i++) {
+    for (i = 0; i < options.length; i++) {
       var prop = options[i];
-      if(settings[prop] !== undefined) metrics[prop] = settings[prop];
-    }
-
-    /* Special processing for primary key based values */
-    if (metrics.DefaultPriority) {
-      orm = XT.Orm.fetch("XM", "Priority");
-      metrics.DefaultPriority = data.getId(orm, metrics.DefaultPriority);
+      if (settings[prop] !== undefined) { metrics[prop] = settings[prop]; }
     }
 
     return data.commitMetrics(metrics);

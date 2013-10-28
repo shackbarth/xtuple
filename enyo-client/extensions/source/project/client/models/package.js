@@ -1,6 +1,7 @@
 enyo.depends(
   "account.js",
   "characteristic.js",
+  "configure.js",
   "contact.js",
   "customer.js",
   "incident.js",

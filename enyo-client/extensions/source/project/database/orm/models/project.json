@@ -494,7 +494,8 @@
         "name": "priority",
         "toOne": {
           "type": "Priority",
-          "column": "wf_priority_id"
+          "column": "wf_priority_id",
+          "required": true
         }
       },
       {

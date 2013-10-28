@@ -9,6 +9,7 @@ strict:true, trailing:true, white:true */
   var lang = XT.stringsFor("en_US", {
     "_project": "Project",
     "_projectAssignedTo": "Project Assigned To",
+    "_projectManagement": "Project Management",
     "_projectOwner": "Project Owner",
     "_projectRelations": "Projects",
     "_projectStatus": "Project Status",

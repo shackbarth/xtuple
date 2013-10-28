@@ -21,7 +21,8 @@ white:true*/
       return {
         owner: XM.currentUser,
         assignedTo: XM.currentUser,
-        status: XM.Workflow.PENDING
+        status: XM.Workflow.PENDING,
+        priority: XT.session.settings.get("DefaultPriority")
       };
     },
 

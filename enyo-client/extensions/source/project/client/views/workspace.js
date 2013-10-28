@@ -29,6 +29,29 @@ trailing:true, white:true, strict:false*/
     ];
 
     XV.appendExtension("XV.CharacteristicWorkspace", extensions);
+
+    // ..........................................................
+    // CONFIGURE
+    //
+
+    enyo.kind({
+      name: "XV.ProjectManagementWorkspace",
+      kind: "XV.Workspace",
+      title: "_configure".loc() + " " + "_project".loc(),
+      model: "XM.ProjectManagement",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger", fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", components: [
+              {kind: "onyx.GroupboxHeader", content: "_default".loc()},
+              {kind: "XV.PriorityPicker", attr: "DefaultPriority",
+                label: "_priority".loc()}
+            ]}
+          ]}
+        ]}
+      ]
+    });
   
     // ..........................................................
     // CONTACT
