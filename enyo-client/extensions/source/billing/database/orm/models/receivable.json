@@ -3,7 +3,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "Receivable",
-    "table": "aropen",
+    "table": "xt.aropeninfo",
     "idSequenceName": "aropen_aropen_id_seq",
     "isRest": true,
     "lockable": true,
@@ -143,6 +143,20 @@
         "attr": {
           "type": "String",
           "column": "aropen_notes"
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Money",
+          "column": "balance"
+        }
+      },
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Money",
+          "column": "tax_total"
         }
       }
     ],

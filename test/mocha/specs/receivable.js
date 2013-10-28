@@ -14,7 +14,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     model, taxModel,
     applicationModel, listModel,
     listModelCollection,
-    modelTaxCollection;
+    modelTaxCollection,
+    listView;
 
   var additionalTests = function () {
     // it.skip("The 'ViewAROpenItems' and 'EditAROpenItem' privileges should be added to XM.SalesCustomer read privileges", function () {
@@ -128,16 +129,31 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           });
 
           it.skip("XM.Receivable should have an attribute 'taxTotal' which is the calculated sum of taxes", function () {
+            assert.fail(true, true, "not implemented");
+          });
 
-          // * A XM.Receivable object can not be created directly. The database view underlying the orm should "do nothing" on insertion.
-          // * A XM.Receivable object can not be deleted.  The database view underlying the orm should "do nothing" on deletion.
+          it.skip("XM.Receivable object can not be created directly", function () {
+            // this should fail
+            // it('can be saved to the database', function (done) {
+            //   this.timeout(10 * 1000);
+            //   crud.save(spec, done);
+            // });
+          });
+
+          it.skip("XM.Receivable object can not be deleted", function () {
+            // this should fail
+            // it('can be deleted from the database', function (done) {
+            //   this.timeout(10 * 1000);
+            //   crud.destroy(spec, done);
+            // });
+          });
+
           // * A dispatchable function should exist on the database called XM.Receivable.createCreditMemo that accepts a JSON credit memo attributes object, including taxes, and posts it.
           // * A dispatchable function should exist on the database called XM.Receivable.createDebitMemo that accepts a JSON debit memo attributes object, including taxes, and posts it.
           // # HINT: On previous two functions you must 1) insert an aropen record 2) insert tax records 3) run the createarcreditmemo or createardebitmemo function that will process all posting activity. Cross check results on the aropen and aropentax tables with the same transaction performed by the Qt client to make sure all columns are populated completely and consistently.
           // * When save is called on the XM.Receivable model and the status is READY_NEW:
           //   > If the documentType is XM.Receivable.CREDIT_MEMO then the function XM.Receivable.createCretidMemo should be dispatched
           //   > If the documentType is XM.Receivable.DEBIT_MEMO then the function XM.Receivable.createDebitMemo should be dispatched
-          });
         });
     });
 
@@ -219,16 +235,16 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     });
 
     describe("XM.ReceivableListItem", function () {
-      before(function () {
-
-      });
-
-      it("A model called XM.ReceivableListItem should exist in the billing extension", function (done) {
+      before(function (done) {
         assert.isDefined(XM.ReceivableListItem);
         listModel = new XM.ReceivableListItem();
         listModel.fetch({uuid: "6087", success: done()});
 
         listModelCollection = new XM.ReceivableListItemCollection();
+      });
+
+      it("A model called XM.ReceivableListItem should exist in the billing extension", function () {
+        assert.isDefined(listModel);
       });
 
       it("XM.ReceivableListItem extends XM.Model", function () {
@@ -272,13 +288,14 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
 
     });
 
-    describe("XM.ReceivableList", function () {
+    describe("XV.ReceivableList", function () {
       before(function () {
-        assert.isDefined(XM.ReceivableList);
+        assert.isDefined(XV.ReceivableList);
+        listView = new XV.ReceivableList();
       });
 
-      it("A List view that represents the XM.ReceivableListItem collection should exist in the billing extension", function () {
-        assert.equal(XM.ReceivableList.collection, "XM.ReceivableListItemCollection");
+      it("A List view that represents the XV.ReceivableListItem collection should exist in the billing extension", function () {
+        assert.equal(listView.collection, "XM.ReceivableListItemCollection");
       });
 
       it.skip("No attribute will be designated as the key", function () {});

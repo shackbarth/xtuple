@@ -131,7 +131,8 @@
           if (typeof priv === 'string') {
             _.each(spec.extensions, function (extension) {
               it("has privilege " + priv + " declared by the " + extension + " extension", function () {
-                assert.isDefined();
+                assert.isDefined(_.findWhere(XT.session.relevantPrivileges,
+                  {privilege: priv, module: extension}));
               });
             });
             /*
