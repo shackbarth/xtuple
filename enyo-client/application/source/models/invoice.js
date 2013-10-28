@@ -114,6 +114,8 @@ white:true*/
 
     idAttribute: 'number',
 
+    numberPolicySetting: 'InvcNumberGeneration',
+
     defaults: function () {
       return {
         invoiceDate: new Date(),

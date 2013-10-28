@@ -5,6 +5,7 @@ select xt.install_js('XM','Billing','xtuple', $$
 (function () {
   var billingOptions = [
     "CCValidDays",
+    "InvcNumberGeneration",
     "NextARMemoNumber",
     "NextCashRcptNumber",
     "HideApplyToBalance",

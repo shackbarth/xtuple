@@ -6,6 +6,7 @@
     "table": "xt.invcheadinfo",
     "isRest": true,
     "idSequenceName": "invchead_invchead_id_seq",
+    "orderSequence":"InvcNumber",
     "lockable": true,
     "comment": "Invoice Map",
     "privileges": {

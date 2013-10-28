@@ -420,6 +420,20 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.equal(_.difference(attrs, invoiceTaxModel.getAttributeNames()).length, 0);
       });
       /**
+        @member -
+        @memberof Invoice.prototype
+        @description The invoice numbering policy can be determined by the user.
+      */
+      it("XM.Invoice should check the setting for InvcNumberGeneration to determine numbering policy", function () {
+        var model;
+        XT.session.settings.set({InvcNumberGeneration: "M"});
+        model = new XM.Invoice();
+        assert.equal(model.numberPolicy, "M");
+        XT.session.settings.set({InvcNumberGeneration: "A"});
+        model = new XM.Invoice();
+        assert.equal(model.numberPolicy, "A");
+      });
+      /**
         @member InvoiceAllocation
         @memberof Invoice.prototype
         @description Invoice-level allocation information
@@ -596,7 +610,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @description When billed is changed extendedPrice should be recalculated.
       */
       it("When billed is changed extendedPrice should be recalculated", function (done) {
-        console.log("set billed to 20");
         lineModel.set({billed: 20});
         setTimeout(function () {
           assert.equal(lineModel.get("extendedPrice"), 197.82);
@@ -717,12 +730,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
 ***** CHANGES MADE TO CORE APPLICATION ******
     // XXX TODO
-    XXX authorized credit? @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - oustandingCredit.
-      - If sum calculates to less than zero, then the balance is zero.
     TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
     TODO: I'm not doing tax calculations correctly
     TODO * Invoices that are posted may not be deleted.
-    XXX XM.Invoice should check the setting for "InvcNumberGeneration" to determine numbering policy. this is in sales?!
 
 
 
