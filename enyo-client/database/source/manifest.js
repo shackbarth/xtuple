@@ -64,6 +64,7 @@
     "xt/functions/install_guiscript.sql",
     "xt/functions/insert_client.sql",
     "xt/functions/invc_allocated_credit.sql",
+    "xt/functions/invc_authorized_credit.sql",
     "xt/functions/invc_line_extended_price.sql",
     "xt/functions/invc_outstanding_credit.sql",
     "xt/functions/invc_subtotal.sql",

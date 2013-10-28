@@ -155,7 +155,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     @parameter {Money} taxTotal the sum of all taxes inluding line items, freight and tax adjustments
     @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
     @parameter {Money} total the calculated total of subtotal + freight + tax + miscCharge
-    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - oustandingCredit.
+    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - outstandingCredit.
       - If sum calculates to less than zero, then the balance is zero.
     @parameter {InvoiceAllocation} allocations
     @parameter {InvoiceTax} taxAdjustments

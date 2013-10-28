@@ -574,7 +574,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       */
       it("If the quantityUnit or priceUnit are changed, \"calculatePrice\" should be run.", function (done) {
         invoiceModel.set({customer: ttoys});
-        lineModel.set({item: btruck, billed: 10});
+        assert.isUndefined(lineModel.get("price"));
+        lineModel.set({item: btruck});
+        lineModel.set({billed: 10});
         setTimeout(function () {
           assert.equal(lineModel.get("price"), 9.8910);
           done();
@@ -594,6 +596,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @description When billed is changed extendedPrice should be recalculated.
       */
       it("When billed is changed extendedPrice should be recalculated", function (done) {
+        console.log("set billed to 20");
         lineModel.set({billed: 20});
         setTimeout(function () {
           assert.equal(lineModel.get("extendedPrice"), 197.82);
@@ -686,6 +689,26 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.isObject(invoiceModel.validate(invoiceModel.attributes));
       });
 
+      it("XM.Invoice includes a function calculateAuthorizedCredit", function (done) {
+        // XXX this is barely under test
+        /*
+        > Makes a call to the server requesting the total authorized credit for a given
+          - sales order number
+          - in the invoice currency
+          - using the invoice date for exchange rate conversion.
+        > Authorized credit should only include authoriztions inside the "CCValidDays" window,
+          or 7 days if no CCValidDays is set, relative to the current date.
+        > The result should be set on the authorizedCredit attribute
+        > On response, recalculate the balance (HINT#: Do not attempt to use bindings for this!)
+        */
+        assert.isFunction(invoiceModel.calculateAuthorizedCredit);
+        assert.isUndefined(invoiceModel.get("authorizedCredit"));
+        invoiceModel.calculateAuthorizedCredit();
+        setTimeout(function () {
+          assert.equal(invoiceModel.get("authorizedCredit"), 0);
+          done();
+        }, 1900);
+      });
 
 
     });
@@ -694,7 +717,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
 ***** CHANGES MADE TO CORE APPLICATION ******
     // XXX TODO
-    XXX is the sourceType in xt.doc INV ? (I is item)
     XXX authorized credit? @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - oustandingCredit.
       - If sum calculates to less than zero, then the balance is zero.
     TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
@@ -703,14 +725,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     XXX XM.Invoice should check the setting for "InvcNumberGeneration" to determine numbering policy. this is in sales?!
 
 
-* XM.Invoice includes a function "calculateAuthorizedCredit" that
-  > Makes a call to the server requesting the total authorized credit for a given
-    - sales order number
-    - in the invoice currency
-    - using the invoice date for exchange rate conversion.
-  > Authorized credit should only include authoriztions inside the "CCValidDays" window, or 7 days if no CCValidDays is set, relative to the current date.
-  > The result should be set on the authorizedCredit attribute
-  > On response, recalculate the balance (HINT#: Do not attempt to use bindings for this!)
 
 * XM.Invoice includes a function "calculateTax" that
   > Gathers line item, freight and adjustments

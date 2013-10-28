@@ -9,7 +9,7 @@ select invchead.*,
   GREATEST(0.0, COALESCE(xt.invc_total(invchead), 0) 
     - COALESCE(xt.invc_allocated_credit(invchead), 0)
     - COALESCE(xt.invc_outstanding_credit(invchead), 0)
-    -- XXX TODO also subtract authorizedcredit
+    - COALESCE(xt.invc_authorized_credit(invchead_invcnumber), 0)
     ) as balance,
   cust_number 
   from invchead

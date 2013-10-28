@@ -78,12 +78,8 @@ white:true*/
         model.notify("_noPriceFound".loc(), { type: K.WARNING });
         model.unset("customerPrice");
         model.unset("price");
-        if (model.hasChanges("billed")) {
-          model.unset("billed");
-        }
-        if (model.hasChanges("quantity")) {
-          model.unset("quantity");
-        }
+        model.unset("billed");
+        model.unset("quantity");
 
       // Handle normal scenario
       } else {
@@ -203,6 +199,16 @@ white:true*/
 
     calculateAllocatedCredit: function () {
       // TODO
+    },
+
+    calculateAuthorizedCredit: function () {
+      var that = this,
+        success = function (resp) {
+          that.set({authorizedCredit: resp});
+          that.calculateBalance();
+        };
+
+      this.dispatch("XM.Invoice", "authorizedCredit", [this.id], {success: success});
     },
 
     calculateBalance: function () {
