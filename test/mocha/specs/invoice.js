@@ -157,12 +157,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.equal(_.difference(attrs, model.getAttributeNames()).length, 0);
       });
       it.skip("XM.InvoiceLineTax can be created, updated and deleted", function () {
-        // TODO
+        // TODO: put under test (code is written)
       });
       it.skip("A view should be used underlying XM.InvoiceLineTax that does nothing " +
           "after insert, update or delete (existing table triggers for line items will " +
           "take care of populating this data correctly)", function () {
-        // TODO
+        // TODO: put under test (code is written)
       });
       /**
         @class
@@ -200,7 +200,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.equal(lineModel.idAttribute, "uuid");
       });
       it.skip("InvoiceLine should include attributes x, y, and z", function () {
-        // TODO
+        // TODO: put under test (code is written)
       });
       /**
         @member -
@@ -249,22 +249,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       /**
         @member -
         @memberof InvoiceLine.prototype
-        @description The price will be recalculated when the units change.
-      */
-      it("If the quantityUnit or SellingUnit are changed, \"calculatePrice\" should be run.", function () {
-        // TODO
-      });
-      /**
-        @member -
-        @memberof InvoiceLine.prototype
-        @description If price or billing change, extendedPrice should be recalculated.
-      */
-      it("If price or billing change, extendedPrice should be recalculated.", function () {
-        // TODO
-      });
-      /**
-        @member -
-        @memberof InvoiceLine.prototype
         @description Quantity and billed values can be fractional only if the item allows it
       */
       it("When the item isFractional attribute === false, decimal numbers should not be allowed " +
@@ -290,15 +274,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           "for billed values.", function () {
         lineModel.set({billed: 1.5, quantity: 2});
         assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
-      });
-      /**
-        @member -
-        @memberof InvoiceLine.prototype
-        @description When billed is changed extendedPrice should be recalculated.
-      */
-      it.skip("When billed is changed extendedPrice should be recalculated", function () {
-        // TODO
-        assert.fail();
       });
       /**
         @member -
@@ -345,7 +320,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @description User requires the "OverrideTax" privilege to edit the tax type.
       */
       it.skip("User requires the OverrideTax privilege to edit the tax type", function () {
-        // TODO
+        // TODO: write code and put under test
         //HINT: Default tax type must be enforced by a trigger on the database if no privilege.
         assert.fail();
       });
@@ -591,6 +566,39 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.isNull(invoiceModel.get("terms"));
         assert.isNull(invoiceModel.get("taxZone"));
         assert.isNull(invoiceModel.get("currency"));
+      });
+      /**
+        @member -
+        @memberof InvoiceLine.prototype
+        @description The price will be recalculated when the units change.
+      */
+      it("If the quantityUnit or priceUnit are changed, \"calculatePrice\" should be run.", function (done) {
+        invoiceModel.set({customer: ttoys});
+        lineModel.set({item: btruck, billed: 10});
+        setTimeout(function () {
+          assert.equal(lineModel.get("price"), 9.8910);
+          done();
+        }, 1900);
+      });
+      /**
+        @member -
+        @memberof InvoiceLine.prototype
+        @description If price or billing change, extendedPrice should be recalculated.
+      */
+      it("If price or billing change, extendedPrice should be recalculated.", function () {
+        assert.equal(lineModel.get("extendedPrice"), 98.91);
+      });
+      /**
+        @member -
+        @memberof InvoiceLine.prototype
+        @description When billed is changed extendedPrice should be recalculated.
+      */
+      it("When billed is changed extendedPrice should be recalculated", function (done) {
+        lineModel.set({billed: 20});
+        setTimeout(function () {
+          assert.equal(lineModel.get("extendedPrice"), 197.82);
+          done();
+        }, 1900);
       });
       /**
         @member -

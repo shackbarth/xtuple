@@ -1248,7 +1248,7 @@
         "name": "billed",
         "attr": {
           "type": "Quantity",
-          "column": "invcitem_ordered"
+          "column": "invcitem_billed"
         }
       },
       {

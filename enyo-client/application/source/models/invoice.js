@@ -7,6 +7,99 @@ white:true*/
   "use strict";
 
   /**
+    This should only be called by `calculatePrice`.
+    @private
+  */
+  var _calculatePrice = function (model) {
+    var K = model.getClass(),
+      item = model.get("item"),
+      priceUnit = model.get("priceUnit"),
+      quantity = model.get("billed"),
+      quantityUnit = model.get("quantityUnit"),
+      readOnlyCache = model.isReadOnly("price"),
+      parent = model.getParent(),
+      asOf = parent.get(parent.documentDateKey),
+      prices = [],
+      itemOptions = {},
+      parentDate,
+      customer,
+      currency,
+
+      // Set price after we have item and all characteristics prices
+      setPrice = function () {
+        // Allow editing again if we could before
+        model.setReadOnly("price", readOnlyCache);
+
+        // If price was requested before this response,
+        // then bail out and start over
+        if (model._invalidPriceRequest) {
+          delete model._invalidPriceRequest;
+          delete model._pendingPriceRequest;
+          _calculatePrice(model);
+          return;
+        }
+
+        var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
+        model.set("customerPrice", totalPrice);
+        model.set("price", totalPrice);
+        model.calculateExtendedPrice();
+      };
+
+    parentDate = parent.get(parent.documentDateKey);
+    customer = parent.get("customer");
+    currency = parent.get("currency");
+
+    // If we already have a request pending we need to indicate
+    // when that is done to start over because something has changed.
+    if (model._pendingPriceRequest) {
+      if (!model._invalidPriceRequest) {
+        model._invalidPriceRequest = true;
+      }
+      return;
+    }
+
+    // Don't allow user editing of price until we hear back from the server
+    model.setReadOnly("price", true);
+
+    // Get the item price
+    itemOptions.asOf = asOf;
+    itemOptions.currency = currency;
+    itemOptions.effective = parentDate;
+    itemOptions.error = function (err) {
+      model.trigger("invalid", err);
+    };
+
+    itemOptions.quantityUnit = quantityUnit;
+    itemOptions.priceUnit = priceUnit;
+    itemOptions.success = function (resp) {
+
+      // Handle no price found scenario
+      if (resp.price === -9999 && !model._invalidPriceRequest) {
+        model.notify("_noPriceFound".loc(), { type: K.WARNING });
+        model.unset("customerPrice");
+        model.unset("price");
+        if (model.hasChanges("billed")) {
+          model.unset("billed");
+        }
+        if (model.hasChanges("quantity")) {
+          model.unset("quantity");
+        }
+
+      // Handle normal scenario
+      } else {
+        if (!model._invalidPriceRequest) {
+          //model.set("basePrice", resp.price);
+          prices.push(resp.price);
+        }
+        setPrice();
+      }
+    };
+    itemOptions.error = function (err) {
+      model.trigger("error", err);
+    };
+    customer.itemPrice(item, quantity, itemOptions);
+  };
+  /**
     @class
 
     @extends XM.Document
@@ -20,6 +113,8 @@ white:true*/
     recordType: 'XM.Invoice',
 
     documentKey: 'number',
+
+    documentDateKey: 'invoiceDate',
 
     idAttribute: 'number',
 
@@ -332,6 +427,8 @@ white:true*/
     bindEvents: function (attributes, options) {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on("change:item", this.itemDidChange);
+      this.on("change:billed", this.billedDidChange);
+      //this.on('change:price', this.priceDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
@@ -365,9 +462,65 @@ white:true*/
     //
     // Model-specific functions
     //
-    calculateExtendedPrice: function () {
+    billedDidChange: function () {
+      this.calculatePrice();
+      this.recalculateParent();
     },
-    calculatePrice: function () {
+
+    // XXX with the uncommented stuff back in, it's identical to the one in salesOrderBase
+    /**
+      Calculates and sets the extended price.
+
+      returns {Object} Receiver
+    */
+    calculateExtendedPrice: function () {
+      var billed = this.get("billed") || 0,
+        quantityUnitRatio = this.get("quantityUnitRatio"),
+        priceUnitRatio = this.get("priceUnitRatio"),
+        price = this.get("price") || 0,
+        extPrice =  (billed * quantityUnitRatio / priceUnitRatio) * price;
+      extPrice = XT.toExtendedPrice(extPrice);
+      this.set("extendedPrice", extPrice);
+      //this.calculateMargin();
+      //this.calculateTax();
+      this.recalculateParent();
+      return this;
+    },
+
+    /**
+      Calculate the price for this line item
+
+      @param{Boolean} force - force the net price to update, even if settings indicate not to.
+      @returns {Object} Receiver
+    */
+    calculatePrice: function (force) {
+      var settings = XT.session.settings,
+        K = this.getClass(),
+        that = this,
+        canUpdate = this.canUpdate(),
+        item = this.get("item"),
+        priceUnit = this.get("priceUnit"),
+        priceUnitRatio = this.get("priceUnitRatio"),
+        quantity = this.get("billed"),
+        quantityUnit = this.get("quantityUnit"),
+        updatePolicy = settings.get("UpdatePriceLineEdit"),
+        parent = this.getParent(),
+        customer = parent ? parent.get("customer") : false,
+        currency = parent ? parent.get("currency") :false,
+        listPrice;
+
+      // If no parent, don't bother
+      if (!parent) { return; }
+
+      // Make sure we have necessary values
+      if (canUpdate && customer && currency &&
+          item && quantity && quantityUnit &&
+          priceUnit && priceUnitRatio &&
+          parent.get(parent.documentDateKey)) {
+
+        _calculatePrice(this);
+      }
+      return this;
     },
 
     isMiscellaneousDidChange: function () {
@@ -435,6 +588,11 @@ white:true*/
         this.set("lineNumber", maxLineNumber + 1);
       }
     },
+
+    //priceDidChange: function () {
+    //  this.calculateExtendedPrice();
+    //},
+
     // Refactor potential: this is like the one on sales order line base, but
     // checks billed as well, and validates isMiscellaneous
     validate: function () {
