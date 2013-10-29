@@ -14,8 +14,7 @@ white:true, strict:false*/
     enyo.kind({
       name: "XV.ProjectWorkflowSuccessorsWidget",
       kind: "XV.DependenciesWidget",
-      model: "XM.ProjectWorkflowSuccessor",
-      parentKey: "predecessor"
+      model: "XM.ProjectWorkflowSuccessor"
     });
 
   };
