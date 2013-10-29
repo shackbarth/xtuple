@@ -895,6 +895,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
               - From Date
               - To Date
         */
+        // TODO: filter by customer group
         var list = new XV.InvoiceList();
         assert.isString(list.getParameterWidget());
       });
