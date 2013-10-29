@@ -336,6 +336,13 @@
         }
       },
       {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "currency"
+        }
+      },
+      {
         "name": "notes",
         "attr": {
           "type": "String",

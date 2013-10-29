@@ -14,6 +14,7 @@
     "_billing": "Billing",
     "_billingDescription": "Corporate Relationship Management",
     "_creditTaxDiscount": "Credit Taxes for Early Payment Discounts",
+    "_customerDeposit": "Customer Deposit",
     "_defaultARIncidentStatus": "Default Incident Category",
     "_defaultAutoCreditWarnGraceDays": "Default Grace Period Days",
     "_editAROpenItem": "Edit Receivables",

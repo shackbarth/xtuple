@@ -261,7 +261,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
       });
 
       it.skip("RecievableListItem should include all receivables, unposted invoices, and unposted returns", function () {
-        // TODO: not sure how to test this
+        // TODO: not sure how to test this yet
         assert.fail(true, true, "not implemented");
       });
 
@@ -276,7 +276,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           "dueDate",
           "amount",
           "currency",
-          "amount",
           "paid",
           "balance",
           "baseAmount",
@@ -307,11 +306,28 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         assert.equal(listView.collection, "XM.ReceivableListItemCollection");
       });
 
-      it.skip("No attribute will be designated as the key", function () {});
+      it("No attribute will be designated as the key", function () {
+        assert.isUndefined(_.find(listView.$, function (item) { return item.isKey; }));
+      });
+
+      it("Clicking the 'New' button for the recievable list should reveal multiple menu options including 'Credit Memo' and 'Debit Memo'", function () {
+        assert.isDefined(listView.newActions);
+        var actions = _.pluck(listView.newActions, "label");
+        assert.include(actions, "Credit Memo");
+        assert.include(actions, "Debit Memo");
+      });
+
+      it.skip("Selecting to create a new Credit Memo or Debit Memo will open the XM.Receivable workspace " +
+        " with the appropriate document type preselected.", function () {
+
+      });
+
       it.skip("The list should include headers", function () {});
       it.skip("The list should include a footer with a total amount in base currency", function () {});
+
       it.skip("The following action will be included on the list: " +
         "Open Receivable: Only enabled on posted receivables with privileges", function () {});
+
       it.skip("The recievable list view will have the following parameter options:" +
        //  ">Receivables
        //   - Number
@@ -332,19 +348,26 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
        // > Document Date
        //  - From Date
          "- To Date", function () {});
+
       it.skip("The As Of parameter will only be enabled when unposted and closed are unchecked. Otherwise it will be set to the current date and disabled.", function () {});
+
       it.skip(" When active the As Of parameter will limit query results to receivables where the As Of date is greater than or equal to the document date" +
        "and is less than or equal to the close date or where the close date is null", function () {
         //HINT: https://github.com/xtuple/xtuple/blob/master/lib/backbone-x/source/collection.js#L63
       });
-      it.skip("A Workspace view that presents a XM.Receivable including viewing and editing of taxes (when applicable) should be exist in the billing extension", function () {});
+
+      it.skip("A Workspace view that represents a XM.Receivable including viewing and editing of taxes (when applicable) should be exist in the billing extension", function () {});
+
       it.skip("The saveText property on the workspace for XM.Receivable will be 'Post' when the status of the object is READY_NEW and 'Save' for any other status.", function () {});
+
       it.skip("A XV.StickyCheckboxWidget should be visible when the model is in a READY_NEW state that provides the option to 'Print on Post.'", function () {});
+
       it.skip("When 'Print on Post' is checked, a standard form should be printed when posting", function () {});
+
       it.skip("TaxTotal and taxes will be hidden when the receivable is an Invoice type", function () {});
-      it.skip("Clicking the 'New' button for the recievable list should reveal multiple menu options including 'Credit Memo' and 'Debit Memo'", function () {});
-      it.skip("Selecting to create a new Credit Memo or Debit Memo will open the XM.Receivable workspace with the appropriate document type preselected.", function () {});
+
       it.skip("TaxTotal and taxes will be hidden when the receivable is an Invoice type", function () {});
+
       it.skip("There should be a printed report definition for the receivables list", function () {});
     });
   };
