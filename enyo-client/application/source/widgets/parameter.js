@@ -792,8 +792,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '!=',
-              value: 'C'
+              value: 'O'
             };
           }
           return param;

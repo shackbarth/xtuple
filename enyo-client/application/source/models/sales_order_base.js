@@ -239,7 +239,18 @@ white:true*/
     @returns {String}
     */
     getOrderStatusString: function () {
-      return this.isActive() ? "_open".loc() : "_closed".loc();
+      var K = XM.SalesOrderBase,
+        status = this.get('status');
+
+      switch (status)
+      {
+      case K.OPEN_STATUS:
+        return '_open'.loc();
+      case K.CLOSED_STATUS:
+        return '_closed'.loc();
+      case K.CANCELLED_STATUS:
+        return '_cancelled'.loc();
+      }
     }
   };
 
@@ -1063,7 +1074,17 @@ white:true*/
       @type String
       @default C
     */
-    CLOSED_STATUS: "C"
+    CLOSED_STATUS: "C",
+
+    /**
+      Order is cancelled.
+
+      @static
+      @constant
+      @type String
+      @default X
+    */
+    CANCELLED_STATUS: "X"
 
   });
 

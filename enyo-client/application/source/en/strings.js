@@ -30,6 +30,7 @@ strict:true, trailing:true, white:true */
     "_bankAccountType": "Account Type",
     "_bankName": "Bank Name",
     "_biWeekly": "Bi-Weekly",
+    "_cancelled": "Cancelled",
     "_closed": "Closed",
     "_commission": "Commission",
     "_completed": "Completed",
