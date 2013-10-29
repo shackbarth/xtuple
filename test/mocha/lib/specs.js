@@ -282,9 +282,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       documentNumber: "DocumentNumber" + Math.random()
     },
     updatableField: "notes",
-    defaults: {
-      //currency: XT.baseCurrency()
-    },
     // afterSaveActions: [{
     //   it: "When the status of a receivable changes to READY_CLEAN (edit), the following attributes: " +
     //   "customer, documentDate, documentType, documentNumber, terms should be readOnly",

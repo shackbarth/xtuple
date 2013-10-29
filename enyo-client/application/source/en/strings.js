@@ -393,6 +393,8 @@ strict:true, trailing:true, white:true */
     "_messageRecipient": "Message Recipient",
     "_middleName": "Middle Name",
     "_miscCharge": "Misc. Charge",
+    "_miscCreditMemo": "Misc. Credit Memo",
+    "_miscDebitMemo": "Misc. Debit Memo",
     "_miscellaneous": "Miscellaneous",
     "_module": "Module",
     "_monthExpired": "Expiration Month",

@@ -33,10 +33,10 @@ XT.extensions.billing.initLists = function () {
     collection: "XM.ReceivableListItemCollection",
     published: {
       newActions: [
-        {name: "creditMemo", label: "_creditMemo".loc(), attributes: {
+        {name: "creditMemo", label: "_miscCreditMemo".loc(), attributes: {
           documentType: XM.Receivable.CREDIT_MEMO
         }},
-        {name: "debitMemo", label: "_debitMemo".loc(), attributes: {
+        {name: "debitMemo", label: "_miscDebitMemo".loc(), attributes: {
           documentType: XM.Receivable.DEBIT_MEMO
         }}
       ]

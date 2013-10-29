@@ -129,6 +129,29 @@ XT.extensions.billing.initReceivableModel = function () {
       }
     },
 
+    createCreditMemo: function (params, options) {
+      //this.dispatch("XM.Receivable", "createCreditMemo", params, options);
+    },
+
+    createDebitMemo: function (params, options) {
+      //this.dispatch("XM.Receivable", "createDebitMemo", params, options);
+    },
+
+    /**
+      When save is called on the XM.Receivable model and the status is READY_NEW:
+      If the documentType is XM.Receivable.CREDIT_MEMO then dispatch XM.Receivable.createCreditMemo
+      If the documentType is XM.Receivable.DEBIT_MEMO then dispatch XM.Receivable.createDebitMemo
+    */
+    save: function (key, value, options) {
+      if (this.getStatus() === XM.Model.READY_NEW) {
+        if (this.isCredit()) {
+          this.createCreditMemo();
+        } else if (this.isDebit()) {
+          this.createDebitMemo();
+        }
+      }
+    },
+
     /**
       The amount must be greater than zero
       The taxTotal may not be greater than the amount
@@ -243,9 +266,10 @@ XT.extensions.billing.initReceivableModel = function () {
 
     @extends XM.Model
   */
-  XM.ReceivableListItem = XM.Model.extend({
+  XM.ReceivableListItem = XM.Info.extend({
     recordType: 'XM.ReceivableListItem',
-    idAttribute: "uuid"
+    idAttribute: "uuid",
+    editableModel: 'XM.Receivable'
   });
 
   // ..........................................................
