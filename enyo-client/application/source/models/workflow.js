@@ -76,25 +76,43 @@ white:true*/
 
     statusDidChange: function (model, value, options) {
       var status = this.get("status"),
-        completeDate = this.get("completeDate"),
-        startDate = this.get("startDate"),
-        parent = this.get("parent"),
-        parentStatus = this.get("parentStatus"),
-        K = XM.Workflow;
+        K = XM.Workflow,
+        parent,
+        parentStatus,
+        workflow,
+        successors;
 
       if (status === K.IN_PROCESS) {
-        if (!startDate) {
+        if (!this.get("startDate")) {
           this.set("startDate", XT.date.today());
         }
 
       // If marked completed
       } else if (status === K.COMPLETED) {
-        if (!completeDate) {
+
+        // Update complete date if applicable
+        if (!this.get("completeDate")) {
           this.set("completeDate", XT.date.today());
         }
-        if (parent && parentStatus) {
+
+        // Update parent status if applicable
+        parent = this.get("parent");
+        parentStatus = parent.get("parentStatus");
+        if (parentStatus) {
           parent.set("status", parentStatus);
         }
+
+        // Update successor statuses if applicable
+        workflow = parent.get("workflow");
+        successors = this.get("successors") || [];
+        _.each(successors, function (successor) {
+          var item = workflow.get(successor.id),
+            status = item.get("status");
+            
+          if (status === K.PENDING) {
+            item.set("status", K.IN_PROCESS);
+          }
+        });
       }
     }
 

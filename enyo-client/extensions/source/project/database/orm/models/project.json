@@ -524,15 +524,6 @@
         }
       },
       {
-        "name": "predecessors",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectWorkflowPredecessor",
-          "column": "wf_id",
-          "inverse": "successor"
-        }
-      },
-      {
         "name": "successors",
         "toMany": {
           "isNested": true,
@@ -607,49 +598,6 @@
           "type": "UserAccountRelation",
           "column": "wf_assigned_username",
           "inverse": "username"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "project",
-    "nameSpace": "XM",
-    "type": "ProjectWorkflowPredecessor",
-    "table": "xt.prjwfdep",
-    "comment": "Project Workflow Predecessor Map",
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "wfdep_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "successor",
-        "attr": {
-          "type": "Number",
-          "column": "wfdep_target_id",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "predecessor",
-        "toOne": {
-          "isNested": true,
-          "type": "ProjectWorkflowRelation",
-          "column": "wfdep_source_id"
         }
       }
     ],

@@ -1054,6 +1054,13 @@
   border: none;
   background: transparent;
 }
+.xv-characteristic-button {
+  left-padding: 6px;
+  color: #357ec7;
+  font-size: 24px;
+  border: none;
+  background: transparent;
+}
 /**
   Import for Font-Awesome icons
 */

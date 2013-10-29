@@ -667,19 +667,6 @@ white:true*/
 
     });
 
-
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.ProjectWorkflowPredecessor = XM.Model.extend(
-      /** @scope XM.ProjectWorkflowPredecessor.prototype */ {
-
-      recordType: 'XM.ProjectWorkflowPredecessor'
-
-    });
-
     /**
       @class
 

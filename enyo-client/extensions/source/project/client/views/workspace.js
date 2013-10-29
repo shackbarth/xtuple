@@ -270,7 +270,7 @@ trailing:true, white:true, strict:false*/
             {kind: "XV.ScrollableGroupbox", name: "dependenciesGroup", fit: true,
               classes: "in-panel", components: [
               {kind: "XV.ProjectStatusPicker", attr: "parentStatus",
-                noneText: "_noChange".loc(), label: "_nextProjectStatus".loc()},
+                noneText: "_noChange".loc(), label: "_nextxtProjectStatus".loc()},
               {kind: "XV.ProjectWorkflowSuccessorsWidget", attr: "successors"}
             ]}
           ]}
