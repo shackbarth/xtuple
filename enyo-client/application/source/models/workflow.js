@@ -22,7 +22,8 @@ white:true*/
         owner: XM.currentUser,
         assignedTo: XM.currentUser,
         status: XM.Workflow.PENDING,
-        priority: XT.session.settings.get("DefaultPriority")
+        priority: XT.session.settings.get("DefaultPriority"),
+        sequence: 0
       };
     },
 
@@ -108,7 +109,7 @@ white:true*/
         _.each(successors, function (successor) {
           var item = workflow.get(successor.id),
             status = item.get("status");
-            
+
           if (status === K.PENDING) {
             item.set("status", K.IN_PROCESS);
           }

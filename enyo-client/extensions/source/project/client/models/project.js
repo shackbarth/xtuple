@@ -666,18 +666,6 @@ white:true*/
       editableModel: 'XM.ProjectWorkflow'
 
     });
-
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.ProjectWorkflowSuccessor = XM.Model.extend(
-      /** @scope XM.ProjectWorkflowSuccessor.prototype */ {
-
-      recordType: 'XM.ProjectWorkflowSuccessor'
-
-    });
   
     /**
       @class
