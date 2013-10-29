@@ -102,9 +102,10 @@ trailing:true, white:true, strict: false*/
       kind: "XV.Workspace",
       title: "_postProduction".loc(),
       model: "XM.PostProduction",
-      //reportModel: "XM.WorkOrder",
       saveText: "_post".loc(),
+      hideApply: true,
       allowNew: false,
+      dirtyWarn: false,
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -119,7 +120,7 @@ trailing:true, white:true, strict: false*/
               },
               {kind: "XV.InputWidget", attr: "getWorkOrderStatusString", label: "_status".loc()},
               {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-              {kind: "XV.TextArea", attr: "productionNotes", fit: true},
+              {kind: "XV.TextArea", attr: "notes", fit: true},
               {kind: "onyx.GroupboxHeader", content: "_options".loc()},
               {kind: "XV.CheckboxWidget", attr: "isBackflushMaterials"},
               {kind: "XV.StickyCheckboxWidget", label: "_closeWorkOrderAfterPosting".loc(),
@@ -130,10 +131,10 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.QuantityWidget", attr: "quantityReceived"},
               {kind: "XV.QuantityWidget", attr: "balance"},
               {kind: "onyx.GroupboxHeader", content: "_post".loc()},
-              {kind: "XV.QuantityWidget", attr: "toIssue", name: "toIssue"}
+              {kind: "XV.QuantityWidget", attr: "qtyToPost", name: "qtyToPost"}
             ]}
           ]},
-          {kind: "XV.PostProductionCreateLotSerialBox", attr: "trace"}
+          {kind: "XV.PostProductionCreateLotSerialBox", attr: "trace", name: "detail"}
         ]},
         {kind: "onyx.Popup", name: "distributePopup", centered: true,
           onHide: "popupHidden",
@@ -149,12 +150,53 @@ trailing:true, white:true, strict: false*/
             classes: "xv-popup-button"},
         ]}
       ],
-      save: function () {
+      /**
+        Overload: Some special handling for start up.
+        */
+      attributesChanged: function () {
+        this.inherited(arguments);
         var model = this.getValue();
-        XM.Manufacturing.postProduction({
+
+        // Focus and select qty on start up.
+        if (!this._started && model &&
+          model.getStatus() === XM.Model.READY_DIRTY) {
+          this.$.qtyToPost.focus();
+          this.$.qtyToPost.$.input.selectContents();
+          this._started = true;
+        }
+
+        // Hide detail if not applicable
+        if (!model.requiresDetail()) {
+          this.$.detail.hide();
+          this.parent.parent.$.menu.refresh();
+        }
+      },
+
+      save: function () {
+        this.inherited(arguments);
+        var model = this.getValue(),
+          detailModels = this.$.detail.getValue().models[0],
+          options = {},
+          details = {},
+          params,
+          workOrder = model.id,
+          quantity = model.get("qtyToPost"),
+          transDate = model.transactionDate,
+          backflush = model.get("isBackflushMaterials");
+        options.asOf = transDate;
+        options.backflush = backflush;
+        //options.detail = model.formatDetail();
+        if (detailModels !== undefined) {
+          details.location = detailModels.getValue("location");
+          details.quantity = detailModels.getValue("quantity");
+          options.detail = details;
+        }
+        params = {
           workOrder: model.id,
-          quantity: model.get("toIssue")
-        }, {});
+          quantity: quantity,
+          options: options
+        };
+        XM.Manufacturing.postProduction(params, options);
       }
     });
 

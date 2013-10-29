@@ -24,7 +24,7 @@ white:true*/
 
       @extends XM.Model
     */
-    XM.PostProduction = XM.Model.extend({
+    XM.PostProduction = XM.Transaction.extend({
 
       recordType: "XM.PostProduction",
 
@@ -45,16 +45,6 @@ white:true*/
       bindEvents: function () {
         XM.Model.prototype.bindEvents.apply(this, arguments);
         this.on('statusChange', this.statusDidChange);
-      },
-
-      statusDidChange: function () {
-        var K = XM.Model,
-          isBackflushMaterials = this.get("isBackflushMaterials");
-        // We want to be able to save and post immeditately.
-        if (this.getStatus() === K.READY_CLEAN) {
-          this.setStatus(K.READY_DIRTY);
-        }
-        this.setReadOnly("isBackflushMaterials", isBackflushMaterials);
       },
 
       /**
@@ -85,7 +75,7 @@ white:true*/
       /**
         This overload will first save any changes via usual means, then
         call `postProduction`.
-      */
+      *//*
       save: function (key, value, options) {
         var that = this,
           success;
@@ -99,19 +89,32 @@ white:true*/
 
         // Post Production after successful save
         options.success = function (model, resp, options) {
-          var postOptions = {},
-            postDate = XT.date.applyTimezoneOffset(that.get("dueDate"), true),
-            params = [
-              that.id,
-              postDate
-            ];
+          var params,
+            postOptions = {},
+            workOrder = that.id,
+            quantity = that.get("qtyToPost"),
+            postDate,
+            detail = {},
+            backflush;
+          
+          postOptions.postDate = XT.date.applyTimezoneOffset(that.get("dueDate"), true);
+          postOptions.detail = that.formatDetail();
+          //postOptions.detail.location = 
+          //postOptions.detail.quantity = 
+          postOptions.backflush = that.get("isBackflushMaterials");
+          params = [
+            workOrder,
+            quantity,
+            postOptions
+          ];
+
           postOptions.success = function (postResp) {
             if (success) { success(model, resp, options); }
           };
           postOptions.error = function () {
             // The datasource takes care of reporting the error to the user
           };
-          that.dispatch("XM.Manufacturing", "postProduction", params, postOptions);
+          that.dispatch("XM.Manufacturing", "postProduction", params);
           return this;
         };
 
@@ -121,7 +124,7 @@ white:true*/
         }
 
         XM.Model.prototype.save.call(this, key, value, options);
-      }
+      }*/
 
     });
 

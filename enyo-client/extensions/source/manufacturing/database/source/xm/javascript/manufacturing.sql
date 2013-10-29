@@ -183,7 +183,7 @@ select xt.install_js('XM','Manufacturing','xtuple', $$
     /* Make sure user can do this */
     if (!XT.Data.checkPrivilege("PostProduction")) { throw new handleError("Access Denied", 401); }
 
-    sql = "select postproduction(wo_id, $2, true, 0, current_timestamp) as series " +
+    sql = "select postproduction(wo_id, $2::numeric, $3::boolean, $4::integer, $5::timestamptz) as series " +
       "from wo where wo_number = $1;";
 
     sql2 = "select current_date != $1 as invalid";  
@@ -192,7 +192,7 @@ select xt.install_js('XM','Manufacturing','xtuple', $$
     for (i = 0; i < ary.length; i++) {
       item = ary[i];
       asOf = item.options ? item.options.asOf : null;
-      series = plv8.execute(sql, [item.workOrder, item.quantity, 0, asOf])[0].series;
+      series = plv8.execute(sql, [item.workOrder, item.quantity, item.options.backflush, 0, item.options.asOf])[0].series;
 
       if (asOf && plv8.execute(sql2, [asOf])[0].invalid &&
           !XT.Data.checkPrivilege("AlterTransactionDates")) {

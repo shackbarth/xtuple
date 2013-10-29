@@ -346,7 +346,7 @@
         }
       },
       {
-        "name": "toIssue",
+        "name": "qtyToPost",
         "attr": {
           "type": "Number",
           "column": "qty_to_post"

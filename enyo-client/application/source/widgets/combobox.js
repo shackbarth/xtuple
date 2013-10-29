@@ -68,11 +68,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.ComboboxWidget",
     collection: "XM.locations",
     label: "_location".loc(),
-    nameAttribute: "format",
-    orderBy: [
-      {attribute: 'format'}
-    ],
-    valueAttribute: "id"
+    keyAttribute: "format"
   });
 
   // ..........................................................
@@ -83,7 +79,8 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.TraceCombobox",
     kind: "XV.ComboboxWidget",
     collection: "XM.traceRelations",
-    label: "_trace".loc()
+    label: "_trace".loc(),
+    keyAttribute: "number"
   });
 
   // ..........................................................
