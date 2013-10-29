@@ -144,14 +144,17 @@ XT.extensions.billing.initReceivableModel = function () {
       If the documentType is XM.Receivable.DEBIT_MEMO then dispatch XM.Receivable.createDebitMemo
     */
     save: function (key, value, options) {
-      XM.Document.prototype.save.call(this, key, value, options);
-
       if (this.getStatus() === XM.Model.READY_NEW) {
+        // cannot create a new receivable, dispatch to posts
+
+
         if (this.isCredit()) {
           this.createCreditMemo();
         } else if (this.isDebit()) {
           this.createDebitMemo();
         }
+      } else { // this is an update, just treat is as normal
+        return XM.Model.prototype.save.call(this, key, value, options);
       }
     },
 

@@ -29,6 +29,8 @@
     "_receivable": "Receivable",
     "_receivables": "Receivables",
     "_recurringInvoiceBuffer": "Recurring Invoice Buffer Days",
+    "_taxes": "Taxes",
+    "_taxTotal": "Tax Total",
     "_viewAROpenItems": "View Receivables",
     "_viewMiscInvoices": "View Invoices"
   });
