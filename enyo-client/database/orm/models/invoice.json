@@ -15,6 +15,17 @@
         "read": "ViewMiscInvoices",
         "update": "MaintainMiscInvoices",
         "delete": "MaintainMiscInvoices"
+      },
+      "attribute": {
+        "isPosted": {
+          "update": false
+        },
+        "isPrinted": {
+          "update": false
+        },
+        "isVoid": {
+          "update": false
+        }
       }
     },
     "properties": [
@@ -420,7 +431,7 @@
       {
         "name": "customer",
         "toOne": {
-          "type": "CustomerRelation",
+          "type": "BillingCustomer",
           "column": "invchead_cust_id",
           "isNested": true,
           "required": true

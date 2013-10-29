@@ -132,7 +132,7 @@ select xt.install_js('XT','Data','xtuple', $$
               param.value = 'f';
             }
 
-            /* Yeah, it depends on a property called 'charectristics'... */
+            /* Yeah, it depends on a property called 'characteristics'... */
             prop = XT.Orm.getProperty(orm, 'characteristics');
 
             /* Build the characteristics query clause. */

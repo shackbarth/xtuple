@@ -482,11 +482,15 @@ trailing:true, white:true*/
       },
       {name: "showVoided", label: "_showVoided".loc(),
         attr: "isVoid", defaultKind: "XV.CheckboxWidget"},
-      /*
-      TODO: BillingCustomer and CustomerCustomerGroup
       {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
-      {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.CustomerWidget"},
+      {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.BillingCustomerWidget"},
       {name: "customerType", attr: "customer.customerType", label: "_customerType".loc(), defaultKind: "XV.CustomerTypePicker"},
+      {name: "customerTypePattern", attr: "customer.customerType", label: "_customerTypePattern".loc()},
+      // TODO: INCLUDES operator? But what would the attr be?
+      //{name: "customerGroup", attr: "customer.customerGroups.customerGroup",
+      //  label: "_customerGroup".loc(), defaultKind: "XV.CustomerGroupWidget"},
+
+  /*
   > Customer
     - Number
     - Type (picker)

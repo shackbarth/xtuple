@@ -376,11 +376,27 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       });
     });
     describe("XM.InvoiceListItem", function () {
-      it("XM.InvoiceListItem includes a post function that dispatches a XM.Invoice.post function to the server", function () {
+      // this should really be under better test
+      it.skip("XM.InvoiceListItem includes a post function that dispatches a " +
+          "XM.Invoice.post function to the server", function () {
         var model = new XM.InvoiceListItem();
         assert.isFunction(model.doPost);
+        /*
+        model.set({number: "999"});
+        model.doPost({
+          success: function () {
+            console.log("success", arguments);
+            done();
+          },
+          error: function () {
+            console.log("error", arguments);
+          }
+        });
+        */
       });
-      it("XM.InvoiceListItem includes a void function that dispatches a XM.Invoice.void function to the server", function () {
+      // this should really be under better test
+      it.skip("XM.InvoiceListItem includes a void function that dispatches a " +
+          "XM.Invoice.void function to the server", function () {
         var model = new XM.InvoiceListItem();
         assert.isFunction(model.doVoid);
       });
@@ -740,6 +756,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
     // XXX TODO
     /*
+    TODO: make sure that posting and voiding work
     TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
     TODO: I'm not doing tax calculations correctly
 

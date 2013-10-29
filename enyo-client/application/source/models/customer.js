@@ -465,6 +465,18 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.CustomerCustomerGroup = XM.Model.extend({
+    /** @scope XM.CustomerCustomerGroup.prototype */
+
+    recordType: 'XM.CustomerCustomerGroup'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.CustomerGroupCustomer = XM.Model.extend({
     /** @scope XM.CustomerGroupCustomer.prototype */
 
@@ -633,6 +645,19 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.AccountDocument
+  */
+  XM.BillingCustomer = XM.AccountDocument.extend({
+    /** @scope XM.BillingCustomer.prototype */
+
+    recordType: 'XM.BillingCustomer',
+
+    descriptionKey: "name"
+
+  });
 
   /**
     @class
@@ -798,6 +823,18 @@ white:true*/
 
     @extends XM.Collection
   */
+  XM.BillingCustomerCollection = XM.Collection.extend({
+    /** @scope XM.BillingCustomerCollection.prototype */
+
+    model: XM.BillingCustomer
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   XM.SalesCustomerCollection = XM.Collection.extend({
     /** @scope XM.SalesCustomerCollection.prototype */
 
@@ -838,6 +875,18 @@ white:true*/
     /** @scope XM.CustomerTypeCollection.prototype */
 
     model: XM.CustomerType
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerCustomerGroupCollection = XM.Collection.extend({
+    /** @scope XM.CustomerCustomerGroupCollection.prototype */
+
+    model: XM.CustomerCustomerGroup
 
   });
 

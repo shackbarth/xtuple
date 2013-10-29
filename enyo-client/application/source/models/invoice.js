@@ -385,10 +385,10 @@ white:true*/
       callback(XT.session.privileges.get("PrintInvoices") || false);
     },
 
-    doPost: function () {
+    doPost: function (options) {
       this.dispatch("XM.Invoice", "post", [this.id], {
-        success: function () { console.log("success!"); },
-        error: function () { console.log("error!"); }
+        success: options && options.success,
+        error: options && options.error
       });
     },
 
@@ -397,10 +397,10 @@ white:true*/
       console.log("TODO: print invoices");
     },
 
-    doVoid: function () {
+    doVoid: function (options) {
       this.dispatch("XM.Invoice", "void", [this.id], {
-        success: function () { console.log("success!"); },
-        error: function () { console.log("error!"); }
+        success: options && options.success,
+        error: options && options.error
       });
     }
 

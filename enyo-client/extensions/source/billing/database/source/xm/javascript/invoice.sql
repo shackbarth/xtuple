@@ -11,5 +11,15 @@ select xt.install_js('XM','Invoice','xtuple', $$
       sql = "select xt.invc_authorized_credit($1) AS result";
 
     return plv8.execute(sql, [invoiceNumber])[0].result;
-  }
+  };
+
+  XM.Invoice.post = function(invoiceNumber) {
+    var invoiceId = XT.Data.getId(XT.Orm.fetch('XM', 'Invoice'), invoiceNumber);
+    return XT.executeFunction("postinvoice", [invoiceId]);
+  };
+
+  XM.Invoice.void = function(invoiceNumber) {
+    var invoiceId = XT.Data.getId(XT.Orm.fetch('XM', 'Invoice'), invoiceNumber);
+    return XT.executeFunction("voidinvoice", [invoiceId]);
+  };
 $$ );

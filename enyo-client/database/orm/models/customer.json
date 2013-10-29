@@ -660,6 +660,84 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "BillingCustomer",
+    "table": "custinfo",
+    "idSequenceName": "cust_cust_id_seq",
+    "orderSequence": "CRMAccountNumber",
+    "comment": "Customer Map for Billing",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewMiscInvoices",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cust_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cust_number",
+          "isNaturalKey": true,
+          "required": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "cust_name",
+          "required": true
+        }
+      },
+      {
+        "name": "customerType",
+        "toOne": {
+          "type": "CustomerType",
+          "column": "cust_custtype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "customerGroups",
+        "toMany": {
+          "isNested": true,
+          "type": "CustomerCustomerGroup",
+          "column": "cust_id",
+          "inverse": "customer"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "cust_active",
+          "required": true
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "cust_comments"
+        }
+      }
+    ],
+    "extensions": [],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "CustomerCharacteristic",
     "table": "charass",
     "idSequenceName": "charass_charass_id_seq",
@@ -2230,6 +2308,49 @@
         "toOne":	{
           "isNested": true,
           "type": "CustomerRelation",
+          "column": "custgrpitem_cust_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerCustomerGroup",
+    "table": "custgrpitem",
+    "idSequenceName": "custgrpitem_custgrpitem_id_seq",
+    "comment": "Customer Group Customer Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr":	{
+          "type": "Number",
+          "column": "custgrpitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "customerGroup",
+        "toOne": {
+          "type": "CustomerGroup",
+          "isNested": true,
+          "column": "custgrpitem_custgrp_id"
+        }
+      },
+      {
+        "name": "customer",
+        "attr": {
+          "type": "Number",
           "column": "custgrpitem_cust_id"
         }
       }
