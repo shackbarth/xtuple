@@ -1036,14 +1036,17 @@ trailing:true, white:true, strict: false*/
   enyo.kind({
     name: "XV.InvoiceList",
     kind: "XV.List",
+    multiSelect: true,
+    allowPrint: true,
     label: "_invoices".loc(),
+    parameterWidget: "XV.InvoiceListParameters",
     collection: "XM.InvoiceListItemCollection",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
     actions: [
-      {name: "delete", prerequisite: "canDelete", method: "doDelete" },
       {name: "void", prerequisite: "canVoid", method: "doVoid" },
+      {name: "post", prerequisite: "canPost", method: "doPost" },
       {name: "print", prerequisite: "canPrint", method: "doPrint" }
     ],
     components: [
@@ -1053,24 +1056,26 @@ trailing:true, white:true, strict: false*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "isPrinted", fit: true,
-                classes: "right"}
+                formatter: "formatPrinted", classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "invoiceDate"},
-              {kind: "XV.ListAttr", attr: "customer.number",
-                classes: "right"}
+              {kind: "XV.ListAttr", attr: "isPosted", fit: true,
+                formatter: "formatPosted", classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "total",
-              placeholder: "_noContact".loc()},
-            {kind: "XV.ListAttr", attr: "isPosted", formatter: "formatPosted"}
+            {kind: "XV.ListAttr", attr: "customer.name"},
+            {kind: "XV.ListAttr", attr: "total"}
           ]}
         ]}
       ]}
     ],
     formatPosted: function (value) {
       return value ? "_posted".loc() : "";
+    },
+    formatPrinted: function (value) {
+      return value ? "_printed".loc() : "";
     },
   });
   XV.registerModelList("XM.InvoiceRelation", "XV.InvoiceList");

@@ -150,12 +150,23 @@ Simplest possible usage:
                 }
               };
 
-              var oldFunc = XT.app.$.postbooks.notify;
+              var oldNotify = XT.app.$.postbooks.notify;
               XT.app.$.postbooks.notify = function (notifySender, notifyObj) {
                 if (notifyObj && notifyObj.type === XM.Model.CRITICAL) {
                   assert.fail(JSON.stringify(notifyObj));
                 } else {
-                  oldFunc(notifySender, notifyObj);
+                  oldNotify(notifySender, notifyObj);
+                }
+              };
+
+              // WIP. Not yet working. Probably need to move it up to earlier app start status.
+              var oldLoc = XT.String.loc;
+              XT.String.loc = function (str) {
+                var localized = XT.localizeString(str);
+                if (localized === str) {
+                  assert.fail(str + " has no translation");
+                } else {
+                  oldLoc(str);
                 }
               };
 

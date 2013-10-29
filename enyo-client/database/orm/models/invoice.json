@@ -71,6 +71,7 @@
         "toOne": {
           "type": "SalesCustomer",
           "column": "invchead_cust_id",
+          "isNested": true,
           "required": true
         }
       },
@@ -421,6 +422,7 @@
         "toOne": {
           "type": "CustomerRelation",
           "column": "invchead_cust_id",
+          "isNested": true,
           "required": true
         }
       }
@@ -490,6 +492,7 @@
         "toOne": {
           "type": "CustomerRelation",
           "column": "invchead_cust_id",
+          "isNested": true,
           "required": true
         }
       }

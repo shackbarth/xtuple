@@ -368,7 +368,7 @@ white:true*/
 
     editableModel: 'XM.Invoice',
 
-    canDelete: function (callback) {
+    couldDestroy: function (callback) {
       callback(XT.session.privileges.get("MaintainMiscInvoices") && !this.get("isPosted"));
     },
 
@@ -394,7 +394,7 @@ white:true*/
 
     doPrint: function () {
       // TODO
-      console.log("Print me!");
+      console.log("TODO: print invoices");
     },
 
     doVoid: function () {

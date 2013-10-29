@@ -737,27 +737,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           done();
         }, 1900);
       });
-      /**
-        @member -
-        @memberof Invoice.prototype
-        @description Invoices that are posted may not be deleted.
-      */
-      it("Invoices that are posted may not be deleted", function (done) {
-        var postedInvoice = new XM.InvoiceListItem(),
-          statusChanged = function () {
-            if (postedInvoice.isReady()) {
-              postedInvoice.off("statusChange", statusChanged);
-              assert.isTrue(XT.session.privileges.get("MaintainMiscInvoices"));
-              postedInvoice.canDelete(function (result) {
-                assert.isFalse(result);
-                done();
-              });
-            }
-          };
-
-        postedInvoice.on("statusChange", statusChanged);
-        postedInvoice.fetch({number: "60133"});
-      });
 
     // XXX TODO
     /*
@@ -783,7 +762,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       */
       it("Delete unposted invoices where the user has the MaintainMiscInvoices privilege", function (done) {
         var model = new XM.InvoiceListItem();
-        model.canDelete(function (response) {
+        model.couldDestroy(function (response) {
           assert.isTrue(response);
           done();
         });
@@ -791,9 +770,17 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       it("Cannot delete unposted invoices where the user has no MaintainMiscInvoices privilege", function (done) {
         var model = new XM.InvoiceListItem();
         XT.session.privileges.attributes.MaintainMiscInvoices = false;
-        model.canDelete(function (response) {
+        model.couldDestroy(function (response) {
           assert.isFalse(response);
-          XT.session.privileges.attributes.MaintainMiscInvoices = true;
+          done();
+        });
+      });
+      it("Cannot delete invoices that are already posted", function (done) {
+        var model = new XM.InvoiceListItem();
+        model.set({isPosted: true});
+        XT.session.privileges.attributes.MaintainMiscInvoices = true;
+        model.couldDestroy(function (response) {
+          assert.isFalse(response);
           done();
         });
       });
@@ -863,29 +850,53 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           done();
         });
       });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description The invoice list should support multiple selections
+      */
+      it("The invoice list should support multiple selections", function () {
+        var list = new XV.InvoiceList();
+        assert.isTrue(list.getMultiSelect());
+        // XXX it looks like trying to delete multiple items at once only deletes the first
+      });
+      it("The invoice list has a parameter widget", function () {
+        /*
+          * The invoice list should use a parameter widget that has the following options:
+            > Invoices
+              - Number
+            > Show
+              - Unposted - checked by default
+              - Posted - unchecked by default
+              - Voided - unchecked by default
+            > Customer
+              - Number
+              - Type (picker)
+              - Type Pattern (text)
+              - Group
+            > Invoice Date
+              - From Date
+              - To Date
+        */
+        var list = new XV.InvoiceList();
+        assert.isString(list.getParameterWidget());
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description The InvoiceList should be printable
+      */
+      it("XV.InvoiceList should be printable", function () {
+        var list = new XV.InvoiceList();
+        assert.isTrue(list.getAllowPrint());
+      });
+
     });
   };
 /*
 
 ***** CHANGES MADE TO CORE APPLICATION ******
 
-* The invoice list should support multiple selections
-* The invoice list should use a parameter widget that has the following options:
-  > Invoices
-    - Number
-  > Show
-    - Unposted - checked by default
-    - Posted - unchecked by default
-    - Voided - unchecked by default
-  > Customer
-    - Number
-    - Type (picker)
-    - Type Pattern (text)
-    - Group
-  > Invoice Date
-    - From Date
-    - To Date
-* XV.InvoiceList should be printable
 
 * A workspace view should exist called XV.InvoiceWorkspace
   > Should include line items views where a grid box is used for non-touch devieces and a list relation editor for touch devices.

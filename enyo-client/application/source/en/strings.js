@@ -452,6 +452,7 @@ strict:true, trailing:true, white:true */
     "_policy": "Policy",
     "_post": "Post",
     "_postbooks": "PostBooks",
+    "_posted": "Posted",
     "_price": "Price",
     "_priceMode": "Price Mode",
     "_priceUnit": "Price UOM",
