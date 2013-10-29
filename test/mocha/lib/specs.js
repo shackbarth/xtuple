@@ -50,7 +50,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     afterSaveActions: [{
       it: "verify currency is readonly",
       action: function (data, next) {
-        assert.isTrue(_.contains(data.model.readOnlyAttributes, "currency"));
+        assert.include(data.model.readOnlyAttributes, "currency");
         next();
       }
     }],
@@ -238,12 +238,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     additionalTests: require("../specs/invoice").additionalTests
   };
 
-  /**
-   @lends invoice
-    Some invoice stuff
-   */
-  var invoiceDetail = "foo";
-
   exports.item = {
     recordType: "XM.Item",
     collectionType: "XM.ItemListItemCollection",
@@ -305,6 +299,56 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
         next();
       }
     }],
+  };
+
+  exports.receivable = {
+    recordType: "XM.Receivable",
+    skipSmoke: true,
+    skipSave: true,
+    skipDelete: true,
+    skipUpdate: true,
+    listKind: "XV.ReceivableListItem",
+    collectionType: null,
+    cacheName: null,
+    enforceUpperKey: true,
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "uuid",
+    documentKey: "documentNumber",
+    attributes: ["uuid", "documentDate", "customer", "dueDate",
+      "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
+      "reasonCode", "amount", "currency", "paid", "notes", "taxes", "balance",
+      "taxTotal", "commission"],
+    // TODO: "applications"],
+    requiredAttributes: ["currency", "customer", "documentDate", "dueDate", "amount"],
+    extensions: ["billing"],
+    privileges: {
+      createUpdateDelete: "EditAROpenItem",
+      read: "ViewAROpenItems"
+    },
+    createHash: {
+      uuid: "TestReceivableId" + Math.random(),
+      customer: {number: "TTOYS"},
+      documentDate: new Date(),
+      dueDate: new Date(),
+      amount: 100,
+      currency: {abbreviation: "USD"},
+      documentNumber: "DocumentNumber" + Math.random()
+    },
+    updatableField: "notes",
+    // afterSaveActions: [{
+    //   it: "When the status of a receivable changes to READY_CLEAN (edit), the following attributes: " +
+    //   "customer, documentDate, documentType, documentNumber, terms should be readOnly",
+    //   action: function (data, next) {
+    //     assert.include(data.model.readOnlyAttributes, "customer");
+    //     assert.include(data.model.readOnlyAttributes, "documentDate");
+    //     assert.include(data.model.readOnlyAttributes, "documentType");
+    //     assert.include(data.model.readOnlyAttributes, "documentNumber");
+    //     assert.include(data.model.readOnlyAttributes, "terms");
+    //     next();
+    //   }
+    // }],
+    additionalTests: require("../specs/receivable").additionalTests
   };
 
   exports.shipVia = {

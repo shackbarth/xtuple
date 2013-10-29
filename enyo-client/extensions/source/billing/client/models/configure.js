@@ -17,6 +17,7 @@ white:true*/
       recordType: 'XM.Billing',
       privileges: 'ConfigureAR',
 
+
       bindEvents: function () {
         XM.Settings.prototype.bindEvents.apply(this, arguments);
         this.on('statusChange', this.statusDidChange);

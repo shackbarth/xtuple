@@ -51,6 +51,17 @@
 
       if (!spec.skipModelConfig) {
         //
+        // Verify required fields
+        //
+        if (spec.requiredAttributes) {
+          _.each(spec.requiredAttributes, function (attr) {
+            it("the " + attr + " attribute is required", function () {
+              assert.include(spec.model.requiredAttributes, attr);
+            });
+          });
+        }
+
+        //
         // Verify lockability
         //
         it(spec.isLockable ? "is lockable" : "is not lockable", function () {
@@ -81,14 +92,19 @@
         if (spec.idAttribute) {
           it("has " + spec.idAttribute + " as its idAttribute", function () {
             assert.equal(spec.idAttribute, spec.model.idAttribute);
-            if (spec.instanceOf === "XM.Document") {
-              // Documents have the same value as their document key
-              assert.equal(spec.idAttribute, spec.model.documentKey);
-            }
           });
         } else {
           it("has its id attribute defined in the test spec", function () {
             assert.fail();
+          });
+        }
+
+        //
+        // Verify Document Key
+        //
+        if (spec.documentKey) {
+          it("has " + spec.documentKey + " as its documentKey", function () {
+            assert.equal(spec.documentKey, spec.model.documentKey);
           });
         }
 
@@ -204,14 +220,23 @@
         //
         // Test that the collection exists
         //
-        it("backs the " + spec.collectionType + " collection", function () {
-          var Collection = XT.getObjectByName(spec.collectionType),
-            modelPrototype = Collection.prototype.model.prototype,
-            editableModel = modelPrototype.editableModel || modelPrototype.recordType;
+        if (spec.collectionType) {
+          it("backs the " + spec.collectionType + " collection", function () {
+            var Collection = XT.getObjectByName(spec.collectionType),
+              modelPrototype = Collection.prototype.model.prototype,
+              editableModel = modelPrototype.editableModel || modelPrototype.recordType;
 
-          assert.isFunction(Collection);
-          assert.equal(editableModel, spec.recordType);
-        });
+            assert.isFunction(Collection);
+            assert.equal(editableModel, spec.recordType);
+          });
+        } else if (spec.collectionType === null) {
+          // TODO: loop through the existing collections and make sure that
+          // none are backed by spec.recordType
+        } else {
+          it("has no colletion specified in the test spec", function () {
+            assert.fail();
+          });
+        }
 
         //
         // Test that the cache exists

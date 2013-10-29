@@ -150,6 +150,7 @@ Simplest possible usage:
                 }
               };
 
+              /*
               var oldNotify = XT.app.$.postbooks.notify;
               XT.app.$.postbooks.notify = function (notifySender, notifyObj) {
                 if (notifyObj && notifyObj.type === XM.Model.CRITICAL) {
@@ -158,7 +159,7 @@ Simplest possible usage:
                   oldNotify(notifySender, notifyObj);
                 }
               };
-
+              */
               // WIP. Not yet working. Probably need to move it up to earlier app start status.
               var oldLoc = XT.String.loc;
               XT.String.loc = function (str) {

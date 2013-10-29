@@ -5,24 +5,24 @@ trailing:true, white:true*/
 
 (function () {
 
-  var billing = XT.extensions.billing;
-
   /**
    * Billing Module.
    */
-  billing.initPostbooks = function () {
+  XT.extensions.billing.initPostbooks = function () {
     var module = {
-        name: billing.name,
+        name: XT.extensions.billing.name,
         label: "_billing".loc(),
         panels: [
           {name: "customerList", kind: "XV.CustomerList"},
-          {name: "invoiceList", kind: "XV.InvoiceList"}
+          {name: "invoiceList", kind: "XV.InvoiceList"},
+          {name: "receivableList", kind: "XV.ReceivableList"}
         ]
       },
       relevantPrivileges = [
         "ApplyARMemos",
         "ConfigureAR",
         "DeleteItemMasters",
+        "EditAROpenItem",
         "MaintainBankAccounts",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
@@ -32,6 +32,7 @@ trailing:true, white:true*/
         "MaintainSalesCategories",
         "MaintainShipVias",
         "MaintainTerms",
+        "ViewAROpenItems",
         "ViewCustomerMasters",
         "ViewCustomerGroups",
         "ViewItemMasters",
@@ -54,7 +55,7 @@ trailing:true, white:true*/
 
     XM.configurations.add(new XM.ConfigurationModel(configuration));
     XT.app.$.postbooks.insertModule(module, 0);
-    XT.session.addRelevantPrivileges(billing.name, relevantPrivileges);
+    XT.session.addRelevantPrivileges(XT.extensions.billing.name, relevantPrivileges);
   };
 
 }());

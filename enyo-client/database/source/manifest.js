@@ -11,6 +11,7 @@
     "xt/trigger_functions/usr_did_change.sql",
     "xt/trigger_functions/usrpref_did_change.sql",
     "public/functions/geteffectivextuser.sql",
+    "public/tables/aropen.sql",
     "public/tables/cohead.sql",
     "public/tables/comment.sql",
     "public/tables/cntct.sql",
