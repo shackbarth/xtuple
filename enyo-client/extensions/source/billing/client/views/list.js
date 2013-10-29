@@ -33,6 +33,9 @@ XT.extensions.billing.initLists = function () {
     collection: "XM.ReceivableListItemCollection",
     parameterWidget: "XV.ReceivableListParameters",
     allowPrint: true,
+    query: {orderBy: [
+      {attribute: 'documentNumber'}
+    ]},
     published: {
       newActions: [
         {name: "creditMemo", label: "_miscCreditMemo".loc(), attributes: {

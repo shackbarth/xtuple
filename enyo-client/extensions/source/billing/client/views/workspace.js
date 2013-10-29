@@ -67,6 +67,7 @@ trailing:true, white:true*/
     title: "_receivable".loc(),
     model: "XM.Receivable",
     saveText: "_post".loc(),
+    allowNew: false,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
