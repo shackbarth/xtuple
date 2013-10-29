@@ -80,7 +80,7 @@
       {
         "name": "customer",
         "toOne": {
-          "type": "SalesCustomer",
+          "type": "BillingCustomer",
           "column": "invchead_cust_id",
           "isNested": true,
           "required": true

@@ -130,7 +130,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     @parameter {Date} invoiceDate required default today
     @parameter {Boolean} isPosted required, defaulting to false, read only
     @parameter {Boolean} isVoid required, defaulting to false, read only
-    @parameter {SalesCustomer} customer required
+    @parameter {BillingCustomer} customer required
     @parameter {String} billtoName
     @parameter {String} billtoAddress1
     @parameter {String} billtoAddress2

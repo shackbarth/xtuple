@@ -659,6 +659,8 @@ white:true*/
 
   });
 
+  XM.BillingCustomer = XM.BillingCustomer.extend(XM.CustomerMixin);
+
   /**
     @class
 

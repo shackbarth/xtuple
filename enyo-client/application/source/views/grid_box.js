@@ -92,6 +92,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         {readOnlyAttr: "quantity",
           editor: {kind: "XV.QuantityWidget", attr: "quantity",
             name: "quantityWidget"}},
+        {readOnlyAttr: "billed",
+          editor: {kind: "XV.QuantityWidget", attr: "billed", placeholder: "_billed".loc(),
+            name: "billedWidget"}},
         {readOnlyAttr: "quantityUnit.name",
           editor: {kind: "XV.UnitCombobox", attr: "quantityUnit",
             name: "quantityUnitPicker", tabStop: false }}

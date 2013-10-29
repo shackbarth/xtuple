@@ -405,13 +405,13 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       before(function (done) {
         async.parallel([
           function (done) {
-            fetchModel(ttoys, XM.SalesCustomer, {number: "TTOYS"}, function (err, model) {
+            fetchModel(ttoys, XM.BillingCustomer, {number: "TTOYS"}, function (err, model) {
               ttoys = model;
               done();
             });
           },
           function (done) {
-            fetchModel(vcol, XM.SalesCustomer, {number: "VCOL"}, function (err, model) {
+            fetchModel(vcol, XM.BillingCustomer, {number: "VCOL"}, function (err, model) {
               vcol = model;
               done();
             });
@@ -485,7 +485,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @description List-view summary information for an invoice
         @property {String} number
         @property {Boolean} isPrinted XXX changed from printed
-        @property {CustomerRelation} customer
+        @property {BillingCustomer} customer
         @property {Date} invoiceDate
         @property {Money} total
         @property {Boolean} isPosted
@@ -575,13 +575,13 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       it("The following fields will be set to read only if the customer does not allow " +
           "free form billto: billtoName, billtoAddress1, billtoAddress2, billtoAddress3, " +
           "billtoCity, billtoState, billtoPostalCode, billtoCountry, billtoPhone", function () {
-        assert.isFalse(invoiceModel.isReadOnly("billtoName"));
-        assert.isFalse(invoiceModel.isReadOnly("billtoAddress3"));
-        assert.isFalse(invoiceModel.isReadOnly("billtoPhone"));
+        assert.isFalse(invoiceModel.isReadOnly("billtoName"), "TTOYS Name");
+        assert.isFalse(invoiceModel.isReadOnly("billtoAddress3"), "TTOYS Address3");
+        assert.isFalse(invoiceModel.isReadOnly("billtoPhone"), "TTOYS Phone");
         invoiceModel.set({customer: vcol});
-        assert.isTrue(invoiceModel.isReadOnly("billtoName"));
-        assert.isTrue(invoiceModel.isReadOnly("billtoAddress3"));
-        assert.isTrue(invoiceModel.isReadOnly("billtoPhone"));
+        assert.isTrue(invoiceModel.isReadOnly("billtoName"), "VCOL Name");
+        assert.isTrue(invoiceModel.isReadOnly("billtoAddress3"), "VCOL Address3");
+        assert.isTrue(invoiceModel.isReadOnly("billtoPhone"), "VCOL Phone");
       });
       it("If the customer attribute is empty, the above fields should be unset.", function () {
         assert.isString(invoiceModel.get("billtoName"));
@@ -910,6 +910,22 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       });
 
     });
+    describe("Invoice workspace", function () {
+      it("Has a customer relation model that's mapped correctly", function () {
+        // TODO: generalize this into a relation widget test that's run against
+        // every relation widget in the app.
+        var workspace = new XV.InvoiceWorkspace();
+        var widgetAttr = workspace.$.customerWidget.attr;
+        var attrModel = _.find(XT.session.schemas.XM.attributes.Invoice.relations, function (relation) {
+          return relation.key === widgetAttr;
+        }).relatedModel;
+        var widgetModel = XT.getObjectByName(workspace.$.customerWidget.getCollection())
+          .prototype.model.prototype.recordType;
+        assert.equal(attrModel, widgetModel);
+      });
+
+
+    });
   };
 /*
 
@@ -917,7 +933,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
 
 * A workspace view should exist called XV.InvoiceWorkspace
-  > Should include line items views where a grid box is used for non-touch devieces and a list relation editor for touch devices.
+  > Should include line items views where a grid box is used for non-touch devices and a list relation editor for touch devices.
   > Should include a panel that displays a group box of lists of taxes separated headers for taxes by line items, freight, and adjustments. Users should be able to add new tax adjustments, and remove tax adjustments for non-posted invoices.
   > Should include a panel that displays credit allocations.
     - When clicked a "new" button should allow the user to create a new minimalized version of cash receipt on-the-fly. The cash receipt need only record the amount, currency, document number, document date, distribution date and whether the balance should generate a credit memo or a customer deposit, depending on global customer deposit metrics.
