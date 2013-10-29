@@ -247,7 +247,7 @@
         "name": "uuid",
         "attr": {
           "type": "String",
-          "column": "natural_key",
+          "column": "uuid",
           "isNaturalKey": true
         }
       },

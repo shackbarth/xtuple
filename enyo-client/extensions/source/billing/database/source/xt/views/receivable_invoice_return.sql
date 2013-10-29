@@ -1,7 +1,7 @@
 select xt.create_view('xt.receivable_invoice_return', $$
 
   select aropen_id as id,
-    obj_uuid as natural_key,
+    obj_uuid as uuid,
     aropen_doctype as document_type,
     aropen_docnumber as document_number,
     aropen_posted as posted,
@@ -19,8 +19,8 @@ select xt.create_view('xt.receivable_invoice_return', $$
   from aropen
   union
   select invchead_id as id,
-    invchead_invcnumber as natural_key,
-    null as document_type,
+    invchead_invcnumber as uuid,
+    'I' as document_type,
     invchead_invcnumber as documentNumber,
     invchead_posted as posted,
     true as open,
@@ -38,8 +38,8 @@ select xt.create_view('xt.receivable_invoice_return', $$
   where invchead_posted = false
   union
   select cmhead_id as id,
-    cmhead_number as natural_key,
-    null as document_type,
+    cmhead_number as uuid,
+    'C' as document_type,
     cmhead_invcnumber as document_number,
     cmhead_posted as posted,
     true as open,
