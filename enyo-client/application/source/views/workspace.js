@@ -1114,15 +1114,139 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
-            {kind: "XV.SalesCustomerWidget", attr: "customer"}
+            {kind: "XV.DateWidget", attr: "invoiceDate"},
+            {kind: "XV.CheckboxWidget", attr: "isPosted"},
+            {kind: "XV.CheckboxWidget", attr: "isVoid"},
+            {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
+            {kind: "XV.BillingCustomerWidget", attr: "customer",
+               name: "customerWidget", showAddress: true,
+               label: "_customer".loc(), nameAttribute: ""
+            },
+            {kind: "XV.AddressFieldsWidget",
+              name: "billtoAddress", attr:
+              {name: "billtoName", line1: "billtoAddress1",
+                line2: "billtoAddress2", line3: "billtoAddress3",
+                city: "billtoCity", state: "billtoState",
+                postalCode: "billtoPostalCode", country: "billtoCountry"}
+            },
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]},
+        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
+        {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.CurrencyPicker", attr: "currency"},
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
+            {kind: "XV.SalesRepPicker", attr: "salesRep"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            {kind: "XV.SaleTypePicker", attr: "saleType"},
+            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
+              label: "_custPO".loc()},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
           ]}
         ]}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      if (enyo.platform.touch) {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.InvoiceLineItemBox", attr: "lineItems", fit: true}
+        ], {owner: this});
+      } else {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.InvoiceLineItemGridBox", attr: "lineItems", fit: true}
+        ], {owner: this});
+      }
+    }
   });
-
   XV.registerModelWorkspace("XM.InvoiceListItem", "XV.InvoiceWorkspace");
 
+  enyo.kind({
+    name: "XV.InvoiceLineWorkspace",
+    kind: "XV.Workspace",
+    title: "_invoiceLine".loc(),
+    model: "XM.InvoiceLine",
+    modelAmnesty: true,
+    published: {
+      currencyKey: "invoice.currency",
+      effectiveKey: "invoice.invoiceDate"
+    },
+    components: [
+      {kind: "Panels", name: "salesLinePanels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", fit: true, components: [
+            {kind: "XV.NumberWidget", attr: "lineNumber"},
+            {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"},
+              name: "itemSiteWidget",
+              query: {parameters: [
+              {attribute: "item.isSold", value: true},
+              {attribute: "item.isActive", value: true},
+              {attribute: "isSold", value: true},
+              {attribute: "isActive", value: true}
+            ]}},
+            {kind: "XV.QuantityWidget", attr: "quantity", label: "_quantityOrdered".loc()},
+            {kind: "XV.QuantityWidget", attr: "billed", label: "_quantityBilled".loc()},
+            {kind: "XV.UnitPicker", name: "quantityUnitPicker",
+              attr: "quantityUnit"},
+            {kind: "XV.MoneyWidget", attr:
+              {localValue: "price", currency: ""},
+              label: "_price".loc(), currencyDisabled: true,
+              scale: XT.SALES_PRICE_SCALE},
+            {kind: "XV.UnitPicker", name: "priceUnitPicker",
+              attr: "priceUnit"},
+            {kind: "XV.MoneyWidget", attr:
+              {localValue: "extendedPrice", currency: ""},
+              label: "_extendedPrice".loc(), currencyDisabled: true,
+              scale: XT.EXTENDED_PRICE_SCALE}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "detailsPanel", title: "_detail".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_detail".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "detailGroup",
+            classes: "in-panel", fit: true, components: [
+            {kind: "XV.MoneyWidget", attr: {baseValue: "unitCost"},
+              label: "_unitCost".loc(), isEditableProperty: "baseValue",
+              currencyDisabled: true},
+            {kind: "XV.MoneyWidget", attr: {localValue: "customerPrice"},
+              label: "_customerPrice".loc(), scale: XT.SALES_PRICE_SCALE,
+              currencyDisabled: true},
+            {kind: "XV.MoneyWidget", attr: {localValue: "margin"},
+              label: "_margin".loc(), scale: XT.EXTENDED_PRICE_SCALE,
+              currencyDisabled: true},
+            {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
+            {kind: "XV.TaxTypePicker", attr: "taxType"},
+            {kind: "XV.NumberWidget", attr: "tax"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]}
+      ]}
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var effectiveKey = this.getEffectiveKey(),
+        currencyKey = this.getCurrencyKey();
+
+      // Set currency and effective attributes on money widgets
+      this.getComponents().forEach(function (ctl) {
+        if (ctl.kind === "XV.MoneyWidget") {
+          ctl.attr.currency = currencyKey;
+          ctl.attr.effective = effectiveKey;
+        }
+      });
+    }
+  });
   // ..........................................................
   // ITEM
   //

@@ -258,7 +258,7 @@ white:true*/
           terms: customer.get("terms"),
           taxZone: customer.get("taxZone"),
           currency: customer.get("currency") || this.get("currency"),
-          billtoPhone: billtoContact.getValue("phone")
+          billtoPhone: billtoContact && billtoContact.getValue("phone")
         };
         if (billtoAddress) {
           _.extend(billtoAttrs, {
@@ -450,6 +450,8 @@ white:true*/
     sellingUnits: undefined,
 
     parentKey: "invoice",
+
+    readOnlyAttributes: ["lineNumber"],
 
     //
     // Core functions
