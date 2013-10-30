@@ -69,7 +69,7 @@ SYS = {};
   require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
-  
+
   if (typeof X.options.biServer !== 'undefined') {
     require("./olapcatalog");
     require("./lib/ext/olapsource");
