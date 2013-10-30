@@ -17,7 +17,8 @@ trailing:true, white:true, strict:false*/
       classes: "large-panel",
       title: "_tasks".loc(),
       columns: [
-        {classes: "grid-item", content: "_number".loc(), rows: [
+        {classes: "grid-item", header: ["_number".loc(), "_description".loc()],
+          rows: [
           {readOnlyAttr: "number",
             editor: {kind: "XV.InputWidget", attr: "number",
               placeholder: "_number".loc()}},
@@ -27,19 +28,22 @@ trailing:true, white:true, strict:false*/
           {readOnlyAttr: "getProjectStatusString",
             editor: {kind: "XV.ProjectStatusPicker", attr: "status"}}
         ]},
-        {classes: "user", content: "_user".loc(), rows: [
+        {classes: "user", header: ["_owner".loc(), "_assignedTo".loc()],
+          rows: [
           {readOnlyAttr: "owner.username",
             editor: {kind: "XV.UserAccountWidget", attr: "owner"}},
           {readOnlyAttr: "assignedTo.username",
             editor: {kind: "XV.UserAccountWidget", attr: "assignedTo"}},
         ]},
-        {classes: "quantity", content: "_hours".loc(), rows: [
+        {classes: "quantity", header: ["_budgetedHrs".loc(), "_actualHrs".loc()],
+          rows: [
           {readOnlyAttr: "budgetedHours",
             editor: {kind: "XV.HoursWidget", attr: "budgetedHours"}},
           {readOnlyAttr: "actualHours",
             editor: {kind: "XV.HoursWidget", attr: "actualHours"}}
         ]},
-        {classes: "price", content: "_expenses".loc(), rows: [
+        {classes: "price", header: ["_budgeted$".loc(), "_actual$".loc()],
+          rows: [
           {readOnlyAttr: "budgetedExpenses",
             editor: {kind: "XV.MoneyWidget",
               attr: {localValue: "budgetedExpenses", currency: ""},
@@ -49,16 +53,21 @@ trailing:true, white:true, strict:false*/
               attr: {localValue: "actualExpenses", currency: ""},
               currencyDisabled: true, currencyShowing: false}}
         ]},
-        {classes: "date", content: "_scheduled".loc(), rows: [
+        {classes: "date", header: ["_start".loc(), "_due".loc()],
+          rows: [
           {readOnlyAttr: "startDate",
+            placeholder: "_noStartDate".loc(),
             editor: {kind: "XV.DateWidget", attr: "startDate"}},
           {readOnlyAttr: "dueDate",
             editor: {kind: "XV.DateWidget", attr: "dueDate"}}
         ]},
-        {classes: "date", content: "_actualDate".loc(), rows: [
+        {classes: "date", header: ["_assigned".loc(), "_completed".loc()],
+          rows: [
           {readOnlyAttr: "assignDate",
+            placeholder: "_noAssignDate".loc(),
             editor: {kind: "XV.DateWidget", attr: "assignDate"}},
           {readOnlyAttr: "completeDate",
+            placeholder: "noCompleteDate".loc(),
             editor: {kind: "XV.DateWidget", attr: "completeDate"}}
         ]}
       ],
@@ -71,7 +80,8 @@ trailing:true, white:true, strict:false*/
       classes: "small-panel",
       title: "_workflow".loc(),
       columns: [
-        {classes: "grid-item", content: "_name".loc(), rows: [
+        {classes: "grid-item", header: ["_name".loc(), "_description".loc()],
+          rows: [
           {readOnlyAttr: "name",
             editor: {kind: "XV.InputWidget", attr: "name",
               placeholder: "_name".loc()}},
@@ -81,7 +91,8 @@ trailing:true, white:true, strict:false*/
           {readOnlyAttr: "getWorkflowStatusString",
             editor: {kind: "XV.WorkflowStatusPicker", attr: "status"}}
         ]},
-        {classes: "user", content: "_user".loc(), rows: [
+        {classes: "user", header: ["_owner".loc(), "_assignedTo".loc()],
+          rows: [
           {readOnlyAttr: "owner.username",
             editor: {kind: "XV.UserAccountWidget", attr: "owner"}},
           {readOnlyAttr: "assignedTo.username",
@@ -89,13 +100,15 @@ trailing:true, white:true, strict:false*/
           {readOnlyAttr: "priority.name",
             editor: {kind: "XV.PriorityPicker", attr: "priority"}}
         ]},
-        {classes: "date", content: "_scheduled".loc(), rows: [
+        {classes: "date", header: ["_start".loc(), "_due".loc()],
+          rows: [
           {readOnlyAttr: "startDate",
             editor: {kind: "XV.DateWidget", attr: "startDate"}},
           {readOnlyAttr: "dueDate",
             editor: {kind: "XV.DateWidget", attr: "dueDate"}}
         ]},
-        {classes: "date", content: "_actualDate".loc(), rows: [
+        {classes: "date", header: ["_assigned".loc(), "_completed".loc()],
+          rows: [
           {readOnlyAttr: "assignDate",
             editor: {kind: "XV.DateWidget", attr: "assignDate"}},
           {readOnlyAttr: "completeDate",
