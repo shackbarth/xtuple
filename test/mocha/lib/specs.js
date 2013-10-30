@@ -169,7 +169,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     @parameter {InvoiceItem} items
   */
   exports.invoice = {
-    skipCrud: true, // XXX
+    //skipCrud: true, // XXX
     skipSmoke: true, // XXX
     recordType: "XM.Invoice",
     collectionType: "XM.InvoiceListItemCollection",

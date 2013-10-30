@@ -132,6 +132,9 @@ Here's how you can use CRUD to create a model to use for your own tests:
           });
           data.model.set({currency: currency});
           lineItem.set({quantity: 7});
+          if (lineRecordType === "XM.InvoiceLine") {
+            lineItem.set({billed: 7});
+          }
           lineItem.set({item: submodels.itemModel});
           lineItem.set({site: submodels.siteModel});
         };
