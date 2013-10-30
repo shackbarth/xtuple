@@ -377,7 +377,7 @@ white:true*/
     },
 
     canVoid: function (callback) {
-      var response = XT.session.privileges.get("VoidMiscInvoices") && this.get("isPosted");
+      var response = XT.session.privileges.get("VoidPostedInvoices") && this.get("isPosted");
       callback(response || false);
     },
 

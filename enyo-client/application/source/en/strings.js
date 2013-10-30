@@ -692,6 +692,7 @@ strict:true, trailing:true, white:true */
     "_noStatus": "No Status",
     "_noTerms": "No Terms",
     "_noType": "No Type",
+    "_void": "Void",
 
     // ********
     // Permissions

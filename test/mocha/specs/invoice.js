@@ -756,8 +756,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
     // XXX TODO
     /*
-    TODO: make sure that posting and voiding work
-    TODO @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
+    TODO:posting and voiding work, anecdotally. Put it under test.
     TODO: I'm not doing tax calculations correctly
 
   TODO:
@@ -774,7 +773,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @description Users can perform the following actions from the list: Delete unposted
           invoices where the user has the MaintainMiscInvoices privilege, Post unposted
           invoices where the user has the "PostMiscInvoices" privilege, Void posted invoices
-          where the user has the "VoidMiscInvoices" privilege, Print invoice forms where
+          where the user has the "VoidPostedInvoices" privilege, Print invoice forms where
           the user has the "PrintInvoices" privilege.
       */
       it("Delete unposted invoices where the user has the MaintainMiscInvoices privilege", function (done) {
@@ -825,19 +824,19 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           done();
         });
       });
-      it("Void posted invoices where the user has the VoidMiscInvoices privilege", function (done) {
+      it("Void posted invoices where the user has the VoidPostedInvoices privilege", function (done) {
         var model = new XM.InvoiceListItem();
         model.set({isPosted: true});
-        XT.session.privileges.attributes.VoidMiscInvoices = true;
+        XT.session.privileges.attributes.VoidPostedInvoices = true;
         model.canVoid(function (response) {
           assert.isTrue(response);
           done();
         });
       });
-      it("Cannot void invoices where the user has no VoidMiscInvoices privilege", function (done) {
+      it("Cannot void invoices where the user has no VoidPostedInvoices privilege", function (done) {
         var model = new XM.InvoiceListItem();
         model.set({isPosted: true});
-        XT.session.privileges.attributes.VoidMiscInvoices = false;
+        XT.session.privileges.attributes.VoidPostedInvoices = false;
         model.canVoid(function (response) {
           assert.isFalse(response);
           done();
@@ -846,7 +845,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       it("Cannot void invoices that are not already posted", function (done) {
         var model = new XM.InvoiceListItem();
         model.set({isPosted: false});
-        XT.session.privileges.attributes.VoidMiscInvoices = true;
+        XT.session.privileges.attributes.VoidPostedInvoices = true;
         model.canVoid(function (response) {
           assert.isFalse(response);
           done();

@@ -9,6 +9,7 @@
     // ********
 
     "_accountsReceivable": "Accounts Receivable",
+    "_applyARMemos": "Apply A/R Memos",
     "_autoCloseARIncident": "Auto Close Incidents when Invoid Paid",
     "_autoCreditWarnLateCustomers": "Credit warn Customers when Late",
     "_billing": "Billing",
@@ -26,13 +27,16 @@
     "_maintainSalesCategory": "Maintain Sales Category",
     "_nextARMemoNumber": "Next Receivables Memo",
     "_nextCashRcptNumber": "Next Cash Receipt",
+    "_postMiscInvoices": "Post Invoices",
+    "_printInvoices": "Print Invoices",
     "_receivable": "Receivable",
     "_receivables": "Receivables",
     "_recurringInvoiceBuffer": "Recurring Invoice Buffer Days",
     "_taxes": "Taxes",
     "_taxTotal": "Tax Total",
     "_viewAROpenItems": "View Receivables",
-    "_viewMiscInvoices": "View Invoices"
+    "_viewMiscInvoices": "View Invoices",
+    "_voidPostedInvoices": "Void Posted Invoices"
   });
 
   if (typeof exports !== 'undefined') {
