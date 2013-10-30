@@ -10,12 +10,11 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
+    crud = require("../lib/crud"),
     assert = require("chai").assert,
-    model, taxModel,
-    applicationModel, listModel,
-    listModelCollection,
-    modelTaxCollection,
-    listView;
+    model,
+    applicationModel,
+    listModel;
 
   var additionalTests = function () {
     // it.skip("The 'ViewAROpenItems' and 'EditAROpenItem' privileges should be added to XM.SalesCustomer read privileges", function () {
@@ -31,6 +30,15 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
             model = new XM.Receivable();
             assert.isTrue(model instanceof XM.Document);
             model.initialize(null, {isNew: true});
+
+            // set required fields that were already test in spec
+            model.set("uuid", "TestReceivableId" + Math.random());
+            model.set("customer", new XM.SalesCustomer());
+            model.set("documentDate", new Date());
+            model.set("dueDate", new Date());
+            model.set("amount", 100);
+            model.set("currency", XT.baseCurrency());
+            model.set("documentNumber", "DocumentNumber" + Math.random());
           });
 
           it("A model extending XM.Document should exist in the billing extension",
@@ -104,12 +112,15 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
             assert.fail(true, true, "not implemented");
           });
 
-          it.skip("Validation: The amount must be greater than zero", function () {
-            assert.fail(true, true, "not implemented");
+          it("Validation: The amount must be greater than zero", function () {
+            model.set("amount", 0);
+            assert.equal(model.validate().code, "xt1013");
           });
 
-          it.skip("Validation: The taxTotal may not be greater than the amount", function () {
-            assert.fail(true, true, "not implemented");
+          it("Validation: The taxTotal may not be greater than the amount", function () {
+            model.set("amount", 20);
+            model.set("taxTotal", 30);
+            assert.equal(model.validate().code, "xt2024");
           });
 
           it.skip("When customer is set, the terms, currency, and salesRep should be copied from the customer and commission should be recalculated", function () {
@@ -132,21 +143,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
             assert.fail(true, true, "not implemented");
           });
 
-          it.skip("XM.Receivable object can not be created directly", function () {
-            // this should fail
-            // it('can be saved to the database', function (done) {
-            //   this.timeout(10 * 1000);
-            //   crud.save(spec, done);
-            // });
-          });
+          it.skip("XM.Receivable object can not be created directly", function () {});
 
-          it.skip("XM.Receivable object can not be deleted", function () {
-            // this should fail
-            // it('can be deleted from the database', function (done) {
-            //   this.timeout(10 * 1000);
-            //   crud.destroy(spec, done);
-            // });
-          });
+          it.skip("XM.Receivable object can not be deleted", function () {});
 
           // # HINT: On previous two functions you must 1) insert an aropen record 2) insert tax records 3)
           // run the createarcreditmemo or createardebitmemo function that will process all posting activity.
@@ -171,6 +170,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     });
 
     describe("XM.ReceivableTax", function () {
+      var taxModel;
+
       before(function () {
         assert.isDefined(XM.ReceivableTax);
         taxModel = new XM.Receivable();
@@ -248,6 +249,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     });
 
     describe("XM.ReceivableListItem", function () {
+      var listModelCollection;
+
       before(function (done) {
         assert.isDefined(XM.ReceivableListItem);
         listModel = new XM.ReceivableListItem();
@@ -302,6 +305,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     });
 
     describe("XV.ReceivableList", function () {
+      var listView;
+
       before(function () {
         assert.isDefined(XV.ReceivableList);
         listView = new XV.ReceivableList();
@@ -360,21 +365,35 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
        "and is less than or equal to the close date or where the close date is null", function () {
         //HINT: https://github.com/xtuple/xtuple/blob/master/lib/backbone-x/source/collection.js#L63
       });
+    });
 
-      it.skip("A Workspace view that represents a XM.Receivable including viewing and editing " +
-        " of taxes (when applicable) should be exist in the billing extension", function () {
-          // attributes: ["documentDate", "customer", "dueDate",
-          //   "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
-          //   "reasonCode", "amount", "currency", "paid", "notes", "taxes", "balance",
-          //   "taxTotal", "commission"],
-          // TODO: "applications"],
+    it("XV.ReceivableWorkspace", function () {
+      var receivableWorkspace;
+
+      before(function () {
+        assert.isDefined(XV.ReceivableWorkspace);
+        receivableWorkspace = new XV.ReceivableWorkspace();
       });
 
-      // add test for document type picker
+      it.skip("A Workspace view that represents a XM.Receivable including viewing and editing of taxes should exist in the billing extension", function () {
+        // attributes: ["documentDate", "customer", "dueDate",
+        //   "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
+        //   "reasonCode", "amount", "currency", "paid", "notes", "taxes", "balance",
+        //   "taxTotal", "commission"],
+        // TODO: "applications"],
+      });
 
-      it.skip("The saveText property on the workspace for XM.Receivable will be 'Post' when the status of the object is READY_NEW and 'Save' for any other status.", function () {});
+      it.skip("The saveText property on the workspace for XM.Receivable will be 'Post' when " +
+        " the status of the object is READY_NEW and 'Save' for any other status.", function () {
+          assert.equal(receivableWorkspace.saveText, "_post".loc());
+        });
 
-      it.skip("A XV.StickyCheckboxWidget should be visible when the model is in a READY_NEW state that provides the option to 'Print on Post.'", function () {});
+      it("A Picker for selecting the DocumentType should exist in the workspace", function () {
+        assert.isDefined(XV.ReceivableTypePicker);
+      });
+
+      it.skip("A XV.StickyCheckboxWidget should be visible when the model is in a READY_NEW state " +
+        "that provides the option to 'Print on Post.'", function () {});
 
       it.skip("When 'Print on Post' is checked, a standard form should be printed when posting", function () {});
 
