@@ -65,13 +65,6 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first",
-            components: [
-            {kind: "XV.ListAttr", attr: "activityType",
-              formatter: "formatType"}
-          ]}
-        ]},
-        {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name", isKey: true},
@@ -79,20 +72,27 @@ trailing:true, white:true, strict: false*/
                 formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
                 classes: "right"}
             ]},
-            {kind: "XV.ListAttr", attr: "description",
-              placeholder: "_noDescription".loc()}
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "activityType",
+                formatter: "formatType"},
+              {kind: "XV.ListAttr", attr: "getActivityStatusString",
+                classes: "right"}
+            ]}
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.ListAttr", attr: "getActivityStatusString"},
-            {kind: "XV.ListAttr", attr: "owner.username"}
-          ]}
-          /* ,
+            {kind: "XV.ListAttr", attr: "description",
+                placeholder: "_noDescription".loc()},
+            {kind: "XV.ListAttr", attr: "getActivityStatusString"}
+          ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "owner.username"},
+            {kind: "XV.ListAttr", attr: "assignedTo.username"}
+            /*
             {kind: "XV.ListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()}
+            */
           ]}
-          */
         ]}
       ]}
     ],
