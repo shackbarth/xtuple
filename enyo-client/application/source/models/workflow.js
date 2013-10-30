@@ -105,9 +105,9 @@ white:true*/
 
         // Update successor statuses if applicable
         workflow = parent.get("workflow");
-        successors = this.get("successors") || [];
+        successors = (this.get("successors") || "").split(",");
         _.each(successors, function (successor) {
-          var item = workflow.get(successor.id),
+          var item = workflow.get(successor),
             status = item.get("status");
 
           if (status === K.PENDING) {
