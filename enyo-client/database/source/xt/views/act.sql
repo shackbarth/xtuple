@@ -14,6 +14,7 @@ select
   todoitem_name as act_name,
   todoitem_active as act_active,
   todoitem_status as act_status,
+  todoitem_priority_id as act_priority_id,
   todoitem_description as act_description,
   todoitem_owner_username as act_owner_username,
   todoitem_username as act_assigned_username,
@@ -34,6 +35,7 @@ select
   ophead_number as act_number,
   ophead_active as act_active,
   opstage_name as act_status,
+  ophead_priority_id as act_priority_id,
   ophead_name as act_description,
   ophead_owner_username as act_owner_username,
   ophead_username as act_assigned_username,
@@ -56,6 +58,7 @@ select
   incdt_number::text as act_number,
   incdt_status != 'L' as act_active,
   incdt_status as act_status,
+  incdt_incdtpriority_id as act_priority_id,
   incdt_summary as act_description,
   incdt_owner_username as act_owner_username,
   incdt_assigned_username as act_assigned_username,
@@ -76,6 +79,7 @@ select
   prj_number as act_name,
   prj_status != 'C' as act_active,
   prj_status as act_status,
+  prjext_priority_id as act_priority_id,
   prj_name as act_description,
   prj_owner_username as act_owner_username,
   prj_username as act_assigned_username,
@@ -85,6 +89,7 @@ select
   prj_completed_date as act_completed_date,
   null as act_parent_uuid
 from prj
+  join xt.prjext on prj_id=prjext_id
   join pg_class c on prj.tableoid = c.oid
   join xt.acttype on acttype_tblname=relname
 
@@ -96,6 +101,7 @@ select
   prjtask_number as act_name,
   prjtask_status != 'C' as act_active,
   prjtask_status as act_status,
+  prjtaskext_priority_id as act_priority_id,
   prjtask_name as act_description,
   prjtask_owner_username as act_owner_username,
   prjtask_username as act_assigned_username,
@@ -105,6 +111,7 @@ select
   prjtask_completed_date as act_completed_date,
   prj.obj_uuid as act_parent_uuid
 from prjtask
+  join xt.prjtaskext on prjtaskext_id=prjtask_id
   join prj on prj_id=prjtask_prj_id
   join pg_class c on prjtask.tableoid = c.oid
   join xt.acttype on acttype_tblname=relname
@@ -118,6 +125,7 @@ select
   wf_name as act_name,
   wf_status not in ('C','D') as act_active,
   wf_status as act_status,
+  wf_priority_id as act_priority_id,
   wf_description as act_description,
   wf_owner_username as act_owner_username,
   wf_assigned_username as act_assigned_username,

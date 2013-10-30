@@ -29,6 +29,30 @@ white:true*/
     });
 
     /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.ProjectTypeCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.ProjectTypeCharacteristic.prototype */ {
+
+      recordType: 'XM.ProjectTypeCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.WorkflowSource
+    */
+    XM.ProjectTypeWorkflow = XM.WorkflowSource.extend(
+      /** @scope XM.ProjectTypeWorkflow.prototype */ {
+
+      recordType: 'XM.ProjectTypeWorkflow'
+
+    });
+
+    /**
       @namespace
 
       A mixin shared by project models that share common project status

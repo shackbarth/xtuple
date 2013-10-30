@@ -165,4 +165,24 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    An abstract class for handling workflow templates.
+
+    @extends XM.Model
+  */
+  XM.WorkflowSource = XM.Model.extend(
+    /** @scope XM.WorkflowSource.prototype */ {
+
+    defaults: {
+      startSet: false,
+      startOffset: 0,
+      dueSet: false,
+      dueOffset: 0,
+      sequence: 0
+    }
+
+  });
+
 }());

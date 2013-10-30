@@ -71,6 +71,13 @@
         }
       },
       {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "act_priority_id"
+        }
+      },      
+      {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
