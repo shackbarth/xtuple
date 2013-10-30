@@ -1,0 +1,33 @@
+[
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Characteristic",
+    "table": "char",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "char_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "isProjects",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_projects"
+        }
+      },
+      {
+        "name": "isTasks",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_tasks"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

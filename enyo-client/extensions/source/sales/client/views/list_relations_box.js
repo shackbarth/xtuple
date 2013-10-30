@@ -70,7 +70,7 @@ trailing:true, white:true*/
       kind: "XV.ListRelationsBox",
       title: "_quotes".loc(),
       parentKey: "opportunity",
-      listRelations: "XV.OpportunitySalesListRelations", // not a bug
+      listRelations: "XV.OpportunityQuoteListRelations", // not a bug
       searchList: "XV.QuoteList",
       handlers: {
         onWorkspace: "appendWorkspace"

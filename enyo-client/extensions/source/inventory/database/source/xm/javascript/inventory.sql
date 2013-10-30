@@ -10,8 +10,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
   /**
     Distribute location and/or trace detail for one or many inventory transactions.
-    For good or for ill, this function attempts to exactly replicate the behavior of
-    distributeInventory.cpp in the C++ client.
+    For good or for ill, this function attempts to exactly replicate the behavior of distributeInventory.cpp in the C++ client.
     
     Example:
 
@@ -71,7 +70,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           " where locitemsite_itemsite_id = $2);",
           qry = plv8.execute(locSql, [uuid, info.itemsite_id]);
         if (!qry.length) {
-          throw new handleError("Location " + uuid + " is not valid.");
+          throw new handleError("Location " + uuid + " is not valid."); 
         }
         return qry[0].location_id;
       };
@@ -571,7 +570,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
-    return JSON.stringify(ret);
+    return ret;
   };
   
   /* 

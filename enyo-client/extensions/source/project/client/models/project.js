@@ -7,6 +7,37 @@ white:true*/
   "use strict";
 
   XT.extensions.project.initProjectModels = function () {
+
+    var _proto = XM.Project.prototype,
+      _defaults = _proto.defaults;
+
+    _proto.defaults = function () {
+      var defaults = _.isFunction(_defaults) ? _defaults() : defaults;
+      // Add first active project type
+      defaults.projectType = _.find(XM.projectTypes.models, function (model) {
+        return model.get("isActive");
+      });
+      return defaults;
+    };
+    /**
+      @class
+
+      @extends XM.Document
+    */
+    XM.ProjectType = XM.Document.extend(
+      /** @scope XM.ProjectType.prototype */ {
+
+      recordType: 'XM.ProjectType',
+
+      documentKey: 'code',
+
+      enforceUpperKey: false,
+
+      defaults: {
+        isActive: true
+      }
+
+    });
   
     /**
       @class
@@ -49,6 +80,83 @@ white:true*/
       isDocumentAssignment: true
 
     });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.ProjectCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.ProjectCharacteristic.prototype */ {
+
+      recordType: 'XM.ProjectCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.ProjectListItemCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.ProjectListItemCharacteristic.prototype */ {
+
+      recordType: 'XM.ProjectListItemCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.ProjectTaskCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.ProjectTaskCharacteristic.prototype */ {
+
+      recordType: 'XM.ProjectTaskCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.TaskCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.TaskCharacteristic.prototype */ {
+
+      recordType: 'XM.TaskCharacteristic'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.TaskListItemCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @scope XM.TaskListItemCharacteristic.prototype */ {
+
+      recordType: 'XM.TaskListItemCharacteristic'
+
+    });
+
+    // ..........................................................
+    // COLLECTIONS
+    //
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ProjectTypeCollection = XM.Collection.extend({
+      /** @scope XM.ProjectTypeCollection.prototype */
+
+      model: XM.ProjectType
+
+    });
+
   };
 
 }());

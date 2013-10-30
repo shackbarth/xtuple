@@ -18,6 +18,10 @@
     margin: 0;
   }
 
+  .enyo-fittable-columns-layout > * {
+    vertical-align: middle;
+  }
+
   .in-panel {
     > *:first-child {
       border-top-color: @silver;
@@ -52,7 +56,9 @@
   */
   .onyx-input-decorator {
     border: 0;
+    margin-left: -8px;
     input {
+      padding-top: 2px;
       width: 150px;
     }
   }
@@ -65,16 +71,20 @@
 
   .xv-relationwidget, .xv-datewidget, .xv-numberwidget {
     .onyx-input-decorator {
+      padding-top: 9px;
       width: 170px;
     }
     input {
+      padding-top: 0;
       width: 120px;
     }
-  }
-
-  .xv-numberwidget {
-    input {
-      width: 150px;
+    .xv-decorated-label {
+      width: 130px;
+      padding: 10px 8px 8px 8px;
+      text-align: right;
+      &.disabled {
+        color: @dim-gray;
+      }
     }
   }
 

@@ -111,6 +111,16 @@ white:true*/
     WEIGHT_SCALE: 2,
 
     /**
+      System precision scale for hours.
+
+      @static
+      @constant
+      @type Number
+      @default 2
+    */
+    HOURS_SCALE: 2,
+
+    /**
       Maximum length of the history array
 
       @static

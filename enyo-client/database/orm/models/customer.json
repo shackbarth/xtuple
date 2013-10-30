@@ -4,7 +4,6 @@
     "nameSpace": "XM",
     "type": "Customer",
     "table": "custinfo",
-    "idSequenceName": "cust_cust_id_seq",
     "isRest": true,
     "lockable": true,
     "orderSequence": "CRMAccountNumber",

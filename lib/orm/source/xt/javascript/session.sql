@@ -26,9 +26,11 @@ select xt.install_js('XT','Session','xtuple', $$
             + 'coalesce(locale_qtyper_scale, 6) as "quantityPerScale", '
             + 'coalesce(locale_uomratio_scale, 6) as "unitRatioScale", '
             + 'coalesce(locale_percent_scale, 2) as "percentScale", '
-            + 'coalesce(locale_weight_scale, 2) as "weightScale" '
+            + 'coalesce(locale_weight_scale, 2) as "weightScale", '
+            + 'coalesce(localeext_hours_scale, 2) as "hoursScale" '
             + 'from locale '
             + 'join usr on usr_locale_id = locale_id '
+            + 'left join xt.localeext on locale_id=localeext_id '
             + 'left join lang on locale_lang_id = lang_id '
             + 'left join country on locale_country_id = country_id '
             + 'where usr_username = $1 ',
@@ -69,7 +71,7 @@ select xt.install_js('XT','Session','xtuple', $$
       return JSON.parse(row.dict_strings);
     });
 
-    return JSON.stringify(rec);
+    return rec;
   }
 
   /**
@@ -85,11 +87,11 @@ select xt.install_js('XT','Session','xtuple', $$
       if (XM.hasOwnProperty(type) &&
           XM[type].settings &&
           typeof XM[type].settings === 'function') {
-        settings = XT.extend(settings, JSON.parse(XM[type].settings()));
+        settings = XT.extend(settings, XM[type].settings());
       }
     }
 
-    return JSON.stringify(settings);
+    return settings;
   }
 
   /**
@@ -109,7 +111,7 @@ select xt.install_js('XT','Session','xtuple', $$
               ') grppriv on (grppriv_priv_id=priv_id); '
       rec = plv8.execute(sql, [ XT.username ] );
 
-    return rec.length ? JSON.stringify(rec) : '{}';
+    return rec.length ? rec : {};
   }
 
 
@@ -120,14 +122,22 @@ select xt.install_js('XT','Session','xtuple', $$
     @returns {Object}
   */
   XT.Session.preferences = function() {
-    var sql = "SELECT * FROM xt.userpref WHERE userpref_usr_username = $1",
+    var sql = "select * from xt.userpref where userpref_usr_username = $1 " +
+              "and userpref_name != 'PreferredWarehouse' " +
+              "union " + 
+              /* Sorry, we've just got to share this one... */
+              "select usrpref_id, usrpref_username, usrpref_name, warehous_code " +
+              "from usrpref " +
+              " join whsinfo on usrpref_value = warehous_id::text " +
+              "where usrpref_username = $1 "
+              "and usrpref_name = 'PreferredWarehouse';";
       result = plv8.execute(sql, [XT.username]),
       resultObj = {};
 
     result.map(function (res) {
       resultObj[res.userpref_name] = res.userpref_value;
     });
-    return JSON.stringify(resultObj);
+    return resultObj;
   }
 
   /*
@@ -145,19 +155,34 @@ select xt.install_js('XT','Session','xtuple', $$
     /* Compose our commit settings by applying the patch to what we already have */
     patches.map(function (patch) {
       var sql,
+        name = patch.path.substring(1),
         updateSql = "UPDATE xt.userpref SET userpref_value = $1 WHERE userpref_usr_username = $2 AND userpref_name = $3;",
-        insertSql = "INSERT INTO xt.userpref (userpref_value, userpref_usr_username, userpref_name) VALUES ($1, $2, $3);";
+        insertSql = "INSERT INTO xt.userpref (userpref_value, userpref_usr_username, userpref_name) VALUES ($1, $2, $3);",
+        /* Handle the ugly exception */
+        updateSqlSite = "UPDATE usrpref SET usrpref_value = (select warehous_id from whsinfo where warehous_code = $1) WHERE usrpref_username = $2 AND usrpref_name = $3;",
+        insertSqlSite = "INSERT INTO usrpref (usrpref_value, usrpref_username, usrpref_name) VALUES ($1, $2, $3);";
 
-      if (patch.op === 'add') {
-        sql = insertSql;
-      } else if(patch.op === 'replace') {
-        sql = updateSql;
+      if (name !== "PreferredWarehouse") {
+        if (patch.op === 'add') {
+          sql = insertSql;
+        } else if(patch.op === 'replace') {
+          sql = updateSql;
+        } else {
+          /* no other operation is supported at the moment */
+          return;
+        }
       } else {
-        /* no other operation is supported at the moment */
-        return;
+        if (patch.op === 'add') {
+          sql = insertSqlSite;
+        } else if(patch.op === 'replace') {
+          sql = updateSqlSite;
+        } else {
+          /* no other operation is supported at the moment */
+          return;
+        }
       }
 
-      plv8.execute(sql, [patch.value, XT.username, patch.path.substring(1)]);
+      plv8.execute(sql, [patch.value, XT.username, name]);
     });
     return true;
   }
@@ -328,7 +353,8 @@ select xt.install_js('XT','Session','xtuple', $$
       if (propertyIsValid(orm, name)) {
         column = {
           name: name,
-          category: recs[i].category
+          category: recs[i].category,
+          type: XT.Orm.getType(orm, name)
         }
         result[type]['columns'].push(column);
       }
@@ -355,7 +381,7 @@ select xt.install_js('XT','Session','xtuple', $$
       }
     }
 
-    return JSON.stringify(result);
+    return result;
   }
 
 $$ );

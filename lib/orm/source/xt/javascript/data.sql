@@ -586,7 +586,9 @@ select xt.install_js('XT','Data','xtuple', $$
         encryptionKey = options.encryptionKey,
         i,
         orm = this.fetchOrm(options.nameSpace, options.type),
-        sql = this.prepareInsert(orm, data, null, encryptionKey);
+        sql = this.prepareInsert(orm, data, null, encryptionKey),
+        pkey = XT.Orm.primaryKey(orm),
+        rec;
 
       /* Handle extensions on the same table. */
       for (var i = 0; i < orm.extensions.length; i++) {
@@ -602,7 +604,9 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       if (sql.statement) {
-        plv8.execute(sql.statement, sql.values);
+        rec = plv8.execute(sql.statement, sql.values);
+        /* Make sure the primary key is populated */
+        if (!data[pkey]) { data[pkey] = rec[0].id; }
       }
 
       /* Handle extensions on other tables. */
@@ -676,7 +680,7 @@ select xt.install_js('XT','Data','xtuple', $$
       count = params.values.length + 1;
 
       /* If no primary key, then create one. */
-      if (!record[pkey]) {
+      if (!record[pkey] && orm.idSequenceName) {
         if (DEBUG) {
           XT.debug('prepareInsert sql =', sql);
           XT.debug('prepareInsert values =', [orm.idSequenceName]);
@@ -810,6 +814,16 @@ select xt.install_js('XT','Data','xtuple', $$
       } else {
         query = 'insert into %1$I (' + columns + ') values (' + expressions + ')';
         params.statement = XT.format(query, [params.table]);
+      }
+
+      /* If we can get the primary key column we want to return that
+         for cases where it is determined behind the scenes */
+      if (!record[pkey] && !params.primaryKey) {
+        params.primaryKey = XT.Orm.primaryKey(orm, true);
+      }
+
+      if (params.primaryKey) {
+        params.statement = params.statement +  'returning ' + params.primaryKey + ' as id';
       }
 
       if (DEBUG) {

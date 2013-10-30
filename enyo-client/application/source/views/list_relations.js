@@ -115,8 +115,9 @@ trailing:true, white:true*/
     setupItem: function (inSender, inEvent) {
       var index = inEvent.index,
         model = this.readyModels()[index],
-        isActive = model.getValue('isActive'),
+        isActive = model ? model.getValue('isActive') : false,
         isNotActive = _.isBoolean(isActive) ? !isActive : false;
+      if (!model) { return; }
 
       this.inherited(arguments);
 

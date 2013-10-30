@@ -22,7 +22,7 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
     var keys = XM.DatabaseInformation.options.slice(0),
       data = Object.create(XT.Data);
     
-    return JSON.stringify(data.retrieveMetrics(keys));
+    return data.retrieveMetrics(keys);
   }
 
   /* 

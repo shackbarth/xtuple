@@ -79,26 +79,10 @@ white:true*/
               shipDate
             ];
           shipOptions.success = function (shipResp) {
-            var map,
-              err;
-            // Check for silent errors
-            if (shipResp < 0) {
-              map = {
-                "-1": "xtinv1001",
-                "-5": "xtinv1002",
-                "-8": "xtinv1008",
-                "-12": "xtinv1003",
-                "-13": "xtinv1004",
-                "-15": "xtinv1005",
-                "-50": "xtinv1006",
-                "-99": "xtinv1007"
-              };
-              resp = resp + "";
-              err = XT.Error.clone(map[resp] ? map[resp] : "xt1001");
-              that.trigger("invalid", that, err, options || {});
-            } else {
-              if (success) { success(model, resp, options); }
-            }
+            if (success) { success(model, resp, options); }
+          };
+          shipOptions.error = function () {
+            // The datasource takes care of reporting the error to the user
           };
           that.dispatch("XM.Inventory", "shipShipment", params, shipOptions);
           return this;
