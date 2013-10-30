@@ -24,6 +24,24 @@ trailing:true, white:true*/
         ]}
       ]
     });
+
+    enyo.kind({
+      name: "XV.ReceivableApplicationListRelations",
+      kind: "XV.ListRelations",
+      parentKey: "receivable",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+              {kind: "XV.ListAttr", attr: "documentNumber", classes: "bold"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "applicationDate"}
+            ]}
+          ]}
+        ]}
+      ]
+    });
   };
 
 }());

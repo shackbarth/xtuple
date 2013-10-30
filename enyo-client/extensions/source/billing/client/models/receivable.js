@@ -308,4 +308,16 @@ XT.extensions.billing.initReceivableModel = function () {
 
   });
 
+  /**
+    @class XM.ReceivableApplicationCollection
+
+    @extends XM.Collection
+  */
+  XM.ReceivableApplicationCollection = XM.Collection.extend({
+    /** @scope XM.ReceivableTaxCollection.prototype */
+
+    model: XM.ReceivableApplication
+
+  });
+
 };

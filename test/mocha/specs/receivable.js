@@ -204,16 +204,20 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     });
 
     describe("XM.ReceivableApplication", function () {
-      before(function () {
+      var applicationModel;
 
+      before(function (done) {
+        assert.isDefined("XM.ReceivableApplication");
+        applicationModel = new XM.ReceivableApplication();
+        applicationModel.fetch({uuid: "19455450-47b6-44a5-a4f6-6cc88881362a", success: done()});
       });
 
-      it.skip("A nested only model called XM.ReceivableApplication should be created in the billing extension", function () {
-        assert.fail(true, true, "not implemented");
+      it("A nested only model called XM.ReceivableApplication should be created in the billing extension", function () {
+        assert.isDefined(applicationModel);
       });
 
-      it.skip("XM.ReceivableApplication extends XM.Model", function () {
-        assert.fail(true, true, "not implemented");
+      it("XM.ReceivableApplication extends XM.Model", function () {
+        assert.isTrue(applicationModel instanceof XM.Model);
       });
 
       it.skip("XM.ReceivableApplication should include applications where the parent is both the target and the source", function () {
@@ -221,13 +225,11 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         assert.fail(true, true, "not implemented");
       });
 
-      it.skip("XM.ReceivableApplication has 'uuid' as its idAttribute", function () {
-        assert.fail(true, true, "not implemented");
-        //assert.equal("uuid", taxModel.idAttribute);
+      it("XM.ReceivableApplication has 'uuid' as its idAttribute", function () {
+        assert.equal(applicationModel.idAttribute, "uuid");
       });
 
       it.skip("XM.ReceivableApplication should include the following attributes", function () {
-        assert.fail(true, true, "not implemented");
         var attrs = ["uuid",
           "applicationType",
           "documentNumber",
@@ -238,7 +240,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
 
         _.each(attrs, function (attr) {
           it("XM.ReceivableApplication contains the " + attr + " attribute", function () {
-            assert.include(XM.ReceivableApplication.getAttributeNames(), attr);
+            assert.include(applicationModel.getAttributeNames(), attr);
           });
         });
       });

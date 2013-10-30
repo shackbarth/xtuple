@@ -105,8 +105,7 @@ trailing:true, white:true*/
           ]}
         ]},
         {kind: "XV.ReceivableTaxBox", attr: "taxes", title: "_taxes".loc()},
-        // add applications relations
-        //{kind: "XV.ReceivableApplicationsBox", attr: "applications", title: "_applications".loc()}
+        {kind: "XV.ReceivableApplicationsListRelationsBox", attr: "applications", title: "_applications".loc()}
       ]}
     ]
   });

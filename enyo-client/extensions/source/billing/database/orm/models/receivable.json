@@ -139,6 +139,15 @@
         }
       },
       {
+        "name": "applications",
+        "toMany": {
+          "isNested": true,
+          "type": "ReceivableApplication",
+          "column": "aropen_id",
+          "inverse": "source"
+        }
+      },
+      {
         "name": "notes",
         "attr": {
           "type": "String",
@@ -382,6 +391,13 @@
           "type": "String",
           "column": "obj_uuid",
           "isNaturalKey": true
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "arapply_source_aropen_id"
         }
       },
       {
