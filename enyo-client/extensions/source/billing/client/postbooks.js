@@ -19,6 +19,7 @@ trailing:true, white:true*/
         ]
       },
       relevantPrivileges = [
+        "ApplyARMemos",
         "ConfigureAR",
         "DeleteItemMasters",
         "EditAROpenItem",
@@ -31,11 +32,15 @@ trailing:true, white:true*/
         "MaintainSalesCategories",
         "MaintainShipVias",
         "MaintainTerms",
+        "OverrideTax",
+        "PostMiscInvoices",
+        "PrintInvoices",
         "ViewAROpenItems",
         "ViewCustomerMasters",
         "ViewCustomerGroups",
         "ViewItemMasters",
-        "ViewMiscInvoices"
+        "ViewMiscInvoices",
+        "VoidPostedInvoices"
       ],
       configuration = {
         model: "XM.billing",

@@ -126,9 +126,49 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     Here is some high-level description of what an invoice is supposed to do.
     @class
     @alias Invoice
+    @parameter {String} number that is the documentKey and idAttribute
+    @parameter {Date} invoiceDate required default today
+    @parameter {Boolean} isPosted required, defaulting to false, read only
+    @parameter {Boolean} isVoid required, defaulting to false, read only
+    @parameter {BillingCustomer} customer required
+    @parameter {String} billtoName
+    @parameter {String} billtoAddress1
+    @parameter {String} billtoAddress2
+    @parameter {String} billtoAddress3
+    @parameter {String} billtoCity
+    @parameter {String} billtoState
+    @parameter {String} billtoPostalCode
+    @parameter {String} billtoCountry
+    @parameter {String} billtoPhone
+    @parameter {Currency} currency
+    @parameter {Terms} terms
+    @parameter {SalesRep} salesRep
+    @parameter {Percent} commission required, default 0
+    @parameter {SaleType} saleType
+    @parameter {String} customerPurchaseOrderNumber
+    @parameter {TaxZone} taxZone
+    @parameter {String} notes
+    @parameter {InvoiceRelation} recurringInvoice
+    @parameter {Money} allocatedCredit the sum of all allocated credits
+    @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
+    @parameter {Money} subtotal the sum of the extended price of all line items
+    @parameter {Money} taxTotal the sum of all taxes inluding line items, freight and tax adjustments
+    @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
+    @parameter {Money} total the calculated total of subtotal + freight + tax + miscCharge
+    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - outstandingCredit.
+      - If sum calculates to less than zero, then the balance is zero.
+    @parameter {InvoiceAllocation} allocations
+    @parameter {InvoiceTax} taxAdjustments
+    @parameter {InvoiceLine} lineItems
+    @parameter {InvoiceCharacteristic} characteristics
+    @parameter {InvoiceContact} contacts
+    @parameter {InvoiceAccount} accounts
+    @parameter {InvoiceCustomer} customers
+    @parameter {InvoiceFile} files
+    @parameter {InvoiceUrl} urls
+    @parameter {InvoiceItem} items
   */
   exports.invoice = {
-    skipSmoke: true, // XXX
     recordType: "XM.Invoice",
     collectionType: "XM.InvoiceListItemCollection",
     /**
@@ -152,7 +192,23 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     */
     idAttribute: "number",
     enforceUpperKey: true,
-    attributes: ["number"], // TODO
+    attributes: ["number", "invoiceDate", "isPosted", "isVoid", "customer",
+      "billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3",
+      "billtoCity", "billtoState", "billtoPostalCode", "billtoCountry",
+      "billtoPhone", "currency", "terms", "salesRep", "commission",
+      "saleType", "customerPurchaseOrderNumber", "taxZone", "notes",
+      "recurringInvoice", "allocatedCredit", "outstandingCredit", "subtotal",
+      "taxTotal", "miscCharge", "total", "balance", "allocations",
+      "taxAdjustments", "lineItems", "characteristics", "contacts",
+      "accounts", "customers", "files", "urls", "items"],
+    requiredAttributes: ["number", "invoiceDate", "isPosted", "isVoid",
+      "customer", "commission"],
+    defaults: {
+      invoiceDate: new Date(),
+      isPosted: false,
+      isVoid: false,
+      commission: 0
+    },
     /**
       @member -
       @memberof Invoice.prototype
@@ -175,14 +231,24 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       customer: {number: "TTOYS"}
     },
     updatableField: "notes",
+    beforeSaveActions: [{it: 'sets up a valid line item',
+      action: require("./model_data").getBeforeSaveAction("XM.InvoiceLine")}],
+    skipSmoke: true,
+    beforeSaveUIActions: [{it: 'sets up a valid line item',
+      action: function (workspace, done) {
+        var gridRow;
+
+        workspace.value.on("change:total", done);
+        workspace.$.invoiceLineItemGridBox.newItem();
+        gridRow = workspace.$.invoiceLineItemGridBox.$.editableGridRow;
+        // TODO
+        //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
+        gridRow.$.quantityWidget.doValueChange({value: 5});
+
+      }
+    }],
     additionalTests: require("../specs/invoice").additionalTests
   };
-
-  /**
-   @lends invoice
-    Some invoice stuff
-   */
-  var invoiceDetail = "foo";
 
   // exports.item = {
   //   recordType: "XM.Item",
