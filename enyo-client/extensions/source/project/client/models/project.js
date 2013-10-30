@@ -322,7 +322,6 @@ white:true*/
       @class
 
       @extends XM.ProjectBase
-      @extends XM.ProjectStatusMixin
     */
     XM.ProjectTask = XM.ProjectBase.extend({
       /** @scope XM.ProjectTask.prototype */
@@ -352,6 +351,10 @@ white:true*/
                     'change:budgetedExpenses change:actualExpenses';
         this.on(event, this.valuesDidChange);
         this.on('change:project', this.projectDidChange);
+      },
+
+      getProjectTaskStatusString: function () {
+        return XM.ProjectStatus.getProjectStatusString.call(this);
       },
 
       /**

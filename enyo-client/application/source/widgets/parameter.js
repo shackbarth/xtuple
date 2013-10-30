@@ -70,6 +70,50 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // ACTIVITY
+  //
+
+  enyo.kind({
+    name: "XV.ActivityListParameters",
+    kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        showInactive: false,
+        user: XM.currentUser
+      };
+    },
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_activities".loc()},
+      {name: "showInactive", label: "_showInactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"},
+      {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
+      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
+      {name: "fromDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"},
+      {name: "toDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"}
+    ]
+  });
+
+  // ..........................................................
   // ADDRESS
   //
 

@@ -1,5 +1,6 @@
 enyo.depends(
   "account.js",
+  "activity.js",
   "address.js",
   "bank_account.js",
   "configure.js",
