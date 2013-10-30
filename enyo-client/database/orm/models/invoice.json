@@ -1159,6 +1159,13 @@
         "read": "ViewMiscInvoices",
         "update": "MaintainMiscInvoices",
         "delete": "MaintainMiscInvoices"
+      },
+      "attribute": {
+        "taxType": {
+          "create": "OverrideTax",
+          "read": true,
+          "update": "OverrideTax"
+        }
       }
     },
     "properties": [

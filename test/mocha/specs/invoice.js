@@ -371,7 +371,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       });
       it.skip("XM.InvoiceLine should have a calculatePrice function that retrieves a price from the " +
           "customer.itemPrice dispatch function based on the billed value.", function () {
-        // TODO
+        // TODO: put under test (code is written)
         assert.fail();
       });
     });
