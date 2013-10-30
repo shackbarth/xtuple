@@ -484,6 +484,20 @@ white:true*/
 
       @extends XM.Model
     */
+    XM.ProjectCustomer = XM.Model.extend(
+      /** @scope XM.ProjectCustomer.prototype */ {
+
+      recordType: 'XM.ProjectCustomer',
+
+      isDocumentAssignment: true
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
     XM.ProjectRecurrence = XM.Model.extend({
       /** @scope XM.ProjectRecurrence.prototype */
 
