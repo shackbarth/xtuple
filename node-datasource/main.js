@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+regexp:true, undef:true, strict:true, trailing:true, white:true, es5:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
 
 Backbone = require("backbone");
@@ -69,7 +69,7 @@ SYS = {};
   require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
-  
+
   if (typeof X.options.biServer !== 'undefined') {
     require("./olapcatalog");
     require("./lib/ext/olapsource");
