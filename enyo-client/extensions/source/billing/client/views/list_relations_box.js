@@ -30,6 +30,38 @@ trailing:true, white:true*/
       parentKey: "receivable",
       listRelations: "XV.ReceivableTaxListRelations"
     });
+
+    enyo.kind({
+      name: "XV.ReceivableTaxListRelations",
+      kind: "XV.ListRelations",
+      parentKey: "receivable",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+              {kind: "XV.ListAttr", attr: "taxCode", classes: "bold"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "amount"}
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
+    // ..........................................................
+    // RECEIVABLE APPLICATIONS
+    //
+
+    // enyo.kind({
+    //   name: "XV.ReceivableApplicationsBox",
+    //   kind: "XV.ListRelationsBox",
+    //   title: "_applications".loc(),
+    //   parentKey: "receivable",
+    //   listRelations: "XV.ReceivableApplicationsListRelations",
+    //   searchList: "XV.ContactList"
+    // });
+
   };
 
 }());

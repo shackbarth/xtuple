@@ -355,7 +355,7 @@
   {
     "context": "billing",
     "nameSpace": "XM",
-    "type": "ReceivableTax",
+    "type": "ReceivableApplication",
     "table": "arapply",
     "idSequenceName": "arapply_arapply_id_seq",
     "comment": "Receivable Tax Map",
@@ -394,7 +394,7 @@
       {
         "name": "documentNumber",
         "attr": {
-          "type": "",
+          "type": "String",
           "column": "arapply_source_docnumber"
         }
       },
