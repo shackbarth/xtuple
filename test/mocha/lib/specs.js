@@ -169,8 +169,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     @parameter {InvoiceItem} items
   */
   exports.invoice = {
-    //skipCrud: true, // XXX
-    skipSmoke: true, // XXX
     recordType: "XM.Invoice",
     collectionType: "XM.InvoiceListItemCollection",
     /**
@@ -235,6 +233,20 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     updatableField: "notes",
     beforeSaveActions: [{it: 'sets up a valid line item',
       action: require("./model_data").getBeforeSaveAction("XM.InvoiceLine")}],
+    skipSmoke: true,
+    beforeSaveUIActions: [{it: 'sets up a valid line item',
+      action: function (workspace, done) {
+        var gridRow;
+
+        workspace.value.on("change:total", done);
+        workspace.$.invoiceLineItemGridBox.newItem();
+        gridRow = workspace.$.invoiceLineItemGridBox.$.editableGridRow;
+        // TODO
+        //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
+        gridRow.$.quantityWidget.doValueChange({value: 5});
+
+      }
+    }],
     additionalTests: require("../specs/invoice").additionalTests
   };
 
