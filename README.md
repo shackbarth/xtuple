@@ -37,4 +37,4 @@ View the [Release Notes](RELEASE.md) to see a change log.
   * [Architectural Overview](https://github.com/xtuple/xtuple/wiki/Overview)
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)
   * [API documentation](http://xtuple.com/jsdoc)
-  * [Developer Wiki](https://github.com/xtuple/xtuple/wiki) 
+  * [Developer Wiki](https://github.com/xtuple/xtuple/wiki)
