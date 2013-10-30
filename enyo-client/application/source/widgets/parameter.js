@@ -79,6 +79,9 @@ trailing:true, white:true*/
     defaultParameters: function () {
       return {
         showInactive: false,
+        showProjects: true,
+        showProjectTasks: true,
+        showProjectWorkflow: true,
         user: XM.currentUser
       };
     },
@@ -99,6 +102,14 @@ trailing:true, white:true*/
       },
       {name: "name", label: "_name".loc(), attr: "name"},
       {name: "description", label: "_description".loc(), attr: "description"},
+      {kind: "onyx.GroupboxHeader", content: "_project".loc()},
+      {name: "showProjects", label: "_projects".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {name: "showProjectTasks", label: "_tasks".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {name: "showProjectWorkflow", label: "_workflow".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_crm".loc()},
+      {name: "showToDos", label: "_toDos".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {name: "showOpportunities", label: "_opportunities".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {name: "showIncidents", label: "_incidents".loc(), defaultKind: "XV.ToggleButtonWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
@@ -110,7 +121,37 @@ trailing:true, white:true*/
       {name: "toDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
         filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
-    ]
+    ],
+    getParameters: function () {
+      var params = this.inherited(arguments),
+        param = {},
+        value = [];
+      if (this.$.showProjects.getValue()) {
+        value.push('Project');
+      }
+      if (this.$.showProjectTasks.getValue()) {
+        value.push('ProjectTask');
+      }
+      if (this.$.showProjectWorkflow.getValue()) {
+        value.push('ProjectWorkflow');
+      }
+      if (this.$.showIncidents.getValue()) {
+        value.push('Incident');
+      }
+      if (this.$.showOpportunities.getValue()) {
+        value.push('Opportunity');
+      }
+      if (this.$.showToDos.getValue()) {
+        value.push('ToDo');
+      }
+      if (value.length) {
+        param.attribute = "activityType";
+        param.operator = "ANY";
+        param.value = value;
+        params.push(param);
+      }
+      return params;
+    }
   });
 
   // ..........................................................

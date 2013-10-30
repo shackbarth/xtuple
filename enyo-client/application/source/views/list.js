@@ -83,7 +83,7 @@ trailing:true, white:true, strict: false*/
             components: [
             {kind: "XV.ListAttr", attr: "description",
                 placeholder: "_noDescription".loc()},
-            {kind: "XV.ListAttr", attr: "getActivityStatusString"}
+            {kind: "XV.ListAttr", attr: "parent.name"}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "owner.username"},

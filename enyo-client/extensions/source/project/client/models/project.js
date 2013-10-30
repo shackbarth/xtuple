@@ -666,7 +666,11 @@ white:true*/
     XM.ProjectWorkflow = XM.Workflow.extend(
       /** @scope XM.ProjectWorkflow.prototype */ {
 
-      recordType: 'XM.ProjectWorkflow'
+      recordType: 'XM.ProjectWorkflow',
+
+      getProjectWorkflowStatusString: function () {
+        return XM.ProjectWorkflow.prototype.getWorkflowStatusString.call(this);
+      }
 
     });
 

@@ -471,6 +471,8 @@ strict:true, trailing:true, white:true */
     "_product": "Product",
     "_products": "Products",
     "_profit": "Profit",
+    "_project": "Project",
+    "_projects": "Projects",
     "_promiseDate": "Promised Date",
     "_properName": "Proper Name",
     "_propername": "Propername",
