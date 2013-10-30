@@ -9,6 +9,8 @@
     // ********
 
     "_accountsReceivable": "Accounts Receivable",
+    "_application": "Application",
+    "_applications": "Applications",
     "_autoCloseARIncident": "Auto Close Incidents when Invoid Paid",
     "_autoCreditWarnLateCustomers": "Credit warn Customers when Late",
     "_billing": "Billing",
