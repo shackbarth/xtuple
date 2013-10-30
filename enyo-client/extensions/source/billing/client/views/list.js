@@ -36,16 +36,17 @@ XT.extensions.billing.initLists = function () {
     query: {orderBy: [
       {attribute: 'documentNumber'}
     ]},
-    published: {
-      newActions: [
-        {name: "creditMemo", label: "_miscCreditMemo".loc(), defaults: {
-          documentType: XM.Receivable.CREDIT_MEMO
-        }},
-        {name: "debitMemo", label: "_miscDebitMemo".loc(), defaults: {
-          documentType: XM.Receivable.DEBIT_MEMO
-        }}
-      ]
-    },
+    newActions: [
+      {name: "creditMemo", label: "_miscCreditMemo".loc(), defaults: {
+        documentType: XM.Receivable.CREDIT_MEMO
+      }},
+      {name: "debitMemo", label: "_miscDebitMemo".loc(), defaults: {
+        documentType: XM.Receivable.DEBIT_MEMO
+      }}
+    ],
+    actions: [
+      {name: "open", method: "doWorkspace" }
+    ],
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
