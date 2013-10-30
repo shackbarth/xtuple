@@ -86,7 +86,8 @@ XT.extensions.billing.initReceivableModel = function () {
       Calculated sum of taxes
     */
     calculateTaxTotal: function () {
-      var amounts = _.pluck(this.get("taxes"), "amount");
+      var taxes = this.get("taxes"),
+        amounts = []; // get amounts from taxes.models
       return _.reduce(amounts, function (num, memo) {
         return num + memo;
       }, 0);

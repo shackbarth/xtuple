@@ -97,8 +97,10 @@ trailing:true, white:true*/
             {kind: "XV.MoneyWidget",
               attr: {localValue: "amount", currency: "currency"},
               label: "_amount".loc()},
-            {kind: "XV.NumberWidget", attr: "paid"},
-            {kind: "XV.NumberWidget", attr: "balance"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "paid"},
+              label: "_paid".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget", attr: {localValue: "balance"},
+              label: "_balance".loc(), currencyShowing: false},
             {kind: "XV.PercentWidget", attr: "commission"},
             // TODO: Move this under taxes
             {kind: "XV.NumberWidget", attr: "taxTotal"}

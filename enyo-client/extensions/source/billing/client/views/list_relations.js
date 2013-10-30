@@ -18,7 +18,7 @@ trailing:true, white:true*/
               {kind: "XV.ListAttr", attr: "taxCode", classes: "bold"}
             ]},
             {kind: "XV.ListColumn", components: [
-              {kind: "XV.ListAttr", attr: "amount"}
+              {kind: "XV.ListAttr", attr: "amount", classes: "bold"}
             ]}
           ]}
         ]}

@@ -1,6 +1,9 @@
 select xt.create_view('xt.aropeninfo', $$
 
-  select aropen.*, 0 as balance, 0 as tax_total from aropen;
+  select aropen.*,
+    0 as balance,
+    0 as tax_total
+  from aropen;
 
 $$,false);
 
