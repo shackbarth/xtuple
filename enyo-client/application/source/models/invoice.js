@@ -513,8 +513,7 @@ white:true*/
         extPrice =  (billed * quantityUnitRatio / priceUnitRatio) * price;
       extPrice = XT.toExtendedPrice(extPrice);
       this.set("extendedPrice", extPrice);
-      //this.calculateMargin();
-      //this.calculateTax();
+      this.calculateTax();
       this.recalculateParent();
       return this;
     },
@@ -553,6 +552,10 @@ white:true*/
         _calculatePrice(this);
       }
       return this;
+    },
+
+    calculateTax: function () {
+      // TODO
     },
 
     isMiscellaneousDidChange: function () {

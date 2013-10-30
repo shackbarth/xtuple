@@ -7,6 +7,11 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 (function () {
   "use strict";
 
+// TODO deferred to later sprint:
+// filter invoice list by customer group
+// print invoices (support printing more that 1 on the same screen)
+
+
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
@@ -376,7 +381,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       });
     });
     describe("XM.InvoiceListItem", function () {
-      // this should really be under better test
+      // TODO:posting and voiding work, anecdotally. Put it under test.
       it.skip("XM.InvoiceListItem includes a post function that dispatches a " +
           "XM.Invoice.post function to the server", function () {
         var model = new XM.InvoiceListItem();
@@ -734,7 +739,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       });
 
       it("XM.Invoice includes a function calculateAuthorizedCredit", function (done) {
-        // XXX this is barely under test
+        // TODO test more thoroughly
         /*
         > Makes a call to the server requesting the total authorized credit for a given
           - sales order number
@@ -756,15 +761,19 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
     // XXX TODO
     /*
-    TODO:posting and voiding work, anecdotally. Put it under test.
-    TODO: I'm not doing tax calculations correctly
 
-  TODO:
-  * XM.Invoice includes a function "calculateTax" that
-    > Gathers line item, freight and adjustments
-    > Groups by and sums and rounds to XT.MONEY_SCALE for each tax code
-    > Sums the sum of each tax code and sets totalTax to the result
-    */
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Invoice includes a function "calculateTax" that
+          Gathers line item, freight and adjustments
+          Groups by and sums and rounds to XT.MONEY_SCALE for each tax code
+          Sums the sum of each tax code and sets totalTax to the result
+      */
+      it.skip("has a calculateTax function that works correctly", function () {
+        // TODO: write code
+
+      });
     });
     describe("Invoice List View", function () {
       /**
@@ -894,7 +903,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
               - From Date
               - To Date
         */
-        // TODO: filter by customer group
         var list = new XV.InvoiceList();
         assert.isString(list.getParameterWidget());
       });
