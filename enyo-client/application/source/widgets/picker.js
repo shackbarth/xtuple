@@ -338,7 +338,7 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'format'}
     ],
-    valueAttribute: "id"
+    valueAttribute: "uuid"
   });
 
 

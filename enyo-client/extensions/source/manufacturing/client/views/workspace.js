@@ -175,9 +175,13 @@ trailing:true, white:true, strict: false*/
       save: function () {
         this.inherited(arguments);
         var model = this.getValue(),
-          detailModels = this.$.detail.getValue().models[0],
+          callback,
+          workspace = this,
+          detailModels = this.$.detail.getValue(),
+          detailModel,
           options = {},
-          details = {},
+          details = [],
+          i = -1,
           params,
           workOrder = model.id,
           quantity = model.get("qtyToPost"),
@@ -185,18 +189,45 @@ trailing:true, white:true, strict: false*/
           backflush = model.get("isBackflushMaterials");
         options.asOf = transDate;
         options.backflush = backflush;
-        //options.detail = model.formatDetail();
-        if (detailModels !== undefined) {
-          details.location = detailModels.getValue("location");
-          details.quantity = detailModels.getValue("quantity");
-          options.detail = details;
-        }
-        params = {
-          workOrder: model.id,
-          quantity: quantity,
-          options: options
+        model.validate(function (isValid) {
+          if (isValid) { callback(workspace); }
+        });
+
+        callback = function (workspace) {
+          //options.detail = model.formatDetail();
+          if (detailModels.length > 0) {
+            i ++;
+            if (i === detailModels.models.length) {
+              if (detailModels.models[0]) {
+                params = {
+                  workOrder: model.id,
+                  quantity: quantity,
+                  options: options
+                };
+                XM.Manufacturing.postProduction(params, options);
+              } else {
+                return;
+              }
+            } else {
+              detailModel = detailModels.models[i];
+              details.push({
+                quantity: detailModel.getValue("quantity"),
+                location: detailModel.getValue("location")
+              });
+              options.detail = details;
+              callback();
+            }
+          } else {
+            params = {
+              workOrder: model.id,
+              quantity: quantity,
+              options: options
+            };
+            XM.Manufacturing.postProduction(params, options);
+            //callback();
+          }
         };
-        XM.Manufacturing.postProduction(params, options);
+        callback();
       }
     });
 

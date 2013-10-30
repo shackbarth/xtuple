@@ -72,59 +72,16 @@ white:true*/
         }
       },
 
+      validate: function (callback) {
+        return true;
+      },
+
       /**
         This overload will first save any changes via usual means, then
         call `postProduction`.
-      *//*
-      save: function (key, value, options) {
-        var that = this,
-          success;
-
-        // Handle both `"key", value` and `{key: value}` -style arguments.
-        if (_.isObject(key) || _.isEmpty(key)) {
-          options = value ? _.clone(value) : {};
-        }
-
-        success = options.success;
-
-        // Post Production after successful save
-        options.success = function (model, resp, options) {
-          var params,
-            postOptions = {},
-            workOrder = that.id,
-            quantity = that.get("qtyToPost"),
-            postDate,
-            detail = {},
-            backflush;
-          
-          postOptions.postDate = XT.date.applyTimezoneOffset(that.get("dueDate"), true);
-          postOptions.detail = that.formatDetail();
-          //postOptions.detail.location = 
-          //postOptions.detail.quantity = 
-          postOptions.backflush = that.get("isBackflushMaterials");
-          params = [
-            workOrder,
-            quantity,
-            postOptions
-          ];
-
-          postOptions.success = function (postResp) {
-            if (success) { success(model, resp, options); }
-          };
-          postOptions.error = function () {
-            // The datasource takes care of reporting the error to the user
-          };
-          that.dispatch("XM.Manufacturing", "postProduction", params);
-          return this;
-        };
-
-        // Handle both `"key", value` and `{key: value}` -style arguments.
-        if (_.isObject(key) || _.isEmpty(key)) {
-          value = options;
-        }
-
-        XM.Model.prototype.save.call(this, key, value, options);
-      }*/
+      */
+      save: function () {
+      }
 
     });
 

@@ -60,18 +60,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // LOCATION
-  //
-
-  enyo.kind({
-    name: "XV.LocationCombobox",
-    kind: "XV.ComboboxWidget",
-    collection: "XM.locations",
-    label: "_location".loc(),
-    keyAttribute: "format"
-  });
-
-  // ..........................................................
   // LOT / SERIAL (TRACE)
   //
 

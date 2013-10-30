@@ -16,7 +16,7 @@
           classes: "in-panel", components: [
           {kind: "XV.QuantityWidget", attr: "quantity"},
           {kind: "XV.TraceCombobox", attr: "lotSerial"},
-          {kind: "XV.LocationCombobox", attr: "location"},
+          {kind: "XV.LocationPicker", attr: "location"},
           {kind: "XV.DateWidget", attr: "expireDate"},
           {kind: "XV.DateWidget", attr: "warrantyDate"},
           {kind: "XV.CharacteristicTypePicker", attr: "characteristic"}
