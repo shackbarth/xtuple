@@ -537,11 +537,12 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
   padding-top: 6px;
+  width: 100%;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
-  height: 20px;
+  height: 25px;
   padding-top: 3px;
-  width: 80px;
+  width: 100%;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
@@ -1041,6 +1042,24 @@
 .spinner.xv-numberwidget input {
   width: 50px;
   text-align: left;
+}
+.xv-dependency-picker .onyx-picker-decorator .onyx-button {
+  width: 280px;
+  margin-left: 6px;
+}
+.xv-dependency-button {
+  left-padding: 6px;
+  color: #357ec7;
+  font-size: 24px;
+  border: none;
+  background: transparent;
+}
+.xv-characteristic-button {
+  left-padding: 6px;
+  color: #357ec7;
+  font-size: 24px;
+  border: none;
+  background: transparent;
 }
 /**
   Import for Font-Awesome icons
