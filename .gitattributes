@@ -14,3 +14,7 @@
 # Denote all files that are truly binary and should not be modified.
 *.png binary
 *.jpg binary
+
+# These are not really binary, but we want them to be left alone
+*.json binary
+*.sql binary

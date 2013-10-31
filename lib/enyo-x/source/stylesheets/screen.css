@@ -1054,8 +1054,26 @@
   border: none;
   background: transparent;
 }
+/**
+  Styles for characteristic pickers and buttons
+*/
+/* Characteristics */
+.xv-characteristic-picker .onyx-picker-decorator .onyx-button {
+  width: 130px;
+}
+.xv-characteristic-item {
+  border-bottom: 1px solid #aaaaaa;
+}
+.xv-characteristic-item .onyx-input-decorator > input {
+  width: 115px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.xv-characteristic-buttons {
+  margin: 8px;
+}
 .xv-characteristic-button {
-  left-padding: 6px;
+  margin: 0 4px 0 4px;
   color: #357ec7;
   font-size: 24px;
   border: none;
@@ -2594,24 +2612,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 8px 0 0 8px;
-}
-/* Characteristics */
-.xv-characteristic-picker .onyx-picker-decorator .onyx-button {
-  width: 130px;
-}
-.xv-characteristic-item {
-  border-bottom: 1px solid #aaaaaa;
-}
-.xv-characteristic-item .onyx-input-decorator > input {
-  width: 115px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.xv-characteristic-button {
-  margin-right: 4px;
-}
-.xv-characteristic-buttons {
-  margin: 8px;
 }
 .xv-popup-button {
   margin: 4px;

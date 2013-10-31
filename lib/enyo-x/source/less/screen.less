@@ -81,6 +81,11 @@
 @import "widgets.less";
 
 /**
+  Styles for characteristic pickers and buttons
+*/
+@import "characteristics.less";
+
+/**
   Import for Font-Awesome icons
 */
 @import "../../lib/font-awesome/less/font-awesome.less";
@@ -350,30 +355,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 8px 0 0 8px;
-}
-
-/* Characteristics */
-.xv-characteristic-picker {
-  .onyx-picker-decorator .onyx-button {
-    width: 130px;
-  }
-}
-
-.xv-characteristic-item {
-  border-bottom: 1px solid @silver;
-  .onyx-input-decorator > input {
-    width: 115px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-}
-
-.xv-characteristic-button {
-  margin-right: 4px;
-}
-
-.xv-characteristic-buttons {
-  margin: 8px;
 }
 
 .xv-popup-button {
