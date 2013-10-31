@@ -13,7 +13,7 @@ var buildAll = require('../../../scripts/lib/build_all'),
 (function () {
   "use strict";
   describe('The database build tool', function () {
-    this.timeout(10 * 60 * 1000);
+    this.timeout(100 * 60 * 1000);
 
     var config = require(path.join(__dirname, "../../../node-datasource/config.js")),
       creds = config.databaseServer,
