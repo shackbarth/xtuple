@@ -112,6 +112,7 @@
     "xt/tables/bicache.sql",
     "xt/tables/clientcode.sql",
     "xt/tables/wf.sql",
+    "xt/tables/prjwf.sql",
     "xt/tables/wfsrc.sql",
     "xt/tables/wftype.sql",
     "xt/javascript/init.sql",
