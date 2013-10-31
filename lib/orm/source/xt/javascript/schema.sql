@@ -27,6 +27,8 @@ select xt.install_js('XT','Schema','xtuple', $$
         func,
         schemaTable,
         sql,
+        fetchRes,
+        fetchSql,
         funcSql,
         res,
         funcRes,
@@ -121,7 +123,14 @@ select xt.install_js('XT','Schema','xtuple', $$
 
       /* Set "required" if column is not "is_nullable". */
       if (res[i].is_nullable === "NO") {
-        ret[res[i].column_name].required = true;
+        /* Check if this is a fetchable number. */
+        fetchSql = 'select orderseq_id from orderseq where orderseq_table = $1 and orderseq_numcol = $2;';
+        fetchRes = plv8.execute(fetchSql, [table, res[i].column_name]);
+
+        /* Set to required when this is not a fetchable number. If it is fetchable, see xt.post(). */
+        if (!fetchRes.length) {
+          ret[res[i].column_name].required = true;
+        }
       }
 
       /* Map PostgreSQL datatype to JSON-Schema type and format. */

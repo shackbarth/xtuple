@@ -174,6 +174,9 @@ create or replace function xt.post(data_hash text) returns text as $$
       prettyPrint = dataHash.prettyPrint ? 2 : null,
       dispatch = dataHash.dispatch,
       data,
+      fetchCol,
+      fetchRes,
+      fetchSql,
       orm,
       pkey,
       prv,
@@ -200,13 +203,49 @@ create or replace function xt.post(data_hash text) returns text as $$
       /* set status */
       XT.jsonpatch.updateState(dataHash.data, "create");
 
-      /* set id if not provided */
+      /* Set natural key number if not provided. */
+      if (nkey && (nkey !== pkey) && !dataHash.data[nkey]) {
+        if (nkey === 'uuid') {
+          dataHash.data[nkey] = XT.generateUUID();
+        } else {
+          /* Check if this is a fetchable number. */
+          fetchSql = 'select orderseq_name from orderseq where orderseq_table = $1 and orderseq_numcol = $2;';
+          fetchCol = XT.Orm.getProperty(orm, nkey).attr.column;
+
+          if (DEBUG) {
+            XT.debug('fetchSql sql =', fetchSql);
+            XT.debug('fetchSql values =', [orm.table, fetchCol]);
+          }
+
+          fetchRes = plv8.execute(fetchSql, [orm.table, fetchCol]);
+
+          if (!fetchRes.length || fetchRes.length > 1) {
+            throw new handleError("A unique " + nkey + " must be provided", 449);
+          } else {
+            /* Since this is null, but required, fetch the next number for this and use it. */
+            var autoNumberSql = 'select fetchNextNumber($1);';
+
+            if (DEBUG) {
+              XT.debug('autoNumberSql sql =', autoNumberSql);
+              XT.debug('autoNumberSql values =', [fetchRes[0].orderseq_name]);
+            }
+
+            dataHash.data[nkey] = plv8.execute(autoNumberSql, [fetchRes[0].orderseq_name])[0].fetchnextnumber;
+
+            if (DEBUG) {
+              XT.debug('autoNumber =', dataHash.data[nkey]);
+            }
+          }
+        }
+      }
+
+      /* Set id if not provided. */
       if (!dataHash.id) {
         if (nkey) {
           if (dataHash.data[nkey] || nkey === 'uuid') {
             dataHash.id = dataHash.data[nkey] || XT.generateUUID();
           } else {
-            plv8.elog(ERROR, "A unique id must be provided");
+            throw new handleError("A unique id must be provided", 449);
           }
         } else {
           dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
