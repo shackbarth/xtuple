@@ -33,6 +33,7 @@ XT.extensions.billing.initLists = function () {
     collection: "XM.ReceivableListItemCollection",
     parameterWidget: "XV.ReceivableListParameters",
     allowPrint: true,
+    showDeleteAction: false,
     query: {orderBy: [
       {attribute: 'documentNumber'}
     ]},
@@ -45,7 +46,8 @@ XT.extensions.billing.initLists = function () {
       }}
     ],
     actions: [
-      {name: "open", method: "doWorkspace" }
+      {name: "open", prerequisite: "canOpen",
+        method: "openReceivable", notify: false, isViewMethod: true}
     ],
     components: [
       {kind: "XV.ListItem", components: [
@@ -112,6 +114,15 @@ XT.extensions.billing.initLists = function () {
     formatPosted: function (value, view, model) {
       var posted = model ? model.get('isPosted') : null;
       return posted ? "_yes".loc() : "_no".loc();
+    },
+    openReceivable: function (inEvent) {
+      var model = inEvent.model;
+
+      this.doWorkspace({
+        workspace: this.getWorkspace(),
+        id: model.id,
+        allowNew: false
+      });
     }
   });
 

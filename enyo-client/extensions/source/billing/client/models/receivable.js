@@ -278,7 +278,15 @@ XT.extensions.billing.initReceivableModel = function () {
   XM.ReceivableListItem = XM.Info.extend({
     recordType: 'XM.ReceivableListItem',
     idAttribute: "uuid",
-    editableModel: 'XM.Receivable'
+    editableModel: 'XM.Receivable',
+
+    canOpen: function (callback) {
+      var canView = XT.session.privileges.get("ViewAROpenItems") && this.get("isPosted");
+      if (callback) {
+        callback(canView);
+      }
+      return canView;
+    },
   });
 
   // ..........................................................
