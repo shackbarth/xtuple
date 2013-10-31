@@ -175,12 +175,15 @@ white:true*/
   XM.WorkflowSource = XM.Model.extend(
     /** @scope XM.WorkflowSource.prototype */ {
 
-    defaults: {
-      startSet: false,
-      startOffset: 0,
-      dueSet: false,
-      dueOffset: 0,
-      sequence: 0
+    defaults: function () {
+      return {
+        startSet: false,
+        startOffset: 0,
+        dueSet: false,
+        dueOffset: 0,
+        priority: XT.session.settings.get("DefaultPriority"),
+        sequence: 0
+      };
     }
 
   });

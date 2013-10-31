@@ -19,6 +19,17 @@ white:true, strict: false*/
     });
 
     // ..........................................................
+    // PROJECT TYPE
+    //
+
+    enyo.kind({
+      name: "XV.ProjectTypeCharacteristicsWidget",
+      kind: "XV.CharacteristicsWidget",
+      model: "XM.ProjectTypeCharacteristic",
+      which: "isProjects"
+    });
+
+    // ..........................................................
     // TASK
     //
 

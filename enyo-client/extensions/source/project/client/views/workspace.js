@@ -294,12 +294,14 @@ trailing:true, white:true, strict:false*/
           {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-              classes: "in-panel", components: [
+              classes: "in-panel", fit: true, components: [
               {kind: "XV.InputWidget", attr: "code"},
               {kind: "XV.CheckboxWidget", attr: "isActive"},
-              {kind: "XV.InputWidget", attr: "description"}
+              {kind: "XV.InputWidget", attr: "description"},
+              {kind: "XV.ProjectCharacteristicsWidget", attr: "characteristics"}
             ]}
-          ]}
+          ]},
+          {kind: "XV.ProjectWorkflowBox", attr: "workflow"}
         ]}
       ]
     });
