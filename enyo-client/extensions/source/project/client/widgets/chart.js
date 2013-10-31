@@ -6,10 +6,24 @@ trailing:true, white:true*/
 (function () {
 
   enyo.kind({
-    name: "XV.ProjectHoursBarChart",
+    name: "XV.ProjectBudgetedHoursBarChart",
     kind: "XV.DrilldownBarChart",
     collection: "XM.ProjectListItemCollection",
-    chartTitle: "_projects".loc(),
+    chartTitle: "_project".loc() + " " + "_budgeted".loc() + " " + "_hours".loc(),
+    groupByOptions: [
+      { name: "status", content: "_status".loc() },
+      { name: "account", content: "_account".loc() },
+      { name: "owner" },
+      { name: "assignedTo" }
+    ],
+    totalField: "budgetedHours"
+  });
+
+  enyo.kind({
+    name: "XV.ProjectActualHoursBarChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.ProjectListItemCollection",
+    chartTitle: "_project".loc() + " " + "_actual".loc() + " " + "_hours".loc(),
     groupByOptions: [
       { name: "status", content: "_status".loc() },
       { name: "account", content: "_account".loc() },
@@ -17,6 +31,34 @@ trailing:true, white:true*/
       { name: "assignedTo" }
     ],
     totalField: "actualHours"
+  });
+
+  enyo.kind({
+    name: "XV.ProjectBudgetedExpensesBarChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.ProjectListItemCollection",
+    chartTitle: "_project".loc() + " " + "_budgeted".loc() + " " + "_expenses".loc(),
+    groupByOptions: [
+      { name: "status", content: "_status".loc() },
+      { name: "account", content: "_account".loc() },
+      { name: "owner" },
+      { name: "assignedTo" }
+    ],
+    totalField: "budgetedExpenses"
+  });
+
+  enyo.kind({
+    name: "XV.ProjectActualExpensesBarChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.ProjectListItemCollection",
+    chartTitle: "_project".loc() + " " + "_actual".loc() + " " + "_expenses".loc(),
+    groupByOptions: [
+      { name: "status", content: "_status".loc() },
+      { name: "account", content: "_account".loc() },
+      { name: "owner" },
+      { name: "assignedTo" }
+    ],
+    totalField: "actualExpenses"
   });
 
   enyo.kind({
@@ -46,10 +88,25 @@ trailing:true, white:true*/
   });
 
   enyo.kind({
-    name: "XV.TaskTimeSeriesChart",
+    name: "XV.TaskBudgetedHoursTimeSeriesChart",
     kind: "XV.TimeSeriesChart",
     collection: "XM.TaskListItemCollection",
-    chartTitle: "_tasks".loc() + " " + "_dueDate".loc(),
+    chartTitle: "_task".loc() + " " + "_budgetedHours".loc() + " " + "_dueDate".loc(),
+    groupByOptions: [
+      { name: "status" },
+      { name: "project" },
+      { name: "owner" },
+      { name: "assignedTo" }
+    ],
+    dateField: "dueDate",
+    totalField: "budgetedHours"
+  });
+
+  enyo.kind({
+    name: "XV.TaskActualHoursTimeSeriesChart",
+    kind: "XV.TimeSeriesChart",
+    collection: "XM.TaskListItemCollection",
+    chartTitle: "_task".loc() + " " + "_actualHours".loc() + " " + "_dueDate".loc(),
     groupByOptions: [
       { name: "status" },
       { name: "project" },
@@ -58,5 +115,35 @@ trailing:true, white:true*/
     ],
     dateField: "dueDate",
     totalField: "actualHours"
+  });
+
+  enyo.kind({
+    name: "XV.TaskBudgetedExpensesTimeSeriesChart",
+    kind: "XV.TimeSeriesChart",
+    collection: "XM.TaskListItemCollection",
+    chartTitle: "_task".loc() + " " + "_budgetedExpenses".loc() + " " + "_dueDate".loc(),
+    groupByOptions: [
+      { name: "status" },
+      { name: "project" },
+      { name: "owner" },
+      { name: "assignedTo" }
+    ],
+    dateField: "dueDate",
+    totalField: "budgetedExpenses"
+  });
+
+  enyo.kind({
+    name: "XV.TaskActualExpensesTimeSeriesChart",
+    kind: "XV.TimeSeriesChart",
+    collection: "XM.TaskListItemCollection",
+    chartTitle: "_task".loc() + " " + "_actualExpenses".loc() + " " + "_dueDate".loc(),
+    groupByOptions: [
+      { name: "status" },
+      { name: "project" },
+      { name: "owner" },
+      { name: "assignedTo" }
+    ],
+    dateField: "dueDate",
+    totalField: "actualExpenses"
   });
 }());

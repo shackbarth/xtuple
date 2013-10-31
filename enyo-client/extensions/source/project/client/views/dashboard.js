@@ -16,8 +16,22 @@ trailing:true, white:true*/
     newActions: [
       {name: "projects", label: "_projects".loc(), item: "XV.ProjectBarChart"},
       {name: "tasks", label: "_tasks".loc(), item: "XV.TaskBarChart"},
-      {name: "taskDueDates", label: "_task".loc() + " " + "_dueDate".loc(), item: "XV.TaskTimeSeriesChart"},
-      {name: "projectHours", label: "_hours".loc(), item: "XV.ProjectHoursBarChart"}
+      {name: "taskBudgetedHours", label: "_task".loc() + " " + "_budgetedHours".loc(),
+        item: "XV.TaskBudgetedHoursTimeSeriesChart"},
+      {name: "taskActualHours", label: "_task".loc() + " " + "_actualHours".loc(),
+        item: "XV.TaskActualHoursTimeSeriesChart"},
+      {name: "taskBudgetedExpenses", label: "_task".loc() + " " + "_budgetedExpenses".loc(),
+        item: "XV.TaskBudgetedExpensesTimeSeriesChart"},
+      {name: "taskActualExpenses", label: "_task".loc() + " " + "_actualExpenses".loc(),
+        item: "XV.TaskActualExpensesTimeSeriesChart"},
+      {name: "projectBudgetedHours", label: "_budgeted".loc() + " " + "_hours".loc(),
+        item: "XV.ProjectBudgetedHoursBarChart"},
+      {name: "projectActualHours", label: "_actual".loc() + " " + "_hours".loc(),
+        item: "XV.ProjectActualHoursBarChart"},
+      {name: "projectBudgetedExpenses", label: "_budgeted".loc() + " " + "_expenses".loc(),
+        item: "XV.ProjectBudgetedExpensesBarChart"},
+      {name: "projectActualExpenses", label: "_actual".loc() + " " + "_expenses".loc(),
+        item: "XV.ProjectActualExpensesBarChart"},
     ]
   });
 }());
