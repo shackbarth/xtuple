@@ -2,5 +2,11 @@
   "name": "project",
   "comment": "Project extension",
   "loadOrder": 60,
-  "databaseScripts": []
+  "databaseScripts": [
+    "xt/tables/acttype.sql",
+    "xt/tables/prjtypeext.sql",
+    "xt/tables/prjtypewf.sql",
+    "xt/tables/wftype.sql",
+    "xm/javascript/project.sql"
+  ]
 }
