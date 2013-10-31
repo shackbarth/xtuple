@@ -27,6 +27,7 @@ trailing:true, white:true*/
       name: "project",
       label: "_project".loc(),
       panels: [
+        {name: "projectDashboard", kind: "XV.ProjectDashboard"},
         {name: "projectList", kind: "XV.ProjectList"},
         {name: "taskList", kind: "XV.TaskList"}
       ]
