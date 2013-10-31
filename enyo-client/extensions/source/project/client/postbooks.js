@@ -6,7 +6,7 @@ trailing:true, white:true*/
 (function () {
 
   XT.extensions.project.initPostbooks = function () {
-    var module, panels, relevantPrivileges;
+    var module, dashboardModule, panels, relevantPrivileges;
 
     // ..........................................................
     // APPLICATION
@@ -23,11 +23,19 @@ trailing:true, white:true*/
 
     XT.app.$.postbooks.appendPanels("setup", panels);
 
+    dashboardModule = {
+      name: "projectDashboard",
+      label: "_dashboard".loc(),
+      panels: [
+        {name: "projectDashboard", kind: "XV.ProjectDashboard"}
+      ]
+    };
+    XT.app.$.postbooks.insertModule(dashboardModule, 0);
+
     module = {
       name: "project",
       label: "_project".loc(),
       panels: [
-        {name: "projectDashboard", kind: "XV.ProjectDashboard"},
         {name: "projectList", kind: "XV.ProjectList"},
         {name: "taskList", kind: "XV.TaskList"}
       ]
