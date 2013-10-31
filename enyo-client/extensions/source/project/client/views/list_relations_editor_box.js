@@ -76,13 +76,14 @@ trailing:true, white:true, strict:false*/
           {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
           {kind: "XV.UserAccountWidget", attr: "owner"},
           {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-          {kind: "onyx.GroupboxHeader", content: "_completionAction".loc()},
+          {kind: "onyx.GroupboxHeader", content: "_dependencies".loc()},
           {kind: "XV.ProjectStatusPicker", attr: "parentStatus",
-            noneText: "_noChange".loc(), label: "_newProjectStatus".loc()},
+            noneText: "_noChange".loc(), label: "_nextProjectStatus".loc()},
+          {kind: "XV.ProjectWorkflowSuccessorsWidget",
+            attr: {workflow: "parent.workflow", successors: "successors"}},
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
-        ]},
-        {kind: "XV.ProjectWorkflowSuccessorsWidget", attr: "successors"}
+        ]}
       ]
     });
 
@@ -119,13 +120,14 @@ trailing:true, white:true, strict:false*/
           {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
           {kind: "XV.UserAccountWidget", attr: "owner"},
           {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-          {kind: "onyx.GroupboxHeader", content: "_completionAction".loc()},
+          {kind: "onyx.GroupboxHeader", content: "_dependencies".loc()},
           {kind: "XV.ProjectStatusPicker", attr: "parentStatus",
             noneText: "_noChange".loc(), label: "_newProjectStatus".loc()},
+          {kind: "XV.ProjectWorkflowSuccessorsWidget",
+            attr: {workflow: "parent.workflow", successors: "successors"}},
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
-        ]},
-        {kind: "XV.ProjectWorkflowSuccessorsWidget", attr: "successors"}
+        ]}
       ]
     });
 
