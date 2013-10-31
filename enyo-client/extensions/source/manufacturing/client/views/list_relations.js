@@ -16,7 +16,7 @@ trailing:true, white:true*/
       name: "XV.PostProductionCreateLotSerialListRelations",
       kind: "XV.ListRelations",
       orderBy: [
-        {attribute: "lotSerial"}
+        {attribute: "quantity"}
       ],
       parentKey: "itemSite",
       components: [
@@ -25,7 +25,7 @@ trailing:true, white:true*/
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
                 {kind: "XV.ListAttr", attr: "quantity", classes: "bold"},
-                {kind: "XV.ListAttr", attr: "lotSerial", fit: true},
+                {kind: "XV.ListAttr", attr: "trace", fit: true},
                 {kind: "XV.ListAttr", attr: "expireDate"}
               ]},
               {kind: "FittableColumns", components: [

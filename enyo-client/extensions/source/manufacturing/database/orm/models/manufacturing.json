@@ -29,7 +29,7 @@
         }
       },
       {
-        "name": "lotSerial",
+        "name": "trace",
         "attr": {
           "type": "String",
           "column": "ls_number"
@@ -47,6 +47,13 @@
         "attr": {
           "type": "Date",
           "column": "expire_date"
+        }
+      },
+            {
+        "name": "warrantyDate",
+        "attr": {
+          "type": "Date",
+          "column": "warranty_date"
         }
       },
       {
@@ -360,7 +367,7 @@
         }
       },
       {
-        "name": "trace",
+        "name": "detail",
         "toMany": {
           "isNested": true,
           "type": "CreateTrace",

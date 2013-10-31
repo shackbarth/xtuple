@@ -15,11 +15,11 @@
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
           classes: "in-panel", components: [
           {kind: "XV.QuantityWidget", attr: "quantity"},
-          {kind: "XV.TraceCombobox", attr: "lotSerial"},
+          {kind: "XV.TraceCombobox", attr: "trace"},
           {kind: "XV.LocationPicker", attr: "location"},
           {kind: "XV.DateWidget", attr: "expireDate"},
-          {kind: "XV.DateWidget", attr: "warrantyDate"},
-          {kind: "XV.CharacteristicTypePicker", attr: "characteristic"}
+          {kind: "XV.DateWidget", attr: "warrantyDate"}
+          //{kind: "XV.CharacteristicTypePicker", attr: "characteristic"}
         ]}
       ]
     });

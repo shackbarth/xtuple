@@ -134,7 +134,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.QuantityWidget", attr: "qtyToPost", name: "qtyToPost"}
             ]}
           ]},
-          {kind: "XV.PostProductionCreateLotSerialBox", attr: "trace", name: "detail"}
+          {kind: "XV.PostProductionCreateLotSerialBox", attr: "detail", name: "detail"}
         ]},
         {kind: "onyx.Popup", name: "distributePopup", centered: true,
           onHide: "popupHidden",
@@ -212,7 +212,10 @@ trailing:true, white:true, strict: false*/
               detailModel = detailModels.models[i];
               details.push({
                 quantity: detailModel.getValue("quantity"),
-                location: detailModel.getValue("location")
+                location: detailModel.getValue("location"),
+                trace: detailModel.getValue("trace"),
+                expiration: detailModel.getValue("expireDate"),
+                warranty: detailModel.getValue("warrantyDate")
               });
               options.detail = details;
               callback();
