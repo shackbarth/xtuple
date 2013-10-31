@@ -850,6 +850,7 @@ strict:true, trailing:true, white:true */
     "_convertAccountSalesRep": "Convert this Account to a SalesRep?",
     "_convertAccountTaxAuthority": "Convert this Account to a Tax Authority?",
     "_convertProspect": "Convert this Prospect to a Customer?",
+    "_copyCharacteristics?": "Would you like to over-write the characteristics with the profile for this selection?",
     "_creditWarn": "This customer is on credit warn.",
     "_creditHold": "This customer is on credit hold.",
     "_customerExists": "A customer with this number already exists.",

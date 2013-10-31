@@ -174,6 +174,7 @@ white:true*/
       bindEvents: function () {
         XM.ProjectBase.prototype.bindEvents.apply(this, arguments);
         this.on('add:tasks remove:tasks', this.tasksDidChange);
+        this.on('change:projectType', this.projectTypeDidChange);
       },
 
       /**
@@ -187,6 +188,36 @@ white:true*/
       */
       copy: function (options) {
         return XM.Project.copy(this, options);
+      },
+
+      projectTypeDidChange: function () {
+        var charProfile = this.getValue("projectType.characteristics"),
+          chars = this.get("characteristics"),
+          that = this,
+          copyProfile = function () {
+            chars.reset();
+            _.each(charProfile.models, function (model) {
+              var assignment = new XM.ProjectCharacteristic(null, {isNew: true});
+              assignment.set("characteristic", model.get("characteristic"));
+              assignment.set("value", model.get("value"));
+              chars.add(assignment);
+            });
+          };
+
+        if (charProfile && charProfile.length) {
+          if (!chars.length) {
+            copyProfile();
+          } else {
+            this.notify("_copyCharacteristics?".loc(), {
+              type: XM.Model.QUESTION,
+              callback: function (response) {
+                if (response.answer) {
+                  copyProfile();
+                }
+              }
+            });
+          }
+        }
       },
 
       /**
