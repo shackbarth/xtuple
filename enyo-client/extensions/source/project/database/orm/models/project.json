@@ -51,7 +51,7 @@
           "isNested": true,
           "type": "ProjectTypeCharacteristic",
           "column": "prjtype_id",
-          "inverse": "project"
+          "inverse": "projectType"
         }
       },
       {
@@ -99,7 +99,7 @@
         }
       },
       {
-        "name": "project",
+        "name": "projectType",
         "attr": {
           "type": "Number",
           "column": "charass_target_id"
