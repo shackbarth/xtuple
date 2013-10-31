@@ -744,9 +744,7 @@
 }
 .xv-list .xv-list-item {
   background-color: #ffffff;
-  padding: 3px;
   border-bottom: 1px solid #dddddd;
-  min-height: 32px;
 }
 @include box-sizing(border-box);
 .xv-list .xv-list-item.header {
