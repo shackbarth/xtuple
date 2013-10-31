@@ -154,9 +154,6 @@
   padding: 0;
   margin: 0;
 }
-.xv-groupbox .enyo-fittable-columns-layout > * {
-  vertical-align: middle;
-}
 .xv-groupbox .in-panel > *:first-child {
   border-top-color: #aaaaaa;
   border-top: none;
@@ -182,7 +179,6 @@
 }
 .xv-groupbox .onyx-input-decorator {
   border: 0;
-  margin-left: -8px;
 }
 .xv-groupbox .onyx-input-decorator input {
   padding-top: 2px;
@@ -1035,6 +1031,9 @@
 .spinner .slider {
   margin: 15px 15px;
   width: 100px;
+}
+.spinner .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
 }
 .spinner.xv-numberwidget .onyx-input-decorator {
   width: 100px;
