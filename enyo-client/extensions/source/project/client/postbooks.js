@@ -12,7 +12,7 @@ trailing:true, white:true, strict:false*/
     // APPLICATION
     //
     panels = [
-      {name: "honorificList", kind: "XV.HonorificList"},
+      {name: "honorificList", kind: "XV.HonorificEditableList"},
       {name: "itemList", kind: "XV.ItemList"},
       {name: "classCodeList", kind: "XV.ClassCodeList"},
       {name: "unitList", kind: "XV.UnitList"},

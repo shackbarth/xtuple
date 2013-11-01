@@ -1,8 +1,123 @@
 /*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, strict: false*/
-/*global XV:true, _:true, enyo:true, XT:true, Globalize:true */
+/*global XM:true, XV:true, _:true, enyo:true, XT:true, Globalize:true */
 
 (function () {
+  var _readOnlyHeight = 57;
+
+  //
+  // HONORIFIC
+  //
+  enyo.kind({
+    name: "XV.HonorificEditableList",
+    kind: "XV.GridBox",
+    classes: "large-panel",
+    title: "_honorifics".loc(),
+    collection: "XM.HonorificCollection",
+    style: "padding: 0px;",
+    label: "_honorifics".loc(),
+    events: {
+      onWorkspace: ""
+    },
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    columns: [
+      {header: ["_code".loc()],
+        rows: [
+        {readOnlyAttr: "code",
+          editor: {kind: "XV.InputWidget", attr: "code", placeholder: "_number".loc()}}
+      ]}
+    ],
+    workspace: "XV.HonorificWorkspace",
+    // XXX just like super but doWorkspace instead of doChildWorkspace
+    buttonTapped: function (inSender, inEvent) {
+      var model,
+        that = this;
+
+      switch (inEvent.originator.name) {
+      case "addGridRowButton":
+        this.newItem();
+        break;
+      case "deleteGridRowButton":
+        // note that can't remove the model from the middle of the collection w/o error
+        // we just destroy the model and hide the row.
+        model = inEvent.originator.parent.parent.parent.value; // XXX better ways to do this
+        model.destroy();
+        this.setEditableIndex(null);
+        this.$.editableGridRow.hide();
+        this.valueChanged();
+        break;
+      case "expandGridRowButton":
+        model = inEvent.originator.parent.parent.parent.value; // XXX better ways to do this
+        this.unbindCollection();
+        this.doWorkspace({ // CHANGED
+          id: model.id, // NEW
+          workspace: this.getWorkspace(),
+          collection: this.getValue(),
+          index: this.getValue().indexOf(model),
+          callback: function () {
+            that.bindCollection();
+          }
+        });
+        break;
+      }
+    },
+    create: function () {
+      var that = this,
+        Klass;
+
+      this.inherited(arguments);
+
+      this.$.newButton.setShowing(false);
+      this.$.groupboxHeader.setShowing(false);
+
+      //
+      // Fetch the list
+      //
+      Klass = XT.getObjectByName(this.collection);
+      this.setValue(new Klass());
+      this.getValue().fetch({
+        query: this.query,
+        success: function () {
+          that.valueChanged();
+        }
+      });
+    },
+    newItem: function () {
+      var editableIndex = this.getValue().length,
+        aboveListCount = this.liveModels(editableIndex - 1).length,
+        Klass = this.getValue().model,
+        model = new Klass(null, {isNew: true}),
+        editor = this.$.editableGridRow;
+
+      this.getValue().add(model);
+      model.setStatus(XM.Model.READY_NEW); // NEW. HACK.
+      this.setEditableIndex(editableIndex);
+      this.valueChanged();
+      // XXX hack. not sure why the port doesn't know to resize down
+      this.$.aboveGridList.$.port.applyStyle("height", (_readOnlyHeight * aboveListCount) + "px");
+      editor.setValue(model);
+      editor.show();
+      editor.render();
+      editor.setFirstFocus();
+    },
+    /*,
+    gridRowTapEither: function (index, indexStart, firstFocus) {
+      var editableIndex,
+        model;
+
+      this.inherited(arguments);
+
+      editableIndex = index + indexStart;
+      model = this.getValue().at(editableIndex);
+      model.fetch({success: function () {
+        model.obtainLock({});
+      }});
+    }*/
+  });
+
+
 
   // ..........................................................
   // SALES ORDER / QUOTE

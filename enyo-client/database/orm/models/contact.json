@@ -1365,7 +1365,6 @@
     "table": "hnfc",
     "isRest": true,
     "idSequenceName": "hnfc_hnfc_id_seq",
-    "lockable": true,
     "comment": "Honorific Map",
     "privileges": {
       "all": {

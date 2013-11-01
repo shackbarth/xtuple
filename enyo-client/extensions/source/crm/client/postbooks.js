@@ -31,7 +31,7 @@ trailing:true, white:true*/
       {name: "stateList", kind: "XV.StateList"},
       {name: "countryList", kind: "XV.CountryList"},
       {name: "priorityList", kind: "XV.PriorityList"},
-      {name: "honorificList", kind: "XV.HonorificList"},
+      {name: "honorificList", kind: "XV.HonorificEditableList"},
       {name: "incidentCategoryList", kind: "XV.IncidentCategoryList"},
       {name: "incidentResolutionList", kind: "XV.IncidentResolutionList"},
       {name: "incidentSeverityList", kind: "XV.IncidentSeverityList"},
