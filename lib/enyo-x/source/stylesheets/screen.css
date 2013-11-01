@@ -1,12 +1,12 @@
+/*csslint unique-headings: false, qualified-headings: false, outline-none: false, font-sizes: false,
+shorthand: true, overqualified-elements: false, unqualified-attributes: false,
+universal-selector: false, regex-selectors: false, font-faces: false, bulletproof-font-face: false,
+vendor-prefix: false, adjoining-classes: false, empty-rules: false, star-property-hack: false,
+ids: false, box-sizing: false*/
 /*
-
   To compile to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
-
-*/
-/*
-  These variables will show in css as their hex values
 */
 /**
  * Default ListItem styles when using a ModelDecorator.
@@ -98,8 +98,8 @@
 .xv-picker-label {
   color: #000000;
   padding: 20px 8px 8px 8px;
-  text-align: right;
   width: 130px;
+  text-align: right;
 }
 .xv-picker-label.disabled {
   color: #696969;
@@ -559,18 +559,6 @@
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .xv-input {
   padding-top: 0;
 }
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .spinner .xv-numberwidget {
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .spinner .xv-numberwidget .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-  margin: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .spinner .xv-numberwidget .onyx-input-decorator input {
-  width: 100%;
-  font-size: 13px;
-}
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
   padding-top: 6px;
 }
@@ -771,7 +759,7 @@
   color: #000000;
 }
 .xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
-  background-color: #8d8d8d;
+  background: transparent;
 }
 .xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
   color: #8d8d8d;
