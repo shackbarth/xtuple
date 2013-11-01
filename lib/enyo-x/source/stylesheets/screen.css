@@ -2402,6 +2402,7 @@ body {
   top: 0;
   height: 54px;
   width: 50px;
+  leftr-padding: 0;
 }
 .item {
   background-color: #333333;
