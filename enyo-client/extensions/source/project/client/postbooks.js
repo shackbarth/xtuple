@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
-/*global XT:true, XV:true, enyo:true*/
+trailing:true, white:true, strict:false*/
+/*global XT:true, XV:true, XM:true, enyo:true*/
 
 (function () {
 
@@ -37,7 +37,7 @@ trailing:true, white:true*/
       label: "_project".loc(),
       panels: [
         {name: "projectList", kind: "XV.ProjectList"},
-        {name: "taskList", kind: "XV.TaskList"}
+        {name: "activityList", kind: "XV.ActivityList"}
       ]
     };
     XT.app.$.postbooks.insertModule(module, 0);
@@ -78,5 +78,12 @@ trailing:true, white:true*/
       "MaintainStates",
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
+
+    XM.configurations.add(new XM.ConfigurationModel({
+      model: "XM.projectManagement",
+      name: "_project".loc(),
+      description: "_projectManagement".loc(),
+      workspace: "XV.ProjectManagementWorkspace"
+    }));
   };
 }());
