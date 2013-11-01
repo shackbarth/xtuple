@@ -31,8 +31,8 @@ white:true, strict:false*/
     });
 
     // ..........................................................
-    // PROJECT TYPE
-    //
+    // RESOURCE
+    // TODO: use picker instead
 
     enyo.kind({
       name: "XV.ResourcePicker",

@@ -25,6 +25,7 @@ trailing:true, white:true, strict:false*/
 
     dashboardModule = {
       name: "projectDashboard",
+      hasSubmenu: false,
       label: "_dashboard".loc(),
       panels: [
         {name: "projectDashboard", kind: "XV.ProjectDashboard"}

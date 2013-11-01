@@ -153,6 +153,7 @@ trailing:true, white:true, strict:false*/
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
           classes: "in-panel", components: [
           {kind: "XV.ResourcePicker", attr: "resource"},
+          // TODO: use {kind: "XV.ResourceWidget", attr: "resource"},
           {kind: "XV.NumberWidget", attr: "percent"}
         ]}
       ]

@@ -131,7 +131,21 @@
         "name": "budgetedHours",
         "attr": {
           "type": "Number",
-          "column": "prjtask_hours_budget"
+          "column": "budgeted_hours"
+        }
+      },
+      {
+        "name": "actualHours",
+        "attr": {
+          "type": "Number",
+          "column": "actual_hours"
+        }
+      },
+      {
+        "name": "balanceHours",
+        "attr": {
+          "type": "Number",
+          "column": "balance_hours"
         }
       }
     ],
