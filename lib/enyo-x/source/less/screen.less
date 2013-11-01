@@ -1,14 +1,20 @@
-/*
+/*csslint unique-headings: false, qualified-headings: false, outline-none: false, font-sizes: false,
+shorthand: true, overqualified-elements: false, unqualified-attributes: false,
+universal-selector: false, regex-selectors: false, font-faces: false, bulletproof-font-face: false,
+vendor-prefix: false, adjoining-classes: false, empty-rules: false, star-property-hack: false,
+ids: false, box-sizing: false*/
 
-  To compile to .css:
+/*
+  To compile this .less file to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
-
 */
 
-/*
-  These variables will show in css as their hex values
-*/
+// Variables for LESS Project
+// --------------------------
+
+// Colors
+// ------
 @highlight: #d6f1ff;
 @orange: #f60;
 @bright-orange: #f49200;
@@ -38,11 +44,29 @@
 @light-orange: #ff9c00;
 @item-hilite-background: url(/assets/item-hilite.png) repeat-x bottom;
 
-@import "model-decorator.less";
+// Fonts
+// ------
+@baseFont: "arial", "arial black";
+@baseFontSize: 100%;
+@panelsFontSize: 5em;
 
-/* Helper classes for css3 */
+// Imports
+// ------
+/**
+  Import for Font-Awesome icons
+*/
+@import "../../lib/font-awesome/less/font-awesome.less";
+@import "../../lib/font-onyx/lib/Icon.less";
 
+/**
+  Helper classes for css3
+*/
 @import "mixins.less";
+
+/**
+  Model decorator
+*/
+@import "model-decorator.less";
 
 /**
   Less styles for the picker widget
@@ -85,15 +109,9 @@
 */
 @import "characteristics.less";
 
-/**
-  Import for Font-Awesome icons
-*/
-@import "../../lib/font-awesome/less/font-awesome.less";
-@import "../../lib/font-onyx/lib/Icon.less";
-
 body {
-  font-family: "arial", "arial black";
-  font-size: 100%;
+  font-family: @baseFont;
+  font-size: @baseFontSize;
 }
 
 .bggrad {
@@ -110,7 +128,7 @@ body {
 
 .panels > * {
   border: 2px solid @dark-gray;
-  font-size: 5em;
+  font-size: @panelsFontSize;
 }
 
 .wide > * {
@@ -120,35 +138,6 @@ body {
 .scroll-ios {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-}
-
-.developer-ui-container {
-  .box-shadow(#333 4px 4px 10px -4px);
-  .border-top-right-radius(10px);
-  top: 100px;
-  left: 0;
-  position: absolute;
-  background-color: @smoke;
-  z-index: 10;
-  .developer-rows {
-    .row {
-      display: block;
-      margin: 10px;
-    }
-  }
-  .onyx-grabber {
-    &.developer-grabber {
-      .box-shadow(#333 4px 4px 10px -4px);
-      .border-top-right-radius(10px);
-      .border-bottom-right-radius(10px);
-      background-color: @smoke;
-      position: absolute;
-      right: -47px;
-      top: 0;
-      height: 54px;
-      width: 50px;
-    }
-  }
 }
 
 .item {
@@ -406,8 +395,6 @@ body {
     text-overflow: ellipsis;
   }
   .xv-comment-box-textblock {
-    // causes white space around text
-    //padding: 5px;
     font-size: small;
     overflow: hidden;
     &.disabled {
@@ -431,12 +418,6 @@ body {
 
 .icon-calendar {
   color: @slate-blue;
-}
-
-.xv-numberwidget {
-  input {
-    text-align: right;
-  }
 }
 
 .xv-addresswidget {
