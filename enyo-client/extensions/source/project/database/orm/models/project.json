@@ -1966,7 +1966,16 @@
           "column": "prjtask_id",
           "inverse": "projectTask"
         }
-      }  
+      },  
+      {
+        "name": "resources",
+        "toMany": {
+          "isNested": true,
+          "type": "TaskResource",
+          "column": "prjtask_id",
+          "inverse": "task"
+        }
+      }
     ],
     "extensions": [
       {
@@ -2212,7 +2221,16 @@
           "column": "prjtask_id",
           "inverse": "task"
         }
-      }   
+      },   
+      {
+        "name": "resources",
+        "toMany": {
+          "isNested": true,
+          "type": "TaskResource",
+          "column": "prjtask_id",
+          "inverse": "task"
+        }
+      }
     ],
     "extensions": [
       {
