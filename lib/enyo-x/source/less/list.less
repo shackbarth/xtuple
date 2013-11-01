@@ -5,13 +5,15 @@
 /* List */
 .xv-list {
   background-color: @white;
+  .xv-list-item > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
   .xv-list-item {
     @include box-sizing(border-box);
     background-color: @white;
-    // this padding puts the white edge in Documents
-    //padding: 3px;
     border-bottom: 1px solid @smoke;
-    //min-height: 32px;
+    min-height: 32px;
     &.header {
       padding-top: 0;
     }

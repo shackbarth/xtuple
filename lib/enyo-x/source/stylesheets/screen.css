@@ -742,9 +742,14 @@
 .xv-list {
   background-color: #ffffff;
 }
+.xv-list .xv-list-item > * {
+  display: inline-block;
+  vertical-align: middle;
+}
 .xv-list .xv-list-item {
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
+  min-height: 32px;
 }
 @include box-sizing(border-box);
 .xv-list .xv-list-item.header {
@@ -2654,7 +2659,6 @@ body {
   text-overflow: ellipsis;
 }
 .xv-comment-box .xv-comment-box-textblock {
-  padding: 5px;
   font-size: small;
   overflow: hidden;
 }
