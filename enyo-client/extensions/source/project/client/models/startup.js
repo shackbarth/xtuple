@@ -8,6 +8,7 @@ white:true*/
 
   XT.extensions.project.initStartup = function () {
     XT.cacheCollection("XM.projectTypes", "XM.ProjectTypeCollection", "code");
+    XT.cacheCollection("XM.resources", "XM.ResourceCollection", "code");
   };
 
 }());

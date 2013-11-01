@@ -742,7 +742,7 @@ white:true*/
       editableModel: 'XM.ProjectWorkflow'
 
     });
-  
+
     /**
       @class
 
@@ -845,6 +845,30 @@ white:true*/
 
     });
 
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.Resource = XM.Model.extend(
+      /** @scope XM.Resource.prototype */ {
+
+      recordType: 'XM.Resource'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.TaskResource = XM.Model.extend(
+      /** @scope XM.TaskResource.prototype */ {
+
+      recordType: 'XM.Resource'
+
+    });
+
     // ..........................................................
     // COLLECTIONS
     //
@@ -882,6 +906,30 @@ white:true*/
       /** @scope XM.ProjectRelationCollection.prototype */
 
       model: XM.ProjectRelation
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ResourceCollection = XM.Collection.extend({
+      /** @scope XM.ResourceCollection.prototype */
+
+      model: XM.Resource
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.TaskResourceCollection = XM.Collection.extend({
+      /** @scope XM.TaskResourceCollection.prototype */
+
+      model: XM.TaskResource
 
     });
 
