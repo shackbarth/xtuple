@@ -6,6 +6,39 @@ trailing:true, white:true*/
 (function () {
 
   enyo.kind({
+    name: "XV.ResourceBudgetedHoursBarChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.TaskResourceAnalysisCollection",
+    chartTitle: "_resource".loc() + " " + "_budgetedHours".loc(),
+    groupByOptions: [
+      { name: "name" }
+    ],
+    totalField: "budgetedHours"
+  });
+
+  enyo.kind({
+    name: "XV.ResourceActualHoursBarChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.TaskResourceAnalysisCollection",
+    chartTitle: "_resource".loc() + " " + "_actualHours".loc(),
+    groupByOptions: [
+      { name: "name" }
+    ],
+    totalField: "actualHours"
+  });
+
+  enyo.kind({
+    name: "XV.ResourceBalanceHoursBarChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.TaskResourceAnalysisCollection",
+    chartTitle: "_resource".loc() + " " + "_balanceHours".loc(),
+    groupByOptions: [
+      { name: "name" }
+    ],
+    totalField: "balanceHours"
+  });
+
+  enyo.kind({
     name: "XV.ProjectBudgetedHoursBarChart",
     kind: "XV.DrilldownBarChart",
     collection: "XM.ProjectListItemCollection",

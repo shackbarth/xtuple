@@ -7,11 +7,11 @@ trailing:true, white:true, strict:false*/
 
   XT.extensions.project.initWorkspaces = function () {
     var extensions;
- 
+
     // ..........................................................
     // ACCOUNT
     //
-  
+
     extensions = [
       {kind: "XV.AccountProjectsBox", container: "panels",
         attr: "projectRelations"}
@@ -22,7 +22,7 @@ trailing:true, white:true, strict:false*/
     // ..........................................................
     // CHARACTERISTIC
     //
-  
+
     extensions = [
       {kind: "XV.ToggleButtonWidget", attr: "isProjects",
         label: "_projects".loc(), container: "rolesGroup"},
@@ -52,11 +52,11 @@ trailing:true, white:true, strict:false*/
         ]}
       ]
     });
-  
+
     // ..........................................................
     // CONTACT
     //
-  
+
     extensions = [
       {kind: "XV.ContactProjectsBox", container: "panels",
         attr: "projectRelations"}
@@ -67,7 +67,7 @@ trailing:true, white:true, strict:false*/
     // ..........................................................
     // INCIDENT
     //
-  
+
     extensions = [
       {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"}
     ];
@@ -236,7 +236,8 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
           ]},
-          {kind: "XV.TaskCommentBox", attr: "comments"}
+          {kind: "XV.TaskCommentBox", attr: "comments"},
+          {kind: "XV.TaskResourcesBox", attr: "resources"}
         ]}
       ]
     });
@@ -319,7 +320,7 @@ trailing:true, white:true, strict:false*/
     // ..........................................................
     // QUOTE
     //
-  
+
     extensions = [
       {kind: "XV.ProjectWidget", container: "settingsGroup", attr: "project"}
     ];
@@ -329,7 +330,7 @@ trailing:true, white:true, strict:false*/
     // ..........................................................
     // SALES ORDER
     //
-  
+
     extensions = [
       {kind: "XV.ProjectWidget", container: "settingsGroup", attr: "project"}
     ];
@@ -339,7 +340,7 @@ trailing:true, white:true, strict:false*/
     // ..........................................................
     // TASK
     //
-  
+
     extensions = [
       {kind: "XV.TaskCharacteristicsWidget", container: "mainGroup",
         attr: "characteristics"}

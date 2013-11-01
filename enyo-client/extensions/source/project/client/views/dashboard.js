@@ -16,6 +16,12 @@ trailing:true, white:true*/
     newActions: [
       {name: "projects", label: "_projects".loc(), item: "XV.ProjectBarChart"},
       {name: "tasks", label: "_tasks".loc(), item: "XV.TaskBarChart"},
+      {name: "resourceBudgetedHours", label: "_resources".loc() + " " + "_budgetedHours".loc(),
+        item: "XV.ResourceBudgetedHoursBarChart"},
+      {name: "resourceActualHours", label: "_resources".loc() + " " + "_actualHours".loc(),
+        item: "XV.ResourceActualHoursBarChart"},
+      {name: "resourceBalanceHours", label: "_resources".loc() + " " + "_balanceHours".loc(),
+        item: "XV.ResourceBalanceHoursBarChart"},
       {name: "taskBudgetedHours", label: "_task".loc() + " " + "_budgetedHours".loc(),
         item: "XV.TaskBudgetedHoursTimeSeriesChart"},
       {name: "taskActualHours", label: "_task".loc() + " " + "_actualHours".loc(),

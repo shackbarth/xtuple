@@ -31,6 +31,8 @@ strict:true, trailing:true, white:true */
     "_projectType": "Project Type",
     "_projectTypes": "Project Types",
     "_projectWorkflow": "Project Workflow",
+    "_resource": "Resource",
+    "_resources": "Resources",
     "_start": "Start",
     "_startSet": "Calculate",
     "_startOffset": "Offset Days"
