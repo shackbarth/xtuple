@@ -5,31 +5,15 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
 (function () {
   var _readOnlyHeight = 57;
 
-  //
-  // HONORIFIC
-  //
+
   enyo.kind({
-    name: "XV.HonorificEditableList",
+    name: "XV.EditableList",
     kind: "XV.GridBox",
     classes: "large-panel",
-    title: "_honorifics".loc(),
-    collection: "XM.HonorificCollection",
     style: "padding: 0px;",
-    label: "_honorifics".loc(),
     events: {
       onWorkspace: ""
     },
-    query: {orderBy: [
-      {attribute: 'code'}
-    ]},
-    columns: [
-      {header: ["_code".loc()],
-        rows: [
-        {readOnlyAttr: "code",
-          editor: {kind: "XV.InputWidget", attr: "code", placeholder: "_number".loc()}}
-      ]}
-    ],
-    workspace: "XV.HonorificWorkspace",
     // XXX just like super but doWorkspace instead of doChildWorkspace
     buttonTapped: function (inSender, inEvent) {
       var model,
@@ -101,23 +85,54 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       editor.show();
       editor.render();
       editor.setFirstFocus();
-    },
-    /*,
-    gridRowTapEither: function (index, indexStart, firstFocus) {
-      var editableIndex,
-        model;
-
-      this.inherited(arguments);
-
-      editableIndex = index + indexStart;
-      model = this.getValue().at(editableIndex);
-      model.fetch({success: function () {
-        model.obtainLock({});
-      }});
-    }*/
+    }
   });
 
+  //
+  // HONORIFIC
+  //
+  enyo.kind({
+    name: "XV.HonorificEditableList",
+    kind: "XV.EditableList",
+    title: "_honorifics".loc(),
+    collection: "XM.HonorificCollection",
+    label: "_honorifics".loc(),
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    columns: [
+      {header: ["_code".loc()],
+        rows: [
+        {readOnlyAttr: "code",
+          editor: {kind: "XV.InputWidget", attr: "code", placeholder: "_number".loc()}}
+      ]}
+    ],
+    workspace: "XV.HonorificWorkspace"
+  });
 
+  //
+  // PROJECT
+  //
+  enyo.kind({
+    name: "XV.ProjectEditableList",
+    kind: "XV.EditableList",
+    title: "_projects".loc(),
+    collection: "XM.ProjectListItemCollection",
+    label: "_projects".loc(),
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    columns: [
+      {header: ["_number".loc(), "_name".loc()],
+        rows: [
+        {readOnlyAttr: "number",
+          editor: {kind: "XV.InputWidget", attr: "number", placeholder: "_number".loc()}},
+        {readOnlyAttr: "name",
+          editor: {kind: "XV.InputWidget", attr: "name", placeholder: "_number".loc()}}
+      ]}
+    ],
+    workspace: "XV.ProjectWorkspace"
+  });
 
   // ..........................................................
   // SALES ORDER / QUOTE

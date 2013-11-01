@@ -38,6 +38,7 @@ trailing:true, white:true, strict:false*/
       label: "_project".loc(),
       panels: [
         {name: "projectList", kind: "XV.ProjectList"},
+        {name: "projectList2", kind: "XV.ProjectEditableList"},
         {name: "activityList", kind: "XV.ActivityList"}
       ]
     };
