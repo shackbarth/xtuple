@@ -311,7 +311,7 @@ white:true*/
             return;
           }
         }
-        handelWfProfile();
+        handleWfProfile();
       },
 
       /**
@@ -836,7 +836,7 @@ white:true*/
       editableModel: 'XM.ProjectWorkflow'
 
     });
-  
+
     /**
       @class
 
@@ -939,6 +939,48 @@ white:true*/
 
     });
 
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.Resource = XM.Model.extend(
+      /** @scope XM.Resource.prototype */ {
+
+      recordType: 'XM.Resource'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.TaskResource = XM.Document.extend(
+      /** @scope XM.TaskResource.prototype */ {
+
+      recordType: 'XM.TaskResource',
+
+      idAttribute: "uuid",
+
+      documentKey: "uuid"
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.TaskResourceAnalysis = XM.Model.extend(
+      /** @scope XM.TaskResourceAnalysis.prototype */ {
+
+      recordType: 'XM.TaskResourceAnalysis',
+
+      idAttribute: "id"
+
+    });
+
     // ..........................................................
     // COLLECTIONS
     //
@@ -976,6 +1018,42 @@ white:true*/
       /** @scope XM.ProjectRelationCollection.prototype */
 
       model: XM.ProjectRelation
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ResourceCollection = XM.Collection.extend({
+      /** @scope XM.ResourceCollection.prototype */
+
+      model: XM.Resource
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.TaskResourceCollection = XM.Collection.extend({
+      /** @scope XM.TaskResourceCollection.prototype */
+
+      model: XM.TaskResource
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.TaskResourceAnalysisCollection = XM.Collection.extend({
+      /** @scope XM.TaskResourceAnalysisCollection.prototype */
+
+      model: XM.TaskResourceAnalysis
 
     });
 

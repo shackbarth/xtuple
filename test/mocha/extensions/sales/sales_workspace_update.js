@@ -11,7 +11,7 @@
     zombieAuth = require("../../lib/zombie_auth"),
     smoke = require("../../lib/smoke"),
     testData = [
-      {kind: "XV.SalesOrderList", model: "XM.SalesOrder", update: "fob"},
+      //{kind: "XV.SalesOrderList", model: "XM.SalesOrder", update: "fob"},
       //{kind: "XV.CustomerList", model: "XM.Customer", update: "notes"}, // zombie can't handle TTOYS
       {kind: "XV.ProspectList", model: "XM.Prospect", update: "notes"},
       {kind: "XV.QuoteList", model: "XM.Quote", update: "fob"},

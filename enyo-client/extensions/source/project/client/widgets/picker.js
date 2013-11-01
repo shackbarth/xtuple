@@ -30,6 +30,18 @@ white:true, strict:false*/
       nameAttribute: "code"
     });
 
+    // ..........................................................
+    // RESOURCE
+    // TODO: use picker instead
+
+    enyo.kind({
+      name: "XV.ResourcePicker",
+      kind: "XV.PickerWidget",
+      collection: "XM.resources",
+      showNone: false,
+      nameAttribute: "code"
+    });
+
   };
 
 }());
