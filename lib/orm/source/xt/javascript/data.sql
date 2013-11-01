@@ -34,12 +34,14 @@ select xt.install_js('XT','Data','xtuple', $$
     buildClause: function (nameSpace, type, parameters, orderBy) {
       parameters = parameters || [];
 
-      var charSql,
+      var arrayIdentifiers,
+        charSql,
         childOrm,
         clauses = [],
         count = 1,
         identifiers = [],
         list = [],
+        isArray = false,
         op,
         orClause,
         orderByIdentifiers = [],
@@ -172,9 +174,31 @@ select xt.install_js('XT','Data','xtuple', $$
               /* Handle paths if applicable. */
               if (param.attribute[c].indexOf('.') > -1) {
                 parts = param.attribute[c].split('.');
-                childOrm = orm;
+                childOrm = this.fetchOrm(nameSpace, type);
                 params.push("");
                 pcount = params.length - 1;
+                isArray = false;
+
+                /* Check if last part is an Array. */
+                for (var m = 0; m < parts.length; m++) {
+                  /* Validate attribute. */
+                  prop = XT.Orm.getProperty(childOrm, parts[m]);
+                  if (!prop) {
+                    plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[m]);
+                  }
+
+                  if (m < parts.length - 1) {
+                    childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                  } else if (prop.attr && prop.attr.type === 'Array') {
+                    /* The last property in the path is an array. */
+                    isArray = true;
+                    params[pcount] = '$' + count;
+                  }
+                }
+
+                /* Reset the childOrm to parent. */
+                childOrm = this.fetchOrm(nameSpace, type);
+
                 for (var n = 0; n < parts.length; n++) {
                   /* Validate attribute. */
                   prop = XT.Orm.getProperty(childOrm, parts[n]);
@@ -182,15 +206,24 @@ select xt.install_js('XT','Data','xtuple', $$
                     plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
                   }
 
-                  /* Build path. e.g. ((%1$I).%2$I).%3$I */
-                  identifiers.push(parts[n]);
-                  params[pcount] += "%" + identifiers.length + "$I";
+                  /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
+                  if (param.isUsernamePrivFilter && isArray) {
+                    identifiers.push(parts[n]);
 
-                  if (n < parts.length - 1) {
-                    params[pcount] = "(" + params[pcount] + ").";
-                    childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
-                  } else if (param.isLower) {
-                    params[pcount] = "lower(" + params[pcount] + ")";
+                    if (n < parts.length - 1) {
+                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    }
+                  } else {
+                    /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                    identifiers.push(parts[n]);
+                    params[pcount] += "%" + identifiers.length + "$I";
+
+                    if (n < parts.length - 1) {
+                      params[pcount] = "(" + params[pcount] + ").";
+                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    } else if (param.isLower) {
+                      params[pcount] = "lower(" + params[pcount] + ")";
+                    }
                   }
                 }
               } else {
@@ -200,24 +233,33 @@ select xt.install_js('XT','Data','xtuple', $$
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
 
+                identifiers.push(param.attribute[c]);
+
                 /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
-                if (param.isUsernamePrivFilter && prop.toMany) {
-                  identifiers.push(param.attribute[c]);
+                if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested) || (prop.attr && prop.attr.type === 'Array'))) {
                   params.push('$' + count);
                   pcount = params.length - 1;
                 } else {
-                  identifiers.push(param.attribute[c]);
                   params.push("%" + identifiers.length + "$I");
                   pcount = params.length - 1;
                 }
               }
 
               /* Add persional privs array search. */
-              if (param.isUsernamePrivFilter && prop.toMany) {
+              if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested) || (prop.attr && prop.attr.type === 'Array') || isArray)) {
                 /* e.g. 'admin' = ANY (usernames_array) */
-                params[pcount] += ' ' + op + ' ANY (%' + identifiers.length + '$I)';
+                arrayIdentifiers = "";
 
-              /* Add optional is null caluse. */
+                /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                for (var f =0; f < identifiers.length; f++) {
+                  arrayIdentifiers += '%' + (f + 1) + '$I';
+                  if (f < identifiers.length - 1) {
+                    arrayIdentifiers = "(" + arrayIdentifiers + ").";
+                  }
+                }
+                params[pcount] += ' ' + op + ' ANY (' + arrayIdentifiers + ')';
+
+              /* Add optional is null clause. */
               } else if (parameters[i].includeNull) {
                 /* e.g. %1$I = $1 or %1$I is null */
                 params[pcount] = params[pcount] + " " + op + ' $' + count + ' or ' + params[pcount] + ' is null';
