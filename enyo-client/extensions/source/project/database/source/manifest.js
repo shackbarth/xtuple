@@ -6,6 +6,7 @@
     "public/tables/emp.sql",
     "public/tables/empgrp.sql",
     "xt/views/resource.sql",
+    "xt/views/tskresourceanalysis.sql",
     "xt/tables/acttype.sql",
     "xt/tables/prjtypeext.sql",
     "xt/tables/prjtypewf.sql",

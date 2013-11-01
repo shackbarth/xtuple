@@ -16,6 +16,7 @@ trailing:true, white:true*/
     newActions: [
       {name: "projects", label: "_projects".loc(), item: "XV.ProjectBarChart"},
       {name: "tasks", label: "_tasks".loc(), item: "XV.TaskBarChart"},
+      {name: "resourceAllocation", label: "_resources".loc(), item: "XV.ResourceHoursBarChart"},
       {name: "taskBudgetedHours", label: "_task".loc() + " " + "_budgetedHours".loc(),
         item: "XV.TaskBudgetedHoursTimeSeriesChart"},
       {name: "taskActualHours", label: "_task".loc() + " " + "_actualHours".loc(),

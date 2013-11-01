@@ -6,6 +6,17 @@ trailing:true, white:true*/
 (function () {
 
   enyo.kind({
+    name: "XV.ResourceHoursBarChart",
+    kind: "XV.DrilldownBarChart",
+    collection: "XM.TaskResourceAnalysisCollection",
+    chartTitle: "_resource".loc() + " " + "_hours".loc(),
+    groupByOptions: [
+      { name: "name" }
+    ],
+    totalField: "budgetedHours"
+  });
+
+  enyo.kind({
     name: "XV.ProjectBudgetedHoursBarChart",
     kind: "XV.DrilldownBarChart",
     collection: "XM.ProjectListItemCollection",

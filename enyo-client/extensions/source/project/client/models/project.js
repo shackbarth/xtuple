@@ -311,7 +311,7 @@ white:true*/
             return;
           }
         }
-        handelWfProfile();
+        handleWfProfile();
       },
 
       /**
@@ -967,6 +967,20 @@ white:true*/
 
     });
 
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.TaskResourceAnalysis = XM.Model.extend(
+      /** @scope XM.TaskResourceAnalysis.prototype */ {
+
+      recordType: 'XM.TaskResourceAnalysis',
+
+      idAttribute: "id"
+
+    });
+
     // ..........................................................
     // COLLECTIONS
     //
@@ -1028,6 +1042,18 @@ white:true*/
       /** @scope XM.TaskResourceCollection.prototype */
 
       model: XM.TaskResource
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.TaskResourceAnalysisCollection = XM.Collection.extend({
+      /** @scope XM.TaskResourceAnalysisCollection.prototype */
+
+      model: XM.TaskResourceAnalysis
 
     });
 
