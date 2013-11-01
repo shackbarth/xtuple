@@ -709,8 +709,8 @@ select xt.install_js('XT','Data','xtuple', $$
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
-        attributePrivileges = orm.privileges && 
-          orm.privileges.attribute && 
+        attributePrivileges = orm.privileges &&
+          orm.privileges.attribute &&
           orm.privileges.attribute[prop];
 
         if(!attributePrivileges || attributePrivileges.create === undefined) {
@@ -1007,8 +1007,8 @@ select xt.install_js('XT','Data','xtuple', $$
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop],
 
-        attributePrivileges = orm.privileges && 
-          orm.privileges.attribute && 
+        attributePrivileges = orm.privileges &&
+          orm.privileges.attribute &&
           orm.privileges.attribute[prop];
 
         if(!attributePrivileges || attributePrivileges.update === undefined) {
@@ -1386,7 +1386,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if(ret.length) {
         return ret[0].id;
       } else {
-        throw new handleError("Primary Key not found on " + orm.table + 
+        throw new handleError("Primary Key not found on " + orm.table +
           " where " + ncol + " = " + value, 400);
       }
     },
@@ -1515,7 +1515,7 @@ select xt.install_js('XT','Data','xtuple', $$
         XT.debug('fetch sql1 = ', sql1);
         XT.debug('fetch values = ', clause.parameters);
       }
-      
+
       /* First query for matching ids, then get entire result set. */
       /* This improves performance over a direct query on the view due */
       /* to the way sorting is handled by the query optimizer */
@@ -1526,11 +1526,11 @@ select xt.install_js('XT','Data','xtuple', $$
         idParams.push("$" + counter);
         counter++;
       });
-      
+
       sql2 = XT.format(sql2, [nameSpace.decamelize(), type.decamelize(), key]);
       sql2 = sql2.replace(/{orderBy}/g, clause.orderBy)
                  .replace('{ids}', idParams.join());
-      
+
       if (DEBUG) {
         XT.debug('fetch sql2 = ', sql2);
         XT.debug('fetch values = ', JSON.stringify(ids));
@@ -1646,7 +1646,7 @@ select xt.install_js('XT','Data','xtuple', $$
         if (options.silentError) {
           return false;
         } else {
-          throw new Error("Access Denied.");
+          throw new handleError("Unauthorized", 401);
         }
       }
 
@@ -1675,7 +1675,7 @@ select xt.install_js('XT','Data','xtuple', $$
           if (options.silentError) {
             return false;
           } else {
-            throw new Error("Access Denied.");
+            throw new handleError("Unauthorized", 401);
           }
         }
         /* Decrypt result where applicable. */
@@ -1761,7 +1761,7 @@ select xt.install_js('XT','Data','xtuple', $$
             delete item[prop.name];
           }
 
-	  	/*  Format for printing if printFormat and not an object */ 
+	  	/*  Format for printing if printFormat and not an object */
 		if (printFormat && !prop.toOne && !prop.toMany) {
 			switch(prop.attr.type) {
 	     		case "Date":
