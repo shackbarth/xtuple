@@ -154,9 +154,6 @@
   padding: 0;
   margin: 0;
 }
-.xv-groupbox .enyo-fittable-columns-layout > * {
-  vertical-align: middle;
-}
 .xv-groupbox .in-panel > *:first-child {
   border-top-color: #aaaaaa;
   border-top: none;
@@ -182,7 +179,6 @@
 }
 .xv-groupbox .onyx-input-decorator {
   border: 0;
-  margin-left: -8px;
 }
 .xv-groupbox .onyx-input-decorator input {
   padding-top: 2px;
@@ -410,10 +406,10 @@
   width: 800px;
 }
 .xv-grid-box .enyo-list-page > *:first-child .xv-grid-row {
-  border-top: 0px;
+  border-top: 0;
 }
 .xv-grid-box .xv-above-grid-list {
-  border: 0px;
+  border: 0;
 }
 .xv-grid-box .xv-scroller {
   background: #f8f8ff;
@@ -537,11 +533,12 @@
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
   padding-top: 6px;
+  width: 100%;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
-  height: 20px;
+  height: 25px;
   padding-top: 3px;
-  width: 80px;
+  width: 100%;
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
@@ -560,7 +557,19 @@
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .xv-input {
-  padding-top: 0px;
+  padding-top: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .spinner .xv-numberwidget {
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .spinner .xv-numberwidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .spinner .xv-numberwidget .onyx-input-decorator input {
+  width: 100%;
+  font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
   padding-top: 6px;
@@ -575,7 +584,7 @@
   font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox {
-  padding-left: 0px;
+  padding-left: 0;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .xv-combobox-input {
   font-size: 13px;
@@ -638,29 +647,29 @@
 .xv-grid-box.xv-groupbox .xv-sales-summary-panel {
   border: none;
   margin-top: 0;
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 0;
+  padding-right: 0;
 }
 .xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group {
   padding: 0;
   border: none;
 }
 .xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget {
-  padding-bottom: 0px;
-  padding-top: 0px;
+  padding-bottom: 0;
+  padding-top: 0;
 }
 .xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget .xv-input-decorator {
-  padding-bottom: 0px;
-  padding-top: 0px;
+  padding-bottom: 0;
+  padding-top: 0;
 }
 .xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget {
-  padding-bottom: 0px;
-  padding-top: 0px;
+  padding-bottom: 0;
+  padding-top: 0;
 }
 .xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
   width: 163px;
-  padding-bottom: 0px;
-  padding-top: 0px;
+  padding-bottom: 0;
+  padding-top: 0;
 }
 /**
   Styles relating to the dashboard
@@ -745,13 +754,15 @@
 .xv-list {
   background-color: #ffffff;
 }
+.xv-list .xv-list-item > * {
+  display: inline-block;
+  vertical-align: middle;
+}
 .xv-list .xv-list-item {
   background-color: #ffffff;
-  padding: 3px;
   border-bottom: 1px solid #dddddd;
   min-height: 32px;
 }
-@include box-sizing(border-box);
 .xv-list .xv-list-item.header {
   padding-top: 0;
 }
@@ -1030,10 +1041,17 @@
   margin: 1px 0 1px 0;
   width: 20px;
   height: 20px;
+  background: transparent;
+  color: #357ec7;
+  font-size: 20px;
+  border: none;
 }
 .spinner .slider {
   margin: 15px 15px;
   width: 100px;
+}
+.spinner .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
 }
 .spinner.xv-numberwidget .onyx-input-decorator {
   width: 100px;
@@ -1041,6 +1059,41 @@
 .spinner.xv-numberwidget input {
   width: 50px;
   text-align: left;
+}
+.xv-dependency-picker .onyx-picker-decorator .onyx-button {
+  width: 280px;
+  margin-left: 6px;
+}
+.xv-dependency-button {
+  color: #357ec7;
+  font-size: 24px;
+  border: none;
+  background: transparent;
+}
+/**
+  Styles for characteristic pickers and buttons
+*/
+/* Characteristics */
+.xv-characteristic-picker .onyx-picker-decorator .onyx-button {
+  width: 130px;
+}
+.xv-characteristic-item {
+  border-bottom: 1px solid #aaaaaa;
+}
+.xv-characteristic-item .onyx-input-decorator > input {
+  width: 115px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.xv-characteristic-buttons {
+  margin: 8px;
+}
+.xv-characteristic-button {
+  margin: 0 4px 0 4px;
+  color: #357ec7;
+  font-size: 24px;
+  border: none;
+  background: transparent;
 }
 /**
   Import for Font-Awesome icons
@@ -2576,24 +2629,6 @@ body {
   text-overflow: ellipsis;
   padding: 8px 0 0 8px;
 }
-/* Characteristics */
-.xv-characteristic-picker .onyx-picker-decorator .onyx-button {
-  width: 130px;
-}
-.xv-characteristic-item {
-  border-bottom: 1px solid #aaaaaa;
-}
-.xv-characteristic-item .onyx-input-decorator > input {
-  width: 115px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.xv-characteristic-button {
-  margin-right: 4px;
-}
-.xv-characteristic-buttons {
-  margin: 8px;
-}
 .xv-popup-button {
   margin: 4px;
 }
@@ -2638,7 +2673,6 @@ body {
   text-overflow: ellipsis;
 }
 .xv-comment-box .xv-comment-box-textblock {
-  padding: 5px;
   font-size: small;
   overflow: hidden;
 }
