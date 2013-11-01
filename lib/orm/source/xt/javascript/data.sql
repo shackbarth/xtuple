@@ -236,7 +236,9 @@ select xt.install_js('XT','Data','xtuple', $$
                 identifiers.push(param.attribute[c]);
 
                 /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
-                if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested) || (prop.attr && prop.attr.type === 'Array'))) {
+                if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested) ||
+                  (prop.attr && prop.attr.type === 'Array'))) {
+
                   params.push('$' + count);
                   pcount = params.length - 1;
                 } else {
@@ -246,7 +248,9 @@ select xt.install_js('XT','Data','xtuple', $$
               }
 
               /* Add persional privs array search. */
-              if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested) || (prop.attr && prop.attr.type === 'Array') || isArray)) {
+              if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested)
+                || (prop.attr && prop.attr.type === 'Array') || isArray)) {
+
                 /* e.g. 'admin' = ANY (usernames_array) */
                 arrayIdentifiers = "";
 
@@ -381,7 +385,9 @@ select xt.install_js('XT','Data','xtuple', $$
         this._granted[privilege] = ret;
       }
 
-      if (DEBUG) { XT.debug('Privilege check for "' + XT.username + '" on "' + privilege + '" returns ' + ret); }
+      if (DEBUG) {
+        XT.debug('Privilege check for "' + XT.username + '" on "' + privilege + '" returns ' + ret);
+      }
 
       return ret;
     },
