@@ -11,7 +11,7 @@ select xt.create_view('xt.crmacctaddr_users', $$
 
 SELECT
   addr_id,
-  username AS crmacct_usernames
+  array_agg(username) AS crmacct_usernames
 FROM (
   SELECT
     addr_id,
@@ -20,6 +20,7 @@ FROM (
 ) addr_crmacct_ids
 LEFT JOIN xt.crmacct_users USING (crmacct_id)
 WHERE 1=1
-  AND username IS NOT NULL;
+  AND username IS NOT NULL
+GROUP BY addr_id;
 
 $$, false);
