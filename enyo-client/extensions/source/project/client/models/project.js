@@ -255,14 +255,32 @@ white:true*/
                 if (_.isString(model.attributes.successors)) {
                   model.attributes.successors.replace(uuid, map[uuid]);
                 }
-              })
-            })
+              });
+            });
+          },
+          handleWfProfile = function () {
+            // Handle copying workflow
+            if (wfProfile && wfProfile.length) {
+              if (!workflow.length) {
+                copyWfProfile();
+              } else {
+                that.notify("_copyWorkflow?".loc(), {
+                  type: XM.Model.QUESTION,
+                  callback: function (response) {
+                    if (response.answer) {
+                      copyWfProfile();
+                    }
+                  }
+                });
+              }
+            }
           };
 
         // Handle copying characteristics
         if (charProfile && charProfile.length) {
           if (!chars.length) {
             copyCharProfile();
+            return;
           } else {
             this.notify("_copyCharacteristics?".loc(), {
               type: XM.Model.QUESTION,
@@ -270,26 +288,13 @@ white:true*/
                 if (response.answer) {
                   copyCharProfile();
                 }
+                handleWfProfile();
               }
             });
+            return;
           }
         }
-
-        // Handle copying workflow
-        if (wfProfile && wfProfile.length) {
-          if (!workflow.length) {
-            copyWfProfile();
-          } else {
-            this.notify("_copyWorkflow?".loc(), {
-              type: XM.Model.QUESTION,
-              callback: function (response) {
-                if (response.answer) {
-                  copyWfProfile();
-                }
-              }
-            });
-          }
-        }
+        handelWfProfile();
       },
 
       /**
