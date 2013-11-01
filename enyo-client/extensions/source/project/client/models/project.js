@@ -253,6 +253,7 @@ white:true*/
               item.set({
                 uuid: id,
                 name: model.get("name"),
+                parentStatus : model.get("parentStatus"),
                 description : model.get("description"),
                 priority: model.get("priority"),
                 startDate: startDate,
