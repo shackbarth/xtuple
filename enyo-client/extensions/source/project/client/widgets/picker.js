@@ -14,7 +14,8 @@ white:true, strict:false*/
     enyo.kind({
       name: "XV.ProjectStatusPicker",
       kind: "XV.PickerWidget",
-      collection: "XM.projectStatuses"
+      collection: "XM.projectStatuses",
+      showNone: false
     });
 
 
