@@ -660,11 +660,13 @@ strict:true, trailing:true, white:true */
     // Placeholders
     // ********
 
+    "_noAssignedTo": "No Assigned To",
     "_noAccountName": "No Account Name",
     "_noAddress": "No Address",
     "_noCategory": "No Category",
     "_noCloseTarget": "No Close Target",
     "_noContact": "No Contact",
+    "_noDepartment": "No Department",
     "_noDueDate": "No Due Date",
     "_noEmail": "No Email",
     "_noExpiration": "No Expiration",
@@ -850,7 +852,8 @@ strict:true, trailing:true, white:true */
     "_convertAccountSalesRep": "Convert this Account to a SalesRep?",
     "_convertAccountTaxAuthority": "Convert this Account to a Tax Authority?",
     "_convertProspect": "Convert this Prospect to a Customer?",
-    "_copyCharacteristics?": "Would you like to over-write the characteristics with the profile for this selection?",
+    "_copyCharacteristics?": "Would you like to over-write the existing characteristics with the profile for this selection?",
+    "_copyWorkflow?": "Would you like to over-write the existing workflow with the profile for this selection?",
     "_creditWarn": "This customer is on credit warn.",
     "_creditHold": "This customer is on credit hold.",
     "_customerExists": "A customer with this number already exists.",

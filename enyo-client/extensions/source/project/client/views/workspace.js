@@ -94,8 +94,11 @@ trailing:true, white:true, strict:false*/
               {name: "overviewControl", components: [
                 {kind: "XV.InputWidget", attr: "number"},
                 {kind: "XV.InputWidget", attr: "name"},
+                {kind: "XV.DepartmentWidget", attr: "department"},
                 {kind: "XV.ProjectTypePicker", attr: "projectType"},
                 {kind: "XV.ProjectStatusPicker", attr: "status"},
+                {kind: "XV.PriorityPicker", attr: "priority"},
+                {kind: "XV.PercentWidget", attr: "percentComplete"},
                 {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
                 {kind: "XV.DateWidget", attr: "dueDate"},
                 {kind: "XV.DateWidget", attr: "startDate"},
@@ -161,6 +164,8 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.InputWidget", attr: "number"},
               {kind: "XV.InputWidget", attr: "name"},
               {kind: "XV.ProjectStatusPicker", attr: "status"},
+              {kind: "XV.PriorityPicker", attr: "priority"},
+              {kind: "XV.PercentWidget", attr: "percentComplete"},
               {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
               {kind: "XV.DateWidget", attr: "dueDate"},
               {kind: "XV.DateWidget", attr: "startDate"},
@@ -207,6 +212,8 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.InputWidget", attr: "number"},
               {kind: "XV.InputWidget", attr: "name"},
               {kind: "XV.ProjectStatusPicker", attr: "status"},
+              {kind: "XV.PriorityPicker", attr: "priority"},
+              {kind: "XV.PercentWidget", attr: "percentComplete"},
               {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
               {kind: "XV.DateWidget", attr: "dueDate"},
               {kind: "XV.DateWidget", attr: "startDate"},
@@ -302,7 +309,7 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.ProjectCharacteristicsWidget", attr: "characteristics"}
             ]}
           ]},
-          {kind: "XV.ProjectWorkflowBox", attr: "workflow"}
+          {kind: "XV.ProjectTypeWorkflowBox", attr: "workflow"}
         ]}
       ]
     });

@@ -13,8 +13,11 @@ strict:true, trailing:true, white:true */
     "_budgetedHrs": "Budgeted Hrs.",
     "_completionAction": "Completion Action",
     "_due": "Due",
+    "_dueSet": "Calculate",
+    "_dueOffset": "Offset Days",
     "_nextProjectStatus": "Next Project Status",
     "_noChange": "No Change",
+    "_percentComplete": "Complete",
     "_project": "Project",
     "_projectAssignedTo": "Project Assigned To",
     "_projectManagement": "Project Management",
@@ -30,7 +33,9 @@ strict:true, trailing:true, white:true */
     "_projectWorkflow": "Project Workflow",
     "_resource": "Resource",
     "_resources": "Resources",
-    "_start": "Start"
+    "_start": "Start",
+    "_startSet": "Calculate",
+    "_startOffset": "Offset Days"
   });
 
   if (typeof exports !== 'undefined') {

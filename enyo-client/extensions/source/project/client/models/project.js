@@ -113,6 +113,7 @@ white:true*/
       bindEvents: function () {
         XM.Document.prototype.bindEvents.apply(this, arguments);
         this.on('change:status', this.projectStatusDidChange);
+        this.on('change:percentComplete', this.percentCompleteDidChange);
         this.statusDidChange();
       },
 
@@ -123,15 +124,31 @@ white:true*/
       },
 
       /**
+        Reimplemented to handle automatic date setting.
+      */
+      percentCompleteDidChange: function () {
+        var percentComplete = this.get('percentComplete');
+        if (percentComplete >= 1) {
+          this.set("status", XM.Project.COMPLETED);
+        }
+      },
+
+      /**
       Reimplemented to handle automatic date setting.
       */
       projectStatusDidChange: function () {
         var status = this.get('status'),
-          date = new Date(), K = XM.Project;
+          date = new Date(),
+          K = XM.Project;
         if (status === K.IN_PROCESS && !this.get('assignDate')) {
           this.set('assignDate', date);
-        } else if (status === K.COMPLETED && !this.get('completeDate')) {
-          this.set('completeDate', date);
+        } else if (status === K.COMPLETED) {
+          if (!this.get('completeDate')) {
+            this.set('completeDate', date);
+          }
+          this.off('change:percentComplete', this.percentCompleteDidChange);
+          this.set("percentComplete", 1);
+          this.on('change:percentComplete', this.percentCompleteDidChange);
         }
       }
 
@@ -191,10 +208,15 @@ white:true*/
       },
 
       projectTypeDidChange: function () {
-        var charProfile = this.getValue("projectType.characteristics"),
+        var projectType = this.get("projectType"),
+          charProfile = projectType ? projectType.get("characteristics") : false,
+          wfProfile = projectType ? projectType.get("workflow") : false,
           chars = this.get("characteristics"),
+          workflow = this.get("workflow"),
           that = this,
-          copyProfile = function () {
+
+          // Copies characteristics from project type to project
+          copyCharProfile = function () {
             chars.reset();
             _.each(charProfile.models, function (model) {
               var assignment = new XM.ProjectCharacteristic(null, {isNew: true});
@@ -202,22 +224,94 @@ white:true*/
               assignment.set("value", model.get("value"));
               chars.add(assignment);
             });
+          },
+
+          // Copies workflow from project type to project
+          copyWfProfile = function () {
+            var map = {};
+            workflow.reset();
+            _.each(wfProfile.models, function (model) {
+              var item = new XM.ProjectWorkflow(null, {isNew: true}),
+                id = XT.generateUUID(),
+                dueOffset = model.get("dueOffset"),
+                startOffset = model.get("startOffset"),
+                dueDate,
+                startDate;
+
+              map[model.id] = id;
+
+              if (model.get("dueSet")) {
+                dueDate = XT.date.today();
+                dueDate.setDate(dueDate.getDate() + model.get("dueOffset"));
+              }
+
+              if (model.get("startSet")) {
+                startDate = XT.date.today();
+                startDate.setDate(startDate.getDate() + model.get("startOffset"));
+              }
+
+              item.set({
+                uuid: id,
+                name: model.get("name"),
+                description : model.get("description"),
+                priority: model.get("priority"),
+                startDate: startDate,
+                dueDate: dueDate,
+                owner: model.get("owner"),
+                assignedTo: model.get("assignedTo"),
+                sequence: model.get("sequence"),
+                notes: model.get("notes"),
+                successors: model.get("successors")
+              });
+              workflow.add(item);
+            });
+
+            // Reiterate through new collection and fix successor mappings
+            _.each(_.keys(map), function (uuid) {
+              _.each(workflow.models, function (model) {
+                if (_.isString(model.attributes.successors)) {
+                  model.attributes.successors.replace(uuid, map[uuid]);
+                }
+              });
+            });
+          },
+          handleWfProfile = function () {
+            // Handle copying workflow
+            if (wfProfile && wfProfile.length) {
+              if (!workflow.length) {
+                copyWfProfile();
+              } else {
+                that.notify("_copyWorkflow?".loc(), {
+                  type: XM.Model.QUESTION,
+                  callback: function (response) {
+                    if (response.answer) {
+                      copyWfProfile();
+                    }
+                  }
+                });
+              }
+            }
           };
 
+        // Handle copying characteristics
         if (charProfile && charProfile.length) {
           if (!chars.length) {
-            copyProfile();
+            copyCharProfile();
+            return;
           } else {
             this.notify("_copyCharacteristics?".loc(), {
               type: XM.Model.QUESTION,
               callback: function (response) {
                 if (response.answer) {
-                  copyProfile();
+                  copyCharProfile();
                 }
+                handleWfProfile();
               }
             });
+            return;
           }
         }
+        handelWfProfile();
       },
 
       /**

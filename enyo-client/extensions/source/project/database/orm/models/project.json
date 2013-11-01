@@ -1540,6 +1540,40 @@
         }
       }    
     ],
+    "extensions": [
+      {
+        "table": "xt.prjext",
+        "relations": [
+          {
+            "column": "prjext_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "department",
+            "toOne": {
+              "type": "Department",
+              "column": "prjext_dept_id"
+            }
+          },
+          {
+            "name": "priority",
+            "toOne": {
+              "type": "Priority",
+              "column": "prjext_priority_id"
+            }
+          },
+          {
+            "name": "percentComplete",
+            "attr": {
+              "type": "Percent",
+              "column": "prjext_pct_complete"
+            }
+          }
+        ]
+      }
+    ],
     "isSystem": true
   },
   {
