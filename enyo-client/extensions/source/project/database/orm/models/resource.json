@@ -1,0 +1,44 @@
+[
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Resource",
+    "table": "xt.resource",
+    "comment": "Resource Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isPrimaryKey": true,
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "resource_code"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "resource_name"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
+
