@@ -30,15 +30,28 @@ trailing:true, white:true, strict:false*/
                   formatter: "formatDueDate",
                   classes: "right"}
               ]},
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "account.name"}
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "name"},
+                {kind: "XV.ListAttr", attr: "priority.name",
+                  fit: true, classes: "right",
+                  placeholder: "_noPriority".loc()}
+              ]},
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "account.name"},
+                {kind: "XV.ListAttr", attr: "percentComplete", fit: true,
+                  formatter: "formatPercent",
+                  classes: "right"}
+              ]}
             ]},
-            {kind: "XV.ListColumn", classes: "third",
+            {kind: "XV.ListColumn", style: "width: 100px;",
               components: [
               {kind: "XV.ListAttr", attr: "getProjectStatusString"},
-              {kind: "XV.ListAttr", attr: "assignedTo.username"}
+              {kind: "XV.ListAttr", attr: "assignedTo.username",
+                placeholder: "_noAssignedTo".loc()},
+              {kind: "XV.ListAttr", attr: "department.number",
+                placeholder: "_noDepartment".loc()},
             ]},
-            {kind: "XV.ListColumn", style: "width: 80;",
+            {kind: "XV.ListColumn", style: "width: 80px;",
               components: [
               {content: "_budgeted".loc() + ":", classes: "xv-list-attr",
                 style: "text-align: right;"},
@@ -83,7 +96,11 @@ trailing:true, white:true, strict:false*/
         view.addRemoveClass("error", value < 0);
         var scale = XT.locale.currencyScale;
         return Globalize.format(value, "c" + scale);
+      },
+      formatPercent: function (value) {
+        return Globalize.format(value, "p" + 0);
       }
+
     });
 
     XV.registerModelList("XM.ProjectRelation", "XV.ProjectList");

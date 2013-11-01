@@ -17,6 +17,7 @@ strict:true, trailing:true, white:true */
     "_dueOffset": "Offset Days",
     "_nextProjectStatus": "Next Project Status",
     "_noChange": "No Change",
+    "_percentComplete": "Complete",
     "_project": "Project",
     "_projectAssignedTo": "Project Assigned To",
     "_projectManagement": "Project Management",

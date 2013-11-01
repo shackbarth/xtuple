@@ -559,6 +559,18 @@
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .xv-input {
   padding-top: 0;
 }
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .spinner .xv-numberwidget {
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .spinner .xv-numberwidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .spinner .xv-numberwidget .onyx-input-decorator input {
+  width: 100%;
+  font-size: 13px;
+}
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
   padding-top: 6px;
 }
@@ -1029,6 +1041,10 @@
   margin: 1px 0 1px 0;
   width: 20px;
   height: 20px;
+  background: transparent;
+  color: #357ec7;
+  font-size: 20px;
+  border: none;
 }
 .spinner .slider {
   margin: 15px 15px;

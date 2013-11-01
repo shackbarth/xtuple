@@ -2326,7 +2326,7 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
               {kind: "XV.TaxCodePicker", label: "_taxCode".loc(), attr: "tax"},
-              {kind: "XV.NumberWidget", label: "_percent".loc(), attr: "percent", scale: XT.PERCENT_SCALE},
+              {kind: "XV.PercentWidget", label: "_percent".loc(), attr: "percent"},
               {kind: "XV.MoneyWidget", attr: {localValue: "amount", currency: "currency",
                 effective: "effectiveDate"}, label: "_amount".loc()},
               {kind: "XV.DateWidget", label: "_effective".loc(), attr: "effectiveDate"},

@@ -113,6 +113,7 @@ white:true*/
       bindEvents: function () {
         XM.Document.prototype.bindEvents.apply(this, arguments);
         this.on('change:status', this.projectStatusDidChange);
+        this.on('change:percentComplete', this.percentCompleteDidChange);
         this.statusDidChange();
       },
 
@@ -123,15 +124,31 @@ white:true*/
       },
 
       /**
+        Reimplemented to handle automatic date setting.
+      */
+      percentCompleteDidChange: function () {
+        var percentComplete = this.get('percentComplete');
+        if (percentComplete >= 1) {
+          this.set("status", XM.Project.COMPLETED);
+        }
+      },
+
+      /**
       Reimplemented to handle automatic date setting.
       */
       projectStatusDidChange: function () {
         var status = this.get('status'),
-          date = new Date(), K = XM.Project;
+          date = new Date(),
+          K = XM.Project;
         if (status === K.IN_PROCESS && !this.get('assignDate')) {
           this.set('assignDate', date);
-        } else if (status === K.COMPLETED && !this.get('completeDate')) {
-          this.set('completeDate', date);
+        } else if (status === K.COMPLETED) {
+          if (!this.get('completeDate')) {
+            this.set('completeDate', date);
+          }
+          this.off('change:percentComplete', this.percentCompleteDidChange);
+          this.set("percentComplete", 1);
+          this.on('change:percentComplete', this.percentCompleteDidChange);
         }
       }
 
