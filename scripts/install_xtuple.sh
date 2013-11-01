@@ -24,7 +24,7 @@ varlog BASEDIR
 LIBS_ONLY=
 if [ $SUDO_USER ]
 then
-	XT_DIR=$RUN_DIR/..
+	XT_DIR=$RUN_DIR
 	varlog XT_DIR
 else
 	log "Must run with sudo, not as root."

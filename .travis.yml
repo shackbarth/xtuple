@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+  - "0.8"
+
+services:
+  - postgresql
+
+before_install:
+  - "sudo nvm install 0.8.22"
+
+install:
+  - "sudo ./scripts/install_xtuple.sh"
+
+before_script:
+  - "cd node-datasource ; sudo node main.js &"
+  - "sleep 5"
+  - "cd .."
+
+script:
+  - "npm run-script test"

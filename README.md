@@ -16,12 +16,11 @@ To install this project, first fork this repo onto your own github account and c
 
 Then run:
 
-    cd scripts
-    sudo ./install_xtuple.sh
+    sudo ./scripts/install_xtuple.sh
 
 This will take a while. Then, to start the datasource, run
 
-    cd ../node-datasource
+    cd node-datasource
     sudo ./main.js
 
 Launch your local browser and navigate to the address `localhost`. Default username and password are `admin`.
