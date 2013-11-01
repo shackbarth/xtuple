@@ -345,7 +345,13 @@ select xt.install_js('XT','Schema','xtuple', $$
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].attr.required) {
-          ret.properties[orm.properties[i].name].required = true;
+          /* Check if this is a fetchable number. */
+          if (orm.orderSequence && orm.properties[i].name === nkey && nkey !== pkey) {
+            /* Do not set this property to required. See xt.post() which will */
+            /* use XM.Model.fetchNumber() for it. */
+          } else {
+            ret.properties[orm.properties[i].name].required = true;
+          }
         }
 
         /* Add key flag. This isn't part of JSON-Schema, but very useful for URIs. */

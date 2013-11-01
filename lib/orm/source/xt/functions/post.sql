@@ -209,32 +209,11 @@ create or replace function xt.post(data_hash text) returns text as $$
           dataHash.data[nkey] = XT.generateUUID();
         } else {
           /* Check if this is a fetchable number. */
-          fetchSql = 'select orderseq_name from orderseq where orderseq_table = $1 and orderseq_numcol = $2;';
-          fetchCol = XT.Orm.getProperty(orm, nkey).attr.column;
-
-          if (DEBUG) {
-            XT.debug('fetchSql sql =', fetchSql);
-            XT.debug('fetchSql values =', [orm.table, fetchCol]);
-          }
-
-          fetchRes = plv8.execute(fetchSql, [orm.table, fetchCol]);
-
-          if (!fetchRes.length || fetchRes.length > 1) {
-            throw new handleError("A unique " + nkey + " must be provided", 449);
-          } else {
+          if (orm.orderSequence) {
             /* Since this is null, but required, fetch the next number for this and use it. */
-            var autoNumberSql = 'select fetchNextNumber($1);';
-
-            if (DEBUG) {
-              XT.debug('autoNumberSql sql =', autoNumberSql);
-              XT.debug('autoNumberSql values =', [fetchRes[0].orderseq_name]);
-            }
-
-            dataHash.data[nkey] = plv8.execute(autoNumberSql, [fetchRes[0].orderseq_name])[0].fetchnextnumber;
-
-            if (DEBUG) {
-              XT.debug('autoNumber =', dataHash.data[nkey]);
-            }
+            dataHash.data[nkey] = XM.Model.fetchNumber(dataHash.nameSpace + '.' + dataHash.type);
+          } else {
+            throw new handleError("A unique " + nkey + " must be provided", 449);
           }
         }
       }
