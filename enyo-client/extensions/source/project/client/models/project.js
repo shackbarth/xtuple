@@ -862,10 +862,14 @@ white:true*/
 
       @extends XM.Model
     */
-    XM.TaskResource = XM.Model.extend(
+    XM.TaskResource = XM.Document.extend(
       /** @scope XM.TaskResource.prototype */ {
 
-      recordType: 'XM.Resource'
+      recordType: 'XM.TaskResource',
+
+      idAttribute: "uuid",
+
+      documentKey: "uuid"
 
     });
 

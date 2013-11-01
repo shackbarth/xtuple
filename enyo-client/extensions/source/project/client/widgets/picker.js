@@ -30,6 +30,18 @@ white:true, strict:false*/
       nameAttribute: "code"
     });
 
+    // ..........................................................
+    // PROJECT TYPE
+    //
+
+    enyo.kind({
+      name: "XV.ResourcePicker",
+      kind: "XV.PickerWidget",
+      collection: "XM.resources",
+      showNone: false,
+      nameAttribute: "code"
+    });
+
   };
 
 }());

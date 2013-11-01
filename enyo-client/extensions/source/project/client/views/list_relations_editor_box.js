@@ -141,6 +141,33 @@ trailing:true, white:true, strict:false*/
       fitButtons: false
     });
 
-  };
+    //
+    // TASK RESOURCES
+    //
+    enyo.kind({
+      name: "XV.TaskResourcesEditor",
+      kind: "XV.RelationsEditor",
+      components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+          classes: "in-panel", components: [
+          {kind: "XV.ResourcePicker", attr: "resource"},
+          {kind: "XV.NumberWidget", attr: "percent"}
+        ]}
+      ]
+    });
 
+    enyo.kind({
+      name: "XV.TaskResourcesBox",
+      kind: "XV.ListRelationsEditorBox",
+      title: "_resources".loc(),
+      editor: "XV.TaskResourcesEditor",
+      parentKey: "task", // XXX projectTask?
+      listRelations: "XV.TaskResourceListRelations",
+      fitButtons: false
+    });
+
+
+
+
+  };
 }());

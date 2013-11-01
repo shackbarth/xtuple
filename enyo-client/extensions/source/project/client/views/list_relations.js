@@ -149,6 +149,31 @@ trailing:true, white:true*/
       formatDueDate: XV.ProjectList.prototype.formatDueDate
     });
 
+    // ..........................................................
+    // TASK RESOURCE
+    //
+
+    enyo.kind({
+      name: "XV.TaskResourceListRelations",
+      kind: "XV.ListRelations",
+      orderBy: [
+        {attribute: 'percent' } // XXX
+      ],
+      parentKey: "task",
+      //XXX workspace: "XV.ProjectWorkspace",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "resource.name", classes: "bold"},
+                {kind: "XV.ListAttr", attr: "percent", fit: true},
+              ]}
+            ]}
+          ]}
+        ]}
+      ]
+    });
   };
 
 }());
