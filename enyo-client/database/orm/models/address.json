@@ -22,7 +22,7 @@
         "update":"MaintainPersonalCRMAccounts",
         "delete":"MaintainPersonalCRMAccounts",
         "properties":[
-          "crmaccountUsers"
+          "crmaccountUsers.crmacctUsernames"
         ]
       }
     },
@@ -125,8 +125,9 @@
         }
       },
       {
-        "name":"crmaccountUsers",
-        "toMany": {
+        "name": "crmaccountUsers",
+        "toOne": {
+          "isNested": true,
           "type": "AccountAddressUsers",
           "column": "addr_id",
           "inverse": "id"
@@ -313,25 +314,25 @@
         "update": false,
         "delete": false,
         "properties":[
-          "crmacct_usernames"
+          "crmacctUsernames"
         ]
       }
     },
     "properties": [
       {
-        "name": "crmacct_usernames",
+        "name": "id",
         "attr": {
-          "type": "String",
-          "column": "crmacct_usernames",
+          "type": "Number",
+          "column": "addr_id",
           "isPrimaryKey": true,
           "isNaturalKey": true
         }
       },
       {
-        "name": "id",
+        "name": "crmacctUsernames",
         "attr": {
-          "type": "Number",
-          "column": "addr_id"
+          "type": "Array",
+          "column": "crmacct_usernames"
         }
       }
     ],
