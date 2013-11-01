@@ -68,7 +68,9 @@ trailing:true, white:true, strict:false*/
             editor: {kind: "XV.DateWidget", attr: "assignDate"}},
           {readOnlyAttr: "completeDate",
             placeholder: "noCompleteDate".loc(),
-            editor: {kind: "XV.DateWidget", attr: "completeDate"}}
+            editor: {kind: "XV.DateWidget", attr: "completeDate"}},
+          {readOnlyAttr: "percentComplete",
+            editor: {kind: "XV.PercentWidget", attr: "percentComplete"}},
         ]}
       ],
       workspace: "XV.ProjectTaskWorkspace"

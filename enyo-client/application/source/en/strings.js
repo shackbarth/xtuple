@@ -660,11 +660,13 @@ strict:true, trailing:true, white:true */
     // Placeholders
     // ********
 
+    "_noAssignedTo": "No Assigned To",
     "_noAccountName": "No Account Name",
     "_noAddress": "No Address",
     "_noCategory": "No Category",
     "_noCloseTarget": "No Close Target",
     "_noContact": "No Contact",
+    "_noDepartment": "No Department",
     "_noDueDate": "No Due Date",
     "_noEmail": "No Email",
     "_noExpiration": "No Expiration",

@@ -49,6 +49,7 @@ trailing:true, white:true*/
         },
         {name: "number", label: "_number".loc(), attr: "number"},
         {name: "name", label: "_name".loc(), attr: "name"},
+        {name: "department", label: "_department".loc(), attr: "department", defaultKind: "XV.DepartmentWidget"},
         {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
         {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
         {name: "statusHeader", kind: "onyx.GroupboxHeader", content: "_status".loc()},
