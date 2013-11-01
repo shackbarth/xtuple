@@ -301,7 +301,7 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.ProjectCharacteristicsWidget", attr: "characteristics"}
             ]}
           ]},
-          {kind: "XV.ProjectWorkflowBox", attr: "workflow"}
+          {kind: "XV.ProjectTypeWorkflowBox", attr: "workflow"}
         ]}
       ]
     });
