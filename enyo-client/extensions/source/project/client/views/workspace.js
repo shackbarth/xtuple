@@ -144,8 +144,11 @@ trailing:true, white:true, strict:false*/
     projectHash = enyo.mixin(projectHash, XV.accountNotifyContactMixin);
     enyo.kind(projectHash);
 
+    XV.registerModelWorkspace("XM.Project", "XV.ProjectWorkspace");
     XV.registerModelWorkspace("XM.ProjectRelation", "XV.ProjectWorkspace");
     XV.registerModelWorkspace("XM.ProjectListItem", "XV.ProjectWorkspace");
+    XV.registerModelWorkspace("XM.ProjectTask", "XV.ProjectWorkspace");
+    XV.registerModelWorkspace("XM.ProjectWorkflow", "XV.ProjectWorkspace");
 
     enyo.kind({
       name: "XV.TaskWorkspace",

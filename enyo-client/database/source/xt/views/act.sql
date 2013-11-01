@@ -10,6 +10,7 @@ select xt.create_view('xt.act', $$
 -- TODO
 select 
   obj_uuid as act_uuid,
+  obj_uuid as act_editor_key,
   acttype_code as act_type,
   todoitem_name as act_name,
   todoitem_active as act_active,
@@ -31,6 +32,7 @@ from todoitem
 union all
 select 
   ophead.obj_uuid as act_uuid,
+  ophead_number as act_editor_key,
   acttype_code as act_type,
   ophead_number as act_number,
   ophead_active as act_active,
@@ -54,6 +56,7 @@ from ophead
 union all
 select 
   incdt.obj_uuid as act_uuid,
+  incdt_number::text as act_editor_key,
   acttype_code as act_type,
   incdt_number::text as act_number,
   incdt_status != 'L' as act_active,
@@ -75,6 +78,7 @@ from incdt
 union all
 select 
   obj_uuid as act_uuid,
+  prj_number as act_editor_key,
   acttype_code as act_type,
   prj_number as act_name,
   prj_status != 'C' as act_active,
@@ -97,6 +101,7 @@ from prj
 union all
 select 
   prjtask.obj_uuid as act_uuid,
+  prj_number as act_editor_key,
   acttype_code as act_type,
   prjtask_number as act_name,
   prjtask_status != 'C' as act_active,
@@ -121,6 +126,7 @@ from prjtask
 union all
 select 
   wf.obj_uuid as act_uuid,
+  prj_number as act_editor_key,
   acttype_code as act_type,
   wf_name as act_name,
   wf_status not in ('C','D') as act_active,

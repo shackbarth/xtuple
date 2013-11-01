@@ -1003,6 +1003,7 @@ strict: false*/
   incidentHash = enyo.mixin(incidentHash, XV.accountNotifyContactMixin);
   enyo.kind(incidentHash);
 
+  XV.registerModelWorkspace("XM.Incident", "XV.IncidentWorkspace");
   XV.registerModelWorkspace("XM.IncidentRelation", "XV.IncidentWorkspace");
   XV.registerModelWorkspace("XM.IncidentListItem", "XV.IncidentWorkspace");
 
@@ -1294,6 +1295,7 @@ strict: false*/
   opportunityHash = enyo.mixin(opportunityHash, XV.accountNotifyContactMixin);
   enyo.kind(opportunityHash);
 
+  XV.registerModelWorkspace("XM.Opportunity", "XV.OpportunityWorkspace");
   XV.registerModelWorkspace("XM.OpportunityRelation", "XV.OpportunityWorkspace");
   XV.registerModelWorkspace("XM.OpportunityListItem", "XV.OpportunityWorkspace");
 
@@ -2484,6 +2486,7 @@ strict: false*/
   };
   toDoHash = enyo.mixin(toDoHash, XV.accountNotifyContactMixin);
   enyo.kind(toDoHash);
+  XV.registerModelWorkspace("XM.ToDo", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
 

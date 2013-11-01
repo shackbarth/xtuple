@@ -96,6 +96,12 @@ trailing:true, white:true, strict: false*/
         ]}
       ]}
     ],
+    getWorkspace: function () {
+      var collection = this.getValue(),
+        model = collection.at(this._lastTapIndex),
+        recordType = "XM." + model.get("activityType");
+      return XV.getWorkspace(recordType);
+    },
     formatDueDate: function (value, view, model) {
       var today = new Date(),
         isLate = (model.get('isActive') &&
@@ -104,8 +110,16 @@ trailing:true, white:true, strict: false*/
       return value;
     },
     formatType: function (value) {
-      return ("_" + value.slice(0,1).toLowerCase() + value.slice(1)).loc();
-    }
+      return ("_" + value.slice(0, 1).toLowerCase() + value.slice(1)).loc();
+    },
+    itemTap: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        oldId = model.id;
+      model.id = model.get("editorKey");
+      this._lastTapIndex = inEvent.index;
+      this.inherited(arguments);
+      model.id = oldId;
+    },
   });
 
   // ..........................................................
