@@ -9,6 +9,7 @@ strict:true, trailing:true, white:true */
   var lang = XT.stringsFor("en_US", {
     "_actual$": "Actual $",
     "_actualHrs": "Actual Hrs.",
+    "_approved": "Approved",
     "_budgeted$": "Budgeted $",
     "_budgetedHrs": "Budgeted Hrs.",
     "_completionAction": "Completion Action",
@@ -31,8 +32,11 @@ strict:true, trailing:true, white:true */
     "_projectType": "Project Type",
     "_projectTypes": "Project Types",
     "_projectWorkflow": "Project Workflow",
+    "_rejected": "Rejected",
     "_resource": "Resource",
     "_resources": "Resources",
+    "_review": "Review",
+    "_revision": "Revision",
     "_start": "Start",
     "_startSet": "Calculate",
     "_startOffset": "Offset Days"

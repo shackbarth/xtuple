@@ -69,21 +69,30 @@ white:true*/
       getProjectStatusString: function () {
         var K = XM.Project,
           status = this.get('status');
-        if (status === K.CONCEPT) {
+
+        switch (status)
+        {
+        case K.CONCEPT:
           return '_concept'.loc();
-        }
-        if (status === K.IN_PROCESS) {
+        case K.REVIEW:
+          return '_review'.loc();
+        case K.REVISION:
+          return '_revision'.loc();
+        case K.APPROVED:
+          return '_approved'.loc();
+        case K.IN_PROCESS:
           return '_inProcess'.loc();
-        }
-        if (status === K.COMPLETED) {
+        case K.COMPLETED:
           return '_completed'.loc();
+        case K.REJECTED:
+          return '_rejected'.loc();
         }
       },
 
       isActive: function () {
         var K = XM.Project,
           status = this.get('status');
-        return (status !== K.COMPLETED);
+        return (status !== K.COMPLETED && status !== K.REJECTED);
       }
 
     };
@@ -448,6 +457,36 @@ white:true*/
       CONCEPT: 'P',
 
       /**
+        Review status for project.
+
+        @static
+        @constant
+        @type String
+        @default R
+      */
+      REVIEW: 'R',
+
+      /**
+        Revision status for project.
+
+        @static
+        @constant
+        @type String
+        @default V
+      */
+      REVISION: 'V',
+
+      /**
+        Approved status for project.
+
+        @static
+        @constant
+        @type String
+        @default A
+      */
+      APPROVED: 'A',
+
+      /**
         In-Process status for project.
 
         @static
@@ -464,7 +503,16 @@ white:true*/
         @type String
         @default C
       */
-      COMPLETED: 'C'
+      COMPLETED: 'C',
+
+      /**
+        Rejected status for project.
+        @static
+        @constant
+        @type String
+        @default J
+      */
+      REJECTED: 'J'
 
     });
 
