@@ -6,7 +6,7 @@ services:
   - postgresql
 
 before_install:
-  - "sudo nvm install 0.8.22"
+  - "nvm install 0.8.22"
 
 install:
   - "sudo ./scripts/install_xtuple.sh"
