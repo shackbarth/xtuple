@@ -275,15 +275,26 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
           ]},
-          {kind: "XV.Groupbox", name: "dependenciesPanel", title: "_dependencies".loc(),
+          {kind: "XV.Groupbox", name: "onCompletedPanel", title: "_completionActions".loc(),
             components: [
-            {kind: "onyx.GroupboxHeader", content: "_dependencies".loc()},
-            {kind: "XV.ScrollableGroupbox", name: "dependenciesGroup", fit: true,
+            {kind: "onyx.GroupboxHeader", content: "_onCompletion".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "completionGroup", fit: true,
               classes: "in-panel", components: [
-              {kind: "XV.ProjectStatusPicker", attr: "parentStatus",
+              {kind: "XV.ProjectStatusPicker", attr: "completedParentStatus",
                 noneText: "_noChange".loc(), label: "_nextProjectStatus".loc()},
               {kind: "XV.ProjectWorkflowSuccessorsWidget",
-                attr: {workflow: "parent.workflow", successors: "successors"}}
+                attr: {workflow: "parent.workflow", successors: "completedSuccessors"}}
+            ]}
+          ]},
+          {kind: "XV.Groupbox", name: "onDeferredPanel", title: "_deferredActions".loc(),
+            components: [
+            {kind: "onyx.GroupboxHeader", content: "_onDeferred".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "deferredGroup", fit: true,
+              classes: "in-panel", components: [
+              {kind: "XV.ProjectStatusPicker", attr: "deferredParentStatus",
+                noneText: "_noChange".loc(), label: "_nextProjectStatus".loc()},
+              {kind: "XV.ProjectWorkflowSuccessorsWidget",
+                attr: {workflow: "parent.workflow", successors: "deferredSuccessors"}}
             ]}
           ]}
         ]}

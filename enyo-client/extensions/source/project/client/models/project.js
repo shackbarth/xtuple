@@ -262,7 +262,6 @@ white:true*/
               item.set({
                 uuid: id,
                 name: model.get("name"),
-                parentStatus : model.get("parentStatus"),
                 description : model.get("description"),
                 priority: model.get("priority"),
                 startDate: startDate,
@@ -271,7 +270,10 @@ white:true*/
                 assignedTo: model.get("assignedTo"),
                 sequence: model.get("sequence"),
                 notes: model.get("notes"),
-                successors: model.get("successors")
+                completedParentStatus : model.get("completedParentStatus"),
+                deferredParentStatus : model.get("deferredParentStatus"),
+                completedSuccessors: model.get("completedSuccessors"),
+                deferredSuccessors: model.get("deferredSuccessors")
               });
               workflow.add(item);
             });
@@ -279,8 +281,13 @@ white:true*/
             // Reiterate through new collection and fix successor mappings
             _.each(_.keys(map), function (uuid) {
               _.each(workflow.models, function (model) {
-                if (_.isString(model.attributes.successors)) {
-                  model.attributes.successors.replace(uuid, map[uuid]);
+                var successors = model.get("completedSuccessors");
+                if (_.isString(successors)) {
+                  model.set("completedSuccessors", successors.replace(uuid, map[uuid]));
+                }
+                successors = model.get("deferredSuccessors");
+                if (_.isString(successors)) {
+                  model.set("deferredSuccessors", successors.replace(uuid, map[uuid]));
                 }
               });
             });

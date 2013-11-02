@@ -78,11 +78,16 @@ trailing:true, white:true, strict:false*/
           {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
           {kind: "XV.UserAccountWidget", attr: "owner"},
           {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-          {kind: "onyx.GroupboxHeader", content: "_dependencies".loc()},
-          {kind: "XV.ProjectStatusPicker", attr: "parentStatus",
+          {kind: "onyx.GroupboxHeader", content: "_onCompletion".loc()},
+          {kind: "XV.ProjectStatusPicker", attr: "completedParentStatus",
             noneText: "_noChange".loc(), label: "_nextProjectStatus".loc()},
           {kind: "XV.ProjectWorkflowSuccessorsWidget",
-            attr: {workflow: "parent.workflow", successors: "successors"}},
+            attr: {workflow: "parent.workflow", successors: "completedSuccessors"}},
+          {kind: "onyx.GroupboxHeader", content: "_onDeferred".loc()},
+          {kind: "XV.ProjectStatusPicker", attr: "deferredParentStatus",
+            noneText: "_noChange".loc(), label: "_nextProjectStatus".loc()},
+          {kind: "XV.ProjectWorkflowSuccessorsWidget",
+            attr: {workflow: "parent.workflow", successors: "deferredSuccessors"}},
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]}
@@ -122,11 +127,16 @@ trailing:true, white:true, strict:false*/
           {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
           {kind: "XV.UserAccountWidget", attr: "owner"},
           {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-          {kind: "onyx.GroupboxHeader", content: "_dependencies".loc()},
-          {kind: "XV.ProjectStatusPicker", attr: "parentStatus",
+          {kind: "onyx.GroupboxHeader", content: "_onCompletion".loc()},
+          {kind: "XV.ProjectStatusPicker", attr: "completedParentStatus",
             noneText: "_noChange".loc(), label: "_nextProjectStatus".loc()},
           {kind: "XV.ProjectWorkflowSuccessorsWidget",
-            attr: {workflow: "parent.workflow", successors: "successors"}},
+            attr: {workflow: "parent.workflow", successors: "completedSuccessors"}},
+          {kind: "onyx.GroupboxHeader", content: "_onDeferred".loc()},
+          {kind: "XV.ProjectStatusPicker", attr: "deferredParentStatus",
+            noneText: "_noChange".loc(), label: "_nextProjectStatus".loc()},
+          {kind: "XV.ProjectWorkflowSuccessorsWidget",
+            attr: {workflow: "parent.workflow", successors: "deferredSuccessors"}},
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]}
@@ -168,9 +178,6 @@ trailing:true, white:true, strict:false*/
       listRelations: "XV.TaskResourceListRelations",
       fitButtons: false
     });
-
-
-
 
   };
 }());

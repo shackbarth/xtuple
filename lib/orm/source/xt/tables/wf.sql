@@ -13,8 +13,10 @@ select xt.add_column('wf','wf_priority_id', 'integer', 'not null');
 select xt.add_column('wf','wf_owner_username', 'text');
 select xt.add_column('wf','wf_assigned_username', 'text');
 select xt.add_column('wf','wf_parent_id', 'integer');
-select xt.add_column('wf','wf_parent_status', 'text');
+select xt.add_column('wf','wf_completed_parent_status', 'text');
+select xt.add_column('wf','wf_deferred_parent_status', 'text');
 select xt.add_column('wf','wf_sequence', 'integer', 'not null default 0');
-select xt.add_column('wf','wf_successors', 'text');
+select xt.add_column('wf','wf_completed_successors', 'text');
+select xt.add_column('wf','wf_deferred_successors', 'text');
 
 comment on table xt.wf is 'Workflow extension table';

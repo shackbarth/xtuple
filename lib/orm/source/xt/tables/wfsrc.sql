@@ -12,8 +12,10 @@ select xt.add_column('wfsrc','wfsrc_priority_id', 'integer', 'not null');
 select xt.add_column('wfsrc','wfsrc_owner_username', 'text');
 select xt.add_column('wfsrc','wfsrc_assigned_username', 'text');
 select xt.add_column('wfsrc','wfsrc_parent_id', 'integer');
-select xt.add_column('wfsrc','wfsrc_parent_status', 'text');
+select xt.add_column('wfsrc','wfsrc_completed_parent_status', 'text');
+select xt.add_column('wfsrc','wfsrc_deferred_parent_status', 'text');
 select xt.add_column('wfsrc','wfsrc_sequence', 'integer', 'not null default 0');
-select xt.add_column('wfsrc','wfsrc_successors', 'text');
+select xt.add_column('wfsrc','wfsrc_completed_successors', 'text');
+select xt.add_column('wfsrc','wfsrc_deferred_successors', 'text');
 
 comment on table xt.wfsrc is 'Workflow source table';
