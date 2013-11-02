@@ -394,7 +394,24 @@ white:true*/
     XM.Project = XM.Project.extend({
       emailDocumentName: "_project".loc(),
       emailProfileAttribute: "projectType.emailProfile",
-      emailStatusMethod: "getProjectStatusString"
+      emailStatusMethod: "getProjectStatusString",
+      /**
+        Build "to" addresses for dirty tasks  as well
+      */
+      buildToString: function (toAddresses) {
+        var tasks = this.get("tasks"),
+          K = XM.EmailSendMixin,
+          that = this;
+
+        // Add project task users to email
+        _.each(tasks.models, function (task) {
+          if (task.isDirty) {
+            toAddresses = K.buildToString.call(task, toAddresses);
+          }
+        });
+        
+        return K.buildToString.call(this, toAddresses);
+      }
     });
 
     // ..........................................................
