@@ -156,13 +156,6 @@
         }
       },
       {
-        "name": "parentStatus",
-        "attr": {
-          "type": "String",
-          "column": "wfsrc_parent_status"
-        }
-      },
-      {
         "name": "name",
         "attr": {
           "type": "String",
@@ -246,10 +239,31 @@
         }
       },
       {
-        "name": "successors",
+        "name": "completedParentStatus",
         "attr": {
           "type": "String",
-          "column": "wfsrc_successors"
+          "column": "wfsrc_completed_parent_status"
+        }
+      },
+      {
+        "name": "deferredParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_deferred_parent_status"
+        }
+      },
+      {
+        "name": "completedSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_completed_successors"
+        }
+      },
+      {
+        "name": "deferredSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_deferred_successors"
         }
       }
     ],
@@ -678,13 +692,6 @@
         }
       },
       {
-        "name": "parentStatus",
-        "attr": {
-          "type": "String",
-          "column": "wf_parent_status"
-        }
-      },
-      {
         "name": "name",
         "attr": {
           "type": "String",
@@ -775,10 +782,31 @@
         }
       },
       {
-        "name": "successors",
+        "name": "completedParentStatus",
         "attr": {
           "type": "String",
-          "column": "wf_successors"
+          "column": "wf_completed_parent_status"
+        }
+      },
+      {
+        "name": "deferredParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wf_deferred_parent_status"
+        }
+      },
+      {
+        "name": "completedSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wf_completed_successors"
+        }
+      },
+      {
+        "name": "deferredSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wf_deferred_successors"
         }
       }
     ],
