@@ -111,7 +111,10 @@ white:true*/
 
       defaults: function () {
         var K = XM.Project,
-          result = { status: K.CONCEPT };
+          result = {
+            status: K.CONCEPT,
+            priority: XT.session.settings.get("DefaultPriority")
+          };
         return result;
       },
 
