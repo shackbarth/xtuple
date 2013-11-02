@@ -302,6 +302,19 @@ trailing:true, white:true, strict:false*/
     });
 
     // ..........................................................
+    // PROJECT EMAIL PROFILE
+    //
+
+    enyo.kind({
+      name: "XV.ProjectEmailProfileWorkspace",
+      kind: "XV.EmailProfileWorkspace",
+      title: "_projectEmailProfile".loc(),
+      model: "XM.ProjectEmailProfile",
+    });
+
+    XV.registerModelWorkspace("XM.ProjectEmailProfile", "XV.ProjectEmailProfileWorkspace");
+
+    // ..........................................................
     // PROJECT TYPE
     //
 
@@ -320,6 +333,7 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.InputWidget", attr: "code"},
               {kind: "XV.CheckboxWidget", attr: "isActive"},
               {kind: "XV.InputWidget", attr: "description"},
+              {kind: "XV.ProjectEmailProfilePicker", attr: "emailProfile"},
               {kind: "XV.ProjectCharacteristicsWidget", attr: "characteristics"}
             ]}
           ]},

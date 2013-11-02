@@ -1,5 +1,97 @@
 [
   {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectEmailProfile",
+    "table": "xt.prjemlprofile",
+    "isRest": true,
+    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "comment": "Project Email Profile Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainProjectEmailProfiles",
+        "read": true,
+        "update": "MaintainProjectEmailProfiles",
+        "delete": "MaintainProjectEmailProfiles"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emlprofile_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_descrip"
+        }
+      },
+      {
+        "name": "from",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_from"
+        }
+      },
+      {
+        "name": "replyTo",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_replyto"
+        }
+      },
+      {
+        "name": "to",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_to"
+        }
+      },
+      {
+        "name": "cc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_cc"
+        }
+      },
+      {
+        "name": "bcc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_bcc"
+        }
+      },
+      {
+        "name": "subject",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_subject"
+        }
+      },
+      {
+        "name": "body",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_body"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
     "context": "project",
     "nameSpace": "XM",
     "type": "ProjectType",
@@ -62,6 +154,26 @@
           "column": "prjtype_id",
           "inverse": "parent"
         }
+      }
+    ],
+    "extensions": [
+      {
+        "table": "xt.prjtypeext",
+        "relations": [
+          {
+            "column": "prjtypeext_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "emailProfile",
+            "toOne": {
+              "type": "ProjectEmailProfile",
+              "column": "prjtypeext_emlprofile_id"
+            }
+          }
+        ]
       }
     ],
     "isSystem": true

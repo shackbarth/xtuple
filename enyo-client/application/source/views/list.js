@@ -9,6 +9,34 @@ trailing:true, white:true, strict: false*/
   // ACCOUNT
   //
 
+  /**
+    An abstract list to be used for email profiles
+  */
+  enyo.kind({
+    name: "XV.EmailProfileList",
+    kind: "XV.List",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
+  // ACCOUNT
+  //
+
   enyo.kind({
     name: "XV.AccountList",
     kind: "XV.List",
@@ -1084,25 +1112,9 @@ trailing:true, white:true, strict: false*/
 
   enyo.kind({
     name: "XV.IncidentEmailProfileList",
-    kind: "XV.List",
+    kind: "XV.EmailProfileList",
     label: "_incidentEmailProfiles".loc(),
-    collection: "XM.IncidentEmailProfileCollection",
-    query: {orderBy: [
-      {attribute: 'name'}
-    ]},
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short",
-            components: [
-            {kind: "XV.ListAttr", attr: "name", isKey: true}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "description"}
-          ]}
-        ]}
-      ]}
-    ]
+    collection: "XM.IncidentEmailProfileCollection"
   });
 
   // ..........................................................

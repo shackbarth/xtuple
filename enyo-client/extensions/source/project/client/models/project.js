@@ -13,6 +13,20 @@ white:true*/
 
       @extends XM.Document
     */
+    XM.ProjectEmailProfile = XM.Document.extend(
+      /** @scope XM.ProjectEmailProfile.prototype */ {
+
+      recordType: 'XM.ProjectEmailProfile',
+
+      documentKey: 'name'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Document
+    */
     XM.ProjectType = XM.Document.extend(
       /** @scope XM.ProjectType.prototype */ {
 
@@ -373,6 +387,14 @@ white:true*/
         this.trigger("change", this, changed);
       }
 
+    });
+
+    // Add support for sending email
+    XM.Project = XM.Project.extend(XM.EmailSendMixin);
+    XM.Project = XM.Project.extend({
+      emailDocumentName: "_project".loc(),
+      emailProfileAttribute: "projectType.emailProfile",
+      emailStatusMethod: "getProjectStatusString"
     });
 
     // ..........................................................
@@ -1043,6 +1065,18 @@ white:true*/
     // ..........................................................
     // COLLECTIONS
     //
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ProjectEmailProfileCollection = XM.Collection.extend({
+      /** @scope XM.ProjectEmailProfileCollection.prototype */
+
+      model: XM.ProjectEmailProfile
+
+    });
 
     /**
       @class

@@ -18,6 +18,7 @@ trailing:true, white:true, strict:false*/
       {name: "unitList", kind: "XV.UnitList"},
       {name: "stateList", kind: "XV.StateList"},
       {name: "countryList", kind: "XV.CountryList"},
+      {name: "projectEmailProfileList", kind: "XV.ProjectEmailProfileList"},
       {name: "projectTypeList", kind: "XV.ProjectTypeList"}
     ];
 
@@ -54,6 +55,7 @@ trailing:true, white:true, strict:false*/
       "MaintainPersonalIncidents",
       "MaintainPersonalProjects",
       "MaintainPersonalToDoItems",
+      "MaintainProjectEmailProfiles",
       "MaintainTitles",
       "ViewAllContacts",
       "ViewAllCRMAccounts",
