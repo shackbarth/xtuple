@@ -310,7 +310,7 @@ strict:true, trailing:true, white:true */
     "_incident": "Incident",
     "_incidentCategories": "Incident Categories",
     "_incidentCategory": "Incident Category",
-    "_incidentEmailProfile": "Incident Email Profiles",
+    "_incidentEmailProfile": "Incident Email Profile",
     "_incidentEmailProfiles": "Incident Email",
     "_incidentHistory": "Incident History",
     "_incidentRelations": "Incidents",
