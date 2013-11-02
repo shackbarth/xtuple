@@ -8,6 +8,17 @@ white:true, strict:false*/
   XT.extensions.project.initPickers = function () {
 
     // ..........................................................
+    // PROJECT EMAIL PROFILE
+    //
+
+    enyo.kind({
+      name: "XV.ProjectEmailProfilePicker",
+      kind: "XV.PickerWidget",
+      label: "_emailProfile".loc(),
+      collection: "XM.projectEmailProfiles"
+    });
+
+    // ..........................................................
     // PROJECT STATUS
     //
 
