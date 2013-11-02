@@ -21,6 +21,48 @@ white:true*/
 
     emailStatusMethod: null,
 
+    /**
+      Builds a list of email addresses to send messages to.
+      Looks for a contact primary email address, owner
+      and assigned to user email addresses. Also removes 
+      the current user's address.
+
+      @param {String} hard coded "to" addresses
+      @returns {String}
+    */
+    buildToString: function (toAddresses) {
+      var attrs = this.getClass().getAttributeNames(),
+        to = toAddresses ? toAddresses.split(",") : [],
+        email;
+
+      // Add contact email
+      if (_.contains(attrs, "contact")) {
+        email = this.getValue("contact.primaryEmail");
+        if (email) { to.push(email); }
+      }
+
+      // Add owner email
+      if (_.contains(attrs, "owner")) {
+        email = this.getValue("owner.email");
+        if (email) { to.push(email); }
+      }
+
+      // Add assigned to email
+      if (_.contains(attrs, "assignedTo")) {
+        email = this.getValue("assignedTo.email");
+        if (email) { to.push(email); }
+      }
+
+      // Remove duplicates
+      to = _.unique(to);
+
+      // Remove current user
+      email = XM.currentUser.get("email");
+      if (email) { to = _.without(to, email); }
+
+      return to.toString();
+    },
+
     save: function (key, value, options) {
       // Handle both `"key", value` and `{key: value}` -style arguments.
       if (_.isObject(key) || _.isEmpty(key)) {
@@ -66,6 +108,9 @@ white:true*/
               formattedContent[key] = format(value);
             }
           });
+
+          // Build up "to" address list.
+          formattedContent.to = that.buildToString(formattedContent.to);
 
           XT.dataSource.sendEmail(formattedContent, emailOptions);
         } // else there's no email profile profiled
