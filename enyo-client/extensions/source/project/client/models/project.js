@@ -197,9 +197,6 @@ white:true*/
       defaults: function () {
         var result = XM.ProjectBase.prototype.defaults.call(this);
         result.owner = result.assignedTo = XM.currentUser;
-        result.projectType = _.find(XM.projectTypes.models, function (model) {
-          return model.get("isActive");
-        });
         return result;
       },
 
