@@ -4,1044 +4,10 @@ universal-selector: false, regex-selectors: false, font-faces: false, bulletproo
 vendor-prefix: false, adjoining-classes: false, empty-rules: false, star-property-hack: false,
 ids: false, box-sizing: false*/
 /*
-  To compile to .css:
+  To compile this .less file to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 */
-/**
- * Default ListItem styles when using a ModelDecorator.
- */
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column {
-  width: 10em;
-}
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr {
-  /**
-        * Default styling for a model's id (as designated by 'idAttribute')
-        */
-
-}
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-id {
-  color: blue;
-  font-weight: bold;
-  cursor: pointer;
-}
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-name {
-  font-weight: bold;
-}
-.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr {
-  color: white;
-}
-.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr.xm-attribute-id {
-  color: #f49200;
-}
-/* Helper classes for css3 */
-.clearfix {
-  *zoom: 1;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.clearfix:after {
-  clear: both;
-}
-.hide-text {
-  font: 0/0 a;
-  color: transparent;
-  text-shadow: none;
-  background-color: transparent;
-  border: 0;
-}
-.input-block-level {
-  display: block;
-  width: 100%;
-  min-height: 30px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-/**
-  Less styles for the picker widget
-*/
-/**
-  Styles related to pickers, combo boxes, and relation widgets
-*/
-/* Picker */
-.onyx-picker-decorator .onyx-button {
-  padding: 12px 8px 12px 8px;
-}
-.onyx-picker .onyx-menu-item {
-  text-align: left;
-  text-overflow: ellipsis;
-}
-.xv-pickerwidget {
-  background-color: #ffffff;
-}
-.picker-icon {
-  position: absolute;
-  right: 0;
-  margin: 0 10px 0 2px;
-  color: #000000;
-}
-.xv-picker-button {
-  text-align: left;
-}
-.xv-picker-button .picker-content {
-  max-width: 100px;
-  overflow: hidden;
-}
-.xv-picker-button.disabled {
-  color: #696969;
-}
-.xv-picker-label {
-  color: #000000;
-  padding: 20px 8px 8px 8px;
-  text-align: right;
-  width: 130px;
-}
-.xv-picker-label.disabled {
-  color: #696969;
-}
-/* Combo Box */
-.xv-combobox .enyo-fittable-columns-layout .icon-sort {
-  display: inline-block;
-  padding-top: 10px;
-  color: #357ec7;
-}
-.xv-combobox .enyo-fittable-columns-layout .xv-decorated-label {
-  padding-top: 10px;
-}
-.xv-combobox .enyo-fittable-columns-layout .xv-combobox-input {
-  padding-top: 10px;
-  padding-right: 4px;
-}
-.xv-combobox-input {
-  font-size: medium;
-  border: 0;
-  display: inline-block;
-  outline: none;
-  width: 125px;
-}
-.xv-combobox-note {
-  padding: 14px 3px 8px 3px;
-  text-align: left;
-}
-/**
-  Styles relating to the groupbox and widgets contained
-    by a groupbox
-*/
-/*
-  Styles relating to the groupbox
-*/
-.xv-groupbox {
-  min-width: 320px;
-  padding: 8px;
-  margin-right: 5px;
-  /**
-    Top level input-decorator class.
-    All below this are overrides.
-  */
-
-}
-.xv-groupbox.editor {
-  min-width: 250px;
-  padding: 0;
-  margin: 0;
-}
-.xv-groupbox.in-panel {
-  padding: 0;
-  margin: 0;
-}
-.xv-groupbox .enyo-fittable-columns-layout > * {
-  vertical-align: middle;
-}
-.xv-groupbox .in-panel > *:first-child {
-  border-top-color: #aaaaaa;
-  border-top: none;
-  border-width: 1px;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-.xv-groupbox .in-panel > *:last-child {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  border-bottom: none;
-}
-.xv-groupbox > .in-panel .editor {
-  border-right: none;
-}
-.xv-groupbox.panel {
-  min-width: 330px;
-}
-.xv-groupbox .xv-inputwidget {
-  background-color: #ffffff;
-}
-.xv-groupbox .onyx-input-decorator {
-  border: 0;
-  margin-left: -8px;
-}
-.xv-groupbox .onyx-input-decorator input {
-  padding-top: 2px;
-  width: 150px;
-}
-.xv-groupbox .onyx-picker-decorator .onyx-button {
-  width: 150px;
-}
-.xv-groupbox .xv-relationwidget .onyx-input-decorator,
-.xv-groupbox .xv-datewidget .onyx-input-decorator,
-.xv-groupbox .xv-numberwidget .onyx-input-decorator {
-  padding-top: 9px;
-  width: 170px;
-}
-.xv-groupbox .xv-relationwidget input,
-.xv-groupbox .xv-datewidget input,
-.xv-groupbox .xv-numberwidget input {
-  padding-top: 0;
-  width: 120px;
-}
-.xv-groupbox .xv-relationwidget .xv-decorated-label,
-.xv-groupbox .xv-datewidget .xv-decorated-label,
-.xv-groupbox .xv-numberwidget .xv-decorated-label {
-  width: 130px;
-  padding: 10px 8px 8px 8px;
-  text-align: right;
-}
-.xv-groupbox .xv-relationwidget .xv-decorated-label.disabled,
-.xv-groupbox .xv-datewidget .xv-decorated-label.disabled,
-.xv-groupbox .xv-numberwidget .xv-decorated-label.disabled {
-  color: #696969;
-}
-.xv-groupbox .xv-moneywidget {
-  background-color: #ffffff;
-  padding-top: 6px;
-  padding-bottom: 2px;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator {
-  border: 0;
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-  width: 110px;
-  padding: 6px 10px 8px 6px;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator input,
-.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-money-label {
-  width: 100%;
-  text-align: right;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator.xv-currency-label {
-  width: 65px;
-}
-.xv-groupbox .xv-moneywidget .xv-picker-button {
-  width: 65px;
-  padding: 10px 4px;
-}
-.xv-groupbox > .onyx-input-decorator {
-  border-color: #aaaaaa;
-  border-width: 0 1px 1px 1px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child {
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > .onyx-input-decorator:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox > * {
-  display: block;
-  border: 1px #aaaaaa solid;
-  border-top-width: 0;
-  /* reset styles that make 'item' look bad if they happen to be there */
-
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  margin: 0;
-}
-.xv-groupbox > *:first-child {
-  border-top-color: #aaaaaa;
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > *:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > *:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox-header {
-  padding: 5px 10px;
-  color: #ffffff;
-  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: uppercase;
-  background-color: #333333;
-  border: none;
-  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
-}
-.xv-groupbox-buttons {
-  border: none;
-}
-.xv-groupbox-buttons .xv-groupbox-button-single {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox-buttons .xv-groupbox-button-center {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-.xv-groupbox-buttons .xv-groupbox-button-left {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox-buttons .xv-groupbox-button-right {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-/**
-  Styles relating to grid-entry
-*/
-/*
-  Styles relating to the grid box
-*/
-/* Entire box including the grid and the summary panel */
-.xv-grid-box {
-  /**
-    This is the most general grid row that
-    is not specific to read-only or selected
-  */
-
-}
-.xv-grid-box.small-panel {
-  width: 600px;
-}
-.xv-grid-box.medium-panel {
-  width: 700px;
-}
-.xv-grid-box.large-panel {
-  width: 800px;
-}
-.xv-grid-box .enyo-list-page > *:first-child .xv-grid-row {
-  border-top: 0px;
-}
-.xv-grid-box .xv-above-grid-list {
-  border: 0px;
-}
-.xv-grid-box .xv-scroller {
-  background: #f8f8ff;
-}
-.xv-grid-box .xv-grid-attr.bold {
-  font-weight: bold;
-}
-.xv-grid-box .xv-grid-attr.error {
-  color: #ff0000;
-}
-.xv-grid-box .xv-grid-attr.emphasis {
-  color: #009000;
-}
-.xv-grid-box .xv-grid-attr.warn {
-  color: #ff9c00;
-}
-.xv-grid-box .xv-grid-attr.italic {
-  font-style: italic;
-}
-.xv-grid-box .xv-grid-attr.placeholder {
-  font-style: italic;
-  color: #93a1a1;
-}
-.xv-grid-box .xv-grid-attr.hyperlink {
-  color: blue;
-}
-.xv-grid-box .xv-gridbox-button {
-  color: #357ec7;
-  font-size: 18px;
-  border: none;
-  background: transparent;
-}
-.xv-grid-box .xv-grid-row {
-  font-size: 12px;
-  background-color: #8d8d8d;
-  border-bottom: 1px solid #aaaaaa;
-  vertical-align: top;
-  /**
-      This is the grid header row
-    */
-
-}
-.xv-grid-box .xv-grid-row > * {
-  display: inline-block;
-}
-.xv-grid-box .xv-grid-row .xv-grid-header {
-  background-color: #8d8d8d;
-  color: #ffffff;
-  font-size: .8em;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding-top: 4px;
-}
-.xv-grid-box .xv-grid-row .xv-grid-header.last {
-  border-right: none;
-}
-.xv-grid-box .xv-grid-row > * {
-  padding: 6px 4px;
-  border: none;
-}
-.xv-grid-box .xv-grid-row .line-number {
-  vertical-align: top;
-  width: 30px;
-  text-align: right;
-}
-.xv-grid-box .xv-grid-row .grid-actions {
-  display: block;
-  padding-left: 30px;
-  border-radius: 4px;
-  border-width: 0;
-  background: #f3f3f3;
-  margin: 6px;
-}
-.xv-grid-box .xv-grid-row .grid-actions > * {
-  display: inline-block;
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row .grid-item {
-  vertical-align: top;
-  width: 175px;
-}
-.xv-grid-box .xv-grid-row .quantity {
-  vertical-align: top;
-  text-align: right;
-  width: 100px;
-}
-.xv-grid-box .xv-grid-row .percent {
-  vertical-align: top;
-  text-align: right;
-  width: 90px;
-}
-.xv-grid-box .xv-grid-row .price {
-  vertical-align: top;
-  text-align: right;
-  width: 90px;
-}
-.xv-grid-box .xv-grid-row .date {
-  vertical-align: top;
-  width: 105px;
-}
-.xv-grid-box .xv-grid-row .user {
-  vertical-align: top;
-  width: 100px;
-}
-.xv-grid-box .xv-grid-row.readonly {
-  background: #f8f8ff;
-  min-height: 56px;
-}
-.xv-grid-box .xv-grid-row.selected {
-  background-color: #ffffff;
-  border: 1px solid #f49200;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-  margin: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator input {
-  width: 100%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
-  height: 20px;
-  padding-top: 3px;
-  width: 80px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget {
-  margin-right: 10px;
-  padding-top: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
-  width: 85%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .xv-input {
-  padding-top: 0px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-  margin: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
-  width: 100%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox {
-  padding-left: 0px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .xv-combobox-input {
-  font-size: 13px;
-  width: 60px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .enyo-fittable-columns-layout .icon-sort {
-  padding-top: 5px;
-  padding-left: 10px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .enyo-fittable-columns-layout .xv-combobox-input {
-  padding-top: 3px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget {
-  padding-bottom: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator {
-  padding: 0;
-  width: 100%;
-  margin: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
-  width: 100%;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
-  width: 100%;
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input {
-  width: 85%;
-  padding-right: 4px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-useraccount-widget .xv-subinput {
-  width: 80px;
-  height: 16px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-subinput {
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
-  padding-top: 6px;
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-decorated-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
-  text-indent: 0;
-  padding-bottom: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
-  border-bottom: 0;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel {
-  border: none;
-  margin-top: 0;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group {
-  padding: 0;
-  border: none;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget {
-  padding-bottom: 0px;
-  padding-top: 0px;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget .xv-input-decorator {
-  padding-bottom: 0px;
-  padding-top: 0px;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget {
-  padding-bottom: 0px;
-  padding-top: 0px;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
-  width: 163px;
-  padding-bottom: 0px;
-  padding-top: 0px;
-}
-/**
-  Styles relating to the dashboard
-*/
-/*
-  Styles relating to the dashboard
-*/
-/*
-  Variables for widths/colors
-*/
-.dashboard {
-  background-color: #8d8d8d;
-  /*
-    These styles will only be used
-    if the chart is in a dashboard
-  */
-
-}
-.dashboard .charts-panels {
-  overflow-y: auto;
-}
-.dashboard .selectable-chart {
-  width: 500px;
-  height: 230px;
-}
-.dashboard .selectable-chart .chart-title-bar {
-  width: 500px;
-}
-.dashboard .nvtooltip {
-  color: black;
-}
-.selectable-chart {
-  margin: 10px;
-  color: #ffffff;
-  overflow: hidden;
-}
-.selectable-chart .chart-title-bar {
-  height: 32px;
-  background-color: #333333;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-top-left-radius: 10px;
-  -moz-border-radius-topleft: 10px;
-  border-top-left-radius: 10px;
-}
-.selectable-chart .chart-title-bar .chart-title {
-  padding-top: 8px;
-  text-align: center;
-}
-.selectable-chart .chart-title-bar .remove-icon {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-.selectable-chart .chart-bottom {
-  background-color: #555555;
-  border: 1px solid #444444;
-  border-top: none;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-right-radius: 10px;
-  -webkit-border-bottom-left-radius: 10px;
-  -moz-border-radius-bottomleft: 10px;
-  border-bottom-left-radius: 10px;
-}
-.selectable-chart .chart-bottom .xv-picker-label {
-  width: 100px;
-  color: #ffffff;
-}
-.selectable-chart .chart-bottom .onyx-button {
-  width: 130px;
-  padding: 10px 10px;
-}
-/**
-  Styles relating to Lists
-*/
-/**
-  Styles relating to Lists
-*/
-/* List */
-.xv-list {
-  background-color: #ffffff;
-}
-.xv-list .xv-list-item {
-  background-color: #ffffff;
-  padding: 3px;
-  border-bottom: 1px solid #dddddd;
-  min-height: 32px;
-}
-@include box-sizing(border-box);
-.xv-list .xv-list-item.header {
-  padding-top: 0;
-}
-.xv-list .xv-list-item.inactive {
-  background-color: #8d8d8d;
-  color: #000000;
-}
-.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
-  background-color: #8d8d8d;
-}
-.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
-  color: #8d8d8d;
-}
-.xv-list .xv-list-item .xv-list-column.short {
-  width: 9em;
-}
-.xv-list .xv-list-item .xv-list-column.first {
-  width: 19em;
-}
-.xv-list .xv-list-item .xv-list-column.second {
-  width: 10em;
-}
-.xv-list .xv-list-item .xv-list-column.third {
-  width: 4.5em;
-}
-.xv-list .xv-list-item .xv-list-column.money {
-  width: 5em;
-}
-.xv-list .xv-list-item .xv-list-column.descr {
-  width: 15.56em;
-}
-.xv-list .xv-list-item .xv-list-column.icon {
-  width: 1.5em;
-}
-.xv-list .xv-list-item .xv-list-column .list-icon {
-  padding: 2px;
-  color: #555555;
-  vertical-align: sub;
-  border: 1px solid #eeeeee;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-}
-.xv-list .xv-list-item.item-selected {
-  background: url(/assets/item-hilite.png) repeat-x bottom;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr {
-  color: #ffffff;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
-  font-style: italic;
-  color: #99ccff;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
-  color: #f49200;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.header {
-  background: #99ccff;
-}
-.xv-list .xv-list-item .xv-list-item-gear {
-  position: absolute;
-  right: 4px;
-  z-index: 999;
-}
-.xv-list-attr {
-  padding: 5px;
-  font-size: .8em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #000000;
-}
-.xv-list-attr.header {
-  padding: 4px;
-  background: #8d8d8d;
-  font-size: .7em;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-.xv-list-attr.footer {
-  padding: 4px;
-  background: #8d8d8d;
-  font-size: .7em;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #000000;
-}
-.xv-list-attr.right {
-  position: absolute;
-  right: 10px;
-  height: 20px;
-}
-.xv-list-attr.text-align-right {
-  text-align: right;
-}
-.xv-list-attr.bold {
-  font-weight: bold;
-}
-.xv-list-attr.error {
-  color: #ff0000;
-}
-.xv-list-attr.emphasis {
-  color: #009000;
-}
-.xv-list-attr.warn {
-  color: #ff9c00;
-}
-.xv-list-attr.italic {
-  font-style: italic;
-}
-.xv-list-attr.placeholder {
-  font-style: italic;
-  color: #93a1a1;
-}
-.xv-list-attr.hyperlink {
-  color: blue;
-}
-/* Navigator */
-.xv-navigator-header {
-  font-size: small;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #ff6600;
-  padding-left: 20px;
-  border-bottom: 1px solid #0e0e0e;
-}
-.xv-workspace-header {
-  color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 8px 0 0 8px;
-}
-/**
-  Styles relating to the parameter widget
-*/
-/**
-  Styles relating to widgets in the pullout
-*/
-/* Pullout */
-.xv-pullout-header {
-  text-align: center;
-  padding: 10px 0;
-}
-.pullout {
-  position: absolute;
-  top: 57px;
-  left: 0;
-  bottom: 0;
-  width: 320px;
-  background: #dddddd;
-}
-.pullout .pullout-scroller {
-  position: relative;
-  margin-right: 4px;
-}
-.pullout .pullout-shadow {
-  position: absolute;
-  height: 100%;
-  width: 20px;
-  right: -20px;
-  /**
-      TODO: this is weird and indicates the REAL need to change the
-      whatever the css system is...this relative path is different...
-    **/
-
-  background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
-  background-size: 20px 2px;
-}
-.pullout .pullout-grabbutton {
-  position: absolute;
-  height: 54px;
-  width: 50px;
-  bottom: 20px;
-  right: -46px;
-  background-color: #dddddd;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-right-radius: 10px;
-}
-.pullout .pullout-toolbar {
-  padding-top: 4px;
-  text-align: center;
-}
-.xv-groupbox.xv-parameter {
-  min-width: 280px;
-  margin: 4px 0 8px 4px;
-  padding: 0;
-}
-.xv-groupbox.xv-parameter .top-drawer {
-  border-top: #aaaaaa 1px solid;
-  background-color: #dddddd;
-  color: #4c4c4c;
-  padding: 7px 0 7px 5px;
-}
-.xv-groupbox.xv-parameter .top-drawer > * {
-  margin-right: 10px;
-}
-.xv-groupbox.xv-parameter .xv-filter-form .button-row {
-  background-color: #ffffff;
-  padding: 7px;
-  text-align: center;
-}
-.xv-groupbox.xv-parameter .xv-filter-form .button-row .onyx-button {
-  margin-right: 3px;
-}
-.xv-groupbox.xv-parameter .xv-filter-form .xv-list {
-  height: 150px;
-}
-#app_pullout_container,
-#app_pullout_help,
-#app_pullout_help_helpPage {
-  height: 100%;
-}
-#app_pullout_help_helpPage {
-  border: none;
-  height: 100%;
-  width: 100%;
-}
-/* Parameter Widget */
-.xv-parameter-item {
-  background-color: #ffffff;
-}
-.xv-parameter-item .xv-label {
-  color: #000;
-}
-.xv-parameter-item .xv-decorated-label {
-  color: #000;
-}
-.xv-parameter-item .xv-picker {
-  width: 150px;
-}
-.xv-parameter-item .xv-radiogroup {
-  padding: 6px;
-  margin-left: 130px;
-}
-/* Layout Widget */
-.xv-tree {
-  background-color: #ffffff;
-}
-.xv-tree .xv-tree-node {
-  /* These picker styles are for the ListAttr node */
-
-}
-.xv-tree .xv-tree-node .xv-pickerwidget {
-  display: inline-block;
-  padding: 4px;
-}
-.xv-tree .xv-tree-node .xv-pickerwidget .xv-picker-label {
-  width: 50px;
-}
-/**
-  Misc styles for widgets
-*/
-/**
-  Styles relating to misc widgets
-*/
-.xv-numberwidget input {
-  text-align: right;
-  width: 150px;
-}
-.spinner .buttons {
-  display: block;
-  padding: 0;
-  margin: 1px 0 1px 0;
-  width: 20px;
-  height: 20px;
-}
-.spinner .slider {
-  margin: 15px 15px;
-  width: 100px;
-}
-.spinner.xv-numberwidget .onyx-input-decorator {
-  width: 100px;
-}
-.spinner.xv-numberwidget input {
-  width: 50px;
-  text-align: left;
-}
 /**
   Import for Font-Awesome icons
 */
@@ -2336,6 +1302,1092 @@ ul.icons-ul > li .icon-li {
   color: white;
   text-shadow: 2px 2px 5px #0099ff, -2px -2px 5px #0099ff, 2px -2px 5px #0099ff, -2px 2px 5px #0099ff;
 }
+/**
+  Helper classes for css3
+*/
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/**
+  Model decorator
+*/
+/**
+ * Default ListItem styles when using a ModelDecorator.
+ */
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column {
+  width: 10em;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr {
+  /**
+        * Default styling for a model's id (as designated by 'idAttribute')
+        */
+
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-id {
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-name {
+  font-weight: bold;
+}
+.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr {
+  color: white;
+}
+.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr.xm-attribute-id {
+  color: #f49200;
+}
+/**
+  Less styles for the picker widget
+*/
+/**
+  Styles related to pickers, combo boxes, and relation widgets
+*/
+/* Picker */
+.onyx-picker-decorator .onyx-button {
+  padding: 12px 8px 12px 8px;
+}
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  text-overflow: ellipsis;
+}
+.xv-pickerwidget {
+  background-color: #ffffff;
+}
+.picker-icon {
+  position: absolute;
+  right: 0;
+  margin: 0 10px 0 2px;
+  color: #000000;
+}
+.xv-picker-button {
+  text-align: left;
+}
+.xv-picker-button .picker-content {
+  max-width: 100px;
+  overflow: hidden;
+}
+.xv-picker-button.disabled {
+  color: #696969;
+}
+.xv-picker-label {
+  color: #000000;
+  padding: 20px 8px 8px 8px;
+  text-align: right;
+  width: 130px;
+}
+.xv-picker-label.disabled {
+  color: #696969;
+}
+/* Combo Box */
+.xv-combobox .enyo-fittable-columns-layout .icon-sort {
+  display: inline-block;
+  padding-top: 10px;
+  color: #357ec7;
+}
+.xv-combobox .enyo-fittable-columns-layout .xv-decorated-label {
+  padding-top: 10px;
+}
+.xv-combobox .enyo-fittable-columns-layout .xv-combobox-input {
+  padding-top: 10px;
+  padding-right: 4px;
+}
+.xv-combobox-input {
+  font-size: medium;
+  border: 0;
+  display: inline-block;
+  outline: none;
+  width: 125px;
+}
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
+}
+/**
+  Styles relating to the groupbox and widgets contained
+    by a groupbox
+*/
+/*
+  Styles relating to the groupbox
+*/
+.xv-groupbox {
+  min-width: 320px;
+  padding: 8px;
+  margin-right: 5px;
+  /**
+    Top level input-decorator class.
+    All below this are overrides.
+  */
+
+}
+.xv-groupbox.editor {
+  min-width: 250px;
+  padding: 0;
+  margin: 0;
+}
+.xv-groupbox.in-panel {
+  padding: 0;
+  margin: 0;
+}
+.xv-groupbox .in-panel > *:first-child {
+  border-top-color: #aaaaaa;
+  border-top: none;
+  border-width: 1px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.xv-groupbox .in-panel > *:last-child {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  border-bottom: none;
+}
+.xv-groupbox > .in-panel .editor {
+  border-right: none;
+}
+.xv-groupbox.panel {
+  min-width: 330px;
+}
+.xv-groupbox .xv-inputwidget {
+  background-color: #ffffff;
+}
+.xv-groupbox .onyx-input-decorator {
+  border: 0;
+}
+.xv-groupbox .onyx-input-decorator input {
+  padding-top: 2px;
+  width: 150px;
+}
+.xv-groupbox .onyx-picker-decorator .onyx-button {
+  width: 150px;
+}
+.xv-groupbox .xv-relationwidget .onyx-input-decorator,
+.xv-groupbox .xv-datewidget .onyx-input-decorator,
+.xv-groupbox .xv-numberwidget .onyx-input-decorator {
+  padding-top: 9px;
+  width: 170px;
+}
+.xv-groupbox .xv-relationwidget input,
+.xv-groupbox .xv-datewidget input,
+.xv-groupbox .xv-numberwidget input {
+  padding-top: 0;
+  width: 120px;
+}
+.xv-groupbox .xv-relationwidget .xv-decorated-label,
+.xv-groupbox .xv-datewidget .xv-decorated-label,
+.xv-groupbox .xv-numberwidget .xv-decorated-label {
+  width: 130px;
+  padding: 10px 8px 8px 8px;
+  text-align: right;
+}
+.xv-groupbox .xv-relationwidget .xv-decorated-label.disabled,
+.xv-groupbox .xv-datewidget .xv-decorated-label.disabled,
+.xv-groupbox .xv-numberwidget .xv-decorated-label.disabled {
+  color: #696969;
+}
+.xv-groupbox .xv-moneywidget {
+  background-color: #ffffff;
+  padding-top: 6px;
+  padding-bottom: 2px;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator {
+  border: 0;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+  width: 110px;
+  padding: 6px 10px 8px 6px;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator input,
+.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-money-label {
+  width: 100%;
+  text-align: right;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator.xv-currency-label {
+  width: 65px;
+}
+.xv-groupbox .xv-moneywidget .xv-picker-button {
+  width: 65px;
+  padding: 10px 4px;
+}
+.xv-groupbox > .onyx-input-decorator {
+  border-color: #aaaaaa;
+  border-width: 0 1px 1px 1px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child {
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > .onyx-input-decorator:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox > * {
+  display: block;
+  border: 1px #aaaaaa solid;
+  border-top-width: 0;
+  /* reset styles that make 'item' look bad if they happen to be there */
+
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  margin: 0;
+}
+.xv-groupbox > *:first-child {
+  border-top-color: #aaaaaa;
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > *:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > *:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox-header {
+  padding: 5px 10px;
+  color: #ffffff;
+  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #333333;
+  border: none;
+  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
+}
+.xv-groupbox-buttons {
+  border: none;
+}
+.xv-groupbox-buttons .xv-groupbox-button-single {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox-buttons .xv-groupbox-button-center {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.xv-groupbox-buttons .xv-groupbox-button-left {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox-buttons .xv-groupbox-button-right {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+/**
+  Styles relating to grid-entry
+*/
+/*
+  Styles relating to the grid box
+*/
+/* Entire box including the grid and the summary panel */
+.xv-grid-box {
+  /**
+    This is the most general grid row that
+    is not specific to read-only or selected
+  */
+
+}
+.xv-grid-box.small-panel {
+  width: 600px;
+}
+.xv-grid-box.medium-panel {
+  width: 700px;
+}
+.xv-grid-box.large-panel {
+  width: 800px;
+}
+.xv-grid-box .enyo-list-page > *:first-child .xv-grid-row {
+  border-top: 0;
+}
+.xv-grid-box .xv-above-grid-list {
+  border: 0;
+}
+.xv-grid-box .xv-scroller {
+  background: #f8f8ff;
+}
+.xv-grid-box .xv-grid-attr.bold {
+  font-weight: bold;
+}
+.xv-grid-box .xv-grid-attr.error {
+  color: #ff0000;
+}
+.xv-grid-box .xv-grid-attr.emphasis {
+  color: #009000;
+}
+.xv-grid-box .xv-grid-attr.warn {
+  color: #ff9c00;
+}
+.xv-grid-box .xv-grid-attr.italic {
+  font-style: italic;
+}
+.xv-grid-box .xv-grid-attr.placeholder {
+  font-style: italic;
+  color: #93a1a1;
+}
+.xv-grid-box .xv-grid-attr.hyperlink {
+  color: blue;
+}
+.xv-grid-box .xv-gridbox-button {
+  color: #357ec7;
+  font-size: 18px;
+  border: none;
+  background: transparent;
+}
+.xv-grid-box .xv-grid-row {
+  font-size: 12px;
+  background-color: #8d8d8d;
+  border-bottom: 1px solid #aaaaaa;
+  vertical-align: top;
+  /**
+      This is the grid header row
+    */
+
+}
+.xv-grid-box .xv-grid-row > * {
+  display: inline-block;
+}
+.xv-grid-box .xv-grid-row .xv-grid-header {
+  background-color: #8d8d8d;
+  color: #ffffff;
+  font-size: .8em;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 4px;
+}
+.xv-grid-box .xv-grid-row .xv-grid-header.last {
+  border-right: none;
+}
+.xv-grid-box .xv-grid-row > * {
+  padding: 6px 4px;
+  border: none;
+}
+.xv-grid-box .xv-grid-row .line-number {
+  vertical-align: top;
+  width: 30px;
+  text-align: right;
+}
+.xv-grid-box .xv-grid-row .grid-actions {
+  display: block;
+  padding-left: 30px;
+  border-radius: 4px;
+  border-width: 0;
+  background: #f3f3f3;
+  margin: 6px;
+}
+.xv-grid-box .xv-grid-row .grid-actions > * {
+  display: inline-block;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row .grid-item {
+  vertical-align: top;
+  width: 175px;
+}
+.xv-grid-box .xv-grid-row .quantity {
+  vertical-align: top;
+  text-align: right;
+  width: 100px;
+}
+.xv-grid-box .xv-grid-row .percent {
+  vertical-align: top;
+  text-align: right;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row .price {
+  vertical-align: top;
+  text-align: right;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row .date {
+  vertical-align: top;
+  width: 105px;
+}
+.xv-grid-box .xv-grid-row .user {
+  vertical-align: top;
+  width: 100px;
+}
+.xv-grid-box .xv-grid-row.readonly {
+  background: #f8f8ff;
+  min-height: 56px;
+}
+.xv-grid-box .xv-grid-row.selected {
+  background-color: #ffffff;
+  border: 1px solid #f49200;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator input {
+  width: 100%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
+  padding-top: 6px;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
+  height: 25px;
+  padding-top: 3px;
+  width: 100%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget {
+  margin-right: 10px;
+  padding-top: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
+  width: 85%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .xv-input {
+  padding-top: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
+  width: 100%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox {
+  padding-left: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .xv-combobox-input {
+  font-size: 13px;
+  width: 60px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .enyo-fittable-columns-layout .icon-sort {
+  padding-top: 5px;
+  padding-left: 10px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .enyo-fittable-columns-layout .xv-combobox-input {
+  padding-top: 3px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget {
+  padding-bottom: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
+  width: 100%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
+  width: 100%;
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input {
+  width: 85%;
+  padding-right: 4px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-useraccount-widget .xv-subinput {
+  width: 80px;
+  height: 16px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-subinput {
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
+  padding-top: 6px;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-decorated-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
+  text-indent: 0;
+  padding-bottom: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
+  border-bottom: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel {
+  border: none;
+  margin-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group {
+  padding: 0;
+  border: none;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget .xv-input-decorator {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
+  width: 163px;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+/**
+  Styles relating to the dashboard
+*/
+/*
+  Styles relating to the dashboard
+*/
+/*
+  Variables for widths/colors
+*/
+.dashboard {
+  background-color: #8d8d8d;
+  /*
+    These styles will only be used
+    if the chart is in a dashboard
+  */
+
+}
+.dashboard .charts-panels {
+  overflow-y: auto;
+}
+.dashboard .selectable-chart {
+  width: 500px;
+  height: 230px;
+}
+.dashboard .selectable-chart .chart-title-bar {
+  width: 500px;
+}
+.dashboard .nvtooltip {
+  color: black;
+}
+.selectable-chart {
+  margin: 10px;
+  color: #ffffff;
+  overflow: hidden;
+}
+.selectable-chart .chart-title-bar {
+  height: 32px;
+  background-color: #333333;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  border-top-left-radius: 10px;
+}
+.selectable-chart .chart-title-bar .chart-title {
+  padding-top: 8px;
+  text-align: center;
+}
+.selectable-chart .chart-title-bar .remove-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.selectable-chart .chart-bottom {
+  background-color: #555555;
+  border: 1px solid #444444;
+  border-top: none;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  border-bottom-left-radius: 10px;
+}
+.selectable-chart .chart-bottom .xv-picker-label {
+  width: 100px;
+  color: #ffffff;
+}
+.selectable-chart .chart-bottom .onyx-button {
+  width: 130px;
+  padding: 10px 10px;
+}
+/**
+  Styles relating to Lists
+*/
+/**
+  Styles relating to Lists
+*/
+/* List */
+.xv-list {
+  background-color: #ffffff;
+}
+.xv-list .xv-list-item > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+.xv-list .xv-list-item {
+  background-color: #ffffff;
+  border-bottom: 1px solid #dddddd;
+  min-height: 32px;
+}
+.xv-list .xv-list-item.header {
+  padding-top: 0;
+}
+.xv-list .xv-list-item.inactive {
+  background-color: #8d8d8d;
+  color: #000000;
+}
+.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
+  background: transparent;
+}
+.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
+  color: #8d8d8d;
+}
+.xv-list .xv-list-item .xv-list-column.short {
+  width: 9em;
+}
+.xv-list .xv-list-item .xv-list-column.first {
+  width: 19em;
+}
+.xv-list .xv-list-item .xv-list-column.second {
+  width: 10em;
+}
+.xv-list .xv-list-item .xv-list-column.third {
+  width: 4.5em;
+}
+.xv-list .xv-list-item .xv-list-column.money {
+  width: 5em;
+}
+.xv-list .xv-list-item .xv-list-column.descr {
+  width: 15.56em;
+}
+.xv-list .xv-list-item .xv-list-column.icon {
+  width: 1.5em;
+}
+.xv-list .xv-list-item .xv-list-column .list-icon {
+  padding: 2px;
+  color: #555555;
+  vertical-align: sub;
+  border: 1px solid #eeeeee;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+.xv-list .xv-list-item.item-selected {
+  background: #226b9a;
+  background-color: #1f608c;
+  background-image: -moz-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#226b9a), to(#1a4f77));
+  background-image: -webkit-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -o-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: linear-gradient(to bottom, #226b9a, #1a4f77);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr {
+  color: #ffffff;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
+  font-style: italic;
+  color: #99ccff;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
+  color: #f49200;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.header {
+  background: #99ccff;
+}
+.xv-list .xv-list-item .xv-list-item-gear {
+  position: absolute;
+  right: 4px;
+  z-index: 999;
+}
+.xv-list-attr {
+  padding: 5px;
+  font-size: .8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #000000;
+}
+.xv-list-attr.header {
+  padding: 4px;
+  background: #8d8d8d;
+  font-size: .7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.xv-list-attr.footer {
+  padding: 4px;
+  background: #8d8d8d;
+  font-size: .7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #000000;
+}
+.xv-list-attr.right {
+  position: absolute;
+  right: 10px;
+  height: 20px;
+}
+.xv-list-attr.text-align-right {
+  text-align: right;
+}
+.xv-list-attr.bold {
+  font-weight: bold;
+}
+.xv-list-attr.error {
+  color: #ff0000;
+}
+.xv-list-attr.emphasis {
+  color: #009000;
+}
+.xv-list-attr.warn {
+  color: #ff9c00;
+}
+.xv-list-attr.italic {
+  font-style: italic;
+}
+.xv-list-attr.placeholder {
+  font-style: italic;
+  color: #93a1a1;
+}
+.xv-list-attr.hyperlink {
+  color: blue;
+}
+/* Navigator */
+.xv-navigator-header {
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ff6600;
+  padding-left: 20px;
+  border-bottom: 1px solid #0e0e0e;
+}
+.xv-workspace-header {
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 0 0 8px;
+}
+/**
+  Styles relating to the parameter widget
+*/
+/**
+  Styles relating to widgets in the pullout
+*/
+/* Pullout */
+.xv-pullout-header {
+  text-align: center;
+  padding: 10px 0;
+}
+.pullout {
+  position: absolute;
+  top: 57px;
+  left: 0;
+  bottom: 0;
+  width: 320px;
+  background: #dddddd;
+}
+.pullout .pullout-scroller {
+  position: relative;
+  margin-right: 4px;
+}
+.pullout .pullout-shadow {
+  position: absolute;
+  height: 100%;
+  width: 20px;
+  right: -20px;
+  /**
+      TODO: this is weird and indicates the REAL need to change the
+      whatever the css system is...this relative path is different...
+    **/
+
+  background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
+  background-size: 20px 2px;
+}
+.pullout .pullout-grabbutton {
+  position: absolute;
+  height: 54px;
+  width: 50px;
+  bottom: 20px;
+  right: -46px;
+  background-color: #dddddd;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+}
+.pullout .pullout-toolbar {
+  padding-top: 4px;
+  text-align: center;
+}
+.xv-groupbox.xv-parameter {
+  min-width: 280px;
+  margin: 4px 0 8px 4px;
+  padding: 0;
+}
+.xv-groupbox.xv-parameter .top-drawer {
+  border-top: #aaaaaa 1px solid;
+  background-color: #dddddd;
+  color: #4c4c4c;
+  padding: 7px 0 7px 5px;
+}
+.xv-groupbox.xv-parameter .top-drawer > * {
+  margin-right: 10px;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .button-row {
+  background-color: #ffffff;
+  padding: 7px;
+  text-align: center;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .button-row .onyx-button {
+  margin-right: 3px;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .xv-list {
+  height: 150px;
+}
+#app_pullout_container,
+#app_pullout_help,
+#app_pullout_help_helpPage {
+  height: 100%;
+}
+#app_pullout_help_helpPage {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+/* Parameter Widget */
+.xv-parameter-item {
+  background-color: #ffffff;
+}
+.xv-parameter-item .xv-label {
+  color: #000;
+}
+.xv-parameter-item .xv-decorated-label {
+  color: #000;
+}
+.xv-parameter-item .xv-picker {
+  width: 150px;
+}
+.xv-parameter-item .xv-radiogroup {
+  padding: 6px;
+  margin-left: 130px;
+}
+/* Layout Widget */
+.xv-tree {
+  background-color: #ffffff;
+}
+.xv-tree .xv-tree-node {
+  /* These picker styles are for the ListAttr node */
+
+}
+.xv-tree .xv-tree-node .xv-pickerwidget {
+  display: inline-block;
+  padding: 4px;
+}
+.xv-tree .xv-tree-node .xv-pickerwidget .xv-picker-label {
+  width: 50px;
+}
+/**
+  Misc styles for widgets
+*/
+/**
+  Styles relating to misc widgets
+*/
+.xv-numberwidget input {
+  text-align: right;
+  width: 150px;
+}
+.spinner .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
+.spinner .buttons {
+  display: block;
+  padding: 0;
+  margin: 1px 0 1px 10px;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  color: #357ec7;
+  font-size: 20px;
+  border: none;
+}
+.spinner .slider {
+  margin: 15px 10px;
+}
+.spinner.xv-numberwidget .onyx-input-decorator {
+  padding: 0;
+}
+.spinner.xv-numberwidget input {
+  width: 140px;
+}
+.xv-dependency-picker .onyx-picker-decorator .onyx-button {
+  width: 280px;
+  margin-left: 6px;
+}
+.xv-dependency-button {
+  color: #357ec7;
+  font-size: 24px;
+  border: none;
+  background: transparent;
+}
+/**
+  Styles for characteristic pickers and buttons
+*/
+/* Characteristics */
+.xv-characteristic-picker .onyx-picker-decorator .onyx-button {
+  width: 130px;
+}
+.xv-characteristic-item {
+  border-bottom: 1px solid #aaaaaa;
+}
+.xv-characteristic-item .onyx-input-decorator > input {
+  width: 115px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.xv-characteristic-buttons {
+  margin: 8px;
+}
+.xv-characteristic-button {
+  margin: 0 4px 0 4px;
+  color: #357ec7;
+  font-size: 24px;
+  border: none;
+  background: transparent;
+}
 body {
   font-family: "arial", "arial black";
   font-size: 100%;
@@ -2368,40 +2420,6 @@ body {
 .scroll-ios {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-}
-.developer-ui-container {
-  -webkit-box-shadow: #333333 4px 4px 10px -4px;
-  -moz-box-shadow: #333333 4px 4px 10px -4px;
-  box-shadow: #333333 4px 4px 10px -4px;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  top: 100px;
-  left: 0;
-  position: absolute;
-  background-color: #dddddd;
-  z-index: 10;
-}
-.developer-ui-container .developer-rows .row {
-  display: block;
-  margin: 10px;
-}
-.developer-ui-container .onyx-grabber.developer-grabber {
-  -webkit-box-shadow: #333333 4px 4px 10px -4px;
-  -moz-box-shadow: #333333 4px 4px 10px -4px;
-  box-shadow: #333333 4px 4px 10px -4px;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-right-radius: 10px;
-  background-color: #dddddd;
-  position: absolute;
-  right: -47px;
-  top: 0;
-  height: 54px;
-  width: 50px;
 }
 .item {
   background-color: #333333;
@@ -2576,24 +2594,6 @@ body {
   text-overflow: ellipsis;
   padding: 8px 0 0 8px;
 }
-/* Characteristics */
-.xv-characteristic-picker .onyx-picker-decorator .onyx-button {
-  width: 130px;
-}
-.xv-characteristic-item {
-  border-bottom: 1px solid #aaaaaa;
-}
-.xv-characteristic-item .onyx-input-decorator > input {
-  width: 115px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.xv-characteristic-button {
-  margin-right: 4px;
-}
-.xv-characteristic-buttons {
-  margin: 8px;
-}
 .xv-popup-button {
   margin: 4px;
 }
@@ -2638,7 +2638,6 @@ body {
   text-overflow: ellipsis;
 }
 .xv-comment-box .xv-comment-box-textblock {
-  padding: 5px;
   font-size: small;
   overflow: hidden;
 }
@@ -2657,9 +2656,6 @@ body {
 }
 .icon-calendar {
   color: #357ec7;
-}
-.xv-numberwidget input {
-  text-align: right;
 }
 .xv-addresswidget {
   background-color: #ffffff;
