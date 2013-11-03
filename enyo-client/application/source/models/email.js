@@ -76,6 +76,41 @@ white:true*/
       return to.toString();
     },
 
+    getChangeString: function () {
+      return this._lastChange;
+    },
+
+    getLastCommentString: function () {
+      var comments = this.get('comments'),
+        // public comments is an array even though comments is a collection
+        comment,
+        ret = "",
+        Klass;
+
+      if (comments.length) {
+        // If public flag exists on these comments, only show public ones
+        if (_.contains(comments.at(0).getClass().getAttributeNames(), "isPublic")) {
+          comments = comments.filter(function (comment) {
+            return comment.get("isPublic");
+          });
+        }
+
+        if (comments.length) {
+
+          // Sort by date descending and take first
+          comments = _.sortBy(comments.models, function (comment) {
+            return -1 * comment.get('created').getTime();
+          });
+          comment = comments[0];
+          ret = "_latestComment".loc() +
+                " (" + comment.get('createdBy') + ")" +
+                "\n\n" +
+                comment.get('text');
+        }
+      }
+      return ret;
+    },
+
     save: function (key, value, options) {
       // Handle both `"key", value` and `{key: value}` -style arguments.
       if (_.isObject(key) || _.isEmpty(key)) {
