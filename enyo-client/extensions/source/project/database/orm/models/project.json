@@ -1373,10 +1373,10 @@
     "comment": "Project List Item Map",
     "privileges": {
       "all": {
-        "create": false,
+        "create": "MaintainAllProjects",
         "read": "ViewAllProjects MaintainAllProjects",
-        "update": false,
-        "delete": false
+        "update": "MaintainAllProjects",
+        "delete": "MaintainAllProjects"
       },
       "personal": {
         "create": false,

@@ -110,30 +110,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     workspace: "XV.HonorificWorkspace"
   });
 
-  //
-  // PROJECT
-  //
-  enyo.kind({
-    name: "XV.ProjectEditableList",
-    kind: "XV.EditableList",
-    title: "_projects".loc(),
-    collection: "XM.ProjectListItemCollection",
-    label: "_projects".loc(),
-    query: {orderBy: [
-      {attribute: 'number'}
-    ]},
-    columns: [
-      {header: ["_number".loc(), "_name".loc()],
-        rows: [
-        {readOnlyAttr: "number",
-          editor: {kind: "XV.InputWidget", attr: "number", placeholder: "_number".loc()}},
-        {readOnlyAttr: "name",
-          editor: {kind: "XV.InputWidget", attr: "name", placeholder: "_number".loc()}}
-      ]}
-    ],
-    workspace: "XV.ProjectWorkspace"
-  });
-
   // ..........................................................
   // SALES ORDER / QUOTE
   //

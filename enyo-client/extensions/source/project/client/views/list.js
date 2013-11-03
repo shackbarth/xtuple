@@ -7,6 +7,61 @@ trailing:true, white:true, strict:false*/
 
   XT.extensions.project.initLists = function () {
 
+    //
+    // PROJECT EDITABLE LIST
+    //
+    enyo.kind({
+      name: "XV.ProjectEditableList",
+      kind: "XV.EditableList",
+      title: "_projects".loc(),
+      collection: "XM.ProjectListItemCollection",
+      label: "_projects".loc(),
+      query: {orderBy: [
+        {attribute: 'number'}
+      ]},
+      columns: [
+        {header: ["_number".loc(), "_name".loc(), "_account".loc()],
+          rows: [
+          {readOnlyAttr: "number",
+            editor: {kind: "XV.InputWidget", attr: "number", placeholder: "_number".loc()}},
+          {readOnlyAttr: "name",
+            editor: {kind: "XV.InputWidget", attr: "name", placeholder: "_number".loc()}},
+          {readOnlyAttr: "account.name",
+            editor: {kind: "XV.AccountWidget", attr: "account"}}
+        ]},
+        {header: ["_dueDate".loc(), "_priority".loc(), "_percentComplete".loc()],
+          rows: [
+          {readOnlyAttr: "dueDate",
+            editor: {kind: "XV.DateWidget", attr: "dueDate", }},
+          {readOnlyAttr: "priority.name",
+            editor: {kind: "XV.PriorityPicker", attr: "priority" }},
+          {readOnlyAttr: "percentComplete",
+            editor: {kind: "XV.PercentWidget", attr: "percentComplete"}}
+        ]},
+        {header: ["_status".loc(), "_assignedTo".loc(), "_department".loc()],
+          rows: [
+          {readOnlyAttr: "getProjectStatusString",
+            editor: {kind: "XV.ProjectStatusPicker", attr: "status", }},
+          {readOnlyAttr: "assignedTo.username",
+            editor: {kind: "XV.UserAccountWidget", attr: "assignedTo" }},
+          {readOnlyAttr: "department.number",
+            editor: {kind: "XV.DepartmentWidget", attr: "department"}}
+        ]},
+        {header: ["_budgetedExpenses".loc(), "_actualExpenses".loc(), "_balanceExpenses".loc()],
+          rows: [
+          {readOnlyAttr: "budgetedExpenses"},
+          {readOnlyAttr: "actualExpenses"},
+          {readOnlyAttr: "balanceExpenses"},
+        ]},
+        {header: ["_budgetedHours".loc(), "_actualHours".loc(), "_balanceHours".loc()],
+          rows: [
+          {readOnlyAttr: "budgetedHours"},
+          {readOnlyAttr: "actualHours"},
+          {readOnlyAttr: "balanceHours"},
+        ]},
+      ],
+      workspace: "XV.ProjectWorkspace"
+    });
     // ..........................................................
     // PROJECT
     //

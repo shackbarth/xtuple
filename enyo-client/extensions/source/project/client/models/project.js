@@ -724,7 +724,9 @@ white:true*/
 
       recordType: 'XM.ProjectListItem',
 
-      editableModel: 'XM.Project'
+      editableModel: 'XM.Project',
+
+      readOnly: false
 
     });
 
