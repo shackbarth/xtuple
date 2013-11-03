@@ -2382,11 +2382,9 @@ ul.icons-ul > li .icon-li {
   margin: 8px;
 }
 .xv-characteristic-button {
-  margin: 0 4px 0 4px;
+  margin-left: 4px;
   color: #357ec7;
   font-size: 24px;
-  border: none;
-  background: transparent;
 }
 body {
   font-family: "arial", "arial black";
