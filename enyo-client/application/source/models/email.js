@@ -83,22 +83,30 @@ white:true*/
     getLastCommentString: function () {
       var comments = this.get('comments'),
         // public comments is an array even though comments is a collection
-        publicComments = comments.filter(function (comment) {
-          return comment.get("isPublic");
-        }),
         comment,
-        ret = "";
+        ret = "",
+        Klass;
 
-      if (publicComments.length) {
-        // Sort by date descending and take first
-        publicComments = _.sortBy(publicComments, function (comment) {
-          return -1 * comment.get('created').getTime();
-        });
-        comment = publicComments[0];
-        ret = "_latestComment".loc() +
-              " (" + comment.get('createdBy') + ")" +
-              "\n\n" +
-              comment.get('text');
+      if (comments.length) {
+        // If public flag exists on these comments, only show public ones
+        if (_.contains(comments.at(0).getClass().getAttributeNames(), "isPublic")) {
+          comments = comments.filter(function (comment) {
+            return comment.get("isPublic");
+          });
+        }
+
+        if (comments.length) {
+
+          // Sort by date descending and take first
+          comments = _.sortBy(comments, function (comment) {
+            return -1 * comment.get('created').getTime();
+          });
+          comment = comments[0];
+          ret = "_latestComment".loc() +
+                " (" + comment.get('createdBy') + ")" +
+                "\n\n" +
+                comment.get('text');
+        }
       }
       return ret;
     },
