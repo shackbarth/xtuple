@@ -1,6 +1,0 @@
-# Autodetect text files
-* text=auto
-
-# Declare files that will always have LF line endings on checkout.
-# This prevents EOF issues when repositories are cloned on Windows machines
-*.* eol=lf
