@@ -83,14 +83,16 @@
         "name": "resource",
         "toOne": {
           "type": "Resource",
-          "column": "tskresource_resource_id"
+          "column": "tskresource_resource_id",
+          "required": true
         }
       },
       {
         "name": "percent",
         "attr": {
           "type": "Percent",
-          "column": "tskresource_percent"
+          "column": "tskresource_percent",
+          "required": true
         }
       }
     ],

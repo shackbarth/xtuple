@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
-/*global XT:true, XV:true, enyo:true*/
+trailing:true, white:true, strict:false*/
+/*global XT:true, XV:true, enyo:true, Globalize:true*/
 
 (function () {
 
@@ -189,13 +189,18 @@ trailing:true, white:true*/
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "resource.name", classes: "bold"},
-                {kind: "XV.ListAttr", attr: "percent", fit: true, classes: "right"},
-              ]}
+                {kind: "XV.ListAttr", attr: "resource.code", classes: "bold"},
+                {kind: "XV.ListAttr", attr: "percent", fit: true,
+                  formatter: "formatPercent", classes: "right"},
+              ]},
+              {kind: "XV.ListAttr", attr: "resource.name"},
             ]}
           ]}
         ]}
-      ]
+      ],
+      formatPercent: function (value) {
+        return Globalize.format(value, "p" + XT.locale.percentScale);
+      }
     });
 
 

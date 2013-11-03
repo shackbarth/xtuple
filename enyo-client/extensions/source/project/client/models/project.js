@@ -1064,7 +1064,7 @@ white:true*/
       documentKey: "uuid",
 
       defaults: {
-        percent: 100
+        percent: 1
       }
 
     });
