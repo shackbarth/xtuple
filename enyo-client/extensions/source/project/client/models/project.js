@@ -197,6 +197,7 @@ white:true*/
       defaults: function () {
         var result = XM.ProjectBase.prototype.defaults.call(this);
         result.owner = result.assignedTo = XM.currentUser;
+        result.percentComplete = 0;
         return result;
       },
 
