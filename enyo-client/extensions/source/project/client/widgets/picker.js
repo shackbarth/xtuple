@@ -38,7 +38,6 @@ white:true, strict:false*/
       name: "XV.ProjectTypePicker",
       kind: "XV.PickerWidget",
       collection: "XM.projectTypes",
-      showNone: false,
       nameAttribute: "code"
     });
 
