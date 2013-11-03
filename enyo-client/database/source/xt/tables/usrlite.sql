@@ -11,7 +11,8 @@ select xt.add_constraint('usrlite', 'usrlite_obj_uui_id','unique(obj_uuid)', 'xt
 
 comment on table xt.usrlite is 'A light weight table of user information used to avoid punishingly heavy queries on the public usr view';
 
-insert into xt.usrlite select 
+insert into xt.usrlite (usr_username, usr_propername, usr_active, usr_disable_export, usr_email)
+select 
   usr_username, 
   usr_propername,
   usr_active,

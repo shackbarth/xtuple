@@ -1061,7 +1061,11 @@ white:true*/
 
       idAttribute: "uuid",
 
-      documentKey: "uuid"
+      documentKey: "uuid",
+
+      defaults: {
+        percent: 1
+      }
 
     });
 
