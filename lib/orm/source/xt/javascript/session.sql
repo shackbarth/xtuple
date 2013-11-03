@@ -54,15 +54,16 @@ select xt.install_js('XT','Session','xtuple', $$
       throw "No result for locale. Username probably does not exist in the instance database";
     } else if (rec.language && rec.country) {
       culture = rec.language + '_' + rec.country;
-    } else if (rec.language) {
-      culture = rec.language;
+    } else {
+      /* Sensible default if locale is not fully set */
+      culture = "en_US";
     }
     rec.culture = culture;
-
 
     /* might as well request the translations in here too */
     strings = plv8.execute(dictionarySql, [culture, XT.username]);
     if(strings.length === 0) {
+      /* Sensible default if locale is fully set but no dictionary exists */
       strings = plv8.execute(dictionarySql, ["en_US"]);
     }
     rec.strings = strings.map(function (row) {
