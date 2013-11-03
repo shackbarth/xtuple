@@ -41,6 +41,13 @@
         }
       },
       {
+        "name": "editorKey",
+        "attr": {
+          "type": "String",
+          "column": "act_editor_key"
+        }
+      },
+      {
         "name": "parent",
         "toOne": {
           "isNested": true,

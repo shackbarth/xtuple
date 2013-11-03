@@ -35,7 +35,7 @@ white:true*/
     */
     couldRead: function () {
       var Klass = XM[this.get("activityType")];
-      return Klass.couldRead(this);
+      return Klass.canRead(this);
     },
 
     /**
@@ -46,7 +46,7 @@ white:true*/
     */
     couldUpdate: function () {
       var Klass = XM[this.get("activityType")];
-      return Klass.couldUpdate(this);
+      return Klass.canUpdate(this);
     },
 
     /**
@@ -57,7 +57,7 @@ white:true*/
     */
     couldDelete: function () {
       var Klass = XM[this.get("activityType")];
-      return Klass.couldDelete(this);
+      return Klass.canDelete(this);
     },
 
     /**
@@ -68,8 +68,12 @@ white:true*/
       @returns Receiver
     */
     couldDestroy: function (callback) {
+      // TODO: Sort this out
+      /*
       var Klass = XM[this.get("activityType")];
-      Klass.couldDestroy(this, callback);
+      Klass.canDestroy(this, callback);
+      */
+      callback(false);
       return this;
     }
   };

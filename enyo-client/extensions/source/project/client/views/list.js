@@ -222,6 +222,17 @@ trailing:true, white:true, strict:false*/
     });
 
     // ..........................................................
+    // PROJECT EMAIL PROFILE
+    //
+
+    enyo.kind({
+      name: "XV.ProjectEmailProfileList",
+      kind: "XV.EmailProfileList",
+      label: "_projectEmailProfiles".loc(),
+      collection: "XM.ProjectEmailProfileCollection"
+    });
+
+    // ..........................................................
     // PROJECT TYPE
     //
 

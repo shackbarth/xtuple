@@ -100,6 +100,42 @@ strict: false*/
   });
 
   // ..........................................................
+  // EMAIL PROFILE
+  //
+
+  /**
+    An abstract workspace for email profiles.
+  */
+  enyo.kind({
+    name: "XV.EmailProfileWorkspace",
+    kind: "XV.Workspace",
+    headerAttrs: ["name", "-", "description"],
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel",
+          fit: true, components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "onyx.GroupboxHeader", content: "_header".loc()},
+            {kind: "XV.InputWidget", attr: "from"},
+            {kind: "XV.InputWidget", attr: "replyTo"},
+            {kind: "XV.InputWidget", attr: "to"},
+            {kind: "XV.InputWidget", attr: "cc"},
+            {kind: "XV.InputWidget", attr: "bcc"},
+            {kind: "XV.InputWidget", attr: "subject"},
+            {kind: "onyx.GroupboxHeader", content: "_body".loc()},
+            {kind: "XV.TextArea", attr: "body", classes: "max-height"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // BASE CLASS
   //
 
@@ -1003,6 +1039,7 @@ strict: false*/
   incidentHash = enyo.mixin(incidentHash, XV.accountNotifyContactMixin);
   enyo.kind(incidentHash);
 
+  XV.registerModelWorkspace("XM.Incident", "XV.IncidentWorkspace");
   XV.registerModelWorkspace("XM.IncidentRelation", "XV.IncidentWorkspace");
   XV.registerModelWorkspace("XM.IncidentListItem", "XV.IncidentWorkspace");
 
@@ -1012,33 +1049,9 @@ strict: false*/
 
   enyo.kind({
     name: "XV.IncidentEmailProfileWorkspace",
-    kind: "XV.Workspace",
+    kind: "XV.EmailProfileWorkspace",
     title: "_incidentEmailProfile".loc(),
-    headerAttrs: ["name", "-", "description"],
     model: "XM.IncidentEmailProfile",
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel",
-          style: "width: 480px;", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-            classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"},
-            {kind: "onyx.GroupboxHeader", content: "_header".loc()},
-            {kind: "XV.InputWidget", attr: "from"},
-            {kind: "XV.InputWidget", attr: "replyTo"},
-            {kind: "XV.InputWidget", attr: "to"},
-            {kind: "XV.InputWidget", attr: "cc"},
-            {kind: "XV.InputWidget", attr: "bcc"},
-            {kind: "XV.InputWidget", attr: "subject"},
-            {kind: "onyx.GroupboxHeader", content: "_body".loc()},
-            {kind: "XV.TextArea", attr: "body", classes: "max-height"}
-          ]}
-        ]}
-      ]}
-    ]
   });
 
   XV.registerModelWorkspace("XM.IncidentEmailProfile", "XV.IncidentEmailProfileWorkspace");
@@ -1294,6 +1307,7 @@ strict: false*/
   opportunityHash = enyo.mixin(opportunityHash, XV.accountNotifyContactMixin);
   enyo.kind(opportunityHash);
 
+  XV.registerModelWorkspace("XM.Opportunity", "XV.OpportunityWorkspace");
   XV.registerModelWorkspace("XM.OpportunityRelation", "XV.OpportunityWorkspace");
   XV.registerModelWorkspace("XM.OpportunityListItem", "XV.OpportunityWorkspace");
 
@@ -2484,6 +2498,7 @@ strict: false*/
   };
   toDoHash = enyo.mixin(toDoHash, XV.accountNotifyContactMixin);
   enyo.kind(toDoHash);
+  XV.registerModelWorkspace("XM.ToDo", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
 

@@ -9,6 +9,34 @@ trailing:true, white:true, strict: false*/
   // ACCOUNT
   //
 
+  /**
+    An abstract list to be used for email profiles
+  */
+  enyo.kind({
+    name: "XV.EmailProfileList",
+    kind: "XV.List",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
+  // ACCOUNT
+  //
+
   enyo.kind({
     name: "XV.AccountList",
     kind: "XV.List",
@@ -96,6 +124,12 @@ trailing:true, white:true, strict: false*/
         ]}
       ]}
     ],
+    getWorkspace: function () {
+      var collection = this.getValue(),
+        model = collection.at(this._lastTapIndex),
+        recordType = "XM." + model.get("activityType");
+      return XV.getWorkspace(recordType);
+    },
     formatDueDate: function (value, view, model) {
       var today = new Date(),
         isLate = (model.get('isActive') &&
@@ -104,8 +138,16 @@ trailing:true, white:true, strict: false*/
       return value;
     },
     formatType: function (value) {
-      return ("_" + value.slice(0,1).toLowerCase() + value.slice(1)).loc();
-    }
+      return ("_" + value.slice(0, 1).toLowerCase() + value.slice(1)).loc();
+    },
+    itemTap: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        oldId = model.id;
+      model.id = model.get("editorKey");
+      this._lastTapIndex = inEvent.index;
+      this.inherited(arguments);
+      model.id = oldId;
+    },
   });
 
   // ..........................................................
@@ -1070,25 +1112,9 @@ trailing:true, white:true, strict: false*/
 
   enyo.kind({
     name: "XV.IncidentEmailProfileList",
-    kind: "XV.List",
+    kind: "XV.EmailProfileList",
     label: "_incidentEmailProfiles".loc(),
-    collection: "XM.IncidentEmailProfileCollection",
-    query: {orderBy: [
-      {attribute: 'name'}
-    ]},
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short",
-            components: [
-            {kind: "XV.ListAttr", attr: "name", isKey: true}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "description"}
-          ]}
-        ]}
-      ]}
-    ]
+    collection: "XM.IncidentEmailProfileCollection"
   });
 
   // ..........................................................

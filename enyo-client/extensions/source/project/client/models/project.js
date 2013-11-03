@@ -13,6 +13,20 @@ white:true*/
 
       @extends XM.Document
     */
+    XM.ProjectEmailProfile = XM.Document.extend(
+      /** @scope XM.ProjectEmailProfile.prototype */ {
+
+      recordType: 'XM.ProjectEmailProfile',
+
+      documentKey: 'name'
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Document
+    */
     XM.ProjectType = XM.Document.extend(
       /** @scope XM.ProjectType.prototype */ {
 
@@ -69,21 +83,30 @@ white:true*/
       getProjectStatusString: function () {
         var K = XM.Project,
           status = this.get('status');
-        if (status === K.CONCEPT) {
+
+        switch (status)
+        {
+        case K.CONCEPT:
           return '_concept'.loc();
-        }
-        if (status === K.IN_PROCESS) {
+        case K.REVIEW:
+          return '_review'.loc();
+        case K.REVISION:
+          return '_revision'.loc();
+        case K.APPROVED:
+          return '_approved'.loc();
+        case K.IN_PROCESS:
           return '_inProcess'.loc();
-        }
-        if (status === K.COMPLETED) {
+        case K.COMPLETED:
           return '_completed'.loc();
+        case K.REJECTED:
+          return '_rejected'.loc();
         }
       },
 
       isActive: function () {
         var K = XM.Project,
           status = this.get('status');
-        return (status !== K.COMPLETED);
+        return (status !== K.COMPLETED && status !== K.REJECTED);
       }
 
     };
@@ -102,7 +125,10 @@ white:true*/
 
       defaults: function () {
         var K = XM.Project,
-          result = { status: K.CONCEPT };
+          result = {
+            status: K.CONCEPT,
+            priority: XT.session.settings.get("DefaultPriority")
+          };
         return result;
       },
 
@@ -261,7 +287,10 @@ white:true*/
                 assignedTo: model.get("assignedTo"),
                 sequence: model.get("sequence"),
                 notes: model.get("notes"),
-                successors: model.get("successors")
+                completedParentStatus : model.get("completedParentStatus"),
+                deferredParentStatus : model.get("deferredParentStatus"),
+                completedSuccessors: model.get("completedSuccessors"),
+                deferredSuccessors: model.get("deferredSuccessors")
               });
               workflow.add(item);
             });
@@ -269,8 +298,13 @@ white:true*/
             // Reiterate through new collection and fix successor mappings
             _.each(_.keys(map), function (uuid) {
               _.each(workflow.models, function (model) {
-                if (_.isString(model.attributes.successors)) {
-                  model.attributes.successors.replace(uuid, map[uuid]);
+                var successors = model.get("completedSuccessors");
+                if (_.isString(successors)) {
+                  model.set("completedSuccessors", successors.replace(uuid, map[uuid]));
+                }
+                successors = model.get("deferredSuccessors");
+                if (_.isString(successors)) {
+                  model.set("deferredSuccessors", successors.replace(uuid, map[uuid]));
                 }
               });
             });
@@ -353,6 +387,31 @@ white:true*/
         this.trigger("change", this, changed);
       }
 
+    });
+
+    // Add support for sending email
+    XM.Project = XM.Project.extend(XM.EmailSendMixin);
+    XM.Project = XM.Project.extend({
+      emailDocumentName: "_project".loc(),
+      emailProfileAttribute: "projectType.emailProfile",
+      emailStatusMethod: "getProjectStatusString",
+      /**
+        Build "to" addresses for dirty tasks  as well
+      */
+      buildToString: function (toAddresses) {
+        var tasks = this.get("tasks"),
+          K = XM.EmailSendMixin,
+          that = this;
+
+        // Add project task users to email
+        _.each(tasks.models, function (task) {
+          if (task.isDirty) {
+            toAddresses = K.buildToString.call(task, toAddresses);
+          }
+        });
+        
+        return K.buildToString.call(this, toAddresses);
+      }
     });
 
     // ..........................................................
@@ -447,6 +506,36 @@ white:true*/
       CONCEPT: 'P',
 
       /**
+        Review status for project.
+
+        @static
+        @constant
+        @type String
+        @default R
+      */
+      REVIEW: 'R',
+
+      /**
+        Revision status for project.
+
+        @static
+        @constant
+        @type String
+        @default V
+      */
+      REVISION: 'V',
+
+      /**
+        Approved status for project.
+
+        @static
+        @constant
+        @type String
+        @default A
+      */
+      APPROVED: 'A',
+
+      /**
         In-Process status for project.
 
         @static
@@ -463,7 +552,16 @@ white:true*/
         @type String
         @default C
       */
-      COMPLETED: 'C'
+      COMPLETED: 'C',
+
+      /**
+        Rejected status for project.
+        @static
+        @constant
+        @type String
+        @default J
+      */
+      REJECTED: 'J'
 
     });
 
@@ -988,6 +1086,18 @@ white:true*/
     // ..........................................................
     // COLLECTIONS
     //
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ProjectEmailProfileCollection = XM.Collection.extend({
+      /** @scope XM.ProjectEmailProfileCollection.prototype */
+
+      model: XM.ProjectEmailProfile
+
+    });
 
     /**
       @class

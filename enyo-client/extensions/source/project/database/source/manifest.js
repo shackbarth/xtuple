@@ -6,6 +6,7 @@
     "public/tables/emp.sql",
     "public/tables/empgrp.sql",
     "xt/tables/acttype.sql",
+    "xt/tables/prjemlprofile.sql",
     "xt/tables/prjtypeext.sql",
     "xt/tables/prjtypewf.sql",
     "xt/tables/tskresource.sql",
