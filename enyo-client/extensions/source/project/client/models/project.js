@@ -328,7 +328,6 @@ white:true*/
         if (charProfile && charProfile.length) {
           if (!chars.length) {
             copyCharProfile();
-            return;
           } else {
             this.notify("_copyCharacteristics?".loc(), {
               type: XM.Model.QUESTION,
