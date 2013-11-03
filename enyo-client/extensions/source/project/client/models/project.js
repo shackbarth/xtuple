@@ -127,7 +127,8 @@ white:true*/
         var K = XM.Project,
           result = {
             status: K.CONCEPT,
-            priority: XT.session.settings.get("DefaultPriority")
+            priority: XT.session.settings.get("DefaultPriority"),
+            percentComplete: 0
           };
         return result;
       },
@@ -197,9 +198,6 @@ white:true*/
       defaults: function () {
         var result = XM.ProjectBase.prototype.defaults.call(this);
         result.owner = result.assignedTo = XM.currentUser;
-        result.projectType = _.find(XM.projectTypes.models, function (model) {
-          return model.get("isActive");
-        });
         return result;
       },
 
@@ -331,7 +329,6 @@ white:true*/
         if (charProfile && charProfile.length) {
           if (!chars.length) {
             copyCharProfile();
-            return;
           } else {
             this.notify("_copyCharacteristics?".loc(), {
               type: XM.Model.QUESTION,

@@ -690,7 +690,8 @@
             "name": "percentComplete",
             "attr": {
               "type": "Percent",
-              "column": "prjext_pct_complete"
+              "column": "prjext_pct_complete",
+              "required": true
             }
           }
         ]
@@ -2202,7 +2203,8 @@
             "name": "percentComplete",
             "attr": {
               "type": "Percent",
-              "column": "prjtaskext_pct_complete"
+              "column": "prjtaskext_pct_complete",
+              "required": true
             }
           }
         ]
@@ -2457,7 +2459,8 @@
             "name": "percentComplete",
             "attr": {
               "type": "Percent",
-              "column": "prjtaskext_pct_complete"
+              "column": "prjtaskext_pct_complete",
+              "required": true
             }
           }
         ]

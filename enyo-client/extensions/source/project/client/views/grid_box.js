@@ -67,7 +67,7 @@ trailing:true, white:true, strict:false*/
             placeholder: "_noAssignDate".loc(),
             editor: {kind: "XV.DateWidget", attr: "assignDate"}},
           {readOnlyAttr: "completeDate",
-            placeholder: "noCompleteDate".loc(),
+            placeholder: "_noCompleteDate".loc(),
             editor: {kind: "XV.DateWidget", attr: "completeDate"}},
           {readOnlyAttr: "percentComplete",
             editor: {kind: "XV.PercentWidget", attr: "percentComplete"}},
@@ -105,6 +105,7 @@ trailing:true, white:true, strict:false*/
         {classes: "date", header: ["_start".loc(), "_due".loc()],
           rows: [
           {readOnlyAttr: "startDate",
+            placeholder: "_noStartDate".loc(),
             editor: {kind: "XV.DateWidget", attr: "startDate"}},
           {readOnlyAttr: "dueDate",
             editor: {kind: "XV.DateWidget", attr: "dueDate"}}
@@ -112,8 +113,10 @@ trailing:true, white:true, strict:false*/
         {classes: "date", header: ["_assigned".loc(), "_completed".loc()],
           rows: [
           {readOnlyAttr: "assignDate",
+            placeholder: "_noAssignDate".loc(),
             editor: {kind: "XV.DateWidget", attr: "assignDate"}},
           {readOnlyAttr: "completeDate",
+            placeholder: "_noCompleteDate".loc(),
             editor: {kind: "XV.DateWidget", attr: "completeDate"}}
         ]}
       ],
