@@ -2094,7 +2094,15 @@ ul.icons-ul > li .icon-li {
   border-radius: 2px;
 }
 .xv-list .xv-list-item.item-selected {
-  background: url(/assets/item-hilite.png) repeat-x bottom;
+  background: #226b9a;
+  background-color: #1f608c;
+  background-image: -moz-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#226b9a), to(#1a4f77));
+  background-image: -webkit-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -o-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: linear-gradient(to bottom, #226b9a, #1a4f77);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr {
   color: #ffffff;
