@@ -127,7 +127,8 @@ white:true*/
         var K = XM.Project,
           result = {
             status: K.CONCEPT,
-            priority: XT.session.settings.get("DefaultPriority")
+            priority: XT.session.settings.get("DefaultPriority"),
+            percentComplete: 0
           };
         return result;
       },
@@ -197,7 +198,6 @@ white:true*/
       defaults: function () {
         var result = XM.ProjectBase.prototype.defaults.call(this);
         result.owner = result.assignedTo = XM.currentUser;
-        result.percentComplete = 0;
         return result;
       },
 
