@@ -67,7 +67,7 @@ trailing:true, white:true, strict:false*/
             placeholder: "_noAssignDate".loc(),
             editor: {kind: "XV.DateWidget", attr: "assignDate"}},
           {readOnlyAttr: "completeDate",
-            placeholder: "noCompleteDate".loc(),
+            placeholder: "_noCompleteDate".loc(),
             editor: {kind: "XV.DateWidget", attr: "completeDate"}},
           {readOnlyAttr: "percentComplete",
             editor: {kind: "XV.PercentWidget", attr: "percentComplete"}},
