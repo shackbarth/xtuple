@@ -98,7 +98,7 @@ white:true*/
         if (comments.length) {
 
           // Sort by date descending and take first
-          comments = _.sortBy(comments, function (comment) {
+          comments = _.sortBy(comments.models, function (comment) {
             return -1 * comment.get('created').getTime();
           });
           comment = comments[0];
