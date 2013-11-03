@@ -5,8 +5,17 @@
  */
 .xv-list .xv-model-decorator > .xv-list-item {
 
+  .xv-table {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+
+    .xv-cell {
+      display: table-cell;
+    }
+  }
+
   .xv-list-column {
-    width: 10em;
 
     &.xv-list-attr {
       /**
