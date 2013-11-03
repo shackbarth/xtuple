@@ -33,7 +33,7 @@ trailing:true, white:true, strict:false*/
           rows: [
           {readOnlyAttr: "dueDate",
             editor: {kind: "XV.DateWidget", attr: "dueDate", }},
-          {readOnlyAttr: "priority.name",
+          {readOnlyAttr: "priority.name", placeholder: "_noPriority".loc(),
             editor: {kind: "XV.PriorityPicker", attr: "priority" }},
           {readOnlyAttr: "percentComplete",
             editor: {kind: "XV.PercentWidget", attr: "percentComplete"}}
@@ -42,9 +42,9 @@ trailing:true, white:true, strict:false*/
           rows: [
           {readOnlyAttr: "getProjectStatusString",
             editor: {kind: "XV.ProjectStatusPicker", attr: "status", }},
-          {readOnlyAttr: "assignedTo.username",
+          {readOnlyAttr: "assignedTo.username", placeholder: "_noAssignedTo".loc(),
             editor: {kind: "XV.UserAccountWidget", attr: "assignedTo" }},
-          {readOnlyAttr: "department.number",
+          {readOnlyAttr: "department.number", placeholder: "_noDepartment".loc(),
             editor: {kind: "XV.DepartmentWidget", attr: "department"}}
         ]},
         {header: ["_budgetedExpenses".loc(), "_actualExpenses".loc(), "_balanceExpenses".loc()],

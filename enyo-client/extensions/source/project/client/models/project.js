@@ -726,7 +726,9 @@ white:true*/
 
       editableModel: 'XM.Project',
 
-      readOnly: false
+      readOnly: false,
+
+      readOnlyAttributes: ["number"]
 
     });
 
