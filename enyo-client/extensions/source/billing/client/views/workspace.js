@@ -114,4 +114,46 @@ trailing:true, white:true*/
 
   XV.registerModelWorkspace("XM.SalesCategory", "XV.SalesCategoryWorkspace");
 
+  /**
+   * @class XV.CashReceiptWorkspace
+   */
+  enyo.kind({
+    name: 'XV.CashReceiptWorkspace',
+    kind: 'XV.Workspace',
+    view: 'XM.CashReceiptView',
+    title: '_cashReceipt'.loc(),
+
+    components: [
+      {kind: 'Panels', arrangerKind: 'CarouselArranger',
+          fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", components: [
+            {kind: "XV.SalesCustomerWidget", attr: "customer"},
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.CheckboxWidget", attr: "isPosted"},
+            {tag: 'hr'},
+            {kind: "XV.DateWidget", attr: "documentDate"},
+            {kind: "XV.DateWidget", attr: "distributionDate"},
+            {kind: "XV.DateWidget", attr: "applicationDate"},
+            {tag: 'hr'},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "amount", currency: "currency"},
+              label: "_amount".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"},
+          ]}
+        ]}
+      ]}
+    ],
+
+    valueChanged: function () {
+      this.log(this.value);
+    }
+  });
+
+  XV.registerModelWorkspace('XM.CashReceiptRelation', 'XV.CashReceiptWorkspace');
+  XV.registerModelWorkspace('XM.CashReceiptListItem', 'XV.CashReceiptWorkspace');
+
 }());

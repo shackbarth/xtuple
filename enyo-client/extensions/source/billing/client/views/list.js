@@ -1,10 +1,9 @@
-/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
-latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
-/*global XT:true, XV:true, enyo:true*/
-
 XT.extensions.billing.initLists = function () {
 
+  /**
+   * @class XV.SalesCategory
+   * @see XM.SalesCategoryCollection
+   */
   enyo.kind({
     name: 'XV.SalesCategoryList',
     kind: 'XV.List',
@@ -21,4 +20,23 @@ XT.extensions.billing.initLists = function () {
   });
 
   XV.registerModelList('XM.SalesCategory', 'XV.SalesCategoryList');
+
+  /**
+   * @class XV.CashReceiptList
+   * @see XM.CashReceiptListItemCollection
+   */
+  enyo.kind({
+    name: 'XV.CashReceiptList',
+    kind: 'XV.List',
+    view: 'XM.CashReceiptView',
+    label: '_cashReceipts'.loc(),
+    collection: 'XM.CashReceiptListItemCollection',
+    components: [
+      {kind: 'XV.ListItemDecorator', components: [
+        {name: 'listItem', kind: 'XV.CashReceiptListItem'}
+      ]}
+    ]
+  });
+
+  XV.registerModelList('XM.CashReceiptListItem', 'XV.CashReceiptListItemCollection');
 };
