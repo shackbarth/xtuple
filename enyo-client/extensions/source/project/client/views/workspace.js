@@ -239,8 +239,8 @@ trailing:true, white:true, strict:false*/
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
           ]},
-          {kind: "XV.TaskCommentBox", attr: "comments"},
-          {kind: "XV.TaskResourcesBox", attr: "resources"}
+          {kind: "XV.TaskResourcesBox", attr: "resources"},
+          {kind: "XV.TaskCommentBox", attr: "comments"}
         ]}
       ]
     });
