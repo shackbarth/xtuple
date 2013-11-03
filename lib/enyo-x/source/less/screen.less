@@ -5,18 +5,24 @@ vendor-prefix: false, adjoining-classes: false, empty-rules: false, star-propert
 ids: false, box-sizing: false*/
 
 /*
-  To compile to .css:
+  To compile this .less file to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 */
+
+// Variables for LESS Project
+// --------------------------
+
+// Colors
+// ------
 @highlight: #d6f1ff;
 @orange: #f60;
 @bright-orange: #f49200;
 @sky-blue: #9cf;
-@slate-blue: #226b9a;
 @light-blue: #35a8ee;
 @blue: #0000ff;
-@slate-blue: #357EC7;
+@slate-blue: #357ec7;
+@dark-slate-blue: #1a4f77;
 @lightest-gray: #eee;
 @earl-grey: #f3f3f3;
 @silver: #aaa;
@@ -36,13 +42,31 @@ ids: false, box-sizing: false*/
 @bright-red: #ff0000;
 @green: #009000;
 @light-orange: #ff9c00;
-@item-hilite-background: url(/assets/item-hilite.png) repeat-x bottom;
+@item-hilite-background: #226b9a;
 
-@import "model-decorator.less";
+// Fonts
+// ------
+@baseFont: "arial", "arial black";
+@baseFontSize: 100%;
+@panelsFontSize: 5em;
 
-/* Helper classes for css3 */
+// Imports
+// ------
+/**
+  Import for Font-Awesome icons
+*/
+@import "../../lib/font-awesome/less/font-awesome.less";
+@import "../../lib/font-onyx/lib/Icon.less";
 
+/**
+  Helper classes for css3
+*/
 @import "mixins.less";
+
+/**
+  Model decorator
+*/
+@import "model-decorator.less";
 
 /**
   Less styles for the picker widget
@@ -81,14 +105,13 @@ ids: false, box-sizing: false*/
 @import "widgets.less";
 
 /**
-  Import for Font-Awesome icons
+  Styles for characteristic pickers and buttons
 */
-@import "../../lib/font-awesome/less/font-awesome.less";
-@import "../../lib/font-onyx/lib/Icon.less";
+@import "characteristics.less";
 
 body {
-  font-family: "arial", "arial black";
-  font-size: 100%;
+  font-family: @baseFont;
+  font-size: @baseFontSize;
 }
 
 .bggrad {
@@ -105,7 +128,7 @@ body {
 
 .panels > * {
   border: 2px solid @dark-gray;
-  font-size: 5em;
+  font-size: @panelsFontSize;
 }
 
 .wide > * {
@@ -115,35 +138,6 @@ body {
 .scroll-ios {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-}
-
-.developer-ui-container {
-  .box-shadow(#333 4px 4px 10px -4px);
-  .border-top-right-radius(10px);
-  top: 100px;
-  left: 0;
-  position: absolute;
-  background-color: @smoke;
-  z-index: 10;
-  .developer-rows {
-    .row {
-      display: block;
-      margin: 10px;
-    }
-  }
-  .onyx-grabber {
-    &.developer-grabber {
-      .box-shadow(#333 4px 4px 10px -4px);
-      .border-top-right-radius(10px);
-      .border-bottom-right-radius(10px);
-      background-color: @smoke;
-      position: absolute;
-      right: -47px;
-      top: 0;
-      height: 54px;
-      width: 50px;
-    }
-  }
 }
 
 .item {
@@ -352,30 +346,6 @@ body {
   padding: 8px 0 0 8px;
 }
 
-/* Characteristics */
-.xv-characteristic-picker {
-  .onyx-picker-decorator .onyx-button {
-    width: 130px;
-  }
-}
-
-.xv-characteristic-item {
-  border-bottom: 1px solid @silver;
-  .onyx-input-decorator > input {
-    width: 115px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-}
-
-.xv-characteristic-button {
-  margin-right: 4px;
-}
-
-.xv-characteristic-buttons {
-  margin: 8px;
-}
-
 .xv-popup-button {
   margin: 4px;
 }
@@ -425,7 +395,6 @@ body {
     text-overflow: ellipsis;
   }
   .xv-comment-box-textblock {
-    padding: 5px;
     font-size: small;
     overflow: hidden;
     &.disabled {
@@ -449,12 +418,6 @@ body {
 
 .icon-calendar {
   color: @slate-blue;
-}
-
-.xv-numberwidget {
-  input {
-    text-align: right;
-  }
 }
 
 .xv-addresswidget {
