@@ -10,7 +10,7 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
     "DatabaseName",
     "DatabaseComments",
     "ServerVersion",
-    "WelcomePage"
+    "MobileWelcomePage"
   ]
 
   /* 
