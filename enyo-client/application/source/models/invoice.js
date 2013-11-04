@@ -218,7 +218,20 @@ white:true*/
     },
 
     calculateOutstandingCredit: function () {
-      // TODO
+      var that = this,
+        success = function (resp) {
+          that.set({outstandingCredit: resp});
+        },
+        error = function (resp) {
+          // not a valid request
+          that.set({outstandingCredit: null});
+        };
+
+      this.dispatch("XM.Invoice", "outstandingCredit",
+        [this.getValue("customer.number"),
+          this.getValue("currency.abbreviation"),
+          this.getValue("invoiceDate")],
+        {success: success, error: error});
     },
 
     calculateTotals: function () {

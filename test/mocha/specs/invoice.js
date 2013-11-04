@@ -639,8 +639,24 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @memberof Invoice.prototype
         @description When currency or invoice date is changed outstanding credit should be recalculated.
       */
-      it.skip("When currency or invoice date is changed outstanding credit should be recalculated", function () {
+      it("When currency or invoice date is changed outstanding credit should be recalculated", function (done) {
+        var outstandingCreditChanged = function () {
+          var usd = _.find(XM.currencies.models, function (model) {
+            return model.get("abbreviation") === "USD";
+          });
+          if (invoiceModel.get("outstandingCredit")) {
+            // second time, with valid currency
+            invoiceModel.off("change:outstandingCredit", outstandingCreditChanged);
+            assert.equal(invoiceModel.get("outstandingCredit"), 25250303.25);
+            done();
+          } else {
+            // first time, with invalid currency
+            invoiceModel.set({currency: usd});
+          }
+        };
 
+        invoiceModel.on("change:outstandingCredit", outstandingCreditChanged);
+        invoiceModel.set({currency: null});
       });
       /**
         @member -
