@@ -4,6 +4,10 @@
   "loadOrder": 30,
   "databaseScripts": [
     "xm/javascript/billing.sql",
-    "xm/javascript/sales_category.sql"
+    "xm/javascript/sales_category.sql",
+    "xt/functions/cashrcpt_sum_pending.sql",
+    "xt/functions/cashrcpt_balance.sql",
+    "xt/views/cashrcptitem_pending.sql",
+    "xt/views/cashrcpt_receivable.sql"
   ]
 }
