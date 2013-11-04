@@ -19,6 +19,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
   var invoiceModel,
     lineModel,
+    allocationModel,
+    usd,
+    gbp,
     ttoys,
     vcol,
     bpaint,
@@ -139,6 +142,15 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
               lineModel = model;
               done();
             });
+          },
+          function (done) {
+            usd = _.find(XM.currencies.models, function (model) {
+              return model.get("abbreviation") === "USD";
+            });
+            gbp = _.find(XM.currencies.models, function (model) {
+              return model.get("abbreviation") === "GBP";
+            });
+            done();
           }
         ], done);
       });
@@ -420,6 +432,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
               vcol = model;
               done();
             });
+          },
+          function (done) {
+            initializeModel(allocationModel, XM.InvoiceAllocation, function (err, model) {
+              allocationModel = model;
+              done();
+            });
           }
         ], done);
       });
@@ -641,9 +659,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       */
       it("When currency or invoice date is changed outstanding credit should be recalculated", function (done) {
         var outstandingCreditChanged = function () {
-          var usd = _.find(XM.currencies.models, function (model) {
-            return model.get("abbreviation") === "USD";
-          });
           if (invoiceModel.get("outstandingCredit")) {
             // second time, with valid currency
             invoiceModel.off("change:outstandingCredit", outstandingCreditChanged);
@@ -661,18 +676,38 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       /**
         @member -
         @memberof Invoice.prototype
+        @description AllocatedCredit should be recalculated when XM.InvoiceAllocation records are added or removed.
+      */
+      it("AllocatedCredit should be recalculated when XM.InvoiceAllocation records " +
+          "are added or removed", function () {
+        // TODO: code is not yet written for currency conversion
+        assert.isUndefined(invoiceModel.get("allocatedCredit"));
+        allocationModel.set({currency: usd, amount: 200});
+        invoiceModel.get("allocations").add(allocationModel);
+        assert.equal(invoiceModel.get("allocatedCredit"), 200);
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
         @description When invoice date is changed allocated credit should be recalculated.
       */
-      it.skip("When the invoice date is changed allocated credit should be recalculated", function () {
-
+      it("When the invoice date is changed allocated credit should be recalculated", function () {
+        allocationModel.set({currency: usd, amount: 300});
+        assert.equal(invoiceModel.get("allocatedCredit"), 200);
+        // XXX This is a wacky way to test this.
+        // XXX Shouldn't the change to the allocated credit itself trigger a change to allocatedCredit?
+        invoiceModel.set({invoiceDate: new Date("1/1/2010")});
+        assert.equal(invoiceModel.get("allocatedCredit"), 300);
       });
       /**
         @member -
         @memberof Invoice.prototype
         @description When subtotal, totalTax or miscCharge are changed, the total should be recalculated.
       */
-      it.skip("When subtotal, totalTax or miscCharge are changed, the total should be recalculated", function () {
-
+      it("When subtotal, totalTax or miscCharge are changed, the total should be recalculated", function () {
+        assert.equal(invoiceModel.get("total"), 197.82);
+        invoiceModel.set({miscCharge: 40});
+        assert.equal(invoiceModel.get("total"), 237.82);
       });
       /**
         @member -
@@ -716,14 +751,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @description Balance should be recalculated when total, allocatedCredit, or outstandingCredit are changed.
       */
       it.skip("Balance should be recalculated when total, allocatedCredit, or outstandingCredit are changed", function () {
-
-      });
-      /**
-        @member -
-        @memberof Invoice.prototype
-        @description AllocatedCredit should be recalculated when XM.InvoiceAllocation records are added or removed.
-      */
-      it.skip("AllocatedCredit should be recalculated when XM.InvoiceAllocation records are added or removed", function () {
 
       });
       /**

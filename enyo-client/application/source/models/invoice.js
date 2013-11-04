@@ -122,7 +122,9 @@ white:true*/
         isPosted: false,
         isVoid: false,
         isPrinted: false,
-        commission: 0
+        commission: 0,
+        taxTotal: 0,
+        miscCharge: 0
       };
     },
 
@@ -200,7 +202,11 @@ white:true*/
     },
 
     calculateAllocatedCredit: function () {
-      // TODO
+      var allocatedCredit = _.reduce(this.get("allocations").models, function (memo, allocation) {
+        // TODO: currency conversion
+        return memo + allocation.get("amount");
+      }, 0);
+      this.set("allocatedCredit", allocatedCredit);
     },
 
     calculateAuthorizedCredit: function () {
@@ -235,10 +241,15 @@ white:true*/
     },
 
     calculateTotals: function () {
-      // TODO
+      var subtotal = _.reduce(this.get("lineItems").models, function (memo, lineModel) {
+        return memo + lineModel.get("extendedPrice");
+      }, 0);
+
+      this.set({total: subtotal + this.get("miscCharge") + this.get("taxTotal")});
     },
 
     calculateTotalTax: function () {
+      console.log("calculate total tax");
       // TODO
     },
 

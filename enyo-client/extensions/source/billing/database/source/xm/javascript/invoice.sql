@@ -6,13 +6,6 @@ select xt.install_js('XM','Invoice','xtuple', $$
 
   XM.Invoice.isDispatchable = true;
 
-  XM.Invoice.allocatedCredit = function(invoiceNumber) {
-    var sql = "select xt.invc_allocated_credit(invchead) AS result FROM invchead " +
-      "where invchead_number = $1";
-
-    return plv8.execute(sql, [invoiceNumber])[0].result;
-  };
-
   XM.Invoice.authorizedCredit = function(invoiceNumber) {
     var sql = "select xt.invc_authorized_credit($1) AS result";
 
