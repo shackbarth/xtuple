@@ -244,17 +244,33 @@
   };
 
   exports.runUICrud = function (spec) {
-    it('can be created through the app UI', function (done) {
-      this.timeout(30 * 1000);
-      navigateToNewWorkspace(XT.app, spec.listKind, function (workspaceContainer) {
-        var workspace = workspaceContainer.$.workspace;
-
-        assert.equal(workspace.value.recordType, spec.recordType);
-        setWorkspaceAttributes(workspace, spec.createHash);
-        saveWorkspace(workspace, function () {
-          deleteFromList(XT.app, workspace.value, done);
-        });
+    var workspaceContainer,
+      workspace;
+    it('can get to a new workspace', function (done) {
+      this.timeout(10 * 1000);
+      navigateToNewWorkspace(XT.app, spec.listKind, function (_workspaceContainer) {
+        workspaceContainer = _workspaceContainer;
+        done();
       });
+    });
+    it('can set the workspace attributes', function () {
+      workspace = workspaceContainer.$.workspace;
+      assert.equal(workspace.value.recordType, spec.recordType);
+      setWorkspaceAttributes(workspace, spec.createHash);
+    });
+    _.each(spec.beforeSaveUIActions || [], function (spec) {
+      it(spec.it, function (done) {
+        this.timeout(20 * 1000);
+        spec.action(workspace, done);
+      });
+    });
+    it('can save the workspace', function (done) {
+      this.timeout(10 * 1000);
+      saveWorkspace(workspace, done);
+    });
+    it('can delete the item from the list', function (done) {
+      this.timeout(10 * 1000);
+      deleteFromList(XT.app, workspace.value, done);
     });
   };
 }());

@@ -253,7 +253,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Not sure what this does.
    */
   checkDependencies = function (data, orm) {
-    var enabled = true, dependencies = orm.dependencies, found, orms;
+    var enabled = true,
+      dependencies = orm.dependencies,
+      found,
+      orms;
+
     if (X.typeOf(orm.enabled) !== X.T_UNDEFINED) return orm.enabled;
     if (!dependencies || dependencies.length <= 0) return enabled;
     orms = data.orms;
@@ -264,14 +268,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         orm.undefinedDependencies.push("%@.%@".f(dependency.namespace, dependency.type));
         enabled = false;
         console.log("Cannot install", orm.type, "because of dependency failure", dependency);
-        return;
+        throw new Error("Cannot install " + orm.type);
       }
       if (!checkDependencies(data, found)) {
         if (!orm.failedDependencies) { orm.failedDependencies = []; }
         orm.failedDependencies.push("%@.%@".f(found.nameSpace, found.type));
         enabled = false;
         console.log("Cannot install", orm.type, "because of dependency failure", dependency);
-        return;
+        throw new Error("Cannot install " + orm.type);
       }
     });
     return enabled;
@@ -424,4 +428,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
+  /*
+  // debug
+  var debugPath = X.path.join(__dirname, "../../enyo-client/database/orm");
+  runOrmInstaller(debugPath, {orms: []}, function (err, res) {
+    console.log(err, res);
+  });
+  */
 }());

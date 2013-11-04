@@ -1036,19 +1036,49 @@ trailing:true, white:true, strict: false*/
   enyo.kind({
     name: "XV.InvoiceList",
     kind: "XV.List",
+    multiSelect: true,
+    allowPrint: true,
     label: "_invoices".loc(),
+    parameterWidget: "XV.InvoiceListParameters",
     collection: "XM.InvoiceListItemCollection",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    actions: [
+      {name: "void", prerequisite: "canVoid", method: "doVoid" },
+      {name: "post", prerequisite: "canPost", method: "doPost" },
+      {name: "print", prerequisite: "canPrint", method: "doPrint" }
+    ],
     components: [
       {kind: "XV.ListItem", components: [
-        {kind: "XV.ListColumn", classes: "last", components: [
-          {kind: "XV.ListAttr", attr: "number", isKey: true}
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "isPrinted", fit: true,
+                formatter: "formatPrinted", classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "invoiceDate"},
+              {kind: "XV.ListAttr", attr: "isPosted", fit: true,
+                formatter: "formatPosted", classes: "right"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "customer.name"},
+            {kind: "XV.ListAttr", attr: "total"}
+          ]}
         ]}
       ]}
-    ]
+    ],
+    formatPosted: function (value) {
+      return value ? "_posted".loc() : "";
+    },
+    formatPrinted: function (value) {
+      return value ? "_printed".loc() : "";
+    },
   });
+  XV.registerModelList("XM.InvoiceRelation", "XV.InvoiceList");
 
   // ..........................................................
   // ITEM

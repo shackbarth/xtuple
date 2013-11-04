@@ -86,7 +86,8 @@ XT.extensions.billing.initReceivableModel = function () {
       Calculated sum of taxes
     */
     calculateTaxTotal: function () {
-      var amounts = _.pluck(this.get("taxes"), "amount");
+      var taxes = this.get("taxes"),
+        amounts = []; // get amounts from taxes.models
       return _.reduce(amounts, function (num, memo) {
         return num + memo;
       }, 0);
@@ -178,9 +179,6 @@ XT.extensions.billing.initReceivableModel = function () {
     }
   });
 
-  /**
-   * @mixin
-   */
   XM.ReceivableMixin = {
     /**
       * Returns a boolean true if the value the documentType attribute
@@ -280,19 +278,16 @@ XT.extensions.billing.initReceivableModel = function () {
   XM.ReceivableListItem = XM.Info.extend({
     recordType: 'XM.ReceivableListItem',
     idAttribute: "uuid",
-    editableModel: 'XM.Receivable'
-  });
+    editableModel: 'XM.Receivable',
 
-  /**
-   * @class XM.ReceivableRelation
-   * @extends XM.Info
-   * @mixes XM.ReceivableMixin
-   */
-  XM.ReceivableRelation = XM.Info.extend({
-    recordType: 'XM.ReceivableRelation',
-    idAttribute: 'number'
+    canOpen: function (callback) {
+      var canView = XT.session.privileges.get("ViewAROpenItems") && this.get("isPosted");
+      if (callback) {
+        callback(canView);
+      }
+      return canView;
+    },
   });
-  XM.ReceivableRelation = XM.ReceivableRelation.extend(XM.ReceivableMixin);
 
   // ..........................................................
   // COLLECTIONS
