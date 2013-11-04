@@ -504,7 +504,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   isGranted = true;
                 }
               }
-            } else {
+            } else if (personalUser) {
               isGranted = personalUser.toLowerCase() === XT.username;
             }
 
