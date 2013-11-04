@@ -34,7 +34,8 @@ select xt.install_js('XT','Data','xtuple', $$
     buildClause: function (nameSpace, type, parameters, orderBy) {
       parameters = parameters || [];
 
-      var arrayIdentifiers,
+      var arrayIdentifiers = [],
+        arrayParams,
         charSql,
         childOrm,
         clauses = [],
@@ -209,6 +210,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
                   if (param.isUsernamePrivFilter && isArray) {
                     identifiers.push(parts[n]);
+                    arrayIdentifiers.push(identifiers.length);
 
                     if (n < parts.length - 1) {
                       childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
@@ -241,6 +243,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
                   params.push('$' + count);
                   pcount = params.length - 1;
+                  arrayIdentifiers.push(identifiers.length);
                 } else {
                   params.push("%" + identifiers.length + "$I");
                   pcount = params.length - 1;
@@ -252,16 +255,17 @@ select xt.install_js('XT','Data','xtuple', $$
                 || (prop.attr && prop.attr.type === 'Array') || isArray)) {
 
                 /* e.g. 'admin' = ANY (usernames_array) */
-                arrayIdentifiers = "";
+                arrayParams = "";
+                params[pcount] += ' ' + op + ' ANY (';
 
                 /* Build path. e.g. ((%1$I).%2$I).%3$I */
-                for (var f =0; f < identifiers.length; f++) {
-                  arrayIdentifiers += '%' + (f + 1) + '$I';
-                  if (f < identifiers.length - 1) {
-                    arrayIdentifiers = "(" + arrayIdentifiers + ").";
+                for (var f =0; f < arrayIdentifiers.length; f++) {
+                  arrayParams += '%' + arrayIdentifiers[f] + '$I';
+                  if (f < arrayIdentifiers.length - 1) {
+                    arrayParams = "(" + arrayParams + ").";
                   }
                 }
-                params[pcount] += ' ' + op + ' ANY (' + arrayIdentifiers + ')';
+                params[pcount] += arrayParams + ')';
 
               /* Add optional is null clause. */
               } else if (parameters[i].includeNull) {
@@ -486,12 +490,24 @@ select xt.install_js('XT','Data','xtuple', $$
                 }
               }
 
-              return ret.toLowerCase();
+              //return ret.toLowerCase();
+              return ret;
             };
 
           while (!isGranted && i < props.length) {
-            var prop = props[i];
-            isGranted = get(record, prop) === XT.username;
+            var prop = props[i],
+                personalUser = get(record, prop);
+
+            if (personalUser instanceof Array) {
+              for (var userIdx = 0; userIdx < personalUser.length; userIdx++) {
+                if (personalUser[userIdx].toLowerCase() === XT.username) {
+                  isGranted = true;
+                }
+              }
+            } else {
+              isGranted = personalUser.toLowerCase() === XT.username;
+            }
+
             i++;
           }
 
