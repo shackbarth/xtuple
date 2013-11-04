@@ -1362,72 +1362,6 @@ ul.icons-ul > li .icon-li {
   color: #f49200;
 }
 /**
-  Less styles for the picker widget
-*/
-/**
-  Styles related to pickers, combo boxes, and relation widgets
-*/
-/* Picker */
-.onyx-picker-decorator .onyx-button {
-  padding: 12px 8px 12px 8px;
-}
-.onyx-picker .onyx-menu-item {
-  text-align: left;
-  text-overflow: ellipsis;
-}
-.xv-pickerwidget {
-  background-color: #ffffff;
-}
-.picker-icon {
-  position: absolute;
-  right: 0;
-  margin: 0 10px 0 2px;
-  color: #000000;
-}
-.xv-picker-button {
-  text-align: left;
-}
-.xv-picker-button .picker-content {
-  max-width: 100px;
-  overflow: hidden;
-}
-.xv-picker-button.disabled {
-  color: #696969;
-}
-.xv-picker-label {
-  color: #000000;
-  padding: 20px 8px 8px 8px;
-  text-align: right;
-  width: 130px;
-}
-.xv-picker-label.disabled {
-  color: #696969;
-}
-/* Combo Box */
-.xv-combobox .enyo-fittable-columns-layout .icon-sort {
-  display: inline-block;
-  padding-top: 10px;
-  color: #357ec7;
-}
-.xv-combobox .enyo-fittable-columns-layout .xv-decorated-label {
-  padding-top: 10px;
-}
-.xv-combobox .enyo-fittable-columns-layout .xv-combobox-input {
-  padding-top: 10px;
-  padding-right: 4px;
-}
-.xv-combobox-input {
-  font-size: medium;
-  border: 0;
-  display: inline-block;
-  outline: none;
-  width: 125px;
-}
-.xv-combobox-note {
-  padding: 14px 3px 8px 3px;
-  text-align: left;
-}
-/**
   Styles relating to the groupbox and widgets contained
     by a groupbox
 */
@@ -1480,7 +1414,6 @@ ul.icons-ul > li .icon-li {
   border: 0;
 }
 .xv-groupbox .onyx-input-decorator input {
-  padding-top: 2px;
   width: 150px;
 }
 .xv-groupbox .onyx-picker-decorator .onyx-button {
@@ -1490,13 +1423,11 @@ ul.icons-ul > li .icon-li {
 .xv-groupbox .xv-datewidget .onyx-input-decorator,
 .xv-groupbox .xv-numberwidget .onyx-input-decorator {
   padding-top: 9px;
-  width: 170px;
 }
 .xv-groupbox .xv-relationwidget input,
 .xv-groupbox .xv-datewidget input,
 .xv-groupbox .xv-numberwidget input {
-  padding-top: 0;
-  width: 120px;
+  width: 135px;
 }
 .xv-groupbox .xv-relationwidget .xv-decorated-label,
 .xv-groupbox .xv-datewidget .xv-decorated-label,
@@ -1680,6 +1611,59 @@ ul.icons-ul > li .icon-li {
   -webkit-border-bottom-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   border-bottom-right-radius: 4px;
+}
+/**
+  Less styles for the picker widget
+*/
+/**
+  Styles related to pickers, combo boxes, and relation widgets
+*/
+.xv-pickerwidget {
+  background-color: #ffffff;
+}
+.onyx-picker-decorator .onyx-button {
+  padding: 12px 8px 12px 8px;
+}
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  text-overflow: ellipsis;
+}
+.picker-icon {
+  position: absolute;
+  right: 0;
+  margin: 0 10px 0 2px;
+  color: #000000;
+}
+.xv-picker-button {
+  text-align: left;
+}
+.xv-picker-button .picker-content {
+  max-width: 100px;
+  overflow: hidden;
+}
+.xv-picker-button.disabled {
+  color: #696969;
+}
+.xv-picker-label {
+  color: #000000;
+  padding: 20px 8px 8px 8px;
+  text-align: right;
+  width: 130px;
+}
+.xv-picker-label.disabled {
+  color: #696969;
+}
+.xv-combobox .onyx-input-decorator input {
+  width: 145px;
+  vertical-align: middle;
+}
+.xv-combobox .icon-sort {
+  color: #357ec7;
+  vertical-align: middle;
+}
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
 }
 /**
   Styles relating to grid-entry
@@ -1873,16 +1857,10 @@ ul.icons-ul > li .icon-li {
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox {
   padding-left: 0;
 }
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .xv-combobox-input {
-  font-size: 13px;
-  width: 60px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .enyo-fittable-columns-layout .icon-sort {
-  padding-top: 5px;
-  padding-left: 10px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .enyo-fittable-columns-layout .xv-combobox-input {
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox input {
   padding-top: 3px;
+  width: 80px;
+  font-size: 13px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget {
   padding-bottom: 0;

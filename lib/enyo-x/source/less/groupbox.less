@@ -53,7 +53,6 @@
   .onyx-input-decorator {
     border: 0;
     input {
-      padding-top: 2px;
       width: 150px;
     }
   }
@@ -66,15 +65,16 @@
 
   .xv-relationwidget, .xv-datewidget, .xv-numberwidget {
     .onyx-input-decorator {
+      // TODO: replace this padding with vertical-align
       padding-top: 9px;
-      width: 170px;
+      //width: 170px;
     }
     input {
-      padding-top: 0;
-      width: 120px;
+      width: 135px;
     }
     .xv-decorated-label {
       width: 130px;
+      // TODO: replace this padding with vertical-align
       padding: 10px 8px 8px 8px;
       text-align: right;
       &.disabled {
