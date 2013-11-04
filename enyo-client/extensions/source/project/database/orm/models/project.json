@@ -5,6 +5,7 @@
     "type": "ProjectType",
     "table": "prjtype",
     "idSequenceName": "prjtype_prjtype_id_seq",
+    "isRest": true,
     "comment": "Project Type Map",
     "privileges": {
       "all": {

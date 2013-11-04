@@ -1724,7 +1724,7 @@ select xt.install_js('XT','Data','xtuple', $$
         if (options.silentError) {
           return false;
         } else {
-          throw new Error("Access Denied.");
+          throw new handleError("Unauthorized", 401);
         }
       }
 
@@ -1753,7 +1753,7 @@ select xt.install_js('XT','Data','xtuple', $$
           if (options.silentError) {
             return false;
           } else {
-            throw new Error("Access Denied.");
+            throw new handleError("Unauthorized", 401);
           }
         }
         /* Decrypt result where applicable. */
