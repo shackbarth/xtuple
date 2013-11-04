@@ -103,6 +103,7 @@ trailing:true, white:true, strict:false*/
 
     });
 
+    XV.registerModelList("XM.ProjectListItem", "XV.ProjectList");
     XV.registerModelList("XM.ProjectRelation", "XV.ProjectList");
 
     enyo.kind({
@@ -165,6 +166,8 @@ trailing:true, white:true, strict:false*/
       formatHours: XV.ProjectList.prototype.formatHours,
       formatExpenses: XV.ProjectList.prototype.formatExpenses
     });
+
+    XV.registerModelList("XM.TaskListItem", "XV.TaskList");
 
     // ..........................................................
     // PROJECT EMAIL PROFILE
