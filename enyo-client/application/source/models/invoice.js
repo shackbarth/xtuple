@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global Globalize:true, XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global Globalize:true, XT:true, XM:true, Backbone:true, _:true, console:true, async:true */
 
 (function () {
   "use strict";
@@ -119,18 +119,18 @@ white:true*/
         quantity = lineItem.get("quantity") || 0;
 
       subtotals.push(extPrice);
-      taxDetails = taxDetails.concat(lineItem.taxDetail);
+      //console.log("taxes are", lineItem.get("taxes"));
+      taxDetails = taxDetails.concat(lineItem.get("taxes").models);
     };
 
     _.each(model.get('lineItems').models, forEachCalcFunction);
 
-    // Add freight taxes to the mix
-    taxDetails = taxDetails.concat(model.freightTaxDetail);
-
     // Total taxes
     // First group amounts by tax code
+    //console.log(JSON.stringify(taxDetails));
     taxCodes = _.groupBy(taxDetails, function (detail) {
-      return detail.taxCode.id;
+      //console.log("detail is", detail.toJSON());
+      return detail.getValue("taxCode.code");
     });
 
     // Loop through each tax code group and subtotal
@@ -155,6 +155,7 @@ white:true*/
     subtotals = subtotals.concat([miscCharge, taxTotal]);
     total = add(subtotals, scale);
 
+    console.log("going to set total to", total);
     // Set values
     model.set("subtotal", subtotal);
     model.set("taxTotal", taxTotal);
@@ -643,7 +644,55 @@ white:true*/
     },
 
     calculateTax: function () {
-      // TODO
+      var parent = this.getParent(),
+        amount = this.get("extendedPrice"),
+        taxTypeId = this.getValue("taxType.id"),
+        recordType,
+        taxZoneId,
+        effective,
+        currency,
+        processTaxResponses,
+        that = this,
+        options = {},
+        params;
+
+      // If no parent, don't bother
+      if (!parent) { return; }
+
+      recordType = parent.recordType;
+      taxZoneId = parent.getValue("taxZone.id");
+      effective = parent.get(parent.documentDateKey);
+      currency = parent.get("currency");
+
+      if (effective && currency && amount) {
+        params = [taxZoneId, taxTypeId, effective, currency.id, amount];
+        processTaxResponses = function (responses) {
+          var processTaxResponse = function (resp, callback) {
+            var setTaxModel = function () {
+              taxModel.off("change:uuid", setTaxModel);
+              taxModel.set({
+                taxType: that.get("taxType"),
+                taxCode: resp.taxCode.code,
+                amount: resp.tax
+              });
+              that.get("taxes").add(taxModel);
+              callback();
+            };
+            var taxModel = new XM.InvoiceLineTax();
+            taxModel.on("change:uuid", setTaxModel);
+            taxModel.initialize(null, {isNew: true});
+          };
+          var finish = function () {
+            that.recalculateParent(false);
+          };
+
+          that.get("taxes").reset(); // empty it out so we can populate it
+
+          async.map(responses, processTaxResponse, finish);
+        };
+        options.success = processTaxResponses;
+        this.dispatch("XM.Tax", "taxDetail", params, options);
+      }
     },
 
     isMiscellaneousDidChange: function () {

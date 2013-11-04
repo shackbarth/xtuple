@@ -238,6 +238,7 @@ var _ = require("underscore"),
     var timeoutId,
       model = data.model,
       invalid = function (model, error) {
+        console.log(JSON.stringify(model.toJSON()));
         assert.fail(JSON.stringify(error) || "Unspecified error", "");
         clearTimeout(timeoutId);
         model.off('statusChange', modelCallback);
