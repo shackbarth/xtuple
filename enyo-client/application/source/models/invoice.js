@@ -95,6 +95,74 @@ white:true*/
     };
     customer.itemPrice(item, quantity, itemOptions);
   };
+
+  /**
+    Function that actually does the calculation work.
+    Taken largely from sales_order_base.
+    @private
+  */
+  var _calculateTotals = function (model) {
+    var miscCharge = model.get("miscCharge") || 0.0,
+      scale = XT.MONEY_SCALE,
+      add = XT.math.add,
+      subtract = XT.math.subtract,
+      subtotals = [],
+      taxDetails = [],
+      subtotal,
+      taxTotal = 0.0,
+      total,
+      taxCodes;
+
+    // Collect line item detail
+    var forEachCalcFunction = function (lineItem) {
+      var extPrice = lineItem.get('extendedPrice') || 0,
+        quantity = lineItem.get("quantity") || 0;
+
+      subtotals.push(extPrice);
+      taxDetails = taxDetails.concat(lineItem.taxDetail);
+    };
+
+    _.each(model.get('lineItems').models, forEachCalcFunction);
+
+    // Add freight taxes to the mix
+    taxDetails = taxDetails.concat(model.freightTaxDetail);
+
+    // Total taxes
+    // First group amounts by tax code
+    taxCodes = _.groupBy(taxDetails, function (detail) {
+      return detail.taxCode.id;
+    });
+
+    // Loop through each tax code group and subtotal
+    _.each(taxCodes, function (group) {
+      var taxes = [],
+        subtotal;
+
+      // Collect array of taxes
+      _.each(group, function (detail) {
+        taxes.push(detail.tax);
+      });
+
+      // Subtotal first to make sure we round by subtotal
+      subtotal = add(taxes, 6);
+
+      // Now add to tax grand total
+      taxTotal = add(taxTotal, subtotal, scale);
+    });
+
+    // Totaling calculations
+    subtotal = add(subtotals, scale);
+    subtotals = subtotals.concat([miscCharge, taxTotal]);
+    total = add(subtotals, scale);
+
+    // Set values
+    model.set("subtotal", subtotal);
+    model.set("taxTotal", taxTotal);
+    model.set("total", total);
+  };
+
+
+
   /**
     @class
 
@@ -241,11 +309,7 @@ white:true*/
     },
 
     calculateTotals: function () {
-      var subtotal = _.reduce(this.get("lineItems").models, function (memo, lineModel) {
-        return memo + lineModel.get("extendedPrice");
-      }, 0);
-
-      this.set({total: subtotal + this.get("miscCharge") + this.get("taxTotal")});
+      _calculateTotals(this);
     },
 
     calculateTotalTax: function () {
