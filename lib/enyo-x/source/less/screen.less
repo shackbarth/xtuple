@@ -414,40 +414,19 @@ body {
   }
 }
 
-.xv-addresswidget-input-decorator {
+.xv-addresswidget-input-decorator, .xv-addresswidget-combobox-decorator {
   background: @white;
   display: block;
   margin: 4px;
+  .enyo-fittable-columns-layout > * {
+    vertical-align: middle;
+  }
   &.short {
     width: 40%;
   }
 }
-
 .xv-addresswidget-combobox-decorator {
-  background: @white;
-  display: block;
-  margin: 4px;
-  width: 80%;
-  padding-right: 0;
-  .xv-combobox-input {
-    width: 80%;
-  }
-  .xv-combobox {
-    padding: 0;
-    width: 100%;
-  }
-  .enyo-fittable-columns-layout {
-    .icon-sort {
-      padding-top: 2px;
-      padding-left: 30px;
-    }
-    .xv-decorated-label {
-      padding-top: 2px;
-    }
-    .xv-combobox-input {
-      padding-top: 2px;
-    }
-  }
+  width: 60%;
 }
 
 .xv-addresswidget-input {
