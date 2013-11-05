@@ -800,8 +800,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @memberof Invoice.prototype
         @description When allocatedCredit or lineItems exist, currency should become read only.
       */
-      it.skip("When allocatedCredit or lineItems exist, currency should become read only.", function () {
-
+      it("When allocatedCredit or lineItems exist, currency should become read only.", function () {
+        assert.isTrue(invoiceModel.isReadOnly("currency"));
       });
       /**
         @member -
@@ -843,9 +843,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           done();
         }, 1900);
       });
-
-    // XXX TODO
-    /*
 
       /**
         @member -

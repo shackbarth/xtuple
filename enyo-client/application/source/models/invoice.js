@@ -238,16 +238,10 @@ white:true*/
     },
 
     //
-    // Shared code with sales order
-    // temp until we refactor these together
-    //
-    lineItemsDidChange: XM.SalesOrderBase.prototype.lineItemsDidChange,
-
-    //
     // Model-specific functions
     //
     allocatedCreditDidChange: function () {
-      this.setReadOnly("currency", this.get("allocatedCredit"));
+      this.setCurrencyReadOnly();
     },
 
     // Refactor potential: sales_order_base minus shipto stuff minus prospect stuff
@@ -383,6 +377,12 @@ white:true*/
       }
     },
 
+    lineItemsDidChange: function () {
+      var lineItems = this.get("lineItems");
+      this.setCurrencyReadOnly();
+      this.setReadOnly("customer", lineItems.length > 0);
+    },
+
     /**
       Re-evaluate taxes for all line items
     */
@@ -390,6 +390,16 @@ white:true*/
       _.each(this.get("lineItems").models, function (lineItem) {
         lineItem.calculateTax();
       });
+    },
+
+    /**
+      Set the currency read-only if there is allocated credit OR line items.
+      I believe SalesOrderBase has a bug in not considering both these
+      conditions at the same time.
+    */
+    setCurrencyReadOnly: function () {
+      var lineItems = this.get("lineItems");
+      this.setReadOnly("currency", lineItems.length > 0 || this.get("allocatedCredit"));
     },
 
     statusDidChange: function () {
