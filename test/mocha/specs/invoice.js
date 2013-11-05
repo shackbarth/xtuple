@@ -792,8 +792,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @memberof Invoice.prototype
         @description Balance should be recalculated when total, allocatedCredit, or outstandingCredit are changed.
       */
-      it.skip("Balance should be recalculated when total, allocatedCredit, or outstandingCredit are changed", function () {
-
+      it("Balance should be recalculated when total, allocatedCredit, or outstandingCredit are changed", function () {
+        assert.equal(invoiceModel.get("balance"), 0);
       });
       /**
         @member -

@@ -293,7 +293,10 @@ white:true*/
     },
 
     calculateBalance: function () {
-      // TODO
+      var rawBalance = this.get("total") - this.get("allocatedCredit") - this.get("outstandingCredit"),
+        balance = Math.max(0, rawBalance);
+
+      this.set({balance: balance});
     },
 
     calculateOutstandingCredit: function () {
