@@ -305,6 +305,33 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // INVOICE LINE TAX
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceLineTaxListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "parent",
+    orderBy: [
+      {attribute: "uuid"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "taxCode.code"},
+              {kind: "XV.ListAttr", attr: "taxType.name", fit: true, classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "amount"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  // ..........................................................
   // TAX REGISTRATION
   //
 

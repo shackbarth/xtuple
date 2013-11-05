@@ -568,7 +568,8 @@ white:true*/
 
     readOnlyAttributes: [
       "lineNumber",
-      "extendedPrice"
+      "extendedPrice",
+      "taxTotal"
     ],
 
     //

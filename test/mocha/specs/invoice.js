@@ -8,6 +8,8 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 (function () {
   "use strict";
 
+// TODO: core bug: child workspaces aren't responsive to changes in model
+
 // TODO deferred to later sprint:
 // filter invoice list by customer group
 // print invoices (support printing more that 1 on the same screen)
@@ -1049,6 +1051,17 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         // TODO: put under test
         assert.fail();
       });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description A child workspace view should exist called XV.InvoiceLineWorkspace should include:
+          all the attributes on XM.InvoiceLine, item cost and item list price values, and a read only
+          panel that displays a group box of lists of taxes.
+      */
+      it.skip("The invoiceLine child workspace", function () {
+        // TODO: put under test
+        assert.fail();
+      });
 
     });
   };
@@ -1066,10 +1079,6 @@ Should include a panel that displays credit allocations.
 
 
 
-* A child workspace view should exist called XV.InvoiceLineWorkspace should include:
-  > All the attributes on XM.InvoiceLine.
-  > Item cost and item list price values.
-  > A read only panel that displays a group box of lists of taxes.
 
 ***** CHANGES MADE BY BILLING EXTENSION ******
 

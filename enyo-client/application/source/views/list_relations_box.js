@@ -313,6 +313,18 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // INVOICE LINE TAX
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceLineTaxBox",
+    kind: "XV.ListRelationsBox",
+    title: "_taxes".loc(),
+    listRelations: "XV.InvoiceLineTaxListRelations",
+    canOpen: false
+  });
+
+  // ..........................................................
   // ITEM GROUP ITEM
   //
 

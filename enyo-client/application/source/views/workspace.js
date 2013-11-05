@@ -1149,7 +1149,7 @@ strict: false*/
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
           ]}
         ]},
-        {kind: "XV.InvoiceAllocationsBox", attr: "allocations"},
+        {kind: "XV.InvoiceAllocationsBox", attr: "allocations", title: "_allocatedCredit".loc()},
       ]}
     ],
     create: function () {
@@ -1190,6 +1190,7 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
+            {kind: "XV.CheckboxWidget", attr: "isMiscellaneous"},
             {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"},
               name: "itemSiteWidget",
               query: {parameters: [
@@ -1198,6 +1199,18 @@ strict: false*/
               {attribute: "isSold", value: true},
               {attribute: "isActive", value: true}
             ]}},
+            {kind: "XV.SalesPriceWidget", attr: "item.listPrice", label: "_listPrice".loc()},
+            {kind: "XV.SalesPriceWidget", attr: "item.wholesalePrice", label: "_wholesalePrice".loc()},
+            {kind: "XV.InputWidget", attr: "customerPartNumber"},
+            {kind: "XV.InputWidget", attr: "itemNumber"},
+            {kind: "XV.InputWidget", attr: "itemDescription"},
+            {kind: "XV.SalesCategoryPicker", attr: "salesCategory"},
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "pricePanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_price".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "priceGroup",
+              classes: "in-panel", fit: true, components: [
             {kind: "XV.QuantityWidget", attr: "quantity", label: "_ordered".loc()},
             {kind: "XV.QuantityWidget", attr: "billed"},
             {kind: "XV.UnitPicker", name: "quantityUnitPicker",
@@ -1227,11 +1240,12 @@ strict: false*/
               currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
-            {kind: "XV.NumberWidget", attr: "tax"},
+            {kind: "XV.NumberWidget", attr: "taxTotal"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
-        ]}
+        ]},
+        {kind: "XV.InvoiceLineTaxBox", attr: "taxes"}
       ]}
     ],
     create: function () {
