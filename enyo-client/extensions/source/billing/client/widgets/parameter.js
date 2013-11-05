@@ -12,16 +12,32 @@
       defaultParameters: function () {
         return {
           showDebits: true,
-          showCredits: true//,
-          //asOfDate: new Date()
+          showCredits: true,
+          asOfDate: new Date()
         };
       },
       components: [
         {kind: "onyx.GroupboxHeader", content: "_receivable".loc()},
         {name: "number", label: "_number".loc(), attr: "number"},
-        // TODO: as of date
-        //{name: "asOfDate", label: "_asOf".loc(), attr: "documentDate", operator: "<=",
-          //defaultKind: "XV.DateWidget"}
+        {name: "asOfDate", label: "_asOf".loc(), attr: "closeDate", defaultKind: "XV.DateWidget",
+          getParameter: function () {
+            var param;
+            if (this.getValue()) {
+              param = [{
+                attribute: this.getAttr(),
+                operator: '<=',
+                value: this.getValue(),
+                includeNull: true
+              },
+              {
+                attribute: "documentDate",
+                operator: '>=',
+                value: this.getValue()
+              }];
+            }
+            return param;
+          }
+        },
         {kind: "onyx.GroupboxHeader", content: "_show".loc()},
         {name: "showUnposted", label: "_unposted".loc(),
           attr: "isPosted", defaultKind: "XV.CheckboxWidget",

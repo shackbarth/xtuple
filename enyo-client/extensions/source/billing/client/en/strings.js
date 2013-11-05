@@ -9,6 +9,7 @@
     // ********
 
     "_accountsReceivable": "Accounts Receivable",
+    "_asOf": "As Of",
     "_application": "Application",
     "_applications": "Applications",
     "_applyARMemos": "Apply A/R Memos",
