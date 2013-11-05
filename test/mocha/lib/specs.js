@@ -170,6 +170,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     @parameter {String} orderNumber Added by sales extension
     @parameter {Date} orderDate Added by sales extension
     @parameter {InvoiceSalesOrder} salesOrders Added by sales extension
+    @parameter {InvoiceIncident} incidents Added by crm extension
+    @parameter {InvoiceOpportunity} opportunities Added by crm extension
   */
   exports.invoice = {
     recordType: "XM.Invoice",
@@ -204,7 +206,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       "taxTotal", "miscCharge", "total", "balance", "allocations",
       "taxAdjustments", "lineItems", "characteristics", "contacts",
       "accounts", "customers", "files", "urls", "items",
-      "orderNumber", "orderDate", "salesOrders"], // these 3 from sales extension
+      "orderNumber", "orderDate", "salesOrders", // these 3 from sales extension
+      "incidents", "opportunities"], // these 2 from crm
     requiredAttributes: ["number", "invoiceDate", "isPosted", "isVoid",
       "customer", "commission"],
     defaults: {

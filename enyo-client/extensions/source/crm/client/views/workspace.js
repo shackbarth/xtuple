@@ -130,6 +130,16 @@ trailing:true, white:true*/
     XV.appendExtension("XV.IncidentWorkspace", extensions);
 
     // ..........................................................
+    // INVOICE
+    //
+
+    extensions = [
+      {kind: "XV.InvoiceIncidentListRelationsBox", container: "panels", attr: "incidents"},
+      {kind: "XV.InvoiceOpportunityListRelationsBox", container: "panels", attr: "opportunities"},
+    ];
+    XV.appendExtension("XV.InvoiceWorkspace", extensions);
+
+    // ..........................................................
     // OPPORTUNITY
     //
 
@@ -142,7 +152,7 @@ trailing:true, white:true*/
     // ..........................................................
     // QUOTE
     //
-  
+
     extensions = [
       {kind: "XV.OpportunityWidget", container: "settingsGroup", attr: "opportunity"}
     ];
@@ -152,7 +162,7 @@ trailing:true, white:true*/
     // ..........................................................
     // SALES ORDER
     //
-  
+
     extensions = [
       {kind: "XV.OpportunityWidget", container: "settingsGroup", attr: "opportunity"}
     ];

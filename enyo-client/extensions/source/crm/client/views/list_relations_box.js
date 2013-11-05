@@ -78,6 +78,28 @@ trailing:true, white:true*/
     });
 
     // ..........................................................
+    // INVOICE
+    //
+
+    enyo.kind({
+      name: "XV.InvoiceIncidentBox",
+      kind: "XV.ListRelationsBox",
+      parentKey: "invoice",
+      listRelations: "XV.InvoiceIncidentListRelations",
+      title: "_incident".loc(),
+      searchList: "XV.IncidentList"
+    });
+
+    enyo.kind({
+      name: "XV.InvoiceOpportunityBox",
+      kind: "XV.ListRelationsBox",
+      parentKey: "invoice",
+      listRelations: "XV.InvoiceOpportunityListRelations",
+      title: "_opportunity".loc(),
+      searchList: "XV.OpportunityList"
+    });
+
+    // ..........................................................
     // OPPORTUNITY
     //
 
