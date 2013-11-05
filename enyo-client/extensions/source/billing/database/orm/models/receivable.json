@@ -292,7 +292,8 @@
         "name": "customer",
         "toOne": {
           "type": "CustomerRelation",
-          "column": "customer"
+          "column": "customer",
+          "isNested": true
         }
       },
       {
