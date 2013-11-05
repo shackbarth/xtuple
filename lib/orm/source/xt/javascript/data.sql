@@ -1756,7 +1756,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
           /* Remove unprivileged attribute if applicable */
           if (!superUser && attrPriv && attrPriv[prop.name] &&
-            attrPriv[prop.name].view &&
+            (attrPriv[prop.name].view !== undefined) &&
             !this.checkPrivilege(attrPriv[prop.name].view)) {
             delete item[prop.name];
           }
