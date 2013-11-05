@@ -162,6 +162,17 @@ trailing:true, white:true*/
     });
 
     // ..........................................................
+    // INVOICE
+    //
+
+    extensions = [
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "orderNumber"},
+      {kind: "XV.DateWidget", container: "mainGroup", attr: "orderDate"},
+      {kind: "XV.InvoiceSalesOrderListRelationsBox", container: "panels", attr: "salesOrders"}
+    ];
+    XV.appendExtension("XV.InvoiceWorkspace", extensions);
+
+    // ..........................................................
     // OPPORTUNITY
     //
 
@@ -169,7 +180,6 @@ trailing:true, white:true*/
       {kind: "XV.OpportunityQuoteListRelationsBox", container: "panels", attr: "quoteRelations"},
       {kind: "XV.OpportunitySalesOrderListRelationsBox", container: "panels", attr: "salesOrderRelations"}
     ];
-
     XV.appendExtension("XV.OpportunityWorkspace", extensions);
 
   };

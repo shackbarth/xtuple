@@ -8,6 +8,19 @@ trailing:true, white:true*/
   XT.extensions.sales.initListRelationsBoxes = function () {
 
     // ..........................................................
+    // INVOICE SALES ORDER
+    //
+
+    enyo.kind({
+      name: "XV.InvoiceSalesOrderListRelationsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_salesOrders".loc(),
+      parentKey: "invoice",
+      listRelations: "XV.InvoiceSalesOrderListRelations",
+      searchList: "XV.SalesOrderList"
+    });
+
+    // ..........................................................
     // OPPORTUNITY QUOTE
     //
 
@@ -34,7 +47,7 @@ trailing:true, white:true*/
       }
     };
 
-    /** @private 
+    /** @private
       Check to see if account is customer or prospect to determine whether `new` works.
     */
     var _updateButtons = function (isCustomerOnly) {

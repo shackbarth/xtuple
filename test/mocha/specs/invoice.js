@@ -8,12 +8,27 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 (function () {
   "use strict";
 
+// TODO: currency conversion
 // TODO: core bug: child workspaces aren't responsive to changes in model
+// XXX is freight only relevant for inventory?
+// TODO "User requires the OverrideTax privilege to edit the tax type", function () {
+/*
+TODO Should include a panel that displays a group box of lists of taxes separated headers for taxes by line items, freight, and adjustments. Users should be able to add new tax adjustments, and remove tax adjustments for non-posted invoices.
+TODO
+Should include a panel that displays credit allocations.
+    - When clicked a "new" button should allow the user to create a new minimalized version of cash receipt on-the-fly. The cash receipt need only record the amount, currency, document number, document date, distribution date and whether the balance should generate a credit memo or a customer deposit, depending on global customer deposit metrics.
+    - When clicked, an "allocate" button should present a list of open receivables that are credits that can be associated with the invoice.
+    - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
+*/
+// XXX huh? SALES EXTENSION:* XM.InvoiceLine will include: > SalesOrderLine "salesOrderLine"
+// TODO: sales extension order date default today
+
 
 // TODO deferred to later sprint:
 // filter invoice list by customer group
 // print invoices (support printing more that 1 on the same screen)
-
+// inventory extensions
+// manufacturing extensions
 
   var async = require("async"),
     _ = require("underscore"),
@@ -537,11 +552,13 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         @property {Money} total
         @property {Boolean} isPosted
         @property {Boolean} isVoid
+        @property {String} orderNumber Added by sales extension
       */
       it("A model called XM.InvoiceListItem extending XM.Info should exist", function () {
         assert.isFunction(XM.InvoiceListItem);
         var invoiceListItemModel = new XM.InvoiceListItem(),
-          attrs = ["number", "isPrinted", "customer", "invoiceDate", "total", "isPosted", "isVoid"];
+          attrs = ["number", "isPrinted", "customer", "invoiceDate", "total", "isPosted",
+            "isVoid", "orderNumber"];
 
         assert.isTrue(invoiceListItemModel instanceof XM.Info);
         assert.equal(invoiceListItemModel.idAttribute, "number");
@@ -856,8 +873,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
           Sums the sum of each tax code and sets totalTax to the result
       */
       it.skip("has a calculateTax function that works correctly", function () {
-        // TODO: write code
-
+        // TODO: put under test
       });
     });
     describe("Invoice List View", function () {
@@ -1081,17 +1097,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
   };
 /*
 
-***** CHANGES MADE TO CORE APPLICATION ******
-
-
-TODO Should include a panel that displays a group box of lists of taxes separated headers for taxes by line items, freight, and adjustments. Users should be able to add new tax adjustments, and remove tax adjustments for non-posted invoices.
-TODO
-Should include a panel that displays credit allocations.
-    - When clicked a "new" button should allow the user to create a new minimalized version of cash receipt on-the-fly. The cash receipt need only record the amount, currency, document number, document date, distribution date and whether the balance should generate a credit memo or a customer deposit, depending on global customer deposit metrics.
-    - When clicked, an "allocate" button should present a list of open receivables that are credits that can be associated with the invoice.
-    - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
-
-
 ***** CHANGES MADE BY CRM EXTENSION ******
 
 * Nested only models should be created according to convention for many-to-many document associations:
@@ -1104,23 +1109,27 @@ Should include a panel that displays credit allocations.
 
 ***** CHANGES MADE BY SALES EXTENSION ******
 
-
-* XM.InvoiceLine will include:
-  > SalesOrderLine "salesOrderLine"
-
-* XM.InvoiceListItem will include:
-  > String "orderNumber"
-
 * XM.Invoice will include:
-  > String "orderNumber"
-  > Date "orderDate" default today
-  > InvoiceSalesOrder "salesOrders"
   > Money "authorizedCredit" the sum of credit card authorizations in the order currency where:
     - The current_timestamp - authorization date is less than CCValidDays || 7
     - The payment status the cc payment (ccpay) record is authorized ("A")
     - The cc payment record is for an order number = the order number specified on the invoice
 * When currency or invoice date is changed authorized credit should be recalculated.
 * When freight is changed the total should be recalculated.
+
+***** CHANGES MADE BY PROJECT EXTENSION ******
+
+* A nested only model should be created according to convention for many-to-many document associations:
+  > XM.InvoiceProject
+
+* XM.Invoice will include:
+  > ProjectRelation "project"
+  > InvoiceProject "projects"
+
+* When an invoice is loaded where "isPosted" is true, then the following attributes will be made read only:
+  > project
+
+* Add the project widget to the invoice workspace if the "UseProjects" setting is true.
 
 ***** CHANGES MADE BY INVENTORY EXTENSION ******
 
@@ -1225,20 +1234,6 @@ Should include a panel that displays credit allocations.
     - The bill to address should be supplimented with a "Shipto" button that when clicked runs the copyToShipto function ()
     - The copy ship to button should be disabled if the customer does not allow free-form shiptos.
   > The shipto addresses available when searching addresses sholud filter on the addresses associated with the customer's account record by default.
-
-***** CHANGES MADE BY PROJECT EXTENSION ******
-
-* A nested only model should be created according to convention for many-to-many document associations:
-  > XM.InvoiceProject
-
-* XM.Invoice will include:
-  > ProjectRelation "project"
-  > InvoiceProject "projects"
-
-* When an invoice is loaded where "isPosted" is true, then the following attributes will be made read only:
-  > project
-
-* Add the project widget to the invoice workspace if the "UseProjects" setting is true.
 
 ***** CHANGES MADE BY MANUFACTURING EXTENSION ******
 

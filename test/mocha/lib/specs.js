@@ -167,6 +167,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     @parameter {InvoiceFile} files
     @parameter {InvoiceUrl} urls
     @parameter {InvoiceItem} items
+    @parameter {String} orderNumber Added by sales extension
+    @parameter {Date} orderDate Added by sales extension
+    @parameter {InvoiceSalesOrder} salesOrders Added by sales extension
   */
   exports.invoice = {
     recordType: "XM.Invoice",
@@ -200,7 +203,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       "recurringInvoice", "allocatedCredit", "outstandingCredit", "subtotal",
       "taxTotal", "miscCharge", "total", "balance", "allocations",
       "taxAdjustments", "lineItems", "characteristics", "contacts",
-      "accounts", "customers", "files", "urls", "items"],
+      "accounts", "customers", "files", "urls", "items",
+      "orderNumber", "orderDate", "salesOrders"], // these 3 from sales extension
     requiredAttributes: ["number", "invoiceDate", "isPosted", "isVoid",
       "customer", "commission"],
     defaults: {
