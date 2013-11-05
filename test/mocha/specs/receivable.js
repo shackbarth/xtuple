@@ -126,27 +126,20 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           it.skip("When customer is set, the terms, currency, and salesRep should be copied from the customer and commission should be recalculated", function () {
             assert.fail(true, true, "not implemented");
           });
-
           it.skip("When the amount is changed, commission should be recalculated as customer.commission * amount", function () {
             assert.fail(true, true, "not implemented");
           });
-
           it.skip("When the document date or terms is changed, the dueDate sholud be recalculated using the terms 'calculateDueDate' function", function () {
             assert.fail(true, true, "not implemented");
           });
-
           it.skip("When child tax records are added or removed, the taxTotal should be recalculated", function () {
             assert.fail(true, true, "not implemented");
           });
-
           it.skip("XM.Receivable should have an attribute 'taxTotal' which is the calculated sum of taxes", function () {
             assert.fail(true, true, "not implemented");
           });
-
           it.skip("XM.Receivable object can not be created directly", function () {});
-
           it.skip("XM.Receivable object can not be deleted", function () {});
-
           // # HINT: On previous two functions you must 1) insert an aropen record 2) insert tax records 3)
           // run the createarcreditmemo or createardebitmemo function that will process all posting activity.
           // Cross check results on the aropen and aropentax tables with the same transaction performed by the
@@ -155,7 +148,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
            "that accepts a JSON credit memo attributes object, including taxes, and posts it.", function () {});
           it.skip("A dispatchable function should exist on the database called XM.Receivable.createDebitMemo " +
             "that accepts a JSON debit memo attributes object, including taxes, and posts it.", function () {});
-
           it.skip("When save is called on the XM.Receivable model and the status is READY_NEW: ", function () {
             it.skip("If the documentType is XM.Receivable.CREDIT_MEMO then the function XM.Receivable.createCreditMemo " +
               "should be dispatched", function () {
@@ -191,12 +183,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
             XM.ReceivableTax.getAttributeNames()).length, 0);
       });
 
-      it.skip("Can be created, but not updated or deleted", function () {
-        assert.fail(true, true, "not implemented");
-      });
-
       it("Extends XM.Model", function () {
         assert.isTrue(taxModel instanceof XM.Model);
+      });
+
+      it.skip("Can be created, but not updated or deleted", function () {
+        assert.fail(true, true, "not implemented");
       });
     });
 
@@ -326,10 +318,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         " with the appropriate document type preselected.", function () {
           // TODO: smoke test
       });
-
       it.skip("The list should include headers", function () {});
       it.skip("The list should include a footer with a total amount in base currency", function () {});
-
       it.skip("The following action will be included on the list: " +
         "Open Receivable: Only enabled on posted receivables with privileges", function () {
           // open here means "edit"
@@ -410,7 +400,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           "applications",
           "commission"
         ];
-
         // TODO: this doesn't cover money widgets
         var attrs = _.pluck(receivableWorkspace.$, "attr");
         _.each(attributes, function (attr) {
@@ -429,7 +418,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
       });
 
       it.skip("TaxTotal and taxes will be hidden when the receivable is an Invoice type", function () {});
-
       it.skip("A XV.StickyCheckboxWidget should be visible when the model is in a READY_NEW state " +
         "that provides the option to 'Print on Post.'", function () {});
       it.skip("When 'Print on Post' is checked, a standard form should be printed when posting", function () {});

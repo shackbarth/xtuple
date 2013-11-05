@@ -109,7 +109,7 @@ XT.extensions.billing.initReceivableModel = function () {
       var customer = this.get("customer"),
         amount = this.get("amount");
       if (customer) {
-        return customer.get("comission") * amount;
+        return customer.get("commission") * amount;
       }
       return 0;
     },
@@ -145,10 +145,9 @@ XT.extensions.billing.initReceivableModel = function () {
       If the documentType is XM.Receivable.DEBIT_MEMO then dispatch XM.Receivable.createDebitMemo
     */
     save: function (key, value, options) {
+      // TODO: validate
       if (this.getStatus() === XM.Model.READY_NEW) {
         // cannot create a new receivable, dispatch to posts
-
-
         if (this.isCredit()) {
           this.createCreditMemo();
         } else if (this.isDebit()) {

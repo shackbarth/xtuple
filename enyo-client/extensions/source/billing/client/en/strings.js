@@ -34,6 +34,7 @@
     "_nextCashRcptNumber": "Next Cash Receipt",
     "_postMiscInvoices": "Post Invoices",
     "_printInvoices": "Print Invoices",
+    "_printOnPost": "Print on Post",
     "_receivable": "Receivable",
     "_receivables": "Receivables",
     "_recurringInvoiceBuffer": "Recurring Invoice Buffer Days",
