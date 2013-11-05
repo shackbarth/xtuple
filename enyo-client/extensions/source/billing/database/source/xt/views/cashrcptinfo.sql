@@ -3,10 +3,11 @@
  * 
  * Returns a CashReceipt with its appliedAmount and balance pre-calculated.
  */
-select xt.create_view('xt.cashrcpt', $$
+select xt.create_view('xt.cashrcptinfo', $$
 
   select
     cashrcpt_id,
+    cashrcpt_number       as number,
     cashrcpt_docnumber    as docnumber,
     cashrcpt_cust_id      as cust_id,
     cashrcpt_docdate      as docdate,
@@ -16,7 +17,6 @@ select xt.create_view('xt.cashrcpt', $$
     cashrcpt_fundstype    as fundstype,
     cashrcpt_curr_id      as curr_id,
     cashrcpt_curr_rate    as curr_rate,
-    cashrcpt_open         as open,
     cashrcpt_amount       as amount,
     cashrcpt_notes        as notes,
     cashrcpt_posted       as posted,

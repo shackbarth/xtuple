@@ -5,8 +5,9 @@
  */
 select xt.create_view('xt.cashrcpt_receivable', $$
 
-  select
+  select distinct on (aropen_id)
     aropen_id,
+    cashrcpt_id,
     aropen.obj_uuid    as obj_uuid,
     aropen_cust_id     as cust_id,
     aropen_doctype     as doctype,

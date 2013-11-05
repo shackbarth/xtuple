@@ -3,9 +3,16 @@
 
   var lang = XT.stringsFor("en_US", {
 
-    // ********
-    // Labels
-    // ********
+    "_CHECK":             'Check',
+    "_CERTIFIED_CHECK":   'Certified Check',
+    "_CASH":              'Cash',
+    "_MASTERCARD":        'Mastercard',
+    "_VISA":              'Visa',
+    "_AMERICAN_EXPRESS":  'American Express',
+    "_DISCOVER":          'Discover',
+    "_OTHER_CREDIT_CARD": 'Other Credit Card',
+    "_WIRE_TRANSFER":     'Wire Transfer',
+    "_OTHER":             'Other',
 
     "_accountsReceivable": "Accounts Receivable",
     "_application": "Application",

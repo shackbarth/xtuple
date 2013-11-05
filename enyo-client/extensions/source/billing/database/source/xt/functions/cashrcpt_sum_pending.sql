@@ -1,3 +1,6 @@
+/**
+ * Sum the pending cash receipt line amounts
+ */
 create or replace function xt.cashrcpt_sum_pending(cashrcpt) returns numeric stable as $$
 
   select

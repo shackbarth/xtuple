@@ -3,7 +3,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "CashReceipt",
-    "table": "xt.cashrcpt",
+    "table": "xt.cashrcptinfo",
     "idSequenceName": "cashrcpt_cashrcpt_id_seq",
     "isRest": true,
     "lockable": true,
@@ -30,8 +30,16 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "docnumber",
+          "column": "number",
           "isNaturalKey": true
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "docnumber",
+          "required": true
         }
       },
       {
@@ -259,8 +267,7 @@
         "name": "currencyRate",
         "attr": {
           "type": "Number",
-          "column": "curr_rate",
-          "require": true
+          "column": "curr_rate"
         }
       },
       {
@@ -276,7 +283,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "CashReceiptRelation",
-    "table": "cashrcpt",
+    "table": "xt.cashrcptinfo",
     "idSequenceName": "cashrcpt_cashrcpt_id_seq",
     "isRest": true,
     "lockable": true,
@@ -304,15 +311,22 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cashrcpt_docnumber",
+          "column": "number",
           "isNaturalKey": true
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "docnumber"
         }
       },
       {
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "cashrcpt_curr_id",
+          "column": "curr_id",
           "required": true
         }
       },
@@ -320,7 +334,7 @@
         "name": "currencyRate",
         "attr": {
           "type": "Number",
-          "column": "cashrcpt_curr_rate",
+          "column": "curr_rate",
           "required": true
         }
       },
@@ -328,7 +342,7 @@
         "name": "customer",
         "toOne": {
           "type": "CustomerRelation",
-          "column": "cashrcpt_cust_id",
+          "column": "cust_id",
           "required": true
         }
       }
@@ -435,7 +449,7 @@
         "name": "appliedAmount",
         "attr": {
           "type": "Money",
-          "column": "appliedAmount",
+          "column": "applied_amount",
           "required": true
         }
       },
@@ -482,7 +496,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "CashReceiptListItem",
-    "table": "cashrcpt",
+    "table": "xt.cashrcptinfo",
     "isRest": true,
     "comment": "Cash Receipt List Item",
     "isSystem": true,
@@ -507,7 +521,15 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cashrcpt_docnumber",
+          "column": "number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "docnumber",
           "isNaturalKey": true
         }
       },
@@ -515,7 +537,7 @@
         "name": "amount",
         "attr": {
           "type": "Money",
-          "column": "cashrcpt_amount"
+          "column": "amount"
         }
       },
       {
@@ -523,7 +545,7 @@
         "toOne": {
           "isNested": true,
           "type": "CustomerRelation",
-          "column": "cashrcpt_cust_id"
+          "column": "cust_id"
         }
       },
       {
@@ -531,21 +553,14 @@
         "toOne": {
           "isNested": true,
           "type": "Currency",
-          "column": "cashrcpt_curr_id"
+          "column": "curr_id"
         }
       },
       {
         "name": "fundsType",
         "attr": {
           "type": "String",
-          "column": "cashrcpt_fundstype"
-        }
-      },
-      {
-        "name": "documentNumber",
-        "attr": {
-          "type": "String",
-          "column": "cashrcpt_docnumber"
+          "column": "fundstype"
         }
       },
       {
@@ -553,21 +568,21 @@
         "toOne": {
           "isNested": true,
           "type": "BankAccountRelation",
-          "column": "cashrcpt_bankaccnt_id"
+          "column": "bankaccnt_id"
         }
       },
       {
         "name": "distributionDate",
         "attr": {
           "type": "Date",
-          "column": "cashrcpt_distdate"
+          "column": "distdate"
         }
       },
       {
         "name": "posted",
         "attr": {
           "type": "Boolean",
-          "column": "cashrcpt_posted"
+          "column": "posted"
         }
       }
     ]

@@ -11,8 +11,7 @@ select xt.create_view('xt.cashrcptitem_pending', $$
     cashrcptitem_amount   as amount,
     cashrcptitem_discount as discount_amount,
     cashrcpt_curr_id      as curr_id,
-    cashrcpt_curr_rate    as curr_rate,
-
+    cashrcpt_curr_rate    as curr_rate
 
   from
     cashrcptitem

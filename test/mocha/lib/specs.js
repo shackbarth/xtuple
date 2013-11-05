@@ -82,8 +82,7 @@
       'applicationDate', 'isPosted'
     ],
     defaults: {
-      isPosted: false,
-
+      isPosted: false
     },
     privileges: {
       create: 'MaintainCashReceipts',
@@ -93,7 +92,10 @@
     },
     extensions: ["billing"],
     updatableField: 'notes',
-    listKind: 'XV.CashReceiptList'
+    listKind: 'XV.CashReceiptList',
+    createHash: {
+
+    }
   };
 
   exports.currency = {

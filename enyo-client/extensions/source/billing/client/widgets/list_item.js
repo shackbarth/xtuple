@@ -16,13 +16,16 @@ XT.extensions.billing.initSalesCategoryListItem = function () {
   XV.CashReceiptFormatters = {
 
     formatIsPosted: function (inModel, inCell) {
-      inCell.setContent(inModel.get('isPosted') ? 'POSTED' : 'NOT POSTED');
+      var posted = inModel.get('posted');
+      inCell.setContent(posted ? 'POSTED' : 'NOT POSTED');
+      inCell.addRemoveClass('isPosted', posted);
     },
 
     formatFundsType: function (inModel, inCell) {
-      inCell.setContent(XM.FundsType[inModel.get('fundsType')]);
-    }
+      var fundsType = XM.FundsTypes[inModel.get('fundsType')];
 
+      inCell.setContent(('_' + fundsType).loc());
+    }
   };
 
   /**

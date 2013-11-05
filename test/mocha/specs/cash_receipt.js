@@ -153,7 +153,6 @@ describe('Billing', function () {
 
     it('XM.CashReceiptApplyBalanceOptions', function () {
       assert.ok(XM.CashReceiptApplyBalanceOptions);
-      assert.ok(XM.CashReceiptApplyBalanceOptions);
     });
 
     it('status:READY_CLEAN handled by #onReadyClean()', function (done) {
@@ -674,8 +673,10 @@ describe('Billing', function () {
       // * A widget called XV.FundsTypePicker to be used on the workspace should exist that is backed by XM.fundsTypes.
       // * XV.FundsTypePicker should have a published property "allowCreditCards" that defaults to false.
       // * When "allowCreditCards" is false, the picker does not show Mastercard, Visa, American Express and Discover funds types.
-      // * When a XV.FundsTypePicker is created, it should set the "allowCreditCards" property to true if the user has the "ProcessCreditCards" privilege.
-      // * A widget called XV.CashReceiptApplyBalanceOptionsPicker to be used on the workspace should be created that is backed by XM.cashReceiptApplyBalanceOptions
+      // * When a XV.FundsTypePicker is created, it should set the "allowCreditCards" property to true if the user has the
+      //    "ProcessCreditCards" privilege.
+      // * A widget called XV.CashReceiptApplyBalanceOptionsPicker to be used on the workspace should be created that is
+      //    backed by XM.cashReceiptApplyBalanceOptions
       // * XV.CashReceiptApplyBalanceOptionsPicker should be used on the useCustomerDeposit attribute on the cash receipt workspace
       // * XV.CashReceiptApplyBalanceOptionsPicker should only be visible if the setting "EnableCustomerDeposits" is true.
       // * There should be a binding on the cash receipt workspace to monitor when either the distribution date or application date changes and update the label on the XV.CashReceiptApplyBalanceOptionsPicker as follows:

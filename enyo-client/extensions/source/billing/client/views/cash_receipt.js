@@ -9,7 +9,8 @@ XT.extensions.billing.initCashReceiptView = function () {
   XM.CashReceiptView = XM.EnyoView.extend({
 
     events: {
-      'view:notify': 'doNotify'
+      'view:notify': 'doNotify',
+      
     },
 
     item: {
@@ -17,14 +18,14 @@ XT.extensions.billing.initCashReceiptView = function () {
       template: [
         [
           {attr: 'number', colspan: 2},
-          {attr: 'posted', formatter: 'formatIsPosted', colspan: 2},
+          {attr: 'posted', formatter: 'formatIsPosted'},
           {attr: 'amount'},
           {attr: 'distributionDate'}
         ],
         [
           {attr: 'customer.name', colspan: 2},
-          {attr: 'fundsType', formatter: 'formatFundsType', colspan: 2},
-          {attr: 'balance'}
+          {attr: 'fundsType', formatter: 'formatFundsType'},
+          {attr: 'bankAccount.name'}
         ]
       ]
     },
@@ -35,7 +36,7 @@ XT.extensions.billing.initCashReceiptView = function () {
       query: {
         orderBy: [
           {attribute: 'distributionDate', descending: true},
-          {attribute: 'documentNumber'}
+          {attribute: 'number', descending: true}
         ]
       },
       parameters: [

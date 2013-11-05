@@ -1,5 +1,5 @@
 /**
- * Sum receivable applied amounts for a CashReceipt
+ * Sum applied amounts for a CashReceipt
  */
 create or replace function xt.cashrcpt_sum_applied(cashrcpt) returns numeric stable as $$
 

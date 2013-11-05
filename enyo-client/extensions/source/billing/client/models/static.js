@@ -45,7 +45,7 @@ XT.extensions.billing.initStaticModels = function () {
       return _.contains([ 'M', 'V', 'A', 'D', 'R' ], fundsType);
     }
   };
-  XM.FundsTypes = _.extend(_.invert(XM.FundsType));
+  XM.FundsTypes = _.extend(_.invert(XM.FundsTypes));
 
   /**
     * @enum

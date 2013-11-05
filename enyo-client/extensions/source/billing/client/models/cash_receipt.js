@@ -32,7 +32,7 @@ XT.extensions.billing.initCashReceipt = function () {
 
     handlers: {
       'status:READY_CLEAN': 'onReadyClean',
-      'change:appliedAmount': 'updatedBalance',
+      'change:appliedAmount': 'updateBalance',
       'change:amount': 'updateBalance',
       'change:customer': 'customerChanged',
       'change:currency': 'currencyChanged',
@@ -47,6 +47,20 @@ XT.extensions.billing.initCashReceipt = function () {
     distributionDateChanged: function () {
       // TODO update currency rate
       this.dateChanged();
+      this.updateCurrencyRate();
+    },
+
+    /**
+     * Updates the derived appliedAmount value, which is the sum of all line
+     * item applied amounts.
+     */
+    updateAppliedAmount: function () {
+      this.set(
+        'appliedAmount',
+        this.get('lineItems').reduce(function (memo, line) {
+          return memo + line.get('appliedAmount');
+        }, 0)
+      );
     },
 
     /**
@@ -90,11 +104,20 @@ XT.extensions.billing.initCashReceipt = function () {
       this.set({ currency: customer.get('currency') });
     },
 
+    updateCurrencyRate: function () {
+
+    },
+
     /**
      * @listens change:currency
      */
     currencyChanged: function (model, currency) {
-      this.checkCurrency();
+      var that = this;
+      this.checkCurrency(function (valid) {
+        if (valid) {
+          that.updateCurrencyRate();
+        }
+      });
     },
 
     /**
@@ -281,14 +304,17 @@ XT.extensions.billing.initCashReceipt = function () {
         payoff = balance >= (value - (balance * discount)),
 
         /**
-         * As opposted to the discount percentage rate, this is the calculted
-         * quantum of discount which is to be subtracted
+         * As opposted to the discount percentage rate, this is the calculated
+         * quantum of discount which is to be subtracted from the amount.
          */
         discountAmount = XT.math.round(payoff ?
           balance * discount :
           value / (1 - discount),
         XT.MONEY_SCALE),
 
+        /**
+         * Amount to be applied to the receivable
+         */
         applyAmount = XT.math.round(payoff ?
           balance - (balance * discount) :
           value

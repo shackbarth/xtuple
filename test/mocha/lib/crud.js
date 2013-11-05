@@ -407,7 +407,6 @@ var _ = require("underscore"),
     // Step 5: save the data to the database
     //
     if (!data.skipSave) {
-      console.log(data);
       it('can be saved to the database', function (done) {
         this.timeout(10 * 1000);
         save(data, done);
