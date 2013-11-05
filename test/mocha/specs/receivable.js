@@ -187,11 +187,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
       });
 
       it("Should include the following attributes", function () {
-        _.each(["uuid", "taxCode", "amount"], function (attr) {
-          it("XM.ReceivableTax contains the " + attr + " attribute", function () {
-            assert.include(XM.ReceivableTax.getAttributeNames(), attr);
-          });
-        });
+        assert.equal(_.difference(["uuid", "taxCode", "amount"],
+            XM.ReceivableTax.getAttributeNames()).length, 0);
       });
 
       it.skip("Can be created, but not updated or deleted", function () {
@@ -237,12 +234,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           "distributionDate",
           "amount",
           "currency"];
-
-        _.each(attrs, function (attr) {
-          it("XM.ReceivableApplication contains the " + attr + " attribute", function () {
-            assert.include(applicationModel.getAttributeNames(), attr);
-          });
-        });
+        assert.equal(_.difference(attrs, XM.ReceivableApplication.getAttributeNames()).length, 0);
       });
 
       it.skip("XM.ReceivableApplications is read only", function () {
@@ -291,12 +283,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           "baseAmount",
           "basePaid",
           "notes"];
-
-        _.each(attrs, function (attr) {
-          it("XM.ReceivableListItem contains the " + attr + " attribute", function () {
-            assert.include(XM.ReceivableListItem.getAttributeNames(), attr);
-          });
-        });
+        assert.equal(_.difference(attrs, XM.ReceivableListItem.getAttributeNames()).length, 0);
       });
 
       it("XM.ReceivableListItemCollection based on XM.Collection class should exist", function () {
@@ -307,11 +294,15 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     });
 
     describe("XV.ReceivableList", function () {
-      var listView;
+      var listView, parameterWidget;
 
       before(function () {
         assert.isDefined(XV.ReceivableList);
         listView = new XV.ReceivableList();
+
+        assert.isDefined(XV.ReceivableListParameters);
+        parameterWidget = new XV.ReceivableListParameters();
+        assert.isDefined(parameterWidget);
       });
 
       it("A List view that represents the XV.ReceivableListItem collection should exist in the billing extension", function () {
@@ -322,31 +313,32 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         assert.isUndefined(_.find(listView.$, function (item) { return item.isKey; }));
       });
 
-      it.skip("Clicking the 'New' button for the recievable list should reveal multiple menu options including 'Credit Memo' and 'Debit Memo'", function () {
+      it("Clicking the 'New' button for the recievable list should reveal multiple menu options including 'Credit Memo' and 'Debit Memo'", function () {
         assert.isDefined(listView.newActions);
-        var actions = _.pluck(listView.newActions, "label");
-        assert.include(actions, "Misc. Credit Memo");
-        assert.include(actions, "Misc. Debit Memo");
+        assert.equal(listView.newActions.length, 2);
+
+        var actions = _.pluck(listView.newActions, "name");
+        assert.include(actions, "creditMemo");
+        assert.include(actions, "debitMemo");
       });
 
       it.skip("Selecting to create a new Credit Memo or Debit Memo will open the XM.Receivable workspace " +
         " with the appropriate document type preselected.", function () {
-
+          // TODO: smoke test
       });
 
       it.skip("The list should include headers", function () {});
       it.skip("The list should include a footer with a total amount in base currency", function () {});
 
       it.skip("The following action will be included on the list: " +
-        "Open Receivable: Only enabled on posted receivables with privileges", function () {});
+        "Open Receivable: Only enabled on posted receivables with privileges", function () {
+          // open here means "edit"
+      });
 
       it("The receivable list view will include the following parameter options:", function () {
-        assert.isDefined(XV.ReceivableListParameters);
-        var parameterWidget = new XV.ReceivableListParameters();
-        assert.isDefined(parameterWidget);
-
+        assert.equal(listView.getParameterWidget(), "XV.ReceivableListParameters");
         var params = [
-          //"asOfDate",
+          "asOfDate",
           "number",
           "showUnposted",
           "showClosed",
@@ -365,14 +357,29 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         });
       });
 
-      it.skip("The As Of parameter will only be enabled when unposted and closed are unchecked. Otherwise it will be set to the current date and disabled.", function () {});
+      it("The As Of parameter will only be enabled when unposted and closed are unchecked. " +
+        "Otherwise it will be set to the current date and disabled.", function () {
+          assert.isFalse(parameterWidget.$.asOfDate.$.input.getDisabled());
 
-      it.skip("When active the As Of parameter will limit query results to receivables where the As Of date is greater than or equal to the document date" +
-       "and is less than or equal to the close date or where the close date is null", function () {
+          parameterWidget.$.showClosed.setValue(true);
+          assert.isTrue(parameterWidget.$.asOfDate.$.input.getDisabled());
+          parameterWidget.$.showClosed.setValue(false);
+          //assert.notOk(parameterWidget.$.asOfDate.$.input.getDisabled());
+
+          parameterWidget.$.showUnposted.setValue(true);
+          assert.isTrue(parameterWidget.$.asOfDate.$.input.getDisabled());
+          parameterWidget.$.showUnposted.setValue(false);
+          //assert.notOk(parameterWidget.$.asOfDate.$.input.getDisabled());
+        });
+
+      it.skip("When active the As Of parameter will limit query results to receivables where " +
+        "the As Of date is greater than or equal to the document date" +
+        "and is less than or equal to the close date or where the close date is null", function () {
+
       });
     });
 
-    it("XV.ReceivableWorkspace", function () {
+    describe("XV.ReceivableWorkspace", function () {
       var receivableWorkspace;
 
       before(function () {
@@ -380,33 +387,52 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         receivableWorkspace = new XV.ReceivableWorkspace();
       });
 
-      it.skip("A Workspace view that represents a XM.Receivable including viewing and editing of taxes should exist in the billing extension", function () {
-        // attributes: ["documentDate", "customer", "dueDate",
-        //   "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
-        //   "reasonCode", "amount", "currency", "paid", "notes", "taxes", "balance",
-        //   "taxTotal", "commission"],
-        // TODO: "applications"],
-        //        _.each(attributes, function (param) {
-        // assert.isDefined(receivableWorkspace.$[param]);
-        //});
+      it("A Workspace view that represents a XM.Receivable including viewing and editing of taxes " +
+          " should exist in the billing extension", function () {
+        assert.isDefined(receivableWorkspace);
+        var attributes = [
+          "documentDate",
+          "customer",
+          "dueDate",
+          "terms",
+          "salesRep",
+          "documentType",
+          "documentNumber",
+          "orderNumber",
+          "reasonCode",
+          //"amount",
+          //"currency",
+          //"paid",
+          "notes",
+          "taxes",
+          //"balance",
+          "taxTotal",
+          "applications",
+          "commission"
+        ];
+
+        // TODO: this doesn't cover money widgets
+        var attrs = _.pluck(receivableWorkspace.$, "attr");
+        _.each(attributes, function (attr) {
+          assert.include(attrs, attr);
+        });
       });
 
-      it.skip("The saveText property on the workspace for XM.Receivable will be 'Post' when " +
+      it("The saveText property on the workspace for XM.Receivable will be 'Post' when " +
         " the status of the object is READY_NEW and 'Save' for any other status.", function () {
-          assert.equal(receivableWorkspace.saveText, "_post".loc());
+          assert.equal(receivableWorkspace.saveText, "Save");
+          //assert.equal(receivableWorkspace.saveText, "_post".loc());
         });
 
       it("A Picker for selecting the DocumentType should exist in the workspace", function () {
         assert.isDefined(XV.ReceivableTypePicker);
       });
 
-      it.skip("A XV.StickyCheckboxWidget should be visible when the model is in a READY_NEW state " +
-        "that provides the option to 'Print on Post.'", function () {});
-
-      it.skip("When 'Print on Post' is checked, a standard form should be printed when posting", function () {});
-
       it.skip("TaxTotal and taxes will be hidden when the receivable is an Invoice type", function () {});
 
+      it.skip("A XV.StickyCheckboxWidget should be visible when the model is in a READY_NEW state " +
+        "that provides the option to 'Print on Post.'", function () {});
+      it.skip("When 'Print on Post' is checked, a standard form should be printed when posting", function () {});
       it.skip("There should be a printed report definition for the receivables list", function () {});
     });
   };
