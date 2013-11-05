@@ -1062,6 +1062,20 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         // TODO: put under test
         assert.fail();
       });
+    });
+    describe("Sales Extension", function () {
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description If the sales extension is installed you can link invoices to sales orders
+          all the attributes on XM.InvoiceLine, item cost and item list price values, and a read only
+          panel that displays a group box of lists of taxes.
+      */
+      it("XM.InvoiceSalesOrder", function () {
+        assert.isFunction(XM.InvoiceSalesOrder);
+        assert.isTrue(XM.InvoiceSalesOrder.prototype.isDocumentAssignment);
+      });
+
 
     });
   };
@@ -1090,8 +1104,6 @@ Should include a panel that displays credit allocations.
 
 ***** CHANGES MADE BY SALES EXTENSION ******
 
-* A nested only model should be created according to convention for many-to-many document associations:
-  > XM.InvoiceSalesOrder
 
 * XM.InvoiceLine will include:
   > SalesOrderLine "salesOrderLine"
