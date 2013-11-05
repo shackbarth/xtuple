@@ -1207,7 +1207,7 @@ strict: false*/
             {kind: "XV.SalesCategoryPicker", attr: "salesCategory"},
           ]}
         ]},
-        {kind: "XV.Groupbox", name: "pricePanel", components: [
+        {kind: "XV.Groupbox", name: "pricePanel", title: "_price".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_price".loc()},
           {kind: "XV.ScrollableGroupbox", name: "priceGroup",
               classes: "in-panel", fit: true, components: [

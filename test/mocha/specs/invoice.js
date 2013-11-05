@@ -1078,14 +1078,6 @@ Should include a panel that displays credit allocations.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
 
 
-
-
-***** CHANGES MADE BY BILLING EXTENSION ******
-
-
-* Add "Invoices" list to Billing module
-* Add "Invoices" list to Sales modules
-
 ***** CHANGES MADE BY CRM EXTENSION ******
 
 * Nested only models should be created according to convention for many-to-many document associations:
