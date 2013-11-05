@@ -20,9 +20,11 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
   var invoiceModel,
     lineModel,
     allocationModel,
+    invoiceTaxModel,
     usd,
     gbp,
     nctax,
+    nctaxCode,
     ttoys,
     vcol,
     bpaint,
@@ -441,6 +443,18 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
             });
           },
           function (done) {
+            fetchModel(nctaxCode, XM.TaxCode, {code: "NC TAX-A"}, function (err, model) {
+              nctaxCode = model;
+              done();
+            });
+          },
+          function (done) {
+            initializeModel(invoiceTaxModel, XM.InvoiceTax, function (err, model) {
+              invoiceTaxModel = model;
+              done();
+            });
+          },
+          function (done) {
             initializeModel(allocationModel, XM.InvoiceAllocation, function (err, model) {
               allocationModel = model;
               done();
@@ -721,7 +735,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @memberof Invoice.prototype
         @description TotalTax should be recalculated when taxZone changes or taxAdjustments are added or removed.
       */
-      it("TotalTax should be recalculated when taxZone changes or taxAdjustments are added or removed.", function (done) {
+      it("TotalTax should be recalculated when taxZone changes.", function (done) {
         var totalChanged = function () {
           invoiceModel.off("change:total", totalChanged);
           assert.equal(invoiceModel.get("taxTotal"), 10.88);
@@ -732,6 +746,18 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.equal(invoiceModel.get("taxTotal"), 9.89);
         invoiceModel.on("change:total", totalChanged);
         invoiceModel.set({taxZone: nctax});
+      });
+      it("TotalTax should be recalculated when taxAdjustments are added or removed.", function (done) {
+        var totalChanged = function () {
+          invoiceModel.off("change:total", totalChanged);
+          assert.equal(invoiceModel.get("taxTotal"), 20.88);
+          assert.equal(invoiceModel.get("total"), 258.70);
+          done();
+        };
+
+        invoiceTaxModel.set({taxCode: nctaxCode, amount: 10.00});
+        invoiceModel.on("change:total", totalChanged);
+        invoiceModel.get("taxAdjustments").add(invoiceTaxModel);
       });
       /**
         @member -

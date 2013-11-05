@@ -114,7 +114,7 @@ white:true*/
       taxCodes;
 
     // Collect line item detail
-    var forEachCalcFunction = function (lineItem) {
+    var forEachLineItemFunction = function (lineItem) {
       var extPrice = lineItem.get('extendedPrice') || 0,
         quantity = lineItem.get("quantity") || 0;
 
@@ -122,7 +122,13 @@ white:true*/
       taxDetails = taxDetails.concat(lineItem.get("taxes").models);
     };
 
-    _.each(model.get('lineItems').models, forEachCalcFunction);
+    // Collect tax adjustment detail
+    var forEachTaxAdjustmentFunction = function (taxAdjustment) {
+      taxDetails = taxDetails.concat(taxAdjustment);
+    };
+
+    _.each(model.get('lineItems').models, forEachLineItemFunction);
+    _.each(model.get('taxAdjustments').models, forEachTaxAdjustmentFunction);
 
     // Total taxes
     // First group amounts by tax code
@@ -224,7 +230,7 @@ white:true*/
       this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
       this.on("change:invoiceDate add:allocations remove:allocations", this.calculateAllocatedCredit);
       this.on("change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
-      //this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
+      this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
       this.on("change:taxZone", this.recalculateTaxes);
       this.on("change:total change:allocatedCredit change:outstandingCredit", this.calculateBalance);
       this.on('allocatedCredit', this.allocatedCreditDidChange);
@@ -311,10 +317,9 @@ white:true*/
       _calculateTotals(this);
     },
 
+    // XXX just calculate all the totals
     calculateTotalTax: function () {
       this.calculateTotals();
-      console.log("calculate total tax");
-      // TODO
     },
 
     // Refactor potential: taken largely from sales_order_base
