@@ -2,32 +2,26 @@
   Styles related to pickers, combo boxes, and relation widgets
 */
 
-/* Picker */
-
+.xv-pickerwidget {
+  background-color: @white;
+}
 .onyx-picker-decorator {
   .onyx-button {
     padding: 12px 8px 12px 8px;
   }
 }
-
 .onyx-picker {
   .onyx-menu-item {
     text-align: left;
     text-overflow: ellipsis;
   }
 }
-
-.xv-pickerwidget {
-  background-color: @white;
-}
-
 .picker-icon {
   position: absolute;
   right: 0;
   margin: 0 10px 0 2px;
   color: @black;
 }
-
 .xv-picker-button {
   text-align: left;
 
@@ -39,7 +33,6 @@
     color: @dim-gray;
   }
 }
-
 .xv-picker-label {
   color: @black;
   padding: 20px 8px 8px 8px;
@@ -50,32 +43,13 @@
   }
 }
 
-/* Combo Box */
 .xv-combobox {
-  .enyo-fittable-columns-layout {
-    .icon-sort {
-      display: inline-block;
-      padding-top: 10px;
-      color: @slate-blue;
-    }
-    .xv-decorated-label {
-      padding-top: 10px;
-    }
-    .xv-combobox-input {
-      padding-top: 10px;
-      padding-right: 4px;
+  .onyx-input-decorator {
+    input {
+      width: 145px;
     }
   }
 }
-
-.xv-combobox-input {
-  font-size: medium;
-  border: 0;
-  display: inline-block;
-  outline: none;
-  width: 125px;
-}
-
 .xv-combobox-note {
   padding: 14px 3px 8px 3px;
   text-align: left;
