@@ -566,7 +566,10 @@ white:true*/
 
     parentKey: "invoice",
 
-    readOnlyAttributes: ["lineNumber"],
+    readOnlyAttributes: [
+      "lineNumber",
+      "extendedPrice"
+    ],
 
     //
     // Core functions
@@ -575,7 +578,7 @@ white:true*/
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on("change:item", this.itemDidChange);
       this.on("change:billed", this.billedDidChange);
-      //this.on('change:price', this.priceDidChange);
+      this.on('change:price', this.priceDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
@@ -787,9 +790,9 @@ white:true*/
       }
     },
 
-    //priceDidChange: function () {
-    //  this.calculateExtendedPrice();
-    //},
+    priceDidChange: function () {
+      this.calculateExtendedPrice();
+    },
 
     // Refactor potential: this is like the one on sales order line base, but
     // checks billed as well, and validates isMiscellaneous

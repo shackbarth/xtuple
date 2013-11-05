@@ -1,8 +1,9 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XV:true, XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
-setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, beforeEach:true, before:true */
+/*global XV:true, XT:true, _:true, console:true, XM:true, Backbone:true,
+require:true, assert:true, setTimeout:true, clearTimeout:true, exports:true,
+it:true, describe:true, beforeEach:true, before:true, enyo:true */
 
 (function () {
   "use strict";
@@ -1012,6 +1013,22 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           .prototype.model.prototype.recordType;
         assert.equal(attrModel, widgetModel);
       });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Supports grid-entry of line items on desktop browsers.
+      */
+      it("Should include line items views where a grid box is used for non-touch devices " +
+          "and a list relation editor for touch devices.", function () {
+        var workspace;
+
+        enyo.platform.touch = true;
+        workspace = new XV.InvoiceWorkspace();
+        assert.equal(workspace.$.lineItemsPanel.children[0].kind, "XV.InvoiceLineItemBox");
+        enyo.platform.touch = false;
+        workspace = new XV.InvoiceWorkspace();
+        assert.equal(workspace.$.lineItemsPanel.children[0].kind, "XV.InvoiceLineItemGridBox");
+      });
 
 
     });
@@ -1022,7 +1039,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
 
 * A workspace view should exist called XV.InvoiceWorkspace
-  > Should include line items views where a grid box is used for non-touch devices and a list relation editor for touch devices.
   > Should include a panel that displays a group box of lists of taxes separated headers for taxes by line items, freight, and adjustments. Users should be able to add new tax adjustments, and remove tax adjustments for non-posted invoices.
   > Should include a panel that displays credit allocations.
     - When clicked a "new" button should allow the user to create a new minimalized version of cash receipt on-the-fly. The cash receipt need only record the amount, currency, document number, document date, distribution date and whether the balance should generate a credit memo or a customer deposit, depending on global customer deposit metrics.

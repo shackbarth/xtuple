@@ -1194,8 +1194,8 @@ strict: false*/
               {attribute: "isSold", value: true},
               {attribute: "isActive", value: true}
             ]}},
-            {kind: "XV.QuantityWidget", attr: "quantity", label: "_quantityOrdered".loc()},
-            {kind: "XV.QuantityWidget", attr: "billed", label: "_quantityBilled".loc()},
+            {kind: "XV.QuantityWidget", attr: "quantity", label: "_ordered".loc()},
+            {kind: "XV.QuantityWidget", attr: "billed"},
             {kind: "XV.UnitPicker", name: "quantityUnitPicker",
               attr: "quantityUnit"},
             {kind: "XV.MoneyWidget", attr:

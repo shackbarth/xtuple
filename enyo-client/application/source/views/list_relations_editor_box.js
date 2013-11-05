@@ -141,6 +141,49 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // INVOICE LINE
+  //
+  enyo.kind({
+    name: "XV.InvoiceLineItemEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.NumberWidget", attr: "lineNumber"},
+        {kind: "XV.ItemSiteWidget",
+          attr: {item: "item", site: "site"},
+          name: "itemSiteWidget"},
+        {kind: "XV.QuantityWidget", attr: "quantity", name: "quantityWidget"},
+        {kind: "XV.QuantityWidget", attr: "billed", name: "billedWidget"},
+        {kind: "XV.UnitCombobox", attr: "quantityUnit", showLabel: true,
+          name: "quantityUnitPicker"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "price", currency: ""},
+          label: "_price".loc(), currencyDisabled: true,
+          scale: XT.SALES_PRICE_SCALE},
+        {kind: "XV.UnitPicker", attr: "priceUnit",
+          name: "priceUnitPicker"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "extendedPrice", currency: ""},
+          label: "_extendedPrice".loc(), currencyDisabled: true,
+          scale: XT.EXTENDED_PRICE_SCALE},
+      ]}
+    ]
+  });
+  enyo.kind({
+    name: "XV.InvoiceLineItemBox",
+    kind: "XV.ListRelationsEditorBox",
+    childWorkspace: "XV.InvoiceLineWorkspace",
+    classes: "xv-short-relations-box",
+    title: "_lineItems".loc(),
+    editor: "XV.InvoiceLineItemEditor",
+    parentKey: "invoice",
+    listRelations: "XV.InvoiceLineItemListRelations",
+    fitButtons: false
+  });
+
+
+  // ..........................................................
   // TAX REGISTRATIONS
   //
   enyo.kind({
@@ -431,36 +474,21 @@ trailing:true, white:true*/
     name: "XV.QuoteLineItemBox",
     kind: "XV.ListRelationsEditorBox",
     classes: "xv-list-relations-box",
-    events: {
-      onChildWorkspace: ""
-    },
     title: "_lineItems".loc(),
     editor: "XV.QuoteLineItemEditor",
     parentKey: "quote",
     listRelations: "XV.QuoteLineItemListRelations",
+    childWorkspace: "XV.QuoteLineWorkspace",
     fitButtons: false,
 
     create: function () {
       this.inherited(arguments);
-      // create extra "expand" button for sales line items
-      this.$.navigationButtonPanel.createComponents([
-        {kind: "onyx.Button", content: "_expand".loc(),
-            name: "expandButton", ontap: "launchWorkspace",
-            classes: "xv-groupbox-button-right",
-            container: this.$.navigationButtonPanel
-        }
-      ], {owner: this});
-
       // create summary panel with totals
       this.createComponents([
         {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
       ], {owner: this});
     },
 
-    disabledChanged: function () {
-      this.inherited(arguments);
-      this.$.expandButton.setDisabled(this.getDisabled());
-    },
     /**
       Set the current model into Summary Panel and set styling for done button
     */
@@ -470,17 +498,6 @@ trailing:true, white:true*/
       this.$.summaryPanel.setValue(model);
       // change the styling of the last button to make room for the new button
       this.$.doneButton.setClasses("xv-groupbox-button-center");
-    },
-
-    launchWorkspace: function (inSender, inEvent) {
-      var index = Number(this.$.list.getFirstSelected());
-      this.doChildWorkspace({
-        workspace: "XV.QuoteLineWorkspace",
-        collection: this.getValue(),
-        index: index,
-        listRelations: this.$.list
-      });
-      return true;
     }
   });
 
@@ -490,17 +507,7 @@ trailing:true, white:true*/
     editor: "XV.SalesOrderLineItemEditor",
     parentKey: "salesOrder",
     listRelations: "XV.SalesOrderLineItemListRelations",
-
-    launchWorkspace: function (inSender, inEvent) {
-      var index = Number(this.$.list.getFirstSelected());
-      this.doChildWorkspace({
-        workspace: "XV.SalesOrderLineWorkspace",
-        collection: this.getValue(),
-        index: index,
-        listRelations: this.$.list
-      });
-      return true;
-    }
+    childWorkspace: "XV.SalesOrderLineWorkspace",
   });
 
   enyo.kind({

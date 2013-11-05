@@ -236,6 +236,46 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // INVOICE LINE
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceLineItemListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "invoice",
+    orderBy: [
+      {attribute: "lineNumber"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "lineNumber", isKey: true}
+              ]}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "item.number"},
+              {kind: "XV.ListAttr", attr: "site.code"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "quantity", formatter: "formatQuantity"},
+            {kind: "XV.ListAttr", attr: "billed", formatter: "formatBilled"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatBilled: function (value) {
+      return "_billed".loc() + ": " + value;
+    },
+    formatQuantity: function (value) {
+      return "_quantity".loc() + ": " + value;
+    },
+  });
+
+  // ..........................................................
   // TAX REGISTRATION
   //
 
