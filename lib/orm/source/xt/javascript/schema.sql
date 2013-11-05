@@ -276,7 +276,8 @@ select xt.install_js('XT','Schema','xtuple', $$
       return false;
     }
 
-    var columns = [],
+    var attrPriv = orm.privileges && orm.privileges.attribute ? orm.privileges.attribute : false,
+        columns = [],
         ext = {},
         nkey = XT.Orm.naturalKey(orm),
         pkey = XT.Orm.primaryKey(orm),
@@ -312,6 +313,14 @@ select xt.install_js('XT','Schema','xtuple', $$
 
       /* Skip this property if it has a attr.value. Those are just used for relation associaiton queries. */
       if (orm.properties[i].attr && orm.properties[i].attr.value) {
+        continue;
+      }
+
+      /* Skip this property if it's ORM column priv is set to false. */
+      /* TODO: Not checking for superuser here. This is more to just check if the column is set to false. */
+      if (attrPriv && attrPriv[orm.properties[i].name] &&
+        (attrPriv[orm.properties[i].name].view !== undefined) &&
+        !XT.Data.checkPrivilege(attrPriv[orm.properties[i].name].view)) {
         continue;
       }
 
