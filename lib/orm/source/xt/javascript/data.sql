@@ -490,7 +490,6 @@ select xt.install_js('XT','Data','xtuple', $$
                 }
               }
 
-              //return ret.toLowerCase();
               return ret;
             };
 

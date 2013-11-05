@@ -24,6 +24,11 @@
         "properties":[
           "crmaccountUsers.crmacctUsernames"
         ]
+      },
+      "attribute": {
+        "crmaccountUsers": {
+          "view": false
+        }
       }
     },
     "properties": [
