@@ -452,5 +452,64 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "ReceivableRelation",
+    "table": "xt.aropeninfo",
+    "idSequenceName": "aropen_aropen_id_seq",
+    "isRest": true,
+    "lockable": true,
+    "isNestedOnly": true,
+    "isSystem": true,
+    "comment": "Receivable Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAROpenItems",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "aropen_cust_id"
+        }
+      },
+      {
+        "name": "documentType",
+        "attr": {
+          "type": "String",
+          "column": "aropen_doctype"
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "aropen_docnumber"
+        }
+      }
+    ]
   }
 ]

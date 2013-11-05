@@ -197,11 +197,9 @@
         query: _.clone(XM.CurrencyRate.buildQuery(asof)),
         success: function (collection) {
           if (collection.length > 0) {
-            onRatesSuccess();
+            return onRatesSuccess();
           }
-          else if (_.isFunction(options.error)) {
-            options.error();
-          }
+          onRatesError();
         },
         error: onRatesError
       });

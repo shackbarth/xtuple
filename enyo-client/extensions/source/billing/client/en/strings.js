@@ -17,7 +17,7 @@
     "_billingDescription": "Corporate Relationship Management",
     "_cashReceipt": "Cash Receipt",
     "_cashReceipts": "Cash Receipts",
-    "_cashReceiptCurrencyMismatchWarning": "The currencies for this Cash Receipt and it's associated Bank Account to not match",
+    "_cashReceiptCurrencyMismatchWarning": "Cash Receipt currency {cr_currency} does not match Bank Account Currency {ba_currency}",
     "_createNewCurrency": "Create New Currency",
     "_creditTaxDiscount": "Credit Taxes for Early Payment Discounts",
     "_customerDeposit": "Customer Deposit",

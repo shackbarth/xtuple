@@ -180,7 +180,7 @@
         }
       },
       {
-        "name": "discount",
+        "name": "discountAmount",
         "attr": {
           "type": "Money",
           "column": "cashrcptitem_discount",
@@ -449,7 +449,7 @@
         }
       },
       {
-        "name": "pendingCashReceipts",
+        "name": "pendingApplications",
         "toMany": {
           "type": "CashReceiptLinePending"
         }

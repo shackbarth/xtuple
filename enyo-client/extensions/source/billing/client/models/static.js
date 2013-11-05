@@ -35,7 +35,15 @@ XT.extensions.billing.initStaticModels = function () {
     DISCOVER:          'D',
     OTHER_CREDIT_CARD: 'R',
     WIRE_TRANSFER:     'W',
-    OTHER:             'O'
+    OTHER:             'O',
+
+    /**
+     * Returns true if the given fundsType is a credit card type, false
+     * otherwise
+     */
+    isCreditCard: function (fundsType) {
+      return _.contains([ 'M', 'V', 'A', 'D', 'R' ], fundsType);
+    }
   };
   XM.FundsType = _.extend(_.invert(XM.FundsType));
 

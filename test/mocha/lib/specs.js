@@ -64,8 +64,7 @@
     additionalTests: require("../specs/configure_billing").additionalTests
   };
 
-  exports.cash_receipt = {
-    name: 'cash_receipt',
+  exports.cashReceipt = {
     recordType: 'XM.CashReceipt',
     collectionType: 'XM.CashReceiptCollection',
     cacheName: null,
@@ -78,23 +77,23 @@
       'documentNumber', 'documentDate', 'bankAccount', 'distributionDate',
       'applicationDate', 'notes', 'isPosted', 'lineItems'
     ],
+    requiredAttributes: [
+      'customer', 'amount', 'currency', 'currencyRatio', 'bankAccount',
+      'applicationDate', 'isPosted'
+    ],
     defaults: {
-      isPosted: false
+      isPosted: false,
+
     },
     privileges: {
       create: 'MaintainCashReceipts',
-      read: 'ViewCashReceipts',
+      read: true,
       update: 'MaintainCashReceipts',
       delete: 'MaintainCashReceipts'
     },
     extensions: ["billing"],
     updatableField: 'notes',
-    listKind: 'XV.CashReceiptList',
-    /*
-    createHash: {
-
-    }
-    */
+    listKind: 'XV.CashReceiptList'
   };
 
   exports.currency = {
