@@ -369,7 +369,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
 
       it.skip("When active the As Of parameter will limit query results to receivables where the As Of date is greater than or equal to the document date" +
        "and is less than or equal to the close date or where the close date is null", function () {
-        //HINT: https://github.com/xtuple/xtuple/blob/master/lib/backbone-x/source/collection.js#L63
       });
     });
 

@@ -53,16 +53,15 @@
             return param;
           }
         },
-        // TODO: Look at close date
         {name: "showClosed", label: "_closed".loc(),
-          attr: "isPosted", defaultKind: "XV.CheckboxWidget",
+          attr: "closeDate", defaultKind: "XV.CheckboxWidget",
           getParameter: function () {
             var param;
             if (!this.getValue()) {
               param = {
                 attribute: this.getAttr(),
-                operator: '=',
-                value: false
+                operator: '!=',
+                value: null
               };
             }
             return param;
@@ -114,8 +113,18 @@
           defaultKind: "XV.DateWidget"},
         {name: "toDocDate", label: "_toDate".loc(), attr: "documentDate", operator: "<=",
           defaultKind: "XV.DateWidget"}
-      ]
+      ],
+      /**
+        The As Of parameter will only be enabled when unposted and closed are unchecked.
+        Otherwise it will be set to the current date and disabled.
+      */
+      parameterChanged: function (inSender, inEvent) {
+        if (inSender.name === "showClosed" || inSender.name === "showUnposted") {
+          // both must be unchecked for enabled date
+          var unchecked = this.$.showClosed.getValue() || this.$.showUnposted.getValue();
+          this.$.asOfDate.$.input.setDisabled(unchecked);
+        }
+      },
     });
   };
-
 }());
