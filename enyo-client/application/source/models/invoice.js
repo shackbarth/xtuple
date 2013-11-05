@@ -119,7 +119,6 @@ white:true*/
         quantity = lineItem.get("quantity") || 0;
 
       subtotals.push(extPrice);
-      //console.log("taxes are", lineItem.get("taxes"));
       taxDetails = taxDetails.concat(lineItem.get("taxes").models);
     };
 
@@ -129,7 +128,6 @@ white:true*/
     // First group amounts by tax code
     //console.log(JSON.stringify(taxDetails));
     taxCodes = _.groupBy(taxDetails, function (detail) {
-      //console.log("detail is", detail.toJSON());
       return detail.getValue("taxCode.code");
     });
 
@@ -140,7 +138,7 @@ white:true*/
 
       // Collect array of taxes
       _.each(group, function (detail) {
-        taxes.push(detail.tax);
+        taxes.push(detail.get("amount"));
       });
 
       // Subtotal first to make sure we round by subtotal
@@ -155,7 +153,6 @@ white:true*/
     subtotals = subtotals.concat([miscCharge, taxTotal]);
     total = add(subtotals, scale);
 
-    console.log("going to set total to", total);
     // Set values
     model.set("subtotal", subtotal);
     model.set("taxTotal", taxTotal);
