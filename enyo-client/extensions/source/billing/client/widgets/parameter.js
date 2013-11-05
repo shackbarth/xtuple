@@ -37,20 +37,21 @@
             return param;
           }
         },
-        // {name: "showClosed", label: "_closed".loc(),
-        //   attr: "isPosted", defaultKind: "XV.CheckboxWidget",
-        //   getParameter: function () {
-        //     var param;
-        //     if (!this.getValue()) {
-        //       param = {
-        //         attribute: this.getAttr(),
-        //         operator: '=',
-        //         value: false
-        //       };
-        //     }
-        //     return param;
-        //   }
-        // },
+        // TODO: Look at close date
+        {name: "showClosed", label: "_closed".loc(),
+          attr: "isPosted", defaultKind: "XV.CheckboxWidget",
+          getParameter: function () {
+            var param;
+            if (!this.getValue()) {
+              param = {
+                attribute: this.getAttr(),
+                operator: '=',
+                value: false
+              };
+            }
+            return param;
+          }
+        },
         {name: "showDebits", label: "_debits".loc(),
           attr: "documentType", defaultKind: "XV.CheckboxWidget",
           getParameter: function () {

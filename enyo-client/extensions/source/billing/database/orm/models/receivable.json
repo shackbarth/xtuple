@@ -311,6 +311,13 @@
         }
       },
       {
+        "name": "closeDate",
+        "attr": {
+          "type": "Date",
+          "column": "close_date"
+        }
+      },
+      {
         "name": "amount",
         "attr": {
           "type": "Money",
