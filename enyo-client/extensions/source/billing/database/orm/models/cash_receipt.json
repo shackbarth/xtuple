@@ -3,7 +3,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "CashReceipt",
-    "table": "cashrcpt",
+    "table": "xt.cashrcpt",
     "idSequenceName": "cashrcpt_cashrcpt_id_seq",
     "isRest": true,
     "lockable": true,
@@ -30,7 +30,7 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cashrcpt_docnumber",
+          "column": "docnumber",
           "isNaturalKey": true
         }
       },
@@ -39,7 +39,7 @@
         "toOne": {
           "isNested": true,
           "type": "SalesCustomer",
-          "column": "cashrcpt_cust_id",
+          "column": "cust_id",
           "required": true
         }
       },
@@ -47,23 +47,37 @@
         "name": "amount",
         "attr": {
           "type": "Money",
-          "column": "cashrcpt_amount",
+          "column": "amount",
           "required": true
+        }
+      },
+      {
+        "name": "appliedAmount",
+        "attr": {
+          "type": "Money",
+          "column": "applied_amount"
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Money",
+          "column": "balance"
         }
       },
       {
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "cashrcpt_curr_id",
+          "column": "curr_id",
           "required": true
         }
       },
       {
-        "name": "currencyRatio",
+        "name": "currencyRate",
         "attr": {
           "type": "Number",
-          "column": "cashrcpt_curr_rate",
+          "column": "curr_rate",
           "required": true
         }
       },
@@ -71,7 +85,7 @@
         "name": "fundsType",
         "attr": {
           "type": "String",
-          "column": "cashrcpt_fundstype",
+          "column": "fundstype",
           "required": true
         }
       },
@@ -79,14 +93,14 @@
         "name": "documentDate",
         "attr": {
           "type": "Date",
-          "column": "cashrcpt_docdate"
+          "column": "docdate"
         }
       },
       {
         "name": "bankAccount",
         "toOne": {
           "type": "BankAccountRelation",
-          "column": "cashrcpt_bankaccnt_id",
+          "column": "bankaccnt_id",
           "required": true
         }
       },
@@ -94,29 +108,29 @@
         "name": "distributionDate",
         "attr": {
           "type": "Date",
-          "column": "cashrcpt_distdate"
+          "column": "distdate"
         }
       },
       {
         "name": "notes",
         "attr": {
           "type": "String",
-          "column": "cashrcpt_notes"
+          "column": "notes"
         }
       },
       {
         "name": "applicationDate",
         "attr": {
           "type": "Date",
-          "column": "cashrcpt_applydate",
+          "column": "applydate",
           "required": true
         }
       },
       {
-        "name": "isPosted",
+        "name": "posted",
         "attr": {
           "type": "Boolean",
-          "column": "cashrcpt_posted",
+          "column": "posted",
           "required": true
         }
       },
@@ -226,10 +240,10 @@
         }
       },
       {
-        "name": "discount",
+        "name": "discountAmount",
         "attr": {
           "type": "Money",
-          "column": "discount",
+          "column": "discount_amount",
           "required": true
         }
       },
@@ -242,10 +256,11 @@
         }
       },
       {
-        "name": "currencyRatio",
+        "name": "currencyRate",
         "attr": {
           "type": "Number",
-          "column": "curr_rate"
+          "column": "curr_rate",
+          "require": true
         }
       },
       {
@@ -302,7 +317,7 @@
         }
       },
       {
-        "name": "currencyRatio",
+        "name": "currencyRate",
         "attr": {
           "type": "Number",
           "column": "cashrcpt_curr_rate",
@@ -417,10 +432,10 @@
         }
       },
       {
-        "name": "paid",
+        "name": "appliedAmount",
         "attr": {
           "type": "Money",
-          "column": "paid",
+          "column": "appliedAmount",
           "required": true
         }
       },
@@ -549,7 +564,7 @@
         }
       },
       {
-        "name": "isPosted",
+        "name": "posted",
         "attr": {
           "type": "Boolean",
           "column": "cashrcpt_posted"

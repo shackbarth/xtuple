@@ -1,3 +1,7 @@
+/**
+ * Calculate the balance of a XM.CashReceipt
+ * balance = amount - (applied + pending)
+ */
 create or replace function xt.cashrcpt_balance(cashrcpt) returns numeric stable as $$
 
   select
@@ -10,4 +14,3 @@ create or replace function xt.cashrcpt_balance(cashrcpt) returns numeric stable 
   ;
 
 $$ language sql;
-

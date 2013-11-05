@@ -5,6 +5,7 @@ XT.extensions.billing.initCashReceipt = function () {
   /**
    * @class XM.CashReceipt
    * @extends XM.Document
+   * @mixes XM.FundsTypes
    */
   XM.CashReceipt = XM.Document.extend({
     recordType: 'XM.CashReceipt',
@@ -14,70 +15,54 @@ XT.extensions.billing.initCashReceipt = function () {
     numberPolicySetting: XM.Document.AUTO_NUMBER,
 
     defaults: function () {
+      this.meta.set({
+        useCustomerDeposit: XT.session.settings.get('EnableCustomerDeposits')
+      });
       return {
-        isPosted: false,
-        fundsType: XM.FundsType.CHECK,
+        posted: false,
+        fundsType: XM.FundsTypes.CHECK,
         currency: XM.baseCurrency,
-        currencyRatio: 1,
+        currencyRate: 1,
         applicationDate: new Date(),
         lineItems: new XM.CashReceiptLineCollection(),
-        applied: 0,
+        appliedAmount: 0,
         balance: 0
       };
     },
 
     handlers: {
       'status:READY_CLEAN': 'onReadyClean',
-      'change:applied': 'appliedChanged',
-      'change:amount': 'amountChanged',
+      'change:appliedAmount': 'updatedBalance',
+      'change:amount': 'updateBalance',
       'change:customer': 'customerChanged',
       'change:currency': 'currencyChanged',
       'change:distributionDate': 'distributionDateChanged',
-      'change:applicationDate': 'applicationDateChanged',
+      'change:applicationDate': 'dateChanged',
       'add': 'lineItemAdded'
-    },
-
-    /**
-     * @listens change:applicationDate
-     */
-    applicationDateChanged: function () {
-      this.dateChanged();
     },
 
     /**
      * @listens change:distributionDate
      */
     distributionDateChanged: function () {
-      // TODO update currency ratio
+      // TODO update currency rate
       this.dateChanged();
     },
 
     /**
+     * @protected
      * @listens change:applied
-     */
-    appliedChanged: function () {
-      this._updateBalance();
-    },
-
-    /**
      * @listens change:amount
      */
-    amountChanged: function () {
-      this._updateBalance();
-    },
-
-    /**
-     * @private
-     * Calculate balance
-     */
-    _updateBalance: function () {
-
+    updateBalance: function () {
+      this.set({ balance: this.get('amount') - this.get('appliedAmount') });
     },
 
     /**
      * @listens add:lineItem
      */
     lineItemAdded: function () {
+      // TODO updated appliedAmount here
       console.log('added');
       console.log(arguments);
     },
@@ -86,7 +71,7 @@ XT.extensions.billing.initCashReceipt = function () {
      * @listens status:READY_CLEAN
      */
     onReadyClean: function (model) {
-      this.setReadOnly(this.get('isPosted'));
+      this.setReadOnly(this.get('posted'));
       this.setReadOnly([
         'amount',
         'fundsType',
@@ -183,64 +168,62 @@ XT.extensions.billing.initCashReceipt = function () {
      *
      * Validate applyLineBalance preconditions.
      */
-    _applyLineBalance: function (receivable, options, _step) {
+    _applyLineBalance: function (receivable, options, step) {
 
       if (receivable.isDebit() && this.get('balance') === 0) {
         return options.error('_noApplicableCashReceiptBalance'.loc());
       }
 
-      var that = this,
-        step = _step || 'checkCurrency',
-        plan = {
+      var that = this, plan = {
 
-          /**
-           * 1. Validate the currency.
-           */
-          checkCurrency: function () {
-            return that.checkCurrency(function (valid) {
-              if (!valid) { return; }
-              that._applyLineBalance(receivable, options, 'convertCurrency');
-            });
-          },
+        /**
+         * 1. Validate the currency.
+         */
+        checkCurrency: function () {
+          return that.checkCurrency(function (valid) {
+            if (!valid) { return; }
+            that._applyLineBalance(receivable, options, 'convertCurrency');
+          });
+        },
 
-          /**
-           * 2. Continue after we've converted the receivable's currency to that of
-           * this cash receipt.
-           */
-          convertCurrency: function () {
-            return receivable.get('currency').toCurrency(
-              that.get('currency'),
-              receivable.get('balance'),
-              that.get('distributionDate'), {
-                success: function (convertedValue) {
-                  that._applyLineBalance(receivable, options, 'fetchReceivable');
-                },
-                error: function () {
-                  options.error('_currencyConversionError'.loc());
-                }
-              });
-          },
-          
-          /**
-           * 3. Fetch/lock Receivable to edit, ensure lock is acquired, pass
-           * back to caller.
-           */
-          fetchReceivable: function () {
-            receivable.fetch({
-              success: function (model) {
-                if (!model.getLockKey()) {
-                  options.error('locked');  // TODO
-                }
-                else {
-                  options.success(model);
-                }
+        /**
+         * 2. Continue after we've converted the receivable's currency to that of
+         * this cash receipt.
+         */
+        convertCurrency: function () {
+          return receivable.get('currency').toCurrency(
+            that.get('currency'),
+            receivable.get('balance'),
+            that.get('distributionDate'), {
+              success: function (convertedValue) {
+                that._applyLineBalance(receivable, options, 'fetchReceivable');
               },
-              error: options.error
+              error: function () {
+                options.error('_currencyConversionError'.loc());
+              }
             });
-          }
-        };
+        },
+        
+        /**
+         * 3. Fetch/lock Receivable to edit, ensure lock is acquired, pass
+         * back to caller.
+         */
+        fetchReceivable: function () {
+          receivable.fetch({
+            success: function (model) {
+              if (!model.getLockKey()) {
+                options.error('locked');  // TODO proper error msg
+              }
+              else {
+                options.success(model);
+              }
+            },
+            error: options.error
+          });
+        }
+      };
 
-      return plan[step]();
+      return plan[step || 'checkCurrency']();
     },
 
     /**
@@ -253,9 +236,8 @@ XT.extensions.billing.initCashReceipt = function () {
       var that = this, options = {
         
         /**
-         * Apply line balance once preconditions are met
-         *
          * @callback
+         * Apply line balance once preconditions are met
          */
         success: function (receivable) {
           var terms = receivable.get('terms'),
@@ -298,6 +280,10 @@ XT.extensions.billing.initCashReceipt = function () {
         discount = terms ? terms.get('discountPercent') : 0.0,
         payoff = balance >= (value - (balance * discount)),
 
+        /**
+         * As opposted to the discount percentage rate, this is the calculted
+         * quantum of discount which is to be subtracted
+         */
         discountAmount = XT.math.round(payoff ?
           balance * discount :
           value / (1 - discount),
@@ -340,7 +326,7 @@ XT.extensions.billing.initCashReceipt = function () {
       var lines = this.get('lineItems');
       lines.remove(lines.where({ receivable: receivable }));
     }
-  });
+  }, XM.FundsTypes);
 
   /**
    * @class XM.CashReceiptLine
@@ -373,7 +359,16 @@ XT.extensions.billing.initCashReceipt = function () {
   XM.CashReceiptReceivable = XM.Receivable.extend({
     // mixins: [ XM.ReceivableMixin ],
     recordType: 'XM.CashReceiptReceivable',
-    idAttribute: 'uuid'
+    idAttribute: 'uuid',
+
+    events: {
+      'change:amount' : 'updateBalance',
+      'change:appliedAmount': 'updateBalance'
+    },
+
+    updateBalance: function () {
+      this.set({ balance: this.get('amount') - this.get('appliedAmount') });
+    }
   });
   XM.CashReceiptReceivable = XM.CashReceiptReceivable.extend(XM.ReceivableMixin);
 
@@ -448,6 +443,7 @@ XT.extensions.billing.initCashReceipt = function () {
     getCredits: function () {
       return this.where({ documentType: XM.Receivable.CREDIT_MEMO });
     },
+
     /**
      * Return list of receivables where isDebit() === true
      */

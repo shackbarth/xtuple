@@ -25,7 +25,7 @@ XT.extensions.billing.initStaticModels = function () {
     * @enum
     * Bi-directional mapping of Funds Types
     */
-  XM.FundsType = {
+  XM.FundsTypes = {
     CHECK:             'C',
     CERTIFIED_CHECK:   'T',
     CASH:              'K',
@@ -45,7 +45,7 @@ XT.extensions.billing.initStaticModels = function () {
       return _.contains([ 'M', 'V', 'A', 'D', 'R' ], fundsType);
     }
   };
-  XM.FundsType = _.extend(_.invert(XM.FundsType));
+  XM.FundsTypes = _.extend(_.invert(XM.FundsType));
 
   /**
     * @enum

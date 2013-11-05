@@ -17,13 +17,14 @@ XT.extensions.billing.initCashReceiptView = function () {
       template: [
         [
           {attr: 'number', colspan: 2},
-          {attr: 'isPosted', formatter: 'formatIsPosted', colspan: 2},
+          {attr: 'posted', formatter: 'formatIsPosted', colspan: 2},
           {attr: 'amount'},
           {attr: 'distributionDate'}
         ],
         [
           {attr: 'customer.name', colspan: 2},
-          {attr: 'fundsType', formatter: 'formatFundsType', colspan: 2}
+          {attr: 'fundsType', formatter: 'formatFundsType', colspan: 2},
+          {attr: 'balance'}
         ]
       ]
     },
