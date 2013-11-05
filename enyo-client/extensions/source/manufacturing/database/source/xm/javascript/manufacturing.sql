@@ -160,7 +160,14 @@ select xt.install_js('XM','Manufacturing','xtuple', $$
     quantity: {type: "Number", description: "Quantity" },
     options: {type: "Object", description: "Other attributes", attributes: {
       asOf: {type: "Date", description: "Transaction Timestamp. Default to now()."},
-      detail: {type: "Array", description: "Distribution detail" }
+      detail: { type: "Array",
+        description: "Distribution Detail",
+        attributes: [
+        {type: "Object", description: "Location and/or Trace detail", attributes: {
+           quantity: {type: "Number", description: "Quantity"},
+           location: {type: "String", description: "UUID of location"},
+           trace: {type: "String", description: "Trace (Lot or Serial) Number"}}}
+      ]},
     }}
   };
 
@@ -231,8 +238,19 @@ select xt.install_js('XM','Manufacturing','xtuple', $$
   };
   XM.Manufacturing.postProduction.description = "Post production";
   XM.Manufacturing.postProduction.params = {
-     workOrder: { type: "String", description: "Order line UUID" },
-     quantity: {type: "Number", description: "Quantity" }
+    workOrder: { type: "String", description: "Order line UUID" },
+    quantity: {type: "Number", description: "Quantity" },
+    options: {type: "Object", description: "Other attributes", attributes: {
+      asOf: {type: "Date", description: "Transaction Timestamp. Default to now()."},
+      detail: { type: "Array",
+        description: "Distribution Detail",
+        attributes: [
+        {type: "Object", description: "Location and/or Trace detail", attributes: {
+           quantity: {type: "Number", description: "Quantity"},
+           location: {type: "String", description: "UUID of location"},
+           trace: {type: "String", description: "Trace (Lot or Serial) Number"}}}
+      ]},
+    }}
   };
 
 }());
