@@ -223,8 +223,9 @@ white:true*/
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
       this.on("change:invoiceDate add:allocations remove:allocations", this.calculateAllocatedCredit);
-      this.on("change:subtotal change:totalTax change:miscCharge", this.calculateTotals);
-      this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
+      this.on("change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
+      //this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
+      this.on("change:taxZone", this.recalculateTaxes);
       this.on("change:total change:allocatedCredit change:outstandingCredit", this.calculateBalance);
       this.on('allocatedCredit', this.allocatedCreditDidChange);
       this.on('statusChange', this.statusDidChange);
@@ -311,6 +312,7 @@ white:true*/
     },
 
     calculateTotalTax: function () {
+      this.calculateTotals();
       console.log("calculate total tax");
       // TODO
     },
@@ -371,6 +373,15 @@ white:true*/
             .unset("billtoPhone");
 
       }
+    },
+
+    /**
+      Re-evaluate taxes for all line items
+    */
+    recalculateTaxes: function () {
+      _.each(this.get("lineItems").models, function (lineItem) {
+        lineItem.calculateTax();
+      });
     },
 
     statusDidChange: function () {

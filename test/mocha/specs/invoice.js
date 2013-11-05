@@ -22,6 +22,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     allocationModel,
     usd,
     gbp,
+    nctax,
     ttoys,
     vcol,
     bpaint,
@@ -434,6 +435,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
             });
           },
           function (done) {
+            fetchModel(nctax, XM.TaxZone, {code: "NC TAX"}, function (err, model) {
+              nctax = model;
+              done();
+            });
+          },
+          function (done) {
             initializeModel(allocationModel, XM.InvoiceAllocation, function (err, model) {
               allocationModel = model;
               done();
@@ -714,8 +721,17 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @memberof Invoice.prototype
         @description TotalTax should be recalculated when taxZone changes or taxAdjustments are added or removed.
       */
-      it.skip("TotalTax should be recalculated when taxZone changes or taxAdjustments are added or removed.", function () {
+      it("TotalTax should be recalculated when taxZone changes or taxAdjustments are added or removed.", function (done) {
+        var totalChanged = function () {
+          invoiceModel.off("change:total", totalChanged);
+          assert.equal(invoiceModel.get("taxTotal"), 10.88);
+          assert.equal(invoiceModel.get("total"), 248.70);
+          done();
+        };
 
+        assert.equal(invoiceModel.get("taxTotal"), 9.89);
+        invoiceModel.on("change:total", totalChanged);
+        invoiceModel.set({taxZone: nctax});
       });
       /**
         @member -
