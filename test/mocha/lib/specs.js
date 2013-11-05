@@ -227,7 +227,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       read: "ViewMiscInvoices"
     },
     createHash: {
-      number: "33InvoiceTest" + Math.random(),
+      number: "30" + (100 + Math.round(Math.random() * 900)),
       customer: {number: "TTOYS"}
     },
     updatableField: "notes",

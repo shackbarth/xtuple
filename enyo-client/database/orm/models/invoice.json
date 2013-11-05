@@ -1347,7 +1347,7 @@
     "type": "InvoiceLineTax",
     "table": "xt.invcitemtaxinfo",
     "isRest": true,
-    "idSequenceName": "invcitemtax_invcitemtax_id_seq",
+    "idSequenceName": "taxhist_taxhist_id_seq",
     "comment": "Invoice Line Tax Map",
     "privileges": {
       "all": {

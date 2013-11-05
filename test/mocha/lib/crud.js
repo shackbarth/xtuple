@@ -253,7 +253,14 @@ var _ = require("underscore"),
         var status = model.getStatus(),
           K = XM.Model,
           options = {};
-        if (status === K.READY_CLEAN) {
+        if (status === K.ERROR) {
+          clearTimeout(timeoutId);
+          model.off('statusChange', modelCallback);
+          model.off('invalid', invalid);
+          model.off('notify', notify);
+          assert.fail("Error status reached on model save: " + model.recordType, "");
+          callback();
+        } else if (status === K.READY_CLEAN) {
           clearTimeout(timeoutId);
           model.off('statusChange', modelCallback);
           model.off('invalid', invalid);

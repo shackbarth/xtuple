@@ -705,9 +705,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @description When subtotal, totalTax or miscCharge are changed, the total should be recalculated.
       */
       it("When subtotal, totalTax or miscCharge are changed, the total should be recalculated", function () {
-        assert.equal(invoiceModel.get("total"), 197.82);
+        assert.equal(invoiceModel.get("total"), 207.71);
         invoiceModel.set({miscCharge: 40});
-        assert.equal(invoiceModel.get("total"), 237.82);
+        assert.equal(invoiceModel.get("total"), 247.71);
       });
       /**
         @member -
