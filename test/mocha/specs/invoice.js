@@ -1040,6 +1040,15 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         // TODO: put under test
         assert.fail();
       });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description The customer search list should search only on active customers.
+      */
+      it.skip("The customer search list should search only on active customers", function () {
+        // TODO: put under test
+        assert.fail();
+      });
 
     });
   };
@@ -1056,7 +1065,6 @@ Should include a panel that displays credit allocations.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
 
 
-  > The customer search list should search only on active customers.
 
 * A child workspace view should exist called XV.InvoiceLineWorkspace should include:
   > All the attributes on XM.InvoiceLine.

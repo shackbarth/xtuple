@@ -181,6 +181,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.BillingCustomerWidget",
     kind: "XV.RelationWidget",
     collection: "XM.BillingCustomerCollection",
+    query: { parameters: [{attribute: "isActive", value: true}]},
     list: "XV.CustomerList"
   });
 
