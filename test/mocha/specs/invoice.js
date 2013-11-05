@@ -1029,7 +1029,17 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         workspace = new XV.InvoiceWorkspace();
         assert.equal(workspace.$.lineItemsPanel.children[0].kind, "XV.InvoiceLineItemGridBox");
       });
-
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description The bill to addresses available when searching addresses should filter
+          on the addresses associated with the customer's account record by default.
+      */
+      it.skip("The bill to addresses available when searching addresses should filter " +
+          "on the addresses associated with the customer's account record by default.", function () {
+        // TODO: put under test
+        assert.fail();
+      });
 
     });
   };
@@ -1038,13 +1048,14 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 ***** CHANGES MADE TO CORE APPLICATION ******
 
 
-* A workspace view should exist called XV.InvoiceWorkspace
-  > Should include a panel that displays a group box of lists of taxes separated headers for taxes by line items, freight, and adjustments. Users should be able to add new tax adjustments, and remove tax adjustments for non-posted invoices.
-  > Should include a panel that displays credit allocations.
+TODO Should include a panel that displays a group box of lists of taxes separated headers for taxes by line items, freight, and adjustments. Users should be able to add new tax adjustments, and remove tax adjustments for non-posted invoices.
+TODO
+Should include a panel that displays credit allocations.
     - When clicked a "new" button should allow the user to create a new minimalized version of cash receipt on-the-fly. The cash receipt need only record the amount, currency, document number, document date, distribution date and whether the balance should generate a credit memo or a customer deposit, depending on global customer deposit metrics.
     - When clicked, an "allocate" button should present a list of open receivables that are credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
-  > The bill to addresses available when searching addresses sholud filter on the addresses associated with the customer's account record by default.
+
+
   > The customer search list should search only on active customers.
 
 * A child workspace view should exist called XV.InvoiceLineWorkspace should include:

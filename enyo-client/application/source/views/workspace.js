@@ -49,13 +49,14 @@ strict: false*/
     },
     controlValueChanged: function (inSender, inEvent) {
       this.inherited(arguments);
-      if (inEvent.originator.name === 'accountWidget') {
+      if (inEvent.originator.name === 'accountWidget' ||
+          inEvent.originator.name === 'customerWidget') {
         this.accountChanged();
       }
     },
     getAccount: function () {
       var model = this.getValue();
-      return model ? model.get('account') : undefined;
+      return model ? (model.get('account') || model.get('customer')) : undefined;
     }
   };
 
@@ -1100,8 +1101,7 @@ strict: false*/
   // ..........................................................
   // INVOICE
   //
-
-  enyo.kind({
+  hash = {
     name: "XV.InvoiceWorkspace",
     kind: "XV.Workspace",
     title: "_invoice".loc(),
@@ -1123,7 +1123,7 @@ strict: false*/
                label: "_customer".loc(), nameAttribute: ""
             },
             {kind: "XV.AddressFieldsWidget",
-              name: "billtoAddress", attr:
+              name: "addressWidget", attr:
               {name: "billtoName", line1: "billtoAddress1",
                 line2: "billtoAddress2", line3: "billtoAddress3",
                 city: "billtoCity", state: "billtoState",
@@ -1148,7 +1148,8 @@ strict: false*/
               label: "_custPO".loc()},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
           ]}
-        ]}
+        ]},
+        {kind: "XV.InvoiceAllocationsBox", attr: "allocations"},
       ]}
     ],
     create: function () {
@@ -1165,7 +1166,10 @@ strict: false*/
         ], {owner: this});
       }
     }
-  });
+  };
+  hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
+  enyo.kind(hash);
+
   XV.registerModelWorkspace("XM.InvoiceListItem", "XV.InvoiceWorkspace");
 
   enyo.kind({

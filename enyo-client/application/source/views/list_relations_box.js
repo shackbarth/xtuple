@@ -302,6 +302,17 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // INVOICE ALLOCATIONS
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceAllocationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_allocations".loc(),
+    listRelations: "XV.InvoiceAllocationListRelations"
+  });
+
+  // ..........................................................
   // ITEM GROUP ITEM
   //
 

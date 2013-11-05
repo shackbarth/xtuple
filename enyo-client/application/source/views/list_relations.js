@@ -236,6 +236,35 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // INVOICE ALLOCATION
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceAllocationListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "invoice",
+    orderBy: [
+      {attribute: "uuid"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "amount"}
+              ]}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "currency"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // INVOICE LINE
   //
 
