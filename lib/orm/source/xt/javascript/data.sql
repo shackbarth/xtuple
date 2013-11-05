@@ -925,8 +925,8 @@ select xt.install_js('XT','Data','xtuple', $$
           }
 
           if (sql.statement) {
-	          plv8.execute(sql.statement, sql.values);
-	        }
+            plv8.execute(sql.statement, sql.values);
+          }
         }
       }
 
@@ -1033,7 +1033,7 @@ select xt.install_js('XT','Data','xtuple', $$
               isValidSql = true;
               count++;
             } else {
-	            // TODO - Improve error handling.
+              // TODO - Improve error handling.
               throw new Error("No encryption key provided.");
             }
           } else if (ormp.name !== pkey) {
@@ -1713,7 +1713,7 @@ select xt.install_js('XT','Data','xtuple', $$
           orm.privileges.attribute : false,
         inclKeys = options.includeKeys,
         superUser = options.superUser,
-		printFormat = options.printFormat,
+        printFormat = options.printFormat,
         c,
         i,
         item,
@@ -1761,49 +1761,49 @@ select xt.install_js('XT','Data','xtuple', $$
             delete item[prop.name];
           }
 
-	  	/*  Format for printing if printFormat and not an object */
-		if (printFormat && !prop.toOne && !prop.toMany) {
-			switch(prop.attr.type) {
-	     		case "Date":
-	     			item[itemAttr] = XT.formatDate(item[itemAttr]).formatdate;
-					break;
-	     		case "Cost":
-	     			item[itemAttr] = XT.formatCost(item[itemAttr]).formatcost.toString();
-					break;
-	     		case "Number":
-	     			item[itemAttr] = XT.formatNumeric(item[itemAttr], "").formatnumeric.toString();
-					break;
-	     		case "Currency":
-	     			item[itemAttr] = XT.formatMoney(item[itemAttr]).formatmoney.toString();
-					break;
-	     		case "SalesPrice":
-	     			item[itemAttr] = XT.formatSalesPrice(item[itemAttr]).formatsalesprice.toString();
-					break;
-	     		case "PurchasePrice":
-	     			item[itemAttr] = XT.formatPurchPrice(item[itemAttr]).formatpurchprice.toString();
-					break;
-	     		case "ExtendedPrice":
-	     			item[itemAttr] = XT.formatExtPrice(item[itemAttr]).formatextprice.toString();
-					break;
-	     		case "Quantity":
-	     			item[itemAttr] = XT.formatQty(item[itemAttr]).formatqty.toString();
-					break;
-	     		case "QuantityPer":
-	     			item[itemAttr] = XT.formatQtyPer(item[itemAttr]).formatqtyper.toString();
-					break;
-	     		case "UnitRatioScale":
-	     			item[itemAttr] = XT.formatRatio(item[itemAttr]).formatratio.toString();
-					break;
-	     		case "Percent":
-	     			item[itemAttr] = XT.formatPrcnt(item[itemAttr]).formatprcnt.toString();
-					break;
-	     		case "WeightScale":
-	     			item[itemAttr] = XT.formatWeight(item[itemAttr]).formatweight.toString();
-					break;
-	     		default:
-	     			item[itemAttr] = (item[itemAttr] || "").toString();
-	     	}
-	  }
+          /*  Format for printing if printFormat and not an object */
+          if (printFormat && !prop.toOne && !prop.toMany) {
+            switch(prop.attr.type) {
+                case "Date":
+                  item[itemAttr] = XT.formatDate(item[itemAttr]).formatdate;
+                break;
+                case "Cost":
+                  item[itemAttr] = XT.formatCost(item[itemAttr]).formatcost.toString();
+                break;
+                case "Number":
+                  item[itemAttr] = XT.formatNumeric(item[itemAttr], "").formatnumeric.toString();
+                break;
+                case "Currency":
+                  item[itemAttr] = XT.formatMoney(item[itemAttr]).formatmoney.toString();
+                break;
+                case "SalesPrice":
+                  item[itemAttr] = XT.formatSalesPrice(item[itemAttr]).formatsalesprice.toString();
+                break;
+                case "PurchasePrice":
+                  item[itemAttr] = XT.formatPurchPrice(item[itemAttr]).formatpurchprice.toString();
+                break;
+                case "ExtendedPrice":
+                  item[itemAttr] = XT.formatExtPrice(item[itemAttr]).formatextprice.toString();
+                break;
+                case "Quantity":
+                  item[itemAttr] = XT.formatQty(item[itemAttr]).formatqty.toString();
+                break;
+                case "QuantityPer":
+                  item[itemAttr] = XT.formatQtyPer(item[itemAttr]).formatqtyper.toString();
+                break;
+                case "UnitRatioScale":
+                  item[itemAttr] = XT.formatRatio(item[itemAttr]).formatratio.toString();
+                break;
+                case "Percent":
+                  item[itemAttr] = XT.formatPrcnt(item[itemAttr]).formatprcnt.toString();
+                break;
+                case "WeightScale":
+                  item[itemAttr] = XT.formatWeight(item[itemAttr]).formatweight.toString();
+                break;
+                default:
+                  item[itemAttr] = (item[itemAttr] || "").toString();
+              }
+          }
 
           /* Handle composite types */
           if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
