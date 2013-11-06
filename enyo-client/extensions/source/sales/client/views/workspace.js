@@ -166,6 +166,11 @@ trailing:true, white:true*/
     //
 
     extensions = [
+      {kind: "XV.MoneyWidget",
+        attr: {localValue: "authorizedCredit", currency: "currency"},
+        label: "_authorizedCredit".loc(), currencyShowing: false,
+        container: "invoiceLineItemBox.summaryPanel.summaryColumnOne",
+        defer: true},
       {kind: "XV.InputWidget", container: "mainGroup", attr: "orderNumber"},
       {kind: "XV.DateWidget", container: "mainGroup", attr: "orderDate"}
     ];

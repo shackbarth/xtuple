@@ -1092,20 +1092,26 @@ Should include a panel that displays credit allocations.
         assert.isFunction(XM.InvoiceSalesOrder);
         assert.isTrue(XM.InvoiceSalesOrder.prototype.isDocumentAssignment);
       });
-
-
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Invoice will include authorizedCredit, the sum of credit card authorizations
+          in the order currency where:
+            - The current_timestamp - authorization date is less than CCValidDays || 7
+            - The payment status the cc payment (ccpay) record is authorized ("A")
+            - The cc payment record is for an order number = the order number specified on the invoice
+          When currency or invoice date is changed authorized credit should be recalculated.
+      */
+      it("authorizedCredit", function () {
+        // TODO: better testing
+        assert.equal(invoiceModel.get("authorizedCredit"), 0);
+      });
     });
   };
 /*
 
 ***** CHANGES MADE BY SALES EXTENSION ******
 
-* XM.Invoice will include:
-  > Money "authorizedCredit" the sum of credit card authorizations in the order currency where:
-    - The current_timestamp - authorization date is less than CCValidDays || 7
-    - The payment status the cc payment (ccpay) record is authorized ("A")
-    - The cc payment record is for an order number = the order number specified on the invoice
-* When currency or invoice date is changed authorized credit should be recalculated.
 * When freight is changed the total should be recalculated.
 
 ***** CHANGES MADE BY PROJECT EXTENSION ******

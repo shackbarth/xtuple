@@ -246,8 +246,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
         var gridRow;
 
         workspace.value.on("change:total", done);
-        workspace.$.invoiceLineItemGridBox.newItem();
-        gridRow = workspace.$.invoiceLineItemGridBox.$.editableGridRow;
+        workspace.$.invoiceLineItemBox.newItem();
+        gridRow = workspace.$.invoiceLineItemBox.$.editableGridRow;
         // TODO
         //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
         gridRow.$.quantityWidget.doValueChange({value: 5});

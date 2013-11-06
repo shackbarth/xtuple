@@ -204,7 +204,9 @@ white:true*/
       "isPosted",
       "isVoid",
       "isPrinted",
-      "miscCharge"
+      "miscCharge",
+      "allocatedCredit",
+      "authorizedCredit"
     ],
 
     // like sales order, minus contact info
@@ -228,6 +230,7 @@ white:true*/
       this.on("change:customer", this.customerDidChange);
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
+      this.on("change:invoiceDate change:currency", this.calculateAuthorizedCredit);
       this.on("change:invoiceDate add:allocations remove:allocations", this.calculateAllocatedCredit);
       this.on("change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
       this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);

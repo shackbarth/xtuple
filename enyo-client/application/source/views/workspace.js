@@ -1158,14 +1158,15 @@ strict: false*/
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.InvoiceLineItemBox", attr: "lineItems", fit: true}
+          {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", attr: "lineItems", fit: true}
         ], {owner: this});
       } else {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.InvoiceLineItemGridBox", attr: "lineItems", fit: true}
+          {kind: "XV.InvoiceLineItemGridBox", name: "invoiceLineItemBox", attr: "lineItems", fit: true}
         ], {owner: this});
       }
+      this.processExtensions(true);
     }
   };
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
