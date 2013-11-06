@@ -167,6 +167,27 @@
           "type": "Money",
           "column": "tax_total"
         }
+      },
+      {
+        "name": "salesCategory",
+        "toOne": {
+          "type": "SalesCategory",
+          "column": "aropen_salescat_id"
+        }
+      },
+      {
+        "name": "journalNumber",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_journalnumber"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "type": "Account",
+          "column": "aropen_accnt_id"
+        }
       }
     ],
     "isSystem": true

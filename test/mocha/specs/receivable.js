@@ -123,6 +123,14 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
             assert.equal(model.validate().code, "xt2024");
           });
 
+          it.skip("When the status of a receivable changes to READY_CLEAN (edit), the following attributes: " +
+          "customer, documentDate, documentType, documentNumber, terms should be readOnly", function () {
+            // assert.include(data.model.readOnlyAttributes, "customer");
+            // assert.include(data.model.readOnlyAttributes, "documentDate");
+            // assert.include(data.model.readOnlyAttributes, "documentType");
+            // assert.include(data.model.readOnlyAttributes, "documentNumber");
+            // assert.include(data.model.readOnlyAttributes, "terms");
+          });
           it.skip("When customer is set, the terms, currency, and salesRep should be copied from the customer and commission should be recalculated", function () {
             assert.fail(true, true, "not implemented");
           });

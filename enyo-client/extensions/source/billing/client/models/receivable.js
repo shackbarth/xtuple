@@ -132,11 +132,11 @@ XT.extensions.billing.initReceivableModel = function () {
     },
 
     createCreditMemo: function (params, options) {
-      //this.dispatch("XM.Receivable", "createCreditMemo", params, options);
+      this.dispatch("XM.Receivable", "createCreditMemo", params, options);
     },
 
     createDebitMemo: function (params, options) {
-      //this.dispatch("XM.Receivable", "createDebitMemo", params, options);
+      this.dispatch("XM.Receivable", "createDebitMemo", params, options);
     },
 
     /**
@@ -145,17 +145,63 @@ XT.extensions.billing.initReceivableModel = function () {
       If the documentType is XM.Receivable.DEBIT_MEMO then dispatch XM.Receivable.createDebitMemo
     */
     save: function (key, value, options) {
-      // TODO: validate
+      var that = this,
+        success;
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        options = value ? _.clone(value) : {};
+      }
+
+      // TODO: validate?
       if (this.getStatus() === XM.Model.READY_NEW) {
         // cannot create a new receivable, dispatch to posts
-        if (this.isCredit()) {
-          this.createCreditMemo();
-        } else if (this.isDebit()) {
-          this.createDebitMemo();
-        }
-      } else { // this is an update, just treat is as normal
-        return XM.Model.prototype.save.call(this, key, value, options);
+        //success = options.success;
+        //options.success = function (model, resp, options) {
+
+          // var recOptions = {},
+          //   salesCategory = that.get("salesCategory"),
+          //   account = that.get("account"),
+          //   params = [
+          //     that.id,
+          //     that.get("customer").id,
+          //     that.get("documentNumber"),
+          //     that.get("orderNumber"),
+          //     that.get("documentDate"),
+          //     that.get("amount"),
+          //     that.get("notes"),
+          //     that.get("reasonCode").id,
+          //     salesCategory ? salesCategory.id : null,
+          //     account ? account.id : null,
+          //     that.get("dueDate"),
+          //     that.get("terms").id,
+          //     that.get("salesRep").id,
+          //     that.get("commission"),
+          //     that.get("journalNumber"),
+          //     that.get("currency").id
+          //   ];
+            // TODO: Add taxes
+
+          // recOptions.success = function (resp) {
+          //   //if (success) { success(model, resp, options); }
+          //   console.log("SUCCESS");
+          // };
+          // recOptions.error = function () {
+          //   console.log("ERROR");
+          // };
+
+
+          // if (this.isCredit()) {
+          //   this.createCreditMemo(params, recOptions);
+          // } else if (this.isDebit()) {
+          //   this.createDebitMemo(params, recOptions);
+          // }
+        return this;
+
+
+        //};
       }
+      return XM.Model.prototype.save.call(this, key, value, options);
     },
 
     /**

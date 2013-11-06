@@ -330,8 +330,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     attributes: ["uuid", "documentDate", "customer", "dueDate",
       "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
       "reasonCode", "amount", "currency", "paid", "notes", "taxes", "balance",
-      "taxTotal", "commission"],
-    // TODO: "applications"],
+      "taxTotal", "commission", "applications"],
     requiredAttributes: ["currency", "customer", "documentDate", "dueDate", "amount"],
     extensions: ["billing"],
     privileges: {
@@ -348,18 +347,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       documentNumber: "DocumentNumber" + Math.random()
     },
     updatableField: "notes",
-    // afterSaveActions: [{
-    //   it: "When the status of a receivable changes to READY_CLEAN (edit), the following attributes: " +
-    //   "customer, documentDate, documentType, documentNumber, terms should be readOnly",
-    //   action: function (data, next) {
-    //     assert.include(data.model.readOnlyAttributes, "customer");
-    //     assert.include(data.model.readOnlyAttributes, "documentDate");
-    //     assert.include(data.model.readOnlyAttributes, "documentType");
-    //     assert.include(data.model.readOnlyAttributes, "documentNumber");
-    //     assert.include(data.model.readOnlyAttributes, "terms");
-    //     next();
-    //   }
-    // }],
     additionalTests: require("../specs/receivable").additionalTests
   };
 
