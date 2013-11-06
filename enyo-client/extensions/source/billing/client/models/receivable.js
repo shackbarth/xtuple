@@ -159,27 +159,23 @@ XT.extensions.billing.initReceivableModel = function () {
         //success = options.success;
         //options.success = function (model, resp, options) {
 
-          // var recOptions = {},
-          //   salesCategory = that.get("salesCategory"),
-          //   account = that.get("account"),
-          //   params = [
-          //     that.id,
-          //     that.get("customer").id,
-          //     that.get("documentNumber"),
-          //     that.get("orderNumber"),
-          //     that.get("documentDate"),
-          //     that.get("amount"),
-          //     that.get("notes"),
-          //     that.get("reasonCode").id,
-          //     salesCategory ? salesCategory.id : null,
-          //     account ? account.id : null,
-          //     that.get("dueDate"),
-          //     that.get("terms").id,
-          //     that.get("salesRep").id,
-          //     that.get("commission"),
-          //     that.get("journalNumber"),
-          //     that.get("currency").id
-          //   ];
+          var recOptions = {},
+            params = [
+              that.id,
+              that.get("customer").id,
+              that.get("documentNumber"),
+              that.get("orderNumber"),
+              that.get("documentDate"),
+              that.get("amount"),
+              that.get("notes"),
+              that.get("reasonCode").id,
+              that.get("dueDate"),
+              that.get("terms").id,
+              that.get("salesRep").id,
+              that.get("commission"),
+              that.get("journalNumber"),
+              that.get("currency").id
+            ];
             // TODO: Add taxes
 
           // recOptions.success = function (resp) {
@@ -191,11 +187,11 @@ XT.extensions.billing.initReceivableModel = function () {
           // };
 
 
-          // if (this.isCredit()) {
-          //   this.createCreditMemo(params, recOptions);
-          // } else if (this.isDebit()) {
-          //   this.createDebitMemo(params, recOptions);
-          // }
+          if (this.isCredit()) {
+            this.createCreditMemo(params, recOptions);
+          } else if (this.isDebit()) {
+            this.createDebitMemo(params, recOptions);
+          }
         return this;
 
 
