@@ -273,25 +273,97 @@ select xt.install_js('XM','Inventory','xtuple', $$
     return;
   };
   XM.Inventory.adjustment.description = "Perform Inventory Adjustments.";
-  XM.Inventory.adjustment.params = {
-    itemSite: {type: "String", description: "UUID of itemSite"},
-    quantity: {type: "Number", description: "Quantity" },
-    options: {type: "Object", description: "Other attributes", attributes: {
-      detail: { type: "Array",
-        description: "Distribution Detail",
-        attributes: [
-        {type: "Object", description: "Location and/or Trace detail", attributes: {
-           quantity: {type: "Number", description: "Quantity"},
-           location: {type: "String", description: "UUID of location"},
-           trace: {type: "String", description: "Trace (Lot or Serial) Number"},
-           expiration: {type: "Date", description: "Perishable expiration date"},
-           warranty: {type: "Date", description: "Warranty expire date"}}}
-      ]},
-      asOf: {type: "Date", description: "Transaction Timestamp, default to now()"},
-      docNumber: {type: "String", description: "Document Number"},
-      notes: {type: "String", description: "Notes"},
-      value: {type: "String", description: "Value"}
-    }}
+  XM.Inventory.adjustment.request = {
+    "$ref": "InventoryAdjustment"
+  };
+  XM.Inventory.adjustment.parameterOrder = ["itemSite", "quantity", "options"];
+  XM.Inventory.adjustment.schema = {
+    InventoryAdjustment: {
+      properties: {
+        itemSite: {
+          title: "Item Site",
+          description: "UUID of itemSite",
+          type: "string",
+          "$ref": "ItemSite/uuid",
+          "required": true
+        },
+        quantity: {
+          title: "Quantity",
+          description: "Quantity",
+          type: "number",
+          "required": true
+        },
+        options: {
+          title: "Options",
+          type: "object",
+          "$ref": "InventoryAdjustmentOptions"
+        }
+      }
+    },
+    InventoryAdjustmentOptions: {
+      properties: {
+        detail: {
+          title: "Detail",
+          description: "Distribution Detail",
+          type: "object",
+          items: {
+            "$ref": "InventoryAdjustmentOptionsDetails"
+          }
+        },
+        asOf: {
+          title: "As Of",
+          description: "Transaction Timestamp, default to now()",
+          type: "string",
+          format: "date-time"
+        },
+        docNumber: {
+          title: "Document Number",
+          description: "Document Number",
+          type: "string"
+        },
+        notes: {
+          title: "Notes",
+          description: "Notes",
+          type: "string"
+        },
+        value: {
+          title: "Value",
+          description: "Value",
+          type: "string"
+        }
+      }
+    },
+    InventoryAdjustmentOptionsDetails: {
+      properties: {
+        quantity: {
+          title: "Quantity",
+          description: "Quantity",
+          type: "number"
+        },
+        location: {
+          title: "Location",
+          description: "UUID of location",
+          type: "string"
+        },
+        trace: {
+          title: "Trace",
+          description: "Trace (Lot or Serial) Number",
+          type: "string"
+        },
+        expiration: {
+          title: "Expiration",
+          description: "Perishable expiration date",
+          type: "string",
+          format: "date"
+        },
+        warranty: {
+          title: "Warranty",
+          description: "Warranty expire date",
+          type: "string",
+          format: "date"
+        }
+      }
+    }
   };
 
   /**
