@@ -50,7 +50,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     afterSaveActions: [{
       it: "verify currency is readonly",
       action: function (data, next) {
-        assert.isTrue(_.contains(data.model.readOnlyAttributes, "currency"));
+        assert.include(data.model.readOnlyAttributes, "currency");
         next();
       }
     }],
@@ -126,9 +126,49 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     Here is some high-level description of what an invoice is supposed to do.
     @class
     @alias Invoice
+    @parameter {String} number that is the documentKey and idAttribute
+    @parameter {Date} invoiceDate required default today
+    @parameter {Boolean} isPosted required, defaulting to false, read only
+    @parameter {Boolean} isVoid required, defaulting to false, read only
+    @parameter {BillingCustomer} customer required
+    @parameter {String} billtoName
+    @parameter {String} billtoAddress1
+    @parameter {String} billtoAddress2
+    @parameter {String} billtoAddress3
+    @parameter {String} billtoCity
+    @parameter {String} billtoState
+    @parameter {String} billtoPostalCode
+    @parameter {String} billtoCountry
+    @parameter {String} billtoPhone
+    @parameter {Currency} currency
+    @parameter {Terms} terms
+    @parameter {SalesRep} salesRep
+    @parameter {Percent} commission required, default 0
+    @parameter {SaleType} saleType
+    @parameter {String} customerPurchaseOrderNumber
+    @parameter {TaxZone} taxZone
+    @parameter {String} notes
+    @parameter {InvoiceRelation} recurringInvoice
+    @parameter {Money} allocatedCredit the sum of all allocated credits
+    @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
+    @parameter {Money} subtotal the sum of the extended price of all line items
+    @parameter {Money} taxTotal the sum of all taxes inluding line items, freight and tax adjustments
+    @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
+    @parameter {Money} total the calculated total of subtotal + freight + tax + miscCharge
+    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - outstandingCredit.
+      - If sum calculates to less than zero, then the balance is zero.
+    @parameter {InvoiceAllocation} allocations
+    @parameter {InvoiceTax} taxAdjustments
+    @parameter {InvoiceLine} lineItems
+    @parameter {InvoiceCharacteristic} characteristics
+    @parameter {InvoiceContact} contacts
+    @parameter {InvoiceAccount} accounts
+    @parameter {InvoiceCustomer} customers
+    @parameter {InvoiceFile} files
+    @parameter {InvoiceUrl} urls
+    @parameter {InvoiceItem} items
   */
   exports.invoice = {
-    skipSmoke: true, // XXX
     recordType: "XM.Invoice",
     collectionType: "XM.InvoiceListItemCollection",
     /**
@@ -152,7 +192,23 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     */
     idAttribute: "number",
     enforceUpperKey: true,
-    attributes: ["number"], // TODO
+    attributes: ["number", "invoiceDate", "isPosted", "isVoid", "customer",
+      "billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3",
+      "billtoCity", "billtoState", "billtoPostalCode", "billtoCountry",
+      "billtoPhone", "currency", "terms", "salesRep", "commission",
+      "saleType", "customerPurchaseOrderNumber", "taxZone", "notes",
+      "recurringInvoice", "allocatedCredit", "outstandingCredit", "subtotal",
+      "taxTotal", "miscCharge", "total", "balance", "allocations",
+      "taxAdjustments", "lineItems", "characteristics", "contacts",
+      "accounts", "customers", "files", "urls", "items"],
+    requiredAttributes: ["number", "invoiceDate", "isPosted", "isVoid",
+      "customer", "commission"],
+    defaults: {
+      invoiceDate: new Date(),
+      isPosted: false,
+      isVoid: false,
+      commission: 0
+    },
     /**
       @member -
       @memberof Invoice.prototype
@@ -175,46 +231,56 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       customer: {number: "TTOYS"}
     },
     updatableField: "notes",
+    beforeSaveActions: [{it: 'sets up a valid line item',
+      action: require("./model_data").getBeforeSaveAction("XM.InvoiceLine")}],
+    skipSmoke: true,
+    beforeSaveUIActions: [{it: 'sets up a valid line item',
+      action: function (workspace, done) {
+        var gridRow;
+
+        workspace.value.on("change:total", done);
+        workspace.$.invoiceLineItemGridBox.newItem();
+        gridRow = workspace.$.invoiceLineItemGridBox.$.editableGridRow;
+        // TODO
+        //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
+        gridRow.$.quantityWidget.doValueChange({value: 5});
+
+      }
+    }],
     additionalTests: require("../specs/invoice").additionalTests
   };
 
-  /**
-   @lends invoice
-    Some invoice stuff
-   */
-  var invoiceDetail = "foo";
-
-  exports.item = {
-    recordType: "XM.Item",
-    collectionType: "XM.ItemListItemCollection",
-    cacheName: null,
-    listKind: "XV.ItemList",
-    instanceOf: "XM.Document",
-    isLockable: true,
-    idAttribute: "number",
-    enforceUpperKey: true,
-    attributes: ["number", "description1"], // TODO: more
-    extensions: ["billing", "crm", "sales", "inventory", "project"],
-    privileges: {
-      createUpdate: "MaintainItemMasters",
-      read: "ViewItemMasters",
-      delete: "DeleteItemMasters"
-    },
-    createHash: {
-      number: "ATEST" + Math.random(),
-      description1: "Item description1",
-      isActive: true,
-      itemType: "P",
-      classCode: {code: "TOYS-COMP"},
-      productCategory: {code: "CLASSIC-WOOD"},
-      inventoryUnit: {name: "CS"},
-      isFractional: true,
-      isSold: true,
-      listPrice: 0.00,
-      priceUnit: {name: "CS"}
-    },
-    updatableField: "description1"
-  };
+  // exports.item = {
+  //   recordType: "XM.Item",
+  //   collectionType: "XM.ItemListItemCollection",
+  //   cacheName: null,
+  //   listKind: "XV.ItemList",
+  //   instanceOf: "XM.Document",
+  //   isLockable: true,
+  //   idAttribute: "number",
+  //   enforceUpperKey: true,
+  //   attributes: ["number", "description1"], // TODO: more
+  //   extensions: ["billing", "crm", "sales", "inventory", "project"],
+  //   privileges: {
+  //     createUpdate: "MaintainItemMasters",
+  //     read: "ViewItemMasters",
+  //     delete: "DeleteItemMasters"
+  //   },
+  //   createHash: {
+  //     number: "ATEST" + Math.random(),
+  //     description1: "Item description1",
+  //     isActive: true,
+  //     itemType: "P",
+  //     classCode: {code: "TOYS-COMP"},
+  //     productCategory: {code: "CLASSIC-WOOD"},
+  //     inventoryUnit: {name: "CS"},
+  //     isFractional: true,
+  //     isSold: true,
+  //     listPrice: 0.00,
+  //     priceUnit: {name: "CS"}
+  //   },
+  //   updatableField: "description1"
+  // };
 
   exports.reasonCode = {
     recordType: "XM.ReasonCode",
@@ -245,6 +311,56 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
         next();
       }
     }],
+  };
+
+  exports.receivable = {
+    recordType: "XM.Receivable",
+    skipSmoke: true,
+    skipSave: true,
+    skipDelete: true,
+    skipUpdate: true,
+    listKind: "XV.ReceivableListItem",
+    collectionType: null,
+    cacheName: null,
+    enforceUpperKey: true,
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "uuid",
+    documentKey: "documentNumber",
+    attributes: ["uuid", "documentDate", "customer", "dueDate",
+      "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
+      "reasonCode", "amount", "currency", "paid", "notes", "taxes", "balance",
+      "taxTotal", "commission"],
+    // TODO: "applications"],
+    requiredAttributes: ["currency", "customer", "documentDate", "dueDate", "amount"],
+    extensions: ["billing"],
+    privileges: {
+      createUpdateDelete: "EditAROpenItem",
+      read: "ViewAROpenItems"
+    },
+    createHash: {
+      uuid: "TestReceivableId" + Math.random(),
+      customer: {number: "TTOYS"},
+      documentDate: new Date(),
+      dueDate: new Date(),
+      amount: 100,
+      currency: {abbreviation: "USD"},
+      documentNumber: "DocumentNumber" + Math.random()
+    },
+    updatableField: "notes",
+    // afterSaveActions: [{
+    //   it: "When the status of a receivable changes to READY_CLEAN (edit), the following attributes: " +
+    //   "customer, documentDate, documentType, documentNumber, terms should be readOnly",
+    //   action: function (data, next) {
+    //     assert.include(data.model.readOnlyAttributes, "customer");
+    //     assert.include(data.model.readOnlyAttributes, "documentDate");
+    //     assert.include(data.model.readOnlyAttributes, "documentType");
+    //     assert.include(data.model.readOnlyAttributes, "documentNumber");
+    //     assert.include(data.model.readOnlyAttributes, "terms");
+    //     next();
+    //   }
+    // }],
+    additionalTests: require("../specs/receivable").additionalTests
   };
 
   exports.shipVia = {

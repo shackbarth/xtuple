@@ -53,25 +53,25 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           picker.setDocumentType("");
           picker.buildList();
           var list = picker._collection.models;
-          assert.isTrue(_.contains(list, nullModel));
-          assert.isTrue(_.contains(list, creditModel));
-          assert.isTrue(_.contains(list, debitModel));
+          assert.include(list, nullModel);
+          assert.include(list, creditModel);
+          assert.include(list, debitModel);
         });
 
         it('verify that the list filters correctly when credit memo is the document type', function () {
           picker.setDocumentType(XM.ReasonCode.CREDIT_MEMO);
           picker.buildList();
           var list = picker._collection.models;
-          assert.isTrue(_.contains(list, nullModel));
-          assert.isTrue(_.contains(list, creditModel));
+          assert.include(list, nullModel);
+          assert.include(list, creditModel);
         });
 
         it('verify that the list filters correctly when debit memo is the document type', function () {
           picker.setDocumentType(XM.ReasonCode.DEBIT_MEMO);
           picker.buildList();
           var list = picker._collection.models;
-          assert.isTrue(_.contains(list, nullModel));
-          assert.isTrue(_.contains(list, debitModel));
+          assert.include(list, nullModel);
+          assert.include(list, debitModel);
         });
       });
     });

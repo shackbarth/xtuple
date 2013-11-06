@@ -406,31 +406,35 @@ var _ = require("underscore"),
     //
     // Step 5: save the data to the database
     //
-    it('can be saved to the database', function (done) {
-      this.timeout(10 * 1000);
-      save(data, done);
-    });
-    _.each(data.afterSaveActions || [], function (spec) {
-      it(spec.it, function (done) {
-        this.timeout(20 * 1000);
-        spec.action(data, done);
+    if (!data.skipSave) {
+      it('can be saved to the database', function (done) {
+        this.timeout(10 * 1000);
+        save(data, done);
       });
-    });
+      _.each(data.afterSaveActions || [], function (spec) {
+        it(spec.it, function (done) {
+          this.timeout(20 * 1000);
+          spec.action(data, done);
+        });
+      });
+    }
 
-    //
-    // Step 6: set the model with updated data
-    //
-    it('can be updated', function () {
-      update(data);
-    });
+    if (!data.skipUpdate) {
+      //
+      // Step 6: set the model with updated data
+      //
+      it('can be updated', function () {
+        update(data);
+      });
 
-    //
-    // Step 7: save the updated model to the database
-    //
-    it('can be re-saved to the database', function (done) {
-      this.timeout(10 * 1000);
-      save(data, done);
-    });
+      //
+      // Step 7: save the updated model to the database
+      //
+      it('can be re-saved to the database', function (done) {
+        this.timeout(10 * 1000);
+        save(data, done);
+      });
+    }
 
     //
     // Step 8: delete the model from the database
