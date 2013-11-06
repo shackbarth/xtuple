@@ -187,9 +187,7 @@ create or replace function xt.post(data_hash text) returns text as $$
       f,
       params,
       args,
-      method,
-      strtype,
-      stringify;
+      method;
 
     dataHash.superUser = false;
     if (dataHash.username) { XT.username = dataHash.username; }
@@ -272,9 +270,8 @@ create or replace function xt.post(data_hash text) returns text as $$
        * Remove the requirement of passing 'isJSON' around.
        * Based on underscore: http://underscorejs.org/docs/underscore.html#section-88
        */
-      strtype = toString.call(ret);
-      stringify = strtype != '[object Number]' && strtype != '[object String]';
-      ret = stringify ? JSON.stringify(ret, null, prettyPrint) : ret;
+      ret = toString.call(ret) != '[object Number]' ?
+        JSON.stringify(ret, null, prettyPrint) : ret;
     }
 
     /* Unset XT.username so it isn't cached for future queries. */
