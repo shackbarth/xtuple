@@ -10,8 +10,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
   /**
     Distribute location and/or trace detail for one or many inventory transactions.
-    For good or for ill, this function attempts to exactly replicate the behavior of
-    distributeInventory.cpp in the C++ client.
+    For good or for ill, this function attempts to exactly replicate the behavior of distributeInventory.cpp in the C++ client.
     
     Example:
 
@@ -278,7 +277,16 @@ select xt.install_js('XM','Inventory','xtuple', $$
     itemSite: {type: "String", description: "UUID of itemSite"},
     quantity: {type: "Number", description: "Quantity" },
     options: {type: "Object", description: "Other attributes", attributes: {
-      detail: {type: "Array", description: "Distribution detail"},
+      detail: { type: "Array",
+        description: "Distribution Detail",
+        attributes: [
+        {type: "Object", description: "Location and/or Trace detail", attributes: {
+           quantity: {type: "Number", description: "Quantity"},
+           location: {type: "String", description: "UUID of location"},
+           trace: {type: "String", description: "Trace (Lot or Serial) Number"},
+           expiration: {type: "Date", description: "Perishable expiration date"},
+           warranty: {type: "Date", description: "Warranty expire date"}}}
+      ]},
       asOf: {type: "Date", description: "Transaction Timestamp, default to now()"},
       docNumber: {type: "String", description: "Document Number"},
       notes: {type: "String", description: "Notes"},
@@ -287,7 +295,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
   };
 
   /**
-    PO Enter Receipt 
+    Enter Receipt 
       select xt.post('{
         "nameSpace":"XM",
         "type":"Inventory",
@@ -328,14 +336,23 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return;
   };
-  XM.Inventory.enterReceipt.description = "Enter Purchase Order Receipt.";
+  XM.Inventory.enterReceipt.description = "Enter Receipt.";
   XM.Inventory.enterReceipt.params = {
     orderLines: {type: "Array", description: "Detail of order lines", attributes: { 
       uuid: {type: "String", description: "Order line UUID" },
       quantity: {type: "Number", description: "Quantity" }
     }},
     options: {type: "Object", description: "Other attributes", attributes: {
-      detail: {type: "Array", description: "Distribution detail" }
+      detail: { type: "Array",
+        description: "Distribution Detail",
+        attributes: [
+        {type: "Object", description: "Location and/or Trace detail", attributes: {
+           quantity: {type: "Number", description: "Quantity"},
+           location: {type: "String", description: "UUID of location"},
+           trace: {type: "String", description: "Trace (Lot or Serial) Number"},
+           expiration: {type: "Date", description: "Perishable expiration date"},
+           warranty: {type: "Date", description: "Warranty expire date"}}}
+      ]},
     }}
   };
 
@@ -430,7 +447,14 @@ select xt.install_js('XM','Inventory','xtuple', $$
     quantity: {type: "Number", description: "Quantity" },
     options: {type: "Object", description: "Other attributes", attributes: {
       asOf: {type: "Date", description: "Transaction Timestamp. Default to now()."},
-      detail: {type: "Array", description: "Distribution detail" }
+      detail: { type: "Array",
+        description: "Distribution Detail",
+        attributes: [
+        {type: "Object", description: "Location and/or Trace detail", attributes: {
+           quantity: {type: "Number", description: "Quantity"},
+           location: {type: "String", description: "UUID of location"},
+           trace: {type: "String", description: "Trace (Lot or Serial) Number"}}}
+      ]},
     }}
   };
 
@@ -571,7 +595,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
-    return JSON.stringify(ret);
+    return ret;
   };
   
   /* 

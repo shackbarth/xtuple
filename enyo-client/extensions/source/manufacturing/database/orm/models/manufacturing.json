@@ -71,6 +71,7 @@
     "nameSpace": "XM",
     "type": "IssueMaterial",
     "table": "xt.womatlissue",
+    "isRest": true,
     "comment": "Issue Work Order Material",
     "privileges": {
       "all": {

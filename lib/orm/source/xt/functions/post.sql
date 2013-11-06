@@ -174,6 +174,9 @@ create or replace function xt.post(data_hash text) returns text as $$
       prettyPrint = dataHash.prettyPrint ? 2 : null,
       dispatch = dataHash.dispatch,
       data,
+      fetchCol,
+      fetchRes,
+      fetchSql,
       orm,
       pkey,
       prv,
@@ -200,13 +203,28 @@ create or replace function xt.post(data_hash text) returns text as $$
       /* set status */
       XT.jsonpatch.updateState(dataHash.data, "create");
 
-      /* set id if not provided */
+      /* Set natural key number if not provided. */
+      if (nkey && (nkey !== pkey) && !dataHash.data[nkey]) {
+        if (nkey === 'uuid') {
+          dataHash.data[nkey] = XT.generateUUID();
+        } else {
+          /* Check if this is a fetchable number. */
+          if (orm.orderSequence) {
+            /* Since this is null, but required, fetch the next number for this and use it. */
+            dataHash.data[nkey] = XM.Model.fetchNumber(dataHash.nameSpace + '.' + dataHash.type);
+          } else {
+            throw new handleError("A unique " + nkey + " must be provided", 449);
+          }
+        }
+      }
+
+      /* Set id if not provided. */
       if (!dataHash.id) {
         if (nkey) {
           if (dataHash.data[nkey] || nkey === 'uuid') {
             dataHash.id = dataHash.data[nkey] || XT.generateUUID();
           } else {
-            plv8.elog(ERROR, "A unique id must be provided");
+            throw new handleError("A unique id must be provided", 449);
           }
         } else {
           dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
@@ -247,13 +265,23 @@ create or replace function xt.post(data_hash text) returns text as $$
       }
 
       ret = obj.isDispatchable ? method() : false;
-      ret = dispatch.isJSON ? JSON.stringify(ret, null, prettyPrint) : ret;
+
+      /**
+       * Remove the requirement of passing 'isJSON' around.
+       * Based on underscore: http://underscorejs.org/docs/underscore.html#section-88
+       */
+      ret = JSON.stringify(ret, null, prettyPrint);
     }
 
     /* Unset XT.username so it isn't cached for future queries. */
     XT.username = undefined;
 
-    XT.message(201, "Created");
+    if (dataHash.dispatch) {
+      XT.message(200, "OK");
+    } else {
+      XT.message(201, "Created");
+    }
+
     return ret;
   } catch (err) {
     XT.error(err);

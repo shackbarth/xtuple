@@ -3,7 +3,7 @@ the client of the xTuple Web/Mobile platform. It does not
 include database or datasource code, nor does it include
 business-object-specific implementation classes.
 
-These objects are in one of three namespaces: 
+These objects are in one of three namespaces:
 
 * `XV`: views, typically defined in `lib/enyo-x`
 * `XM`: models, typically defined in `lib/backbone-x`

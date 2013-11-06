@@ -7,6 +7,10 @@
   padding: 8px;
   margin-right: 5px;
 
+  .enyo-fittable-columns-layout > * {
+    vertical-align: middle;
+  }
+
   &.editor {
     min-width: 250px;
     padding: 0;
@@ -64,17 +68,8 @@
   }
 
   .xv-relationwidget, .xv-datewidget, .xv-numberwidget {
-    .onyx-input-decorator {
-      width: 170px;
-    }
     input {
-      width: 120px;
-    }
-  }
-
-  .xv-numberwidget {
-    input {
-      width: 150px;
+      width: 135px;
     }
   }
 
@@ -85,9 +80,9 @@
 
     .onyx-input-decorator {
       border: 0;
-      font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+      font-family: @groupboxFont;
       width: 110px;
-      padding: 6px 10px 8px 6px;
+      padding: 0 10px 0 6px;
 
       input, .xv-money-label {
         width: 100%;
@@ -146,6 +141,7 @@
   > *:first-child:last-child {
     .border-radius(4px);
   }
+
 }
 
 .xv-groupbox-header {

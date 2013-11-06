@@ -122,7 +122,7 @@ select xt.install_js('XM','item','xtuple', $$
             "where uomtype_name=$2 " +
             " and item_number=$1) as units ";
 
-     return JSON.stringify(plv8.execute(sql, [itemId, type])[0].units);
+     return plv8.execute(sql, [itemId, type])[0].units;
   }
 
 }());

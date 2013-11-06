@@ -86,6 +86,35 @@ trailing:true, white:true, strict: false*/
   });
 
   // ..........................................................
+  // BANK ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.BankAccountList",
+    kind: "XV.List",
+    label: "_bankAccounts".loc(),
+    collection: "XM.BankAccountRelationCollection",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.BankAccountRelation", "XV.BankAccountList");
+
+  // ..........................................................
   // CLASS CODE
   //
 
@@ -1001,6 +1030,27 @@ trailing:true, white:true, strict: false*/
   });
 
   // ..........................................................
+  // INVOICE
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceList",
+    kind: "XV.List",
+    label: "_invoices".loc(),
+    collection: "XM.InvoiceListItemCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "number", isKey: true}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // ITEM
   //
 
@@ -1685,16 +1735,14 @@ trailing:true, white:true, strict: false*/
     },
     convertQuote: function (inEvent) {
       var model = inEvent.model,
+        that = this,
         customer = model.get("customer"),
         K = XM.CustomerProspectRelation,
-        that = this,
+        attrs,
 
         // In case we are converting a prospect
         convertToCustomer = function (resp) {
           if (!resp.answer) { return; }
-          var success = function () {
-            this.getValue().convertFromProspect(customer.id);
-          };
 
           that.doWorkspace({
             workspace: "XV.CustomerWorkspace",
@@ -1702,32 +1750,46 @@ trailing:true, white:true, strict: false*/
               number: customer.get("number"),
               name: customer.get("name")
             },
-            success: success,
+            success: afterCustomerCreated,
             callback: convertToSalesOrder,
             allowNew: false
           });
         },
 
-        // A callback in case we had to convert to a customer first
-        convertToSalesOrder = function () {
-          var success = function () {
-              var gridBox = this.$.salesOrderLineItemGridBox;
-              this.getValue().convertFromQuote(model.id, {
-                success: function () {
-                  // Hack to force grid to refresh. Why doesn't it on its own?
-                  gridBox.valueChanged();
-                  gridBox.setDisabled(false);
-                }
-              });
-            };
+        afterCustomerCreated = function () {
+          this.getValue().convertFromProspect(customer.id);
+        },
 
+        convertToSalesOrder = function () {
+          XM.SalesOrder.convertFromQuote(model.id, {
+            success: afterQuoteConvertedSuccess
+          });
+        },
+
+        afterQuoteConvertedSuccess = function (resp) {
+          attrs = resp;
           that.doWorkspace({
             workspace: "XV.SalesOrderWorkspace",
-            success: success,
+            success: afterSalesOrderCreated,
             allowNew: false
           });
+        },
+
+        afterSalesOrderCreated = function () {
+          var value = this.getValue(),
+            gridBox = this.$.salesOrderLineItemGridBox;
+
+          value.setStatus(XM.Model.BUSY_FETCHING);
+          value.set(attrs);
+          value.revertStatus();
+
+          //Hack to force grid to refresh. Why doesn't it on its own?
+          gridBox.valueChanged();
+          gridBox.setDisabled(false);
         };
 
+
+      // Get the process started one way or another
       if (customer.get("status") === K.PROSPECT_STATUS) {
         this.doNotify({
           type: XM.Model.QUESTION,
@@ -1741,6 +1803,33 @@ trailing:true, white:true, strict: false*/
   });
 
   XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
+
+  // ..........................................................
+  // REASON CODE
+  //
+
+  enyo.kind({
+    name: "XV.ReasonCodeList",
+    kind: "XV.List",
+    label: "_reasonCodes".loc(),
+    collection: "XM.ReasonCodeCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 
   // ..........................................................
   // SALE TYPE

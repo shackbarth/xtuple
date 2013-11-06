@@ -5,12 +5,16 @@
 /* List */
 .xv-list {
   background-color: @white;
+  .xv-list-item > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
   .xv-list-item {
-    @include box-sizing(border-box);
+    // this isn't valid so it isn't really doing anything
+    // @include box-sizing(border-box);
     background-color: @white;
-    padding-top: 3px;
-    padding-bottom: 3px;
     border-bottom: 1px solid @smoke;
+    min-height: 32px;
     &.header {
       padding-top: 0;
     }
@@ -19,7 +23,7 @@
       color: @black;
       .xv-list-column {
         .xv-list-attr {
-          background-color: @gray;
+          background: transparent;
           &.placeholder {
             color: @gray;
           }
@@ -57,51 +61,29 @@
       }
     }
     &.item-selected {
-      background: @slate-blue url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
+      background: @item-hilite-background;
+      #gradient > .vertical(@item-hilite-background, @dark-slate-blue);
+
       .xv-list-attr {
         color: @white;
-        background: none;
         &.placeholder {
           font-style: italic;
           color: @sky-blue;
         }
         &.hyperlink {
           color: @bright-orange;
-          background: transparent;
         }
-      }
-      .xv-list-attr {
         &.header {
           background: @sky-blue;
         }
       }
-      .xv-list-column {
-        .xv-list-attr {
-          color: @white;
-          background: none;
-          &.placeholder {
-            font-style: italic;
-            color: SkyBlue;
-          }
-          &.hyperlink {
-            color: @bright-orange;
-            background: transparent;
-          }
-        }
-      }
+    }
+    .xv-list-item-gear {
+      position: absolute;
+      right: 4px;
+      z-index: 999;
     }
   }
-}
-
-.xv-list-item > * {
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.xv-list-gear-icon-button {
-  float: right;
-  display: none;
-  margin-top: -4px;
 }
 
 .xv-list-attr {
@@ -111,7 +93,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: @black;
-  background-color: @white;
   &.header {
     padding: 4px;
     background: @gray;
