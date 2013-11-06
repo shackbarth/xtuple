@@ -699,6 +699,7 @@ Should include a panel that displays credit allocations.
         @description When currency or invoice date is changed outstanding credit should be recalculated.
       */
       it("When currency or invoice date is changed outstanding credit should be recalculated", function (done) {
+        this.timeout(5000);
         var outstandingCreditChanged = function () {
           if (invoiceModel.get("outstandingCredit")) {
             // second time, with valid currency
@@ -1096,16 +1097,6 @@ Should include a panel that displays credit allocations.
     });
   };
 /*
-
-***** CHANGES MADE BY CRM EXTENSION ******
-
-* Nested only models should be created according to convention for many-to-many document associations:
-  > XM.InvoiceIncident
-  > XM.InvoiceOpportunity
-
-* XM.Invoice will include:
-  > InvoiceIncident "incidents"
-  > InvoiceOpportunity "opportunities"
 
 ***** CHANGES MADE BY SALES EXTENSION ******
 

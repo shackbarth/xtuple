@@ -105,23 +105,6 @@ trailing:true, white:true*/
       parentKey: "incident"
     });
 
-
-    // ..........................................................
-    // INVOICE
-    //
-
-    enyo.kind({
-      name: "XV.InvoiceIncidentListRelations",
-      kind: "XV.IncidentListRelations",
-      parentKey: "invoice"
-    });
-
-    enyo.kind({
-      name: "XV.InvoiceOpportunityListRelations",
-      kind: "XV.AccountOpportunityListRelations",
-      parentKey: "invoice"
-    });
-
     // ..........................................................
     // OPPORTUNITY
     //

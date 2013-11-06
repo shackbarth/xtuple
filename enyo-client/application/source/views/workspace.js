@@ -1150,6 +1150,7 @@ strict: false*/
           ]}
         ]},
         {kind: "XV.InvoiceAllocationsBox", attr: "allocations", title: "_allocatedCredit".loc()},
+        {kind: "XV.InvoiceDocumentsBox", attr: "documents"}
       ]}
     ],
     create: function () {

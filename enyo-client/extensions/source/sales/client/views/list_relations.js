@@ -81,35 +81,6 @@ trailing:true, white:true, strict:false */
     });
 
     // ..........................................................
-    // INVOICE SALES ORDER
-    //
-
-    enyo.kind({
-      name: "XV.InvoiceSalesOrderListRelations",
-      kind: "XV.ListRelations",
-      parentKey: "invoice",
-      components: [
-        {kind: "XV.ListItem", components: [
-          {kind: "FittableRows", components: [
-            {kind: "XV.ListColumn", classes: "first", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-                {kind: "XV.ListAttr", attr: "orderDate", classes: "right"}
-              ]}
-            ]}
-            /*{kind: "XV.ListColumn", classes: "first", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "shipVia"},
-                {kind: "XV.ListAttr", attr: "total", classes: "right",
-                  formatter: "formatMoney"}
-              ]}
-            ]}*/
-          ]}
-        ]}
-      ],
-    });
-
-    // ..........................................................
     // OPPORTUNITY SALES ORDER
     //
 

@@ -167,8 +167,7 @@ trailing:true, white:true*/
 
     extensions = [
       {kind: "XV.InputWidget", container: "mainGroup", attr: "orderNumber"},
-      {kind: "XV.DateWidget", container: "mainGroup", attr: "orderDate"},
-      {kind: "XV.InvoiceSalesOrderListRelationsBox", container: "panels", attr: "salesOrders"}
+      {kind: "XV.DateWidget", container: "mainGroup", attr: "orderDate"}
     ];
     XV.appendExtension("XV.InvoiceWorkspace", extensions);
 

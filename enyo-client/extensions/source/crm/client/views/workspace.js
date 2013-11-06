@@ -130,16 +130,6 @@ trailing:true, white:true*/
     XV.appendExtension("XV.IncidentWorkspace", extensions);
 
     // ..........................................................
-    // INVOICE
-    //
-
-    extensions = [
-      {kind: "XV.InvoiceIncidentListRelationsBox", container: "panels", attr: "incidents"},
-      {kind: "XV.InvoiceOpportunityListRelationsBox", container: "panels", attr: "opportunities"},
-    ];
-    XV.appendExtension("XV.InvoiceWorkspace", extensions);
-
-    // ..........................................................
     // OPPORTUNITY
     //
 

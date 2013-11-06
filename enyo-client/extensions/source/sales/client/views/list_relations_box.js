@@ -8,19 +8,6 @@ trailing:true, white:true*/
   XT.extensions.sales.initListRelationsBoxes = function () {
 
     // ..........................................................
-    // INVOICE SALES ORDER
-    //
-
-    enyo.kind({
-      name: "XV.InvoiceSalesOrderListRelationsBox",
-      kind: "XV.ListRelationsBox",
-      title: "_salesOrders".loc(),
-      parentKey: "invoice",
-      listRelations: "XV.InvoiceSalesOrderListRelations",
-      searchList: "XV.SalesOrderList"
-    });
-
-    // ..........................................................
     // OPPORTUNITY QUOTE
     //
 
