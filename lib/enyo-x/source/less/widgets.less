@@ -12,21 +12,36 @@
   .buttons {
     display: block;
     padding: 0;
-    margin: 1px 0 1px 0;
+    margin: 1px 0 1px 10px;
     width: 20px;
     height: 20px;
+    background: transparent;
+    color: @slate-blue;
+    font-size: 20px;
+    border: none;
   }
   .slider {
-    margin: 15px 15px;
-    width: 100px;
+    margin: 15px 10px;
   }
   &.xv-numberwidget {
-    .onyx-input-decorator {
-      width: 100px;
-    }
     input {
-      width: 50px;
-      text-align: left;
+      width: 140px;
     }
   }
+}
+
+.xv-dependency-picker {
+  .onyx-picker-decorator {
+    .onyx-button {
+      width: 280px;
+      margin-left: 6px;
+    }
+  }
+}
+
+.xv-dependency-button {
+  color: @slate-blue;
+  font-size: 24px;
+  border: none;
+  background: transparent;
 }

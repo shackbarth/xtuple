@@ -340,32 +340,35 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
       it.skip("The following action will be included on the list: " +
         "Open Receivable: Only enabled on posted receivables with privileges", function () {});
 
-      it.skip("The recievable list view will have the following parameter options:" +
-       //  ">Receivables
-       //   - Number
-       //   - As Of - default today
-       // > Show
-       //   - Unposted - unchecked by default
-       //   - Closed - unchecked by default
-       //   - Debits - checked by default
-       //   - Credits - checked by default
-       // > Customer
-       //   - Number
-       //   - Type (picker)
-       //   - Type Pattern (text)
-       //   - Group
-       // > Due Date
-       //   - From Date
-       //   - To Date
-       // > Document Date
-       //  - From Date
-         "- To Date", function () {});
+      it("The receivable list view will include the following parameter options:", function () {
+        assert.isDefined(XV.ReceivableListParameters);
+        var parameterWidget = new XV.ReceivableListParameters();
+        assert.isDefined(parameterWidget);
+
+        var params = [
+          //"asOfDate",
+          "number",
+          "showUnposted",
+          "showClosed",
+          "showDebits",
+          "showCredits",
+          "customer",
+          "customerType",
+          // customer type pattern,
+          "toDate",
+          "fromDate",
+          "toDocDate",
+          "fromDocDate"
+        ];
+        _.each(params, function (param) {
+          assert.isDefined(parameterWidget.$[param]);
+        });
+      });
 
       it.skip("The As Of parameter will only be enabled when unposted and closed are unchecked. Otherwise it will be set to the current date and disabled.", function () {});
 
       it.skip("When active the As Of parameter will limit query results to receivables where the As Of date is greater than or equal to the document date" +
        "and is less than or equal to the close date or where the close date is null", function () {
-        //HINT: https://github.com/xtuple/xtuple/blob/master/lib/backbone-x/source/collection.js#L63
       });
     });
 
@@ -383,6 +386,9 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         //   "reasonCode", "amount", "currency", "paid", "notes", "taxes", "balance",
         //   "taxTotal", "commission"],
         // TODO: "applications"],
+        //        _.each(attributes, function (param) {
+        // assert.isDefined(receivableWorkspace.$[param]);
+        //});
       });
 
       it.skip("The saveText property on the workspace for XM.Receivable will be 'Post' when " +

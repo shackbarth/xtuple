@@ -78,11 +78,11 @@ XT.extensions.billing.initLists = function () {
           {kind: "XV.ListColumn", classes: "third", components: [
             {kind: "XV.ListAttr", attr: "isPosted", formatter: "formatPosted"}
           ]},
-          {kind: "XV.ListColumn", classes: "short", components: [
+          {kind: "XV.ListColumn", classes: "money", components: [
             {kind: "XV.ListAttr", attr: "documentNumber"}
           ]},
-          {kind: "XV.ListColumn", classes: "short", components: [
-            {kind: "XV.ListAttr", attr: "customer"}
+          {kind: "XV.ListColumn", classes: "descr", components: [
+            {kind: "XV.ListAttr", attr: "customer.name"}
           ]},
           {kind: "XV.ListColumn", classes: "money", components: [
             {kind: "XV.ListAttr", attr: "documentDate"}

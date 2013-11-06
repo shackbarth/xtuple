@@ -292,7 +292,8 @@
         "name": "customer",
         "toOne": {
           "type": "CustomerRelation",
-          "column": "customer"
+          "column": "customer",
+          "isNested": true
         }
       },
       {
@@ -307,6 +308,13 @@
         "attr": {
           "type": "Date",
           "column": "due_date"
+        }
+      },
+      {
+        "name": "closeDate",
+        "attr": {
+          "type": "Date",
+          "column": "close_date"
         }
       },
       {

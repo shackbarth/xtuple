@@ -1,6 +1,5 @@
 /*
-
-  To compile to .css:
+  To compile this .less file to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 
@@ -9,14 +8,20 @@
 /*
   These variables will show in css as their hex values
 */
+
+// Variables for LESS Project
+// --------------------------
+
+// Colors
+// ------
 @highlight: #d6f1ff;
 @orange: #f60;
 @bright-orange: #f49200;
 @sky-blue: #9cf;
-@slate-blue: #226b9a;
 @light-blue: #35a8ee;
 @blue: #0000ff;
-@slate-blue: #357EC7;
+@slate-blue: #357ec7;
+@dark-slate-blue: #1a4f77;
 @lightest-gray: #eee;
 @earl-grey: #f3f3f3;
 @silver: #aaa;
@@ -36,24 +41,44 @@
 @bright-red: #ff0000;
 @green: #009000;
 @light-orange: #ff9c00;
-@item-hilite-background: url(/assets/item-hilite.png) repeat-x bottom;
+@item-hilite-background: #226b9a;
 
-@import "model-decorator.less";
+// Fonts
+// ------
+@baseFont: "arial", "arial black";
+@groupboxFont: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+@startupFont: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
+@baseFontSize: 100%;
+@panelsFontSize: 5em;
 
-/* Helper classes for css3 */
+// Imports
+// ------
+/**
+  Import for Font-Awesome icons
+*/
+@import "../../lib/font-awesome/less/font-awesome.less";
+@import "../../lib/font-onyx/lib/Icon.less";
 
+/**
+  Helper classes for css3
+*/
 @import "mixins.less";
 
 /**
-  Less styles for the picker widget
+  Model decorator
 */
-@import "picker.less";
+@import "model-decorator.less";
 
 /**
   Styles relating to the groupbox and widgets contained
     by a groupbox
 */
 @import "groupbox.less";
+
+/**
+  Less styles for the picker widget
+*/
+@import "picker.less";
 
 /**
   Styles relating to grid-entry
@@ -81,14 +106,23 @@
 @import "widgets.less";
 
 /**
-  Import for Font-Awesome icons
+  Styles for characteristic pickers and buttons
 */
-@import "../../lib/font-awesome/less/font-awesome.less";
-@import "../../lib/font-onyx/lib/Icon.less";
+@import "characteristics.less";
+
+/**
+  Styles relations to relation widgets
+*/
+@import "relations.less";
+
+/**
+  Styles for startup panel
+*/
+@import "startup.less";
 
 body {
-  font-family: "arial", "arial black";
-  font-size: 100%;
+  font-family: @baseFont;
+  font-size: @baseFontSize;
 }
 
 .bggrad {
@@ -105,7 +139,7 @@ body {
 
 .panels > * {
   border: 2px solid @dark-gray;
-  font-size: 5em;
+  font-size: @panelsFontSize;
 }
 
 .wide > * {
@@ -117,43 +151,26 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-.developer-ui-container {
-  .box-shadow(#333 4px 4px 10px -4px);
-  .border-top-right-radius(10px);
-  top: 100px;
-  left: 0;
-  position: absolute;
-  background-color: @smoke;
-  z-index: 10;
-  .developer-rows {
-    .row {
-      display: block;
-      margin: 10px;
-    }
+/*
+  Media query for responsive design. This adapts to smaller
+  displays.
+*/
+@media (max-width: 480px) {
+  .pullout-menu {
+    display: block;
+    margin: 0;
   }
-  .onyx-grabber {
-    &.developer-grabber {
-      .box-shadow(#333 4px 4px 10px -4px);
-      .border-top-right-radius(10px);
-      .border-bottom-right-radius(10px);
-      background-color: @smoke;
-      position: absolute;
-      right: -47px;
-      top: 0;
-      height: 54px;
-      width: 50px;
-    }
-  }
+  .app-panels > * {
+       min-width: 100%;
+       max-width: 100%;
+   }
 }
 
 .item {
-  background-color: @dark-gray;
-  border-bottom: 1px solid @near-black;
   position: relative;
   padding: 16px 12px;
-}
-
-.item {
+  background-color: @dark-gray;
+  border-bottom: 1px solid @near-black;
   &.onyx-selected {
     background-color: @slate-blue;
   }
@@ -241,28 +258,6 @@ body {
   }
 }
 
-.xv-startup-panel {
-  background: @dark-gray;
-  .xv-startup-divider {
-    width: 70%;
-    margin: 0 auto 8px auto;
-    top: 200px;
-    position: relative;
-    color: @bright-orange;
-    text-transform: uppercase;
-    font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
-  }
-  .xv-startup-progress {
-    width: 70%;
-    margin: 0 auto 0 auto;
-    top: 200px;
-    position: relative;
-  }
-}
-
 .xv-my-account-popup {
   background-color: @white;
   color: #000;
@@ -315,26 +310,6 @@ body {
   padding: 10px;
 }
 
-/*
-  Media query for responsive design. This adapts to smaller
-  displays.
-*/
-@media (max-width: 480px) {
-  .pullout-menu {
-    display: block;
-    margin: 0;
-  }
-  .app-panels > * {
-       min-width: 100%;
-       max-width: 100%;
-   }
-}
-
-/*
-  XV Views
-*/
-
-/* Navigator */
 .xv-navigator-header {
   font-size: small;
   font-weight: bold;
@@ -350,30 +325,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 8px 0 0 8px;
-}
-
-/* Characteristics */
-.xv-characteristic-picker {
-  .onyx-picker-decorator .onyx-button {
-    width: 130px;
-  }
-}
-
-.xv-characteristic-item {
-  border-bottom: 1px solid @silver;
-  .onyx-input-decorator > input {
-    width: 115px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-}
-
-.xv-characteristic-button {
-  margin-right: 4px;
-}
-
-.xv-characteristic-buttons {
-  margin: 8px;
 }
 
 .xv-popup-button {
@@ -407,7 +358,6 @@ body {
   text-align: center;
 }
 
-/* CommentBox */
 .xv-comment-box {
   .onxy-groupbox-header {
     max-width: 320px;
@@ -425,7 +375,6 @@ body {
     text-overflow: ellipsis;
   }
   .xv-comment-box-textblock {
-    padding: 5px;
     font-size: small;
     overflow: hidden;
     &.disabled {
@@ -439,22 +388,9 @@ body {
   }
 }
 
-/*
-  XV Widgets
-*/
-
-.icon-folder-open-alt {
+.icon-folder-open-alt, .icon-calendar, .icon-sort {
   color: @slate-blue;
-}
-
-.icon-calendar {
-  color: @slate-blue;
-}
-
-.xv-numberwidget {
-  input {
-    text-align: right;
-  }
+  vertical-align: middle;
 }
 
 .xv-addresswidget {
@@ -477,40 +413,19 @@ body {
   }
 }
 
-.xv-addresswidget-input-decorator {
+.xv-addresswidget-input-decorator, .xv-addresswidget-combobox-decorator {
   background: @white;
   display: block;
   margin: 4px;
+  .enyo-fittable-columns-layout > * {
+    vertical-align: middle;
+  }
   &.short {
     width: 40%;
   }
 }
-
 .xv-addresswidget-combobox-decorator {
-  background: @white;
-  display: block;
-  margin: 4px;
-  width: 80%;
-  padding-right: 0;
-  .xv-combobox-input {
-    width: 80%;
-  }
-  .xv-combobox {
-    padding: 0;
-    width: 100%;
-  }
-  .enyo-fittable-columns-layout {
-    .icon-sort {
-      padding-top: 2px;
-      padding-left: 30px;
-    }
-    .xv-decorated-label {
-      padding-top: 2px;
-    }
-    .xv-combobox-input {
-      padding-top: 2px;
-    }
-  }
+  width: 60%;
 }
 
 .xv-addresswidget-input {
@@ -550,98 +465,9 @@ body {
   background-color: @white;
 }
 
-/* RelationWidget */
-.xv-relationwidget-completer {
-  left: -200px;
-  top: 15px;
-}
-
-.xv-completer-sidecar {
-  color: @blue-gray;
-}
-
-.xv-relationwidget-column {
-  &.left {
-    padding-right: 18px;
-    color: #000;
-    width: 140px;
-  }
-}
-
-.xv-relationwidget-icon {
-  top: 1px;
-  left: 8px;
-  height: 30px;
-  position: relative;
-}
-
-.xv-relationwidget-description {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-indent: 140px;
-  font-size: small;
-  padding-bottom: 4px;
-  max-width: 325px;
-  &.disabled {
-    color: @dim-gray;
-  }
-  &.label {
-    text-indent: 0;
-    text-align: right;
-
-  }
-  &.hasLabel {
-    text-indent: 0;
-  }
-  &.hyperlink {
-    color: blue;
-  }
-}
-
-.xv-private-item-site-widget {
-  border-bottom-color: rgb(170, 170, 170);
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-}
-
-/* RelationsEditorBox */
-.xv-relations-editor-box {
-  .xv-groupbox {
-    margin-right: 0;
-    padding: 0;
-    border: none;
-  }
-  &.panel {
-    width: 350px;
-  }
-}
-
-/* ListRelationsBox */
-.xv-list-relations-box {
-  &.panel {
-    width: 625px;
-  }
-}
-
-.xv-short-relations-box {
-  &.panel {
-    width: 500px;
-  }
-}
-
-.xv-label {
+.xv-label, .xv-decorated-label {
   width: 130px;
   padding: 8px;
-  text-align: right;
-  &.disabled {
-    color: @dim-gray;
-  }
-}
-
-.xv-decorated-label {
-  width: 130px;
-  padding: 14px 8px 8px 8px;
   text-align: right;
   &.disabled {
     color: @dim-gray;
@@ -674,6 +500,7 @@ body {
 }
 
 .xv-half-check {
+  // TODO: replace this image with font
   background:
     transparent
     url(../../../../../../assets/checkbox.png)
