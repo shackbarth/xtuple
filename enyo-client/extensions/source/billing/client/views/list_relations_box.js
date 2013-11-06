@@ -44,6 +44,19 @@ trailing:true, white:true*/
       listRelations: "XV.ReceivableApplicationListRelations"
     });
 
+    /**
+     * @class XV.CashReceiptApplicationsBox
+     * @extends XV.ListRelationsBox
+     * @see XV.CashReceiptApplicationsList
+     */
+    enyo.kind({
+      name: 'XV.CashReceiptApplicationsBox',
+      kind: 'XV.ListRelationsBox',
+      listRelations: 'XV.CashReceiptApplicationsList',
+      title: '_cashReceiptApplications'.loc(),
+      canOpen: false
+    });
+
   };
 
 }());

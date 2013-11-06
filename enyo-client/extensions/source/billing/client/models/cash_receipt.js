@@ -15,11 +15,10 @@ XT.extensions.billing.initCashReceipt = function () {
     numberPolicySetting: XM.Document.AUTO_NUMBER,
 
     defaults: function () {
-      this.meta.set({
-        useCustomerDeposit: XT.session.settings.get('EnableCustomerDeposits')
-      });
+      this.meta = new Backbone.Model();
       return {
         posted: false,
+        useCustomerDeposit: XT.session.settings.get('EnableCustomerDeposits'),
         fundsType: XM.FundsTypes.CHECK,
         currency: XM.baseCurrency,
         currencyRate: 1,
@@ -85,6 +84,8 @@ XT.extensions.billing.initCashReceipt = function () {
      * @listens status:READY_CLEAN
      */
     onReadyClean: function (model) {
+      /*
+       * TODO re-enable 
       this.setReadOnly(this.get('posted'));
       this.setReadOnly([
         'amount',
@@ -94,7 +95,8 @@ XT.extensions.billing.initCashReceipt = function () {
         'bankAccount',
         'distributionDate',
         'applicationDate'
-      ], this.isCreditCard());
+      ], XM.FundsTypes.isCreditCard(this.get('fundsType')));
+      */
     },
 
     /**

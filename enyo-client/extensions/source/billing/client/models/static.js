@@ -35,7 +35,9 @@ XT.extensions.billing.initStaticModels = function () {
     DISCOVER:          'D',
     OTHER_CREDIT_CARD: 'R',
     WIRE_TRANSFER:     'W',
-    OTHER:             'O',
+    OTHER:             'O'
+  };
+  XM.FundsTypes = _.extend(_.invert(XM.FundsTypes), {
 
     /**
      * Returns true if the given fundsType is a credit card type, false
@@ -44,8 +46,7 @@ XT.extensions.billing.initStaticModels = function () {
     isCreditCard: function (fundsType) {
       return _.contains([ 'M', 'V', 'A', 'D', 'R' ], fundsType);
     }
-  };
-  XM.FundsTypes = _.extend(_.invert(XM.FundsTypes));
+  });
 
   /**
     * @enum

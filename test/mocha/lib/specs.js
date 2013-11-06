@@ -93,9 +93,8 @@
     extensions: ["billing"],
     updatableField: 'notes',
     listKind: 'XV.CashReceiptList',
-    createHash: {
-
-    }
+    createHash: require("../specs/cash_receipt").createHash,
+    additionalTests: require("../specs/cash_receipt").additionalTests,
   };
 
   exports.currency = {

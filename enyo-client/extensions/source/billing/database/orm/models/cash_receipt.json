@@ -52,6 +52,14 @@
         }
       },
       {
+        "name": "useCustomerDeposit",
+        "attr": {
+          "type": "Boolean",
+          "column": "usecustdeposit",
+          "required": true
+        }
+      },
+      {
         "name": "amount",
         "attr": {
           "type": "Money",
@@ -145,6 +153,7 @@
       {
         "name": "lineItems",
         "toMany": {
+          "isNested": true,
           "type": "CashReceiptLine"
         }
       }
@@ -179,10 +188,11 @@
         }
       },
       {
-        "name": "cashReceipt",
+        "name": "receivable",
         "toOne": {
-          "type": "CashReceiptRelation",
-          "column": "cashrcptitem_cashrcpt_id"
+          "isNested": true,
+          "type": "ReceivableRelation",
+          "column": "cashrcptitem_aropen_id"
         }
       },
       {
@@ -474,13 +484,14 @@
         "name": "allPending",
         "attr": {
           "type": "Money",
-          "column": "pending"
+          "column": "all_pending"
         }
       },
       {
         "name": "pendingApplications",
         "toMany": {
-          "type": "CashReceiptLinePending"
+          "type": "CashReceiptLinePending",
+          "isNested": true
         }
       },
       {

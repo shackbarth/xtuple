@@ -42,6 +42,29 @@ trailing:true, white:true*/
         ]}
       ]
     });
+
+    /**
+     * @class XV.CashReceiptApplicationsBox
+     * @extends XV.ListRelations
+     * @see XV.CashReceiptApplicationsList
+     */
+    enyo.kind({
+      name: 'XV.CashReceiptApplicationsList',
+      kind: 'XV.ListRelations',
+      parentKey: 'cashReceipt',
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+              {kind: "XV.ListAttr", attr: "documentNumber", classes: "bold"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "amount"}
+            ]}
+          ]}
+        ]}
+      ]
+    });
   };
 
 }());

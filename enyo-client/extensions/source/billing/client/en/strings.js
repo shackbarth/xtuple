@@ -23,6 +23,7 @@
     "_billing": "Billing",
     "_billingDescription": "Corporate Relationship Management",
     "_cashReceipt": "Cash Receipt",
+    "_cashReceiptApplications": "Cash Receipt Applications",
     "_cashReceipts": "Cash Receipts",
     "_cashReceiptCurrencyMismatchWarning": "Cash Receipt currency {cr_currency} does not match Bank Account Currency {ba_currency}",
     "_createNewCurrency": "Create New Currency",

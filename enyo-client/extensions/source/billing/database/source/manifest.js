@@ -8,10 +8,11 @@
     "xt/views/receivable_invoice_return.sql",
     "xt/views/aropeninfo.sql",
     "xt/views/cashrcptitem_pending.sql",
-    "xt/functions/cashrcpt_sum_pending.sql",
+    "xt/functions/cashrcpt_sum_amount.sql",
+    "xt/functions/cashrcpt_receivable_sum_amount.sql",
     "xt/functions/cashrcpt_balance.sql",
-    "xt/views/cashrcpt_receivable.sql",
-    "xt/functions/cashrcpt_sum_applied.sql",
-    "xt/views/cashrcptinfo.sql"
+    "xt/functions/cashrcpt_receivable_balance.sql",
+    "xt/views/cashrcptinfo.sql",
+    "xt/views/cashrcpt_receivable.sql"
   ]
 }

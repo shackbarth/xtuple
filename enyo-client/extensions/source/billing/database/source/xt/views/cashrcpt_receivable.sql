@@ -1,12 +1,13 @@
 /**
  * @alias XM.CashReceiptReceivable
  * 
- * Returns a receivable with its pending receipts and balance pre-calculated.
+ * Returns a CashReceiptReceivable with its pending receipts and balance pre-calculated.
  */
 select xt.create_view('xt.cashrcpt_receivable', $$
 
-  select distinct on (aropen_id)
+  select
     aropen_id,
+    cashrcptitem_id,
     cashrcpt_id,
     aropen.obj_uuid    as obj_uuid,
     aropen_cust_id     as cust_id,
@@ -20,8 +21,8 @@ select xt.create_view('xt.cashrcpt_receivable', $$
     aropen_paid        as applied_amount,
     aropen_amount      as amount,
 
-    xt.cashrcpt_sum_pending(cashrcpt) as pending,
-    xt.cashrcpt_balance(cashrcpt)     as balance
+    xt.cashrcpt_receivable_sum_amount(aropen, false)  as all_pending,
+    xt.cashrcpt_receivable_balance(aropen)            as balance
 
   from
     cashrcpt
