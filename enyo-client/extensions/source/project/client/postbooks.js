@@ -32,7 +32,8 @@ trailing:true, white:true, strict:false*/
         {name: "projectDashboard", kind: "XV.ProjectDashboard"}
       ]
     };
-    XT.app.$.postbooks.insertModule(dashboardModule, 0);
+    // TODO: Refine dashboards. Refactor with Pentaho?
+    //XT.app.$.postbooks.insertModule(dashboardModule, 0);
 
     module = {
       name: "project",
