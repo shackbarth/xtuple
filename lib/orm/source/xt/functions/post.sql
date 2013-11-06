@@ -276,7 +276,12 @@ create or replace function xt.post(data_hash text) returns text as $$
     /* Unset XT.username so it isn't cached for future queries. */
     XT.username = undefined;
 
-    XT.message(201, "Created");
+    if (dataHash.dispatch) {
+      XT.message(200, "OK");
+    } else {
+      XT.message(201, "Created");
+    }
+
     return ret;
   } catch (err) {
     XT.error(err);
