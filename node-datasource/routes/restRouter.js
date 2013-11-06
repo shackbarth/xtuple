@@ -89,7 +89,7 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.type = "Discovery";
     payload.dispatch = {
       functionName: "getServices",
-      parameters: [null, rootUrl]
+      parameters: [null, rootUrl, true]
     };
 
     // Dummy up session.
@@ -324,17 +324,17 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
                 }
               });
 
-            /* Add params in the any req.query order. */
-            } else if (services[model].methods[id.camelize()].parameters) {
-
-              _.each(services[model].methods[id.camelize()].parameters,
+            /* Add params from the req.body. */
+            } else if (services[model].methods[id.camelize()].parameterOrder &&
+              services[model].methods[id.camelize()].parameterOrder.length) {
+              _.each(services[model].methods[id.camelize()].parameterOrder,
                 function (value, key, list) {
 
-                if (req.query[value]) {
+                if (req.body[value]) {
                   if (!payload.dispatch.parameters) {
                     payload.dispatch.parameters = [];
                   }
-                  payload.dispatch.parameters.push(req.query[value]);
+                  payload.dispatch.parameters.push(req.body[value]);
                 }
               });
             }
