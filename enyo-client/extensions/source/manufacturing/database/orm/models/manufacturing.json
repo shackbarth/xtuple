@@ -360,6 +360,13 @@
         }
       },
       {
+        "name": "undistributed",
+        "attr": {
+          "type": "Number",
+          "column": "undistributed"
+        }
+      },
+      {
         "name": "isBackflushMaterials",
         "attr": {
           "type": "Boolean",

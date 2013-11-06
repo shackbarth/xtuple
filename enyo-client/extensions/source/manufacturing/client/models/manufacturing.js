@@ -15,7 +15,26 @@ white:true*/
     */
     XM.CreateTrace = XM.Model.extend({
 
-      recordType: "XM.CreateTrace"
+      recordType: "XM.CreateTrace",
+
+      parentKey: "itemSite",
+
+      readOnlyAttributes: [
+        //"trace",
+        //"location",
+        "expireDate",
+        "warrantyDate",
+        "characteristic"
+      ],
+
+      statusDidChange: function () {
+        var K = XM.Model;
+        if (this.getStatus() === K.READY_NEW) {
+          this.setReadOnly('expireDate');
+          this.setReadOnly('warrantyDate', false);
+        }
+      }
+      //this.setReadOnly("expireDate", !parentModel.get("itemSite").get("perishable"));
 
     });
 
@@ -37,8 +56,11 @@ white:true*/
         "ordered",
         "quantityReceived",
         "qtyRequired",
-        "balance"
+        "balance",
+        "undistributed"
       ],
+
+      quantityAttribute: "qtyToPost",
 
       transactionDate: null,
 
@@ -76,11 +98,30 @@ white:true*/
         return true;
       },
 
-      /**
-        This overload will first save any changes via usual means, then
-        call `postProduction`.
-      */
       save: function () {
+      },
+
+      /**
+        Return the quantity of items that require detail distribution.
+      
+        @returns {Number}
+      */
+      undistributed: function () {
+        var toIssue = this.get(this.quantityAttribute),
+          scale = XT.QTY_SCALE,
+          undist = 0,
+          dist;
+        // We only care about distribution on controlled items
+        if (this.requiresDetail() && toIssue) {
+          // Get the distributed values
+          dist = _.pluck(_.pluck(this.getValue("detail").models, "attributes"), "quantity");
+          // Filter on only ones that actually have a value
+          if (dist.length) {
+            undist = XT.math.add(dist, scale);
+          }
+          undist = XT.math.subtract(toIssue, undist, scale);
+        }
+        return undist;
       }
 
     });

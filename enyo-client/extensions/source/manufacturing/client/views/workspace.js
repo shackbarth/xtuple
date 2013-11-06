@@ -130,8 +130,9 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.QuantityWidget", attr: "ordered"},
               {kind: "XV.QuantityWidget", attr: "quantityReceived"},
               {kind: "XV.QuantityWidget", attr: "balance"},
+              {kind: "XV.QuantityWidget", attr: "undistributed"},
               {kind: "onyx.GroupboxHeader", content: "_post".loc()},
-              {kind: "XV.QuantityWidget", attr: "qtyToPost", name: "qtyToPost"}
+              {kind: "XV.QuantityWidget", attr: "qtyToPost", name: "qtyToPost", onValueChange: "qtyToPostChanged"}
             ]}
           ]},
           {kind: "XV.PostProductionCreateLotSerialBox", attr: "detail", name: "detail"}
@@ -150,6 +151,9 @@ trailing:true, white:true, strict: false*/
             classes: "xv-popup-button"},
         ]}
       ],
+      statusChanged: function () {
+        this.inherited(arguments);
+      },
       /**
         Overload: Some special handling for start up.
         */
@@ -170,6 +174,26 @@ trailing:true, white:true, strict: false*/
           this.$.detail.hide();
           this.parent.parent.$.menu.refresh();
         }
+      },
+
+      //TODO - clean up the functionality of newItem() and doneItem() 
+      // here and in PostProductionCreateLotSerialBox
+      distributeRemaining: function () {
+        var model = this.getValue(),
+          undistributed = model.undistributed();
+        if (!model.requiresDetail()) { return; }
+        if (undistributed > 0) {
+          this.$.detail.newItem();
+        }
+      },
+
+      qtyToPostChanged: function (inSender, inEvent) {
+        var model = this.getValue(),
+          undistributed = model.get("undistributed"),
+          qtyToPost = this.$.qtyToPost.getValue();
+        model.set("qtyToPost", qtyToPost);
+        model.set("undistributed", model.undistributed());
+        this.distributeRemaining();
       },
 
       save: function () {
@@ -194,7 +218,6 @@ trailing:true, white:true, strict: false*/
         });
 
         callback = function (workspace) {
-          //options.detail = model.formatDetail();
           if (detailModels.length > 0) {
             i ++;
             if (i === detailModels.models.length) {
@@ -204,7 +227,7 @@ trailing:true, white:true, strict: false*/
                   quantity: quantity,
                   options: options
                 };
-                XM.Manufacturing.postProduction(params, options);
+                XM.Manufacturing.postProduction(params);
               } else {
                 return;
               }
@@ -226,7 +249,7 @@ trailing:true, white:true, strict: false*/
               quantity: quantity,
               options: options
             };
-            XM.Manufacturing.postProduction(params, options);
+            XM.Manufacturing.postProduction(params);
             //callback();
           }
         };

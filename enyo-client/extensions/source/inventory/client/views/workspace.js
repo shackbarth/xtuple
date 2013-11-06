@@ -192,6 +192,7 @@ trailing:true, white:true, strict: false*/
         }
         this.inherited(arguments);
       },
+
       distributeDone: function () {
         this._popupDone = true;
         delete this._distModel;

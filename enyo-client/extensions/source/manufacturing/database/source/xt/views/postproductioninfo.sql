@@ -30,6 +30,7 @@ select xt.create_view('xt.postproductioninfo', $$
     wo_username, 
     case when (wo_qtyrcv > wo_qtyord) then 0 else (wo_qtyord - wo_qtyrcv) end AS balance,
     null::numeric AS qty_to_post,
+    null::numeric AS undistributed,
     case when (coalesce(wo_cosmethod, '') != 'D' and womatl_wo_id is not null) then true else false end as backflush_materials
   from wo
     join itemsite on wo_itemsite_id = itemsite_id

@@ -7,7 +7,8 @@ select xt.create_view('xt.createtraceinfo', $$
     null::text as location,
     null::date as expire_date,
     null::date as warranty_date,
-    null::text as characteristic
+    null::text as characteristic,
+    0::numeric as distributed
   ;
 
 create or replace rule "_INSERT" as on insert to xt.createtraceinfo do instead nothing;
