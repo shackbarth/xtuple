@@ -360,7 +360,7 @@ XT.extensions.billing.initCashReceipt = function () {
    * @class XM.CashReceiptLine
    * @extends XM.Model
    */
-  XM.CashReceiptLine = XM.Info.extend({
+  XM.CashReceiptLine = XM.Model.extend({
     recordType: 'XM.CashReceiptLine',
 
     defaults: {
