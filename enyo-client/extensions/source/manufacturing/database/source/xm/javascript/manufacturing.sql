@@ -260,35 +260,6 @@ select xt.install_js('XM','Manufacturing','xtuple', $$
     orderLine: { type: "String", description: "Order line UUID" }
   };
 
-  XM.Manufacturing.postProduction = function (workOrder, quantity) {
-    var sql = "select postproduction(wo_id, $2, true, 0, current_timestamp) as series " +
-      "from wo where obj_uuid = $1;";
-
-    /* Make sure user can do this */
-    if (!XT.Data.checkPrivilege("PostProduction")) { throw new handleError("Access Denied", 401); }
-
-    /* Post the transaction */
-    var ret = plv8.execute(sql, [workOrder, quantity])[0].series;
-    
-    return ret;
-  };
-  XM.Manufacturing.postProduction.description = "Post production";
-  XM.Manufacturing.postProduction.params = {
-    workOrder: { type: "String", description: "Order line UUID" },
-    quantity: {type: "Number", description: "Quantity" },
-    options: {type: "Object", description: "Other attributes", attributes: {
-      asOf: {type: "Date", description: "Transaction Timestamp. Default to now()."},
-      detail: { type: "Array",
-        description: "Distribution Detail",
-        attributes: [
-        {type: "Object", description: "Location and/or Trace detail", attributes: {
-           quantity: {type: "Number", description: "Quantity"},
-           location: {type: "String", description: "UUID of location"},
-           trace: {type: "String", description: "Trace (Lot or Serial) Number"}}}
-      ]},
-    }}
-  };
-
 }());
   
 $$ );

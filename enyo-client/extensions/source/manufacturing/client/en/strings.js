@@ -37,6 +37,7 @@
     "_qtyToPost": "Qty to Post",
     "_scrapOnPost": "Scrap on Post",
     "_trace": "Trace",
+    "_undistributed": "Qty Remaining to Distibute",
     "_warrantyDate": "Purchase Warranty Date",
     "_woExplosionLevel": "Default Work ORder Explosion Level",
     "_workOrderChangeLog": "Post Work Order Changes to the Change Log"

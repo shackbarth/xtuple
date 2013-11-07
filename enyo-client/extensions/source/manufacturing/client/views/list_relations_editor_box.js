@@ -21,10 +21,7 @@
           {kind: "XV.DateWidget", attr: "warrantyDate"}
           //{kind: "XV.CharacteristicTypePicker", attr: "characteristic"}
         ]}
-      ],
-      statusChanged: function () {
-        this.inherited(arguments);
-      }
+      ]
     });
 
     enyo.kind({
@@ -39,15 +36,12 @@
         if (this.getValue()) {
           var parentModel = this.getParent().getParent().getValue();
           var undistributed = parentModel.undistributed();
-          parentModel.set("undistributed", undistributed);
+          //parentModel.set("undistributed", undistributed);
           if (undistributed > 0) {
             this.newItem();
           }
         }
       },
-      /**
-        Add a new model to the collection and bring up a blank editor to fill it in
-      */
       transitionFinished: function () {
         this.inherited(arguments);
         if (this.getValue()) {
@@ -60,6 +54,8 @@
               qtyToDistribute = model.get("undistributed");
             this.$.editor.$.quantity.setValue(qtyToDistribute);
           }
+          //Call CreateTrace model's method to set readOnly and required
+          this.$.editor.getValue().displayAttributes();
         }
       }
     });

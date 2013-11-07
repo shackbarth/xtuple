@@ -130,9 +130,10 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.QuantityWidget", attr: "ordered"},
               {kind: "XV.QuantityWidget", attr: "quantityReceived"},
               {kind: "XV.QuantityWidget", attr: "balance"},
-              {kind: "XV.QuantityWidget", attr: "undistributed"},
               {kind: "onyx.GroupboxHeader", content: "_post".loc()},
-              {kind: "XV.QuantityWidget", attr: "qtyToPost", name: "qtyToPost", onValueChange: "qtyToPostChanged"}
+              {kind: "XV.QuantityWidget", attr: "qtyToPost", name: "qtyToPost",
+                onValueChange: "qtyToPostChanged"},
+              {kind: "XV.QuantityWidget", attr: "undistributed", name: "undistributed"}
             ]}
           ]},
           {kind: "XV.PostProductionCreateLotSerialBox", attr: "detail", name: "detail"}
@@ -151,9 +152,6 @@ trailing:true, white:true, strict: false*/
             classes: "xv-popup-button"},
         ]}
       ],
-      statusChanged: function () {
-        this.inherited(arguments);
-      },
       /**
         Overload: Some special handling for start up.
         */
@@ -172,8 +170,11 @@ trailing:true, white:true, strict: false*/
         // Hide detail if not applicable
         if (!model.requiresDetail()) {
           this.$.detail.hide();
+          this.$.undistributed.hide();
           this.parent.parent.$.menu.refresh();
         }
+
+        this.$.detail.$.newButton.setDisabled(true);
       },
 
       //TODO - clean up the functionality of newItem() and doneItem() 
@@ -184,6 +185,9 @@ trailing:true, white:true, strict: false*/
         if (!model.requiresDetail()) { return; }
         if (undistributed > 0) {
           this.$.detail.newItem();
+        } else {
+          //Can't create more distribution detail records than required
+          this.$.detail.$.newButton.setDisabled(true);
         }
       },
 
@@ -192,13 +196,15 @@ trailing:true, white:true, strict: false*/
           undistributed = model.get("undistributed"),
           qtyToPost = this.$.qtyToPost.getValue();
         model.set("qtyToPost", qtyToPost);
-        model.set("undistributed", model.undistributed());
+        //model.set("undistributed", model.undistributed());
+        model.undistributed();
         this.distributeRemaining();
       },
 
       save: function () {
         this.inherited(arguments);
         var model = this.getValue(),
+          that = this,
           callback,
           workspace = this,
           detailModels = this.$.detail.getValue(),
@@ -227,7 +233,7 @@ trailing:true, white:true, strict: false*/
                   quantity: quantity,
                   options: options
                 };
-                XM.Manufacturing.postProduction(params);
+                XM.Manufacturing.postProduction(params, options);
               } else {
                 return;
               }
@@ -249,7 +255,7 @@ trailing:true, white:true, strict: false*/
               quantity: quantity,
               options: options
             };
-            XM.Manufacturing.postProduction(params);
+            XM.Manufacturing.postProduction(params, options);
             //callback();
           }
         };

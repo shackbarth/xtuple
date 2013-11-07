@@ -20,21 +20,45 @@ white:true*/
       parentKey: "itemSite",
 
       readOnlyAttributes: [
-        //"trace",
-        //"location",
+        "location",
+        "trace",
         "expireDate",
         "warrantyDate",
         "characteristic"
       ],
 
-      statusDidChange: function () {
-        var K = XM.Model;
-        if (this.getStatus() === K.READY_NEW) {
-          this.setReadOnly('expireDate');
-          this.setReadOnly('warrantyDate', false);
+      requiredAttributes: [
+        "quantity"
+      ],
+
+      //Try using bind events function? as in l388 on sales_order_base
+      displayAttributes: function () {
+        var parentModel = this.getParent(),
+          location = parentModel.getValue("itemSite.locationControl"),
+          warranty = parentModel.getValue("itemSite.warranty"),
+          perishable = parentModel.getValue("itemSite.perishable"),
+          controlMethod = parentModel.getValue("itemSite.controlMethod"),
+          K = XM.ItemSite,
+          trace = controlMethod === K.LOT_CONTROL || controlMethod === K.SERIAL_CONTROL;
+
+        if (trace) {
+          this.requiredAttributes.push("trace");
+          this.setReadOnly("trace", false);
         }
+        if (location) {
+          this.requiredAttributes.push("location");
+          this.setReadOnly("location", false);
+        }
+        if (perishable) {
+          this.requiredAttributes.push("expireDate");
+          this.setReadOnly("expireDate", false);
+        }
+        if (warranty) {
+          this.requiredAttributes.push("warrantyDate");
+          this.setReadOnly("warrantyDate", false);
+        }
+        
       }
-      //this.setReadOnly("expireDate", !parentModel.get("itemSite").get("perishable"));
 
     });
 
@@ -121,6 +145,7 @@ white:true*/
           }
           undist = XT.math.subtract(toIssue, undist, scale);
         }
+        this.set("undistributed", undist > 0 ? undist : 0);
         return undist;
       }
 
