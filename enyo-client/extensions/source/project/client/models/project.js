@@ -402,7 +402,7 @@ white:true*/
 
         // Add project task users to email
         _.each(tasks.models, function (task) {
-          if (task.isDirty) {
+          if (task.isDirty()) {
             toAddresses = K.buildToString.call(task, toAddresses);
           }
         });
