@@ -609,7 +609,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       options: {
         title: "Options",
         type: "object",
-        "$ref": "InventoryReceiptOptions"
+        "$ref": "InventoryIssueToShippingOptions"
       }
     },
     InventoryIssueToShippingOptions: {
