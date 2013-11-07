@@ -46,7 +46,7 @@
         "name": "customer",
         "toOne": {
           "isNested": true,
-          "type": "CustomerRelation",
+          "type": "SalesCustomer",
           "column": "cust_id",
           "required": true
         }
