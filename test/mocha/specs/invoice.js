@@ -699,7 +699,7 @@ Should include a panel that displays credit allocations.
         @description When currency or invoice date is changed outstanding credit should be recalculated.
       */
       it("When currency or invoice date is changed outstanding credit should be recalculated", function (done) {
-        this.timeout(5000);
+        this.timeout(9000);
         var outstandingCreditChanged = function () {
           if (invoiceModel.get("outstandingCredit")) {
             // second time, with valid currency

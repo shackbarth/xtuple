@@ -308,6 +308,7 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.InvoiceAllocationsBox",
     kind: "XV.ListRelationsBox",
+    parentKey: "invoice",
     title: "_allocations".loc(),
     listRelations: "XV.InvoiceAllocationListRelations"
   });
