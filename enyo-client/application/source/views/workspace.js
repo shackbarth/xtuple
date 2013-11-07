@@ -61,7 +61,8 @@ strict: false*/
   };
 
   /**
-    Abstract workspace to be used for objects that are attached to models subclassed from `AccountDocument`.
+    Abstract workspace to be used for objects that are attached to models subclassed
+      from `AccountDocument`.
     Must be subclassed.
   */
   enyo.kind({
@@ -1176,7 +1177,8 @@ strict: false*/
       } else {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.InvoiceLineItemGridBox", name: "invoiceLineItemBox", attr: "lineItems", fit: true}
+          {kind: "XV.InvoiceLineItemGridBox", name: "invoiceLineItemBox",
+            attr: "lineItems", fit: true}
         ], {owner: this});
       }
       this.processExtensions(true);
@@ -1189,10 +1191,9 @@ strict: false*/
 
   enyo.kind({
     name: "XV.InvoiceLineWorkspace",
-    kind: "XV.Workspace",
+    kind: "XV.ChildWorkspace",
     title: "_invoiceLine".loc(),
     model: "XM.InvoiceLine",
-    modelAmnesty: true,
     published: {
       currencyKey: "invoice.currency",
       effectiveKey: "invoice.invoiceDate"
@@ -1215,7 +1216,8 @@ strict: false*/
               {attribute: "isActive", value: true}
             ]}},
             {kind: "XV.SalesPriceWidget", attr: "item.listPrice", label: "_listPrice".loc()},
-            {kind: "XV.SalesPriceWidget", attr: "item.wholesalePrice", label: "_wholesalePrice".loc()},
+            {kind: "XV.SalesPriceWidget", attr: "item.wholesalePrice",
+              label: "_wholesalePrice".loc()},
             {kind: "XV.InputWidget", attr: "customerPartNumber"},
             {kind: "XV.InputWidget", attr: "itemNumber"},
             {kind: "XV.InputWidget", attr: "itemDescription"},
@@ -2033,7 +2035,8 @@ strict: false*/
       Inserts additional components where they should be rendered.
     */
     build: function () {
-      if (XT.session.privileges.get("ProcessCreditCards") && XT.session.settings.get("CCCompany") === "Authorize.Net") {
+      if (XT.session.privileges.get("ProcessCreditCards") &&
+          XT.session.settings.get("CCCompany") === "Authorize.Net") {
         this.$.salesPanels.createComponent(
           {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards",
             addBefore: this.$.salesOrderCommentBox},
@@ -2726,19 +2729,23 @@ strict: false*/
             {kind: "XV.InputWidget", attr: "email"},
             {kind: "XV.CheckboxWidget", attr: "useEnhancedAuth"},
             {kind: "XV.CheckboxWidget", attr: "disableExport"},
-            // normally I'd put classes: "xv-assignment-box" into the container of the assignmentbox,
-            // but there is no such container here. Maybe some CSS work to be done now that assignmentbox
-            // is the thing inside the thing instead of the thing and the container all together.
+            // normally I'd put classes: "xv-assignment-box" into the container of the
+            // assignmentbox, but there is no such container here. Maybe some CSS work
+            // to be done now that assignmentbox is the thing inside the thing instead
+            // of the thing and the container all together.
             {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
-            {kind: "XV.UserAccountExtensionAssignmentBox", attr: "grantedExtensions", name: "grantedExtensions" },
+            {kind: "XV.UserAccountExtensionAssignmentBox", attr: "grantedExtensions",
+              name: "grantedExtensions" },
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" },
+            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles",
+              name: "grantedRoles" },
           ]}
         ]},
         {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
             title: "_privileges".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
-          {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
+          {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges",
+            name: "grantedPrivileges" }
         ]}
       ]}
     ],
@@ -2774,7 +2781,8 @@ strict: false*/
     },
 
     /**
-      Inject awareness of privileges earned by role into the privilege box at the start of the model loading
+      Inject awareness of privileges earned by role into the privilege box
+        at the start of the model loading
      */
     statusChanged: function (model, status, options) {
       this.inherited(arguments);
@@ -2809,13 +2817,15 @@ strict: false*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
-            {kind: "XV.UserAccountRoleExtensionAssignmentBox", attr: "grantedExtensions", name: "grantedExtensions" }
+            {kind: "XV.UserAccountRoleExtensionAssignmentBox", attr: "grantedExtensions",
+              name: "grantedExtensions" }
           ]}
         ]},
         {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
             title: "_privileges".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
-          {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
+          {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges",
+            name: "grantedPrivileges" }
         ]}
       ]}
     ]

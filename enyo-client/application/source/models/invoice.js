@@ -231,11 +231,13 @@ white:true*/
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
       this.on("change:invoiceDate change:currency", this.calculateAuthorizedCredit);
-      this.on("change:invoiceDate add:allocations remove:allocations", this.calculateAllocatedCredit);
+      this.on("change:invoiceDate add:allocations remove:allocations",
+        this.calculateAllocatedCredit);
       this.on("change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
       this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
       this.on("change:taxZone", this.recalculateTaxes);
-      this.on("change:total change:allocatedCredit change:outstandingCredit", this.calculateBalance);
+      this.on("change:total change:allocatedCredit change:outstandingCredit",
+        this.calculateBalance);
       this.on('allocatedCredit', this.allocatedCreditDidChange);
       this.on('statusChange', this.statusDidChange);
     },
@@ -290,7 +292,9 @@ white:true*/
     },
 
     calculateBalance: function () {
-      var rawBalance = this.get("total") - this.get("allocatedCredit") - this.get("outstandingCredit"),
+      var rawBalance = this.get("total") -
+          this.get("allocatedCredit") -
+          this.get("outstandingCredit"),
         balance = Math.max(0, rawBalance);
 
       this.set({balance: balance});
@@ -825,7 +829,9 @@ white:true*/
       }
 
       // Checks item values line up with isMiscellaneous
-      extraRequiredFields = isMiscellaneous ? ["itemNumber", "itemDescription", "salesCategory"] : ["item"];
+      extraRequiredFields = isMiscellaneous ?
+        ["itemNumber", "itemDescription", "salesCategory"] :
+        ["item"];
 
       _.each(extraRequiredFields, function (req) {
         var value = that.get(req),

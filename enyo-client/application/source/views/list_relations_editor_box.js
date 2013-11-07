@@ -44,7 +44,8 @@ trailing:true, white:true*/
         {kind: "XV.InputWidget", attr: "address1"},
         {kind: "XV.InputWidget", attr: "address2"},
         {kind: "XV.InputWidget", attr: "city"},
-        {kind: "XV.CountryCombobox", attr: "country", name: "country", onValueChange: "countryChanged" },
+        {kind: "XV.CountryCombobox", attr: "country", name: "country",
+          onValueChange: "countryChanged" },
         {kind: "XV.StateCombobox", attr: "state", name: "state"},
         {kind: "XV.InputWidget", attr: "zip", label: "_postalCode".loc()},
         {kind: "XV.CreditCardTypePicker", attr: "creditCardType", label: "_type".loc()},
@@ -263,7 +264,8 @@ trailing:true, white:true*/
         this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
       }
 
-      // Loop through the components and set the specific attribute information for the Money widgets
+      // Loop through the components and set the specific attribute
+      // information for the Money widgets
       this.getComponents().forEach(function (e) {
         if (e.kind === "XV.MoneyWidget") {
           e.attr.currency = "quote.currency";
@@ -288,6 +290,7 @@ trailing:true, white:true*/
         parent.off("change:quoteDate", this.quoteDateChanged, this);
         this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
       }
+      // Add default bindings
       XV.RelationsEditor.prototype.setValue.apply(this, arguments);
       // Add new bindings
       if (this.value) {
@@ -321,7 +324,8 @@ trailing:true, white:true*/
         this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
       }
 
-      // Loop through the components and set the specific attribute information for the Money widgets
+      // Loop through the components and set the specific attribute information
+      // for the Money widgets
       this.getComponents().forEach(function (e) {
         if (e.kind === "XV.MoneyWidget") {
           e.attr.currency = "order.currency";
@@ -469,7 +473,8 @@ trailing:true, white:true*/
     kind: "XV.RelationsEditor",
     style: "margin-top: 10px;",
     components: [
-      {kind: "XV.Groupbox", name: "totalGroup", classes: "xv-sales-summary-total-group", components: [
+      {kind: "XV.Groupbox", name: "totalGroup", classes: "xv-sales-summary-total-group",
+          components: [
         {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
         {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
           {kind: "FittableRows", name: "summaryColumnOne", components: [
