@@ -1,5 +1,5 @@
-/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global */
 
 (function () {
@@ -20,11 +20,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       requireCache: true,
       pgPoolSize: 15,
       pgWorker: false,
-      bindAddress: "localhost",
+      bindAddress: "0.0.0.0",
       redirectPort: 80,
       maintenancePort: 442,
-      // proxyPort is the port the app will be redirected to 
-      // this is useful if there is a proxy in front of the app listening 
+      // proxyPort is the port the app will be redirected to
+      // this is useful if there is a proxy in front of the app listening
       // on a different port
       proxyPort: null,
       port: 443,
@@ -46,8 +46,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // URL of BI server
       // Leave this empty unless reports are installed
-      biUrl: "", // "http://yourserver.com:8080/pentaho/content/reporting/reportviewer/report.html?",
-      biServerUrl: "", // "http://yourserver.com:8080/pentaho/"
+      // "http://yourserver.com:8080/pentaho/content/reporting/reportviewer/report.html?",
+      biUrl: "",
+      // "http://yourserver.com:8080/pentaho/"
+      biServerUrl: "",
       // To support multitenant in Pentaho, it must have a unique database key
       uniqueTenantId: "default",
 

@@ -1934,6 +1934,11 @@ select xt.install_js('XT','Data','xtuple', $$
         else { ret[prop] = qry[i].value; }
       }
 
+      /* Make sure there is a result at all times */
+      keys.forEach(function (key) {
+        if (ret[key] === undefined) { ret[key] = null; }
+      });
+
       return ret;
     },
 
