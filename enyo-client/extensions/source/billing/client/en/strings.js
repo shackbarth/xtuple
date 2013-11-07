@@ -32,6 +32,7 @@
     "_maintainSalesCategory": "Maintain Sales Category",
     "_nextARMemoNumber": "Next Receivables Memo",
     "_nextCashRcptNumber": "Next Cash Receipt",
+    "_orderNumber": "Order #",
     "_postMiscInvoices": "Post Invoices",
     "_printInvoices": "Print Invoices",
     "_printOnPost": "Print on Post",
