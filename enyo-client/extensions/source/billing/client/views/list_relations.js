@@ -51,12 +51,12 @@ trailing:true, white:true*/
     enyo.kind({
       name: 'XV.CashReceiptApplicationsList',
       kind: 'XV.ListRelations',
-      parentKey: 'cashReceipt',
+      parentKey: 'receivable',
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "short", fit: true, components: [
-              {kind: "XV.ListAttr", attr: "documentNumber", classes: "bold"}
+              {kind: "XV.ListAttr", attr: "receivable.documentNumber", classes: "bold"}
             ]},
             {kind: "XV.ListColumn", components: [
               {kind: "XV.ListAttr", attr: "amount"}
@@ -66,5 +66,7 @@ trailing:true, white:true*/
       ]
     });
   };
+
+  XV.registerModelList('XM.CashReceiptLine', 'XV.CashReceiptApplicationsList');
 
 }());

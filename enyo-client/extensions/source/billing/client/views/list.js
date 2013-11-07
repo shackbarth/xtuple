@@ -38,8 +38,25 @@ XT.extensions.billing.initLists = function () {
       ]}
     ]
   });
-
   XV.registerModelList('XM.CashReceiptListItem', 'XV.CashReceiptListItemCollection');
+
+  /**
+   * @class XV.CashReceiptLineList
+   * @see XM.CashReceiptLineCollection
+   */
+  enyo.kind({
+    name: 'XV.CashReceiptLineList',
+    kind: 'XV.List',
+    view: 'XM.CashReceiptView',
+    label: '_cashReceipts'.loc(),
+    collection: 'XM.CashReceiptLineCollection',
+    components: [
+      {kind: 'XV.ListItemDecorator', components: [
+        {name: 'listItem', kind: 'XV.CashReceiptListItem'}
+      ]}
+    ]
+  });
+  XV.registerModelList('XM.CashReceiptLineListItem', 'XV.CashReceiptListItemCollection');
 
   //
   // ..........................................................

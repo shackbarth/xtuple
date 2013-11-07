@@ -7,6 +7,7 @@ select xt.create_view('xt.cashrcptitem_pending', $$
 
   select
     cashrcpt_id,
+    cashrcptitem_id,
     aropen_id,
     cashrcptitem.obj_uuid as obj_uuid,
     cashrcptitem_id       as id,

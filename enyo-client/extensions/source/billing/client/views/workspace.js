@@ -182,22 +182,38 @@
           {kind: 'onyx.GroupboxHeader', content: '_overview'.loc()},
           {kind: 'XV.ScrollableGroupbox', name: 'mainGroup',
               classes: 'in-panel', components: [
-            {kind: 'XV.SalesCustomerWidget', attr: 'customer'},
             {kind: 'XV.InputWidget', attr: 'number'},
             {kind: 'XV.CheckboxWidget', attr: 'isPosted'},
+            {kind: 'XV.SalesCustomerWidget', attr: 'customer'},
+            {kind: 'XV.FundsTypePicker'},
+            {kind: 'XV.CashReceiptApplyOptionsPicker'},
             {tag: 'hr'},
             {kind: 'XV.DateWidget', attr: 'documentDate'},
             {kind: 'XV.DateWidget', attr: 'distributionDate'},
             {kind: 'XV.DateWidget', attr: 'applicationDate'},
             {tag: 'hr'},
+            {kind: 'XV.InputWidget', attr: 'currency'},
             {kind: 'XV.MoneyWidget',
-              attr: {localValue: 'amount', currency: 'currency'},
-              label: '_amount'.loc()},
+              label: '_balance'.loc(),
+              attr: { localValue: 'balance', currency: 'currency' },
+              disableCurrency: true
+            },
+            {kind: 'XV.MoneyWidget',
+              label: '_amount'.loc(),
+              attr: { localValue: 'amount', currency: 'currency' },
+              disableCurrency: true
+            },
+            {kind: 'XV.MoneyWidget',
+              label: '_applied'.loc(),
+              attr: { localValue: 'appliedAmount', currency: 'currency' },
+              disableCurrency: true
+            },
             {kind: 'onyx.GroupboxHeader', content: '_notes'.loc()},
             {kind: 'XV.TextArea', attr: 'notes'},
           ]}
         ]},
-        {kind: 'XV.CashReceiptApplicationsBox', attr: 'lineItems'}
+        {kind: 'XV.CashReceiptApplicationsBox', attr: 'lineItems'},
+        {kind: 'XV.CreditCardBox', attr: 'customer.creditCards'}
       ]}
     ],
 

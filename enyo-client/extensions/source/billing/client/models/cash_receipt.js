@@ -5,7 +5,7 @@ XT.extensions.billing.initCashReceipt = function () {
   /**
    * @class XM.CashReceipt
    * @extends XM.Document
-   * @mixes XM.FundsTypes
+   * @mixes XM.FundsTypeEnum
    */
   XM.CashReceipt = XM.Document.extend({
     recordType: 'XM.CashReceipt',
@@ -19,7 +19,7 @@ XT.extensions.billing.initCashReceipt = function () {
       return {
         posted: false,
         useCustomerDeposit: XT.session.settings.get('EnableCustomerDeposits'),
-        fundsType: XM.FundsTypes.CHECK,
+        fundsType: XM.FundsTypeEnum.CHECK,
         currency: XM.baseCurrency,
         currencyRate: 1,
         applicationDate: new Date(),
@@ -86,6 +86,7 @@ XT.extensions.billing.initCashReceipt = function () {
     onReadyClean: function (model) {
       /*
        * TODO re-enable 
+       *
       this.setReadOnly(this.get('posted'));
       this.setReadOnly([
         'amount',
@@ -95,7 +96,7 @@ XT.extensions.billing.initCashReceipt = function () {
         'bankAccount',
         'distributionDate',
         'applicationDate'
-      ], XM.FundsTypes.isCreditCard(this.get('fundsType')));
+      ], XM.fundsTypes.get(this.get('fundsType')).isCreditCard())
       */
     },
 
@@ -354,14 +355,15 @@ XT.extensions.billing.initCashReceipt = function () {
       var lines = this.get('lineItems');
       lines.remove(lines.where({ receivable: receivable }));
     }
-  }, XM.FundsTypes);
+  }, XM.FundsTypeEnum);
 
   /**
    * @class XM.CashReceiptLine
    * @extends XM.Model
    */
-  XM.CashReceiptLine = XM.Model.extend({
+  XM.CashReceiptLine = XM.Info.extend({
     recordType: 'XM.CashReceiptLine',
+    editableModel: 'XM.CashReceiptReceivable',
     idAttribute: 'uuid',
 
     defaults: {
@@ -422,6 +424,26 @@ XT.extensions.billing.initCashReceipt = function () {
   });
 
   /**
+   * @class XM.CashReceiptLineListItem
+   * @extends XM.Info
+   * @see XM.CashReceipt
+   */
+  XM.CashReceiptLineListItem = XM.Info.extend({
+    recordType: 'XM.CashReceiptLineListItem',
+    idAttribute: 'number',
+    editableModel: 'XM.CashReceiptReceivable',
+  });
+
+  /**
+   * @class XM.CashReceiptRelation
+   * @extends XM.Info
+   */
+  XM.CashReceiptRelation = XM.Info.extend({
+    recordType: 'XM.CashReceiptRelation',
+    editableModel: 'XM.CashReceipt'
+  });
+
+  /**
    * @class XM.CashReceiptCollection
    * @extends XM.Collection
    */
@@ -446,10 +468,10 @@ XT.extensions.billing.initCashReceipt = function () {
   });
 
   /**
-   * @class XM.CashReceiptReceivablesCollection
+   * @class XM.CashReceiptReceivableCollection
    * @extends XM.Collection
    */
-  XM.CashReceiptReceivablesCollection = XM.Collection.extend({
+  XM.CashReceiptReceivableCollection = XM.Collection.extend({
     model: XM.CashReceiptReceivable,
 
     /**

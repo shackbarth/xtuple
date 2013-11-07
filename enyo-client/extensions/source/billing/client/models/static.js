@@ -22,10 +22,10 @@ XT.extensions.billing.initStaticModels = function () {
   }
 
   /**
-    * @enum
-    * Bi-directional mapping of Funds Types
-    */
-  XM.FundsTypes = {
+   * @enum
+   * Bi-directional mapping of Funds Types
+   */
+  XM.FundsTypeEnum = {
     CHECK:             'C',
     CERTIFIED_CHECK:   'T',
     CASH:              'K',
@@ -37,23 +37,35 @@ XT.extensions.billing.initStaticModels = function () {
     WIRE_TRANSFER:     'W',
     OTHER:             'O'
   };
-  XM.FundsTypes = _.extend(_.invert(XM.FundsTypes), {
 
+  /**
+   * @class XM.FundsType
+   * @extends Backbone.Model
+   */
+  XM.FundsType = XM.StaticModel.extend({
     /**
      * Returns true if the given fundsType is a credit card type, false
-     * otherwise
+     * otherwise.
      */
-    isCreditCard: function (fundsType) {
-      return _.contains([ 'M', 'V', 'A', 'D', 'R' ], fundsType);
+    isCreditCard: function () {
+      return _.contains([ 'M', 'V', 'A', 'D', 'R' ], this.get('code'));
     }
   });
 
+  XM.fundsTypes = new XM.EnumMapCollection(
+    XM.FundsTypeEnum, { model: XM.FundsType }
+  );
+        
   /**
-    * @enum
-    * Cash Receipt Balance Application Options
-    */
-  XM.CashReceiptApplyBalanceOption = {
+   * @enum
+   * Cash Receipt Balance Application Options.
+   */
+  XM.CashReceiptApplyOptionEnum = {
     APPLY_BALANCE_TO_CREDIT_MEMO:      false,
     APPLY_BALANCE_TO_CUSTOMER_DEPOSIT: true
   };
+
+  XM.cashReceiptApplyOptions = new XM.EnumMapCollection(
+    XM.CashReceiptApplyOptionEnum
+  );
 };

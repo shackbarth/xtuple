@@ -3,7 +3,7 @@ XT.extensions.billing.initCashReceiptView = function () {
   var model = 'XM.CashReceipt';
 
   /**
-   * View of a SalesCategory business object.
+   * View of a CashReceipt business object.
    * @class XM.CashReceiptView
    */
   XM.CashReceiptView = XM.EnyoView.extend({
@@ -27,7 +27,7 @@ XT.extensions.billing.initCashReceiptView = function () {
           {attr: 'fundsType', formatter: 'formatFundsType'},
           {attr: 'bankAccount.name'}
         ]
-      ]
+      ],
     },
 
     list: {
@@ -66,8 +66,20 @@ XT.extensions.billing.initCashReceiptView = function () {
 
     workspace: {
       model: model,
-      template: [
+      panels: [
+        {
+          title: '_overview'.loc(),
+          template: [
 
+          ]
+        },
+        {
+          type: 'relation',
+          view: 'XM.CashReceiptApplicationsView'  // TODO
+        },
+
+      ],
+      relations: [
       ]
     }
 

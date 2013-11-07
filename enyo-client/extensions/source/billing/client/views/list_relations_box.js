@@ -54,9 +54,16 @@ trailing:true, white:true*/
       kind: 'XV.ListRelationsBox',
       listRelations: 'XV.CashReceiptApplicationsList',
       title: '_cashReceiptApplications'.loc(),
-      canOpen: false
-    });
+      create: function () {
+        this.inherited(arguments);
 
+        this.$.buttonsPanel.createComponents([
+          { content: 'Apply Balance' },
+          { content: 'Apply Line' },
+          { content: 'Clear Line' },
+        ]);
+      }
+    });
   };
 
 }());

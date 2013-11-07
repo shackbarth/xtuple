@@ -46,7 +46,7 @@
         "name": "customer",
         "toOne": {
           "isNested": true,
-          "type": "SalesCustomer",
+          "type": "CustomerRelation",
           "column": "cust_id",
           "required": true
         }
@@ -117,7 +117,7 @@
         "toOne": {
           "type": "BankAccountRelation",
           "column": "bankaccnt_id",
-          "required": true
+          "isNested": true
         }
       },
       {
@@ -153,8 +153,10 @@
       {
         "name": "lineItems",
         "toMany": {
-          "isNested": true,
-          "type": "CashReceiptLine"
+          "column": "cashrcpt_id",
+          "type": "CashReceiptLine",
+          "inverse": "cashReceipt",
+          "isNested": true
         }
       }
     ]
@@ -166,8 +168,6 @@
     "table": "cashrcptitem",
     "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
     "isRest": true,
-    "lockable": true,
-    "isNestedOnly": true,
     "isSystem": true,
     "comment": "Cash Receipt Line Item",
     "privileges": {
@@ -185,6 +185,13 @@
           "type": "Number",
           "column": "cashrcptitem_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "owner",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_cashrcpt_id"
         }
       },
       {
@@ -242,6 +249,14 @@
     },
     "properties": [
       {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
         "name": "uuid",
         "attr": {
           "type": "String",
@@ -285,6 +300,13 @@
         "toOne": {
           "type": "CashReceiptRelation",
           "column": "cashrcpt_id"
+        }
+      },
+      {
+        "name": "receivable",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_id"
         }
       }
     ]
@@ -351,6 +373,7 @@
       {
         "name": "customer",
         "toOne": {
+          "isNested": true,
           "type": "CustomerRelation",
           "column": "cust_id",
           "required": true
@@ -390,14 +413,6 @@
           "type": "String",
           "column": "obj_uuid",
           "isNaturalKey": true
-        }
-      },
-      {
-        "name": "customer",
-        "toOne": {
-          "type": "CustomerRelation",
-          "column": "cust_id",
-          "required": true
         }
       },
       {
@@ -490,6 +505,8 @@
       {
         "name": "pendingApplications",
         "toMany": {
+          "column": "aropen_id",
+          "inverse": "receivable",
           "type": "CashReceiptLinePending",
           "isNested": true
         }
@@ -577,9 +594,9 @@
       {
         "name": "bankAccount",
         "toOne": {
-          "isNested": true,
           "type": "BankAccountRelation",
-          "column": "bankaccnt_id"
+          "column": "bankaccnt_id",
+          "isNested": true
         }
       },
       {

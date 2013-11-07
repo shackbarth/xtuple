@@ -18,6 +18,21 @@ trailing:true, white:true, strict: false*/
       showNone: false
     });
 
+    enyo.kind({
+      name: 'XV.FundsTypePicker',
+      kind: 'XV.PickerWidget',
+      collection: 'XM.fundsTypes',
+      nameAttribute: 'key',
+      showNone: false
+    });
+
+    enyo.kind({
+      name: 'XV.CashReceiptApplyOptionsPicker',
+      kind: 'XV.PickerWidget',
+      collection: 'XM.cashReceiptApplyOptions',
+      nameAttribute: 'key',
+      showNone: false
+    });
   };
 
 }());
