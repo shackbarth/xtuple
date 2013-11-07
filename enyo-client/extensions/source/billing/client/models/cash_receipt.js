@@ -23,7 +23,6 @@ XT.extensions.billing.initCashReceipt = function () {
         currency: XM.baseCurrency,
         currencyRate: 1,
         applicationDate: new Date(),
-        lineItems: new XM.CashReceiptLineCollection(),
         appliedAmount: 0,
         balance: 0
       };
@@ -363,8 +362,6 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceiptLine = XM.Info.extend({
     recordType: 'XM.CashReceiptLine',
-    editableModel: 'XM.CashReceiptReceivable',
-    idAttribute: 'uuid',
 
     defaults: {
       amount: 0,
@@ -449,14 +446,6 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceiptCollection = XM.Collection.extend({
     model: XM.CashReceipt
-  });
-
-  /**
-   * @class XM.CashReceiptLineCollection
-   * @extends XM.Collection
-   */
-  XM.CashReceiptLineCollection = XM.Collection.extend({
-    model: XM.CashReceiptLine
   });
 
   /**

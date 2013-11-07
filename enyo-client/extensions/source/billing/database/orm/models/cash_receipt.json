@@ -117,7 +117,7 @@
         "toOne": {
           "type": "BankAccountRelation",
           "column": "bankaccnt_id",
-          "isNested": true
+          "required": true
         }
       },
       {
@@ -188,7 +188,7 @@
         }
       },
       {
-        "name": "owner",
+        "name": "cashReceipt",
         "attr": {
           "type": "Number",
           "column": "cashrcptitem_cashrcpt_id"
@@ -198,7 +198,7 @@
         "name": "receivable",
         "toOne": {
           "isNested": true,
-          "type": "ReceivableRelation",
+          "type": "CashReceiptReceivable",
           "column": "cashrcptitem_aropen_id"
         }
       },
@@ -236,7 +236,6 @@
     "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
     "isRest": true,
     "lockable": true,
-    "isNestedOnly": true,
     "isSystem": true,
     "comment": "Pending Cash Receipt Line Item",
     "privileges": {
@@ -320,7 +319,6 @@
     "isRest": true,
     "lockable": true,
     "comment": "Cash Receipt Relation",
-    "isNestedOnly": true,
     "isSystem": true,
     "privileges": {
       "all": {
@@ -594,9 +592,9 @@
       {
         "name": "bankAccount",
         "toOne": {
+          "isNested": true,
           "type": "BankAccountRelation",
-          "column": "bankaccnt_id",
-          "isNested": true
+          "column": "bankaccnt_id"
         }
       },
       {

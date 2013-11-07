@@ -468,7 +468,6 @@
     "table": "xt.aropeninfo",
     "idSequenceName": "aropen_aropen_id_seq",
     "isRest": true,
-    "isNestedOnly": true,
     "isSystem": true,
     "comment": "Receivable Map",
     "privileges": {
