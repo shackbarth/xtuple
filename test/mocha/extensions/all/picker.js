@@ -40,7 +40,7 @@
 
           if (XV.inheritsFrom(value.prototype, "XV.Picker") &&
               // don't test abstract kinds, non-picker widgets with picker in name
-              !_.contains(['PickerWidget', 'AttributePicker', 'ExpenseCategoryPicker'], key)) {
+              !_.contains(['PickerWidget', 'AttributePicker', 'ExpenseCategoryPicker', 'DependencyPicker'], key)) {
 
             describe('XV.' + key, function () {
               before(function () {

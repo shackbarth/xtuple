@@ -439,8 +439,6 @@ init_everythings() {
 	log "######################################################"
 	log ""
 
-	psql -U postgres dev -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>1 | tee -a $LOG_FILE
-
 	cdir $XT_DIR/node-datasource
 
 	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: ""/testDatabase: "dev"/' > config.js
@@ -456,7 +454,7 @@ init_everythings() {
 	log "Created salt"
 	openssl genrsa -des3 -out server.key -passout pass:xtuple 1024 2>1 | tee -a $LOG_FILE
 	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple 2>1 | tee -a $LOG_FILE
-	openssl req -batch -new -key key.pem -out server.csr -subj '/CN=localhost' 2>1 | tee -a $LOG_FILE
+	openssl req -batch -new -key key.pem -out server.csr -subj '/CN='$(hostname) 2>1 | tee -a $LOG_FILE
 	openssl x509 -req -days 365 -in server.csr -signkey key.pem -out server.crt 2>1 | tee -a $LOG_FILE
 	if [ $? -ne 0 ]
 	then
@@ -469,6 +467,8 @@ init_everythings() {
 
 	cdir $XT_DIR
 	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
+
+	psql -U postgres dev -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>1 | tee -a $LOG_FILE
 
 	log ""
 	log "######################################################"

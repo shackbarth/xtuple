@@ -25,7 +25,7 @@
       // look at all the workspaces in XV
       _.each(XV, function (value, key) {
         if (XV.inheritsFrom(value.prototype, "XV.Workspace")) {
-          if (_.contains(['SalesOrderBase', 'AccountDocumentWorkspace', 'OrderedReferenceWorkspace'], key) ||
+          if (_.contains(['SalesOrderBase', 'AccountDocumentWorkspace', 'OrderedReferenceWorkspace', 'EmailProfileWorkspace'], key) ||
               value.prototype.modelAmnesty) {
             // exclude abstract classes and child workspaces
             return;
