@@ -8,15 +8,15 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 (function () {
   "use strict";
 
-// TODO: currency conversion
-// XXX is freight only relevant for inventory?
-// TODO "User requires the OverrideTax privilege to edit the tax type", function () {
 /*
-TODO Should include a panel that displays a group box of lists of taxes separated headers
-for taxes by line items, freight, and adjustments. Users should be able to add new tax
+TODO: the following items are not yet done but need to be done by release
+
+1. currency conversion
+2. tax type defaults to item tax type if user has no OverrideTax privilege
+3. A panel that displays a group box of lists of taxes separated headers
+  for taxes by line items, freight, and adjustments. Users should be able to add new tax
   adjustments, and remove tax adjustments for non-posted invoices.
-TODO
-Should include a panel that displays credit allocations.
+4. Should include a panel that displays credit allocations.
     - When clicked a "new" button should allow the user to create a new minimalized version
     of cash receipt on-the-fly. The cash receipt need only record the amount, currency,
     document number, document date, distribution date and whether the balance should
@@ -24,10 +24,11 @@ Should include a panel that displays credit allocations.
     - When clicked, an "allocate" button should present a list of open receivables that are
     credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
-*/
-// XXX huh? SALES EXTENSION:* XM.InvoiceLine will include: > SalesOrderLine "salesOrderLine"
-// TODO: sales extension order date default today
+5. SALES EXTENSION:* XM.InvoiceLine will include: > SalesOrderLine "salesOrderLine"
+6. sales extension order date default today
+7. Changes made by the project extension
 
+*/
 
 // TODO deferred to later sprint:
 // filter invoice list by customer group
@@ -1148,9 +1149,6 @@ Should include a panel that displays credit allocations.
   };
 /*
 
-***** CHANGES MADE BY SALES EXTENSION ******
-
-* When freight is changed the total should be recalculated.
 
 ***** CHANGES MADE BY PROJECT EXTENSION ******
 
