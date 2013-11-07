@@ -46,7 +46,7 @@
         "name": "customer",
         "toOne": {
           "isNested": true,
-          "type": "CustomerRelation",
+          "type": "SalesCustomer",
           "column": "cust_id",
           "required": true
         }
@@ -159,7 +159,8 @@
           "isNested": true
         }
       }
-    ]
+    ],
+    "isSystem": true
   },
   {
     "context": "billing",
@@ -226,7 +227,9 @@
           "required": true
         }
       }
-    ]
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
   },
   {
     "context": "billing",
@@ -308,7 +311,9 @@
           "column": "aropen_id"
         }
       }
-    ]
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
   },
   {
     "context": "billing",
@@ -377,7 +382,9 @@
           "required": true
         }
       }
-    ]
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
   },
   {
     "context": "billing",
@@ -516,7 +523,8 @@
           "column": "aropen_id"
         }
       }
-    ]
+    ],
+    "isSystem": true
   },
   {
     "context": "billing",
@@ -611,6 +619,7 @@
           "column": "posted"
         }
       }
-    ]
+    ],
+    "isSystem": true
   }
 ]
