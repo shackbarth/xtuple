@@ -39,7 +39,7 @@
             collName,
             recordType,
             abstractKinds = ['List', 'ConfigurationsList', 'AbbreviationList',
-              'NameList', 'NameDescriptionList', 'TransactionList'],
+              'NameList', 'NameDescriptionList', 'TransactionList', 'EmailProfileList'],
             master = new enyo.Control();
 
           if (XV.inheritsFrom(value.prototype, "XV.List") &&
