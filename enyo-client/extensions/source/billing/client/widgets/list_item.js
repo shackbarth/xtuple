@@ -53,4 +53,17 @@ XT.extensions.billing.initSalesCategoryListItem = function () {
 
     })
   );
+
+  /**
+   * @class XV.CashReceiptLinePendingListItem
+   */
+  enyo.kind(
+    enyo.mixin(XV.CashReceiptFormatters, {
+
+      name: 'XV.CashReceiptLinePendingListItem',
+      kind: 'XV.ListItem',
+      view: 'XM.CashReceiptView'
+
+    })
+  );
 };

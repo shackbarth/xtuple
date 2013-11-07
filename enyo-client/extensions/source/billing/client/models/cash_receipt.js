@@ -360,7 +360,7 @@ XT.extensions.billing.initCashReceipt = function () {
    * @class XM.CashReceiptLine
    * @extends XM.Model
    */
-  XM.CashReceiptLine = XM.Info.extend({
+  XM.CashReceiptLine = XM.Model.extend({
     recordType: 'XM.CashReceiptLine',
 
     defaults: {
@@ -404,7 +404,7 @@ XT.extensions.billing.initCashReceipt = function () {
    * @extends XM.Info
    * @see XM.CashReceipt
    */
-  XM.CashReceiptListItem = XM.Info.extend({
+  XM.CashReceiptListItem = XM.Model.extend({
     recordType: 'XM.CashReceiptListItem',
     idAttribute: 'number',
     editableModel: 'XM.CashReceipt',

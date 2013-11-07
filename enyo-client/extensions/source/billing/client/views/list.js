@@ -38,7 +38,7 @@ XT.extensions.billing.initLists = function () {
       ]}
     ]
   });
-  XV.registerModelList('XM.CashReceiptListItem', 'XV.CashReceiptListItemCollection');
+  XV.registerModelList('XM.CashReceiptListItem', 'XV.CashReceiptList');
 
   /**
    * @class XV.CashReceiptLineList
@@ -56,7 +56,7 @@ XT.extensions.billing.initLists = function () {
       ]}
     ]
   });
-  XV.registerModelList('XM.CashReceiptLineListItem', 'XV.CashReceiptListItemCollection');
+  XV.registerModelList('XM.CashReceiptLineListItem', 'XV.CashReceiptLineList');
 
   //
   // ..........................................................

@@ -18,6 +18,10 @@ trailing:true, white:true, strict: false*/
       showNone: false
     });
 
+    /**
+     * @class XV.FundsTypePicker
+     * @extends XV.PickerWidget
+     */
     enyo.kind({
       name: 'XV.FundsTypePicker',
       kind: 'XV.PickerWidget',
@@ -26,6 +30,10 @@ trailing:true, white:true, strict: false*/
       showNone: false
     });
 
+    /**
+     * @class XV.CashReceiptApplyOptionsPicker
+     * @extends XV.PickerWidget
+     */
     enyo.kind({
       name: 'XV.CashReceiptApplyOptionsPicker',
       kind: 'XV.PickerWidget',
