@@ -90,7 +90,7 @@ select xt.install_js('XT','Orm','xtuple', $$
     /* Validate the ORM against the database types */
     schemaSql = 'select c.relname as "type", ' +
       ' attname as "column", ' +
-      ' typcategory as "category", ' + 
+      ' typcategory as "category", ' +
       ' n.nspname as "schema", ' +
       ' attnum from pg_class c ' +
       ' join pg_namespace n on n.oid = c.relnamespace ' +
@@ -98,11 +98,12 @@ select xt.install_js('XT','Orm','xtuple', $$
       ' join pg_type t on a.atttypid = t.oid ' +
       ' where n.nspname = $1 ' +
       ' and c.relname = $2;';
-    
+
     schema = plv8.execute(schemaSql, [tableNamespace, tableName]);
 
     var verifyOrmType = function (ormType, columnType) {
       var ormTypeMappings = {
+        "A": ["Array"],
         "B": ["Boolean"],
         "D": ["Date","DueDate"],
         "N": ["Cost", "ExtendedPrice", "Hours", "Money", "Number", "Percent",
@@ -125,7 +126,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         if(schemaColumn.length === 0) {
           if (ormProp.attr.column === 'obj_uuid') {
             /* obj_uuid might not be inserted yet */
-            return; 
+            return;
           }
           throw new Error(nameSpace + "." + type + " ORM property " + ormProp.attr.column
             + " references a column not in " + tableNamespace + "." + tableName);
@@ -134,7 +135,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         var schemaType = schemaColumn.category;
         var success = verifyOrmType(ormProp.attr.type, schemaType);
         if (success < 0) {
-          throw new Error(nameSpace + "." + type + " ORM property " + ormProp.name + 
+          throw new Error(nameSpace + "." + type + " ORM property " + ormProp.name +
             " type " + ormProp.attr.type + " does not match table column type of " + schemaType);
         }
       }
@@ -314,6 +315,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       /*
       XT.debug('result count = ', [res.length]); 
       */
+      XT.debug('result count = ', [res.length]);
     }
 
     for (i = 0; i < res.length; i++) {
@@ -391,7 +393,7 @@ select xt.install_js('XT','Orm','xtuple', $$
   */
   XT.Orm.getType = function (orm, name) {
     var prop = XT.Orm.getProperty(orm, name);
-    return prop.attr ? prop.attr.type : 
+    return prop.attr ? prop.attr.type :
       prop.toOne ? prop.toOne.type : prop.toMany.type;
   };
 
@@ -506,7 +508,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             if (attr.column  === "obj_uuid") {
               schemaName = orm.table.indexOf(".") === -1 ? 'public' : orm.table.beforeDot();
               tableName = orm.table.indexOf(".") === -1 ? orm.table : orm.table.afterDot();
-              
+
               /* make sure this isn't a view */
               query = "select relkind " +
                       "from pg_class c, pg_namespace n " +
@@ -536,7 +538,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                 XT.debug('createView values = ', [tableName, schemaName]);
               }
               res = plv8.execute(query, [tableName, schemaName]);
-              
+
               if (!res[0].count) {
                 if (isView) {
                   plv8.elog(ERROR, "Can not add obj_uuid field because {table} is not a table.".replace("{table}", orm.table));
@@ -784,6 +786,6 @@ select xt.install_js('XT','Orm','xtuple', $$
         plv8.execute(query);
       }
     }
- 
+
   };
 $$ );

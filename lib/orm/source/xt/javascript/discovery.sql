@@ -209,6 +209,9 @@ select xt.install_js('XT','Discovery','xtuple', $$
     /* Sanitize the JSON-Schema. */
     XT.Discovery.sanitize(schemas);
 
+    /* Get services JSON-Schema. */
+    XT.Discovery.getServicesSchema(orm, schemas);
+
     /* Sort schema properties alphabetically. */
     discovery.schemas = XT.Discovery.sortObject(schemas);
 
@@ -675,13 +678,56 @@ select xt.install_js('XT','Discovery','xtuple', $$
 
 
   /**
+   * Return an API Discovery document's Services JSON-Schema.
+   *
+   * @param {String} Optional. An orm_type name like "Contact".
+   * @param {Object} Optional. A schema object to add schemas too.
+   * @returns {Object}
+   */
+  XT.Discovery.getServicesSchema = function (orm, schemas) {
+    "use strict";
+    schemas = schemas || {};
+
+    var dispatchableObjects = XT.Discovery.getDispatchableObjects(orm),
+      i,
+      businessObject,
+      businessObjectName,
+      method,
+      methodName,
+      objectServices;
+
+    for (i = 0; i < dispatchableObjects.length; i++) {
+      businessObjectName = dispatchableObjects[i];
+      businessObject = XM[businessObjectName];
+      objectServices = {};
+      for (methodName in businessObject) {
+        method = businessObject[methodName];
+        /*
+        Report only on documented dispatch methods. We document the methods by
+        tacking description and params attributes onto the function.
+        */
+        if (typeof method === 'function' && method.description && method.schema) {
+          for (var schema in method.schema) {
+            schemas[schema] = method.schema[schema];
+          }
+        }
+      }
+    }
+
+    return schemas;
+  };
+
+
+  /**
    * Return an API Discovery document's Services section.
    *
    * @param {String} Optional. An orm_type name like "Contact".
    * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
+   * @param {Boolean} Optional. Some services have no query parameters, but their function
+   *  does and we need to know what order to put them in. @See restRouter.js
    * @returns {Object}
    */
-  XT.Discovery.getServices = function (orm, rootUrl) {
+  XT.Discovery.getServices = function (orm, rootUrl, includeOrder) {
     "use strict";
 
     var resources = {},
@@ -714,7 +760,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
         Report only on documented dispatch methods. We document the methods by
         tacking description and params attributes onto the function.
         */
-        if (typeof method === 'function' && method.description && method.params) {
+        if (typeof method === 'function' && method.description && (method.params || method.schema)) {
           for (methodParamName in method.params) {
             /* The parameter location is query unless otherwise specified */
             methodParam = method.params[methodParamName];
@@ -734,9 +780,19 @@ select xt.install_js('XT','Discovery','xtuple', $$
             httpMethod: "POST",
             scopes: scopes,
             description: method.description,
-            parameters: method.params,
-            parameterOrder: Object.keys(method.params)
           };
+
+          if (method.request) {
+            objectServices[methodName].request = method.request;
+          }
+
+          if (method.params) {
+            objectServices[methodName].parameters = method.params;
+            objectServices[methodName].parameterOrder = Object.keys(method.params);
+          } else if (method.parameterOrder && includeOrder) {
+            /* This isn't included in the Discovery Doc, just when called from restRouter.js */
+            objectServices[methodName].parameterOrder = method.parameterOrder;
+          }
         }
       }
       if (Object.keys(objectServices).length > 0) {

@@ -271,6 +271,10 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       isActive: true
     },
 
+    conversionMap: {
+      name: "properName"
+    },
+
     bindEvents: function () {
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('statusChange', this.statusChanged);

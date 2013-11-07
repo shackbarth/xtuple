@@ -490,17 +490,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-
-  // ..........................................................
-  // PROJECT STATUS
-  //
-
-  enyo.kind({
-    name: "XV.ProjectStatusPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.projectStatuses"
-  });
-
+  
   // ..........................................................
   // REASON CODES
   //
@@ -876,6 +866,17 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.wagePeriods",
     showNone: false,
     valueAttribute: "id"
+  });
+
+  // ..........................................................
+  // WORKFLOW STATUS
+  //
+
+  enyo.kind({
+    name: "XV.WorkflowStatusPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.workflowStatuses"
   });
 
   // ..........................................................

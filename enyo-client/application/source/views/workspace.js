@@ -101,6 +101,42 @@ strict: false*/
   });
 
   // ..........................................................
+  // EMAIL PROFILE
+  //
+
+  /**
+    An abstract workspace for email profiles.
+  */
+  enyo.kind({
+    name: "XV.EmailProfileWorkspace",
+    kind: "XV.Workspace",
+    headerAttrs: ["name", "-", "description"],
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel",
+          fit: true, components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "onyx.GroupboxHeader", content: "_header".loc()},
+            {kind: "XV.InputWidget", attr: "from"},
+            {kind: "XV.InputWidget", attr: "replyTo"},
+            {kind: "XV.InputWidget", attr: "to"},
+            {kind: "XV.InputWidget", attr: "cc"},
+            {kind: "XV.InputWidget", attr: "bcc"},
+            {kind: "XV.InputWidget", attr: "subject"},
+            {kind: "onyx.GroupboxHeader", content: "_body".loc()},
+            {kind: "XV.TextArea", attr: "body", classes: "max-height"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // BASE CLASS
   //
 
@@ -1004,6 +1040,7 @@ strict: false*/
   incidentHash = enyo.mixin(incidentHash, XV.accountNotifyContactMixin);
   enyo.kind(incidentHash);
 
+  XV.registerModelWorkspace("XM.Incident", "XV.IncidentWorkspace");
   XV.registerModelWorkspace("XM.IncidentRelation", "XV.IncidentWorkspace");
   XV.registerModelWorkspace("XM.IncidentListItem", "XV.IncidentWorkspace");
 
@@ -1013,33 +1050,9 @@ strict: false*/
 
   enyo.kind({
     name: "XV.IncidentEmailProfileWorkspace",
-    kind: "XV.Workspace",
+    kind: "XV.EmailProfileWorkspace",
     title: "_incidentEmailProfile".loc(),
-    headerAttrs: ["name", "-", "description"],
     model: "XM.IncidentEmailProfile",
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel",
-          style: "width: 480px;", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-            classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"},
-            {kind: "onyx.GroupboxHeader", content: "_header".loc()},
-            {kind: "XV.InputWidget", attr: "from"},
-            {kind: "XV.InputWidget", attr: "replyTo"},
-            {kind: "XV.InputWidget", attr: "to"},
-            {kind: "XV.InputWidget", attr: "cc"},
-            {kind: "XV.InputWidget", attr: "bcc"},
-            {kind: "XV.InputWidget", attr: "subject"},
-            {kind: "onyx.GroupboxHeader", content: "_body".loc()},
-            {kind: "XV.TextArea", attr: "body", classes: "max-height"}
-          ]}
-        ]}
-      ]}
-    ]
   });
 
   XV.registerModelWorkspace("XM.IncidentEmailProfile", "XV.IncidentEmailProfileWorkspace");
@@ -1435,6 +1448,7 @@ strict: false*/
   opportunityHash = enyo.mixin(opportunityHash, XV.accountNotifyContactMixin);
   enyo.kind(opportunityHash);
 
+  XV.registerModelWorkspace("XM.Opportunity", "XV.OpportunityWorkspace");
   XV.registerModelWorkspace("XM.OpportunityRelation", "XV.OpportunityWorkspace");
   XV.registerModelWorkspace("XM.OpportunityListItem", "XV.OpportunityWorkspace");
 
@@ -1555,159 +1569,6 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.ProductCategory", "XV.ProductCategoryWorkspace");
-
-  // ..........................................................
-  // PROJECT
-  //
-
-  var projectHash = {
-    name: "XV.ProjectWorkspace",
-    kind: "XV.Workspace",
-    title: "_project".loc(),
-    headerAttrs: ["number", "-", "name"],
-    model: "XM.Project",
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        classes: "xv-top-panel", fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-            classes: "in-panel", components: [
-            {name: "overviewControl", components: [
-              {kind: "XV.InputWidget", attr: "number"},
-              {kind: "XV.InputWidget", attr: "name"},
-              {kind: "XV.ProjectStatusPicker", attr: "status"},
-              {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-              {kind: "XV.DateWidget", attr: "dueDate"},
-              {kind: "XV.DateWidget", attr: "startDate"},
-              {kind: "XV.DateWidget", attr: "assignDate"},
-              {kind: "XV.DateWidget", attr: "completeDate"},
-              {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-              {kind: "XV.UserAccountWidget", attr: "owner"},
-              {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-              {kind: "XV.TextArea", attr: "notes", fit: true},
-              {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-              {kind: "XV.AccountWidget", attr: "account"},
-              {kind: "XV.ContactWidget", attr: "contact"}
-            ]}
-          ]}
-        ]},
-        {kind: "XV.ProjectCommentBox", attr: "comments"},
-        {kind: "XV.ContactDocumentsBox", attr: "documents"}
-      ]}
-    ],
-    create: function () {
-      this.inherited(arguments);
-      if (enyo.platform.touch) {
-        this.$.panels.createComponents([
-          {kind: "XV.ProjectTasksBox", attr: "tasks",
-            addBefore: this.$.projectCommentBox}
-        ], {owner: this});
-      } else {
-        this.$.panels.createComponents([
-          {kind: "XV.ProjectTasksGridBox", attr: "tasks",
-            addBefore: this.$.projectCommentBox}
-        ], {owner: this});
-      }
-    }
-  };
-
-  projectHash = enyo.mixin(projectHash, XV.accountNotifyContactMixin);
-  enyo.kind(projectHash);
-
-  XV.registerModelWorkspace("XM.ProjectRelation", "XV.ProjectWorkspace");
-  XV.registerModelWorkspace("XM.ProjectListItem", "XV.ProjectWorkspace");
-
-  enyo.kind({
-    name: "XV.TaskWorkspace",
-    kind: "XV.Workspace",
-    title: "_task".loc(),
-    headerAttrs: ["number", "-", "name"],
-    model: "XM.Task",
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        classes: "xv-top-panel", fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-            classes: "in-panel", components: [
-            {kind: "XV.ProjectWidget", attr: "project"},
-            {kind: "XV.InputWidget", attr: "number"},
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.ProjectStatusPicker", attr: "status"},
-            {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-            {kind: "XV.DateWidget", attr: "dueDate"},
-            {kind: "XV.DateWidget", attr: "startDate"},
-            {kind: "XV.DateWidget", attr: "assignDate"},
-            {kind: "XV.DateWidget", attr: "completeDate"},
-            {kind: "onyx.GroupboxHeader", content: "_hours".loc()},
-            {kind: "XV.HoursWidget", attr: "budgetedHours",
-             label: "_budgeted".loc()},
-            {kind: "XV.HoursWidget", attr: "actualHours",
-             label: "_actual".loc()},
-            {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
-            {kind: "XV.MoneyWidget", attr: {localValue: "budgetedExpenses"},
-             label: "_budgeted".loc(), currencyShowing: false},
-            {kind: "XV.MoneyWidget", attr: {localValue: "actualExpenses"},
-             label: "_actual".loc(), currencyShowing: false},
-            {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-            {kind: "XV.UserAccountWidget", attr: "owner"},
-            {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true}
-          ]}
-        ]},
-        {kind: "XV.TaskCommentBox", attr: "comments"}
-      ]}
-    ]
-  });
-
-  XV.registerModelWorkspace("XM.Task", "XV.TaskWorkspace");
-  XV.registerModelWorkspace("XM.TaskListItem", "XV.TaskWorkspace");
-
-  enyo.kind({
-    name: "XV.ProjectTaskWorkspace",
-    kind: "XV.Workspace",
-    title: "_projectTask".loc(),
-    model: "XM.ProjectTask",
-    modelAmnesty: true,
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        classes: "xv-top-panel", fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-            classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number"},
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.ProjectStatusPicker", attr: "status"},
-            {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-            {kind: "XV.DateWidget", attr: "dueDate"},
-            {kind: "XV.DateWidget", attr: "startDate"},
-            {kind: "XV.DateWidget", attr: "assignDate"},
-            {kind: "XV.DateWidget", attr: "completeDate"},
-            {kind: "onyx.GroupboxHeader", content: "_hours".loc()},
-            {kind: "XV.HoursWidget", attr: "budgetedHours",
-             label: "_budgeted".loc()},
-            {kind: "XV.HoursWidget", attr: "actualHours",
-             label: "_actual".loc()},
-            {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
-            {kind: "XV.MoneyWidget", attr: {localValue: "budgetedExpenses"},
-             label: "_budgeted".loc(), currencyShowing: false},
-            {kind: "XV.MoneyWidget", attr: {localValue: "actualExpenses"},
-             label: "_actual".loc(), currencyShowing: false},
-            {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-            {kind: "XV.UserAccountWidget", attr: "owner"},
-            {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true}
-          ]}
-        ]},
-        {kind: "XV.TaskCommentBox", attr: "comments"}
-      ]}
-    ]
-  });
 
   // ..........................................................
   // PROSPECT
@@ -2620,7 +2481,7 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
               {kind: "XV.TaxCodePicker", label: "_taxCode".loc(), attr: "tax"},
-              {kind: "XV.NumberWidget", label: "_percent".loc(), attr: "percent", scale: XT.PERCENT_SCALE},
+              {kind: "XV.PercentWidget", label: "_percent".loc(), attr: "percent"},
               {kind: "XV.MoneyWidget", attr: {localValue: "amount", currency: "currency",
                 effective: "effectiveDate"}, label: "_amount".loc()},
               {kind: "XV.DateWidget", label: "_effective".loc(), attr: "effectiveDate"},
@@ -2778,6 +2639,7 @@ strict: false*/
   };
   toDoHash = enyo.mixin(toDoHash, XV.accountNotifyContactMixin);
   enyo.kind(toDoHash);
+  XV.registerModelWorkspace("XM.ToDo", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
 

@@ -40,7 +40,7 @@
       });
     };
 
-  describe('Sales Order Workspace', function () {
+  describe.skip('Sales Order Workspace', function () {
     this.timeout(20 * 1000);
 
     //
