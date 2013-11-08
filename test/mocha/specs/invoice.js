@@ -25,7 +25,6 @@ TODO: the following items are not yet done but need to be done by release
     credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
 5. SALES EXTENSION:* XM.InvoiceLine will include: > SalesOrderLine "salesOrderLine"
-6. sales extension order date default today
 7. Changes made by the project extension
 
 */
@@ -1144,6 +1143,14 @@ TODO: the following items are not yet done but need to be done by release
       it("authorizedCredit", function () {
         // TODO: better testing
         assert.equal(invoiceModel.get("authorizedCredit"), 0);
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description sales extension order date defaults to today
+      */
+      it("Sales extension order date default today", function () {
+        assert.equal(invoiceModel.get("orderDate").getDate(), new Date().getDate());
       });
     });
   };
