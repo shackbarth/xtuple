@@ -80,7 +80,15 @@ white:true*/
 
     recordType: 'XM.WorkOrderListItem',
 
-    editableModel: 'XM.WorkOrder'
+    editableModel: 'XM.WorkOrder',
+
+    canPostProduction: function (callback) {
+      var hasPrivilege = XT.session.privileges.get("PostProduction");
+      if (callback) {
+        callback(hasPrivilege);
+      }
+      return this;
+    }
 
   });
 
@@ -198,7 +206,8 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.WorkOrderListItemCollection = XM.Collection.extend(/** @lends XM.WorkOrderListItemCollection.prototype */{
+  XM.WorkOrderListItemCollection = XM.Collection.extend(
+    /** @lends XM.WorkOrderListItemCollection.prototype */{
 
     model: XM.WorkOrderListItem
 
@@ -209,7 +218,8 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.WorkOrderRelationCollection = XM.Collection.extend(/** @lends XM.WorkOrderRelationCollection.prototype */{
+  XM.WorkOrderRelationCollection = XM.Collection.extend(
+    /** @lends XM.WorkOrderRelationCollection.prototype */{
 
     model: XM.WorkOrderRelation
 
