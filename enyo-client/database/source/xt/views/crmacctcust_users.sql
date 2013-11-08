@@ -7,7 +7,7 @@
  * access to a customer based on what CRM Account it belongs to.
  */
 
-select xt.create_view('xt.customer_users', $$
+select xt.create_view('xt.crmacctcust_users', $$
 
 SELECT
   cust_id,
