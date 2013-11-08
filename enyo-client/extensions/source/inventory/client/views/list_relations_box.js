@@ -12,11 +12,11 @@ trailing:true, white:true*/
     //
 
     enyo.kind({
-      name: "XV.IssueToShippingDetailRelationsBox",
+      name: "XV.IssueStockDetailRelationsBox",
       kind: "XV.ListRelationsBox",
       title: "_detail".loc(),
       parentKey: "itemSite",
-      listRelations: "XV.IssueToShippingDetailListRelations",
+      listRelations: "XV.IssueStockDetailListRelations",
       canOpen: false,
       events: {
         onDetailSelectionChanged: ""
