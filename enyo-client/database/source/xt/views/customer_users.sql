@@ -1,26 +1,27 @@
 /*
  * This view lists all postgres usernames that are associated with a CRM
- * Account that owns an address. That associaiton is either the main user
+ * Account that owns a customer. That associaiton is either the main user
  * account, owner's user account or customer's sale rep's user account.
  *
  * This view can be used to determine which users have personal privilege
- * access to an address based on what CRM Account it belongs to.
+ * access to a customer based on what CRM Account it belongs to.
  */
 
-select xt.create_view('xt.crmacctaddr_users', $$
+select xt.create_view('xt.customer_users', $$
 
 SELECT
-  addr_id,
+  cust_id,
   array_agg(username) AS crmacct_usernames
 FROM (
   SELECT
-    addr_id,
+    cust_id,
     crmacct_id
-  FROM xt.crmacctaddr
-) addr_crmacct_ids
+  FROM custinfo
+  JOIN crmacct ON cust_id = crmacct_cust_id
+) cust_crmacct_ids
 LEFT JOIN xt.crmacct_users USING (crmacct_id)
 WHERE 1=1
   AND username IS NOT NULL
-GROUP BY addr_id;
+GROUP BY cust_id;
 
 $$, false);
