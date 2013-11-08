@@ -1909,7 +1909,7 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "CustomerUsers",
+    "type": "AccountCustomerUsers",
     "table": "xt.customer_users",
     "comment": "List which users have personal privilege access to a customer based on what CRM Account it belongs to.",
     "privileges": {
