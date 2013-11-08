@@ -140,20 +140,25 @@ XT.extensions.billing.initReceivableModel = function () {
     },
 
     save: function (key, value, options) {
-      options = options ? _.clone(options) : {};
-      var that = this,
-        success;
-
-      // Handle both `"key", value` and `{key: value}` -style arguments.
-      if (_.isObject(key) || _.isEmpty(key)) {
-        options = value ? _.clone(value) : {};
-      } else {
+      if (this.getStatus() === XM.Model.READY_NEW) {
         options = options ? _.clone(options) : {};
-      }
-      success = options.success;
+        var that = this,
+          success;
 
-      // receivable after successful save
-      options.success = function (model, resp, options) {
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          options = value ? _.clone(value) : {};
+        } else {
+          options = options ? _.clone(options) : {};
+        }
+
+        // validate before dispatch
+        if (!this.validate()) {
+          return false;
+        }
+
+        success = options.success;
+
         var recOptions = {},
           params = [
             that.id,
@@ -173,18 +178,19 @@ XT.extensions.billing.initReceivableModel = function () {
           ];
 
         recOptions.success = function (resp) {
-          if (success) { success(model, resp, options); }
+          that.setStatus(XM.Model.READY_CLEAN, options);
+          if (success) { success(that, resp, options); }
         };
-        recOptions.error = function () {
-        };
+        recOptions.error = function () {};
 
-        that.dispatch("XM.Receivable", "createCreditMemo", params, recOptions);
+        if (this.isCredit()) {
+          this.createCreditMemo(params, recOptions);
+        } else if (this.isDebit()) {
+          this.createDebitMemo(params, recOptions);
+        }
         return this;
-      };
-
-      // Handle both `"key", value` and `{key: value}` -style arguments.
-      if (_.isObject(key) || _.isEmpty(key)) { value = options; }
-      //return XM.Model.prototype.save.call(this, key, value, options);
+      }
+      return XM.Model.prototype.save.call(this, key, value, options);
     },
 
     /**
