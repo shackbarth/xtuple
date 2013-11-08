@@ -412,30 +412,34 @@ select xt.install_js('XM','Inventory','xtuple', $$
   XM.Inventory.receipt.parameterOrder = ["orderLines"];
   XM.Inventory.receipt.schema = {
     InventoryReceipt: {
-      orderLines: {
-        title: "OrderLines",
-        type: "object",
-        "$ref": "InventoryReceiptOrderLine"
+      properties: {
+        orderLines: {
+          title: "OrderLines",
+          type: "object",
+          "$ref": "InventoryReceiptOrderLine"
+        }
       }
     },
     InventoryReceiptOrderLine: {
-      orderLine: {
-        title: "Order Line",
-        description: "UUID of order document line item",
-        type: "string",
-        "$ref": "OrderLine/uuid",
-        "required": true
-      },
-      quantity: {
-        title: "Quantity",
-        description: "Quantity",
-        type: "number",
-        "required": true
-      },
-      options: {
-        title: "Options",
-        type: "object",
-        "$ref": "InventoryReceiptOptions"
+      properties: {
+        orderLine: {
+          title: "Order Line",
+          description: "UUID of order document line item",
+          type: "string",
+          "$ref": "OrderLine/uuid",
+          "required": true
+        },
+        quantity: {
+          title: "Quantity",
+          description: "Quantity",
+          type: "number",
+          "required": true
+        },
+        options: {
+          title: "Options",
+          type: "object",
+          "$ref": "InventoryReceiptOptions"
+        }
       }
     },
     InventoryReceiptOptions: {
@@ -586,30 +590,34 @@ select xt.install_js('XM','Inventory','xtuple', $$
   XM.Inventory.issueToShipping.parameterOrder = ["orderLines"];
   XM.Inventory.issueToShipping.schema = {
     InventoryIssueToShipping: {
-      orderLines: {
-        title: "OrderLines",
-        type: "object",
-        "$ref": "InventoryIssueToShippingOrderLine"
+      properties: {
+        orderLines: {
+          title: "OrderLines",
+          type: "object",
+          "$ref": "InventoryIssueToShippingOrderLine"
+        }
       }
     },
     InventoryIssueToShippingOrderLine: {
-      orderLine: {
-        title: "Order Line",
-        description: "UUID of order document line item",
-        type: "string",
-        "$ref": "OrderLine/uuid",
-        "required": true
-      },
-      quantity: {
-        title: "Quantity",
-        description: "Quantity",
-        type: "number",
-        "required": true
-      },
-      options: {
-        title: "Options",
-        type: "object",
-        "$ref": "InventoryIssueToShippingOptions"
+      properties: {
+        orderLine: {
+          title: "Order Line",
+          description: "UUID of order document line item",
+          type: "string",
+          "$ref": "OrderLine/uuid",
+          "required": true
+        },
+        quantity: {
+          title: "Quantity",
+          description: "Quantity",
+          type: "number",
+          "required": true
+        },
+        options: {
+          title: "Options",
+          type: "object",
+          "$ref": "InventoryIssueToShippingOptions"
+        }
       }
     },
     InventoryIssueToShippingOptions: {
@@ -686,17 +694,19 @@ select xt.install_js('XM','Inventory','xtuple', $$
   XM.Inventory.shipShipment.parameterOrder = ["shipment", "shipDate"];
   XM.Inventory.shipShipment.schema = {
     InventoryShipShipment: {
-      orderLine: {
-        title: "Shipment",
-        description: "Number of shipment",
-        type: "string",
-        "$ref": "Shipment/number",
-        "required": true
-      },
-      shipDate: {
-        title: "Ship Date",
-        description: "Ship Date",
-        type: "date"
+      properties: {
+        orderLine: {
+          title: "Shipment",
+          description: "Number of shipment",
+          type: "string",
+          "$ref": "Shipment/number",
+          "required": true
+        },
+        shipDate: {
+          title: "Ship Date",
+          description: "Ship Date",
+          type: "date"
+        }
       }
     }
   };
@@ -747,12 +757,14 @@ select xt.install_js('XM','Inventory','xtuple', $$
   XM.Inventory.returnFromShipping.parameterOrder = ["orderLine"];
   XM.Inventory.returnFromShipping.schema = {
     InventoryReturnFromShipping: {
-      orderLine: {
-        title: "OrderLine",
-        description: "UUID of order document line item",
-        type: "string",
-        "$ref": "OrderLine/uuid",
-        "required": true
+      properties: {
+        orderLine: {
+          title: "OrderLine",
+          description: "UUID of order document line item",
+          type: "string",
+          "$ref": "OrderLine/uuid",
+          "required": true
+        }
       }
     }
   };
@@ -791,12 +803,14 @@ select xt.install_js('XM','Inventory','xtuple', $$
   XM.Inventory.recallShipment.parameterOrder = ["shipment"];
   XM.Inventory.shipShipment.schema = {
     InventoryRecallShipment: {
-      orderLine: {
-        title: "Shipment",
-        description: "Number of shipment",
-        type: "string",
-        "$ref": "Shipment/number",
-        "required": true
+      properties: {
+        orderLine: {
+          title: "Shipment",
+          description: "Number of shipment",
+          type: "string",
+          "$ref": "Shipment/number",
+          "required": true
+        }
       }
     }
   };
