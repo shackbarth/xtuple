@@ -39,20 +39,20 @@
           }
         },
         {kind: "onyx.GroupboxHeader", content: "_show".loc()},
-        // {name: "showUnposted", label: "_unposted".loc(),
-        //   attr: "isPosted", defaultKind: "XV.CheckboxWidget",
-        //   getParameter: function () {
-        //     var param;
-        //     if (!this.getValue()) {
-        //       param = {
-        //         attribute: this.getAttr(),
-        //         operator: '=',
-        //         value: true
-        //       };
-        //     }
-        //     return param;
-        //   }
-        // },
+        {name: "showUnposted", label: "_unposted".loc(),
+          attr: "isPosted", defaultKind: "XV.CheckboxWidget",
+          getParameter: function () {
+            var param;
+            if (!this.getValue()) {
+              param = {
+                attribute: this.getAttr(),
+                operator: '=',
+                value: true
+              };
+            }
+            return param;
+          }
+        },
         // {name: "showClosed", label: "_closed".loc(),
         //   attr: "closeDate", defaultKind: "XV.CheckboxWidget",
         //   getParameter: function () {
@@ -123,8 +123,8 @@
       parameterChanged: function (inSender, inEvent) {
         if (inSender.name === "showClosed" || inSender.name === "showUnposted") {
           // both must be unchecked for enabled date
-          var unchecked = this.$.showClosed.getValue() || this.$.showUnposted.getValue();
-          this.$.asOfDate.$.input.setDisabled(unchecked);
+          //var unchecked = this.$.showClosed.getValue() || this.$.showUnposted.getValue();
+          //this.$.asOfDate.$.input.setDisabled(unchecked);
         }
       },
     });
