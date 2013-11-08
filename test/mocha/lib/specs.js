@@ -27,8 +27,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     isLockable: true,
     idAttribute: "name",
     enforceUpperKey: false,
-    attributes: ["name", "description", "bankName", "accountNumber", "bankAccountType", "isUsedByBilling",
-      "isUsedByPayments", "notes", "currency"],
+    attributes: ["name", "description", "bankName", "accountNumber", "bankAccountType",
+      "isUsedByBilling", "isUsedByPayments", "notes", "currency"],
     extensions: ["sales", "billing"],
     privileges: {
       createUpdateDelete: "MaintainBankAccounts",
@@ -150,12 +150,15 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     @parameter {String} notes
     @parameter {InvoiceRelation} recurringInvoice
     @parameter {Money} allocatedCredit the sum of all allocated credits
-    @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
+    @parameter {Money} outandingCredit the sum of all unallocated credits, not including
+      cash receipts pending
     @parameter {Money} subtotal the sum of the extended price of all line items
-    @parameter {Money} taxTotal the sum of all taxes inluding line items, freight and tax adjustments
+    @parameter {Money} taxTotal the sum of all taxes inluding line items, freight and
+      tax adjustments
     @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
     @parameter {Money} total the calculated total of subtotal + freight + tax + miscCharge
-    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - outstandingCredit.
+    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit -
+      outstandingCredit.
       - If sum calculates to less than zero, then the balance is zero.
     @parameter {InvoiceAllocation} allocations
     @parameter {InvoiceTax} taxAdjustments
@@ -207,7 +210,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       "taxAdjustments", "lineItems", "characteristics", "contacts",
       "accounts", "customers", "files", "urls", "items",
       "orderNumber", "orderDate", "salesOrders", // these 3 from sales extension
-      "incidents", "opportunities"], // these 2 from crm
+      "incidents", "opportunities", // these 2 from crm
+      "project", "projects"], // these 2 from project
     requiredAttributes: ["number", "invoiceDate", "isPosted", "isVoid",
       "customer", "commission"],
     defaults: {
@@ -249,7 +253,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
         workspace.$.invoiceLineItemBox.newItem();
         gridRow = workspace.$.invoiceLineItemBox.$.editableGridRow;
         // TODO
-        //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
+        //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel,
+          //site: submodels.siteModel}});
         gridRow.$.quantityWidget.doValueChange({value: 5});
 
       }
@@ -356,7 +361,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     },
     updatableField: "notes",
     // afterSaveActions: [{
-    //   it: "When the status of a receivable changes to READY_CLEAN (edit), the following attributes: " +
+    //   it: "When the status of a receivable changes to READY_CLEAN (edit),
+    //      the following attributes: " +
     //   "customer, documentDate, documentType, documentNumber, terms should be readOnly",
     //   action: function (data, next) {
     //     assert.include(data.model.readOnlyAttributes, "customer");

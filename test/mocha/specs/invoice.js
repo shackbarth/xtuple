@@ -24,8 +24,6 @@ TODO: the following items are not yet done but need to be done by release
     - When clicked, an "allocate" button should present a list of open receivables that are
     credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
-5. SALES EXTENSION:* XM.InvoiceLine will include: > SalesOrderLine "salesOrderLine"
-7. Changes made by the project extension
 
 */
 
@@ -236,6 +234,7 @@ TODO: the following items are not yet done but need to be done by release
         @property {TaxType} taxType
         @property {Money} taxTotal sum of all taxes
         @property {InvoiceLineTax} taxes
+        @property {SalesOrderLine} salesOrderLine Added by sales extension
       */
       var invoiceLine = it("A nested only model called XM.InvoiceLine extending " +
           "XM.Model should exist", function () {
@@ -1122,8 +1121,6 @@ TODO: the following items are not yet done but need to be done by release
         @member -
         @memberof Invoice.prototype
         @description If the sales extension is installed you can link invoices to sales orders
-          all the attributes on XM.InvoiceLine, item cost and item list price values, and a
-          read only panel that displays a group box of lists of taxes.
       */
       it("XM.InvoiceSalesOrder", function () {
         assert.isFunction(XM.InvoiceSalesOrder);
@@ -1153,25 +1150,39 @@ TODO: the following items are not yet done but need to be done by release
         assert.equal(invoiceModel.get("orderDate").getDate(), new Date().getDate());
       });
     });
+    describe("Project extension", function () {
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description If the project extension is installed you can link invoices to projects
+      */
+      it("XM.InvoiceProject", function () {
+        assert.isFunction(XM.InvoiceProject);
+        assert.isTrue(XM.InvoiceProject.prototype.isDocumentAssignment);
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description The project attribute will be read-only for posted invoices
+      */
+      it.skip("project is read-only for posted invoices", function () {
+        // TODO: put under test
+        assert.fail();
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description The project widget will be added to the invoice workspace if the
+          UseProjects setting is true.
+      */
+      it.skip("Add the project widget to the invoice workspace if the UseProjects setting is true.",
+          function () {
+        // TODO: put under test
+        assert.fail();
+      });
+    });
   };
 /*
-
-
-***** CHANGES MADE BY PROJECT EXTENSION ******
-
-* A nested only model should be created according to convention for many-to-many document
-associations:
-  > XM.InvoiceProject
-
-* XM.Invoice will include:
-  > ProjectRelation "project"
-  > InvoiceProject "projects"
-
-* When an invoice is loaded where "isPosted" is true, then the following attributes will
-be made read only:
-  > project
-
-* Add the project widget to the invoice workspace if the "UseProjects" setting is true.
 
 ***** CHANGES MADE BY INVENTORY EXTENSION ******
 
