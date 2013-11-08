@@ -2420,6 +2420,7 @@ trailing:true, white:true, strict: false*/
     label: "_workOrders".loc(),
     collection: "XM.WorkOrderListItemCollection",
     parameterWidget: "XV.WorkOrderListParameters",
+    canAddNew: false,
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -2427,13 +2428,14 @@ trailing:true, white:true, strict: false*/
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+            {kind: "XV.ListAttr", attr: "number", fit: true}
           ]},
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "status",
+              {kind: "XV.ListAttr", attr: "getWorkOrderStatusString",
                 style: "padding-left: 24px"},
-              {kind: "XV.ListAttr", attr: "itemSite.item.number", classes: "bold", style: "padding-left: 12px"}
+              {kind: "XV.ListAttr", attr: "itemSite.item.number",
+                classes: "bold", style: "padding-left: 12px"}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "itemSite.site.code", style: "padding-left: 12px"},
@@ -2448,8 +2450,8 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "last", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "itemSite.item.inventoryUnit.name"},
-              {kind: "XV.ListAttr", attr: "qtyOrdered"},
-              {kind: "XV.ListAttr", attr: "qtyReceived"}
+              {kind: "XV.ListAttr", attr: "ordered"},
+              {kind: "XV.ListAttr", attr: "quantityReceived"}
             ]}
           ]}
         ]}
