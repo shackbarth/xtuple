@@ -86,7 +86,8 @@ XT.extensions.billing.initReceivableModel = function () {
       Calculated sum of taxes
     */
     calculateTaxTotal: function () {
-      var amounts = _.pluck(this.get("taxes"), "amount");
+      var taxes = this.get("taxes"),
+        amounts = []; // get amounts from taxes.models
       return _.reduce(amounts, function (num, memo) {
         return num + memo;
       }, 0);
@@ -277,12 +278,29 @@ XT.extensions.billing.initReceivableModel = function () {
   XM.ReceivableListItem = XM.Info.extend({
     recordType: 'XM.ReceivableListItem',
     idAttribute: "uuid",
-    editableModel: 'XM.Receivable'
+    editableModel: 'XM.Receivable',
+
+    canOpen: function (callback) {
+      var canView = XT.session.privileges.get("ViewAROpenItems") && this.get("isPosted");
+      if (callback) {
+        callback(canView);
+      }
+      return canView;
+    },
+  });
+
+  XM.ReceivableRelation = XM.Model.extend({
+    recordType: 'XM.ReceivableRelation',
+    idAttribute: 'uuid'
   });
 
   // ..........................................................
   // COLLECTIONS
   //
+
+  XM.ReceivableRelationCollection = XM.Collection.extend({
+    model: XM.ReceivableRelation
+  });
 
   /**
     @class XM.ReceivableListItemCollection
@@ -307,5 +325,18 @@ XT.extensions.billing.initReceivableModel = function () {
     model: XM.ReceivableTax
 
   });
+
+  /**
+    @class XM.ReceivableApplicationCollection
+
+    @extends XM.Collection
+  */
+  XM.ReceivableApplicationCollection = XM.Collection.extend({
+    /** @scope XM.ReceivableTaxCollection.prototype */
+
+    model: XM.ReceivableApplication
+
+  });
+
 
 };

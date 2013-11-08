@@ -18,6 +18,47 @@ trailing:true, white:true*/
               {kind: "XV.ListAttr", attr: "taxCode", classes: "bold"}
             ]},
             {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "amount", classes: "bold"}
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
+    enyo.kind({
+      name: "XV.ReceivableApplicationListRelations",
+      kind: "XV.ListRelations",
+      parentKey: "receivable",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+              {kind: "XV.ListAttr", attr: "documentNumber", classes: "bold"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "applicationDate"}
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
+    /**
+     * @class XV.CashReceiptApplicationsBox
+     * @extends XV.ListRelations
+     * @see XV.CashReceiptApplicationsList
+     */
+    enyo.kind({
+      name: 'XV.CashReceiptApplicationsList',
+      kind: 'XV.ListRelations',
+      parentKey: 'receivable',
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+              {kind: "XV.ListAttr", attr: "receivable.documentNumber", classes: "bold"}
+            ]},
+            {kind: "XV.ListColumn", components: [
               {kind: "XV.ListAttr", attr: "amount"}
             ]}
           ]}
@@ -25,5 +66,7 @@ trailing:true, white:true*/
       ]
     });
   };
+
+  XV.registerModelList('XM.CashReceiptLine', 'XV.CashReceiptApplicationsList');
 
 }());

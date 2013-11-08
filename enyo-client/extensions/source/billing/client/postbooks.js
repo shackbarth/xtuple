@@ -1,8 +1,3 @@
-/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
-latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
-/*global XT:true, XV:true, XM:true, enyo:true*/
-
 (function () {
 
   /**
@@ -15,15 +10,19 @@ trailing:true, white:true*/
         panels: [
           {name: "customerList", kind: "XV.CustomerList"},
           {name: "invoiceList", kind: "XV.InvoiceList"},
-          {name: "receivableList", kind: "XV.ReceivableList"}
+          {name: "receivableList", kind: "XV.ReceivableList"},
+          {name: "cashReceiptList", kind: "XV.CashReceiptList"}
         ]
       },
       relevantPrivileges = [
         "ApplyARMemos",
         "ConfigureAR",
+        "CreateNewCurrency",
         "DeleteItemMasters",
         "EditAROpenItem",
         "MaintainBankAccounts",
+        "MaintainCashReceipts",
+        "MaintainCurrencies",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
         "MaintainItemMasters",
@@ -33,13 +32,16 @@ trailing:true, white:true*/
         "MaintainShipVias",
         "MaintainTerms",
         "OverrideTax",
+        "PostCashReceipts",
         "PostMiscInvoices",
         "PrintInvoices",
         "ViewAROpenItems",
+        "ViewCashReceipts",
         "ViewCustomerMasters",
         "ViewCustomerGroups",
         "ViewItemMasters",
         "ViewMiscInvoices",
+        "VoidPostedCashReceipts",
         "VoidPostedInvoices"
       ],
       configuration = {
