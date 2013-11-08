@@ -106,6 +106,9 @@ trailing:true, white:true, strict: false*/
       hideApply: true,
       allowNew: false,
       dirtyWarn: false,
+      events: {
+        onPrevious: ""
+      },
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -234,6 +237,8 @@ trailing:true, white:true, strict: false*/
                   options: options
                 };
                 XM.Manufacturing.postProduction(params, options);
+                //TODO - Replace this hack
+                workspace.getParent().getParent().doPrevious();
               } else {
                 return;
               }
@@ -247,7 +252,7 @@ trailing:true, white:true, strict: false*/
                 warranty: detailModel.getValue("warrantyDate")
               });
               options.detail = details;
-              callback();
+              callback(workspace);
             }
           } else {
             params = {
@@ -259,7 +264,7 @@ trailing:true, white:true, strict: false*/
             //callback();
           }
         };
-        callback();
+        callback(workspace);
       }
     });
 
