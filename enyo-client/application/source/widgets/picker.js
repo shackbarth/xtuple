@@ -553,6 +553,19 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // SALES CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.SalesCategoryPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.salesCategories",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+
+  // ..........................................................
   // SALES REP
   //
 

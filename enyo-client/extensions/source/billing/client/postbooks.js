@@ -5,23 +5,24 @@ trailing:true, white:true*/
 
 (function () {
 
-  var billing = XT.extensions.billing;
-
   /**
    * Billing Module.
    */
-  billing.initPostbooks = function () {
+  XT.extensions.billing.initPostbooks = function () {
     var module = {
-        name: billing.name,
+        name: XT.extensions.billing.name,
         label: "_billing".loc(),
         panels: [
           {name: "customerList", kind: "XV.CustomerList"},
-          {name: "invoiceList", kind: "XV.InvoiceList"}
+          {name: "invoiceList", kind: "XV.InvoiceList"},
+          {name: "receivableList", kind: "XV.ReceivableList"}
         ]
       },
       relevantPrivileges = [
+        "ApplyARMemos",
         "ConfigureAR",
         "DeleteItemMasters",
+        "EditAROpenItem",
         "MaintainBankAccounts",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
@@ -31,10 +32,15 @@ trailing:true, white:true*/
         "MaintainSalesCategories",
         "MaintainShipVias",
         "MaintainTerms",
+        "OverrideTax",
+        "PostMiscInvoices",
+        "PrintInvoices",
+        "ViewAROpenItems",
         "ViewCustomerMasters",
         "ViewCustomerGroups",
         "ViewItemMasters",
-        "ViewMiscInvoices"
+        "ViewMiscInvoices",
+        "VoidPostedInvoices"
       ],
       configuration = {
         model: "XM.billing",
@@ -42,6 +48,9 @@ trailing:true, white:true*/
         description: "_billingDescription".loc(),
         workspace: "XV.BillingWorkspace"
       },
+      salesPanels = [
+        {name: "sales_invoiceList", kind: "XV.InvoiceList"}
+      ],
       setupPanels = [
         {name: "bankAccountList", kind: "XV.BankAccountList"},
         {name: "reasonCodeList", kind: "XV.ReasonCodeList"},
@@ -50,10 +59,11 @@ trailing:true, white:true*/
       ];
 
     XT.app.$.postbooks.appendPanels("setup", setupPanels);
+    XT.app.$.postbooks.appendPanels("sales", salesPanels);
 
     XM.configurations.add(new XM.ConfigurationModel(configuration));
     XT.app.$.postbooks.insertModule(module, 0);
-    XT.session.addRelevantPrivileges(billing.name, relevantPrivileges);
+    XT.session.addRelevantPrivileges(XT.extensions.billing.name, relevantPrivileges);
   };
 
 }());

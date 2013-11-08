@@ -17,7 +17,7 @@ white:true*/
       /** @scope XM.SalesOrderToDoRelation.prototype */ {
 
       recordType: 'XM.SalesOrderToDoRelation',
-      
+
       editableModel: 'XM.ToDo'
 
     });
@@ -31,7 +31,7 @@ white:true*/
       /** @scope XM.SalesOrderIncidentRelation.prototype */ {
 
       recordType: 'XM.SalesOrderIncidentRelation',
-      
+
       editableModel: 'XM.Incident'
 
     });
@@ -45,7 +45,7 @@ white:true*/
       /** @scope XM.SalesOrderOpportunityRelation.prototype */ {
 
       recordType: 'XM.SalesOrderOpportunityRelation',
-      
+
       editableModel: 'XM.Opportunity'
 
     });

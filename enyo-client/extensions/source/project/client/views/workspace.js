@@ -201,10 +201,9 @@ trailing:true, white:true, strict:false*/
 
     enyo.kind({
       name: "XV.ProjectTaskWorkspace",
-      kind: "XV.Workspace",
+      kind: "XV.ChildWorkspace",
       title: "_projectTask".loc(),
       model: "XM.ProjectTask",
-      modelAmnesty: true,
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           classes: "xv-top-panel", fit: true, components: [
@@ -247,10 +246,9 @@ trailing:true, white:true, strict:false*/
 
     enyo.kind({
       name: "XV.ProjectWorkflowWorkspace",
-      kind: "XV.Workspace",
+      kind: "XV.ChildWorkspace",
       title: "_projectWorkflow".loc(),
       model: "XM.ProjectWorkflow",
-      modelAmnesty: true,
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           classes: "xv-top-panel", fit: true, components: [
