@@ -39,34 +39,36 @@
           }
         },
         {kind: "onyx.GroupboxHeader", content: "_show".loc()},
-        {name: "showUnposted", label: "_unposted".loc(),
-          attr: "isPosted", defaultKind: "XV.CheckboxWidget",
-          getParameter: function () {
-            var param;
-            if (!this.getValue()) {
-              param = {
-                attribute: this.getAttr(),
-                operator: '=',
-                value: true
-              };
-            }
-            return param;
-          }
-        },
-        {name: "showClosed", label: "_closed".loc(),
-          attr: "closeDate", defaultKind: "XV.CheckboxWidget",
-          getParameter: function () {
-            var param;
-            if (!this.getValue()) {
-              param = {
-                attribute: this.getAttr(),
-                operator: '!=',
-                value: null
-              };
-            }
-            return param;
-          }
-        },
+        // {name: "showUnposted", label: "_unposted".loc(),
+        //   attr: "isPosted", defaultKind: "XV.CheckboxWidget",
+        //   getParameter: function () {
+        //     var param;
+        //     if (!this.getValue()) {
+        //       param = {
+        //         attribute: this.getAttr(),
+        //         operator: '=',
+        //         value: true
+        //       };
+        //     }
+        //     return param;
+        //   }
+        // },
+        // {name: "showClosed", label: "_closed".loc(),
+        //   attr: "closeDate", defaultKind: "XV.CheckboxWidget",
+        //   getParameter: function () {
+        //     var param;
+        //     if (!this.getValue()) {
+        //       param = {
+        //         attribute: this.getAttr(),
+        //         operator: '!=',
+        //         value: null
+        //       };
+        //     }
+        //     return param;
+        //   }
+        // },
+
+        // TODO: ***These are not working
         {name: "showDebits", label: "_debits".loc(),
           attr: "documentType", defaultKind: "XV.CheckboxWidget",
           getParameter: function () {
@@ -97,12 +99,12 @@
         },
         {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
         {name: "customer", attr: "customer", label: "_customer".loc(),
-          defaultKind: "XV.BillingCustomerWidget"},
+          defaultKind: "XV.SalesCustomerWidget"},
         {name: "customerType", attr: "customer.customerType", label: "_customerType".loc(),
           defaultKind: "XV.CustomerTypePicker"},
-        // TODO:
-        //   - Type Pattern (text)
-        //   - Group
+        // // TODO:
+        // //   - Type Pattern (text)
+        // //   - Group
         {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
         {name: "fromDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
           defaultKind: "XV.DateWidget"},
