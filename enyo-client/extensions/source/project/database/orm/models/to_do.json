@@ -1,11 +1,11 @@
 [
   {
-    "context": "sales",
+    "context": "project",
     "nameSpace": "XM",
-    "type": "ProjectCustomer",
+    "type": "ToDoProject",
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
-    "comment": "Project Customer Map",
+    "comment": "ToDo Project Map",
     "privileges": {
       "all": {
         "create": true,
@@ -36,7 +36,7 @@
         "attr": {
           "type": "String",
           "column": "source_type",
-          "value": "P"
+          "value": "TODO"
         }
       },
       {
@@ -51,14 +51,14 @@
         "attr": {
           "type": "String",
           "column": "target_type",
-          "value": "C"
+          "value": "J"
         }
       },
       {
-        "name": "customer",
+        "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "CustomerRelation",
+          "type": "ProjectRelation",
           "column": "target_id"
         }
       },

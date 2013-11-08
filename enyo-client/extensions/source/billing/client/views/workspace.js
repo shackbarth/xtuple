@@ -17,11 +17,12 @@ trailing:true, white:true*/
       title: "_configure".loc() + " " + "_billing".loc(),
       model: "XM.Billing",
       components: [
-        {kind: "Panels", arrangerKind: "CarouselArranger", fit: true, components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
           {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
-              {kind: "onyx.GroupboxHeader", content: "_accountsReceivable".loc()},
               {kind: "XV.NumberWidget", attr: "NextARMemoNumber",
                 label: "_nextARMemoNumber".loc(), formatting: false},
               {kind: "XV.NumberWidget", attr: "NextCashRcptNumber",
@@ -57,6 +58,61 @@ trailing:true, white:true*/
       ]
     });
   };
+
+  // ..........................................................
+  // RECEIVABLE
+  //
+  enyo.kind({
+    name: "XV.ReceivableWorkspace",
+    kind: "XV.Workspace",
+    title: "_receivable".loc(),
+    model: "XM.Receivable",
+    saveText: "_post".loc(),
+    allowNew: false,
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.SalesCustomerWidget", attr: "customer"},
+            {kind: "XV.DateWidget", attr: "documentDate"},
+            {kind: "XV.DateWidget", attr: "dueDate"},
+            {kind: "XV.ReceivableTypePicker", attr: "documentType"},
+            {kind: "XV.InputWidget", attr: "documentNumber"},
+            {kind: "XV.InputWidget", attr: "orderNumber"},
+            {kind: "XV.ReasonCodePicker", attr: "reasonCode"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.BillingTermsPicker", attr: "terms"},
+            {kind: "XV.SalesRepPicker", attr: "salesRep"},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "amount", currency: "currency"},
+              label: "_amount".loc()},
+            {kind: "XV.NumberWidget", attr: "paid"},
+            {kind: "XV.NumberWidget", attr: "balance"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            // TODO: Move this under taxes
+            {kind: "XV.NumberWidget", attr: "taxTotal"}
+          ]}
+        ]},
+        {kind: "XV.ReceivableTaxBox", attr: "taxes", title: "_taxes".loc()},
+        // add applications relations
+        //{kind: "XV.ReceivableApplicationsBox", attr: "applications", title: "_applications".loc()}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Receivable", "XV.ReceivableWorkspace");
+  XV.registerModelWorkspace("XM.ReceivableListItem", "XV.ReceivableWorkspace");
 
   enyo.kind({
     name: "XV.SalesCategoryWorkspace",

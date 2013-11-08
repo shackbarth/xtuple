@@ -7,9 +7,9 @@ select xt.create_view('xt.invciteminfo', $$
   case when invcitem_item_id = -1 then true else false end as invcitem_is_misc,
   invcitem_ordered * invcitem_qty_invuomratio 
     * (invcitem_price / invcitem_price_invuomratio) as invcitem_ext_price,
-  max(taxhist_tax) as invcitem_tax_total
+  sum(taxhist_tax) as invcitem_tax_total
   from invcitem
-  inner join invcitemtax on invcitem_id = taxhist_parent_id
+  left join invcitemtax on invcitem_id = taxhist_parent_id
   group by invcitem_id
 
 $$, false);

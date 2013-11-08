@@ -1642,6 +1642,10 @@ ul.icons-ul > li .icon-li {
 .xv-combobox .onyx-input-decorator input {
   width: 145px;
 }
+.xv-combobox .icon-sort {
+  color: #357ec7;
+  vertical-align: middle;
+}
 .xv-combobox-note {
   padding: 14px 3px 8px 3px;
   text-align: left;
@@ -2289,6 +2293,9 @@ ul.icons-ul > li .icon-li {
   text-align: right;
   width: 150px;
 }
+.spinner .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
 .spinner .buttons {
   display: block;
   padding: 0;
@@ -2345,7 +2352,7 @@ ul.icons-ul > li .icon-li {
   Styles relations to relation widgets
 */
 /**
-  Styles for Relation Widgets
+  Styles relating to RelationWidgets
 */
 .xv-relationwidget-completer {
   left: -200px;
@@ -2356,7 +2363,7 @@ ul.icons-ul > li .icon-li {
 }
 .xv-relationwidget-column.left {
   padding-right: 18px;
-  color: #000;
+  color: #000000;
   width: 140px;
 }
 .xv-relationwidget-icon {
@@ -2392,6 +2399,7 @@ ul.icons-ul > li .icon-li {
   border-bottom-width: 1px;
   border-bottom-style: solid;
 }
+/* RelationsEditorBox */
 .xv-relations-editor-box .xv-groupbox {
   margin-right: 0;
   padding: 0;
@@ -2411,7 +2419,7 @@ ul.icons-ul > li .icon-li {
   Styles for startup panel
 */
 /**
-  Styles for the initial startup panel
+  Styles for the application startup
 */
 .xv-startup-panel {
   background: #333333;
@@ -2524,39 +2532,6 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-}
-.xv-login .xv-login-form {
-  position: absolute;
-  height: 250px;
-  width: 300px;
-  top: 50%;
-  left: 50%;
-  margin-top: -125px;
-  margin-left: -150px;
-}
-.xv-login .xv-login-form .xv-message-box {
-  font-size: 12px;
-  text-align: center;
-  padding: 10px;
-}
-.xv-login .xv-login-form .xv-message-box.error {
-  color: #ff0000;
-}
-.xv-login .xv-organizations-selection {
-  position: absolute;
-  height: 300px;
-  width: 400px;
-  top: 50%;
-  left: 50%;
-  margin-top: -150px;
-  margin-left: -200px;
-}
-.xv-login .xv-organizations-selection .xv-organization-row {
-  padding: 5px;
-  cursor: pointer;
-}
-.xv-login .xv-organizations-selection .xv-organization-row:hover {
-  background-color: #dddddd;
 }
 .xv-my-account-popup {
   background-color: #ffffff;
@@ -2693,37 +2668,22 @@ body {
 .xv-addresswidget .xv-addresswidget-viewer.disabled {
   color: #696969;
 }
-.xv-addresswidget-input-decorator {
-  background: #ffffff;
-  display: block;
-  margin: 4px;
-}
-.xv-addresswidget-input-decorator.short {
-  width: 40%;
-}
+.xv-addresswidget-input-decorator,
 .xv-addresswidget-combobox-decorator {
   background: #ffffff;
   display: block;
   margin: 4px;
-  width: 80%;
-  padding-right: 0;
 }
-.xv-addresswidget-combobox-decorator .xv-combobox-input {
-  width: 80%;
+.xv-addresswidget-input-decorator .enyo-fittable-columns-layout > *,
+.xv-addresswidget-combobox-decorator .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
 }
-.xv-addresswidget-combobox-decorator .xv-combobox {
-  padding: 0;
-  width: 100%;
+.xv-addresswidget-input-decorator.short,
+.xv-addresswidget-combobox-decorator.short {
+  width: 40%;
 }
-.xv-addresswidget-combobox-decorator .enyo-fittable-columns-layout .icon-sort {
-  padding-top: 2px;
-  padding-left: 30px;
-}
-.xv-addresswidget-combobox-decorator .enyo-fittable-columns-layout .xv-decorated-label {
-  padding-top: 2px;
-}
-.xv-addresswidget-combobox-decorator .enyo-fittable-columns-layout .xv-combobox-input {
-  padding-top: 2px;
+.xv-addresswidget-combobox-decorator {
+  width: 60%;
 }
 .xv-addresswidget-input {
   width: 100%;

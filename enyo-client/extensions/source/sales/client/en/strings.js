@@ -12,6 +12,7 @@ strict:true, trailing:true, white:true */
     "_allowASAPShipSchedules": "Allow ASAP Schedule Dates",
     "_allowDiscounts": "Allow Price Discounts",
     "_allowFreeFormShiptos": "Allow Free Form Ship-Tos",
+    "_authorizedCredit": "Authorized Credit",
     "_autoAllocateCreditMemos": "Allocate Credit Memos to New Sales Order on Save",
     "_autoSelectForBilling": "Check 'Select for Billing' option on Ship Order",
     "_bookings": "Bookings",

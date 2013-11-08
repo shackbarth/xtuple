@@ -439,8 +439,6 @@ init_everythings() {
 	log "######################################################"
 	log ""
 
-	psql -U postgres dev -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>1 | tee -a $LOG_FILE
-
 	cdir $XT_DIR/node-datasource
 
 	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: ""/testDatabase: "dev"/' > config.js
@@ -469,6 +467,8 @@ init_everythings() {
 
 	cdir $XT_DIR
 	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
+
+	psql -U postgres dev -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>1 | tee -a $LOG_FILE
 
 	log ""
 	log "######################################################"

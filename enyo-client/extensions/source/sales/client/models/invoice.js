@@ -6,16 +6,16 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.extensions.sales.initProjectModels = function () {
+  XT.extensions.sales.initInvoiceModels = function () {
     /**
       @class
 
       @extends XM.Model
     */
-    XM.ProjectCustomer = XM.Model.extend(
-      /** @scope XM.ProjectCustomer.prototype */ {
+    XM.InvoiceSalesOrder = XM.Model.extend(
+      /** @scope XM.InvoiceSalesOrder.prototype */ {
 
-      recordType: 'XM.ProjectCustomer',
+      recordType: 'XM.InvoiceSalesOrder',
 
       isDocumentAssignment: true
 
@@ -24,3 +24,4 @@ white:true*/
   };
 
 }());
+

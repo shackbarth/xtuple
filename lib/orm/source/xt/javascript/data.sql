@@ -136,7 +136,7 @@ select xt.install_js('XT','Data','xtuple', $$
               param.value = 'f';
             }
 
-            /* Yeah, it depends on a property called 'charectristics'... */
+            /* Yeah, it depends on a property called 'characteristics'... */
             prop = XT.Orm.getProperty(orm, 'characteristics');
 
             /* Build the characteristics query clause. */
@@ -1933,6 +1933,11 @@ select xt.install_js('XT','Data','xtuple', $$
         else if(!isNaN(qry[i].value)) { ret[prop] = qry[i].value - 0; }
         else { ret[prop] = qry[i].value; }
       }
+
+      /* Make sure there is a result at all times */
+      keys.forEach(function (key) {
+        if (ret[key] === undefined) { ret[key] = null; }
+      });
 
       return ret;
     },

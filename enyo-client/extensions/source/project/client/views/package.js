@@ -1,7 +1,10 @@
 enyo.depends(
+  "documents_box.js",
+  "grid_box.js",
   "list.js",
   "list_relations.js",
   "list_relations_box.js",
   "list_relations_editor_box.js",
-  "workspace.js"
+  "workspace.js",
+  "dashboard.js"
 );

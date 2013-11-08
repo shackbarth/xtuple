@@ -1,17 +1,17 @@
 select xt.install_js('XM','Inventory','xtuple', $$
-/* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
+/* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple.
    See www.xtuple.com/CPAL for the full text of the software license. */
 
 (function () {
 
   if (!XM.PrivateInventory) { XM.PrivateInventory = {}; }
-  
+
   XM.PrivateInventory.isDispatchable = false; /* No direct access from client */
 
   /**
     Distribute location and/or trace detail for one or many inventory transactions.
     For good or for ill, this function attempts to exactly replicate the behavior of distributeInventory.cpp in the C++ client.
-    
+
     Example:
 
         XM.Inventory.distribute (12345,[
@@ -36,13 +36,13 @@ select xt.install_js('XM','Inventory','xtuple', $$
               expiration: '2013-08-05T00:00:00.000Z',
               warranty: '2013-08-05T00:00:00.000Z'
             }
-          ]    
+          ]
         })
-        
+
     @private
     @param {Number} Series number
     @param {Array} Detail
-    
+
   */
   XM.PrivateInventory.distribute = function (series, detail) {
     detail = detail || [];
@@ -70,13 +70,13 @@ select xt.install_js('XM','Inventory','xtuple', $$
           " where locitemsite_itemsite_id = $2);",
           qry = plv8.execute(locSql, [uuid, info.itemsite_id]);
         if (!qry.length) {
-          throw new handleError("Location " + uuid + " is not valid."); 
+          throw new handleError("Location " + uuid + " is not valid.");
         }
         return qry[0].location_id;
       };
 
     if (detail && detail.length) {
-      sql = "select itemlocdist_id, " + 
+      sql = "select itemlocdist_id, " +
         " invhist_id, " +
         " invhist_invqty, " +
         " invhistsense(invhist_id) as sense, " +
@@ -92,7 +92,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
       /* We shouldn't have detail if there are no detail control settings turned on */
       if (!info.length) {
         throw new handleError("Item Site is not controlled.");
-      } else if (info.length > 1) { 
+      } else if (info.length > 1) {
         throw new handleError("Only distribution for one transaction at a time is supported.");
       }
       info = info[0];
@@ -102,11 +102,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
         qty += detail[i].quantity;
         detail[i].quantity = detail[i].quantity * info.sense; /* Fix the nonsense */
       }
-      
+
       if (qty != info.invhist_invqty) {
         throw new handleError("Distribution quantity does not match transaction quantity.");
       }
-      
+
       /* Loop through and handle each trace detail */
       if (info.itemsite_controlmethod === 'L' || info.itemsite_controlmethod === 'S') {
         sql = "select nextval('itemloc_series_seq') AS itemloc_series;";
@@ -131,10 +131,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
           "from itemlocdist join ls on itemlocdist_ls_id=ls_id " +
           "where ls_number = $1 " +
           " and itemlocdist_itemsite_id=$2; ";
-        
+
         for (i = 0; i < detail.length; i++) {
           d = detail[i];
-          
+
           if (!d.trace) { throw new handleError("Itemsite requires lot or serial trace detail."); }
 
           /* Serial numbers can only be one */
@@ -148,11 +148,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
               if (!rec.length) {
                 throw new handleError("Serial number " + d.trace + " does not exist in inventory.");
               }
-            } else { 
+            } else {
               throw new handleError("Serial number quantity must be one.");
             }
           }
-          
+
           distId = plv8.execute(sql, [
             d.trace, traceSeries, d.quantity, d.expiration, d.warranty, info.itemlocdist_id
           ])[0].id;
@@ -163,7 +163,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
             if (!d.location) { throw new handleError("Itemsite requires location detail."); }
 
             locId = getLocId(d.location);
-          } else { 
+          } else {
             if (d.location) { throw new handleError("Itemsite does not support location detail."); }
           }
           plv8.execute(sql2, [locId, distId]);
@@ -183,7 +183,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           " itemlocdist_itemsite_id, itemlocdist_expiration, " +
           " itemlocdist_qty, itemlocdist_series, itemlocdist_invhist_id ) " +
           " values ($1, 'L', $2, $3, endoftime(), $4, $5, $6); ";
-            
+
         for (i = 0; i < detail.length; i++) {
           d = detail[i];
           if (!d.location) { throw new handleError("Item Site requires location detail."); }
@@ -206,7 +206,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
         "where invhist_series = $1" +
         " and (itemsite_loccntrl or itemsite_controlmethod in ('L','S')); ";
       invHist = plv8.execute(sql,[series]);
-      
+
       if (invHist.length) { throw new handleError("Transaction requires distribution detail"); }
     }
 
@@ -218,12 +218,12 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
 
   if (!XM.Inventory) { XM.Inventory = {options: []}; }
-  
+
   XM.Inventory.isDispatchable = true;
 
   /**
     Perform Inventory Adjustments.
-    
+
       select xt.post('{
         "username": "admin",
         "nameSpace":"XM",
@@ -242,7 +242,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           ]
         }
       }');
-  
+
     @param {String} Itemsite uuid
     @param {Number} Quantity
     @param {Array} [options.detail] Distribution detail
@@ -273,29 +273,101 @@ select xt.install_js('XM','Inventory','xtuple', $$
     return;
   };
   XM.Inventory.adjustment.description = "Perform Inventory Adjustments.";
-  XM.Inventory.adjustment.params = {
-    itemSite: {type: "String", description: "UUID of itemSite"},
-    quantity: {type: "Number", description: "Quantity" },
-    options: {type: "Object", description: "Other attributes", attributes: {
-      detail: { type: "Array",
-        description: "Distribution Detail",
-        attributes: [
-        {type: "Object", description: "Location and/or Trace detail", attributes: {
-           quantity: {type: "Number", description: "Quantity"},
-           location: {type: "String", description: "UUID of location"},
-           trace: {type: "String", description: "Trace (Lot or Serial) Number"},
-           expiration: {type: "Date", description: "Perishable expiration date"},
-           warranty: {type: "Date", description: "Warranty expire date"}}}
-      ]},
-      asOf: {type: "Date", description: "Transaction Timestamp, default to now()"},
-      docNumber: {type: "String", description: "Document Number"},
-      notes: {type: "String", description: "Notes"},
-      value: {type: "String", description: "Value"}
-    }}
+  XM.Inventory.adjustment.request = {
+    "$ref": "InventoryAdjustment"
+  };
+  XM.Inventory.adjustment.parameterOrder = ["itemSite", "quantity", "options"];
+  XM.Inventory.adjustment.schema = {
+    InventoryAdjustment: {
+      properties: {
+        itemSite: {
+          title: "Item Site",
+          description: "UUID of itemSite",
+          type: "string",
+          "$ref": "ItemSite/uuid",
+          "required": true
+        },
+        quantity: {
+          title: "Quantity",
+          description: "Quantity",
+          type: "number",
+          "required": true
+        },
+        options: {
+          title: "Options",
+          type: "object",
+          "$ref": "InventoryAdjustmentOptions"
+        }
+      }
+    },
+    InventoryAdjustmentOptions: {
+      properties: {
+        detail: {
+          title: "Detail",
+          description: "Distribution Detail",
+          type: "object",
+          items: {
+            "$ref": "InventoryAdjustmentOptionsDetails"
+          }
+        },
+        asOf: {
+          title: "As Of",
+          description: "Transaction Timestamp, default to now()",
+          type: "string",
+          format: "date-time"
+        },
+        docNumber: {
+          title: "Document Number",
+          description: "Document Number",
+          type: "string"
+        },
+        notes: {
+          title: "Notes",
+          description: "Notes",
+          type: "string"
+        },
+        value: {
+          title: "Value",
+          description: "Value",
+          type: "string"
+        }
+      }
+    },
+    InventoryAdjustmentOptionsDetails: {
+      properties: {
+        quantity: {
+          title: "Quantity",
+          description: "Quantity",
+          type: "number"
+        },
+        location: {
+          title: "Location",
+          description: "UUID of location",
+          type: "string"
+        },
+        trace: {
+          title: "Trace",
+          description: "Trace (Lot or Serial) Number",
+          type: "string"
+        },
+        expiration: {
+          title: "Expiration",
+          description: "Perishable expiration date",
+          type: "string",
+          format: "date"
+        },
+        warranty: {
+          title: "Warranty",
+          description: "Warranty expire date",
+          type: "string",
+          format: "date"
+        }
+      }
+    }
   };
 
   /**
-    Enter Receipt 
+    Receipt
       select xt.post('{
         "nameSpace":"XM",
         "type":"Inventory",
@@ -310,13 +382,10 @@ select xt.install_js('XM','Inventory','xtuple', $$
         "username":"admin"
       }');
 
-  
+
     @param {Array} orderLines
-    @param {String} orderLines[n].uuid
-    @param {String} orderLines[n].quantity
-    @param {Array} [options.detail] Distribution detail
   */
-  XM.Inventory.enterReceipt = function (orderLines, options) {
+  XM.Inventory.receipt = function (orderLines, options) {
     options = options || {};
 
     /* Make sure user can do this */
@@ -336,29 +405,102 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return;
   };
-  XM.Inventory.enterReceipt.description = "Enter Receipt.";
-  XM.Inventory.enterReceipt.params = {
-    orderLines: {type: "Array", description: "Detail of order lines", attributes: { 
-      uuid: {type: "String", description: "Order line UUID" },
-      quantity: {type: "Number", description: "Quantity" }
-    }},
-    options: {type: "Object", description: "Other attributes", attributes: {
-      detail: { type: "Array",
-        description: "Distribution Detail",
-        attributes: [
-        {type: "Object", description: "Location and/or Trace detail", attributes: {
-           quantity: {type: "Number", description: "Quantity"},
-           location: {type: "String", description: "UUID of location"},
-           trace: {type: "String", description: "Trace (Lot or Serial) Number"},
-           expiration: {type: "Date", description: "Perishable expiration date"},
-           warranty: {type: "Date", description: "Warranty expire date"}}}
-      ]},
-    }}
+  XM.Inventory.receipt.description = "Receipt of Purchase Order, Transfer Order, or Returned materials.";
+  XM.Inventory.receipt.request = {
+    "$ref": "InventoryReceipt"
+  };
+  XM.Inventory.receipt.parameterOrder = ["orderLines"];
+  XM.Inventory.receipt.schema = {
+    InventoryReceipt: {
+      properties: {
+        orderLines: {
+          title: "OrderLines",
+          type: "object",
+          "$ref": "InventoryReceiptOrderLine"
+        }
+      }
+    },
+    InventoryReceiptOrderLine: {
+      properties: {
+        orderLine: {
+          title: "Order Line",
+          description: "UUID of order document line item",
+          type: "string",
+          "$ref": "OrderLine/uuid",
+          "required": true
+        },
+        quantity: {
+          title: "Quantity",
+          description: "Quantity",
+          type: "number",
+          "required": true
+        },
+        options: {
+          title: "Options",
+          type: "object",
+          "$ref": "InventoryReceiptOptions"
+        }
+      }
+    },
+    InventoryReceiptOptions: {
+      properties: {
+        detail: {
+          title: "Detail",
+          description: "Distribution Detail",
+          type: "object",
+          items: {
+            "$ref": "InventoryReceiptOptionsDetails"
+          }
+        },
+        asOf: {
+          title: "As Of",
+          description: "Transaction Timestamp, default to now()",
+          type: "string",
+          format: "date-time"
+        },
+        post: {
+          title: "Post",
+          description: "Post transaction immediatly",
+          type: "boolean"
+        }
+      }
+    },
+    InventoryReceiptOptionsDetails: {
+      properties: {
+        quantity: {
+          title: "Quantity",
+          description: "Quantity",
+          type: "number"
+        },
+        location: {
+          title: "Location",
+          description: "UUID of location",
+          type: "string"
+        },
+        trace: {
+          title: "Trace",
+          description: "Trace (Lot or Serial) Number",
+          type: "string"
+        },
+        expiration: {
+          title: "Expiration",
+          description: "Perishable expiration date",
+          type: "string",
+          format: "date"
+        },
+        warranty: {
+          title: "Warranty",
+          description: "Warranty expire date",
+          type: "string",
+          format: "date"
+        }
+      }
+    }
   };
 
   /**
     Issue to shipping.
-    
+
       select xt.post('{
         "username": "admin",
         "nameSpace":"XM",
@@ -384,7 +526,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           ]
         }
       }');
-  
+
     @param {String|Array} Order line uuid or array of objects
     @param {Number|Object} Quantity or options
     @param {Date}   [options.asOf=now()] Transaction Timestamp
@@ -441,26 +583,85 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return;
   };
-  XM.Inventory.issueToShipping.description = "Issue to Shipping.";
-  XM.Inventory.issueToShipping.params = {
-    orderLine: { type: "String", description: "Order line UUID" },
-    quantity: {type: "Number", description: "Quantity" },
-    options: {type: "Object", description: "Other attributes", attributes: {
-      asOf: {type: "Date", description: "Transaction Timestamp. Default to now()."},
-      detail: { type: "Array",
-        description: "Distribution Detail",
-        attributes: [
-        {type: "Object", description: "Location and/or Trace detail", attributes: {
-           quantity: {type: "Number", description: "Quantity"},
-           location: {type: "String", description: "UUID of location"},
-           trace: {type: "String", description: "Trace (Lot or Serial) Number"}}}
-      ]},
-    }}
+  XM.Inventory.issueToShipping.description = "Issue to Shipping for Sales Order or Transfer Order.";
+  XM.Inventory.issueToShipping.request = {
+    "$ref": "InventoryIssueToShipping"
+  };
+  XM.Inventory.issueToShipping.parameterOrder = ["orderLines"];
+  XM.Inventory.issueToShipping.schema = {
+    InventoryIssueToShipping: {
+      properties: {
+        orderLines: {
+          title: "OrderLines",
+          type: "object",
+          "$ref": "InventoryIssueToShippingOrderLine"
+        }
+      }
+    },
+    InventoryIssueToShippingOrderLine: {
+      properties: {
+        orderLine: {
+          title: "Order Line",
+          description: "UUID of order document line item",
+          type: "string",
+          "$ref": "OrderLine/uuid",
+          "required": true
+        },
+        quantity: {
+          title: "Quantity",
+          description: "Quantity",
+          type: "number",
+          "required": true
+        },
+        options: {
+          title: "Options",
+          type: "object",
+          "$ref": "InventoryIssueToShippingOptions"
+        }
+      }
+    },
+    InventoryIssueToShippingOptions: {
+      properties: {
+        detail: {
+          title: "Detail",
+          description: "Distribution Detail",
+          type: "object",
+          items: {
+            "$ref": "InventoryIssueToShippingOptionsDetails"
+          }
+        },
+        asOf: {
+          title: "As Of",
+          description: "Transaction Timestamp, default to now()",
+          type: "string",
+          format: "date-time"
+        }
+      }
+    },
+    InventoryIssueToShippingOptionsDetails: {
+      properties: {
+        quantity: {
+          title: "Quantity",
+          description: "Quantity",
+          type: "number"
+        },
+        location: {
+          title: "Location",
+          description: "UUID of location",
+          type: "string"
+        },
+        trace: {
+          title: "Trace",
+          description: "Trace (Lot or Serial) Number",
+          type: "string"
+        }
+      }
+    }
   };
 
   /**
     Ship shipment.
-    
+
       select xt.post('{
         "username": "admin",
         "nameSpace":"XM",
@@ -470,7 +671,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           "parameters":["203"]
         }
       }');
-  
+
     @param {Number} Shipment number
     @param {Date} Ship date, default = current date
   */
@@ -483,17 +684,36 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     /* Post the transaction */
     var ret = plv8.execute(sql, [shipment, shipDate])[0].series;
-    
+
     return ret;
   };
-  XM.Inventory.shipShipment.description = "Ship shipment";
-  XM.Inventory.shipShipment.params = {
-     shipment: { shipment: "Number", shipDate: "Ship Date" }
+  XM.Inventory.shipShipment.description = "Ship Sales or Transfer Order shipment";
+  XM.Inventory.shipShipment.request = {
+    "$ref": "InventoryShipShipment"
+  };
+  XM.Inventory.shipShipment.parameterOrder = ["shipment", "shipDate"];
+  XM.Inventory.shipShipment.schema = {
+    InventoryShipShipment: {
+      properties: {
+        orderLine: {
+          title: "Shipment",
+          description: "Number of shipment",
+          type: "string",
+          "$ref": "Shipment/number",
+          "required": true
+        },
+        shipDate: {
+          title: "Ship Date",
+          description: "Ship Date",
+          type: "date"
+        }
+      }
+    }
   };
 
   /**
     Return shipment transactions.
-    
+
       select xt.post('{
         "username": "admin",
         "nameSpace":"XM",
@@ -503,7 +723,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           "parameters":["95c30aba-883a-41da-e780-1d844a1dc112"]
         }
       }');
-  
+
     @param {String|Array} Order line uuid, or array of uuids
   */
   XM.Inventory.returnFromShipping = function (orderLine) {
@@ -530,14 +750,28 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return ret;
   };
-  XM.Inventory.returnFromShipping.description = "Return shipment transactions.";
-  XM.Inventory.returnFromShipping.params = {
-    orderLine: { type: "String", description: "Order line UUID" }
+  XM.Inventory.returnFromShipping.description = "Return issued materials from shipping to inventory.";
+    XM.Inventory.shipShipment.request = {
+    "$ref": "InventoryReturnFromShipping"
+  };
+  XM.Inventory.returnFromShipping.parameterOrder = ["orderLine"];
+  XM.Inventory.returnFromShipping.schema = {
+    InventoryReturnFromShipping: {
+      properties: {
+        orderLine: {
+          title: "OrderLine",
+          description: "UUID of order document line item",
+          type: "string",
+          "$ref": "OrderLine/uuid",
+          "required": true
+        }
+      }
+    }
   };
 
   /**
     Return complete shipment (only available for orders that have not been shipped) - used in maintain shipping contents screen.
-    
+
       select xt.post('{
         "username": "admin",
         "nameSpace":"XM",
@@ -547,7 +781,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
           "parameters":["203"]
         }
       }');
-  
+
     @param {Number} shipment id
   */
   XM.Inventory.recallShipment = function (shipment) {
@@ -562,24 +796,37 @@ select xt.install_js('XM','Inventory','xtuple', $$
 
     return ret ? ret : true;
   };
-  XM.Inventory.recallShipment.description = "Return complete shipment (only available for orders that " +
-    "have not been shipped) - used in maintain shipping contents screen.";
-  XM.Inventory.recallShipment.params = {
-     shipment: { type: "String", description: "Shipment Number" }
+  XM.Inventory.recallShipment.description = "Return shipped shipment";
+  XM.Inventory.recallShipment.request = {
+    "$ref": "InventoryRecallShipment"
+  };
+  XM.Inventory.recallShipment.parameterOrder = ["shipment"];
+  XM.Inventory.shipShipment.schema = {
+    InventoryRecallShipment: {
+      properties: {
+        orderLine: {
+          title: "Shipment",
+          description: "Number of shipment",
+          type: "string",
+          "$ref": "Shipment/number",
+          "required": true
+        }
+      }
+    }
   };
 
   XM.Inventory.options = XM.Inventory.options.concat([
     "ItemSiteChangeLog",
     "WarehouseChangeLog",
-    "AllowAvgCostMethod",  
+    "AllowAvgCostMethod",
     "AllowStdCostMethod",
     "AllowJobCostMethod",
     "ShipmentNumberGeneration",
     "NextShipmentNumber",
     "KitComponentInheritCOS"
   ]);
-  
-  /* 
+
+  /*
   Return Inventory configuration settings.
 
   @returns {Object}
@@ -591,14 +838,14 @@ select xt.install_js('XM','Inventory','xtuple', $$
         ret = {},
         qry;
 
-    ret.NextShipmentNumber = plv8.execute(sql)[0].value;  
-      
+    ret.NextShipmentNumber = plv8.execute(sql)[0].value;
+
     ret = XT.extend(ret, data.retrieveMetrics(keys));
 
     return ret;
   };
-  
-  /* 
+
+  /*
   Update Inventory configuration settings. Only valid options as defined in the array
   XM.Inventory.options will be processed.
 
@@ -606,11 +853,11 @@ select xt.install_js('XM','Inventory','xtuple', $$
    @returns {Boolean}
   */
   XM.Inventory.commitSettings = function(patches) {
-    var sql, settings, 
+    var sql, settings,
       options = XM.Inventory.options.slice(0),
-      data = Object.create(XT.Data), 
+      data = Object.create(XT.Data),
       metrics = {};
-        
+
     /* check privileges */
     if(!data.checkPrivilege('ConfigureIM')) throw new Error('Access Denied');
 
@@ -619,12 +866,12 @@ select xt.install_js('XM','Inventory','xtuple', $$
     if (!XT.jsonpatch.apply(settings, patches)) {
       plv8.elog(NOTICE, 'Malformed patch document');
     }
-    
+
     /* update numbers */
     if(settings.NextShipmentNumber) {
       plv8.execute("select setval('shipment_number_seq', $1)", [settings.NextShipmentNumber - 1]);
     }
-    options.remove('NextShipmentNumber'); 
+    options.remove('NextShipmentNumber');
 
     /* update remaining options as metrics
       first make sure we pass an object that only has valid metric options for this type */
@@ -632,20 +879,20 @@ select xt.install_js('XM','Inventory','xtuple', $$
       var prop = options[i];
       if(settings[prop] !== undefined) metrics[prop] = settings[prop];
     }
- 
+
     return data.commitMetrics(metrics);
   };
 
   /**
     Returns an object indicating which cost methods are used.
-    
+
     @returns Object
   */
   XM.Inventory.usedCostMethods = function() {
     var sql = "select count(*) > 0 as used from itemsite where itemsite_costmethod = $1",
       data = Object.create(XT.Data),
       used = {};
-        
+
     /* check privileges */
     if(!data.checkPrivilege('ConfigureIM')) throw new Error('Access Denied');
 
@@ -657,5 +904,5 @@ select xt.install_js('XM','Inventory','xtuple', $$
   }
 
 }());
-  
+
 $$ );
