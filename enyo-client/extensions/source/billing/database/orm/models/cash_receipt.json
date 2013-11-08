@@ -7,7 +7,6 @@
     "idSequenceName": "cashrcpt_cashrcpt_id_seq",
     "isRest": true,
     "lockable": true,
-    "isSystem": true,
     "comment": "Cash Receipt",
     "privileges": {
       "all": {
@@ -169,7 +168,6 @@
     "table": "cashrcptitem",
     "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
     "isRest": true,
-    "isSystem": true,
     "comment": "Cash Receipt Line Item",
     "privileges": {
       "all": {
@@ -239,7 +237,6 @@
     "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
     "isRest": true,
     "lockable": true,
-    "isSystem": true,
     "comment": "Pending Cash Receipt Line Item",
     "privileges": {
       "all": {
@@ -324,7 +321,6 @@
     "isRest": true,
     "lockable": true,
     "comment": "Cash Receipt Relation",
-    "isSystem": true,
     "privileges": {
       "all": {
         "create": false,
@@ -393,7 +389,6 @@
     "table": "xt.cashrcpt_receivable",
     "isRest": true,
     "lockable": true,
-    "isSystem": true,
     "comment": "Cash Receipt Receivable",
     "privileges": {
       "all": {
@@ -533,7 +528,6 @@
     "table": "xt.cashrcptinfo",
     "isRest": true,
     "comment": "Cash Receipt List Item",
-    "isSystem": true,
     "privileges": {
       "all": {
         "create": false,

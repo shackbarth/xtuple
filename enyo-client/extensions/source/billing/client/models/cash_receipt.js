@@ -449,6 +449,14 @@ XT.extensions.billing.initCashReceipt = function () {
   });
 
   /**
+   * @class XM.CashReceiptLineListItemCollection
+   * @extends XM.Collection
+   */
+  XM.CashReceiptLineListItemCollection = XM.Collection.extend({
+    model: XM.CashReceiptLineListItem
+  });
+
+  /**
    * @class XM.CashReceiptListItemCollection
    * @extends XM.Collection
    */
