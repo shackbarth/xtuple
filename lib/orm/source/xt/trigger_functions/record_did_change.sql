@@ -1,5 +1,5 @@
 create or replace function xt.record_did_change() returns trigger as $$
-/* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
+/* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple.
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
  var data = Object.create(XT.Data),
@@ -7,6 +7,9 @@ create or replace function xt.record_did_change() returns trigger as $$
    oid = data.getTableOid(table),
    insert = TG_OP === 'INSERT',
    qry,
+   shareParams,
+   shareSql,
+   sourceCode,
    sql,
    pkey;
 
@@ -23,7 +26,7 @@ create or replace function xt.record_did_change() returns trigger as $$
          '    where indisprimary = true ' +
          '      and indrelid in ( ' +
          '        select oid ' +
-         '        from pg_class ' + 
+         '        from pg_class ' +
          '        where lower(relname) = $2)) ' +
          ' and pg_attribute.attrelid = pg_class.oid ' +
          ' and pg_attribute.attisdropped = false ';
@@ -49,13 +52,26 @@ create or replace function xt.record_did_change() returns trigger as $$
      sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);'
      plv8.execute(sql, [oid, NEW[pkey], XT.generateUUID()]);
 
+     /* Add the user that's creating this record to the xt.obj_share. */
+     sourceCode = plv8.execute('select xt.get_source_code($1);', [pkey])[0].get_source_code;
+     if (sourceCode) {
+       shareSql = 'insert into xt.obj_share (obj_share_target_id, obj_share_type, obj_share_user) values ($1, $2, $3);'
+       shareParams = [
+         NEW[pkey],
+         sourceCode,
+         XT.username
+       ];
+
+       plv8.execute(shareSql, shareParams);
+     }
+
    /* delete version record if applicable */
    } else if (TG_OP === 'DELETE') {
      sql =  'delete from xt.ver where ver_table_oid = $1 and ver_record_id = $2';
      plv8.execute(sql, [oid, OLD[pkey]]);
      return OLD
    }
-   
+
    return NEW;
 
 $$ language plv8;
