@@ -19,18 +19,13 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       assert.equal(XM.BankAccount.CREDIT_CARD, "R");
     });
 
-    it('verify that XM.reasonCodeDocumentTypes contains the constants', function () {
+    it('verify that XM.bankAccountTypes contains the constants', function () {
       assert.equal(XM.bankAccountTypes.length, 3);
 
-      assert.ok(_.find(XM.bankAccountTypes.models, function (m) {
-        return m.id === XM.BankAccount.CASH;
-      }));
-      assert.ok(_.find(XM.bankAccountTypes.models, function (m) {
-        return m.id === XM.BankAccount.CHECKING;
-      }));
-      assert.ok(_.find(XM.bankAccountTypes.models, function (m) {
-        return m.id === XM.BankAccount.CREDIT_CARD;
-      }));
+      var ids = _.pluck(XM.bankAccountTypes.models, "id");
+      assert.include(ids, XM.BankAccount.CASH);
+      assert.include(ids, XM.BankAccount.CHECKING);
+      assert.include(ids, XM.BankAccount.CREDIT_CARD);
     });
 
     it('verify that Billing Bank Account Picker only lists bank accounts where isUsedByBilling is true',

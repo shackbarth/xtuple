@@ -177,9 +177,13 @@ regexp:true, undef:true, trailing:true, white:true */
     list: "XV.CustomerList"
   });
 
-  // ..........................................................
-  // CUSTOMER
-  //
+  enyo.kind({
+    name: "XV.BillingCustomerWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.BillingCustomerCollection",
+    query: { parameters: [{attribute: "isActive", value: true}]},
+    list: "XV.CustomerList"
+  });
 
   enyo.kind({
     name: "XV.SalesCustomerWidget",
@@ -187,6 +191,18 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.SalesCustomerCollection",
     list: "XV.CustomerList"
   });
+
+  // ..........................................................
+  // CUSTOMER GROUP
+  //
+  enyo.kind({
+    name: "XV.CustomerGroupWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.CustomerGroupCollection",
+    keyAttribute: "name",
+    list: "XV.CustomerGroupList"
+  });
+
   // ..........................................................
   // CUSTOMER PROSPECT
   //

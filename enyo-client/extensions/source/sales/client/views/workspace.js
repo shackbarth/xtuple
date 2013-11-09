@@ -162,6 +162,21 @@ trailing:true, white:true*/
     });
 
     // ..........................................................
+    // INVOICE
+    //
+
+    extensions = [
+      {kind: "XV.MoneyWidget",
+        attr: {localValue: "authorizedCredit", currency: "currency"},
+        label: "_authorizedCredit".loc(), currencyShowing: false,
+        container: "invoiceLineItemBox.summaryPanel.summaryColumnOne",
+        defer: true},
+      {kind: "XV.InputWidget", container: "mainGroup", attr: "orderNumber"},
+      {kind: "XV.DateWidget", container: "mainGroup", attr: "orderDate"}
+    ];
+    XV.appendExtension("XV.InvoiceWorkspace", extensions);
+
+    // ..........................................................
     // OPPORTUNITY
     //
 
@@ -169,7 +184,6 @@ trailing:true, white:true*/
       {kind: "XV.OpportunityQuoteListRelationsBox", container: "panels", attr: "quoteRelations"},
       {kind: "XV.OpportunitySalesOrderListRelationsBox", container: "panels", attr: "salesOrderRelations"}
     ];
-
     XV.appendExtension("XV.OpportunityWorkspace", extensions);
 
   };

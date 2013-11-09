@@ -8,8 +8,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   </head>
-  <body class="enyo-unselectable">
+  <body>
 
+  <!--  Why is this here and not in the head? -->
   <style type="text/css" media="all">
   <% include login/stylesheets/screen.css %>
   </style>
@@ -31,7 +32,7 @@
             <option value="<%= databases[i] %>"><%= databases[i] %></option>
           <% } %>
           </select>
-          <input class="enyo-unselectable login-button" name="submit" 
+          <input class="enyo-unselectable login-button" name="submit"
             id="form-fields_loginButton" type="submit" value="Sign In"/>
         </form>
       </div>
@@ -41,6 +42,28 @@
       <label class="login-message-box error"><%= message[i] %></label>
     <% } %>
   </section>
+
+  <!-- <div class="footer">
+    <div class="footer-container">
+      <p>
+        Visit the <a href='http://www.xtuple.org/docs/mobile-web-demo-guide'>Mobile Web Demo Guide</a>,
+        or send email to <a href='mailto:demo@xtuple.com'>demo@xtuple.com</a> for help.
+      </p>
+
+      <p>
+        This MOBILE WEB CLIENT provides access the CRM, Project and Sales modules of xTuple.
+        You must use the DESKTOP CLIENT to access the full application, including CRM, Projects, Sales, Purchasing, Inventory, Manufacturing, Scheduling and Accounting modules.
+      </p>
+
+      <p>
+        Download the xTuple Desktop client here: <a href=''>Windows</a>,
+        <a href=''>Mac</a>, <a href=''>Linux</a>
+      </p>
+
+      <p>v1.4.5</p>
+    </div>
+  </div> -->
+
   <script>
     document.loginForm.id.focus();
   </script>

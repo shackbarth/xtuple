@@ -9,7 +9,7 @@ white:true*/
   XT.extensions.inventory.initStartup = function () {
     XT.cacheCollection("XM.siteZoneRelations", "XM.SiteZoneRelationCollection", "name");
     XT.cacheCollection("XM.locationRelations", "XM.LocationRelationCollection");
-    XT.cacheCollection("XM.location", "XM.LocationCollection");
+    XT.cacheCollection("XM.locations", "XM.LocationCollection");
   };
 
 }());

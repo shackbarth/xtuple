@@ -7,6 +7,29 @@ trailing:true, white:true*/
 
   XT.extensions.billing.initListRelationsBox = function () {
 
+    // ..........................................................
+    // RECEIVABLE TAXES
+    //
+    enyo.kind({
+      name: "XV.ReceivableTaxEditor",
+      kind: "XV.RelationsEditor",
+      components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+          classes: "in-panel", components: [
+          {kind: "XV.InputWidget", attr: "taxCode"},
+          {kind: "XV.NumberWidget", attr: "amount"},
+        ]}
+      ]
+    });
+
+    enyo.kind({
+      name: "XV.ReceivableTaxBox",
+      kind: "XV.ListRelationsEditorBox",
+      title: "_tax".loc(),
+      editor: "XV.ReceivableTaxEditor",
+      parentKey: "receivable",
+      listRelations: "XV.ReceivableTaxListRelations"
+    });
   };
 
 }());

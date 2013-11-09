@@ -70,6 +70,91 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // ACTIVITY
+  //
+
+  enyo.kind({
+    name: "XV.ActivityListParameters",
+    kind: "XV.ParameterWidget",
+    defaultParameters: function () {
+      return {
+        showInactive: false,
+        showProjects: true,
+        showProjectTasks: true,
+        showProjectWorkflow: true,
+        user: XM.currentUser
+      };
+    },
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_activities".loc()},
+      {name: "showInactive", label: "_showInactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"},
+      {kind: "onyx.GroupboxHeader", content: "_project".loc()},
+      {name: "showProjects", label: "_projects".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {name: "showProjectTasks", label: "_tasks".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {name: "showProjectWorkflow", label: "_workflow".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_crm".loc()},
+      {name: "showToDos", label: "_toDos".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {name: "showOpportunities", label: "_opportunities".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {name: "showIncidents", label: "_incidents".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
+      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
+      {name: "fromDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"},
+      {name: "toDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"}
+    ],
+    getParameters: function () {
+      var params = this.inherited(arguments),
+        param = {},
+        value = [];
+      if (this.$.showProjects.getValue()) {
+        value.push('Project');
+      }
+      if (this.$.showProjectTasks.getValue()) {
+        value.push('ProjectTask');
+      }
+      if (this.$.showProjectWorkflow.getValue()) {
+        value.push('ProjectWorkflow');
+      }
+      if (this.$.showIncidents.getValue()) {
+        value.push('Incident');
+      }
+      if (this.$.showOpportunities.getValue()) {
+        value.push('Opportunity');
+      }
+      if (this.$.showToDos.getValue()) {
+        value.push('ToDo');
+      }
+      if (value.length) {
+        param.attribute = "activityType";
+        param.operator = "ANY";
+        param.value = value;
+        params.push(param);
+      }
+      return params;
+    }
+  });
+
+  // ..........................................................
   // ADDRESS
   //
 
@@ -443,6 +528,75 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // INVOICE
+  //
+  enyo.kind({
+    name: "XV.InvoiceListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_invoice".loc()},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {kind: "onyx.GroupboxHeader", content: "_show".loc()},
+      {name: "showUnposted", label: "_showUnposted".loc(),
+        attr: "isPosted", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "showPosted", label: "_showPosted".loc(),
+        attr: "isPosted", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: false
+            };
+          }
+          return param;
+        }
+      },
+      {name: "showVoided", label: "_showVoided".loc(),
+        attr: "isVoid", defaultKind: "XV.CheckboxWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
+      {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.BillingCustomerWidget"},
+      {name: "customerType", attr: "customer.customerType", label: "_customerType".loc(), defaultKind: "XV.CustomerTypePicker"},
+      {name: "customerTypePattern", attr: "customer.customerType", label: "_customerTypePattern".loc()},
+      // TODO: INCLUDES operator? But what would the attr be?
+      //{name: "customerGroup", attr: "customer.customerGroups.customerGroup",
+      //  label: "_customerGroup".loc(), defaultKind: "XV.CustomerGroupWidget"},
+
+  /*
+  > Customer
+    - Number
+    - Type (picker)
+    - Type Pattern (text)
+    - Group
+      */
+      {kind: "onyx.GroupboxHeader", content: "_invoiceDate".loc()},
+      {name: "fromDate", label: "_fromDate".loc(), attr: "invoiceDate", operator: ">=",
+        defaultKind: "XV.DateWidget"},
+      {name: "toDate", label: "_toDate".loc(), attr: "invoiceDate", operator: "<=",
+        defaultKind: "XV.DateWidget"}
+    ],
+    create: function () {
+      this.inherited(arguments);
+      // XXX only apply this if the filter is default
+      this.$.showUnposted.setValue(true);
+    }
+
+  });
+
+  // ..........................................................
   // ITEM
   //
 
@@ -623,112 +777,6 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
-  // PROJECT
-  //
-
-  enyo.kind({
-    name: "XV.ProjectListParameters",
-    kind: "XV.ParameterWidget",
-    defaultParameters: function () {
-      return {
-        user: XM.currentUser
-      };
-    },
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_project".loc()},
-      {name: "showCompleted", label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
-        getParameter: function () {
-          var param;
-          if (!this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '!=',
-              value: 'C'
-            };
-          }
-          return param;
-        }
-      },
-      {name: "number", label: "_number".loc(), attr: "number"},
-      {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
-      {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
-      {name: "statusHeader", kind: "onyx.GroupboxHeader", content: "_status".loc()},
-      {name: "status", label: "_status".loc(), attr: "status",
-        defaultKind: "XV.ProjectStatusPicker"},
-      {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
-      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
-      {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {name: "fromDueDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
-        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
-        defaultKind: "XV.DateWidget"},
-      {name: "toDueDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
-        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
-        defaultKind: "XV.DateWidget"}
-    ],
-    /**
-      Special handling for status.
-    */
-    setParameterItemValues: function (items) {
-      this.inherited(arguments);
-      var i;
-      for (i = 0; i < items.length; i++) {
-        if (items[i].name === "status" &&
-            items[i].showing === false) {
-          this.$.showCompleted.hide();
-          this.$.statusHeader.hide();
-        }
-      }
-
-    }
-  });
-
-  enyo.kind({
-    name: "XV.ProjectTaskListParameters",
-    kind: "XV.ParameterWidget",
-    defaultParameters: function () {
-      return {
-        user: XM.currentUser
-      };
-    },
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_project".loc()},
-      {name: "showCompleted", label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
-        getParameter: function () {
-          var param;
-          if (!this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '!=',
-              value: 'C'
-            };
-          }
-          return param;
-        }
-      },
-      {name: "project", label: "_project".loc(), attr: "project", defaultKind: "XV.ProjectWidget"},
-      {name: "number", label: "_number".loc(), attr: "number"},
-      {name: "name", label: "_name".loc(), attr: "name"},
-      {kind: "onyx.GroupboxHeader", content: "_status".loc()},
-      {name: "status", label: "_status".loc(), attr: "status",
-        defaultKind: "XV.ProjectStatusPicker"},
-      {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
-      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
-      {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {name: "fromDueDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
-        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
-        defaultKind: "XV.DateWidget"},
-      {name: "toDueDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
-        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
-        defaultKind: "XV.DateWidget"}
-    ]
-  });
-
-  // ..........................................................
   // PROSPECT
   //
 
@@ -898,8 +946,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '!=',
-              value: 'C'
+              value: 'O'
             };
           }
           return param;
@@ -1283,7 +1330,7 @@ trailing:true, white:true*/
         }
       },
       /*TODO
-        Has Parent Sales Order 
+        Has Parent Sales Order
         Has Closed Parent Sales Orders
         Item Group
       */
