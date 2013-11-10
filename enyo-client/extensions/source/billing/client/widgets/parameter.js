@@ -25,14 +25,15 @@
             if (this.getValue()) {
               param = [{
                 attribute: this.getAttr(),
-                operator: '<=',
+                operator: '>=',
                 value: this.getValue(),
                 includeNull: true
               },
               {
                 attribute: "documentDate",
-                operator: '>=',
-                value: this.getValue()
+                operator: '<=',
+                value: this.getValue(),
+                includeNull: true
               }];
             }
             return param;
