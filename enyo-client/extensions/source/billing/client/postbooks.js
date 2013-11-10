@@ -8,7 +8,7 @@
         name: XT.extensions.billing.name,
         label: "_billing".loc(),
         panels: [
-          {name: "customerList", kind: "XV.CustomerList"},
+          {name: "_customerList", kind: "XV.CustomerList"},
           {name: "invoiceList", kind: "XV.InvoiceList"},
           {name: "receivableList", kind: "XV.ReceivableList"},
           {name: "cashReceiptList", kind: "XV.CashReceiptList"}

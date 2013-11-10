@@ -33,16 +33,16 @@ white:true*/
     * Bi-directional mapping of Funds Types
     */
     XM.FundsTypeEnum = {
-      CHECK:             'C',
-      CERTIFIED_CHECK:   'T',
-      CASH:              'K',
-      MASTERCARD:        'M',
-      VISA:              'V',
-      AMERICAN_EXPRESS:  'A',
-      DISCOVER:          'D',
-      OTHER_CREDIT_CARD: 'R',
-      WIRE_TRANSFER:     'W',
-      OTHER:             'O'
+      C: 'CHECK',
+      T: 'CERTIFIED_CHECK',
+      K: 'CASH',
+      M: 'MASTERCARD',
+      V: 'VISA',
+      A: 'AMERICAN_EXPRESS',
+      D: 'DISCOVER',
+      R: 'OTHER_CREDIT_CARD',
+      W: 'WIRE_TRANSFER',
+      O: 'OTHER'
     };
 
     /**
@@ -55,7 +55,7 @@ white:true*/
       * otherwise.
       */
       isCreditCard: function () {
-        return _.contains([ 'M', 'V', 'A', 'D', 'R' ], this.get('code'));
+        return _.contains([ 'M', 'V', 'A', 'D', 'R' ], this.id);
       }
     });
 
