@@ -5,7 +5,7 @@ vendor-prefix: false, adjoining-classes: false, empty-rules: false, star-propert
 ids: false, box-sizing: false*/
 /*
   To compile this .less file to .css:
-
+  lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 */
 /**
@@ -2233,6 +2233,72 @@ ul.icons-ul > li .icon-li {
   top: 200px;
   position: relative;
 }
+.xv-addresswidget {
+  background-color: #ffffff;
+  padding: 4px;
+}
+.xv-addresswidget .xv-addresswidget-viewer {
+  border: 0;
+  font-size: medium;
+  display: inline;
+}
+.xv-addresswidget .xv-addresswidget-viewer.placeholder {
+  font-style: italic;
+  color: #93a1a1;
+}
+.xv-addresswidget .xv-addresswidget-viewer.hyperlink {
+  color: #0000ff;
+}
+.xv-addresswidget .xv-addresswidget-viewer.disabled {
+  color: #696969;
+}
+.xv-addresswidget .xv-addresswidget-buttons {
+  margin-top: 4px;
+}
+.xv-addresswidget .xv-addresswidget-buttons .xv-addresswidget-button {
+  margin-right: 4px;
+}
+.xv-addresswidget-input-decorator,
+.xv-addresswidget-combobox-decorator {
+  background: #ffffff;
+  display: block;
+  margin: 4px;
+}
+.xv-addresswidget-input-decorator input,
+.xv-addresswidget-combobox-decorator input {
+  width: 100%;
+}
+.xv-addresswidget-input-decorator .enyo-fittable-columns-layout > *,
+.xv-addresswidget-combobox-decorator .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
+.xv-addresswidget-input-decorator.short,
+.xv-addresswidget-combobox-decorator.short {
+  width: 40%;
+}
+.xv-addresswidget-combobox-decorator {
+  width: 60%;
+}
+.xv-button-section .xv-addresswidget-buttons {
+  margin: 0;
+  background-color: #555555;
+}
+.xv-addresswidget-editor-header {
+  padding: 4px;
+}
+.xv-addresswidget-editor {
+  width: 320px;
+  padding: 8px;
+  padding-right: 16px;
+}
+.xv-addresslist-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: normal;
+  overflow: auto;
+  color: #000000;
+  background-color: #ffffff;
+}
 /**
   Styles relating to the groupbox and widgets contained
     by a groupbox
@@ -2628,72 +2694,6 @@ body {
 .icon-sort {
   color: #357ec7;
   vertical-align: middle;
-}
-.xv-addresswidget {
-  background-color: #ffffff;
-  padding: 4px;
-}
-.xv-addresswidget .xv-addresswidget-viewer {
-  border: 0;
-  font-size: medium;
-  display: inline;
-}
-.xv-addresswidget .xv-addresswidget-viewer.placeholder {
-  font-style: italic;
-  color: #93a1a1;
-}
-.xv-addresswidget .xv-addresswidget-viewer.hyperlink {
-  color: #0000ff;
-}
-.xv-addresswidget .xv-addresswidget-viewer.disabled {
-  color: #696969;
-}
-.xv-addresswidget-input-decorator,
-.xv-addresswidget-combobox-decorator {
-  background: #ffffff;
-  display: block;
-  margin: 4px;
-}
-.xv-addresswidget-input-decorator .enyo-fittable-columns-layout > *,
-.xv-addresswidget-combobox-decorator .enyo-fittable-columns-layout > * {
-  vertical-align: middle;
-}
-.xv-addresswidget-input-decorator.short,
-.xv-addresswidget-combobox-decorator.short {
-  width: 40%;
-}
-.xv-addresswidget-combobox-decorator {
-  width: 60%;
-}
-.xv-addresswidget-input {
-  width: 100%;
-}
-.xv-addresswidget-button {
-  margin-right: 4px;
-}
-.xv-addresswidget-buttons {
-  margin-top: 4px;
-}
-.xv-button-section {
-  margin-top: 4px;
-  margin: 0;
-  background-color: #555555;
-}
-.xv-addresswidget-editor-header {
-  padding: 4px;
-}
-.xv-addresswidget-editor {
-  width: 320px;
-  padding: 8px;
-  padding-right: 16px;
-}
-.xv-addresslist-attr {
-  padding: 5px;
-  font-size: 13px;
-  white-space: normal;
-  overflow: auto;
-  color: #000;
-  background-color: #ffffff;
 }
 .xv-label,
 .xv-decorated-label {
