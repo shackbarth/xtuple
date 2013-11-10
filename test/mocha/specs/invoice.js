@@ -1,11 +1,40 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XV:true, XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
-setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, beforeEach:true, before:true */
+/*global XV:true, XT:true, _:true, console:true, XM:true, Backbone:true,
+require:true, assert:true, setTimeout:true, clearTimeout:true, exports:true,
+it:true, describe:true, beforeEach:true, before:true, enyo:true */
 
 (function () {
   "use strict";
+
+/*
+TODO: the following items are not yet done but need to be done by release
+
+1. currency conversion
+2. tax type defaults to item tax type if user has no OverrideTax privilege
+3. A panel that displays a group box of lists of taxes separated headers
+  for taxes by line items, freight, and adjustments. Users should be able to add new tax
+  adjustments, and remove tax adjustments for non-posted invoices.
+4. Should include a panel that displays credit allocations.
+    - When clicked a "new" button should allow the user to create a new minimalized version
+    of cash receipt on-the-fly. The cash receipt need only record the amount, currency,
+    document number, document date, distribution date and whether the balance should
+    generate a credit memo or a customer deposit, depending on global customer deposit metrics.
+    - When clicked, an "allocate" button should present a list of open receivables that are
+    credits that can be associated with the invoice.
+    - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
+5. SALES EXTENSION:* XM.InvoiceLine will include: > SalesOrderLine "salesOrderLine"
+6. sales extension order date default today
+7. Changes made by the project extension
+
+*/
+
+// TODO deferred to later sprint:
+// filter invoice list by customer group
+// print invoices (support printing more that 1 on the same screen)
+// inventory extensions
+// manufacturing extensions
 
   var async = require("async"),
     _ = require("underscore"),
@@ -14,6 +43,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 
   var invoiceModel,
     lineModel,
+    allocationModel,
+    invoiceTaxModel,
+    usd,
+    gbp,
+    nctax,
+    nctaxCode,
     ttoys,
     vcol,
     bpaint,
@@ -50,7 +85,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       @default 7
     */
     describe("Setup for Invoice", function () {
-      it("The system settings option CCValidDays will default to 7 if not already in the db", function () {
+      it("The system settings option CCValidDays will default to 7 if " +
+          "not already in the db", function () {
         assert.equal(XT.session.settings.get("CCValidDays"), 7);
       });
       /**
@@ -134,6 +170,15 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
               lineModel = model;
               done();
             });
+          },
+          function (done) {
+            usd = _.find(XM.currencies.models, function (model) {
+              return model.get("abbreviation") === "USD";
+            });
+            gbp = _.find(XM.currencies.models, function (model) {
+              return model.get("abbreviation") === "GBP";
+            });
+            done();
           }
         ], done);
       });
@@ -186,13 +231,15 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @property {SalesPrice} price
         @property {Unit} priceUnit
         @property {Number} priceUnitRatio
-        @property {ExtendedPrice} extendedPrice billed * quantityUnitRatio * (price / priceUnitRatio)
+        @property {ExtendedPrice} extendedPrice billed * quantityUnitRatio *
+          (price / priceUnitRatio)
         @property {Number} notes
         @property {TaxType} taxType
         @property {Money} taxTotal sum of all taxes
         @property {InvoiceLineTax} taxes
       */
-      var invoiceLine = it("A nested only model called XM.InvoiceLine extending XM.Model should exist", function () {
+      var invoiceLine = it("A nested only model called XM.InvoiceLine extending " +
+          "XM.Model should exist", function () {
         var lineModel;
         assert.isFunction(XM.InvoiceLine);
         lineModel = new XM.InvoiceLine();
@@ -336,9 +383,10 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       /**
         @member -
         @memberof InvoiceLine.prototype
-        @description The user can define a line item as being miscellaneous or not. Miscellaneous means
-          that they can enter a free-form itemNumber, itemDescription, and salesCategory. If the item
-          is not miscellaneous then they must choose an item instead.
+        @description The user can define a line item as being miscellaneous or not.
+          Miscellaneous means that they can enter a free-form itemNumber, itemDescription,
+          and salesCategory. If the item is not miscellaneous then they must choose
+          an item instead.
       */
       it("When isMiscellaneous is false, item is editable and itemNumber, itemDescription " +
           " and salesCategory are read only", function () {
@@ -362,21 +410,25 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         lineModel.set({item: bpaint});
         assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
       });
-      it("If isMiscellaneous === true then validation makes sure the itemNumber, itemDescription and " +
-          "salesCategory are set", function () {
+      it("If isMiscellaneous === true then validation makes sure the itemNumber, " +
+          "itemDescription and salesCategory are set", function () {
         lineModel.set({isMiscellaneous: true, itemDescription: null});
         assert.isObject(lineModel.validate(lineModel.attributes));
-        lineModel.set({itemNumber: "P", itemDescription: "Paint", salesCategory: new XM.SalesCategory()});
+        lineModel.set({
+          itemNumber: "P",
+          itemDescription: "Paint",
+          salesCategory: new XM.SalesCategory()
+        });
         assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
       });
-      it.skip("XM.InvoiceLine should have a calculatePrice function that retrieves a price from the " +
-          "customer.itemPrice dispatch function based on the billed value.", function () {
+      it.skip("XM.InvoiceLine should have a calculatePrice function that retrieves a price from " +
+          "the customer.itemPrice dispatch function based on the billed value.", function () {
         // TODO: put under test (code is written)
         assert.fail();
       });
     });
     describe("XM.InvoiceListItem", function () {
-      // this should really be under better test
+      // TODO:posting and voiding work, anecdotally. Put it under test.
       it.skip("XM.InvoiceListItem includes a post function that dispatches a " +
           "XM.Invoice.post function to the server", function () {
         var model = new XM.InvoiceListItem();
@@ -415,6 +467,30 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
               vcol = model;
               done();
             });
+          },
+          function (done) {
+            fetchModel(nctax, XM.TaxZone, {code: "NC TAX"}, function (err, model) {
+              nctax = model;
+              done();
+            });
+          },
+          function (done) {
+            fetchModel(nctaxCode, XM.TaxCode, {code: "NC TAX-A"}, function (err, model) {
+              nctaxCode = model;
+              done();
+            });
+          },
+          function (done) {
+            initializeModel(invoiceTaxModel, XM.InvoiceTax, function (err, model) {
+              invoiceTaxModel = model;
+              done();
+            });
+          },
+          function (done) {
+            initializeModel(allocationModel, XM.InvoiceAllocation, function (err, model) {
+              allocationModel = model;
+              done();
+            });
           }
         ], done);
       });
@@ -440,7 +516,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @memberof Invoice.prototype
         @description The invoice numbering policy can be determined by the user.
       */
-      it("XM.Invoice should check the setting for InvcNumberGeneration to determine numbering policy", function () {
+      it("XM.Invoice should check the setting for InvcNumberGeneration to determine " +
+          "numbering policy", function () {
         var model;
         XT.session.settings.set({InvcNumberGeneration: "M"});
         model = new XM.Invoice();
@@ -458,7 +535,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @property {Money} amount
         @property {Currency} currency
       */
-      it("A nested only model called XM.InvoiceAllocation extending XM.Model should exist", function () {
+      it("A nested only model called XM.InvoiceAllocation extending XM.Model " +
+          "should exist", function () {
         assert.isFunction(XM.InvoiceAllocation);
         var invoiceAllocationModel = new XM.InvoiceAllocation(),
           attrs = ["uuid", "invoice", "amount", "currency"];
@@ -467,7 +545,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         assert.equal(invoiceAllocationModel.idAttribute, "uuid");
         assert.equal(_.difference(attrs, invoiceAllocationModel.getAttributeNames()).length, 0);
       });
-      it("XM.InvoiceAllocation should only be updateable by users with the ApplyARMemos privilege.", function () {
+      it("XM.InvoiceAllocation should only be updateable by users with the ApplyARMemos " +
+          "privilege.", function () {
         XT.session.privileges.attributes.ApplyARMemos = false;
         assert.isFalse(XM.InvoiceAllocation.canCreate());
         assert.isTrue(XM.InvoiceAllocation.canRead());
@@ -490,17 +569,20 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @property {Money} total
         @property {Boolean} isPosted
         @property {Boolean} isVoid
+        @property {String} orderNumber Added by sales extension
       */
       it("A model called XM.InvoiceListItem extending XM.Info should exist", function () {
         assert.isFunction(XM.InvoiceListItem);
         var invoiceListItemModel = new XM.InvoiceListItem(),
-          attrs = ["number", "isPrinted", "customer", "invoiceDate", "total", "isPosted", "isVoid"];
+          attrs = ["number", "isPrinted", "customer", "invoiceDate", "total", "isPosted",
+            "isVoid", "orderNumber"];
 
         assert.isTrue(invoiceListItemModel instanceof XM.Info);
         assert.equal(invoiceListItemModel.idAttribute, "number");
         assert.equal(_.difference(attrs, invoiceListItemModel.getAttributeNames()).length, 0);
       });
-      it("Only users that have ViewMiscInvoices or MaintainMiscInvoices may read XV.InvoiceListItem", function () {
+      it("Only users that have ViewMiscInvoices or MaintainMiscInvoices may read " +
+          "XV.InvoiceListItem", function () {
         XT.session.privileges.attributes.ViewMiscInvoices = false;
         XT.session.privileges.attributes.MaintainMiscInvoices = false;
         assert.isFalse(XM.InvoiceListItem.canRead());
@@ -552,8 +634,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @member -
         @memberof Invoice.prototype
         @description When the customer changes, the billto information should be populated from
-          the customer, along with the salesRep, commission, terms, taxZone, and currency. The billto
-          fields will be read-only if the customer does not allow free-form billto.
+          the customer, along with the salesRep, commission, terms, taxZone, and currency.
+          The billto fields will be read-only if the customer does not allow free-form billto.
       */
       it("When the customer changes on XM.Invoice, the following customer data should be " +
           "populated from the customer: billtoName (= customer.name), billtoAddress1, " +
@@ -599,7 +681,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         @memberof InvoiceLine.prototype
         @description The price will be recalculated when the units change.
       */
-      it("If the quantityUnit or priceUnit are changed, \"calculatePrice\" should be run.", function (done) {
+      it("If the quantityUnit or priceUnit are changed, \"calculatePrice\" should be " +
+          "run.", function (done) {
         invoiceModel.set({customer: ttoys});
         assert.isUndefined(lineModel.get("price"));
         lineModel.set({item: btruck});
@@ -632,39 +715,104 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       /**
         @member -
         @memberof Invoice.prototype
-        @description When currency or invoice date is changed outstanding credit should be recalculated.
+        @description When currency or invoice date is changed outstanding credit should be
+          recalculated.
       */
-      it.skip("When currency or invoice date is changed outstanding credit should be recalculated", function () {
+      it.skip("When currency or invoice date is changed outstanding credit should be recalculated",
+          function (done) {
+        // frustratingly nondeterministic
+        this.timeout(9000);
+        var outstandingCreditChanged = function () {
+          if (invoiceModel.get("outstandingCredit")) {
+            // second time, with valid currency
+            invoiceModel.off("change:outstandingCredit", outstandingCreditChanged);
+            assert.equal(invoiceModel.get("outstandingCredit"), 25250303.25);
+            done();
+          } else {
+            // first time, with invalid currency
+            invoiceModel.set({currency: usd});
+          }
+        };
 
+        invoiceModel.on("change:outstandingCredit", outstandingCreditChanged);
+        invoiceModel.set({currency: null});
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description AllocatedCredit should be recalculated when XM.InvoiceAllocation records
+          are added or removed.
+      */
+      it("AllocatedCredit should be recalculated when XM.InvoiceAllocation records " +
+          "are added or removed", function () {
+        // TODO: code is not yet written for currency conversion
+        assert.isUndefined(invoiceModel.get("allocatedCredit"));
+        allocationModel.set({currency: usd, amount: 200});
+        invoiceModel.get("allocations").add(allocationModel);
+        assert.equal(invoiceModel.get("allocatedCredit"), 200);
       });
       /**
         @member -
         @memberof Invoice.prototype
         @description When invoice date is changed allocated credit should be recalculated.
       */
-      it.skip("When the invoice date is changed allocated credit should be recalculated", function () {
-
+      it("When the invoice date is changed allocated credit should be recalculated", function () {
+        allocationModel.set({currency: usd, amount: 300});
+        assert.equal(invoiceModel.get("allocatedCredit"), 200);
+        // XXX This is a wacky way to test this.
+        // XXX Shouldn't the change to the allocated credit itself trigger a change
+          //to allocatedCredit?
+        invoiceModel.set({invoiceDate: new Date("1/1/2010")});
+        assert.equal(invoiceModel.get("allocatedCredit"), 300);
       });
       /**
         @member -
         @memberof Invoice.prototype
-        @description When subtotal, totalTax or miscCharge are changed, the total should be recalculated.
+        @description When subtotal, totalTax or miscCharge are changed, the total
+          should be recalculated.
       */
-      it.skip("When subtotal, totalTax or miscCharge are changed, the total should be recalculated", function () {
-
+      it("When subtotal, totalTax or miscCharge are changed, the total should be recalculated",
+          function () {
+        assert.equal(invoiceModel.get("total"), 207.71);
+        invoiceModel.set({miscCharge: 40});
+        assert.equal(invoiceModel.get("total"), 247.71);
       });
       /**
         @member -
         @memberof Invoice.prototype
-        @description TotalTax should be recalculated when taxZone changes or taxAdjustments are added or removed.
+        @description TotalTax should be recalculated when taxZone changes or
+          taxAdjustments are added or removed.
       */
-      it.skip("TotalTax should be recalculated when taxZone changes or taxAdjustments are added or removed.", function () {
+      it("TotalTax should be recalculated when taxZone changes.", function (done) {
+        var totalChanged = function () {
+          invoiceModel.off("change:total", totalChanged);
+          assert.equal(invoiceModel.get("taxTotal"), 10.88);
+          assert.equal(invoiceModel.get("total"), 248.70);
+          done();
+        };
 
+        assert.equal(invoiceModel.get("taxTotal"), 9.89);
+        invoiceModel.on("change:total", totalChanged);
+        invoiceModel.set({taxZone: nctax});
+      });
+      it("TotalTax should be recalculated when taxAdjustments are added or removed.",
+          function (done) {
+        var totalChanged = function () {
+          invoiceModel.off("change:total", totalChanged);
+          assert.equal(invoiceModel.get("taxTotal"), 20.88);
+          assert.equal(invoiceModel.get("total"), 258.70);
+          done();
+        };
+
+        invoiceTaxModel.set({taxCode: nctaxCode, amount: 10.00});
+        invoiceModel.on("change:total", totalChanged);
+        invoiceModel.get("taxAdjustments").add(invoiceTaxModel);
       });
       /**
         @member -
         @memberof Invoice.prototype
-        @description When an invoice is loaded where "isPosted" is true, then the following attributes will be made read only:
+        @description When an invoice is loaded where "isPosted" is true, then the following
+          attributes will be made read only:
           lineItems, number, invoiceDate, terms, salesrep, commission, taxZone, saleType
       */
       it("When an invoice is loaded where isPosted is true, then the following " +
@@ -692,31 +840,26 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       /**
         @member -
         @memberof Invoice.prototype
-        @description Balance should be recalculated when total, allocatedCredit, or outstandingCredit are changed.
+        @description Balance should be recalculated when total, allocatedCredit, or
+          outstandingCredit are changed.
       */
-      it.skip("Balance should be recalculated when total, allocatedCredit, or outstandingCredit are changed", function () {
-
-      });
-      /**
-        @member -
-        @memberof Invoice.prototype
-        @description AllocatedCredit should be recalculated when XM.InvoiceAllocation records are added or removed.
-      */
-      it.skip("AllocatedCredit should be recalculated when XM.InvoiceAllocation records are added or removed", function () {
-
+      it("Balance should be recalculated when total, allocatedCredit, or outstandingCredit " +
+          "are changed", function () {
+        assert.equal(invoiceModel.get("balance"), 0);
       });
       /**
         @member -
         @memberof Invoice.prototype
         @description When allocatedCredit or lineItems exist, currency should become read only.
       */
-      it.skip("When allocatedCredit or lineItems exist, currency should become read only.", function () {
-
+      it("When allocatedCredit or lineItems exist, currency should become read only.", function () {
+        assert.isTrue(invoiceModel.isReadOnly("currency"));
       });
       /**
         @member -
         @memberof Invoice.prototype
-        @description To save, the invoice total must not be less than zero and there must be at least one line item.
+        @description To save, the invoice total must not be less than zero and there must be
+          at least one line item.
       */
       it("Save validation: The total must not be less than zero", function () {
         invoiceModel.set({customer: ttoys, number: "98765"});
@@ -734,7 +877,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       });
 
       it("XM.Invoice includes a function calculateAuthorizedCredit", function (done) {
-        // XXX this is barely under test
+        // TODO test more thoroughly
         /*
         > Makes a call to the server requesting the total authorized credit for a given
           - sales order number
@@ -746,7 +889,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         > On response, recalculate the balance (HINT#: Do not attempt to use bindings for this!)
         */
         assert.isFunction(invoiceModel.calculateAuthorizedCredit);
-        assert.isUndefined(invoiceModel.get("authorizedCredit"));
         invoiceModel.calculateAuthorizedCredit();
         setTimeout(function () {
           assert.equal(invoiceModel.get("authorizedCredit"), 0);
@@ -754,17 +896,17 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         }, 1900);
       });
 
-    // XXX TODO
-    /*
-    TODO:posting and voiding work, anecdotally. Put it under test.
-    TODO: I'm not doing tax calculations correctly
-
-  TODO:
-  * XM.Invoice includes a function "calculateTax" that
-    > Gathers line item, freight and adjustments
-    > Groups by and sums and rounds to XT.MONEY_SCALE for each tax code
-    > Sums the sum of each tax code and sets totalTax to the result
-    */
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Invoice includes a function "calculateTax" that
+          Gathers line item, freight and adjustments
+          Groups by and sums and rounds to XT.MONEY_SCALE for each tax code
+          Sums the sum of each tax code and sets totalTax to the result
+      */
+      it.skip("has a calculateTax function that works correctly", function () {
+        // TODO: put under test
+      });
     });
     describe("Invoice List View", function () {
       /**
@@ -776,14 +918,16 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           where the user has the "VoidPostedInvoices" privilege, Print invoice forms where
           the user has the "PrintInvoices" privilege.
       */
-      it("Delete unposted invoices where the user has the MaintainMiscInvoices privilege", function (done) {
+      it("Delete unposted invoices where the user has the MaintainMiscInvoices privilege",
+          function (done) {
         var model = new XM.InvoiceListItem();
         model.couldDestroy(function (response) {
           assert.isTrue(response);
           done();
         });
       });
-      it("Cannot delete unposted invoices where the user has no MaintainMiscInvoices privilege", function (done) {
+      it("Cannot delete unposted invoices where the user has no MaintainMiscInvoices privilege",
+          function (done) {
         var model = new XM.InvoiceListItem();
         XT.session.privileges.attributes.MaintainMiscInvoices = false;
         model.couldDestroy(function (response) {
@@ -800,7 +944,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           done();
         });
       });
-      it("Post unposted invoices where the user has the PostMiscInvoices privilege", function (done) {
+      it("Post unposted invoices where the user has the PostMiscInvoices privilege",
+          function (done) {
         var model = new XM.InvoiceListItem();
         model.canPost(function (response) {
           assert.isTrue(response);
@@ -824,7 +969,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           done();
         });
       });
-      it("Void posted invoices where the user has the VoidPostedInvoices privilege", function (done) {
+      it("Void posted invoices where the user has the VoidPostedInvoices privilege",
+          function (done) {
         var model = new XM.InvoiceListItem();
         model.set({isPosted: true});
         XT.session.privileges.attributes.VoidPostedInvoices = true;
@@ -833,7 +979,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
           done();
         });
       });
-      it("Cannot void invoices where the user has no VoidPostedInvoices privilege", function (done) {
+      it("Cannot void invoices where the user has no VoidPostedInvoices privilege",
+          function (done) {
         var model = new XM.InvoiceListItem();
         model.set({isPosted: true});
         XT.session.privileges.attributes.VoidPostedInvoices = false;
@@ -894,7 +1041,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
               - From Date
               - To Date
         */
-        // TODO: filter by customer group
         var list = new XV.InvoiceList();
         assert.isString(list.getParameterWidget());
       });
@@ -915,74 +1061,110 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
         // every relation widget in the app.
         var workspace = new XV.InvoiceWorkspace();
         var widgetAttr = workspace.$.customerWidget.attr;
-        var attrModel = _.find(XT.session.schemas.XM.attributes.Invoice.relations, function (relation) {
-          return relation.key === widgetAttr;
-        }).relatedModel;
+        var attrModel = _.find(XT.session.schemas.XM.attributes.Invoice.relations,
+          function (relation) {
+            return relation.key === widgetAttr;
+          }).relatedModel;
         var widgetModel = XT.getObjectByName(workspace.$.customerWidget.getCollection())
           .prototype.model.prototype.recordType;
         assert.equal(attrModel, widgetModel);
       });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Supports grid-entry of line items on desktop browsers.
+      */
+      it("Should include line items views where a grid box is used for non-touch devices " +
+          "and a list relation editor for touch devices.", function () {
+        var workspace;
 
-
+        enyo.platform.touch = true;
+        workspace = new XV.InvoiceWorkspace();
+        assert.equal(workspace.$.lineItemsPanel.children[0].kind, "XV.InvoiceLineItemBox");
+        enyo.platform.touch = false;
+        workspace = new XV.InvoiceWorkspace();
+        assert.equal(workspace.$.lineItemsPanel.children[0].kind, "XV.InvoiceLineItemGridBox");
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description The bill to addresses available when searching addresses should filter
+          on the addresses associated with the customer's account record by default.
+      */
+      it.skip("The bill to addresses available when searching addresses should filter " +
+          "on the addresses associated with the customer's account record by default.",
+            function () {
+        // TODO: put under test
+        assert.fail();
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description The customer search list should search only on active customers.
+      */
+      it.skip("The customer search list should search only on active customers", function () {
+        // TODO: put under test
+        assert.fail();
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description A child workspace view should exist called XV.InvoiceLineWorkspace
+          should include: all the attributes on XM.InvoiceLine, item cost and item list
+          price values, and a read only panel that displays a group box of lists of taxes.
+      */
+      it.skip("The invoiceLine child workspace", function () {
+        // TODO: put under test
+        assert.fail();
+      });
+    });
+    describe("Sales Extension", function () {
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description If the sales extension is installed you can link invoices to sales orders
+          all the attributes on XM.InvoiceLine, item cost and item list price values, and a
+          read only panel that displays a group box of lists of taxes.
+      */
+      it("XM.InvoiceSalesOrder", function () {
+        assert.isFunction(XM.InvoiceSalesOrder);
+        assert.isTrue(XM.InvoiceSalesOrder.prototype.isDocumentAssignment);
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Invoice will include authorizedCredit, the sum of credit card authorizations
+          in the order currency where:
+            - The current_timestamp - authorization date is less than CCValidDays || 7
+            - The payment status the cc payment (ccpay) record is authorized ("A")
+            - The cc payment record is for an order number = the order number specified on
+              the invoice
+          When currency or invoice date is changed authorized credit should be recalculated.
+      */
+      it("authorizedCredit", function () {
+        // TODO: better testing
+        assert.equal(invoiceModel.get("authorizedCredit"), 0);
+      });
     });
   };
 /*
 
-***** CHANGES MADE TO CORE APPLICATION ******
 
+***** CHANGES MADE BY PROJECT EXTENSION ******
 
-* A workspace view should exist called XV.InvoiceWorkspace
-  > Should include line items views where a grid box is used for non-touch devices and a list relation editor for touch devices.
-  > Should include a panel that displays a group box of lists of taxes separated headers for taxes by line items, freight, and adjustments. Users should be able to add new tax adjustments, and remove tax adjustments for non-posted invoices.
-  > Should include a panel that displays credit allocations.
-    - When clicked a "new" button should allow the user to create a new minimalized version of cash receipt on-the-fly. The cash receipt need only record the amount, currency, document number, document date, distribution date and whether the balance should generate a credit memo or a customer deposit, depending on global customer deposit metrics.
-    - When clicked, an "allocate" button should present a list of open receivables that are credits that can be associated with the invoice.
-    - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
-  > The bill to addresses available when searching addresses sholud filter on the addresses associated with the customer's account record by default.
-  > The customer search list should search only on active customers.
-
-* A child workspace view should exist called XV.InvoiceLineWorkspace should include:
-  > All the attributes on XM.InvoiceLine.
-  > Item cost and item list price values.
-  > A read only panel that displays a group box of lists of taxes.
-
-***** CHANGES MADE BY BILLING EXTENSION ******
-
-
-* Add "Invoices" list to Billing module
-* Add "Invoices" list to Sales modules
-
-***** CHANGES MADE BY CRM EXTENSION ******
-
-* Nested only models should be created according to convention for many-to-many document associations:
-  > XM.InvoiceIncident
-  > XM.InvoiceOpportunity
+* A nested only model should be created according to convention for many-to-many document
+associations:
+  > XM.InvoiceProject
 
 * XM.Invoice will include:
-  > InvoiceIncident "incidents"
-  > InvoiceOpportunity "opportunities"
+  > ProjectRelation "project"
+  > InvoiceProject "projects"
 
-***** CHANGES MADE BY SALES EXTENSION ******
+* When an invoice is loaded where "isPosted" is true, then the following attributes will
+be made read only:
+  > project
 
-* A nested only model should be created according to convention for many-to-many document associations:
-  > XM.InvoiceSalesOrder
-
-* XM.InvoiceLine will include:
-  > SalesOrderLine "salesOrderLine"
-
-* XM.InvoiceListItem will include:
-  > String "orderNumber"
-
-* XM.Invoice will include:
-  > String "orderNumber"
-  > Date "orderDate" default today
-  > InvoiceSalesOrder "salesOrders"
-  > Money "authorizedCredit" the sum of credit card authorizations in the order currency where:
-    - The current_timestamp - authorization date is less than CCValidDays || 7
-    - The payment status the cc payment (ccpay) record is authorized ("A")
-    - The cc payment record is for an order number = the order number specified on the invoice
-* When currency or invoice date is changed authorized credit should be recalculated.
-* When freight is changed the total should be recalculated.
+* Add the project widget to the invoice workspace if the "UseProjects" setting is true.
 
 ***** CHANGES MADE BY INVENTORY EXTENSION ******
 
@@ -1000,7 +1182,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 * XM.InvoiceListItem will extend the post function to include inventory information
   * For each line item where "updateInventory" is true, issue materials to the invoice
   * Capture distribution detail (trace and location) where applicable
-#HINT: This will likely require creating an alternate dispatchable "post" function that accepts an invoice id _and_ inventory data.
+#HINT: This will likely require creating an alternate dispatchable "post" function that
+  accepts an invoice id _and_ inventory data.
 
 * XM.Invoice will include:
   > Date "shipDate" default today
@@ -1022,7 +1205,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
 * When the customer changes will copy the following attributes from the customer model:
   > shipCharge
   > shipto (If a default customer shipto exists)
-  > The following fields will be set to read only if the customer does not allow free form shipnto:
+  > The following fields will be set to read only if the customer does not allow free
+  form shipnto:
     - shiptoName
     - shiptoAddress1
     - shiptoAddress2
@@ -1032,11 +1216,13 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     - shiptoPostalCode
     - shiptoCountry
     - shiptoPhone
-* The inventory extension adds a function to XM.Invoice "copyBilltoToShipto" that does the following
+* The inventory extension adds a function to XM.Invoice "copyBilltoToShipto" that
+does the following
   > Clears the shipto
   > Copies billto name, address fields and phone number to shipto equivilants.
   > Sets the invoice tax zone to the customer tax zone.
-* When an invoice is loaded where "isPosted" is true, then the following attributes will be made read only:
+* When an invoice is loaded where "isPosted" is true, then the following attributes
+will be made read only:
   > lineItems
   > number
   > invoiceDate
@@ -1050,7 +1236,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
   > shipZone
   > saleType
 
-* If the shipto changes to a value, the following fields should be set based on information from the shipto:
+* If the shipto changes to a value, the following fields should be set based on information
+from the shipto:
   - shiptoName (= customer.shipto.name)
   - shiptoAddress1
   - shiptoAddress2
@@ -1077,34 +1264,25 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
   - shiptoPhone
 * If any of the above listed shipto attributes are manually altered, the shipto is unset.
 
-* Freight should be read only and zero when the "isCustomerPay" property is false on the ship charge associated with the invoice.
+* Freight should be read only and zero when the "isCustomerPay" property is false on the ship
+charge associated with the invoice.
 
 * totalTax should be recalculated when freight changes.
 
 * Add the following to the invoice workspace:
   > When the customer is changed on the XV.InvoiceWorkspace model:
-    - customer should be set on shipto relation so that it will search on and select from that customer's shipto addresses.
-    - The bill to address should be supplimented with a "Shipto" button that when clicked runs the copyToShipto function ()
+    - customer should be set on shipto relation so that it will search on and select from that
+    customer's shipto addresses.
+    - The bill to address should be supplimented with a "Shipto" button that when clicked runs
+    the copyToShipto function ()
     - The copy ship to button should be disabled if the customer does not allow free-form shiptos.
-  > The shipto addresses available when searching addresses sholud filter on the addresses associated with the customer's account record by default.
-
-***** CHANGES MADE BY PROJECT EXTENSION ******
-
-* A nested only model should be created according to convention for many-to-many document associations:
-  > XM.InvoiceProject
-
-* XM.Invoice will include:
-  > ProjectRelation "project"
-  > InvoiceProject "projects"
-
-* When an invoice is loaded where "isPosted" is true, then the following attributes will be made read only:
-  > project
-
-* Add the project widget to the invoice workspace if the "UseProjects" setting is true.
+  > The shipto addresses available when searching addresses sholud filter on the addresses
+  associated with the customer's account record by default.
 
 ***** CHANGES MADE BY MANUFACTURING EXTENSION ******
 
-* A nested only model should be created according to convention for many-to-many document associations:
+* A nested only model should be created according to convention for many-to-many document
+associations:
   > XM.InvoiceWorkOrder
 
 * Modify XM.Invoice to include:

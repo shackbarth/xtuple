@@ -7,10 +7,17 @@ select xt.install_js('XM','Invoice','xtuple', $$
   XM.Invoice.isDispatchable = true;
 
   XM.Invoice.authorizedCredit = function(invoiceNumber) {
-    var err,
-      sql = "select xt.invc_authorized_credit($1) AS result";
+    var sql = "select xt.invc_authorized_credit($1) AS result";
 
     return plv8.execute(sql, [invoiceNumber])[0].result;
+  };
+
+  XM.Invoice.outstandingCredit = function(customerNumber, currencyAbbreviation, invoiceDate) {
+    var sql = "select xt.invc_outstanding_credit($1, $2, $3) AS result",
+      customerId = XT.Data.getId(XT.Orm.fetch('XM', 'Customer'), customerNumber),
+      currencyId = XT.Data.getId(XT.Orm.fetch('XM', 'Currency'), currencyAbbreviation);
+
+    return plv8.execute(sql, [customerId, currencyId, invoiceDate])[0].result;
   };
 
   XM.Invoice.post = function(invoiceNumber) {

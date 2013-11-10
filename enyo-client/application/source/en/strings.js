@@ -117,6 +117,7 @@ strict:true, trailing:true, white:true */
     "_balanceMethod": "Balance Method",
     "_basis": "Basis",
     "_bcc": "Bcc",
+    "_billed": "Billed",
     "_billingContact": "Billing Contact",
     "_billingRate": "Billing Rate",
     "_billTo": "Bill To",
@@ -325,6 +326,7 @@ strict:true, trailing:true, white:true */
     "_inventoryHistory": "Inventory History",
     "_invoice": "Invoice",
     "_invoiceDate": "Invoice Date",
+    "_invoiceLine": "Invoice Line",
     "_invoices": "Invoices",
     "_initials": "Initials",
     "_inventoryUnit": "Inventory Unit",
@@ -343,6 +345,7 @@ strict:true, trailing:true, white:true */
     "_isItemWeight": "Item Weight",
     "_isItems": "Items",
     "_isMessage": "Message",
+    "_isMiscellaneous": "Miscellaneous",
     "_isOpportunities": "Opportunities",
     "_isPicklist": "Picklist",
     "_isPosted": "Posted",
@@ -354,8 +357,10 @@ strict:true, trailing:true, white:true */
     "_isSystem": "System",
     "_isUsedByBilling": "Used By Billing",
     "_isUsedByPayments": "Used By Payments",
+    "_isVoid": "Void",
     "_item": "Item",
     "_itemConversion": "Item Conversion",
+    "_itemDescription": "Item Description",
     "_itemNumber": "Item Number",
     "_itemGroup": "Item Group",
     "_itemGroups": "Item Groups",
@@ -383,6 +388,7 @@ strict:true, trailing:true, white:true */
     "_listPrice": "List Price",
     "_listPriceDiscount": "List Price Discount",
     "_locale": "Locale",
+    "_location": "Location",
     "_login": "Login",
     "_logout": "Logout",
     "_lotSerial": "Lot/Serial",
@@ -596,6 +602,7 @@ strict:true, trailing:true, white:true */
     "_tasks": "Tasks",
     "_tax": "Tax",
     "_taxCode": "Tax Code",
+    "_taxes": "Taxes",
     "_taxType": "Tax Type",
     "_taxAssignment": "Tax Assignment",
     "_taxAuthority": "Tax Authority",
@@ -622,6 +629,7 @@ strict:true, trailing:true, white:true */
     "_total": "Total",
     "_totals": "Totals",
     "_toUnit": "To Unit",
+    "_trace": "Lot/Serial",
     "_transactionDate": "Transaction Date",
     "_transactionType": "Transaction Type",
     "_transactionSuccessful": "Transaction Successful",
@@ -865,7 +873,8 @@ strict:true, trailing:true, white:true */
     // ********
 
     "_accountExists": "This number is currently assigned to an Account.",
-    "_automaticFreight": "Manually clearing the freight will enable automatic Freight recalculations.",
+    "_automaticFreight": "Manually clearing the freight will enable automatic " +
+      "Freight recalculations.",
     "_continue?": " Do you want to continue?",
     "_convertAccount": "Convert this Account to a Customer?",
     "_convertAccountEmployee": "Convert this Account to an Employee?",
@@ -873,8 +882,10 @@ strict:true, trailing:true, white:true */
     "_convertAccountSalesRep": "Convert this Account to a SalesRep?",
     "_convertAccountTaxAuthority": "Convert this Account to a Tax Authority?",
     "_convertProspect": "Convert this Prospect to a Customer?",
-    "_copyCharacteristics?": "Would you like to over-write the existing characteristics with the profile for this selection?",
-    "_copyWorkflow?": "Would you like to over-write the existing workflow with the profile for this selection?",
+    "_copyCharacteristics?": "Would you like to over-write the existing characteristics " +
+      "with the profile for this selection?",
+    "_copyWorkflow?": "Would you like to over-write the existing workflow with the " +
+      "profile for this selection?",
     "_creditWarn": "This customer is on credit warn.",
     "_creditHold": "This customer is on credit hold.",
     "_customerExists": "A customer with this number already exists.",
@@ -883,13 +894,19 @@ strict:true, trailing:true, white:true */
     "_manualFreight": "Manually editing the freight will disable automatic freight recalculations.",
     "_mustSave": "You must save your changes before proceeding.",
     "_noPriceFound": "This item is marked as exclusive and no qualifying price was found.",
-    "_noPurchase": "This item may not be purchased in this date. Please select another date or item.",
-    "_noReschedule": "No Items can be rescheduled because there are no valid price schedules for the date entered.",
-    "_partialReschedule": "Some exclusive items may not be rescheduled because there is no valid price schedule for the date entered.",
+    "_noPurchase": "This item may not be purchased in this date. Please select " +
+      "another date or item.",
+    "_noReschedule": "No Items can be rescheduled because there are no valid price " +
+      "schedules for the date entered.",
+    "_partialReschedule": "Some exclusive items may not be rescheduled because there is no " +
+      "valid price schedule for the date entered.",
     "_prospectExists": "This number is currently assigned to a Prospect.",
     "_recalculateAll?": "Do you want to recalculate all prices line items, taxes, and freight ?",
-    "_rescheduleAll": "Changing this date will update the Schedule Date on all editable line items.",
-    "_updateFractional": "The quantity ordered and unit of measure selected will result in a fractional inventory qty for this item. This item does not allow fractional quantities; the quantity will be updated accordingly.",
+    "_rescheduleAll": "Changing this date will update the Schedule Date on all " +
+      "editable line items.",
+    "_updateFractional": "The quantity ordered and unit of measure selected will result in a " +
+      "fractional inventory qty for this item. This item does not allow fractional quantities; " +
+      "the quantity will be updated accordingly.",
     "_updatePrice?": "You have changed the price basis, do you want to update the Price?",
     "_whatToDo": "What would you like to do?"
   });

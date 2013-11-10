@@ -19,7 +19,7 @@
       {kind: "XV.OpportunityList", model: "XM.Opportunity", update: "name"},
       {kind: "XV.ContactList", model: "XM.Contact", update: "firstName"},
       {kind: "XV.ToDoList", model: "XM.ToDo", update: "notes"},
-      {kind: "XV.IncidentList", model: "XM.Incident", update: "notes"}
+      //{kind: "XV.IncidentList", model: "XM.Incident", update: "notes"}
     ];
 
   describe('CRM Workspaces', function () {
@@ -41,13 +41,15 @@
         * Test the INCDT-19869 fix.
         * http://www.xtuple.org/xtincident/view/default/19869
         */
-      describe.skip('INCDT-19869: Lock not released when "New" is tapped in workspace', function () {
+      describe.skip('INCDT-19869: Lock not released when "New" is tapped in workspace',
+          function () {
         var workspaceContainer, model, id;
 
         beforeEach(function (done) {
           this.timeout(30 * 1000);
 
-          smoke.navigateToExistingWorkspace(XT.app, "XV.IncidentList", function (_workspaceContainer) {
+          smoke.navigateToExistingWorkspace(XT.app, "XV.IncidentList",
+              function (_workspaceContainer) {
             var workspace;
 
             assert.notEqual(workspaceContainer, XT.app.$.postbooks.getActive());

@@ -4,8 +4,9 @@ select invchead.*,
   xt.invc_allocated_credit(invchead) as allocated_credit,
   xt.invc_outstanding_credit(invchead_cust_id, invchead_curr_id, invchead_invcdate) as outstanding_credit,
   xt.invc_subtotal(invchead) as subtotal,
-  xt.invc_tax_total(invchead) as tax_total,
+  xt.invc_tax_total(invchead_id) as tax_total,
   xt.invc_total(invchead) as total,
+  xt.invc_authorized_credit(invchead_invcnumber) as authorized_credit,
   GREATEST(0.0, COALESCE(xt.invc_total(invchead), 0) 
     - COALESCE(xt.invc_allocated_credit(invchead), 0)
     - COALESCE(xt.invc_outstanding_credit(invchead_cust_id, invchead_curr_id, invchead_invcdate), 0)

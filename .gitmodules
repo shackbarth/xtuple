@@ -40,3 +40,6 @@
 [submodule "lib/enyo-x/lib/font-onyx"]
 	path = lib/enyo-x/lib/font-onyx
 	url = https://github.com/xtuple/font-onyx.git
+[submodule "lib/tools/lib/async"]
+	path = lib/tools/lib/async
+	url = https://github.com/caolan/async.git

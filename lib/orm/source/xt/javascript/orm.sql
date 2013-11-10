@@ -266,14 +266,18 @@ select xt.install_js('XT','Orm','xtuple', $$
 
     if (isSuper) {
       if (DEBUG) {
+        /*
         XT.debug('fetch sql = ', superSql);
         XT.debug('fetch values = ', [nameSpace, type, false]);
+        */
       }
       res = plv8.execute(superSql, [nameSpace, type, false]);
     } else {
       if (DEBUG) {
+        /*
         XT.debug('fetch sql = ', sql);
         XT.debug('fetch values = ', [nameSpace, type, XT.username, false]);
+        */
       }
       res = plv8.execute(sql, [nameSpace, type, XT.username, false]);
     }
@@ -287,15 +291,19 @@ select xt.install_js('XT','Orm','xtuple', $$
     }
     ret = JSON.parse(res[0].json);
     if (DEBUG) {
+      /*
       XT.debug('result count = ', [res.length]);
+      */
     }
 
     /* get extensions and merge them into the base */
     if (!ret.extensions) ret.extensions = [];
 
     if (DEBUG) {
+      /*
       XT.debug('fetch sql = ', sql);
       XT.debug('fetch values = ', [nameSpace, type, XT.username, true]);
+      */
     }
 
     if (isSuper) {
@@ -304,6 +312,9 @@ select xt.install_js('XT','Orm','xtuple', $$
       res = plv8.execute(sql, [nameSpace, type, XT.username, true]);
     }
     if (DEBUG) {
+      /*
+      XT.debug('result count = ', [res.length]); 
+      */
       XT.debug('result count = ', [res.length]);
     }
 
@@ -322,7 +333,9 @@ select xt.install_js('XT','Orm','xtuple', $$
     }
 
     if (DEBUG) {
-      XT.debug('props = ', ret.properties.map(function (prop) {return prop.name}));
+      /*
+      XT.debug('props = ', ret.properties.map(function (prop) {return prop.name})); 
+      */
     }
     return ret;
   };

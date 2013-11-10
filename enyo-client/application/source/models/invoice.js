@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global Globalize:true, XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global Globalize:true, XT:true, XM:true, Backbone:true, _:true, console:true, async:true */
 
 (function () {
   "use strict";
@@ -95,6 +95,78 @@ white:true*/
     };
     customer.itemPrice(item, quantity, itemOptions);
   };
+
+  /**
+    Function that actually does the calculation work.
+    Taken largely from sales_order_base.
+    @private
+  */
+  var _calculateTotals = function (model) {
+    var miscCharge = model.get("miscCharge") || 0.0,
+      scale = XT.MONEY_SCALE,
+      add = XT.math.add,
+      subtract = XT.math.subtract,
+      subtotals = [],
+      taxDetails = [],
+      subtotal,
+      taxTotal = 0.0,
+      total,
+      taxCodes;
+
+    // Collect line item detail
+    var forEachLineItemFunction = function (lineItem) {
+      var extPrice = lineItem.get('extendedPrice') || 0,
+        quantity = lineItem.get("quantity") || 0;
+
+      subtotals.push(extPrice);
+      taxDetails = taxDetails.concat(lineItem.get("taxes").models);
+    };
+
+    // Collect tax adjustment detail
+    var forEachTaxAdjustmentFunction = function (taxAdjustment) {
+      taxDetails = taxDetails.concat(taxAdjustment);
+    };
+
+    _.each(model.get('lineItems').models, forEachLineItemFunction);
+    _.each(model.get('taxAdjustments').models, forEachTaxAdjustmentFunction);
+
+    // Total taxes
+    // First group amounts by tax code
+    //console.log(JSON.stringify(taxDetails));
+    taxCodes = _.groupBy(taxDetails, function (detail) {
+      return detail.getValue("taxCode.code");
+    });
+
+    // Loop through each tax code group and subtotal
+    _.each(taxCodes, function (group) {
+      var taxes = [],
+        subtotal;
+
+      // Collect array of taxes
+      _.each(group, function (detail) {
+        taxes.push(detail.get("amount"));
+      });
+
+      // Subtotal first to make sure we round by subtotal
+      subtotal = add(taxes, 6);
+
+      // Now add to tax grand total
+      taxTotal = add(taxTotal, subtotal, scale);
+    });
+
+    // Totaling calculations
+    subtotal = add(subtotals, scale);
+    subtotals = subtotals.concat([miscCharge, taxTotal]);
+    total = add(subtotals, scale);
+
+    // Set values
+    model.set("subtotal", subtotal);
+    model.set("taxTotal", taxTotal);
+    model.set("total", total);
+  };
+
+
+
   /**
     @class
 
@@ -122,7 +194,9 @@ white:true*/
         isPosted: false,
         isVoid: false,
         isPrinted: false,
-        commission: 0
+        commission: 0,
+        taxTotal: 0,
+        miscCharge: 0
       };
     },
 
@@ -130,7 +204,9 @@ white:true*/
       "isPosted",
       "isVoid",
       "isPrinted",
-      "miscCharge"
+      "miscCharge",
+      "allocatedCredit",
+      "authorizedCredit"
     ],
 
     // like sales order, minus contact info
@@ -154,25 +230,23 @@ white:true*/
       this.on("change:customer", this.customerDidChange);
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
-      this.on("change:invoiceDate add:allocations remove:allocations", this.calculateAllocatedCredit);
-      this.on("change:subtotal change:totalTax change:miscCharge", this.calculateTotals);
+      this.on("change:invoiceDate change:currency", this.calculateAuthorizedCredit);
+      this.on("change:invoiceDate add:allocations remove:allocations",
+        this.calculateAllocatedCredit);
+      this.on("change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
       this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
-      this.on("change:total change:allocatedCredit change:outstandingCredit", this.calculateBalance);
+      this.on("change:taxZone", this.recalculateTaxes);
+      this.on("change:total change:allocatedCredit change:outstandingCredit",
+        this.calculateBalance);
       this.on('allocatedCredit', this.allocatedCreditDidChange);
       this.on('statusChange', this.statusDidChange);
     },
 
     //
-    // Shared code with sales order
-    // temp until we refactor these together
-    //
-    lineItemsDidChange: XM.SalesOrderBase.prototype.lineItemsDidChange,
-
-    //
     // Model-specific functions
     //
     allocatedCreditDidChange: function () {
-      this.setReadOnly("currency", this.get("allocatedCredit"));
+      this.setCurrencyReadOnly();
     },
 
     // Refactor potential: sales_order_base minus shipto stuff minus prospect stuff
@@ -200,7 +274,11 @@ white:true*/
     },
 
     calculateAllocatedCredit: function () {
-      // TODO
+      var allocatedCredit = _.reduce(this.get("allocations").models, function (memo, allocation) {
+        // TODO: currency conversion
+        return memo + allocation.get("amount");
+      }, 0);
+      this.set("allocatedCredit", allocatedCredit);
     },
 
     calculateAuthorizedCredit: function () {
@@ -214,19 +292,38 @@ white:true*/
     },
 
     calculateBalance: function () {
-      // TODO
+      var rawBalance = this.get("total") -
+          this.get("allocatedCredit") -
+          this.get("outstandingCredit"),
+        balance = Math.max(0, rawBalance);
+
+      this.set({balance: balance});
     },
 
     calculateOutstandingCredit: function () {
-      // TODO
+      var that = this,
+        success = function (resp) {
+          that.set({outstandingCredit: resp});
+        },
+        error = function (resp) {
+          // not a valid request
+          that.set({outstandingCredit: null});
+        };
+
+      this.dispatch("XM.Invoice", "outstandingCredit",
+        [this.getValue("customer.number"),
+          this.getValue("currency.abbreviation"),
+          this.getValue("invoiceDate")],
+        {success: success, error: error});
     },
 
     calculateTotals: function () {
-      // TODO
+      _calculateTotals(this);
     },
 
+    // XXX just calculate all the totals
     calculateTotalTax: function () {
-      // TODO
+      this.calculateTotals();
     },
 
     // Refactor potential: taken largely from sales_order_base
@@ -285,6 +382,31 @@ white:true*/
             .unset("billtoPhone");
 
       }
+    },
+
+    lineItemsDidChange: function () {
+      var lineItems = this.get("lineItems");
+      this.setCurrencyReadOnly();
+      this.setReadOnly("customer", lineItems.length > 0);
+    },
+
+    /**
+      Re-evaluate taxes for all line items
+    */
+    recalculateTaxes: function () {
+      _.each(this.get("lineItems").models, function (lineItem) {
+        lineItem.calculateTax();
+      });
+    },
+
+    /**
+      Set the currency read-only if there is allocated credit OR line items.
+      I believe SalesOrderBase has a bug in not considering both these
+      conditions at the same time.
+    */
+    setCurrencyReadOnly: function () {
+      var lineItems = this.get("lineItems");
+      this.setReadOnly("currency", lineItems.length > 0 || this.get("allocatedCredit"));
     },
 
     statusDidChange: function () {
@@ -451,7 +573,11 @@ white:true*/
 
     parentKey: "invoice",
 
-    readOnlyAttributes: ["lineNumber"],
+    readOnlyAttributes: [
+      "lineNumber",
+      "extendedPrice",
+      "taxTotal"
+    ],
 
     //
     // Core functions
@@ -460,7 +586,7 @@ white:true*/
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on("change:item", this.itemDidChange);
       this.on("change:billed", this.billedDidChange);
-      //this.on('change:price', this.priceDidChange);
+      this.on('change:price', this.priceDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
@@ -513,8 +639,7 @@ white:true*/
         extPrice =  (billed * quantityUnitRatio / priceUnitRatio) * price;
       extPrice = XT.toExtendedPrice(extPrice);
       this.set("extendedPrice", extPrice);
-      //this.calculateMargin();
-      //this.calculateTax();
+      this.calculateTax();
       this.recalculateParent();
       return this;
     },
@@ -553,6 +678,58 @@ white:true*/
         _calculatePrice(this);
       }
       return this;
+    },
+
+    calculateTax: function () {
+      var parent = this.getParent(),
+        amount = this.get("extendedPrice"),
+        taxTypeId = this.getValue("taxType.id"),
+        recordType,
+        taxZoneId,
+        effective,
+        currency,
+        processTaxResponses,
+        that = this,
+        options = {},
+        params;
+
+      // If no parent, don't bother
+      if (!parent) { return; }
+
+      recordType = parent.recordType;
+      taxZoneId = parent.getValue("taxZone.id");
+      effective = parent.get(parent.documentDateKey);
+      currency = parent.get("currency");
+
+      if (effective && currency && amount) {
+        params = [taxZoneId, taxTypeId, effective, currency.id, amount];
+        processTaxResponses = function (responses) {
+          var processTaxResponse = function (resp, callback) {
+            var setTaxModel = function () {
+              taxModel.off("change:uuid", setTaxModel);
+              taxModel.set({
+                taxType: that.get("taxType"),
+                taxCode: resp.taxCode.code,
+                amount: resp.tax
+              });
+              that.get("taxes").add(taxModel);
+              callback();
+            };
+            var taxModel = new XM.InvoiceLineTax();
+            taxModel.on("change:uuid", setTaxModel);
+            taxModel.initialize(null, {isNew: true});
+          };
+          var finish = function () {
+            that.recalculateParent(false);
+          };
+
+          that.get("taxes").reset(); // empty it out so we can populate it
+
+          async.map(responses, processTaxResponse, finish);
+        };
+        options.success = processTaxResponses;
+        this.dispatch("XM.Tax", "taxDetail", params, options);
+      }
     },
 
     isMiscellaneousDidChange: function () {
@@ -621,9 +798,9 @@ white:true*/
       }
     },
 
-    //priceDidChange: function () {
-    //  this.calculateExtendedPrice();
-    //},
+    priceDidChange: function () {
+      this.calculateExtendedPrice();
+    },
 
     // Refactor potential: this is like the one on sales order line base, but
     // checks billed as well, and validates isMiscellaneous
@@ -652,7 +829,9 @@ white:true*/
       }
 
       // Checks item values line up with isMiscellaneous
-      extraRequiredFields = isMiscellaneous ? ["itemNumber", "itemDescription", "salesCategory"] : ["item"];
+      extraRequiredFields = isMiscellaneous ?
+        ["itemNumber", "itemDescription", "salesCategory"] :
+        ["item"];
 
       _.each(extraRequiredFields, function (req) {
         var value = that.get(req),

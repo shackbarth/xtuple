@@ -9,7 +9,7 @@ select xt.create_view('xt.invciteminfo', $$
     * (invcitem_price / invcitem_price_invuomratio) as invcitem_ext_price,
   sum(taxhist_tax) as invcitem_tax_total
   from invcitem
-  inner join invcitemtax on invcitem_id = taxhist_parent_id
+  left join invcitemtax on invcitem_id = taxhist_parent_id
   group by invcitem_id
 
 $$, false);
