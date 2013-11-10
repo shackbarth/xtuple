@@ -12,6 +12,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // Format xmla response as json and return
       queryCallback = function (xmlaResponse) {
 		var obj = xmlaResponse.fetchAllAsObject();
+		obj = {data :  obj};
+        //X.log("..............return: " + JSON.stringify(obj));
 		res.writeHead(200, { 'Content-Type': 'application/json' });
         res.write(JSON.stringify(obj));
         res.end();
@@ -56,6 +58,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // encode and sign JWT with private key
     jwt = encodeJWT(JSON.stringify(header), JSON.stringify(claimSet), privKey);
+    
+    //X.log("query is: " + query);
 
     X.olapSource.query(query, jwt, queryCallback);
   };
