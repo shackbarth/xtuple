@@ -6,7 +6,7 @@ ids: false, box-sizing: false*/
 
 /*
   To compile this .less file to .css:
-  lessc screen.less > ../stylesheets/screen.css
+
   Use -compress for a compressed .css with no comments
 */
 
@@ -54,6 +54,7 @@ ids: false, box-sizing: false*/
 
 // Imports
 // ------
+
 /**
   Import for Font-Awesome icons
 */
@@ -69,12 +70,6 @@ ids: false, box-sizing: false*/
   Model decorator
 */
 @import "model-decorator.less";
-
-/**
-  Styles relating to the groupbox and widgets contained
-    by a groupbox
-*/
-@import "groupbox.less";
 
 /**
   Less styles for the picker widget
@@ -120,6 +115,12 @@ ids: false, box-sizing: false*/
   Styles for startup panel
 */
 @import "startup.less";
+
+/**
+  Styles relating to the groupbox and widgets contained
+    by a groupbox
+*/
+@import "groupbox.less";
 
 body {
   font-family: @baseFont;

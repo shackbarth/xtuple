@@ -5,7 +5,7 @@ vendor-prefix: false, adjoining-classes: false, empty-rules: false, star-propert
 ids: false, box-sizing: false*/
 /*
   To compile this .less file to .css:
-  lessc screen.less > ../stylesheets/screen.css
+
   Use -compress for a compressed .css with no comments
 */
 /**
@@ -1284,7 +1284,6 @@ ul.icons-ul > li .icon-li {
      * Icon size set per Onyx standard:
      * https://github.com/enyojs/onyx/blob/master/source/Icon.js#L5
      */
-
   width: 32px;
   height: 32px;
   padding: 3px;
@@ -1345,7 +1344,6 @@ ul.icons-ul > li .icon-li {
   /**
         * Default styling for a model's id (as designated by 'idAttribute')
         */
-
 }
 .xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-id {
   color: blue;
@@ -1362,243 +1360,6 @@ ul.icons-ul > li .icon-li {
   color: #f49200;
 }
 /**
-  Styles relating to the groupbox and widgets contained
-    by a groupbox
-*/
-/*
-  Styles relating to the groupbox
-*/
-.xv-groupbox {
-  min-width: 320px;
-  padding: 8px;
-  margin-right: 5px;
-  /**
-    Top level input-decorator class.
-    All below this are overrides.
-  */
-
-}
-.xv-groupbox .enyo-fittable-columns-layout > * {
-  vertical-align: middle;
-}
-.xv-groupbox.editor {
-  min-width: 250px;
-  padding: 0;
-  margin: 0;
-}
-.xv-groupbox.in-panel {
-  padding: 0;
-  margin: 0;
-}
-.xv-groupbox .in-panel > *:first-child {
-  border-top-color: #aaaaaa;
-  border-top: none;
-  border-width: 1px;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-.xv-groupbox .in-panel > *:last-child {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  border-bottom: none;
-}
-.xv-groupbox > .in-panel .editor {
-  border-right: none;
-}
-.xv-groupbox.panel {
-  min-width: 330px;
-}
-.xv-groupbox .xv-inputwidget {
-  background-color: #ffffff;
-}
-.xv-groupbox .onyx-input-decorator {
-  border: 0;
-}
-.xv-groupbox .onyx-input-decorator input {
-  width: 150px;
-}
-.xv-groupbox .onyx-picker-decorator .onyx-button {
-  width: 150px;
-}
-.xv-groupbox .xv-relationwidget input,
-.xv-groupbox .xv-datewidget input,
-.xv-groupbox .xv-numberwidget input {
-  width: 135px;
-}
-.xv-groupbox .xv-moneywidget {
-  background-color: #ffffff;
-  padding-top: 6px;
-  padding-bottom: 2px;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator {
-  border: 0;
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-  width: 110px;
-  padding: 0 10px 0 6px;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator input,
-.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-money-label {
-  width: 100%;
-  text-align: right;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator.xv-currency-label {
-  width: 65px;
-}
-.xv-groupbox .xv-moneywidget .xv-picker-button {
-  width: 65px;
-  padding: 10px 4px;
-}
-.xv-groupbox > .onyx-input-decorator {
-  border-color: #aaaaaa;
-  border-width: 0 1px 1px 1px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child {
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > .onyx-input-decorator:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox > * {
-  display: block;
-  border: 1px #aaaaaa solid;
-  border-top-width: 0;
-  /* reset styles that make 'item' look bad if they happen to be there */
-
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  margin: 0;
-}
-.xv-groupbox > *:first-child {
-  border-top-color: #aaaaaa;
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > *:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > *:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox-header {
-  padding: 5px 10px;
-  color: #ffffff;
-  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: uppercase;
-  background-color: #333333;
-  border: none;
-  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
-}
-.xv-groupbox-buttons {
-  border: none;
-}
-.xv-groupbox-buttons .xv-groupbox-button-single {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox-buttons .xv-groupbox-button-center {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-.xv-groupbox-buttons .xv-groupbox-button-left {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox-buttons .xv-groupbox-button-right {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-/**
   Less styles for the picker widget
 */
 /**
@@ -1609,6 +1370,7 @@ ul.icons-ul > li .icon-li {
 }
 .onyx-picker-decorator .onyx-button {
   padding: 12px 8px 12px 8px;
+  width: 150px;
 }
 .onyx-picker .onyx-menu-item {
   text-align: left;
@@ -1662,7 +1424,6 @@ ul.icons-ul > li .icon-li {
     This is the most general grid row that
     is not specific to read-only or selected
   */
-
 }
 .xv-grid-box.small-panel {
   width: 600px;
@@ -1718,7 +1479,6 @@ ul.icons-ul > li .icon-li {
   /**
       This is the grid header row
     */
-
 }
 .xv-grid-box .xv-grid-row > * {
   display: inline-block;
@@ -1936,7 +1696,6 @@ ul.icons-ul > li .icon-li {
     These styles will only be used
     if the chart is in a dashboard
   */
-
 }
 .dashboard .charts-panels {
   overflow-y: auto;
@@ -2187,7 +1946,6 @@ ul.icons-ul > li .icon-li {
       TODO: this is weird and indicates the REAL need to change the
       whatever the css system is...this relative path is different...
     **/
-
   background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
   background-size: 20px 2px;
 }
@@ -2274,7 +2032,6 @@ ul.icons-ul > li .icon-li {
 }
 .xv-tree .xv-tree-node {
   /* These picker styles are for the ListAttr node */
-
 }
 .xv-tree .xv-tree-node .xv-pickerwidget {
   display: inline-block;
@@ -2289,9 +2046,43 @@ ul.icons-ul > li .icon-li {
 /**
   Styles relating to misc widgets
 */
+.onyx-input-decorator {
+  border: 0;
+}
+.onyx-input-decorator input {
+  width: 150px;
+}
+.xv-inputwidget {
+  background-color: #ffffff;
+}
+.xv-relationwidget input,
+.xv-datewidget input {
+  width: 135px;
+}
 .xv-numberwidget input {
   text-align: right;
   width: 150px;
+}
+.xv-moneywidget {
+  background-color: #ffffff;
+  padding-top: 6px;
+  padding-bottom: 2px;
+}
+.xv-moneywidget .onyx-input-decorator {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+  margin-right: 5px;
+}
+.xv-moneywidget .onyx-input-decorator input,
+.xv-moneywidget .onyx-input-decorator .xv-money-label {
+  width: 85px;
+  text-align: right;
+}
+.xv-moneywidget .onyx-input-decorator.xv-currency-label {
+  width: 65px;
+}
+.xv-moneywidget .xv-picker-button {
+  width: 65px;
+  padding: 10px 4px;
 }
 .spinner .enyo-fittable-columns-layout > * {
   vertical-align: middle;
@@ -2311,7 +2102,7 @@ ul.icons-ul > li .icon-li {
   margin: 15px 10px;
 }
 .spinner.xv-numberwidget input {
-  width: 140px;
+  width: 120px;
 }
 .xv-dependency-picker .onyx-picker-decorator .onyx-button {
   width: 280px;
@@ -2442,13 +2233,203 @@ ul.icons-ul > li .icon-li {
   top: 200px;
   position: relative;
 }
+/**
+  Styles relating to the groupbox and widgets contained
+    by a groupbox
+*/
+/*
+  Styles relating to the groupbox
+*/
+.xv-groupbox {
+  min-width: 320px;
+  padding: 8px;
+  margin-right: 5px;
+}
+.xv-groupbox .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
+.xv-groupbox.editor {
+  min-width: 250px;
+  padding: 0;
+  margin: 0;
+}
+.xv-groupbox.in-panel {
+  padding: 0;
+  margin: 0;
+}
+.xv-groupbox .in-panel > *:first-child {
+  border-top-color: #aaaaaa;
+  border-top: none;
+  border-width: 1px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.xv-groupbox .in-panel > *:last-child {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  border-bottom: none;
+}
+.xv-groupbox > .in-panel .editor {
+  border-right: none;
+}
+.xv-groupbox.panel {
+  min-width: 330px;
+}
+.xv-groupbox > .onyx-input-decorator {
+  border-color: #aaaaaa;
+  border-width: 0 1px 1px 1px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child {
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > .onyx-input-decorator:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox > * {
+  display: block;
+  border: 1px #aaaaaa solid;
+  border-top-width: 0;
+  /* reset styles that make 'item' look bad if they happen to be there */
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  margin: 0;
+}
+.xv-groupbox > *:first-child {
+  border-top-color: #aaaaaa;
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > *:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > *:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox-header {
+  padding: 5px 10px;
+  color: #ffffff;
+  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #333333;
+  border: none;
+  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
+}
+.xv-groupbox-buttons {
+  border: none;
+}
+.xv-groupbox-buttons .xv-groupbox-button-single {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox-buttons .xv-groupbox-button-center {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.xv-groupbox-buttons .xv-groupbox-button-left {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox-buttons .xv-groupbox-button-right {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
 body {
   font-family: "arial", "arial black";
   font-size: 100%;
 }
 .bggrad {
   /* Radial Gradient */
-
   background-color: #333333;
   background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(#696969), to(#333333));
   background-image: -webkit-radial-gradient(circle, #696969, #333333);
@@ -2615,7 +2596,6 @@ body {
 }
 .xv-comment-box {
   /* Resets the margin/padding value for blockquote tag in comments */
-
 }
 .xv-comment-box .onxy-groupbox-header {
   max-width: 320px;
