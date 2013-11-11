@@ -11,7 +11,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 /*
 TODO: the following items are not yet done but need to be done by release
 
-1. currency conversion
 1. order number and order date on top of overview (with sales extension)
 2. tax type defaults to item tax type if user has no OverrideTax privilege
 3. A panel that displays a group box of lists of taxes separated headers
@@ -745,7 +744,6 @@ TODO: the following items are not yet done but need to be done by release
       */
       it("AllocatedCredit should be recalculated when XM.InvoiceAllocation records " +
           "are added or removed", function () {
-        // TODO: code is not yet written for currency conversion
         assert.isUndefined(invoiceModel.get("allocatedCredit"));
         allocationModel.set({currency: usd, amount: 200});
         invoiceModel.get("allocations").add(allocationModel);
