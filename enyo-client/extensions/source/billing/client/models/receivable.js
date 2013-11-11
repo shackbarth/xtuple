@@ -15,7 +15,7 @@ XT.extensions.billing.initReceivableModel = function () {
     idAttribute: 'uuid',
     nameAttribute: 'documentNumber',
     documentKey: 'documentNumber',
-    numberPolicySetting: XM.Document.AUTO_NUMBER,
+    numberPolicy: XM.Document.AUTO_NUMBER,
 
     defaults: function () {
       return {
@@ -109,7 +109,7 @@ XT.extensions.billing.initReceivableModel = function () {
       var customer = this.get("customer"),
         amount = this.get("amount");
       if (customer) {
-        return customer.get("comission") * amount;
+        return customer.get("commission") * amount;
       }
       return 0;
     },
@@ -132,31 +132,65 @@ XT.extensions.billing.initReceivableModel = function () {
     },
 
     createCreditMemo: function (params, options) {
-      //this.dispatch("XM.Receivable", "createCreditMemo", params, options);
+      return this.dispatch("XM.Receivable", "createCreditMemo", params, options);
     },
 
     createDebitMemo: function (params, options) {
-      //this.dispatch("XM.Receivable", "createDebitMemo", params, options);
+      return this.dispatch("XM.Receivable", "createDebitMemo", params, options);
     },
 
-    /**
-      When save is called on the XM.Receivable model and the status is READY_NEW:
-      If the documentType is XM.Receivable.CREDIT_MEMO then dispatch XM.Receivable.createCreditMemo
-      If the documentType is XM.Receivable.DEBIT_MEMO then dispatch XM.Receivable.createDebitMemo
-    */
     save: function (key, value, options) {
       if (this.getStatus() === XM.Model.READY_NEW) {
-        // cannot create a new receivable, dispatch to posts
+        options = options ? _.clone(options) : {};
+        var that = this,
+          success;
 
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          options = value ? _.clone(value) : {};
+        } else {
+          options = options ? _.clone(options) : {};
+        }
+
+        // validate before dispatch
+        if (!this.validate()) {
+          return false;
+        }
+
+        success = options.success;
+
+        var recOptions = {},
+          params = [
+            that.id,
+            that.get("customer").id,
+            that.get("documentNumber"),
+            that.get("documentDate"),
+            that.get("amount"),
+            that.get("dueDate"),
+            that.get("currency").id,
+            that.get("commission"),
+            that.get("orderNumber"),
+            that.get("notes"),
+            that.get("terms").id,
+            that.get("reasonCode").id,
+            that.get("salesRep").id,
+            that.get("paid")
+          ];
+
+        recOptions.success = function (resp) {
+          that.setStatus(XM.Model.READY_CLEAN, options);
+          if (success) { success(that, resp, options); }
+        };
+        recOptions.error = function () {};
 
         if (this.isCredit()) {
-          this.createCreditMemo();
+          this.createCreditMemo(params, recOptions);
         } else if (this.isDebit()) {
-          this.createDebitMemo();
+          this.createDebitMemo(params, recOptions);
         }
-      } else { // this is an update, just treat is as normal
-        return XM.Model.prototype.save.call(this, key, value, options);
+        return this;
       }
+      return XM.Model.prototype.save.call(this, key, value, options);
     },
 
     /**

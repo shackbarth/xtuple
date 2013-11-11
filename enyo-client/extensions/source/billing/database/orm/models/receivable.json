@@ -5,6 +5,7 @@
     "type": "Receivable",
     "table": "xt.aropeninfo",
     "idSequenceName": "aropen_aropen_id_seq",
+    "orderSequence": "ARMemoNumber",
     "isRest": true,
     "lockable": true,
     "comment": "Receivable Information",
@@ -38,6 +39,7 @@
         "toOne": {
           "type": "SalesCustomer",
           "column": "aropen_cust_id",
+          "isNested": true,
           "required": true
         }
       },
@@ -152,6 +154,13 @@
         "attr": {
           "type": "String",
           "column": "aropen_notes"
+        }
+      },
+      {
+        "name": "journalNumber",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_journalnumber"
         }
       },
       {

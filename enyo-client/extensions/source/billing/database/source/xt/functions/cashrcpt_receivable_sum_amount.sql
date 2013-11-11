@@ -9,14 +9,18 @@
 create or replace function xt.cashrcpt_receivable_sum_amount(aropen, boolean)
 returns numeric stable as $$
 
-  select
+  select distinct on (cashrcptitem_id)
     coalesce(
       -- aggregate CashReceiptLine amounts
       sum(
         -- convert CashReceiptLine currency to that of CashReceiptReceivable
-        currtocurr(cashrcpt_curr_id, aropen_curr_id, cashrcptitem_amount, cashrcpt_distdate) 
-      ),
-      0.0
+        currtocurr(
+          cashrcpt_curr_id,
+          aropen_curr_id,
+          cashrcptitem_amount,
+          cashrcpt_distdate
+        )
+      ), 0
     )
 
   from

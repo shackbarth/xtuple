@@ -62,8 +62,10 @@
     kind: "XV.Workspace",
     title: "_receivable".loc(),
     model: "XM.Receivable",
-    saveText: "_post".loc(),
     allowNew: false,
+    events: {
+      onPrint: ""
+    },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -79,7 +81,10 @@
             {kind: "XV.InputWidget", attr: "orderNumber"},
             {kind: "XV.ReasonCodePicker", attr: "reasonCode"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes"}
+            {kind: "XV.TextArea", attr: "notes"},
+            {kind: "onyx.GroupboxHeader", content: "_options".loc()},
+            {kind: "XV.StickyCheckboxWidget", label: "_printOnPost".loc(),
+              name: "printOnPost"}
           ]}
         ]},
         {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
@@ -98,13 +103,44 @@
               label: "_balance".loc(), currencyShowing: false},
             {kind: "XV.PercentWidget", attr: "commission"},
             // TODO: Move this under taxes
-            {kind: "XV.NumberWidget", attr: "taxTotal"}
+            {kind: "XV.NumberWidget", name: "taxTotal", attr: "taxTotal"}
           ]}
         ]},
-        {kind: "XV.ReceivableTaxBox", attr: "taxes", title: "_taxes".loc()},
+        {kind: "XV.ReceivableTaxBox", name: "taxes", attr: "taxes", title: "_taxes".loc()},
         {kind: "XV.ReceivableApplicationsListRelationsBox", attr: "applications", title: "_applications".loc()}
       ]}
-    ]
+    ],
+    /**
+      The saveText property on the workspace will be 'Post' when
+      the status of the object is READY_NEW and 'Save' for any other status.
+
+      When the model is in a READY_NEW state a checkbox is visible
+      that provides the option to 'Print on Post.'
+
+      TaxTotal and taxes will be hidden when the receivable is an Invoice.
+    */
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+      var isNew = model.getStatus() === XM.Model.READY_NEW,
+        isInvoice = model.get("documentType") === XM.Receivable.INVOICE;
+
+      if (isNew) {
+        this.setSaveText("_post".loc());
+      }
+      this.$.printOnPost.setShowing(isNew);
+      this.$.taxTotal.setShowing(!isInvoice);
+      this.$.taxes.setShowing(!isInvoice);
+    },
+    /**
+      When 'Print on Post' is checked,
+      a standard form should be printed when posting.
+    */
+    save: function (options) {
+      if (this.$.printOnPost.isChecked()) {
+        this.doPrint();
+      }
+      this.inherited(arguments);
+    }
   });
 
   XV.registerModelWorkspace("XM.Receivable", "XV.ReceivableWorkspace");

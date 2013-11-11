@@ -47,9 +47,14 @@
     "_maintainSalesCategory": "Maintain Sales Category",
     "_nextARMemoNumber": "Next Receivables Memo",
     "_nextCashRcptNumber": "Next Cash Receipt",
+<<<<<<< HEAD
     "_postCashReceipts": "Post Cash Receipts",
+=======
+    "_orderNumber": "Order #",
+>>>>>>> c23116033c835128622c396c7afb6310c1d76b65
     "_postMiscInvoices": "Post Invoices",
     "_printInvoices": "Print Invoices",
+    "_printOnPost": "Print on Post",
     "_receivable": "Receivable",
     "_receivables": "Receivables",
     "_recurringInvoiceBuffer": "Recurring Invoice Buffer Days",

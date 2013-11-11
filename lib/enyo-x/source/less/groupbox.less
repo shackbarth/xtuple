@@ -46,60 +46,6 @@
     min-width: 330px;
   }
 
-  .xv-inputwidget {
-    background-color: @white;
-  }
-
-  /**
-    Top level input-decorator class.
-    All below this are overrides.
-  */
-  .onyx-input-decorator {
-    border: 0;
-    input {
-      width: 150px;
-    }
-  }
-
-  .onyx-picker-decorator {
-    .onyx-button {
-      width: 150px;
-    }
-  }
-
-  .xv-relationwidget, .xv-datewidget, .xv-numberwidget {
-    input {
-      width: 135px;
-    }
-  }
-
-  .xv-moneywidget {
-    background-color: @white;
-    padding-top: 6px;
-    padding-bottom: 2px;
-
-    .onyx-input-decorator {
-      border: 0;
-      font-family: @groupboxFont;
-      width: 110px;
-      padding: 0 10px 0 6px;
-
-      input, .xv-money-label {
-        width: 100%;
-        text-align: right;
-      }
-
-      &.xv-currency-label {
-        width: 65px;
-      }
-    }
-
-    .xv-picker-button {
-      width: 65px;
-      padding: 10px 4px;
-    }
-  }
-
   > .onyx-input-decorator {
     border-color: @silver;
     border-width: 0 1px 1px 1px;
