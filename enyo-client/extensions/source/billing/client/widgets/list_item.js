@@ -23,7 +23,7 @@ XT.extensions.billing.initSalesCategoryListItem = function () {
 
     formatFundsType: function (inModel, inCell) {
       var fundsType = XM.fundsTypes.get(inModel.get('fundsType'));
-      inCell.setContent(('_' + fundsType.get('value')).loc());
+      inCell.setContent(fundsType.get('label'));
     }
   };
 

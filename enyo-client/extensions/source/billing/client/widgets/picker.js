@@ -26,11 +26,23 @@ trailing:true, white:true, strict: false*/
       name: 'XV.FundsTypePicker',
       kind: 'XV.PickerWidget',
       collection: 'XM.fundsTypes',
-      nameAttribute: 'value',
+      nameAttribute: 'label',
       label: '_fundsType'.loc(),
       showNone: false,
       published: {
         allowCreditCards: false
+      },
+
+      /**
+       * @override
+       * @see XV.FundsTypePicker#filter
+       *
+       * Decide based on session privileges whether to show credit card
+       * options
+       */
+      create: function () {
+        this.inherited(arguments);
+        this.setAllowCreditCards(XT.session.privileges.get('ProcessCreditCards'));
       },
 
       /**
@@ -52,9 +64,18 @@ trailing:true, white:true, strict: false*/
       name: 'XV.CashReceiptApplyOptionsPicker',
       kind: 'XV.PickerWidget',
       collection: 'XM.cashReceiptApplyOptions',
-      nameAttribute: 'key',
-      label: '_applyOption'.loc(),
-      showNone: false
+      nameAttribute: 'label',
+      label: '_applyBalanceAs'.loc(),
+      showNone: false,
+
+      /**
+       * @override
+       * Decide based on session settings whether to display this widget
+       */
+      create: function () {
+        this.inherited(arguments);
+        this.setShowing(XT.session.settings.get('EnableCustomerDeposits'));
+      }
     });
   };
 

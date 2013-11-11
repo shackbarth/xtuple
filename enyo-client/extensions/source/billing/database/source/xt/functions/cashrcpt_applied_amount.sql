@@ -6,10 +6,10 @@
  * @param {Boolean}         whether to aggregate applied or un-applied amounts
  * @returns sum of CashReceiptLine amounts for this CashReceipt
  */
-create or replace function xt.cashrcpt_applied_amount(cashrcpt_id, boolean)
+create or replace function xt.cashrcpt_applied_amount(numeric, boolean)
 returns numeric stable as $$
 
-  select distinct on (cashrcptitem_id)
+  select
     coalesce(sum(cashrcptitem_amount), 0)
 
   from

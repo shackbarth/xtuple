@@ -9,7 +9,7 @@
 create or replace function xt.cashrcpt_receivable_sum_amount(aropen, boolean)
 returns numeric stable as $$
 
-  select distinct on (cashrcptitem_id)
+  select
     coalesce(
       -- aggregate CashReceiptLine amounts
       sum(

@@ -30,7 +30,7 @@ white:true*/
 
     /**
     * @enum
-    * Bi-directional mapping of Funds Types
+    * Funds Types
     */
     XM.FundsTypeEnum = {
       C: 'CHECK',
@@ -50,10 +50,11 @@ white:true*/
     * @extends Backbone.Model
     */
     XM.FundsType = XM.StaticModel.extend({
+
       /**
-      * Returns true if the given fundsType is a credit card type, false
-      * otherwise.
-      */
+       * Returns true if the given fundsType is a credit card type, false
+       * otherwise.
+       */
       isCreditCard: function () {
         return _.contains([ 'M', 'V', 'A', 'D', 'R' ], this.id);
       }
@@ -64,12 +65,12 @@ white:true*/
     );
           
     /**
-    * @enum
-    * Cash Receipt Balance Application Options.
-    */
+     * @enum
+     * Cash Receipt Balance Application Options.
+     */
     XM.CashReceiptApplyOptionEnum = {
-      APPLY_BALANCE_TO_CREDIT_MEMO:      false,
-      APPLY_BALANCE_TO_CUSTOMER_DEPOSIT: true
+      0: 'APPLY_BALANCE_TO_CREDIT_MEMO',
+      1: 'APPLY_BALANCE_TO_CUSTOMER_DEPOSIT'
     };
 
     XM.cashReceiptApplyOptions = new XM.EnumMapCollection(

@@ -221,14 +221,16 @@
             {kind: 'XV.InputWidget', attr: 'number'},
             {kind: 'XV.CheckboxWidget', attr: 'isPosted'},
             {kind: 'XV.SalesCustomerWidget', attr: 'customer'},
-            {kind: 'XV.FundsTypePicker', onSelect: 'fundsTypeSelected'},
-            {kind: 'XV.CashReceiptApplyOptionsPicker', onSelect: 'applyOptionSelected'},
+            {kind: 'XV.FundsTypePicker', attr: 'fundsType', onSelect: 'fundsTypeSelected'},
+            {kind: 'XV.CashReceiptApplyOptionsPicker',
+              attr: 'useCustomerDeposit',
+              onSelect: 'applyOptionSelected'
+            },
             {tag: 'hr'},
             {kind: 'XV.DateWidget', attr: 'documentDate'},
             {kind: 'XV.DateWidget', attr: 'distributionDate'},
             {kind: 'XV.DateWidget', attr: 'applicationDate'},
             {tag: 'hr'},
-            {kind: 'XV.InputWidget', attr: 'currency'},
             {kind: 'XV.MoneyWidget',
               label: '_balance'.loc(),
               attr: { localValue: 'balance', currency: 'currency' },
@@ -240,7 +242,7 @@
               disableCurrency: true
             },
             {kind: 'XV.MoneyWidget',
-              label: '_applied'.loc(),
+              label: '_appliedAmount'.loc(),
               attr: { localValue: 'appliedAmount', currency: 'currency' },
               disableCurrency: true
             },
@@ -256,9 +258,11 @@
     valueChanged: function () {
       this.log(this.value);
     },
+
     fundsTypeSelected: function (inSender, inEvent) {
       this.log(inEvent);
     },
+
     applyOptionSelected: function (inSender, inEvent) {
       this.log(inEvent);
     }

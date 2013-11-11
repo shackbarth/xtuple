@@ -23,8 +23,8 @@ select xt.create_view('xt.cashrcptinfo', $$
     cashrcpt_posted       as posted,
     cashrcpt_usecustdeposit as usecustdeposit,
 
-    xt.cashrcpt_applied_amount(cashrcpt_id, true) as applied_amount,
-    coalesce(amount - applied_amount, 0)          as balance
+    xt.cashrcpt_applied_amount(cashrcpt_id, true)     as applied_amount,
+    xt.cashrcpt_balance(cashrcpt_id, cashrcpt_amount) as balance
 
   from cashrcpt;
 

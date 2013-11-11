@@ -18,8 +18,8 @@ XT.extensions.billing.initCashReceipt = function () {
       this.meta = new Backbone.Model();
       return {
         posted: false,
-        useCustomerDeposit: XT.session.settings.get('EnableCustomerDeposits'),
-        fundsType: XM.FundsTypeEnum.CHECK,
+        fundsType: XM.CashReceipt.CHECK,
+        useCustomerDeposit: false,
         currency: XM.baseCurrency,
         currencyRate: 1,
         applicationDate: new Date(),
@@ -85,8 +85,8 @@ XT.extensions.billing.initCashReceipt = function () {
     onReadyClean: function (model) {
       /*
        * TODO re-enable 
-       *
       this.setReadOnly(this.get('posted'));
+      */
       this.setReadOnly([
         'amount',
         'fundsType',
@@ -95,8 +95,7 @@ XT.extensions.billing.initCashReceipt = function () {
         'bankAccount',
         'distributionDate',
         'applicationDate'
-      ], XM.fundsTypes.get(this.get('fundsType')).isCreditCard())
-      */
+      ], XM.fundsTypes.get(this.get('fundsType')).isCreditCard());
     },
 
     /**
@@ -107,7 +106,7 @@ XT.extensions.billing.initCashReceipt = function () {
     },
 
     updateCurrencyRate: function () {
-
+      // TODO
     },
 
     /**
@@ -354,7 +353,7 @@ XT.extensions.billing.initCashReceipt = function () {
       var lines = this.get('lineItems');
       lines.remove(lines.where({ receivable: receivable }));
     }
-  }, XM.FundsTypeEnum);
+  }, _.invert(XM.FundsTypeEnum));
 
   /**
    * @class XM.CashReceiptLine

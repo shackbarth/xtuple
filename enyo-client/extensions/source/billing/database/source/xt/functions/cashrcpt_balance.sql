@@ -2,7 +2,7 @@
  * Calculate the balance of a XM.CashReceipt
  * balance = amount - applied
  */
-create or replace function xt.cashrcpt_balance(cashrcpt_id, cashrcpt_amount)
+create or replace function xt.cashrcpt_balance(numeric, numeric)
 returns numeric stable as $$
 
   select
