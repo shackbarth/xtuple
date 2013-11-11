@@ -647,7 +647,7 @@ TODO: the following items are not yet done but need to be done by release
         assert.equal(invoiceModel.get("billtoName"), "Tremendous Toys Incorporated");
         assert.equal(invoiceModel.get("billtoAddress2"), "101 Toys Place");
         assert.equal(invoiceModel.get("billtoPhone"), "703-931-4269");
-        assert.equal(invoiceModel.getValue("salesRep.name"), "Sam Masters");
+        assert.equal(invoiceModel.getValue("salesRep.number"), "1000");
         assert.equal(invoiceModel.getValue("commission"), 0.075);
         assert.equal(invoiceModel.getValue("terms.code"), "2-10N30");
         assert.equal(invoiceModel.getValue("taxZone.code"), "VA TAX");
@@ -833,7 +833,7 @@ TODO: the following items are not yet done but need to be done by release
           };
 
         postedInvoice.on("statusChange", statusChanged);
-        postedInvoice.fetch({number: "60133"});
+        postedInvoice.fetch({number: "60004"});
       });
       /**
         @member -

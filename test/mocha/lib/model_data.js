@@ -58,14 +58,14 @@ Here's how you can use CRUD to create a model to use for your own tests:
     calculateFreight: true,
     customer: { number: "TTOYS" },
     terms: { code: "2-10N30" },
-    salesRep: { number: "2000" },
+    salesRep: { number: "1000" },
   };
 
   var salesOrder = exports.salesOrder = {
     calculateFreight: true,
     customer: { number: "TTOYS" },
     terms: { code: "2-10N30" },
-    salesRep: { number: "2000" },
+    salesRep: { number: "1000" },
     wasQuote: true
   };
 
@@ -158,12 +158,15 @@ Here's how you can use CRUD to create a model to use for your own tests:
       An extra bit of work we have to do after the createHash fields are set:
       create a valid line item.
      */
-    beforeSaveActions: [{it: 'sets up a valid line item', action: getBeforeSaveAction("XM.SalesOrderLine")}],
+    beforeSaveActions: [{it: 'sets up a valid line item',
+      action: getBeforeSaveAction("XM.SalesOrderLine")}],
     afterSaveActions: [{it: 'has the credit card information', action: function (data, next) {
-      //assert.equal(data.model.getValue("customer.creditCards").models[0].get("number"), "************1111");
+      //assert.equal(data.model.getValue("customer.creditCards")
+        //.models[0].get("number"), "************1111");
       // XXX: the commented-out code is better but relies on the encrpytion key being the demo key
       // TODO: populate our own credit card into customer and test that
-      assert.equal(data.model.getValue("customer.creditCards").models[0].get("number").substring(0, 12), "************");
+      assert.equal(data.model.getValue("customer.creditCards").models[0]
+        .get("number").substring(0, 12), "************");
       next();
     }}],
     updateHash: {
@@ -179,7 +182,8 @@ Here's how you can use CRUD to create a model to use for your own tests:
       An extra bit of work we have to do after the createHash fields are set:
       create a valid line item.
      */
-    beforeSaveActions: [{it: 'sets up a valid line item', action: getBeforeSaveAction("XM.QuoteLine")}],
+    beforeSaveActions: [{it: 'sets up a valid line item',
+      action: getBeforeSaveAction("XM.QuoteLine")}],
     updateHash: {
       calculateFreight: false
     }

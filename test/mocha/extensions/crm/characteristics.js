@@ -45,7 +45,7 @@
           charWidget.newItem();
           // XXX it'd be better to do this through enyo
           charModel = _.find(XM.characteristics.models, function (m) {
-            return m.id === 'Birthday';
+            return m.id === 'CONTACT-BIRTHDAY';
           });
           assert.isObject(charModel);
           contactCharModel = charWidget.value.models[0];
@@ -89,7 +89,8 @@
               });
               assert.isFunction(deleteItem.tap);
               deleteItem.tap();
-              assert.equal(model.get("characteristics").models[0].getStatusString(), "DESTROYED_DIRTY");
+              assert.equal(model.get("characteristics").models[0].getStatusString(),
+                "DESTROYED_DIRTY");
 
               model.on("statusChange", modelResaved);
               workspaceContainer.apply();
@@ -106,7 +107,8 @@
     /**
     * Test INCDT-21540 fix
     */
-    describe.skip('INCDT-21540: Characteristics appear editable when they shouldn\'t be', function () {
+    describe.skip('INCDT-21540: Characteristics appear editable when they shouldn\'t be',
+        function () {
       var workspaceContainer, workspace, model, id, moduleContainer, originalPrivileges;
 
       beforeEach(function () {
@@ -116,7 +118,8 @@
       it('test Characteristics widgets for enable/disable capability', function (done) {
         this.timeout(30 * 1000);
 
-        smoke.navigateToExistingWorkspace(XT.app, "XV.IncidentList", function (_workspaceContainer) {
+        smoke.navigateToExistingWorkspace(XT.app, "XV.IncidentList",
+            function (_workspaceContainer) {
           workspaceContainer = _workspaceContainer;
           moduleContainer = XT.app.$.postbooks;
 
@@ -147,7 +150,8 @@
           }
         });
 
-        smoke.navigateToExistingWorkspace(XT.app, "XV.IncidentList", function (_workspaceContainer) {
+        smoke.navigateToExistingWorkspace(XT.app, "XV.IncidentList",
+            function (_workspaceContainer) {
           workspaceContainer = _workspaceContainer;
           moduleContainer = XT.app.$.postbooks;
 
