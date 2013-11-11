@@ -1,10 +1,4 @@
-/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
-white:true*/
-/*global XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
-setTimeout:true, clearTimeout:true, exports:true, it:true */
-
-
+/*jshint maxlen: false */
 /*
   To generate spec documentation:
   cd scripts
@@ -68,6 +62,70 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       delete: false
     },
     additionalTests: require("../specs/configure_billing").additionalTests
+  };
+
+  exports.cashReceipt = {
+    recordType: 'XM.CashReceipt',
+    collectionType: 'XM.CashReceiptCollection',
+    cacheName: null,
+    instanceOf: 'XM.Document',
+    isLockable: true,
+    idAttribute: 'number',
+    enforceUpperKey: false,
+    attributes: [
+      'number', 'customer', 'amount', 'currency', 'currencyRatio',
+      'documentNumber', 'documentDate', 'bankAccount', 'distributionDate',
+      'applicationDate', 'notes', 'isPosted', 'lineItems'
+    ],
+    requiredAttributes: [
+      'customer', 'amount', 'currency', 'currencyRatio', 'bankAccount',
+      'applicationDate', 'isPosted'
+    ],
+    defaults: {
+      isPosted: false
+    },
+    privileges: {
+      create: 'MaintainCashReceipts',
+      read: true,
+      update: 'MaintainCashReceipts',
+      delete: 'MaintainCashReceipts'
+    },
+    extensions: ["billing"],
+    updatableField: 'notes',
+    listKind: 'XV.CashReceiptList',
+    createHash: require("../specs/cash_receipt").createHash,
+    additionalTests: require("../specs/cash_receipt").additionalTests,
+  };
+
+  exports.currency = {
+    name: 'currency',
+    recordType: 'XM.Currency',
+    collectionType: 'XM.CurrencyCollection',
+    cacheName: 'XM.currencies',
+    instanceOf: 'XM.Document',
+    isLockable: true,
+    idAttribute: 'abbreviation',
+    enforceUpperKey: false,
+    attributes: [
+      'name', 'symbol', 'abbreviation'
+    ],
+    defaults: {
+      isBase: false
+    },
+    privileges: {
+      create: 'CreateNewCurrency',
+      read: true,
+      update: 'MaintainCurrencies',
+      delete: 'MaintainCurrencies'
+    },
+    extensions: ["billing"],
+    createHash: {
+      name: 'name' + Math.random().toString(36).slice(0, 3),
+      symbol: Math.random().toString(36).slice(0, 3),
+      abbreviation: Math.random().toString(36).slice(0, 3)
+    },
+    updatableField: 'name',
+    listKind: 'XV.CurrencyList'
   };
 
   /**
@@ -342,8 +400,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
     attributes: ["uuid", "documentDate", "customer", "dueDate",
       "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
       "reasonCode", "amount", "currency", "paid", "notes", "taxes", "balance",
-      "taxTotal", "commission"],
-    // TODO: "applications"],
+      "taxTotal", "commission", "applications"],
     requiredAttributes: ["currency", "customer", "documentDate", "dueDate", "amount"],
     extensions: ["billing"],
     privileges: {
@@ -360,19 +417,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true */
       documentNumber: "DocumentNumber" + Math.random()
     },
     updatableField: "notes",
-    // afterSaveActions: [{
-    //   it: "When the status of a receivable changes to READY_CLEAN (edit),
-    //      the following attributes: " +
-    //   "customer, documentDate, documentType, documentNumber, terms should be readOnly",
-    //   action: function (data, next) {
-    //     assert.include(data.model.readOnlyAttributes, "customer");
-    //     assert.include(data.model.readOnlyAttributes, "documentDate");
-    //     assert.include(data.model.readOnlyAttributes, "documentType");
-    //     assert.include(data.model.readOnlyAttributes, "documentNumber");
-    //     assert.include(data.model.readOnlyAttributes, "terms");
-    //     next();
-    //   }
-    // }],
     additionalTests: require("../specs/receivable").additionalTests
   };
 

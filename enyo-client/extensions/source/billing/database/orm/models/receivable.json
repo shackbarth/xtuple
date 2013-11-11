@@ -5,6 +5,7 @@
     "type": "Receivable",
     "table": "xt.aropeninfo",
     "idSequenceName": "aropen_aropen_id_seq",
+    "orderSequence": "ARMemoNumber",
     "isRest": true,
     "lockable": true,
     "comment": "Receivable Information",
@@ -38,6 +39,7 @@
         "toOne": {
           "type": "SalesCustomer",
           "column": "aropen_cust_id",
+          "isNested": true,
           "required": true
         }
       },
@@ -139,10 +141,26 @@
         }
       },
       {
+        "name": "applications",
+        "toMany": {
+          "isNested": true,
+          "type": "ReceivableApplication",
+          "column": "aropen_id",
+          "inverse": "source"
+        }
+      },
+      {
         "name": "notes",
         "attr": {
           "type": "String",
           "column": "aropen_notes"
+        }
+      },
+      {
+        "name": "journalNumber",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_journalnumber"
         }
       },
       {
@@ -283,7 +301,8 @@
         "name": "customer",
         "toOne": {
           "type": "CustomerRelation",
-          "column": "customer"
+          "column": "customer",
+          "isNested": true
         }
       },
       {
@@ -298,6 +317,13 @@
         "attr": {
           "type": "Date",
           "column": "due_date"
+        }
+      },
+      {
+        "name": "closeDate",
+        "attr": {
+          "type": "Date",
+          "column": "close_date"
         }
       },
       {
@@ -355,7 +381,7 @@
   {
     "context": "billing",
     "nameSpace": "XM",
-    "type": "ReceivableTax",
+    "type": "ReceivableApplication",
     "table": "arapply",
     "idSequenceName": "arapply_arapply_id_seq",
     "comment": "Receivable Tax Map",
@@ -385,6 +411,13 @@
         }
       },
       {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "arapply_source_aropen_id"
+        }
+      },
+      {
         "name": "applicationType",
         "attr": {
           "type": "String",
@@ -394,7 +427,7 @@
       {
         "name": "documentNumber",
         "attr": {
-          "type": "",
+          "type": "String",
           "column": "arapply_source_docnumber"
         }
       },
@@ -436,5 +469,62 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "ReceivableRelation",
+    "table": "xt.aropeninfo",
+    "idSequenceName": "aropen_aropen_id_seq",
+    "isRest": true,
+    "isSystem": true,
+    "comment": "Receivable Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAROpenItems",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "aropen_cust_id"
+        }
+      },
+      {
+        "name": "documentType",
+        "attr": {
+          "type": "String",
+          "column": "aropen_doctype"
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "aropen_docnumber"
+        }
+      }
+    ]
   }
 ]

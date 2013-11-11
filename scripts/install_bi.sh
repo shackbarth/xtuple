@@ -135,8 +135,8 @@ download_files () {
 	log ""
     cdir $RUN_DIR/../..
 	rm -R ErpBI
-	# rm ErpBI.zip
-	# wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
+	rm ErpBI.zip
+	wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
 	unzip ErpBI.zip  2>1 | tee -a $LOG_FILE
 	
 	cdir $BISERVER_HOME/biserver-ce/

@@ -1,10 +1,10 @@
-/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
-latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true, strict: false*/
-/*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, Globalize:true*/
-
 XT.extensions.billing.initLists = function () {
+  'use strict';
 
+  /**
+   * @class XV.SalesCategory
+   * @see XM.SalesCategoryCollection
+   */
   enyo.kind({
     name: 'XV.SalesCategoryList',
     kind: 'XV.List',
@@ -22,6 +22,43 @@ XT.extensions.billing.initLists = function () {
 
   XV.registerModelList('XM.SalesCategory', 'XV.SalesCategoryList');
 
+  /**
+   * @class XV.CashReceiptList
+   * @see XM.CashReceiptListItemCollection
+   */
+  enyo.kind({
+    name: 'XV.CashReceiptList',
+    kind: 'XV.List',
+    view: 'XM.CashReceiptView',
+    label: '_cashReceipts'.loc(),
+    collection: 'XM.CashReceiptListItemCollection',
+    components: [
+      {kind: 'XV.ListItemDecorator', components: [
+        {name: 'listItem', kind: 'XV.CashReceiptListItem'}
+      ]}
+    ]
+  });
+  XV.registerModelList('XM.CashReceiptListItem', 'XV.CashReceiptList');
+
+  /**
+   * @class XV.CashReceiptLineList
+   * @see XM.CashReceiptLineCollection
+   */
+  enyo.kind({
+    name: 'XV.CashReceiptLineList',
+    kind: 'XV.List',
+    view: 'XM.CashReceiptView',
+    label: '_cashReceipts'.loc(),
+    collection: 'XM.CashReceiptLineCollection',
+    components: [
+      {kind: 'XV.ListItemDecorator', components: [
+        {name: 'listItem', kind: 'XV.CashReceiptListItem'}
+      ]}
+    ]
+  });
+  XV.registerModelList('XM.CashReceiptLineListItem', 'XV.CashReceiptLineList');
+
+  //
   // ..........................................................
   // RECEIVABLES
   //
@@ -33,19 +70,22 @@ XT.extensions.billing.initLists = function () {
     collection: "XM.ReceivableListItemCollection",
     parameterWidget: "XV.ReceivableListParameters",
     allowPrint: true,
+    showDeleteAction: false,
     query: {orderBy: [
       {attribute: 'documentNumber'}
     ]},
-    published: {
-      newActions: [
-        {name: "creditMemo", label: "_miscCreditMemo".loc(), defaults: {
-          documentType: XM.Receivable.CREDIT_MEMO
-        }},
-        {name: "debitMemo", label: "_miscDebitMemo".loc(), defaults: {
-          documentType: XM.Receivable.DEBIT_MEMO
-        }}
-      ]
-    },
+    newActions: [
+      {name: "creditMemo", label: "_miscCreditMemo".loc(), defaults: {
+        documentType: XM.Receivable.CREDIT_MEMO
+      }},
+      {name: "debitMemo", label: "_miscDebitMemo".loc(), defaults: {
+        documentType: XM.Receivable.DEBIT_MEMO
+      }}
+    ],
+    actions: [
+      {name: "open", prerequisite: "canOpen",
+        method: "openReceivable", notify: false, isViewMethod: true}
+    ],
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -55,11 +95,11 @@ XT.extensions.billing.initLists = function () {
           {kind: "XV.ListColumn", classes: "third", components: [
             {kind: "XV.ListAttr", attr: "isPosted", formatter: "formatPosted"}
           ]},
-          {kind: "XV.ListColumn", classes: "short", components: [
+          {kind: "XV.ListColumn", classes: "money", components: [
             {kind: "XV.ListAttr", attr: "documentNumber"}
           ]},
-          {kind: "XV.ListColumn", classes: "short", components: [
-            {kind: "XV.ListAttr", attr: "customer"}
+          {kind: "XV.ListColumn", classes: "descr", components: [
+            {kind: "XV.ListAttr", attr: "customer.name"}
           ]},
           {kind: "XV.ListColumn", classes: "money", components: [
             {kind: "XV.ListAttr", attr: "documentDate"}
@@ -111,8 +151,18 @@ XT.extensions.billing.initLists = function () {
     formatPosted: function (value, view, model) {
       var posted = model ? model.get('isPosted') : null;
       return posted ? "_yes".loc() : "_no".loc();
+    },
+    openReceivable: function (inEvent) {
+      var model = inEvent.model;
+
+      this.doWorkspace({
+        workspace: this.getWorkspace(),
+        id: model.id,
+        allowNew: false
+      });
     }
   });
 
   XV.registerModelList('XM.Receivable', 'XV.ReceivableList');
+
 };

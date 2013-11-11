@@ -60,6 +60,18 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // LOT / SERIAL (TRACE)
+  //
+
+  enyo.kind({
+    name: "XV.TraceCombobox",
+    kind: "XV.ComboboxWidget",
+    collection: "XM.traceRelations",
+    label: "_trace".loc(),
+    keyAttribute: "number"
+  });
+
+  // ..........................................................
   // QUOTE LINE CHARACTERISTIC
   //
 
