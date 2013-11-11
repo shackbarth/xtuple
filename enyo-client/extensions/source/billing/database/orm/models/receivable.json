@@ -228,6 +228,14 @@
         }
       },
       {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "taxhist_taxtype_id",
+          "required": true
+        }
+      },
+      {
         "name": "amount",
         "attr": {
           "type": "Money",

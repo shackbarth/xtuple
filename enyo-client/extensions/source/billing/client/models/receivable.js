@@ -160,22 +160,35 @@ XT.extensions.billing.initReceivableModel = function () {
         success = options.success;
 
         var recOptions = {},
-          params = [
-            that.id,
-            that.get("customer").id,
-            that.get("documentNumber"),
-            that.get("documentDate"),
-            that.get("amount"),
-            that.get("dueDate"),
-            that.get("currency").id,
-            that.get("commission"),
-            that.get("orderNumber"),
-            that.get("notes"),
-            that.get("terms").id,
-            that.get("reasonCode").id,
-            that.get("salesRep").id,
-            that.get("paid")
-          ];
+          taxes = that.get("taxes") ? that.get("taxes").models : null;
+
+        taxes = _.map(taxes, function (m) {
+          return {
+            amount: m.get("amount"),
+            parent: m.get("tax").id,
+            taxCode: m.get("taxCode").id,
+            taxType: m.get("taxType") ? m.get("taxType").id : null,
+            uuid: m.id
+          };
+        });
+
+        var params = [
+          that.id,
+          that.get("customer").id,
+          that.get("documentNumber"),
+          that.get("documentDate"),
+          that.get("amount"),
+          that.get("dueDate"),
+          that.get("currency").id,
+          that.get("commission"),
+          that.get("orderNumber"),
+          that.get("notes"),
+          that.get("terms") ? that.get("terms").id : null,
+          that.get("reasonCode") ? that.get("reasonCode").id : null,
+          that.get("salesRep") ? that.get("salesRep").id : null,
+          that.get("paid"),
+          taxes
+        ];
 
         recOptions.success = function (resp) {
           that.setStatus(XM.Model.READY_CLEAN, options);
