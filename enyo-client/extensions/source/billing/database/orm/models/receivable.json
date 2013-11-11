@@ -5,6 +5,7 @@
     "type": "Receivable",
     "table": "xt.aropeninfo",
     "idSequenceName": "aropen_aropen_id_seq",
+    "orderSequence": "ARMemoNumber",
     "isRest": true,
     "lockable": true,
     "comment": "Receivable Information",

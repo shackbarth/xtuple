@@ -15,7 +15,7 @@ XT.extensions.billing.initReceivableModel = function () {
     idAttribute: 'uuid',
     nameAttribute: 'documentNumber',
     documentKey: 'documentNumber',
-    numberPolicySetting: XM.Document.AUTO_NUMBER,
+    numberPolicy: XM.Document.AUTO_NUMBER,
 
     defaults: function () {
       return {
