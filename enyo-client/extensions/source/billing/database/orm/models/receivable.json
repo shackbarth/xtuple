@@ -39,6 +39,7 @@
         "toOne": {
           "type": "SalesCustomer",
           "column": "aropen_cust_id",
+          "isNested": true,
           "required": true
         }
       },

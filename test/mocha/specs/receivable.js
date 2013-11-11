@@ -107,11 +107,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
               assert.isTrue(model.isCredit());
             });
 
-          it.skip("The orderSequence is 'ARMemoNumber'", function () {
-            assert.equal(model.orderSequence, "ARMemoNumber");
-
-          });
-
           it("Validation: The amount must be greater than zero", function () {
             model.set("amount", 0);
             assert.equal(model.validate().code, "xt1013");
@@ -123,22 +118,43 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
             assert.equal(model.validate().code, "xt2024");
           });
 
-          it.skip("When the status of a receivable changes to READY_CLEAN (edit), the following attributes: " +
+          it("When the status of a receivable changes to READY_CLEAN (edit), the following attributes: " +
           "customer, documentDate, documentType, documentNumber, terms should be readOnly", function () {
-            assert.fail(true, true, "not implemented");
-            // assert.include(data.model.readOnlyAttributes, "customer");
-            // assert.include(data.model.readOnlyAttributes, "documentDate");
-            // assert.include(data.model.readOnlyAttributes, "documentType");
-            // assert.include(data.model.readOnlyAttributes, "documentNumber");
-            // assert.include(data.model.readOnlyAttributes, "terms");
+            model.setStatus(XM.Model.READY_NEW);
+            // assert.notInclude(model.readOnlyAttributes, "customer");
+            // assert.notInclude(model.readOnlyAttributes, "documentDate");
+            // assert.notInclude(model.readOnlyAttributes, "documentType");
+            // assert.notInclude(model.readOnlyAttributes, "documentNumber");
+            // assert.notInclude(model.readOnlyAttributes, "terms");
+
+            model.setStatus(XM.Model.READY_CLEAN);
+            assert.include(model.readOnlyAttributes, "customer");
+            assert.include(model.readOnlyAttributes, "documentDate");
+            assert.include(model.readOnlyAttributes, "documentType");
+            assert.include(model.readOnlyAttributes, "documentNumber");
+            assert.include(model.readOnlyAttributes, "terms");
           });
-          it.skip("When customer is set, the terms, currency, and salesRep should be copied from the customer and commission should be recalculated", function () {
-            assert.fail(true, true, "not implemented");
+
+          it("When customer is set, the terms, currency, and salesRep should be copied from the customer and commission should be recalculated", function (done) {
+            // create customer to set
+            var customerModel = new XM.SalesCustomer(),
+              callback = function () {
+                model.set("customer", customerModel);
+                assert.equal(customerModel.get("terms", model.get("terms")));
+                assert.equal(customerModel.get("currency", model.get("currency")));
+                assert.equal(customerModel.get("salesRep", model.get("salesRep")));
+                done();
+              };
+            customerModel.fetch({number: "TTOYS", success: callback()});
+          });
+
+          it.skip("The orderSequence is 'ARMemoNumber'", function () {
+            //assert.equal(XM.Receivable.orderSequence, "ARMemoNumber");
           });
           it.skip("When the amount is changed, commission should be recalculated as customer.commission * amount", function () {
             assert.fail(true, true, "not implemented");
           });
-          it.skip("When the document date or terms is changed, the dueDate sholud be recalculated using the terms 'calculateDueDate' function", function () {
+          it.skip("When the document date or terms is changed, the dueDate should be recalculated using the terms 'calculateDueDate' function", function () {
             assert.fail(true, true, "not implemented");
           });
           it.skip("When child tax records are added or removed, the taxTotal should be recalculated", function () {
@@ -370,7 +386,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
       it.skip("When active the As Of parameter will limit query results to receivables where " +
         "the As Of date is greater than or equal to the document date" +
         "and is less than or equal to the close date or where the close date is null", function () {
-
       });
     });
 
