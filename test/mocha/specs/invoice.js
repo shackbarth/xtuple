@@ -12,6 +12,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 TODO: the following items are not yet done but need to be done by release
 
 1. currency conversion
+1. order number and order date on top of overview (with sales extension)
 2. tax type defaults to item tax type if user has no OverrideTax privilege
 3. A panel that displays a group box of lists of taxes separated headers
   for taxes by line items, freight, and adjustments. Users should be able to add new tax
@@ -24,6 +25,7 @@ TODO: the following items are not yet done but need to be done by release
     - When clicked, an "allocate" button should present a list of open receivables that are
     credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
+
 
 */
 
