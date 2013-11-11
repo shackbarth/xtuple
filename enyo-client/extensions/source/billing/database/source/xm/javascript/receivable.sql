@@ -68,8 +68,8 @@ select xt.install_js('XM','Receivable','xtuple', $$
     var recId = XM.Receivable.insertReceivable(uuid, customerId, docNum, docDate, amt, dueDate, currencyId, commission, orderNum, notes, termsId, reasonCodeId, salesRepId, paid, taxes, 'D');
 
     /* do post */
-    id = plv8.execute('select createardebitmemo($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18) as value',
-        [recId, customerId, docNum, orderNum, docDate, amt, notes, reasonCodeId, -1, -1, dueDate, termsId, salesRepId,commission, null, currencyId, null, null])[0].value;
+    id = plv8.execute('select createardebitmemo($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) as value',
+        [recId, customerId, 0, docNum, orderNum, docDate, amt, notes, reasonCodeId, -1, -1, dueDate, termsId, salesRepId, commission, currencyId])[0].value;
 
     /* return id from post */
     return id;
