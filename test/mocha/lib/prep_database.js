@@ -58,9 +58,10 @@
     assignmentModel.set({privilege: priv});
     adminModel.get("grantedPrivileges").add(assignmentModel);
     adminModel.save(null, {success: function () {
-      var preExistingPriv = _.filter(adminModel.get("grantedPrivileges").models, function (model) {
-        return model.getValue("privilege.name") === privName;
-      });
+      // update the client, too
+      var setObj = {};
+      setObj[privName] = true;
+      XT.session.privileges.set(setObj);
       callback();
     }});
   };

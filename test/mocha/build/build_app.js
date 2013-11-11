@@ -26,7 +26,6 @@ var buildAll = require('../../../scripts/lib/build_all'),
       buildAll.build({
         database: databaseName,
         initialize: true,
-        // TODO: use postbooks backup
         backup: path.join(__dirname, "../lib/demo-test.backup")
       }, function (err, res) {
         assert.isNull(err);
@@ -45,6 +44,7 @@ var buildAll = require('../../../scripts/lib/build_all'),
       });
     });
 
+    /*
     it('should not have non-core extensions built', function (done) {
       var sql = "select * from xt.orm where orm_context = 'time_expense';";
 
@@ -118,6 +118,8 @@ var buildAll = require('../../../scripts/lib/build_all'),
         done();
       });
     });
+
+    */
   });
 }());
 
