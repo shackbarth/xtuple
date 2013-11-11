@@ -263,14 +263,8 @@ white:true*/
     applyIsPostedRules: function () {
       var isPosted = this.get("isPosted");
 
-      this.setReadOnly("lineItems", isPosted);
-      this.setReadOnly("number", isPosted);
-      this.setReadOnly("invoiceDate", isPosted);
-      this.setReadOnly("terms", isPosted);
-      this.setReadOnly("salesRep", isPosted);
-      this.setReadOnly("commission", isPosted);
-      this.setReadOnly("taxZone", isPosted);
-      this.setReadOnly("saleType", isPosted);
+      this.setReadOnly(["lineItems", "number", "invoiceDate", "terms", "salesRep", "commission",
+        "taxZone", "saleType"], isPosted);
     },
 
     calculateAllocatedCredit: function () {

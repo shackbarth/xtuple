@@ -1126,8 +1126,8 @@ strict: false*/
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number"},
+            classes: "in-panel", fit: true, components: [
+            {kind: "XV.InputWidget", name: "invoiceNumberWidget", attr: "number"},
             {kind: "XV.DateWidget", attr: "invoiceDate"},
             {kind: "XV.CheckboxWidget", attr: "isPosted"},
             {kind: "XV.CheckboxWidget", attr: "isVoid"},
