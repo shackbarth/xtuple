@@ -223,7 +223,8 @@
         "name": "taxCode",
         "toOne": {
           "type": "TaxCode",
-          "column": "taxhist_tax_id"
+          "column": "taxhist_tax_id",
+          "required": true
         }
       },
       {
