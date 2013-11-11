@@ -185,8 +185,8 @@
             {kind: 'XV.InputWidget', attr: 'number'},
             {kind: 'XV.CheckboxWidget', attr: 'isPosted'},
             {kind: 'XV.SalesCustomerWidget', attr: 'customer'},
-            {kind: 'XV.FundsTypePicker'},
-            {kind: 'XV.CashReceiptApplyOptionsPicker'},
+            {kind: 'XV.FundsTypePicker', onSelect: 'fundsTypeSelected'},
+            {kind: 'XV.CashReceiptApplyOptionsPicker', onSelect: 'applyOptionSelected'},
             {tag: 'hr'},
             {kind: 'XV.DateWidget', attr: 'documentDate'},
             {kind: 'XV.DateWidget', attr: 'distributionDate'},
@@ -219,6 +219,12 @@
 
     valueChanged: function () {
       this.log(this.value);
+    },
+    fundsTypeSelected: function (inSender, inEvent) {
+      this.log(inEvent);
+    },
+    applyOptionSelected: function (inSender, inEvent) {
+      this.log(inEvent);
     }
   });
 

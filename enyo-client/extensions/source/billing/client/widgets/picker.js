@@ -26,8 +26,22 @@ trailing:true, white:true, strict: false*/
       name: 'XV.FundsTypePicker',
       kind: 'XV.PickerWidget',
       collection: 'XM.fundsTypes',
-      nameAttribute: 'key',
-      showNone: false
+      nameAttribute: 'value',
+      label: '_fundsType'.loc(),
+      showNone: false,
+      published: {
+        allowCreditCards: false
+      },
+
+      /**
+       * @override
+       * @see XV.PickerWidget#filter
+       */
+      filter: function (models, options) {
+        return _.filter(models, function (model) {
+          return this.allowCreditCards || !model.isCreditCard();
+        });
+      }
     });
 
     /**
@@ -39,6 +53,7 @@ trailing:true, white:true, strict: false*/
       kind: 'XV.PickerWidget',
       collection: 'XM.cashReceiptApplyOptions',
       nameAttribute: 'key',
+      label: '_applyOption'.loc(),
       showNone: false
     });
   };

@@ -2,12 +2,10 @@
  * Calculate the balance of a XM.CashReceipt
  * balance = amount - applied
  */
-create or replace function xt.cashrcpt_balance(cashrcpt) returns numeric stable as $$
+create or replace function xt.cashrcpt_balance(cashrcpt_id, cashrcpt_amount)
+returns numeric stable as $$
 
   select
-    coalesce($1.cashrcpt_amount - xt.cashrcpt_sum_amount($1, true))
-
-  from
-    cashrcpt;
+    coalesce($2 - xt.cashrcpt_applied_amount($1, true), 0)
 
 $$ language sql;
