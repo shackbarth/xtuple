@@ -18,7 +18,7 @@
     "ejs": "0.8.x",
     "express": "3.1.x",
     "json-patch": "git://github.com/xtuple/JSON-Patch.git",
-    "less": "~1.5.0",
+    "less": "1.5.0",
     "nodemailer": "0.3.x",
     "oauth2orize": "0.1.x",
     "oauth2orize-jwt-bearer": "0.1.x",
@@ -45,7 +45,7 @@
     "html5": "0.3.13",
     "zombie": "1.4.x",
     "vows": "0.7.x",
-    "less": "~1.5.0"
+    "less": "1.5.0"
   },
   "optionalDependencies": {},
   "engines": {
