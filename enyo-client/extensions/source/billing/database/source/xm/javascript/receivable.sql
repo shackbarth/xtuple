@@ -20,7 +20,7 @@ select xt.install_js('XM','Receivable','xtuple', $$
 
     for (var i = 0; i < taxes.length; i++) {
         plv8.elog(NOTICE, "taxes: ", taxes[i]);
-        var taxAmount = taxes[i].amount,
+        var taxAmount = taxes[i].taxAmount,
             taxParent = taxes[i].parent ? XT.Data.getId(XT.Orm.fetch('XM', 'Receivable'), taxes[i].parent) : null,
             taxCodeId = taxes[i].taxCode ? XT.Data.getId(XT.Orm.fetch('XM', 'TaxCode'), taxes[i].taxCode) : null,
             taxTypeId = taxes[i].taxType ? XT.Data.getId(XT.Orm.fetch('XM', 'TaxType'), taxes[i].taxType) : null,
@@ -28,7 +28,7 @@ select xt.install_js('XM','Receivable','xtuple', $$
         var insertTaxSql = "insert into aropentax " +
         "( obj_uuid, taxhist_parent_id, taxhist_tax_id, taxhist_amount, taxhist_curr_id, taxhist_docdate, taxhist_tax, taxhist_basis, taxhist_percent )" +
         "values " +
-        "( $1, $2, $3, $4, $5, $6, $4, 0, 0);";
+        "( $1, $2, $3, 0, $5, $6, $4, 0, 0);";
         plv8.elog(NOTICE, "insert sql: ", insertTaxSql);
         plv8.execute(insertTaxSql, [taxUuid, taxParent, taxCodeId, taxAmount, currencyId, docDate]);
     }

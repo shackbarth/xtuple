@@ -191,7 +191,7 @@
       "all": {
         "create": true,
         "read": true,
-        "update": false,
+        "update": true,
         "delete": false
       }
     },
@@ -223,8 +223,7 @@
         "name": "taxCode",
         "toOne": {
           "type": "TaxCode",
-          "column": "taxhist_tax_id",
-          "required": true
+          "column": "taxhist_tax_id"
         }
       },
       {
@@ -239,6 +238,34 @@
         "attr": {
           "type": "Money",
           "column": "taxhist_amount"
+        }
+      },
+      {
+        "name": "taxAmount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_tax"
+        }
+      },
+      {
+        "name": "basis",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_basis"
+        }
+      },
+      {
+        "name": "percent",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_percent"
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "taxhist_docdate"
         }
       }
     ],

@@ -131,14 +131,24 @@ XT.extensions.billing.initReceivableModel = function () {
       }
     },
 
+    /**
+      Dispatches to database function to post credit memo
+    */
     createCreditMemo: function (params, options) {
       return this.dispatch("XM.Receivable", "createCreditMemo", params, options);
     },
-
+    /**
+      Dispatches to database function to post debit memo
+    */
     createDebitMemo: function (params, options) {
       return this.dispatch("XM.Receivable", "createDebitMemo", params, options);
     },
 
+    /**
+      If this is a new receivable, then this save performs validation and
+      dispatches to post a credit or debit memo. If this is an update, it
+      calls the typical model save.
+    */
     save: function (key, value, options) {
       if (this.getStatus() === XM.Model.READY_NEW) {
         options = options ? _.clone(options) : {};
@@ -164,10 +174,13 @@ XT.extensions.billing.initReceivableModel = function () {
 
         taxes = _.map(taxes, function (m) {
           return {
-            amount: m.get("amount"),
+            taxAmount: m.get("taxAmount"),
             parent: m.get("tax").id,
             taxCode: m.get("taxCode").id,
             taxType: m.get("taxType") ? m.get("taxType").id : null,
+            basis: m.get("basis"),
+            percent: m.get("percent"),
+            documentDate: m.get("documentDate"),
             uuid: m.id
           };
         });
@@ -304,7 +317,33 @@ XT.extensions.billing.initReceivableModel = function () {
   */
   XM.ReceivableTax = XM.Model.extend({
     recordType: 'XM.ReceivableTax',
-    idAttribute: "uuid"
+    idAttribute: "uuid",
+
+    defaults: function () {
+      return {
+        basis: 0,
+        percent: 0,
+        amount: 0
+      };
+    },
+
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on('change:tax', this.parentDidChange);
+      this.on('statusChange', this.statusDidChange);
+    },
+
+    parentDidChange: function () {
+      var parent = this.get("tax");
+      this.set("documentDate", parent.get("documentDate"));
+    },
+
+    statusDidChange: function () {
+      if (this.getStatus() === XM.Model.READY_CLEAN) {
+        this.setReadOnly("taxCode");
+        this.setReadOnly("taxAmount");
+      }
+    },
   });
 
   /**
