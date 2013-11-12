@@ -78,13 +78,9 @@ XT.extensions.billing.initReceivableModel = function () {
        documentNumber, terms
     */
     statusDidChange: function () {
-      if (this.getStatus() === XM.Model.READY_CLEAN) {
-        this.setReadOnly("customer");
-        this.setReadOnly("documentDate");
-        this.setReadOnly("documentType");
-        this.setReadOnly("documentNumber");
-        this.setReadOnly("terms");
-      }
+      var isEdit = this.getStatus() === XM.Model.READY_CLEAN;
+      this.setReadOnly(["customer", "documentDate", "documentType",
+        "documentNumber", "terms"], isEdit);
     },
 
     taxesDidChange: function () {
@@ -364,10 +360,8 @@ XT.extensions.billing.initReceivableModel = function () {
     },
 
     statusDidChange: function () {
-      if (this.getStatus() === XM.Model.READY_CLEAN) {
-        this.setReadOnly("taxCode");
-        this.setReadOnly("taxAmount");
-      }
+      var isEdit = this.getStatus() === XM.Model.READY_CLEAN;
+      this.setReadOnly(["taxCode", "taxAmount"], isEdit);
     },
   });
 
