@@ -62,6 +62,7 @@
     "_salesCategory": "Sales Category",
     "_taxes": "Taxes",
     "_taxTotal": "Tax Total",
+    "unposted": "Unposted",
     "_useCustomerDeposit": "Use Customer Deposit",
     "_viewAROpenItems": "View Receivables",
     "_viewCashReceipts": "View Cash Receipts",
