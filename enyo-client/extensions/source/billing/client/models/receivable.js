@@ -216,6 +216,8 @@ XT.extensions.billing.initReceivableModel = function () {
           that.get("amount"),
           that.get("dueDate"),
           that.get("currency").id,
+          XM.currencyRates.getScalarRate('to base from',
+            that.get("currency"), new Date()),
           that.get("commission"),
           that.get("orderNumber"),
           that.get("notes"),
