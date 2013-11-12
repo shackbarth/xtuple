@@ -17,7 +17,7 @@ trailing:true, white:true*/
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
           classes: "in-panel", components: [
           {kind: "XV.TaxCodePicker", attr: "taxCode"},
-          {kind: "XV.MoneyWidget", attr: {localValue: "amount"},
+          {kind: "XV.MoneyWidget", attr: {localValue: "taxAmount"},
             label: "_amount".loc(), currencyShowing: false}
         ]}
       ]
