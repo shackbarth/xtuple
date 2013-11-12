@@ -21,8 +21,8 @@
     isLockable: true,
     idAttribute: "name",
     enforceUpperKey: false,
-    attributes: ["name", "description", "bankName", "accountNumber", "bankAccountType", "isUsedByBilling",
-      "isUsedByPayments", "notes", "currency"],
+    attributes: ["name", "description", "bankName", "accountNumber", "bankAccountType",
+      "isUsedByBilling", "isUsedByPayments", "notes", "currency"],
     extensions: ["sales", "billing"],
     privileges: {
       createUpdateDelete: "MaintainBankAccounts",
@@ -208,12 +208,15 @@
     @parameter {String} notes
     @parameter {InvoiceRelation} recurringInvoice
     @parameter {Money} allocatedCredit the sum of all allocated credits
-    @parameter {Money} outandingCredit the sum of all unallocated credits, not including cash receipts pending
+    @parameter {Money} outandingCredit the sum of all unallocated credits, not including
+      cash receipts pending
     @parameter {Money} subtotal the sum of the extended price of all line items
-    @parameter {Money} taxTotal the sum of all taxes inluding line items, freight and tax adjustments
+    @parameter {Money} taxTotal the sum of all taxes inluding line items, freight and
+      tax adjustments
     @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
     @parameter {Money} total the calculated total of subtotal + freight + tax + miscCharge
-    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit - outstandingCredit.
+    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit -
+      outstandingCredit.
       - If sum calculates to less than zero, then the balance is zero.
     @parameter {InvoiceAllocation} allocations
     @parameter {InvoiceTax} taxAdjustments
@@ -265,7 +268,8 @@
       "taxAdjustments", "lineItems", "characteristics", "contacts",
       "accounts", "customers", "files", "urls", "items",
       "orderNumber", "orderDate", "salesOrders", // these 3 from sales extension
-      "incidents", "opportunities"], // these 2 from crm
+      "incidents", "opportunities", // these 2 from crm
+      "project", "projects"], // these 2 from project
     requiredAttributes: ["number", "invoiceDate", "isPosted", "isVoid",
       "customer", "commission"],
     defaults: {
@@ -307,7 +311,8 @@
         workspace.$.invoiceLineItemBox.newItem();
         gridRow = workspace.$.invoiceLineItemBox.$.editableGridRow;
         // TODO
-        //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel, site: submodels.siteModel}});
+        //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel,
+          //site: submodels.siteModel}});
         gridRow.$.quantityWidget.doValueChange({value: 5});
 
       }

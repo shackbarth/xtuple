@@ -7,6 +7,7 @@ select xt.install_js('XM','ProjectManagement','project', $$
   XM.ProjectManagement.isDispatchable = true;
 
   XM.ProjectManagement.options = [
+    "UseProjects",
     "DefaultPriority"
   ];
 

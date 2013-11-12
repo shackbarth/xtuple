@@ -263,22 +263,34 @@ white:true*/
     applyIsPostedRules: function () {
       var isPosted = this.get("isPosted");
 
-      this.setReadOnly("lineItems", isPosted);
-      this.setReadOnly("number", isPosted);
-      this.setReadOnly("invoiceDate", isPosted);
-      this.setReadOnly("terms", isPosted);
-      this.setReadOnly("salesRep", isPosted);
-      this.setReadOnly("commission", isPosted);
-      this.setReadOnly("taxZone", isPosted);
-      this.setReadOnly("saleType", isPosted);
+      this.setReadOnly(["lineItems", "number", "invoiceDate", "terms", "salesRep", "commission",
+        "taxZone", "saleType"], isPosted);
     },
 
+    /**
+      Add up the allocated credit. Only complicated because the reduce has
+      to happen asynchronously due to currency conversion
+    */
     calculateAllocatedCredit: function () {
-      var allocatedCredit = _.reduce(this.get("allocations").models, function (memo, allocation) {
-        // TODO: currency conversion
-        return memo + allocation.get("amount");
-      }, 0);
-      this.set("allocatedCredit", allocatedCredit);
+      var invoiceCurrency = this.get("currency"),
+        that = this,
+        reduceFunction = function (memo, allocationModel, callback) {
+          allocationModel.get("currency").toCurrency(
+            invoiceCurrency,
+            allocationModel.get("amount"),
+            new Date(),
+            {
+              success: function (targetValue) {
+                callback(null, memo + targetValue);
+              }
+            }
+          );
+        },
+        finish = function (err, totalAllocatedCredit) {
+          that.set("allocatedCredit", totalAllocatedCredit);
+        };
+
+      async.reduce(this.get("allocations").models, 0, reduceFunction, finish);
     },
 
     calculateAuthorizedCredit: function () {
