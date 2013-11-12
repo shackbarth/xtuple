@@ -39,6 +39,7 @@ XT.extensions.billing.initReceivableModel = function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:amount', this.amountDidChange);
       this.on('change:customer', this.customerDidChange);
+      // combine these two
       this.on('change:documentDate', this.documentDateDidChange);
       this.on('change:terms', this.documentDateDidChange);
       this.on('change:paid', this.paidDidChange);
