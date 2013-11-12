@@ -1,6 +1,9 @@
 enyo.depends(
+  "email.js",
   "account.js",
+  "activity.js",
   "address.js",
+  "bank_account.js",
   "configure.js",
   "contact.js",
   "credit_card.js",
@@ -16,11 +19,12 @@ enyo.depends(
   "ledger_account.js",
   "opportunity.js",
   "priority.js",
-  "project.js",
   "prospect.js",
   "purchase_order.js",
   "sales_order_base.js",
+  "invoice.js",
   "quote.js",
+  "reason_code.js",
   "sales_order.js",
   "sales_rep.js",
   "sales_history.js",
@@ -32,6 +36,7 @@ enyo.depends(
   "url.js",
   "user_account.js",
   "user_chart.js",
-  "static.js",
-  "vendor.js"
+  "vendor.js",
+  "work_order.js",
+  "static.js"
 );

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+regexp:true, undef:true, strict:true, trailing:true, white:true, es5:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
 
 Backbone = require("backbone");
@@ -69,7 +69,7 @@ SYS = {};
   require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
-  
+
   if (typeof X.options.biServer !== 'undefined') {
     require("./olapcatalog");
     require("./lib/ext/olapsource");
@@ -415,8 +415,9 @@ redirectServer.listen(X.options.datasource.redirectPort);
 // TODO - Active browser sessions can make calls to this server when it hasn't fully started.
 // That can cause it to crash at startup.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
-io = socketio.listen(server.listen(X.options.datasource.port));
+io = socketio.listen(server.listen(X.options.datasource.port, X.options.datasource.bindAddress));
 
+X.log("Server listening at: ", X.options.datasource.bindAddress);
 X.log("node-datasource started on port: ", X.options.datasource.port);
 X.log("redirectServer started on port: ", X.options.datasource.redirectPort);
 X.log("Databases accessible from this server: \n", JSON.stringify(X.options.datasource.databases, null, 2));

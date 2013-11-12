@@ -8,17 +8,19 @@
     "url": "https://github.com/xtuple/xtuple.git"
   },
   "dependencies": {
-    "async":"0.2.x",
-    "backbone":"0.9.10",
+    "async": "0.2.x",
+    "backbone": "0.9.10",
     "backbone-relational": "0.8.0",
     "bcrypt": "0.7.x",
-    "colors":"0.6.x",
+    "colors": "0.6.x",
     "commander": "1.2.x",
     "connect-ensure-login": "0.1.x",
     "ejs": "0.8.x",
     "express": "3.1.x",
     "json-patch": "git://github.com/xtuple/JSON-Patch.git",
-    "nodemailer":"0.3.x",
+    "less": "1.5.0",
+    "moment": "2.4.x",
+    "nodemailer": "0.3.x",
     "oauth2orize": "0.1.x",
     "oauth2orize-jwt-bearer": "0.1.x",
     "passport": "0.1.x",
@@ -27,24 +29,24 @@
     "passport-local": "0.1.x",
     "passport-oauth2-client-password": "0.1.x",
     "passport-oauth2-jwt-bearer": "0.1.x",
-    "paynode":"0.3.6",
-    "pg":"0.14.x",
-    "request":"2.14.x",
-    "rimraf":"2.2.x",
+    "paynode": "0.3.6",
+    "pg": "0.14.x",
+    "request": "2.14.x",
+    "rimraf": "2.2.x",
     "rjson": "~0.2.4",
-    "socket.io":"0.9.x",
-    "underscore":"1.4.x",
-    "winston":"0.7.x",
+    "socket.io": "0.9.x",
+    "underscore": "1.4.x",
+    "winston": "0.7.x",
     "xml4js": "git://github.com/rpbouman/xmla4js.git"
   },
   "devDependencies": {
-    "chai":"1.5.x",
-    "mocha":"1.9.x",
-    "require-uncache":"0.0.x",
+    "chai": "1.5.x",
+    "mocha": "1.9.x",
+    "require-uncache": "0.0.x",
     "html5": "0.3.13",
-    "zombie":"1.4.x",
-    "vows":"0.7.x",
-    "less":"1.4.2"
+    "zombie": "1.4.x",
+    "vows": "0.7.x",
+    "less": "1.5.0"
   },
   "optionalDependencies": {},
   "engines": {
@@ -53,7 +55,7 @@
   "main": "node-datasource/main.js",
   "scripts": {
     "test-build": "./node_modules/.bin/mocha -R spec test/mocha/build/build_app.js",
-    "test": "./node_modules/.bin/mocha -R spec test/mocha/lib/login.js test/mocha/models/* test/mocha/database/* test/mocha/extensions/*",
+    "test": "./node_modules/.bin/mocha -R spec test/mocha/lib/login.js test/mocha/models/* test/mocha/database/* test/mocha/extensions/* test/mocha/lib/test_runner.js",
     "test-datasource": "./node_modules/.bin/mocha -R spec test/mocha/routes/*"
   }
 }

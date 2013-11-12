@@ -26,9 +26,11 @@ select xt.install_js('XT','Session','xtuple', $$
             + 'coalesce(locale_qtyper_scale, 6) as "quantityPerScale", '
             + 'coalesce(locale_uomratio_scale, 6) as "unitRatioScale", '
             + 'coalesce(locale_percent_scale, 2) as "percentScale", '
-            + 'coalesce(locale_weight_scale, 2) as "weightScale" '
+            + 'coalesce(locale_weight_scale, 2) as "weightScale", '
+            + 'coalesce(localeext_hours_scale, 2) as "hoursScale" '
             + 'from locale '
             + 'join usr on usr_locale_id = locale_id '
+            + 'left join xt.localeext on locale_id=localeext_id '
             + 'left join lang on locale_lang_id = lang_id '
             + 'left join country on locale_country_id = country_id '
             + 'where usr_username = $1 ',
@@ -70,7 +72,7 @@ select xt.install_js('XT','Session','xtuple', $$
       return JSON.parse(row.dict_strings);
     });
 
-    return JSON.stringify(rec);
+    return rec;
   }
 
   /**
@@ -86,11 +88,11 @@ select xt.install_js('XT','Session','xtuple', $$
       if (XM.hasOwnProperty(type) &&
           XM[type].settings &&
           typeof XM[type].settings === 'function') {
-        settings = XT.extend(settings, JSON.parse(XM[type].settings()));
+        settings = XT.extend(settings, XM[type].settings());
       }
     }
 
-    return JSON.stringify(settings);
+    return settings;
   }
 
   /**
@@ -110,7 +112,7 @@ select xt.install_js('XT','Session','xtuple', $$
               ') grppriv on (grppriv_priv_id=priv_id); '
       rec = plv8.execute(sql, [ XT.username ] );
 
-    return rec.length ? JSON.stringify(rec) : '{}';
+    return rec.length ? rec : {};
   }
 
 
@@ -136,7 +138,7 @@ select xt.install_js('XT','Session','xtuple', $$
     result.map(function (res) {
       resultObj[res.userpref_name] = res.userpref_value;
     });
-    return JSON.stringify(resultObj);
+    return resultObj;
   }
 
   /*
@@ -352,7 +354,8 @@ select xt.install_js('XT','Session','xtuple', $$
       if (propertyIsValid(orm, name)) {
         column = {
           name: name,
-          category: recs[i].category
+          category: recs[i].category,
+          type: XT.Orm.getType(orm, name)
         }
         result[type]['columns'].push(column);
       }
@@ -379,7 +382,7 @@ select xt.install_js('XT','Session','xtuple', $$
       }
     }
 
-    return JSON.stringify(result);
+    return result;
   }
 
 $$ );

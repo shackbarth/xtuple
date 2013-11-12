@@ -164,7 +164,7 @@ clone_repo() {
 	then
 		return 1
 	fi
-	
+
 	cdir $BASEDIR
 	if [ ! -d plv8js ]
 	then
@@ -180,7 +180,7 @@ clone_repo() {
 	else
 		log "Found /usr/src/v8"
 	fi
-	
+
 	cdir $XT_DIR
 	# add remote
 	if [ -z "$(git remote -v | grep xtuple/xtuple.git)" ]
@@ -188,7 +188,7 @@ clone_repo() {
 		log "Adding xtuple remote"
 		su $SUDO_USER -c "git remote add --track master xtuple https://github.com/xtuple/xtuple.git"
 	fi
-	
+
 	if [ $XT_VERSION ]
 	then
 		log "Checking out $XT_VERSION"
@@ -204,9 +204,9 @@ build_deps() {
 	# 3. if not, see if we can download the pre-made deb package
 	# 4. if not, compile from source
 	# the source should be cloned whether we need to compile or not
-	
+
 	cdir $RUN_DIR
-	
+
 	log "Checking if nodejs is installed"
 	dpkg -s nodejs 2>1 > /dev/null
 	if [ $? -eq 0 ]
@@ -214,7 +214,7 @@ build_deps() {
 		log "nodejs is installed."
 	else
 		log "nodejs is not installed"
-		
+
 		log "Looking for nodejs_$NODE_VERSION.deb in $(pwd)"
 		if [ ! -f nodejs_$NODE_VERSION.deb ]
 		then
@@ -246,7 +246,7 @@ build_deps() {
 			dpkg -i nodejs_$NODE_VERSION.deb 2>1 | tee -a $LOG_FILE
 		fi
 	fi
-	
+
 	cdir $RUN_DIR
 	log "Checking if libv8 is installed"
 	dpkg -s libv8 2>1 > /dev/null
@@ -255,7 +255,7 @@ build_deps() {
 		log "libv8 is installed"
 	else
 		log "libv8 is not installed."
-		
+
 		log "Looking for libv8-3.16.5_3.16.5-1_amd64.deb in $(pwd)"
 		if [ -f libv8-3.16.5_3.16.5-1_amd64.deb ]
 		then
@@ -264,7 +264,7 @@ build_deps() {
 		else
 			log "File not found."
 			log "Attempting to download $XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb"
-			
+
 			wget -q $XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb && wait
 			if [ $? -ne 0 ]
 			then
@@ -285,7 +285,7 @@ build_deps() {
 			fi
 		fi
 	fi
-	
+
 	cdir $RUN_DIR
 	log "Checking if plv8js is installed."
 	dpkg -s postgresql-9.1-plv8 2>1 > /dev/null
@@ -294,7 +294,7 @@ build_deps() {
 		log "plv8js is installed"
 	else
 		log "plv8js is not installed"
-		
+
 		log "Looking for postgresql-9.1-plv8_1.4.0-1_amd64.deb in $(pwd)"
 		if [ ! -f postgresql-9.1-plv8_1.4.0-1_amd64.deb ]
 		then
@@ -333,7 +333,7 @@ setup_postgres() {
 	then
 		return 1
 	fi
-	
+
 	PGDIR=/etc/postgresql/9.1/main
 	mv $PGDIR/postgresql.conf $PGDIR/postgresql.conf.default
 	if [ $? -ne 0 ]
@@ -347,12 +347,12 @@ setup_postgres() {
 	chown postgres $PGDIR/pg_hba.conf
 
 	service postgresql restart
-	
+
 	log ""
 	log "Dropping old databases if they already exist..."
 	log ""
 	dropdb -U postgres dev
-	
+
 	cdir $BASEDIR/postgres
 	wget http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
 	wait
@@ -399,7 +399,7 @@ setup_postgres() {
 
 # Pull submodules
 
-pull_modules() { 
+pull_modules() {
 	cdir $XT_DIR
 	git submodule update --init --recursive 2>1 | tee -a $LOG_FILE
 	if [ $? -ne 0 ]
@@ -447,14 +447,14 @@ init_everythings() {
 	log ""
 	log "The database is now set up..."
 	log ""
-	
+
 	mkdir -p $XT_DIR/node-datasource/lib/private
 	cdir $XT_DIR/node-datasource/lib/private
 	cat /dev/urandom | tr -dc '0-9a-zA-Z!@#$%^&*_+-'| head -c 64 > salt.txt
 	log "Created salt"
 	openssl genrsa -des3 -out server.key -passout pass:xtuple 1024 2>1 | tee -a $LOG_FILE
 	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple 2>1 | tee -a $LOG_FILE
-	openssl req -batch -new -key key.pem -out server.csr -subj '/CN=localhost' 2>1 | tee -a $LOG_FILE
+	openssl req -batch -new -key key.pem -out server.csr -subj '/CN='$(hostname) 2>1 | tee -a $LOG_FILE
 	openssl x509 -req -days 365 -in server.csr -signkey key.pem -out server.crt 2>1 | tee -a $LOG_FILE
 	if [ $? -ne 0 ]
 	then
@@ -467,9 +467,9 @@ init_everythings() {
 
 	cdir $XT_DIR
 	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
-	
+
 	psql -U postgres dev -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>1 | tee -a $LOG_FILE
-  
+
 	log ""
 	log "######################################################"
 	log "######################################################"

@@ -41,7 +41,7 @@ white:true*/
 
       quantityAttribute: "toIssue",
 
-      issueMethod: "issueToShipping",
+      issueMethod: "issueItem",
 
       readOnlyAttributes: [
         "atShipping",
@@ -52,7 +52,8 @@ white:true*/
         "returned",
         "site",
         "shipment",
-        "shipped"
+        "shipped",
+        "unit"
       ],
 
       transactionDate: null,
@@ -69,7 +70,7 @@ white:true*/
         this.on("change:toIssue", this.toIssueDidChange);
       },
 
-      canIssueStock: function (callback) {
+      canIssueItem: function (callback) {
         var isShipped = this.getValue("shipment.isShipped") || false,
           hasPrivilege = XT.session.privileges.get("IssueStockToShipping");
         if (callback) {
@@ -78,7 +79,7 @@ white:true*/
         return this;
       },
 
-      canReturnStock: function (callback) {
+      canReturnItem: function (callback) {
         var isShipped = this.getValue("shipment.isShipped") || false,
           hasPrivilege = XT.session.privileges.get("ReturnStockFromShipping"),
           atShipping = this.get("atShipping");
@@ -155,7 +156,7 @@ white:true*/
       @params {Array} Data
       @params {Object} Options
     */
-    XM.Inventory.issueToShipping = function (params, options) {
+    XM.Inventory.issueItem = function (params, options) {
       var obj = XM.Model.prototype;
       obj.dispatch("XM.Inventory", "issueToShipping", params, options);
     };
@@ -166,7 +167,7 @@ white:true*/
       @params {Array} Array of model ids
       @params {Object} Options
     */
-    XM.Inventory.returnFromShipping = function (params, options) {
+    XM.Inventory.returnItem = function (params, options) {
       var obj = XM.Model.prototype;
       obj.dispatch("XM.Inventory", "returnFromShipping", params, options);
     };

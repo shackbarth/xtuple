@@ -1,0 +1,55 @@
+@import 'list.less';
+
+/**
+ * Default ListItem styles when using a ModelDecorator.
+ */
+.xv-list .xv-model-decorator > .xv-list-item {
+
+  .xv-table {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+
+    .xv-cell {
+      display: table-cell;
+    }
+  }
+
+  .xv-list-column {
+
+    &.xv-list-attr {
+      /**
+        * Default styling for a model's id (as designated by 'idAttribute')
+        */
+      &.xm-attribute-id {
+        .xv-list-attr > .hyperlink;
+        .xv-list-attr > .bold;
+
+        cursor: pointer;
+      }
+      &.xm-attribute-name {
+        .xv-list-attr > .bold;
+      }
+
+      &.xm-attributetype-number {
+        text-align: right;
+      }
+      &.xm-attributetype-money {
+        .xm-attributetype-number;
+      }
+      &.xm-attributetype-date {
+        .xm-attributetype-number;
+      }
+
+    }
+  }
+  &.item-selected {
+    .xv-list-attr {
+      color: white;
+      &.xm-attribute-id {
+        color: @bright-orange;
+      }
+    }
+
+  }
+}

@@ -12,11 +12,11 @@
       autoTestAttributes : true,
       createHash: {
         name: "Milky Way" + Math.random(),
-        abbreviation: "MW",
+        abbreviation: "MW" + Math.random(),
         country: {abbreviation: "AO" }
       },
       updateHash: {
-        abbreviation: "XY"
+        abbreviation: "XY" + Math.random()
       }
     };
 

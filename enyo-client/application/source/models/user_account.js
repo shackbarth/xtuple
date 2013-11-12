@@ -47,6 +47,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       expiredColor: "",
       extendedPriceScale: 2,
       futureColor: "",
+      hoursScale: 2,
       percentScale: 2,
       purchasePriceScale: 4,
       quantityPerScale: 6,
@@ -268,6 +269,10 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
     defaults: {
       disableExport: false,
       isActive: true
+    },
+
+    conversionMap: {
+      name: "properName"
     },
 
     bindEvents: function () {

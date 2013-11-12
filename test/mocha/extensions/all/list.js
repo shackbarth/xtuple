@@ -38,11 +38,13 @@
           var child,
             collName,
             recordType,
+            abstractKinds = ['List', 'ConfigurationsList', 'AbbreviationList',
+              'NameList', 'NameDescriptionList', 'TransactionList', 'EmailProfileList', 'SalesCategoryList'],
             master = new enyo.Control();
 
           if (XV.inheritsFrom(value.prototype, "XV.List") &&
               // don't test abstract kinds
-              !_.contains(['List', 'ConfigurationsList', 'AbbreviationList', 'NameList', 'NameDescriptionList'], key)) {
+              !_.contains(abstractKinds, key)) {
 
             describe('XV.' + key, function () {
               it('should have their attrs set up right', function () {

@@ -22,6 +22,15 @@ trailing:true, white:true*/
   // CREDIT CARD
   //
 
+  /**
+    Not your typical list relations box. This box allows you to select
+    a credit card linked with the customer of this workspace, and then
+    authorize or process the credit card. This is accomplished via a
+    custom node route. You can also add a credit card (to the customer,
+    not to the model backing this workspace) on the fly using
+    PopupWorkspace. Magstripe readers are also supported, which will do
+    a similar operation as the popup workspace, without the popup.
+   */
   enyo.kind({
     name: "XV.CreditCardBox",
     kind: "XV.ListRelationsBox",
@@ -298,6 +307,30 @@ trailing:true, white:true*/
     kind: "XV.ListRelationsBox",
     title: "_history".loc(),
     listRelations: "XV.IncidentHistoryListRelations",
+    canOpen: false
+  });
+
+  // ..........................................................
+  // INVOICE ALLOCATIONS
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceAllocationsBox",
+    kind: "XV.ListRelationsBox",
+    parentKey: "invoice",
+    title: "_allocations".loc(),
+    listRelations: "XV.InvoiceAllocationListRelations"
+  });
+
+  // ..........................................................
+  // INVOICE LINE TAX
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceLineTaxBox",
+    kind: "XV.ListRelationsBox",
+    title: "_taxes".loc(),
+    listRelations: "XV.InvoiceLineTaxListRelations",
     canOpen: false
   });
 

@@ -83,7 +83,7 @@
       {
         "name": "scheduleDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "schedule_date"
         }
       },
@@ -1076,6 +1076,7 @@
       {
         "name": "item",
         "toOne": {
+          "required": true,
           "isNested": true,
           "type": "ItemRelation",
           "column": "coitem_item_id",
@@ -1155,7 +1156,7 @@
       {
         "name": "scheduleDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "coitem_scheddate",
           "required": true
         }
@@ -1527,7 +1528,7 @@
       {
         "name": "scheduleDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "schedule_date"
         }
       },

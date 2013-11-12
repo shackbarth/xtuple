@@ -1,10 +1,11 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, XM:true, XV:true, XZ:true, enyo:true */
+/*global XT:true, XM:true, XV:true, XZ:true, enyo:true, XG:true */
 
 // global objects
 enyo = {};
 XT = {};
+XG = {};
 XM = {};
 XV = {};
 XZ = {}; // xTuple Zombie. Used to help zombie within the context of these tests.
@@ -128,6 +129,7 @@ Simplest possible usage:
 
               // add the global objects to our global namespace
               enyo = browser.window.enyo;
+              XG = browser.window.XG;
               XM = browser.window.XM;
               XT = browser.window.XT;
               XV = browser.window.XV;
@@ -138,12 +140,34 @@ Simplest possible usage:
               XT.log = function (message, obj) {
                 if (obj && obj.isError) {
                   // errors from the datasource should cause the test to fail
+                  // I believe this is dead code now that we report these through notify instead
                   console.log(JSON.stringify(obj));
                   assert.fail(JSON.stringify(obj));
                 }
                 // log if verbose mode or if the log is a warning
                 if (verboseMode || (message && message.code)) {
                   console.log(JSON.stringify(arguments));
+                }
+              };
+
+              /*
+              var oldNotify = XT.app.$.postbooks.notify;
+              XT.app.$.postbooks.notify = function (notifySender, notifyObj) {
+                if (notifyObj && notifyObj.type === XM.Model.CRITICAL) {
+                  assert.fail(JSON.stringify(notifyObj));
+                } else {
+                  oldNotify(notifySender, notifyObj);
+                }
+              };
+              */
+              // WIP. Not yet working. Probably need to move it up to earlier app start status.
+              var oldLoc = XT.String.loc;
+              XT.String.loc = function (str) {
+                var localized = XT.localizeString(str);
+                if (localized === str) {
+                  assert.fail(str + " has no translation");
+                } else {
+                  oldLoc(str);
                 }
               };
 

@@ -1,11 +1,31 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true */
+/*global XT:true, XM:true, _:true */
 
 (function () {
 
   "use strict";
+
+  var CREDIT_OK = 0;
+  var CREDIT_WARN = 1;
+  var CREDIT_HOLD = 2;
+  var _checkCredit = function () {
+    var creditStatus = this.getValue("customer.creditStatus"),
+      K = XM.Customer,
+      privs = XT.session.privileges;
+
+    if (this.isNew() && creditStatus !== K.CREDIT_GOOD) {
+      if (creditStatus === K.CREDIT_WARN &&
+        !privs.get("CreateSOForWarnCustomer")) {
+        return CREDIT_WARN;
+      } else if (creditStatus === K.CREDIT_HOLD &&
+        !privs.get("CreateSOForHoldCustomer")) {
+        return CREDIT_HOLD;
+      }
+    }
+    return CREDIT_OK;
+  };
 
   /**
     @class
@@ -32,13 +52,58 @@ white:true*/
       defaults.wasQuote = false;
 
       return defaults;
+    },
+
+    customerDidChange: function () {
+      XM.SalesOrderBase.prototype.customerDidChange.apply(this, arguments);
+      var creditStatus = _checkCredit.call(this),
+        warn = XM.Model.WARNING;
+      if (creditStatus === CREDIT_WARN) {
+        this.notify("_creditWarn".loc(), { type: warn });
+      } else if (creditStatus === CREDIT_HOLD) {
+        this.notify("_creditHold".loc(), { type: warn });
+      }
+    },
+
+    validate: function () {
+      var creditStatus = _checkCredit.call(this);
+      if (creditStatus === CREDIT_WARN) {
+        return XT.Error.clone('xt2022');
+      } else if (creditStatus === CREDIT_HOLD) {
+        return XT.Error.clone('xt2023');
+      }
+
+      return XM.SalesOrderBase.prototype.validate.apply(this, arguments);
     }
   });
 
-  XM.SalesOrder.used = function (id, options) {
-    return XM.ModelMixin.dispatch('XM.SalesOrder', 'used',
-      [id], options);
-  };
+  // ..........................................................
+  // CLASS METHODS
+  //
+  _.extend(XM.SalesOrder, /** @lends XM.SalesOrderBase# */{
+    /**
+      Pass a quote id and receive a sales order in the success callback.
+
+      @param {String} Quote number
+      @param {Object} Options
+      @param {Function} [options.success] Success callback
+      @param {Function} [options.error] Error callback
+    */
+    convertFromQuote: function (id, options) {
+      var success = options.success,
+        proto = this.prototype;
+      options.success = function (data) {
+        data = proto.parse(data);
+        success(data);
+      };
+      proto.dispatch("XM.SalesOrder", "convertFromQuote", [id], options);
+    },
+
+    used: function (id, options) {
+      return XM.ModelMixin.dispatch('XM.SalesOrder', 'used',
+        [id], options);
+    }
+  });
 
   /**
     @class

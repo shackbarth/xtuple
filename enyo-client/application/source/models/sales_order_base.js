@@ -227,6 +227,12 @@ white:true*/
     Mixin for shared quote or sales order functions.
   */
   XM.SalesOrderBaseMixin = {
+    isActive: function () {
+      var K = XM.SalesOrderBase,
+        status = this.get("status");
+      return status === K.OPEN_STATUS;
+    },
+
     /**
     Returns quote or sales order status as a localized string.
 
@@ -234,8 +240,17 @@ white:true*/
     */
     getOrderStatusString: function () {
       var K = XM.SalesOrderBase,
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+        status = this.get('status');
+
+      switch (status)
+      {
+      case K.OPEN_STATUS:
+        return '_open'.loc();
+      case K.CLOSED_STATUS:
+        return '_closed'.loc();
+      case K.CANCELLED_STATUS:
+        return '_cancelled'.loc();
+      }
     }
   };
 
@@ -263,7 +278,8 @@ white:true*/
           freight: 0,
           miscCharge: 0,
           total: 0,
-          site: XT.defaultSite().toJSON()
+          site: XT.defaultSite().toJSON(),
+          currency: XT.baseCurrency().id
         };
 
       // the name of this field is different for different business objects
@@ -657,7 +673,7 @@ white:true*/
           site: customer.get("preferredSite") ?
             XM.Site.findOrCreate({code: customer.get("preferredSite").id}) : // SiteRelation -> Site
             this.get("site"),
-          currency: customer.get("currency")
+          currency: customer.get("currency") || this.get("currency")
         };
         if (billtoContact) {
           _.extend(billtoAttrs, {
@@ -1058,7 +1074,17 @@ white:true*/
       @type String
       @default C
     */
-    CLOSED_STATUS: "C"
+    CLOSED_STATUS: "C",
+
+    /**
+      Order is cancelled.
+
+      @static
+      @constant
+      @type String
+      @default X
+    */
+    CANCELLED_STATUS: "X"
 
   });
 

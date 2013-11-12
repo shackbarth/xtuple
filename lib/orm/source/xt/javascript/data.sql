@@ -34,12 +34,15 @@ select xt.install_js('XT','Data','xtuple', $$
     buildClause: function (nameSpace, type, parameters, orderBy) {
       parameters = parameters || [];
 
-      var charSql,
+      var arrayIdentifiers = [],
+        arrayParams,
+        charSql,
         childOrm,
         clauses = [],
         count = 1,
         identifiers = [],
         list = [],
+        isArray = false,
         op,
         orClause,
         orderByIdentifiers = [],
@@ -69,6 +72,7 @@ select xt.install_js('XT','Data','xtuple', $$
         parameters.push({
           attribute: privileges.personal.properties,
           isLower: true,
+          isUsernamePrivFilter: true,
           value: XT.username
         });
       }
@@ -132,7 +136,7 @@ select xt.install_js('XT','Data','xtuple', $$
               param.value = 'f';
             }
 
-            /* Yeah, it depends on a property called 'charectristics'... */
+            /* Yeah, it depends on a property called 'characteristics'... */
             prop = XT.Orm.getProperty(orm, 'characteristics');
 
             /* Build the characteristics query clause. */
@@ -171,9 +175,31 @@ select xt.install_js('XT','Data','xtuple', $$
               /* Handle paths if applicable. */
               if (param.attribute[c].indexOf('.') > -1) {
                 parts = param.attribute[c].split('.');
-                childOrm = orm;
+                childOrm = this.fetchOrm(nameSpace, type);
                 params.push("");
                 pcount = params.length - 1;
+                isArray = false;
+
+                /* Check if last part is an Array. */
+                for (var m = 0; m < parts.length; m++) {
+                  /* Validate attribute. */
+                  prop = XT.Orm.getProperty(childOrm, parts[m]);
+                  if (!prop) {
+                    plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[m]);
+                  }
+
+                  if (m < parts.length - 1) {
+                    childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                  } else if (prop.attr && prop.attr.type === 'Array') {
+                    /* The last property in the path is an array. */
+                    isArray = true;
+                    params[pcount] = '$' + count;
+                  }
+                }
+
+                /* Reset the childOrm to parent. */
+                childOrm = this.fetchOrm(nameSpace, type);
+
                 for (var n = 0; n < parts.length; n++) {
                   /* Validate attribute. */
                   prop = XT.Orm.getProperty(childOrm, parts[n]);
@@ -181,15 +207,25 @@ select xt.install_js('XT','Data','xtuple', $$
                     plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
                   }
 
-                  /* Build path. e.g. ((%1$I).%2$I).%3$I */
-                  identifiers.push(parts[n]);
-                  params[pcount] += "%" + identifiers.length + "$I";
+                  /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
+                  if (param.isUsernamePrivFilter && isArray) {
+                    identifiers.push(parts[n]);
+                    arrayIdentifiers.push(identifiers.length);
 
-                  if (n < parts.length - 1) {
-                    params[pcount] = "(" + params[pcount] + ").";
-                    childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
-                  } else if (param.isLower) {
-                    params[pcount] = "lower(" + params[pcount] + ")";
+                    if (n < parts.length - 1) {
+                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    }
+                  } else {
+                    /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                    identifiers.push(parts[n]);
+                    params[pcount] += "%" + identifiers.length + "$I";
+
+                    if (n < parts.length - 1) {
+                      params[pcount] = "(" + params[pcount] + ").";
+                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    } else if (param.isLower) {
+                      params[pcount] = "lower(" + params[pcount] + ")";
+                    }
                   }
                 }
               } else {
@@ -198,13 +234,41 @@ select xt.install_js('XT','Data','xtuple', $$
                 if (!prop) {
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
+
                 identifiers.push(param.attribute[c]);
-                params.push("%" + identifiers.length + "$I");
-                pcount = params.length - 1;
+
+                /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
+                if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested) ||
+                  (prop.attr && prop.attr.type === 'Array'))) {
+
+                  params.push('$' + count);
+                  pcount = params.length - 1;
+                  arrayIdentifiers.push(identifiers.length);
+                } else {
+                  params.push("%" + identifiers.length + "$I");
+                  pcount = params.length - 1;
+                }
               }
 
-              /* Add optional is null caluse. */
-              if (parameters[i].includeNull) {
+              /* Add persional privs array search. */
+              if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested)
+                || (prop.attr && prop.attr.type === 'Array') || isArray)) {
+
+                /* e.g. 'admin' = ANY (usernames_array) */
+                arrayParams = "";
+                params[pcount] += ' ' + op + ' ANY (';
+
+                /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                for (var f =0; f < arrayIdentifiers.length; f++) {
+                  arrayParams += '%' + arrayIdentifiers[f] + '$I';
+                  if (f < arrayIdentifiers.length - 1) {
+                    arrayParams = "(" + arrayParams + ").";
+                  }
+                }
+                params[pcount] += arrayParams + ')';
+
+              /* Add optional is null clause. */
+              } else if (parameters[i].includeNull) {
                 /* e.g. %1$I = $1 or %1$I is null */
                 params[pcount] = params[pcount] + " " + op + ' $' + count + ' or ' + params[pcount] + ' is null';
               } else {
@@ -325,7 +389,9 @@ select xt.install_js('XT','Data','xtuple', $$
         this._granted[privilege] = ret;
       }
 
-      if (DEBUG) { XT.debug('Privilege check for "' + XT.username + '" on "' + privilege + '" returns ' + ret); }
+      if (DEBUG) {
+        XT.debug('Privilege check for "' + XT.username + '" on "' + privilege + '" returns ' + ret);
+      }
 
       return ret;
     },
@@ -424,12 +490,23 @@ select xt.install_js('XT','Data','xtuple', $$
                 }
               }
 
-              return ret.toLowerCase();
+              return ret;
             };
 
           while (!isGranted && i < props.length) {
-            var prop = props[i];
-            isGranted = get(record, prop) === XT.username;
+            var prop = props[i],
+                personalUser = get(record, prop);
+
+            if (personalUser instanceof Array) {
+              for (var userIdx = 0; userIdx < personalUser.length; userIdx++) {
+                if (personalUser[userIdx].toLowerCase() === XT.username) {
+                  isGranted = true;
+                }
+              }
+            } else if (personalUser) {
+              isGranted = personalUser.toLowerCase() === XT.username;
+            }
+
             i++;
           }
 
@@ -581,7 +658,9 @@ select xt.install_js('XT','Data','xtuple', $$
         encryptionKey = options.encryptionKey,
         i,
         orm = this.fetchOrm(options.nameSpace, options.type),
-        sql = this.prepareInsert(orm, data, null, encryptionKey);
+        sql = this.prepareInsert(orm, data, null, encryptionKey),
+        pkey = XT.Orm.primaryKey(orm),
+        rec;
 
       /* Handle extensions on the same table. */
       for (var i = 0; i < orm.extensions.length; i++) {
@@ -597,7 +676,9 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       if (sql.statement) {
-        plv8.execute(sql.statement, sql.values);
+        rec = plv8.execute(sql.statement, sql.values);
+        /* Make sure the primary key is populated */
+        if (!data[pkey]) { data[pkey] = rec[0].id; }
       }
 
       /* Handle extensions on other tables. */
@@ -671,7 +752,7 @@ select xt.install_js('XT','Data','xtuple', $$
       count = params.values.length + 1;
 
       /* If no primary key, then create one. */
-      if (!record[pkey]) {
+      if (!record[pkey] && orm.idSequenceName) {
         if (DEBUG) {
           XT.debug('prepareInsert sql =', sql);
           XT.debug('prepareInsert values =', [orm.idSequenceName]);
@@ -705,8 +786,8 @@ select xt.install_js('XT','Data','xtuple', $$
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
-        attributePrivileges = orm.privileges && 
-          orm.privileges.attribute && 
+        attributePrivileges = orm.privileges &&
+          orm.privileges.attribute &&
           orm.privileges.attribute[prop];
 
         if(!attributePrivileges || attributePrivileges.create === undefined) {
@@ -805,6 +886,16 @@ select xt.install_js('XT','Data','xtuple', $$
       } else {
         query = 'insert into %1$I (' + columns + ') values (' + expressions + ')';
         params.statement = XT.format(query, [params.table]);
+      }
+
+      /* If we can get the primary key column we want to return that
+         for cases where it is determined behind the scenes */
+      if (!record[pkey] && !params.primaryKey) {
+        params.primaryKey = XT.Orm.primaryKey(orm, true);
+      }
+
+      if (params.primaryKey) {
+        params.statement = params.statement +  'returning ' + params.primaryKey + ' as id';
       }
 
       if (DEBUG) {
@@ -911,8 +1002,8 @@ select xt.install_js('XT','Data','xtuple', $$
           }
 
           if (sql.statement) {
-	          plv8.execute(sql.statement, sql.values);
-	        }
+            plv8.execute(sql.statement, sql.values);
+          }
         }
       }
 
@@ -993,8 +1084,8 @@ select xt.install_js('XT','Data','xtuple', $$
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop],
 
-        attributePrivileges = orm.privileges && 
-          orm.privileges.attribute && 
+        attributePrivileges = orm.privileges &&
+          orm.privileges.attribute &&
           orm.privileges.attribute[prop];
 
         if(!attributePrivileges || attributePrivileges.update === undefined) {
@@ -1019,7 +1110,7 @@ select xt.install_js('XT','Data','xtuple', $$
               isValidSql = true;
               count++;
             } else {
-	            // TODO - Improve error handling.
+              // TODO - Improve error handling.
               throw new Error("No encryption key provided.");
             }
           } else if (ormp.name !== pkey) {
@@ -1372,7 +1463,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if(ret.length) {
         return ret[0].id;
       } else {
-        throw new handleError("Primary Key not found on " + orm.table + 
+        throw new handleError("Primary Key not found on " + orm.table +
           " where " + ncol + " = " + value, 400);
       }
     },
@@ -1501,7 +1592,7 @@ select xt.install_js('XT','Data','xtuple', $$
         XT.debug('fetch sql1 = ', sql1);
         XT.debug('fetch values = ', clause.parameters);
       }
-      
+
       /* First query for matching ids, then get entire result set. */
       /* This improves performance over a direct query on the view due */
       /* to the way sorting is handled by the query optimizer */
@@ -1512,11 +1603,11 @@ select xt.install_js('XT','Data','xtuple', $$
         idParams.push("$" + counter);
         counter++;
       });
-      
+
       sql2 = XT.format(sql2, [nameSpace.decamelize(), type.decamelize(), key]);
       sql2 = sql2.replace(/{orderBy}/g, clause.orderBy)
                  .replace('{ids}', idParams.join());
-      
+
       if (DEBUG) {
         XT.debug('fetch sql2 = ', sql2);
         XT.debug('fetch values = ', JSON.stringify(ids));
@@ -1632,7 +1723,7 @@ select xt.install_js('XT','Data','xtuple', $$
         if (options.silentError) {
           return false;
         } else {
-          throw new Error("Access Denied.");
+          throw new handleError("Unauthorized", 401);
         }
       }
 
@@ -1661,7 +1752,7 @@ select xt.install_js('XT','Data','xtuple', $$
           if (options.silentError) {
             return false;
           } else {
-            throw new Error("Access Denied.");
+            throw new handleError("Unauthorized", 401);
           }
         }
         /* Decrypt result where applicable. */
@@ -1699,7 +1790,7 @@ select xt.install_js('XT','Data','xtuple', $$
           orm.privileges.attribute : false,
         inclKeys = options.includeKeys,
         superUser = options.superUser,
-		printFormat = options.printFormat,
+        printFormat = options.printFormat,
         c,
         i,
         item,
@@ -1742,54 +1833,54 @@ select xt.install_js('XT','Data','xtuple', $$
 
           /* Remove unprivileged attribute if applicable */
           if (!superUser && attrPriv && attrPriv[prop.name] &&
-            attrPriv[prop.name].view &&
+            (attrPriv[prop.name].view !== undefined) &&
             !this.checkPrivilege(attrPriv[prop.name].view)) {
             delete item[prop.name];
           }
 
-	  	/*  Format for printing if printFormat and not an object */ 
-		if (printFormat && !prop.toOne && !prop.toMany) {
-			switch(prop.attr.type) {
-	     		case "Date":
-	     			item[itemAttr] = XT.formatDate(item[itemAttr]).formatdate;
-					break;
-	     		case "Cost":
-	     			item[itemAttr] = XT.formatCost(item[itemAttr]).formatcost.toString();
-					break;
-	     		case "Number":
-	     			item[itemAttr] = XT.formatNumeric(item[itemAttr], "").formatnumeric.toString();
-					break;
-	     		case "Currency":
-	     			item[itemAttr] = XT.formatMoney(item[itemAttr]).formatmoney.toString();
-					break;
-	     		case "SalesPrice":
-	     			item[itemAttr] = XT.formatSalesPrice(item[itemAttr]).formatsalesprice.toString();
-					break;
-	     		case "PurchasePrice":
-	     			item[itemAttr] = XT.formatPurchPrice(item[itemAttr]).formatpurchprice.toString();
-					break;
-	     		case "ExtendedPrice":
-	     			item[itemAttr] = XT.formatExtPrice(item[itemAttr]).formatextprice.toString();
-					break;
-	     		case "Quantity":
-	     			item[itemAttr] = XT.formatQty(item[itemAttr]).formatqty.toString();
-					break;
-	     		case "QuantityPer":
-	     			item[itemAttr] = XT.formatQtyPer(item[itemAttr]).formatqtyper.toString();
-					break;
-	     		case "UnitRatioScale":
-	     			item[itemAttr] = XT.formatRatio(item[itemAttr]).formatratio.toString();
-					break;
-	     		case "Percent":
-	     			item[itemAttr] = XT.formatPrcnt(item[itemAttr]).formatprcnt.toString();
-					break;
-	     		case "WeightScale":
-	     			item[itemAttr] = XT.formatWeight(item[itemAttr]).formatweight.toString();
-					break;
-	     		default:
-	     			item[itemAttr] = (item[itemAttr] || "").toString();
-	     	}
-	  }
+          /*  Format for printing if printFormat and not an object */
+          if (printFormat && !prop.toOne && !prop.toMany) {
+            switch(prop.attr.type) {
+                case "Date":
+                  item[itemAttr] = XT.formatDate(item[itemAttr]).formatdate;
+                break;
+                case "Cost":
+                  item[itemAttr] = XT.formatCost(item[itemAttr]).formatcost.toString();
+                break;
+                case "Number":
+                  item[itemAttr] = XT.formatNumeric(item[itemAttr], "").formatnumeric.toString();
+                break;
+                case "Currency":
+                  item[itemAttr] = XT.formatMoney(item[itemAttr]).formatmoney.toString();
+                break;
+                case "SalesPrice":
+                  item[itemAttr] = XT.formatSalesPrice(item[itemAttr]).formatsalesprice.toString();
+                break;
+                case "PurchasePrice":
+                  item[itemAttr] = XT.formatPurchPrice(item[itemAttr]).formatpurchprice.toString();
+                break;
+                case "ExtendedPrice":
+                  item[itemAttr] = XT.formatExtPrice(item[itemAttr]).formatextprice.toString();
+                break;
+                case "Quantity":
+                  item[itemAttr] = XT.formatQty(item[itemAttr]).formatqty.toString();
+                break;
+                case "QuantityPer":
+                  item[itemAttr] = XT.formatQtyPer(item[itemAttr]).formatqtyper.toString();
+                break;
+                case "UnitRatioScale":
+                  item[itemAttr] = XT.formatRatio(item[itemAttr]).formatratio.toString();
+                break;
+                case "Percent":
+                  item[itemAttr] = XT.formatPrcnt(item[itemAttr]).formatprcnt.toString();
+                break;
+                case "WeightScale":
+                  item[itemAttr] = XT.formatWeight(item[itemAttr]).formatweight.toString();
+                break;
+                default:
+                  item[itemAttr] = (item[itemAttr] || "").toString();
+              }
+          }
 
           /* Handle composite types */
           if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
@@ -1842,6 +1933,11 @@ select xt.install_js('XT','Data','xtuple', $$
         else if(!isNaN(qry[i].value)) { ret[prop] = qry[i].value - 0; }
         else { ret[prop] = qry[i].value; }
       }
+
+      /* Make sure there is a result at all times */
+      keys.forEach(function (key) {
+        if (ret[key] === undefined) { ret[key] = null; }
+      });
 
       return ret;
     },

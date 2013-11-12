@@ -1,5 +1,5 @@
-/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true,
+noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, X:true, _:true */
 
 (function () {
@@ -23,8 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.nameSpace = "XT";
     payload.type = "Discovery";
     payload.dispatch = {
-      functionName: "getIsRestORMs",
-      isJSON: true
+      functionName: "getIsRestORMs"
     };
 
     // Dummy up session.
@@ -50,14 +49,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return next(new Error("Invalid Request."));
       }
 
-      routeCall(req, res, next, orms, result.data);
+      getServices(req, res, next, orms, result.data);
     };
 
     payload.nameSpace = "XT";
     payload.type = "Discovery";
     payload.dispatch = {
       functionName: "getResources",
-      isJSON: true,
       parameters: [null, rootUrl]
     };
 
@@ -73,12 +71,47 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     routes.queryDatabase("post", payload, session, callback);
   };
 
-  var routeCall = function (req, res, next, orms, resources) {
+  var getServices = function (req, res, next, orms, resources) {
+    var callback = {},
+        payload = {},
+        rootUrl = req.protocol + "://" + req.host + "/",
+        session = {};
+
+    callback = function (result) {
+      if (result.isError) {
+        return next(new Error("Invalid Request."));
+      }
+
+      routeCall(req, res, next, orms, resources, result.data);
+    };
+
+    payload.nameSpace = "XT";
+    payload.type = "Discovery";
+    payload.dispatch = {
+      functionName: "getServices",
+      parameters: [null, rootUrl, true]
+    };
+
+    // Dummy up session.
+    session.passport = {
+      "user": {
+        "id": req.user.get("username"),
+        "username": req.user.get("username"),
+        "organization": req.user.get("organization")
+      }
+    };
+
+    routes.queryDatabase("post", payload, session, callback);
+  };
+
+  var routeCall = function (req, res, next, orms, resources, services) {
     var id,
         error = {error: {}},
         model,
+        resourceModel = false,
         schema,
         searchableAttributes,
+        serviceModel = false,
         payload = {},
         session = {},
         callback = function (resp) {
@@ -113,8 +146,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           req.params.model === value.orm_type.camelToHyphen()) {
         // TODO - Do we need to include "XM" in the name?
         model = value.orm_type;
+        resourceModel = true;
       }
     });
+
+    _.each(services, function (value, key, list) {
+      // Find the matching model from this req URI.
+      if (req.params.model && key && req.params.model === key.camelToHyphen()) {
+        model = key;
+        serviceModel = true;
+      }
+    });
+
+    if (model && resourceModel && serviceModel) {
+      X.err("REST API Error! ");
+      X.err("Found both a matching ORM type and a Service for '" + model +
+        "'. REST Router does not know what to do with this request.");
+      X.err("On path: ", req.path);
+      X.err("Please fix this!!!");
+
+      return res.send(501, "Not Implemented");
+    }
 
     if (!model) {
       return res.send(404, "Not Found");
@@ -212,13 +264,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         break;
       case "HEAD":
-        // Asks for the response identical to the one that would correspond to a GET request, but without the response body.
-        // This is useful for retrieving meta-information written in response headers, without having to transport the entire content.
+        // Asks for the response identical to the one that would correspond to a GET request,
+        // but without the response body. This is useful for retrieving meta-information written
+        // in response headers, without having to transport the entire content.
         // TODO - call head method.
         return res.send(); // HEAD doesn't send a body.
       case "OPTIONS":
         // Returns the HTTP methods that the server supports for specified URL.
-        // This can be used to check the functionality of a web server by requesting '*' instead of a specific resource.
+        // This can be used to check the functionality of a web server by requesting '*' instead
+        // of a specific resource.
         // TODO - call options method.
         return res.send('REST API OPTIONS call to model: ' + model);
       case "PATCH": // Is used to apply partial modifications to a resource.
@@ -235,16 +289,70 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         routes.queryDatabase("patch", payload, session, callback);
 
         break;
-      case "POST": // Requests that the server accept the entity enclosed in the request as a new subordinate of the web resource identified by the URI.
-        if (id || !req.body) {
-          return res.send(404, "Not Found");
-        }
-        // TODO - POST method can also call dispatch functions for "service" endpoints.
-        payload.nameSpace = "XM";
-        payload.type = model;
-        payload.data = req.body;
+      case "POST": // Requests that the server accept the entity enclosed in the request as a
+                  // new subordinate of the web resource identified by the URI.
+        /* POST method can also call dispatch functions for "Service" endpoints. */
+        if (serviceModel) {
+          /* Check service's methods for match. */
+          if (services[model] && services[model].methods &&
+            services[model].methods[id.camelize()]) {
 
-        routes.queryDatabase("post", payload, session, callback);
+            /* Handle Service request. */
+            payload.nameSpace = "XM";
+            payload.type = model;
+            payload.dispatch = {
+              functionName: id.camelize()
+            };
+
+            // TODO: Some services accept an "options" query parameter that is an object.
+            // Not sure how that will work here. May need to get that from req.body on a POST
+            // and not as a query parameter.
+
+            /* Add params in the parameterOrder order. */
+            if (services[model].methods[id.camelize()].parameters &&
+              services[model].methods[id.camelize()].parameterOrder &&
+              services[model].methods[id.camelize()].parameterOrder.length) {
+
+              _.each(services[model].methods[id.camelize()].parameterOrder,
+                function (value, key, list) {
+
+                if (req.query[value]) {
+                  if (!payload.dispatch.parameters) {
+                    payload.dispatch.parameters = [];
+                  }
+                  payload.dispatch.parameters.push(req.query[value]);
+                }
+              });
+
+            /* Add params from the req.body. */
+            } else if (services[model].methods[id.camelize()].parameterOrder &&
+              services[model].methods[id.camelize()].parameterOrder.length) {
+              _.each(services[model].methods[id.camelize()].parameterOrder,
+                function (value, key, list) {
+
+                if (req.body[value]) {
+                  if (!payload.dispatch.parameters) {
+                    payload.dispatch.parameters = [];
+                  }
+                  payload.dispatch.parameters.push(req.body[value]);
+                }
+              });
+            }
+
+            routes.queryDatabase("post", payload, session, callback);
+          } else {
+            return res.send(405, "Method Not Allowed");
+          }
+        } else if (id || !req.body) {
+          return res.send(404, "Not Found");
+        } else {
+          /* Handle Resource request. */
+          payload.nameSpace = "XM";
+          payload.type = model;
+          payload.data = req.body;
+
+          routes.queryDatabase("post", payload, session, callback);
+        }
 
         break;
       case "PUT":

@@ -1,13 +1,14 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XM:true, Backbone:true, _:true */
 
 (function () {
   "use strict";
 
   // These are hard coded collections that may be turned into tables at a later date
-  var i;
+  var i,
+    K;
 
   // Account Type
   var accountTypeJson = [
@@ -102,10 +103,11 @@ white:true*/
   }
 
   // Credit Status
+  K = XM.Customer;
   var creditStatusJson = [
-    { id: "G", name: "_goodStanding".loc() },
-    { id: "W", name: "_creditWarning".loc() },
-    { id: "H", name: "_creditHolding".loc() }
+    { id: K.CREDIT_GOOD, name: "_goodStanding".loc() },
+    { id: K.CREDIT_WARN, name: "_creditWarning".loc() },
+    { id: K.CREDIT_HOLD, name: "_creditHolding".loc() }
   ];
   XM.CreditStatusModel = Backbone.Model.extend({
   });
@@ -119,7 +121,7 @@ white:true*/
   }
 
   // Incident Status (TODO: There is actually already a table for this one...)
-  var K = XM.Incident;
+  K = XM.Incident;
   var incidentStatusJson = [
     { id: K.NEW, name: "_new".loc() },
     { id: K.FEEDBACK, name: "_feedback".loc() },
@@ -213,24 +215,6 @@ white:true*/
   for (i = 0; i < numberPolicyJson.length; i++) {
     var numberPolicy = new XM.NumberPolicyModel(numberPolicyJson[i]);
     XM.numberPolicies.add(numberPolicy);
-  }
-
-  // Project Status
-  K = XM.Project;
-  var projectStatusJson = [
-    { id: K.CONCEPT, name: "_concept".loc() },
-    { id: K.IN_PROCESS, name: "_inProcess".loc() },
-    { id: K.COMPLETED, name: "_completed".loc() }
-  ];
-  XM.ProjectStatusModel = Backbone.Model.extend({
-  });
-  XM.ProjectStatusCollection = Backbone.Collection.extend({
-    model: XM.ProjectStatusModel
-  });
-  XM.projectStatuses = new XM.ProjectStatusCollection();
-  for (i = 0; i < projectStatusJson.length; i++) {
-    var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
-    XM.projectStatuses.add(projectStatus);
   }
 
   // Characteristic Type
@@ -372,5 +356,56 @@ white:true*/
   XM.AttributeCollection = Backbone.Collection.extend({
     model: XM.Attribute
   });
+
+  // Reason Code Document Types
+  K = XM.ReasonCode;
+  var reasonDocTypeJson = [
+    { id: K.DEBIT_MEMO, name: "_debitMemo".loc() },
+    { id: K.CREDIT_MEMO, name: "_creditMemo".loc() }
+  ];
+  XM.ReasonDocTypeModel = Backbone.Model.extend({});
+  XM.ReasonDocTypeCollection = Backbone.Collection.extend({
+    model: XM.ReasonDocTypeModel
+  });
+  XM.reasonCodeDocumentTypes = new XM.ReasonDocTypeCollection();
+  for (i = 0; i < reasonDocTypeJson.length; i++) {
+    var reasonDocType = new XM.ReasonDocTypeModel(reasonDocTypeJson[i]);
+    XM.reasonCodeDocumentTypes.add(reasonDocType);
+  }
+
+  // Bank Account Types
+  K = XM.BankAccount;
+  var bankAccountTypeJson = [
+    { id: K.CASH, name: "_cash".loc() },
+    { id: K.CHECKING, name: "_checking".loc() },
+    { id: K.CREDIT_CARD, name: "_creditCard".loc() }
+  ];
+  XM.BankAccountTypeModel = Backbone.Model.extend({});
+  XM.BankAccountTypeCollection = Backbone.Collection.extend({
+    model: XM.BankAccountTypeModel
+  });
+  XM.bankAccountTypes = new XM.BankAccountTypeCollection();
+  for (i = 0; i < bankAccountTypeJson.length; i++) {
+    var bankAccountType = new XM.BankAccountTypeModel(bankAccountTypeJson[i]);
+    XM.bankAccountTypes.add(bankAccountType);
+  }
+
+  // Workflow Status
+  K = XM.Workflow;
+  var workflowStatusJson = [
+    { id: K.PENDING, name: "_pending".loc() },
+    { id: K.IN_PROCESS, name: "_inProcess".loc() },
+    { id: K.COMPLETED, name: "_completed".loc() },
+    { id: K.DEFERRED, name: "_deferred".loc() },
+  ];
+  XM.WorkflowStatusModel = Backbone.Model.extend({});
+  XM.WorkflowStatusCollection = Backbone.Collection.extend({
+    model: XM.WorkflowStatusModel
+  });
+  XM.workflowStatuses = new XM.WorkflowStatusCollection();
+  for (i = 0; i < workflowStatusJson.length; i++) {
+    var workflowStatus = new XM.ToDoStatusModel(workflowStatusJson[i]);
+    XM.workflowStatuses.add(workflowStatus);
+  }
 
 }());

@@ -42,8 +42,7 @@ regexp:true, undef:true, trailing:true, white:true */
             onfocus: "receiveFocus"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-            {kind: "onyx.IconButton", src: "/assets/triangle-down-large.png",
-              classes: "xv-relationwidget-icon"},
+            {kind: "onyx.IconButton", classes: "icon-folder-open-alt"},
             {name: 'popupMenu', floating: true, kind: "onyx.Menu",
               components: [
               {kind: "XV.MenuItem", name: 'searchItem', content: "_search".loc()},
@@ -178,9 +177,13 @@ regexp:true, undef:true, trailing:true, white:true */
     list: "XV.CustomerList"
   });
 
-  // ..........................................................
-  // CUSTOMER
-  //
+  enyo.kind({
+    name: "XV.BillingCustomerWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.BillingCustomerCollection",
+    query: { parameters: [{attribute: "isActive", value: true}]},
+    list: "XV.CustomerList"
+  });
 
   enyo.kind({
     name: "XV.SalesCustomerWidget",
@@ -188,6 +191,18 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.SalesCustomerCollection",
     list: "XV.CustomerList"
   });
+
+  // ..........................................................
+  // CUSTOMER GROUP
+  //
+  enyo.kind({
+    name: "XV.CustomerGroupWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.CustomerGroupCollection",
+    keyAttribute: "name",
+    list: "XV.CustomerGroupList"
+  });
+
   // ..........................................................
   // CUSTOMER PROSPECT
   //
@@ -698,6 +713,7 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.UserAccountWidget",
+    classes: "xv-useraccount-widget",
     kind: "XV.RelationWidget",
     collection: "XM.UserAccountRelationCollection",
     list: "XV.UserAccountList",
@@ -715,6 +731,18 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.VendorRelationCollection",
     keyAttribute: "number",
     list: "XV.VendorList"
+  });
+
+  // ..........................................................
+  // WORK ORDER
+  //
+
+  enyo.kind({
+    name: "XV.WorkOrderWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.WorkOrderRelationCollection",
+    keyAttribute: "number",
+    list: "XV.WorkOrderList"
   });
 
 }());

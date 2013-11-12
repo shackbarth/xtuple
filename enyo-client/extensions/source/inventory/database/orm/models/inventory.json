@@ -332,6 +332,7 @@
     "nameSpace": "XM",
     "type": "IssueToShipping",
     "table": "xt.coitemship",
+    "isRest": true,
     "comment": "Issue To Shipping Map",
     "privileges": {
       "all": {
@@ -399,7 +400,8 @@
         "name": "unit",
         "toOne": {
           "type": "Unit",
-          "column": "coitem_qty_uom_id"
+          "column": "coitem_qty_uom_id",
+          "isNested": true
         }
       },
       {

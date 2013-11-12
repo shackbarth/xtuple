@@ -1,0 +1,36 @@
+[
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Invoice",
+    "table": "xt.invcheadinfo",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "invchead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "project",
+        "toOne": {
+          "type": "ProjectRelation",
+          "column": "invchead_prj_id"
+        }
+      },
+      {
+        "name": "projects",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceProject",
+          "column": "invchead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }
+]

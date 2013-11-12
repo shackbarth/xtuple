@@ -27,6 +27,8 @@ select xt.install_js('XT','Schema','xtuple', $$
         func,
         schemaTable,
         sql,
+        fetchRes,
+        fetchSql,
         funcSql,
         res,
         funcRes,
@@ -121,7 +123,14 @@ select xt.install_js('XT','Schema','xtuple', $$
 
       /* Set "required" if column is not "is_nullable". */
       if (res[i].is_nullable === "NO") {
-        ret[res[i].column_name].required = true;
+        /* Check if this is a fetchable number. */
+        fetchSql = 'select orderseq_id from orderseq where orderseq_table = $1 and orderseq_numcol = $2;';
+        fetchRes = plv8.execute(fetchSql, [table, res[i].column_name]);
+
+        /* Set to required when this is not a fetchable number. If it is fetchable, see xt.post(). */
+        if (!fetchRes.length) {
+          ret[res[i].column_name].required = true;
+        }
       }
 
       /* Map PostgreSQL datatype to JSON-Schema type and format. */
@@ -267,7 +276,8 @@ select xt.install_js('XT','Schema','xtuple', $$
       return false;
     }
 
-    var columns = [],
+    var attrPriv = orm.privileges && orm.privileges.attribute ? orm.privileges.attribute : false,
+        columns = [],
         ext = {},
         nkey = XT.Orm.naturalKey(orm),
         pkey = XT.Orm.primaryKey(orm),
@@ -306,6 +316,14 @@ select xt.install_js('XT','Schema','xtuple', $$
         continue;
       }
 
+      /* Skip this property if it's ORM column priv is set to false. */
+      /* TODO: Not checking for superuser here. This is more to just check if the column is set to false. */
+      if (attrPriv && attrPriv[orm.properties[i].name] &&
+        (attrPriv[orm.properties[i].name].view !== undefined) &&
+        !XT.Data.checkPrivilege(attrPriv[orm.properties[i].name].view)) {
+        continue;
+      }
+
       if (!ret.properties) {
         /* Initialize properties. */
         ret.properties = {};
@@ -336,7 +354,13 @@ select xt.install_js('XT','Schema','xtuple', $$
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].attr.required) {
-          ret.properties[orm.properties[i].name].required = true;
+          /* Check if this is a fetchable number. */
+          if (orm.orderSequence && orm.properties[i].name === nkey && nkey !== pkey) {
+            /* Do not set this property to required. See xt.post() which will */
+            /* use XM.Model.fetchNumber() for it. */
+          } else {
+            ret.properties[orm.properties[i].name].required = true;
+          }
         }
 
         /* Add key flag. This isn't part of JSON-Schema, but very useful for URIs. */
@@ -426,6 +450,10 @@ select xt.install_js('XT','Schema','xtuple', $$
       if (orm.properties[i].attr && orm.properties[i].attr.column) {
         /* Loop through the returned schemaColumnInfo attributes and add them. */
         for (var attrname in schemaColumnInfo[orm.properties[i].attr.column]) {
+          if (!ret.properties[orm.properties[i].name]) {
+            /* This can happen if the same column name is errantly referenced in different properties */
+            throw new Error("Cannot get property " + orm.properties[i].name + " on ORM " + orm.nameSpace + "." + orm.type);
+          }
           ret.properties[orm.properties[i].name][attrname] = schemaColumnInfo[orm.properties[i].attr.column][attrname];
         }
       }

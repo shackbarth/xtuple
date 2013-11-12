@@ -37,6 +37,24 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // HOURS
+  //
+
+  enyo.kind({
+    name: "XV.Hours",
+    kind: "XV.Number",
+    maxlength: 12,
+    scale: XT.HOURS_SCALE
+  });
+
+  enyo.kind({
+    name: "XV.HoursWidget",
+    kind: "XV.NumberWidget",
+    maxlength: 12,
+    scale: XT.HOURS_SCALE
+  });
+
+  // ..........................................................
   // PERCENT
   //
 

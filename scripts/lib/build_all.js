@@ -48,7 +48,8 @@ var _ = require('underscore'),
             { ext_location: '/core-extensions', ext_name: 'crm' },
             { ext_location: '/core-extensions', ext_name: 'inventory' },
             { ext_location: '/core-extensions', ext_name: 'project' },
-            { ext_location: '/core-extensions', ext_name: 'sales' }
+            { ext_location: '/core-extensions', ext_name: 'sales' },
+            { ext_location: '/core-extensions', ext_name: 'billing' }
           ],
           adaptExtensions = function (err, res) {
             if (err) {
@@ -177,7 +178,8 @@ var _ = require('underscore'),
         path.join(__dirname, '../../enyo-client/extensions/source/crm'),
         path.join(__dirname, '../../enyo-client/extensions/source/inventory'),
         path.join(__dirname, '../../enyo-client/extensions/source/project'),
-        path.join(__dirname, '../../enyo-client/extensions/source/sales')
+        path.join(__dirname, '../../enyo-client/extensions/source/sales'),
+        path.join(__dirname, '../../enyo-client/extensions/source/billing'),
       ];
       buildAll([buildSpecs], creds, callback);
 

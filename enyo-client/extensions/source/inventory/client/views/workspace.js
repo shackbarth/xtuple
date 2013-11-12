@@ -130,6 +130,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ItemSiteWidget", attr:
                 {item: "itemSite.item", site: "itemSite.site"}
               },
+              {kind: "XV.InputWidget", attr: "unit.name", label: "_issueUnit".loc()},
               {kind: "XV.QuantityWidget", attr: "ordered"},
               {kind: "XV.QuantityWidget", attr: "shipped"},
               {kind: "XV.QuantityWidget", attr: "returned"},
@@ -191,6 +192,7 @@ trailing:true, white:true, strict: false*/
         }
         this.inherited(arguments);
       },
+
       distributeDone: function () {
         this._popupDone = true;
         delete this._distModel;
