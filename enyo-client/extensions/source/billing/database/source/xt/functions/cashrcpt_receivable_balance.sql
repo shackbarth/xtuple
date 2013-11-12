@@ -13,5 +13,6 @@ create or replace function xt.cashrcpt_receivable_balance(aropen) returns numeri
     cashrcpt
     inner join cashrcptitem  on (cashrcpt_id = cashrcptitem_cashrcpt_id)
     inner join aropen        on (cashrcptitem_aropen_id = aropen_id)
+  ;
 
 $$ language sql;

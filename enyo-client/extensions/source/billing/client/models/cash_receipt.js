@@ -21,12 +21,10 @@ XT.extensions.billing.initCashReceipt = function () {
         fundsType: XM.CashReceipt.CHECK,
         useCustomerDeposit: false,
         currency: XM.baseCurrency,
-        currencyRate: 1,
+        currencyRate: 1.0,
         applicationDate: new Date(),
-        customer: new XM.SalesCustomer(),
         amount: 0,
         appliedAmount: 0,
-        bankAccount: new XM.BankAccountRelation(),
         balance: 0
       };
     },
