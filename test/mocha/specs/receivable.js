@@ -28,6 +28,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     - Parameter widget should include options for "showClosed", "customerType",
       "customer type pattern"
     - The As Of parameter will only be enabled when unposted and closed are unchecked.
+    - BUG: Currency rate is not being set for amounts not in base currency
   */
 
   var additionalTests = function () {
