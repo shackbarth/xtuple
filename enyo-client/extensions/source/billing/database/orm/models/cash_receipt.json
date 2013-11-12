@@ -142,7 +142,7 @@
         }
       },
       {
-        "name": "posted",
+        "name": "isPosted",
         "attr": {
           "type": "Boolean",
           "column": "posted",
@@ -165,16 +165,16 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "CashReceiptLine",
-    "table": "cashrcptitem",
+    "table": "xt.cashrcptiteminfo",
     "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
     "isRest": true,
     "comment": "Cash Receipt Line Item",
     "privileges": {
       "all": {
-        "create": false,
+        "create": "MaintainCashReceipts",
         "read": "ViewCashReceipts",
-        "update": false,
-        "delete": false
+        "update": "MaintainCashReceipts",
+        "delete": "MaintainCashReceipts"
       }
     },
     "properties": [
@@ -190,7 +190,7 @@
         "name": "cashReceipt",
         "attr": {
           "type": "Number",
-          "column": "cashrcptitem_cashrcpt_id"
+          "column": "cashrcpt_id"
         }
       },
       {
@@ -198,7 +198,7 @@
         "toOne": {
           "isNested": true,
           "type": "CashReceiptReceivable",
-          "column": "cashrcptitem_aropen_id"
+          "column": "aropen_id"
         }
       },
       {
@@ -213,7 +213,7 @@
         "name": "amount",
         "attr": {
           "type": "Money",
-          "column": "cashrcptitem_amount",
+          "column": "amount",
           "required": true
         }
       },
@@ -221,7 +221,7 @@
         "name": "discountAmount",
         "attr": {
           "type": "Money",
-          "column": "cashrcptitem_discount",
+          "column": "discount",
           "required": true
         }
       }
@@ -507,8 +507,7 @@
         "toMany": {
           "column": "aropen_id",
           "inverse": "receivable",
-          "type": "CashReceiptLinePending",
-          "isNested": true
+          "type": "CashReceiptLinePending"
         }
       },
       {
@@ -607,7 +606,7 @@
         }
       },
       {
-        "name": "posted",
+        "name": "isPosted",
         "attr": {
           "type": "Boolean",
           "column": "posted"

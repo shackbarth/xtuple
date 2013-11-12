@@ -17,13 +17,16 @@ XT.extensions.billing.initCashReceipt = function () {
     defaults: function () {
       this.meta = new Backbone.Model();
       return {
-        posted: false,
+        isPosted: false,
         fundsType: XM.CashReceipt.CHECK,
         useCustomerDeposit: false,
         currency: XM.baseCurrency,
         currencyRate: 1,
         applicationDate: new Date(),
+        customer: new XM.SalesCustomer(),
+        amount: 0,
         appliedAmount: 0,
+        bankAccount: new XM.BankAccountRelation(),
         balance: 0
       };
     },
@@ -85,7 +88,7 @@ XT.extensions.billing.initCashReceipt = function () {
     onReadyClean: function (model) {
       /*
        * TODO re-enable 
-      this.setReadOnly(this.get('posted'));
+      this.setReadOnly(this.get('isPosted'));
       */
       this.setReadOnly([
         'amount',
@@ -105,20 +108,12 @@ XT.extensions.billing.initCashReceipt = function () {
       this.set({ currency: customer.get('currency') });
     },
 
-    updateCurrencyRate: function () {
-      // TODO
-    },
-
     /**
      * @listens change:currency
      */
     currencyChanged: function (model, currency) {
       var that = this;
-      this.checkCurrency(function (valid) {
-        if (valid) {
-          that.updateCurrencyRate();
-        }
-      });
+      this.checkCurrency();
     },
 
     /**
@@ -134,13 +129,27 @@ XT.extensions.billing.initCashReceipt = function () {
     },
 
     /**
-     * Warn and notify the user if the the cash receipt's currency does not
-     * match the bank account's.
+     * Check currencies and notify the user if the the cash receipt's currency
+     * does not match the bank account's.
      */
-    checkCurrency: function (callback) {
-      var bankAccount = this.get('bankAccount'),
+    checkCurrency: function (_callback) {
+      var that = this,
+        bankAccount = this.get('bankAccount'),
         bankAccountCurrency = bankAccount.get('currency').get('abbreviation'),
-        cashReceiptCurrency = this.get('currency').get('abbreviation');
+        cashReceiptCurrency = this.get('currency').get('abbreviation'),
+        previousCurrency = that.previousAttributes().currency,
+        callback = function (ok) {
+          if (ok) {
+            return callback(ok);
+          }
+
+          // XXX
+          console.log('canceled currency change from '+ previousCurrency +
+            ' to '+ that.get('currency'));
+
+          that.set({ currency: previousCurrency });
+        };
+
 
       if (bankAccountCurrency !== cashReceiptCurrency && this.meta.get('currencyWarning')) {
         this.notify(
@@ -305,7 +314,7 @@ XT.extensions.billing.initCashReceipt = function () {
         payoff = balance >= (value - (balance * discount)),
 
         /**
-         * As opposted to the discount percentage rate, this is the calculated
+         * As opposed to the discount percentage rate, this is the calculated
          * quantum of discount which is to be subtracted from the amount.
          */
         discountAmount = XT.math.round(payoff ?
@@ -424,10 +433,10 @@ XT.extensions.billing.initCashReceipt = function () {
    * @extends XM.Info
    * @see XM.CashReceipt
    */
-  XM.CashReceiptLineListItem = XM.Info.extend({
-    recordType: 'XM.CashReceiptLineListItem',
-    idAttribute: 'number',
-    editableModel: 'XM.CashReceiptReceivable',
+  XM.CashReceiptLineListItem = XM.CashReceiptLine.extend({
+    //recordType: 'XM.CashReceiptLineListItem',
+    idAttribute: 'uuid',
+    editableModel: 'XM.CashReceiptReceivable'
   });
 
   /**
@@ -445,6 +454,14 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceiptCollection = XM.Collection.extend({
     model: XM.CashReceipt
+  });
+
+  /**
+   * @class XM.CashReceiptCollection
+   * @extends XM.Collection
+   */
+  XM.CashReceiptLineCollection = XM.Collection.extend({
+    model: XM.CashReceiptLine
   });
 
   /**

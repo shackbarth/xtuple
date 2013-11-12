@@ -1,12 +1,11 @@
-/*csslint unique-headings: false, qualified-headings: false, outline-none: false, font-sizes: false,
-shorthand: true, overqualified-elements: false, unqualified-attributes: false,
-universal-selector: false, regex-selectors: false, font-faces: false, bulletproof-font-face: false,
-vendor-prefix: false, adjoining-classes: false, empty-rules: false, star-property-hack: false,
-ids: false, box-sizing: false*/
 /*
   To compile this .less file to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
+
+*/
+/*
+  These variables will show in css as their hex values
 */
 /**
   Import for Font-Awesome icons
@@ -1337,8 +1336,13 @@ ul.icons-ul > li .icon-li {
 /**
  * Default ListItem styles when using a ModelDecorator.
  */
-.xv-list .xv-model-decorator > .xv-list-item .xv-list-column {
-  width: 10em;
+.xv-list .xv-model-decorator > .xv-list-item .xv-table {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-table .xv-cell {
+  display: table-cell;
 }
 .xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr {
   /**
@@ -1352,6 +1356,15 @@ ul.icons-ul > li .icon-li {
 }
 .xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-name {
   font-weight: bold;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-number {
+  text-align: right;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-money {
+  text-align: right;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-date {
+  text-align: right;
 }
 .xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr {
   color: white;
@@ -1771,6 +1784,7 @@ ul.icons-ul > li .icon-li {
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
   min-height: 32px;
+  padding: 2px 36px 2px 2px;
 }
 .xv-list .xv-list-item.header {
   padding-top: 0;
@@ -1841,7 +1855,7 @@ ul.icons-ul > li .icon-li {
 }
 .xv-list .xv-list-item .xv-list-item-gear {
   position: absolute;
-  right: 4px;
+  right: 0px;
   z-index: 999;
 }
 .xv-list-attr {

@@ -25,6 +25,12 @@ XT.extensions.billing.initReceivableModel = function () {
       };
     },
 
+    readOnlyAttributes: [
+      "balance",
+      "taxTotal",
+      "commission"
+    ],
+
     // ..........................................................
     // METHODS
     //
@@ -34,9 +40,10 @@ XT.extensions.billing.initReceivableModel = function () {
       this.on('change:amount', this.amountDidChange);
       this.on('change:customer', this.customerDidChange);
       this.on('change:documentDate', this.documentDateDidChange);
+      this.on('change:terms', this.documentDateDidChange);
       this.on('change:paid', this.paidDidChange);
       this.on('statusChange', this.statusDidChange);
-      this.on('add:taxes remove:taxes', this.taxesDidChange);
+      this.on('change:taxes add:taxes remove:taxes', this.taxesDidChange);
     },
 
     /**
@@ -59,8 +66,9 @@ XT.extensions.billing.initReceivableModel = function () {
        be recalculated using the terms "calculateDueDate" function
     */
     documentDateDidChange: function () {
-      this.set("dueDate", new Date());
+      this.set("dueDate", this.calculateDueDate());
     },
+
     paidDidChange: function () {
       this.set("balance", this.calculateBalance());
     },
@@ -70,14 +78,11 @@ XT.extensions.billing.initReceivableModel = function () {
        documentNumber, terms
     */
     statusDidChange: function () {
-      if (this.getStatus() === XM.Model.READY_CLEAN) {
-        this.setReadOnly("customer");
-        this.setReadOnly("documentDate");
-        this.setReadOnly("documentType");
-        this.setReadOnly("documentNumber");
-        this.setReadOnly("terms");
-      }
+      var isEdit = this.getStatus() === XM.Model.READY_CLEAN;
+      this.setReadOnly(["customer", "documentDate", "documentType",
+        "documentNumber", "terms"], isEdit);
     },
+
     taxesDidChange: function () {
       this.set("taxTotal", this.calculateTaxTotal());
     },
@@ -86,8 +91,11 @@ XT.extensions.billing.initReceivableModel = function () {
       Calculated sum of taxes
     */
     calculateTaxTotal: function () {
-      var taxes = this.get("taxes"),
-        amounts = []; // get amounts from taxes.models
+      var taxes = this.get("taxes");
+      if (!taxes || taxes.length === 0) {
+        return 0;
+      }
+      var amounts = _.map(taxes.models, function (tax) { return tax.get("taxAmount") || 0; });
       return _.reduce(amounts, function (num, memo) {
         return num + memo;
       }, 0);
@@ -115,6 +123,19 @@ XT.extensions.billing.initReceivableModel = function () {
     },
 
     /**
+      Calculate due date using calculateDueDate function
+      on Terms
+    */
+    calculateDueDate: function () {
+      var terms = this.get("terms"),
+        docDate = this.get("documentDate");
+      if (terms && docDate) {
+        return terms.calculateDueDate(docDate);
+      }
+      return null;
+    },
+
+    /**
       Copy the terms, currency, and salesRep from the
       customer
     */
@@ -131,14 +152,24 @@ XT.extensions.billing.initReceivableModel = function () {
       }
     },
 
+    /**
+      Dispatches to database function to post credit memo
+    */
     createCreditMemo: function (params, options) {
       return this.dispatch("XM.Receivable", "createCreditMemo", params, options);
     },
-
+    /**
+      Dispatches to database function to post debit memo
+    */
     createDebitMemo: function (params, options) {
       return this.dispatch("XM.Receivable", "createDebitMemo", params, options);
     },
 
+    /**
+      If this is a new receivable, then this save performs validation and
+      dispatches to post a credit or debit memo. If this is an update, it
+      calls the typical model save.
+    */
     save: function (key, value, options) {
       if (this.getStatus() === XM.Model.READY_NEW) {
         options = options ? _.clone(options) : {};
@@ -160,22 +191,38 @@ XT.extensions.billing.initReceivableModel = function () {
         success = options.success;
 
         var recOptions = {},
-          params = [
-            that.id,
-            that.get("customer").id,
-            that.get("documentNumber"),
-            that.get("documentDate"),
-            that.get("amount"),
-            that.get("dueDate"),
-            that.get("currency").id,
-            that.get("commission"),
-            that.get("orderNumber"),
-            that.get("notes"),
-            that.get("terms").id,
-            that.get("reasonCode").id,
-            that.get("salesRep").id,
-            that.get("paid")
-          ];
+          taxes = that.get("taxes") ? that.get("taxes").models : null;
+
+        taxes = _.map(taxes, function (m) {
+          return {
+            taxAmount: m.get("taxAmount"),
+            parent: m.get("tax").id,
+            taxCode: m.get("taxCode").id,
+            taxType: m.get("taxType") ? m.get("taxType").id : null,
+            basis: m.get("basis"),
+            percent: m.get("percent"),
+            documentDate: m.get("documentDate"),
+            uuid: m.id
+          };
+        });
+
+        var params = [
+          that.id,
+          that.get("customer").id,
+          that.get("documentNumber"),
+          that.get("documentDate"),
+          that.get("amount"),
+          that.get("dueDate"),
+          that.get("currency").id,
+          that.get("commission"),
+          that.get("orderNumber"),
+          that.get("notes"),
+          that.get("terms") ? that.get("terms").id : null,
+          that.get("reasonCode") ? that.get("reasonCode").id : null,
+          that.get("salesRep") ? that.get("salesRep").id : null,
+          that.get("paid"),
+          taxes
+        ];
 
         recOptions.success = function (resp) {
           that.setStatus(XM.Model.READY_CLEAN, options);
@@ -291,7 +338,31 @@ XT.extensions.billing.initReceivableModel = function () {
   */
   XM.ReceivableTax = XM.Model.extend({
     recordType: 'XM.ReceivableTax',
-    idAttribute: "uuid"
+    idAttribute: "uuid",
+
+    defaults: function () {
+      return {
+        basis: 0,
+        percent: 0,
+        amount: 0
+      };
+    },
+
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on('change:tax', this.parentDidChange);
+      this.on('statusChange', this.statusDidChange);
+    },
+
+    parentDidChange: function () {
+      var parent = this.get("tax");
+      this.set("documentDate", parent.get("documentDate"));
+    },
+
+    statusDidChange: function () {
+      var isEdit = this.getStatus() === XM.Model.READY_CLEAN;
+      this.setReadOnly(["taxCode", "taxAmount"], isEdit);
+    },
   });
 
   /**

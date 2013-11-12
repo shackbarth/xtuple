@@ -194,7 +194,7 @@
        */
       XM.currencyRates.add(_.pluck(plan, 'currency'));
       XM.currencyRates.fetch({
-        query: _.clone(XM.CurrencyRate.buildQuery(asof)),
+        query: _.clone(XM.CurrencyRate.buildQuery(asof)), // XXX forgot why I cloned this...
         success: function (collection) {
           if (collection.length > 0) {
             return onRatesSuccess();

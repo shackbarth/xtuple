@@ -191,7 +191,7 @@
       "all": {
         "create": true,
         "read": true,
-        "update": false,
+        "update": true,
         "delete": false
       }
     },
@@ -227,10 +227,45 @@
         }
       },
       {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "taxhist_taxtype_id"
+        }
+      },
+      {
         "name": "amount",
         "attr": {
           "type": "Money",
           "column": "taxhist_amount"
+        }
+      },
+      {
+        "name": "taxAmount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_tax"
+        }
+      },
+      {
+        "name": "basis",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_basis"
+        }
+      },
+      {
+        "name": "percent",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_percent"
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "taxhist_docdate"
         }
       }
     ],
@@ -300,7 +335,7 @@
       {
         "name": "customer",
         "toOne": {
-          "type": "CustomerRelation",
+          "type": "SalesCustomer",
           "column": "customer",
           "isNested": true
         }

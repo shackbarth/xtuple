@@ -49,10 +49,10 @@ XT.extensions.billing.initLists = function () {
     kind: 'XV.List',
     view: 'XM.CashReceiptView',
     label: '_cashReceipts'.loc(),
-    collection: 'XM.CashReceiptLineCollection',
+    collection: 'XM.CashReceiptLineListItemCollection',
     components: [
       {kind: 'XV.ListItemDecorator', components: [
-        {name: 'listItem', kind: 'XV.CashReceiptListItem'}
+        {name: 'listItem', kind: 'XV.CashReceiptLineListItem'}
       ]}
     ]
   });

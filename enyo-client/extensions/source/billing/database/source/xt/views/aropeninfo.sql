@@ -2,7 +2,7 @@ select xt.create_view('xt.aropeninfo', $$
 
   select aropen.*,
     xt.ar_balance(aropen) as balance,
-    xt.ar_tax_total(aropen) as tax_total
+    xt.ar_tax_total(aropen.aropen_id) as tax_total
   from aropen;
 
 $$,false);
