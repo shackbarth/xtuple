@@ -39,7 +39,7 @@ XT.extensions.billing.initReceivableModel = function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:amount', this.amountDidChange);
       this.on('change:customer', this.customerDidChange);
-      // combine these two
+      // combine these
       this.on('change:documentDate', this.documentDateDidChange);
       this.on('change:terms', this.documentDateDidChange);
       this.on('change:paid', this.paidDidChange);
@@ -193,7 +193,8 @@ XT.extensions.billing.initReceivableModel = function () {
 
         var recOptions = {},
           taxes = that.get("taxes") ? that.get("taxes").models : null;
-
+        // construct the array of tax objects to send as a parameter to
+        // the dispatch function
         taxes = _.map(taxes, function (m) {
           return {
             taxAmount: m.get("taxAmount"),
@@ -206,7 +207,7 @@ XT.extensions.billing.initReceivableModel = function () {
             uuid: m.id
           };
         });
-
+        // array of parameters, including taxes, to send to dispatch function
         var params = [
           that.id,
           that.get("customer").id,
