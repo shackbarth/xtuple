@@ -51,18 +51,22 @@ trailing:true, white:true*/
      */
     enyo.kind({
       name: 'XV.CashReceiptApplicationsBox',
-      kind: 'XV.ListRelationsBox',
-      listRelations: 'XV.CashReceiptApplicationsList',
+      kind: 'XV.ListRelationsEditorBox',
+      editor: 'XV.CashReceiptLineEditor',
+      listRelations: 'XV.CashReceiptLineListRelation',
+      childWorkspace: 'XV.CashReceiptReceivableWorkspace',
       title: '_cashReceiptApplications'.loc(),
+      /*
       create: function () {
         this.inherited(arguments);
 
         this.$.buttonsPanel.createComponents([
-          { content: 'Apply Balance' },
-          { content: 'Apply Line' },
-          { content: 'Clear Line' },
+          { content: 'Apply Balance', ontap: 'onApplyBalanceTap' },
+          { content: 'Apply Line', ontap: 'onApplyLineTap' },
+          { content: 'Clear Line', ontap: 'onClearLineTap' },
         ]);
       }
+      */
     });
   };
 

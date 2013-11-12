@@ -5,12 +5,16 @@ XT.extensions.billing.initCashReceiptView = function () {
   /**
    * View of a CashReceipt business object.
    * @class XM.CashReceiptView
+   * @extends XM.EnyoView
+   * @model XM.CashReceipt
    */
   XM.CashReceiptView = XM.EnyoView.extend({
 
     events: {
       'view:notify': 'doNotify',
-      
+      'change:distributionDate': 'onDateChange',
+      'change:applicationDate': 'onDateChange',
+      'change:balance': 'onBalanceChange'
     },
 
     item: {
@@ -75,14 +79,12 @@ XT.extensions.billing.initCashReceiptView = function () {
         },
         {
           type: 'relation',
-          view: 'XM.CashReceiptApplicationsView'  // TODO
-        },
-
+          attribute: 'lineItems'
+        }
       ],
       relations: [
       ]
     }
-
   });
 };
 

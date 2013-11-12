@@ -204,6 +204,8 @@
 
   /**
    * @class XV.CashReceiptWorkspace
+   * @extends XV.Workspace
+   * @presents XM.CashReceiptView
    */
   enyo.kind({
     name: 'XV.CashReceiptWorkspace',
@@ -219,7 +221,7 @@
           {kind: 'XV.ScrollableGroupbox', name: 'mainGroup',
               classes: 'in-panel', components: [
             {kind: 'XV.InputWidget', attr: 'number'},
-            {kind: 'XV.CheckboxWidget', attr: 'isPosted'},
+            {kind: 'XV.CheckboxWidget', attr: 'isPosted', label: '_posted'.loc()},
             {kind: 'XV.SalesCustomerWidget', attr: 'customer'},
             {kind: 'XV.FundsTypePicker', attr: 'fundsType', onSelect: 'fundsTypeSelected'},
             {kind: 'XV.CashReceiptApplyOptionsPicker',
@@ -232,6 +234,7 @@
             {kind: 'XV.DateWidget', attr: 'applicationDate'},
             {tag: 'hr'},
             {kind: 'XV.MoneyWidget',
+              name: 'balance',
               label: '_balance'.loc(),
               attr: { localValue: 'balance', currency: 'currency' },
               disableCurrency: true
@@ -255,12 +258,50 @@
       ]}
     ],
 
+    /**
+     * @see XM.CashReceiptView
+     * @fires XM.CashReceiptView#events
+     */
+    handlers: {
+      onDateChange: 'dateChanged',
+      onBalanceChange: 'balanceChanged',
+      newItem: 'newCashReceiptLineTapped'
+    },
+
+    /**
+     * @listens onValueChange
+     */
     valueChanged: function () {
       this.log(this.value);
     },
 
+    newCashReceiptLineTapped: function (inSender, inEvent) {
+      this.log(inEvent);
+    },
+
+    /**
+     * @listens onBalanceChange
+     */
+    balanceChanged: function (inSender, inEvent) {
+      this.$.balance.addRemoveClass('xv-balance-negative', this.value.get('balance') < 0);
+    },
+
+    /**
+     * @listens onDateChange
+     */
+    dateChanged: function (inSender, inEvent) {
+      if (moment(this.value.get('distributionDate'))
+          .isBefore(this.value.get('applicationDate'))) {
+        this.$.fundsTypePicker.setLabel('_recordReceiptAs'.loc());
+      }
+      else {
+        this.$.fundsTypePicker.setLabel('_applyBalanceAs'.loc());
+      }
+    },
+
     fundsTypeSelected: function (inSender, inEvent) {
       this.log(inEvent);
+      this.log(this.value);
     },
 
     applyOptionSelected: function (inSender, inEvent) {
@@ -270,5 +311,32 @@
 
   XV.registerModelWorkspace('XM.CashReceiptRelation', 'XV.CashReceiptWorkspace');
   XV.registerModelWorkspace('XM.CashReceiptListItem', 'XV.CashReceiptWorkspace');
+
+  /**
+   * @class XV.CashReceiptReceivableWorkspace
+   * @extends XV.Workspace
+   * @presents XM.CashReceiptView
+   */
+  enyo.kind({
+    name: 'XV.CashReceiptReceivableWorkspace',
+    kind: 'XV.Workspace',
+    view: 'XM.CashReceiptView',
+    title: '_cashReceiptReceivable'.loc(),
+
+    components: [
+      {kind: 'Panels', arrangerKind: 'CarouselArranger',
+          fit: true, components: [
+        {kind: 'XV.Groupbox', name: 'mainPanel', components: [
+          {kind: 'onyx.GroupboxHeader', content: '_overview'.loc()},
+          {kind: 'XV.ScrollableGroupbox', name: 'mainGroup',
+              classes: 'in-panel', components: [
+            {kind: 'XV.InputWidget', attr: 'number'}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace('XM.CashReceiptLineListItem', 'XV.CashReceiptReceivableWorkspace');
 
 }());

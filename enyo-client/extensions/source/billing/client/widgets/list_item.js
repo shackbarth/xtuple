@@ -16,8 +16,8 @@ XT.extensions.billing.initSalesCategoryListItem = function () {
   XV.CashReceiptFormatters = {
 
     formatIsPosted: function (inModel, inCell) {
-      var posted = inModel.get('posted');
-      inCell.setContent((posted ? '_posted' : '_notPosted').loc());
+      var posted = inModel.get('isPosted');
+      inCell.setContent((posted ? '_isPosted' : '_isNotPosted').loc());
       inCell.addRemoveClass('isPosted', posted);
     },
 
