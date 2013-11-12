@@ -34,7 +34,7 @@ var buildAll = require('../../../scripts/lib/build_all'),
     });
 
     it('should have core extensions built', function (done) {
-      var sql = "select * from pg_class where relname = 'contact_project';";
+      var sql = "select relname from pg_class where relname = 'contact_project';";
 
       creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
@@ -44,82 +44,6 @@ var buildAll = require('../../../scripts/lib/build_all'),
       });
     });
 
-    /*
-    it('should not have non-core extensions built', function (done) {
-      var sql = "select * from xt.orm where orm_context = 'time_expense';";
-
-      creds.database = databaseName;
-      datasource.query(sql, creds, function (err, res) {
-        assert.isNull(err);
-        assert.equal(res.rowCount, 0);
-        done();
-      });
-    });
-
-    it('should rebuild without error on an existing database', function (done) {
-      buildAll.build({
-        database: databaseName
-      }, function (err, res) {
-        assert.isNull(err);
-        done();
-      });
-    });
-
-    it('should have core extensions built', function (done) {
-      var sql = "select * from pg_class where relname = 'contact_project';";
-
-      creds.database = databaseName;
-      datasource.query(sql, creds, function (err, res) {
-        assert.isNull(err);
-        assert.equal(res.rowCount, 1);
-        done();
-      });
-    });
-
-    it('should not have non-core extensions built', function (done) {
-      var sql = "select * from xt.orm where orm_context = 'time_expense';";
-
-      creds.database = databaseName;
-      datasource.query(sql, creds, function (err, res) {
-        assert.isNull(err);
-        assert.equal(res.rowCount, 0);
-        done();
-      });
-    });
-
-    it('should be able to build an extension', function (done) {
-      buildAll.build({
-        database: databaseName,
-        extension: path.join(__dirname + '../../../../../xtuple-extensions/source/time_expense')
-      }, function (err, res) {
-        assert.isNull(err);
-        done();
-      });
-    });
-
-    it('should have core extensions built', function (done) {
-      var sql = "select * from pg_class where relname = 'contact_project';";
-
-      creds.database = databaseName;
-      datasource.query(sql, creds, function (err, res) {
-        assert.isNull(err);
-        assert.equal(res.rowCount, 1);
-        done();
-      });
-    });
-
-    it('should have the new extension built', function (done) {
-      var sql = "select * from xt.orm where orm_context = 'time_expense';";
-
-      creds.database = databaseName;
-      datasource.query(sql, creds, function (err, res) {
-        assert.isNull(err);
-        assert.notEqual(res.rowCount, 0);
-        done();
-      });
-    });
-
-    */
   });
 }());
 
