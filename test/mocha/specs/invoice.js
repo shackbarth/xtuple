@@ -28,19 +28,6 @@ TODO: the following items are not yet done but need to be done by release
 
 /*
 TODO: from Vinay
-1.      When a customer with non-base currency is selected the following values should be displayed in the foreign currency along with the values in base currency -
-·       Unit price
-·       Extended price
-·       Allocated Credit
-·       Authorized Credit
-·       Margin
-·       Subtotal
-·       Misc. Charge
-·       Freight
-·       Total
-·       Balance
-
-2.      Currency field should be read only after a line item is added to the invoice
 
 3.      When a line item is added/removed, subtotal should be recalculated and displayed (as in Sales order screen)
 
@@ -399,6 +386,15 @@ TODO: from Vinay
         assert.equal(lineModel.get("lineNumber"), 2);
         invoiceModel.get("lineItems").remove(dummyModel);
         // TODO: be more thorough
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Currency field should be read only after a line item is added to the invoice
+      */
+      it("Currency field should be read-only after a line item is added to the invoice",
+          function () {
+        assert.isTrue(invoiceModel.isReadOnly("currency"));
       });
       /**
         @member -
@@ -926,6 +922,17 @@ TODO: from Vinay
       it.skip("has a calculateTax function that works correctly", function () {
         // TODO: put under test
       });
+
+
+      it.skip("When a customer with non-base currency is selected the following values " +
+          "should be displayed in the foreign currency along with the values in base currency " +
+          " - Unit price, Extended price, Allocated Credit, Authorized Credit, Margin, " +
+          "Subtotal, Misc. Charge, Freight, Total, Balance", function () {
+
+        // TODO: put under test (requires postbooks demo to have currency conversion)
+      });
+
+
     });
     describe("Invoice List View", function () {
       /**
