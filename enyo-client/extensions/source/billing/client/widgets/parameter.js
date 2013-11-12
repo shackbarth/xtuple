@@ -101,9 +101,8 @@
         {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
         {name: "customer", attr: "customer", label: "_customer".loc(),
           defaultKind: "XV.SalesCustomerWidget"},
-        // TODO: this is not working
-        // {name: "customerType", attr: "customer.customerType", label: "_customerType".loc(),
-        //   defaultKind: "XV.CustomerTypePicker"},
+        {name: "customerType", attr: "customer.customerType", label: "_customerType".loc(),
+          defaultKind: "XV.CustomerTypePicker"},
         // // TODO:
         // //   - Type Pattern (text)
         // //   - Group
