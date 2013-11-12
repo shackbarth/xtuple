@@ -16,8 +16,9 @@ trailing:true, white:true*/
       components: [
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
           classes: "in-panel", components: [
-          {kind: "XV.InputWidget", attr: "taxCode"},
-          {kind: "XV.NumberWidget", attr: "amount"},
+          {kind: "XV.TaxCodePicker", attr: "taxCode"},
+          {kind: "XV.MoneyWidget", attr: {localValue: "taxAmount"},
+            label: "_amount".loc(), currencyShowing: false}
         ]}
       ]
     });
@@ -29,6 +30,43 @@ trailing:true, white:true*/
       editor: "XV.ReceivableTaxEditor",
       parentKey: "receivable",
       listRelations: "XV.ReceivableTaxListRelations"
+    });
+
+    // ..........................................................
+    // RECEIVABLE APPLICATIONS
+    //
+
+    enyo.kind({
+      name: "XV.ReceivableApplicationsListRelationsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_applications".loc(),
+      parentKey: "receivable",
+      listRelations: "XV.ReceivableApplicationListRelations"
+    });
+
+    /**
+     * @class XV.CashReceiptApplicationsBox
+     * @extends XV.ListRelationsBox
+     * @see XV.CashReceiptApplicationsList
+     */
+    enyo.kind({
+      name: 'XV.CashReceiptApplicationsBox',
+      kind: 'XV.ListRelationsEditorBox',
+      editor: 'XV.CashReceiptLineEditor',
+      listRelations: 'XV.CashReceiptLineListRelation',
+      childWorkspace: 'XV.CashReceiptReceivableWorkspace',
+      title: '_cashReceiptApplications'.loc(),
+      /*
+      create: function () {
+        this.inherited(arguments);
+
+        this.$.buttonsPanel.createComponents([
+          { content: 'Apply Balance', ontap: 'onApplyBalanceTap' },
+          { content: 'Apply Line', ontap: 'onApplyLineTap' },
+          { content: 'Clear Line', ontap: 'onClearLineTap' },
+        ]);
+      }
+      */
     });
   };
 

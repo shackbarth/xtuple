@@ -15,7 +15,7 @@ XT.extensions.billing.initReceivableModel = function () {
     idAttribute: 'uuid',
     nameAttribute: 'documentNumber',
     documentKey: 'documentNumber',
-    numberPolicySetting: XM.Document.AUTO_NUMBER,
+    numberPolicy: XM.Document.AUTO_NUMBER,
 
     defaults: function () {
       return {
@@ -24,6 +24,12 @@ XT.extensions.billing.initReceivableModel = function () {
         taxTotal: 0
       };
     },
+
+    readOnlyAttributes: [
+      "balance",
+      "taxTotal",
+      "commission"
+    ],
 
     // ..........................................................
     // METHODS
@@ -34,9 +40,10 @@ XT.extensions.billing.initReceivableModel = function () {
       this.on('change:amount', this.amountDidChange);
       this.on('change:customer', this.customerDidChange);
       this.on('change:documentDate', this.documentDateDidChange);
+      this.on('change:terms', this.documentDateDidChange);
       this.on('change:paid', this.paidDidChange);
       this.on('statusChange', this.statusDidChange);
-      this.on('add:taxes remove:taxes', this.taxesDidChange);
+      this.on('change:taxes add:taxes remove:taxes', this.taxesDidChange);
     },
 
     /**
@@ -59,8 +66,9 @@ XT.extensions.billing.initReceivableModel = function () {
        be recalculated using the terms "calculateDueDate" function
     */
     documentDateDidChange: function () {
-      this.set("dueDate", new Date());
+      this.set("dueDate", this.calculateDueDate());
     },
+
     paidDidChange: function () {
       this.set("balance", this.calculateBalance());
     },
@@ -70,14 +78,11 @@ XT.extensions.billing.initReceivableModel = function () {
        documentNumber, terms
     */
     statusDidChange: function () {
-      if (this.getStatus() === XM.Model.READY_CLEAN) {
-        this.setReadOnly("customer");
-        this.setReadOnly("documentDate");
-        this.setReadOnly("documentType");
-        this.setReadOnly("documentNumber");
-        this.setReadOnly("terms");
-      }
+      var isEdit = this.getStatus() === XM.Model.READY_CLEAN;
+      this.setReadOnly(["customer", "documentDate", "documentType",
+        "documentNumber", "terms"], isEdit);
     },
+
     taxesDidChange: function () {
       this.set("taxTotal", this.calculateTaxTotal());
     },
@@ -86,7 +91,11 @@ XT.extensions.billing.initReceivableModel = function () {
       Calculated sum of taxes
     */
     calculateTaxTotal: function () {
-      var amounts = _.pluck(this.get("taxes"), "amount");
+      var taxes = this.get("taxes");
+      if (!taxes || taxes.length === 0) {
+        return 0;
+      }
+      var amounts = _.map(taxes.models, function (tax) { return tax.get("taxAmount") || 0; });
       return _.reduce(amounts, function (num, memo) {
         return num + memo;
       }, 0);
@@ -108,9 +117,22 @@ XT.extensions.billing.initReceivableModel = function () {
       var customer = this.get("customer"),
         amount = this.get("amount");
       if (customer) {
-        return customer.get("comission") * amount;
+        return customer.get("commission") * amount;
       }
       return 0;
+    },
+
+    /**
+      Calculate due date using calculateDueDate function
+      on Terms
+    */
+    calculateDueDate: function () {
+      var terms = this.get("terms"),
+        docDate = this.get("documentDate");
+      if (terms && docDate) {
+        return terms.calculateDueDate(docDate);
+      }
+      return null;
     },
 
     /**
@@ -130,32 +152,92 @@ XT.extensions.billing.initReceivableModel = function () {
       }
     },
 
+    /**
+      Dispatches to database function to post credit memo
+    */
     createCreditMemo: function (params, options) {
-      //this.dispatch("XM.Receivable", "createCreditMemo", params, options);
+      return this.dispatch("XM.Receivable", "createCreditMemo", params, options);
     },
-
+    /**
+      Dispatches to database function to post debit memo
+    */
     createDebitMemo: function (params, options) {
-      //this.dispatch("XM.Receivable", "createDebitMemo", params, options);
+      return this.dispatch("XM.Receivable", "createDebitMemo", params, options);
     },
 
     /**
-      When save is called on the XM.Receivable model and the status is READY_NEW:
-      If the documentType is XM.Receivable.CREDIT_MEMO then dispatch XM.Receivable.createCreditMemo
-      If the documentType is XM.Receivable.DEBIT_MEMO then dispatch XM.Receivable.createDebitMemo
+      If this is a new receivable, then this save performs validation and
+      dispatches to post a credit or debit memo. If this is an update, it
+      calls the typical model save.
     */
     save: function (key, value, options) {
       if (this.getStatus() === XM.Model.READY_NEW) {
-        // cannot create a new receivable, dispatch to posts
+        options = options ? _.clone(options) : {};
+        var that = this,
+          success;
 
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          options = value ? _.clone(value) : {};
+        } else {
+          options = options ? _.clone(options) : {};
+        }
+
+        // validate before dispatch
+        if (!this.validate()) {
+          return false;
+        }
+
+        success = options.success;
+
+        var recOptions = {},
+          taxes = that.get("taxes") ? that.get("taxes").models : null;
+
+        taxes = _.map(taxes, function (m) {
+          return {
+            taxAmount: m.get("taxAmount"),
+            parent: m.get("tax").id,
+            taxCode: m.get("taxCode").id,
+            taxType: m.get("taxType") ? m.get("taxType").id : null,
+            basis: m.get("basis"),
+            percent: m.get("percent"),
+            documentDate: m.get("documentDate"),
+            uuid: m.id
+          };
+        });
+
+        var params = [
+          that.id,
+          that.get("customer").id,
+          that.get("documentNumber"),
+          that.get("documentDate"),
+          that.get("amount"),
+          that.get("dueDate"),
+          that.get("currency").id,
+          that.get("commission"),
+          that.get("orderNumber"),
+          that.get("notes"),
+          that.get("terms") ? that.get("terms").id : null,
+          that.get("reasonCode") ? that.get("reasonCode").id : null,
+          that.get("salesRep") ? that.get("salesRep").id : null,
+          that.get("paid"),
+          taxes
+        ];
+
+        recOptions.success = function (resp) {
+          that.setStatus(XM.Model.READY_CLEAN, options);
+          if (success) { success(that, resp, options); }
+        };
+        recOptions.error = function () {};
 
         if (this.isCredit()) {
-          this.createCreditMemo();
+          this.createCreditMemo(params, recOptions);
         } else if (this.isDebit()) {
-          this.createDebitMemo();
+          this.createDebitMemo(params, recOptions);
         }
-      } else { // this is an update, just treat is as normal
-        return XM.Model.prototype.save.call(this, key, value, options);
+        return this;
       }
+      return XM.Model.prototype.save.call(this, key, value, options);
     },
 
     /**
@@ -256,7 +338,31 @@ XT.extensions.billing.initReceivableModel = function () {
   */
   XM.ReceivableTax = XM.Model.extend({
     recordType: 'XM.ReceivableTax',
-    idAttribute: "uuid"
+    idAttribute: "uuid",
+
+    defaults: function () {
+      return {
+        basis: 0,
+        percent: 0,
+        amount: 0
+      };
+    },
+
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on('change:tax', this.parentDidChange);
+      this.on('statusChange', this.statusDidChange);
+    },
+
+    parentDidChange: function () {
+      var parent = this.get("tax");
+      this.set("documentDate", parent.get("documentDate"));
+    },
+
+    statusDidChange: function () {
+      var isEdit = this.getStatus() === XM.Model.READY_CLEAN;
+      this.setReadOnly(["taxCode", "taxAmount"], isEdit);
+    },
   });
 
   /**
@@ -277,12 +383,29 @@ XT.extensions.billing.initReceivableModel = function () {
   XM.ReceivableListItem = XM.Info.extend({
     recordType: 'XM.ReceivableListItem',
     idAttribute: "uuid",
-    editableModel: 'XM.Receivable'
+    editableModel: 'XM.Receivable',
+
+    canOpen: function (callback) {
+      var canView = XT.session.privileges.get("ViewAROpenItems") && this.get("isPosted");
+      if (callback) {
+        callback(canView);
+      }
+      return canView;
+    },
+  });
+
+  XM.ReceivableRelation = XM.Model.extend({
+    recordType: 'XM.ReceivableRelation',
+    idAttribute: 'uuid'
   });
 
   // ..........................................................
   // COLLECTIONS
   //
+
+  XM.ReceivableRelationCollection = XM.Collection.extend({
+    model: XM.ReceivableRelation
+  });
 
   /**
     @class XM.ReceivableListItemCollection
@@ -307,5 +430,18 @@ XT.extensions.billing.initReceivableModel = function () {
     model: XM.ReceivableTax
 
   });
+
+  /**
+    @class XM.ReceivableApplicationCollection
+
+    @extends XM.Collection
+  */
+  XM.ReceivableApplicationCollection = XM.Collection.extend({
+    /** @scope XM.ReceivableTaxCollection.prototype */
+
+    model: XM.ReceivableApplication
+
+  });
+
 
 };

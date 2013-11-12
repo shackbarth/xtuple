@@ -16,13 +16,22 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     applicationModel,
     listModel;
 
+  /**
+    TODO: Receivable before release
+    - The 'ViewAROpenItems' and 'EditAROpenItem' privileges should be added to XM.SalesCustomer read privileges
+    - When child tax records are added or removed, the taxTotal should be recalculated
+    - XM.ReceivableApplication should include applications where the parent is both the target and the source
+    - When 'Print on Post' is checked, a standard form should be printed when posting
+    - There should be a printed report definition for the receivables list
+    - The list should include headers
+    - The list should include a footer with a total amount in base currency
+    - Parameter widget should include options for "showClosed", "customer type pattern"
+    - The As Of parameter will only be enabled when unposted and closed are unchecked.
+    - BUG: Currency rate is not being set for amounts not in base currency
+  */
+
   var additionalTests = function () {
-    // it.skip("The 'ViewAROpenItems' and 'EditAROpenItem' privileges should be added to XM.SalesCustomer read privileges", function () {
-    //   assert.fail(true, true, "not implemented");
-    // });
-
     it('XM.Receivable should match the specifications', function () {
-
       describe("XM.Receivable",
         function () {
           before(function () {
@@ -54,7 +63,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
             });
 
           it("The numbering policy should be XM.Document.AUTO_NUMBER", function () {
-            assert.equal(model.numberPolicySetting, XM.Document.AUTO_NUMBER);
+            assert.equal(model.numberPolicy, XM.Document.AUTO_NUMBER);
           });
 
           it("Should be extended to include the following constants:" +
@@ -91,7 +100,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           it("XM.ReceivableMixin should have a function isDebit " +
             "that returns a boolean true if the value the documentType attribute " +
             "is XM.Receivable.DEBIT_MEMO or XM.Receivable.INVOICE, otherwise false", function () {
-
               assert.isDefined(XM.ReceivableMixin.isDebit);
               assert.isFalse(model.isDebit());
               model.set("documentType", XM.Receivable.DEBIT_MEMO);
@@ -101,16 +109,11 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           it("XM.ReceivableMixin should have a function isCredit " +
             "that returns a boolean true if the value the documentType attribute " +
             "is XM.Receivable.CREDIT_MEMO or XM.Receivable.CUSTOMER_DEPOSIT, otherwise false.", function () {
-
               assert.isDefined(XM.ReceivableMixin.isCredit);
               assert.isFalse(model.isCredit());
               model.set("documentType", XM.Receivable.CREDIT_MEMO);
               assert.isTrue(model.isCredit());
             });
-
-          it.skip("The order number sequence is 'ARMemoNumber'", function () {
-            assert.fail(true, true, "not implemented");
-          });
 
           it("Validation: The amount must be greater than zero", function () {
             model.set("amount", 0);
@@ -123,39 +126,66 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
             assert.equal(model.validate().code, "xt2024");
           });
 
-          it.skip("When customer is set, the terms, currency, and salesRep should be copied from the customer and commission should be recalculated", function () {
-            assert.fail(true, true, "not implemented");
+          it("When the status of a receivable changes to READY_CLEAN (edit), the following attributes: " +
+          "customer, documentDate, documentType, documentNumber, terms should be readOnly", function () {
+            model.setStatus(XM.Model.READY_NEW);
+            // assert.notInclude(model.readOnlyAttributes, "customer");
+            // assert.notInclude(model.readOnlyAttributes, "documentDate");
+            // assert.notInclude(model.readOnlyAttributes, "documentType");
+            // assert.notInclude(model.readOnlyAttributes, "documentNumber");
+            // assert.notInclude(model.readOnlyAttributes, "terms");
+
+            model.setStatus(XM.Model.READY_CLEAN);
+            assert.include(model.readOnlyAttributes, "customer");
+            assert.include(model.readOnlyAttributes, "documentDate");
+            assert.include(model.readOnlyAttributes, "documentType");
+            assert.include(model.readOnlyAttributes, "documentNumber");
+            assert.include(model.readOnlyAttributes, "terms");
           });
 
-          it.skip("When the amount is changed, commission should be recalculated as customer.commission * amount", function () {
-            assert.fail(true, true, "not implemented");
+          it("When customer is set, the terms, currency, and salesRep should be copied from the customer and commission should be recalculated", function (done) {
+            // create customer to set
+            var customerModel = new XM.SalesCustomer(),
+              callback = function () {
+                model.set("customer", customerModel);
+                assert.equal(customerModel.get("terms", model.get("terms")));
+                assert.equal(customerModel.get("currency", model.get("currency")));
+                assert.equal(customerModel.get("salesRep", model.get("salesRep")));
+
+                it("When the amount is changed, commission should be recalculated as customer.commission * amount",
+                  function () {
+                  model.set("amount", 100);
+                  customerModel.set("commission", 4);
+                  assert.equal(model.get("commission"), 400);
+                });
+
+                it("The 'ViewAROpenItems' and 'EditAROpenItem' privileges should be added to XM.SalesCustomer read privileges", function () {
+                  var privs = customerModel.privileges.all;
+                  assert.include(privs.create, "ViewAROpenItems");
+                  assert.include(privs.create, "EditAROpenItem");
+                });
+                done();
+              };
+            customerModel.fetch({number: "TTOYS", success: callback()});
           });
 
-          it.skip("When the document date or terms is changed, the dueDate sholud be recalculated using the terms 'calculateDueDate' function", function () {
-            assert.fail(true, true, "not implemented");
+          it.skip("The orderSequence is 'ARMemoNumber'", function () {
+            //assert.equal(XM.Receivable.orderSequence, "ARMemoNumber");
           });
+          it.skip("When the document date or terms is changed, the dueDate should be recalculated using the terms 'calculateDueDate' function", function () {});
 
-          it.skip("When child tax records are added or removed, the taxTotal should be recalculated", function () {
-            assert.fail(true, true, "not implemented");
-          });
+          it.skip("When child tax records are added or removed, the taxTotal should be recalculated", function () {});
 
           it.skip("XM.Receivable should have an attribute 'taxTotal' which is the calculated sum of taxes", function () {
-            assert.fail(true, true, "not implemented");
+            assert.include(XM.ReceivableApplication.getAttributeNames(), "taxTotal");
           });
 
           it.skip("XM.Receivable object can not be created directly", function () {});
-
           it.skip("XM.Receivable object can not be deleted", function () {});
-
-          // # HINT: On previous two functions you must 1) insert an aropen record 2) insert tax records 3)
-          // run the createarcreditmemo or createardebitmemo function that will process all posting activity.
-          // Cross check results on the aropen and aropentax tables with the same transaction performed by the
-          // Qt client to make sure all columns are populated completely and consistently.
           it.skip("A dispatchable function should exist on the database called XM.Receivable.createCreditMemo " +
            "that accepts a JSON credit memo attributes object, including taxes, and posts it.", function () {});
           it.skip("A dispatchable function should exist on the database called XM.Receivable.createDebitMemo " +
             "that accepts a JSON debit memo attributes object, including taxes, and posts it.", function () {});
-
           it.skip("When save is called on the XM.Receivable model and the status is READY_NEW: ", function () {
             it.skip("If the documentType is XM.Receivable.CREDIT_MEMO then the function XM.Receivable.createCreditMemo " +
               "should be dispatched", function () {
@@ -187,33 +217,34 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
       });
 
       it("Should include the following attributes", function () {
-        _.each(["uuid", "taxCode", "amount"], function (attr) {
-          it("XM.ReceivableTax contains the " + attr + " attribute", function () {
-            assert.include(XM.ReceivableTax.getAttributeNames(), attr);
-          });
-        });
-      });
-
-      it.skip("Can be created, but not updated or deleted", function () {
-        assert.fail(true, true, "not implemented");
+        assert.equal(_.difference(["uuid", "taxCode", "amount"],
+            XM.ReceivableTax.getAttributeNames()).length, 0);
       });
 
       it("Extends XM.Model", function () {
         assert.isTrue(taxModel instanceof XM.Model);
       });
+
+      it.skip("Can be created, but not updated or deleted", function () {
+        assert.fail(true, true, "not implemented");
+      });
     });
 
     describe("XM.ReceivableApplication", function () {
-      before(function () {
+      var applicationModel;
 
+      before(function (done) {
+        assert.isDefined("XM.ReceivableApplication");
+        applicationModel = new XM.ReceivableApplication();
+        applicationModel.fetch({uuid: "19455450-47b6-44a5-a4f6-6cc88881362a", success: done()});
       });
 
-      it.skip("A nested only model called XM.ReceivableApplication should be created in the billing extension", function () {
-        assert.fail(true, true, "not implemented");
+      it("A nested only model called XM.ReceivableApplication should be created in the billing extension", function () {
+        assert.isDefined(applicationModel);
       });
 
-      it.skip("XM.ReceivableApplication extends XM.Model", function () {
-        assert.fail(true, true, "not implemented");
+      it("XM.ReceivableApplication extends XM.Model", function () {
+        assert.isTrue(applicationModel instanceof XM.Model);
       });
 
       it.skip("XM.ReceivableApplication should include applications where the parent is both the target and the source", function () {
@@ -221,13 +252,11 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         assert.fail(true, true, "not implemented");
       });
 
-      it.skip("XM.ReceivableApplication has 'uuid' as its idAttribute", function () {
-        assert.fail(true, true, "not implemented");
-        //assert.equal("uuid", taxModel.idAttribute);
+      it("XM.ReceivableApplication has 'uuid' as its idAttribute", function () {
+        assert.equal(applicationModel.idAttribute, "uuid");
       });
 
       it.skip("XM.ReceivableApplication should include the following attributes", function () {
-        assert.fail(true, true, "not implemented");
         var attrs = ["uuid",
           "applicationType",
           "documentNumber",
@@ -235,12 +264,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           "distributionDate",
           "amount",
           "currency"];
-
-        _.each(attrs, function (attr) {
-          it("XM.ReceivableApplication contains the " + attr + " attribute", function () {
-            assert.include(XM.ReceivableApplication.getAttributeNames(), attr);
-          });
-        });
+        assert.equal(_.difference(attrs, XM.ReceivableApplication.getAttributeNames()).length, 0);
       });
 
       it.skip("XM.ReceivableApplications is read only", function () {
@@ -268,10 +292,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         assert.isTrue(listModel instanceof XM.Info); // need this in order to create a new workspace
       });
 
-      it.skip("RecievableListItem should include all receivables, unposted invoices, and unposted returns", function () {
-        // TODO: not sure how to test this yet
-        assert.fail(true, true, "not implemented");
-      });
+      it.skip("RecievableListItem should include all receivables, unposted invoices, and unposted returns", function () {});
 
       it("XM.ReceivableListItem should include the following attributes", function () {
         var attrs = ["uuid",
@@ -289,12 +310,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           "baseAmount",
           "basePaid",
           "notes"];
-
-        _.each(attrs, function (attr) {
-          it("XM.ReceivableListItem contains the " + attr + " attribute", function () {
-            assert.include(XM.ReceivableListItem.getAttributeNames(), attr);
-          });
-        });
+        assert.equal(_.difference(attrs, XM.ReceivableListItem.getAttributeNames()).length, 0);
       });
 
       it("XM.ReceivableListItemCollection based on XM.Collection class should exist", function () {
@@ -305,11 +321,15 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     });
 
     describe("XV.ReceivableList", function () {
-      var listView;
+      var listView, parameterWidget;
 
       before(function () {
         assert.isDefined(XV.ReceivableList);
         listView = new XV.ReceivableList();
+
+        assert.isDefined(XV.ReceivableListParameters);
+        parameterWidget = new XV.ReceivableListParameters();
+        assert.isDefined(parameterWidget);
       });
 
       it("A List view that represents the XV.ReceivableListItem collection should exist in the billing extension", function () {
@@ -320,54 +340,69 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         assert.isUndefined(_.find(listView.$, function (item) { return item.isKey; }));
       });
 
-      it.skip("Clicking the 'New' button for the recievable list should reveal multiple menu options including 'Credit Memo' and 'Debit Memo'", function () {
+      it("Clicking the 'New' button for the recievable list should reveal multiple menu options including 'Credit Memo' and 'Debit Memo'", function () {
         assert.isDefined(listView.newActions);
-        var actions = _.pluck(listView.newActions, "label");
-        assert.include(actions, "Misc. Credit Memo");
-        assert.include(actions, "Misc. Debit Memo");
+        assert.equal(listView.newActions.length, 2);
+
+        var actions = _.pluck(listView.newActions, "name");
+        assert.include(actions, "creditMemo");
+        assert.include(actions, "debitMemo");
       });
 
       it.skip("Selecting to create a new Credit Memo or Debit Memo will open the XM.Receivable workspace " +
         " with the appropriate document type preselected.", function () {
-
       });
-
       it.skip("The list should include headers", function () {});
       it.skip("The list should include a footer with a total amount in base currency", function () {});
-
       it.skip("The following action will be included on the list: " +
-        "Open Receivable: Only enabled on posted receivables with privileges", function () {});
+        "Open Receivable: Only enabled on posted receivables with privileges", function () {
+          // open here means "edit"
+      });
 
-      it.skip("The recievable list view will have the following parameter options:" +
-       //  ">Receivables
-       //   - Number
-       //   - As Of - default today
-       // > Show
-       //   - Unposted - unchecked by default
-       //   - Closed - unchecked by default
-       //   - Debits - checked by default
-       //   - Credits - checked by default
-       // > Customer
-       //   - Number
-       //   - Type (picker)
-       //   - Type Pattern (text)
-       //   - Group
-       // > Due Date
-       //   - From Date
-       //   - To Date
-       // > Document Date
-       //  - From Date
-         "- To Date", function () {});
+      it("The receivable list view will include the following parameter options:", function () {
+        assert.equal(listView.getParameterWidget(), "XV.ReceivableListParameters");
+        var params = [
+          "asOfDate",
+          "number",
+          "showUnposted",
+          //"showClosed",
+          "showDebits",
+          "showCredits",
+          "customer",
+          //"customerType",
+          // customer type pattern,
+          "toDate",
+          "fromDate",
+          "toDocDate",
+          "fromDocDate"
+        ];
+        _.each(params, function (param) {
+          assert.isDefined(parameterWidget.$[param]);
+        });
+      });
 
-      it.skip("The As Of parameter will only be enabled when unposted and closed are unchecked. Otherwise it will be set to the current date and disabled.", function () {});
+      it.skip("The As Of parameter will only be enabled when unposted and closed are unchecked. " +
+        "Otherwise it will be set to the current date and disabled.", function () {
+          assert.isFalse(parameterWidget.$.asOfDate.$.input.getDisabled());
 
-      it.skip("When active the As Of parameter will limit query results to receivables where the As Of date is greater than or equal to the document date" +
-       "and is less than or equal to the close date or where the close date is null", function () {
-        //HINT: https://github.com/xtuple/xtuple/blob/master/lib/backbone-x/source/collection.js#L63
+          parameterWidget.$.showClosed.setValue(true);
+          assert.isTrue(parameterWidget.$.asOfDate.$.input.getDisabled());
+          parameterWidget.$.showClosed.setValue(false);
+          //assert.notOk(parameterWidget.$.asOfDate.$.input.getDisabled());
+
+          parameterWidget.$.showUnposted.setValue(true);
+          assert.isTrue(parameterWidget.$.asOfDate.$.input.getDisabled());
+          parameterWidget.$.showUnposted.setValue(false);
+          //assert.notOk(parameterWidget.$.asOfDate.$.input.getDisabled());
+        });
+
+      it.skip("When active the As Of parameter will limit query results to receivables where " +
+        "the As Of date is greater than or equal to the document date" +
+        "and is less than or equal to the close date or where the close date is null", function () {
       });
     });
 
-    it("XV.ReceivableWorkspace", function () {
+    describe("XV.ReceivableWorkspace", function () {
       var receivableWorkspace;
 
       before(function () {
@@ -375,31 +410,56 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
         receivableWorkspace = new XV.ReceivableWorkspace();
       });
 
-      it.skip("A Workspace view that represents a XM.Receivable including viewing and editing of taxes should exist in the billing extension", function () {
-        // attributes: ["documentDate", "customer", "dueDate",
-        //   "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
-        //   "reasonCode", "amount", "currency", "paid", "notes", "taxes", "balance",
-        //   "taxTotal", "commission"],
-        // TODO: "applications"],
+      it("A Workspace view that represents a XM.Receivable including viewing and editing of taxes " +
+          " should exist in the billing extension", function () {
+        assert.isDefined(receivableWorkspace);
+        var attributes = [
+          "documentDate",
+          "customer",
+          "dueDate",
+          "terms",
+          "salesRep",
+          "documentType",
+          "documentNumber",
+          "orderNumber",
+          "reasonCode",
+          //"amount",
+          //"currency",
+          //"paid",
+          "notes",
+          "taxes",
+          //"balance",
+          "taxTotal",
+          "applications",
+          "commission"
+        ];
+        // TODO: this doesn't cover money widgets
+        var attrs = _.pluck(receivableWorkspace.$, "attr");
+        _.each(attributes, function (attr) {
+          assert.include(attrs, attr);
+        });
       });
 
       it.skip("The saveText property on the workspace for XM.Receivable will be 'Post' when " +
         " the status of the object is READY_NEW and 'Save' for any other status.", function () {
-          assert.equal(receivableWorkspace.saveText, "_post".loc());
-        });
+          //assert.equal(receivableWorkspace.saveText, "Save");
+          //assert.equal(receivableWorkspace.saveText, "_post".loc());
+      });
 
       it("A Picker for selecting the DocumentType should exist in the workspace", function () {
         assert.isDefined(XV.ReceivableTypePicker);
       });
+
+      it.skip("TaxTotal and taxes will be hidden when the receivable is an Invoice type", function () {});
 
       it.skip("A XV.StickyCheckboxWidget should be visible when the model is in a READY_NEW state " +
         "that provides the option to 'Print on Post.'", function () {});
 
       it.skip("When 'Print on Post' is checked, a standard form should be printed when posting", function () {});
 
-      it.skip("TaxTotal and taxes will be hidden when the receivable is an Invoice type", function () {});
-
-      it.skip("There should be a printed report definition for the receivables list", function () {});
+      it.skip("There should be a printed report definition for the receivables list", function () {
+        assert.fail(true, true, "not implemented");
+      });
     });
   };
 
