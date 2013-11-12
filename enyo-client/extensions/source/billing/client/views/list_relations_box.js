@@ -44,6 +44,30 @@ trailing:true, white:true*/
       listRelations: "XV.ReceivableApplicationListRelations"
     });
 
+    /**
+     * @class XV.CashReceiptApplicationsBox
+     * @extends XV.ListRelationsBox
+     * @see XV.CashReceiptApplicationsList
+     */
+    enyo.kind({
+      name: 'XV.CashReceiptApplicationsBox',
+      kind: 'XV.ListRelationsEditorBox',
+      editor: 'XV.CashReceiptLineEditor',
+      listRelations: 'XV.CashReceiptLineListRelation',
+      childWorkspace: 'XV.CashReceiptReceivableWorkspace',
+      title: '_cashReceiptApplications'.loc(),
+      /*
+      create: function () {
+        this.inherited(arguments);
+
+        this.$.buttonsPanel.createComponents([
+          { content: 'Apply Balance', ontap: 'onApplyBalanceTap' },
+          { content: 'Apply Line', ontap: 'onApplyLineTap' },
+          { content: 'Clear Line', ontap: 'onClearLineTap' },
+        ]);
+      }
+      */
+    });
   };
 
 }());

@@ -1,8 +1,3 @@
-/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
-latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
-/*global XT:true, XM:true, XV:true, enyo:true*/
-
 (function () {
 
   XT.extensions.billing.initWorkspaces = function () {
@@ -152,21 +147,21 @@ trailing:true, white:true*/
   XV.registerModelWorkspace("XM.ReceivableListItem", "XV.ReceivableWorkspace");
 
   enyo.kind({
-    name: "XV.SalesCategoryWorkspace",
-    kind: "XV.Workspace",
-    view: "XM.SalesCategoryView",
-    title: "_salesCategory".loc(),
+    name: 'XV.SalesCategoryWorkspace',
+    kind: 'XV.Workspace',
+    view: 'XM.SalesCategoryView',
+    title: '_salesCategory'.loc(),
 
     components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
+      {kind: 'Panels', arrangerKind: 'CarouselArranger',
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.CheckboxWidget", name: 'isActive', attr: "isActive", disabled: true}
+        {kind: 'XV.Groupbox', name: 'mainPanel', components: [
+          {kind: 'onyx.GroupboxHeader', content: '_overview'.loc()},
+          {kind: 'XV.ScrollableGroupbox', name: 'mainGroup',
+            classes: 'in-panel', components: [
+            {kind: 'XV.InputWidget', attr: 'name'},
+            {kind: 'XV.InputWidget', attr: 'description'},
+            {kind: 'XV.CheckboxWidget', name: 'isActive', attr: 'isActive', disabled: true}
           ]}
         ]}
       ]}
@@ -205,6 +200,145 @@ trailing:true, white:true*/
     }
   });
 
-  XV.registerModelWorkspace("XM.SalesCategory", "XV.SalesCategoryWorkspace");
+  XV.registerModelWorkspace('XM.SalesCategory', 'XV.SalesCategoryWorkspace');
+
+  /**
+   * @class XV.CashReceiptWorkspace
+   * @extends XV.Workspace
+   * @presents XM.CashReceiptView
+   */
+  enyo.kind({
+    name: 'XV.CashReceiptWorkspace',
+    kind: 'XV.Workspace',
+    view: 'XM.CashReceiptView',
+    model: 'XM.CashReceipt',
+    title: '_cashReceipt'.loc(),
+
+    components: [
+      {kind: 'Panels', arrangerKind: 'CarouselArranger',
+          fit: true, components: [
+        {kind: 'XV.Groupbox', name: 'mainPanel', components: [
+          {kind: 'onyx.GroupboxHeader', content: '_overview'.loc()},
+          {kind: 'XV.ScrollableGroupbox', name: 'mainGroup',
+              classes: 'in-panel', components: [
+            {kind: 'XV.InputWidget', attr: 'number'},
+            {kind: 'XV.CheckboxWidget', attr: 'isPosted', label: '_posted'.loc()},
+            {kind: 'XV.SalesCustomerWidget', attr: 'customer'},
+            {kind: 'XV.FundsTypePicker', attr: 'fundsType', onSelect: 'fundsTypeSelected'},
+            {kind: 'XV.CashReceiptApplyOptionsPicker',
+              attr: 'useCustomerDeposit',
+              onSelect: 'applyOptionSelected'
+            },
+            {tag: 'hr'},
+            {kind: 'XV.DateWidget', attr: 'documentDate'},
+            {kind: 'XV.DateWidget', attr: 'distributionDate'},
+            {kind: 'XV.DateWidget', attr: 'applicationDate'},
+            {tag: 'hr'},
+            {kind: 'XV.MoneyWidget',
+              name: 'balance',
+              label: '_balance'.loc(),
+              attr: { localValue: 'balance', currency: 'currency' },
+              disableCurrency: true
+            },
+            {kind: 'XV.MoneyWidget',
+              label: '_amount'.loc(),
+              attr: { localValue: 'amount', currency: 'currency' },
+              disableCurrency: true
+            },
+            {kind: 'XV.MoneyWidget',
+              label: '_appliedAmount'.loc(),
+              attr: { localValue: 'appliedAmount', currency: 'currency' },
+              disableCurrency: true
+            },
+            {kind: 'onyx.GroupboxHeader', content: '_notes'.loc()},
+            {kind: 'XV.TextArea', attr: 'notes'},
+          ]}
+        ]},
+        {kind: 'XV.CashReceiptApplicationsBox', attr: 'lineItems'},
+        {kind: 'XV.CreditCardBox', attr: 'customer.creditCards'}
+      ]}
+    ],
+
+    /**
+     * @see XM.CashReceiptView
+     * @fires XM.CashReceiptView#events
+     */
+    handlers: {
+      onDateChange: 'dateChanged',
+      onBalanceChange: 'balanceChanged',
+      newItem: 'newCashReceiptLineTapped'
+    },
+
+    /**
+     * @listens onValueChange
+     */
+    valueChanged: function () {
+      this.log(this.value);
+    },
+
+    newCashReceiptLineTapped: function (inSender, inEvent) {
+      this.log(inEvent);
+    },
+
+    /**
+     * @listens onBalanceChange
+     */
+    balanceChanged: function (inSender, inEvent) {
+      this.$.balance.addRemoveClass('xv-balance-negative', this.value.get('balance') < 0);
+    },
+
+    /**
+     * @listens onDateChange
+     */
+    dateChanged: function (inSender, inEvent) {
+      if (moment(this.value.get('distributionDate'))
+          .isBefore(this.value.get('applicationDate'))) {
+        this.$.fundsTypePicker.setLabel('_recordReceiptAs'.loc());
+      }
+      else {
+        this.$.fundsTypePicker.setLabel('_applyBalanceAs'.loc());
+      }
+    },
+
+    fundsTypeSelected: function (inSender, inEvent) {
+      this.log(inEvent);
+      this.log(this.value);
+    },
+
+    applyOptionSelected: function (inSender, inEvent) {
+      this.log(inEvent);
+    }
+  });
+
+  XV.registerModelWorkspace('XM.CashReceipt', 'XV.CashReceiptWorkspace');
+  XV.registerModelWorkspace('XM.CashReceiptRelation', 'XV.CashReceiptWorkspace');
+  XV.registerModelWorkspace('XM.CashReceiptListItem', 'XV.CashReceiptWorkspace');
+
+  /**
+   * @class XV.CashReceiptReceivableWorkspace
+   * @extends XV.Workspace
+   * @presents XM.CashReceiptView
+   */
+  enyo.kind({
+    name: 'XV.CashReceiptReceivableWorkspace',
+    kind: 'XV.Workspace',
+    view: 'XM.CashReceiptView',
+    title: '_cashReceiptReceivable'.loc(),
+
+    components: [
+      {kind: 'Panels', arrangerKind: 'CarouselArranger',
+          fit: true, components: [
+        {kind: 'XV.Groupbox', name: 'mainPanel', components: [
+          {kind: 'onyx.GroupboxHeader', content: '_overview'.loc()},
+          {kind: 'XV.ScrollableGroupbox', name: 'mainGroup',
+              classes: 'in-panel', components: [
+            {kind: 'XV.InputWidget', attr: 'number'}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace('XM.CashReceiptLineListItem', 'XV.CashReceiptReceivableWorkspace');
 
 }());

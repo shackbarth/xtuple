@@ -14,11 +14,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     classes: "medium-panel",
     title: "_lineItems".loc(),
     columns: [
-      {classes: "line-number", content: "#", rows: [
+      {classes: "line-number", header: "#", rows: [
         {readOnlyAttr: "lineNumber",
           editor: {kind: "XV.NumberWidget", attr: "lineNumber"}}
       ]},
-      {classes: "grid-item", content: "_item".loc(), rows: [
+      {classes: "grid-item", header: ["_item".loc(), "_site".loc()], rows: [
         {readOnlyAttr: "item.number",
           editor: {kind: "XV.ItemSiteWidget", attr:
           {item: "item", site: "site"},
@@ -32,7 +32,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         {readOnlyAttr: "item.description1"},
         {readOnlyAttr: "site.code"}
       ]},
-      {classes: "quantity", content: "_quantity".loc(), rows: [
+      {classes: "quantity", header: ["_ordered".loc(), "_billed".loc()], rows: [
         {readOnlyAttr: "quantity",
           editor: {kind: "XV.QuantityWidget", attr: "quantity",
             name: "quantityWidget"}},
@@ -43,7 +43,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
           editor: {kind: "XV.UnitCombobox", attr: "quantityUnit",
             name: "quantityUnitPicker", tabStop: false }}
       ]},
-      {classes: "price", content: "_price".loc(), rows: [
+      {classes: "price", header: ["_price".loc(), "_extendedPrice".loc()], rows: [
         {readOnlyAttr: "price",
           editor: {kind: "XV.MoneyWidget",
             attr: {localValue: "price", currency: ""},

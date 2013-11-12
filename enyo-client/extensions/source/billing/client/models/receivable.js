@@ -396,9 +396,18 @@ XT.extensions.billing.initReceivableModel = function () {
     },
   });
 
+  XM.ReceivableRelation = XM.Model.extend({
+    recordType: 'XM.ReceivableRelation',
+    idAttribute: 'uuid'
+  });
+
   // ..........................................................
   // COLLECTIONS
   //
+
+  XM.ReceivableRelationCollection = XM.Collection.extend({
+    model: XM.ReceivableRelation
+  });
 
   /**
     @class XM.ReceivableListItemCollection
@@ -435,5 +444,6 @@ XT.extensions.billing.initReceivableModel = function () {
     model: XM.ReceivableApplication
 
   });
+
 
 };

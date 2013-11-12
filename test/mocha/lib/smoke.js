@@ -1,9 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
-  immed:true, eqeqeq:true, forin:true, latedef:true,
-  newcap:true, noarg:true, undef:true */
-/*global it:true, XT:true, XM:true, XV:true, exports:true, require:true,
-  setTimeout:true, XG:true */
-
 (function () {
   "use strict";
 
@@ -82,7 +76,7 @@
          * that value exists.
          * @listens lock:obtain
          */
-        XG.Tuplespace.once('lock:obtain', function (_model, lock) {
+        XM.Tuplespace.once('lock:obtain', function (_model, lock) {
           // console.log('\na ' + _model.recordType + ' obtained lock!');
 
           workspaceContainer = app.$.postbooks.getActive();

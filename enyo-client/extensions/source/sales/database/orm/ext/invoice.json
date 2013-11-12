@@ -46,7 +46,32 @@
     ],
     "sequence": 0,
     "isSystem": true
-  }, 
+  },
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "InvoiceLine",
+    "table": "xt.invciteminfo",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "invcitem_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "salesOrderLine",
+        "toOne": {
+          "type": "SalesOrderLine",
+          "column": "invcitem_coitem_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
   {
     "context": "sales",
     "nameSpace": "XM",
@@ -71,6 +96,5 @@
     ],
     "sequence": 0,
     "isSystem": true
-  } 
+  }
 ]
-
