@@ -24,9 +24,30 @@ TODO: the following items are not yet done but need to be done by release
     - When clicked, an "allocate" button should present a list of open receivables that are
     credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
+*/
 
+/*
+TODO: from Vinay
+1.      When a customer with non-base currency is selected the following values should be displayed in the foreign currency along with the values in base currency -
+·       Unit price
+·       Extended price
+·       Allocated Credit
+·       Authorized Credit
+·       Margin
+·       Subtotal
+·       Misc. Charge
+·       Freight
+·       Total
+·       Balance
+
+2.      Currency field should be read only after a line item is added to the invoice
+
+3.      When a line item is added/removed, subtotal should be recalculated and displayed (as in Sales order screen)
+
+4.      I have observed that the Allocated Credit box doesn’t respond on selecting the ‘New’ button. There are no test scenarios regarding allocate credit in the Spec document/mocha test document. Could we add scenarios for Allocate Credit to the Invoice test?
 
 */
+
 
 // TODO deferred to later sprint:
 // filter invoice list by customer group
