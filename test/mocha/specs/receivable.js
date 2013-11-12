@@ -25,17 +25,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     - There should be a printed report definition for the receivables list
     - The list should include headers
     - The list should include a footer with a total amount in base currency
-    - Parameter widget should include options for "showClosed", "customerType",
-      "customer type pattern"
+    - Parameter widget should include options for "showClosed", "customer type pattern"
     - The As Of parameter will only be enabled when unposted and closed are unchecked.
     - BUG: Currency rate is not being set for amounts not in base currency
   */
 
   var additionalTests = function () {
-    it.skip("The 'ViewAROpenItems' and 'EditAROpenItem' privileges should be added to XM.SalesCustomer read privileges", function () {
-      assert.fail(true, true, "not implemented");
-    });
-
     it('XM.Receivable should match the specifications', function () {
       describe("XM.Receivable",
         function () {
@@ -162,6 +157,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
                   model.set("amount", 100);
                   customerModel.set("commission", 4);
                   assert.equal(model.get("commission"), 400);
+                });
+
+                it("The 'ViewAROpenItems' and 'EditAROpenItem' privileges should be added to XM.SalesCustomer read privileges", function () {
+                  var privs = customerModel.privileges.all;
+                  assert.include(privs.create, "ViewAROpenItems");
+                  assert.include(privs.create, "EditAROpenItem");
                 });
                 done();
               };
