@@ -23,7 +23,10 @@ XT.extensions.billing.initCashReceipt = function () {
         currency: XM.baseCurrency,
         currencyRate: 1,
         applicationDate: new Date(),
+        customer: new XM.SalesCustomer(),
+        amount: 0,
         appliedAmount: 0,
+        bankAccount: new XM.BankAccountRelation(),
         balance: 0
       };
     },
@@ -451,6 +454,14 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceiptCollection = XM.Collection.extend({
     model: XM.CashReceipt
+  });
+
+  /**
+   * @class XM.CashReceiptCollection
+   * @extends XM.Collection
+   */
+  XM.CashReceiptLineCollection = XM.Collection.extend({
+    model: XM.CashReceiptLine
   });
 
   /**

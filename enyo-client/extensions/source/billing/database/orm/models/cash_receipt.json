@@ -171,10 +171,10 @@
     "comment": "Cash Receipt Line Item",
     "privileges": {
       "all": {
-        "create": false,
+        "create": "MaintainCashReceipts",
         "read": "ViewCashReceipts",
-        "update": false,
-        "delete": false
+        "update": "MaintainCashReceipts",
+        "delete": "MaintainCashReceipts"
       }
     },
     "properties": [

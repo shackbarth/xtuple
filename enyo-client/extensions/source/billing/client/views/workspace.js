@@ -211,6 +211,7 @@
     name: 'XV.CashReceiptWorkspace',
     kind: 'XV.Workspace',
     view: 'XM.CashReceiptView',
+    model: 'XM.CashReceipt',
     title: '_cashReceipt'.loc(),
 
     components: [
@@ -309,6 +310,7 @@
     }
   });
 
+  XV.registerModelWorkspace('XM.CashReceipt', 'XV.CashReceiptWorkspace');
   XV.registerModelWorkspace('XM.CashReceiptRelation', 'XV.CashReceiptWorkspace');
   XV.registerModelWorkspace('XM.CashReceiptListItem', 'XV.CashReceiptWorkspace');
 
