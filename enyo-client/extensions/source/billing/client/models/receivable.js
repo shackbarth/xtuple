@@ -25,6 +25,12 @@ XT.extensions.billing.initReceivableModel = function () {
       };
     },
 
+    readOnlyAttributes: [
+      "balance",
+      "taxTotal",
+      "commission"
+    ],
+
     // ..........................................................
     // METHODS
     //
@@ -33,10 +39,10 @@ XT.extensions.billing.initReceivableModel = function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:amount', this.amountDidChange);
       this.on('change:customer', this.customerDidChange);
-      this.on('change:documentDate', this.documentDateDidChange);
+      this.on('change:documentDate change:terms', this.documentDateDidChange);
       this.on('change:paid', this.paidDidChange);
       this.on('statusChange', this.statusDidChange);
-      this.on('add:taxes remove:taxes', this.taxesDidChange);
+      this.on('change:taxes add:taxes remove:taxes', this.taxesDidChange);
     },
 
     /**
@@ -59,8 +65,9 @@ XT.extensions.billing.initReceivableModel = function () {
        be recalculated using the terms "calculateDueDate" function
     */
     documentDateDidChange: function () {
-      this.set("dueDate", new Date());
+      this.set("dueDate", this.calculateDueDate());
     },
+
     paidDidChange: function () {
       this.set("balance", this.calculateBalance());
     },
@@ -78,6 +85,7 @@ XT.extensions.billing.initReceivableModel = function () {
         this.setReadOnly("terms");
       }
     },
+
     taxesDidChange: function () {
       this.set("taxTotal", this.calculateTaxTotal());
     },
@@ -86,8 +94,11 @@ XT.extensions.billing.initReceivableModel = function () {
       Calculated sum of taxes
     */
     calculateTaxTotal: function () {
-      var taxes = this.get("taxes"),
-        amounts = []; // get amounts from taxes.models
+      var taxes = this.get("taxes");
+      if (!taxes || taxes.length === 0) {
+        return 0;
+      }
+      var amounts = _.map(taxes.models, function (tax) { return tax.get("taxAmount") || 0; });
       return _.reduce(amounts, function (num, memo) {
         return num + memo;
       }, 0);
@@ -112,6 +123,19 @@ XT.extensions.billing.initReceivableModel = function () {
         return customer.get("commission") * amount;
       }
       return 0;
+    },
+
+    /**
+      Calculate due date using calculateDueDate function
+      on Terms
+    */
+    calculateDueDate: function () {
+      var terms = this.get("terms"),
+        docDate = this.get("documentDate");
+      if (terms && docDate) {
+        return terms.calculateDueDate(docDate);
+      }
+      return null;
     },
 
     /**
