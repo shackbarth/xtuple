@@ -1280,6 +1280,32 @@ strict: false*/
     }
   });
   // ..........................................................
+  // INVOICE ALLOCATION
+  //
+
+  /*
+  enyo.kind({
+    name: "XV.InvoiceAllocationWorkspace",
+    kind: "XV.Workspace",
+    title: "_allocation".loc(),
+    model: "XM.InvoiceAllocation",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.InvoiceAllocation", "XV.InvoiceAllocationWorkspace");
+  */
+  // ..........................................................
   // ITEM
   //
 

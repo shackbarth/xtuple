@@ -233,7 +233,7 @@ white:true*/
       this.on("change:invoiceDate change:currency", this.calculateAuthorizedCredit);
       this.on("change:invoiceDate add:allocations remove:allocations",
         this.calculateAllocatedCredit);
-      this.on("change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
+      this.on("add:lineItems remove:lineItems change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
       this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
       this.on("change:taxZone", this.recalculateTaxes);
       this.on("change:total change:allocatedCredit change:outstandingCredit",
@@ -274,6 +274,9 @@ white:true*/
     calculateAllocatedCredit: function () {
       var invoiceCurrency = this.get("currency"),
         that = this,
+        allocationsWithCurrency = _.filter(this.get("allocations").models, function (allo) {
+          return allo.get("currency");
+        }),
         reduceFunction = function (memo, allocationModel, callback) {
           allocationModel.get("currency").toCurrency(
             invoiceCurrency,
@@ -290,7 +293,7 @@ white:true*/
           that.set("allocatedCredit", totalAllocatedCredit);
         };
 
-      async.reduce(this.get("allocations").models, 0, reduceFunction, finish);
+      async.reduce(allocationsWithCurrency, 0, reduceFunction, finish);
     },
 
     calculateAuthorizedCredit: function () {
