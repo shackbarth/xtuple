@@ -1,3 +1,4 @@
+exports.temp = function () {
 describe('XM.Currency', function (done) {
 
   var usd, eur, gbp, base, asof,
@@ -52,7 +53,7 @@ describe('XM.Currency', function (done) {
    * should include an asynchronous prototype function "toCurrency" that' +
    * accepts a "to" currency, a value, an as of date, and options. It' +
    * should return the receiver.', function () {
-   *  
+   *
    *  @see XM.Currency#toBase
    */
   describe('#toCurrency()', function (done) {
@@ -63,7 +64,7 @@ describe('XM.Currency', function (done) {
      * If the value passed in is zero, then zero will be forwarded to
      * the callback. Since, irrespective of conversion rate, zero money
      * is zero.
-     * 
+     *
      * An asychronous "success" callback in options should pass back the
      * converted value of the currency
      */
@@ -173,3 +174,4 @@ describe('XM.Currency', function (done) {
     });
   });
 });
+};

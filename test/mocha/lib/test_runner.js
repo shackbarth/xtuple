@@ -1,7 +1,8 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, XM:true, XV:true, exports:true, describe:true, it:true, require:true */
+/*global XT:true, XM:true, XV:true, exports:true, describe:true, it:true,
+require:true, __dirname:true, console:true */
 
 
 // TODO: test "used"
@@ -14,12 +15,24 @@
 
   var crud = require('./crud'),
     smoke = require('./smoke'),
-    specs = require('./specs'),
+    fs = require('fs'),
+    _ = require("underscore"),
+    path = require('path'),
+    specFiles = _.filter(fs.readdirSync(path.join(__dirname, "../specs")), function (fileName) {
+      // filter out .swp files, etc.
+      return path.extname(fileName) === '.js';
+    }),
+    specs,
     assert = require("chai").assert,
-    zombieAuth = require("./zombie_auth"),
-    _ = require("underscore");
+    zombieAuth = require("./zombie_auth");
 
-  _.each(specs, function (spec) {
+  _.each(specFiles, function (specFile) {
+    var spec = require(path.join(__dirname, "../specs", specFile)).spec;
+    if (!spec) {
+      // temporary during conversion process
+      console.log(specFile, "spec is incomplete.");
+      return;
+    }
     describe(spec.recordType, function () {
       if (_.isString(spec.updatableField)) {
         spec.updateHash = {};
