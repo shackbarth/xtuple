@@ -39,9 +39,7 @@ XT.extensions.billing.initReceivableModel = function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:amount', this.amountDidChange);
       this.on('change:customer', this.customerDidChange);
-      // combine these
-      this.on('change:documentDate', this.documentDateDidChange);
-      this.on('change:terms', this.documentDateDidChange);
+      this.on('change:documentDate change:terms', this.documentDateDidChange);
       this.on('change:paid', this.paidDidChange);
       this.on('statusChange', this.statusDidChange);
       this.on('change:taxes add:taxes remove:taxes', this.taxesDidChange);
@@ -131,7 +129,10 @@ XT.extensions.billing.initReceivableModel = function () {
       var terms = this.get("terms"),
         docDate = this.get("documentDate");
       if (terms && docDate) {
-        return terms.calculateDueDate(docDate);
+        // sending a clone of docDate, otherwise
+        // it gets modified in this terms function
+        var dateCopy = new Date(docDate.getTime());
+        return terms.calculateDueDate(dateCopy);
       }
       return null;
     },
@@ -360,7 +361,7 @@ XT.extensions.billing.initReceivableModel = function () {
 
     parentDidChange: function () {
       var parent = this.get("tax");
-      this.set("documentDate", parent.get("documentDate"));
+      //this.set("documentDate", parent.get("documentDate"));
     },
 
     statusDidChange: function () {
