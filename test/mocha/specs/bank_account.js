@@ -12,6 +12,44 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     smoke = require("../lib/smoke"),
     assert = require("chai").assert;
 
+  var spec = {
+    recordType: "XM.BankAccount",
+    collectionType: "XM.BankAccountCollection",
+    cacheName: null, // there is no cache for BankAccount
+    listKind: "XV.BankAccountList",
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "name",
+    enforceUpperKey: false,
+    attributes: ["name", "description", "bankName", "accountNumber", "bankAccountType",
+      "isUsedByBilling", "isUsedByPayments", "notes", "currency"],
+    extensions: ["sales", "billing"],
+    privileges: {
+      createUpdateDelete: "MaintainBankAccounts",
+      read: "MaintainBankAccounts"
+    },
+    createHash: {
+      name: "TestBankAccount" + Math.random(),
+      description: "Test bank account",
+      bankName: "TestBankName",
+      accountNumber: Math.random(),
+      notes: "Test bank account notes"
+    },
+    updatableField: "description",
+    defaults: {
+      //currency: XT.baseCurrency(),
+      isUsedByBilling: false,
+      isUsedByPayments: false
+    },
+    afterSaveActions: [{
+      it: "verify currency is readonly",
+      action: function (data, next) {
+        assert.include(data.model.readOnlyAttributes, "currency");
+        next();
+      }
+    }]
+  };
+
   var additionalTests = function () {
     it('verify constant values', function () {
       assert.equal(XM.BankAccount.CASH, "C");
@@ -33,12 +71,15 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
       assert.isDefined(XV.BillingTermsPicker);
       var picker = new XV.BillingBankAccountPicker();
-      _.each(picker._collection.models, function (model) {
+      _.each(picker.filteredList(), function (model) {
         assert.isTrue(model.get("isUsedByBilling"));
       });
 
     });
   };
 
+  exports.spec = spec;
   exports.additionalTests = additionalTests;
+
+
 }());

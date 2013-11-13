@@ -1,7 +1,8 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, XM:true, XV:true, exports:true, describe:true, it:true, require:true */
+/*global XT:true, XM:true, XV:true, exports:true, describe:true, it:true,
+require:true, __dirname:true, console:true */
 
 
 // TODO: test "used"
@@ -9,17 +10,49 @@
 
 // TODO: test defaults
 
+/**
+  By convention, the test runner will look for .js files in the test/mocha/specs
+  directory, and run any file with an export.specs. If there are any custom business
+  logic tests to be run, those should go in the same file under a different export,
+  export.additionalTests
+
+  You can run tests for a particular business object by taking advantage of
+  the -g flag.
+
+  mocha -R spec -g XM.Invoice test/mocha/lib/test_runner.js
+
+  To generate spec documentation:
+  cd scripts
+  ./generateSpecs.sh
+
+*/
+
+
 (function () {
   "use strict";
 
   var crud = require('./crud'),
     smoke = require('./smoke'),
-    specs = require('./specs'),
+    fs = require('fs'),
+    _ = require("underscore"),
+    path = require('path'),
+    specFiles = _.filter(fs.readdirSync(path.join(__dirname, "../specs")), function (fileName) {
+      // filter out .swp files, etc.
+      return path.extname(fileName) === '.js';
+    }),
+    specs,
     assert = require("chai").assert,
-    zombieAuth = require("./zombie_auth"),
-    _ = require("underscore");
+    zombieAuth = require("./zombie_auth");
 
-  _.each(specs, function (spec) {
+  _.each(specFiles, function (specFile) {
+    var specContents = require(path.join(__dirname, "../specs", specFile)),
+      spec = specContents.spec;
+
+    if (!spec) {
+      // temporary during conversion process
+      console.log(specFile, "spec is incomplete.");
+      return;
+    }
     describe(spec.recordType, function () {
       if (_.isString(spec.updatableField)) {
         spec.updateHash = {};
@@ -266,8 +299,8 @@
       // TODO: verify that the cache is made available by certain extensions and not others
       // TODO: verify that the list is made available by certain extensions and not others
 
-      if (spec.additionalTests) {
-        spec.additionalTests();
+      if (specContents.additionalTests) {
+        specContents.additionalTests();
       }
 
     });

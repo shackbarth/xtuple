@@ -319,7 +319,90 @@ trailing:true, white:true*/
     kind: "XV.ListRelationsBox",
     parentKey: "invoice",
     title: "_allocations".loc(),
-    listRelations: "XV.InvoiceAllocationListRelations"
+    listRelations: "XV.InvoiceAllocationListRelations",
+    create: function () {
+      this.inherited(arguments);
+      if (this.$.attachButton) {
+        this.$.attachButton.setShowing(false);
+      }
+      if (this.$.detachButton) {
+        this.$.detachButton.setShowing(false);
+      }
+      if (this.$.openButton) {
+        this.$.openButton.setShowing(false);
+      }
+      /*
+      TODO: re-enable when ready
+      this.createComponent({
+        kind: "onyx.Button",
+        name: "allocateButton",
+        onclick: "allocateItem",
+        content: "_allocate".loc(),
+        classes: "xv-groupbox-button-right",
+        container: this.$.buttonsPanel
+      });
+      */
+    },
+    allocateItem: function () {
+      var attr = this.attr,
+        list = this.$.list,
+        ListModel = list.getValue().model,
+        searchList = "XV.ReceivableList",
+        inEvent,
+        // Callback to handle selection...
+        callback = function (selectedModel) {
+          XT.log("handle selection");
+        };
+
+      // Open a search screen excluding objects already selected
+      inEvent = {
+        list: searchList,
+        callback: callback,
+        conditions: [
+          {attribute: "closeDate", operator: ">=", value: new Date(), includeNull: true},
+          {attribute: "documentDate", operator: "<=", value: new Date(), includeNull: true},
+          {attribute: "documentType", operator: "!=", value: "D"}
+        ],
+        parameterItemValues: [
+          {name: "showUnposted", value: true}
+        ]
+      };
+      this.doSearch(inEvent);
+    },
+    newItem: function () {
+      XT.log("TODO: open limited cash receipt workspace");
+    /**
+      var list = this.$.list,
+        parent = this.$.list.getParent(),
+        key = this.getParentKey(),
+        workspace = XV.getWorkspace(list.value.model.prototype.recordType),
+        attributes = {},
+        callback = function (model) {
+          if (!model) { return; }
+          var Model = list.getValue().model,
+            attrs = {},
+            value,
+            options = {};
+          attrs[Model.prototype.idAttribute] = model.id;
+          value = Model.findOrCreate(attrs);
+          options.success = function () {
+            list.getValue().add(value);
+            list.lengthChanged();
+          };
+          value.fetch(options);
+        },
+        inEvent;
+      attributes[key] = parent.id;
+      inEvent = {
+        originator: this,
+        workspace: workspace,
+        attributes: attributes,
+        callback: callback,
+        allowNew: false
+      };
+      this.doWorkspace(inEvent);
+      */
+    },
   });
 
   // ..........................................................
