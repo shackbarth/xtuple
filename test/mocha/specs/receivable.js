@@ -18,8 +18,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
 
   /**
     TODO: Receivable before release
-    - The 'ViewAROpenItems' and 'EditAROpenItem' privileges should be added to XM.SalesCustomer read privileges
-    - When child tax records are added or removed, the taxTotal should be recalculated
     - XM.ReceivableApplication should include applications where the parent is both the target and the source
     - When 'Print on Post' is checked, a standard form should be printed when posting
     - There should be a printed report definition for the receivables list

@@ -75,10 +75,10 @@ XT.extensions.billing.initLists = function () {
       {attribute: 'documentNumber'}
     ]},
     newActions: [
-      {name: "creditMemo", label: "_miscCreditMemo".loc(), defaults: {
+      {name: "creditMemo", label: "_miscCreditMemo".loc(), allowNew: false, defaults: {
         documentType: XM.Receivable.CREDIT_MEMO
       }},
-      {name: "debitMemo", label: "_miscDebitMemo".loc(), defaults: {
+      {name: "debitMemo", label: "_miscDebitMemo".loc(), allowNew: false, defaults: {
         documentType: XM.Receivable.DEBIT_MEMO
       }}
     ],

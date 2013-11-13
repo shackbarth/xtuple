@@ -62,7 +62,6 @@
     kind: "XV.Workspace",
     title: "_receivable".loc(),
     model: "XM.Receivable",
-    allowNew: false,
     events: {
       onPrint: ""
     },
