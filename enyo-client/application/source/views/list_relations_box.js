@@ -319,7 +319,6 @@ trailing:true, white:true*/
     kind: "XV.ListRelationsBox",
     parentKey: "invoice",
     title: "_allocations".loc(),
-    searchList: "XV.ReceivableList",
     listRelations: "XV.InvoiceAllocationListRelations",
     create: function () {
       this.inherited(arguments);
@@ -342,7 +341,7 @@ trailing:true, white:true*/
       var attr = this.attr,
         list = this.$.list,
         ListModel = list.getValue().model,
-        searchList = this.getSearchList(),
+        searchList = "XV.ReceivableList",
         inEvent,
         // Callback to handle selection...
         callback = function (selectedModel) {

@@ -1283,6 +1283,7 @@ strict: false*/
   // INVOICE ALLOCATION
   //
 
+  /*
   enyo.kind({
     name: "XV.InvoiceAllocationWorkspace",
     kind: "XV.Workspace",
@@ -1303,6 +1304,7 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.InvoiceAllocation", "XV.InvoiceAllocationWorkspace");
+  */
   // ..........................................................
   // ITEM
   //
