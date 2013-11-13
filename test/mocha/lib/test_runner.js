@@ -12,7 +12,9 @@ require:true, __dirname:true, console:true */
 
 /**
   By convention, the test runner will look for .js files in the test/mocha/specs
-  directory, and run any file with an export.specs.
+  directory, and run any file with an export.specs. If there are any custom business
+  logic tests to be run, those should go in the same file under a different export,
+  export.additionalTests
 
   You can run tests for a particular business object by taking advantage of
   the -g flag.
@@ -43,7 +45,9 @@ require:true, __dirname:true, console:true */
     zombieAuth = require("./zombie_auth");
 
   _.each(specFiles, function (specFile) {
-    var spec = require(path.join(__dirname, "../specs", specFile)).spec;
+    var specContents = require(path.join(__dirname, "../specs", specFile)),
+      spec = specContents.spec;
+
     if (!spec) {
       // temporary during conversion process
       console.log(specFile, "spec is incomplete.");
@@ -295,8 +299,8 @@ require:true, __dirname:true, console:true */
       // TODO: verify that the cache is made available by certain extensions and not others
       // TODO: verify that the list is made available by certain extensions and not others
 
-      if (spec.additionalTests) {
-        spec.additionalTests();
+      if (specContents.additionalTests) {
+        specContents.additionalTests();
       }
 
     });

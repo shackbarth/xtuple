@@ -12,6 +12,36 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     smoke = require("../lib/smoke"),
     assert = require("chai").assert;
 
+  var spec = {
+    recordType: "XM.ReasonCode",
+    collectionType: "XM.ReasonCodeCollection",
+    cacheName: "XM.reasonCodes",
+    listKind: "XV.ReasonCodeList",
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "code",
+    enforceUpperKey: false,
+    attributes: ["code", "description", "documentType"],
+    extensions: ["inventory", "billing"],
+    privileges: {
+      createUpdateDelete: "MaintainReasonCodes",
+      read: true
+    },
+    createHash: {
+      code: "TestReasonCode" + Math.random(),
+      description: "Test Reason Code",
+      documentType: "ARDM"
+    },
+    updatableField: "description",
+    afterSaveActions: [{
+      it: "verify saved reason code is in cached collection",
+      action: function (data, next) {
+        assert.isTrue(_.contains(XM.reasonCodes.models, data.model));
+        next();
+      }
+    }],
+  };
+
   var additionalTests = function () {
     it('verify constant values', function () {
       assert.equal(XM.ReasonCode.CREDIT_MEMO, "ARCM");
@@ -77,5 +107,6 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     });
   };
 
+  exports.spec = spec;
   exports.additionalTests = additionalTests;
 }());

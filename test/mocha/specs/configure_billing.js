@@ -35,6 +35,18 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       "AutoCloseARIncident"
     ];
 
+  var spec = {
+    recordType: "XM.Billing",
+    skipCrud: true,
+    skipSmoke: true,
+    skipModelConfig: true,
+    privileges: {
+      read: "ConfigureAR",
+      createUpdate: "ConfigureAR",
+      delete: false
+    }
+  };
+
   var additionalTests = function () {
 
     it('can be loaded with a zombie session', function (done) {
@@ -96,5 +108,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     });
   };
 
+
+  exports.spec = spec;
   exports.additionalTests = additionalTests;
 }());
