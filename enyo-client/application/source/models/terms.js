@@ -73,12 +73,10 @@ white:true*/
     */
     calculateDueDate: function (startDate) {
       var termsType = this.get("termsType"),
-        returnDate = startDate,
+        returnDate = new Date(startDate.getTime()),
         cutOffDay = this.get("cutOffDay"),
         dueDays = this.get("dueDays");
 
-      // TODO: This is a possible bug that the returnDate is being modified
-      // instead of a clone of startDate
       if (termsType === XM.Terms.DAYS) {
         returnDate.setDate(returnDate.getDate() + this.get("dueDays"));
       } else if (termsType === XM.Terms.PROXIMO && returnDate.getDate() <= cutOffDay) {

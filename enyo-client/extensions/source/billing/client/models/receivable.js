@@ -42,7 +42,7 @@ XT.extensions.billing.initReceivableModel = function () {
       this.on('change:documentDate change:terms', this.documentDateDidChange);
       this.on('change:paid', this.paidDidChange);
       this.on('statusChange', this.statusDidChange);
-      this.on('change:taxes add:taxes remove:taxes', this.taxesDidChange);
+      this.on('add:taxes remove:taxes', this.taxesDidChange);
     },
 
     /**
@@ -82,7 +82,20 @@ XT.extensions.billing.initReceivableModel = function () {
         "documentNumber", "terms"], isEdit);
     },
 
-    taxesDidChange: function () {
+    /**
+      Called when a tax is added or removed
+      @param {Object} model
+    */
+    taxesDidChange: function (model) {
+      if (model) {
+        // add listener for taxAmount change on new model
+        model.on('change:taxAmount', this.taxAmountDidChange, this);
+      } else {
+        this.taxAmountDidChange();
+      }
+    },
+
+    taxAmountDidChange: function () {
       this.set("taxTotal", this.calculateTaxTotal());
     },
 
@@ -129,10 +142,7 @@ XT.extensions.billing.initReceivableModel = function () {
       var terms = this.get("terms"),
         docDate = this.get("documentDate");
       if (terms && docDate) {
-        // sending a clone of docDate, otherwise
-        // it gets modified in this terms function
-        var dateCopy = new Date(docDate.getTime());
-        return terms.calculateDueDate(dateCopy);
+        return terms.calculateDueDate(docDate);
       }
       return null;
     },
@@ -361,7 +371,7 @@ XT.extensions.billing.initReceivableModel = function () {
 
     parentDidChange: function () {
       var parent = this.get("tax");
-      //this.set("documentDate", parent.get("documentDate"));
+      this.set("documentDate", parent.get("documentDate"));
     },
 
     statusDidChange: function () {
