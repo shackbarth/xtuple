@@ -108,10 +108,15 @@ white:true*/
       subtract = XT.math.subtract,
       subtotals = [],
       taxDetails = [],
+      lineItemTaxDetails = [],
+      adjustmentTaxDetails = [],
       subtotal,
       taxTotal = 0.0,
+      taxModel,
       total,
       taxCodes;
+
+    model.meta.get("taxes").reset([]);
 
     // Collect line item detail
     var forEachLineItemFunction = function (lineItem) {
@@ -120,25 +125,48 @@ white:true*/
 
       subtotals.push(extPrice);
       taxDetails = taxDetails.concat(lineItem.get("taxes").models);
+      lineItemTaxDetails = lineItemTaxDetails.concat(lineItem.get("taxes").models);
     };
 
     // Collect tax adjustment detail
     var forEachTaxAdjustmentFunction = function (taxAdjustment) {
       taxDetails = taxDetails.concat(taxAdjustment);
+      adjustmentTaxDetails = adjustmentTaxDetails.concat(taxAdjustment);
     };
 
     _.each(model.get('lineItems').models, forEachLineItemFunction);
     _.each(model.get('taxAdjustments').models, forEachTaxAdjustmentFunction);
 
+    //
+    // Subtotal the tax detail for presentation in the view layer. The presentation
+    // of the taxes are grouped first by line item / adjustment / freight, as opposed
+    // to the rest of the calculation here which are first grouped by taxCode. So
+    // the calculation has to be separate.
+    //
+    taxCodes = _.groupBy(lineItemTaxDetails, function (detail) {
+      return detail.getValue("taxCode.code");
+    });
+    _.each(taxCodes, function (taxDetails, code) {
+      var subtotal = _.reduce(taxDetails, function (memo, item) {
+        return memo + item.get("amount");
+      }, 0);
+      taxModel = new XM.StaticModel({
+        type: "_lineItems".loc(),
+        code: code,
+        currency: model.get("currency"),
+        amount: subtotal
+      });
+      model.meta.get("taxes").add(taxModel);
+    });
+
     // Total taxes
     // First group amounts by tax code
-    //console.log(JSON.stringify(taxDetails));
     taxCodes = _.groupBy(taxDetails, function (detail) {
       return detail.getValue("taxCode.code");
     });
 
     // Loop through each tax code group and subtotal
-    _.each(taxCodes, function (group) {
+    _.each(taxCodes, function (group, key) {
       var taxes = [],
         subtotal;
 
@@ -240,6 +268,12 @@ white:true*/
         this.calculateBalance);
       this.on('allocatedCredit', this.allocatedCreditDidChange);
       this.on('statusChange', this.statusDidChange);
+    },
+
+    initialize: function (attributes, options) {
+      XM.Document.prototype.initialize.apply(this, arguments);
+      this.meta = new Backbone.Model();
+      this.meta.set({taxes: new Backbone.Collection()});
     },
 
     //
