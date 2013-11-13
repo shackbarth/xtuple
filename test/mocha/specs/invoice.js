@@ -21,6 +21,7 @@ TODO: the following items are not yet done but need to be done by release
     of cash receipt on-the-fly. The cash receipt need only record the amount, currency,
     document number, document date, distribution date and whether the balance should
     generate a credit memo or a customer deposit, depending on global customer deposit metrics.
+    "EnableCustomerDeposit"
     - When clicked, an "allocate" button should present a list of open receivables that are
     credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.

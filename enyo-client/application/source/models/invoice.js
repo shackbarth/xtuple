@@ -274,6 +274,9 @@ white:true*/
     calculateAllocatedCredit: function () {
       var invoiceCurrency = this.get("currency"),
         that = this,
+        allocationsWithCurrency = _.filter(this.get("allocations").models, function (allo) {
+          return allo.get("currency");
+        }),
         reduceFunction = function (memo, allocationModel, callback) {
           allocationModel.get("currency").toCurrency(
             invoiceCurrency,
@@ -290,7 +293,7 @@ white:true*/
           that.set("allocatedCredit", totalAllocatedCredit);
         };
 
-      async.reduce(this.get("allocations").models, 0, reduceFunction, finish);
+      async.reduce(allocationsWithCurrency, 0, reduceFunction, finish);
     },
 
     calculateAuthorizedCredit: function () {

@@ -1,8 +1,7 @@
 /*jshint maxlen: false */
+
 /*
-  To generate spec documentation:
-  cd scripts
-  ./generateSpecs.sh
+  TODO: move the tests out of this file into the specs files themselves.
 */
 
 (function () {
