@@ -380,7 +380,7 @@
     "privileges": {
       "all": {
         "create": "MaintainSalesOrders",
-        "read": "ViewSalesOrders",
+        "read": "ViewSalesOrders ViewAROpenItems EditAROpenItem",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
       },

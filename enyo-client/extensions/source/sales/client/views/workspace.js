@@ -12,7 +12,8 @@ trailing:true, white:true*/
     // ACCOUNT
     //
 
-    // Intercept calls to create customers and make sure prospects get properly"converted" to customers.
+    // Intercept calls to create customers and make sure prospects get properly
+    // "converted" to customers.
     var proto = XV.AccountWorkspace.prototype;
     proto.kindHandlers.onWorkspace = "workspace";
     proto.workspace = function (inSender, inEvent) {
@@ -131,7 +132,8 @@ trailing:true, white:true*/
                 label: "_ignoreIfDiscounted".loc()}
             ]}
           ]},
-          {kind: "XV.Groupbox", name: "defaultsPanel", title: "_customerDefaults".loc(), components: [
+          {kind: "XV.Groupbox", name: "defaultsPanel", title: "_customerDefaults".loc(),
+              components: [
             {kind: "XV.ScrollableGroupbox", name: "defaultsGroup", fit: true,
               classes: "in-panel", components: [
               {kind: "onyx.GroupboxHeader", content: "_customerDefaults".loc()},
@@ -171,8 +173,10 @@ trailing:true, white:true*/
         label: "_authorizedCredit".loc(), currencyShowing: false,
         container: "invoiceLineItemBox.summaryPanel.summaryColumnOne",
         defer: true},
-      {kind: "XV.InputWidget", container: "mainGroup", attr: "orderNumber"},
-      {kind: "XV.DateWidget", container: "mainGroup", attr: "orderDate"}
+      {kind: "XV.InputWidget", container: "mainGroup", addBefore: "invoiceNumberWidget",
+        attr: "orderNumber"},
+      {kind: "XV.DateWidget", container: "mainGroup", addBefore: "invoiceNumberWidget",
+        attr: "orderDate"}
     ];
     XV.appendExtension("XV.InvoiceWorkspace", extensions);
 
@@ -182,7 +186,8 @@ trailing:true, white:true*/
 
     extensions = [
       {kind: "XV.OpportunityQuoteListRelationsBox", container: "panels", attr: "quoteRelations"},
-      {kind: "XV.OpportunitySalesOrderListRelationsBox", container: "panels", attr: "salesOrderRelations"}
+      {kind: "XV.OpportunitySalesOrderListRelationsBox", container: "panels",
+        attr: "salesOrderRelations"}
     ];
     XV.appendExtension("XV.OpportunityWorkspace", extensions);
 
