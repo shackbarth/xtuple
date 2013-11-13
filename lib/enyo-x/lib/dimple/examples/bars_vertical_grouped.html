@@ -1,0 +1,35 @@
+<!----------------------------------------------------------------->
+<!-- AUTOMATICALLY GENERATED CODE - PLEASE EDIT TEMPLATE INSTEAD -->
+<!----------------------------------------------------------------->
+<div id="chartContainer">
+  <script src="../lib/d3.v3.min.js"></script>
+  <script src="../dist/dimple.v1.1.1.js"></script>
+  <script type="text/javascript">
+  var data =  [{"values":[
+  {"Period":"2012-12","Measure":"20","MeasureYear":"Orders"},
+  {"Period":"2013-1","Measure":"30","MeasureYear":"Orders"},
+  {"Period":"2013-2","Measure":"40","MeasureYear":"Orders"},
+  {"Period":"2013-3","Measure":"50","MeasureYear":"Orders"},
+  {"Period":"2012-12","Measure":"5","MeasureYear":"Prev Year"},
+  {"Period":"2013-1","Measure":"10","MeasureYear":"Prev Year"},
+  {"Period":"2013-2","Measure":"15","MeasureYear":"Prev Year"},
+  {"Period":"2013-3","Measure":"20","MeasureYear":"Prev Year"},  
+  ],
+  "measures":["Amount, Shipment","Previous MeasureYear"]}];
+//    var svg = dimple.newSvg("#chartContainer", 590, 400);
+    var svg = dimple.newSvg("#chartContainer", 590, 400);
+
+      var myChart = new dimple.chart(svg, data[0].values);
+//      myChart.setBounds(60, 30, 510, 330)
+      myChart.setBounds(60, 30, 400, 220)
+      var x = myChart.addCategoryAxis("x", ["Period", "MeasureYear"]);
+      myChart.addMeasureAxis("y", "Measure");
+      //myChart.addSeries("measure", dimple.plot.bar);
+      //myChart.addSeries("measure", dimple.plot.bubble);
+	  //myChart.addSeries("measure", dimple.plot.area);
+      myChart.addSeries("MeasureYear", dimple.plot.line);
+      myChart.addLegend(65, 10, 400, 20, "center");
+      myChart.draw();
+
+  </script>
+</div>
