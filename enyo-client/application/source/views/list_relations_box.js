@@ -322,9 +322,15 @@ trailing:true, white:true*/
     listRelations: "XV.InvoiceAllocationListRelations",
     create: function () {
       this.inherited(arguments);
-      this.$.attachButton.setShowing(false);
-      this.$.detachButton.setShowing(false);
-      this.$.openButton.setShowing(false);
+      if (this.$.attachButton) {
+        this.$.attachButton.setShowing(false);
+      }
+      if (this.$.detachButton) {
+        this.$.detachButton.setShowing(false);
+      }
+      if (this.$.openButton) {
+        this.$.openButton.setShowing(false);
+      }
       /*
       TODO: re-enable when ready
       this.createComponent({
