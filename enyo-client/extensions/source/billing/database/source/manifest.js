@@ -18,6 +18,7 @@
     "xt/functions/cashrcpt_receivable_balance.sql",
     "xt/views/cashrcptinfo.sql",
     "xt/views/cashrcpt_receivable.sql",
-    "xt/views/cashrcptiteminfo.sql"
+    "xt/views/cashrcptiteminfo.sql",
+    "xt/views/receivable_applications.sql"
   ]
 }

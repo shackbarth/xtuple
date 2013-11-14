@@ -18,7 +18,7 @@
       },
       components: [
         {kind: "onyx.GroupboxHeader", content: "_receivable".loc()},
-        {name: "number", label: "_number".loc(), attr: "number", defaultKind: "XV.NumberWidget"},
+        {name: "number", label: "_number".loc(), attr: "documentNumber", defaultKind: "XV.NumberWidget"},
         {name: "asOfDate", label: "_asOf".loc(), attr: "closeDate", defaultKind: "XV.DateWidget",
           getParameter: function () {
             var param;

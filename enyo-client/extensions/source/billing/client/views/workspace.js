@@ -95,14 +95,15 @@
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.MoneyWidget",
               attr: {localValue: "amount", currency: "currency"},
-              label: "_amount".loc()}, // add effective date?
+              label: "_amount".loc(), effective: "documentDate"},
             {kind: "XV.MoneyWidget", attr: {localValue: "paid"},
-              label: "_paid".loc(), currencyShowing: false},
+              label: "_paid".loc(), currencyDisabled: true},
             {kind: "XV.MoneyWidget", attr: {localValue: "balance"},
-              label: "_balance".loc(), currencyShowing: false},
+              label: "_balance".loc(), currencyDisabled: true},
             {kind: "XV.PercentWidget", attr: "commission"},
             // TODO: Move this under taxes
-            {kind: "XV.NumberWidget", name: "taxTotal", attr: "taxTotal"}
+            {kind: "XV.MoneyWidget", attr: {localValue: "taxTotal"},
+              label: "_taxTotal".loc(), name: "taxTotal", currencyShowing: false},
           ]}
         ]},
         {kind: "XV.ReceivableTaxBox", name: "taxes", attr: "taxes", title: "_taxes".loc()},
