@@ -5,6 +5,20 @@
  */
 select xt.create_view('xt.cashrcptitem_pending', $$
 
-  select * from cashrcptitem where cashrcptitem_applied = false;
+  select
+    obj_uuid                as uuid,
+    cashrcptitem_id         as id,
+    cashrcptitem_amount     as amount,
+    cashrcptitem_discount   as discountAmount,
+    cashrcptitem_aropen_id  as
+
+
+    
+    
+  from
+    cashrcptitem
+  
+  where
+    cashrcptitem_applied = false;
 
 $$);

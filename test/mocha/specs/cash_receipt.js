@@ -88,8 +88,41 @@
         }
       ]
     },
+    cashReceiptSpec = {
+      recordType: 'XM.CashReceipt',
+      collectionType: 'XM.CashReceiptCollection',
+      cacheName: null,
+      skipSmoke: true,
+    // skipCrud: true,
+      instanceOf: 'XM.Document',
+      isLockable: true,
+      idAttribute: 'number',
+      enforceUpperKey: false,
+      attributes: [
+        'number', 'customer', 'amount', 'currency', 'currencyRate',
+        'documentNumber', 'documentDate', 'bankAccount', 'distributionDate',
+        'applicationDate', 'notes', 'isPosted', 'lineItems', 'balance'
+      ],
+      requiredAttributes: [
+        'customer', 'amount', 'currency', 'currencyRate',
+        'bankAccount', 'applicationDate', 'isPosted'
+      ],
+      defaults: {
+        isPosted: false
+      },
+      privileges: {
+        create: 'MaintainCashReceipts',
+        read: true,
+        update: 'MaintainCashReceipts',
+        delete: 'MaintainCashReceipts'
+      },
+      extensions: ["billing"],
+      //updatableField: 'notes',
+      listKind: 'XV.CashReceiptList',
+      createHash: cashReceiptHash
+    },
 
-    test = function () {
+    cashReceiptTest = function () {
 
       describe('XM.CashReceipt', function () {
         var cashReceiptSchema, usd, eur, gbp,
@@ -759,8 +792,8 @@
     };
 
   module.exports = {
-    additionalTests: test,
-    createHash: cashReceiptHash
+    spec: cashReceiptSpec,
+    additionalTests: cashReceiptTest
   };
 
 })();
