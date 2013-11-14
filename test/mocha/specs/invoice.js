@@ -21,12 +21,21 @@ TODO: the following items are not yet done but need to be done by release
     of cash receipt on-the-fly. The cash receipt need only record the amount, currency,
     document number, document date, distribution date and whether the balance should
     generate a credit memo or a customer deposit, depending on global customer deposit metrics.
+    "EnableCustomerDeposit"
     - When clicked, an "allocate" button should present a list of open receivables that are
     credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
+*/
 
+/*
+TODO: from Vinay
+
+3.      When a line item is added/removed, subtotal should be recalculated and displayed (as in Sales order screen)
+
+4.      I have observed that the Allocated Credit box doesn’t respond on selecting the ‘New’ button. There are no test scenarios regarding allocate credit in the Spec document/mocha test document. Could we add scenarios for Allocate Credit to the Invoice test?
 
 */
+
 
 // TODO deferred to later sprint:
 // filter invoice list by customer group
@@ -37,9 +46,8 @@ TODO: the following items are not yet done but need to be done by release
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
-    assert = require("chai").assert;
-
-  var invoiceModel,
+    assert = require("chai").assert,
+    invoiceModel,
     lineModel,
     allocationModel,
     invoiceTaxModel,
@@ -52,6 +60,7 @@ TODO: the following items are not yet done but need to be done by release
     bpaint,
     btruck;
 
+  // TODO: this kind of thing belongs in the framework
   var initializeModel = function (model, Klass, done) {
     var statusChanged = function () {
       if (model.isReady()) {
@@ -75,7 +84,146 @@ TODO: the following items are not yet done but need to be done by release
     model.fetch(hash);
   };
 
-  exports.additionalTests = function () {
+  /**
+    Here is some high-level description of what an invoice is supposed to do.
+    @class
+    @alias Invoice
+    @parameter {String} number that is the documentKey and idAttribute
+    @parameter {Date} invoiceDate required default today
+    @parameter {Boolean} isPosted required, defaulting to false, read only
+    @parameter {Boolean} isVoid required, defaulting to false, read only
+    @parameter {BillingCustomer} customer required
+    @parameter {String} billtoName
+    @parameter {String} billtoAddress1
+    @parameter {String} billtoAddress2
+    @parameter {String} billtoAddress3
+    @parameter {String} billtoCity
+    @parameter {String} billtoState
+    @parameter {String} billtoPostalCode
+    @parameter {String} billtoCountry
+    @parameter {String} billtoPhone
+    @parameter {Currency} currency
+    @parameter {Terms} terms
+    @parameter {SalesRep} salesRep
+    @parameter {Percent} commission required, default 0
+    @parameter {SaleType} saleType
+    @parameter {String} customerPurchaseOrderNumber
+    @parameter {TaxZone} taxZone
+    @parameter {String} notes
+    @parameter {InvoiceRelation} recurringInvoice
+    @parameter {Money} allocatedCredit the sum of all allocated credits
+    @parameter {Money} outandingCredit the sum of all unallocated credits, not including
+      cash receipts pending
+    @parameter {Money} subtotal the sum of the extended price of all line items
+    @parameter {Money} taxTotal the sum of all taxes inluding line items, freight and
+      tax adjustments
+    @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
+    @parameter {Money} total the calculated total of subtotal + freight + tax + miscCharge
+    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit -
+      outstandingCredit.
+      - If sum calculates to less than zero, then the balance is zero.
+    @parameter {InvoiceAllocation} allocations
+    @parameter {InvoiceTax} taxAdjustments
+    @parameter {InvoiceLine} lineItems
+    @parameter {InvoiceCharacteristic} characteristics
+    @parameter {InvoiceContact} contacts
+    @parameter {InvoiceAccount} accounts
+    @parameter {InvoiceCustomer} customers
+    @parameter {InvoiceFile} files
+    @parameter {InvoiceUrl} urls
+    @parameter {InvoiceItem} items
+    @parameter {String} orderNumber Added by sales extension
+    @parameter {Date} orderDate Added by sales extension
+    @parameter {InvoiceSalesOrder} salesOrders Added by sales extension
+    @parameter {InvoiceIncident} incidents Added by crm extension
+    @parameter {InvoiceOpportunity} opportunities Added by crm extension
+  */
+  var spec = {
+    recordType: "XM.Invoice",
+    collectionType: "XM.InvoiceListItemCollection",
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description The invoice collection is not cached.
+    */
+    cacheName: null,
+    listKind: "XV.InvoiceList",
+    instanceOf: "XM.Document",
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description Invoice is lockable.
+    */
+    isLockable: true,
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description The ID attribute is "number", which will be automatically uppercased.
+    */
+    idAttribute: "number",
+    enforceUpperKey: true,
+    attributes: ["number", "invoiceDate", "isPosted", "isVoid", "customer",
+      "billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3",
+      "billtoCity", "billtoState", "billtoPostalCode", "billtoCountry",
+      "billtoPhone", "currency", "terms", "salesRep", "commission",
+      "saleType", "customerPurchaseOrderNumber", "taxZone", "notes",
+      "recurringInvoice", "allocatedCredit", "outstandingCredit", "subtotal",
+      "taxTotal", "miscCharge", "total", "balance", "allocations",
+      "taxAdjustments", "lineItems", "characteristics", "contacts",
+      "accounts", "customers", "files", "urls", "items",
+      "orderNumber", "orderDate", "salesOrders", // these 3 from sales extension
+      "incidents", "opportunities", // these 2 from crm
+      "project", "projects"], // these 2 from project
+    requiredAttributes: ["number", "invoiceDate", "isPosted", "isVoid",
+      "customer", "commission"],
+    defaults: {
+      invoiceDate: new Date(),
+      isPosted: false,
+      isVoid: false,
+      commission: 0
+    },
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description Used in the billing module
+    */
+    extensions: ["billing"],
+    /**
+      @member -
+      @memberof Invoice.prototype
+      @description Users can create, update, and delete invoices if they have the
+        MaintainMiscInvoices privilege, and they can read invoices if they have
+        the ViewMiscInvoices privilege.
+    */
+    privileges: {
+      createUpdateDelete: "MaintainMiscInvoices",
+      read: "ViewMiscInvoices"
+    },
+    createHash: {
+      number: "30" + (100 + Math.round(Math.random() * 900)),
+      customer: {number: "TTOYS"}
+    },
+    updatableField: "notes",
+    beforeSaveActions: [{it: 'sets up a valid line item',
+      action: require("../lib/model_data").getBeforeSaveAction("XM.InvoiceLine")}],
+    skipSmoke: true,
+    beforeSaveUIActions: [{it: 'sets up a valid line item',
+      action: function (workspace, done) {
+        var gridRow;
+
+        workspace.value.on("change:total", done);
+        workspace.$.invoiceLineItemBox.newItem();
+        gridRow = workspace.$.invoiceLineItemBox.$.editableGridRow;
+        // TODO
+        //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel,
+          //site: submodels.siteModel}});
+        gridRow.$.quantityWidget.doValueChange({value: 5});
+
+      }
+    }]
+  };
+
+  var additionalTests = function () {
     /**
       @member -
       @memberof Invoice.prototype
@@ -378,6 +526,15 @@ TODO: the following items are not yet done but need to be done by release
         assert.equal(lineModel.get("lineNumber"), 2);
         invoiceModel.get("lineItems").remove(dummyModel);
         // TODO: be more thorough
+      });
+      /**
+        @member -
+        @memberof Invoice.prototype
+        @description Currency field should be read only after a line item is added to the invoice
+      */
+      it("Currency field should be read-only after a line item is added to the invoice",
+          function () {
+        assert.isTrue(invoiceModel.isReadOnly("currency"));
       });
       /**
         @member -
@@ -905,6 +1062,17 @@ TODO: the following items are not yet done but need to be done by release
       it.skip("has a calculateTax function that works correctly", function () {
         // TODO: put under test
       });
+
+
+      it.skip("When a customer with non-base currency is selected the following values " +
+          "should be displayed in the foreign currency along with the values in base currency " +
+          " - Unit price, Extended price, Allocated Credit, Authorized Credit, Margin, " +
+          "Subtotal, Misc. Charge, Freight, Total, Balance", function () {
+
+        // TODO: put under test (requires postbooks demo to have currency conversion)
+      });
+
+
     });
     describe("Invoice List View", function () {
       /**
@@ -1182,6 +1350,12 @@ TODO: the following items are not yet done but need to be done by release
       });
     });
   };
+
+  exports.spec = spec;
+  exports.additionalTests = additionalTests;
+
+
+
 /*
 
 ***** CHANGES MADE BY INVENTORY EXTENSION ******

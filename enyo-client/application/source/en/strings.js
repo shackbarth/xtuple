@@ -92,6 +92,7 @@ strict:true, trailing:true, white:true */
     "_addresses": "Addresses",
     "_advanced" : "Advanced",
     "_alarms": "Alarms",
+    "_allocate": "Allocate",
     "_allocatedCredit": "Allocated Credit",
     "_allowableItems": "Allowable Items",
     "_altEmphasisColor": "Alt Emphasis Color",

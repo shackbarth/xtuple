@@ -54,21 +54,21 @@
             return param;
           }
         },
-        // {name: "showClosed", label: "_closed".loc(),
-        //   attr: "closeDate", defaultKind: "XV.CheckboxWidget",
-        //   getParameter: function () {
-        //     var param;
-        //     if (!this.getValue()) {
-        //       param = {
-        //         attribute: this.getAttr(),
-        //         operator: '!=',
-        //         value: null
-        //       };
-        //     }
-        //     return param;
-        //   }
-        // },
-
+        {name: "showClosed", label: "_closed".loc(),
+          attr: "closeDate", defaultKind: "XV.CheckboxWidget",
+          getParameter: function () {
+            var param;
+            if (!this.getValue()) {
+              param = {
+                attribute: this.getAttr(),
+                operator: '=',
+                value: null,
+                includeNull: true
+              };
+            }
+            return param;
+          }
+        },
         // TODO: ***These are not working
         {name: "showDebits", label: "_debits".loc(),
           attr: "documentType", defaultKind: "XV.CheckboxWidget",
@@ -78,7 +78,7 @@
               param = {
                 attribute: this.getAttr(),
                 operator: '!=',
-                value: XM.Receivable.DEBIT_MEMO
+                value: 'D'
               };
             }
             return param;
@@ -92,7 +92,7 @@
               param = {
                 attribute: this.getAttr(),
                 operator: '!=',
-                value: XM.Receivable.DEBIT_MEMO
+                value: 'C'
               };
             }
             return param;
@@ -123,9 +123,9 @@
       */
       parameterChanged: function (inSender, inEvent) {
         if (inSender.name === "showClosed" || inSender.name === "showUnposted") {
-          // both must be unchecked for enabled date
-          //var unchecked = this.$.showClosed.getValue() || this.$.showUnposted.getValue();
-          //this.$.asOfDate.$.input.setDisabled(unchecked);
+          //both must be unchecked for enabled date
+          var unchecked = this.$.showClosed.getValue() || this.$.showUnposted.getValue();
+          this.$.asOfDate.$.input.setDisabled(unchecked);
         }
       },
     });

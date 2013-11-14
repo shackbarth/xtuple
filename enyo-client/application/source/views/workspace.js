@@ -282,7 +282,7 @@ strict: false*/
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
+            classes: "in-panel", fit: true, components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.InputWidget", attr: "bankName"},
@@ -1164,6 +1164,7 @@ strict: false*/
           ]}
         ]},
         {kind: "XV.InvoiceAllocationsBox", attr: "allocations", title: "_allocatedCredit".loc()},
+        {kind: "XV.InvoiceTaxBox", attr: "taxes", title: "_taxes".loc()},
         {kind: "XV.InvoiceDocumentsBox", attr: "documents"}
       ]}
     ],
@@ -1279,6 +1280,32 @@ strict: false*/
       });
     }
   });
+  // ..........................................................
+  // INVOICE ALLOCATION
+  //
+
+  /*
+  enyo.kind({
+    name: "XV.InvoiceAllocationWorkspace",
+    kind: "XV.Workspace",
+    title: "_allocation".loc(),
+    model: "XM.InvoiceAllocation",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.InvoiceAllocation", "XV.InvoiceAllocationWorkspace");
+  */
   // ..........................................................
   // ITEM
   //
