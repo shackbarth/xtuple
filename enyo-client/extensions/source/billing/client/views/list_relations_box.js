@@ -10,18 +10,6 @@ trailing:true, white:true*/
     // ..........................................................
     // RECEIVABLE TAXES
     //
-    enyo.kind({
-      name: "XV.ReceivableTaxEditor",
-      kind: "XV.RelationsEditor",
-      components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-          classes: "in-panel", components: [
-          {kind: "XV.TaxCodePicker", attr: "taxCode"},
-          {kind: "XV.MoneyWidget", attr: {localValue: "taxAmount"},
-            label: "_amount".loc(), currencyShowing: false}
-        ]}
-      ]
-    });
 
     enyo.kind({
       name: "XV.ReceivableTaxBox",
@@ -29,7 +17,12 @@ trailing:true, white:true*/
       title: "_tax".loc(),
       editor: "XV.ReceivableTaxEditor",
       parentKey: "receivable",
-      listRelations: "XV.ReceivableTaxListRelations"
+      listRelations: "XV.ReceivableTaxListRelations",
+      fitButtons: false,
+      create: function () {
+        this.inherited(arguments);
+        this.$.deleteButton.setShowing(false);
+      }
     });
 
     // ..........................................................

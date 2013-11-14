@@ -11,7 +11,6 @@
     _ = require("underscore"),
     assert = require("chai").assert;
 
-
   exports.cashReceipt = {
     recordType: 'XM.CashReceipt',
     collectionType: 'XM.CashReceiptCollection',
@@ -48,45 +47,5 @@
     },
     additionalTests: require("../specs/cash_receipt").additionalTests,
   };
-
-
-
-  exports.receivable = {
-    recordType: "XM.Receivable",
-    skipSmoke: true,
-    skipSave: true,
-    skipDelete: true,
-    skipUpdate: true,
-    listKind: "XV.ReceivableListItem",
-    collectionType: null,
-    cacheName: null,
-    enforceUpperKey: true,
-    instanceOf: "XM.Document",
-    isLockable: true,
-    idAttribute: "uuid",
-    documentKey: "documentNumber",
-    attributes: ["uuid", "documentDate", "customer", "dueDate",
-      "terms", "salesRep", "documentType", "documentNumber", "orderNumber",
-      "reasonCode", "amount", "currency", "paid", "notes", "taxes", "balance",
-      "taxTotal", "commission", "applications"],
-    requiredAttributes: ["currency", "customer", "documentDate", "dueDate", "amount"],
-    extensions: ["billing"],
-    privileges: {
-      createUpdateDelete: "EditAROpenItem",
-      read: "ViewAROpenItems"
-    },
-    createHash: {
-      uuid: "TestReceivableId" + Math.random(),
-      customer: {number: "TTOYS"},
-      documentDate: new Date(),
-      dueDate: new Date(),
-      amount: 100,
-      currency: {abbreviation: "USD"},
-      documentNumber: "DocumentNumber" + Math.random()
-    },
-    updatableField: "notes",
-    additionalTests: require("../specs/receivable").additionalTests
-  };
-
 
 }());

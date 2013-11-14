@@ -73,7 +73,7 @@ white:true*/
     */
     calculateDueDate: function (startDate) {
       var termsType = this.get("termsType"),
-        returnDate = startDate,
+        returnDate = new Date(startDate.getTime()),
         cutOffDay = this.get("cutOffDay"),
         dueDays = this.get("dueDays");
 

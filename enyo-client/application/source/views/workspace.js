@@ -282,7 +282,7 @@ strict: false*/
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
+            classes: "in-panel", fit: true, components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.InputWidget", attr: "bankName"},
