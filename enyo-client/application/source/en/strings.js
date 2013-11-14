@@ -222,7 +222,7 @@ strict:true, trailing:true, white:true */
     "_discountDay": "Discount Day",
     "_discountDays": "Discount Days",
     "_discover": "Discover",
-    "_disableExport": "Disable Export",
+    "_disableExport": "Disable Export and Print",
     "_document": "Document",
     "_documentChangedStatus": "The status of the following {document} has been changed to {status}",
     "_documentCreatedStatus": "The following {document} has been created with status {status}",
