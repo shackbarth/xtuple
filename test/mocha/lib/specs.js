@@ -69,7 +69,7 @@
     collectionType: 'XM.CashReceiptCollection',
     cacheName: null,
     skipSmoke: true,
-    skipCrud: true,
+    //skipCrud: true,
     instanceOf: 'XM.Document',
     isLockable: true,
     idAttribute: 'number',
@@ -98,7 +98,7 @@
     createHash: {
 
     },
-    additionalTests: require("../specs/cash_receipt").additionalTests,
+    //additionalTests: require("../specs/cash_receipt").additionalTests,
   };
 
   exports.currency = {

@@ -29,6 +29,12 @@ XT.extensions.billing.initCashReceipt = function () {
       };
     },
 
+    readOnlyAttributes: [
+      'balance',
+      'appliedAmount',
+      'currencyRate'
+    ],
+
     handlers: {
       'status:READY_CLEAN': 'onReadyClean',
       'change:appliedAmount': 'updateBalance',
@@ -371,6 +377,7 @@ XT.extensions.billing.initCashReceipt = function () {
 
     defaults: {
       amount: 0,
+      discount: 0,
       discountAmount: 0
     }
   });

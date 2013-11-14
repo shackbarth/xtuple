@@ -5,14 +5,19 @@
  */
 select xt.create_view('xt.cashrcptiteminfo', $$
 
-  select * from xt.cashrcpt_receivable
+  select *
+    
+  from
+    cashrcptitem
+    inner join aropen on (cashrcptitem_aropen_id = aropen_id)
+    inner join cashrcpt on (cashrcptitem_cashrcpt_id = cashrcpt_id)
 
   where
     cashrcpt_posted
-      AND (cashrcptitem_cashrcpt_id = cashrcpt_id)
+      and (cashrcptitem_cashrcpt_id = cashrcpt_id)
 
-    OR NOT cashrcpt_posted
-      AND (open AND cust_id = cashrcpt_cust_id)
+    or not cashrcpt_posted
+      and (aropen_open and aropen_cust_id = cashrcpt_cust_id);
 
 $$);
 

@@ -31,7 +31,6 @@ select xt.create_view('xt.cashrcpt_receivable', $$
   from
     cashrcpt
     left join cashrcptitem  on (cashrcpt_id = cashrcptitem_cashrcpt_id)
-    left join aropen        on (cashrcptitem_aropen_id = aropen_id)
-  ;
+    left join aropen        on (cashrcptitem_aropen_id = aropen_id);
 
 $$);
