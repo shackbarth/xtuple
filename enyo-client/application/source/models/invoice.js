@@ -258,6 +258,7 @@ white:true*/
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on("change:customer", this.customerDidChange);
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
+      this.on("change:invoiceDate add:taxAdjustments", this.setTaxAllocationDate);
       this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
       this.on("change:invoiceDate change:currency", this.calculateAuthorizedCredit);
       this.on("change:invoiceDate add:allocations remove:allocations",
@@ -457,6 +458,16 @@ white:true*/
     setCurrencyReadOnly: function () {
       var lineItems = this.get("lineItems");
       this.setReadOnly("currency", lineItems.length > 0 || this.get("allocatedCredit"));
+    },
+
+    /**
+      The document date on any misc tax adjustments should be the invoice date
+    */
+    setTaxAllocationDate: function () {
+      var invoiceDate = this.get("invoiceDate");
+      _.each(this.get("taxAdjustments").models, function (taxAdjustment) {
+        taxAdjustment.set({documentDate: invoiceDate});
+      });
     },
 
     statusDidChange: function () {

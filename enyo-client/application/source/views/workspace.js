@@ -1165,6 +1165,7 @@ strict: false*/
         ]},
         {kind: "XV.InvoiceAllocationsBox", attr: "allocations", title: "_allocatedCredit".loc()},
         {kind: "XV.InvoiceTaxBox", attr: "taxes", title: "_taxes".loc()},
+        {kind: "XV.InvoiceTaxAdjustmentBox", attr: "taxAdjustments", title: "_taxAdjustments".loc()},
         {kind: "XV.InvoiceDocumentsBox", attr: "documents"}
       ]}
     ],

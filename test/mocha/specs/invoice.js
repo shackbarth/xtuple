@@ -16,6 +16,7 @@ TODO: the following items are not yet done but need to be done by release
 3. A panel that displays a group box of lists of taxes separated headers
   for taxes by line items, freight, and adjustments. Users should be able to add new tax
   adjustments, and remove tax adjustments for non-posted invoices.
+
 4. Should include a panel that displays credit allocations.
     - When clicked a "new" button should allow the user to create a new minimalized version
     of cash receipt on-the-fly. The cash receipt need only record the amount, currency,
@@ -25,15 +26,6 @@ TODO: the following items are not yet done but need to be done by release
     - When clicked, an "allocate" button should present a list of open receivables that are
     credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
-*/
-
-/*
-TODO: from Vinay
-
-3.      When a line item is added/removed, subtotal should be recalculated and displayed (as in Sales order screen)
-
-4.      I have observed that the Allocated Credit box doesn’t respond on selecting the ‘New’ button. There are no test scenarios regarding allocate credit in the Spec document/mocha test document. Could we add scenarios for Allocate Credit to the Invoice test?
-
 */
 
 
@@ -650,6 +642,15 @@ TODO: from Vinay
           }
         ], done);
       });
+
+      //
+      // Note: the other required fields in taxhist should be populated with the following:
+      // basis: 0
+      // percent: 0
+      // amount: 0
+      // docdate: invoice date
+      // taxtype: 3. Yes, 3.
+      //
       /**
         @member InvoiceTax
         @memberof Invoice.prototype
@@ -962,6 +963,10 @@ TODO: from Vinay
         invoiceTaxModel.set({taxCode: nctaxCode, amount: 10.00});
         invoiceModel.on("change:total", totalChanged);
         invoiceModel.get("taxAdjustments").add(invoiceTaxModel);
+      });
+      it("The document date of the tax adjustment should be the invoice date.",
+          function () {
+        assert.equal(invoiceModel.get("invoiceDate"), invoiceTaxModel.get("documentDate"));
       });
       /**
         @member -

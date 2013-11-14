@@ -602,6 +602,7 @@ strict:true, trailing:true, white:true */
     "_task": "Task",
     "_tasks": "Tasks",
     "_tax": "Tax",
+    "_taxAdjustments": "Tax Adjustments",
     "_taxCode": "Tax Code",
     "_taxes": "Taxes",
     "_taxType": "Tax Type",
