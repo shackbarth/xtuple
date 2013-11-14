@@ -233,6 +233,7 @@ white:true*/
       "isVoid",
       "isPrinted",
       "miscCharge",
+      "lineItems",
       "allocatedCredit",
       "authorizedCredit"
     ],
