@@ -129,7 +129,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             return;
           }
           /**
-           * TODO check if transient
+           * TODO check if derived
           throw new Error(nameSpace + "." + type + " ORM property " + ormProp.attr.column
             + " references a column not in " + tableNamespace + "." + tableName);
            */
@@ -508,8 +508,8 @@ select xt.install_js('XT','Orm','xtuple', $$
             /**
              * If a method is given, do not attempt to prefix with table alias.
              */
-            if (attr.transient && attr.method) {
-              plv8.elog(NOTICE, 'using function for transient property: '+ prop.name + ' -> '+ attr.method);
+            if (attr.derived && attr.method) {
+              plv8.elog(NOTICE, 'using function for derived property: '+ prop.name + ' -> '+ attr.method);
               col = attr.method;
             }
             else {

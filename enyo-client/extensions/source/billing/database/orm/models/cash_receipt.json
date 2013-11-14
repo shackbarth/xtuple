@@ -70,7 +70,7 @@
         "name": "appliedAmount",
         "attr": {
           "type": "Money",
-          "transient": true,
+          "derived": true,
           "method": "xt.cashrcpt_applied_amount(cashrcpt_id, true)"
         }
       },
@@ -78,7 +78,7 @@
         "name": "balance",
         "attr": {
           "type": "Money",
-          "transient": true,
+          "derived": true,
           "method": "xt.cashrcpt_balance(cashrcpt_id, cashrcpt_amount)"
         }
       },
@@ -417,7 +417,7 @@
         "name": "balance",
         "attr": {
           "type": "Money",
-          "transient": true,
+          "derived": true,
           "method": "xt.cashrcpt_receivable_balance(arapply_target_aropen_id)"
         }
       },
@@ -425,7 +425,7 @@
         "name": "allPending",
         "attr": {
           "type": "Money",
-          "transient": true,
+          "derived": true,
           "method": "xt.cashrcpt_receivable_sum_amount(arapply_target_aropen_id, false)"
         }
       },

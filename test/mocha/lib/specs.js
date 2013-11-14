@@ -69,7 +69,7 @@
     collectionType: 'XM.CashReceiptCollection',
     cacheName: null,
     skipSmoke: true,
-    //skipCrud: true,
+    skipCrud: true,
     instanceOf: 'XM.Document',
     isLockable: true,
     idAttribute: 'number',
@@ -80,8 +80,7 @@
       'applicationDate', 'notes', 'isPosted', 'lineItems', 'balance'
     ],
     requiredAttributes: [
-      'customer', 'amount', 'currency', 'currencyRate', 'bankAccount',
-      'applicationDate', 'isPosted'
+      'customer', 'amount', 'currency', 'currencyRate', 'bankAccount', 'applicationDate', 'isPosted'
     ],
     defaults: {
       isPosted: false
