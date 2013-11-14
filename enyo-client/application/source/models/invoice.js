@@ -41,7 +41,9 @@ white:true*/
 
         var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
         model.set("customerPrice", totalPrice);
+        model.off("price", model.priceDidChange);
         model.set("price", totalPrice);
+        model.on("price", model.priceDidChange);
         model.calculateExtendedPrice();
       };
 

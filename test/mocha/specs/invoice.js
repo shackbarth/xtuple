@@ -13,11 +13,18 @@ TODO: the following items are not yet done but need to be done by release
 
 1. order number and order date on top of overview (with sales extension)
 2. tax type defaults to item tax type if user has no OverrideTax privilege
-3. A panel that displays a group box of lists of taxes separated headers
-  for taxes by line items, freight, and adjustments. Users should be able to add new tax
-  adjustments, and remove tax adjustments for non-posted invoices.
+3. Subtotal widget to update immediately when its model is updated
+*/
 
-4. Should include a panel that displays credit allocations.
+/*
+TODO deferred to later sprint:
+
+ * filter invoice list by customer group
+ * print invoices (support printing more that 1 on the same screen)
+ * inventory extensions
+ * manufacturing extensions
+ * get the tax summary and tax adjustment boxes in the same panel
+ * Include a panel that displays credit allocations.
     - When clicked a "new" button should allow the user to create a new minimalized version
     of cash receipt on-the-fly. The cash receipt need only record the amount, currency,
     document number, document date, distribution date and whether the balance should
@@ -27,14 +34,6 @@ TODO: the following items are not yet done but need to be done by release
     credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
 */
-
-
-// TODO deferred to later sprint:
-// filter invoice list by customer group
-// print invoices (support printing more that 1 on the same screen)
-// inventory extensions
-// manufacturing extensions
-
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
