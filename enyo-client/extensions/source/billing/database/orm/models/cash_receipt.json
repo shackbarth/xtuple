@@ -3,7 +3,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "CashReceipt",
-    "table": "xt.cashrcptinfo",
+    "table": "cashrcpt",
     "idSequenceName": "cashrcpt_cashrcpt_id_seq",
     "isRest": true,
     "lockable": true,
@@ -29,7 +29,7 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "number",
+          "column": "cashrcpt_number",
           "isNaturalKey": true
         }
       },
@@ -37,7 +37,7 @@
         "name": "documentNumber",
         "attr": {
           "type": "String",
-          "column": "docnumber",
+          "column": "cashrcpt_docnumber",
           "required": true
         }
       },
@@ -46,7 +46,7 @@
         "toOne": {
           "isNested": true,
           "type": "SalesCustomer",
-          "column": "cust_id",
+          "column": "cashrcpt_cust_id",
           "required": true
         }
       },
@@ -54,7 +54,7 @@
         "name": "useCustomerDeposit",
         "attr": {
           "type": "Boolean",
-          "column": "usecustdeposit",
+          "column": "cashrcpt_usecustdeposit",
           "required": true
         }
       },
@@ -62,7 +62,7 @@
         "name": "amount",
         "attr": {
           "type": "Money",
-          "column": "amount",
+          "column": "cashrcpt_amount",
           "required": true
         }
       },
@@ -70,21 +70,23 @@
         "name": "appliedAmount",
         "attr": {
           "type": "Money",
-          "column": "applied_amount"
+          "derived": true,
+          "method": "xt.cashrcpt_applied_amount(cashrcpt_id, true)"
         }
       },
       {
         "name": "balance",
         "attr": {
           "type": "Money",
-          "column": "balance"
+          "derived": true,
+          "method": "xt.cashrcpt_balance(cashrcpt_id, cashrcpt_amount)"
         }
       },
       {
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "curr_id",
+          "column": "cashrcpt_curr_id",
           "required": true
         }
       },
@@ -92,7 +94,7 @@
         "name": "currencyRate",
         "attr": {
           "type": "Number",
-          "column": "curr_rate",
+          "column": "cashrcpt_curr_rate",
           "required": true
         }
       },
@@ -100,7 +102,7 @@
         "name": "fundsType",
         "attr": {
           "type": "String",
-          "column": "fundstype",
+          "column": "cashrcpt_fundstype",
           "required": true
         }
       },
@@ -108,14 +110,15 @@
         "name": "documentDate",
         "attr": {
           "type": "Date",
-          "column": "docdate"
+          "column": "cashrcpt_docdate"
         }
       },
       {
         "name": "bankAccount",
         "toOne": {
           "type": "BankAccountRelation",
-          "column": "bankaccnt_id",
+          "column": "cashrcpt_bankaccnt_id",
+          "isNested": true,
           "required": true
         }
       },
@@ -123,21 +126,21 @@
         "name": "distributionDate",
         "attr": {
           "type": "Date",
-          "column": "distdate"
+          "column": "cashrcpt_distdate"
         }
       },
       {
         "name": "notes",
         "attr": {
           "type": "String",
-          "column": "notes"
+          "column": "cashrcpt_notes"
         }
       },
       {
         "name": "applicationDate",
         "attr": {
           "type": "Date",
-          "column": "applydate",
+          "column": "cashrcpt_applydate",
           "required": true
         }
       },
@@ -145,7 +148,7 @@
         "name": "isPosted",
         "attr": {
           "type": "Boolean",
-          "column": "posted",
+          "column": "cashrcpt_posted",
           "required": true
         }
       },
@@ -165,16 +168,16 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "CashReceiptLine",
-    "table": "xt.cashrcptiteminfo",
+    "table": "cashrcptitem",
     "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
     "isRest": true,
     "comment": "Cash Receipt Line Item",
     "privileges": {
       "all": {
-        "create": "MaintainCashReceipts",
-        "read": "ViewCashReceipts",
-        "update": "MaintainCashReceipts",
-        "delete": "MaintainCashReceipts"
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
       }
     },
     "properties": [
@@ -184,21 +187,6 @@
           "type": "Number",
           "column": "cashrcptitem_id",
           "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "cashReceipt",
-        "attr": {
-          "type": "Number",
-          "column": "cashrcpt_id"
-        }
-      },
-      {
-        "name": "receivable",
-        "toOne": {
-          "isNested": true,
-          "type": "CashReceiptReceivable",
-          "column": "aropen_id"
         }
       },
       {
@@ -213,7 +201,7 @@
         "name": "amount",
         "attr": {
           "type": "Money",
-          "column": "amount",
+          "column": "cashrcptitem_amount",
           "required": true
         }
       },
@@ -221,7 +209,23 @@
         "name": "discountAmount",
         "attr": {
           "type": "Money",
-          "column": "discount",
+          "column": "cashrcptitem_discount",
+          "required": true
+        }
+      },
+      {
+        "name": "cashReceipt",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_cashrcpt_id"
+        }
+      },
+      {
+        "name": "receivable",
+        "toOne": {
+          "type": "ReceivableRelation",
+          "column": "cashrcptitem_aropen_id",
+          "isNested": true,
           "required": true
         }
       }
@@ -267,7 +271,7 @@
         "name": "amount",
         "attr": {
           "type": "Money",
-          "column": "amount",
+          "column": "cashrcptitem_amount",
           "required": true
         }
       },
@@ -275,37 +279,22 @@
         "name": "discountAmount",
         "attr": {
           "type": "Money",
-          "column": "discount_amount",
+          "column": "cashrcptitem_discount",
           "required": true
         }
       },
       {
-        "name": "currency",
-        "toOne": {
-          "type": "Currency",
-          "column": "curr_id",
-          "required": true
-        }
-      },
-      {
-        "name": "currencyRate",
+        "name": "cashReceiptReceivable",
         "attr": {
           "type": "Number",
-          "column": "curr_rate"
+          "column": "cashrcptitem_aropen_id"
         }
       },
       {
         "name": "cashReceipt",
         "toOne": {
           "type": "CashReceiptRelation",
-          "column": "cashrcpt_id"
-        }
-      },
-      {
-        "name": "receivable",
-        "attr": {
-          "type": "Number",
-          "column": "aropen_id"
+          "column": "cashrcptitem_cashrcpt_id"
         }
       }
     ],
@@ -316,7 +305,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "CashReceiptRelation",
-    "table": "xt.cashrcptinfo",
+    "table": "cashrcpt",
     "idSequenceName": "cashrcpt_cashrcpt_id_seq",
     "isRest": true,
     "lockable": true,
@@ -342,7 +331,7 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "number",
+          "column": "cashrcpt_number",
           "isNaturalKey": true
         }
       },
@@ -350,14 +339,14 @@
         "name": "documentNumber",
         "attr": {
           "type": "String",
-          "column": "docnumber"
+          "column": "cashrcpt_docnumber"
         }
       },
       {
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "curr_id",
+          "column": "cashrcpt_curr_id",
           "required": true
         }
       },
@@ -365,7 +354,7 @@
         "name": "currencyRate",
         "attr": {
           "type": "Number",
-          "column": "curr_rate",
+          "column": "cashrcpt_curr_rate",
           "required": true
         }
       },
@@ -374,7 +363,7 @@
         "toOne": {
           "isNested": true,
           "type": "CustomerRelation",
-          "column": "cust_id",
+          "column": "cashrcpt_cust_id",
           "required": true
         }
       }
@@ -386,16 +375,17 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "CashReceiptReceivable",
-    "table": "xt.cashrcpt_receivable",
+    "table": "arapply",
+    "idSequenceName": "arapply_arapply_id_seq",
     "isRest": true,
     "lockable": true,
     "comment": "Cash Receipt Receivable",
     "privileges": {
       "all": {
-        "create": "MaintainCashReceipts",
-        "read": "ViewCashReceipts",
-        "update": "MaintainCashReceipts",
-        "delete": "MaintainCashReceipts"
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -403,7 +393,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "aropen_id",
+          "column": "arapply_id",
           "isPrimaryKey": true
         }
       },
@@ -416,97 +406,35 @@
         }
       },
       {
-        "name": "documentType",
+        "name": "appliedAmount",
         "attr": {
-          "type": "String",
-          "column": "doctype",
-          "required": true
-        }
-      },
-      {
-        "name": "documentNumber",
-        "attr": {
-          "type": "String",
-          "column": "docnumber",
-          "required": true
-        }
-      },
-      {
-        "name": "orderNumber",
-        "attr": {
-          "type": "String",
-          "column": "ordernumber",
-          "required": true
-        }
-      },
-      {
-        "name": "documentDate",
-        "attr": {
-          "type": "Date",
-          "column": "docdate",
-          "required": true
-        }
-      },
-      {
-        "name": "dueDate",
-        "attr": {
-          "type": "Date",
-          "column": "duedate",
+          "type": "Money",
+          "column": "arapply_applied",
           "required": true
         }
       },
       {
         "name": "balance",
         "attr": {
-          "type": "Number",
-          "column": "balance"
-        }
-      },
-      {
-        "name": "amount",
-        "attr": {
           "type": "Money",
-          "column": "amount",
-          "required": true
-        }
-      },
-      {
-        "name": "appliedAmount",
-        "attr": {
-          "type": "Money",
-          "column": "applied_amount",
-          "required": true
-        }
-      },
-      {
-        "name": "currency",
-        "toOne": {
-          "type": "Currency",
-          "column": "curr_id",
-          "required": true
-          
-        }
-      },
-      {
-        "name": "isOpen",
-        "attr": {
-          "type": "Boolean",
-          "column": "open",
-          "required": true
+          "derived": true,
+          "method": "xt.cashrcpt_receivable_balance(arapply_target_aropen_id)"
         }
       },
       {
         "name": "allPending",
         "attr": {
           "type": "Money",
-          "column": "all_pending"
+          "derived": true,
+          "method": "xt.cashrcpt_receivable_sum_amount(arapply_target_aropen_id, false)"
         }
       },
       {
         "name": "pendingApplications",
         "toMany": {
-          "column": "aropen_id",
-          "inverse": "receivable",
+          "isNested": true,
+          "column": "arapply_target_aropen_id",
+          "inverse": "cashReceiptReceivable",
           "type": "CashReceiptLinePending"
         }
       },
@@ -514,7 +442,8 @@
         "name": "receivable",
         "toOne": {
           "type": "ReceivableRelation",
-          "column": "aropen_id"
+          "column": "arapply_target_aropen_id",
+          "isNested": true
         }
       }
     ],
@@ -524,7 +453,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "CashReceiptListItem",
-    "table": "xt.cashrcptinfo",
+    "table": "cashrcpt",
     "isRest": true,
     "comment": "Cash Receipt List Item",
     "privileges": {
@@ -548,7 +477,7 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "number",
+          "column": "cashrcpt_number",
           "isNaturalKey": true
         }
       },
@@ -556,7 +485,7 @@
         "name": "documentNumber",
         "attr": {
           "type": "String",
-          "column": "docnumber",
+          "column": "cashrcpt_docnumber",
           "isNaturalKey": true
         }
       },
@@ -564,7 +493,7 @@
         "name": "amount",
         "attr": {
           "type": "Money",
-          "column": "amount"
+          "column": "cashrcpt_amount"
         }
       },
       {
@@ -572,7 +501,7 @@
         "toOne": {
           "isNested": true,
           "type": "CustomerRelation",
-          "column": "cust_id"
+          "column": "cashrcpt_cust_id"
         }
       },
       {
@@ -580,14 +509,14 @@
         "toOne": {
           "isNested": true,
           "type": "Currency",
-          "column": "curr_id"
+          "column": "cashrcpt_curr_id"
         }
       },
       {
         "name": "fundsType",
         "attr": {
           "type": "String",
-          "column": "fundstype"
+          "column": "cashrcpt_fundstype"
         }
       },
       {
@@ -595,21 +524,21 @@
         "toOne": {
           "isNested": true,
           "type": "BankAccountRelation",
-          "column": "bankaccnt_id"
+          "column": "cashrcpt_bankaccnt_id"
         }
       },
       {
         "name": "distributionDate",
         "attr": {
           "type": "Date",
-          "column": "distdate"
+          "column": "cashrcpt_distdate"
         }
       },
       {
         "name": "isPosted",
         "attr": {
           "type": "Boolean",
-          "column": "posted"
+          "column": "cashrcpt_posted"
         }
       }
     ],
