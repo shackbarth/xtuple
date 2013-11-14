@@ -300,7 +300,7 @@ white:true*/
       var isPosted = this.get("isPosted");
 
       this.setReadOnly(["lineItems", "number", "invoiceDate", "terms", "salesRep", "commission",
-        "taxZone", "saleType"], isPosted);
+        "taxZone", "saleType", "taxAdjustments"], isPosted);
     },
 
     /**
