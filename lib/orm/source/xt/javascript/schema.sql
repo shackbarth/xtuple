@@ -277,10 +277,12 @@ select xt.install_js('XT','Schema','xtuple', $$
     }
 
     var attrPriv = orm.privileges && orm.privileges.attribute ? orm.privileges.attribute : false,
+        attr,
         columns = [],
         ext = {},
         nkey = XT.Orm.naturalKey(orm),
         pkey = XT.Orm.primaryKey(orm),
+        prop,
         ret = {},
         relatedORM = {},
         relatedKey,
@@ -306,6 +308,9 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     /* Loop through the ORM properties and get the columns. */
     for (var i = 0; i < orm.properties.length; i++) {
+      prop = orm.properties[i];
+      attr = prop.attr;
+
       /* Skip primaryKey if there is a natualKey that's a different property. */
       if (nkey && orm.properties[i].name === pkey && orm.properties[i].name !== nkey) {
         continue;
@@ -316,7 +321,7 @@ select xt.install_js('XT','Schema','xtuple', $$
         continue;
       }
 
-      /* Skip this property if it's ORM column priv is set to false. */
+      /* Skip this property if its ORM column priv is set to false. */
       /* TODO: Not checking for superuser here. This is more to just check if the column is set to false. */
       if (attrPriv && attrPriv[orm.properties[i].name] &&
         (attrPriv[orm.properties[i].name].view !== undefined) &&
@@ -338,6 +343,15 @@ select xt.install_js('XT','Schema','xtuple', $$
         /* Initialize named properties. */
         ret.properties[orm.properties[i].name] = {};
         ret.properties[orm.properties[i].name].title = orm.properties[i].name.humanize();
+      }
+
+      /**
+       * Derived property
+       * By definition a derived property is not backed by a column, so use the
+       * 'name' property to stand in for the column.
+       */
+      if (attr && attr.derived) {
+        attr.column = prop.name;
       }
 
       /* Basic property */
@@ -379,8 +393,7 @@ select xt.install_js('XT','Schema','xtuple', $$
           ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
         } else {
 
-          /* TODO: Assuming "XM" here... */
-          relatedORM = XT.Orm.fetch("XM", orm.properties[i].toOne.type, {"silentError": true});
+          relatedORM = XT.Orm.fetch(orm.nameSpace, orm.properties[i].toOne.type, {"silentError": true});
           relatedKey = XT.Orm.naturalKey(relatedORM) || XT.Orm.primaryKey(relatedORM);
           relatedKeyProp = XT.Orm.getProperty(relatedORM, relatedKey);
 

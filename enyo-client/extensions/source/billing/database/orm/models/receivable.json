@@ -509,7 +509,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "ReceivableRelation",
-    "table": "xt.aropeninfo",
+    "table": "aropen",
     "idSequenceName": "aropen_aropen_id_seq",
     "isRest": true,
     "isSystem": true,
@@ -540,10 +540,25 @@
         }
       },
       {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "aropen_curr_id",
+          "required": true
+        }
+      },
+      {
         "name": "customer",
         "toOne": {
           "type": "CustomerRelation",
           "column": "aropen_cust_id"
+        }
+      },
+      {
+        "name": "isOpen",
+        "attr": {
+          "type": "Boolean",
+          "column": "aropen_open"
         }
       },
       {
@@ -558,6 +573,30 @@
         "attr": {
           "type": "String",
           "column": "aropen_docnumber"
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "aropen_docdate",
+          "required": true
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "aropen_duedate",
+          "required": true
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "aropen_ordernumber",
+          "required": true
         }
       }
     ]
