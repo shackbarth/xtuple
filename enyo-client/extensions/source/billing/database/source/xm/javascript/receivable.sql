@@ -30,14 +30,17 @@ select xt.install_js('XM','Receivable','xtuple', $$
   XM.Receivable.insertReceivable = function (uuid, customerId, docNum, docDate, amt, dueDate, currencyId,
     currencyRate, commission, orderNum, notes, termsId, reasonCodeId, salesRepId, paid, taxes, documentType) {
     /* add receivable */
-    var insertSql = "insert into aropen ( obj_uuid, aropen_cust_id, aropen_docnumber, aropen_docdate, aropen_amount, aropen_duedate, aropen_curr_id, aropen_doctype, " +
-    "aropen_commission_due, aropen_ordernumber, aropen_notes, aropen_terms_id, aropen_rsncode_id, aropen_salesrep_id, aropen_paid, aropen_curr_rate, aropen_posted ) " +
+    var insertSql = "insert into aropen ( obj_uuid, aropen_cust_id, aropen_docnumber, aropen_docdate, aropen_distdate, " +
+    "aropen_amount, aropen_duedate, aropen_curr_id, aropen_doctype, aropen_commission_due, " +
+    "aropen_ordernumber, aropen_notes, aropen_terms_id, aropen_rsncode_id, aropen_salesrep_id, aropen_paid, " +
+    "aropen_curr_rate, aropen_commission_paid, aropen_posted, aropen_open ) " +
         " values " +
-        "( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17 );";
+        "( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20 );";
     plv8.elog(NOTICE, "insert sql: ", insertSql);
     plv8.elog(NOTICE, "currency rate: ", currencyRate);
-    plv8.execute(insertSql, [uuid, customerId, docNum, docDate, amt, dueDate, currencyId, documentType, commission,
-        orderNum, notes, termsId, reasonCodeId, salesRepId, paid, currencyRate, true]);
+    /* the posted value here doesn't really mean anything since the QT client hard-codes it */
+    plv8.execute(insertSql, [uuid, customerId, docNum, docDate, docDate, amt, dueDate, currencyId, documentType, commission,
+        orderNum, notes, termsId, reasonCodeId, salesRepId, paid, currencyRate, false, false, true]);
 
     var selectSql = "select aropen_id as result from aropen where obj_uuid = $1;";
     var id = plv8.execute(selectSql, [uuid])[0].result;
@@ -154,7 +157,10 @@ select xt.install_js('XM','Receivable','xtuple', $$
     var reasonCodeId = reasonCode ? XT.Data.getId(XT.Orm.fetch('XM', 'ReasonCode'), reasonCode) : null;
     var termsId = terms ? XT.Data.getId(XT.Orm.fetch('XM', 'Terms'), terms) : null;
 
-    /* insert receivable/taxes */
+    /**
+     insert receivable/taxes
+     for credits, the tax amount is negative
+    */
     var recId = XM.Receivable.insertReceivable(uuid, customerId, docNum, docDate, amt, dueDate, currencyId, currencyRate, commission, orderNum, notes, termsId, reasonCodeId, salesRepId, paid, taxes, 'D');
 
     /* do post */
