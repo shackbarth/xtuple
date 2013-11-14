@@ -128,11 +128,17 @@ select xt.install_js('XT','Orm','xtuple', $$
             /* obj_uuid might not be inserted yet */
             return;
           }
+
           /**
-           * TODO check if derived
+           * skip column check for derived fields
+           * TODO an existence check for the defined "method" could be helpful.
+           */
+          if (ormProp.attr.derived) {
+            return;
+          }
+
           throw new Error(nameSpace + "." + type + " ORM property " + ormProp.attr.column
             + " references a column not in " + tableNamespace + "." + tableName);
-           */
         }
         /*
         schemaColumn = schemaColumn[0];
