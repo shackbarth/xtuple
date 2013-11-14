@@ -62,6 +62,7 @@
     "_salesCategory": "Sales Category",
     "_taxes": "Taxes",
     "_taxTotal": "Tax Total",
+    "_unposted": "Unposted",
     "_useCustomerDeposit": "Use Customer Deposit",
     "_viewAROpenItems": "View Receivables",
     "_viewCashReceipts": "View Cash Receipts",
@@ -70,7 +71,10 @@
     "_void": "Void",
     "_voidPostedCashReceipts": "Void Posted Cash Receipts",
     "_voidPostedInvoices": "Void Posted Invoices",
-    "_wireTransfer": 'Wire Transfer'
+    "_wireTransfer": 'Wire Transfer',
+
+    // Application errors
+    "_taxesMustNotBeGreater": "The Tax Total may not be greater than the Amount"
   });
 
   if (typeof exports !== 'undefined') {

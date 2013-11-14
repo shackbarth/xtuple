@@ -22,4 +22,20 @@ XT.extensions.billing.initListRelationsEditors = function () {
     ]
   });
 
+  // ..........................................................
+  // RECEIVABLE TAXES
+  //
+  enyo.kind({
+    name: "XV.ReceivableTaxEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.TaxCodePicker", attr: "taxCode"},
+        {kind: "XV.MoneyWidget", attr: {localValue: "taxAmount"},
+          label: "_amount".loc(), currencyShowing: false}
+      ]}
+    ]
+  });
+
 };

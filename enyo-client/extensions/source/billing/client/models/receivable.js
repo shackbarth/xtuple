@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true, expr:true */
-/*global XT:true, XM:true, _:true */
+/*global XT:true, XM:true, _:true, Globalize:true */
 
 XT.extensions.billing.initReceivableModel = function () {
   'use strict';
@@ -39,11 +39,10 @@ XT.extensions.billing.initReceivableModel = function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:amount', this.amountDidChange);
       this.on('change:customer', this.customerDidChange);
-      this.on('change:documentDate', this.documentDateDidChange);
-      this.on('change:terms', this.documentDateDidChange);
+      this.on('change:documentDate change:terms', this.documentDateDidChange);
       this.on('change:paid', this.paidDidChange);
       this.on('statusChange', this.statusDidChange);
-      this.on('change:taxes add:taxes remove:taxes', this.taxesDidChange);
+      this.on('add:taxes remove:taxes', this.taxesDidChange);
     },
 
     /**
@@ -83,7 +82,20 @@ XT.extensions.billing.initReceivableModel = function () {
         "documentNumber", "terms"], isEdit);
     },
 
-    taxesDidChange: function () {
+    /**
+      Called when a tax is added or removed
+      @param {Object} model
+    */
+    taxesDidChange: function (model) {
+      if (model) {
+        // add listener for taxAmount change on new model
+        model.on('change:taxAmount', this.taxAmountDidChange, this);
+      } else {
+        this.taxAmountDidChange();
+      }
+    },
+
+    taxAmountDidChange: function () {
       this.set("taxTotal", this.calculateTaxTotal());
     },
 
@@ -172,27 +184,30 @@ XT.extensions.billing.initReceivableModel = function () {
     */
     save: function (key, value, options) {
       if (this.getStatus() === XM.Model.READY_NEW) {
-        options = options ? _.clone(options) : {};
-        var that = this,
-          success;
+        var that = this, taxes,
+          recOptions = {},
+          success, params,
+          attrs;
 
         // Handle both `"key", value` and `{key: value}` -style arguments.
-        if (_.isObject(key) || _.isEmpty(key)) {
-          options = value ? _.clone(value) : {};
+        if (key === null || typeof key === 'object') {
+          attrs = key;
+          options = value;
         } else {
-          options = options ? _.clone(options) : {};
+          (attrs = {})[key] = value;
         }
 
-        // validate before dispatch
-        if (!this.validate()) {
+        options = _.extend({validate: true}, options);
+
+        // Do not persist invalid models.
+        if (!this._validate(attrs, options)) {
           return false;
         }
 
         success = options.success;
-
-        var recOptions = {},
-          taxes = that.get("taxes") ? that.get("taxes").models : null;
-
+        taxes = that.get("taxes") ? that.get("taxes").models : null;
+        // construct the array of tax objects to send as a parameter to
+        // the dispatch function
         taxes = _.map(taxes, function (m) {
           return {
             taxAmount: m.get("taxAmount"),
@@ -205,8 +220,8 @@ XT.extensions.billing.initReceivableModel = function () {
             uuid: m.id
           };
         });
-
-        var params = [
+        // array of parameters, including taxes, to send to dispatch function
+        params = [
           that.id,
           that.get("customer").id,
           that.get("documentNumber"),
@@ -214,6 +229,7 @@ XT.extensions.billing.initReceivableModel = function () {
           that.get("amount"),
           that.get("dueDate"),
           that.get("currency").id,
+          XM.currencyRates.getScalarRate('to base from', that.get("currency"), that.get("documentDate")),
           that.get("commission"),
           that.get("orderNumber"),
           that.get("notes"),
@@ -247,17 +263,34 @@ XT.extensions.billing.initReceivableModel = function () {
     validate: function () {
       var amount = this.get("amount") || 0,
         taxTotal = this.get("taxTotal") || 0,
-        params;
+        currency = this.get("currency"),
+        documentDate = this.get("documentDate"),
+        currencyRate,
+        params = {}, error;
+
+      error = XM.Document.prototype.validate.apply(this, arguments);
+      if (error) { return error; }
+
+      currencyRate = XM.currencyRates.getScalarRate('to base from',
+        currency, documentDate);
+      if (!currencyRate || isNaN(currencyRate)) {
+        params.currency = currency.get("abbreviation");
+        params.asOf = Globalize.format(documentDate, "d");
+        return XT.Error.clone('xt2010', { params: params});
+      }
 
       if (amount <= 0) {
         params = {attr: "_amount".loc(), value: amount};
         return XT.Error.clone('xt1013', { params: params });
       }
+
       if (Math.max(taxTotal, amount) === taxTotal) {
         return XT.Error.clone('xt2024');
       }
-      return XM.Document.prototype.validate.apply(this, arguments);
+
+      return;
     }
+
   });
 
   XM.ReceivableMixin = {
