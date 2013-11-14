@@ -1164,7 +1164,9 @@ strict: false*/
           ]}
         ]},
         {kind: "XV.InvoiceAllocationsBox", attr: "allocations", title: "_allocatedCredit".loc()},
+        // TODO: nest the next two items in a groupbox
         {kind: "XV.InvoiceTaxBox", attr: "taxes", title: "_taxes".loc()},
+        {kind: "XV.InvoiceTaxAdjustmentBox", attr: "taxAdjustments", title: "_taxAdjustments".loc()},
         {kind: "XV.InvoiceDocumentsBox", attr: "documents"}
       ]}
     ],
