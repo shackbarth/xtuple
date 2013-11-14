@@ -140,7 +140,6 @@ select xt.install_js('XT','Orm','xtuple', $$
           throw new Error(nameSpace + "." + type + " ORM property " + ormProp.attr.column
             + " references a column not in " + tableNamespace + "." + tableName);
         }
-        /*
         schemaColumn = schemaColumn[0];
         var schemaType = schemaColumn.category;
         var success = verifyOrmType(ormProp.attr.type, schemaType);
@@ -148,7 +147,6 @@ select xt.install_js('XT','Orm','xtuple', $$
           throw new Error(nameSpace + "." + type + " ORM property " + ormProp.name +
             " type " + ormProp.attr.type + " does not match table column type of " + schemaType);
         }
-        */
       }
     });
 
