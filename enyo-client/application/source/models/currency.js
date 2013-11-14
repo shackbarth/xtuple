@@ -177,7 +177,7 @@
        * conversion rates in the cache, so we have to query the server.
        *
        * @callback
-       * When both rates are fetched into the global rate cache, make another 
+       * When both rates are fetched into the global rate cache, make another
        * call to toCurrency.
        */
       onRatesSuccess = function () {
@@ -494,7 +494,7 @@
 
     /**
      * Perform currency conversion and return the scalar value of the new
-     * currency. Conversion is done by first converting the value to the 
+     * currency. Conversion is done by first converting the value to the
      * base currency, and then converting it to the target currency.
      *
      * @param {Number}  rVia      rate from value to 'via' currency
@@ -543,7 +543,7 @@
         ]
       };
     }
-    
+
   });
 
 

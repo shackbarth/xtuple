@@ -95,7 +95,7 @@
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.MoneyWidget",
               attr: {localValue: "amount", currency: "currency"},
-              label: "_amount".loc()},
+              label: "_amount".loc()}, // add effective date?
             {kind: "XV.MoneyWidget", attr: {localValue: "paid"},
               label: "_paid".loc(), currencyShowing: false},
             {kind: "XV.MoneyWidget", attr: {localValue: "balance"},

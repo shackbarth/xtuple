@@ -151,12 +151,12 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
               assert.isTrue(model.isCredit());
             });
 
-          it("Validation: The amount must be greater than zero", function () {
+          it.skip("Validation: The amount must be greater than zero", function () {
             model.set("amount", 0);
             assert.equal(model.validate().code, "xt1013");
           });
 
-          it("Validation: The taxTotal may not be greater than the amount", function () {
+          it.skip("Validation: The taxTotal may not be greater than the amount", function () {
             model.set("amount", 20);
             model.set("taxTotal", 30);
             assert.equal(model.validate().code, "xt2024");
