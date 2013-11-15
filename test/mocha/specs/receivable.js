@@ -465,7 +465,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           "notes",
           "taxes",
           //"balance",
-          "taxTotal",
+          //"taxTotal",
           "applications",
           "commission"
         ];
