@@ -9,10 +9,9 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceipt = XM.Document.extend({
     recordType: 'XM.CashReceipt',
-    idAttribute: 'number',
     documentKey: 'number',
     enforceUpperKey: false,
-    numberPolicySetting: XM.Document.AUTO_NUMBER,
+    numberPolicy: XM.Document.AUTO_NUMBER,
 
     defaults: function () {
       this.meta = new Backbone.Model();
@@ -25,7 +24,8 @@ XT.extensions.billing.initCashReceipt = function () {
         applicationDate: new Date(),
         amount: 0,
         appliedAmount: 0,
-        balance: 0
+        balance: 0,
+        lineItems: new XM.CashReceiptLineCollection()
       };
     },
 
@@ -129,7 +129,8 @@ XT.extensions.billing.initCashReceipt = function () {
      * @returns {Date}
      */
     getMinimumDate: function () {
-      _.max(this.lineItems.pluck('documentDate'));
+      return this.lineItems ?
+        _.max(this.lineItems.pluck('documentDate')) : XT.date.startOfTime();
     },
 
     /**
@@ -138,22 +139,32 @@ XT.extensions.billing.initCashReceipt = function () {
      */
     checkCurrency: function (_callback) {
       var that = this,
-        bankAccount = this.get('bankAccount'),
-        bankAccountCurrency = bankAccount.get('currency').get('abbreviation'),
-        cashReceiptCurrency = this.get('currency').get('abbreviation'),
-        previousCurrency = that.previousAttributes().currency,
         callback = function (ok) {
-          if (ok) {
-            return callback(ok);
+          var previousCurrency = that.previousAttributes().currency;
+
+          if (!ok) {
+            // XXX
+            console.log('canceled currency change from '+ previousCurrency +
+              ' to '+ that.get('currency'));
+
+            that.set({ currency: previousCurrency });
           }
 
-          // XXX
-          console.log('canceled currency change from '+ previousCurrency +
-            ' to '+ that.get('currency'));
+          if (_.isFunction(_callback)) {
+            _callback(ok);
+            return that;
+          }
+        },
+        bankAccount = this.get('bankAccount'),
+        bankAccountCurrency,
+        cashReceiptCurrency;
 
-          that.set({ currency: previousCurrency });
-        };
+      if (!this.get('bankAccount')) {
+        return callback(true);
+      }
 
+      bankAccountCurrency = bankAccount.get('currency').get('abbreviation'),
+      cashReceiptCurrency = this.get('currency').get('abbreviation');
 
       if (bankAccountCurrency !== cashReceiptCurrency && this.meta.get('currencyWarning')) {
         this.notify(
@@ -164,11 +175,8 @@ XT.extensions.billing.initCashReceipt = function () {
         );
         this.meta.set({ currencyWarning: false });
       }
-      else if (_.isFunction(callback)) {
-        callback(true);
-      }
 
-      return this;
+      return callback(true);
     },
 
     /**
@@ -206,12 +214,12 @@ XT.extensions.billing.initCashReceipt = function () {
      * Validate applyLineBalance preconditions.
      */
     _applyLineBalance: function (receivable, options, step) {
-
       if (receivable.isDebit() && this.get('balance') === 0) {
         return options.error('_noApplicableCashReceiptBalance'.loc());
       }
 
-      var that = this, plan = {
+      var that = this,
+        plan = {
 
         /**
          * 1. Validate the currency.
@@ -374,10 +382,10 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceiptLine = XM.Model.extend({
     recordType: 'XM.CashReceiptLine',
+    readOnly: true,
 
     defaults: {
       amount: 0,
-      discount: 0,
       discountAmount: 0
     }
   });
@@ -400,6 +408,22 @@ XT.extensions.billing.initCashReceipt = function () {
     // mixins: [ XM.ReceivableMixin ],
     recordType: 'XM.CashReceiptReceivable',
     idAttribute: 'uuid',
+
+    readOnlyAttributes: [
+      'receivable.documentNumber',
+      'receivable.documentType',
+      'receivable.orderNumber',
+      'receivable.dueDate',
+      'receivable.currency',
+      'balance',
+      'allPending'
+    ],
+
+    initialize: function () {
+      if (this.isNew()) {
+        this.setReadOnly(this.readOnlyAttributes, false);
+      }
+    },
 
     events: {
       'change:amount' : 'updateBalance',

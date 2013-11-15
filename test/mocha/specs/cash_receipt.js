@@ -39,25 +39,31 @@
       currency: {abbreviation: "USD"},
       documentNumber: "DocumentNumber" + Math.random()
     },
+    /**
+     * Existing bank expected to be in the test database.
+     */
     bankAccountHash = {
-      name: "TestBankAccount" + Math.random(),
-      description: "Test bank account",
-      bankName: "TestBankName",
-      accountNumber: Math.random(),
+      name: "EBANK",
+      description: "eBank description",
+      bankName: "eBank",
+      accountNumber: 123145,
       notes: "Test bank account notes"
     },
     cashReceiptHash = {
+      //number: Math.random() * 10000,
       isPosted: false,
       amount: 10000,
       applicationDate: new Date(),
       currencyRate: 1.0,
       bankAccount: bankAccountHash,
+      useCustomerDeposit: true,
       currency: {
         abbreviation: 'USD',
       },
       customer: {
         number: 'TTOYS'
       },
+      /*
       lineItems: [
         {
           amount: 100,
@@ -87,9 +93,43 @@
           }, receivableHash)
         }
       ]
+      */
+    },
+    cashReceiptSpec = {
+      recordType: 'XM.CashReceipt',
+      collectionType: 'XM.CashReceiptCollection',
+      cacheName: null,
+      skipSmoke: true,
+    // skipCrud: true,
+      instanceOf: 'XM.Document',
+      isLockable: true,
+      idAttribute: 'number',
+      enforceUpperKey: false,
+      attributes: [
+        'number', 'customer', 'amount', 'currency', 'currencyRate',
+        'documentNumber', 'documentDate', 'bankAccount', 'distributionDate',
+        'applicationDate', 'notes', 'isPosted', 'balance'
+      ],
+      requiredAttributes: [
+        'customer', 'amount', 'currency', 'currencyRate', 'number',
+        'bankAccount', 'applicationDate', 'isPosted', 'useCustomerDeposit'
+      ],
+      defaults: {
+        isPosted: false
+      },
+      privileges: {
+        create: 'MaintainCashReceipts',
+        read: true,
+        update: 'MaintainCashReceipts',
+        delete: 'MaintainCashReceipts'
+      },
+      extensions: ["billing"],
+      updatableField: 'notes',
+      listKind: 'XV.CashReceiptList',
+      createHash: cashReceiptHash
     },
 
-    test = function () {
+    cashReceiptTest = function () {
 
       describe('XM.CashReceipt', function () {
         var cashReceiptSchema, usd, eur, gbp,
@@ -759,8 +799,8 @@
     };
 
   module.exports = {
-    additionalTests: test,
-    createHash: cashReceiptHash
+    spec: cashReceiptSpec,
+    additionalTests: cashReceiptTest
   };
 
 })();

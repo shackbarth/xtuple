@@ -129,5 +129,16 @@
         }
       },
     });
+
+
+    enyo.kind({
+      name: "XV.CashReceiptListParameters",
+      kind: "XV.ParameterWidget",
+      defaultParameters: function () {
+        return {
+          showPosted: true
+        };
+      }
+    });
   };
 }());

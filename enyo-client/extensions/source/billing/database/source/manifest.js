@@ -9,14 +9,10 @@
     "xm/javascript/sales_category.sql",
     "xt/functions/ar_balance.sql",
     "xt/functions/ar_tax_total.sql",
+    "xt/functions/cashrcpt.sql",
+    "xt/views/cashrcptitem_pending.sql",
     "xt/views/receivable_invoice_return.sql",
     "xt/views/aropeninfo.sql",
-    "xt/functions/cashrcpt_applied_amount.sql",
-    "xt/functions/cashrcpt_receivable_sum_amount.sql",
-    "xt/functions/cashrcpt_balance.sql",
-    "xt/functions/cashrcpt_receivable_balance.sql",
-    "xt/views/cashrcpt_receivable.sql",
-    "xt/views/receivable_applications.sql",
-    "xt/views/cashrcptitem_pending.sql"
+    "xt/views/receivable_applications.sql"
   ]
 }

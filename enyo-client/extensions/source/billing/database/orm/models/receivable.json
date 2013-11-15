@@ -576,11 +576,10 @@
         }
       },
       {
-        "name": "documentDate",
+        "name": "orderNumber",
         "attr": {
-          "type": "Date",
-          "column": "aropen_docdate",
-          "required": true
+          "type": "String",
+          "column": "aropen_ordernumber"
         }
       },
       {
