@@ -173,9 +173,9 @@ trailing:true, white:true*/
         label: "_authorizedCredit".loc(), currencyShowing: false,
         container: "invoiceLineItemBox.summaryPanel.summaryColumnOne",
         defer: true},
-      {kind: "XV.InputWidget", container: "mainGroup", addBefore: "invoiceNumberWidget",
+      {kind: "XV.InputWidget", container: "mainSubgroup", addBefore: "isPosted",
         attr: "orderNumber"},
-      {kind: "XV.DateWidget", container: "mainGroup", addBefore: "invoiceNumberWidget",
+      {kind: "XV.DateWidget", container: "mainSubgroup", addBefore: "isPosted",
         attr: "orderDate"}
     ];
     XV.appendExtension("XV.InvoiceWorkspace", extensions);

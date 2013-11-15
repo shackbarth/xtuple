@@ -1126,25 +1126,27 @@ strict: false*/
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", fit: true, components: [
-            {kind: "XV.InputWidget", name: "invoiceNumberWidget", attr: "number"},
-            {kind: "XV.DateWidget", attr: "invoiceDate"},
-            {kind: "XV.CheckboxWidget", attr: "isPosted"},
-            {kind: "XV.CheckboxWidget", attr: "isVoid"},
-            {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
-            {kind: "XV.BillingCustomerWidget", attr: "customer",
-               name: "customerWidget", showAddress: true,
-               label: "_customer".loc(), nameAttribute: ""
-            },
-            {kind: "XV.AddressFieldsWidget",
-              name: "addressWidget", attr:
-              {name: "billtoName", line1: "billtoAddress1",
-                line2: "billtoAddress2", line3: "billtoAddress3",
-                city: "billtoCity", state: "billtoState",
-                postalCode: "billtoPostalCode", country: "billtoCountry"}
-            },
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true}
+              classes: "in-panel", fit: true, components: [
+            {name: "mainSubgroup", components: [ // not a scroller, so we can addBefore
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.DateWidget", attr: "invoiceDate"},
+              {kind: "XV.CheckboxWidget", name: "isPosted", attr: "isPosted"},
+              {kind: "XV.CheckboxWidget", name: "isVoid", attr: "isVoid"},
+              {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
+              {kind: "XV.BillingCustomerWidget", attr: "customer",
+                 name: "customerWidget", showAddress: true,
+                 label: "_customer".loc(), nameAttribute: ""
+              },
+              {kind: "XV.AddressFieldsWidget",
+                name: "addressWidget", attr:
+                {name: "billtoName", line1: "billtoAddress1",
+                  line2: "billtoAddress2", line3: "billtoAddress3",
+                  city: "billtoCity", state: "billtoState",
+                  postalCode: "billtoPostalCode", country: "billtoCountry"}
+              },
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "XV.TextArea", attr: "notes", fit: true}
+            ]}
           ]}
         ]},
         {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},

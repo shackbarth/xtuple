@@ -40,10 +40,7 @@ white:true*/
         }
 
         var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
-        model.set("customerPrice", totalPrice);
-        model.off("price", model.priceDidChange);
-        model.set("price", totalPrice);
-        model.on("price", model.priceDidChange);
+        model.set({customerPrice: totalPrice, price: totalPrice});
         model.calculateExtendedPrice();
       };
 
@@ -190,9 +187,8 @@ white:true*/
     total = add(subtotals, scale);
 
     // Set values
-    model.set("subtotal", subtotal);
-    model.set("taxTotal", taxTotal);
-    model.set("total", total);
+    model.set({subtotal: subtotal, taxTotal: taxTotal, total: total});
+    model.trigger("refreshView", model);
   };
 
 
