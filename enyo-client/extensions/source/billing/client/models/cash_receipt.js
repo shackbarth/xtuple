@@ -377,7 +377,6 @@ XT.extensions.billing.initCashReceipt = function () {
 
     defaults: {
       amount: 0,
-      discount: 0,
       discountAmount: 0
     }
   });
@@ -400,6 +399,16 @@ XT.extensions.billing.initCashReceipt = function () {
     // mixins: [ XM.ReceivableMixin ],
     recordType: 'XM.CashReceiptReceivable',
     idAttribute: 'uuid',
+
+    readOnlyAttributes: [
+      'receivable.documentType',
+      'receivable.documentNumber',
+      'receivable.orderNumber',
+      'receivable.dueDate',
+      'receivable.currency',
+      'balance',
+      'allPending'
+    ],
 
     events: {
       'change:amount' : 'updateBalance',

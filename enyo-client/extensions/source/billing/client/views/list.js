@@ -32,6 +32,7 @@ XT.extensions.billing.initLists = function () {
     view: 'XM.CashReceiptView',
     label: '_cashReceipts'.loc(),
     collection: 'XM.CashReceiptListItemCollection',
+    parameterWidget: 'XV.CashReceiptListParameters',
     components: [
       {kind: 'XV.ListItemDecorator', components: [
         {name: 'listItem', kind: 'XV.CashReceiptListItem'}

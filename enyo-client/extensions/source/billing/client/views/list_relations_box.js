@@ -47,7 +47,6 @@ trailing:true, white:true*/
       kind: 'XV.ListRelationsEditorBox',
       editor: 'XV.CashReceiptLineEditor',
       listRelations: 'XV.CashReceiptLineListRelation',
-      childWorkspace: 'XV.CashReceiptReceivableWorkspace',
       title: '_cashReceiptApplications'.loc(),
       /*
       create: function () {

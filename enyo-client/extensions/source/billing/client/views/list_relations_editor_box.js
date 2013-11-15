@@ -7,6 +7,9 @@ XT.extensions.billing.initListRelationsEditors = function () {
     components: [
       {kind: 'XV.ScrollableGroupbox', fit: true, classes: 'in-panel', components: [
         {kind: 'XV.InputWidget', attr: 'receivable.documentNumber', label: '_documentNumber'.loc()},
+        {kind: "XV.ReceivableTypePicker", attr: "receivable.documentType"},
+        {kind: "XV.InputWidget", attr: "orderNumber"},
+        {kind: "XV.DateWidget", attr: "dueDate"},
         {kind: 'XV.CheckboxWidget', attr: 'isApplied', label: '_applied'.loc()},
         {kind: 'XV.MoneyWidget',
           label: '_amount'.loc(),
@@ -15,7 +18,7 @@ XT.extensions.billing.initListRelationsEditors = function () {
         },
         {kind: 'XV.MoneyWidget',
           label: '_discount'.loc(),
-          attr: { localValue: 'discount', currency: 'cashReceipt.currency' },
+          attr: { localValue: 'discountAmount', currency: 'cashReceipt.currency' },
           disableCurrency: true
         }
       ]}

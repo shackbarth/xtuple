@@ -786,6 +786,11 @@ select xt.install_js('XT','Data','xtuple', $$
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
+        /**
+         * Ignore derived fields for insert/update
+         */
+        if (attr.derived) continue;
+
         attributePrivileges = orm.privileges &&
           orm.privileges.attribute &&
           orm.privileges.attribute[prop];
@@ -1087,6 +1092,11 @@ select xt.install_js('XT','Data','xtuple', $$
         attributePrivileges = orm.privileges &&
           orm.privileges.attribute &&
           orm.privileges.attribute[prop];
+
+        /**
+         * Ignore derived fields for insert/update
+         */
+        if (attr.derived) continue;
 
         if(!attributePrivileges || attributePrivileges.update === undefined) {
           canEdit = true;
