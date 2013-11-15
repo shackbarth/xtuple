@@ -13,7 +13,6 @@ TODO: the following items are not yet done but need to be done by release
 
 1. order number and order date on top of overview (with sales extension)
 2. tax type defaults to item tax type if user has no OverrideTax privilege
-3. Subtotal widget to update immediately when its model is updated
 */
 
 /*
