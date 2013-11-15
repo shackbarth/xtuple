@@ -2425,6 +2425,9 @@ trailing:true, white:true, strict: false*/
       {name: "postProduction", method: "postProduction",
           isViewMethod: true, notify: false,
           prerequisite: "canPostProduction"},
+      {name: "issueMaterial", method: "issueMaterial",
+          isViewMethod: true, notify: false,
+          prerequisite: "canIssueMaterial"}
     ],
     query: {orderBy: [
       {attribute: 'number'}
@@ -2462,6 +2465,15 @@ trailing:true, white:true, strict: false*/
         ]}
       ]}
     ],
+    issueMaterial: function (inEvent) {
+      var index = inEvent.index,
+        workOrder = this.getValue().at(index),
+        that = this,
+        panel = XT.app.$.postbooks.createComponent({kind: "XV.IssueMaterial", model: workOrder.id});
+      panel.render();
+      XT.app.$.postbooks.reflow();
+      XT.app.$.postbooks.setIndex(XT.app.$.postbooks.getPanels().length - 1);
+    },
     postProduction: function (inEvent) {
       var index = inEvent.index,
         workOrder = this.getValue().at(index),
