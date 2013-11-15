@@ -27,8 +27,7 @@
       'applicationDate', 'notes', 'isPosted', 'lineItems', 'balance'
     ],
     requiredAttributes: [
-      'customer', 'amount', 'currency', 'currencyRate', 'bankAccount',
-      'applicationDate', 'isPosted'
+      'customer', 'amount', 'currency', 'currencyRate', 'bankAccount', 'applicationDate', 'isPosted'
     ],
     defaults: {
       isPosted: false
@@ -45,7 +44,7 @@
     createHash: {
 
     },
-    additionalTests: require("../specs/cash_receipt").additionalTests,
+    //additionalTests: require("../specs/cash_receipt").additionalTests,
   };
 
 }());

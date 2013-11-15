@@ -13,10 +13,18 @@ TODO: the following items are not yet done but need to be done by release
 
 1. order number and order date on top of overview (with sales extension)
 2. tax type defaults to item tax type if user has no OverrideTax privilege
-3. A panel that displays a group box of lists of taxes separated headers
-  for taxes by line items, freight, and adjustments. Users should be able to add new tax
-  adjustments, and remove tax adjustments for non-posted invoices.
-4. Should include a panel that displays credit allocations.
+3. Subtotal widget to update immediately when its model is updated
+*/
+
+/*
+TODO deferred to later sprint:
+
+ * filter invoice list by customer group
+ * print invoices (support printing more that 1 on the same screen)
+ * inventory extensions
+ * manufacturing extensions
+ * get the tax summary and tax adjustment boxes in the same panel
+ * Include a panel that displays credit allocations.
     - When clicked a "new" button should allow the user to create a new minimalized version
     of cash receipt on-the-fly. The cash receipt need only record the amount, currency,
     document number, document date, distribution date and whether the balance should
@@ -26,23 +34,6 @@ TODO: the following items are not yet done but need to be done by release
     credits that can be associated with the invoice.
     - The 2 buttons above should only be enabled if the user has the "ApplyARMemos" privilege.
 */
-
-/*
-TODO: from Vinay
-
-3.      When a line item is added/removed, subtotal should be recalculated and displayed (as in Sales order screen)
-
-4.      I have observed that the Allocated Credit box doesn’t respond on selecting the ‘New’ button. There are no test scenarios regarding allocate credit in the Spec document/mocha test document. Could we add scenarios for Allocate Credit to the Invoice test?
-
-*/
-
-
-// TODO deferred to later sprint:
-// filter invoice list by customer group
-// print invoices (support printing more that 1 on the same screen)
-// inventory extensions
-// manufacturing extensions
-
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
@@ -650,6 +641,15 @@ TODO: from Vinay
           }
         ], done);
       });
+
+      //
+      // Note: the other required fields in taxhist should be populated with the following:
+      // basis: 0
+      // percent: 0
+      // amount: 0
+      // docdate: invoice date
+      // taxtype: 3. Yes, 3.
+      //
       /**
         @member InvoiceTax
         @memberof Invoice.prototype
@@ -962,6 +962,10 @@ TODO: from Vinay
         invoiceTaxModel.set({taxCode: nctaxCode, amount: 10.00});
         invoiceModel.on("change:total", totalChanged);
         invoiceModel.get("taxAdjustments").add(invoiceTaxModel);
+      });
+      it("The document date of the tax adjustment should be the invoice date.",
+          function () {
+        assert.equal(invoiceModel.get("invoiceDate"), invoiceTaxModel.get("documentDate"));
       });
       /**
         @member -

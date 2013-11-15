@@ -2,11 +2,11 @@
  * Aggregate the cash receipt line amounts; it is necessary to convert the
  * amount of each CashReceiptLine to the currency of the CashReceiptReceivable.
  *
- * @param {XM.CashReceiptReceivable}  the cash receipt receivable
- * @param {Boolean}                   whether to aggregate applied or un-applied amounts
+ * @param {Integer} aropen_id
+ * @param {Boolean} whether to aggregate applied or un-applied amounts
  * @returns sum of CashReceiptLine amounts for this CashReceiptReceivable
  */
-create or replace function xt.cashrcpt_receivable_sum_amount(aropen, boolean)
+create or replace function xt.cashrcpt_receivable_sum_amount(numeric, boolean)
 returns numeric stable as $$
 
   select
@@ -25,7 +25,7 @@ returns numeric stable as $$
 
   from
     cashrcptitem
-    inner join aropen on ($1.aropen_id = cashrcptitem_aropen_id)
+    inner join aropen on (aropen_id = cashrcptitem_aropen_id)
     inner join cashrcpt on (cashrcptitem_cashrcpt_id = cashrcpt_id)
 
   where
