@@ -589,13 +589,6 @@
           "column": "aropen_duedate",
           "required": true
         }
-      },
-      {
-        "name": "orderNumber",
-        "attr": {
-          "type": "String",
-          "column": "aropen_ordernumber"
-        }
       }
     ]
   }
