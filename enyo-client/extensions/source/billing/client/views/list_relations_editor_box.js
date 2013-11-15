@@ -7,7 +7,7 @@ XT.extensions.billing.initListRelationsEditors = function () {
     components: [
       {kind: 'XV.ScrollableGroupbox', fit: true, classes: 'in-panel', components: [
         {kind: 'XV.InputWidget', attr: 'receivable.documentNumber', label: '_documentNumber'.loc()},
-        {kind: "XV.ReceivableTypePicker", attr: 'receivable.documentType', label: '_documentType'.loc()},
+        //{kind: "XV.ReceivableTypePicker", attr: 'receivable.documentType', label: '_documentType'.loc()},
         {kind: "XV.InputWidget", attr: "orderNumber"},
         {kind: "XV.DateWidget", attr: "dueDate"},
         {kind: 'XV.CheckboxWidget', attr: 'isApplied', label: '_applied'.loc()},

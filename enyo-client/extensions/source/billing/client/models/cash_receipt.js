@@ -396,7 +396,8 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceiptLinePending = XM.Model.extend({
     recordType: 'XM.CashReceiptLinePending',
-    idAttribute: 'uuid'
+    idAttribute: 'uuid',
+    readOnly: true
   });
 
   /**
@@ -408,6 +409,7 @@ XT.extensions.billing.initCashReceipt = function () {
     // mixins: [ XM.ReceivableMixin ],
     recordType: 'XM.CashReceiptReceivable',
     idAttribute: 'uuid',
+    readOnly: true,
 
     readOnlyAttributes: [
       'receivable.documentNumber',

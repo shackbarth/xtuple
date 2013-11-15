@@ -221,12 +221,11 @@
         }
       },
       {
-        "name": "receivable",
+        "name": "cashReceiptReceivable",
         "toOne": {
           "type": "CashReceiptReceivable",
           "column": "cashrcptitem_aropen_id",
-          "isNested": true,
-          "required": true
+          "isNested": true
         }
       }
     ],
