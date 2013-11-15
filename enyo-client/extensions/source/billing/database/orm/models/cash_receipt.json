@@ -5,6 +5,7 @@
     "type": "CashReceipt",
     "table": "cashrcpt",
     "idSequenceName": "cashrcpt_cashrcpt_id_seq",
+    "orderSequence": "CashRcptNumber",
     "isRest": true,
     "lockable": true,
     "comment": "Cash Receipt",
@@ -37,8 +38,7 @@
         "name": "documentNumber",
         "attr": {
           "type": "String",
-          "column": "cashrcpt_docnumber",
-          "required": true
+          "column": "cashrcpt_docnumber"
         }
       },
       {
@@ -126,8 +126,7 @@
         "name": "distributionDate",
         "attr": {
           "type": "Date",
-          "column": "cashrcpt_distdate",
-          "required": true
+          "column": "cashrcpt_distdate"
         }
       },
       {

@@ -39,25 +39,31 @@
       currency: {abbreviation: "USD"},
       documentNumber: "DocumentNumber" + Math.random()
     },
+    /**
+     * Existing bank expected to be in the test database.
+     */
     bankAccountHash = {
-      name: "TestBankAccount" + Math.random(),
-      description: "Test bank account",
-      bankName: "TestBankName",
-      accountNumber: Math.random(),
+      name: "EBANK",
+      description: "eBank description",
+      bankName: "eBank",
+      accountNumber: 123145,
       notes: "Test bank account notes"
     },
     cashReceiptHash = {
+      //number: Math.random() * 10000,
       isPosted: false,
       amount: 10000,
       applicationDate: new Date(),
       currencyRate: 1.0,
       bankAccount: bankAccountHash,
+      useCustomerDeposit: true,
       currency: {
         abbreviation: 'USD',
       },
       customer: {
         number: 'TTOYS'
       },
+      /*
       lineItems: [
         {
           amount: 100,
@@ -87,6 +93,7 @@
           }, receivableHash)
         }
       ]
+      */
     },
     cashReceiptSpec = {
       recordType: 'XM.CashReceipt',
@@ -101,11 +108,11 @@
       attributes: [
         'number', 'customer', 'amount', 'currency', 'currencyRate',
         'documentNumber', 'documentDate', 'bankAccount', 'distributionDate',
-        'applicationDate', 'notes', 'isPosted', 'lineItems', 'balance'
+        'applicationDate', 'notes', 'isPosted', 'balance'
       ],
       requiredAttributes: [
-        'customer', 'amount', 'currency', 'currencyRate',
-        'bankAccount', 'applicationDate', 'isPosted'
+        'customer', 'amount', 'currency', 'currencyRate', 'number',
+        'bankAccount', 'applicationDate', 'isPosted', 'useCustomerDeposit'
       ],
       defaults: {
         isPosted: false
@@ -117,7 +124,7 @@
         delete: 'MaintainCashReceipts'
       },
       extensions: ["billing"],
-      //updatableField: 'notes',
+      updatableField: 'notes',
       listKind: 'XV.CashReceiptList',
       createHash: cashReceiptHash
     },
