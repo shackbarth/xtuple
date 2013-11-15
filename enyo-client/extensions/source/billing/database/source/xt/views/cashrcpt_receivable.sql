@@ -25,8 +25,8 @@ select xt.create_view('xt.cashrcpt_receivable', $$
     aropen_amount      as amount,
     cashrcptitem_discount as discount,
 
-    xt.cashrcpt_receivable_sum_amount(aropen, false)  as all_pending,
-    xt.cashrcpt_receivable_balance(aropen)            as balance
+    xt.cashrcpt_receivable_sum_amount(aropen.aropen_id, false)  as all_pending,
+    xt.cashrcpt_receivable_balance(aropen.aropen_id)            as balance
 
   from
     cashrcpt
