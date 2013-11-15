@@ -36,7 +36,7 @@ XT.extensions.billing.initCashReceiptView = function () {
 
     list: {
       model: model + 'ListItem',
-      printable: true,
+      allowPrint: true,
       query: {
         orderBy: [
           {attribute: 'distributionDate', descending: true},
