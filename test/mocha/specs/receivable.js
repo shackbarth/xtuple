@@ -17,17 +17,13 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     listModel;
 
   /**
-    TODO: Receivable before release
-    - XM.ReceivableApplication should include applications where the parent is both the target and the source
-    - The list should include headers
-    - The list should include a footer with a total amount in base currency
-    - Parameter widget should include options for "showClosed"
-    - The As Of parameter will only be enabled when unposted and closed are unchecked.
-
     TODO: deferred to later sprint:
     - filter receivable list by customer group
     - When 'Print on Post' is checked, a standard form should be printed when posting
     - There should be a printed report definition for the receivables list
+    - The list should include headers
+    - The list should include a footer with a total amount in base currency
+    - Add smoke testing for Workspace
   */
 
   var spec = {
@@ -84,6 +80,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
             model.set("amount", 100);
             model.set("currency", XT.baseCurrency());
             model.set("documentNumber", "DocumentNumber" + Math.random());
+            model.set("documentType", 'C');
           });
 
           it("A model extending XM.Document should exist in the billing extension",
@@ -151,6 +148,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
               assert.isTrue(model.isCredit());
             });
 
+          // this is a false negative :(
           it.skip("Validation: The amount must be greater than zero", function () {
             model.set("amount", 0);
             assert.equal(model.validate().code, "xt1013");
@@ -467,7 +465,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
           //"balance",
           //"taxTotal",
           "applications",
-          "commission"
+          //"commission"
         ];
         // TODO: this doesn't cover money widgets
         var attrs = _.pluck(receivableWorkspace.$, "attr");

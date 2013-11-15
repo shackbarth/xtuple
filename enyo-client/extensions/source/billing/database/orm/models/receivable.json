@@ -595,8 +595,7 @@
         "name": "orderNumber",
         "attr": {
           "type": "String",
-          "column": "aropen_ordernumber",
-          "required": true
+          "column": "aropen_ordernumber"
         }
       }
     ]
