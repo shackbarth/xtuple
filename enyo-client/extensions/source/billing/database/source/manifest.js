@@ -15,6 +15,8 @@
     "xt/functions/cashrcpt_receivable_sum_amount.sql",
     "xt/functions/cashrcpt_balance.sql",
     "xt/functions/cashrcpt_receivable_balance.sql",
+    "xt/views/cashrcpt_receivable.sql",
+    "xt/views/receivable_applications.sql",
     "xt/views/cashrcptitem_pending.sql"
   ]
 }

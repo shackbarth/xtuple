@@ -146,7 +146,7 @@
           "isNested": true,
           "type": "ReceivableApplication",
           "column": "aropen_id",
-          "inverse": "source"
+          "inverse": "parent"
         }
       },
       {
@@ -417,7 +417,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "ReceivableApplication",
-    "table": "arapply",
+    "table": "xt.receivable_applications",
     "idSequenceName": "arapply_arapply_id_seq",
     "comment": "Receivable Tax Map",
     "privileges": {
@@ -446,24 +446,24 @@
         }
       },
       {
-        "name": "source",
+        "name": "parent",
         "attr": {
           "type": "Number",
-          "column": "arapply_source_aropen_id"
+          "column": "parent_id"
         }
       },
       {
         "name": "applicationType",
         "attr": {
           "type": "String",
-          "column": "arapply_source_doctype"
+          "column": "document_type"
         }
       },
       {
         "name": "documentNumber",
         "attr": {
           "type": "String",
-          "column": "arapply_source_docnumber"
+          "column": "document_number"
         }
       },
       {
@@ -491,7 +491,7 @@
         "name": "baseAmount",
         "attr": {
           "type": "Money",
-          "column": "arapply_applied"
+          "column": "base_amount"
         }
       },
       {

@@ -12,6 +12,7 @@
     "xt/trigger_functions/usrpref_did_change.sql",
     "public/functions/geteffectivextuser.sql",
     "public/tables/aropen.sql",
+    "public/tables/arapply.sql",
     "public/tables/cashrcpt.sql",
     "public/tables/cohead.sql",
     "public/tables/comment.sql",

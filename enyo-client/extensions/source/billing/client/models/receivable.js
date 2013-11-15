@@ -28,6 +28,7 @@ XT.extensions.billing.initReceivableModel = function () {
     readOnlyAttributes: [
       "balance",
       "taxTotal",
+      "paid",
       "commission"
     ],
 
@@ -247,6 +248,8 @@ XT.extensions.billing.initReceivableModel = function () {
         recOptions.error = function () {};
 
         if (this.isCredit()) {
+          // the tax amount should be negative for credit memos
+          _.each(params.taxes, function (t) { t.taxAmount = -Math.abs(t.taxAmount); });
           this.createCreditMemo(params, recOptions);
         } else if (this.isDebit()) {
           this.createDebitMemo(params, recOptions);
