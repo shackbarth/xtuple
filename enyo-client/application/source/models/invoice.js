@@ -41,7 +41,9 @@ white:true*/
 
         var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
         model.set("customerPrice", totalPrice);
+        model.off("price", model.priceDidChange);
         model.set("price", totalPrice);
+        model.on("price", model.priceDidChange);
         model.calculateExtendedPrice();
       };
 
@@ -258,6 +260,7 @@ white:true*/
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on("change:customer", this.customerDidChange);
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
+      this.on("change:invoiceDate add:taxAdjustments", this.setTaxAllocationDate);
       this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
       this.on("change:invoiceDate change:currency", this.calculateAuthorizedCredit);
       this.on("change:invoiceDate add:allocations remove:allocations",
@@ -299,7 +302,7 @@ white:true*/
       var isPosted = this.get("isPosted");
 
       this.setReadOnly(["lineItems", "number", "invoiceDate", "terms", "salesRep", "commission",
-        "taxZone", "saleType"], isPosted);
+        "taxZone", "saleType", "taxAdjustments"], isPosted);
     },
 
     /**
@@ -457,6 +460,16 @@ white:true*/
     setCurrencyReadOnly: function () {
       var lineItems = this.get("lineItems");
       this.setReadOnly("currency", lineItems.length > 0 || this.get("allocatedCredit"));
+    },
+
+    /**
+      The document date on any misc tax adjustments should be the invoice date
+    */
+    setTaxAllocationDate: function () {
+      var invoiceDate = this.get("invoiceDate");
+      _.each(this.get("taxAdjustments").models, function (taxAdjustment) {
+        taxAdjustment.set({documentDate: invoiceDate});
+      });
     },
 
     statusDidChange: function () {

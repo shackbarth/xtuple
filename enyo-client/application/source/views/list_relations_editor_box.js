@@ -183,6 +183,33 @@ trailing:true, white:true*/
     fitButtons: false
   });
 
+  // ..........................................................
+  // INVOICE TAX ADJUSTMENT
+  //
+  enyo.kind({
+    name: "XV.InvoiceTaxAdjustmentEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.TaxCodePicker", attr: "taxCode"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "amount", currency: ""},
+          label: "_amount".loc(), currencyDisabled: true,
+          scale: XT.SALES_PRICE_SCALE}
+      ]}
+    ]
+  });
+  enyo.kind({
+    name: "XV.InvoiceTaxAdjustmentBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_taxAdjustments".loc(),
+    editor: "XV.InvoiceTaxAdjustmentEditor",
+    parentKey: "invoice",
+    listRelations: "XV.InvoiceTaxAdjustmentListRelations",
+    fitButtons: false
+  });
+
 
   // ..........................................................
   // TAX REGISTRATIONS
