@@ -14,8 +14,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
   var spec = {
     recordType: "XM.ProjectType",
-    collectionType: "XM.ProjectType",
-    cacheName: XM.projectTypes,
+    skipSmoke: true,
+    collectionType: "XM.ProjectTypeCollection",
+    cacheName: null,
     listKind: "XV.ProjectTypeList",
     instanceOf: "XM.Document",
     isLockable: false,
@@ -25,14 +26,11 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     extensions: ["project"],
     privileges: {
       createUpdate: "MaintainProjectTypes",
-      read: "MaintainProjectTypes"
+      read: true
     },
     createHash: {
-      name: "TestProjectType" + Math.random(),
+      code: "TestProjectType" + Math.random(),
       description: "Test project type",
-      bankName: "TestBankName",
-      accountNumber: Math.random(),
-      notes: "Test project type notes"
     },
     defaults: {
       isActive: true
@@ -41,8 +39,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   var additionalTests = function () {};
+  var spork;
 
-  exports.spec = spec;
+  exports.spec = spork; // re-enable this after addition of MaintainProjectTypes to prep_database
   exports.additionalTests = additionalTests;
 
 }());
