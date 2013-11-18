@@ -135,8 +135,8 @@ then
 fi
 
 install_packages() {
-	apt-get -q update 2>1 | tee -a $LOG_FILE
-	apt-get -q -y install vim git subversion build-essential postgresql-9.1 postgresql-contrib postgresql-server-dev-9.1 2>1 | tee -a $LOG_FILE
+	apt-get -q update 2>&1 | tee -a $LOG_FILE
+	apt-get -q -y install vim git subversion build-essential postgresql-9.1 postgresql-contrib postgresql-server-dev-9.1 2>&1 | tee -a $LOG_FILE
 	log "apt-get returned $?"
 }
 
@@ -169,14 +169,14 @@ clone_repo() {
 	if [ ! -d plv8js ]
 	then
 		log "Cloning https://code.google.com/p/plv8js/"
-		git clone https://code.google.com/p/plv8js/ 2>1 | tee -a $LOG_FILE
+		git clone https://code.google.com/p/plv8js/ 2>&1 | tee -a $LOG_FILE
 	else
 		log "Found /usr/src/plv8js"
 	fi
 	if [ ! -d v8 ]
 	then
 		log "Cloning git://github.com/v8/v8.git"
-		git clone git://github.com/v8/v8.git 2>1 | tee -a $LOG_FILE
+		git clone git://github.com/v8/v8.git 2>&1 | tee -a $LOG_FILE
 	else
 		log "Found /usr/src/v8"
 	fi
@@ -192,7 +192,7 @@ clone_repo() {
 	if [ $XT_VERSION ]
 	then
 		log "Checking out $XT_VERSION"
-		su $SUDO_USER -c "git checkout $XT_VERSION" 2>1 | tee -a $LOG_FILE
+		su $SUDO_USER -c "git checkout $XT_VERSION" 2>&1 | tee -a $LOG_FILE
 	fi
 }
 
@@ -208,7 +208,7 @@ build_deps() {
 	cdir $RUN_DIR
 
 	log "Checking if nodejs is installed"
-	dpkg -s nodejs 2>1 > /dev/null
+	dpkg -s nodejs 2>&1 > /dev/null
 	if [ $? -eq 0 ]
 	then
 		log "nodejs is installed."
@@ -228,28 +228,28 @@ build_deps() {
 				mkdir $XT_DIR/install
 				cdir $XT_DIR/install
 
-				apt-get -q update 2>1 | tee -a $LOG_FILE
-				apt-get -q -y install git cdbs curl devscripts debhelper dh-buildinfo zlib1g-dev 2>1 | tee -a $LOG_FILE
+				apt-get -q update 2>&1 | tee -a $LOG_FILE
+				apt-get -q -y install git cdbs curl devscripts debhelper dh-buildinfo zlib1g-dev 2>&1 | tee -a $LOG_FILE
 
-				git clone git://github.com/mark-webster/node-debian.git 2>1 | tee -a $LOG_FILE
+				git clone git://github.com/mark-webster/node-debian.git 2>&1 | tee -a $LOG_FILE
 				cdir node-debian
-				./build.sh clean $(log $NODE_VERSION | grep -o "0\.[0-9]\.[0-9]*") 2>1 | tee -a $LOG_FILE
-				./build.sh $(log $NODE_VERSION | grep -o "0\.[0-9]\.[0-9]*") 2>1 | tee -a $LOG_FILE
+				./build.sh clean $(log $NODE_VERSION | grep -o "0\.[0-9]\.[0-9]*") 2>&1 | tee -a $LOG_FILE
+				./build.sh $(log $NODE_VERSION | grep -o "0\.[0-9]\.[0-9]*") 2>&1 | tee -a $LOG_FILE
 				log "Installing $XT_DIR/install/node-debian/nodejs_$NODE_VERSION.deb"
-				dpkg -i $XT_DIR/install/node-debian/nodejs_$NODE_VERSION.deb 2>1 | tee -a $LOG_FILE
+				dpkg -i $XT_DIR/install/node-debian/nodejs_$NODE_VERSION.deb 2>&1 | tee -a $LOG_FILE
 			else
 				log "Installing nodejs_$NODE_VERSION.deb"
-				dpkg -i nodejs_$NODE_VERSION.deb 2>1 | tee -a $LOG_FILE
+				dpkg -i nodejs_$NODE_VERSION.deb 2>&1 | tee -a $LOG_FILE
 			fi
 		else
 			log "Installing nodejs_$NODE_VERSION.deb"
-			dpkg -i nodejs_$NODE_VERSION.deb 2>1 | tee -a $LOG_FILE
+			dpkg -i nodejs_$NODE_VERSION.deb 2>&1 | tee -a $LOG_FILE
 		fi
 	fi
 
 	cdir $RUN_DIR
 	log "Checking if libv8 is installed"
-	dpkg -s libv8 2>1 > /dev/null
+	dpkg -s libv8 2>&1 > /dev/null
 	if [ $? -eq 0 ]
 	then
 		log "libv8 is installed"
@@ -260,7 +260,7 @@ build_deps() {
 		if [ -f libv8-3.16.5_3.16.5-1_amd64.deb ]
 		then
 			log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
-			dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
+			dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>&1 | tee -a $LOG_FILE
 		else
 			log "File not found."
 			log "Attempting to download $XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb"
@@ -272,23 +272,23 @@ build_deps() {
 				log "Compiling from source."
 
 				cdir $BASEDIR/v8
-				git checkout 3.16.5 2>1 | tee -a $LOG_FILE
+				git checkout 3.16.5 2>&1 | tee -a $LOG_FILE
 
-				make dependencies 2>1 | tee -a $LOG_FILE
+				make dependencies 2>&1 | tee -a $LOG_FILE
 
-				make library=shared native 2>1 | tee -a $LOG_FILE
+				make library=shared native 2>&1 | tee -a $LOG_FILE
 				log "Installing library."
 				cp $BASEDIR/v8/out/native/lib.target/libv8.so /usr/lib/ #root
 			else
 				log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
-				dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
+				dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>&1 | tee -a $LOG_FILE
 			fi
 		fi
 	fi
 
 	cdir $RUN_DIR
 	log "Checking if plv8js is installed."
-	dpkg -s postgresql-9.1-plv8 2>1 > /dev/null
+	dpkg -s postgresql-9.1-plv8 2>&1 > /dev/null
 	if [ $? -eq 0 ]
 	then
 		log "plv8js is installed"
@@ -307,20 +307,20 @@ build_deps() {
 				log "Error occured while downloading ($?)"
 				log "Compiling from source"
 				cdir $BASEDIR/plv8
-				make V8_SRCDIR=../v8 CPLUS_INCLUDE_PATH=../v8/include 2>1 | tee -a $LOG_FILE
+				make V8_SRCDIR=../v8 CPLUS_INCLUDE_PATH=../v8/include 2>&1 | tee -a $LOG_FILE
 				if [ $? -ne 0 ]
 				then
 					return 1
 				fi
 				log "Installing plv8js."
-				make install 2>1 | tee -a $LOG_FILE
+				make install 2>&1 | tee -a $LOG_FILE
 			else
 				log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-				dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
+				dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>&1 | tee -a $LOG_FILE
 			fi
 		else
 			log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-			dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
+			dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>&1 | tee -a $LOG_FILE
 		fi
 	fi
 }
@@ -388,20 +388,20 @@ setup_postgres() {
 	log "######################################################"
 	log ""
 
-	psql -q -U postgres -f 'init.sql' 2>1 | tee -a $LOG_FILE
+	psql -q -U postgres -f 'init.sql' 2>&1 | tee -a $LOG_FILE
 
-	createdb -U postgres -O admin dev 2>1 | tee -a $LOG_FILE
+	createdb -U postgres -O admin dev 2>&1 | tee -a $LOG_FILE
 
-	pg_restore -U postgres -d dev postbooks_demo-$NEWESTVERSION.backup 2>1 | tee -a $LOG_FILE
+	pg_restore -U postgres -d dev postbooks_demo-$NEWESTVERSION.backup 2>&1 | tee -a $LOG_FILE
 
-	psql -U postgres dev -c "CREATE EXTENSION plv8" 2>1 | tee -a $LOG_FILE
+	psql -U postgres dev -c "CREATE EXTENSION plv8" 2>&1 | tee -a $LOG_FILE
 }
 
 # Pull submodules
 
 pull_modules() {
 	cdir $XT_DIR
-	git submodule update --init --recursive 2>1 | tee -a $LOG_FILE
+	git submodule update --init --recursive 2>&1 | tee -a $LOG_FILE
 	if [ $? -ne 0 ]
 	then
 		return 1
@@ -412,8 +412,8 @@ pull_modules() {
 		log "Couldn't find npm"
 		return 2
 	fi
-	npm install 2>1 | tee -a $LOG_FILE
-	npm install -g mocha 2>1 | tee -a $LOG_FILE
+	npm install 2>&1 | tee -a $LOG_FILE
+	npm install -g mocha 2>&1 | tee -a $LOG_FILE
 
     cdir test/shared
     rm -f login_data.js
@@ -441,7 +441,7 @@ init_everythings() {
 
 	cdir $XT_DIR/node-datasource
 
-	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: ""/testDatabase: "dev"/' > config.js
+	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed "s/testDatabase: \"\"/testDatabase: '$DATABASE'/"" > config.js
 	log "Configured node-datasource"
 
 	log ""
@@ -452,10 +452,10 @@ init_everythings() {
 	cdir $XT_DIR/node-datasource/lib/private
 	cat /dev/urandom | tr -dc '0-9a-zA-Z!@#$%^&*_+-'| head -c 64 > salt.txt
 	log "Created salt"
-	openssl genrsa -des3 -out server.key -passout pass:xtuple 1024 2>1 | tee -a $LOG_FILE
-	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple 2>1 | tee -a $LOG_FILE
-	openssl req -batch -new -key key.pem -out server.csr -subj '/CN='$(hostname) 2>1 | tee -a $LOG_FILE
-	openssl x509 -req -days 365 -in server.csr -signkey key.pem -out server.crt 2>1 | tee -a $LOG_FILE
+	openssl genrsa -des3 -out server.key -passout pass:xtuple 1024 2>&1 | tee -a $LOG_FILE
+	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple 2>&1 | tee -a $LOG_FILE
+	openssl req -batch -new -key key.pem -out server.csr -subj '/CN='$(hostname) 2>&1 | tee -a $LOG_FILE
+	openssl x509 -req -days 365 -in server.csr -signkey key.pem -out server.crt 2>&1 | tee -a $LOG_FILE
 	if [ $? -ne 0 ]
 	then
 		log ""
@@ -466,9 +466,9 @@ init_everythings() {
 	fi
 
 	cdir $XT_DIR
-	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
+	node scripts/build_app.js -d dev 2>&1 | tee -a $LOG_FILE
 
-	psql -U postgres dev -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>1 | tee -a $LOG_FILE
+	psql -U postgres $DATABASE -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>&1 | tee -a $LOG_FILE
 
 	log ""
 	log "######################################################"
