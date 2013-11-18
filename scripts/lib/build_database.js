@@ -41,7 +41,6 @@ var  async = require('async'),
         ' -f ' + filename +
         ' --single-transaction';
       exec(psqlCommand, {maxBuffer: 40000 * 1024 /* 20x default */}, function (err, stdout, stderr) {
-        //winston.info(stderr);
         if (err) {
           winston.error("Cannot install file ", filename);
           callback(err);
