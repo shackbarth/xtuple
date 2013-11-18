@@ -8,6 +8,7 @@ Backbone = require("backbone");
 _ = require("underscore");
 jsonpatch = require("json-patch");
 SYS = {};
+XT = { };
 
 (function () {
   "use strict";
