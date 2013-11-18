@@ -497,6 +497,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
     });
   };
 
-  exports.spec = spec;
+  exports.spork = spec;
   exports.additionalTests = additionalTests;
 }());

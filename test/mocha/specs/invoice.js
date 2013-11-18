@@ -1353,7 +1353,7 @@ TODO deferred to later sprint:
     });
   };
 
-  exports.spec = spec;
+  exports.spork = spec;
   exports.additionalTests = additionalTests;
 
 

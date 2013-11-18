@@ -229,7 +229,7 @@
               assert.isTrue(cr.isReadOnly('bankAccount'));
               assert.isTrue(cr.isReadOnly('distributionDate'));
               assert.isTrue(cr.isReadOnly('applicationDate'));
-              
+
               done();
             });
 
@@ -287,7 +287,7 @@
           assert.equal(cr.get('currency'), eur);
           */
         });
-            
+
         it('change:currency handled by #currencyChanged()', function () {
           var cr = new XM.CashReceipt(),
             ratio = cr.get('currencyRate');
@@ -624,7 +624,7 @@
           * > Boolean "isOpen"
           * > CashReceiptLinePending "pendingCashReceipts"
         */
-        
+
         it.skip('Date "balance" that is the calculated value of amount - paid - all pending', function () {
 
         });
@@ -672,7 +672,7 @@
           // > Boolean "isPosted"
       */
         describe('privileges', function () {
-          
+
           it.skip('Users require "MaintainCashReceipts" or "ViewCashReceipts"' +
             'to read XM.CashReceiptListItem.', function () {
 
@@ -799,7 +799,7 @@
     };
 
   module.exports = {
-    spec: cashReceiptSpec,
+    spork: cashReceiptSpec,
     additionalTests: cashReceiptTest
   };
 
