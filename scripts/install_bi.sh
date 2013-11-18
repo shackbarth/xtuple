@@ -198,7 +198,6 @@ configure_pentaho() {
 	log "######################################################"
 	log "######################################################"
 	log ""
-	dropdb -U postgres erpbi
 	createdb -U postgres -O admin erpbi 2>1 | tee -a $LOG_FILE
 	cdir $BISERVER_HOME/data-integration
 	export KETTLE_HOME=properties/psg-linux
