@@ -2,6 +2,10 @@ create or replace function xt.usrpref_did_change() returns trigger as $$
 /* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple.
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
+  if (typeof XT === 'undefined') { 
+    plv8.execute("select xt.js_init();"); 
+  }
+
  var sql = "update xt.usrlite set usr_{name} = $1 where usr_username = $2",
    val = NEW.usrpref_value,
    name;
