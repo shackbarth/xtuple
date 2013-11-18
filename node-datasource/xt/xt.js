@@ -27,6 +27,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 // Include the foundation that instantiates the
 // X global namespace
 require('./foundation');
+XT = { };
 
 (function () {
   "use strict";
