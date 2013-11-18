@@ -406,7 +406,7 @@ white:true*/
             toAddresses = K.buildToString.call(task, toAddresses);
           }
         });
-        
+
         return K.buildToString.call(this, toAddresses);
       }
     });
