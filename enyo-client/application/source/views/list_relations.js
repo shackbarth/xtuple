@@ -236,6 +236,169 @@ trailing:true, white:true, strict:false*/
   });
 
   // ..........................................................
+  // INVOICE ALLOCATION
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceAllocationListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "invoice",
+    orderBy: [
+      {attribute: "uuid"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "amount"}
+              ]}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "currency"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
+  // INVOICE LINE
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceLineItemListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "invoice",
+    orderBy: [
+      {attribute: "lineNumber"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "lineNumber", isKey: true}
+              ]}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "item.number"},
+              {kind: "XV.ListAttr", attr: "site.code"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "quantity", formatter: "formatQuantity"},
+            {kind: "XV.ListAttr", attr: "billed", formatter: "formatBilled"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatBilled: function (value) {
+      return "_billed".loc() + ": " + value;
+    },
+    formatQuantity: function (value) {
+      return "_quantity".loc() + ": " + value;
+    },
+  });
+
+  // ..........................................................
+  // INVOICE LINE TAX
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceLineTaxListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "parent",
+    orderBy: [
+      {attribute: "uuid"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "taxCode.code"},
+              {kind: "XV.ListAttr", attr: "taxType.name", fit: true, classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "amount"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
+  // INVOICE TAX
+  // Summarized read-only models of line item taxes
+
+  enyo.kind({
+    name: "XV.InvoiceTaxListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "invoice",
+    orderBy: [
+      {attribute: "uuid"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "type"},
+              {kind: "XV.ListAttr", attr: "code", classes: "right"},
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "amount", formatter: "formatPrice"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ],
+    formatPrice: function (value, view, model) {
+      var currency = model.get("currency"),
+        scale = XT.locale.salesPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    }
+  });
+
+  // ..........................................................
+  // INVOICE TAX ADJUSTMENT
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceTaxAdjustmentListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "invoice",
+    orderBy: [
+      {attribute: "uuid"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "taxCode.code"},
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "amount", formatter: "formatPrice"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ],
+    formatPrice: function (value, view, model) {
+      var parent = model.getParent(),
+        currency = parent ? parent.get("currency") : false,
+        scale = XT.locale.salesPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    }
+  });
+
+  // ..........................................................
   // TAX REGISTRATION
   //
 

@@ -135,8 +135,8 @@ download_files () {
 	log ""
     cdir $RUN_DIR/../..
 	rm -R ErpBI
-	# rm ErpBI.zip
-	# wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
+	rm ErpBI.zip
+	wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
 	unzip ErpBI.zip  2>1 | tee -a $LOG_FILE
 	
 	cdir $BISERVER_HOME/biserver-ce/
@@ -198,7 +198,6 @@ configure_pentaho() {
 	log "######################################################"
 	log "######################################################"
 	log ""
-	dropdb -U postgres erpbi
 	createdb -U postgres -O admin erpbi 2>1 | tee -a $LOG_FILE
 	cdir $BISERVER_HOME/data-integration
 	export KETTLE_HOME=properties/psg-linux

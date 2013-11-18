@@ -6,7 +6,7 @@ white:true*/
 (function () {
 
   "use strict";
- 
+
   var CREDIT_OK = 0;
   var CREDIT_WARN = 1;
   var CREDIT_HOLD = 2;

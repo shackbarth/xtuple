@@ -128,6 +128,15 @@ select xt.install_js('XT','Orm','xtuple', $$
             /* obj_uuid might not be inserted yet */
             return;
           }
+
+          /**
+           * skip column check for derived fields
+           * TODO an existence check for the defined "method" could be helpful.
+           */
+          if (ormProp.attr.derived) {
+            return;
+          }
+
           throw new Error(nameSpace + "." + type + " ORM property " + ormProp.attr.column
             + " references a column not in " + tableNamespace + "." + tableName);
         }
@@ -266,14 +275,18 @@ select xt.install_js('XT','Orm','xtuple', $$
 
     if (isSuper) {
       if (DEBUG) {
+        /*
         XT.debug('fetch sql = ', superSql);
         XT.debug('fetch values = ', [nameSpace, type, false]);
+        */
       }
       res = plv8.execute(superSql, [nameSpace, type, false]);
     } else {
       if (DEBUG) {
+        /*
         XT.debug('fetch sql = ', sql);
         XT.debug('fetch values = ', [nameSpace, type, XT.username, false]);
+        */
       }
       res = plv8.execute(sql, [nameSpace, type, XT.username, false]);
     }
@@ -287,15 +300,19 @@ select xt.install_js('XT','Orm','xtuple', $$
     }
     ret = JSON.parse(res[0].json);
     if (DEBUG) {
+      /*
       XT.debug('result count = ', [res.length]);
+      */
     }
 
     /* get extensions and merge them into the base */
     if (!ret.extensions) ret.extensions = [];
 
     if (DEBUG) {
+      /*
       XT.debug('fetch sql = ', sql);
       XT.debug('fetch values = ', [nameSpace, type, XT.username, true]);
+      */
     }
 
     if (isSuper) {
@@ -304,6 +321,9 @@ select xt.install_js('XT','Orm','xtuple', $$
       res = plv8.execute(sql, [nameSpace, type, XT.username, true]);
     }
     if (DEBUG) {
+      /*
+      XT.debug('result count = ', [res.length]); 
+      */
       XT.debug('result count = ', [res.length]);
     }
 
@@ -322,7 +342,9 @@ select xt.install_js('XT','Orm','xtuple', $$
     }
 
     if (DEBUG) {
-      XT.debug('props = ', ret.properties.map(function (prop) {return prop.name}));
+      /*
+      XT.debug('props = ', ret.properties.map(function (prop) {return prop.name})); 
+      */
     }
     return ret;
   };
@@ -478,14 +500,26 @@ select xt.install_js('XT','Orm','xtuple', $$
         if(DEBUG) XT.debug('processing property ->', prop.name);
         if(prop.name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
 
+
         /* process attributes */
         if (prop.attr || prop.toOne) {
           attr = prop.attr ? prop.attr : prop.toOne;
           if (DEBUG) XT.debug('building attribute', [prop.name, attr.column]);
-          isVisible = attr.value === undefined ? true : false;
+          isVisible = (attr.value === undefined);
           if (!attr.type) throw new Error('No type was defined on property ' + prop.name);
           if (isVisible) {
-            col = tblAlias + '.' + attr.column;
+
+            /**
+             * If a method is given, do not attempt to prefix with table alias.
+             */
+            if (attr.derived && attr.method) {
+              plv8.elog(NOTICE, 'using function for derived property: '+ prop.name + ' -> '+ attr.method);
+              col = attr.method;
+            }
+            else {
+              col = tblAlias + '.' + attr.column;
+            }
+
             col = col.concat(' as "', alias, '"');
 
             /* If the column is `obj_uuid` and it's not there, create it.

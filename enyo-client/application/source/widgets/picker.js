@@ -380,12 +380,12 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.LocationPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.location",
+    collection: "XM.locations",
     nameAttribute: "format",
     orderBy: [
       {attribute: 'format'}
     ],
-    valueAttribute: "id"
+    valueAttribute: "uuid"
   });
 
 
@@ -490,7 +490,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // REASON CODES
   //
@@ -550,6 +550,19 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ToDoStatusPicker",
     kind: "XV.PickerWidget",
     collection: "XM.toDoStatuses"
+  });
+
+  // ..........................................................
+  // SALES CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.SalesCategoryPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.salesCategories",
+    orderBy: [
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................

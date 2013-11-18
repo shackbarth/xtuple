@@ -407,7 +407,7 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
-redirectServer.listen(X.options.datasource.redirectPort);
+redirectServer.listen(X.options.datasource.redirectPort,X.options.datasource.bindAddress);
 
 /**
  * Start the express server. This is the NEW way.

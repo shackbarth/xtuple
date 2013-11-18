@@ -1,0 +1,100 @@
+[
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "Invoice",
+    "table": "xt.invcheadinfo",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "invchead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "authorizedCredit",
+        "attr": {
+          "type": "Number",
+          "column": "authorized_credit"
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "invchead_ordernumber"
+        }
+      },
+      {
+        "name": "orderDate",
+        "attr": {
+          "type": "Date",
+          "column": "invchead_orderdate"
+        }
+      },
+      {
+        "name": "salesOrders",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceSalesOrder",
+          "column": "invchead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "InvoiceLine",
+    "table": "xt.invciteminfo",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "invcitem_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "salesOrderLine",
+        "toOne": {
+          "type": "SalesOrderLine",
+          "column": "invcitem_coitem_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "InvoiceListItem",
+    "table": "xt.invcheadinfo",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "invchead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "invchead_ordernumber"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }
+]

@@ -1,4 +1,4 @@
-  /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
+/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
 /*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
@@ -525,6 +525,75 @@ trailing:true, white:true*/
         attr: "updated", operator: "<=",
         defaultKind: "XV.DateWidget"}
     ]
+  });
+
+  // ..........................................................
+  // INVOICE
+  //
+  enyo.kind({
+    name: "XV.InvoiceListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_invoice".loc()},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {kind: "onyx.GroupboxHeader", content: "_show".loc()},
+      {name: "showUnposted", label: "_showUnposted".loc(),
+        attr: "isPosted", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "showPosted", label: "_showPosted".loc(),
+        attr: "isPosted", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: false
+            };
+          }
+          return param;
+        }
+      },
+      {name: "showVoided", label: "_showVoided".loc(),
+        attr: "isVoid", defaultKind: "XV.CheckboxWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
+      {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.BillingCustomerWidget"},
+      {name: "customerType", attr: "customer.customerType", label: "_customerType".loc(), defaultKind: "XV.CustomerTypePicker"},
+      {name: "customerTypePattern", attr: "customer.customerType", label: "_customerTypePattern".loc()},
+      // TODO: INCLUDES operator? But what would the attr be?
+      //{name: "customerGroup", attr: "customer.customerGroups.customerGroup",
+      //  label: "_customerGroup".loc(), defaultKind: "XV.CustomerGroupWidget"},
+
+  /*
+  > Customer
+    - Number
+    - Type (picker)
+    - Type Pattern (text)
+    - Group
+      */
+      {kind: "onyx.GroupboxHeader", content: "_invoiceDate".loc()},
+      {name: "fromDate", label: "_fromDate".loc(), attr: "invoiceDate", operator: ">=",
+        defaultKind: "XV.DateWidget"},
+      {name: "toDate", label: "_toDate".loc(), attr: "invoiceDate", operator: "<=",
+        defaultKind: "XV.DateWidget"}
+    ],
+    create: function () {
+      this.inherited(arguments);
+      // XXX only apply this if the filter is default
+      this.$.showUnposted.setValue(true);
+    }
+
   });
 
   // ..........................................................
@@ -1261,7 +1330,7 @@ trailing:true, white:true*/
         }
       },
       /*TODO
-        Has Parent Sales Order 
+        Has Parent Sales Order
         Has Closed Parent Sales Orders
         Item Group
       */

@@ -1124,19 +1124,49 @@ trailing:true, white:true, strict: false*/
   enyo.kind({
     name: "XV.InvoiceList",
     kind: "XV.List",
+    multiSelect: true,
+    allowPrint: true,
     label: "_invoices".loc(),
+    parameterWidget: "XV.InvoiceListParameters",
     collection: "XM.InvoiceListItemCollection",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
+    actions: [
+      {name: "void", prerequisite: "canVoid", method: "doVoid" },
+      {name: "post", prerequisite: "canPost", method: "doPost" },
+      {name: "print", prerequisite: "canPrint", method: "doPrint" }
+    ],
     components: [
       {kind: "XV.ListItem", components: [
-        {kind: "XV.ListColumn", classes: "last", components: [
-          {kind: "XV.ListAttr", attr: "number", isKey: true}
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "isPrinted", fit: true,
+                formatter: "formatPrinted", classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "invoiceDate"},
+              {kind: "XV.ListAttr", attr: "isPosted", fit: true,
+                formatter: "formatPosted", classes: "right"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "customer.name"},
+            {kind: "XV.ListAttr", attr: "total"}
+          ]}
         ]}
       ]}
-    ]
+    ],
+    formatPosted: function (value) {
+      return value ? "_posted".loc() : "";
+    },
+    formatPrinted: function (value) {
+      return value ? "_printed".loc() : "";
+    },
   });
+  XV.registerModelList("XM.InvoiceRelation", "XV.InvoiceList");
 
   // ..........................................................
   // ITEM
@@ -2390,6 +2420,15 @@ trailing:true, white:true, strict: false*/
     label: "_workOrders".loc(),
     collection: "XM.WorkOrderListItemCollection",
     parameterWidget: "XV.WorkOrderListParameters",
+    canAddNew: false,
+    actions: [
+      {name: "postProduction", method: "postProduction",
+          isViewMethod: true, notify: false,
+          prerequisite: "canPostProduction"},
+      {name: "issueMaterial", method: "issueMaterial",
+          isViewMethod: true, notify: false,
+          prerequisite: "canIssueMaterial"}
+    ],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -2397,13 +2436,14 @@ trailing:true, white:true, strict: false*/
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+            {kind: "XV.ListAttr", attr: "number", fit: true}
           ]},
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "status",
+              {kind: "XV.ListAttr", attr: "getWorkOrderStatusString",
                 style: "padding-left: 24px"},
-              {kind: "XV.ListAttr", attr: "itemSite.item.number", classes: "bold", style: "padding-left: 12px"}
+              {kind: "XV.ListAttr", attr: "itemSite.item.number",
+                classes: "bold", style: "padding-left: 12px"}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "itemSite.site.code", style: "padding-left: 12px"},
@@ -2418,13 +2458,54 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "last", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "itemSite.item.inventoryUnit.name"},
-              {kind: "XV.ListAttr", attr: "qtyOrdered"},
-              {kind: "XV.ListAttr", attr: "qtyReceived"}
+              {kind: "XV.ListAttr", attr: "ordered"},
+              {kind: "XV.ListAttr", attr: "quantityReceived"}
             ]}
           ]}
         ]}
       ]}
-    ]
+    ],
+    issueMaterial: function (inEvent) {
+      var index = inEvent.index,
+        workOrder = this.getValue().at(index),
+        that = this,
+        panel = XT.app.$.postbooks.createComponent({kind: "XV.IssueMaterial", model: workOrder.id});
+      panel.render();
+      XT.app.$.postbooks.reflow();
+      XT.app.$.postbooks.setIndex(XT.app.$.postbooks.getPanels().length - 1);
+    },
+    postProduction: function (inEvent) {
+      var index = inEvent.index,
+        workOrder = this.getValue().at(index),
+        that = this,
+        callback = function (resp) {
+          var options = {
+            success: function () {
+              // Re-render the row if showing shipped, otherwise remove it
+              var query = that.getQuery(),
+                param,
+                collection,
+                model;
+              param = _.findWhere(query.parameters, {attribute: "getWorkOrderStatusString"});
+              if (param === "Closed") {
+                collection = that.getValue();
+                model = collection.at(index);
+                collection.remove(model);
+                that.fetched();
+              } else {
+                that.renderRow(index);
+              }
+            }
+          };
+          // Refresh row if shipped
+          if (resp) { workOrder.fetch(options); }
+        };
+      this.doWorkspace({
+        workspace: "XV.PostProductionWorkspace",
+        id: workOrder.id,
+        callback: callback
+      });
+    }
   });
 
   XV.registerModelList("XM.WorkOrderListItem", "XV.WorkOrderList");
