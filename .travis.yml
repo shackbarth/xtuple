@@ -2,12 +2,6 @@ language: node_js
 node_js:
   - "0.8"
 
-services:
-  - postgresql
-
-before_install:
-  - "nvm install 0.8.22"
-
 install:
   - "sudo ./scripts/install_xtuple.sh"
 
