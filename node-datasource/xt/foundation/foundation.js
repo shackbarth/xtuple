@@ -123,7 +123,10 @@ X = {};
   };
 
   /**
-    Sires.
+    Example usage:
+    -"Sire, we have found this dastardly beast in the dungeons of node-xt."
+    -"Pray let us dispatch with it forthwith."
+    -"Yes, sire."
   */
   X.sire = function (base) {
     var K = X.$P, ret;
