@@ -2,6 +2,24 @@
 
 This version requires version 4.2.0 or higher of xTuple PostBooks or commercial edition database.
 
+1.4.6 (2013/11/xx)
+==================
+Critical deployment changes
+---------------------------
+- The Sales Dashboard has been redesigned to show sales data from analytic cubes.  To connect to the BI Server
+you must define:
+ 
+   biServer: {
+        hostname: "localhost",
+        port: 8080,
+        catalog: "xTuple",
+        tenantname: "default",
+        keyFile: "./lib/rest-keys/server.key"
+      }
+in config.js.  Also, the Sales Dashboard is now structured in a private extension:
+ 
+   https://github.com/xtuple/private-extensions/tree/master/source/bi
+
 1.4.5 (2013/10/11)
 ==================
 - Fixed
