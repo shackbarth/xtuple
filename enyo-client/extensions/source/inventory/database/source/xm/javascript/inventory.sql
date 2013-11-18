@@ -815,7 +815,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     }
   };
 
-  XM.Inventory.options = XM.Inventory.options.concat([
+  XM.Inventory.options = [
     "ItemSiteChangeLog",
     "WarehouseChangeLog",
     "AllowAvgCostMethod",
@@ -824,7 +824,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
     "ShipmentNumberGeneration",
     "NextShipmentNumber",
     "KitComponentInheritCOS"
-  ]);
+  ];
 
   /*
   Return Inventory configuration settings.
@@ -832,7 +832,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
   @returns {Object}
   */
   XM.Inventory.settings = function() {
-    var keys = XM.Inventory.options.slice(0),
+    var keys = XM.Inventory.options,
         data = Object.create(XT.Data),
         sql = "select last_value + 1 as value from shipment_number_seq",
         ret = {},
@@ -854,7 +854,7 @@ select xt.install_js('XM','Inventory','xtuple', $$
   */
   XM.Inventory.commitSettings = function(patches) {
     var sql, settings,
-      options = XM.Inventory.options.slice(0),
+      options = XM.Inventory.options,
       data = Object.create(XT.Data),
       metrics = {};
 

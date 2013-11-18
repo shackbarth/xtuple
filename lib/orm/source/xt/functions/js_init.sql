@@ -2,6 +2,8 @@ drop function if exists xt.js_init();
 
 create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
 
+  if (plv8.__initialized) return;
+
   DEBUG = debug ? debug : false;
 
   if (plv8.version < '1.3.0'){
@@ -850,9 +852,17 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
         if(DEBUG) XT.debug('loading javascript for type->', res[i].js_type);
 
         eval(res[i].javascript);
+
+        var ns = eval(res[i].js_namespace);
+        if (ns && ns[js_type]) {
+          if (Object.isFrozen(ns[js_type])) {
+            plv8.elog(WARNING, 'object already frozen: '+ ns + '.' + js_type);
+          }
+          Object.freeze(ns[js_type]);
+        }
       }
     }
+    plv8.__initialized = true;
   }
 
 $$ language plv8;
-
