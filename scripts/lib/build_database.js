@@ -2,9 +2,9 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true*/
 
+_ = require('underscore');
 
-var _ = require('underscore'),
-  async = require('async'),
+var  async = require('async'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
@@ -41,6 +41,7 @@ var _ = require('underscore'),
         ' -f ' + filename +
         ' --single-transaction';
       exec(psqlCommand, {maxBuffer: 40000 * 1024 /* 20x default */}, function (err, stdout, stderr) {
+        //winston.info(stderr);
         if (err) {
           winston.error("Cannot install file ", filename);
           callback(err);
@@ -303,7 +304,7 @@ var _ = require('underscore'),
             if (!isLibOrm) {
               // unless it it hasn't yet been defined (ie. lib/orm),
               // running xt.js_init() is probably a good idea.
-              extensionSql = jsInit + extensionSql;
+              //extensionSql = jsInit + extensionSql;
             }
 
             if (isApplicationCore && spec.wipeViews) {
