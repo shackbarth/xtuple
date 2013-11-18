@@ -1,0 +1,595 @@
+[
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "Receivable",
+    "table": "xt.aropeninfo",
+    "idSequenceName": "aropen_aropen_id_seq",
+    "orderSequence": "ARMemoNumber",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Receivable Information",
+    "privileges": {
+      "all": {
+        "create": "EditAROpenItem",
+        "read": "ViewAROpenItems",
+        "update": "EditAROpenItem",
+        "delete": "EditAROpenItem"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "SalesCustomer",
+          "column": "aropen_cust_id",
+          "isNested": true,
+          "required": true
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "aropen_docdate",
+          "required": true
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "aropen_duedate",
+          "required": true
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "aropen_terms_id"
+        }
+      },
+      {
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "aropen_salesrep_id"
+        }
+      },
+      {
+        "name": "documentType",
+        "attr": {
+          "type": "String",
+          "column": "aropen_doctype"
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "aropen_docnumber"
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "aropen_ordernumber"
+        }
+      },
+      {
+        "name": "reasonCode",
+        "toOne": {
+          "type": "ReasonCode",
+          "column": "aropen_rsncode_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "aropen_amount",
+          "required": true
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "aropen_curr_id",
+          "required": true
+        }
+      },
+      {
+        "name": "paid",
+        "attr": {
+          "type": "Money",
+          "column": "aropen_paid"
+        }
+      },
+      {
+        "name": "commission",
+        "attr": {
+          "type": "Money",
+          "column": "aropen_commission_due"
+        }
+      },
+      {
+        "name": "taxes",
+        "toMany": {
+          "isNested": true,
+          "type": "ReceivableTax",
+          "column": "aropen_id",
+          "inverse": "tax"
+        }
+      },
+      {
+        "name": "applications",
+        "toMany": {
+          "isNested": true,
+          "type": "ReceivableApplication",
+          "column": "aropen_id",
+          "inverse": "parent"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "aropen_notes"
+        }
+      },
+      {
+        "name": "journalNumber",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_journalnumber"
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Money",
+          "column": "balance"
+        }
+      },
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Money",
+          "column": "tax_total"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "ReceivableTax",
+    "table": "aropentax",
+    "idSequenceName": "taxhist_taxhist_id_seq",
+    "comment": "Receivable Tax Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "tax",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_parent_id"
+        }
+      },
+      {
+        "name": "taxCode",
+        "toOne": {
+          "type": "TaxCode",
+          "column": "taxhist_tax_id"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "taxhist_taxtype_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_amount"
+        }
+      },
+      {
+        "name": "taxAmount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_tax"
+        }
+      },
+      {
+        "name": "basis",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_basis"
+        }
+      },
+      {
+        "name": "percent",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_percent"
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "taxhist_docdate"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "ReceivableListItem",
+    "table": "xt.receivable_invoice_return",
+    "isRest": true,
+    "comment": "Receivable List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAROpenItems",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "documentType",
+        "attr": {
+          "type": "String",
+          "column": "document_type"
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "document_number"
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "posted"
+        }
+      },
+      {
+        "name": "isOpen",
+        "attr": {
+          "type": "Boolean",
+          "column": "open"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "SalesCustomer",
+          "column": "customer",
+          "isNested": true
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "document_date"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "due_date"
+        }
+      },
+      {
+        "name": "closeDate",
+        "attr": {
+          "type": "Date",
+          "column": "close_date"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "amount"
+        }
+      },
+      {
+        "name": "baseAmount",
+        "attr": {
+          "type": "Money",
+          "column": "base_amount"
+        }
+      },
+      {
+        "name": "paid",
+        "attr": {
+          "type": "Money",
+          "column": "paid"
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Money",
+          "column": "balance"
+        }
+      },
+      {
+        "name": "basePaid",
+        "attr": {
+          "type": "Money",
+          "column": "base_paid"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "currency"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "notes"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "ReceivableApplication",
+    "table": "xt.receivable_applications",
+    "idSequenceName": "arapply_arapply_id_seq",
+    "comment": "Receivable Tax Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "arapply_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "Number",
+          "column": "parent_id"
+        }
+      },
+      {
+        "name": "applicationType",
+        "attr": {
+          "type": "String",
+          "column": "document_type"
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "document_number"
+        }
+      },
+      {
+        "name": "applicationDate",
+        "attr": {
+          "type": "Date",
+          "column": "arapply_postdate"
+        }
+      },
+      {
+        "name": "distributionDate",
+        "attr": {
+          "type": "Date",
+          "column": "arapply_distdate"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "arapply_applied"
+        }
+      },
+      {
+        "name": "baseAmount",
+        "attr": {
+          "type": "Money",
+          "column": "base_amount"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "arapply_curr_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "ReceivableRelation",
+    "table": "aropen",
+    "idSequenceName": "aropen_aropen_id_seq",
+    "isRest": true,
+    "isSystem": true,
+    "comment": "Receivable Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAROpenItems",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "aropen_curr_id",
+          "required": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "aropen_cust_id"
+        }
+      },
+      {
+        "name": "isOpen",
+        "attr": {
+          "type": "Boolean",
+          "column": "aropen_open"
+        }
+      },
+      {
+        "name": "documentType",
+        "attr": {
+          "type": "String",
+          "column": "aropen_doctype"
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "aropen_docnumber"
+        }
+      },
+      {
+        "name": "orderNumber",
+        "attr": {
+          "type": "String",
+          "column": "aropen_ordernumber"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "aropen_duedate",
+          "required": true
+        }
+      }
+    ]
+  }
+]

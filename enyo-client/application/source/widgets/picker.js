@@ -380,12 +380,12 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.LocationPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.location",
+    collection: "XM.locations",
     nameAttribute: "format",
     orderBy: [
       {attribute: 'format'}
     ],
-    valueAttribute: "id"
+    valueAttribute: "uuid"
   });
 
 
@@ -492,16 +492,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // PROJECT STATUS
-  //
-
-  enyo.kind({
-    name: "XV.ProjectStatusPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.projectStatuses"
-  });
-
-  // ..........................................................
   // REASON CODES
   //
 
@@ -560,6 +550,19 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ToDoStatusPicker",
     kind: "XV.PickerWidget",
     collection: "XM.toDoStatuses"
+  });
+
+  // ..........................................................
+  // SALES CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.SalesCategoryPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.salesCategories",
+    orderBy: [
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................
@@ -863,6 +866,17 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.wagePeriods",
     showNone: false,
     valueAttribute: "id"
+  });
+
+  // ..........................................................
+  // WORKFLOW STATUS
+  //
+
+  enyo.kind({
+    name: "XV.WorkflowStatusPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.workflowStatuses"
   });
 
   // ..........................................................

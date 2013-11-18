@@ -2,6 +2,10 @@ create or replace function xt.record_did_change() returns trigger as $$
 /* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
+  if (typeof XT === 'undefined') { 
+    plv8.execute("select xt.js_init();"); 
+  }
+
  var data = Object.create(XT.Data),
    table = TG_TABLE_SCHEMA + "." + TG_TABLE_NAME,
    oid = data.getTableOid(table),

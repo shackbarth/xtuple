@@ -14,10 +14,40 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     model;
 
   /**
-    Terms are used to determine the billing Terms for Accounts Payable and Accounts Receivable. 
+    Terms are used to determine the billing Terms for Accounts Payable and Accounts Receivable.
     @class
     @alias Terms
   */
+  var spec = {
+    recordType: "XM.Terms",
+    collectionType: "XM.TermsCollection",
+    cacheName: "XM.terms",
+    listKind: "XV.TermsList",
+    instanceOf: "XM.Document",
+    isLockable: true,
+    idAttribute: "code",
+    enforceUpperKey: false,
+    attributes: ["code", "cutOffDay", "description", "dueDays", "discountDays", "discountPercent",
+      "isUsedByBilling", "isUsedByPayments", "termsType"],
+    defaults: {
+      dueDays: 0,
+      discountDays: 0,
+      cutOffDay: 0,
+      isUsedByBilling: false,
+      isUsedByPayments: false,
+      termsType: "D"
+    },
+    extensions: ["billing", "inventory", "sales"],
+    privileges: {
+      createUpdateDelete: "MaintainTerms",
+      read: true
+    },
+    createHash: {
+      code: "TestTerms" + Math.random(),
+      description: "Test Terms"
+    },
+    updatableField: "description"
+  };
 
   var additionalTests = function () {
     /**
@@ -45,7 +75,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     */
     it("when the terms type is set to DAYS", function (done) {
       var initComplete = function () {
-        model.set(require("../lib/specs").terms.createHash);
+        model.set(spec.createHash);
         model.set("termsType", XM.Terms.DAYS);
         done();
       };
@@ -270,7 +300,8 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       assert.isDefined(XM.TermsCollection);
       //assert.isTrue(XM.TermsCollection instanceof XM.Collection);
     });
-    it("When the terms type selected is XM.Terms.DAYS", function (done) {
+    // TODO: rehab this not using smoke, which crashes subsequent tests
+    it.skip("When the terms type selected is XM.Terms.DAYS", function (done) {
       smoke.navigateToNewWorkspace(XT.app, "XV.TermsList", function (workspaceContainer) {
         workspaceContainer.$.workspace.value.set({termsType: XM.Terms.DAYS});
         done();
@@ -278,34 +309,34 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     });
     // TODO: The "dueDays", "discountDays" and "cutoffDays" attributes should be mapped to spin boxes.
     // TODO: the dueDays spin box should allow values between 0 and 999
-    it("the label for dueDays should be 'Due Days'", function () {
+    it.skip("the label for dueDays should be 'Due Days'", function () {
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
       assert.equal(workspace.$.dueDays.$.label.getContent(), XT.String.loc("_dueDays") + ":");
     });
-    it("the label for discountDays should be 'Discount Days'", function () {
+    it.skip("the label for discountDays should be 'Discount Days'", function () {
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
       assert.equal(workspace.$.discountDays.$.label.getContent(),
         XT.String.loc("_discountDays") + ":");
     });
-    it("The cutoffDay widget should be hidden", function () {
+    it.skip("The cutoffDay widget should be hidden", function () {
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
       assert.isFalse(workspace.$.cutOffDay.getShowing());
     });
-    it("When the terms type selected is XM.Terms.PROXIMO", function () {
+    it.skip("When the terms type selected is XM.Terms.PROXIMO", function () {
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
       workspace.value.set({termsType: XM.Terms.PROXIMO});
     });
-    it("The cutoffDay widget should be visible", function () {
+    it.skip("The cutoffDay widget should be visible", function () {
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
       assert.isTrue(workspace.$.cutOffDay.getShowing());
     });
     // TODO: the dueDays spin box should allow values between 0 and 31.
     // TODO: The cutoffDays should map to a spin box allowing values between 0 and 31.
-    it("the label for dueDays should be 'Due Day'", function () {
+    it.skip("the label for dueDays should be 'Due Day'", function () {
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
       assert.equal(workspace.$.dueDays.$.label.getContent(), XT.String.loc("_dueDay") + ":");
     });
-    it("the label for discountDays should be 'Discount Day'", function () {
+    it.skip("the label for discountDays should be 'Discount Day'", function () {
       var workspace = XT.app.$.postbooks.getActive().$.workspace;
       assert.equal(workspace.$.discountDays.$.label.getContent(),
         XT.String.loc("_discountDay") + ":");
@@ -337,5 +368,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     });
   };
 
+  exports.spec = spec;
   exports.additionalTests = additionalTests;
 }());

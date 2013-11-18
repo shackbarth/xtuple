@@ -2,6 +2,8 @@ drop function if exists xt.js_init();
 
 create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
 
+  if (plv8.__initialized) return;
+
   DEBUG = debug ? debug : false;
 
   if (plv8.version < '1.3.0'){
@@ -90,6 +92,8 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     }
   }
 
+
+  /* TODO: How can we send back a JSON object with error message and more info like 'foocol is required'. */
   handleError = function (message, code) {
     var err = new Error();
     this.stack = err.stack;
@@ -427,7 +431,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       "from locale " +
       "join usr on usr_locale_id = locale_id " +
       "left join lang on locale_lang_id = lang_id " +
-      "left join country on locale_country_id = country_id " + 
+      "left join country on locale_country_id = country_id " +
       "where usr_username = $1;";
     return plv8.execute(sql, [XT.username])[0].culture;
   };
@@ -476,9 +480,9 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   };
 
   /**
-    Wrapper for plv8.execute() for calling postgres functions. 
+    Wrapper for plv8.execute() for calling postgres functions.
     If the postgres function returns an error in the form of
-    a negative integer, this function finds the appropriate 
+    a negative integer, this function finds the appropriate
     translation and throws that error.
 
     NOTE that you should not pass unsanitized user input into
@@ -512,7 +516,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     var result = plv8.execute(sql, params)[0].result;
     if(typeof result === 'number' && result < 0) {
       errorString = XT.errorToString(functionName, result);
-      throw new handleError(errorString, 424); 
+      throw new handleError(errorString, 424);
     } else {
       return result;
     }
@@ -564,11 +568,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
     return string;
   };
-  
+
   /**
-   * Wrap formatDate() 
+   * Wrap formatDate()
    *
-   * @param Object The date. 
+   * @param Object The date.
    * @returns {String} Date string in user's locale.
   */
   XT.formatDate = function (string) {
@@ -582,9 +586,9 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   };
 
   /**
-   * Wrap formatCost() 
+   * Wrap formatCost()
    *
-   * @param Number The cost. 
+   * @param Number The cost.
    * @returns {Number} Cost number in user's locale & scale.
   */
   XT.formatCost = function (numb) {
@@ -596,11 +600,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     ret = plv8.execute(query, [numb])[0];
     return ret;
   };
-  
+
   /**
-   * Wrap formatMoney() 
+   * Wrap formatMoney()
    *
-   * @param Number The money. 
+   * @param Number The money.
    * @returns {Number} Money in user's locale & scale.
   */
   XT.formatMoney = function (numb) {
@@ -612,11 +616,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     ret = plv8.execute(query, [numb])[0];
     return ret;
   };
-  
+
   /**
-   * Wrap formatSalesPrice() 
+   * Wrap formatSalesPrice()
    *
-   * @param Number The price. 
+   * @param Number The price.
    * @returns {Number} Price in user's locale & scale.
   */
   XT.formatSalesPrice = function (numb) {
@@ -628,11 +632,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     ret = plv8.execute(query, [numb])[0];
     return ret;
   };
-  
+
   /**
-   * Wrap formatPurchPrice() 
+   * Wrap formatPurchPrice()
    *
-   * @param Number The price. 
+   * @param Number The price.
    * @returns {Number} Price in user's locale & scale.
   */
   XT.formatPurchPrice = function (numb) {
@@ -644,11 +648,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     ret = plv8.execute(query, [numb])[0];
     return ret;
   };
-  
+
   /**
-   * Wrap formatExtPrice() 
+   * Wrap formatExtPrice()
    *
-   * @param Number The price. 
+   * @param Number The price.
    * @returns {Number} Price in user's locale & scale.
   */
   XT.formatExtPrice = function (numb) {
@@ -660,11 +664,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     ret = plv8.execute(query, [numb])[0];
     return ret;
   };
-  
+
   /**
-   * Wrap formatQty() 
+   * Wrap formatQty()
    *
-   * @param Number The quantity. 
+   * @param Number The quantity.
    * @returns {Number} Quantity in user's locale & scale.
   */
   XT.formatQty = function (numb) {
@@ -676,11 +680,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     ret = plv8.execute(query, [numb])[0];
     return ret;
   };
-  
+
   /**
-   * Wrap formatQtyPer() 
+   * Wrap formatQtyPer()
    *
-   * @param Number The quantity per. 
+   * @param Number The quantity per.
    * @returns {Number} Quantity per in user's locale & scale.
   */
   XT.formatQtyPer = function (numb) {
@@ -692,11 +696,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     ret = plv8.execute(query, [numb])[0];
     return ret;
   };
-  
+
   /**
-   * Wrap formatRatio() 
+   * Wrap formatRatio()
    *
-   * @param Number The ratio. 
+   * @param Number The ratio.
    * @returns {Number} Ratio in user's locale & scale.
   */
   XT.formatRatio = function (numb) {
@@ -708,11 +712,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     ret = plv8.execute(query, [numb])[0];
     return ret;
   };
-  
+
   /**
-   * Wrap formatPrcnt() 
+   * Wrap formatPrcnt()
    *
-   * @param Number The percent. 
+   * @param Number The percent.
    * @returns {Number} Percent in user's locale & scale.
   */
   XT.formatPrcnt = function (numb) {
@@ -724,11 +728,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     ret = plv8.execute(query, [numb])[0];
     return ret;
   };
-  
-  /** 
-   * Wrap formatWeight() 
+
+  /**
+   * Wrap formatWeight()
    *
-   * @param Number The weight. 
+   * @param Number The weight.
    * @returns {Number} Weight in user's locale & scale.
   */
   XT.formatWeight = function (numb) {
@@ -740,11 +744,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     ret = plv8.execute(query, [numb])[0];
     return ret;
   };
-  
+
   /**
-   * Wrap formatNumeric() 
+   * Wrap formatNumeric()
    *
-   * @param Number. 
+   * @param Number.
    * @returns {Number} Number in user's locale & scale.
   */
   XT.formatNumeric = function (numb, text) {
@@ -848,9 +852,17 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
         if(DEBUG) XT.debug('loading javascript for type->', res[i].js_type);
 
         eval(res[i].javascript);
+
+        var ns = eval(res[i].js_namespace);
+        if (ns && ns[js_type]) {
+          if (Object.isFrozen(ns[js_type])) {
+            plv8.elog(WARNING, 'object already frozen: '+ ns + '.' + js_type);
+          }
+          Object.freeze(ns[js_type]);
+        }
       }
     }
+    plv8.__initialized = true;
   }
 
 $$ language plv8;
-

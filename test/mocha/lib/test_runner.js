@@ -1,7 +1,8 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, XM:true, XV:true, exports:true, describe:true, it:true, require:true */
+/*global XT:true, XM:true, XV:true, exports:true, describe:true, it:true,
+require:true, __dirname:true, console:true */
 
 
 // TODO: test "used"
@@ -9,16 +10,49 @@
 
 // TODO: test defaults
 
+/**
+  By convention, the test runner will look for .js files in the test/mocha/specs
+  directory, and run any file with an export.specs. If there are any custom business
+  logic tests to be run, those should go in the same file under a different export,
+  export.additionalTests
+
+  You can run tests for a particular business object by taking advantage of
+  the -g flag.
+
+  mocha -R spec -g XM.Invoice test/mocha/lib/test_runner.js
+
+  To generate spec documentation:
+  cd scripts
+  ./generateSpecs.sh
+
+*/
+
+
 (function () {
   "use strict";
 
   var crud = require('./crud'),
     smoke = require('./smoke'),
-    specs = require('./specs'),
+    fs = require('fs'),
+    _ = require("underscore"),
+    path = require('path'),
+    specFiles = _.filter(fs.readdirSync(path.join(__dirname, "../specs")), function (fileName) {
+      // filter out .swp files, etc.
+      return path.extname(fileName) === '.js';
+    }),
+    specs,
     assert = require("chai").assert,
-    _ = require("underscore");
+    zombieAuth = require("./zombie_auth");
 
-  _.each(specs, function (spec) {
+  _.each(specFiles, function (specFile) {
+    var specContents = require(path.join(__dirname, "../specs", specFile)),
+      spec = specContents.spec;
+
+    if (!spec) {
+      // temporary during conversion process
+      console.log(specFile, "spec is incomplete.");
+      return;
+    }
     describe(spec.recordType, function () {
       if (_.isString(spec.updatableField)) {
         spec.updateHash = {};
@@ -30,6 +64,15 @@
       //
       if (!spec.skipCrud) {
         crud.runAllCrud(spec);
+      } else {
+        // even if we skip CRUD we have to create a model
+        it('can be loaded with a zombie session', function (done) {
+          this.timeout(40 * 1000);
+          zombieAuth.loadApp({callback: done, verbose: false /* data.verbose */});
+        });
+        it('can be created', function () {
+          spec.model = new XM[spec.recordType.substring(3)]();
+        });
       }
 
       //
@@ -40,6 +83,17 @@
       }
 
       if (!spec.skipModelConfig) {
+        //
+        // Verify required fields
+        //
+        if (spec.requiredAttributes) {
+          _.each(spec.requiredAttributes, function (attr) {
+            it("the " + attr + " attribute is required", function () {
+              assert.include(spec.model.requiredAttributes, attr);
+            });
+          });
+        }
+
         //
         // Verify lockability
         //
@@ -71,14 +125,19 @@
         if (spec.idAttribute) {
           it("has " + spec.idAttribute + " as its idAttribute", function () {
             assert.equal(spec.idAttribute, spec.model.idAttribute);
-            if (spec.instanceOf === "XM.Document") {
-              // Documents have the same value as their document key
-              assert.equal(spec.idAttribute, spec.model.documentKey);
-            }
           });
         } else {
           it("has its id attribute defined in the test spec", function () {
             assert.fail();
+          });
+        }
+
+        //
+        // Verify Document Key
+        //
+        if (spec.documentKey) {
+          it("has " + spec.documentKey + " as its documentKey", function () {
+            assert.equal(spec.documentKey, spec.model.documentKey);
           });
         }
 
@@ -194,14 +253,23 @@
         //
         // Test that the collection exists
         //
-        it("backs the " + spec.collectionType + " collection", function () {
-          var Collection = XT.getObjectByName(spec.collectionType),
-            modelPrototype = Collection.prototype.model.prototype,
-            editableModel = modelPrototype.editableModel || modelPrototype.recordType;
+        if (spec.collectionType) {
+          it("backs the " + spec.collectionType + " collection", function () {
+            var Collection = XT.getObjectByName(spec.collectionType),
+              modelPrototype = Collection.prototype.model.prototype,
+              editableModel = modelPrototype.editableModel || modelPrototype.recordType;
 
-          assert.isFunction(Collection);
-          assert.equal(editableModel, spec.recordType);
-        });
+            assert.isFunction(Collection);
+            assert.equal(editableModel, spec.recordType);
+          });
+        } else if (spec.collectionType === null) {
+          // TODO: loop through the existing collections and make sure that
+          // none are backed by spec.recordType
+        } else {
+          it("has no colletion specified in the test spec", function () {
+            assert.fail();
+          });
+        }
 
         //
         // Test that the cache exists
@@ -231,8 +299,8 @@
       // TODO: verify that the cache is made available by certain extensions and not others
       // TODO: verify that the list is made available by certain extensions and not others
 
-      if (spec.additionalTests) {
-        spec.additionalTests();
+      if (specContents.additionalTests) {
+        specContents.additionalTests();
       }
 
     });

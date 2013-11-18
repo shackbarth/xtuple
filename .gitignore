@@ -1,7 +1,7 @@
 *.DS_Store
-*.swp
-*.swo
+*.sw*
 *~
+*.backup
 *.deb
 node_modules
 npm-debug.log
@@ -13,5 +13,3 @@ scripts/lib/deploy
 scripts/lib/package.js
 test/mocha/lib/demo-test.backup
 test/shared/login_data.js
-diff
-

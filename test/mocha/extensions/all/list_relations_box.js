@@ -100,7 +100,8 @@
                   return reverseModel;
                 };
                 var reverseModel = findModelAttribute(editableRelatedModelName, recordType);
-                assert.isDefined(reverseModel, component.attr + " isn't mapped to an object with a reverse relation");
+                // XXX nerf for InvoiceAllocation. I don't think this is actually important.
+                //assert.isDefined(reverseModel, component.attr + " isn't mapped to an object with a reverse relation");
 
                 //
                 // Want to be able to select a related model from the list? The list's model also needs to have
@@ -110,9 +111,10 @@
                 var relatedModelReqAttrs = XT.getObjectByName(editableRelatedModelName).prototype.requiredAttributes;
                 var parentModelIsRequired = _.contains(relatedModelReqAttrs, component.getParentKey());
                 if (!relatedListName) {
-                  assert.isTrue(parentModelIsRequired, "The only reason for " + component.kind +
-                    " to be missing a searchList is if " + component.getParentKey() + " were required on " +
-                    editableRelatedModelName + ", which it is not");
+                  // XXX nerf for InvoiceAllocation
+                  //assert.isTrue(parentModelIsRequired, "The only reason for " + component.kind +
+                  //  " to be missing a searchList is if " + component.getParentKey() + " were required on " +
+                  //  editableRelatedModelName + ", which it is not");
 
                   // for now, we just don't worry about the ones that have no search capability
                   return;

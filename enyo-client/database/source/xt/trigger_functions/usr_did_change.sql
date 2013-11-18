@@ -2,6 +2,10 @@ create or replace function xt.usr_did_change() returns trigger as $$
 /* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple.
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
+  if (typeof XT === 'undefined') { 
+    plv8.execute("select xt.js_init();"); 
+  }
+
  var sql = "select setUserPreference('" + NEW.usr_username + "', '{name}', $1)";
  if (TG_OP === 'INSERT') {
    plv8.execute('select xt.createuser($1, false)', [NEW.usr_username.toLowerCase()]);

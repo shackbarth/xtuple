@@ -2,9 +2,9 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true*/
 
+_ = require('underscore');
 
-var _ = require('underscore'),
-  async = require('async'),
+var  async = require('async'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
@@ -72,14 +72,14 @@ var _ = require('underscore'),
       credsClone = JSON.parse(JSON.stringify(creds));
     // the calls to drop and create the database need to be run against the database "postgres"
     credsClone.database = "postgres";
-    winston.log("Dropping database " + databaseName);
+    winston.info("Dropping database " + databaseName);
     dataSource.query("drop database if exists " + databaseName + ";", credsClone, function (err, res) {
       if (err) {
         winston.error("drop db error", err.message, err.stack, err);
         callback(err);
         return;
       }
-      winston.log("Creating and restoring database " + databaseName);
+      winston.info("Creating and restoring database " + databaseName);
       dataSource.query("create database " + databaseName + " template template1", credsClone, function (err, res) {
         if (err) {
           winston.error("create db error", err.message, err.stack, err);
@@ -303,7 +303,7 @@ var _ = require('underscore'),
             if (!isLibOrm) {
               // unless it it hasn't yet been defined (ie. lib/orm),
               // running xt.js_init() is probably a good idea.
-              extensionSql = jsInit + extensionSql;
+              //extensionSql = jsInit + extensionSql;
             }
 
             if (isApplicationCore && spec.wipeViews) {

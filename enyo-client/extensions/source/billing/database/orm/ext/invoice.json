@@ -1,0 +1,27 @@
+[
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "InvoiceLine",
+    "table": "xt.invciteminfo",
+    "isExtension": true,
+    "comment": "Extended by Billing",
+    "relations": [
+      {
+        "column": "invcitem_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "salesCategory",
+        "toOne": {
+          "type": "SalesCategory",
+          "column": "invcitem_salescat_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }
+]
