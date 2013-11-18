@@ -86,6 +86,7 @@ trailing:true, white:true*/
       "MaintainPersonalOpportunities",
       "MaintainPersonalProjects",
       "MaintainPersonalToDoItems",
+      "MaintainProjectTypes",
       "MaintainTitles",
       "ReassignToDoItems",
       "ViewAllContacts",
