@@ -76,7 +76,7 @@ while getopts ":icbpgnh-:" opt; do
       echo "Usage: install_xtuple [OPTION]"
 	 echo "Build the full xTuple Mobile Development Environment."
 	 echo ""
-	 echo "To install everything, run sudo ./scripts/install_xtuple.sh"
+	 echo "To install everything, just do bash scripts/install_xtuple.sh"
 	 echo "Everything will go in /usr/local/src/xtuple"
 	 echo ""
 	 echo -e "  -b\t\t"
