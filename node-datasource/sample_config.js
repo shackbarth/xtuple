@@ -21,13 +21,13 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       pgPoolSize: 15,
       pgWorker: false,
       bindAddress: "0.0.0.0",
-      redirectPort: 80,
-      maintenancePort: 442,
+      redirectPort: 8880,
+      maintenancePort: 8442,
       // proxyPort is the port the app will be redirected to
       // this is useful if there is a proxy in front of the app listening
       // on a different port
       proxyPort: null,
-      port: 443,
+      port: 8443,
       keyFile: "./lib/private/key.pem",
       certFile: "./lib/private/server.crt",
       caFile: null,
