@@ -39,9 +39,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   var additionalTests = function () {};
-  var spork;
 
-  exports.spec = spork; // re-enable this after addition of MaintainProjectTypes to prep_database
+  exports.spec = spec;
   exports.additionalTests = additionalTests;
 
 }());
