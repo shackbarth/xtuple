@@ -17,6 +17,7 @@ cdir() {
 
 RUNALL=true
 XT_VERSION=
+DATABASE=dev
 NODE_VERSION=
 varlog RUN_DIR
 BASEDIR=/usr/local/src
