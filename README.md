@@ -3,6 +3,7 @@ xTuple
 
 xTuple Enterprise Resource Planning Mobile-Web client
 
+
 ### Installing this project
 
 The install script for this project is Debian based and designed to run on a 64 bit Ubuntu 12.04 machine. *If you do not have 64 bit hardware the install script will not work for you* and you will have to do a manual build. It is best if you do not already have postgres installed on your machine.
@@ -15,11 +16,12 @@ To install this project, first fork this repo onto your own github account and c
 
 Then run:
 
-    sudo ./scripts/install_xtuple.sh
+    cd scripts
+    sudo ./install_xtuple.sh
 
 This will take a while. Then, to start the datasource, run
 
-    cd node-datasource
+    cd ../node-datasource
     sudo ./main.js
 
 Launch your local browser and navigate to the address `localhost`. Default username and password are `admin`.
