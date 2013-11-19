@@ -216,7 +216,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     });
   };
 
-  exports.spork = spec;
+  exports.spec = spec;
   // XXX TODO: bring these back. Looks like a masterref->postgres migration problem
   //exports.additionalTests = additionalTests;
 }());

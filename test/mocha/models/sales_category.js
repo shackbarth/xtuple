@@ -21,7 +21,7 @@
       }
     };
 
-  describe.skip('SalesCategory CRUD Test', function () {
+  describe('SalesCategory CRUD Test', function () {
     crud.runAllCrud(data);
   });
 })();

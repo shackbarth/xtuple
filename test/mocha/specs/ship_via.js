@@ -34,7 +34,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     updatableField: "description"
   };
 
-  exports.spork = spec;
+  exports.spec = spec;
 
 }());
 
