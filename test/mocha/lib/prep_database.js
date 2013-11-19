@@ -19,6 +19,7 @@
 
   var adminName = loginData.data.username;
   var privName = "MaintainSaleTypes"; // TODO: support array
+  // TODO: Add "MaintainProjectTypes"
 
   var assignmentModel;
   var initAssignmentModel = function (callback) {
