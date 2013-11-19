@@ -35,6 +35,7 @@ TODO deferred to later sprint:
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
+    common = require("../lib/common"),
     assert = require("chai").assert,
     invoiceModel,
     lineModel,
@@ -49,29 +50,6 @@ TODO deferred to later sprint:
     bpaint,
     btruck;
 
-  // TODO: this kind of thing belongs in the framework
-  var initializeModel = function (model, Klass, done) {
-    var statusChanged = function () {
-      if (model.isReady()) {
-        model.off("statusChange", statusChanged);
-        done(null, model);
-      }
-    };
-    model = new Klass();
-    model.on("statusChange", statusChanged);
-    model.initialize(null, {isNew: true});
-  };
-  var fetchModel = function (model, Klass, hash, done) {
-    var statusChanged = function () {
-      if (model.isReady()) {
-        model.off("statusChange", statusChanged);
-        done(null, model);
-      }
-    };
-    model = new Klass();
-    model.on("statusChange", statusChanged);
-    model.fetch(hash);
-  };
 
   /**
     Here is some high-level description of what an invoice is supposed to do.
@@ -283,25 +261,25 @@ TODO deferred to later sprint:
       before(function (done) {
         async.parallel([
           function (done) {
-            fetchModel(bpaint, XM.ItemRelation, {number: "BPAINT1"}, function (err, model) {
+            common.fetchModel(bpaint, XM.ItemRelation, {number: "BPAINT1"}, function (err, model) {
               bpaint = model;
               done();
             });
           },
           function (done) {
-            fetchModel(btruck, XM.ItemRelation, {number: "BTRUCK1"}, function (err, model) {
+            common.fetchModel(btruck, XM.ItemRelation, {number: "BTRUCK1"}, function (err, model) {
               btruck = model;
               done();
             });
           },
           function (done) {
-            initializeModel(invoiceModel, XM.Invoice, function (err, model) {
+            common.initializeModel(invoiceModel, XM.Invoice, function (err, model) {
               invoiceModel = model;
               done();
             });
           },
           function (done) {
-            initializeModel(lineModel, XM.InvoiceLine, function (err, model) {
+            common.initializeModel(lineModel, XM.InvoiceLine, function (err, model) {
               lineModel = model;
               done();
             });
@@ -602,37 +580,37 @@ TODO deferred to later sprint:
       before(function (done) {
         async.parallel([
           function (done) {
-            fetchModel(ttoys, XM.BillingCustomer, {number: "TTOYS"}, function (err, model) {
+            common.fetchModel(ttoys, XM.BillingCustomer, {number: "TTOYS"}, function (err, model) {
               ttoys = model;
               done();
             });
           },
           function (done) {
-            fetchModel(vcol, XM.BillingCustomer, {number: "VCOL"}, function (err, model) {
+            common.fetchModel(vcol, XM.BillingCustomer, {number: "VCOL"}, function (err, model) {
               vcol = model;
               done();
             });
           },
           function (done) {
-            fetchModel(nctax, XM.TaxZone, {code: "NC TAX"}, function (err, model) {
+            common.fetchModel(nctax, XM.TaxZone, {code: "NC TAX"}, function (err, model) {
               nctax = model;
               done();
             });
           },
           function (done) {
-            fetchModel(nctaxCode, XM.TaxCode, {code: "NC TAX-A"}, function (err, model) {
+            common.fetchModel(nctaxCode, XM.TaxCode, {code: "NC TAX-A"}, function (err, model) {
               nctaxCode = model;
               done();
             });
           },
           function (done) {
-            initializeModel(invoiceTaxModel, XM.InvoiceTax, function (err, model) {
+            common.initializeModel(invoiceTaxModel, XM.InvoiceTax, function (err, model) {
               invoiceTaxModel = model;
               done();
             });
           },
           function (done) {
-            initializeModel(allocationModel, XM.InvoiceAllocation, function (err, model) {
+            common.initializeModel(allocationModel, XM.InvoiceAllocation, function (err, model) {
               allocationModel = model;
               done();
             });
