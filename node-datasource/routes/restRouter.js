@@ -41,7 +41,7 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
   var getResources = function (req, res, next, orms) {
     var callback = {},
         payload = {},
-        rootUrl = req.protocol + "://" + req.host + "/",
+        rootUrl = req.protocol + "://" + req.headers.host + "/",
         session = {};
 
     callback = function (result) {
