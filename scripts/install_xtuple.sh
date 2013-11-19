@@ -390,11 +390,11 @@ setup_postgres() {
 
 	psql -q -U postgres -f 'init.sql' 2>&1 | tee -a $LOG_FILE
 
-	createdb -U postgres -O admin dev 2>&1 | tee -a $LOG_FILE
+	createdb -U postgres -O admin $DATABASE 2>&1 | tee -a $LOG_FILE
 
-	pg_restore -U postgres -d dev postbooks_demo-$NEWESTVERSION.backup 2>&1 | tee -a $LOG_FILE
+	pg_restore -U postgres -d $DATABASE postbooks_demo-$NEWESTVERSION.backup 2>&1 | tee -a $LOG_FILE
 
-	psql -U postgres dev -c "CREATE EXTENSION plv8" 2>&1 | tee -a $LOG_FILE
+	psql -U postgres $DATABASE -c "CREATE EXTENSION plv8" 2>&1 | tee -a $LOG_FILE
 }
 
 # Pull submodules
@@ -466,7 +466,7 @@ init_everythings() {
 	fi
 
 	cdir $XT_DIR
-	node scripts/build_app.js -d dev 2>&1 | tee -a $LOG_FILE
+	node scripts/build_app.js -d $DATABASE 2>&1 | tee -a $LOG_FILE
 
 	psql -U postgres $DATABASE -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>&1 | tee -a $LOG_FILE
 
