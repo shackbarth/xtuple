@@ -10,6 +10,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
+    common = require("../lib/common"),
     assert = require("chai").assert;
 
   var spec = {
@@ -38,7 +39,46 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     updatableField: "description"
   };
 
-  var additionalTests = function () {};
+  var additionalTests = function () {
+    describe("ProjectTypeWorkflow", function () {
+      var projectTypeModel,
+        workflowSourceModel;
+
+      before(function (done) {
+        async.parallel([
+          function (done) {
+            common.initializeModel(projectTypeModel, XM.ProjectType, function (err, model) {
+              projectTypeModel = model;
+              projectTypeModel.set(spec.createHash);
+              done();
+            });
+          },
+          function (done) {
+            common.initializeModel(workflowSourceModel, XM.ProjectTypeWorkflow, function (err, model) {
+              workflowSourceModel = model;
+              done();
+            });
+          }
+        ], done);
+      });
+
+
+      it("can get added to a project type", function (done) {
+        assert.isTrue(workflowSourceModel.isReady());
+        workflowSourceModel.set({
+          name: "First step",
+          priority: XM.priorities.models[0]
+        });
+        projectTypeModel.get("workflow").add(workflowSourceModel);
+        assert.isUndefined(JSON.stringify(projectTypeModel.validate(projectTypeModel.attributes)));
+        projectTypeModel.save(null, {success: function () {
+          done();
+        }});
+      });
+
+
+    });
+  };
 
   exports.spec = spec;
   exports.additionalTests = additionalTests;

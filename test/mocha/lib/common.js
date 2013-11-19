@@ -74,6 +74,7 @@
     model.on("statusChange", statusChanged);
     model.initialize(null, {isNew: true});
   };
+
   var fetchModel = function (model, Klass, hash, done) {
     var statusChanged = function () {
       if (model.isReady()) {

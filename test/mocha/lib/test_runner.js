@@ -50,13 +50,21 @@ require:true, __dirname:true, console:true */
 
     if (!spec) {
       // temporary during conversion process
-      console.log(specFile, "spec is incomplete.");
+      console.log("Note:", specFile, "spec is sporked.");
       return;
     }
     describe(spec.recordType, function () {
       if (_.isString(spec.updatableField)) {
         spec.updateHash = {};
         spec.updateHash[spec.updatableField] = "Test" + Math.random();
+      }
+
+
+      if (spec.skipBoilerplateTests && specContents.additionalTests) {
+        specContents.additionalTests();
+        return;
+      } else if (spec.skipBoilerplateTests) {
+        return;
       }
 
       //
