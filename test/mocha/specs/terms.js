@@ -368,6 +368,6 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
     });
   };
 
-  exports.spec = spec;
+  exports.spork = spec;
   exports.additionalTests = additionalTests;
 }());

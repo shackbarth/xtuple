@@ -78,7 +78,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     });
   };
 
-  exports.spec = spec;
+  exports.spork = spec;
   exports.additionalTests = additionalTests;
 
 
