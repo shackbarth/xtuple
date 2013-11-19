@@ -6,8 +6,8 @@ install:
   - "sudo ./scripts/install_xtuple.sh"
 
 before_script:
-  - "cd node-datasource ; sudo node main.js &"
-  - "sleep 5"
+  - "cd node-datasource ; nohup node main.js &"
+  - "sleep 10"
   - "cd .."
 
 script:
