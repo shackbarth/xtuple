@@ -3,8 +3,6 @@ xTuple
 
 xTuple Enterprise Resource Planning Mobile-Web client
 
-[![Build Status](https://travis-ci.org/tjwebb/xtuple.png?branch=21855)](https://travis-ci.org/tjwebb/xtuple)
-
 
 ### Installing this project
 
