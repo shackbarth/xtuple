@@ -303,7 +303,7 @@ var  async = require('async'),
             if (!isLibOrm) {
               // unless it it hasn't yet been defined (ie. lib/orm),
               // running xt.js_init() is probably a good idea.
-              //extensionSql = jsInit + extensionSql;
+              extensionSql = jsInit + extensionSql;
             }
 
             if (isApplicationCore && spec.wipeViews) {
