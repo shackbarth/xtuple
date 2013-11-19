@@ -145,7 +145,6 @@
 - Fixed
   issue #[21994](http://www.xtuple.org/xtincident/view/bugs/21994)
   _*Selecting to run the install script displays Syntax error_
-1.x.x (???/xx/xx)
 
 This version requires version 4.2.0 or higher of xTuple PostBooks or commercial edition database.
 
