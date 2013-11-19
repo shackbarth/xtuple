@@ -81,7 +81,7 @@ Simplest possible usage:
       database = loginData.data.org;
       host = loginData.data.webaddress;
     }
-    host = host || "https://localhost:8443";
+    host = host || "https://localhost:443";
 
     if (options.refreshLogin) {
       enyo = {};
