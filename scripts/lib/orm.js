@@ -71,7 +71,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   /**
-    Here is the function that actually installs the ORM!
+    Here is the function that actually installs the ORM
    */
   submit = function (data, orm, queue, ack, isExtension) {
     var extensions, context, extensionList = [], namespace, type;
@@ -142,6 +142,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var installed = data.installed,
       orms = data.orms,
       orm, dependencies = [];
+
     if (!queue || queue.length === 0) {
       // this is the actual callback! The first arg is an error, which is null if
       // we've made it this far. The second arg is an array of all the orm names
@@ -212,7 +213,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (stat.isDirectory()) {
         // we'll be populating this root object in the recursion with empty keys
         dive(file, root ? root : (root = {}));
-      } else {
+      } else if (X.ext(file) === "json" || X.ext(file) === "js") {
         root[file] = "";
       }
     });
@@ -399,8 +400,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           ns = ext.nameSpace;
           type = ext.type;
           try {
+            if (!orms[ns]) {
+              // prevents a bug whereby a module with only "extensions" and no "models"
+              // would get ignored entirely by the orm installer
+              orms[ns] = {};
+            }
             orm = orms[ns][type];
-          } catch (err) { return; }
+          } catch (err) {
+            console.log("orm extension error:", err);
+            return;
+          }
           if (orm) {
             if (!orm.extensions) { orm.extensions = []; }
             orm.extensions.push(ext);
@@ -417,7 +426,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     data.extensions = extensions;
 
     calculateDependencies.call(this, data);
-    ack(orms);
+    ack();
   };
 
 
@@ -441,8 +450,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   // debug
+  /*
   var debugPath = X.path.join(__dirname, "../../enyo-client/extensions/source/test/database/orm");
   runOrmInstaller(debugPath, {orms: []}, function (err, res) {
     console.log(err, res);
   });
+  */
 }());

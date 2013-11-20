@@ -16,7 +16,7 @@
       {
         "name": "isSalesOrders",
         "attr": {
-          "type": "Broolean",
+          "type": "Boolean",
           "column": "char_salesorders"
         }
       }
