@@ -36,8 +36,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   var additionalTests = function () {
-    describe("ProjectTypeWorkflow", function () {
-      var projectTypeModel,
+    describe("SaleTypeWorkflow", function () {
+      var saleTypeModel,
         workflowSourceModel;
       //var models = {
       //  projectTypeModel: null,
@@ -48,14 +48,14 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         //common.prepModels(models);
         async.parallel([
           function (done) {
-            common.initializeModel(projectTypeModel, XM.ProjectType, function (err, model) {
-              projectTypeModel = model;
-              projectTypeModel.set(spec.createHash);
+            common.initializeModel(saleTypeModel, XM.SaleType, function (err, model) {
+              saleTypeModel = model;
+              saleTypeModel.set(spec.createHash);
               done();
             });
           },
           function (done) {
-            common.initializeModel(workflowSourceModel, XM.ProjectTypeWorkflow, function (err, model) {
+            common.initializeModel(workflowSourceModel, XM.SaleTypeWorkflow, function (err, model) {
               workflowSourceModel = model;
               done();
             });
@@ -64,15 +64,15 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       });
 
 
-      it("can get added to a project type", function (done) {
+      it("can get added to a sale type", function (done) {
         assert.isTrue(workflowSourceModel.isReady());
         workflowSourceModel.set({
           name: "First step",
           priority: XM.priorities.models[0]
         });
-        projectTypeModel.get("workflow").add(workflowSourceModel);
-        assert.isUndefined(JSON.stringify(projectTypeModel.validate(projectTypeModel.attributes)));
-        projectTypeModel.save(null, {success: function () {
+        saleTypeModel.get("workflow").add(workflowSourceModel);
+        assert.isUndefined(JSON.stringify(saleTypeModel.validate(saleTypeModel.attributes)));
+        saleTypeModel.save(null, {success: function () {
           done();
         }});
       });
@@ -82,7 +82,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   exports.spec = spec;
-  exports.additionalTestspork = additionalTests;
+  exports.additionalTests = additionalTests;
 
 }());
 
