@@ -43,8 +43,13 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     describe("ProjectTypeWorkflow", function () {
       var projectTypeModel,
         workflowSourceModel;
+      //var models = {
+      //  projectTypeModel: null,
+      //  workflowSourceModel : null
+      //};
 
       before(function (done) {
+        //common.prepModels(models);
         async.parallel([
           function (done) {
             common.initializeModel(projectTypeModel, XM.ProjectType, function (err, model) {

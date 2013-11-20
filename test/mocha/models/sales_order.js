@@ -12,31 +12,6 @@ module:true, require:true, exports:true, console:true */
     modelData = require("../lib/model_data"),
     assert = require("chai").assert;
 
-  describe('Sales order', function () {
-    crud.runAllCrud(modelData.salesOrderData);
-  });
-
-  describe('Sales order business logic', function () {
-    it('should take the defaults from the customer', function (done) {
-      var terms = new XM.Terms(),
-        customer = new XM.SalesCustomer(),
-        salesOrder = new XM.SalesOrder(),
-        initCallback = function () {
-          terms.set({code: "COD"});
-          customer.set({terms: terms, billtoContact: "Bob"});
-          assert.equal(salesOrder.getValue("terms.code"), "");
-          salesOrder.set({customer: customer});
-
-          // customer.terms.code gets copied to terms.code
-          assert.equal(salesOrder.getValue("terms.code"), "COD");
-          done();
-        };
-
-      salesOrder.on('change:number', initCallback);
-      salesOrder.initialize(null, {isNew: true});
-    });
-  });
-
   describe('Quote', function () {
     crud.runAllCrud(modelData.quoteData);
   });

@@ -172,7 +172,7 @@ TODO deferred to later sprint:
     },
     updatableField: "notes",
     beforeSaveActions: [{it: 'sets up a valid line item',
-      action: require("../lib/model_data").getBeforeSaveAction("XM.InvoiceLine")}],
+      action: require("./sales_order").getBeforeSaveAction("XM.InvoiceLine")}],
     skipSmoke: true,
     beforeSaveUIActions: [{it: 'sets up a valid line item',
       action: function (workspace, done) {

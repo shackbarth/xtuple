@@ -7,6 +7,7 @@
   "use strict";
 
   var _ = require("underscore"),
+    async = require("async"),
     assert = require("chai").assert;
 
   /**
@@ -86,6 +87,34 @@
     model.on("statusChange", statusChanged);
     model.fetch(hash);
   };
+
+/*
+  under development...
+
+  var prepModel = function (spec, done) {
+    if (spec.hash) {
+      fetchModel();
+    } else {
+      initializeModel(null, XM.ProjectType, done);
+    }
+  };
+
+  var prepModels = function (models, done) {
+    var modelsArray = _.map(models, function (value, key) {
+      return {key: key, hash: value};
+    });
+
+    async.map(modelsArray, prepModel, function (err, results) {
+      if (err) {
+        done(err);
+      }
+      _.each(results, function (result) {
+        models[result.key] = result.model;
+      });
+      done();
+    });
+  };
+    */
 
   exports.initializeModel = initializeModel;
   exports.fetchModel = fetchModel;
