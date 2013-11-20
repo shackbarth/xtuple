@@ -799,7 +799,7 @@
     };
 
   module.exports = {
-    spork: cashReceiptSpec,
+    spec: cashReceiptSpec,
     additionalTests: cashReceiptTest
   };
 

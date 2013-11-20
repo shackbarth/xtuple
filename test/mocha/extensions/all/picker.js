@@ -18,7 +18,7 @@
     _ = require("underscore"),
     assert = require("chai").assert;
 
-  describe.skip('Pickers', function () {
+  describe('Pickers', function () {
     this.timeout(45 * 1000);
 
     before(function (done) {
