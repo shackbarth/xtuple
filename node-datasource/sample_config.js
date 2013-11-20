@@ -82,7 +82,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       password: "admin"
     },
     biServer: {
-        hostname: "localhost",
+        hostname: "biserverhostname",
         port: 8080,
         catalog: "xTuple",
         tenantname: "default",

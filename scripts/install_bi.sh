@@ -18,12 +18,12 @@ cdir() {
 
 RUNALL=true
 BI_DIR=$RUN_DIR/../../bi
+PRIVATE_DIR=$RUN_DIR/../../private-extensions
 XT_DIR=$RUN_DIR/..
 export BISERVER_HOME=$RUN_DIR/../../ErpBI
 DATABASE=dev
 TENANT=default
 COMMONNAME=$(hostname)
-export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:bin/javac::")
 
 while getopts ":iebcpd:t:n:j:" opt; do
   case $opt in
@@ -86,26 +86,26 @@ then
 	PREP=true
 fi
 
-if  ! test -e $JAVA_HOME/bin/javac ;
+if  ! test -d $BI_DIR ;
 then
 	log ""
 	log "#############################################################"
 	log "#############################################################"
-    log "Sorry can not find javac.  Set Java Home with the -j argument"
+    log "Sorry bi folder not found.  You must clone xtuple/bi"
 	log "#############################################################"
 	log "#############################################################"
 	log ""
     exit 1
 fi
 
-if  ! test -d $XT_DIR ;
+if  ! test -d $PRIVATE_DIR ;
 then
 	log ""
-	log "#############################################################"
-	log "#############################################################"
-    log "Sorry xtuple folder not found.  You must clone xtuple"
-	log "#############################################################"
-	log "#############################################################"
+	log "####################################################################################"
+	log "####################################################################################"
+    log "Sorry private-extensions folder not found.  You must clone xtuple/private-extensions"
+	log "####################################################################################"
+	log "####################################################################################"
 	log ""
     exit 1
 fi
@@ -119,9 +119,19 @@ install_packages () {
 	log "######################################################"
 	log ""
 	apt-get install -qy git openjdk-6-jdk maven2
+	export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:bin/javac::")	
+	if  ! test -e $JAVA_HOME/bin/javac ;
+	then
+		log ""
+		log "#############################################################"
+		log "#############################################################"
+		log "Sorry can not find javac.  Set Java Home with the -j argument"
+		log "#############################################################"
+		log "#############################################################"
+		log ""
+		exit 1
+	fi
 }
-
-#git clone https://github.com/xtuple/bi
 
 download_files () {
 	log ""
@@ -135,8 +145,8 @@ download_files () {
 	log ""
     cdir $RUN_DIR/../..
 	rm -R ErpBI
-	rm ErpBI.zip
-	wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
+	#rm ErpBI.zip
+	#wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
 	unzip ErpBI.zip  2>1 | tee -a $LOG_FILE
 	
 	cdir $BISERVER_HOME/biserver-ce/
@@ -225,14 +235,23 @@ prep_mobile() {
 	cdir $XT_DIR/node-datasource/lib/rest-keys
 	openssl genrsa -out server.key 1024 2>1 | tee -a $LOG_FILE
 	openssl rsa -in server.key -pubout > server.pub 2>1 | tee -a $LOG_FILE
-
+	
+	#
+	# Would be better to get multiline sed working to put commonname in:
+	# biserver: {
+	#    hostname: myname
+	#
+	# Something similar to:
+	#	sed 'N;s#biServer: {\n        hostname:.*#biServer: {\n        hostname: \"'$COMMONNAME'\",#' \
+	
 	cdir $XT_DIR/node-datasource
 	mv config.js config.js.old 2>1 | tee -a $LOG_FILE
 	cat config.js.old | \
 	sed 's#biKeyFile: .*#biKeyFile: \"./lib/rest-keys/server.key\",#' | \
 	sed 's#biServerUrl: .*#biServerUrl: \"https://'$COMMONNAME':8443/pentaho/\",#'| \
 	sed 's#uniqueTenantId: .*#uniqueTenantId: \"'$TENANT'",#' | \
-	sed 's#biUrl: .*#biUrl: \"https://'$COMMONNAME':8443/pentaho/content/reporting/reportviewer/report.html\?solution=xtuple\&path=%2Fprpt\&locale=en_US\&userid=reports\&password=password\&output-target=pageable/pdf\",#' \
+	sed 's#biUrl: .*#biUrl: \"https://'$COMMONNAME':8443/pentaho/content/reporting/reportviewer/report.html\?solution=xtuple\&path=%2Fprpt\&locale=en_US\&userid=reports\&password=password\&output-target=pageable/pdf\",#' | \
+	sed 's#biserverhostname#'$COMMONNAME'#' \
 	> config.js
 }
 
