@@ -77,6 +77,24 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   }
 
   /**
+    Remove duplicates from an array.
+
+    @returns Array with no duplicates.
+  */
+  Array.prototype.unique = function () {
+    var a = this.concat();
+    for(var i=0; i<a.length; ++i) {
+      for(var j=i+1; j<a.length; ++j) {
+        if(a[i] === a[j]) {
+          a.splice(j--, 1);
+        }
+      }
+    }
+
+    return a;
+  }
+
+  /**
     Curry function
   */
   Function.prototype.curry = function () {
