@@ -148,6 +148,72 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "SaleTypeCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Sale Type Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "ST"
+        }
+      },
+      {
+        "name": "saleType",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "SaleType",
     "table": "saletype",
     "isRest": true,
@@ -193,6 +259,15 @@
           "type": "SaleTypeWorkflow",
           "column": "saletype_id",
           "inverse": "parent"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "SaleTypeCharacteristic",
+          "column": "saletype_id",
+          "inverse": "saleType",
+          "isNested": true
         }
       },
       {

@@ -2204,7 +2204,8 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "code"},
-            {kind: "XV.InputWidget", attr: "description"}
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.SaleTypeCharacteristicsWidget", attr: "characteristics"}
           ]}
         ]},
         {kind: "XV.SaleTypeWorkflowBox", attr: "workflow"}

@@ -23,6 +23,17 @@ white:true*/
   /**
     @class
 
+    @extends XM.CharacteristicAssignment
+  */
+  XM.SaleTypeCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.SaleTypeCharacteristic.prototype */{
+
+    recordType: 'XM.SaleTypeCharacteristic'
+
+  });
+
+  /**
+    @class
+
     @extends XM.WorkflowSource
   */
   XM.SaleTypeWorkflow = XM.WorkflowSource.extend(
