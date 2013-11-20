@@ -199,15 +199,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Recurse into the file structure to parse the json files.
    */
   dive = function (path, root) {
-    var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
-    isTop = root ? false: true;
+    var files = X.directoryFiles(path, {fullPath: true}),
+      stat,
+      isTop,
+      ret,
+      content,
+      errors = [];
+
+    isTop = root ? false : true;
     _.each(files, function (file) {
       stat = fs.statSync(file);
-      if (stat.isDirectory()) dive(file, root ? root: (root = {}));
-      else if (X.ext(file) === "json") root[file] = "";
+      if (stat.isDirectory()) {
+        // we'll be populating this root object in the recursion with empty keys
+        dive(file, root ? root : (root = {}));
+      } else {
+        root[file] = "";
+      }
     });
     if (isTop) {
       ret = [];
+      // and now we populate those keys with the file data
       _.each(_.keys(root), function (file) {
         content = parseFile(file);
         if (content.isError) {
@@ -429,11 +440,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  /*
   // debug
-  var debugPath = X.path.join(__dirname, "../../enyo-client/database/orm");
+  var debugPath = X.path.join(__dirname, "../../enyo-client/extensions/source/test/database/orm");
   runOrmInstaller(debugPath, {orms: []}, function (err, res) {
     console.log(err, res);
   });
-  */
 }());
