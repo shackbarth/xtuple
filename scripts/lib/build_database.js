@@ -2,9 +2,9 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true*/
 
+_ = require('underscore');
 
-var _ = require('underscore'),
-  async = require('async'),
+var  async = require('async'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
