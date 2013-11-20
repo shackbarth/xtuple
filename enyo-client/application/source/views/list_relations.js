@@ -632,4 +632,30 @@ trailing:true, white:true, strict:false*/
     parentKey: "salesOrder"
   });
 
+  // ..........................................................
+  // SALE TYPE WORKFLOW
+  //
+
+  enyo.kind({
+    name: "XV.SaleTypeWorkflowListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: "sequence"}
+    ],
+    parentKey: "saleType",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "description"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 }());

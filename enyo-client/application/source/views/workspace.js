@@ -2206,7 +2206,8 @@ strict: false*/
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "description"}
           ]}
-        ]}
+        ]},
+        {kind: "XV.SaleTypeWorkflowBox", attr: "workflow"}
       ]}
     ]
   });

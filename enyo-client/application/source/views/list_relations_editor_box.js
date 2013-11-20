@@ -536,4 +536,50 @@ trailing:true, white:true*/
     ]
   });
 
+  // ..........................................................
+  // SALE TYPE
+  //
+  enyo.kind({
+    name: "XV.SaleTypeWorkflowEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "name"},
+        {kind: "XV.InputWidget", attr: "description"},
+        {kind: "XV.PriorityPicker", attr: "priority", showNone: false},
+        {kind: "XV.NumberSpinnerWidget", attr: "sequence"},
+        {kind: "onyx.GroupboxHeader", content: "_startDate".loc()},
+        {kind: "XV.ToggleButtonWidget", attr: "startSet"},
+        {kind: "XV.NumberSpinnerWidget", attr: "startOffset"},
+        {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
+        {kind: "XV.ToggleButtonWidget", attr: "dueSet"},
+        {kind: "XV.NumberSpinnerWidget", attr: "dueOffset"},
+        {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+        {kind: "XV.UserAccountWidget", attr: "owner"},
+        {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+        {kind: "onyx.GroupboxHeader", content: "_onCompletion".loc()},
+        {kind: "XV.CreditStatusPicker", attr: "completedParentStatus",
+          noneText: "_noChange".loc(), label: "_nextStatus".loc()},
+        {kind: "XV.DependenciesWidget",
+          attr: {workflow: "parent.workflow", successors: "completedSuccessors"}},
+        {kind: "onyx.GroupboxHeader", content: "_onDeferred".loc()},
+        {kind: "XV.ProjectStatusPicker", attr: "deferredParentStatus",
+          noneText: "_noChange".loc(), label: "_nextStatus".loc()},
+        {kind: "XV.DependenciesWidget",
+          attr: {workflow: "parent.workflow", successors: "deferredSuccessors"}},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes", fit: true}
+      ]}
+    ]
+  });
+  enyo.kind({
+    name: "XV.SaleTypeWorkflowBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_workflow".loc(),
+    editor: "XV.SaleTypeWorkflowEditor",
+    parentKey: "saleType",
+    listRelations: "XV.SaleTypeWorkflowListRelations",
+    fitButtons: false
+  });
 }());
