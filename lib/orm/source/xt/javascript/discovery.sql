@@ -92,7 +92,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
   /**
    * Return an API Discovery document for this database's ORM where isRest = true.
    *
-   * @param {String} Optional. An orm_type name like "Contact".
+   * @param {String} or {Array} Optional. An orm_type name like "Contact".
    * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
    * @returns {Object}
    */
@@ -100,13 +100,29 @@ select xt.install_js('XT','Discovery','xtuple', $$
     "use strict";
 
     var discovery = {},
+        gotDispatchable,
+        gotOrms,
+        isDispatchable = [],
         listItemOrms = [],
         org = plv8.execute("select current_database()"),
-        orms = XT.Discovery.getIsRestORMs(orm),
+        ormAuth = {},
+        orms = [],
         schemas = {},
         version = "v1alpha1";
 
     rootUrl = rootUrl || "{rootUrl}";
+
+    if (orm && typeof orm === 'string') {
+      orms = XT.Discovery.getIsRestORMs(orm);
+    } else if (orm instanceof Array && orm.length) {
+      /* Build up ORMs from array. */
+      for (var i = 0; i < orm.length; i++) {
+        gotOrms = XT.Discovery.getIsRestORMs(orm[i]);
+        orms = orms.concat(gotOrms).unique();
+      }
+    } else {
+      orms = XT.Discovery.getIsRestORMs();
+    }
 
     if (org.length !== 1) {
       return false;
@@ -115,7 +131,19 @@ select xt.install_js('XT','Discovery','xtuple', $$
     }
 
     if (!orms) {
-      if (XT.Discovery.getDispatchableObjects(orm).length === 0) {
+      if (orm && typeof orm === 'string') {
+        isDispatchable = XT.Discovery.getDispatchableObjects(orm);
+      } else if (orm instanceof Array && orm.length) {
+        /* Check Dispatchable for orm array. */
+        for (var i = 0; i < orm.length; i++) {
+          gotDispatchable = XT.Discovery.getDispatchableObjects(orm[i]);
+          isDispatchable = isDispatchable.concat(gotDispatchable).unique();
+        }
+      } else {
+        isDispatchable = XT.Discovery.getDispatchableObjects();
+      }
+
+      if (isDispatchable.length === 0) {
         /* If there are no resource, and no services, then there's nothing to see here */
         return false;
       }
@@ -130,17 +158,17 @@ select xt.install_js('XT','Discovery','xtuple', $$
     discovery.etag = "";
 
     discovery.discoveryVersion = version; /* TODO - Move this to v1 for release. */
-    discovery.id = org + (orm ? "." + orm.camelToHyphen() : "") + ":" + version;
-    discovery.name = org + (orm ? "." + orm.camelToHyphen() : "");
+    discovery.id = org + (typeof orm === 'string' ? "." + orm.camelToHyphen() : "") + ":" + version;
+    discovery.name = org + (typeof orm === 'string' ? "." + orm.camelToHyphen() : "");
     discovery.version = version;
     discovery.revision = XT.Discovery.getDate();
-    discovery.title = "xTuple ERP REST API for " + (orm ? orm : "all") + " business objects.";
+    discovery.title = "xTuple ERP REST API for " + (typeof orm === 'string' ? orm : "all") + " business objects.";
     discovery.description = "Lets you get and manipulate xTuple ERP " + (orm ? orm + " " : "") + "business objects.";
     discovery.icons = {
-      "x16": rootUrl + org + "/assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-16.png",
-      "x32": rootUrl + org + "/assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-32.png"
+      "x16": rootUrl + org + "/assets/api/" + (typeof orm === 'string' ? orm.camelToHyphen() : "api") + "-16.png",
+      "x32": rootUrl + org + "/assets/api/" + (typeof orm === 'string' ? orm.camelToHyphen() : "api") + "-32.png"
     };
-    discovery.documentationLink = "https://dev.xtuple.com/" + (orm ? orm.camelToHyphen() : ""); /* TODO - What should this be? */
+    discovery.documentationLink = "https://dev.xtuple.com/" + (typeof orm === 'string' ? orm.camelToHyphen() : ""); /* TODO - What should this be? */
     discovery.protocol = "rest";
     discovery.baseUrl = rootUrl + org + "/api/" + version + "/";
     discovery.basePath = "/" + org + "/api/" + version + "/";
@@ -187,7 +215,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
      */
     discovery.auth = XT.Discovery.getAuth(orm, rootUrl);
 
-
     /*
      * Schema section.
      */
@@ -210,7 +237,16 @@ select xt.install_js('XT','Discovery','xtuple', $$
     XT.Discovery.sanitize(schemas);
 
     /* Get services JSON-Schema. */
-    XT.Discovery.getServicesSchema(orm, schemas);
+    if (orm && typeof orm === 'string') {
+      XT.Discovery.getServicesSchema(orm, schemas);
+    } else if (orm instanceof Array && orm.length) {
+      /* Build up schemas from array. */
+      for (var i = 0; i < orm.length; i++) {
+        XT.Discovery.getServicesSchema(orm[i], schemas);
+      }
+    } else {
+      XT.Discovery.getServicesSchema(null, schemas);
+    }
 
     /* Sort schema properties alphabetically. */
     discovery.schemas = XT.Discovery.sortObject(schemas);
@@ -289,11 +325,23 @@ select xt.install_js('XT','Discovery','xtuple', $$
     "use strict";
 
     var auth = {},
+      gotOrms,
       org = plv8.execute("select current_database()"),
-      orms = XT.Discovery.getIsRestORMs(orm);
+      orms = [];
 
     rootUrl = rootUrl || "{rootUrl}";
 
+    if (orm && typeof orm === 'string') {
+      orms = XT.Discovery.getIsRestORMs(orm);
+    } else if (orm instanceof Array && orm.length) {
+      /* Build up ORMs from array. */
+      for (var i = 0; i < orm.length; i++) {
+        gotOrms = XT.Discovery.getIsRestORMs(orm[i]);
+        orms = orms.concat(gotOrms).unique();
+      }
+    } else {
+      orms = XT.Discovery.getIsRestORMs();
+    }
 
     if (org.length !== 1) {
       return false;
@@ -356,11 +404,24 @@ select xt.install_js('XT','Discovery','xtuple', $$
   XT.Discovery.getResources = function (orm, rootUrl) {
     "use strict";
 
-    var resources = {},
-      org = XT.currentDb(),
-      orms = XT.Discovery.getIsRestORMs(orm);
+    var gotOrms,
+        resources = {},
+        org = XT.currentDb(),
+        orms = [];
 
     rootUrl = rootUrl || "{rootUrl}";
+
+    if (orm && typeof orm === 'string') {
+      orms = XT.Discovery.getIsRestORMs(orm);
+    } else if (orm instanceof Array && orm.length) {
+      /* Build up ORMs from array. */
+      for (var i = 0; i < orm.length; i++) {
+        gotOrms = XT.Discovery.getIsRestORMs(orm[i]);
+        orms = orms.concat(gotOrms).unique();
+      }
+    } else {
+      orms = XT.Discovery.getIsRestORMs();
+    }
 
     if (!org) {
       return false;
@@ -732,7 +793,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
 
     var resources = {},
       org = XT.currentDb(),
-      dispatchableObjects = XT.Discovery.getDispatchableObjects(orm),
+      dispatchableObjects = [],
+      gotOrms,
       i,
       businessObject,
       businessObjectName,
@@ -745,6 +807,18 @@ select xt.install_js('XT','Discovery','xtuple', $$
       version = "v1alpha1";
 
     rootUrl = rootUrl || "{rootUrl}";
+
+    if (orm && typeof orm === 'string') {
+      dispatchableObjects = XT.Discovery.getDispatchableObjects(orm);
+    } else if (orm instanceof Array && orm.length) {
+      /* Build up ORMs from array. */
+      for (var i = 0; i < orm.length; i++) {
+        gotOrms = XT.Discovery.getDispatchableObjects(orm[i]);
+        dispatchableObjects = dispatchableObjects.concat(gotOrms).unique();
+      }
+    } else {
+      dispatchableObjects = XT.Discovery.getDispatchableObjects(null);
+    }
 
     if (!org) {
       return false;

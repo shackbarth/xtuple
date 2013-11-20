@@ -83,6 +83,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       model = req.params.model.camelize().capitalize();
     }
 
+    if (!req.params.model && req.query && req.query.resources && req.query.resources.length) {
+      model = req.query.resources;
+    }
+
     payload.nameSpace = "XT";
     payload.type = "Discovery";
     payload.dispatch = {
