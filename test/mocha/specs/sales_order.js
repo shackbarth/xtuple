@@ -9,7 +9,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
   var async = require("async"),
     _ = require("underscore"),
-    assert = require("assert");
+    assert = require("chai").assert;
 
   //
   // More complicated business logic for quote and sales order saving
@@ -117,7 +117,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     */
     idAttribute: "number",
     enforceUpperKey: true,
-    attributes: ["number"],
+    attributes: ["number", "characteristics"],
     /**
       @member -
       @memberof SalesOrder.prototype
@@ -164,26 +164,32 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
   var additionalTests = function () {
 
+    describe("Sales order business logic", function () {
+      it('should take the defaults from the customer', function (done) {
+        var terms = new XM.Terms(),
+          customer = new XM.SalesCustomer(),
+          salesOrder = new XM.SalesOrder(),
+          initCallback = function () {
+            terms.set({code: "COD"});
+            customer.set({terms: terms, billtoContact: "Bob"});
+            assert.equal(salesOrder.getValue("terms.code"), "");
+            salesOrder.set({customer: customer});
 
-    it('should take the defaults from the customer', function (done) {
-      var terms = new XM.Terms(),
-        customer = new XM.SalesCustomer(),
-        salesOrder = new XM.SalesOrder(),
-        initCallback = function () {
-          terms.set({code: "COD"});
-          customer.set({terms: terms, billtoContact: "Bob"});
-          assert.equal(salesOrder.getValue("terms.code"), "");
-          salesOrder.set({customer: customer});
+            // customer.terms.code gets copied to terms.code
+            assert.equal(salesOrder.getValue("terms.code"), "COD");
+            done();
+          };
 
-          // customer.terms.code gets copied to terms.code
-          assert.equal(salesOrder.getValue("terms.code"), "COD");
-          done();
-        };
-
-      salesOrder.on('change:number', initCallback);
-      salesOrder.initialize(null, {isNew: true});
+        salesOrder.on('change:number', initCallback);
+        salesOrder.initialize(null, {isNew: true});
+      });
     });
-
+    describe("Sales order characteristics", function () {
+      it("isSalesOrders should be a field of XM.Characteristic", function () {
+        assert.include(XM.Characteristic.prototype.getAttributeNames(), "isSalesOrders");
+        assert.include(XM.Characteristic.prototype.contextAttributes, "isSalesOrders");
+      });
+    });
   };
 
   exports.spec = spec;

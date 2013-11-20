@@ -202,6 +202,17 @@ white:true*/
 
     @extends XM.CharacteristicAssignment
   */
+  XM.SalesOrderCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.SalesOrderCharacteristic.prototype */{
+
+    recordType: 'XM.SalesOrderCharacteristic'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.CharacteristicAssignment
+  */
   XM.SalesOrderLineCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.SalesOrderLineCharacteristic.prototype */{
 
     recordType: 'XM.SalesOrderLineCharacteristic',

@@ -195,4 +195,15 @@ white:true*/
     }
   });
 
+  // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderCharacteristicsWidget",
+    kind: "XV.CharacteristicsWidget",
+    model: "XM.SalesOrderCharacteristic",
+    which: "isSalesOrders"
+  });
+
 }());

@@ -106,6 +106,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     }
 
+    //console.log(raiseNotice("installing %@%@.%@").f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
     ormSql += raiseNotice("installing %@%@.%@").f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type);
     ormSql += "select xt.install_orm('%@');\n".f(X.json(cleanse(orm)));
 

@@ -2026,6 +2026,7 @@ strict: false*/
             },
             {kind: "XV.ContactWidget", attr: "shiptoContact",
               name: "shiptoContact"},
+            {kind: "XV.SalesOrderCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
             {kind: "XV.TextArea", attr: "orderNotes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
