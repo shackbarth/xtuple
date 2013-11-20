@@ -2,6 +2,152 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "SaleTypeWorkflow",
+    "table": "xt.saletypewf",
+    "comment": "Sale Type Workflow Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_parent_id",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_name",
+          "required": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_description"
+        }
+      },
+      {
+        "name": "startSet",
+        "attr": {
+          "type": "Boolean",
+          "column": "wfsrc_start_set"
+        }
+      },
+      {
+        "name": "startOffset",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_start_offset"
+        }
+      },
+      {
+        "name": "dueSet",
+        "attr": {
+          "type": "Boolean",
+          "column": "wfsrc_due_set"
+        }
+      },
+      {
+        "name": "dueOffset",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_due_offset"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_notes"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "wfsrc_priority_id",
+          "required": true
+        }
+      },
+      {
+        "name": "sequence",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_sequence"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wfsrc_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wfsrc_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "completedParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_completed_parent_status"
+        }
+      },
+      {
+        "name": "deferredParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_deferred_parent_status"
+        }
+      },
+      {
+        "name": "completedSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_completed_successors"
+        }
+      },
+      {
+        "name": "deferredSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_deferred_successors"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "SaleType",
     "table": "saletype",
     "isRest": true,
@@ -38,6 +184,15 @@
         "attr": {
           "type": "String",
           "column": "saletype_descr"
+        }
+      },
+      {
+        "name": "workflow",
+        "toMany": {
+          "isNested": true,
+          "type": "SaleTypeWorkflow",
+          "column": "saletype_id",
+          "inverse": "parent"
         }
       },
       {

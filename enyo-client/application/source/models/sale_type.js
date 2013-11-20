@@ -20,6 +20,18 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.WorkflowSource
+  */
+  XM.SaleTypeWorkflow = XM.WorkflowSource.extend(
+    /** @scope XM.SaleTypeWorkflow.prototype */ {
+
+    recordType: 'XM.SaleTypeWorkflow'
+
+  });
+
   // ..........................................................
   // COLLECTIONS
   //
