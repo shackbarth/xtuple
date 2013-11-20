@@ -22,6 +22,7 @@ strict:true, trailing:true, white:true */
     "_onCompletion": "On Completion",
     "_onDeferred": "On Deferred",
     "_maintainProjectEmailProfiles": "Maintain Project Email Profiles",
+    "_maintainProjectTypes": "Maintain Project Types",
     "_percentComplete": "Complete",
     "_project": "Project",
     "_projectAssignedTo": "Project Assigned To",

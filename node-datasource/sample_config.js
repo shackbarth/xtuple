@@ -22,7 +22,6 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       pgWorker: false,
       bindAddress: "0.0.0.0",
       redirectPort: 80,
-      maintenancePort: 442,
       // proxyPort is the port the app will be redirected to
       // this is useful if there is a proxy in front of the app listening
       // on a different port
@@ -82,7 +81,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       password: "admin"
     },
     biServer: {
-        hostname: "localhost",
+        hostname: "biserverhostname",
         port: 8080,
         catalog: "xTuple",
         tenantname: "default",

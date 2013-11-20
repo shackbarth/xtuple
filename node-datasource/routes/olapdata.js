@@ -7,7 +7,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var utils = require('../oauth2/utils');
 
   exports.queryOlapCatalog = function (req, res) {
-    
+
     //X.log("..............query: " + JSON.stringify(req.query.mdx));
     var query = req.query.mdx,
       // Format xmla response as json and return
@@ -59,8 +59,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // encode and sign JWT with private key
     jwt = encodeJWT(JSON.stringify(header), JSON.stringify(claimSet), privKey);
-    
-    //X.log("query is: " + query);
 
     X.olapSource.query(query, jwt, queryCallback);
   };

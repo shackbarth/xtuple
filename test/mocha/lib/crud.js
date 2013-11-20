@@ -282,8 +282,6 @@ var _ = require("underscore"),
         }
       };
 
-    console.log(JSON.stringify(model.toJSON()));
-
     assert.equal(JSON.stringify(model.validate(model.attributes)), undefined);
 
     // If we don't hear back, keep going

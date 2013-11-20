@@ -57,6 +57,7 @@ trailing:true, white:true, strict:false*/
       "MaintainPersonalProjects",
       "MaintainPersonalToDoItems",
       "MaintainProjectEmailProfiles",
+      "MaintainProjectTypes",
       "MaintainTitles",
       "ViewAllContacts",
       "ViewAllCRMAccounts",
