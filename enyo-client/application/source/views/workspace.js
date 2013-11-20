@@ -2109,7 +2109,8 @@ strict: false*/
     save: function (options) {
       this.inherited(arguments);
       var gridBox = this.$.salesOrderLineItemGridBox;
-      if (gridBox) {
+      // XXX hack to prevent screen from hanging in the case of invalid data
+      if (gridBox && !XT.app.$.postbooks.$.notifyPopup.getShowing()) {
         gridBox.setEditableIndex(null);
         gridBox.valueChanged();
         gridBox.$.editableGridRow.setShowing(false);
@@ -2900,13 +2901,15 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
           {kind: "XV.ScrollableGroupbox", name: "rolesGroup", fit: true,
             classes: "in-panel", components: [
+            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_accounts".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_addresses".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contacts".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_accounts".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employees".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incidents".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isInvoices", label: "_invoices".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_items".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunities".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employees".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isSalesOrders", label: "_salesOrders".loc()},
           ]}
         ]},
         {kind: "XV.CharacteristicOptionBox", name: "optionsPanel",

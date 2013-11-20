@@ -224,6 +224,12 @@ TODO deferred to later sprint:
         model = new XM.InvoiceCharacteristic();
         assert.isTrue(model instanceof XM.CharacteristicAssignment);
       });
+      it("can be set by a widget in the characteristics workspace", function () {
+        var characteristicWorkspace = new XV.CharacteristicWorkspace();
+        assert.include(_.map(characteristicWorkspace.$, function (control) {
+          return control.attr;
+        }), "isInvoices");
+      });
     });
     /**
       @member -

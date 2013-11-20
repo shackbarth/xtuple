@@ -185,9 +185,33 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       });
     });
     describe("Sales order characteristics", function () {
-      it("isSalesOrders should be a field of XM.Characteristic", function () {
-        assert.include(XM.Characteristic.prototype.getAttributeNames(), "isSalesOrders");
-        assert.include(XM.Characteristic.prototype.contextAttributes, "isSalesOrders");
+      /**
+        @member -
+        @memberof SalesOrder.prototype
+        @description Characteristics can be assigned as being for sales orders
+      */
+      it("XM.Characteristic includes isSalesOrders as a context attribute", function () {
+        var characteristic = new XM.Characteristic();
+        assert.include(characteristic.getAttributeNames(), "isSalesOrders");
+      });
+      /**
+        @member SalesOrderCharacteristic
+        @memberof SalesOrder.prototype
+        @description Follows the convention for characteristics
+        @see Characteristic
+      */
+      it("convention for characteristic assignments", function () {
+        var model;
+
+        assert.isFunction(XM.SalesOrderCharacteristic);
+        model = new XM.SalesOrderCharacteristic();
+        assert.isTrue(model instanceof XM.CharacteristicAssignment);
+      });
+      it("can be set by a widget in the characteristics workspace", function () {
+        var characteristicWorkspace = new XV.CharacteristicWorkspace();
+        assert.include(_.map(characteristicWorkspace.$, function (control) {
+          return control.attr;
+        }), "isSalesOrders");
       });
     });
   };
