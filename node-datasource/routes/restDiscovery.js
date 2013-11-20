@@ -6,7 +6,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   var routes = require('./routes'),
-      getRestStore,
+      getRestStore = {},
       listStore;
 
   exports.list = function (req, res, next) {
@@ -67,7 +67,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return next(new Error("Invalid Request."));
       }
 
-      getRestStore = result.data;
+      getRestStore[req.url] = result.data;
 
       // The discovery doc should be cacheable. A "Vary: " header will break that.
       // See: http://code.google.com/p/google-api-php-client/source/browse/tags/0.6.2/src/io/Google_CacheParser.php#100
@@ -99,11 +99,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    if (getRestStore) {
+    if (getRestStore && getRestStore[req.url]) {
       // The discovery doc should be cacheable. A "Vary: " header will break that.
       // See: http://code.google.com/p/google-api-php-client/source/browse/tags/0.6.2/src/io/Google_CacheParser.php#100
       delete res._headers.vary;
-      res.json(getRestStore);
+      res.json(getRestStore[req.url]);
     } else {
       routes.queryDatabase("post", payload, session, callback);
     }
