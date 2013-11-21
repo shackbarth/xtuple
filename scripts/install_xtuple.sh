@@ -357,7 +357,7 @@ pull_modules() {
 		return 2
 	fi
   npm install -q 2>&1 | tee -a $LOG_FILE
-  sudo $(which npm) install -g -q mocha 2>&1 | tee -a $LOG_FILE
+  npm install -g -q mocha 2>&1 | tee -a $LOG_FILE
 
   cdir test/shared
   rm -f login_data.js
