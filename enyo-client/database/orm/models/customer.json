@@ -15,10 +15,24 @@
         "update": "MaintainCustomerMasters",
         "delete": "MaintainCustomerMasters"
       },
+      "personal":{
+        "create": false,
+        "read": "ViewPersonalCRMAccounts",
+        "update": false,
+        "delete": false,
+        "properties":[
+          "crmaccountUsers.crmacctUsernames"
+        ]
+      },
       "attribute": {
         "creditStatus": {
           "create": "UpdateCustomerCreditStatus",
           "update": "UpdateCustomerCreditStatus"
+        },
+        "crmaccountUsers": {
+          "view": false,
+          "create": false,
+          "update": false
         }
       }
     },
@@ -363,6 +377,15 @@
           "type": "CreditCard",
           "column": "cust_id",
           "inverse": "customer"
+        }
+      },
+      {
+        "name": "crmaccountUsers",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountCustomerUsers",
+          "column": "cust_id",
+          "inverse": "id"
         }
       }
     ],
