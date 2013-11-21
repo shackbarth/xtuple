@@ -12,5 +12,4 @@ before_script:
   - "cd .."
 
 script:
-  - "sudo $(which npm) run-script test-build"
   - "sudo $(which npm) run-script test"
