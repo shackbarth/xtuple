@@ -6,7 +6,7 @@ before_install:
   - "sudo ./scripts/install_xtuple.sh -ibpn"
 
 before_script:
-  - "cd node-datasource ; node main.js &"
+  - "cd node-datasource ; sudo node main.js &"
   - "sleep 10"
   - "cd .."
 
