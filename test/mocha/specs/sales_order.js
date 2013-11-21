@@ -316,8 +316,18 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         assert.equal(copiedWorkflow.get("name"), workflowSourceModel.get("name"));
         assert.equal(copiedWorkflow.get("priority").id,
           workflowSourceModel.get("priority").id);
+        salesOrderModel.set({saleType: null});
+        salesOrderModel.get("workflow").remove(copiedWorkflow);
       });
-
+/*
+  - The due date for "Pack" workflow items will default to the "Pack date" on the order. Changing the Pack Date will update "Pack" workflow item's due date
+  - The due date for "Ship" workflow items will default to the schedule date on the header. If that date changes, "Ship" workflow items will be updated.
+  - When hold status of an order is changed to "None", all credit check type workflow items will be marked completed.
+  - When all materials have been issued to a work order, all "Pack" workflow items will be marked completed.
+  - When an order is shipped
+    > If all materials were issued all "Ship" workflow items will be marked completed.
+    > If outstanding line items exist, any "Ship" workflow items will be updated to be due on the next minum scheduled date remaining.
+*/
 
     });
   };

@@ -39,7 +39,13 @@ white:true*/
   XM.SaleTypeWorkflow = XM.WorkflowSource.extend(
     /** @scope XM.SaleTypeWorkflow.prototype */ {
 
-    recordType: 'XM.SaleTypeWorkflow'
+    recordType: 'XM.SaleTypeWorkflow',
+
+    defaults: function () {
+      return {
+        workflowType: XM.SalesOrderWorkflow.TYPE_OTHER
+      };
+    }
 
   });
 

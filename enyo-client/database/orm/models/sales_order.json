@@ -681,6 +681,13 @@
         }
       },
       {
+        "name": "workflowType",
+        "attr": {
+          "type": "String",
+          "column": "wf_type"
+        }
+      },
+      {
         "name": "status",
         "attr": {
           "type": "String",

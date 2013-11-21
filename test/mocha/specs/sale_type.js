@@ -93,6 +93,25 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         }});
       });
 
+      /**
+        @member -
+        @memberof SaleType.prototype
+        @description Sales order workflow types can be "Credit Check", "Pack", "Ship", and "Other" (default)
+      */
+      it("workflow type other is default", function () {
+        assert.equal(workflowSourceModel.get("workflowType"), XM.SalesOrderWorkflow.TYPE_OTHER);
+      });
+      it("workflow types are credit check, pack, ship, and other", function () {
+        assert.isString(XM.SalesOrderWorkflow.TYPE_OTHER);
+        assert.isString(XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK);
+        assert.isString(XM.SalesOrderWorkflow.TYPE_PACK);
+        assert.isString(XM.SalesOrderWorkflow.TYPE_SHIP);
+      });
+      it("you can set the workflow type", function () {
+        workflowSourceModel.set({workflowType: XM.SalesOrderWorkflow.TYPE_SHIP});
+        assert.isUndefined(workflowSourceModel.validate(workflowSourceModel.attributes));
+      });
+
 
     });
   };

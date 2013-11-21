@@ -96,6 +96,13 @@
         }
       },
       {
+        "name": "workflowType",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_type"
+        }
+      },
+      {
         "name": "owner",
         "toOne": {
           "isNested": true,

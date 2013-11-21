@@ -54,7 +54,8 @@ white:true*/
             item.set({
               uuid: id,
               name: model.get("name"),
-              description : model.get("description"),
+              description: model.get("description"),
+              type: model.get("type"),
               priority: model.get("priority"),
               startDate: startDate,
               dueDate: dueDate,

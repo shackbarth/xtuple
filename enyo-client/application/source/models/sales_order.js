@@ -225,6 +225,17 @@ white:true*/
     recordType: 'XM.SalesOrderWorkflow'
 
   });
+  _.extend(XM.SalesOrderWorkflow, /** @lends XM.SalesOrderLine# */{
+
+    TYPE_OTHER: "O",
+
+    TYPE_CREDIT_CHECK: "C",
+
+    TYPE_PACK: "P",
+
+    TYPE_SHIP: "S"
+
+  });
 
   /**
     @class
