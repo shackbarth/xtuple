@@ -385,6 +385,7 @@ white:true*/
       var pricePolicy = XT.session.settings.get("soPriceEffective");
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on('add:lineItems remove:lineItems change:miscCharge', this.calculateTotals);
+      this.on('change:saleType', this.saleTypeDidChange);
       this.on('change:customer', this.customerDidChange);
       this.on('change:freight', this.freightDidChange);
       this.on('change:shipto', this.shiptoDidChange);

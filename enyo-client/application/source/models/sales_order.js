@@ -65,6 +65,11 @@ white:true*/
       }
     },
 
+    saleTypeDidChange: function () {
+      this.inheritWorkflowSource(this.get("saleType"), "XM.SalesOrderCharacteristic",
+        "XM.SalesOrderWorkflow");
+    },
+
     validate: function () {
       var creditStatus = _checkCredit.call(this);
       if (creditStatus === CREDIT_WARN) {
@@ -76,6 +81,7 @@ white:true*/
       return XM.SalesOrderBase.prototype.validate.apply(this, arguments);
     }
   });
+  _.extend(XM.SalesOrder.prototype, XM.WorkflowMixin);
 
   // ..........................................................
   // CLASS METHODS

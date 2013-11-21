@@ -217,6 +217,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     });
     describe("Sales order workflow", function () {
       var salesOrderModel,
+        saleTypeModel,
+        characteristicAssignment,
+        workflowSourceModel,
         workflowModel;
 
       before(function (done) {
@@ -229,6 +232,24 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
             });
           },
           function (done) {
+            common.initializeModel(characteristicAssignment, XM.SaleTypeCharacteristic, function (err, model) {
+              characteristicAssignment = model;
+              done();
+            });
+          },
+          function (done) {
+            common.initializeModel(workflowSourceModel, XM.SaleTypeWorkflow, function (err, model) {
+              workflowSourceModel = model;
+              done();
+            });
+          },
+          function (done) {
+            common.initializeModel(saleTypeModel, XM.SaleType, function (err, model) {
+              saleTypeModel = model;
+              done();
+            });
+          },
+          function (done) {
             common.initializeModel(workflowModel, XM.SalesOrderWorkflow, function (err, model) {
               workflowModel = model;
               done();
@@ -237,19 +258,64 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         ], done);
       });
 
-
-      it("can get added to a sales order", function (done) {
+      // this is somewhat limited
+      it("can get added to a sales order", function () {
         assert.isTrue(workflowModel.isReady());
         workflowModel.set({
           name: "First step",
           priority: XM.priorities.models[0]
         });
         salesOrderModel.get("workflow").add(workflowModel);
-        assert.isUndefined(JSON.stringify(salesOrderModel.validate(salesOrderModel.attributes)));
-        done();
-        //saleTypeModel.save(null, {success: function () {
-        //  done();
-        //}});
+        assert.equal(salesOrderModel.get("workflow").length, 1);
+        salesOrderModel.get("workflow").remove(workflowModel);
+      });
+      /**
+        @member -
+        @memberof SalesOrder.prototype
+        @description When the sale type changes, the characteristics of the new sale type
+          are copied over to the sales order.
+      */
+      it("copies sale type characteristics when the sale type changes", function () {
+        var copiedCharacteristic;
+
+        characteristicAssignment.set({
+          characteristic: XM.characteristics.models[0],
+          value: "testvalue"
+        });
+        saleTypeModel.get("characteristics").add(characteristicAssignment);
+        salesOrderModel.set({saleType: saleTypeModel});
+        assert.equal(salesOrderModel.get("characteristics").length, 1);
+        copiedCharacteristic = salesOrderModel.get("characteristics").models[0];
+        assert.equal(copiedCharacteristic.recordType, "XM.SalesOrderCharacteristic");
+        assert.equal(copiedCharacteristic.get("value"), characteristicAssignment.get("value"));
+        assert.equal(copiedCharacteristic.get("characteristic").id,
+          characteristicAssignment.get("characteristic").id);
+        salesOrderModel.set({saleType: null});
+        salesOrderModel.get("characteristics").remove(copiedCharacteristic);
+      });
+      /**
+        @member -
+        @memberof SalesOrder.prototype
+        @description When the sale type changes, the workflow sources of the new sale type
+          are transformed into workflow items for the sales order.
+      */
+      it("copies sale type workflow when the sale type changes", function () {
+        var copiedWorkflow;
+
+        assert.isTrue(workflowSourceModel.isReady());
+        workflowSourceModel.set({
+          name: "First step",
+          priority: XM.priorities.models[0]
+        });
+        saleTypeModel.get("workflow").add(workflowSourceModel);
+
+        salesOrderModel.set({saleType: saleTypeModel});
+        assert.equal(salesOrderModel.get("workflow").length, 1);
+        copiedWorkflow = salesOrderModel.get("workflow").models[0];
+        assert.equal(copiedWorkflow.recordType, "XM.SalesOrderWorkflow");
+        assert.equal(copiedWorkflow.get("name"), workflowSourceModel.get("name"));
+        assert.equal(copiedWorkflow.get("priority").id,
+          workflowSourceModel.get("priority").id);
       });
 
 
