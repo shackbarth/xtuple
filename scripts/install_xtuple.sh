@@ -1,13 +1,17 @@
+#!/bin/bash
+
+NODE_VERSION=0.8.26
+
 RUN_DIR=$(pwd)
 LOG_FILE=$RUN_DIR/install.log
-mv $LOG_FILE $LOG_FILE.old
+mv $LOG_FILE $LOG_FILE.old 2>&1
 log() {
-	echo $@
+	echo "xtuple_install: >> $@"
 	echo $@ >> $LOG_FILE
 }
 
 varlog() {
-	log $(eval "echo $1 = \$$1")
+  log $(eval "echo $1 = \$$1")
 }
 
 cdir() {
@@ -15,26 +19,15 @@ cdir() {
 	log "Changing directory to $1"
 }
 
+DATABASE=dev
 RUNALL=true
 XT_VERSION=
-DATABASE=dev
-NODE_VERSION=
-varlog RUN_DIR
 BASEDIR=/usr/local/src
-varlog BASEDIR
 LIBS_ONLY=
-if [ $SUDO_USER ]
-then
-	XT_DIR=$RUN_DIR/..
-	varlog XT_DIR
-else
-	log "Must run with sudo, not as root."
-	exit -1
-fi
+XT_DIR=$RUN_DIR
 XTUPLE_REPO='http://sourceforge.net/projects/postbooks/files/mobile-debian'
-varlog XTUPLE_REPO
 
-while getopts ":icbpgnh-:" opt; do
+while getopts ":icbpgnhm-:" opt; do
   case $opt in
     i)
       # Install packages
@@ -60,21 +53,15 @@ while getopts ":icbpgnh-:" opt; do
       # Grab and install all the submodules/extensions
       RUNALL=
       GRAB=true
-	 if [ -z "$SUDO_USER" ]
-	 then
-		log "Must run with sudo, not as root."
-		return 1
-	 fi
       ;;
     n)
       # iNitialize the databases and stuff
       RUNALL=
       INIT=true
-	 if [ -z "$SUDO_USER" ]
-	 then
-		log "Must run with sudo, not as root."
-		return 1
-	 fi
+      ;;
+    m)
+      RUNALL=
+      NPM_INSTALL=true
       ;;
     x)
       # Checkout a specific version of the xTuple repo
@@ -93,9 +80,8 @@ while getopts ":icbpgnh-:" opt; do
     h)
       echo "Usage: install_xtuple [OPTION]"
 	 echo "Build the full xTuple Mobile Development Environment."
-	 echo "This script must be run with sudo."
 	 echo ""
-	 echo "To install everything, just do sudo ./install_xtuple.sh"
+	 echo "To install everything, run sudo ./scripts/install_xtuple.sh"
 	 echo "Everything will go in /usr/local/src/xtuple"
 	 echo ""
 	 echo -e "  -b\t\t"
@@ -105,6 +91,7 @@ while getopts ":icbpgnh-:" opt; do
 	 echo -e "  -i\t\t"
 	 echo -e "  -n\t\t"
 	 echo -e "  -p\t\t"
+   exit 0;
       ;;
   esac
 done
@@ -131,14 +118,12 @@ fi
 
 if [ -z "$NODE_VERSION" ]
 then
-	NODE_VERSION=0.8.22-1_amd64
 	varlog NODE_VERSION
 fi
 
 install_packages() {
-	apt-get -q update 2>&1 | tee -a $LOG_FILE
-	apt-get -q -y install vim git subversion build-essential postgresql-9.1 postgresql-contrib postgresql-server-dev-9.1 2>&1 | tee -a $LOG_FILE
-	log "apt-get returned $?"
+ apt-get -qq update 2>&1 | tee -a $LOG_FILE
+ apt-get -qq install git libssl-dev build-essential postgresql-9.1 postgresql-contrib postgresql-server-dev-9.1 2>&1 | tee -a $LOG_FILE
 }
 
 # Use only if running from a debian package install for the first time
@@ -160,6 +145,8 @@ user_init() {
 
 # Clone repo
 clone_repo() {
+  
+
 	mkdir -p $BASEDIR
 	if [ $? -ne 0 ]
 	then
@@ -183,22 +170,17 @@ clone_repo() {
 	fi
 
 	cdir $XT_DIR
-	# add remote
-	if [ -z "$(git remote -v | grep xtuple/xtuple.git)" ]
-	then
-		log "Adding xtuple remote"
-		su $SUDO_USER -c "git remote add --track master xtuple https://github.com/xtuple/xtuple.git"
-	fi
 
 	if [ $XT_VERSION ]
 	then
 		log "Checking out $XT_VERSION"
-		su $SUDO_USER -c "git checkout $XT_VERSION" 2>&1 | tee -a $LOG_FILE
+		"git checkout $XT_VERSION" 2>&1 | tee -a $LOG_FILE
 	fi
 }
 
 # Build dependencies
 build_deps() {
+
 	# for each dependency
 	# 1. check if it's installed
 	# 2. look to see if the file is already downloaded
@@ -208,45 +190,13 @@ build_deps() {
 
 	cdir $RUN_DIR
 
-	log "Checking if nodejs is installed"
-	dpkg -s nodejs 2>&1 > /dev/null
-	if [ $? -eq 0 ]
-	then
-		log "nodejs is installed."
-	else
-		log "nodejs is not installed"
-
-		log "Looking for nodejs_$NODE_VERSION.deb in $(pwd)"
-		if [ ! -f nodejs_$NODE_VERSION.deb ]
-		then
-			log "File not found. Attempting to download $XTUPLE_REPO/nodejs_$NODE_VERSION.deb"
-			wget -q $XTUPLE_REPO/nodejs_$NODE_VERSION.deb && wait
-
-			if [ $? -ne 0 ]
-			then
-				log "Error occured while downloading ($?)"
-				log "Compiling from source"
-				mkdir $XT_DIR/install
-				cdir $XT_DIR/install
-
-				apt-get -q update 2>&1 | tee -a $LOG_FILE
-				apt-get -q -y install git cdbs curl devscripts debhelper dh-buildinfo zlib1g-dev 2>&1 | tee -a $LOG_FILE
-
-				git clone git://github.com/mark-webster/node-debian.git 2>&1 | tee -a $LOG_FILE
-				cdir node-debian
-				./build.sh clean $(log $NODE_VERSION | grep -o "0\.[0-9]\.[0-9]*") 2>&1 | tee -a $LOG_FILE
-				./build.sh $(log $NODE_VERSION | grep -o "0\.[0-9]\.[0-9]*") 2>&1 | tee -a $LOG_FILE
-				log "Installing $XT_DIR/install/node-debian/nodejs_$NODE_VERSION.deb"
-				dpkg -i $XT_DIR/install/node-debian/nodejs_$NODE_VERSION.deb 2>&1 | tee -a $LOG_FILE
-			else
-				log "Installing nodejs_$NODE_VERSION.deb"
-				dpkg -i nodejs_$NODE_VERSION.deb 2>&1 | tee -a $LOG_FILE
-			fi
-		else
-			log "Installing nodejs_$NODE_VERSION.deb"
-			dpkg -i nodejs_$NODE_VERSION.deb 2>&1 | tee -a $LOG_FILE
-		fi
-	fi
+  if [ -d "$HOME/.nvm" ]; then
+    log "nvm installed."
+    source $HOME/.nvm/nvm.sh
+  else
+    wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | sh
+    nvm install $NODE_VERSION
+  fi
 
 	cdir $RUN_DIR
 	log "Checking if libv8 is installed"
@@ -279,7 +229,7 @@ build_deps() {
 
 				make library=shared native 2>&1 | tee -a $LOG_FILE
 				log "Installing library."
-				cp $BASEDIR/v8/out/native/lib.target/libv8.so /usr/lib/ #root
+				cp $BASEDIR/v8/out/native/lib.target/libv8.so /usr/lib/
 			else
 				log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
 				dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>&1 | tee -a $LOG_FILE
@@ -336,14 +286,14 @@ setup_postgres() {
 	fi
 
 	PGDIR=/etc/postgresql/9.1/main
-	mv $PGDIR/postgresql.conf $PGDIR/postgresql.conf.default
+	cp $PGDIR/postgresql.conf $PGDIR/postgresql.conf.default
 	if [ $? -ne 0 ]
 	then
 		return 2
 	fi
 	cat $PGDIR/postgresql.conf.default | sed "s/#listen_addresses = \S*/listen_addresses = \'*\'/" | sed "s/#custom_variable_classes = ''/custom_variable_classes = 'plv8'/" > $PGDIR/postgresql.conf
 	chown postgres $PGDIR/postgresql.conf
-	mv $PGDIR/pg_hba.conf $PGDIR/pg_hba.conf.default
+	cp $PGDIR/pg_hba.conf $PGDIR/pg_hba.conf.default
 	cat $PGDIR/pg_hba.conf.default | sed "s/local\s*all\s*postgres.*/local\tall\tpostgres\ttrust/" | sed "s/local\s*all\s*all.*/local\tall\tall\ttrust/" | sed "s#host\s*all\s*all\s*127\.0\.0\.1.*#host\tall\tall\t127.0.0.1/32\ttrust#" > $PGDIR/pg_hba.conf
 	chown postgres $PGDIR/pg_hba.conf
 
@@ -352,17 +302,17 @@ setup_postgres() {
 	log ""
 	log "Dropping old databases if they already exist..."
 	log ""
-	dropdb -U postgres dev
+	dropdb -U postgres $DATABASE
 
 	cdir $BASEDIR/postgres
 	wget http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
 	wait
-  NEWESTVERSION=`cat rss | grep -o '03%20PostBooks-databases\/4.[0-9].[0-9]\(RC\)\?\/postbooks_demo-4.[0-9].[0-9]\(RC\)\?.backup\/download' | grep -o '4.[0-9].[0-9]\(RC\)\?' | head -1`
+  NEWESTVERSION=$(cat rss | grep -o '03%20PostBooks-databases\/4.[0-9].[0-9]\(RC\)\?\/postbooks_demo-4.[0-9].[0-9]\(RC\)\?.backup\/download' | grep -o '4.[0-9].[0-9]\(RC\)\?' | head -1)
 	rm rss
 
 	if [ -z "$NEWESTVERSION" ]
 	then
-		NEWESTVERSION="4.0.3"
+		NEWESTVERSION="4.2.0"
 		log "######################################################"
 		log "Couldn't find the latest version. Using $NEWESTVERSION instead."
 		log "######################################################"
@@ -390,12 +340,10 @@ setup_postgres() {
 	log ""
 
 	psql -q -U postgres -f 'init.sql' 2>&1 | tee -a $LOG_FILE
-
 	createdb -U postgres -O admin $DATABASE 2>&1 | tee -a $LOG_FILE
-
 	pg_restore -U postgres -d $DATABASE postbooks_demo-$NEWESTVERSION.backup 2>&1 | tee -a $LOG_FILE
-
 	psql -U postgres $DATABASE -c "CREATE EXTENSION plv8" 2>&1 | tee -a $LOG_FILE
+  cp postbooks_demo-$NEWESTVERSION.backup $XT_DIR/test/mocha/lib/demo-test.backup
 }
 
 # Pull submodules
@@ -413,25 +361,11 @@ pull_modules() {
 		log "Couldn't find npm"
 		return 2
 	fi
-	npm install 2>&1 | tee -a $LOG_FILE
-	npm install -g mocha 2>&1 | tee -a $LOG_FILE
-
-    cdir test/shared
-    rm -f login_data.js
-    echo "exports.data = {" >> login_data.js
-    echo "  webaddress: ''," >> login_data.js
-    echo "  username: 'admin', //------- Enter the xTuple username" >> login_data.js
-    echo "  pwd: 'admin', //------ enter the password here" >> login_data.js
-    echo "  org: 'dev', //------ enter the database name here" >> login_data.js
-    echo "  suname: '', //-------enter the sauce labs username" >> login_data.js
-    echo "  sakey: '' //------enter the sauce labs access key" >> login_data.js
-    echo "}" >> login_data.js
-	log "Created testing login_data.js"
-
+  npm install -q 2>&1 | tee -a $LOG_FILE
+  npm install -g -q mocha 2>&1 | tee -a $LOG_FILE
 }
 
 init_everythings() {
-
 	log ""
 	log "######################################################"
 	log "######################################################"
@@ -466,9 +400,20 @@ init_everythings() {
 		return 3
 	fi
 
+	cdir $XT_DIR/test/shared
+  rm -f login_data.js
+  echo "exports.data = {" >> login_data.js
+  echo "  webaddress: ''," >> login_data.js
+  echo "  username: 'admin', //------- Enter the xTuple username" >> login_data.js
+  echo "  pwd: 'admin', //------ enter the password here" >> login_data.js
+  echo "  org: '$DATABASE', //------ enter the database name here" >> login_data.js
+  echo "  suname: '', //-------enter the sauce labs username" >> login_data.js
+  echo "  sakey: '' //------enter the sauce labs access key" >> login_data.js
+  echo "};" >> login_data.js
+	log "Created testing login_data.js"
+
 	cdir $XT_DIR
 	node scripts/build_app.js -d $DATABASE 2>&1 | tee -a $LOG_FILE
-
 	psql -U postgres $DATABASE -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>&1 | tee -a $LOG_FILE
 
 	log ""

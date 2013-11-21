@@ -13,7 +13,7 @@
     "backbone-relational": "0.8.0",
     "bcrypt": "0.7.x",
     "colors": "0.6.x",
-    "commander": "1.2.x",
+    "commander": "2.1.x",
     "connect-ensure-login": "0.1.x",
     "ejs": "0.8.x",
     "express": "3.1.x",
