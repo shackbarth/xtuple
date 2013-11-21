@@ -85,8 +85,14 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     var a = this.concat();
     for(var i=0; i<a.length; ++i) {
       for(var j=i+1; j<a.length; ++j) {
-        if(a[i] === a[j]) {
-          a.splice(j--, 1);
+        if (typeof a[i] === 'string' && typeof a[j] === 'string') {
+          if(a[i] === a[j]) {
+            a.splice(j--, 1);
+          }
+        } else if (typeof a[i] === 'object' && typeof a[j] === 'object') {
+          if(JSON.stringify(a[i]) === JSON.stringify(a[j])) {
+            a.splice(j--, 1);
+          }
         }
       }
     }
