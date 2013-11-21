@@ -11,7 +11,9 @@ XV = {};
 XZ = {}; // xTuple Zombie. Used to help zombie within the context of these tests.
 
 var assert = require('assert'),
-  zombie = require('zombie');
+  zombie = require('zombie'),
+  URL = require('url'),
+  _ = require('underscore');
 
 
 /**
@@ -79,7 +81,7 @@ Simplest possible usage:
       database = loginData.data.org;
       host = loginData.data.webaddress;
     }
-    host = host || "https://localhost:443";
+    host = host || "https://localhost:8443";
 
     if (options.refreshLogin) {
       enyo = {};
@@ -97,6 +99,18 @@ Simplest possible usage:
       callback();
       return;
     }
+
+    var parse = URL.parse;
+    URL.parse = function (url) {
+      if (_.isObject(url) && _.isString(url.href)) {
+        //console.log('parsing url.href: ' + url.href);
+        return parse(url.href);
+      }
+      else {
+        //console.log('parsing url as string: ' + url);
+        return parse(url);
+      }
+    };
 
     zombie.visit(host, {debug: verboseMode}, function (e, browser) {
       //
