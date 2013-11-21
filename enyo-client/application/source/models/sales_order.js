@@ -43,6 +43,13 @@ white:true*/
 
     documentDateKey: "orderDate",
 
+
+    bindEvents: function () {
+      XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
+      var pricePolicy = XT.session.settings.get("soPriceEffective");
+      this.on('change:packDate', this.packDateDidChange);
+    },
+
     /**
       Add default for wasQuote.
      */
@@ -63,6 +70,10 @@ white:true*/
       } else if (creditStatus === CREDIT_HOLD) {
         this.notify("_creditHold".loc(), { type: warn });
       }
+    },
+
+    packDateDidChange: function () {
+      this.updateWorkflowItems(XM.SalesOrderWorkflow.TYPE_PACK);
     },
 
     saleTypeDidChange: function () {

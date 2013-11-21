@@ -875,6 +875,12 @@ white:true*/
         options = {},
         that = this;
 
+      // In addition to updates to line items, update workflow
+      // items if applicable
+      if (this.updateWorkflowItems) {
+        this.updateWorkflowItems(XM.SalesOrderWorkflow.TYPE_SHIP);
+      }
+
       if (!lineItems.length) { return; }
 
       options.type = XM.Model.QUESTION;
@@ -935,6 +941,7 @@ white:true*/
         }
       };
       this.notify(message, options);
+
     },
 
     /**

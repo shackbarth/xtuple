@@ -338,15 +338,47 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         assert.equal(salesOrderModel.get("workflow").length, 1);
         copiedWorkflow = salesOrderModel.get("workflow").models[0];
         assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/1/2004").getDate());
-
       });
-      it.skip("Changing the Pack Date will update Pack workflow item's due date",
+      it("Changing the Pack Date will update Pack workflow item's due date",
           function () {
+        var copiedWorkflow = salesOrderModel.get("workflow").models[0];
+        assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/1/2004").getDate());
+        salesOrderModel.set({packDate: new Date("1/4/2004")});
+        assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/4/2004").getDate());
+        salesOrderModel.set({saleType: null});
+        salesOrderModel.get("workflow").reset([]);
+        salesOrderModel.get("characteristics").reset([]);
+      });
+      /**
+        @member -
+        @memberof SalesOrder.prototype
+        @description The due date for "Ship" workflow items will default to the schedule
+          date on the header. If that date changes, "Ship" workflow items will be updated.
+      */
+      it("The due date for Ship workflow items will default to the schedule date on the order",
+          function () {
+        var copiedWorkflow;
 
+        saleTypeModel.get("workflow").models[0]
+          .set({workflowType: XM.SalesOrderWorkflow.TYPE_SHIP});
+        salesOrderModel.set({scheduleDate: new Date("1/10/2004")});
+        salesOrderModel.set({saleType: saleTypeModel});
+        assert.equal(salesOrderModel.get("workflow").length, 1);
+        copiedWorkflow = salesOrderModel.get("workflow").models[0];
+        assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/10/2004").getDate());
+      });
+      it("Changing the schedule Date will update Ship workflow item's due date",
+          function () {
+        var copiedWorkflow = salesOrderModel.get("workflow").models[0];
+        assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/10/2004").getDate());
+        salesOrderModel.set({scheduleDate: new Date("1/14/2004")});
+        assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/14/2004").getDate());
+        salesOrderModel.set({saleType: null});
+        salesOrderModel.get("workflow").reset([]);
+        salesOrderModel.get("characteristics").reset([]);
 
       });
 /*
-  - The due date for "Ship" workflow items will default to the schedule date on the header. If that date changes, "Ship" workflow items will be updated.
   - When hold status of an order is changed to "None", all credit check type workflow items will be marked completed.
   - When all materials have been issued to a work order, all "Pack" workflow items will be marked completed.
   - When an order is shipped
