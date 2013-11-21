@@ -2060,7 +2060,8 @@ strict: false*/
         ]},
         {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
           attr: "comments"},
-        {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
+        {kind: "XV.SalesOrderDocumentsBox", attr: "documents"},
+        {kind: "XV.SalesOrderWorkflowBox", attr: "workflow"}
       ]}
     ],
     /**

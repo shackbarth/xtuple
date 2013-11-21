@@ -9,6 +9,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
   var async = require("async"),
     _ = require("underscore"),
+    common = require("../lib/common"),
     assert = require("chai").assert;
 
   //
@@ -213,6 +214,45 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           return control.attr;
         }), "isSalesOrders");
       });
+    });
+    describe("Sales order workflow", function () {
+      var salesOrderModel,
+        workflowModel;
+
+      before(function (done) {
+        async.parallel([
+          function (done) {
+            common.initializeModel(salesOrderModel, XM.SalesOrder, function (err, model) {
+              salesOrderModel = model;
+              salesOrderModel.set(spec.createHash);
+              done();
+            });
+          },
+          function (done) {
+            common.initializeModel(workflowModel, XM.SalesOrderWorkflow, function (err, model) {
+              workflowModel = model;
+              done();
+            });
+          }
+        ], done);
+      });
+
+
+      it("can get added to a sales order", function (done) {
+        assert.isTrue(workflowModel.isReady());
+        workflowModel.set({
+          name: "First step",
+          priority: XM.priorities.models[0]
+        });
+        salesOrderModel.get("workflow").add(workflowModel);
+        assert.isUndefined(JSON.stringify(salesOrderModel.validate(salesOrderModel.attributes)));
+        done();
+        //saleTypeModel.save(null, {success: function () {
+        //  done();
+        //}});
+      });
+
+
     });
   };
 

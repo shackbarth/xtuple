@@ -122,6 +122,7 @@
     "xt/tables/bicache.sql",
     "xt/tables/clientcode.sql",
     "xt/tables/prjwf.sql",
+    "xt/tables/coheadwf.sql",
     "xt/tables/saletypewf.sql",
     "xt/javascript/init.sql",
     "xt/views/act.sql",

@@ -537,10 +537,10 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
-  // SALE TYPE
+  // SALE TYPE AND SALES ORDER WORKFLOW
   //
   enyo.kind({
-    name: "XV.SaleTypeWorkflowEditor",
+    name: "XV.SalesWorkflowEditor",
     kind: "XV.RelationsEditor",
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
@@ -573,6 +573,17 @@ trailing:true, white:true*/
       ]}
     ]
   });
+
+  enyo.kind({
+    name: "XV.SaleTypeWorkflowEditor",
+    kind: "XV.SalesWorkflowEditor",
+  });
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkflowEditor",
+    kind: "XV.SalesWorkflowEditor",
+  });
+
   enyo.kind({
     name: "XV.SaleTypeWorkflowBox",
     kind: "XV.ListRelationsEditorBox",
@@ -580,6 +591,16 @@ trailing:true, white:true*/
     editor: "XV.SaleTypeWorkflowEditor",
     parentKey: "saleType",
     listRelations: "XV.SaleTypeWorkflowListRelations",
+    fitButtons: false
+  });
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkflowBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_workflow".loc(),
+    editor: "XV.SalesOrderWorkflowEditor",
+    parentKey: "salesOrder",
+    listRelations: "XV.SalesOrderWorkflowListRelations",
     fitButtons: false
   });
 }());

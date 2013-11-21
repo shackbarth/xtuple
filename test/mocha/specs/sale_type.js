@@ -36,6 +36,27 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   var additionalTests = function () {
+    describe("Sale type characteristics", function () {
+      /**
+        @member -
+        @memberof SaleType.prototype
+        @description Characteristics can be associated with sale types.
+      */
+      it("is a SaleTypeCharacteristic", function () {
+        var model;
+
+        assert.isFunction(XM.SaleTypeCharacteristic);
+        model = new XM.SaleTypeCharacteristic();
+        assert.isTrue(model instanceof XM.CharacteristicAssignment);
+      });
+      /**
+        @member -
+        @memberof SaleType.prototype
+        @description The available characteristic types are shared with sales orders
+      */
+      it.skip("uses isSalesOrders as its context attribute", function () {
+      });
+    });
     describe("SaleTypeWorkflow", function () {
       var saleTypeModel,
         workflowSourceModel;

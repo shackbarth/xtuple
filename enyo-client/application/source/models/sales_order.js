@@ -211,6 +211,18 @@ white:true*/
   /**
     @class
 
+    @extends XM.Workflow
+  */
+  XM.SalesOrderWorkflow = XM.Workflow.extend(
+    /** @scope XM.SalesOrderWorkflow.prototype */ {
+
+    recordType: 'XM.SalesOrderWorkflow'
+
+  });
+
+  /**
+    @class
+
     @extends XM.CharacteristicAssignment
   */
   XM.SalesOrderLineCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.SalesOrderLineCharacteristic.prototype */{
