@@ -403,8 +403,6 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
 
 
 // Set up the other servers we run on different ports.
-//var unexposedServer = express();
-//unexposedServer.listen(X.options.datasource.maintenancePort);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"

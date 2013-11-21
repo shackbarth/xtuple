@@ -11,7 +11,7 @@ log() {
 }
 
 varlog() {
-  log $(eval "echo $1 = \$$1")
+	log $(eval "echo $1 = \$$1")
 }
 
 cdir() {
@@ -22,10 +22,22 @@ cdir() {
 DATABASE=dev
 RUNALL=true
 XT_VERSION=
+DATABASE=dev
+NODE_VERSION=
+varlog RUN_DIR
 BASEDIR=/usr/local/src
+varlog BASEDIR
 LIBS_ONLY=
-XT_DIR=$RUN_DIR
+if [ $SUDO_USER ]
+then
+	XT_DIR=$RUN_DIR/..
+	varlog XT_DIR
+else
+	log "Must run with sudo, not as root."
+	exit -1
+fi
 XTUPLE_REPO='http://sourceforge.net/projects/postbooks/files/mobile-debian'
+varlog XTUPLE_REPO
 
 while getopts ":icbpgnh-:" opt; do
   case $opt in
@@ -53,11 +65,21 @@ while getopts ":icbpgnh-:" opt; do
       # Grab and install all the submodules/extensions
       RUNALL=
       GRAB=true
+	 if [ -z "$SUDO_USER" ]
+	 then
+		log "Must run with sudo, not as root."
+		return 1
+	 fi
       ;;
     n)
       # iNitialize the databases and stuff
       RUNALL=
       INIT=true
+	 if [ -z "$SUDO_USER" ]
+	 then
+		log "Must run with sudo, not as root."
+		return 1
+	 fi
       ;;
     x)
       # Checkout a specific version of the xTuple repo
@@ -76,8 +98,9 @@ while getopts ":icbpgnh-:" opt; do
     h)
       echo "Usage: install_xtuple [OPTION]"
 	 echo "Build the full xTuple Mobile Development Environment."
+	 echo "This script must be run with sudo."
 	 echo ""
-	 echo "To install everything, run sudo ./scripts/install_xtuple.sh"
+	 echo "To install everything, just do sudo ./install_xtuple.sh"
 	 echo "Everything will go in /usr/local/src/xtuple"
 	 echo ""
 	 echo -e "  -b\t\t"
@@ -113,13 +136,14 @@ fi
 
 if [ -z "$NODE_VERSION" ]
 then
-	NODE_VERSION=0.8.25
+	NODE_VERSION=0.8.22-1_amd64
 	varlog NODE_VERSION
 fi
 
 install_packages() {
- apt-get -qq update 2>&1 | tee -a $LOG_FILE
- apt-get -qq install git libssl-dev build-essential postgresql-9.1 postgresql-contrib postgresql-server-dev-9.1 2>&1 | tee -a $LOG_FILE
+  apt-get -qq update 2>&1 | tee -a $LOG_FILE
+  apt-get -qq install git libssl-dev build-essential postgresql-9.1 postgresql-contrib postgresql-server-dev-9.1 2>&1 | tee -a $LOG_FILE
+	log "apt-get returned $?"
 }
 
 # Use only if running from a debian package install for the first time
@@ -141,8 +165,6 @@ user_init() {
 
 # Clone repo
 clone_repo() {
-  
-
 	mkdir -p $BASEDIR
 	if [ $? -ne 0 ]
 	then
@@ -166,6 +188,12 @@ clone_repo() {
 	fi
 
 	cdir $XT_DIR
+	# add remote
+	if [ -z "$(git remote -v | grep xtuple/xtuple.git)" ]
+	then
+		log "Adding xtuple remote"
+		su $SUDO_USER -c "git remote add --track master xtuple https://github.com/xtuple/xtuple.git"
+	fi
 
 	if [ $XT_VERSION ]
 	then
@@ -176,7 +204,6 @@ clone_repo() {
 
 # Build dependencies
 build_deps() {
-
 	# for each dependency
 	# 1. check if it's installed
 	# 2. look to see if the file is already downloaded
@@ -186,16 +213,45 @@ build_deps() {
 
 	cdir $RUN_DIR
 
-  if [ -d "$HOME/.nvm" ]; then
-    log "nvm installed."
-    source $HOME/.nvm/nvm.sh
-  else
-    wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | sh
-    nvm install $NODE_VERSION
-  fi
+	log "Checking if nodejs is installed"
+	dpkg -s nodejs 2>&1 > /dev/null
+	if [ $? -eq 0 ]
+	then
+		log "nodejs is installed."
+	else
+		log "nodejs is not installed"
 
-  nvm alias xtuple $NODE_VERSION
-  nvm use xtuple
+		log "Looking for nodejs_$NODE_VERSION.deb in $(pwd)"
+		if [ ! -f nodejs_$NODE_VERSION.deb ]
+		then
+			log "File not found. Attempting to download $XTUPLE_REPO/nodejs_$NODE_VERSION.deb"
+			wget -q $XTUPLE_REPO/nodejs_$NODE_VERSION.deb && wait
+
+			if [ $? -ne 0 ]
+			then
+				log "Error occured while downloading ($?)"
+				log "Compiling from source"
+				mkdir $XT_DIR/install
+				cdir $XT_DIR/install
+
+				apt-get -q update 2>&1 | tee -a $LOG_FILE
+				apt-get -q -y install git cdbs curl devscripts debhelper dh-buildinfo zlib1g-dev 2>&1 | tee -a $LOG_FILE
+
+				git clone git://github.com/mark-webster/node-debian.git 2>&1 | tee -a $LOG_FILE
+				cdir node-debian
+				./build.sh clean $(log $NODE_VERSION | grep -o "0\.[0-9]\.[0-9]*") 2>&1 | tee -a $LOG_FILE
+				./build.sh $(log $NODE_VERSION | grep -o "0\.[0-9]\.[0-9]*") 2>&1 | tee -a $LOG_FILE
+				log "Installing $XT_DIR/install/node-debian/nodejs_$NODE_VERSION.deb"
+				dpkg -i $XT_DIR/install/node-debian/nodejs_$NODE_VERSION.deb 2>&1 | tee -a $LOG_FILE
+			else
+				log "Installing nodejs_$NODE_VERSION.deb"
+				dpkg -i nodejs_$NODE_VERSION.deb 2>&1 | tee -a $LOG_FILE
+			fi
+		else
+			log "Installing nodejs_$NODE_VERSION.deb"
+			dpkg -i nodejs_$NODE_VERSION.deb 2>&1 | tee -a $LOG_FILE
+		fi
+	fi
 
 	cdir $RUN_DIR
 	log "Checking if libv8 is installed"
@@ -311,7 +367,7 @@ setup_postgres() {
 
 	if [ -z "$NEWESTVERSION" ]
 	then
-		NEWESTVERSION="4.2.0"
+		NEWESTVERSION="4.0.3"
 		log "######################################################"
 		log "Couldn't find the latest version. Using $NEWESTVERSION instead."
 		log "######################################################"
@@ -366,10 +422,10 @@ pull_modules() {
   cdir test/shared
   rm -f login_data.js
   echo "exports.data = {" >> login_data.js
-  echo "  webaddress: 'https://localhost:443'," >> login_data.js
+  echo "  webaddress: ''," >> login_data.js
   echo "  username: 'admin', //------- Enter the xTuple username" >> login_data.js
   echo "  pwd: 'admin', //------ enter the password here" >> login_data.js
-  echo "  org: 'dev', //------ enter the database name here" >> login_data.js
+  echo "  org: '$DATABASE', //------ enter the database name here" >> login_data.js
   echo "  suname: '', //-------enter the sauce labs username" >> login_data.js
   echo "  sakey: '' //------enter the sauce labs access key" >> login_data.js
   echo "}" >> login_data.js
@@ -377,7 +433,6 @@ pull_modules() {
 }
 
 init_everythings() {
-  
 
 	log ""
 	log "######################################################"
@@ -389,7 +444,7 @@ init_everythings() {
 
 	cdir $XT_DIR/node-datasource
 
-	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: ""/testDatabase: "$DATABASE"/' > config.js
+	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed "s/testDatabase: \"\"/testDatabase: '$DATABASE'/" > config.js
 	log "Configured node-datasource"
 
 	log ""
