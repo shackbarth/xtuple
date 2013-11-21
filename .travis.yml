@@ -11,4 +11,4 @@ before_script:
   - "cd .."
 
 script:
-  - "npm run-script test"
+  - "sudo npm run-script test"
