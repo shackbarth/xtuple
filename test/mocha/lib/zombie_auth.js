@@ -11,7 +11,9 @@ XV = {};
 XZ = {}; // xTuple Zombie. Used to help zombie within the context of these tests.
 
 var assert = require('assert'),
-  zombie = require('zombie');
+  zombie = require('zombie'),
+  URL = require('url'),
+  _ = require('underscore');
 
 
 /**
@@ -97,6 +99,16 @@ Simplest possible usage:
       callback();
       return;
     }
+
+    var parse = URL.parse;
+    URL.parse = function (url) {
+      if (_.isObject(url) && _.isString(url.href)) {
+        return parse(url.href);
+      }
+      else {
+        return parse(url);
+      }
+    };
 
     zombie.visit(host, {debug: verboseMode}, function (e, browser) {
       //
