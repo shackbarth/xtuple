@@ -412,7 +412,7 @@ init_everythings() {
 	fi
 
 	cdir $XT_DIR
-	node node scripts/build_app.js -d $DATABASE 2>&1 | tee -a $LOG_FILE
+	node scripts/build_app.js -d $DATABASE 2>&1 | tee -a $LOG_FILE
 	psql -U postgres $DATABASE -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>&1 | tee -a $LOG_FILE
 
 	log ""

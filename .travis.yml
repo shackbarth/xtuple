@@ -2,6 +2,10 @@ language: node_js
 node_js:
   - "0.8"
 
+before_install:
+  - "alias node='$NVM_BIN/node'"
+  - "alias npm='$NVM_BIN/npm'"
+
 install:
   - "sudo ./scripts/install_xtuple.sh"
 
@@ -11,4 +15,4 @@ before_script:
   - "cd .."
 
 script:
-  - "sudo npm run-script test"
+  - "npm run-script test"
