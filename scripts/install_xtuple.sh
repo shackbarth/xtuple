@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NODE_VERSION=0.8.25
+NODE_VERSION=0.8.26
 
 RUN_DIR=$(pwd)
 LOG_FILE=$RUN_DIR/install.log
@@ -113,7 +113,6 @@ fi
 
 if [ -z "$NODE_VERSION" ]
 then
-	NODE_VERSION=0.8.25
 	varlog NODE_VERSION
 fi
 
