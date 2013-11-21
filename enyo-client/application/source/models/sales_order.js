@@ -73,35 +73,33 @@ white:true*/
     },
 
     packDateDidChange: function () {
-      this.updateWorkflowItems(XM.SalesOrderWorkflow.TYPE_PACK);
+      this.updateWorkflowItemPackDate();
     },
 
     saleTypeDidChange: function () {
       this.inheritWorkflowSource(this.get("saleType"), "XM.SalesOrderCharacteristic",
         "XM.SalesOrderWorkflow");
-      this.updateWorkflowItems();
+      this.updateWorkflowItemPackDate();
+      this.updateWorkflowItemShipDate();
     },
 
-    /**
-
-      @param {String} workflowType Only update workflow items with this type.
-        if undefined, update all workflow items
-    */
-    updateWorkflowItems: function (workflowType) {
+    updateWorkflowItemPackDate: function () {
       var that = this;
 
-      _.each(this.get("workflow").models, function (workflow) {
-        if (!workflowType || (workflow.get("workflowType") === workflowType)) {
-          // update the workflow model
-          switch (workflow.get("workflowType")) {
-          case XM.SalesOrderWorkflow.TYPE_PACK:
-            workflow.set({dueDate: that.get("packDate")});
-            break;
-          case XM.SalesOrderWorkflow.TYPE_SHIP:
-            workflow.set({dueDate: that.get("scheduleDate")});
-            break;
-          }
-        }
+      _.each(this.get("workflow").models.where(
+          {workflowType: XM.SalesOrderWorkflow.TYPE_PACK}),
+          function (workflow) {
+        workflow.set({dueDate: that.get("packDate")});
+      });
+    },
+
+    updateWorkflowItemShipDate: function () {
+      var that = this;
+
+      _.each(this.get("workflow").models.where(
+          {workflowType: XM.SalesOrderWorkflow.TYPE_SHIP}),
+          function (workflow) {
+        workflow.set({dueDate: that.get("scheduleDate")});
       });
     },
 
