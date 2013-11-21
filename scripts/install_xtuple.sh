@@ -4,9 +4,9 @@ NODE_VERSION=0.8.26
 
 RUN_DIR=$(pwd)
 LOG_FILE=$RUN_DIR/install.log
-mv $LOG_FILE $LOG_FILE.old
+mv $LOG_FILE $LOG_FILE.old 2>&1
 log() {
-	echo $@
+	echo "xtuple_install: >> $@"
 	echo $@ >> $LOG_FILE
 }
 
@@ -27,7 +27,7 @@ LIBS_ONLY=
 XT_DIR=$RUN_DIR
 XTUPLE_REPO='http://sourceforge.net/projects/postbooks/files/mobile-debian'
 
-while getopts ":icbpgnh-:" opt; do
+while getopts ":icbpgnhm-:" opt; do
   case $opt in
     i)
       # Install packages
@@ -59,6 +59,10 @@ while getopts ":icbpgnh-:" opt; do
       RUNALL=
       INIT=true
       ;;
+    m)
+      RUNALL=
+      NPM_INSTALL=true
+      ;;
     x)
       # Checkout a specific version of the xTuple repo
 	 XT_VERSION=$OPTARG
@@ -87,6 +91,7 @@ while getopts ":icbpgnh-:" opt; do
 	 echo -e "  -i\t\t"
 	 echo -e "  -n\t\t"
 	 echo -e "  -p\t\t"
+   exit 0;
       ;;
   esac
 done
@@ -302,7 +307,7 @@ setup_postgres() {
 	cdir $BASEDIR/postgres
 	wget http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
 	wait
-  NEWESTVERSION=`cat rss | grep -o '03%20PostBooks-databases\/4.[0-9].[0-9]\(RC\)\?\/postbooks_demo-4.[0-9].[0-9]\(RC\)\?.backup\/download' | grep -o '4.[0-9].[0-9]\(RC\)\?' | head -1`
+  NEWESTVERSION=$(cat rss | grep -o '03%20PostBooks-databases\/4.[0-9].[0-9]\(RC\)\?\/postbooks_demo-4.[0-9].[0-9]\(RC\)\?.backup\/download' | grep -o '4.[0-9].[0-9]\(RC\)\?' | head -1)
 	rm rss
 
 	if [ -z "$NEWESTVERSION" ]
@@ -358,23 +363,9 @@ pull_modules() {
 	fi
   npm install -q 2>&1 | tee -a $LOG_FILE
   npm install -g -q mocha 2>&1 | tee -a $LOG_FILE
-
-  cdir test/shared
-  rm -f login_data.js
-  echo "exports.data = {" >> login_data.js
-  echo "  webaddress: ''," >> login_data.js
-  echo "  username: 'admin', //------- Enter the xTuple username" >> login_data.js
-  echo "  pwd: 'admin', //------ enter the password here" >> login_data.js
-  echo "  org: '$DATABASE', //------ enter the database name here" >> login_data.js
-  echo "  suname: '', //-------enter the sauce labs username" >> login_data.js
-  echo "  sakey: '' //------enter the sauce labs access key" >> login_data.js
-  echo "}" >> login_data.js
-	log "Created testing login_data.js"
 }
 
 init_everythings() {
-  
-
 	log ""
 	log "######################################################"
 	log "######################################################"
@@ -408,6 +399,18 @@ init_everythings() {
 		log "######################################################"
 		return 3
 	fi
+
+	cdir $XT_DIR/test/shared
+  rm -f login_data.js
+  echo "exports.data = {" >> login_data.js
+  echo "  webaddress: ''," >> login_data.js
+  echo "  username: 'admin', //------- Enter the xTuple username" >> login_data.js
+  echo "  pwd: 'admin', //------ enter the password here" >> login_data.js
+  echo "  org: '$DATABASE', //------ enter the database name here" >> login_data.js
+  echo "  suname: '', //-------enter the sauce labs username" >> login_data.js
+  echo "  sakey: '' //------enter the sauce labs access key" >> login_data.js
+  echo "};" >> login_data.js
+	log "Created testing login_data.js"
 
 	cdir $XT_DIR
 	node scripts/build_app.js -d $DATABASE 2>&1 | tee -a $LOG_FILE
