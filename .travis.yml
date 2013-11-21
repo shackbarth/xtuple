@@ -4,11 +4,13 @@ node_js:
 
 before_install:
   - "sudo ./scripts/install_xtuple.sh -ibpn"
+  - "sudo $(which npm) install"
 
 before_script:
-  - "cd node-datasource ; sudo node main.js &"
+  - "cd node-datasource ; sudo $(which node) main.js &"
   - "sleep 10"
   - "cd .."
 
 script:
-  - "npm run-script test"
+  - "sudo $(which npm) run-script test-build"
+  - "sudo $(which npm) run-script test"
