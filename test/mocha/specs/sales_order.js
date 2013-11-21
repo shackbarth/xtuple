@@ -376,10 +376,34 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         salesOrderModel.set({saleType: null});
         salesOrderModel.get("workflow").reset([]);
         salesOrderModel.get("characteristics").reset([]);
+      });
+      /**
+        @member -
+        @memberof SalesOrder.prototype
+        @description When hold type of an order is changed to "None", all credit
+          check type workflow items will be marked completed.
+      */
+      it("When hold type of an order is changed to None, all credit " +
+          "check type workflow items will be marked completed.", function () {
+        var copiedWorkflow;
 
+
+        saleTypeModel.get("workflow").models[0]
+          .set({workflowType: XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK});
+        salesOrderModel.set({saleType: saleTypeModel});
+        assert.equal(salesOrderModel.get("workflow").length, 1);
+
+        salesOrderModel.set({holdType: XM.holdTypes.models[0]});
+        copiedWorkflow = salesOrderModel.get("workflow").models[0];
+        assert.notEqual(copiedWorkflow.get("status"), XM.Workflow.COMPLETED);
+        salesOrderModel.set({holdType: undefined});
+        copiedWorkflow = salesOrderModel.get("workflow").models[0];
+        assert.equal(copiedWorkflow.get("status"), XM.Workflow.COMPLETED);
+        salesOrderModel.set({saleType: null});
+        salesOrderModel.get("workflow").reset([]);
+        salesOrderModel.get("characteristics").reset([]);
       });
 /*
-  - When hold status of an order is changed to "None", all credit check type workflow items will be marked completed.
   - When all materials have been issued to a work order, all "Pack" workflow items will be marked completed.
   - When an order is shipped
     > If all materials were issued all "Ship" workflow items will be marked completed.

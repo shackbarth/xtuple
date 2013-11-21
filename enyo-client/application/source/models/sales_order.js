@@ -48,6 +48,7 @@ white:true*/
       XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
       var pricePolicy = XT.session.settings.get("soPriceEffective");
       this.on('change:packDate', this.packDateDidChange);
+      this.on('change:holdType', this.holdTypeDidChange);
     },
 
     /**
@@ -72,6 +73,18 @@ white:true*/
       }
     },
 
+    holdTypeDidChange: function () {
+      if (!this.get("holdType")) {
+        _.each(this.get("workflow").where(
+            {workflowType: XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK}),
+            function (workflow) {
+
+          workflow.set({status: XM.Workflow.COMPLETED});
+        });
+      }
+      this.updateWorkflowItemPackDate();
+    },
+
     packDateDidChange: function () {
       this.updateWorkflowItemPackDate();
     },
@@ -86,7 +99,7 @@ white:true*/
     updateWorkflowItemPackDate: function () {
       var that = this;
 
-      _.each(this.get("workflow").models.where(
+      _.each(this.get("workflow").where(
           {workflowType: XM.SalesOrderWorkflow.TYPE_PACK}),
           function (workflow) {
         workflow.set({dueDate: that.get("packDate")});
@@ -96,7 +109,7 @@ white:true*/
     updateWorkflowItemShipDate: function () {
       var that = this;
 
-      _.each(this.get("workflow").models.where(
+      _.each(this.get("workflow").where(
           {workflowType: XM.SalesOrderWorkflow.TYPE_SHIP}),
           function (workflow) {
         workflow.set({dueDate: that.get("scheduleDate")});
