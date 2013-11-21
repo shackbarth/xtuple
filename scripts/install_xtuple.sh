@@ -188,13 +188,12 @@ build_deps() {
   if [ -d "$HOME/.nvm" ]; then
     log "nvm installed."
     source $HOME/.nvm/nvm.sh
+    sudo source $HOME/.nvm/nvm.sh
   else
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | sh
+    sudo nvm install $NODE_VERSION
     nvm install $NODE_VERSION
   fi
-
-  nvm alias xtuple $NODE_VERSION
-  nvm use xtuple
 
 	cdir $RUN_DIR
 	log "Checking if libv8 is installed"
