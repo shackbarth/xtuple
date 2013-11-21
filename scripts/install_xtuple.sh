@@ -2,7 +2,7 @@
 
 NODE_VERSION=0.8.25
 
-RUN_DIR=`pwd`
+RUN_DIR=$(pwd)
 LOG_FILE=$RUN_DIR/install.log
 mv $LOG_FILE $LOG_FILE.old
 log() {
@@ -11,7 +11,7 @@ log() {
 }
 
 varlog() {
-	log `eval "echo $1 = \$$1"`
+  log $(eval "echo $1 = \$$1")
 }
 
 cdir() {
@@ -19,6 +19,7 @@ cdir() {
 	log "Changing directory to $1"
 }
 
+DATABASE=dev
 RUNALL=true
 XT_VERSION=
 BASEDIR=/usr/local/src
@@ -117,14 +118,12 @@ then
 fi
 
 install_packages() {
-	 apt-get -qq update 2>1 | tee -a $LOG_FILE
-	 apt-get -qq install git libssl-dev build-essential postgresql-9.1 postgresql-contrib postgresql-server-dev-9.1 2>1 | tee -a $LOG_FILE
+ apt-get -qq update 2>&1 | tee -a $LOG_FILE
+ apt-get -qq install git libssl-dev build-essential postgresql-9.1 postgresql-contrib postgresql-server-dev-9.1 2>&1 | tee -a $LOG_FILE
 }
 
 # Use only if running from a debian package install for the first time
 user_init() {
-  
-
 	if [ "$USER" = "root" ]
 	then
 		echo "Run this as a normal user"
@@ -144,7 +143,7 @@ user_init() {
 clone_repo() {
   
 
-	 mkdir -p $BASEDIR
+	mkdir -p $BASEDIR
 	if [ $? -ne 0 ]
 	then
 		return 1
@@ -154,14 +153,14 @@ clone_repo() {
 	if [ ! -d plv8js ]
 	then
 		log "Cloning https://code.google.com/p/plv8js/"
-		 git clone https://code.google.com/p/plv8js/ 2>1 | tee -a $LOG_FILE
+		git clone https://code.google.com/p/plv8js/ 2>&1 | tee -a $LOG_FILE
 	else
 		log "Found /usr/src/plv8js"
 	fi
 	if [ ! -d v8 ]
 	then
 		log "Cloning git://github.com/v8/v8.git"
-		 git clone git://github.com/v8/v8.git 2>1 | tee -a $LOG_FILE
+		git clone git://github.com/v8/v8.git 2>&1 | tee -a $LOG_FILE
 	else
 		log "Found /usr/src/v8"
 	fi
@@ -171,7 +170,7 @@ clone_repo() {
 	if [ $XT_VERSION ]
 	then
 		log "Checking out $XT_VERSION"
-		"git checkout $XT_VERSION" 2>1 | tee -a $LOG_FILE
+		"git checkout $XT_VERSION" 2>&1 | tee -a $LOG_FILE
 	fi
 }
 
@@ -200,7 +199,7 @@ build_deps() {
 
 	cdir $RUN_DIR
 	log "Checking if libv8 is installed"
-	dpkg -s libv8 2>1 > /dev/null
+	dpkg -s libv8 2>&1 > /dev/null
 	if [ $? -eq 0 ]
 	then
 		log "libv8 is installed"
@@ -211,7 +210,7 @@ build_deps() {
 		if [ -f libv8-3.16.5_3.16.5-1_amd64.deb ]
 		then
 			log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
-			 dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
+			dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>&1 | tee -a $LOG_FILE
 		else
 			log "File not found."
 			log "Attempting to download $XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb"
@@ -223,23 +222,23 @@ build_deps() {
 				log "Compiling from source."
 
 				cdir $BASEDIR/v8
-				git checkout 3.16.5 2>1 | tee -a $LOG_FILE
+				git checkout 3.16.5 2>&1 | tee -a $LOG_FILE
 
-				make dependencies 2>1 | tee -a $LOG_FILE
+				make dependencies 2>&1 | tee -a $LOG_FILE
 
-				make library=shared native 2>1 | tee -a $LOG_FILE
+				make library=shared native 2>&1 | tee -a $LOG_FILE
 				log "Installing library."
-				 cp $BASEDIR/v8/out/native/lib.target/libv8.so /usr/lib/
+				cp $BASEDIR/v8/out/native/lib.target/libv8.so /usr/lib/
 			else
 				log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
-				 dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
+				dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>&1 | tee -a $LOG_FILE
 			fi
 		fi
 	fi
 
 	cdir $RUN_DIR
 	log "Checking if plv8js is installed."
-	 dpkg -s postgresql-9.1-plv8 2>1 > /dev/null
+	dpkg -s postgresql-9.1-plv8 2>&1 > /dev/null
 	if [ $? -eq 0 ]
 	then
 		log "plv8js is installed"
@@ -258,20 +257,20 @@ build_deps() {
 				log "Error occured while downloading ($?)"
 				log "Compiling from source"
 				cdir $BASEDIR/plv8
-				make V8_SRCDIR=../v8 CPLUS_INCLUDE_PATH=../v8/include 2>1 | tee -a $LOG_FILE
+				make V8_SRCDIR=../v8 CPLUS_INCLUDE_PATH=../v8/include 2>&1 | tee -a $LOG_FILE
 				if [ $? -ne 0 ]
 				then
 					return 1
 				fi
 				log "Installing plv8js."
-				make install 2>1 | tee -a $LOG_FILE
+				make install 2>&1 | tee -a $LOG_FILE
 			else
 				log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-				 dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
+				dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>&1 | tee -a $LOG_FILE
 			fi
 		else
 			log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-			 dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
+			dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>&1 | tee -a $LOG_FILE
 		fi
 	fi
 }
@@ -286,18 +285,18 @@ setup_postgres() {
 	fi
 
 	PGDIR=/etc/postgresql/9.1/main
-	 cp $PGDIR/postgresql.conf $PGDIR/postgresql.conf.default
+	cp $PGDIR/postgresql.conf $PGDIR/postgresql.conf.default
 	if [ $? -ne 0 ]
 	then
 		return 2
 	fi
-	 cat $PGDIR/postgresql.conf.default | sed "s/#listen_addresses = \S*/listen_addresses = \'*\'/" | sed "s/#custom_variable_classes = ''/custom_variable_classes = 'plv8'/" > $PGDIR/postgresql.conf
-	 chown postgres $PGDIR/postgresql.conf
-	 cp $PGDIR/pg_hba.conf $PGDIR/pg_hba.conf.default
-	 cat $PGDIR/pg_hba.conf.default | sed "s/local\s*all\s*postgres.*/local\tall\tpostgres\ttrust/" | sed "s/local\s*all\s*all.*/local\tall\tall\ttrust/" | sed "s#host\s*all\s*all\s*127\.0\.0\.1.*#host\tall\tall\t127.0.0.1/32\ttrust#" > $PGDIR/pg_hba.conf
-	 chown postgres $PGDIR/pg_hba.conf
+	cat $PGDIR/postgresql.conf.default | sed "s/#listen_addresses = \S*/listen_addresses = \'*\'/" | sed "s/#custom_variable_classes = ''/custom_variable_classes = 'plv8'/" > $PGDIR/postgresql.conf
+	chown postgres $PGDIR/postgresql.conf
+	cp $PGDIR/pg_hba.conf $PGDIR/pg_hba.conf.default
+	cat $PGDIR/pg_hba.conf.default | sed "s/local\s*all\s*postgres.*/local\tall\tpostgres\ttrust/" | sed "s/local\s*all\s*all.*/local\tall\tall\ttrust/" | sed "s#host\s*all\s*all\s*127\.0\.0\.1.*#host\tall\tall\t127.0.0.1/32\ttrust#" > $PGDIR/pg_hba.conf
+	chown postgres $PGDIR/pg_hba.conf
 
-	 service postgresql restart
+	service postgresql restart
 
 	log ""
 	log "Dropping old databases if they already exist..."
@@ -308,7 +307,7 @@ setup_postgres() {
 	wget http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
 	wait
   NEWESTVERSION=`cat rss | grep -o '03%20PostBooks-databases\/4.[0-9].[0-9]\(RC\)\?\/postbooks_demo-4.[0-9].[0-9]\(RC\)\?.backup\/download' | grep -o '4.[0-9].[0-9]\(RC\)\?' | head -1`
-	 rm rss
+	rm rss
 
 	if [ -z "$NEWESTVERSION" ]
 	then
@@ -339,20 +338,18 @@ setup_postgres() {
 	log "######################################################"
 	log ""
 
-	psql -q -U postgres -f 'init.sql' 2>1 | tee -a $LOG_FILE
-	createdb -U postgres -O admin dev 2>1 | tee -a $LOG_FILE
-	pg_restore -U postgres -d dev postbooks_demo-$NEWESTVERSION.backup 2>1 | tee -a $LOG_FILE
-	psql -U postgres dev -c "CREATE EXTENSION plv8" 2>1 | tee -a $LOG_FILE
+	psql -q -U postgres -f 'init.sql' 2>&1 | tee -a $LOG_FILE
+	createdb -U postgres -O admin $DATABASE 2>&1 | tee -a $LOG_FILE
+	pg_restore -U postgres -d $DATABASE postbooks_demo-$NEWESTVERSION.backup 2>&1 | tee -a $LOG_FILE
+	psql -U postgres $DATABASE -c "CREATE EXTENSION plv8" 2>&1 | tee -a $LOG_FILE
   cp postbooks_demo-$NEWESTVERSION.backup $XT_DIR/test/mocha/lib/demo-test.backup
 }
 
 # Pull submodules
 
 pull_modules() {
-  
-
 	cdir $XT_DIR
-	git submodule update --init --recursive 2>1 | tee -a $LOG_FILE
+	git submodule update --init --recursive 2>&1 | tee -a $LOG_FILE
 	if [ $? -ne 0 ]
 	then
 		return 1
@@ -363,13 +360,13 @@ pull_modules() {
 		log "Couldn't find npm"
 		return 2
 	fi
-	npm install 2>1 | tee -a $LOG_FILE
-	npm install -g mocha 2>1 | tee -a $LOG_FILE
+	npm install 2>&1 | tee -a $LOG_FILE
+	npm install -g mocha 2>&1 | tee -a $LOG_FILE
 
   cdir test/shared
   rm -f login_data.js
   echo "exports.data = {" >> login_data.js
-  echo "  webaddress: 'https://localhost:8443'," >> login_data.js
+  echo "  webaddress: 'https://localhost:443'," >> login_data.js
   echo "  username: 'admin', //------- Enter the xTuple username" >> login_data.js
   echo "  pwd: 'admin', //------ enter the password here" >> login_data.js
   echo "  org: 'dev', //------ enter the database name here" >> login_data.js
@@ -392,7 +389,7 @@ init_everythings() {
 
 	cdir $XT_DIR/node-datasource
 
-	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: ""/testDatabase: "dev"/' > config.js
+	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: ""/testDatabase: "$DATABASE"/' > config.js
 	log "Configured node-datasource"
 
 	log ""
@@ -403,10 +400,10 @@ init_everythings() {
 	cdir $XT_DIR/node-datasource/lib/private
 	cat /dev/urandom | tr -dc '0-9a-zA-Z!@#$%^&*_+-'| head -c 64 > salt.txt
 	log "Created salt"
-	openssl genrsa -des3 -out server.key -passout pass:xtuple 1024 2>1 | tee -a $LOG_FILE
-	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple 2>1 | tee -a $LOG_FILE
-	openssl req -batch -new -key key.pem -out server.csr -subj '/CN='$(hostname) 2>1 | tee -a $LOG_FILE
-	openssl x509 -req -days 365 -in server.csr -signkey key.pem -out server.crt 2>1 | tee -a $LOG_FILE
+	openssl genrsa -des3 -out server.key -passout pass:xtuple 1024 2>&1 | tee -a $LOG_FILE
+	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple 2>&1 | tee -a $LOG_FILE
+	openssl req -batch -new -key key.pem -out server.csr -subj '/CN='$(hostname) 2>&1 | tee -a $LOG_FILE
+	openssl x509 -req -days 365 -in server.csr -signkey key.pem -out server.crt 2>&1 | tee -a $LOG_FILE
 	if [ $? -ne 0 ]
 	then
 		log ""
@@ -417,8 +414,8 @@ init_everythings() {
 	fi
 
 	cdir $XT_DIR
-	node scripts/build_app.js -d dev 2>1 | tee -a $LOG_FILE
-	psql -U postgres dev -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>1 | tee -a $LOG_FILE
+	node scripts/build_app.js -d $DATABASE 2>&1 | tee -a $LOG_FILE
+	psql -U postgres $DATABASE -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>&1 | tee -a $LOG_FILE
 
 	log ""
 	log "######################################################"
@@ -436,10 +433,10 @@ init_everythings() {
 	if [ $USERNAME ]
 	then
 		log "cd ~/xtuple/node-datasource"
-		log " node main.js"
+		log "sudo node main.js"
 	else
 		log "cd /usr/local/src/xtuple/node-datasource/"
-		log " node main.js"
+		log "sudo node main.js"
 	fi
 }
 
