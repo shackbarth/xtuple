@@ -300,7 +300,7 @@ setup_postgres() {
 	log ""
 	log "Dropping old databases if they already exist..."
 	log ""
-	dropdb -U postgres dev
+	dropdb -U postgres $DATABASE
 
 	cdir $BASEDIR/postgres
 	wget http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
@@ -365,10 +365,10 @@ pull_modules() {
   cdir test/shared
   rm -f login_data.js
   echo "exports.data = {" >> login_data.js
-  echo "  webaddress: 'https://localhost:443'," >> login_data.js
+  echo "  webaddress: ''," >> login_data.js
   echo "  username: 'admin', //------- Enter the xTuple username" >> login_data.js
   echo "  pwd: 'admin', //------ enter the password here" >> login_data.js
-  echo "  org: 'dev', //------ enter the database name here" >> login_data.js
+  echo "  org: '$DATABASE', //------ enter the database name here" >> login_data.js
   echo "  suname: '', //-------enter the sauce labs username" >> login_data.js
   echo "  sakey: '' //------enter the sauce labs access key" >> login_data.js
   echo "}" >> login_data.js
