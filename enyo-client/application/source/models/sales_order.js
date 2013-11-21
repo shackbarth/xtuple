@@ -68,6 +68,30 @@ white:true*/
     saleTypeDidChange: function () {
       this.inheritWorkflowSource(this.get("saleType"), "XM.SalesOrderCharacteristic",
         "XM.SalesOrderWorkflow");
+      this.updateWorkflowItems();
+    },
+
+    /**
+
+      @param {String} workflowType Only update workflow items with this type.
+        if undefined, update all workflow items
+    */
+    updateWorkflowItems: function (workflowType) {
+      var that = this;
+
+      _.each(this.get("workflow").models, function (workflow) {
+        if (!workflowType || (workflow.get("workflowType") === workflowType)) {
+          // update the workflow model
+          switch (workflow.get("workflowType")) {
+          case XM.SalesOrderWorkflow.TYPE_PACK:
+            workflow.set({dueDate: that.get("packDate")});
+            break;
+          case XM.SalesOrderWorkflow.TYPE_SHIP:
+            workflow.set({dueDate: that.get("scheduleDate")});
+            break;
+          }
+        }
+      });
     },
 
     validate: function () {

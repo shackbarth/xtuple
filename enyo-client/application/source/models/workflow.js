@@ -55,7 +55,7 @@ white:true*/
               uuid: id,
               name: model.get("name"),
               description: model.get("description"),
-              type: model.get("type"),
+              workflowType: model.get("workflowType"),
               priority: model.get("priority"),
               startDate: startDate,
               dueDate: dueDate,

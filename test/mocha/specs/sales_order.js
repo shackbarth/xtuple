@@ -291,7 +291,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         assert.equal(copiedCharacteristic.get("characteristic").id,
           characteristicAssignment.get("characteristic").id);
         salesOrderModel.set({saleType: null});
-        salesOrderModel.get("characteristics").remove(copiedCharacteristic);
+        salesOrderModel.get("workflow").reset([]);
+        salesOrderModel.get("characteristics").reset([]);
       });
       /**
         @member -
@@ -317,10 +318,34 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         assert.equal(copiedWorkflow.get("priority").id,
           workflowSourceModel.get("priority").id);
         salesOrderModel.set({saleType: null});
-        salesOrderModel.get("workflow").remove(copiedWorkflow);
+        salesOrderModel.get("workflow").reset([]);
+        salesOrderModel.get("characteristics").reset([]);
+      });
+      /**
+        @member -
+        @memberof SalesOrder.prototype
+        @description The due date for "Pack" workflow items will default to the "Pack date" on
+          the order. Changing the Pack Date will update "Pack" workflow item's due date
+      */
+      it("The due date for Pack workflow items will default to the Pack date on the order",
+          function () {
+        var copiedWorkflow;
+
+        saleTypeModel.get("workflow").models[0]
+          .set({workflowType: XM.SalesOrderWorkflow.TYPE_PACK});
+        salesOrderModel.set({packDate: new Date("1/1/2004")});
+        salesOrderModel.set({saleType: saleTypeModel});
+        assert.equal(salesOrderModel.get("workflow").length, 1);
+        copiedWorkflow = salesOrderModel.get("workflow").models[0];
+        assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/1/2004").getDate());
+
+      });
+      it.skip("Changing the Pack Date will update Pack workflow item's due date",
+          function () {
+
+
       });
 /*
-  - The due date for "Pack" workflow items will default to the "Pack date" on the order. Changing the Pack Date will update "Pack" workflow item's due date
   - The due date for "Ship" workflow items will default to the schedule date on the header. If that date changes, "Ship" workflow items will be updated.
   - When hold status of an order is changed to "None", all credit check type workflow items will be marked completed.
   - When all materials have been issued to a work order, all "Pack" workflow items will be marked completed.
