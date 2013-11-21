@@ -188,10 +188,8 @@ build_deps() {
   if [ -d "$HOME/.nvm" ]; then
     log "nvm installed."
     source $HOME/.nvm/nvm.sh
-    sudo source $HOME/.nvm/nvm.sh
   else
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | sh
-    sudo nvm install $NODE_VERSION
     nvm install $NODE_VERSION
   fi
 
@@ -358,8 +356,8 @@ pull_modules() {
 		log "Couldn't find npm"
 		return 2
 	fi
-	npm install 2>&1 | tee -a $LOG_FILE
-	npm install -g mocha 2>&1 | tee -a $LOG_FILE
+  npm install -q 2>&1 | tee -a $LOG_FILE
+  sudo $(which npm) install -g -q mocha 2>&1 | tee -a $LOG_FILE
 
   cdir test/shared
   rm -f login_data.js

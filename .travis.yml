@@ -2,15 +2,11 @@ language: node_js
 node_js:
   - "0.8"
 
-before_install:
-  - "alias node='$NVM_BIN/node'"
-  - "alias npm='$NVM_BIN/npm'"
-
 install:
   - "sudo ./scripts/install_xtuple.sh"
 
 before_script:
-  - "cd node-datasource ; sudo node main.js &"
+  - "cd node-datasource ; sudo $(which node) main.js &"
   - "sleep 10"
   - "cd .."
 
