@@ -14,4 +14,4 @@ scripts/lib/package.js
 test/lib/demo-test.backup
 test/lib/login_data.js
 test/mocha/lib/demo-test.backup
-tes/mocha/lib/login_data.js
+test/shared/login_data.js
