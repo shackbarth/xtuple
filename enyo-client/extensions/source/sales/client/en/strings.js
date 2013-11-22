@@ -50,8 +50,6 @@ strict:true, trailing:true, white:true */
     "_restrictCreditMemos": "Restrict Credit Memos to Items on their Apply-to Document",
     "_sales": "Sales",
     "_salesDescription": "Customer and Sales Order Management",
-    "_salesEmailProfile": "Sales Email Profile",
-    "_salesEmailProfiles": "Sales Email Profiles",
     "_salesHistory": "Sales History",
     "_salesOrder": "Sales Order",
     "_scheduled": "Scheduled",

@@ -17,6 +17,12 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     Sale Type
     @class
     @alias SaleType
+    @property {String} code
+    @property {String} description
+    @property {SalesEmailProfile} emailProfile
+    @property {SaleTypeCharacteristicCollection} characteristics
+    @property {SalesTypeWorkflow} workflow
+    @property {String} defaultHoldType
   */
   var spec = {
     recordType: "XM.SaleType",
@@ -27,7 +33,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     isLockable: true,
     idAttribute: "code",
     enforceUpperKey: true,
-    attributes: ["code", "description"],
+    attributes: ["code", "description", "characteristics", "workflow",
+      "emailProfile", "defaultHoldType"],
     extensions: ["sales"],
     privileges: {
       createUpdate: "MaintainSaleTypes",

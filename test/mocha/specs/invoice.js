@@ -79,7 +79,7 @@ TODO deferred to later sprint:
     @property {String} notes
     @property {InvoiceRelation} recurringInvoice
     @property {Money} allocatedCredit the sum of all allocated credits
-    @property {Money} outandingCredit the sum of all unallocated credits, not including
+    @property {Money} outstandingCredit the sum of all unallocated credits, not including
       cash receipts pending
     @property {Money} subtotal the sum of the extended price of all line items
     @property {Money} taxTotal the sum of all taxes inluding line items, freight and

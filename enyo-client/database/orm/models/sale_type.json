@@ -378,6 +378,33 @@
         }
       }
     ],
+    "extensions": [
+      {
+        "table": "xt.saletypeext",
+        "relations": [
+          {
+            "column": "saletypeext_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "emailProfile",
+            "toOne": {
+              "type": "SalesEmailProfile",
+              "column": "saletypeext_emlprofile_id"
+            }
+          },
+          {
+            "name": "defaultHoldType",
+            "attr": {
+              "type": "String",
+              "column": "saletypeext_default_hold_type"
+            }
+          }
+        ]
+      }
+    ],
     "isSystem": true
   }
 ]
