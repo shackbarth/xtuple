@@ -343,7 +343,7 @@ setup_postgres() {
 	createdb -U postgres -O admin $DATABASE 2>&1 | tee -a $LOG_FILE
 	pg_restore -U postgres -d $DATABASE postbooks_demo-$NEWESTVERSION.backup 2>&1 | tee -a $LOG_FILE
 	psql -U postgres $DATABASE -c "CREATE EXTENSION plv8" 2>&1 | tee -a $LOG_FILE
-  cp postbooks_demo-$NEWESTVERSION.backup $XT_DIR/test/mocha/lib/demo-test.backup
+  cp postbooks_demo-$NEWESTVERSION.backup $XT_DIR/test/lib/demo-test.backup
 }
 
 # Pull submodules

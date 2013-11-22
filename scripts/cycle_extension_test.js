@@ -151,8 +151,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         mocha.suite.on('pre-require', function (context, file) {
           require_uncache(file);
         });
-        mocha.addFile(path.join(__dirname, "../test/mocha/lib/login.js"));
-        //mocha.addFile(path.join(__dirname, "../test/mocha/extensions/all/workspace_empty.js"));
+        mocha.addFile(path.join(__dirname, "../test/lib/login.js"));
+        //mocha.addFile(path.join(__dirname, "../test/extensions/all/workspace_empty.js"));
         mocha.run(function (failures) {
           callback(failures);
         });
