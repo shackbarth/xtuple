@@ -11,7 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     RJSON = require("rjson");
 
 
-  var loginData = require('../../shared/login_data'),
+  var loginData = require('../lib/login_data'),
     database = loginData.data.org,
     host = loginData.data.webaddress || "https://localhost",
     delimiter = host.charAt(host.length - 1) === "/" ? "" : "/",

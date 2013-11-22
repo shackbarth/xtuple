@@ -11,7 +11,7 @@ require:true, __dirname:true, console:true */
 // TODO: test defaults
 
 /**
-  By convention, the test runner will look for .js files in the test/mocha/specs
+  By convention, the test runner will look for .js files in the test/specs
   directory, and run any file with an export.specs. If there are any custom business
   logic tests to be run, those should go in the same file under a different export,
   export.additionalTests
@@ -19,7 +19,7 @@ require:true, __dirname:true, console:true */
   You can run tests for a particular business object by taking advantage of
   the -g flag.
 
-  mocha -R spec -g XM.Invoice test/mocha/lib/test_runner.js
+  mocha -R spec -g XM.Invoice test/lib/test_runner.js
 
   To generate spec documentation:
   cd scripts
