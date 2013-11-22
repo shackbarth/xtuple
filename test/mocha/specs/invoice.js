@@ -55,55 +55,55 @@ TODO deferred to later sprint:
     Here is some high-level description of what an invoice is supposed to do.
     @class
     @alias Invoice
-    @parameter {String} number that is the documentKey and idAttribute
-    @parameter {Date} invoiceDate required default today
-    @parameter {Boolean} isPosted required, defaulting to false, read only
-    @parameter {Boolean} isVoid required, defaulting to false, read only
-    @parameter {BillingCustomer} customer required
-    @parameter {String} billtoName
-    @parameter {String} billtoAddress1
-    @parameter {String} billtoAddress2
-    @parameter {String} billtoAddress3
-    @parameter {String} billtoCity
-    @parameter {String} billtoState
-    @parameter {String} billtoPostalCode
-    @parameter {String} billtoCountry
-    @parameter {String} billtoPhone
-    @parameter {Currency} currency
-    @parameter {Terms} terms
-    @parameter {SalesRep} salesRep
-    @parameter {Percent} commission required, default 0
-    @parameter {SaleType} saleType
-    @parameter {String} customerPurchaseOrderNumber
-    @parameter {TaxZone} taxZone
-    @parameter {String} notes
-    @parameter {InvoiceRelation} recurringInvoice
-    @parameter {Money} allocatedCredit the sum of all allocated credits
-    @parameter {Money} outandingCredit the sum of all unallocated credits, not including
+    @property {String} number that is the documentKey and idAttribute
+    @property {Date} invoiceDate required default today
+    @property {Boolean} isPosted required, defaulting to false, read only
+    @property {Boolean} isVoid required, defaulting to false, read only
+    @property {BillingCustomer} customer required
+    @property {String} billtoName
+    @property {String} billtoAddress1
+    @property {String} billtoAddress2
+    @property {String} billtoAddress3
+    @property {String} billtoCity
+    @property {String} billtoState
+    @property {String} billtoPostalCode
+    @property {String} billtoCountry
+    @property {String} billtoPhone
+    @property {Currency} currency
+    @property {Terms} terms
+    @property {SalesRep} salesRep
+    @property {Percent} commission required, default 0
+    @property {SaleType} saleType
+    @property {String} customerPurchaseOrderNumber
+    @property {TaxZone} taxZone
+    @property {String} notes
+    @property {InvoiceRelation} recurringInvoice
+    @property {Money} allocatedCredit the sum of all allocated credits
+    @property {Money} outandingCredit the sum of all unallocated credits, not including
       cash receipts pending
-    @parameter {Money} subtotal the sum of the extended price of all line items
-    @parameter {Money} taxTotal the sum of all taxes inluding line items, freight and
+    @property {Money} subtotal the sum of the extended price of all line items
+    @property {Money} taxTotal the sum of all taxes inluding line items, freight and
       tax adjustments
-    @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
-    @parameter {Money} total the calculated total of subtotal + freight + tax + miscCharge
-    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit -
+    @property {Money} miscCharge read only (will be re-implemented as editable by Ledger)
+    @property {Money} total the calculated total of subtotal + freight + tax + miscCharge
+    @property {Money} balance the sum of total - allocatedCredit - authorizedCredit -
       outstandingCredit.
       - If sum calculates to less than zero, then the balance is zero.
-    @parameter {InvoiceAllocation} allocations
-    @parameter {InvoiceTax} taxAdjustments
-    @parameter {InvoiceLine} lineItems
-    @parameter {InvoiceCharacteristic} characteristics
-    @parameter {InvoiceContact} contacts
-    @parameter {InvoiceAccount} accounts
-    @parameter {InvoiceCustomer} customers
-    @parameter {InvoiceFile} files
-    @parameter {InvoiceUrl} urls
-    @parameter {InvoiceItem} items
-    @parameter {String} orderNumber Added by sales extension
-    @parameter {Date} orderDate Added by sales extension
-    @parameter {InvoiceSalesOrder} salesOrders Added by sales extension
-    @parameter {InvoiceIncident} incidents Added by crm extension
-    @parameter {InvoiceOpportunity} opportunities Added by crm extension
+    @property {InvoiceAllocation} allocations
+    @property {InvoiceTax} taxAdjustments
+    @property {InvoiceLine} lineItems
+    @property {InvoiceCharacteristic} characteristics
+    @property {InvoiceContact} contacts
+    @property {InvoiceAccount} accounts
+    @property {InvoiceCustomer} customers
+    @property {InvoiceFile} files
+    @property {InvoiceUrl} urls
+    @property {InvoiceItem} items
+    @property {String} orderNumber Added by sales extension
+    @property {Date} orderDate Added by sales extension
+    @property {InvoiceSalesOrder} salesOrders Added by sales extension
+    @property {InvoiceIncident} incidents Added by crm extension
+    @property {InvoiceOpportunity} opportunities Added by crm extension
   */
   var spec = {
     recordType: "XM.Invoice",

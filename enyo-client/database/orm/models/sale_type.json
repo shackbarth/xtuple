@@ -223,6 +223,7 @@
     "nameSpace": "XM",
     "type": "SalesEmailProfile",
     "table": "xt.salesemlprofile",
+    "lockable": true,
     "isRest": true,
     "idSequenceName": "emlprofile_emlprofile_id_seq",
     "comment": "Sales Email Profile Map",

@@ -399,7 +399,14 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         salesOrderModel.get("characteristics").reset([]);
       });
 /*
-  - When all materials have been issued to a work order, all "Pack" workflow items will be marked completed.
+IN INVENTORY EXTENSION:
+  - When all materials have been issued to a sales order, all "Pack" workflow items will be marked completed.
+    trigger on db on shipitem table when a shipitem is added or removed
+      shipitem has orderitem, shiphead has the type (co vs to)
+      do some math: has everything been issued
+      coitem has shipped quantity field
+      order quantity - shipped quantity + returned quantity - sum (shipitems quantiy where shipped is false)
+      orditem and orditemship
   - When an order is shipped
     > If all materials were issued all "Ship" workflow items will be marked completed.
     > If outstanding line items exist, any "Ship" workflow items will be updated to be due on the next minum scheduled date remaining.

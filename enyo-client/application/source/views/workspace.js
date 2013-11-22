@@ -2150,6 +2150,19 @@ strict: false*/
   XV.registerModelWorkspace("XM.ReasonCode", "XV.ReasonCodeWorkspace");
 
   // ..........................................................
+  // SALES EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.SalesEmailProfileWorkspace",
+    kind: "XV.EmailProfileWorkspace",
+    title: "_salesEmailProfile".loc(),
+    model: "XM.SalesEmailProfile",
+  });
+
+  XV.registerModelWorkspace("XM.SalesEmailProfile", "XV.SalesEmailProfileWorkspace");
+
+  // ..........................................................
   // SALES REP
   //
 

@@ -17,7 +17,7 @@
     _ = require("underscore"),
     loginData = require('../../shared/login_data'),
     username = loginData.data.username,
-    privNames = ["MaintainSaleTypes", "MaintainProjectTypes"];
+    privNames = ["MaintainSaleTypes", "MaintainProjectTypes", "MaintainSalesEmailProfiles"];
 
   var assignmentModels;
   var initAssignmentModel = function (privName, callback) {

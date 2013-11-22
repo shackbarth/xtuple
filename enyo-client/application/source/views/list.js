@@ -1592,8 +1592,18 @@ trailing:true, white:true, strict: false*/
   });
 
   XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderList");
-
   XV.registerModelList("XM.PurchaseOrderListItem", "XV.PurchaseOrderList");
+
+  // ..........................................................
+  // SALES EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.SalesEmailProfileList",
+    kind: "XV.EmailProfileList",
+    label: "_salesEmailProfiles".loc(),
+    collection: "XM.SalesEmailProfileCollection"
+  });
 
   // ..........................................................
   // SALES ORDER

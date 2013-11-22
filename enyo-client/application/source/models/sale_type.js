@@ -25,10 +25,12 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.SalesEmailProfile = XM.Model.extend({
+  XM.SalesEmailProfile = XM.Document.extend({
     /** @scope XM.SalesEmailProfile.prototype */
 
-    recordType: 'XM.SaleType'
+    recordType: 'XM.SalesEmailProfile',
+
+    documentKey: 'name'
 
   });
 
@@ -74,6 +76,18 @@ white:true*/
     /** @scope XM.SaleTypeCollection.prototype */
 
     model: XM.SaleType
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SalesEmailProfileCollection = XM.Collection.extend({
+    /** @scope XM.SalesEmailProfileCollection.prototype */
+
+    model: XM.SalesEmailProfile
 
   });
 
