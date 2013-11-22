@@ -3,9 +3,9 @@
   newcap:true, noarg:true, undef:true */
 /*global XT:true, describe:true, it:true, require:true, __dirname:true, after:true */
 
-var buildAll = require('../../../scripts/lib/build_all'),
+var buildAll = require('../../scripts/lib/build_all'),
   assert = require('chai').assert,
-  datasource = require('../../../node-datasource/lib/ext/datasource').dataSource,
+  datasource = require('../../node-datasource/lib/ext/datasource').dataSource,
   path = require('path'),
   expect = require('chai').expect,
   zombieAuth = require('../lib/zombie_auth');
@@ -15,7 +15,7 @@ var buildAll = require('../../../scripts/lib/build_all'),
   describe('The database build tool', function () {
     this.timeout(100 * 60 * 1000);
 
-    var config = require(path.join(__dirname, "../../../node-datasource/config.js")),
+    var config = require(path.join(__dirname, "../../node-datasource/config.js")),
       creds = config.databaseServer,
       databaseName = config.datasource.testDatabase;
 
