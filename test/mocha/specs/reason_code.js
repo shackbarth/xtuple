@@ -22,7 +22,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["code", "description", "documentType"],
-    extensions: ["inventory", "billing"],
+    extensions: ["billing"],
     privileges: {
       createUpdateDelete: "MaintainReasonCodes",
       read: true
