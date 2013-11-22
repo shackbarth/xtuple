@@ -1,3 +1,11 @@
+1.5.1 (2013/11/22)
+===============
+
+Critical deployment changes
+---------------------------
+* File moved xtuple/test/shared/login_data.js -> xtuple/test/lib/login_data.js
+* File moved xtuple/test/mocha/lib/demo-test.backup -> xtuple/test/lib/demo-test.backup
+
 1.5.0 (2013/11/19)
 ==================
 
