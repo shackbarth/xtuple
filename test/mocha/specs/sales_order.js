@@ -322,7 +322,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         @description The due date for "Pack" workflow items will default to the "Pack date" on
           the order. Changing the Pack Date will update "Pack" workflow item's due date
       */
-      it("The due date for Pack workflow items will default to the Pack date on the order",
+      // TODO: reimplement in inventory
+      it.skip("The due date for Pack workflow items will default to the Pack date on the order",
           function () {
         var copiedWorkflow;
 
@@ -334,7 +335,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         copiedWorkflow = salesOrderModel.get("workflow").models[0];
         assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/1/2004").getDate());
       });
-      it("Changing the Pack Date will update Pack workflow item's due date",
+      // TODO: reimplement in inventory
+      it.skip("Changing the Pack Date will update Pack workflow item's due date",
           function () {
         var copiedWorkflow = salesOrderModel.get("workflow").models[0];
         assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/1/2004").getDate());
@@ -350,7 +352,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         @description The due date for "Ship" workflow items will default to the schedule
           date on the header. If that date changes, "Ship" workflow items will be updated.
       */
-      it("The due date for Ship workflow items will default to the schedule date on the order",
+      // TODO: reimplement in inventory
+      it.skip("The due date for Ship workflow items will default to the schedule date on the order",
           function () {
         var copiedWorkflow;
 
@@ -362,7 +365,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         copiedWorkflow = salesOrderModel.get("workflow").models[0];
         assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/10/2004").getDate());
       });
-      it("Changing the schedule Date will update Ship workflow item's due date",
+      // TODO: reimplement in inventory
+      it.skip("Changing the schedule Date will update Ship workflow item's due date",
           function () {
         var copiedWorkflow = salesOrderModel.get("workflow").models[0];
         assert.equal(copiedWorkflow.get("dueDate").getDate(), new Date("1/10/2004").getDate());

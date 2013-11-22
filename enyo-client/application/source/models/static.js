@@ -411,9 +411,10 @@ white:true*/
   // Workflow Type
   var salesOrderWorkflowTypeJson = [
     { id: XM.SalesOrderWorkflow.TYPE_OTHER, name: "_other".loc() },
-    { id: XM.SalesOrderWorkflow.CREDIT_CHECK, name: "_creditCheck".loc() },
-    { id: XM.SalesOrderWorkflow.PACK, name: "_pack".loc() },
-    { id: XM.SalesOrderWorkflow.SHIP, name: "_ship".loc() }
+    { id: XM.SalesOrderWorkflow.CREDIT_CHECK, name: "_creditCheck".loc() }//,
+    // TODO: reimplement in inventory
+    //{ id: XM.SalesOrderWorkflow.PACK, name: "_pack".loc() },
+    //{ id: XM.SalesOrderWorkflow.SHIP, name: "_ship".loc() }
   ];
   XM.SalesOrderWorkflowTypeModel = Backbone.Model.extend({});
   XM.SalesOrderWorkflowTypeCollection = Backbone.Collection.extend({
