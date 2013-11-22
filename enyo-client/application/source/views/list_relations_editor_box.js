@@ -564,7 +564,7 @@ trailing:true, white:true*/
         {kind: "XV.DependenciesWidget",
           attr: {workflow: "parent.workflow", successors: "completedSuccessors"}},
         {kind: "onyx.GroupboxHeader", content: "_onDeferred".loc()},
-        {kind: "XV.ProjectStatusPicker", attr: "deferredParentStatus",
+        {kind: "XV.CreditStatusPicker", attr: "deferredParentStatus",
           noneText: "_noChange".loc(), label: "_nextStatus".loc()},
         {kind: "XV.DependenciesWidget",
           attr: {workflow: "parent.workflow", successors: "deferredSuccessors"}},

@@ -12,8 +12,6 @@ strict:true, trailing:true, white:true */
     "_approved": "Approved",
     "_budgeted$": "Budgeted $",
     "_budgetedHrs": "Budgeted Hrs.",
-    "_completionActions": "Completion Actions",
-    "_deferredActions": "Deferred Actions",
     "_due": "Due",
     "_dueSet": "Calculate",
     "_dueOffset": "Offset Days",
