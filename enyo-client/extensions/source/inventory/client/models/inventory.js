@@ -97,7 +97,7 @@ white:true*/
       issueBalance: function () {
         var balance = this.get("balance"),
           atShipping = this.get("atShipping"),
-          toIssue = XT.math.subtract(balance, atShipping, XT.QUANTITY_SCALE);
+          toIssue = XT.math.subtract(balance, atShipping, XT.QTY_SCALE);
         return toIssue >= 0 ? toIssue : 0;
       },
 
