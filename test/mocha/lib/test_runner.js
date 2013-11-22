@@ -53,7 +53,7 @@ require:true, __dirname:true, console:true */
       console.log("Note:", specFile, "spec is sporked.");
       return;
     }
-    describe(spec.recordType, function () {
+    (spec.skipAll ? describe.skip : describe)(spec.recordType, function () {
       if (_.isString(spec.updatableField)) {
         spec.updateHash = {};
         spec.updateHash[spec.updatableField] = "Test" + Math.random();
