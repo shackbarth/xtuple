@@ -97,6 +97,9 @@ white:true*/
     saleTypeDidChange: function () {
       this.inheritWorkflowSource(this.get("saleType"), "XM.SalesOrderCharacteristic",
         "XM.SalesOrderWorkflow");
+      if (!this.get("holdType")) {
+        this.set({holdType: this.getValue("saleType.defaultHoldType")});
+      }
       // TODO: reimplement in inventory
       //this.updateWorkflowItemPackDate();
       //this.updateWorkflowItemShipDate();

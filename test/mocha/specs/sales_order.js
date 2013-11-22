@@ -267,6 +267,20 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       /**
         @member -
         @memberof SalesOrder
+        @description When the sale type changes, the default hold type of the sale type
+          will get copied to the sales order.
+      */
+      it("copies sale type hold type when the sale type changes", function () {
+        saleTypeModel.set({defaultHoldType: "N"});
+        salesOrderModel.set({saleType: saleTypeModel});
+        assert.equal(salesOrderModel.get("holdType"), "N");
+        salesOrderModel.set({saleType: null});
+        salesOrderModel.get("workflow").reset([]);
+        salesOrderModel.get("characteristics").reset([]);
+      });
+      /**
+        @member -
+        @memberof SalesOrder
         @description When the sale type changes, the characteristics of the new sale type
           are copied over to the sales order.
       */
