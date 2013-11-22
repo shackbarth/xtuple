@@ -23,6 +23,18 @@ white:true*/
   /**
     @class
 
+    @extends XM.Model
+  */
+  XM.SalesEmailProfile = XM.Model.extend({
+    /** @scope XM.SalesEmailProfile.prototype */
+
+    recordType: 'XM.SaleType'
+
+  });
+
+  /**
+    @class
+
     @extends XM.CharacteristicAssignment
   */
   XM.SaleTypeCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.SaleTypeCharacteristic.prototype */{

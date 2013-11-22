@@ -97,6 +97,7 @@
     "xt/functions/undomerge.sql",
     "xt/tables/acttype.sql",
     "xt/tables/emlprofile.sql",
+    "xt/tables/salesemlprofile.sql",
     "xt/tables/filter.sql",
     "xt/tables/localeext.sql",
     "xt/tables/incdtemlprofile.sql",
