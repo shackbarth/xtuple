@@ -37,7 +37,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, describe:true, before
       isUsedByPayments: false,
       termsType: "D"
     },
-    extensions: ["billing", "inventory", "sales"],
+    extensions: ["billing", "sales"],
     privileges: {
       createUpdateDelete: "MaintainTerms",
       read: true
