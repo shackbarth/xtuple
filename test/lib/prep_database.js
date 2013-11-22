@@ -8,8 +8,7 @@
 
   /*
     Does any need prep-work to the database. Currently, this is just to add
-    the MaintainSaleTypes privilege to admin. This can be generalized lot
-    if we want to do more stuff in here.
+    the privileges to the test user.
   */
 
 
