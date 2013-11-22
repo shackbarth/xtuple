@@ -15,7 +15,7 @@
 
   var async = require("async"),
     _ = require("underscore"),
-    loginData = require('../../shared/login_data');
+    loginData = require('./login_data');
 
   var adminName = loginData.data.username;
   var privName = "MaintainSaleTypes"; // TODO: support array
