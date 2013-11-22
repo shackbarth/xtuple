@@ -1,9 +1,9 @@
 select xt.install_js('XM','ProjectManagement','project', $$
-  /* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
+  /* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple.
      See www.xtuple.com/CPAL for the full text of the software license. */
 
   if (!XM.ProjectManagement) { XM.ProjectManagement = {}; }
-  
+
   XM.ProjectManagement.isDispatchable = true;
 
   XM.ProjectManagement.options = [
@@ -38,7 +38,7 @@ select xt.install_js('XM','ProjectManagement','project', $$
       options = K.options.slice(0),
       metrics = {},
       i;
-   
+
     /* Compose our commit settings by applying the patch to what we already have */
     if (!XT.jsonpatch.apply(settings, patches)) {
       plv8.elog(NOTICE, 'Malformed patch document');
