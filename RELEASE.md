@@ -1,6 +1,170 @@
-1.x.x (???/xx/xx)
+1.5.0 (2013/11/19)
+==================
+
+- Implemented
+  issue #[18917](http://www.xtuple.org/xtincident/view/bugs/18917)
+  _Complete translation functionality_
+- Fixed
+  issue #[19681](http://www.xtuple.org/xtincident/view/bugs/19681)
+  _*Omnibus :It is not possible to re-attach a newly created and detached To Do item from a record_
+- Implemented
+  issue #[20438](http://www.xtuple.org/xtincident/view/bugs/20438)
+  _convert a quote to a sales order_
+- Fixed
+  issue #[20625](http://www.xtuple.org/xtincident/view/bugs/20625)
+  _Customer hold privileges are not enforced on Sales Order_
+- Implemented
+  issue #[20946](http://www.xtuple.org/xtincident/view/bugs/20946)
+  _implement rjson for basic compression_
+- Implemented
+  issue #[21038](http://www.xtuple.org/xtincident/view/bugs/21038)
+  _Complete Issue to Shipping_
+- Implemented
+  issue #[21100](http://www.xtuple.org/xtincident/view/bugs/21100)
+  _Sales Order Line Items should have a border to show_
+- Fixed
+  issue #[21166](http://www.xtuple.org/xtincident/view/bugs/21166)
+  _*Selecting to create a New To Do from the To Do tab of an incident generates a JS console error_
+- Fixed
+  issue #[21178](http://www.xtuple.org/xtincident/view/bugs/21178)
+  _*It is possible to delete the tasks to which Actual Time/Expenses are posted already_
+- Fixed
+  issue #[21245](http://www.xtuple.org/xtincident/view/bugs/21245)
+  _*Inactive Sales representatives are available for selection_
+- Fixed
+  issue #[21442](http://www.xtuple.org/xtincident/view/bugs/21442)
+  _Site Defaults in Mobile Web are not honoring user defaults_
+- Fixed
+  issue #[21448](http://www.xtuple.org/xtincident/view/bugs/21448)
+  _Error checking on functions is spotty in Mobile_
+- Fixed
+  issue #[21483](http://www.xtuple.org/xtincident/view/bugs/21483)
+  _*Omnibus: Records lists doesn't honor the selected 'Sort By' options_
+- Fixed
+  issue #[21491](http://www.xtuple.org/xtincident/view/bugs/21491)
+  _*Selecting to save a new To do item with an incident/Opportunity attached to it displays JS console error_
+- Fixed
+  issue #[21494](http://www.xtuple.org/xtincident/view/bugs/21494)
+  _The Alter Transaction Dates Privilege is not enforced on Issue to Shipping and Ship_
+- Fixed
+  issue #[21529](http://www.xtuple.org/xtincident/view/bugs/21529)
+  _Item Site is incomplete_
+- Implemented
+  issue #[21585](http://www.xtuple.org/xtincident/view/bugs/21585)
+  _Add support for Sales Categories_
+- Implemented
+  issue #[21587](http://www.xtuple.org/xtincident/view/bugs/21587)
+  _Add Billing configuration_
+- Implemented
+  issue #[21601](http://www.xtuple.org/xtincident/view/bugs/21601)
+  _Add mult-select support to worksheets_
+- Fixed
+  issue #[21604](http://www.xtuple.org/xtincident/view/bugs/21604)
+  _Terms implementation is incomplete_
+- Implemented
+  issue #[21614](http://www.xtuple.org/xtincident/view/bugs/21614)
+  _Implement Bank Account_
+- Fixed
+  issue #[21617](http://www.xtuple.org/xtincident/view/bugs/21617)
+  _*Unable to scroll the Time Sheets List in a new Worksheet_
+- Implemented
+  issue #[21625](http://www.xtuple.org/xtincident/view/bugs/21625)
+  _Implement Reason Code_
+- Fixed
+  issue #[21633](http://www.xtuple.org/xtincident/view/bugs/21633)
+  _*Unable to delete a Sales order_
+- Fixed
+  issue #[21650](http://www.xtuple.org/xtincident/view/bugs/21650)
+  _*'Ship' button is active in the Issue to Shipping screen when 'Ship Orders' privilege is disabled for the user_
+- Fixed
+  issue #[21657](http://www.xtuple.org/xtincident/view/bugs/21657)
+  _Grid row doesn't refresh_
+- Fixed
+  issue #[21659](http://www.xtuple.org/xtincident/view/bugs/21659)
+  _Mobile Timecard entry... remembering fields so don't need to continually enter same data_
+- Fixed
+  issue #[21666](http://www.xtuple.org/xtincident/view/bugs/21666)
+  _*Unable to delete a Prospect_
+- Fixed
+  issue #[21667](http://www.xtuple.org/xtincident/view/bugs/21667)
+  _*Unable to delete a Customer_
+- Fixed
+  issue #[21670](http://www.xtuple.org/xtincident/view/bugs/21670)
+  _*Selecting to discard the changes of a Worksheet hangs the application_
+- Implemented
+  issue #[21679](http://www.xtuple.org/xtincident/view/bugs/21679)
+  _Tweak MW refresh icon_
+- Fixed
+  issue #[21680](http://www.xtuple.org/xtincident/view/bugs/21680)
+  _Timesheets in Mobile Web Client Default to Billable, when Customer is Selected_
+- Implemented
+  issue #[21684](http://www.xtuple.org/xtincident/view/bugs/21684)
+  _Implement Invoices_
+- Fixed
+  issue #[21704](http://www.xtuple.org/xtincident/view/bugs/21704)
+  _Unable to use Sales Analysis due to Blocked page_
+- Implemented
+  issue #[21739](http://www.xtuple.org/xtincident/view/bugs/21739)
+  _Projects should support characteristics_
+- Implemented
+  issue #[21750](http://www.xtuple.org/xtincident/view/bugs/21750)
+  _Develop OLAP client support for dashboards_
+- Implemented
+  issue #[21762](http://www.xtuple.org/xtincident/view/bugs/21762)
+  _Add support for grid entry to project_
+- Fixed
+  issue #[21801](http://www.xtuple.org/xtincident/view/bugs/21801)
+  _xt error on desktop 4.1  with Mobile client_
+- Implemented
+  issue #[21807](http://www.xtuple.org/xtincident/view/bugs/21807)
+  _Develop install script for Pentaho_
+- Implemented
+  issue #[21821](http://www.xtuple.org/xtincident/view/bugs/21821)
+  _Need new welcome screen metric for MW_
+- Fixed
+  issue #[21831](http://www.xtuple.org/xtincident/view/bugs/21831)
+  _Can not run xt-mobile scripts on db upgraded from 4.1.0 to 4.2.0_
+- Implemented
+  issue #[21834](http://www.xtuple.org/xtincident/view/bugs/21834)
+  _Prerequisite Checks for Mobile Required_
+- Fixed
+  issue #[21851](http://www.xtuple.org/xtincident/view/bugs/21851)
+  _mobile no longer uses bindAddress_
+- Implemented
+  issue #[21864](http://www.xtuple.org/xtincident/view/bugs/21864)
+  _assign project tasks to resources_
+- Fixed
+  issue #[21894](http://www.xtuple.org/xtincident/view/bugs/21894)
+  _Address can not be updated_
+- Implemented
+  issue #[21895](http://www.xtuple.org/xtincident/view/bugs/21895)
+  _Initial analytic charts for dashboard in Sales BI Extension_
+- Fixed
+  issue #[21933](http://www.xtuple.org/xtincident/view/bugs/21933)
+  _Client not responding after log in_
+- Fixed
+  issue #[21994](http://www.xtuple.org/xtincident/view/bugs/21994)
+  _*Selecting to run the install script displays Syntax error_
 
 This version requires version 4.2.0 or higher of xTuple PostBooks or commercial edition database.
+
+1.4.6 (2013/11/xx)
+==================
+Critical deployment changes
+---------------------------
+- The Sales Dashboard has been redesigned to show sales data from analytic cubes.  To connect to the BI Server
+you must define:
+ 
+   biServer: {
+        hostname: "localhost",
+        port: 8080,
+        catalog: "xTuple",
+        tenantname: "default",
+        keyFile: "./lib/rest-keys/server.key"
+      }
+in config.js.  Also, the Sales Dashboard is now structured in a private extension:
+ 
+   https://github.com/xtuple/private-extensions/tree/master/source/bi
 
 1.4.5 (2013/10/11)
 ==================
