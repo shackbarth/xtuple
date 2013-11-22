@@ -59,7 +59,8 @@ trailing:true, white:true*/
         {name: "customerList", kind: "XV.CustomerList"},
         {name: "prospectList", kind: "XV.ProspectList"},
         {name: "quoteList", kind: "XV.QuoteList"},
-        {name: "salesOrderList", kind: "XV.SalesOrderList"}
+        {name: "salesOrderList", kind: "XV.SalesOrderList"},
+        {name: "sales_activityList", kind: "XV.ActivityList"}
       ]
     };
 
