@@ -19,8 +19,6 @@ strict:true, trailing:true, white:true */
     "_dueOffset": "Offset Days",
     "_nextProjectStatus": "Next Project Status",
     "_noChange": "No Change",
-    "_onCompletion": "On Completion",
-    "_onDeferred": "On Deferred",
     "_maintainProjectEmailProfiles": "Maintain Project Email Profiles",
     "_maintainProjectTypes": "Maintain Project Types",
     "_percentComplete": "Complete",
