@@ -373,21 +373,6 @@ regexp:true, undef:true, trailing:true, white:true */
     ]
   });
 
-  // ..........................................................
-  // LOCATION
-  //
-
-  enyo.kind({
-    name: "XV.LocationPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.locations",
-    nameAttribute: "format",
-    orderBy: [
-      {attribute: 'format'}
-    ],
-    valueAttribute: "uuid"
-  });
-
 
   // ..........................................................
   // MONTH
@@ -615,19 +600,6 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.shipZones",
     orderBy: [
       {attribute: 'name'}
-    ]
-  });
-
-  // ..........................................................
-  // SITE ZONE
-  //
-
-  enyo.kind({
-    name: "XV.SiteZonePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.siteZoneRelations",
-    orderBy: [
-      {attribute: 'code'}
     ]
   });
 

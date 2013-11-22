@@ -125,7 +125,7 @@ select xt.install_js('XT','Session','xtuple', $$
   XT.Session.preferences = function() {
     var sql = "select * from xt.userpref where userpref_usr_username = $1 " +
               "and userpref_name != 'PreferredWarehouse' " +
-              "union " + 
+              "union " +
               /* Sorry, we've just got to share this one... */
               "select usrpref_id, usrpref_username, usrpref_name, warehous_code " +
               "from usrpref " +

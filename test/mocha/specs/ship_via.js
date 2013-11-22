@@ -22,7 +22,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["code", "description"],
-    extensions: ["billing", "inventory", "sales"],
+    extensions: ["billing", "sales"],
     privileges: {
       createUpdateDelete: "MaintainShipVias",
       read: true
