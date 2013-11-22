@@ -41,9 +41,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     });
   };
 
-  /**
-    Useful for any model that uses XM.SalesOrderLineBase
-   */
+  //
+  // Useful for any model that uses XM.SalesOrderLineBase
+  //
   var getBeforeSaveAction = function (lineRecordType) {
     return function (data, next) {
       var lineItem = new XM[lineRecordType.substring(3)](),
@@ -97,38 +97,33 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     recordType: "XM.SalesOrder",
     skipSmoke: true, // XXX TODO get rid of this
     collectionType: "XM.SalesOrderListItemCollection",
-    /**
-      @member -
-      @memberof SalesOrder.prototype
-      @description The sales order collection is cached.
-    */
     cacheName: null,
     listKind: "XV.SalesOrderList",
     instanceOf: "XM.Document",
     /**
       @member -
-      @memberof SalesOrder.prototype
+      @memberof SalesOrder
       @description Sales orders are lockable.
     */
     isLockable: true,
     /**
       @member -
-      @memberof SalesOrder.prototype
-      @description The ID attribute is "code", which will be automatically uppercased.
+      @memberof SalesOrder
+      @description The ID attribute is "number", which will be automatically uppercased.
     */
     idAttribute: "number",
     enforceUpperKey: true,
     attributes: ["number", "characteristics"],
     /**
       @member -
-      @memberof SalesOrder.prototype
+      @memberof SalesOrder
       @description Used in the sales module
     */
     extensions: ["sales"],
     /**
       @member -
-      @memberof SalesOrder.prototype
-      @description Sales Orders can be read by people with "MaintainSalesOrders"
+      @memberof SalesOrder
+      @description Sales Orders can be read by people with "ViewSalesOrders"
        and can be created, updated,
        or deleted by users with the "MaintainSalesOrders" privilege.
     */
@@ -143,10 +138,10 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       salesRep: { number: "1000" },
       wasQuote: true
     },
-    /**
-      An extra bit of work we have to do after the createHash fields are set:
-      create a valid line item.
-     */
+    //
+    // An extra bit of work we have to do after the createHash fields are set:
+    // create a valid line item.
+    //
     beforeSaveActions: [{it: 'sets up a valid line item',
       action: getBeforeSaveAction("XM.SalesOrderLine")}],
     afterSaveActions: [{it: 'has the credit card information', action: function (data, next) {
@@ -188,7 +183,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     describe("Sales order characteristics", function () {
       /**
         @member -
-        @memberof SalesOrder.prototype
+        @memberof SalesOrder
         @description Characteristics can be assigned as being for sales orders
       */
       it("XM.Characteristic includes isSalesOrders as a context attribute", function () {
@@ -197,7 +192,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       });
       /**
         @member SalesOrderCharacteristic
-        @memberof SalesOrder.prototype
+        @memberof SalesOrder
         @description Follows the convention for characteristics
         @see Characteristic
       */
@@ -271,7 +266,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       });
       /**
         @member -
-        @memberof SalesOrder.prototype
+        @memberof SalesOrder
         @description When the sale type changes, the characteristics of the new sale type
           are copied over to the sales order.
       */
@@ -296,7 +291,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       });
       /**
         @member -
-        @memberof SalesOrder.prototype
+        @memberof SalesOrder
         @description When the sale type changes, the workflow sources of the new sale type
           are transformed into workflow items for the sales order.
       */
@@ -323,7 +318,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       });
       /**
         @member -
-        @memberof SalesOrder.prototype
+        @memberof SalesOrder
         @description The due date for "Pack" workflow items will default to the "Pack date" on
           the order. Changing the Pack Date will update "Pack" workflow item's due date
       */
@@ -351,7 +346,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       });
       /**
         @member -
-        @memberof SalesOrder.prototype
+        @memberof SalesOrder
         @description The due date for "Ship" workflow items will default to the schedule
           date on the header. If that date changes, "Ship" workflow items will be updated.
       */
@@ -379,7 +374,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       });
       /**
         @member -
-        @memberof SalesOrder.prototype
+        @memberof SalesOrder
         @description When hold type of an order is changed to "None", all credit
           check type workflow items will be marked completed.
       */

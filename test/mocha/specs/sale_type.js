@@ -13,6 +13,11 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     common = require("../lib/common"),
     assert = require("chai").assert;
 
+  /**
+    Sale Type
+    @class
+    @alias SaleType
+  */
   var spec = {
     recordType: "XM.SaleType",
     collectionType: "XM.SaleTypeCollection",
