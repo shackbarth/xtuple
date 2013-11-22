@@ -40,7 +40,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     creds = config.databaseServer;
     creds.host = creds.hostname; // adapt our lingo to node-postgres lingo
 
-    loginData = require(path.join(__dirname, "../test/shared/login_data")).data;
+    loginData = require(path.join(__dirname, "../test/lib/login_data")).data;
     creds.database = loginData.org;
 
     callback();

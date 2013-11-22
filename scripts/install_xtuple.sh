@@ -400,7 +400,7 @@ init_everythings() {
 		return 3
 	fi
 
-	cdir $XT_DIR/test/shared
+	cdir $XT_DIR/test/lib
   rm -f login_data.js
   echo "exports.data = {" >> login_data.js
   echo "  webaddress: ''," >> login_data.js
