@@ -11,5 +11,5 @@ scripts/1
 scripts/lib/build
 scripts/lib/deploy
 scripts/lib/package.js
-test/mocha/lib/demo-test.backup
-test/shared/login_data.js
+test/lib/demo-test.backup
+test/lib/login_data.js
