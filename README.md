@@ -3,6 +3,8 @@ xTuple
 
 xTuple Enterprise Resource Planning Mobile-Web client
 
+[![Build Status](https://travis-ci.org/xtuple/xtuple.png)](https://travis-ci.org/xtuple/xtuple)
+
 ### Installing this project
 
 The install script for this project is Debian based and designed to run on a 64 bit Ubuntu 12.04 machine. *If you do not have 64 bit hardware the install script will not work for you* and you will have to do a manual build. It is best if you do not already have postgres installed on your machine.

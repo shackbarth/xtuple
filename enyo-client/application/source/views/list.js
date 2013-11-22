@@ -2446,17 +2446,16 @@ trailing:true, white:true, strict: false*/
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "number", fit: true}
+            {kind: "XV.ListAttr", attr: "number", fit: true},
+            {kind: "XV.ListAttr", attr: "itemSite.site.code", style: "padding-left: 12px"}
           ]},
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "getWorkOrderStatusString",
-                style: "padding-left: 24px"},
+              {kind: "XV.ListAttr", attr: "getWorkOrderStatusString"},
               {kind: "XV.ListAttr", attr: "itemSite.item.number",
-                classes: "bold", style: "padding-left: 12px"}
+                classes: "bold"}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "itemSite.site.code", style: "padding-left: 12px"},
               {kind: "XV.ListAttr", attr: "itemSite.item.description1", classes: "italic"}
             ]}
           ]},

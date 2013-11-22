@@ -24,7 +24,8 @@ trailing:true, white:true, strict:false*/
       published: {
         shipment: null,
         transModule: XM.Inventory,
-        transWorkspace: "XV.IssueStockWorkspace"
+        transWorkspace: "XV.IssueStockWorkspace",
+        transQtyIssued: "atShipping"
       },
       components: [
         {kind: "XV.ListItem", components: [
