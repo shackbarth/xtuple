@@ -22,7 +22,7 @@
 
     it('should all be accessible', function (done) {
       this.timeout(30 * 1000);
-      var navigator,
+      var navigator, workspace,
         list,
         i = -1;
 
@@ -37,9 +37,15 @@
         list.itemTap({}, {index: i, originator: {}});
         workspaceContainer = XT.app.$.postbooks.getActive();
         assert.equal(workspaceContainer.kind, "XV.WorkspaceContainer");
+        workspace = workspaceContainer.$.workspace;
+
+        //workspace.value.set("test", "test");
+        //workspaceContainer.saveAndClose({force: true});
+
         workspaceContainer.close();
+
         setTimeout(function () {
-          assert.equal(XT.app.$.postbooks.getActive(), "XV.Navigator");
+          assert.equal(XT.app.$.postbooks.getActive(), "XV.Navigator", "Cannot save " + workspace.kind);
           callback();
         }, 3000);
       }, function (err, result) {

@@ -78,7 +78,7 @@ select xt.install_js('XM','Billing','xtuple', $$
     if(!data.checkPrivilege('ConfigureAR')) throw new Error('Access Denied');
 
     /* Compose our commit settings by applying the patch to what we already have */
-    settings = JSON.parse(XM.Billing.settings());
+    settings = XM.Billing.settings();
     if (!XT.jsonpatch.apply(settings, patches)) {
       plv8.elog(NOTICE, 'Malformed patch document');
     }
