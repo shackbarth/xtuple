@@ -31,7 +31,7 @@ Simplest possible usage:
     Loads up the xTuple environment and makes the global variables globally available.
 
     The first three options are optional, but if omitted then the login data should be
-    available in the /test/shared/loginData.js file.
+    available in the /test/lib/loginData.js file.
 
     There is one important limitation to this code at the moment: the client-side
     app must be built. (Going in through debug.html won't work).
@@ -70,9 +70,9 @@ Simplest possible usage:
 
     if (!username || !password) {
       try {
-        loginData = require('../../shared/login_data');
+        loginData = require('./login_data');
       } catch (err) {
-        console.log("Make sure you put your login credentials in the /test/shared/login_data.js file");
+        console.log("Make sure you put your login credentials in the /test/lib/login_data.js file");
         process.exit(1);
       }
 
