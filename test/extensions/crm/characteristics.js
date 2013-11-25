@@ -45,7 +45,8 @@
           charWidget.newItem();
           // XXX it'd be better to do this through enyo
           charModel = _.find(XM.characteristics.models, function (m) {
-            return m.id === 'CONTACT-BIRTHDAY';
+            // support masterref and postbooks
+            return m.id === 'CONTACT-BIRTHDAY' || m.id === 'Birthday';
           });
           assert.isObject(charModel);
           contactCharModel = charWidget.value.models[0];
