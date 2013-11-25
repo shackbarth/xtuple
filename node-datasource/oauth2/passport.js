@@ -231,6 +231,9 @@ passport.use(new BearerStrategy(
     var accesshash = X.crypto.createHash('sha1').update(privateSalt + accessToken).digest("hex"),
         database = url.parse(req.url).path.split("/")[1];
 
+// TODO: debugging
+console.log("access_token:", accessToken);
+
     db.accessTokens.findByAccessToken(accesshash, database, function (err, token) {
       if (err) { return done(err); }
       if (!token) { return done(null, false); }
