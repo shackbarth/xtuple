@@ -268,7 +268,9 @@ white:true*/
   */
   XM.SalesOrderCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.SalesOrderCharacteristic.prototype */{
 
-    recordType: 'XM.SalesOrderCharacteristic'
+    recordType: 'XM.SalesOrderCharacteristic',
+
+    which: 'isSalesOrders'
 
   });
 

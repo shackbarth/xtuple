@@ -142,7 +142,9 @@ white:true*/
   XM.AccountCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.AccountCharacteristic.prototype */
 
-    recordType: 'XM.AccountCharacteristic'
+    recordType: 'XM.AccountCharacteristic',
+
+    which: 'isAccounts'
 
   });
 

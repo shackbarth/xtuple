@@ -50,7 +50,9 @@ white:true*/
     XM.ProjectTypeCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectTypeCharacteristic.prototype */ {
 
-      recordType: 'XM.ProjectTypeCharacteristic'
+      recordType: 'XM.ProjectTypeCharacteristic',
+
+      which: 'isProjects'
 
     });
 
@@ -874,7 +876,9 @@ white:true*/
     XM.ProjectCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectCharacteristic.prototype */ {
 
-      recordType: 'XM.ProjectCharacteristic'
+      recordType: 'XM.ProjectCharacteristic',
+
+      which: 'isProjects'
 
     });
 
@@ -886,7 +890,9 @@ white:true*/
     XM.ProjectListItemCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectListItemCharacteristic.prototype */ {
 
-      recordType: 'XM.ProjectListItemCharacteristic'
+      recordType: 'XM.ProjectListItemCharacteristic',
+
+      which: 'isProjects'
 
     });
 
@@ -898,7 +904,9 @@ white:true*/
     XM.ProjectTaskCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectTaskCharacteristic.prototype */ {
 
-      recordType: 'XM.ProjectTaskCharacteristic'
+      recordType: 'XM.ProjectTaskCharacteristic',
+
+      which: 'isTasks'
 
     });
 
@@ -910,7 +918,9 @@ white:true*/
     XM.TaskCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.TaskCharacteristic.prototype */ {
 
-      recordType: 'XM.TaskCharacteristic'
+      recordType: 'XM.TaskCharacteristic',
+
+      which: 'isTasks'
 
     });
 
@@ -922,7 +932,9 @@ white:true*/
     XM.TaskListItemCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.TaskListItemCharacteristic.prototype */ {
 
-      recordType: 'XM.TaskListItemCharacteristic'
+      recordType: 'XM.TaskListItemCharacteristic',
+
+      which: 'isTasks'
 
     });
 
