@@ -53,16 +53,8 @@ DO $$
       plv8.execute("CREATE OR REPLACE VIEW saleshistory AS " + saleshistory);
       plv8.execute("CREATE OR REPLACE VIEW saleshistorymisc AS " + saleshistorymisc);
     }
-  }
-$$ language plv8;
 
-/* Resets the xt.obj.obj_uuid defualt after the cleanup. */
-DO $$
-  var obj;
-
-  obj = plv8.execute("select data_type from information_schema.columns where table_name = 'obj' and column_name = 'obj_uuid'");
-
-  if (obj.length) {
+    /* Resets the xt.obj.obj_uuid defualt after the cleanup. */
     /* This will also set the default on ALL child tables that inherit from xt.obj. */
     plv8.execute("ALTER TABLE xt.obj ALTER COLUMN obj_uuid SET DEFAULT xt.uuid_generate_v4();");
   }
