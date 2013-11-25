@@ -27,6 +27,54 @@ white:true*/
       var receivableType = new XM.ReceivableTypeModel(receivableTypeJson[i]);
       XM.receivableTypes.add(receivableType);
     }
-  };
 
+    /**
+    * @enum
+    * Funds Types
+    */
+    XM.FundsTypeEnum = {
+      C: 'CHECK',
+      T: 'CERTIFIED_CHECK',
+      K: 'CASH',
+      M: 'MASTERCARD',
+      V: 'VISA',
+      A: 'AMERICAN_EXPRESS',
+      D: 'DISCOVER',
+      R: 'OTHER_CREDIT_CARD',
+      W: 'WIRE_TRANSFER',
+      O: 'OTHER'
+    };
+
+    /**
+    * @class XM.FundsType
+    * @extends Backbone.Model
+    */
+    XM.FundsType = XM.StaticModel.extend({
+
+      /**
+       * Returns true if the given fundsType is a credit card type, false
+       * otherwise.
+       */
+      isCreditCard: function () {
+        return _.contains([ 'M', 'V', 'A', 'D', 'R' ], this.id);
+      }
+    });
+
+    XM.fundsTypes = new XM.EnumMapCollection(
+      XM.FundsTypeEnum, { model: XM.FundsType }
+    );
+          
+    /**
+     * @enum
+     * Cash Receipt Balance Application Options.
+     */
+    XM.CashReceiptApplyOptionEnum = {
+      0: 'APPLY_BALANCE_TO_CREDIT_MEMO',
+      1: 'APPLY_BALANCE_TO_CUSTOMER_DEPOSIT'
+    };
+
+    XM.cashReceiptApplyOptions = new XM.EnumMapCollection(
+      XM.CashReceiptApplyOptionEnum
+    );
+  };
 }());

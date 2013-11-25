@@ -18,12 +18,12 @@ cdir() {
 
 RUNALL=true
 BI_DIR=$RUN_DIR/../../bi
+PRIVATE_DIR=$RUN_DIR/../../private-extensions
 XT_DIR=$RUN_DIR/..
 export BISERVER_HOME=$RUN_DIR/../../ErpBI
 DATABASE=dev
 TENANT=default
 COMMONNAME=$(hostname)
-export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:bin/javac::")
 
 while getopts ":iebcpd:t:n:j:" opt; do
   case $opt in
@@ -86,26 +86,26 @@ then
 	PREP=true
 fi
 
-if  ! test -e $JAVA_HOME/bin/javac ;
+if  ! test -d $BI_DIR ;
 then
 	log ""
 	log "#############################################################"
 	log "#############################################################"
-    log "Sorry can not find javac.  Set Java Home with the -j argument"
+    log "Sorry bi folder not found.  You must clone xtuple/bi"
 	log "#############################################################"
 	log "#############################################################"
 	log ""
     exit 1
 fi
 
-if  ! test -d $XT_DIR ;
+if  ! test -d $PRIVATE_DIR ;
 then
 	log ""
-	log "#############################################################"
-	log "#############################################################"
-    log "Sorry xtuple folder not found.  You must clone xtuple"
-	log "#############################################################"
-	log "#############################################################"
+	log "####################################################################################"
+	log "####################################################################################"
+    log "Sorry private-extensions folder not found.  You must clone xtuple/private-extensions"
+	log "####################################################################################"
+	log "####################################################################################"
 	log ""
     exit 1
 fi
@@ -119,9 +119,19 @@ install_packages () {
 	log "######################################################"
 	log ""
 	apt-get install -qy git openjdk-6-jdk maven2
+	export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:bin/javac::")	
+	if  ! test -e $JAVA_HOME/bin/javac ;
+	then
+		log ""
+		log "#############################################################"
+		log "#############################################################"
+		log "Sorry can not find javac.  Set Java Home with the -j argument"
+		log "#############################################################"
+		log "#############################################################"
+		log ""
+		exit 1
+	fi
 }
-
-#git clone https://github.com/xtuple/bi
 
 download_files () {
 	log ""
@@ -135,12 +145,12 @@ download_files () {
 	log ""
     cdir $RUN_DIR/../..
 	rm -R ErpBI
-	# rm ErpBI.zip
-	# wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
-	unzip ErpBI.zip  2>1 | tee -a $LOG_FILE
+	rm ErpBI.zip
+	wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
+	unzip ErpBI.zip  2>&1 | tee -a $LOG_FILE
 	
 	cdir $BISERVER_HOME/biserver-ce/
-	chmod 755 -R . 2>1 | tee -a $LOG_FILE
+	chmod 755 -R . 2>&1 | tee -a $LOG_FILE
 	
 	cdir $BISERVER_HOME/biserver-ce/ssl-keys
 	rm cacerts.jks
@@ -155,7 +165,7 @@ download_files () {
 	cat pentaho.xml.sample | \
 	sed s/org.h2.Driver/org.postgresql.Driver/ | \
 	sed s#jdbc:h2:../../../h2database/erpbi#jdbc:postgresql://localhost:5432/erpbi# \
-	> pentaho.xml  2>1 | tee -a $LOG_FILE
+	> pentaho.xml  2>&1 | tee -a $LOG_FILE
 }
 
 run_scripts() {
@@ -168,25 +178,25 @@ run_scripts() {
 	log "######################################################"
 	log ""
 	cdir $BI_DIR/olap-schema
-	mvn install 2>1 | tee -a $LOG_FILE
+	mvn install 2>&1 | tee -a $LOG_FILE
 	java -jar Saxon-HE-9.4.jar -s:src/erpi-sogl-tenant-xtuple.xml -xsl:style.xsl -o:target/erpi-schema.xml
-	mvn process-resources 2>1 | tee -a $LOG_FILE
+	mvn process-resources 2>&1 | tee -a $LOG_FILE
 
 	cdir ../pentaho-extensions/oauthsso
-	mvn clean 2>1 | tee -a $LOG_FILE
-	mvn install 2>1 | tee -a $LOG_FILE
-	mvn process-resources 2>1 | tee -a $LOG_FILE
+	mvn clean 2>&1 | tee -a $LOG_FILE
+	mvn install 2>&1 | tee -a $LOG_FILE
+	mvn process-resources 2>&1 | tee -a $LOG_FILE
 
 	cdir ../dynschema
-	mvn install 2>1 | tee -a $LOG_FILE
-	mvn process-resources 2>1 | tee -a $LOG_FILE
+	mvn install 2>&1 | tee -a $LOG_FILE
+	mvn process-resources 2>&1 | tee -a $LOG_FILE
 
 	cdir ../../etl
-	mvn install 2>1 | tee -a $LOG_FILE
-	mvn process-resources 2>1 | tee -a $LOG_FILE
+	mvn install 2>&1 | tee -a $LOG_FILE
+	mvn process-resources 2>&1 | tee -a $LOG_FILE
 	
 	cdir $XT_DIR/pentaho/report-datasource
-	sh build.sh  2>1 | tee -a $LOG_FILE
+	sh build.sh  2>&1 | tee -a $LOG_FILE
 }
 
 configure_pentaho() {
@@ -198,16 +208,15 @@ configure_pentaho() {
 	log "######################################################"
 	log "######################################################"
 	log ""
-	dropdb -U postgres erpbi
-	createdb -U postgres -O admin erpbi 2>1 | tee -a $LOG_FILE
+	createdb -U postgres -O admin erpbi 2>&1 | tee -a $LOG_FILE
 	cdir $BISERVER_HOME/data-integration
 	export KETTLE_HOME=properties/psg-linux
 	
-	mv $KETTLE_HOME/.kettle/kettle.properties $KETTLE_HOME/.kettle/kettle.properties.sample  2>1 | tee -a $LOG_FILE
+	mv $KETTLE_HOME/.kettle/kettle.properties $KETTLE_HOME/.kettle/kettle.properties.sample  2>&1 | tee -a $LOG_FILE
 	cat $KETTLE_HOME/.kettle/kettle.properties.sample | \
 	sed s'#erpi.source.url=.*#erpi.source.url=jdbc\:postgresql\://localhost\:5432/'$DATABASE'#' | \
 	sed s'#erpi.tenant.id=.*#erpi.tenant.id='$TENANT'.'$DATABASE'#' \
-	> $KETTLE_HOME/.kettle/kettle.properties  2>1 | tee -a $LOG_FILE
+	> $KETTLE_HOME/.kettle/kettle.properties  2>&1 | tee -a $LOG_FILE
 	
 	sh kitchenkh.sh -file=../ErpBI/ETL/JOBS/Load.kjb -level=Basic
 }
@@ -224,16 +233,25 @@ prep_mobile() {
 	log ""
 	mkdir $XT_DIR/node-datasource/lib/rest-keys
 	cdir $XT_DIR/node-datasource/lib/rest-keys
-	openssl genrsa -out server.key 1024 2>1 | tee -a $LOG_FILE
-	openssl rsa -in server.key -pubout > server.pub 2>1 | tee -a $LOG_FILE
-
+	openssl genrsa -out server.key 1024 2>&1 | tee -a $LOG_FILE
+	openssl rsa -in server.key -pubout > server.pub 2>&1 | tee -a $LOG_FILE
+	
+	#
+	# Would be better to get multiline sed working to put commonname in:
+	# biserver: {
+	#    hostname: myname
+	#
+	# Something similar to:
+	#	sed 'N;s#biServer: {\n        hostname:.*#biServer: {\n        hostname: \"'$COMMONNAME'\",#' \
+	
 	cdir $XT_DIR/node-datasource
-	mv config.js config.js.old 2>1 | tee -a $LOG_FILE
+	mv config.js config.js.old 2>&1 | tee -a $LOG_FILE
 	cat config.js.old | \
 	sed 's#biKeyFile: .*#biKeyFile: \"./lib/rest-keys/server.key\",#' | \
 	sed 's#biServerUrl: .*#biServerUrl: \"https://'$COMMONNAME':8443/pentaho/\",#'| \
 	sed 's#uniqueTenantId: .*#uniqueTenantId: \"'$TENANT'",#' | \
-	sed 's#biUrl: .*#biUrl: \"https://'$COMMONNAME':8443/pentaho/content/reporting/reportviewer/report.html\?solution=xtuple\&path=%2Fprpt\&locale=en_US\&userid=reports\&password=password\&output-target=pageable/pdf\",#' \
+	sed 's#biUrl: .*#biUrl: \"https://'$COMMONNAME':8443/pentaho/content/reporting/reportviewer/report.html\?solution=xtuple\&path=%2Fprpt\&locale=en_US\&userid=reports\&password=password\&output-target=pageable/pdf\",#' | \
+	sed 's#biserverhostname#'$COMMONNAME'#' \
 	> config.js
 }
 

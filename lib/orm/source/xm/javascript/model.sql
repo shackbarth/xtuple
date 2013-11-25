@@ -268,4 +268,3 @@ select xt.install_js('XM','Model','xtuple', $$
   };
   
 $$ );
-

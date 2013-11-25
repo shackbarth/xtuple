@@ -8,6 +8,7 @@ Backbone = require("backbone");
 _ = require("underscore");
 jsonpatch = require("json-patch");
 SYS = {};
+XT = { };
 
 (function () {
   "use strict";
@@ -402,12 +403,10 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
 
 
 // Set up the other servers we run on different ports.
-//var unexposedServer = express();
-//unexposedServer.listen(X.options.datasource.maintenancePort);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
-redirectServer.listen(X.options.datasource.redirectPort);
+redirectServer.listen(X.options.datasource.redirectPort,X.options.datasource.bindAddress);
 
 /**
  * Start the express server. This is the NEW way.

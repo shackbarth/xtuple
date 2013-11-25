@@ -25,7 +25,7 @@ trailing:true, white:true*/
       // Look for welcome page and set to what settings say to
       var children = this.$.navigator.$.contentPanels.children,
         welcome = _.findWhere(children, {name: "welcomePage"}),
-        url = XT.session.settings.get("WelcomePage");
+        url = XT.session.settings.get("MobileWelcomePage");
       if (welcome && url) {
         welcome.setAttributes({src: url});
       }

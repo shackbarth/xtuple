@@ -21,6 +21,17 @@ white:true*/
 
     });
 
+    //
+    // Extend invoice defaults so that the default invoice date is today
+    //
+    var defaults = XM.Invoice.prototype.defaults;
+    _.extend(XM.Invoice.prototype, {
+      defaults: function () {
+        var def = defaults.apply(this, arguments);
+        def.orderDate = new Date();
+        return def;
+      }
+    });
   };
 
 }());

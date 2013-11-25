@@ -1059,7 +1059,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
 
             /* Only get this child schema if we don't already have it. */
             if (childOrm && !schemas[childOrm]) {
-              /* Recusing into children. */
+              /* Recursing into children. */
               schemas = XT.extend(schemas, XT.Discovery.getORMSchemas([{ "orm_namespace": "XM", "orm_type": childOrm }]));
             }
           }

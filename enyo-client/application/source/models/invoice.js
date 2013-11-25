@@ -40,8 +40,7 @@ white:true*/
         }
 
         var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
-        model.set("customerPrice", totalPrice);
-        model.set("price", totalPrice);
+        model.set({customerPrice: totalPrice, price: totalPrice});
         model.calculateExtendedPrice();
       };
 
@@ -108,10 +107,15 @@ white:true*/
       subtract = XT.math.subtract,
       subtotals = [],
       taxDetails = [],
+      lineItemTaxDetails = [],
+      adjustmentTaxDetails = [],
       subtotal,
       taxTotal = 0.0,
+      taxModel,
       total,
       taxCodes;
+
+    model.meta.get("taxes").reset([]);
 
     // Collect line item detail
     var forEachLineItemFunction = function (lineItem) {
@@ -120,25 +124,48 @@ white:true*/
 
       subtotals.push(extPrice);
       taxDetails = taxDetails.concat(lineItem.get("taxes").models);
+      lineItemTaxDetails = lineItemTaxDetails.concat(lineItem.get("taxes").models);
     };
 
     // Collect tax adjustment detail
     var forEachTaxAdjustmentFunction = function (taxAdjustment) {
       taxDetails = taxDetails.concat(taxAdjustment);
+      adjustmentTaxDetails = adjustmentTaxDetails.concat(taxAdjustment);
     };
 
     _.each(model.get('lineItems').models, forEachLineItemFunction);
     _.each(model.get('taxAdjustments').models, forEachTaxAdjustmentFunction);
 
+    //
+    // Subtotal the tax detail for presentation in the view layer. The presentation
+    // of the taxes are grouped first by line item / adjustment / freight, as opposed
+    // to the rest of the calculation here which are first grouped by taxCode. So
+    // the calculation has to be separate.
+    //
+    taxCodes = _.groupBy(lineItemTaxDetails, function (detail) {
+      return detail.getValue("taxCode.code");
+    });
+    _.each(taxCodes, function (taxDetails, code) {
+      var subtotal = _.reduce(taxDetails, function (memo, item) {
+        return memo + item.get("amount");
+      }, 0);
+      taxModel = new XM.StaticModel({
+        type: "_lineItems".loc(),
+        code: code,
+        currency: model.get("currency"),
+        amount: subtotal
+      });
+      model.meta.get("taxes").add(taxModel);
+    });
+
     // Total taxes
     // First group amounts by tax code
-    //console.log(JSON.stringify(taxDetails));
     taxCodes = _.groupBy(taxDetails, function (detail) {
       return detail.getValue("taxCode.code");
     });
 
     // Loop through each tax code group and subtotal
-    _.each(taxCodes, function (group) {
+    _.each(taxCodes, function (group, key) {
       var taxes = [],
         subtotal;
 
@@ -160,9 +187,8 @@ white:true*/
     total = add(subtotals, scale);
 
     // Set values
-    model.set("subtotal", subtotal);
-    model.set("taxTotal", taxTotal);
-    model.set("total", total);
+    model.set({subtotal: subtotal, taxTotal: taxTotal, total: total});
+    model.trigger("refreshView", model);
   };
 
 
@@ -205,6 +231,7 @@ white:true*/
       "isVoid",
       "isPrinted",
       "miscCharge",
+      "lineItems",
       "allocatedCredit",
       "authorizedCredit"
     ],
@@ -229,17 +256,24 @@ white:true*/
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on("change:customer", this.customerDidChange);
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
+      this.on("change:invoiceDate add:taxAdjustments", this.setTaxAllocationDate);
       this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
       this.on("change:invoiceDate change:currency", this.calculateAuthorizedCredit);
       this.on("change:invoiceDate add:allocations remove:allocations",
         this.calculateAllocatedCredit);
-      this.on("change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
+      this.on("add:lineItems remove:lineItems change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
       this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
       this.on("change:taxZone", this.recalculateTaxes);
       this.on("change:total change:allocatedCredit change:outstandingCredit",
         this.calculateBalance);
       this.on('allocatedCredit', this.allocatedCreditDidChange);
       this.on('statusChange', this.statusDidChange);
+    },
+
+    initialize: function (attributes, options) {
+      XM.Document.prototype.initialize.apply(this, arguments);
+      this.meta = new Backbone.Model();
+      this.meta.set({taxes: new Backbone.Collection()});
     },
 
     //
@@ -263,22 +297,37 @@ white:true*/
     applyIsPostedRules: function () {
       var isPosted = this.get("isPosted");
 
-      this.setReadOnly("lineItems", isPosted);
-      this.setReadOnly("number", isPosted);
-      this.setReadOnly("invoiceDate", isPosted);
-      this.setReadOnly("terms", isPosted);
-      this.setReadOnly("salesRep", isPosted);
-      this.setReadOnly("commission", isPosted);
-      this.setReadOnly("taxZone", isPosted);
-      this.setReadOnly("saleType", isPosted);
+      this.setReadOnly(["lineItems", "number", "invoiceDate", "terms", "salesRep", "commission",
+        "taxZone", "saleType", "taxAdjustments"], isPosted);
     },
 
+    /**
+      Add up the allocated credit. Only complicated because the reduce has
+      to happen asynchronously due to currency conversion
+    */
     calculateAllocatedCredit: function () {
-      var allocatedCredit = _.reduce(this.get("allocations").models, function (memo, allocation) {
-        // TODO: currency conversion
-        return memo + allocation.get("amount");
-      }, 0);
-      this.set("allocatedCredit", allocatedCredit);
+      var invoiceCurrency = this.get("currency"),
+        that = this,
+        allocationsWithCurrency = _.filter(this.get("allocations").models, function (allo) {
+          return allo.get("currency");
+        }),
+        reduceFunction = function (memo, allocationModel, callback) {
+          allocationModel.get("currency").toCurrency(
+            invoiceCurrency,
+            allocationModel.get("amount"),
+            new Date(),
+            {
+              success: function (targetValue) {
+                callback(null, memo + targetValue);
+              }
+            }
+          );
+        },
+        finish = function (err, totalAllocatedCredit) {
+          that.set("allocatedCredit", totalAllocatedCredit);
+        };
+
+      async.reduce(allocationsWithCurrency, 0, reduceFunction, finish);
     },
 
     calculateAuthorizedCredit: function () {
@@ -407,6 +456,16 @@ white:true*/
     setCurrencyReadOnly: function () {
       var lineItems = this.get("lineItems");
       this.setReadOnly("currency", lineItems.length > 0 || this.get("allocatedCredit"));
+    },
+
+    /**
+      The document date on any misc tax adjustments should be the invoice date
+    */
+    setTaxAllocationDate: function () {
+      var invoiceDate = this.get("invoiceDate");
+      _.each(this.get("taxAdjustments").models, function (taxAdjustment) {
+        taxAdjustment.set({documentDate: invoiceDate});
+      });
     },
 
     statusDidChange: function () {

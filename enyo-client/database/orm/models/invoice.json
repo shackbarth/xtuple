@@ -582,7 +582,7 @@
     "type": "InvoiceTax",
     "table": "invcheadtax",
     "isRest": true,
-    "idSequenceName": "invcheadtax_invcheadtax_id_seq",
+    "idSequenceName": "taxhist_taxhist_id_seq",
     "comment": "Invoice Tax Map",
     "privileges": {
       "all": {
@@ -629,6 +629,45 @@
         "attr": {
           "type": "Money",
           "column": "taxhist_tax"
+        }
+      },
+      {
+        "name": "basis",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_basis",
+          "value": 0
+        }
+      },
+      {
+        "name": "percent",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_percent",
+          "value": 0
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_amount",
+          "value": 0
+        }
+      },
+      {
+        "name": "taxType",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_taxtype_id",
+          "value": 3
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "taxhist_docdate"
         }
       }
     ],

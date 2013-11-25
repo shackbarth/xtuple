@@ -1,5 +1,6 @@
 enyo.depends(
-  "en",
+//  "less/",
+  "en/",
   "core.js",
   "models",
   "views",

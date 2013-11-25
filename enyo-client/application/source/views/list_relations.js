@@ -331,6 +331,73 @@ trailing:true, white:true, strict:false*/
       ]}
     ]
   });
+
+  // ..........................................................
+  // INVOICE TAX
+  // Summarized read-only models of line item taxes
+
+  enyo.kind({
+    name: "XV.InvoiceTaxListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "invoice",
+    orderBy: [
+      {attribute: "uuid"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "type"},
+              {kind: "XV.ListAttr", attr: "code", classes: "right"},
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "amount", formatter: "formatPrice"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ],
+    formatPrice: function (value, view, model) {
+      var currency = model.get("currency"),
+        scale = XT.locale.salesPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    }
+  });
+
+  // ..........................................................
+  // INVOICE TAX ADJUSTMENT
+  //
+
+  enyo.kind({
+    name: "XV.InvoiceTaxAdjustmentListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "invoice",
+    orderBy: [
+      {attribute: "uuid"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "taxCode.code"},
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "amount", formatter: "formatPrice"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ],
+    formatPrice: function (value, view, model) {
+      var parent = model.getParent(),
+        currency = parent ? parent.get("currency") : false,
+        scale = XT.locale.salesPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    }
+  });
+
   // ..........................................................
   // TAX REGISTRATION
   //

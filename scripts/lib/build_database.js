@@ -2,9 +2,9 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true*/
 
+_ = require('underscore');
 
-var _ = require('underscore'),
-  async = require('async'),
+var  async = require('async'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
@@ -520,6 +520,9 @@ var _ = require('underscore'),
 
         "delete from xt.clientcode where clientcode_id in " +
         "(select clientcode_id from xt.clientcode inner join xt.ext on clientcode_ext_id = ext_id where ext_name = $1);",
+
+        "delete from xt.dict where dict_id in " +
+        "(select dict_id from xt.dict inner join xt.ext on dict_ext_id = ext_id where ext_name = $1);",
 
         "delete from xt.extdep where extdep_id in " +
         "(select extdep_id from xt.extdep inner join xt.ext " +
