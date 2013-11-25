@@ -34,7 +34,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     components: [
       {kind: "FittableColumns", components: [
-        {name: "label", content: "", classes: "xv-decorated-label"},
+        {name: "label", content: "", fit: true, classes: "xv-decorated-label"},
         {kind: "onyx.InputDecorator", name: "decorator",
           classes: "xv-input-decorator", components: [
           {name: 'input', kind: "onyx.Input", classes: "xv-subinput",
