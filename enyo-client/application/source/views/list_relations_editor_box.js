@@ -562,12 +562,12 @@ trailing:true, white:true*/
         {kind: "XV.CreditStatusPicker", attr: "completedParentStatus",
           noneText: "_noChange".loc(), label: "_nextStatus".loc()},
         {kind: "XV.DependenciesWidget",
-          attr: {workflow: "parent.workflow", successors: "completedSuccessors"}},
+          attr: {workflow: "parent.workflow", successors: "completedSuccessors", parentId: "id"}},
         {kind: "onyx.GroupboxHeader", content: "_onDeferred".loc()},
         {kind: "XV.CreditStatusPicker", attr: "deferredParentStatus",
           noneText: "_noChange".loc(), label: "_nextStatus".loc()},
         {kind: "XV.DependenciesWidget",
-          attr: {workflow: "parent.workflow", successors: "deferredSuccessors"}},
+          attr: {workflow: "parent.workflow", successors: "deferredSuccessors", parentId: "id"}},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
         {kind: "XV.TextArea", attr: "notes", fit: true}
       ]}
