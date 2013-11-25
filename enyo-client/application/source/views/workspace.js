@@ -2115,7 +2115,6 @@ strict: false*/
           ]}
         ]},
         {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
-        {kind: "FittableRows", title: "_workflow".loc(), name: "workflowPanel"},
         {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
@@ -2140,6 +2139,7 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
+        {kind: "FittableRows", title: "_workflow".loc(), name: "workflowPanel"},
         {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
           attr: "comments"},
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
