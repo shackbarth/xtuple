@@ -2,7 +2,7 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true */
 
-if (typeof XT === 'un`fined') {
+if (typeof XT === 'undefined') {
   XT = {};
 }
 
