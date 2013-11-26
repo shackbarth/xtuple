@@ -752,5 +752,48 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ShareUsers",
+    "table": "xt.share_users",
+    "comment": "List which users have personal privilege access to a resource based on what CRM Account it belongs to or share access grants.",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "MaintainUsers",
+        "update": false,
+        "delete": false
+      },
+      "personal":{
+        "create": false,
+        "read":"ViewPersonalCRMAccounts",
+        "update": false,
+        "delete": false,
+        "properties":[
+          "username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "username",
+          "isNaturalKey": true
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]

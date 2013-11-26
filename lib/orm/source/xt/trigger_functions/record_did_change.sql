@@ -2,8 +2,8 @@ create or replace function xt.record_did_change() returns trigger as $$
 /* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple.
    See www.xtuple.com/CPAL for the full text of the software license. */
 
-  if (typeof XT === 'undefined') { 
-    plv8.execute("select xt.js_init();"); 
+  if (typeof XT === 'undefined') {
+    plv8.execute("select xt.js_init();");
   }
 
  var data = Object.create(XT.Data),
@@ -57,14 +57,19 @@ create or replace function xt.record_did_change() returns trigger as $$
      plv8.execute(sql, [oid, NEW[pkey], XT.generateUUID()]);
 
      /* Add the user that's creating this record to the xt.obj_share. */
-     sourceCode = plv8.execute('select xt.get_source_code($1);', [pkey])[0].get_source_code;
-     if (sourceCode) {
-       shareSql = 'insert into xt.obj_share (obj_share_target_id, obj_share_type, obj_share_user) values ($1, $2, $3);'
+     if (NEW.obj_uuid) {
+       /* TODO: Should they get update and delete access? */
+       shareSql = 'insert into xt.obj_share (obj_share_target_uuid, obj_share_username, obj_share_read) values ($1, $2, $3);'
        shareParams = [
-         NEW[pkey],
-         sourceCode,
-         XT.username
+         NEW.obj_uuid,
+         XT.username,
+         true
        ];
+
+       if (DEBUG) {
+         XT.debug('Record Insert user share sql =', shareSql);
+         XT.debug('Record Insert user share values =', shareParams);
+       }
 
        plv8.execute(shareSql, shareParams);
      }
