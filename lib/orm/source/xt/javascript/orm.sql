@@ -322,7 +322,7 @@ select xt.install_js('XT','Orm','xtuple', $$
     }
     if (DEBUG) {
       /*
-      XT.debug('result count = ', [res.length]); 
+      XT.debug('result count = ', [res.length]);
       */
       XT.debug('result count = ', [res.length]);
     }
@@ -343,7 +343,7 @@ select xt.install_js('XT','Orm','xtuple', $$
 
     if (DEBUG) {
       /*
-      XT.debug('props = ', ret.properties.map(function (prop) {return prop.name})); 
+      XT.debug('props = ', ret.properties.map(function (prop) {return prop.name}));
       */
     }
     return ret;
@@ -566,7 +566,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                 }
 
                 /* looks good. add the column, add inheritance and unique constraint */
-                query = "alter table {table} add column obj_uuid text default xt.generate_uuid();";
+                query = "alter table {table} add column obj_uuid uuid default xt.uuid_generate_v4();";
                 query = query.replace("{table}", orm.table);
 
                 if (DEBUG) {

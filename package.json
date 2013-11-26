@@ -37,7 +37,7 @@
     "socket.io": "0.9.x",
     "underscore": "1.4.x",
     "winston": "0.7.x",
-    "xml4js": "git://github.com/rpbouman/xmla4js.git"
+    "xmla4js": "git://github.com/rpbouman/xmla4js.git"
   },
   "devDependencies": {
     "chai": "1.5.x",
@@ -54,8 +54,8 @@
   },
   "main": "node-datasource/main.js",
   "scripts": {
-    "test-build": "./node_modules/.bin/mocha -R spec test/mocha/build/build_app.js",
-    "test": "./node_modules/.bin/mocha -R spec test/mocha/lib/login.js test/mocha/models/* test/mocha/database/* test/mocha/extensions/* test/mocha/lib/test_runner.js",
-    "test-datasource": "./node_modules/.bin/mocha -R spec test/mocha/routes/*"
+    "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
+    "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
+    "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*"
   }
 }

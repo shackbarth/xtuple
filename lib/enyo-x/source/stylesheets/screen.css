@@ -2711,13 +2711,15 @@ body {
 }
 .xv-label,
 .xv-decorated-label {
-  width: 130px;
   padding: 8px;
   text-align: right;
 }
 .xv-label.disabled,
 .xv-decorated-label.disabled {
   color: #696969;
+}
+.xv-label {
+  width: 130px;
 }
 .xv-short-textarea .xv-textarea-input {
   min-height: 0;

@@ -216,7 +216,7 @@ select xt.install_js('XM','Sales','xtuple', $$
     if(!data.checkPrivilege('ConfigureSO')) throw new Error('Access Denied');
 
     /* Compose our commit settings by applying the patch to what we already have */
-    settings = JSON.parse(XM.Sales.settings());
+    settings = XM.Sales.settings();
     if (!XT.jsonpatch.apply(settings, patches)) {
       plv8.elog(NOTICE, 'Malformed patch document');
     }

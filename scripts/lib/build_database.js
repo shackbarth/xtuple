@@ -521,6 +521,9 @@ var  async = require('async'),
         "delete from xt.clientcode where clientcode_id in " +
         "(select clientcode_id from xt.clientcode inner join xt.ext on clientcode_ext_id = ext_id where ext_name = $1);",
 
+        "delete from xt.dict where dict_id in " +
+        "(select dict_id from xt.dict inner join xt.ext on dict_ext_id = ext_id where ext_name = $1);",
+
         "delete from xt.extdep where extdep_id in " +
         "(select extdep_id from xt.extdep inner join xt.ext " +
         "on extdep_from_ext_id = ext_id or extdep_to_ext_id = ext_id where ext_name = $1);",
