@@ -1,7 +1,7 @@
 select xt.create_view('xt.receivable_invoice_return', $$
 
   select aropen_id as id,
-    obj_uuid as uuid,
+    obj_uuid::text as uuid,
     aropen_doctype as document_type,
     aropen_docnumber as document_number,
     TRUE as posted, -- as the QT client does!

@@ -614,6 +614,13 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
+        }
+      },
+      {
         "name": "workflow",
         "toMany": {
           "isNested": true,

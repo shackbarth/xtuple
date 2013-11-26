@@ -10,13 +10,11 @@
    data = {
     recordType: "XM.TaxAssignment",
     autoTestAttributes: true,
+    skipUpdate: true,
     createHash: {
       tax: {code: "VATAX-A"},
       taxZone: {code: "GA TAX"},
       taxType: {name: "Adjustment"}
-    },
-    updateHash: {
-      uuid: "1234"
     }
   };
 
