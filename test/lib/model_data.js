@@ -57,15 +57,13 @@ Here's how you can use CRUD to create a model to use for your own tests:
   var quote = exports.quote = {
     calculateFreight: true,
     customer: { number: "TTOYS" },
-    terms: { code: "2-10N30" },
-    salesRep: { number: "1000" },
+    terms: { code: "2-10N30" }
   };
 
   var salesOrder = exports.salesOrder = {
     calculateFreight: true,
     customer: { number: "TTOYS" },
     terms: { code: "2-10N30" },
-    salesRep: { number: "1000" },
     wasQuote: true
   };
 
