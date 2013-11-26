@@ -551,6 +551,17 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // SALES EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.SalesEmailProfilePicker",
+    kind: "XV.PickerWidget",
+    label: "_emailProfile".loc(),
+    collection: "XM.salesEmailProfiles"
+  });
+
+  // ..........................................................
   // SALES REP
   //
 

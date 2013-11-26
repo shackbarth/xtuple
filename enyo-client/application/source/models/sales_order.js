@@ -43,6 +43,12 @@ white:true*/
 
     documentDateKey: "orderDate",
 
+    bindEvents: function () {
+      XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
+      var pricePolicy = XT.session.settings.get("soPriceEffective");
+      this.on('change:holdType', this.holdTypeDidChange);
+    },
+
     /**
       Add default for wasQuote.
      */
@@ -65,6 +71,25 @@ white:true*/
       }
     },
 
+    holdTypeDidChange: function () {
+      if (!this.get("holdType")) {
+        _.each(this.get("workflow").where(
+            {workflowType: XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK}),
+            function (workflow) {
+
+          workflow.set({status: XM.Workflow.COMPLETED});
+        });
+      }
+    },
+
+    saleTypeDidChange: function () {
+      this.inheritWorkflowSource(this.get("saleType"), "XM.SalesOrderCharacteristic",
+        "XM.SalesOrderWorkflow");
+      if (!this.get("holdType")) {
+        this.set({holdType: this.getValue("saleType.defaultHoldType")});
+      }
+    },
+
     validate: function () {
       var creditStatus = _checkCredit.call(this);
       if (creditStatus === CREDIT_WARN) {
@@ -76,6 +101,7 @@ white:true*/
       return XM.SalesOrderBase.prototype.validate.apply(this, arguments);
     }
   });
+  _.extend(XM.SalesOrder.prototype, XM.WorkflowMixin);
 
   // ..........................................................
   // CLASS METHODS
@@ -195,6 +221,37 @@ white:true*/
 
     isDocumentAssignment: true
 
+  });
+
+  /**
+    @class
+
+    @extends XM.CharacteristicAssignment
+  */
+  XM.SalesOrderCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.SalesOrderCharacteristic.prototype */{
+
+    recordType: 'XM.SalesOrderCharacteristic',
+
+    which: 'isSalesOrders'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Workflow
+  */
+  XM.SalesOrderWorkflow = XM.Workflow.extend(
+    /** @scope XM.SalesOrderWorkflow.prototype */ {
+
+    recordType: 'XM.SalesOrderWorkflow'
+
+  });
+  _.extend(XM.SalesOrderWorkflow, /** @lends XM.SalesOrderLine# */{
+
+    TYPE_OTHER: "O",
+
+    TYPE_CREDIT_CHECK: "C",
   });
 
   /**

@@ -195,4 +195,26 @@ white:true*/
     }
   });
 
+  // ..........................................................
+  // SALE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SaleTypeCharacteristicsWidget",
+    kind: "XV.CharacteristicsWidget",
+    model: "XM.SaleTypeCharacteristic",
+    which: "isSalesOrders" // not a bug
+  });
+
+  // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderCharacteristicsWidget",
+    kind: "XV.CharacteristicsWidget",
+    model: "XM.SalesOrderCharacteristic",
+    which: "isSalesOrders"
+  });
+
 }());

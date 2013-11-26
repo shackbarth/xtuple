@@ -13,6 +13,7 @@ white:true*/
     XT.cacheCollection("XM.freightClasses", "XM.FreightClassCollection", "code");
     XT.cacheCollection("XM.plannerCodes", "XM.PlannerCodeCollection", "code");
     XT.cacheCollection("XM.productCategories", "XM.ProductCategoryCollection");
+    XT.cacheCollection("XM.salesEmailProfiles", "XM.SalesEmailProfileCollection");
     XT.cacheCollection("XM.salesReps", "XM.SalesRepCollection");
     XT.cacheCollection("XM.saleTypes", "XM.SaleTypeCollection", "code");
     XT.cacheCollection("XM.shipCharges", "XM.ShipChargeCollection");

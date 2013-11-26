@@ -150,4 +150,59 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     parentKey: "quote"
   });
 
+  // ..........................................................
+  // WORKFLOW GRID BOX
+  //
+
+  enyo.kind({
+    name: "XV.WorkflowGridBox",
+    kind: "XV.GridBox",
+    classes: "small-panel",
+    title: "_workflow".loc(),
+    columns: [
+      {classes: "grid-item", header: ["_name".loc(), "_description".loc()],
+        rows: [
+        {readOnlyAttr: "name",
+          editor: {kind: "XV.InputWidget", attr: "name",
+            placeholder: "_name".loc()}},
+        {readOnlyAttr: "description",
+          editor: {kind: "XV.InputWidget", attr: "description",
+            placeholder: "_description".loc()}},
+        {readOnlyAttr: "getWorkflowStatusString",
+          editor: {kind: "XV.WorkflowStatusPicker", attr: "status"}}
+      ]},
+      {classes: "user", header: ["_owner".loc(), "_assignedTo".loc()],
+        rows: [
+        {readOnlyAttr: "owner.username",
+          editor: {kind: "XV.UserAccountWidget", attr: "owner"}},
+        {readOnlyAttr: "assignedTo.username",
+          editor: {kind: "XV.UserAccountWidget", attr: "assignedTo"}},
+        {readOnlyAttr: "priority.name",
+          editor: {kind: "XV.PriorityPicker", attr: "priority"}}
+      ]},
+      {classes: "date", header: ["_start".loc(), "_due".loc()],
+        rows: [
+        {readOnlyAttr: "startDate",
+          placeholder: "_noStartDate".loc(),
+          editor: {kind: "XV.DateWidget", attr: "startDate"}},
+        {readOnlyAttr: "dueDate",
+          editor: {kind: "XV.DateWidget", attr: "dueDate"}}
+      ]},
+      {classes: "date", header: ["_assigned".loc(), "_completed".loc()],
+        rows: [
+        {readOnlyAttr: "assignDate",
+          placeholder: "_noAssignDate".loc(),
+          editor: {kind: "XV.DateWidget", attr: "assignDate"}},
+        {readOnlyAttr: "completeDate",
+          placeholder: "_noCompleteDate".loc(),
+          editor: {kind: "XV.DateWidget", attr: "completeDate"}}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkflowGridBox",
+    kind: "XV.WorkflowGridBox",
+    workspace: "XV.SalesOrderWorkflowWorkspace"
+  });
 }());

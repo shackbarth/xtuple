@@ -143,6 +143,30 @@ select
 from xt.prjwf wf
   join prj on prj_id=wf_parent_id
   join pg_class c on wf.tableoid = c.oid
+  join xt.acttype on acttype_tblname=relname
+
+-- SALES ORDER WORKFLOW
+
+union all
+select 
+  wf.obj_uuid as act_uuid,
+  cohead_number as act_editor_key,
+  acttype_code as act_type,
+  wf_name as act_name,
+  wf_status not in ('C','D') as act_active,
+  wf_status as act_status,
+  wf_priority_id as act_priority_id,
+  wf_description as act_description,
+  wf_owner_username as act_owner_username,
+  wf_assigned_username as act_assigned_username,
+  wf_start_date as act_start_date,
+  wf_due_date as act_due_date,
+  wf_assigned_date as act_assigned_date,
+  wf_completed_date as act_completed_date,
+  cohead.obj_uuid as act_parent_uuid
+from xt.coheadwf wf
+  join cohead on cohead_id=wf_parent_id
+  join pg_class c on wf.tableoid = c.oid
   join xt.acttype on acttype_tblname=relname;
 
 $$, true);

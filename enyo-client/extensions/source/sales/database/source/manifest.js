@@ -2,6 +2,8 @@
   "name": "sales",
   "comment": "Sales extension",
   "loadOrder": 20,
-  "databaseScripts": []
+  "databaseScripts": [
+    "xt/tables/acttype.sql"
+  ]
 }
 
