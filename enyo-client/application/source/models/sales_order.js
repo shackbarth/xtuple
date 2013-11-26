@@ -43,7 +43,6 @@ white:true*/
 
     documentDateKey: "orderDate",
 
-
     bindEvents: function () {
       XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
       var pricePolicy = XT.session.settings.get("soPriceEffective");
