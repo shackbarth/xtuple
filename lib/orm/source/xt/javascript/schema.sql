@@ -253,6 +253,10 @@ select xt.install_js('XT','Schema','xtuple', $$
         case "USER-DEFINED":
           ret[res[i].column_name].type = "string";
           break;
+        case "uuid":
+          ret[res[i].column_name].type = "string";
+          ret[res[i].column_name].format = "uuid";
+          break;
         default:
           throw new Error("Unsupported datatype format. No known conversion from PostgreSQL to JSON-Schema.");
       }
