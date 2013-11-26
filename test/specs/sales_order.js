@@ -135,7 +135,6 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       calculateFreight: true,
       customer: { number: "TTOYS" },
       terms: { code: "2-10N30" },
-      salesRep: { number: "1000" },
       wasQuote: true
     },
     //
