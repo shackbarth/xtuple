@@ -37,7 +37,7 @@
     "socket.io": "0.9.x",
     "underscore": "1.4.x",
     "winston": "0.7.x",
-    "xml4js": "git://github.com/rpbouman/xmla4js.git"
+    "xmla4js": "git://github.com/rpbouman/xmla4js.git"
   },
   "devDependencies": {
     "chai": "1.5.x",

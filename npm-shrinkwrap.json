@@ -130,6 +130,46 @@
       "from": "json-patch@git://github.com/xtuple/JSON-Patch.git",
       "resolved": "git://github.com/xtuple/JSON-Patch.git#eb69a78f6d041b2f630a9747a5b227c42c8df077"
     },
+    "less": {
+      "version": "1.5.0",
+      "from": "less@1.5.0",
+      "dependencies": {
+        "mime": {
+          "version": "1.2.11",
+          "from": "mime@~1.2.7"
+        },
+        "mkdirp": {
+          "version": "0.3.5",
+          "from": "mkdirp@~0.3.4"
+        },
+        "clean-css": {
+          "version": "1.0.12",
+          "from": "clean-css@1.0.x",
+          "dependencies": {
+            "commander": {
+              "version": "1.3.2",
+              "from": "commander@1.3.x",
+              "dependencies": {
+                "keypress": {
+                  "version": "0.1.0",
+                  "from": "keypress@0.1.x"
+                }
+              }
+            }
+          }
+        },
+        "source-map": {
+          "version": "0.1.31",
+          "from": "source-map@0.1.x",
+          "dependencies": {
+            "amdefine": {
+              "version": "0.1.0",
+              "from": "amdefine@>=0.0.4"
+            }
+          }
+        }
+      }
+    },
     "moment": {
       "version": "2.4.0",
       "from": "moment@2.4.x"
@@ -579,6 +619,69 @@
       "from": "xml4js@git://github.com/rpbouman/xmla4js.git",
       "resolved": "git://github.com/rpbouman/xmla4js.git#cbfd568b4858c99f493e182722a12bed20bdee95"
     },
+    "require-uncache": {
+      "version": "0.0.2",
+      "from": "require-uncache@0.0.x"
+    },
+    "chai": {
+      "version": "1.5.0",
+      "from": "chai@1.5.x"
+    },
+    "vows": {
+      "version": "0.7.0",
+      "from": "vows@0.7.x",
+      "dependencies": {
+        "eyes": {
+          "version": "0.1.8",
+          "from": "eyes@>=0.1.6"
+        },
+        "diff": {
+          "version": "1.0.7",
+          "from": "diff@~1.0.3"
+        }
+      }
+    },
+    "mocha": {
+      "version": "1.9.0",
+      "from": "mocha@1.9.x",
+      "dependencies": {
+        "commander": {
+          "version": "0.6.1",
+          "from": "commander@0.6.1",
+          "resolved": "https://registry.npmjs.org/commander/-/commander-0.6.1.tgz"
+        },
+        "growl": {
+          "version": "1.7.0",
+          "from": "growl@1.7.x"
+        },
+        "jade": {
+          "version": "0.26.3",
+          "from": "jade@0.26.3",
+          "dependencies": {
+            "mkdirp": {
+              "version": "0.3.0",
+              "from": "mkdirp@0.3.0"
+            }
+          }
+        },
+        "diff": {
+          "version": "1.0.2",
+          "from": "diff@1.0.2"
+        },
+        "debug": {
+          "version": "0.7.4",
+          "from": "debug@*"
+        },
+        "mkdirp": {
+          "version": "0.3.3",
+          "from": "mkdirp@0.3.3"
+        },
+        "ms": {
+          "version": "0.3.0",
+          "from": "ms@0.3.0"
+        }
+      }
+    },
     "zombie": {
       "version": "1.4.1",
       "from": "zombie@1.4.x",
@@ -602,7 +705,7 @@
             },
             "cssstyle": {
               "version": "0.2.3",
-              "from": "cssstyle@0.2.3"
+              "from": "cssstyle@>=0.2.3"
             },
             "contextify": {
               "version": "0.1.6",
@@ -664,6 +767,74 @@
               "from": "options@>=0.0.5"
             }
           }
+        }
+      }
+    },
+    "html5": {
+      "version": "0.3.13",
+      "from": "html5@0.3.13",
+      "dependencies": {
+        "jsdom": {
+          "version": "0.8.8",
+          "from": "jsdom@>= 0.6.0",
+          "dependencies": {
+            "htmlparser2": {
+              "version": "3.3.0",
+              "from": "htmlparser2@>= 3.1.5 <4",
+              "dependencies": {
+                "domhandler": {
+                  "version": "2.1.0",
+                  "from": "domhandler@2.1"
+                },
+                "domutils": {
+                  "version": "1.1.6",
+                  "from": "domutils@1.1"
+                },
+                "domelementtype": {
+                  "version": "1.1.1",
+                  "from": "domelementtype@1"
+                },
+                "readable-stream": {
+                  "version": "1.0.17",
+                  "from": "readable-stream@1.0"
+                }
+              }
+            },
+            "nwmatcher": {
+              "version": "1.3.1",
+              "from": "nwmatcher@~1.3.1"
+            },
+            "xmlhttprequest": {
+              "version": "1.6.0",
+              "from": "xmlhttprequest@>=1.5.0"
+            },
+            "cssom": {
+              "version": "0.2.5",
+              "from": "cssom@~0.2.5"
+            },
+            "cssstyle": {
+              "version": "0.2.3",
+              "from": "cssstyle@~0.2.3"
+            },
+            "contextify": {
+              "version": "0.1.6",
+              "from": "contextify@~0.1.5",
+              "dependencies": {
+                "bindings": {
+                  "version": "1.1.1",
+                  "from": "bindings@*"
+                }
+              }
+            }
+          }
+        },
+        "opts": {
+          "version": "1.2.2",
+          "from": "opts@~1.2.1"
+        },
+        "html5-entities": {
+          "version": "0.5.0",
+          "from": "html5-entities@~0.5.0"
         }
       }
     }
