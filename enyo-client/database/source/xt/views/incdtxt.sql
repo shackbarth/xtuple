@@ -23,7 +23,7 @@ $$ language plv8;
 revoke all on xt.incdtxt from public;
 grant all on table xt.incdtxt to group xtrole;
 
-create or replace rule "_INSERT" as on insert to xt.incdtxt do instead 
+create or replace rule "_INSERT" as on insert to xt.incdtxt do instead
 
 insert into incdt (
   incdt_id,
@@ -70,7 +70,7 @@ insert into incdt (
   coalesce(new.incdt_updated, now()),
   new.incdt_prj_id,
   new.incdt_public,
-  coalesce(new.obj_uuid, xt.generate_uuid())
+  coalesce(new.obj_uuid, xt.uuid_generate_v4())
 );
 
 create or replace rule "_UPDATE" as on update to xt.incdtxt do instead

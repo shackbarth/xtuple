@@ -612,6 +612,13 @@
           "column": "cohead_id",
           "inverse": "source"
         }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
+        }
       }
     ],
     "isSystem": true
