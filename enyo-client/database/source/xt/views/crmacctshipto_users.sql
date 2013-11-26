@@ -24,15 +24,6 @@ FROM (
   LEFT JOIN xt.crmacct_users USING (crmacct_id)
   WHERE 1=1
     AND username IS NOT NULL
-
-  -- Shared access grants.
-  UNION
-  SELECT
-    obj_share_target_id AS shipto_id,
-    obj_share_user AS username
-  FROM xt.obj_share
-  WHERE 1=1
-    AND obj_share_type = 'SHP'
 ) shipto_users
 
 GROUP BY shipto_id;

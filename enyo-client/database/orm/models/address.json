@@ -22,7 +22,7 @@
         "update":"MaintainPersonalCRMAccounts",
         "delete":"MaintainPersonalCRMAccounts",
         "properties":[
-          "crmaccountUsers.crmacctUsernames"
+          "crmaccountUsers"
         ]
       },
       "attribute": {
@@ -133,11 +133,10 @@
       },
       {
         "name": "crmaccountUsers",
-        "toOne": {
-          "isNested": true,
-          "type": "AccountAddressUsers",
-          "column": "addr_id",
-          "inverse": "id"
+        "toMany": {
+          "type": "ShareUsers",
+          "column": "obj_uuid",
+          "inverse": "uuid"
         }
       }
     ],
