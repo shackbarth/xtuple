@@ -46,8 +46,6 @@ white:true*/
     bindEvents: function () {
       XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
       var pricePolicy = XT.session.settings.get("soPriceEffective");
-      // TODO: reimplement in inventory
-      //this.on('change:packDate', this.packDateDidChange);
       this.on('change:holdType', this.holdTypeDidChange);
     },
 
@@ -82,16 +80,7 @@ white:true*/
           workflow.set({status: XM.Workflow.COMPLETED});
         });
       }
-      // TODO: reimplement in inventory
-      //this.updateWorkflowItemPackDate();
     },
-
-    /*
-    TODO: reimplement in inventory
-    packDateDidChange: function () {
-      this.updateWorkflowItemPackDate();
-    },
-    */
 
     saleTypeDidChange: function () {
       this.inheritWorkflowSource(this.get("saleType"), "XM.SalesOrderCharacteristic",
@@ -99,33 +88,7 @@ white:true*/
       if (!this.get("holdType")) {
         this.set({holdType: this.getValue("saleType.defaultHoldType")});
       }
-      // TODO: reimplement in inventory
-      //this.updateWorkflowItemPackDate();
-      //this.updateWorkflowItemShipDate();
     },
-
-    /*
-    TODO: reimplement in inventory
-    updateWorkflowItemPackDate: function () {
-      var that = this;
-
-      _.each(this.get("workflow").where(
-          {workflowType: XM.SalesOrderWorkflow.TYPE_PACK}),
-          function (workflow) {
-        workflow.set({dueDate: that.get("packDate")});
-      });
-    },
-
-    updateWorkflowItemShipDate: function () {
-      var that = this;
-
-      _.each(this.get("workflow").where(
-          {workflowType: XM.SalesOrderWorkflow.TYPE_SHIP}),
-          function (workflow) {
-        workflow.set({dueDate: that.get("scheduleDate")});
-      });
-    },
-    */
 
     validate: function () {
       var creditStatus = _checkCredit.call(this);
@@ -289,12 +252,6 @@ white:true*/
     TYPE_OTHER: "O",
 
     TYPE_CREDIT_CHECK: "C",
-
-    //  TODO: reimplement in inventory
-    //TYPE_PACK: "P",
-
-    //TYPE_SHIP: "S"
-
   });
 
   /**

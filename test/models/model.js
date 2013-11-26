@@ -122,6 +122,17 @@
       assert.include(model.myCount, 15);
     });
 
+    it('should error on illegal augmentation', function () {
+      try {
+        XM.TestModel.augment({
+          myCount: 99
+        });
+        assert.fail("Illegal augmentation should not be allowed");
+      } catch (error) {
+        assert.isObject(error);
+      }
+    });
+
 
   });
 }());
