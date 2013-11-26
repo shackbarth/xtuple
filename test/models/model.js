@@ -68,7 +68,7 @@
     });
 
     it('should add new fields', function () {
-      XM.TestModel.augment({
+      XM.TestModel.prototype.augment({
         myNewThing: "GREAT"
       });
 
@@ -78,7 +78,7 @@
 
     it('should error on type mismatches', function () {
       try {
-        XM.TestModel.augment({
+        XM.TestModel.prototype.augment({
           myHash: "GREAT"
         });
         assert.fail("Type mismatches should not be allowed");
@@ -88,7 +88,7 @@
     });
 
     it('should mix in objects', function () {
-      XM.TestModel.augment({
+      XM.TestModel.prototype.augment({
         myHash: {
           bar: 5
         }
@@ -100,7 +100,7 @@
     });
 
     it('should union arrays', function () {
-      XM.TestModel.augment({
+      XM.TestModel.prototype.augment({
         myArray: [7]
       });
 
@@ -112,19 +112,22 @@
     });
 
     it('should run the old function and then the new', function () {
-      XM.TestModel.augment({
+      XM.TestModel.prototype.augment({
         myIncrementer: function () {
           this.myCount *= 3;
         }
       });
 
+      var a = new XM.TestModel();
+      a.myIncrementer();
       var model = new XM.TestModel();
-      assert.include(model.myCount, 15);
+      model.myIncrementer();
+      assert.equal(model.myCount, 18);
     });
 
     it('should error on illegal augmentation', function () {
       try {
-        XM.TestModel.augment({
+        XM.TestModel.prototype.augment({
           myCount: 99
         });
         assert.fail("Illegal augmentation should not be allowed");
