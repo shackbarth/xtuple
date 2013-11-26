@@ -13,7 +13,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     assert = require("chai").assert;
 
   //
-  // More complicated business logic for quote and sales order saving
+  // Complicated business logic for quote and sales order saving
   //
   var primeSubmodels = function (done) {
     var submodels = {};

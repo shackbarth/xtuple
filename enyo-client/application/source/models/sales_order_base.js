@@ -399,6 +399,11 @@ white:true*/
       } else if (pricePolicy === "ScheduleDate") {
         this.requiredAttributes.push("scheduleDate");
       }
+
+      if (this.saleTypeDidChange) {
+        // inherit sale type defaults up front
+        this.saleTypeDidChange();
+      }
     },
 
     /**
