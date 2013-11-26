@@ -83,7 +83,18 @@
         });
         assert.fail("Type mismatches should not be allowed");
       } catch (error) {
-        assert.isObject(error);
+        assert.notEqual(error.actual, "Type mismatches should not be allowed");
+      }
+    });
+
+    it('should error if you are stomping an object value', function () {
+      try {
+        XM.TestModel.prototype.augment({
+          myHash: {foo: 19}
+        });
+        assert.fail("Do not allow this stomp");
+      } catch (error) {
+        assert.notEqual(error.actual, "Do not allow this stomp");
       }
     });
 
@@ -132,7 +143,7 @@
         });
         assert.fail("Illegal augmentation should not be allowed");
       } catch (error) {
-        assert.isObject(error);
+        assert.notEqual(error.actual, "Illegal augmentation should not be allowed");
       }
     });
 
