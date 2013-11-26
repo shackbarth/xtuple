@@ -81,6 +81,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
     @returns Array with no duplicates.
   */
+  /* TODO: Or add underscore.js support. */
   Array.prototype.unique = function () {
     var a = this.concat();
     for(var i=0; i<a.length; ++i) {
