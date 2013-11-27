@@ -625,7 +625,7 @@
         "toMany": {
           "isNested": true,
           "type": "SalesOrderWorkflow",
-          "column": "cohead_id",
+          "column": "obj_uuid",
           "inverse": "parent"
         }
       },
@@ -667,7 +667,7 @@
       {
         "name": "parent",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "wf_parent_uuid",
           "isNaturalKey": true
         }
