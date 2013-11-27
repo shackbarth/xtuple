@@ -23,14 +23,12 @@ select xt.add_column('wf','wf_deferred_successors', 'text');
 
 comment on table xt.wf is 'Workflow extension table';
 
--- once migration is done we can drop the column
--- TODO
---alter table xt.wf drop column if exists wf_parent_id cascade
-
-
--- migrate from previous implementation (for 1.5.1)
-update xt.wf 
-set wf_parent_uuid = prj.obj_uuid 
-from prj 
-where wf_parent_id = prj_id
-and wf_parent_uuid is null;
+DO $$
+  /* Migrate from previous implementation (for 1.5.1) */  
+  try {
+    plv8.execute("update xt.wf set wf_parent_uuid = prj.obj_uuid from prj " +
+      "where wf_parent_id = prj_id and wf_parent_uuid is null;");
+    plv8.execute("alter table xt.wf drop column if exists wf_parent_id cascade");
+  } catch (error) {
+  }
+$$ language plv8;
