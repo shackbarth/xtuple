@@ -304,49 +304,6 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "AccountAddressUsers",
-    "table": "xt.crmacctaddr_users",
-    "comment": "List which users have personal privilege access to an address based on what CRM Account it belongs to.",
-    "privileges": {
-      "all": {
-        "create": false,
-        "read": "ViewAddresses",
-        "update": false,
-        "delete": false
-      },
-      "personal":{
-        "create": false,
-        "read":"ViewPersonalCRMAccounts",
-        "update": false,
-        "delete": false,
-        "properties":[
-          "crmacctUsernames"
-        ]
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "addr_id",
-          "isPrimaryKey": true,
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "crmacctUsernames",
-        "attr": {
-          "type": "Array",
-          "column": "crmacct_usernames"
-        }
-      }
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
     "type": "AddressInfo",
     "table": "addr",
     "isRest": true,

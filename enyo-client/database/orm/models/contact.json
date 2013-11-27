@@ -264,49 +264,6 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "AccountContactUsers",
-    "table": "xt.crmacctcntct_users",
-    "comment": "List which users have personal privilege access to a contact based on what CRM Account it belongs to.",
-    "privileges": {
-      "all": {
-        "create": false,
-        "read": "ViewAllContacts",
-        "update": false,
-        "delete": false
-      },
-      "personal":{
-        "create": false,
-        "read":"ViewPersonalCRMAccounts",
-        "update": false,
-        "delete": false,
-        "properties":[
-          "crmacctUsernames"
-        ]
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "cntct_id",
-          "isPrimaryKey": true,
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "crmacctUsernames",
-        "attr": {
-          "type": "Array",
-          "column": "crmacct_usernames"
-        }
-      }
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
     "type": "ContactInfo",
     "table": "cntct",
     "isRest": true,
