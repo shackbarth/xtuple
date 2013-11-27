@@ -152,13 +152,15 @@ require:true, __dirname:true, console:true */
         //
         // Make sure we're testing the enforceUpperCase (the asserts themselves are in CRUD)
         //
-        it((spec.enforceUpperKey ? "Enforces" : "Does not enforce") + " uppercasing the key", function () {
-          assert.equal(spec.model.enforceUpperKey, spec.enforceUpperKey);
-        });
-        if (!_.isBoolean(spec.enforceUpperKey)) {
-          it("has its enforceUpperKey convention defined in the test spec", function () {
-            assert.fail();
+        if (spec.enforceUpperKey) {
+          it((spec.enforceUpperKey ? "Enforces" : "Does not enforce") + " uppercasing the key", function () {
+            assert.equal(spec.model.enforceUpperKey, spec.enforceUpperKey);
           });
+          if (!_.isBoolean(spec.enforceUpperKey)) {
+            it("has its enforceUpperKey convention defined in the test spec", function () {
+              assert.fail();
+            });
+          }
         }
 
         //
