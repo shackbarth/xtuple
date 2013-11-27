@@ -801,8 +801,7 @@
         "name": "parent",
         "attr": {
           "type": "String",
-          "column": "wf_parent_uuid",
-          "isNaturalKey": true
+          "column": "wf_parent_uuid"
         }
       },
       {

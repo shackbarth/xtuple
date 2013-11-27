@@ -548,11 +548,12 @@ select xt.install_js('XT','Data','xtuple', $$
     commitArrays: function (orm, record, encryptionKey) {
       var pkey = XT.Orm.primaryKey(orm),
         fkey,
-        id = record[pkey],
         ormp,
         prop,
         val,
-        values;
+        values,
+        columnToKey,
+        propToKey;
 
       for (prop in record) {
         ormp = XT.Orm.getProperty(orm, prop);
@@ -566,7 +567,13 @@ select xt.install_js('XT','Data','xtuple', $$
             val = values[i];
 
             /* Populate the parent key into the foreign key field if it's absent. */
-            if (!val[fkey]) { val[fkey] = id; }
+            if (!val[fkey]) { 
+              columnToKey = ormp.toMany.column;
+              propToKey = orm.properties.filter(function (prop) {
+                return prop.attr && prop.attr.column === columnToKey;
+              })[0].name;
+              val[fkey] = record[propToKey]; 
+            }
 
             this.commitRecord({
               nameSpace: orm.nameSpace,

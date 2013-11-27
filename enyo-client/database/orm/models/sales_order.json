@@ -50,6 +50,13 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
+        }
+      },
+      {
         "name": "customer",
         "toOne": {
           "isNested": true,
@@ -614,13 +621,6 @@
         }
       },
       {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid"
-        }
-      },
-      {
         "name": "workflow",
         "toMany": {
           "isNested": true,
@@ -668,8 +668,7 @@
         "name": "parent",
         "attr": {
           "type": "String",
-          "column": "wf_parent_uuid",
-          "isNaturalKey": true
+          "column": "wf_parent_uuid"
         }
       },
       {
