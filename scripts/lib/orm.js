@@ -71,7 +71,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   /**
-    Here is the function that actually installs the ORM!
+    Here is the function that actually installs the ORM
    */
   submit = function (data, orm, queue, ack, isExtension) {
     var extensions, context, extensionList = [], namespace, type;
@@ -106,6 +106,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     }
 
+    //console.log(raiseNotice("installing %@%@.%@").f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
     ormSql += raiseNotice("installing %@%@.%@").f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type);
     ormSql += "select xt.install_orm('%@');\n".f(X.json(cleanse(orm)));
 
@@ -141,6 +142,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var installed = data.installed,
       orms = data.orms,
       orm, dependencies = [];
+
     if (!queue || queue.length === 0) {
       // this is the actual callback! The first arg is an error, which is null if
       // we've made it this far. The second arg is an array of all the orm names
@@ -198,15 +200,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Recurse into the file structure to parse the json files.
    */
   dive = function (path, root) {
-    var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
-    isTop = root ? false: true;
+    var files = X.directoryFiles(path, {fullPath: true}),
+      stat,
+      isTop,
+      ret,
+      content,
+      errors = [];
+
+    isTop = root ? false : true;
     _.each(files, function (file) {
       stat = fs.statSync(file);
-      if (stat.isDirectory()) dive(file, root ? root: (root = {}));
-      else if (X.ext(file) === "json") root[file] = "";
+      if (stat.isDirectory()) {
+        // we'll be populating this root object in the recursion with empty keys
+        dive(file, root ? root : (root = {}));
+      } else if (X.ext(file) === "json" || X.ext(file) === "js") {
+        root[file] = "";
+      }
     });
     if (isTop) {
       ret = [];
+      // and now we populate those keys with the file data
       _.each(_.keys(root), function (file) {
         content = parseFile(file);
         if (content.isError) {
@@ -387,8 +400,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           ns = ext.nameSpace;
           type = ext.type;
           try {
+            if (!orms[ns]) {
+              // prevents a bug whereby a module with only "extensions" and no "models"
+              // would get ignored entirely by the orm installer
+              orms[ns] = {};
+            }
             orm = orms[ns][type];
-          } catch (err) { return; }
+          } catch (err) {
+            console.log("orm extension error:", err);
+            return;
+          }
           if (orm) {
             if (!orm.extensions) { orm.extensions = []; }
             orm.extensions.push(ext);
@@ -405,7 +426,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     data.extensions = extensions;
 
     calculateDependencies.call(this, data);
-    ack(orms);
+    ack();
   };
 
 
@@ -428,9 +449,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  /*
   // debug
-  var debugPath = X.path.join(__dirname, "../../enyo-client/database/orm");
+  /*
+  var debugPath = X.path.join(__dirname, "../../enyo-client/extensions/source/test/database/orm");
   runOrmInstaller(debugPath, {orms: []}, function (err, res) {
     console.log(err, res);
   });

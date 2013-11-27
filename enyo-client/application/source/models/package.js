@@ -1,5 +1,6 @@
 enyo.depends(
   "email.js",
+  "workflow.js",
   "account.js",
   "activity.js",
   "address.js",

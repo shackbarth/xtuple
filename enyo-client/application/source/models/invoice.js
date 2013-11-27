@@ -609,7 +609,9 @@ white:true*/
   XM.InvoiceCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.InvoiceCharacteristic.prototype */
 
-    recordType: 'XM.InvoiceCharacteristic'
+    recordType: 'XM.InvoiceCharacteristic',
+
+    which: 'isInvoices'
 
   });
 

@@ -7,7 +7,7 @@ DO $$
     schemaname,
     i;
 
-  sql = "select schemaname, viewname from pg_views where schemaname in ('xm','sys');"
+  sql = "select schemaname, viewname from pg_views where schemaname in ('xm','sys', 'xt');"
   result = plv8.execute(sql);
   for (i = 0; i < result.length; i++) {
     viewname = result[i].viewname;
@@ -21,4 +21,3 @@ DO $$
   plv8.execute("alter table xt.orm enable trigger orm_did_change");
 
 $$ language plv8;
-

@@ -110,6 +110,8 @@ trailing:true, white:true*/
       {name: "showToDos", label: "_toDos".loc(), defaultKind: "XV.ToggleButtonWidget"},
       {name: "showOpportunities", label: "_opportunities".loc(), defaultKind: "XV.ToggleButtonWidget"},
       {name: "showIncidents", label: "_incidents".loc(), defaultKind: "XV.ToggleButtonWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_sales".loc()},
+      {name: "showSalesOrderWorkflow", label: "_workflow".loc(), defaultKind: "XV.ToggleButtonWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
@@ -143,6 +145,9 @@ trailing:true, white:true*/
       }
       if (this.$.showToDos.getValue()) {
         value.push('ToDo');
+      }
+      if (this.$.showSalesOrderWorkflow.getValue()) {
+        value.push('SalesOrderWorkflow');
       }
       if (value.length) {
         param.attribute = "activityType";

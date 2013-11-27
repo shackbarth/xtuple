@@ -22,6 +22,7 @@ trailing:true, white:true*/
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
       {name: "saleTypeList", kind: "XV.SaleTypeList"},
+      {name: "salesEmailProfileList", kind: "XV.SalesEmailProfileList"},
       {name: "shipViaList", kind: "XV.ShipViaList"},
       {name: "shipZoneList", kind: "XV.ShipZoneList"},
       {name: "salesRepList", kind: "XV.SalesRepList"},
@@ -58,7 +59,8 @@ trailing:true, white:true*/
         {name: "customerList", kind: "XV.CustomerList"},
         {name: "prospectList", kind: "XV.ProspectList"},
         {name: "quoteList", kind: "XV.QuoteList"},
-        {name: "salesOrderList", kind: "XV.SalesOrderList"}
+        {name: "salesOrderList", kind: "XV.SalesOrderList"},
+        {name: "sales_activityList", kind: "XV.ActivityList"}
       ]
     };
 
@@ -82,6 +84,7 @@ trailing:true, white:true*/
       "MaintainFreightClasses",
       "MaintainItemMasters",
       "MaintainQuotes",
+      "MaintainSalesEmailProfiles",
       "MaintainSalesOrders",
       "MaintainSalesReps",
       "MaintainShipVias",
