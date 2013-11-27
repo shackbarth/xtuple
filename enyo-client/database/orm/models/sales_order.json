@@ -668,7 +668,7 @@
         "name": "parent",
         "attr": {
           "type": "Number",
-          "column": "wf_parent_id",
+          "column": "wf_parent_uuid",
           "isNaturalKey": true
         }
       },
