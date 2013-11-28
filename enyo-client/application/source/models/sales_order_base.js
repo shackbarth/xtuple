@@ -385,6 +385,7 @@ white:true*/
       var pricePolicy = XT.session.settings.get("soPriceEffective");
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on('add:lineItems remove:lineItems change:miscCharge', this.calculateTotals);
+      this.on('change:saleType', this.saleTypeDidChange);
       this.on('change:customer', this.customerDidChange);
       this.on('change:freight', this.freightDidChange);
       this.on('change:shipto', this.shiptoDidChange);
@@ -397,6 +398,11 @@ white:true*/
         this.on('change:' + this.documentDateKey, this.recalculatePrices);
       } else if (pricePolicy === "ScheduleDate") {
         this.requiredAttributes.push("scheduleDate");
+      }
+
+      if (this.saleTypeDidChange) {
+        // inherit sale type defaults up front
+        this.saleTypeDidChange();
       }
     },
 
@@ -874,6 +880,12 @@ white:true*/
         options = {},
         that = this;
 
+      // In addition to updates to line items, update workflow
+      // items if applicable
+      if (this.updateWorkflowItemShipDate) {
+        this.updateWorkflowItemShipDate();
+      }
+
       if (!lineItems.length) { return; }
 
       options.type = XM.Model.QUESTION;
@@ -934,6 +946,7 @@ white:true*/
         }
       };
       this.notify(message, options);
+
     },
 
     /**

@@ -530,7 +530,9 @@ white:true*/
   XM.ItemListItemCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.ItemListItmeCharacteristic.prototype */
 
-    recordType: 'XM.ItemListItemCharacteristic'
+    recordType: 'XM.ItemListItemCharacteristic',
+
+    which: "isItems"
 
   });
 
@@ -556,7 +558,9 @@ white:true*/
   XM.ItemCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.ItemCharacteristic.prototype */
 
-    recordType: 'XM.ItemCharacteristic'
+    recordType: 'XM.ItemCharacteristic',
+
+    which: 'isItems'
 
   });
 
@@ -669,7 +673,9 @@ white:true*/
   XM.ItemRelationCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.ItemRelationCharacteristic.prototype */
 
-    recordType: 'XM.ItemRelationCharacteristic'
+    recordType: 'XM.ItemRelationCharacteristic',
+
+    which: 'isItems'
 
   });
 

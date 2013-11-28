@@ -35,6 +35,7 @@ TODO deferred to later sprint:
   var async = require("async"),
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
+    common = require("../lib/common"),
     assert = require("chai").assert,
     invoiceModel,
     lineModel,
@@ -49,83 +50,60 @@ TODO deferred to later sprint:
     bpaint,
     btruck;
 
-  // TODO: this kind of thing belongs in the framework
-  var initializeModel = function (model, Klass, done) {
-    var statusChanged = function () {
-      if (model.isReady()) {
-        model.off("statusChange", statusChanged);
-        done(null, model);
-      }
-    };
-    model = new Klass();
-    model.on("statusChange", statusChanged);
-    model.initialize(null, {isNew: true});
-  };
-  var fetchModel = function (model, Klass, hash, done) {
-    var statusChanged = function () {
-      if (model.isReady()) {
-        model.off("statusChange", statusChanged);
-        done(null, model);
-      }
-    };
-    model = new Klass();
-    model.on("statusChange", statusChanged);
-    model.fetch(hash);
-  };
 
   /**
     Here is some high-level description of what an invoice is supposed to do.
     @class
     @alias Invoice
-    @parameter {String} number that is the documentKey and idAttribute
-    @parameter {Date} invoiceDate required default today
-    @parameter {Boolean} isPosted required, defaulting to false, read only
-    @parameter {Boolean} isVoid required, defaulting to false, read only
-    @parameter {BillingCustomer} customer required
-    @parameter {String} billtoName
-    @parameter {String} billtoAddress1
-    @parameter {String} billtoAddress2
-    @parameter {String} billtoAddress3
-    @parameter {String} billtoCity
-    @parameter {String} billtoState
-    @parameter {String} billtoPostalCode
-    @parameter {String} billtoCountry
-    @parameter {String} billtoPhone
-    @parameter {Currency} currency
-    @parameter {Terms} terms
-    @parameter {SalesRep} salesRep
-    @parameter {Percent} commission required, default 0
-    @parameter {SaleType} saleType
-    @parameter {String} customerPurchaseOrderNumber
-    @parameter {TaxZone} taxZone
-    @parameter {String} notes
-    @parameter {InvoiceRelation} recurringInvoice
-    @parameter {Money} allocatedCredit the sum of all allocated credits
-    @parameter {Money} outandingCredit the sum of all unallocated credits, not including
+    @property {String} number that is the documentKey and idAttribute
+    @property {Date} invoiceDate required default today
+    @property {Boolean} isPosted required, defaulting to false, read only
+    @property {Boolean} isVoid required, defaulting to false, read only
+    @property {BillingCustomer} customer required
+    @property {String} billtoName
+    @property {String} billtoAddress1
+    @property {String} billtoAddress2
+    @property {String} billtoAddress3
+    @property {String} billtoCity
+    @property {String} billtoState
+    @property {String} billtoPostalCode
+    @property {String} billtoCountry
+    @property {String} billtoPhone
+    @property {Currency} currency
+    @property {Terms} terms
+    @property {SalesRep} salesRep
+    @property {Percent} commission required, default 0
+    @property {SaleType} saleType
+    @property {String} customerPurchaseOrderNumber
+    @property {TaxZone} taxZone
+    @property {String} notes
+    @property {InvoiceRelation} recurringInvoice
+    @property {Money} allocatedCredit the sum of all allocated credits
+    @property {Money} outstandingCredit the sum of all unallocated credits, not including
       cash receipts pending
-    @parameter {Money} subtotal the sum of the extended price of all line items
-    @parameter {Money} taxTotal the sum of all taxes inluding line items, freight and
+    @property {Money} subtotal the sum of the extended price of all line items
+    @property {Money} taxTotal the sum of all taxes inluding line items, freight and
       tax adjustments
-    @parameter {Money} miscCharge read only (will be re-implemented as editable by Ledger)
-    @parameter {Money} total the calculated total of subtotal + freight + tax + miscCharge
-    @parameter {Money} balance the sum of total - allocatedCredit - authorizedCredit -
+    @property {Money} miscCharge read only (will be re-implemented as editable by Ledger)
+    @property {Money} total the calculated total of subtotal + freight + tax + miscCharge
+    @property {Money} balance the sum of total - allocatedCredit - authorizedCredit -
       outstandingCredit.
       - If sum calculates to less than zero, then the balance is zero.
-    @parameter {InvoiceAllocation} allocations
-    @parameter {InvoiceTax} taxAdjustments
-    @parameter {InvoiceLine} lineItems
-    @parameter {InvoiceCharacteristic} characteristics
-    @parameter {InvoiceContact} contacts
-    @parameter {InvoiceAccount} accounts
-    @parameter {InvoiceCustomer} customers
-    @parameter {InvoiceFile} files
-    @parameter {InvoiceUrl} urls
-    @parameter {InvoiceItem} items
-    @parameter {String} orderNumber Added by sales extension
-    @parameter {Date} orderDate Added by sales extension
-    @parameter {InvoiceSalesOrder} salesOrders Added by sales extension
-    @parameter {InvoiceIncident} incidents Added by crm extension
-    @parameter {InvoiceOpportunity} opportunities Added by crm extension
+    @property {InvoiceAllocation} allocations
+    @property {InvoiceTax} taxAdjustments
+    @property {InvoiceLine} lineItems
+    @property {InvoiceCharacteristic} characteristics
+    @property {InvoiceContact} contacts
+    @property {InvoiceAccount} accounts
+    @property {InvoiceCustomer} customers
+    @property {InvoiceFile} files
+    @property {InvoiceUrl} urls
+    @property {InvoiceItem} items
+    @property {String} orderNumber Added by sales extension
+    @property {Date} orderDate Added by sales extension
+    @property {InvoiceSalesOrder} salesOrders Added by sales extension
+    @property {InvoiceIncident} incidents Added by crm extension
+    @property {InvoiceOpportunity} opportunities Added by crm extension
   */
   var spec = {
     recordType: "XM.Invoice",
@@ -194,7 +172,7 @@ TODO deferred to later sprint:
     },
     updatableField: "notes",
     beforeSaveActions: [{it: 'sets up a valid line item',
-      action: require("../lib/model_data").getBeforeSaveAction("XM.InvoiceLine")}],
+      action: require("./sales_order").getBeforeSaveAction("XM.InvoiceLine")}],
     skipSmoke: true,
     beforeSaveUIActions: [{it: 'sets up a valid line item',
       action: function (workspace, done) {
@@ -246,6 +224,12 @@ TODO deferred to later sprint:
         model = new XM.InvoiceCharacteristic();
         assert.isTrue(model instanceof XM.CharacteristicAssignment);
       });
+      it("can be set by a widget in the characteristics workspace", function () {
+        var characteristicWorkspace = new XV.CharacteristicWorkspace();
+        assert.include(_.map(characteristicWorkspace.$, function (control) {
+          return control.attr;
+        }), "isInvoices");
+      });
     });
     /**
       @member -
@@ -283,25 +267,25 @@ TODO deferred to later sprint:
       before(function (done) {
         async.parallel([
           function (done) {
-            fetchModel(bpaint, XM.ItemRelation, {number: "BPAINT1"}, function (err, model) {
+            common.fetchModel(bpaint, XM.ItemRelation, {number: "BPAINT1"}, function (err, model) {
               bpaint = model;
               done();
             });
           },
           function (done) {
-            fetchModel(btruck, XM.ItemRelation, {number: "BTRUCK1"}, function (err, model) {
+            common.fetchModel(btruck, XM.ItemRelation, {number: "BTRUCK1"}, function (err, model) {
               btruck = model;
               done();
             });
           },
           function (done) {
-            initializeModel(invoiceModel, XM.Invoice, function (err, model) {
+            common.initializeModel(invoiceModel, XM.Invoice, function (err, model) {
               invoiceModel = model;
               done();
             });
           },
           function (done) {
-            initializeModel(lineModel, XM.InvoiceLine, function (err, model) {
+            common.initializeModel(lineModel, XM.InvoiceLine, function (err, model) {
               lineModel = model;
               done();
             });
@@ -602,37 +586,37 @@ TODO deferred to later sprint:
       before(function (done) {
         async.parallel([
           function (done) {
-            fetchModel(ttoys, XM.BillingCustomer, {number: "TTOYS"}, function (err, model) {
+            common.fetchModel(ttoys, XM.BillingCustomer, {number: "TTOYS"}, function (err, model) {
               ttoys = model;
               done();
             });
           },
           function (done) {
-            fetchModel(vcol, XM.BillingCustomer, {number: "VCOL"}, function (err, model) {
+            common.fetchModel(vcol, XM.BillingCustomer, {number: "VCOL"}, function (err, model) {
               vcol = model;
               done();
             });
           },
           function (done) {
-            fetchModel(nctax, XM.TaxZone, {code: "NC TAX"}, function (err, model) {
+            common.fetchModel(nctax, XM.TaxZone, {code: "NC TAX"}, function (err, model) {
               nctax = model;
               done();
             });
           },
           function (done) {
-            fetchModel(nctaxCode, XM.TaxCode, {code: "NC TAX-A"}, function (err, model) {
+            common.fetchModel(nctaxCode, XM.TaxCode, {code: "NC TAX-A"}, function (err, model) {
               nctaxCode = model;
               done();
             });
           },
           function (done) {
-            initializeModel(invoiceTaxModel, XM.InvoiceTax, function (err, model) {
+            common.initializeModel(invoiceTaxModel, XM.InvoiceTax, function (err, model) {
               invoiceTaxModel = model;
               done();
             });
           },
           function (done) {
-            initializeModel(allocationModel, XM.InvoiceAllocation, function (err, model) {
+            common.initializeModel(allocationModel, XM.InvoiceAllocation, function (err, model) {
               allocationModel = model;
               done();
             });
@@ -802,7 +786,8 @@ TODO deferred to later sprint:
         assert.equal(invoiceModel.get("billtoName"), "Tremendous Toys Incorporated");
         assert.equal(invoiceModel.get("billtoAddress2"), "101 Toys Place");
         assert.equal(invoiceModel.get("billtoPhone"), "703-931-4269");
-        assert.equal(invoiceModel.getValue("salesRep.number"), "1000");
+        assert.isString(invoiceModel.getValue("salesRep.number"),
+          ttoys.getValue("salesRep.number"));
         assert.equal(invoiceModel.getValue("commission"), 0.075);
         assert.equal(invoiceModel.getValue("terms.code"), "2-10N30");
         assert.equal(invoiceModel.getValue("taxZone.code"), "VA TAX");

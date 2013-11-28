@@ -7,12 +7,13 @@
   "use strict";
 
   var _ = require("underscore"),
+    async = require("async"),
     assert = require("chai").assert;
 
   /**
     Make sure that the attrs of a list or a workspace correspond to the schema
    */
-  exports.verifyAttr = function (attr, recordType, orderByAttribute) {
+  var verifyAttr = function (attr, recordType, orderByAttribute) {
     var relations = XT.session.schemas.XM.get(XT.String.suffix(recordType)).relations,
       prefix, suffix, relation, cacheName, relatedModelPrototype;
 
@@ -63,5 +64,60 @@
     }
   };
 
+  var initializeModel = function (model, Klass, done) {
+    var statusChanged = function () {
+      if (model.isReady()) {
+        model.off("statusChange", statusChanged);
+        done(null, model);
+      }
+    };
+    model = new Klass();
+    model.on("statusChange", statusChanged);
+    model.initialize(null, {isNew: true});
+  };
+
+  var fetchModel = function (model, Klass, hash, done) {
+    var statusChanged = function () {
+      if (model.isReady()) {
+        model.off("statusChange", statusChanged);
+        done(null, model);
+      }
+    };
+    model = new Klass();
+    model.on("statusChange", statusChanged);
+    model.fetch(hash);
+  };
+
+/*
+  under development...
+
+  var prepModel = function (spec, done) {
+    if (spec.hash) {
+      fetchModel();
+    } else {
+      initializeModel(null, XM.ProjectType, done);
+    }
+  };
+
+  var prepModels = function (models, done) {
+    var modelsArray = _.map(models, function (value, key) {
+      return {key: key, hash: value};
+    });
+
+    async.map(modelsArray, prepModel, function (err, results) {
+      if (err) {
+        done(err);
+      }
+      _.each(results, function (result) {
+        models[result.key] = result.model;
+      });
+      done();
+    });
+  };
+    */
+
+  exports.initializeModel = initializeModel;
+  exports.fetchModel = fetchModel;
+  exports.verifyAttr = verifyAttr;
 
 }());
