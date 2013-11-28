@@ -569,9 +569,9 @@ select xt.install_js('XT','Data','xtuple', $$
             /* Populate the parent key into the foreign key field if it's absent. */
             if (!val[fkey]) { 
               columnToKey = ormp.toMany.column;
-              propToKey = orm.properties.filter(function (prop) {
+              propToKey = columnToKey ? orm.properties.filter(function (prop) {
                 return prop.attr && prop.attr.column === columnToKey;
-              })[0].name;
+              })[0].name : pkey; /* fall back the primary key if the orm is set up wacky */
               val[fkey] = record[propToKey]; 
             }
 
