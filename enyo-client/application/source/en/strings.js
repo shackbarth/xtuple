@@ -91,6 +91,7 @@ strict:true, trailing:true, white:true */
     "_addressComment": "Address Comment",
     "_addresses": "Addresses",
     "_advanced" : "Advanced",
+    "_agent": "Agent",
     "_alarms": "Alarms",
     "_allocate": "Allocate",
     "_allocatedCredit": "Allocated Credit",
