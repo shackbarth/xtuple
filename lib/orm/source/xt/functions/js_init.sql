@@ -2,7 +2,9 @@ drop function if exists xt.js_init();
 
 create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
 
-  if (plv8.__initialized) return;
+  if (plv8.__initialized && debug !== true) {
+    return;
+  }
 
   DEBUG = debug ? debug : false;
 

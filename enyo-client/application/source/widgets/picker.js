@@ -873,6 +873,17 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
   });
 
   // ..........................................................
+  // WORKFLOW TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkflowTypePicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.salesOrderWorkflowTypes"
+  });
+
+  // ..........................................................
   // YEAR
   //
 
