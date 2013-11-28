@@ -2,7 +2,7 @@
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, console:true, issue:true, require:true, XM:true, io:true,
-Backbone:true, _:true, X:true, __dirname:true, exports:true */
+Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
 
 (function () {
   "use strict";
@@ -342,6 +342,33 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true */
         return true;
       }
     };
+
+  //
+  // Set up listener for postgres events on the nodext channel
+  //
+  /*
+    do $$
+      plv8.execute("NOTIFY nodext, '{foo: 15}'");
+    $$ language plv8;
+  */
+  if (!XT.pgListeners) {
+    XT.pgListeners = {};
+    _.each(X.options.datasource.databases, function (database) {
+      var creds = DataSource.getAdminCredentials(database);
+      X.pg.connect(creds, function (err, client, done) {
+        if (err) {
+          return console.error('error fetching client from pool', err);
+        }
+        client.on('notification', function (msg) {
+          console.log(msg.payload);
+        });
+        client.query("LISTEN nodext");
+        X.log("Listening for postgres notifications on the nodext channel on ", database);
+        XT.pgListeners[database] = client;
+      });
+    });
+  }
+
 
   XT.dataSource = X.Database.create(DataSource);
 

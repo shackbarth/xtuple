@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true, es5:true */
+regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
 
 Backbone = require("backbone");
@@ -400,13 +400,11 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
   });
 }
 
-
-
 // Set up the other servers we run on different ports.
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
-redirectServer.listen(X.options.datasource.redirectPort,X.options.datasource.bindAddress);
+redirectServer.listen(X.options.datasource.redirectPort, X.options.datasource.bindAddress);
 
 /**
  * Start the express server. This is the NEW way.
