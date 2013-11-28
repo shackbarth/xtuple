@@ -141,7 +141,7 @@ select
   wf_completed_date as act_completed_date,
   prj.obj_uuid::uuid as act_parent_uuid
 from xt.prjwf wf
-  join prj on prj_id=wf_parent_id
+  join prj on prj.obj_uuid=wf_parent_uuid
   join pg_class c on wf.tableoid = c.oid
   join xt.acttype on acttype_tblname=relname
 
@@ -165,7 +165,7 @@ select
   wf_completed_date as act_completed_date,
   cohead.obj_uuid as act_parent_uuid
 from xt.coheadwf wf
-  join cohead on cohead_id=wf_parent_id
+  join cohead on cohead.obj_uuid=wf_parent_uuid
   join pg_class c on wf.tableoid = c.oid
   join xt.acttype on acttype_tblname=relname;
 

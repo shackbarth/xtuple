@@ -411,7 +411,7 @@ white:true*/
   // Workflow Type
   var salesOrderWorkflowTypeJson = [
     { id: XM.SalesOrderWorkflow.TYPE_OTHER, name: "_other".loc() },
-    { id: XM.SalesOrderWorkflow.CREDIT_CHECK, name: "_creditCheck".loc() }//,
+    { id: XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK, name: "_creditCheck".loc() }//,
   ];
   XM.SalesOrderWorkflowTypeModel = Backbone.Model.extend({});
   XM.SalesOrderWorkflowTypeCollection = Backbone.Collection.extend({

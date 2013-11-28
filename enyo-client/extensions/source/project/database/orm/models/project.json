@@ -568,7 +568,7 @@
         "toMany": {
           "isNested": true,
           "type": "ProjectWorkflow",
-          "column": "prj_id",
+          "column": "obj_uuid",
           "inverse": "parent"
         }
       },
@@ -800,9 +800,8 @@
       {
         "name": "parent",
         "attr": {
-          "type": "Number",
-          "column": "wf_parent_id",
-          "isNaturalKey": true
+          "type": "String",
+          "column": "wf_parent_uuid"
         }
       },
       {
@@ -953,8 +952,8 @@
       {
         "name": "parent",
         "attr": {
-          "type": "Number",
-          "column": "wf_parent_id",
+          "type": "String",
+          "column": "wf_parent_uuid",
           "isNaturalKey": true
         }
       },
