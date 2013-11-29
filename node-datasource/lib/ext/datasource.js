@@ -348,11 +348,21 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
   //
   /*
     do $$
-      plv8.execute("NOTIFY nodext, '{foo: 15}'");
+      var payload = {action: "email", content: {
+        from: "no-reply@xtuple.com",
+        to: "shackbarth@xtuple.com",
+        subject: "test subject",
+        text: "test body"
+      }};
+      plv8.execute("select pg_notify($1, $2);", ['nodext', JSON.stringify(payload)]);
     $$ language plv8;
   */
-  if (!XT.pgListeners) {
-    XT.pgListeners = {};
+  if (!X.pgListeners) {
+    var afterEmail = function () {
+      // do nothing.
+      console.log("email sent", arguments);
+    };
+    X.pgListeners = {};
     _.each(X.options.datasource.databases, function (database) {
       var creds = DataSource.getAdminCredentials(database);
       X.pg.connect(creds, function (err, client, done) {
@@ -360,11 +370,22 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
           return console.error('error fetching client from pool', err);
         }
         client.on('notification', function (msg) {
-          console.log(msg.payload);
+          var payload = JSON.parse(msg.payload),
+            content = payload.content;
+
+          // to generalize this in the future we would want to enforce
+          // a separation of concerns in which the possible actions would
+          // be registered somewhere and this function would be unaware
+          // of the implementation details of each action.
+          if (payload.action === 'email') {
+            console.log("sending email", JSON.stringify(content));
+            X.smtpTransport.sendMail(content, afterEmail);
+          }
+
         });
         client.query("LISTEN nodext");
         X.log("Listening for postgres notifications on the nodext channel on ", database);
-        XT.pgListeners[database] = client;
+        X.pgListeners[database] = client;
       });
     });
   }
