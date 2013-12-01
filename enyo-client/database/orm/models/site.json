@@ -402,6 +402,21 @@
         }
       },
       {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "warehous_cntct_id"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "warehous_taxzone_id"
+        }
+      },
+      {
         "name": "incoterms",
         "attr": {
           "type": "String",
