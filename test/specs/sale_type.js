@@ -30,12 +30,33 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     cacheName: null,
     listKind: "XV.SaleTypeList",
     instanceOf: "XM.Document",
+		/**
+      @member -
+      @memberof SaleType
+      @description Sale Types are lockable
+    */
     isLockable: true,
+		/**
+      @member -
+      @memberof SaleType
+      @description The ID attribute is "code", which will be automatically uppercased.
+    */
     idAttribute: "code",
     enforceUpperKey: true,
     attributes: ["code", "description", "characteristics", "workflow",
       "emailProfile", "defaultHoldType"],
+    /**
+      @member -
+      @memberof SaleType
+      @description Used in the sales module
+    */
     extensions: ["sales"],
+    /**
+      @member -
+      @memberof SaleType
+      @description Sale Types can be read by anyone and can be created and updated
+        by users with the "MaintainSaleTypes" privilege.
+    */
     privileges: {
       createUpdate: "MaintainSaleTypes",
       read: true
@@ -48,6 +69,20 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   var additionalTests = function () {
+    /**
+      @member -
+      @memberof SaleType.prototype
+      @description Sale Types used in a sales order cannot be deleted
+     */
+    it("Sale Types used in a sales order cannot be deleted", function () {
+    });
+    /**
+      @member -
+      @memberof SaleType.prototype
+      @description Sale Types with workflows created, but not used in any sales order can be deleted
+     */
+    it("Sale Types with workflows created can be deleted", function () {
+    });
     describe("Sale type characteristics", function () {
       /**
         @member -
@@ -105,28 +140,47 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         }});
       });
 
-      /**
-        @member -
-        @memberof SaleType.prototype
-        @description Sales order workflow types can be "Credit Check", "Pack" (inventory only),
-          "Ship" (inventory only), and "Other" (default)
-      */
+     /**
+      @member -
+      @memberof SaleType.prototype
+      @description Sales order workflow types can be "Credit Check", "Pack" (inventory only),
+        "Ship" (inventory only), and "Other" (default)
+     */
       it("workflow type other is default", function () {
         assert.equal(workflowSourceModel.get("workflowType"), XM.SalesOrderWorkflow.TYPE_OTHER);
       });
       it("workflow types are credit check, pack , ship, and other", function () {
         assert.isString(XM.SalesOrderWorkflow.TYPE_OTHER);
         assert.isString(XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK);
-        // TODO :implement in inventory
-        //assert.isString(XM.SalesOrderWorkflow.TYPE_PACK);
-        //assert.isString(XM.SalesOrderWorkflow.TYPE_SHIP);
+       // TODO :implement in inventory
+       //assert.isString(XM.SalesOrderWorkflow.TYPE_PACK);
+       //assert.isString(XM.SalesOrderWorkflow.TYPE_SHIP);
       });
       it("you can set the workflow type", function () {
         workflowSourceModel.set({workflowType: XM.SalesOrderWorkflow.TYPE_SHIP});
         assert.isUndefined(workflowSourceModel.validate(workflowSourceModel.attributes));
       });
-
-
+     /**
+      @member -
+      @memberof SaleType.prototype
+      @description Workflows can be created, edited and deleted for a new Sale Type
+     */
+      it.skip("workflows can be created, edited and deleted for a new Sale Type", function () {
+      });
+     /**
+      @member -
+      @memberof SaleType.prototype
+      @description Workflows can be created, edited and deleted for an existing Sale Type
+     */
+      it.skip("workflows can be created, edited and deleted for an existing Sale Type", function () {
+      });
+     /**
+      @member -
+      @memberof SaleType.prototype
+      @description 'Successors' picker should display the existing workflows of the sale type
+     */
+      it.skip("'Successors' picker should display the existing workflows of the sale type", function () {
+      });
     });
   };
 
