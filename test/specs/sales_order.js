@@ -251,7 +251,11 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           }
         ], done);
       });
-
+      /**
+        @member -
+        @memberof SalesOrder
+        @description Workflows can be added, edited and removed from a new sales order
+      */
       // this is somewhat limited
       it("can get added to a sales order", function () {
         assert.isTrue(workflowModel.isReady());
@@ -262,6 +266,20 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         salesOrderModel.get("workflow").add(workflowModel);
         assert.equal(salesOrderModel.get("workflow").length, 1);
         salesOrderModel.get("workflow").remove(workflowModel);
+      });
+      /**
+        @member -
+        @memberof SalesOrder
+        @description Workflows can be added, edited and removed from an existing sales order
+      */
+      it.skip("Workflows can be added, updated and removed to an existing Sales order", function () {
+      });
+      /**
+        @member -
+        @memberof SalesOrder
+        @description Sales orders cannot be saved with incomplete workflows
+      */
+      it.skip("Sales orders cannot be saved with incomplete workflows", function () {
       });
       /**
         @member -
@@ -328,6 +346,37 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         salesOrderModel.set({saleType: null});
         salesOrderModel.get("workflow").reset([]);
         salesOrderModel.get("characteristics").reset([]);
+      });
+      /**
+        @member -
+        @memberof SalesOrder
+        @description For the Workflow items copied from the Sale types, the start date and due date " +
+        "should be calculated correctly based on the offset
+      */
+      it.skip("For the Workflow items copied from the Sale types, the start date and due date " +
+        "should be calculated correctly based on the offset", function () {
+      });
+      /**
+        @member -
+        @memberof SalesOrder
+        @description When a Sale type with characteristics, of an existing sales order is changed," +
+        "to a sale type with no characteristics, the existing characteristics should be cleared" +
+        "on the sales order
+      */
+      it.skip("When a Sale type with characteristics, of an existing sales order is changed," +
+        "to a sale type with no characteristics, the existing characteristics should be cleared" +
+        "on the sales order", function () {
+      });
+      /**
+        @member -
+        @memberof SalesOrder
+        @description When a Sale type with workflows, of an existing sales order is changed," +
+        "to a sale type with no workflows, the existing characteristics should be cleared" +
+        "on the sales order
+      */
+      it.skip("When a Sale type with workflows, of an existing sales order is changed," +
+        "to a sale type with no workflows, the existing characteristics should be cleared" +
+        "on the sales order", function () {
       });
       /**
         @member -

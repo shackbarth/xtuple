@@ -25,14 +25,24 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       it("User Alternate A/R Account checkbox should be inactive by default", function () {
       });
+      it("Selecting 'Post Payment button' should should 'save' the Sales Order and post the" +
+          "payment to the Sales Order", function () {
+      });
       it("Sales Category Picker menu should be enabled on checking " +
           "'Use Alternate A/R Account' option and list available Sales Categories ", function () {
       });
       it("Selecting to Post Cash Payment with Application Date " +
           "earlier than Distribution Date should display an error dialog", function () {
       });
+      it("If currency on salesOrder does not match 'PostTo' bank account" +
+        "(ex. USD on SO, EUR on account), return prompt to ask user if they'd like to convert" +
+        "to bankAccount currency", function () {
+      });
       it("Balance amount should be recalculated on selecting to" +
           "Post Cash Payment", function () {
+      });
+      it("Selecting to post cash payment with 'Amount Received' is greater than" +
+        "balance return error", function () {
       });
       it("Selecting to post cash payment with blank or zero in 'Amount Received'  " +
           "field should display an error message", function () {
