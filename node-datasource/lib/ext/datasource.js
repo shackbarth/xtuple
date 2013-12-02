@@ -357,45 +357,37 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
       plv8.execute("select pg_notify($1, $2);", ['nodext', JSON.stringify(payload)]);
     $$ language plv8;
   */
-  if (!X.pgListeners) {
-    var afterEmail = function () {
+  var setupPgListeners = function (databases, eventHandlers) {
+    var afterAction = function () {
       // do nothing.
-      console.log("email sent", arguments);
+      console.log("action taken", arguments);
     };
-    X.pgListeners = {};
-    _.each(X.options.datasource.databases, function (database) {
+    _.each(databases, function (database) {
       var creds = DataSource.getAdminCredentials(database);
       X.pg.connect(creds, function (err, client, done) {
         if (err) {
           return console.error('error fetching client from pool', err);
         }
         client.on('notification', function (msg) {
-          var payload = JSON.parse(msg.payload),
-            content = payload.content;
+          var payload = JSON.parse(msg.payload);
 
-          // to generalize this in the future we would want to enforce
-          // a separation of concerns in which the possible actions would
-          // be registered somewhere and this function would be unaware
-          // of the implementation details of each action.
-          if (payload.action === 'email') {
-            console.log("sending email", JSON.stringify(content));
-            X.smtpTransport.sendMail(content, afterEmail);
-          }
-
+          // the event handlers get passed in by the caller. Just run the
+          // event handler that corresponds to the action postgres is
+          // requesting.
+          eventHandlers[payload.action](payload.content, afterAction);
         });
         client.query("LISTEN nodext");
         X.log("Listening for postgres notifications on the nodext channel on ", database);
-        X.pgListeners[database] = client;
       });
     });
-  }
-
+  };
 
   XT.dataSource = X.Database.create(DataSource);
 
   module.exports = {
     api: DataSource,
-    dataSource: XT.dataSource
+    dataSource: XT.dataSource,
+    setupPgListeners: setupPgListeners
   };
 
 }());

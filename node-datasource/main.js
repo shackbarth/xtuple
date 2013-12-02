@@ -67,9 +67,12 @@ XT = { };
   X.setup(options);
 
   // load some more required files
-  require("./lib/ext/datasource");
+  var datasource = require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
+  datasource.setupPgListeners(X.options.datasource.databases, {
+    email: X.smtpTransport.sendMail
+  });
 
   if (typeof X.options.biServer !== 'undefined') {
     require("./olapcatalog");
