@@ -426,6 +426,7 @@ strict:true, trailing:true, white:true */
     "_name": "Name",
     "_neither": "Neither",
     "_nextCheckNumber": "Next Check Number",
+    "_nextHoldType": "Next Hold Type",
     "_nextNumber": "Next Number",
     "_nextStatus": "Next Status",
     "_noChange": "No Change",
