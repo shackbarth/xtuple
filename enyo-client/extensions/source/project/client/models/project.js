@@ -806,6 +806,10 @@ white:true*/
 
       recordType: 'XM.ProjectWorkflow',
 
+      // a change to the status of a workflow should update the project
+      // status based on the completedParentStatus or deferredParentStatus
+      driveParentStatus: true,
+
       getProjectWorkflowStatusString: function () {
         return XM.ProjectWorkflow.prototype.getWorkflowStatusString.call(this);
       }

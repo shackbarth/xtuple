@@ -356,12 +356,21 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       it("When a workflow item is completed or deferred, the hold type of the sales " +
           "order will be set to be the applicable target hold type of the workflow item. ",
           function () {
-        console.log(JSON.stringify(workflowModel.toJSON()));
         workflowModel.set({completedParentStatus: "R"});
         salesOrderModel.get("workflow").add(workflowModel);
         assert.equal(salesOrderModel.get("holdType"), "N");
         workflowModel.set({status: "C"});
         assert.equal(salesOrderModel.get("holdType"), "R");
+        salesOrderModel.set({saleType: null});
+        salesOrderModel.get("workflow").reset([]);
+        salesOrderModel.get("characteristics").reset([]);
+      });
+      it("When a workflow item is completed it should not update the status of the sales order",
+          function () {
+        workflowModel.set({status: "I"});
+        salesOrderModel.get("workflow").add(workflowModel);
+        workflowModel.set({status: "C"});
+        assert.equal(salesOrderModel.get("status"), "O");
         salesOrderModel.set({saleType: null});
         salesOrderModel.get("workflow").reset([]);
         salesOrderModel.get("characteristics").reset([]);
