@@ -1,3 +1,42 @@
-insert into xt.acttype (acttype_tblname, acttype_code) 
-select 'coheadwf', 'SalesOrderWorkflow'
-where not exists (select * from xt.acttype where acttype_tblname = 'coheadwf');
+insert into xt.acttype (
+  acttype_nsname,
+  acttype_tblname,
+  acttype_code,
+  acttype_col_uuid,
+  acttype_col_editor_key,
+  acttype_col_type,
+  acttype_col_name,
+  acttype_col_active,
+  acttype_col_status,
+  acttype_col_priority_id, 
+  acttype_col_description,
+  acttype_col_owner_username,
+  acttype_col_assigned_username,
+  acttype_col_start_date,
+  acttype_col_due_date,
+  acttype_col_assigned_date,
+  acttype_col_completed_Date,
+  acttype_col_parent_uuid,
+  acttype_join
+) values (
+  'xt',
+  'coheadwf',
+  'SalesOrderWorkflow',
+  'coheadwf.obj_uuid',
+  'cohead_number',
+  'acttype_code',
+  'wf_name',
+  'wf_status not in (''C'',''D'')',
+  'wf_status',
+  'wf_priority_id',
+  'wf_description',
+  'wf_owner_username',
+  'wf_assigned_username',
+  'wf_start_date',
+  'wf_due_date',
+  'wf_assigned_date',
+  'wf_completed_date',
+  'cohead.obj_uuid',
+  'join cohead on cohead.obj_uuid=wf_parent_uuid'
+);
+

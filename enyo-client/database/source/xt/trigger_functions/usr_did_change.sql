@@ -21,6 +21,7 @@ create or replace function xt.usr_did_change() returns trigger as $$
    plv8.execute(sql.replace("{name}", 'active'), [NEW.usr_active ? 't' : 'f'] );
    plv8.execute(sql.replace("{name}", 'UseEnhancedAuthentication'), [NEW.usr_enhancedauth ? 't' : 'f'] );
    plv8.execute(sql.replace("{name}", 'DisableExportContents'), [NEW.usr_disable_export ? 't' : 'f'] );
+   plv8.execute(sql.replace("{name}", 'agent'), [NEW.usr_agent ? 't' : 'f'] );
    XT.UserPreferencesUpdating = false;
  }
 
