@@ -117,7 +117,9 @@ white:true*/
   XM.OpportunityCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.OpportunityCharacteristic.prototype */
 
-    recordType: 'XM.OpportunityCharacteristic'
+    recordType: 'XM.OpportunityCharacteristic',
+
+    which: 'isOpportunities'
 
   });
 

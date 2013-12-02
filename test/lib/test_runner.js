@@ -50,13 +50,21 @@ require:true, __dirname:true, console:true */
 
     if (!spec) {
       // temporary during conversion process
-      console.log(specFile, "spec is incomplete.");
+      console.log("Note:", specFile, "spec is sporked.");
       return;
     }
-    describe(spec.recordType, function () {
+    (spec.skipAll ? describe.skip : describe)(spec.recordType, function () {
       if (_.isString(spec.updatableField)) {
         spec.updateHash = {};
         spec.updateHash[spec.updatableField] = "Test" + Math.random();
+      }
+
+
+      if (spec.skipBoilerplateTests && specContents.additionalTests) {
+        specContents.additionalTests();
+        return;
+      } else if (spec.skipBoilerplateTests) {
+        return;
       }
 
       //
@@ -144,13 +152,15 @@ require:true, __dirname:true, console:true */
         //
         // Make sure we're testing the enforceUpperCase (the asserts themselves are in CRUD)
         //
-        it((spec.enforceUpperKey ? "Enforces" : "Does not enforce") + " uppercasing the key", function () {
-          assert.equal(spec.model.enforceUpperKey, spec.enforceUpperKey);
-        });
-        if (!_.isBoolean(spec.enforceUpperKey)) {
-          it("has its enforceUpperKey convention defined in the test spec", function () {
-            assert.fail();
+        if (spec.enforceUpperKey) {
+          it((spec.enforceUpperKey ? "Enforces" : "Does not enforce") + " uppercasing the key", function () {
+            assert.equal(spec.model.enforceUpperKey, spec.enforceUpperKey);
           });
+          if (!_.isBoolean(spec.enforceUpperKey)) {
+            it("has its enforceUpperKey convention defined in the test spec", function () {
+              assert.fail();
+            });
+          }
         }
 
         //

@@ -1,7 +1,8 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global describe:true, it:true, XT:true, XM:true, XV:true, process:true, module:true, require:true */
+/*global describe:true, it:true, XT:true, XM:true, XV:true,
+  process:true, module:true, require:true, beforeEach: true */
 
 (function () {
   "use strict";
@@ -48,6 +49,105 @@
       status = model.isReadOnly("itemSite.site.standardCost");
       assert.isNull(status);
     });
+  });
+
+  describe('XM.Model.augment()', function () {
+
+    beforeEach(function () {
+      XM.TestModel = XM.Model.extend({
+        recordType: "XM.TestModel",
+        myHash: {
+          foo: 3
+        },
+        myArray: [1, 2, 3],
+        myCount: 1,
+        myIncrementer: function () {
+          this.myCount += 5;
+        }
+      });
+    });
+
+    it('should add new fields', function () {
+      XM.TestModel.prototype.augment({
+        myNewThing: "GREAT"
+      });
+
+      var model = new XM.TestModel();
+      assert.equal(model.myNewThing, "GREAT");
+    });
+
+    it('should error on type mismatches', function () {
+      try {
+        XM.TestModel.prototype.augment({
+          myHash: "GREAT"
+        });
+        assert.fail("Type mismatches should not be allowed");
+      } catch (error) {
+        assert.notEqual(error.actual, "Type mismatches should not be allowed");
+      }
+    });
+
+    it('should error if you are stomping an object value', function () {
+      try {
+        XM.TestModel.prototype.augment({
+          myHash: {foo: 19}
+        });
+        assert.fail("Do not allow this stomp");
+      } catch (error) {
+        assert.notEqual(error.actual, "Do not allow this stomp");
+      }
+    });
+
+    it('should mix in objects', function () {
+      XM.TestModel.prototype.augment({
+        myHash: {
+          bar: 5
+        }
+      });
+
+      var model = new XM.TestModel();
+      assert.equal(model.myHash.foo, 3);
+      assert.equal(model.myHash.bar, 5);
+    });
+
+    it('should union arrays', function () {
+      XM.TestModel.prototype.augment({
+        myArray: [7]
+      });
+
+      var model = new XM.TestModel();
+      assert.include(model.myArray, 1);
+      assert.include(model.myArray, 2);
+      assert.include(model.myArray, 3);
+      assert.include(model.myArray, 7);
+    });
+
+    it('should run the old function and then the new', function () {
+      XM.TestModel.prototype.augment({
+        myIncrementer: function () {
+          this.myCount *= 3;
+        }
+      });
+
+      var a = new XM.TestModel();
+      a.myIncrementer();
+      var model = new XM.TestModel();
+      model.myIncrementer();
+      assert.equal(model.myCount, 18);
+    });
+
+    it('should error on illegal augmentation', function () {
+      try {
+        XM.TestModel.prototype.augment({
+          myCount: 99
+        });
+        assert.fail("Illegal augmentation should not be allowed");
+      } catch (error) {
+        assert.notEqual(error.actual, "Illegal augmentation should not be allowed");
+      }
+    });
+
+
   });
 }());
 

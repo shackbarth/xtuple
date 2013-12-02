@@ -36,6 +36,7 @@ strict:true, trailing:true, white:true */
     "_includePackageWeight": "Include Package Weight in Freight Calculation",
     "_invoice": "Invoice",
     "_invoiceDateSource": "Invoice Date Source",
+    "_maintainSalesEmailProfiles": "Maintain Sales Email Profiles",
     "_postCustomerChanges": "Post Customer Changes",
     "_postSalesOrderChanges": "Post Sales Order Changes",
     "_priceControl": "Price Control",
