@@ -47,6 +47,7 @@ white:true*/
       XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
       var pricePolicy = XT.session.settings.get("soPriceEffective");
       this.on('change:holdType', this.holdTypeDidChange);
+      this.get("workflow").on("all", this.workflowDidChange, this);
     },
 
     /**
@@ -87,6 +88,21 @@ white:true*/
         "XM.SalesOrderWorkflow");
       if (!this.get("holdType")) {
         this.set({holdType: this.getValue("saleType.defaultHoldType")});
+      }
+    },
+
+    // XXX slightly awkward implementation on "on:all"
+    workflowDidChange: function (eventName, workflowModel, status) {
+      var targetHoldStatus;
+
+      if (eventName === "change:status" && _.contains(["C", "D"], status)) {
+        targetHoldStatus = status === 'C' ?
+          workflowModel.get("completedParentStatus") :
+          workflowModel.get("deferredParentStatus");
+
+        if (targetHoldStatus) {
+          this.set({holdType: targetHoldStatus});
+        }
       }
     },
 
