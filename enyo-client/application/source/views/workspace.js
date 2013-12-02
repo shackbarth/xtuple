@@ -2227,6 +2227,7 @@ strict: false*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.SalesOrderWorkflowTypePicker", attr: "workflowType"},
             {kind: "XV.WorkflowStatusPicker", attr: "status"},
             {kind: "XV.PriorityPicker", attr: "priority", showNone: false},
             {kind: "XV.NumberSpinnerWidget", attr: "sequence"},

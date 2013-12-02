@@ -5,7 +5,10 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  var routes = require('./routes');
+  var routes = require('./routes'),
+      getIsRestORMsStore,
+      getResourcesStore,
+      getServicesStore;
 
   var getIsRestORMs = function (req, res, next) {
     var callback = {},
@@ -17,6 +20,7 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
         return next(new Error("Invalid Request."));
       }
 
+      getIsRestORMsStore = result.data;
       getResources(req, res, next, result.data);
     };
 
@@ -35,7 +39,11 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.queryDatabase("post", payload, session, callback);
+    if (getIsRestORMsStore) {
+      getResources(req, res, next, getIsRestORMsStore);
+    } else {
+      routes.queryDatabase("post", payload, session, callback);
+    }
   };
 
   var getResources = function (req, res, next, orms) {
@@ -48,6 +56,8 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (result.isError) {
         return next(new Error("Invalid Request."));
       }
+
+      getResourcesStore = result.data;
 
       getServices(req, res, next, orms, result.data);
     };
@@ -68,7 +78,11 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.queryDatabase("post", payload, session, callback);
+    if (getResourcesStore) {
+      getServices(req, res, next, orms, getResourcesStore);
+    } else {
+      routes.queryDatabase("post", payload, session, callback);
+    }
   };
 
   var getServices = function (req, res, next, orms, resources) {
@@ -81,6 +95,8 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (result.isError) {
         return next(new Error("Invalid Request."));
       }
+
+      getServicesStore = result.data;
 
       routeCall(req, res, next, orms, resources, result.data);
     };
@@ -101,7 +117,12 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.queryDatabase("post", payload, session, callback);
+
+    if (getServicesStore) {
+      routeCall(req, res, next, orms, resources, getServicesStore);
+    } else {
+      routes.queryDatabase("post", payload, session, callback);
+    }
   };
 
   var routeCall = function (req, res, next, orms, resources, services) {

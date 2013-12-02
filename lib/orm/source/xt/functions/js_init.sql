@@ -2,7 +2,9 @@ drop function if exists xt.js_init();
 
 create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
 
-  if (plv8.__initialized) return;
+  if (plv8.__initialized && debug !== true) {
+    return;
+  }
 
   DEBUG = debug ? debug : false;
 
@@ -74,6 +76,31 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       }
     }
     return false;
+  }
+
+  /**
+    Remove duplicates from an array.
+
+    @returns Array with no duplicates.
+  */
+  /* TODO: Or add underscore.js support. */
+  Array.prototype.unique = function () {
+    var a = this.concat();
+    for(var i=0; i<a.length; ++i) {
+      for(var j=i+1; j<a.length; ++j) {
+        if (typeof a[i] === 'string' && typeof a[j] === 'string') {
+          if(a[i] === a[j]) {
+            a.splice(j--, 1);
+          }
+        } else if (typeof a[i] === 'object' && typeof a[j] === 'object') {
+          if(JSON.stringify(a[i]) === JSON.stringify(a[j])) {
+            a.splice(j--, 1);
+          }
+        }
+      }
+    }
+
+    return a;
   }
 
   /**
