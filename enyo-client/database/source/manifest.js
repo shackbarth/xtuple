@@ -3,6 +3,7 @@
   "databaseScripts": [
     "version_check.sql",
     "drop_deprecated.sql",
+    "xt/trigger_functions/acttype_did_change.sql",
     "xt/trigger_functions/comment_did_change.sql",
     "xt/trigger_functions/customer_did_change.sql",
     "xt/trigger_functions/owner_record_did_change.sql",
@@ -127,7 +128,6 @@
     "xt/tables/coheadwf.sql",
     "xt/tables/saletypewf.sql",
     "xt/javascript/init.sql",
-    "xt/views/act.sql",
     "xt/views/cohistinfo.sql",
     "xt/views/doc.sql",
     "xt/views/cntctinfo.sql",
