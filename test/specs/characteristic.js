@@ -27,7 +27,6 @@
 
   var spec = {
       recordType: "XM.Characteristic",
-      //autoTestAttributes: true,
       enforceUpperKey: false,
       collectionType: "XM.CharacteristicCollection",
       listKind: "XV.CharacteristicList",
@@ -36,12 +35,12 @@
                   "isAddresses", "isContacts", "isAccounts", "isItems", "isInvoices",
                   "isEmployees", "isIncidents", "isOpportunities", "isProjects", "isSalesOrders"],
       idAttribute: "name",
-      //extensions: ["crm"],
+      //extensions: ["crm"],  //Incident 22094
       isLockable: true,
       cacheName: "XM.characteristics",
       privileges: {
         createUpdateDelete: "MaintainCharacteristics",
-        //read: "ViewCharacteristics"
+        //read: "ViewCharacteristics"  //Incident 22093
       },
       createHash: {
         name: "Test Characteristic" + Math.random(),
@@ -60,8 +59,6 @@
       }
     };
 
-  //var additionalTests = function () {};
-
   exports.spec = spec;
-  //exports.additionalTests = additionalTests;
+  
 }());
