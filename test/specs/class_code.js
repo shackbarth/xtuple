@@ -24,6 +24,7 @@
       instanceOf: "XM.Document",
       attributes: ["code", "description"],
       idAttribute: "code",
+      //extensions: ["crm", "project"], //Incident 22102
       extensions: ["crm"],
       isLockable: true,
       cacheName: "XM.classCodes",
