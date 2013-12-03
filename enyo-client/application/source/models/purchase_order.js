@@ -179,4 +179,16 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.PurchaseOrderRelationCollection = XM.Collection.extend({
+    /** @scope XM.PurchaseOrderListItemCollection.prototype */
+
+    model: XM.PurchaseOrderRelation
+
+  });
+
 }());
