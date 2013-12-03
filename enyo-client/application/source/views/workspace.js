@@ -2228,6 +2228,7 @@ strict: false*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.SalesOrderWorkflowTypePicker", attr: "workflowType"},
             {kind: "XV.WorkflowStatusPicker", attr: "status"},
             {kind: "XV.PriorityPicker", attr: "priority", showNone: false},
             {kind: "XV.NumberSpinnerWidget", attr: "sequence"},
@@ -2478,7 +2479,7 @@ strict: false*/
             {kind: "XV.ContactWidget", attr: "contact"},
             {kind: "XV.AddressWidget", attr: "address"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
-            {kind: "XV.InputWidget", attr: "fob"},
+            {kind: "XV.InputWidget", attr: "incoterms"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
@@ -2926,6 +2927,7 @@ strict: false*/
             {kind: "XV.InputWidget", attr: "email"},
             {kind: "XV.CheckboxWidget", attr: "useEnhancedAuth"},
             {kind: "XV.CheckboxWidget", attr: "disableExport"},
+            {kind: "XV.CheckboxWidget", attr: "isAgent"},
             // normally I'd put classes: "xv-assignment-box" into the container of the
             // assignmentbox, but there is no such container here. Maybe some CSS work
             // to be done now that assignmentbox is the thing inside the thing instead

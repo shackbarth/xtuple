@@ -1,8 +1,18 @@
 /*jshint node:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, trailing:true, white:true */
+regexp:true, undef:true, trailing:true, white:true, strict:false */
 /*global XT:true, XM:true, enyo:true, _:true */
 
 (function () {
+
+  // ..........................................................
+  // AGENT
+
+  enyo.kind({
+    name: "XV.AgentPicker",
+    kind: "XV.PickerWidget",
+    nameAttribute: "username",
+    collection: "XM.agents"
+  });
 
   // ..........................................................
   // ACCOUNT TYPE
@@ -860,6 +870,17 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     showNone: false,
     collection: "XM.workflowStatuses"
+  });
+
+  // ..........................................................
+  // WORKFLOW TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkflowTypePicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.salesOrderWorkflowTypes"
   });
 
   // ..........................................................

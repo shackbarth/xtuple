@@ -244,7 +244,9 @@ white:true*/
   XM.SalesOrderWorkflow = XM.Workflow.extend(
     /** @scope XM.SalesOrderWorkflow.prototype */ {
 
-    recordType: 'XM.SalesOrderWorkflow'
+    recordType: 'XM.SalesOrderWorkflow',
+
+    parentStatusAttribute: 'holdType'
 
   });
   _.extend(XM.SalesOrderWorkflow, /** @lends XM.SalesOrderLine# */{

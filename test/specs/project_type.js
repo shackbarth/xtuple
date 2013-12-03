@@ -82,6 +82,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         }});
       });
 
+      it.skip('Allow New Workflow when editing an existing Project Type', function () {
+      });
 
     });
   };

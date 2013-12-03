@@ -2,7 +2,7 @@
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, console:true, issue:true, require:true, XM:true, io:true,
-Backbone:true, _:true, X:true, __dirname:true, exports:true */
+Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
 
 (function () {
   "use strict";
@@ -343,11 +343,51 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true */
       }
     };
 
+  //
+  // Set up listener for postgres events on the nodext channel
+  //
+  /*
+    do $$
+      var payload = {action: "email", content: {
+        from: "no-reply@xtuple.com",
+        to: "shackbarth@xtuple.com",
+        subject: "test subject",
+        text: "test body"
+      }};
+      plv8.execute("select pg_notify($1, $2);", ['nodext', JSON.stringify(payload)]);
+    $$ language plv8;
+  */
+  var setupPgListeners = function (databases, eventHandlers) {
+    var afterAction = function () {
+      // do nothing.
+      console.log("action taken", arguments);
+    };
+    _.each(databases, function (database) {
+      var creds = DataSource.getAdminCredentials(database);
+      X.pg.connect(creds, function (err, client, done) {
+        if (err) {
+          return console.error('error fetching client from pool', err);
+        }
+        client.on('notification', function (msg) {
+          var payload = JSON.parse(msg.payload);
+
+          // the event handlers get passed in by the caller. Just run the
+          // event handler that corresponds to the action postgres is
+          // requesting.
+          eventHandlers[payload.action](payload.content, afterAction);
+        });
+        client.query("LISTEN nodext");
+        X.log("Listening for postgres notifications on the nodext channel on ", database);
+      });
+    });
+  };
+
   XT.dataSource = X.Database.create(DataSource);
 
   module.exports = {
     api: DataSource,
-    dataSource: XT.dataSource
+    dataSource: XT.dataSource,
+    setupPgListeners: setupPgListeners
   };
 
 }());
