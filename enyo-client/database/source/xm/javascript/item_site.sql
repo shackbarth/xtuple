@@ -28,8 +28,8 @@ select xt.install_js('XM','item_site','xtuple', $$
     @param {Object} Additional query filter (Optional)
     @returns {Array}
    */
-  XM.ItemSite.itemsForCustomer = function (customerId, shiptoId, effectiveDate, query) {
-    customerId = customerId ? XT.Data.getId(XT.Orm.fetch('XM', 'CustomerProspectRelation'), customerId) : null;
+  XM.ItemSite.itemsForCustomer = function (customerNumber, shiptoId, effectiveDate, query) {
+    customerId = customerNumber ? XT.Data.getId(XT.Orm.fetch('XM', 'CustomerProspectRelation'), customerNumber) : null;
     shiptoId = shiptoId ? XT.Data.getId(XT.Orm.fetch('XM', 'CustomerShipto'), shiptoId) : -1;
     effectiveDate = effectiveDate || new Date();
     query = query || {};
@@ -37,7 +37,7 @@ select xt.install_js('XM','item_site','xtuple', $$
       offset = query.rowOffset ? 'offset ' + Number(query.rowOffset) : '',
       clause = XT.Data.buildClause("XM", "ItemSite", query.parameters, query.orderBy),
       spliceIndex,
-      oneIfSplice = 0,
+      twoIfSplice = 0,
       aliasInjection,
       itemNumber,
       sql = 'select * from xm.item_site_list_item where id in ' +
@@ -46,17 +46,24 @@ select xt.install_js('XM','item_site','xtuple', $$
             ' where {conditions} ';
 
     if (customerId) {
-      sql = sql + ' and (item).id in (select * from custitem(${p2}, ${p3}::integer, ${p4}::date)) ';
+      sql = sql + ' and (item).id in (select * from custitem(${p3}, ${p4}::integer, ${p5}::date)) ';
     }
     sql = sql + '{orderBy} {limit} {offset}) ' +
       '{orderBy}';
 
-    /* crazily splice in the option of querying by alias in the middle of the item number part of the WHERE */
+    /* crazily splice in the option of querying by alias in the middle of the item number part of the WHERE.
+      In the future conditions should be able to generate this sort of code itself with the 
+      proposed aliases*number format. Once that's ready, take this ugly code out */
     spliceIndex = clause.conditions.indexOf('or (item).barcode');
     if (spliceIndex >= 0) {
-      oneIfSplice = 1;
-      aliasInjection = " or (item).number in (select item_number from item inner join itemalias " + 
-        "on item_id = itemalias_item_id where itemalias_number ~^ ${p1}) "
+      twoIfSplice = 2;
+      aliasInjection = " or (item).number in (" +
+        "select item_number from item " +
+        "inner join itemalias on item_id = itemalias_item_id " +
+        "left join crmacct on itemalias_crmacct_id = crmacct_id " + 
+        "where itemalias_number ~^ ${p1} " + 
+        "and (crmacct_number is null or crmacct_number = ${p2}) "
+        ") "
       clause.conditions = clause.conditions.substring(0, spliceIndex) + aliasInjection + clause.conditions.substring(spliceIndex);
       itemNumber = query.parameters.filter(function (param) {
         return param.attribute && param.attribute.length && param.attribute.indexOf("item.number") >= 0;
@@ -69,12 +76,13 @@ select xt.install_js('XM','item_site','xtuple', $$
              .replace('{limit}', limit)
              .replace('{offset}', offset)
              .replace('{p1}', clause.parameters.length + 1)
-             .replace('{p2}', clause.parameters.length + 1 + oneIfSplice)
-             .replace('{p3}', clause.parameters.length + 2 + oneIfSplice)
-             .replace('{p4}', clause.parameters.length + 3 + oneIfSplice);
+             .replace('{p2}', clause.parameters.length + 2)
+             .replace('{p3}', clause.parameters.length + 1 + twoIfSplice)
+             .replace('{p4}', clause.parameters.length + 2 + twoIfSplice)
+             .replace('{p5}', clause.parameters.length + 3 + twoIfSplice);
 
     if (spliceIndex >= 0) {
-      clause.parameters = clause.parameters.concat([itemNumber]);
+      clause.parameters = clause.parameters.concat([itemNumber, customerNumber]);
     }
     if (customerId) {
       clause.parameters = clause.parameters.concat([customerId, shiptoId, effectiveDate]);
