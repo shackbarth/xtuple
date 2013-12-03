@@ -7,6 +7,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 (function () {
   "use strict";
 
+  var assert = require("chai").assert;
+
   /**
     @class
     @alias Item
@@ -20,7 +22,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     isLockable: true,
     idAttribute: "number",
     enforceUpperKey: true,
-    attributes: ["number", "description1"], // TODO: more
+    attributes: ["number", "description1", "barCode"], // TODO: more
     extensions: ["billing", "crm", "sales", "project"],
     privileges: {
       createUpdate: "MaintainItemMasters",
@@ -43,9 +45,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     updatableField: "description1"
   };
   var additionalTests = function () {
-    describe.skip("Item screen", function () {
-      it("Bar Code field should present in the Item screen and should be editable", function () {
-      });
+    describe("Item screen", function () {
       it("List of Aliases should exist in the Item screen", function () {
       });
       it("Aliases can be created, updated and deleted", function () {
@@ -65,7 +65,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         });
       });
     });
-    describe.skip("Item relation widget", function () {
+    describe("Item relation widget", function () {
       it("Selecting to enter the item alias manually in the Item relation widget" +
           "should display the related item for selection", function () {
       });
