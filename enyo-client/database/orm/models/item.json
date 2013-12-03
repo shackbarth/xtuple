@@ -155,13 +155,6 @@
         }
       },
       {
-        "name": "barCode",
-        "attr": {
-          "type": "String",
-          "column": "item_upccode"
-        }
-      },
-      {
         "name": "classCode",
         "toOne": {
           "type": "ClassCode",
@@ -278,6 +271,15 @@
         "attr": {
           "type": "Number",
           "column": "item_packweight"
+        }
+      },
+      {
+        "name": "aliases",
+        "toMany": {
+          "isNested": true,
+          "type": "ItemAlias",
+          "column": "item_id",
+          "inverse": "item"
         }
       },
       {
@@ -473,7 +475,8 @@
         "name": "aliasNumber",
         "attr": {
           "type": "String",
-          "column": "itemalias_number"
+          "column": "itemalias_number",
+          "required": true
         }
       },
       {
@@ -487,7 +490,8 @@
         "name": "useDescription",
         "attr": {
           "type": "Boolean",
-          "column": "itemalias_usedescrip"
+          "column": "itemalias_usedescrip",
+          "required": true
         }
       },
       {

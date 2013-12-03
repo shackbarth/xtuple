@@ -7,7 +7,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 (function () {
   "use strict";
 
-  var assert = require("chai").assert;
+  var _ = require("underscore"),
+    assert = require("chai").assert,
+    common = require("../lib/common");
 
   /**
     @class
@@ -22,7 +24,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     isLockable: true,
     idAttribute: "number",
     enforceUpperKey: true,
-    attributes: ["number", "description1", "barCode"], // TODO: more
+    attributes: ["number", "description1", "barcode", "aliases"],
     extensions: ["billing", "crm", "sales", "project"],
     privileges: {
       createUpdate: "MaintainItemMasters",
@@ -42,27 +44,58 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       listPrice: 0.00,
       priceUnit: {name: "CS"}
     },
-    updatableField: "description1"
+    updatableField: "description1",
+    beforeSaveActions: [{it: "should be able to add an item alias", action: function (data, next) {
+      var itemAlias = new XM.ItemAlias(),
+        statusChanged = function () {
+          if (itemAlias.isReady()) {
+            itemAlias.off("statusChange", statusChanged);
+            itemAlias.set({aliasNumber: "Alias123"});
+            data.model.get("aliases").add(itemAlias);
+            next();
+          }
+        };
+
+      itemAlias.on("statusChange", statusChanged);
+      itemAlias.initialize(null, {isNew: true});
+    }}],
+    beforeDeleteActions: [{it: "should be able to delete the item alias", action: function (data, next) {
+      data.model.get("aliases").remove(data.model.get("aliases").models[0]);
+      next();
+    }}]
   };
   var additionalTests = function () {
-    describe("Item screen", function () {
-      it("List of Aliases should exist in the Item screen", function () {
+    describe("Item Alias", function () {
+      var itemAlias;
+      before(function (done) {
+        common.initializeModel(itemAlias, XM.ItemAlias, function (err, model) {
+          itemAlias = model;
+          done();
+        });
       });
-      it("Aliases can be created, updated and deleted", function () {
+      it("Item Alias should contain the following fields - Item Number,Alias Number," +
+          "Associated CRMAccount, 'Use Description' checkbox, Description, " +
+          "Comments", function () {
+        var aliasFields = ["item", "aliasNumber", "useDescription", "description1"];//
+          // "account", "comments"]; TODO
+        assert.equal(_.difference(aliasFields, itemAlias.getAttributeNames()).length, 0);
       });
-      describe("Item Alias Screen", function () {
-        it("Item Alias should contain the following fields - Item Number,Alias Number," +
-            "Associated CRMAccount, 'Use Description' checkbox, Description, " +
-            "Comments", function () {
-        });
-        it("Item Number field should be read only", function () {
-        });
-        it("Use an Alias option should be unchecked and Description field " +
-            "should be inactive by default", function () {
-        });
-        it("Description field should be enabled when 'Use Description' " +
-            "option is selected", function () {
-        });
+      it("Use a description option should be unchecked and Description field " +
+          "should be inactive by default", function () {
+        assert.isFalse(itemAlias.get("useDescription"));
+        assert.isTrue(itemAlias.isReadOnly("description1"));
+      });
+      it("Description field should be enabled when 'Use Description' " +
+          "option is selected", function () {
+        itemAlias.set({useDescription: true});
+        assert.isFalse(itemAlias.isReadOnly("description1"));
+      });
+      it("Description field should be disabled and content wiped when 'Use Description' " +
+          "option is unselected", function () {
+        itemAlias.set({description1: "should get wiped"});
+        itemAlias.set({useDescription: false});
+        assert.isTrue(itemAlias.isReadOnly("description1"));
+        assert.equal(itemAlias.get("description1"), "");
       });
     });
     describe("Item relation widget", function () {

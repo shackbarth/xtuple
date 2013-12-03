@@ -583,6 +583,38 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.ItemAlias = XM.Model.extend({
+    /** @scope XM.ItemAlias.prototype */
+
+    recordType: 'XM.ItemAlias',
+
+    defaults: {
+      useDescription: false
+    },
+
+    bindEvents: function () {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on('change:useDescription', this.useDescriptionDidChange);
+
+      this.useDescriptionDidChange();
+    },
+
+    useDescriptionDidChange: function () {
+      // clear out the description if we don't use it
+      if (!this.get("useDescription") && this.get("description1")) {
+        this.set({description1: ""});
+      }
+      this.setReadOnly("description1", !this.get("useDescription"));
+    }
+
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.ItemAccount = XM.Model.extend({
     /** @scope XM.ItemAccount.prototype */
 
