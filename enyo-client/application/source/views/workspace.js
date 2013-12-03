@@ -1416,6 +1416,7 @@ strict: false*/
             {kind: "XV.ClassCodePicker", attr: "classCode"},
             {kind: "XV.FreightClassPicker", attr: "freightClass"},
             {kind: "XV.UnitPicker", attr: "inventoryUnit"},
+            {kind: "XV.InputWidget", attr: "barcode", label: "_upcCode".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
             {kind: "XV.CheckboxWidget", attr: "isPicklist"},
             {kind: "onyx.GroupboxHeader", content: "_product".loc()},
@@ -1434,7 +1435,8 @@ strict: false*/
           ]}
         ]},
         {kind: "XV.ItemCommentBox", attr: "comments"},
-        {kind: "XV.ItemDocumentsBox", attr: "documents"}
+        {kind: "XV.ItemDocumentsBox", attr: "documents"},
+        {kind: "XV.ItemAliasBox", attr: "aliases"}
       ]}
     ]
   });
