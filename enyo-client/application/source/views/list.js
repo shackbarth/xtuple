@@ -1285,7 +1285,7 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "item.number", isKey: true},
-              {kind: "XV.ListAttr", attr: "item.unit.name", fit: true, classes: "right"}
+              {kind: "XV.ListAttr", attr: "item.barcode", fit: true, classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "item.description1"},
