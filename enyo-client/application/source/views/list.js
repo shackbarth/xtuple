@@ -1287,7 +1287,11 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ListAttr", attr: "item.number", isKey: true},
               {kind: "XV.ListAttr", attr: "item.unit.name", fit: true, classes: "right"}
             ]},
-            {kind: "XV.ListAttr", attr: "item.description1"}
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "item.description1"},
+              {kind: "XV.ListAttr", attr: "item.aliases", fit: true,
+                formatter: "formatAliases", classes: "right"}
+            ]}
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
@@ -1299,6 +1303,11 @@ trailing:true, white:true, strict: false*/
     ],
     formatActive: function (value, view, model) {
       return value ? "_active".loc() : "";
+    },
+    formatAliases: function (value, view, model) {
+      return value.map(function (model) {
+        return model.get("aliasNumber");
+      }).join();
     },
     formatSold: function (value, view, model) {
       return value ? "_sold".loc() : "";

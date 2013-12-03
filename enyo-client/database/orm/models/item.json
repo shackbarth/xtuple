@@ -1312,6 +1312,15 @@
         }
       },
       {
+        "name": "aliases",
+        "toMany": {
+          "isNested": true,
+          "type": "ItemAlias",
+          "column": "item_id",
+          "inverse": "item"
+        }
+      },
+      {
         "name": "characteristics",
         "toMany": {
           "type": "ItemRelationCharacteristic",
