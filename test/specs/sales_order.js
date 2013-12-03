@@ -350,6 +350,34 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       /**
         @member -
         @memberof SalesOrder
+        @description When a workflow item is completed or deferred, the hold type of the sales
+          order will be set to be the applicable target hold type of the workflow item.
+      */
+      it("When a workflow item is completed or deferred, the hold type of the sales " +
+          "order will be set to be the applicable target hold type of the workflow item. ",
+          function () {
+        workflowModel.set({completedParentStatus: "R"});
+        salesOrderModel.get("workflow").add(workflowModel);
+        assert.equal(salesOrderModel.get("holdType"), "N");
+        workflowModel.set({status: "C"});
+        assert.equal(salesOrderModel.get("holdType"), "R");
+        salesOrderModel.set({saleType: null});
+        salesOrderModel.get("workflow").reset([]);
+        salesOrderModel.get("characteristics").reset([]);
+      });
+      it("When a workflow item is completed it should not update the status of the sales order",
+          function () {
+        workflowModel.set({status: "I"});
+        salesOrderModel.get("workflow").add(workflowModel);
+        workflowModel.set({status: "C"});
+        assert.equal(salesOrderModel.get("status"), "O");
+        salesOrderModel.set({saleType: null});
+        salesOrderModel.get("workflow").reset([]);
+        salesOrderModel.get("characteristics").reset([]);
+      });
+      /**
+        @member -
+        @memberof SalesOrder
         @description For the Workflow items copied from the Sale types, the start date and due date " +
         "should be calculated correctly based on the offset
       */
@@ -447,7 +475,6 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       it("When hold type of an order is changed to None, all credit " +
           "check type workflow items will be marked completed.", function () {
         var copiedWorkflow;
-
 
         saleTypeModel.get("workflow").models[0]
           .set({workflowType: XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK});
