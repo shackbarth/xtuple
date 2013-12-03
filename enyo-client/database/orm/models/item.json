@@ -239,7 +239,7 @@
       {
         "name": "listPrice",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "item_listprice",
           "required": true
         }
@@ -247,7 +247,7 @@
       {
         "name": "wholesalePrice",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "item_listcost"
         }
       },
@@ -262,14 +262,14 @@
       {
         "name": "productWeight",
         "attr": {
-          "type": "Number",
+          "type": "Weight",
           "column": "item_prodweight"
         }
       },
       {
         "name": "packageWeight",
         "attr": {
-          "type": "Number",
+          "type": "Weight",
           "column": "item_packweight"
         }
       },
@@ -1247,21 +1247,21 @@
       {
         "name": "listPrice",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "item_listprice"
         }
       },
       {
         "name": "standardCost",
         "attr": {
-          "type": "Number",
+          "type": "Cost",
           "column": "std_cost"
         }
       },
       {
         "name": "wholesalePrice",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "item_listcost"
         }
       },
@@ -1275,21 +1275,21 @@
       {
         "name": "priceUnitRatio",
         "attr": {
-          "type": "Number",
+          "type": "UnitRatio",
           "column": "inv_price_ratio"
         }
       },
       {
         "name": "productWeight",
         "attr": {
-          "type": "Number",
+          "type": "Weight",
           "column": "item_prodweight"
         }
       },
       {
         "name": "packageWeight",
         "attr": {
-          "type": "Number",
+          "type": "Weight",
           "column": "item_packweight"
         }
       },
@@ -1376,7 +1376,7 @@
       {
         "name": "price",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "charass_price"
         }
       }
