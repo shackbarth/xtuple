@@ -76,8 +76,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       it("Item Alias should contain the following fields - Item Number,Alias Number," +
           "Associated CRMAccount, 'Use Description' checkbox, Description, " +
           "Comments", function () {
-        var aliasFields = ["item", "aliasNumber", "useDescription", "description1"];//
-          // "account", "comments"]; TODO
+        var aliasFields = ["item", "aliasNumber", "useDescription", "description1",
+          "account"];//, "comments"]; TODO
         assert.equal(_.difference(aliasFields, itemAlias.getAttributeNames()).length, 0);
       });
       it("Use a description option should be unchecked and Description field " +

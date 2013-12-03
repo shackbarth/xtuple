@@ -502,6 +502,13 @@
         }
       },
       {
+        "name": "account",
+        "toOne": {
+          "type": "AccountRelation",
+          "column": "itemalias_crmacct_id"
+        }
+      },
+      {
         "name": "description2",
         "attr": {
           "type": "String",
