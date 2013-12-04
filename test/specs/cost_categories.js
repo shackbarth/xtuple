@@ -25,12 +25,13 @@
       instanceOf: "XM.Document",
       attributes: ["code", "description"],
       idAttribute: "code",
-      //extensions: ["inventory", "sales"], //Incident 22101
+      extensions: ["sales"], //Incident 22101
+      //extensions: ["inventory", "sales"], //Inventory is not in postbooks
       isLockable: true,
       cacheName: "XM.costCategories",
       privileges: {
         createUpdateDelete: "MaintainCostCategories",
-        //read: "ViewCostCategories" //Incident 22100
+        read: "ViewCostCategories" //Incident 22100
       },
       createHash: {
         code: "CostCategory" + Math.random(),
