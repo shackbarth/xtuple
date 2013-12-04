@@ -50,7 +50,6 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     describe("Item site relation widget", function () {
       var item,
         alias;
-      /*
       before(function (done) {
         async.series([
           function (done) {
@@ -60,28 +59,38 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
             });
           },
           function (done) {
-            common.initializeModel(alias, XM.ItemAlias, function (err, model) {
-              alias = model;
+            var initialized = function () {
+              alias.off("change:uuid", initialized);
+              alias.set({aliasNumber: "ABC123"});
+              assert.isUndefined(JSON.stringify(alias.validate(alias.attributes)));
               done();
-            });
+            };
+
+            alias = new XM.ItemAlias();
+            alias.on("change:uuid", initialized);
+            alias.initialize(null, {isNew: true});
           },
           function (done) {
             var itemSaved = function () {
-              if (item.isReady()) {
+              if (item.getStatus() === XM.Model.READY_CLEAN) {
                 item.off("statusChange", itemSaved);
-                console.log(item.get("aliases"));
                 done();
               }
             };
-            alias.set({aliasNumber: "ABC123"});
+
+            if (item.get("aliases").length > 0) {
+              // alias is already set up
+              done();
+              return;
+            }
+
             item.get("aliases").add(alias);
-            console.log(item.get("aliases"));
             item.on("statusChange", itemSaved);
+            assert.isUndefined(JSON.stringify(item.validate(item.attributes)));
             item.save();
           }
         ], done);
       });
-      */
       it("Selecting to enter the item alias manually in the Item relation widget" +
           "should display the related item for selection", function (done) {
         var widget = new XV.ItemSiteWidget(),
@@ -93,9 +102,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         widget.$.privateItemSiteWidget.mockReturn = mockReturn;
         widget.$.privateItemSiteWidget.fetchCollection("BTR", 10, "mockReturn");
       });
-      it.skip("Aliases option should be available on the Item widget which displays " +
+      it("Aliases option should be available on the Item widget which displays " +
           "Active Alias Items on selection", function (done) {
-        // TODO: get this to work
         var widget = new XV.ItemSiteWidget(),
           mockReturn = function (results) {
             assert.equal(results[0].item.number, "BPAINT1");
