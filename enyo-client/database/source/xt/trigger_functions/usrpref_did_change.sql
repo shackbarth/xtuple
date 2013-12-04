@@ -16,13 +16,15 @@ create or replace function xt.usrpref_did_change() returns trigger as $$
    case "propername":
    case "active":
    case "email":
+   case "agent":
      name = NEW.usrpref_name;
      break;
    case "DisableExportContents":
-     name = "disable_export";  
+     name = "disable_export"; 
  }
 
  if (NEW.usrpref_name === 'active' ||
+     NEW.usrpref_name === 'agent' ||
      NEW.usrpref_name === 'DisableExportContents') {
    val = val === 't' ? true : false; 
  }

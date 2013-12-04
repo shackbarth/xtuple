@@ -50,7 +50,9 @@ white:true*/
     XM.ProjectTypeCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectTypeCharacteristic.prototype */ {
 
-      recordType: 'XM.ProjectTypeCharacteristic'
+      recordType: 'XM.ProjectTypeCharacteristic',
+
+      which: 'isProjects'
 
     });
 
@@ -232,117 +234,8 @@ white:true*/
       },
 
       projectTypeDidChange: function () {
-        var projectType = this.get("projectType"),
-          charProfile = projectType ? projectType.get("characteristics") : false,
-          wfProfile = projectType ? projectType.get("workflow") : false,
-          chars = this.get("characteristics"),
-          workflow = this.get("workflow"),
-          that = this,
-
-          // Copies characteristics from project type to project
-          copyCharProfile = function () {
-            chars.reset();
-            _.each(charProfile.models, function (model) {
-              var assignment = new XM.ProjectCharacteristic(null, {isNew: true});
-              assignment.set("characteristic", model.get("characteristic"));
-              assignment.set("value", model.get("value"));
-              chars.add(assignment);
-            });
-          },
-
-          // Copies workflow from project type to project
-          copyWfProfile = function () {
-            var map = {};
-            workflow.reset();
-            _.each(wfProfile.models, function (model) {
-              var item = new XM.ProjectWorkflow(null, {isNew: true}),
-                id = XT.generateUUID(),
-                dueOffset = model.get("dueOffset"),
-                startOffset = model.get("startOffset"),
-                dueDate,
-                startDate;
-
-              map[model.id] = id;
-
-              if (model.get("dueSet")) {
-                dueDate = XT.date.today();
-                dueDate.setDate(dueDate.getDate() + model.get("dueOffset"));
-              }
-
-              if (model.get("startSet")) {
-                startDate = XT.date.today();
-                startDate.setDate(startDate.getDate() + model.get("startOffset"));
-              }
-
-              item.set({
-                uuid: id,
-                name: model.get("name"),
-                description : model.get("description"),
-                priority: model.get("priority"),
-                startDate: startDate,
-                dueDate: dueDate,
-                owner: model.get("owner"),
-                assignedTo: model.get("assignedTo"),
-                sequence: model.get("sequence"),
-                notes: model.get("notes"),
-                completedParentStatus : model.get("completedParentStatus"),
-                deferredParentStatus : model.get("deferredParentStatus"),
-                completedSuccessors: model.get("completedSuccessors"),
-                deferredSuccessors: model.get("deferredSuccessors")
-              });
-              workflow.add(item);
-            });
-
-            // Reiterate through new collection and fix successor mappings
-            _.each(_.keys(map), function (uuid) {
-              _.each(workflow.models, function (model) {
-                var successors = model.get("completedSuccessors");
-                if (_.isString(successors)) {
-                  model.set("completedSuccessors", successors.replace(uuid, map[uuid]));
-                }
-                successors = model.get("deferredSuccessors");
-                if (_.isString(successors)) {
-                  model.set("deferredSuccessors", successors.replace(uuid, map[uuid]));
-                }
-              });
-            });
-          },
-          handleWfProfile = function () {
-            // Handle copying workflow
-            if (wfProfile && wfProfile.length) {
-              if (!workflow.length) {
-                copyWfProfile();
-              } else {
-                that.notify("_copyWorkflow?".loc(), {
-                  type: XM.Model.QUESTION,
-                  callback: function (response) {
-                    if (response.answer) {
-                      copyWfProfile();
-                    }
-                  }
-                });
-              }
-            }
-          };
-
-        // Handle copying characteristics
-        if (charProfile && charProfile.length) {
-          if (!chars.length) {
-            copyCharProfile();
-          } else {
-            this.notify("_copyCharacteristics?".loc(), {
-              type: XM.Model.QUESTION,
-              callback: function (response) {
-                if (response.answer) {
-                  copyCharProfile();
-                }
-                handleWfProfile();
-              }
-            });
-            return;
-          }
-        }
-        handleWfProfile();
+        this.inheritWorkflowSource(this.get("projectType"), "XM.ProjectCharacteristic",
+          "XM.ProjectWorkflow");
       },
 
       /**
@@ -410,6 +303,7 @@ white:true*/
         return K.buildToString.call(this, toAddresses);
       }
     });
+    _.extend(XM.Project.prototype, XM.WorkflowMixin);
 
     // ..........................................................
     // CLASS METHODS
@@ -982,7 +876,9 @@ white:true*/
     XM.ProjectCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectCharacteristic.prototype */ {
 
-      recordType: 'XM.ProjectCharacteristic'
+      recordType: 'XM.ProjectCharacteristic',
+
+      which: 'isProjects'
 
     });
 
@@ -994,7 +890,9 @@ white:true*/
     XM.ProjectListItemCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectListItemCharacteristic.prototype */ {
 
-      recordType: 'XM.ProjectListItemCharacteristic'
+      recordType: 'XM.ProjectListItemCharacteristic',
+
+      which: 'isProjects'
 
     });
 
@@ -1006,7 +904,9 @@ white:true*/
     XM.ProjectTaskCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectTaskCharacteristic.prototype */ {
 
-      recordType: 'XM.ProjectTaskCharacteristic'
+      recordType: 'XM.ProjectTaskCharacteristic',
+
+      which: 'isTasks'
 
     });
 
@@ -1018,7 +918,9 @@ white:true*/
     XM.TaskCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.TaskCharacteristic.prototype */ {
 
-      recordType: 'XM.TaskCharacteristic'
+      recordType: 'XM.TaskCharacteristic',
+
+      which: 'isTasks'
 
     });
 
@@ -1030,7 +932,9 @@ white:true*/
     XM.TaskListItemCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.TaskListItemCharacteristic.prototype */ {
 
-      recordType: 'XM.TaskListItemCharacteristic'
+      recordType: 'XM.TaskListItemCharacteristic',
+
+      which: 'isTasks'
 
     });
 

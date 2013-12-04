@@ -8,70 +8,85 @@
 
   /*
     Does any need prep-work to the database. Currently, this is just to add
-    the MaintainSaleTypes privilege to admin. This can be generalized lot
-    if we want to do more stuff in here.
+    the privileges to the test user.
   */
 
 
   var async = require("async"),
     _ = require("underscore"),
-    loginData = require('./login_data');
+    loginData = require('./login_data'),
+    username = loginData.data.username,
+    privNames = ["MaintainSaleTypes", "MaintainProjectTypes", "MaintainSalesEmailProfiles"];
 
-  var adminName = loginData.data.username;
-  var privName = "MaintainSaleTypes"; // TODO: support array
-  // TODO: Add "MaintainProjectTypes"
-
-  var assignmentModel;
-  var initAssignmentModel = function (callback) {
-    assignmentModel = new XM.UserAccountPrivilegeAssignment();
+  var assignmentModels;
+  var initAssignmentModel = function (privName, callback) {
+    var assignmentModel = new XM.UserAccountPrivilegeAssignment();
     assignmentModel.on("change:uuid", function () {
-      callback();
+      assignmentModel.privName = privName;
+      callback(null, assignmentModel);
     });
     assignmentModel.initialize(null, {isNew: true});
   };
+  var initAssignmentModels = function (callback) {
+    async.map(privNames, initAssignmentModel, function (err, results) {
+      assignmentModels = results;
+      callback();
+    });
+  };
 
-  var adminModel;
-  var fetchAdminModel = function (callback) {
+  var userModel;
+  var fetchUserModel = function (callback) {
     var statusChanged = function () {
-      if (adminModel.isReady()) {
-        adminModel.off("statusChange", statusChanged);
+      if (userModel.isReady()) {
+        userModel.off("statusChange", statusChanged);
         callback();
       }
     };
-    adminModel = new XM.UserAccount();
-    adminModel.on("statusChange", statusChanged);
-    adminModel.fetch({username: adminName});
+    userModel = new XM.UserAccount();
+    userModel.on("statusChange", statusChanged);
+    userModel.fetch({username: username});
   };
 
-  var saveAdminPrivs = function (callback) {
-    var priv = _.find(XM.privileges.models, function (priv) {
-      return priv.id === privName;
-    });
-    var preExistingPriv = _.filter(adminModel.get("grantedPrivileges").models, function (model) {
-      return model.getValue("privilege.name") === privName;
-    });
-    if (preExistingPriv.length > 0) {
-      // no need to add it
-      return callback();
-    }
+  var saveUserPrivs = function (callback) {
+    _.each(assignmentModels, function (assignmentModel) {
+      var priv,
+        preExistingPriv = _.filter(userModel.get("grantedPrivileges").models, function (model) {
+          return model.getValue("privilege.name") === assignmentModel.privName;
+        });
+      if (preExistingPriv.length > 0) {
+        // no need to add it
+        return;
+      }
+      priv = _.find(XM.privileges.models, function (priv) {
+        return priv.id === assignmentModel.privName;
+      });
 
-    // okay, add the privilege
-    assignmentModel.set({privilege: priv});
-    adminModel.get("grantedPrivileges").add(assignmentModel);
-    adminModel.save(null, {success: function () {
+      // okay, add the privilege
+      assignmentModel.set({privilege: priv});
+      userModel.get("grantedPrivileges").add(assignmentModel);
+
       // update the client, too
       var setObj = {};
-      setObj[privName] = true;
+      setObj[assignmentModel.privName] = true;
       XT.session.privileges.set(setObj);
+    });
+
+    if (!userModel.isDirty()) {
+      // no privs to set
+      callback();
+      return;
+    }
+
+    userModel.save(null, {success: function () {
       callback();
     }});
   };
 
   var prepDatabase = function (callback) {
     async.series([
-      initAssignmentModel,
-      fetchAdminModel,
-      saveAdminPrivs
+      initAssignmentModels,
+      fetchUserModel,
+      saveUserPrivs
     ], callback);
   };
 

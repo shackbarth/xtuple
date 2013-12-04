@@ -12,6 +12,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @alias Item
   */
   var spec = {
+    skipAll: true,
     recordType: "XM.Item",
     collectionType: "XM.ItemListItemCollection",
     cacheName: null,
@@ -44,7 +45,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
 
-  //exports.spec = spec;
+  exports.spec = spec;
 
 }());
 
