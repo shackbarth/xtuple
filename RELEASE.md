@@ -1,10 +1,14 @@
-1.5.1 (2013/11/22)
+1.5.1 (2013/12/04)
 ===============
 
 Critical deployment changes
 ---------------------------
 * File moved xtuple/test/shared/login_data.js -> xtuple/test/lib/login_data.js
+  `mv test/shared/login_data.js test/lib`
 * File moved xtuple/test/mocha/lib/demo-test.backup -> xtuple/test/lib/demo-test.backup
+  `mv test/mocha/lib/demo-test.backup test/lib`
+* If you have inventory registered you will have to change its location
+  `update xt.ext set ext_location = '/private-extensions' where ext_name = 'inventory'`
 
 1.5.0 (2013/11/19)
 ==================
