@@ -24,13 +24,12 @@
       instanceOf: "XM.Document",
       attributes: ["code", "description"],
       idAttribute: "code",
-      //extensions: ["crm", "project"], //Incident 22102
-      extensions: ["crm"],
+      extensions: ["crm", "project"], //Incident 22102
       isLockable: true,
       cacheName: "XM.classCodes",
       privileges: {
         createUpdateDelete: "MaintainClassCodes",
-        //read: "ViewClassCodes" //Incident 22098
+        read: "ViewClassCodes" //Incident 22098
       },
       createHash: {
         code: "CCode" + Math.random(),
