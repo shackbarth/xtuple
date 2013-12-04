@@ -2,219 +2,57 @@
 noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, X:true, _:true */
 
-(function () {
-  "use strict";
+var routes = require('./routes'),
+  _ = require('underscore'),
+  str = require('underscore.string'),
+  querylib = require('../lib/query'),
+  RestQuery = querylib.RestQuery,
+  XtGetQuery = querylib.XtGetQuery;
 
-  var routes = require('./routes'),
-      getIsRestORMsStore,
-      getResourcesStore,
-      getServicesStore;
+_.mixin(str.exports());
 
-  var getIsRestORMs = function (req, res, next) {
-    var callback = {},
-        payload = {},
-        session = {};
+/**
+ * @class RestRouter
+ */
+module.exports = (function () {
+  'use strict';
 
-    callback = function (result) {
-      if (result.isError) {
-        return next(new Error("Invalid Request."));
-      }
+  var handlers = {
+      /**
+       * @private
+       * Requests a representation of the specified resource.
+       */
+      GET: function (req, res, session, options) {
+        var schema,
+          searchableAttributes,
+          ormType = options.ormType,
+          id = options.id,
+          resources = options.resources,
+          callback = options.callback,
 
-      getIsRestORMsStore = result.data;
-      getResources(req, res, next, result.data);
-    };
+          payload = {
+            nameSpace: 'XM'
+          },
+          rq = new RestQuery(req.query),
+          target = rq.toTarget(XtGetQuery);
 
-    payload.nameSpace = "XT";
-    payload.type = "Discovery";
-    payload.dispatch = {
-      functionName: "getIsRestORMs"
-    };
+        //console.log(rq);
+        //console.log(target);
 
-    // Dummy up session.
-    session.passport = {
-      "user": {
-        "id": req.user.get("username"),
-        "username": req.user.get("username"),
-        "organization": req.user.get("organization")
-      }
-    };
-
-    if (getIsRestORMsStore) {
-      getResources(req, res, next, getIsRestORMsStore);
-    } else {
-      routes.queryDatabase("post", payload, session, callback);
-    }
-  };
-
-  var getResources = function (req, res, next, orms) {
-    var callback = {},
-        payload = {},
-        rootUrl = req.protocol + "://" + req.host + "/",
-        session = {};
-
-    callback = function (result) {
-      if (result.isError) {
-        return next(new Error("Invalid Request."));
-      }
-
-      getResourcesStore = result.data;
-
-      getServices(req, res, next, orms, result.data);
-    };
-
-    payload.nameSpace = "XT";
-    payload.type = "Discovery";
-    payload.dispatch = {
-      functionName: "getResources",
-      parameters: [null, rootUrl]
-    };
-
-    // Dummy up session.
-    session.passport = {
-      "user": {
-        "id": req.user.get("username"),
-        "username": req.user.get("username"),
-        "organization": req.user.get("organization")
-      }
-    };
-
-    if (getResourcesStore) {
-      getServices(req, res, next, orms, getResourcesStore);
-    } else {
-      routes.queryDatabase("post", payload, session, callback);
-    }
-  };
-
-  var getServices = function (req, res, next, orms, resources) {
-    var callback = {},
-        payload = {},
-        rootUrl = req.protocol + "://" + req.host + "/",
-        session = {};
-
-    callback = function (result) {
-      if (result.isError) {
-        return next(new Error("Invalid Request."));
-      }
-
-      getServicesStore = result.data;
-
-      routeCall(req, res, next, orms, resources, result.data);
-    };
-
-    payload.nameSpace = "XT";
-    payload.type = "Discovery";
-    payload.dispatch = {
-      functionName: "getServices",
-      parameters: [null, rootUrl, true]
-    };
-
-    // Dummy up session.
-    session.passport = {
-      "user": {
-        "id": req.user.get("username"),
-        "username": req.user.get("username"),
-        "organization": req.user.get("organization")
-      }
-    };
-
-
-    if (getServicesStore) {
-      routeCall(req, res, next, orms, resources, getServicesStore);
-    } else {
-      routes.queryDatabase("post", payload, session, callback);
-    }
-  };
-
-  var routeCall = function (req, res, next, orms, resources, services) {
-    var id,
-        error = {error: {}},
-        model,
-        resourceModel = false,
-        schema,
-        searchableAttributes,
-        serviceModel = false,
-        payload = {},
-        session = {},
-        callback = function (resp) {
-          if (resp.isError) {
-            // Google style error object.
-            error.error.errors = [{message: resp.status.message}];
-            error.error.code = resp.status.code;
-            error.error.message = resp.status.message;
-            return res.json(resp.status.code, error);
-          } else {
-            return res.json(resp.status.code, resp);
-          }
-        };
-
-    //  Get the model id from this req URI.
-    if (req.params.model && req.params.id) {
-      id = req.params.id;
-    }
-
-    // Dummy up session.
-    session.passport = {
-      "user": {
-        "id": req.user.get("username"),
-        "username": req.user.get("username"),
-        "organization": req.user.get("organization")
-      }
-    };
-
-    _.each(orms, function (value, key, list) {
-      // Find the matching model from this req URI.
-      if (req.params.model && value && value.orm_namespace && value.orm_type &&
-          req.params.model === value.orm_type.camelToHyphen()) {
-        // TODO - Do we need to include "XM" in the name?
-        model = value.orm_type;
-        resourceModel = true;
-      }
-    });
-
-    _.each(services, function (value, key, list) {
-      // Find the matching model from this req URI.
-      if (req.params.model && key && req.params.model === key.camelToHyphen()) {
-        model = key;
-        serviceModel = true;
-      }
-    });
-
-    if (model && resourceModel && serviceModel) {
-      X.err("REST API Error! ");
-      X.err("Found both a matching ORM type and a Service for '" + model +
-        "'. REST Router does not know what to do with this request.");
-      X.err("On path: ", req.path);
-      X.err("Please fix this!!!");
-
-      return res.send(501, "Not Implemented");
-    }
-
-    if (!model) {
-      return res.send(404, "Not Found");
-    } else {
-      switch (req.method) {
-      case "DELETE": // Deletes the specified resource.
-        if (!id) {
-          return res.send(404, "Not Found");
+        if (target.isValid()) {
+          console.log('VALID');
+        }
+        else {
+          console.log('BAD');
         }
 
-        payload.nameSpace = "XM";
-        payload.type = model;
-        payload.id = id + "";
-
-        routes.queryDatabase("delete", payload, session, callback);
-
-        break;
-      case "GET": // Requests a representation of the specified resource.
-        payload.nameSpace = "XM";
-
         if (req.params.id) { // This is a single resource request.
-          payload.type = model;
+          payload.type = ormType;
           payload.id = id + "";
 
           routes.queryDatabase("get", payload, session, callback);
         } else { // This is a list request.
-          payload.type = resources[model].methods.list.response.$ref;
+          payload.type = resources[ormType].methods.list.response.$ref;
           payload.query = {};
           // unary plus is a cast to integer
           payload.query.rowLimit = (+req.query.maxResults) || 100;
@@ -223,7 +61,7 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
             (+req.query.pageToken) * ((+req.query.maxResults) || 100) :
             0;
 
-          // q represents a full-text search on any text attributes of the model
+          // q represents a full-text search on any text attributes of the ormType
           payload.query.parameters = [];
           schema = XT.session.schemas.XM.attributes[payload.type.camelize().capitalize()];
           if (req.query.q) {
@@ -279,113 +117,288 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
             }
           });
 
-
           routes.queryDatabase("get", payload, session, callback);
         }
+      },
 
-        break;
-      case "HEAD":
-        // Asks for the response identical to the one that would correspond to a GET request,
-        // but without the response body. This is useful for retrieving meta-information written
-        // in response headers, without having to transport the entire content.
-        // TODO - call head method.
-        return res.send(); // HEAD doesn't send a body.
-      case "OPTIONS":
-        // Returns the HTTP methods that the server supports for specified URL.
-        // This can be used to check the functionality of a web server by requesting '*' instead
-        // of a specific resource.
-        // TODO - call options method.
-        return res.send('REST API OPTIONS call to model: ' + model);
-      case "PATCH": // Is used to apply partial modifications to a resource.
+      /**
+       * @private
+       * Requests that the server accept the entity enclosed in the request as a
+       * new subordinate of the web resource identified by the URI.
+       * POST method can also call dispatch functions for "Service" endpoints.
+       */
+      POST: function (req, res, session, options) {
+        var serviceModel = options.serviceModel,
+          services = options.services,
+          id = _.camelize(options.id),
+          ormType = options.ormType,
+          callback = options.callback,
+          payload = {
+            nameSpace: "XM",
+            type: ormType,
+            dispatch: serviceModel && {
+              functionName: id,
+              parameters: req.body.attributes
+            },
+            data: !serviceModel && req.body
+          };
+
+        if (!req.body) {
+          return res.send(400, "Bad Request");
+        }
+
+        routes.queryDatabase("post", payload, session, callback);
+      },
+
+      /**
+       * @private
+       * TODO implement
+       */
+      PUT: null,
+
+      /**
+       * Deletes the specified resource.
+       * @private
+       */
+      DELETE: function (req, res, session, options) {
+        var id = options.id,
+          ormType = options.ormType,
+          callback = options.callback,
+          payload = { };
+        if (!id) {
+          return res.send(404, "Not Found");
+        }
+
+        payload.nameSpace = "XM";
+        payload.type = ormType;
+        payload.id = id + "";
+
+        routes.queryDatabase("delete", payload, session, callback);
+      },
+      
+      /**
+       * Apply partial modifications to a resource.
+       * @private
+       */
+      PATCH: function (req, res, session, options) {
+        var id = options.id,
+          ormType = options.ormType,
+          callback = options.callback,
+          payload = { };
+
         if (!id || !req.body || !req.body.etag || !req.body.patches) {
           return res.send(404, "Not Found");
         }
 
         payload.nameSpace = "XM";
-        payload.type = model;
+        payload.type = ormType;
         payload.id = id + "";
         payload.etag = req.body.etag;
         payload.patches = req.body.patches;
 
         routes.queryDatabase("patch", payload, session, callback);
+      },
 
-        break;
-      case "POST": // Requests that the server accept the entity enclosed in the request as a
-                  // new subordinate of the web resource identified by the URI.
-        /* POST method can also call dispatch functions for "Service" endpoints. */
-        if (serviceModel) {
-          /* Check service's methods for match. */
-          if (services[model] && services[model].methods &&
-            services[model].methods[id.camelize()]) {
+      /**
+       * Returns the HTTP methods that the server supports for specified URL.
+       * This can be used to check the functionality of a web server by requesting '*' instead
+       * of a specific resource.
+       * TODO - call options method.
+       * @private
+       */
+      OPTIONS: function (req, res, session, options) {
+        var ormType = options.ormType;
+        return res.send('REST API OPTIONS call to ormType: ' + ormType);
+      },
 
-            /* Handle Service request. */
-            payload.nameSpace = "XM";
-            payload.type = model;
-            payload.dispatch = {
-              functionName: id.camelize()
-            };
+      /**
+       * Asks for the response identical to the one that would correspond to a GET request,
+       * but without the response body. This is useful for retrieving meta-information written
+       * in response headers, without having to transport the entire content.
+       * TODO - call head method.
+       * @private
+       */
+      HEAD: function (req, res, session, options) {
+        return res.send();
+      }
+    },
 
-            // TODO: Some services accept an "options" query parameter that is an object.
-            // Not sure how that will work here. May need to get that from req.body on a POST
-            // and not as a query parameter.
+    /**
+     * @private
+     */
+    _getResources = function (req, res, next, orms) {
+      var callback = {},
+          payload = {},
+          rootUrl = req.protocol + "://" + req.host + "/",
+          session = {};
 
-            /* Add params in the parameterOrder order. */
-            if (services[model].methods[id.camelize()].parameters &&
-              services[model].methods[id.camelize()].parameterOrder &&
-              services[model].methods[id.camelize()].parameterOrder.length) {
-
-              _.each(services[model].methods[id.camelize()].parameterOrder,
-                function (value, key, list) {
-
-                if (req.query[value]) {
-                  if (!payload.dispatch.parameters) {
-                    payload.dispatch.parameters = [];
-                  }
-                  payload.dispatch.parameters.push(req.query[value]);
-                }
-              });
-
-            /* Add params from the req.body. */
-            } else if (services[model].methods[id.camelize()].parameterOrder &&
-              services[model].methods[id.camelize()].parameterOrder.length) {
-              _.each(services[model].methods[id.camelize()].parameterOrder,
-                function (value, key, list) {
-
-                if (req.body[value]) {
-                  if (!payload.dispatch.parameters) {
-                    payload.dispatch.parameters = [];
-                  }
-                  payload.dispatch.parameters.push(req.body[value]);
-                }
-              });
-            }
-
-            routes.queryDatabase("post", payload, session, callback);
-          } else {
-            return res.send(405, "Method Not Allowed");
-          }
-        } else if (id || !req.body) {
-          return res.send(404, "Not Found");
-        } else {
-          /* Handle Resource request. */
-          payload.nameSpace = "XM";
-          payload.type = model;
-          payload.data = req.body;
-
-          routes.queryDatabase("post", payload, session, callback);
+      callback = function (result) {
+        if (result.isError) {
+          return next(new Error("Invalid Request."));
         }
 
-        break;
-      case "PUT":
-        // Requests that the enclosed entity be stored under the supplied URI.
-        // TODO - call put method.
-        return res.send('REST API does not support PUT calls at this time.');
-      default:
+        _getServices(req, res, next, orms, result.data);
+      };
+
+      payload.nameSpace = "XT";
+      payload.type = "Discovery";
+      payload.dispatch = {
+        functionName: "getResources",
+        parameters: [null, rootUrl]
+      };
+
+      // Dummy up session.
+      session.passport = {
+        "user": {
+          "id": "admin",
+          "username": "admin",
+          "organization": "masterref"
+        }
+      };
+      routes.queryDatabase("post", payload, session, callback);
+    },
+
+    /**
+     * @private
+     */
+    _getServices = function (req, res, next, orms, resources) {
+      var callback = {},
+          payload = {},
+          rootUrl = req.protocol + "://" + req.host + "/",
+          session = {};
+
+      callback = function (result) {
+        if (result.isError) {
+          return next(new Error("Invalid Request."));
+        }
+
+        routeCall(req, res, next, orms, resources, result.data);
+      };
+
+      payload.nameSpace = "XT";
+      payload.type = "Discovery";
+      payload.dispatch = {
+        functionName: "getServices",
+        parameters: [null, rootUrl, true]
+      };
+
+      // Dummy up session.
+      session.passport = {
+        "user": {
+          "id": "admin",
+          "username": "admin",
+          "organization": "masterref"
+        }
+      };
+
+      routes.queryDatabase("post", payload, session, callback);
+    },
+
+    /**
+     * @private
+     */
+    routeCall = function (req, res, next, orms, resources, services) {
+      var ormType = _.capitalize(_.camelize(req.params.model)),
+        resourceModel,
+        serviceModel,
+        session = {
+          passport: {
+            "user": {
+              "id": "admin",
+              "username": "admin",
+              "organization": "masterref"
+            }
+          }
+        },
+        callback = function (resp) {
+          if (resp.isError) {
+            // Google style error object.
+            return res.json(resp.status.code, {
+              error: {
+                code: resp.status.code,
+                message: resp.status.message,
+                errors: [
+                  { message: resp.status.message }
+                ]
+              }
+            });
+          } else {
+            return res.json(resp.status.code, resp);
+          }
+        };
+
+      if (!req.params.model) {
         return res.send(404, "Not Found");
       }
-    }
+
+      resourceModel = _.findWhere(orms, { orm_type: ormType });
+      serviceModel  = _.contains(_.keys(services), ormType);
+
+      if (resourceModel && serviceModel) {
+        X.err("REST API Error! ");
+        X.err("Found both a matching ORM type and a Service for '" + ormType +
+          "'. REST Router does not know what to do with this request.");
+        X.err("On path: ", req.path);
+        X.err("Please fix this!!!");
+
+        return res.send(501, "Not Implemented");
+      }
+
+      if (!(resourceModel || serviceModel)) {
+        return res.send(404, "Not Found");
+      }
+
+      // handle request
+      var handler = handlers[req.method];
+      if (!_.isFunction(handler)) {
+        return res.send(405, "Method Not Allowed");
+      }
+      else {
+        handler(req, res, session, {
+          ormType: ormType,
+          id: req.params.id,
+          resources: resources,
+          serviceModel: serviceModel,
+          services: services,
+          callback: callback
+        });
+      }
+    };
+
+  /**
+   * @public
+   */
+  function getIsRestORMs(req, res, next) {
+    var callback = {},
+        payload = {},
+        session = {};
+
+    callback = function (result) {
+      if (result.isError) {
+        return next(new Error("Invalid Request."));
+      }
+
+      _getResources(req, res, next, result.data);
+    };
+
+    payload.nameSpace = "XT";
+    payload.type = "Discovery";
+    payload.dispatch = {
+      functionName: "getIsRestORMs"
+    };
+
+    // Dummy up session.
+    session.passport = {
+      "user": {
+        "id": "admin",
+        "username": "admin",
+        "organization": "masterref"
+      }
+    };
+    routes.queryDatabase("post", payload, session, callback);
+  }
+
+  return {
+    router: [getIsRestORMs]
   };
-
-  exports.router = [getIsRestORMs];
-
-}());
+})();

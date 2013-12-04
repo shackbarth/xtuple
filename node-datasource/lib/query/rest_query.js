@@ -17,38 +17,42 @@
   }
 
   Object.defineProperties(RestQuery, {
+    /**
+     * @static
+     */
     template: {
       value: {
-        attributes: {
-          'children: 0+': [
+        '(?)attributes': {
+          '(+)': _.or(
             // xtuple custom operators
             { EQUALS:        _.isDefined },
-            { NOT_EQUAL:     _.isDefined },
             { GREATER_THAN:  _.or(_.isFinite, isValidDate) },
             { AT_LEAST:      _.or(_.isFinite, isValidDate) },
             { LESS_THAN:     _.or(_.isFinite, isValidDate) },
-            { AT_MOST:       _.or(_.isFinite, isValidDate) },
-
-            // mongodb query operators
-            { $eq:  _.isDefined },                   // =
-            { $ne:  _.isDefined },                   // !=
-            { $gt:  _.or(_.isFinite, isValidDate) }, // >
-            { $gte: _.or(_.isFinite, isValidDate) }, // >=
-            { $lt:  _.or(_.isFinite, isValidDate) }, // <
-            { $lte: _.or(_.isFinite, isValidDate) }, // <=
-          ],
+            { AT_MOST:       _.or(_.isFinite, isValidDate) }
+          )
         },
-        orderby: {
-          'children: 0+': _.or(_.isFinite, /ASC/i, /DESC/i)
+        '(?)orderby': {
+          '(+)': _.or(_.isFinite, /ASC/i, /DESC/i)
         },
-        $orderby: {
-          'children: 0+': _.or(_.isFinite, /ASC/i, /DESC/i)
-        },
-        maxresults: _.isFinite,
-        pagetoken: _.isFinite,
-        count: function (count) {
+        '(?)maxresults': _.isFinite,
+        '(?)pagetoken': _.isFinite,
+        '(?)count': function (count) {
           return _.contains([ true, false, 1, 0], count);
         }
+      }
+    },
+
+    /**
+     * @static
+     */
+    operators: {
+      value: {
+        EQUALS:       '=',
+        LESS_THAN:    '<',
+        AT_MOST:      '<=',
+        GREATER_THAN: '>',
+        AT_LEAST:     '>='
       }
     },
 
@@ -69,10 +73,52 @@
      * @override
      */
     _toTarget: function (targetClass) {
-      console.log('isValid: '+ this.isValid());
-      console.log(this.query);
+      var x = toXtGetQuery(this.query);
+      //console.log(x);
+      return x;
+      //console.log(this.query);
     }
   });
+
+  /**
+   * Translate this RestQuery to a XtGetQuery
+   */
+  function toXtGetQuery (source) {
+    var target = {
+      parameters: (function () {
+        return _.flatten(
+          _.map(source.attributes, function (clause, attr) {
+            return _.map(clause, function (operand, operator) {
+              return {
+                attribute: attr,
+                operator: RestQuery.operators[operator],
+                value: operand
+              };
+            });
+          })
+        );
+      })(),
+      orderBy: (function () {
+        return _.map(source.orderby, function (direction, attr) {
+          return {
+            attribute: attr,
+            descending: /desc/i.test(direction)
+          };
+        });
+      })(),
+      rowOffset: (function () {
+        return source.pagetoken;
+      })(),
+      rowLimit: (function () {
+        return source.maxresults;
+      })()
+    };
+
+    //console.log(source);
+    //console.log(target);
+
+    return _.compactObject(target);
+  }
 
   module.exports = RestQuery;
 

@@ -84,7 +84,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     restDiscovery.getRest
   ];
   exports.restRouter = [
-    passport.authenticate('bearer', { session: false }),
+    //passport.authenticate('bearer', { session: false }),
     restRouter.router
   ];
 

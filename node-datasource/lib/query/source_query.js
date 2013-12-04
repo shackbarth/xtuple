@@ -28,17 +28,17 @@
      * @public
      * @param {Class} type of target to translate to
      */
-    toTarget: function (targetClass) {
-      var target = this._toTarget(targetClass);
+    toTarget: function (TargetQuery) {
+      var target = this._toTarget(TargetQuery);
 
-      console.log('target template: '+ targetClass.getTemplate());
-
-      if (_.test(targetClass.getTemplate(), target)) {
-        return target;
-      }
-      else {
-        return null;
-      }
+      //console.log(targetClass.template);
+      console.log(target);
+      //console.log('target template: '+ JSON.stringify(targetClass.template));
+      //
+      //_.test(TargetQuery.template, target);
+      var t = new TargetQuery(target);
+      console.log(t);
+      return t;
     }
   });
 

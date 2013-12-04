@@ -10,7 +10,7 @@
   "author": "",
   "license": "BSD",
   "dependencies": {
-    "congruence": "~1.2.2",
+    "congruence": "1.2.3",
     "moment": "~2.4.0",
     "underscore": "~1.5.2"
   },
