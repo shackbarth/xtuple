@@ -521,10 +521,19 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       });
 
       it("puts the alias in the customer part number field when an item is selected", function () {
-        alias.set({aliasNumber: "ALIAS123"});
-        item.get("aliases").add(alias);
+        var aliasNumber;
+        if (item.get("aliases").length > 0) {
+          // this item already has an alias
+          aliasNumber = item.get("aliases").models[0].get("aliasNumber");
+        } else {
+          // we have to set up an alias for the purpose of the test
+          aliasNumber = "ALIAS123";
+          alias.set({aliasNumber: aliasNumber});
+          item.get("aliases").add(alias);
+        }
+
         lineItem.set({item: item});
-        assert.equal(lineItem.get("customerPartNumber"), "ALIAS123");
+        assert.equal(lineItem.get("customerPartNumber"), aliasNumber);
       });
     });
   };
