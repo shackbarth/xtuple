@@ -29,39 +29,39 @@ module.exports = (function () {
           id = options.id,
           resources = options.resources,
           callback = options.callback,
-
+          rq,
+          target,
           payload = {
-            nameSpace: 'XM'
-          },
-          rq = new RestQuery(req.query),
-          target = rq.toTarget(XtGetQuery);
+            nameSpace: 'XM',
+            type: ormType
+          };
 
-        //console.log(rq);
-        //console.log(target);
-
-        if (target.isValid()) {
-          console.log('VALID');
-        }
-        else {
-          console.log('BAD');
-        }
 
         if (req.params.id) { // This is a single resource request.
           payload.type = ormType;
           payload.id = id + "";
 
           routes.queryDatabase("get", payload, session, callback);
+
         } else { // This is a list request.
-          payload.type = resources[ormType].methods.list.response.$ref;
+
+          payload.query = new RestQuery(req.query).toTarget(XtGetQuery).query;
+          console.log(payload.query);
+
+          return routes.queryDatabase("get", payload, session, callback);
+
+          /*
           payload.query = {};
-          // unary plus is a cast to integer
           payload.query.rowLimit = (+req.query.maxResults) || 100;
           // assumption: pageToken is 0-indexed
           payload.query.rowOffset = (+req.query.pageToken) ?
             (+req.query.pageToken) * ((+req.query.maxResults) || 100) :
             0;
+          */
+
 
           // q represents a full-text search on any text attributes of the ormType
+          /*
           payload.query.parameters = [];
           schema = XT.session.schemas.XM.attributes[payload.type.camelize().capitalize()];
           if (req.query.q) {
@@ -76,6 +76,7 @@ module.exports = (function () {
               });
             }
           }
+          */
 
           // We also support field-level filtering, with the MATCHES, >=, or <=
           // operations. These latter two can be requested by appending Min or Max

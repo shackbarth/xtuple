@@ -29,16 +29,7 @@
      * @param {Class} type of target to translate to
      */
     toTarget: function (TargetQuery) {
-      var target = this._toTarget(TargetQuery);
-
-      //console.log(targetClass.template);
-      console.log(target);
-      //console.log('target template: '+ JSON.stringify(targetClass.template));
-      //
-      //_.test(TargetQuery.template, target);
-      var t = new TargetQuery(target);
-      console.log(t);
-      return t;
+      return new TargetQuery(this._toTarget(TargetQuery));
     }
   });
 

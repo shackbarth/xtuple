@@ -12,8 +12,10 @@
   }
 
   Object.defineProperties(XtGetQuery, {
+
     /**
-     * Query object template for xt.get calls
+     * Query object template for xt.get()
+     * @static
      */
     template: {
       value: {
