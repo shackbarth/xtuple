@@ -87,7 +87,10 @@ select xt.install_js('XM','item_site','xtuple', $$
     if (customerId) {
       clause.parameters = clause.parameters.concat([customerId, shiptoId, effectiveDate]);
     }
-    if (DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
+    if (DEBUG) { 
+      plv8.elog(NOTICE, 'sql = ', sql); 
+      plv8.elog(NOTICE, 'parameters = ', clause.parameters); 
+    }
     return plv8.execute(sql, clause.parameters);
   };
 
