@@ -848,11 +848,19 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey":true
+        }
+      },
+      {
         "name": "name",
         "attr": {
           "type": "String",
           "column": "itemgrp_name",
-          "isNaturalKey": true
+          "required": true
         }
       },
       {
@@ -865,6 +873,7 @@
       {
         "name": "items",
         "toMany": {
+          "isNested": true,
           "type": "ItemGroupItem",
           "column": "itemgrp_id",
           "inverse": "itemGroup"
@@ -907,9 +916,11 @@
       },
       {
         "name": "item",
-        "attr": {
-          "type": "Number",
-          "column": "itemgrpitem_item_id"
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "itemgrpitem_item_id",
+          "inverse": "id"
         }
       },
       {
