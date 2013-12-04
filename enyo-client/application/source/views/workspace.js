@@ -1201,6 +1201,7 @@ strict: false*/
     kind: "XV.Workspace",
     title: "_invoice".loc(),
     model: "XM.Invoice",
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
