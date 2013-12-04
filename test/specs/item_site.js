@@ -46,18 +46,34 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     updatableField: "notes"
   };
   var additionalTests = function () {
-    describe.skip("Item site relation widget", function () {
+    describe("Item site relation widget", function () {
       it("Selecting to enter the item alias manually in the Item relation widget" +
-          "should display the related item for selection", function () {
+          "should display the related item for selection", function (done) {
+        var widget = new XV.ItemSiteWidget(),
+          mockReturn = function (results) {
+            assert.equal(results[0].item.number, "BTRUCK1");
+            done();
+          };
+
+        widget.$.privateItemSiteWidget.mockReturn = mockReturn;
+        widget.$.privateItemSiteWidget.fetchCollection("BTR", 10, "mockReturn");
       });
-      it("Aliases option should be available on the Item widget which displays " +
+      it.skip("Aliases option should be available on the Item widget which displays " +
           "Active Alias Items on selection", function () {
+        // TODO
       });
-      it("Selecting the Alias in the Item relation widget should populate the Item" +
-          "Number in the item Number field and Alias Name in the" +
-          "Customer P/N field", function () {
-      });
-      it("Should be able to search the Item through Bar Code", function () {
+      it("Should be able to search the Item through Bar Code", function (done) {
+        var widget = new XV.ItemSiteWidget(),
+          mockReturn = function (results) {
+            assert.include(_.map(results, function (result) {
+              return result.item.number;
+            }), "BTRUCK1");
+            done();
+          };
+
+        widget.$.privateItemSiteWidget.mockReturn = mockReturn;
+        widget.$.privateItemSiteWidget.fetchCollection("1234", 10, "mockReturn");
+
       });
     });
   };
