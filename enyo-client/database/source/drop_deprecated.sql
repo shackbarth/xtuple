@@ -26,8 +26,6 @@ DROP TRIGGER IF EXISTS usrpref_did_change on usrpref;
 --delete from xt.pkgscript where script_name in ('user', 'users', 'userPreferences');
 
 /* Cleans up old xt.obj uuid installs and converts them from data type text to uuid. */
-/* Need to do this twice. Once in lib/orm/source and once in enyo-client/database/source/xt */
-/* To support new installs and upgrading old ones. */
 DO $$
   var obj,
     saleshistory,

@@ -9,7 +9,22 @@ select xt.add_column('obj_share', 'obj_share_update', 'bool', 'not null default 
 select xt.add_column('obj_share', 'obj_share_delete', 'bool', 'not null default false', 'xt', 'Grant delete access flag.');
 select xt.add_column('obj_share', 'obj_share_created', 'timestamp with time zone', 'not null default now()', 'xt', 'Timestamp when access was created.');
 select xt.add_column('obj_share', 'obj_share_updated', 'timestamp with time zone', 'not null default now()', 'xt', 'Timestamp when access was updated.');
-select xt.add_column('obj_share', 'obj_uuid', 'uuid', 'not null default xt.uuid_generate_v4()', 'xt', 'The UUID of this share record.');
+
+/* Cleans up old xt.obj uuid installs and converts them from data type text to uuid. */
+DO $$
+  var obj;
+
+  obj = plv8.execute("select data_type from information_schema.columns where table_schema = 'xt' and table_name = 'obj' and column_name = 'obj_uuid';");
+
+  if (obj.length) {
+    /* Support upgrading old installs without the obj uuid type change. */
+    if (obj[0].data_type === 'text') {
+      plv8.execute("select xt.add_column('obj_share', 'obj_uuid', 'text', 'not null default xt.uuid_generate_v4()', 'xt', 'The UUID of this share record.');");
+    } else {
+      plv8.execute("select xt.add_column('obj_share', 'obj_uuid', 'uuid', 'not null default xt.uuid_generate_v4()', 'xt', 'The UUID of this share record.');");
+    }
+  }
+$$ language plv8;
 
 select xt.add_inheritance('xt.obj_share', 'xt.obj');
 
