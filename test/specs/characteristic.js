@@ -35,12 +35,12 @@
                   "isAddresses", "isContacts", "isAccounts", "isItems", "isInvoices",
                   "isEmployees", "isIncidents", "isOpportunities", "isProjects", "isSalesOrders"],
       idAttribute: "name",
-      //extensions: ["crm"],  //Incident 22094
+      extensions: ["crm"],  //Incident 22094
       isLockable: true,
       cacheName: "XM.characteristics",
       privileges: {
         createUpdateDelete: "MaintainCharacteristics",
-        //read: "ViewCharacteristics"  //Incident 22093
+        read: "ViewCharacteristics"  //Incident 22093
       },
       createHash: {
         name: "Test Characteristic" + Math.random(),
@@ -60,5 +60,5 @@
     };
 
   exports.spec = spec;
-  
+
 }());
