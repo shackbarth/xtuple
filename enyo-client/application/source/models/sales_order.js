@@ -83,10 +83,29 @@ white:true*/
     },
 
     saleTypeDidChange: function () {
+      var that = this,
+        currentHoldType = this.get("holdType"),
+        defaultHoldType = this.getValue("saleType.defaultHoldType") || null;
+
       this.inheritWorkflowSource(this.get("saleType"), "XM.SalesOrderCharacteristic",
         "XM.SalesOrderWorkflow");
-      if (!this.get("holdType")) {
-        this.set({holdType: this.getValue("saleType.defaultHoldType")});
+
+
+      if (this.getStatus() === XM.Model.EMPTY) {
+        // on a new order, set the hold type to the sale type default
+        this.set({holdType: defaultHoldType});
+
+      } else if (defaultHoldType !== currentHoldType) {
+        // otherwise, if the sale type wants to drive a change to the hold type,
+        // prompt the user.
+        this.notify("_updateHoldType?".loc(), {
+          type: XM.Model.QUESTION,
+          callback: function (response) {
+            if (response.answer) {
+              that.set({holdType: defaultHoldType});
+            }
+          }
+        });
       }
     },
 
