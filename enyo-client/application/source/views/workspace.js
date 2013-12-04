@@ -1949,6 +1949,7 @@ strict: false*/
               {attribute: "isSold", value: true},
               {attribute: "isActive", value: true}
             ]}},
+            {kind: "XV.InputWidget", attr: "customerPartNumber"},
             {kind: "XV.QuantityWidget", attr: "quantity"},
             {kind: "XV.UnitPicker", name: "quantityUnitPicker",
               attr: "quantityUnit"},

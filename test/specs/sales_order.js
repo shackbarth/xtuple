@@ -491,20 +491,41 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         salesOrderModel.get("workflow").reset([]);
         salesOrderModel.get("characteristics").reset([]);
       });
-/*
-IN INVENTORY EXTENSION:
-  - When all materials have been issued to a sales order, all "Pack" workflow items will be marked completed.
-    trigger on db on shipitem table when a shipitem is added or removed
-      shipitem has orderitem, shiphead has the type (co vs to)
-      do some math: has everything been issued
-      coitem has shipped quantity field
-      order quantity - shipped quantity + returned quantity - sum (shipitems quantiy where shipped is false)
-      orditem and orditemship
-  - When an order is shipped
-    > If all materials were issued all "Ship" workflow items will be marked completed.
-    > If outstanding line items exist, any "Ship" workflow items will be updated to be due on the next minum scheduled date remaining.
-*/
+    });
+    describe("Sales order line", function () {
+      var lineItem,
+        item,
+        alias;
 
+      before(function (done) {
+        async.parallel([
+          function (done) {
+            common.initializeModel(lineItem, XM.SalesOrderLine, function (err, model) {
+              lineItem = model;
+              done();
+            });
+          },
+          function (done) {
+            common.fetchModel(item, XM.ItemRelation, {number: "BPAINT1"}, function (err, model) {
+              item = model;
+              done();
+            });
+          },
+          function (done) {
+            common.initializeModel(alias, XM.ItemAlias, function (err, model) {
+              alias = model;
+              done();
+            });
+          }
+        ], done);
+      });
+
+      it("puts the alias in the customer part number field when an item is selected", function () {
+        alias.set({aliasNumber: "ALIAS123"});
+        item.get("aliases").add(alias);
+        lineItem.set({item: item});
+        assert.equal(lineItem.get("customerPartNumber"), "ALIAS123");
+      });
     });
   };
 

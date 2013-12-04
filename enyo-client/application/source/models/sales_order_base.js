@@ -1574,6 +1574,10 @@ white:true*/
 
       if (!item) { return; }
 
+      if (item.get("aliases").length > 0) {
+        this.set({customerPartNumber: item.get("aliases").models[0].get("aliasNumber")});
+      }
+
       // Reset Unit Cost
       this.off("unitCost", this.unitCostDidChange);
       this.set("unitCost", unitCost);

@@ -98,20 +98,6 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         assert.equal(itemAlias.get("description1"), "");
       });
     });
-    describe("Item relation widget", function () {
-      it("Selecting to enter the item alias manually in the Item relation widget" +
-          "should display the related item for selection", function () {
-      });
-      it("Aliases option should be available on the Item widget which displays " +
-          "Active Alias Items on selection", function () {
-      });
-      it("Selecting the Alias in the Item relation widget should populate the Item" +
-          "Number in the item Number field and Alias Name in the" +
-          "Customer P/N field", function () {
-      });
-      it("Should be able to search the Item through Bar Code", function () {
-      });
-    });
   };
 
   exports.spec = spec;
