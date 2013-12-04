@@ -11,7 +11,7 @@
     "privileges": {
       "all": {
         "create": "MaintainClassCodes",
-        "read": true,
+        "read": "ViewClassCodes",
         "update": "MaintainClassCodes",
         "delete": "MaintainClassCodes"
       }
