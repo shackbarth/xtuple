@@ -661,12 +661,13 @@ trailing:true, white:true, strict:false*/
   enyo.kind({
     name: "XV.SalesOrderWorkflowListRelations",
     kind: "XV.WorkflowListRelations",
-    parentKey: "salesOrder",
+    parentKey: "salesOrder"
   });
 
   enyo.kind({
     name: "XV.SaleTypeWorkflowListRelations",
     kind: "XV.WorkflowListRelations",
-    parentKey: "saleType",
+    parentKey: "saleType"
   });
+
 }());

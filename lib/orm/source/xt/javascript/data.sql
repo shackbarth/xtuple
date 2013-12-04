@@ -553,8 +553,41 @@ select xt.install_js('XT','Data','xtuple', $$
         val,
         values,
         columnToKey,
-        propToKey;
+        propToKey,
 
+        resolveKey = function (col) {
+          var attr;
+          
+          /* First search properties */
+          var ary = orm.properties.filter(function (prop) {
+            return prop.attr && prop.attr.column === col;
+          });
+          
+          if (ary.length) {
+            attr =  ary[0].name;
+
+          } else {
+            /* If not found must be extension, search relations */
+            if (orm.extensions.length) {
+              orm.extensions.forEach(function (ext) {
+                if (!attr) {
+                  ary = ext.relations.filter(function (prop) {
+                    return prop.column === col;
+                  });
+
+                  if (ary.length) { 
+                    attr = ary[0].inverse;
+                  }
+                }
+              })
+            };
+          }
+          if (attr) { return attr };
+
+          /* If still not found, we have a structural problem */
+          throw new Error("Can not resolve primary id on toMany relation");
+        };
+        
       for (prop in record) {
         ormp = XT.Orm.getProperty(orm, prop);
 
@@ -567,11 +600,9 @@ select xt.install_js('XT','Data','xtuple', $$
             val = values[i];
 
             /* Populate the parent key into the foreign key field if it's absent. */
-            if (!val[fkey]) { 
+            if (!val[fkey]) {
               columnToKey = ormp.toMany.column;
-              propToKey = columnToKey ? orm.properties.filter(function (prop) {
-                return prop.attr && prop.attr.column === columnToKey;
-              })[0].name : pkey; /* fall back the primary key if the orm is set up wacky */
+              propToKey = columnToKey ? resolveKey(columnToKey) : pkey;
               val[fkey] = record[propToKey]; 
             }
 
