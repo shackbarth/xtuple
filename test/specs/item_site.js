@@ -113,6 +113,10 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         widget.$.privateItemSiteWidget.mockReturn = mockReturn;
         widget.$.privateItemSiteWidget.fetchCollection("ABC123", 10, "mockReturn");
       });
+      it.skip("Search should filter by customer-specific aliases where appropriate",
+          function () {
+        // TODO
+      });
       it("Should be able to search the Item through Bar Code", function (done) {
         var widget = new XV.ItemSiteWidget(),
           mockReturn = function (results) {
@@ -124,7 +128,6 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
         widget.$.privateItemSiteWidget.mockReturn = mockReturn;
         widget.$.privateItemSiteWidget.fetchCollection("1234", 10, "mockReturn");
-
       });
     });
   };
