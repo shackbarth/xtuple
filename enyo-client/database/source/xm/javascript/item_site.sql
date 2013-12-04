@@ -63,7 +63,7 @@ select xt.install_js('XM','item_site','xtuple', $$
         "left join crmacct on itemalias_crmacct_id = crmacct_id " + 
         "where itemalias_number ~^ ${p1} " + 
         "and (crmacct_number is null or crmacct_number = ${p2}) " +
-        ") "
+        ") ";
       clause.conditions = clause.conditions.substring(0, spliceIndex) + aliasInjection + clause.conditions.substring(spliceIndex);
       itemNumber = query.parameters.filter(function (param) {
         return param.attribute && param.attribute.length && param.attribute.indexOf("item.number") >= 0;
