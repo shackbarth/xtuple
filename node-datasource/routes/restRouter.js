@@ -42,7 +42,7 @@ module.exports = (function () {
 
         freeQuery = new FreeTextQuery(req.query);
         if (freeQuery.isValid()) {
-          schema = XT.session.schemas.XM.attributes[payload.type.camelize().capitalize()];
+          schema = XT.session.schemas.XM.attributes[_.capitalize(_.camelize(payload.type))];
           payload.query = freeQuery.toTarget(XtGetQuery, { schema: schema }).query;
           return routes.queryDatabase("get", payload, session, callback);
         }
@@ -162,34 +162,23 @@ module.exports = (function () {
      * @private
      */
     _getResources = function (req, res, next, orms) {
-      var callback = {},
-          payload = {},
-          rootUrl = req.protocol + "://" + req.host + "/",
-          session = {};
+      var rootUrl = req.protocol + "://" + req.host + "/",
+        session = getSession(req, next),
+        payload = {
+          nameSpace: 'XT',
+          type: 'Discovery',
+          dispatch: {
+            functionName: "getResources",
+            parameters: [null, rootUrl]
+          }
+        },
+        callback = function (result) {
+          if (result.isError) {
+            return next(new Error("Invalid Request."));
+          }
+          _getServices(req, res, next, orms, result.data);
+        };
 
-      callback = function (result) {
-        if (result.isError) {
-          return next(new Error("Invalid Request."));
-        }
-
-        _getServices(req, res, next, orms, result.data);
-      };
-
-      payload.nameSpace = "XT";
-      payload.type = "Discovery";
-      payload.dispatch = {
-        functionName: "getResources",
-        parameters: [null, rootUrl]
-      };
-
-      // Dummy up session.
-      session.passport = {
-        "user": {
-          "id": "admin",
-          "username": "admin",
-          "organization": "masterref"
-        }
-      };
       routes.queryDatabase("post", payload, session, callback);
     },
 
@@ -197,34 +186,22 @@ module.exports = (function () {
      * @private
      */
     _getServices = function (req, res, next, orms, resources) {
-      var callback = {},
-          payload = {},
-          rootUrl = req.protocol + "://" + req.host + "/",
-          session = {};
-
-      callback = function (result) {
-        if (result.isError) {
-          return next(new Error("Invalid Request."));
-        }
-
-        routeCall(req, res, next, orms, resources, result.data);
-      };
-
-      payload.nameSpace = "XT";
-      payload.type = "Discovery";
-      payload.dispatch = {
-        functionName: "getServices",
-        parameters: [null, rootUrl, true]
-      };
-
-      // Dummy up session.
-      session.passport = {
-        "user": {
-          "id": "admin",
-          "username": "admin",
-          "organization": "masterref"
-        }
-      };
+      var rootUrl = req.protocol + "://" + req.host + "/",
+        payload = {
+          nameSpace: 'XT',
+          type: 'Discovery',
+          dispatch: {
+            functionName: "getServices",
+            parameters: [null, rootUrl]
+          }
+        },
+        session = getSession(req, next),
+        callback = function (result) {
+          if (result.isError) {
+            return next(new Error("Invalid Request."));
+          }
+          routeCall(req, res, next, orms, resources, result.data);
+        };
 
       routes.queryDatabase("post", payload, session, callback);
     },
@@ -236,25 +213,15 @@ module.exports = (function () {
       var ormType = _.capitalize(_.camelize(req.params.model)),
         resourceModel,
         serviceModel,
-        session = {
-          passport: {
-            "user": {
-              "id": "admin",
-              "username": "admin",
-              "organization": "masterref"
-            }
-          }
-        },
+        session = getSession(req, next),
         callback = function (resp) {
           if (resp.isError) {
-            // Google style error object.
+            // Google style error object. TODO functionize this
             return res.json(resp.status.code, {
               error: {
                 code: resp.status.code,
                 message: resp.status.message,
-                errors: [
-                  { message: resp.status.message }
-                ]
+                errors: [ { message: resp.status.message } ]
               }
             });
           } else {
@@ -270,13 +237,9 @@ module.exports = (function () {
       serviceModel  = _.contains(_.keys(services), ormType);
 
       if (resourceModel && serviceModel) {
-        X.err("REST API Error! ");
-        X.err("Found both a matching ORM type and a Service for '" + ormType +
-          "'. REST Router does not know what to do with this request.");
+        X.err("Found both a matching ORM type and a Service for '" + ormType + "'. REST Router does not know what to do with this request.");
         X.err("On path: ", req.path);
-        X.err("Please fix this!!!");
-
-        return res.send(501, "Not Implemented");
+        return res.send(500, "Not Implemented");
       }
 
       if (!(resourceModel || serviceModel)) {
@@ -304,33 +267,45 @@ module.exports = (function () {
    * @public
    */
   function getIsRestORMs(req, res, next) {
-    var callback = {},
-        payload = {},
-        session = {};
-
-    callback = function (result) {
-      if (result.isError) {
-        return next(new Error("Invalid Request."));
-      }
-
-      _getResources(req, res, next, result.data);
-    };
-
-    payload.nameSpace = "XT";
-    payload.type = "Discovery";
-    payload.dispatch = {
-      functionName: "getIsRestORMs"
-    };
-
-    // Dummy up session.
-    session.passport = {
-      "user": {
-        "id": "admin",
-        "username": "admin",
-        "organization": "masterref"
-      }
-    };
+    console.log(req.user);
+    var payload = {
+        nameSpace: 'XT',
+        type: 'Discovery',
+        dispatch: {
+          functionName: "getIsRestORMs"
+        }
+      },
+      session = getSession(req, next),
+      callback = function (result) {
+        if (result.isError) {
+          return next(new Error("Invalid Request."));
+        }
+        _getResources(req, res, next, result.data);
+      };
     routes.queryDatabase("post", payload, session, callback);
+  }
+
+  /**
+   * Create a datasource session object
+   */
+  function getSession(req, next) {
+    return {
+      passport: getPassport(req.user, next)
+    };
+  }
+
+  /**
+   * Create a session passport object given a req.user
+   */
+  function getPassport(user, next) {
+    if (!user) return next(new Error('user is not defined'));
+    return {
+      user: {
+        id: user.get('username'),
+        username: user.get('username'),
+        organizaion: user.get('organization'),
+      }
+    };
   }
 
   return {
