@@ -59,7 +59,7 @@ select xt.install_js('XM','crm','crm', $$
       ret[colors.pop()] = qry.pop().color;
     }
 
-    ret = XT.extend(ret, data.retrieveMetrics(keys));
+    ret = XT.extend(data.retrieveMetrics(keys), ret);
 
     return ret;
   }
