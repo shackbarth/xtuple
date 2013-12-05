@@ -680,7 +680,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.PurchaseOrderWidget",
     kind: "XV.RelationWidget",
-    collection: "XM.PurchaseOrderListItemCollection",
+    collection: "XM.PurchaseOrderRelationCollection",
     keyAttribute: "number",
     list: "XV.PurchaseOrderList"
   });

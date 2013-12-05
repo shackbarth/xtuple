@@ -11,7 +11,7 @@
     "privileges": {
       "all": {
         "create": "MaintainClassCodes",
-        "read": true,
+        "read": "ViewClassCodes",
         "update": "MaintainClassCodes",
         "delete": "MaintainClassCodes"
       }
@@ -239,7 +239,7 @@
       {
         "name": "listPrice",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "item_listprice",
           "required": true
         }
@@ -247,7 +247,7 @@
       {
         "name": "wholesalePrice",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "item_listcost"
         }
       },
@@ -262,14 +262,14 @@
       {
         "name": "productWeight",
         "attr": {
-          "type": "Number",
+          "type": "Weight",
           "column": "item_prodweight"
         }
       },
       {
         "name": "packageWeight",
         "attr": {
-          "type": "Number",
+          "type": "Weight",
           "column": "item_packweight"
         }
       },
@@ -866,11 +866,19 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey":true
+        }
+      },
+      {
         "name": "name",
         "attr": {
           "type": "String",
           "column": "itemgrp_name",
-          "isNaturalKey": true
+          "required": true
         }
       },
       {
@@ -883,6 +891,7 @@
       {
         "name": "items",
         "toMany": {
+          "isNested": true,
           "type": "ItemGroupItem",
           "column": "itemgrp_id",
           "inverse": "itemGroup"
@@ -925,9 +934,11 @@
       },
       {
         "name": "item",
-        "attr": {
-          "type": "Number",
-          "column": "itemgrpitem_item_id"
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "itemgrpitem_item_id",
+          "inverse": "id"
         }
       },
       {
@@ -1265,21 +1276,21 @@
       {
         "name": "listPrice",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "item_listprice"
         }
       },
       {
         "name": "standardCost",
         "attr": {
-          "type": "Number",
+          "type": "Cost",
           "column": "std_cost"
         }
       },
       {
         "name": "wholesalePrice",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "item_listcost"
         }
       },
@@ -1293,21 +1304,21 @@
       {
         "name": "priceUnitRatio",
         "attr": {
-          "type": "Number",
+          "type": "UnitRatio",
           "column": "inv_price_ratio"
         }
       },
       {
         "name": "productWeight",
         "attr": {
-          "type": "Number",
+          "type": "Weight",
           "column": "item_prodweight"
         }
       },
       {
         "name": "packageWeight",
         "attr": {
-          "type": "Number",
+          "type": "Weight",
           "column": "item_packweight"
         }
       },
@@ -1403,7 +1414,7 @@
       {
         "name": "price",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "charass_price"
         }
       }

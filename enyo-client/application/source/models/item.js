@@ -158,14 +158,12 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.Model
   */
-  XM.ItemGroup = XM.Document.extend({
+  XM.ItemGroup = XM.Model.extend({
     /** @scope XM.ItemGroup.prototype */
 
-    recordType: 'XM.ItemGroup',
-
-    documentKey: 'name'
+    recordType: 'XM.ItemGroup'
 
   });
 
@@ -750,18 +748,6 @@ white:true*/
    /** @scope XM.ItemGroupCollection.prototype */
 
     model: XM.ItemGroup
-
-  });
-
-  /**
-   @class
-
-   @extends XM.Collection
-  */
-  XM.ItemGroupItemCollection = XM.Collection.extend({
-   /** @scope XM.ItemGroupCollection.prototype */
-
-    model: XM.ItemGroupItem
 
   });
 
