@@ -1,0 +1,117 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "VendorContract",
+    "table": "contrct",
+    "isRest": true,
+    "idSequenceName": "contrct_contrct_id_seq",
+    "lockable": true,
+    "comment": "Vendor Contract Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainVendorContracts",
+        "read": "ViewVendorContracts",
+        "update": "MaintainVendorContracts",
+        "delete": "MaintainVendorContracts"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "contrct_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "contrct_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "isNested": true,
+          "type": "VendorRelation",
+          "column": "contrct_vend_id"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "contrct_active"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "contrct_note"
+        }
+      },
+      {
+        "name": "effective",
+        "attr": {
+          "type": "Date",
+          "column": "contrct_effective"
+        }
+      },
+      {
+        "name": "expires",
+        "attr": {
+          "type": "DueDate",
+          "column": "contrct_expires"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "VendorContractRelation",
+    "table": "contrct",
+    "comment": "Vendor Contract Relation Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "contrct_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "contrct_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "isNested": true,
+          "type": "VendorRelation",
+          "column": "contrct_vend_id"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "contrct_active"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]
