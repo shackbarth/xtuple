@@ -584,10 +584,12 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     /* Pass 'string' to format() as the first parameter. */
     args.unshift(string);
 
+    /*
     if (DEBUG) {
       XT.debug('XT.format sql =', query);
       XT.debug('XT.format args =', args);
     }
+    */
     string = plv8.execute(query, args)[0].format;
 
     /* Remove 'string' from args to prevent reference errors. */

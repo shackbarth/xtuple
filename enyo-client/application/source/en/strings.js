@@ -927,6 +927,8 @@ strict:true, trailing:true, white:true */
     "_updateFractional": "The quantity ordered and unit of measure selected will result in a " +
       "fractional inventory qty for this item. This item does not allow fractional quantities; " +
       "the quantity will be updated accordingly.",
+    "_updateHoldType?": "Would you like to over-write the existing hold type with the " +
+      "default for this selection?",
     "_updatePrice?": "You have changed the price basis, do you want to update the Price?",
     "_whatToDo": "What would you like to do?"
   });
