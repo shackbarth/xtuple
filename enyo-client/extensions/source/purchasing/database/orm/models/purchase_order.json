@@ -1,0 +1,797 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PurchaseOrder",
+    "table": "xt.poheadinfo",
+    "orderSequence": "PoNumber",
+    "idSequenceName": "pohead_pohead_id_seq",
+    "isRest": true,
+    "comment": "Purchase Order Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPurchaseOrders",
+        "read": "ViewPurchaseOrders",
+        "update": "MaintainPurchaseOrders",
+        "delete": "MaintainPurchaseOrders"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "pohead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "pohead_number",
+          "isNaturalKey": true
+         }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "pohead_status"
+        }
+      },
+      {
+        "name": "orderDate",
+        "attr": {
+          "type": "Date",
+          "column": "pohead_orderdate"
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "type": "VendorRelation",
+          "column": "pohead_vend_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "incoterms",
+        "attr": {
+          "type": "String",
+          "column": "pohead_fob"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipvia"
+        }
+      },
+      {
+        "name": "comments",
+        "attr": {
+          "type": "String",
+          "column": "pohead_comments"
+        }
+      },
+      {
+        "name": "freight",
+        "attr": {
+          "type": "Number",
+          "column": "pohead_freight"
+        }
+      },
+      {
+        "name": "isPrinted",
+        "attr": {
+          "type": "Boolean",
+          "column": "pohead_printed"
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "pohead_terms_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "Site",
+          "column": "pohead_warehous_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "agent",
+        "attr": {
+          "type": "String",
+          "column": "pohead_agent_username"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "pohead_curr_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "pohead_taxzone_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "pohead_taxtype_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "vendorContact",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "pohead_vend_cntct_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "vendorContactHonorific",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_honorific"
+        }
+      },
+      {
+        "name": "vendorContactFirstName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_first_name"
+        }
+      },
+      {
+        "name": "vendorContactMiddleName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_middle"
+        }
+      },
+      {
+        "name": "vendorContactLastName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_last_name"
+        }
+      },
+      {
+        "name": "vendorContactSuffic",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_suffix"
+        }
+      },
+      {
+        "name": "vendorContactPhone",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_phone"
+        }
+      },
+      {
+        "name": "vendorContactTitle",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_title"
+        }
+      },
+      {
+        "name": "vendorContactFax",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_fax"
+        }
+      },
+      {
+        "name": "vendorContactEmail",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_email"
+        }
+      },
+      {
+        "name": "vendorAddress",
+        "toOne": {
+          "type": "Address",
+          "column": "pohead_vendaddr_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "vendorAddress1",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress1"
+        }
+      },
+      {
+        "name": "vendorAddress2",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress2"
+        }
+      },
+      {
+        "name": "vendorAddress3",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress3"
+        }
+      },
+      {
+        "name": "vendorCity",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendcity"
+        }
+      },
+      {
+        "name": "vendorState",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendstate"
+        }
+      },
+      {
+        "name": "vendorPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendzipcode"
+        }
+      },
+      {
+        "name": "vendorCountry",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendcountry"
+        }
+      },
+      {
+        "name": "vendorShiptoContact",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "pohead_shipto_cntct_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "vendorShiptoContactHonorific",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_honorific"
+        }
+      },
+      {
+        "name": "vendorShiptoContactFirstName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_first_name"
+        }
+      },
+      {
+        "name": "vendorShiptoContactMiddleName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_middle"
+        }
+      },
+      {
+        "name": "vendorShiptoContactLastName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_last_name"
+        }
+      },
+      {
+        "name": "vendorShiptoContactSuffix",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_suffix"
+        }
+      },
+      {
+        "name": "vendorShiptoContactPhone",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_phone"
+        }
+      },
+      {
+        "name": "vendorShiptoContactTitle",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_title"
+        }
+      },
+      {
+        "name": "vendorShiptoContactFax",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_fax"
+        }
+      },
+      {
+        "name": "vendorShiptoContactEmail",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_email"
+        }
+      },
+      {
+        "name": "shiptoAddress",
+        "toOne": {
+          "type": "AddressInfo",
+          "column": "pohead_shiptoaddress_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "shiptoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptoaddress1"
+        }
+      },
+      {
+        "name": "shiptoAddress2",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptoaddress2"
+        }
+      },
+      {
+        "name": "shiptoAddress3",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptoaddress3"
+        }
+      },
+      {
+        "name": "shiptoCity",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptocity"
+        }
+      },
+      {
+        "name": "shiptoState",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptostate"
+        }
+      },
+      {
+        "name": "shiptoPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptozipcode"
+        }
+      },
+      {
+        "name": "shiptoCountry",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptocountry"
+        }
+      },
+      {
+        "name": "releaseDate",
+        "attr": {
+          "type": "Date",
+          "column": "pohead_released"
+        }
+      },
+      {
+        "name": "subtotal",
+        "attr": {
+          "type": "Money",
+          "column": "subtotal"
+        }
+      }, 
+      {
+        "name": "freightSubtotal",
+        "attr": {
+          "type": "Money",
+          "column": "freight_subtotal"
+        }
+      }, 
+      {
+        "name": "taxtTotal",
+        "attr": {
+          "type": "Money",
+          "column": "tax_total"
+        }
+      }, 
+      {
+        "name": "total",
+        "attr": {
+          "type": "Money",
+          "column": "total"
+        }
+      }, 
+      {
+        "name": "lineItems",
+        "toMany": {
+          "type": "PurchaseOrderLine",
+          "column": "pohead_id",
+          "inverse": "purchaseOrder"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderRelation",
+    "table": "pohead",
+    "isRest": true,
+    "comment": "Purchase Order Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "pohead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "pohead_number",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "type": "VendorRelation",
+          "column": "pohead_vend_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipvia"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderLine",
+    "table": "xt.poiteminfo",
+    "idSequenceName": "poitem_poitem_id_seq",
+    "comment": "Purchase Order Line Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "poitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "purchaseOrder",
+        "attr": {
+          "type": "Number",
+          "column": "poitem_pohead_id",
+          "isNested": true
+         }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "poitem_status"
+        }
+      },
+      {
+        "name": "lineNumber",
+        "attr": {
+          "type": "Number",
+          "column": "poitem_linenumber"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "poitem_duedate"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "type": "ItemRelation",
+          "column": "item_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "warehous_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "vendorItemNumber",
+        "attr": {
+          "type": "String",
+          "column": "poitem_vend_item_number"
+        }
+      },
+      {
+        "name": "vendorItemDescription",
+        "attr": {
+          "type": "String",
+          "column": "poitem_vend_item_descrip"
+        }
+      },
+      {
+        "name": "vendorUnit",
+        "attr": {
+          "type": "String",
+          "column": "poitem_vend_uom"
+        }
+      },
+      {
+        "name": "vendorUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "poitem_invvenduomratio"
+        }
+      },
+      {
+        "name": "ordered",
+        "attr": {
+          "type": "Quantity",
+          "column": "poitem_qty_ordered"
+        }
+      },
+      {
+        "name": "toReceive",
+        "attr": {
+          "type": "Quantity",
+          "column": "poitem_qty_toreceive"
+        }
+      },
+      {
+        "name": "received",
+        "attr": {
+          "type": "Quantity",
+          "column": "poitem_qty_received"
+        }
+      },
+      {
+        "name": "returned",
+        "attr": {
+          "type": "Quantity",
+          "column": "poitem_qty_returned"
+        }
+      },
+      {
+        "name": "vouchered",
+        "attr": {
+          "type": "Quantity",
+          "column": "poitem_qty_vouchered"
+        }
+      },
+      {
+        "name": "unitPrice",
+        "attr": {
+          "type": "PurchasePrice",
+          "column": "poitem_unitprice"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "poitem_comments"
+        }
+      },
+      {
+        "name": "expenseCategory",
+        "toOne": {
+          "type": "ExpenseCategory",
+          "column": "poitem_expcat_id"
+        }
+      },
+      {
+        "name": "itemSource",
+        "attr": {
+          "type": "Number",
+          "column": "poitem_itemsrc_id"
+        }
+      },
+      {
+        "name": "freight",
+        "attr": {
+          "type": "Money",
+          "column": "poitem_freight"
+        }
+      },
+      {
+        "name": "freightReceived",
+        "attr": {
+          "type": "Money",
+          "column": "poitem_freight_received"
+        }
+      },
+      {
+        "name": "freightVouchered",
+        "attr": {
+          "type": "Money",
+          "column": "poitem_freight_vouchered"
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "poitem_stdcost"
+        }
+      },
+      {
+        "name": "manufacturerName",
+        "attr": {
+          "type": "String",
+          "column": "poitem_manuf_name"
+        }
+      },
+      {
+        "name": "manufacturerItemNumber",
+        "attr": {
+          "type": "String",
+          "column": "poitem_manuf_item_number"
+        }
+      },
+      {
+        "name": "manufacturerItemDescription",
+        "attr": {
+          "type": "String",
+          "column": "poitem_manuf_item_descrip"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "poitem_taxtype_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderListItem",
+    "table": "xt.poheadinfo",
+    "isRest": true,
+    "comment": "Purchase Order List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "pohead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "pohead_number",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "type": "VendorRelation",
+          "column": "pohead_vend_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "orderDate",
+        "attr": {
+          "type": "Date",
+          "column": "pohead_orderdate"
+         }
+      },
+      {
+        "name": "agent",
+        "attr": {
+          "type": "String",
+          "column": "pohead_agent_username"
+         }
+      },
+      {
+        "name": "isPrinted",
+        "attr": {
+          "type": "Boolean",
+          "column": "pohead_printed"
+         }
+      },
+      {
+        "name": "status",
+        "attr": { 
+          "type": "String",
+          "column": "pohead_status"
+         }
+      },
+      {
+        "name": "total",
+        "attr": { 
+          "type": "Money",
+          "column": "total"
+         }
+      }
+    ],
+    "isSystem": true
+  }
+]
