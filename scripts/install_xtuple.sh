@@ -158,13 +158,13 @@ setup_postgres() {
 	sudo service postgresql restart
 
 	log "Dropping old databases if they already exist..."
-	sudo dropdb -U postgres $DATABASE
+	sudo dropdb -U postgres $DATABASE 2>&1
 
 	cdir $BASEDIR/postgres
-	wget -q http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
+	sudo wget -q http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
 	wait
   NEWESTVERSION=$(cat rss | grep -o '03%20PostBooks-databases\/4.[0-9].[0-9]\(RC\)\?\/postbooks_demo-4.[0-9].[0-9]\(RC\)\?.backup\/download' | grep -o '4.[0-9].[0-9]\(RC\)\?' | head -1)
-	rm rss
+	sudo rm rss
 
 	if [ -z "$NEWESTVERSION" ]
 	then
@@ -174,8 +174,8 @@ setup_postgres() {
 
 	if [ ! -f postbooks_demo-$NEWESTVERSION.backup ]
 	then
-		wget -qO postbooks_demo-$NEWESTVERSION.backup http://sourceforge.net/projects/postbooks/files/03%20PostBooks-databases/$NEWESTVERSION/postbooks_demo-$NEWESTVERSION.backup/download
-		wget -qO init.sql http://sourceforge.net/projects/postbooks/files/03%20PostBooks-databases/$NEWESTVERSION/init.sql/download
+		sudo wget -qO postbooks_demo-$NEWESTVERSION.backup http://sourceforge.net/projects/postbooks/files/03%20PostBooks-databases/$NEWESTVERSION/postbooks_demo-$NEWESTVERSION.backup/download
+		sudo wget -qO init.sql http://sourceforge.net/projects/postbooks/files/03%20PostBooks-databases/$NEWESTVERSION/init.sql/download
 		wait
 		if [ ! -f postbooks_demo-$NEWESTVERSION.backup ]
 		then
