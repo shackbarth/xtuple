@@ -3,6 +3,7 @@ node_js:
   - "0.8"
 
 install:
+  - "alias sudo='sudo env PATH=$PATH $@'"
   - "bash scripts/install_xtuple.sh -ipn"
 
 before_script:

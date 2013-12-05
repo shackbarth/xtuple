@@ -112,6 +112,7 @@ install_packages() {
     source $HOME/.nvm/nvm.sh
   else
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
+    wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | sudo bash
     nvm install $NODE_VERSION
   fi
   npm install -q 2>&1 | tee -a $LOG_FILE
@@ -204,7 +205,7 @@ init_everythings() {
 	log "Configured node-datasource"
 	log "The database is now set up..."
 
-	sudo mkdir -p $XT_DIR/node-datasource/lib/private
+	mkdir -p $XT_DIR/node-datasource/lib/private
 	cdir $XT_DIR/node-datasource/lib/private
 	cat /dev/urandom | tr -dc '0-9a-zA-Z!@#$%^&*_+-'| head -c 64 > salt.txt
 	log "Created salt"
