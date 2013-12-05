@@ -504,6 +504,7 @@
       {
         "name": "account",
         "toOne": {
+          "isNested": true,
           "type": "AccountRelation",
           "column": "itemalias_crmacct_id"
         }
