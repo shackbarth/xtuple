@@ -222,6 +222,10 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
             common.initializeModel(salesOrderModel, XM.SalesOrder, function (err, model) {
               salesOrderModel = model;
               salesOrderModel.set(spec.createHash);
+              salesOrderModel.notify = function (message, options) {
+                // whatever it is, I'll take it!
+                options.callback({answer: true});
+              };
               done();
             });
           },
@@ -358,7 +362,6 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           function () {
         workflowModel.set({completedParentStatus: "R"});
         salesOrderModel.get("workflow").add(workflowModel);
-        assert.equal(salesOrderModel.get("holdType"), "N");
         workflowModel.set({status: "C"});
         assert.equal(salesOrderModel.get("holdType"), "R");
         salesOrderModel.set({saleType: null});

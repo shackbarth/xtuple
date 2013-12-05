@@ -90,7 +90,6 @@ white:true*/
       this.inheritWorkflowSource(this.get("saleType"), "XM.SalesOrderCharacteristic",
         "XM.SalesOrderWorkflow");
 
-
       if (this.getStatus() === XM.Model.EMPTY) {
         // on a new order, set the hold type to the sale type default
         this.set({holdType: defaultHoldType});
