@@ -268,7 +268,8 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
     defaults: {
       disableExport: false,
-      isActive: true
+      isActive: true,
+      isAgent: false
     },
 
     conversionMap: {
