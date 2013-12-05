@@ -25,9 +25,13 @@ white:true*/
         callback = function () {};
       } else {
         callback = function (response) {
-          if (response && response.isError) {
-            // handle error status centrally here before we return to the caller
+          notify(response);
 
+          if (response && response.isError) {
+            // notify the user in the case of error. We have to do it after
+            // we process the original callback so as to make sure the scrims
+            // get cleaned up before we put a new popup up. An alternative is
+            // just to print to console in the case of error.
             errorMessage = response.status ? response.status.message : response.message;
             if (errorMessage) {
               XT.app.$.postbooks.notify(null, {
@@ -35,16 +39,7 @@ white:true*/
                 message: errorMessage
               });
             }
-
-            if (response.code === "SESSION_NOT_FOUND") {
-              // The session couldn't be validated by the datasource.
-              // XXX might be dead code
-              XT.logout();
-            }
-
           }
-
-          notify(response);
         };
       }
 
