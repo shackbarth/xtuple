@@ -78,8 +78,6 @@ module.exports = (function () {
             data: req.body
           };
 
-        console.log(payload);
-
         if (!req.body) {
           return res.send(400, "Bad Request");
         }
@@ -286,6 +284,7 @@ module.exports = (function () {
       }
 
       // handle request
+      // TODO express naturally handles request method routing
       var handler = handlers[req.method];
       if (!_.isFunction(handler)) {
         return res.send(405, "Method Not Allowed");
