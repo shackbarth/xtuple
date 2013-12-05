@@ -371,6 +371,7 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: ["item.number", "item.barcode"],
     nameAttribute: "item.description1",
     descripAttribute: "item.description2",
+    skipCompleterFilter: true,
     classes: "xv-private-item-site-widget"
   });
 

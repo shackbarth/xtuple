@@ -399,6 +399,28 @@ trailing:true, white:true, strict:false*/
   });
 
   // ..........................................................
+  // ITEM ALIAS
+  //
+
+  enyo.kind({
+    name: "XV.ItemAliasListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "item",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "aliasNumber", classes: "bold"}
+          ]},
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "description1"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // TAX REGISTRATION
   //
 

@@ -274,6 +274,15 @@
         }
       },
       {
+        "name": "aliases",
+        "toMany": {
+          "isNested": true,
+          "type": "ItemAlias",
+          "column": "item_id",
+          "inverse": "item"
+        }
+      },
+      {
         "name": "comments",
         "toMany": {
           "isNested": true,
@@ -466,7 +475,8 @@
         "name": "aliasNumber",
         "attr": {
           "type": "String",
-          "column": "itemalias_number"
+          "column": "itemalias_number",
+          "required": true
         }
       },
       {
@@ -480,7 +490,8 @@
         "name": "useDescription",
         "attr": {
           "type": "Boolean",
-          "column": "itemalias_usedescrip"
+          "column": "itemalias_usedescrip",
+          "required": true
         }
       },
       {
@@ -488,6 +499,14 @@
         "attr": {
           "type": "String",
           "column": "itemalias_descrip1"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "itemalias_crmacct_id"
         }
       },
       {
@@ -1302,6 +1321,15 @@
         "attr": {
           "type": "Weight",
           "column": "item_packweight"
+        }
+      },
+      {
+        "name": "aliases",
+        "toMany": {
+          "isNested": true,
+          "type": "ItemAlias",
+          "column": "item_id",
+          "inverse": "item"
         }
       },
       {
