@@ -8,7 +8,8 @@
    * @constructor
    */
   function XtGetQuery (query) {
-    TargetQuery.call(this, XtGetQuery.template, query);
+    this.template || (this.template = XtGetQuery.template);
+    TargetQuery.call(this, query);
   }
 
   Object.defineProperties(XtGetQuery, {
@@ -23,7 +24,9 @@
           return _.all(parameters, function (param) {
             return _.test({
               'attribute': _.isString,
-              'operator': _.isString,
+              'operator': _.or(
+                '=', '<', '<=', '>', '>=', 'MATCHES', 'BEGINS_WITH'
+              ),
               'value': _.isDefined,
               '(?)isCharacteristic': _.isBoolean
             }, param);
@@ -43,13 +46,7 @@
     }
   });
 
-  /**
-   * @extends Query
-   */
-  XtGetQuery.prototype = _.extend(Object.create(TargetQuery.prototype), {
-
-  });
+  XtGetQuery.prototype = Object.create(TargetQuery.prototype);
 
   module.exports = XtGetQuery;
-
 })();

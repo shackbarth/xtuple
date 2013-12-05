@@ -17,5 +17,6 @@ _.mixin({
 
 module.exports = {
   RestQuery: require('./rest_query'),
+  FreeTextQuery: require('./freetext_query'),
   XtGetQuery: require('./xtget_query')
 };

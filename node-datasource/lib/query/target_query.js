@@ -6,8 +6,8 @@
   /**
    * @constructor
    */
-  function TargetQuery (template, query) {
-    Query.call(this, template, query);
+  function TargetQuery (query) {
+    Query.call(this, query);
   }
 
   /**
@@ -19,10 +19,9 @@
      * @public
      */
     getDateFormat: function () {
-      return 
+      return moment.defaultFormat;
     }
   });
 
   module.exports = TargetQuery;
-
 })();

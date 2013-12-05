@@ -4,10 +4,14 @@
   /**
    * A database query structured as a javascript object.
    * @constructor Query
+   * @param {Object}
    */
-  function Query (template, query) {
+  function Query (query) {
+    if (!this.template) {
+      return new Error('subclasses must set the template field');
+    }
     this.query = _.clone(query);
-    this.valid = _.test(template, query);
+    this.valid = _.test(this.template, query);
   }
 
   Query.prototype = Object.create({

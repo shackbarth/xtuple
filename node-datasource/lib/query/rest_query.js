@@ -13,10 +13,12 @@
    * @class RestQuery
    */
   function RestQuery (query) {
-    SourceQuery.call(this, RestQuery.template, query);
+    this.template || (this.template = RestQuery.template);
+    SourceQuery.call(this, query);
   }
 
   Object.defineProperties(RestQuery, {
+
     /**
      * @static
      */
@@ -24,8 +26,9 @@
       value: {
         '(?)attributes': {
           '(+)': _.or(
-            // xtuple custom operators
             { EQUALS:        _.isDefined },
+            { MATCHES:       _.isString },
+            { BEGINS_WITH:   _.isString },
             { GREATER_THAN:  _.or(_.isFinite, isValidDate) },
             { AT_LEAST:      _.or(_.isFinite, isValidDate) },
             { LESS_THAN:     _.or(_.isFinite, isValidDate) },
@@ -52,7 +55,9 @@
         LESS_THAN:    '<',
         AT_MOST:      '<=',
         GREATER_THAN: '>',
-        AT_LEAST:     '>='
+        AT_LEAST:     '>=',
+        MATCHES:      'MATCHES',
+        BEGINS_WITH:  'BEGINS_WITH'
       }
     },
 
@@ -72,11 +77,10 @@
     /**
      * @override
      */
-    _toTarget: function (targetClass) {
-      var x = toXtGetQuery(this.query);
-      //console.log(x);
-      return x;
-      //console.log(this.query);
+    _toTarget: function (TargetQuery, options) {
+      if (TargetQuery.name === 'XtGetQuery') {
+        return new TargetQuery(toXtGetQuery(this.query, options));
+      }
     }
   });
 
@@ -107,19 +111,14 @@
         });
       })(),
       rowOffset: (function () {
-        return source.pagetoken;
+        return (+source.pagetoken || 0) * (+source.maxresults || 100);
       })(),
       rowLimit: (function () {
-        return source.maxresults;
+        return Math.max(+source.maxresults, 100);
       })()
     };
-
-    //console.log(source);
-    //console.log(target);
-
     return _.compactObject(target);
   }
 
   module.exports = RestQuery;
-
 })();

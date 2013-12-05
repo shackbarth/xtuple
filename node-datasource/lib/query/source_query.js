@@ -6,8 +6,8 @@
   /**
    * @constructor
    */
-  function SourceQuery (template, query) {
-    Query.call(this, template, query);
+  function SourceQuery (query) {
+    Query.call(this, query);
   }
 
   /**
@@ -28,8 +28,8 @@
      * @public
      * @param {Class} type of target to translate to
      */
-    toTarget: function (TargetQuery) {
-      return new TargetQuery(this._toTarget(TargetQuery));
+    toTarget: function (TargetQuery, options) {
+      return this._toTarget(TargetQuery, options);
     }
   });
 

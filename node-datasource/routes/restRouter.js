@@ -7,6 +7,7 @@ var routes = require('./routes'),
   str = require('underscore.string'),
   querylib = require('../lib/query'),
   RestQuery = querylib.RestQuery,
+  FreeTextQuery = querylib.FreeTextQuery,
   XtGetQuery = querylib.XtGetQuery;
 
 _.mixin(str.exports());
@@ -18,108 +19,41 @@ module.exports = (function () {
   'use strict';
 
   var handlers = {
+
       /**
        * @private
        * Requests a representation of the specified resource.
        */
       GET: function (req, res, session, options) {
-        var schema,
-          searchableAttributes,
-          ormType = options.ormType,
-          id = options.id,
-          resources = options.resources,
+        var ormType = options.ormType,
           callback = options.callback,
-          rq,
-          target,
           payload = {
             nameSpace: 'XM',
-            type: ormType
-          };
+            type: ormType,
+            id: options.id
+          },
+          restQuery,
+          freeQuery,
+          schema;
 
-
-        if (req.params.id) { // This is a single resource request.
-          payload.type = ormType;
-          payload.id = id + "";
-
-          routes.queryDatabase("get", payload, session, callback);
-
-        } else { // This is a list request.
-
-          payload.query = new RestQuery(req.query).toTarget(XtGetQuery).query;
-          console.log(payload.query);
-
+        if (options.id) {
           return routes.queryDatabase("get", payload, session, callback);
-
-          /*
-          payload.query = {};
-          payload.query.rowLimit = (+req.query.maxResults) || 100;
-          // assumption: pageToken is 0-indexed
-          payload.query.rowOffset = (+req.query.pageToken) ?
-            (+req.query.pageToken) * ((+req.query.maxResults) || 100) :
-            0;
-          */
-
-
-          // q represents a full-text search on any text attributes of the ormType
-          /*
-          payload.query.parameters = [];
-          schema = XT.session.schemas.XM.attributes[payload.type.camelize().capitalize()];
-          if (req.query.q) {
-            searchableAttributes = _.compact(_.map(schema.columns, function (column) {
-              return column.category === 'S' ? column.name : null;
-            }));
-            if (searchableAttributes.length > 0) {
-              payload.query.parameters.push({
-                attribute: searchableAttributes,
-                operator: "MATCHES",
-                value: req.query.q
-              });
-            }
-          }
-          */
-
-          // We also support field-level filtering, with the MATCHES, >=, or <=
-          // operations. These latter two can be requested by appending Min or Max
-          // to the end of the attribute name, as advertised in the discovery doc.
-          _.each(schema.columns, function (column) {
-            var attr = column.name,
-              category = column.category,
-              operator;
-
-            if (['B', 'D', 'N', 'S'].indexOf(category) < 0) {
-              return;
-            }
-            if (req.query[attr]) {
-              if (category === 'S') {
-                operator = "MATCHES";
-              } else if (category === 'B' || category === 'N') {
-                operator = "=";
-              }
-              payload.query.parameters.push({
-                attribute: attr,
-                operator: operator,
-                value: req.query[attr]
-              });
-            }
-
-            if (req.query[attr + "Min"]) {
-              payload.query.parameters.push({
-                attribute: attr,
-                operator: ">=",
-                value: req.query[attr + "Min"]
-              });
-            }
-            if (req.query[attr + "Max"]) {
-              payload.query.parameters.push({
-                attribute: attr,
-                operator: "<=",
-                value: req.query[attr + "Max"]
-              });
-            }
-          });
-
-          routes.queryDatabase("get", payload, session, callback);
         }
+
+        freeQuery = new FreeTextQuery(req.query);
+        if (freeQuery.isValid()) {
+          schema = XT.session.schemas.XM.attributes[payload.type.camelize().capitalize()];
+          payload.query = freeQuery.toTarget(XtGetQuery, { schema: schema }).query;
+          return routes.queryDatabase("get", payload, session, callback);
+        }
+
+        restQuery = new RestQuery(req.query);
+        if (restQuery.isValid()) {
+          payload.query = restQuery.toTarget(XtGetQuery).query;
+          return routes.queryDatabase("get", payload, session, callback);
+        }
+
+        return res.send(400, "Bad Request");
       },
 
       /**
@@ -141,8 +75,10 @@ module.exports = (function () {
               functionName: id,
               parameters: req.body.attributes
             },
-            data: !serviceModel && req.body
+            data: req.body
           };
+
+        console.log(payload);
 
         if (!req.body) {
           return res.send(400, "Bad Request");
@@ -358,7 +294,6 @@ module.exports = (function () {
         handler(req, res, session, {
           ormType: ormType,
           id: req.params.id,
-          resources: resources,
           serviceModel: serviceModel,
           services: services,
           callback: callback
