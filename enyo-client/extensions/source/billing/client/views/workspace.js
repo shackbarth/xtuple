@@ -61,6 +61,7 @@
     name: "XV.ReceivableWorkspace",
     kind: "XV.Workspace",
     title: "_receivable".loc(),
+    view: 'XM.ReceivableView',
     model: "XM.Receivable",
     events: {
       onPrint: ""
@@ -78,7 +79,7 @@
             {kind: "XV.ReceivableTypePicker", attr: "documentType"},
             {kind: "XV.InputWidget", attr: "documentNumber"},
             {kind: "XV.InputWidget", attr: "orderNumber"},
-            {kind: "XV.ReasonCodePicker", attr: "reasonCode"},
+            {kind: "XV.ReasonCodePicker", name: "reasonCodePicker", attr: "reasonCode", documentType: null},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"},
             {kind: "onyx.GroupboxHeader", content: "_options".loc()},
@@ -111,27 +112,52 @@
         {kind: "XV.ReceivableApplicationsListRelationsBox", attr: "applications", title: "_applications".loc()}
       ]}
     ],
+
+    /**
+      @see XM.ReceivableView
+      @listens XM.ReceivableView#events
+    */
+    handlers: {
+      onStatusChange: "statusChanged",
+      onDocumentTypeChange: "documentTypeChanged",
+    },
+
     /**
       The saveText property on the workspace will be 'Post' when
       the status of the object is READY_NEW and 'Save' for any other status.
 
       When the model is in a READY_NEW state a checkbox is visible
       that provides the option to 'Print on Post.'
-
-      TaxTotal and taxes will be hidden when the receivable is an Invoice.
     */
-    attributesChanged: function (model, options) {
-      this.inherited(arguments);
-      var isNew = model.getStatus() === XM.Model.READY_NEW,
-        isInvoice = model.get("documentType") === XM.Receivable.INVOICE;
+    documentTypeChanged: function (inSender, inEvent) {
+      var documentType = this.value.get("documentType"),
+        isInvoice = documentType === XM.Receivable.INVOICE;
 
+      this.$.taxTotal.setShowing(!isInvoice);
+      this.$.taxes.setShowing(!isInvoice);
+
+      if (documentType === XM.Receivable.CREDIT_MEMO) {
+        this.$.reasonCodePicker.setDocumentType(XM.ReasonCode.CREDIT_MEMO);
+      } else if (documentType === XM.Receivable.DEBIT_MEMO) {
+        this.$.reasonCodePicker.setDocumentType(XM.ReasonCode.DEBIT_MEMO);
+      }
+    },
+
+    /**
+      The saveText property on the workspace will be 'Post' when
+      the status of the object is READY_NEW and 'Save' for any other status.
+
+      When the model is in a READY_NEW state a checkbox is visible
+      that provides the option to 'Print on Post.'
+    */
+    statusChanged: function (inSender, inEvent) {
+      var isNew = this.value.getStatus() === XM.Model.READY_NEW;
       if (isNew) {
         this.setSaveText("_post".loc());
       }
       this.$.printOnPost.setShowing(isNew);
-      this.$.taxTotal.setShowing(!isInvoice);
-      this.$.taxes.setShowing(!isInvoice);
     },
+
     /**
       When 'Print on Post' is checked,
       a standard form should be printed when posting.
