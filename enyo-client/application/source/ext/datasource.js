@@ -28,16 +28,19 @@ white:true*/
           notify(response);
 
           if (response && response.isError) {
-            // notify the user in the case of error. We have to do it after
-            // we process the original callback so as to make sure the scrims
-            // get cleaned up before we put a new popup up. An alternative is
-            // just to print to console in the case of error.
+            // notify the user in the case of error.
+            // Wait a second to make sure that whatever the expected callback
+            // function has time to do whatever it has to do. Not pretty,
+            // but works across a broad range of callback errors.
             errorMessage = response.status ? response.status.message : response.message;
             if (errorMessage) {
-              XT.app.$.postbooks.notify(null, {
-                type: XM.Model.CRITICAL,
-                message: errorMessage
-              });
+              console.log("Error:", errorMessage);
+              setTimeout(function () {
+                XT.app.$.postbooks.notify(null, {
+                  type: XM.Model.CRITICAL,
+                  message: errorMessage
+                });
+              }, 1000);
             }
           }
         };
