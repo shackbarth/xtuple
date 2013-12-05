@@ -1,6 +1,6 @@
 [
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "ItemSource",
     "table": "itemsrc",
@@ -189,7 +189,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "ItemSourcePrice",
     "table": "itemsrcp",

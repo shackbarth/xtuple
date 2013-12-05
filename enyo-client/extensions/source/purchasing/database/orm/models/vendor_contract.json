@@ -1,6 +1,6 @@
 [
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "VendorContract",
     "table": "contrct",
@@ -73,7 +73,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "VendorContractRelation",
     "table": "contrct",

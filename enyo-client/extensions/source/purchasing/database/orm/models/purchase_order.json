@@ -1,6 +1,6 @@
 [
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseEmailProfile",
     "table": "xt.poemlprofile",
@@ -92,7 +92,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseType",
     "table": "potype",
@@ -167,7 +167,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseTypeCharacteristic",
     "table": "charass",
@@ -225,7 +225,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseTypeWorkflow",
     "table": "xt.potypewf",
@@ -371,7 +371,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseOrder",
     "table": "xt.poheadinfo",
@@ -847,7 +847,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseOrderCharacteristic",
     "table": "charass",
@@ -913,7 +913,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseOrderWorkflow",
     "table": "xt.powf",
@@ -1072,7 +1072,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseOrderRelation",
     "table": "pohead",
@@ -1122,7 +1122,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseOrderLine",
     "table": "xt.poiteminfo",
@@ -1342,7 +1342,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseOrderListItem",
     "table": "xt.poheadinfo",
@@ -1447,7 +1447,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseOrderListItemCharacteristic",
     "table": "charass",
