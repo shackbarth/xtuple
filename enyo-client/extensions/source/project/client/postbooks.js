@@ -51,6 +51,7 @@ trailing:true, white:true, strict:false*/
       "MaintainAllCRMAccounts",
       "MaintainAllIncidents",
       "MaintainAllProjects",
+      "MaintainClassCodes",
       "MaintainPersonalContacts",
       "MaintainPersonalCRMAccounts",
       "MaintainPersonalIncidents",
