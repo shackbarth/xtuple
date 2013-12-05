@@ -613,6 +613,47 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "UserAccountRoleListItem",
+    "table": "grp",
+    "comment": "User Account Role List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "grp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "grp_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "grp_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "UserAccountRoleRelation",
     "table": "grp",
     "comment": "User Account Role Relation Map",

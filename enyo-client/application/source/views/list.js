@@ -2648,7 +2648,7 @@ trailing:true, white:true, strict: false*/
   enyo.kind({
     name: "XV.UserAccountRoleList",
     kind: "XV.NameDescriptionList",
-    collection: "XM.UserAccountRoleCollection"
+    collection: "XM.UserAccountRoleListItemCollection"
   });
 
   enyo.kind({
