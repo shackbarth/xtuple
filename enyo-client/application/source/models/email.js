@@ -61,7 +61,7 @@ white:true*/
         workflow = this.get("workflow");
         _.each(workflow.models, function (item) {
           if (item.isDirty()) {
-            that.buildToString.call(item, to);
+            to = that.buildToString.call(item, to.join()).split(",");
           }
         });
       }
@@ -126,11 +126,12 @@ white:true*/
           return comment.getStatus() === XM.Model.READY_NEW;
         }),
         name = this.emailDocumentName,
-        that = this;
+        that = this,
+        profile = this.getValue(this.emailProfileAttribute),
+        to = profile ? this.buildToString("") : "";
 
       options.success = function (model, resp, options) {
-        var profile = model.getValue(that.emailProfileAttribute),
-          formattedContent = {},
+        var formattedContent = {},
           emailOptions = {error: function () {
             XT.log("Error sending email with " + name + " details");
           }},
@@ -156,6 +157,8 @@ white:true*/
               formattedContent[key] = format(value);
             }
           });
+
+          formattedContent.to = to ? to + "," + formattedContent.to : formattedContent.to;
 
           // Build up "to" address list.
           formattedContent.to = that.buildToString(formattedContent.to);
