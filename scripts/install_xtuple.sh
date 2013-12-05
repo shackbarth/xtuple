@@ -29,17 +29,12 @@ LIBS_ONLY=
 XT_DIR=$RUN_DIR
 XTUPLE_REPO='http://sourceforge.net/projects/postbooks/files/mobile-debian'
 
-while getopts ":icpgnhm-:" opt; do
+while getopts ":ipnhm-:" opt; do
   case $opt in
     i)
       # Install packages
       RUNALL=
       INSTALL=true
-      ;;
-    c)
-      # Clone repos
-      RUNALL=
-      CLONE=true
       ;;
     p)
       # Configure postgress
@@ -91,7 +86,6 @@ done
 if [ $RUNALL ]
 then
 	INSTALL=true
-	CLONE=true
 	POSTGRES=true
 	INIT=true
 fi
@@ -99,7 +93,6 @@ fi
 if [ $USERINIT ]
 then
 	INSTALL=
-	CLONE=
 	POSTGRES=
 	INIT=
 fi
@@ -141,27 +134,10 @@ user_init() {
 	git remote add xtuple git://github.com/xtuple/xtuple.git
 }
 
-# Clone repo
-clone_repo() {
-	mkdir -p $BASEDIR
-	if [ $? -ne 0 ]
-	then
-		return 1
-	fi
-
-	cdir $XT_DIR
-
-	if [ $XT_VERSION ]
-	then
-		log "Checking out $XT_VERSION"
-		"git checkout $XT_VERSION" 2>&1 | tee -a $LOG_FILE
-	fi
-}
-
 # Configure postgres and initialize postgres databases
 
 setup_postgres() {
-	mkdir -p $BASEDIR/postgres
+	sudo mkdir -p $BASEDIR/postgres
 	if [ $? -ne 0 ]
 	then
 		return 1
@@ -228,7 +204,7 @@ init_everythings() {
 	log "Configured node-datasource"
 	log "The database is now set up..."
 
-	mkdir -p $XT_DIR/node-datasource/lib/private
+	sudo mkdir -p $XT_DIR/node-datasource/lib/private
 	cdir $XT_DIR/node-datasource/lib/private
 	cat /dev/urandom | tr -dc '0-9a-zA-Z!@#$%^&*_+-'| head -c 64 > salt.txt
 	log "Created salt"
@@ -289,16 +265,6 @@ then
 	fi
 fi
 
-if [ $CLONE ]
-then
-  log "clone_repo()"
-	clone_repo
-	if [ $? -ne 0 ]
-	then
-		log "Tried URL: git://github.com/$USERNAME/xtuple.git"
-		exit 2
-	fi
-fi
 if [ $POSTGRES ]
 then
   log "setup_postgres()"
