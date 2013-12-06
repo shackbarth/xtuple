@@ -52,18 +52,18 @@ while getopts ":ipnhm-:" opt; do
       ;;
     x)
       # Checkout a specific version of the xTuple repo
-	 XT_VERSION=$OPTARG
-	 ;;
+      XT_VERSION=$OPTARG
+      ;;
     init)
       # only for initializing a fresh debian package install
       RUNALL=
-	 USERINIT=true
-	 ;;
+      USERINIT=true
+      ;;
     node)
       # select the version to use for nodejs
-	 NODE_VERSION=$OPTARG
-	 varlog NODE_VERSION
-	 ;;
+      NODE_VERSION=$OPTARG
+      varlog NODE_VERSION
+      ;;
     h)
       echo "Usage: install_xtuple [OPTION]"
 	 echo "Build the full xTuple Mobile Development Environment."
@@ -107,14 +107,9 @@ install_packages() {
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
   sudo apt-get -q install git libssl-dev build-essential postgresql-9.1 postgresql-9.1-plv8 postgresql-contrib postgresql-server-dev-9.1 2>&1 | tee -a $LOG_FILE
 
-  if [ -d "$HOME/.nvm" ]; then
-    log "nvm installed."
-    source $HOME/.nvm/nvm.sh
-  else
-    wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
-    wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | sudo bash
-    nvm install $NODE_VERSION
-  fi
+  wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
+  #wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | sudo bash
+  nvm install $NODE_VERSION
   npm install -q 2>&1 | tee -a $LOG_FILE
 }
 
