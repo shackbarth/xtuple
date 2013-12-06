@@ -1558,6 +1558,7 @@ white:true*/
         options = {},
         itemCharAttrs,
         charTypes,
+        partNumberAlias,
         len,
         i;
 
@@ -1573,6 +1574,21 @@ white:true*/
       }
 
       if (!item) { return; }
+
+      if (parent && parent.get("customer")) {
+        //
+        // If this item has an alias specific to a particular account which happens
+        // to be the account on the sales order, then put that alias into the customer
+        // part number field. If there are more than one match, then just choose the
+        // first.
+        //
+        partNumberAlias = _.find(item.get("aliases").models, function (alias) {
+          return alias.get("account").id === parent.get("customer").id;
+        });
+        if (partNumberAlias) {
+          this.set({customerPartNumber: partNumberAlias.get("aliasNumber")});
+        }
+      }
 
       // Reset Unit Cost
       this.off("unitCost", this.unitCostDidChange);

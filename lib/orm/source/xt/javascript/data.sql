@@ -420,11 +420,12 @@ select xt.install_js('XT','Data','xtuple', $$
         old;
 
       /* If there is no ORM, this isn't a table data type so no check required. */
+      /*
       if (DEBUG) {
         XT.debug('orm type is ->', map.type);
         XT.debug('orm is ->', map);
       }
-
+      */
       if (!map) { return true; }
 
       /* Can not access 'nested only' records directly. */
@@ -603,6 +604,10 @@ select xt.install_js('XT','Data','xtuple', $$
             if (!val[fkey]) {
               columnToKey = ormp.toMany.column;
               propToKey = columnToKey ? resolveKey(columnToKey) : pkey;
+              if (!record[propToKey]) {
+                /* If there's no data, we have a structural problem */
+                throw new Error("Can not resolve foreign key on toMany relation " + ormp.name);
+              }
               val[fkey] = record[propToKey]; 
             }
 
@@ -716,7 +721,13 @@ select xt.install_js('XT','Data','xtuple', $$
       if (sql.statement) {
         rec = plv8.execute(sql.statement, sql.values);
         /* Make sure the primary key is populated */
-        if (!data[pkey]) { data[pkey] = rec[0].id; }
+        if (!data[pkey]) { 
+          data[pkey] = rec[0].id; 
+        }
+        /* Make sure the obj_uuid is populated, if applicable */
+        if (!data.obj_uuid && rec[0] && rec[0].obj_uuid) {
+          data.uuid = rec[0].obj_uuid;
+        }
       }
 
       /* Handle extensions on other tables. */
@@ -816,6 +827,10 @@ select xt.install_js('XT','Data','xtuple', $$
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
         prop = ormp.name;
+
+        if (ormp.toMany && ormp.toMany.column === 'obj_uuid') { 
+          params.parentUuid = true; 
+        }
 
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
@@ -937,8 +952,12 @@ select xt.install_js('XT','Data','xtuple', $$
         params.primaryKey = XT.Orm.primaryKey(orm, true);
       }
 
-      if (params.primaryKey) {
-        params.statement = params.statement +  'returning ' + params.primaryKey + ' as id';
+      if (params.primaryKey && params.parentUuid) {
+        params.statement = params.statement + ' returning ' + params.primaryKey + ' as id, obj_uuid';
+      } else if (params.parentUuid) {
+        params.statement = params.statement + ' returning obj_uuid';
+      } else if (params.primaryKey) {
+        params.statement = params.statement + ' returning ' + params.primaryKey + ' as id';
       }
 
       if (DEBUG) {

@@ -212,6 +212,32 @@ trailing:true, white:true*/
 
 
   // ..........................................................
+  // ITEM ALIASES
+  //
+  enyo.kind({
+    name: "XV.ItemAliasEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "aliasNumber", label: "_alias".loc()},
+        {kind: "XV.AccountWidget", attr: "account" },
+        {kind: "XV.CheckboxWidget", attr: "useDescription"},
+        {kind: "XV.InputWidget", attr: "description1", label: "_description".loc()}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.ItemAliasBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_aliases".loc(),
+    editor: "XV.ItemAliasEditor",
+    parentKey: "item",
+    listRelations: "XV.ItemAliasListRelations"
+  });
+
+  // ..........................................................
   // TAX REGISTRATIONS
   //
   enyo.kind({

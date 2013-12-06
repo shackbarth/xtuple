@@ -183,7 +183,7 @@ select xt.install_js('XM','Sales','xtuple', $$
     ret.NextCreditMemoNumber = plv8.execute(sql, ['CmNumber'])[0].value;
     ret.NextInvoiceNumber = plv8.execute(sql, ['InvcNumber'])[0].value;
 
-    ret = XT.extend(ret, data.retrieveMetrics(keys));
+    ret = XT.extend(data.retrieveMetrics(keys), ret);
 
     /* Special processing for primary key based values */
     orm = XT.Orm.fetch("XM", "CustomerType");

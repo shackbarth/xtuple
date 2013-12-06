@@ -179,7 +179,10 @@ insert into cohead (
   new.cohead_status,
   new.cohead_saletype_id,
   new.cohead_shipzone_id
-);
+)
+
+returning cohead.*, null::date, null::numeric, null::numeric, null::numeric, 
+null::numeric, null::numeric, null::numeric, null::numeric, null::text, null::text;
 
 create or replace rule "_UPDATE" as on update to xt.coheadinfo do instead
 
