@@ -104,13 +104,14 @@ fi
 
 install_packages() {
   wget -qO- http://anonscm.debian.org/loggerhead/pkg-postgresql/postgresql-common/trunk/download/head:/apt.postgresql.org.s-20130224224205-px3qyst90b3xp8zj-1/apt.postgresql.org.sh | sudo bash > /dev/null
-  sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
-  sudo apt-get -q install git libssl-dev build-essential postgresql-9.1 postgresql-9.1-plv8 postgresql-contrib postgresql-server-dev-9.1 2>&1 | tee -a $LOG_FILE
+  #sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
+  sudo apt-get -q install git libssl-dev postgresql-9.1 postgresql-contrib postgresql-9.1-plv8 2>&1 | grep 'Setting up' | tee -a $LOG_FILE
 
-  wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
-  #wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | sudo bash
-  nvm install $NODE_VERSION
-  npm install -q 2>&1 | tee -a $LOG_FILE
+  if ! type nvm; then
+    wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
+    nvm install $NODE_VERSION 
+  fi
+  npm install > /dev/null 2>&1 | tee -a $LOG_FILE
 }
 
 # Use only if running from a debian package install for the first time
@@ -196,7 +197,7 @@ init_everythings() {
 
 	cdir $XT_DIR/node-datasource
 
-	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed "s/testDatabase: \"\"/testDatabase: '$DATABASE'/" > config.js
+	cat sample_config.js | sed "s/testDatabase: \"\"/testDatabase: '$DATABASE'/" > config.js
 	log "Configured node-datasource"
 	log "The database is now set up..."
 
@@ -215,15 +216,7 @@ init_everythings() {
 	fi
 
 	cdir $XT_DIR/test/lib
-  rm -f login_data.js
-  echo "exports.data = {" >> login_data.js
-  echo "  webaddress: ''," >> login_data.js
-  echo "  username: 'admin', //------- Enter the xTuple username" >> login_data.js
-  echo "  pwd: 'admin', //------ enter the password here" >> login_data.js
-  echo "  org: '$DATABASE', //------ enter the database name here" >> login_data.js
-  echo "  suname: '', //-------enter the sauce labs username" >> login_data.js
-  echo "  sakey: '' //------enter the sauce labs access key" >> login_data.js
-  echo "};" >> login_data.js
+  cat sample_login_data.js | sed "s/org: \'dev\'/org: \'$DATABASE\'/" > login_data.js
 	log "Created testing login_data.js"
 
 	cdir $XT_DIR
