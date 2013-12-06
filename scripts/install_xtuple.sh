@@ -104,13 +104,15 @@ fi
 
 install_packages() {
   wget -qO- http://anonscm.debian.org/loggerhead/pkg-postgresql/postgresql-common/trunk/download/head:/apt.postgresql.org.s-20130224224205-px3qyst90b3xp8zj-1/apt.postgresql.org.sh | sudo bash > /dev/null
-  #sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
+  sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
+  log "installing debian packages..."
   sudo apt-get -q install git libssl-dev postgresql-9.1 postgresql-contrib postgresql-9.1-plv8 2>&1 | grep 'Setting up' | tee -a $LOG_FILE
 
   if ! type nvm; then
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
     nvm install $NODE_VERSION 
   fi
+  log "installing npm modules..."
   npm install > /dev/null 2>&1 | tee -a $LOG_FILE
 }
 
@@ -154,8 +156,7 @@ setup_postgres() {
 
 	sudo service postgresql restart
 
-	log "Dropping old databases if they already exist..."
-	sudo dropdb -U postgres $DATABASE 2>&1
+	sudo dropdb -U postgres --if-exists $DATABASE 2>&1
 
 	cdir $BASEDIR/postgres
 	sudo wget -q http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss

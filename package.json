@@ -45,7 +45,6 @@
     "require-uncache": "0.0.x",
     "html5": "0.3.13",
     "zombie": "1.4.x",
-    "less": "1.5.0"
   },
   "optionalDependencies": {},
   "engines": {
