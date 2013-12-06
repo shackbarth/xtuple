@@ -8,7 +8,7 @@ white:true*/
 
   XT.extensions.purchasing.initStartup = function () {
     XT.cacheCollection("XM.purchaseEmailProfiles", "XM.PurchaseEmailProfileCollection", "name");
-    XT.cacheCollection("XM.purchaseTypes", "XM.ProjectTypeCollection", "code");
+    XT.cacheCollection("XM.purchaseTypes", "XM.PurchaseTypeCollection", "code");
   };
 
 }());

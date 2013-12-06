@@ -412,6 +412,30 @@ white:true*/
 
     });
 
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.PurchaseTypeCollection = XM.Collection.extend({
+
+      model: XM.PurchaseType
+
+    });
+
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.PurchaseEmailProfileCollection = XM.Collection.extend({
+
+      model: XM.PurchaseEmailProfile
+
+    });
+
   };
 
 }());

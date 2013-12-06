@@ -5,7 +5,7 @@ white:true, strict:false*/
 
 (function () {
 
-  XT.extensions.project.initPickers = function () {
+  XT.extensions.purchasing.initPickers = function () {
 
     // ..........................................................
     // PURCHAS EMAIL PROFILE

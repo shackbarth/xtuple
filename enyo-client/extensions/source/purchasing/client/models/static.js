@@ -24,7 +24,7 @@ white:true*/
     });
     XM.purchaseOrderStatuses = new XM.PurchaseOrderStatusCollection();
     for (i = 0; i < purchaseOrderStatusesJson.length; i++) {
-      var purchaseOrderStatus = new XM.TransferOrderStatusModel(purchaseOrderStatusesJson[i]);
+      var purchaseOrderStatus = new XM.PurchaseOrderStatusModel(purchaseOrderStatusesJson[i]);
       XM.purchaseOrderStatuses.add(purchaseOrderStatus);
     }
 

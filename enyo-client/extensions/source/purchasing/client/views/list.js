@@ -13,7 +13,7 @@ trailing:true, white:true, strict:false*/
 
     enyo.kind({
       name: "XV.PurchaseEmailProfileList",
-      kind: "XV.PurchaseProfileList",
+      kind: "XV.EmailProfileList",
       label: "_purchaseEmailProfiles".loc(),
       collection: "XM.PurchaseEmailProfileCollection"
     });
@@ -49,7 +49,7 @@ trailing:true, white:true, strict:false*/
               ]}
             ]},
             {kind: "XV.ListColumn", classes: "last", components: [
-              {kind: "XV.ListAttr", formatter: "site.code"},
+              {kind: "XV.ListAttr", attr: "site.code"},
               {kind: "XV.ListAttr", formatter: "formatShipto"}
             ]}
           ]}
