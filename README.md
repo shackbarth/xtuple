@@ -23,7 +23,7 @@ Then run:
 It will prompt you for your `sudo` credentials; installation will take a few minutes. Then, to start the datasource, run:
 
     cd node-datasource
-    sudo node main.js
+    node main.js
 
 Launch your local browser and navigate to the address `localhost`. Default username and password are `admin`.
 
