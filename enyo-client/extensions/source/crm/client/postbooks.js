@@ -27,6 +27,7 @@ trailing:true, white:true*/
 
     panels = [
       {name: "itemList", kind: "XV.ItemList"},
+      {name: "itemGroupList", kind: "XV.ItemGroupList"},
       {name: "currencyList", kind: "XV.CurrencyList"},
       {name: "stateList", kind: "XV.StateList"},
       {name: "countryList", kind: "XV.CountryList"},

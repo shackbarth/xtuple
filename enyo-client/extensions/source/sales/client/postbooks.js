@@ -36,6 +36,8 @@ trailing:true, white:true*/
       {name: "termsList", kind: "XV.TermsList"},
       {name: "customerGroupList", kind: "XV.CustomerGroupList"},
       {name: "freightClassList", kind: "XV.FreightClassList"},
+      {name: "itemList", kind: "XV.ItemList"},
+      {name: "itemGroupList", kind: "XV.ItemGroupList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
       {name: "plannerCodeList", kind: "XV.PlannerCodeList"},
