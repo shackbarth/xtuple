@@ -48,8 +48,7 @@ white:true*/
 
     defaults: function () {
       return {
-        isActive: true,
-        site: XT.defaultSite()
+        isActive: true
       };
     },
 
@@ -285,7 +284,7 @@ white:true*/
     success = options.success;
     options.success = function (data) {
       that.reset(data);
-      if (success) { success(that); }
+      if (success) { success(data); }
     };
     XM.ModelMixin.dispatch("XM.ItemSite", "itemsForCustomer",
       [customerId, shiptoId, effectiveDate, options.query], options);
