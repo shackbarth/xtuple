@@ -95,7 +95,7 @@ trailing:true, white:true, strict: false*/
                 {kind: "XV.DateWidget", attr: "releaseDate"},
                 {kind: "XV.PurchaseOrderStatusPicker", attr: "status"},
                 {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
-                {kind: "XV.VendorRelation", attr: "vendor"},
+                {kind: "XV.VendorWidget", attr: "vendor"},
                 {kind: "XV.AddressFieldsWidget",
                   name: "vendorAddressWidget", attr:
                   {line1: "vendorAddress1",

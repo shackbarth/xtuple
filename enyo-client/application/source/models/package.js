@@ -21,7 +21,6 @@ enyo.depends(
   "opportunity.js",
   "priority.js",
   "prospect.js",
-  "purchase_order.js",
   "sales_order_base.js",
   "invoice.js",
   "quote.js",

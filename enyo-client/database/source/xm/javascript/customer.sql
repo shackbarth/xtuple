@@ -124,9 +124,9 @@ select xt.install_js('XM','Customer','xtuple', $$
   }
 
   /**
-    Return whether a tax authority is referenced by another table.
+    Return whether a Customer is referenced by another table.
     
-    @param {String} Tax Authority Number
+    @param {String} Customer Number
   */
   XM.Customer.used = function(id) {
     var exceptions = ["public.crmacct"];

@@ -175,6 +175,7 @@
     "xm/javascript/system.sql",
     "xm/javascript/tax.sql",
     "xm/javascript/to_do.sql",
+    "xm/javascript/vendor.sql",
     "public/tables/comment_trigger.sql",
     "public/tables/pkghead.sql",
     "public/tables/schemaord.sql",

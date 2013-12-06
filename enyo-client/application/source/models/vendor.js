@@ -9,7 +9,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Info
+    @extends XM.Document
   */
   XM.VendorType = XM.Document.extend(/** @scope XM.VendorType.prototype */{
 
@@ -22,17 +22,42 @@ white:true*/
   /**
     @class
 
+    @extends XM.AccountDocument
+  */
+  XM.Vendor = XM.AccountDocument.extend(/** @scope XM.Vendor.prototype */{
+
+    recordType: 'XM.Vendor',
+
+    conversionMap: {
+      name: "name",
+      primaryContact: "contact1",
+      secondaryContact: "contact2"
+    }
+
+  });
+
+  // ..........................................................
+  // CLASS METHODS
+  //
+  _.extend(XM.Vendor, /** @lends XM.Vendor# */{
+
+    used: function (id, options) {
+      return XM.ModelMixin.dispatch('XM.Vendor', 'used', [id], options);
+    }
+
+  });
+
+
+  /**
+    @class
+
     @extends XM.Info
   */
-  XM.VendorRelation = XM.Document.extend(/** @scope XM.VendorRelation.prototype */{
+  XM.VendorRelation = XM.Info.extend(/** @scope XM.VendorRelation.prototype */{
 
     recordType: 'XM.VendorRelation',
 
-    documentKey: "number"
-
-    //editableModel: 'XM.Vendor'
-
-    //numberKey: "number"
+    editableModel: 'XM.Vendor'
 
   });
 
