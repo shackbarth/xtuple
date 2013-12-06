@@ -12,6 +12,7 @@ The install script for this project is Debian based and designed to run on a 64 
 To install this project, first fork this repo onto your own github account. We recommend checking out the latest tagged release, but if you want to just checkout the lastest code you can skip this next step. Find and checkout the latest tag with the following:
 
     git clone --recursive git://github.com/<username>/xtuple.git
+    cd xtuple
     git remote add XTUPLE git://github.com/xtuple/xtuple.git
     git fetch XTUPLE
     git checkout `git describe --abbrev=0`
