@@ -7,6 +7,21 @@ select xt.install_js('XM','Purchasing','purchasing', $$
   XM.Purchasing.isDispatchable = true;
 
   XM.Purchasing.options = [
+    "BillDropShip",
+    "EnableDropShipments",
+    "PONumberGeneration",
+    "PrNumberGeneration",
+    "NextPurchaseOrderNumber",
+    "NextVoucherNumber",
+    "NextPurchaseRequestNumber",
+    "POChangeLog",
+    "VendorChangeLog",
+    "UseEarliestAvailDateOnPOItem",
+    "DefaultPrintPOOnSave",
+    "RequireStdCostForPOItem",
+    "RequirePOTax",
+    "CopyPRtoPOItem",
+    "DefaultPOShipVia"
   ];
 
   /*
@@ -16,9 +31,19 @@ select xt.install_js('XM','Purchasing','purchasing', $$
   */
   XM.Purchasing.settings = function() {
     var keys = XM.Purchasing.options.slice(0),
-        data = Object.create(XT.Data);
+        data = Object.create(XT.Data),
+        sql = "select orderseq_number as value "
+            + "from orderseq"
+            + " where (orderseq_name=$1)",
+        ret = {};
 
-    return data.retrieveMetrics(keys);
+    ret.NextPurchaseOrderNumber = plv8.execute(sql, ['PoNumber'])[0].value;
+    ret.NextVoucherNumber = plv8.execute(sql, ['VcNumber'])[0].value;
+    ret.NextPurchaseRequestNumber = plv8.execute(sql, ['PrNumber'])[0].value;
+
+    ret = XT.extend(data.retrieveMetrics(keys), ret);
+
+    return ret;
   };
 
    /*
@@ -41,6 +66,22 @@ select xt.install_js('XM','Purchasing','purchasing', $$
     if (!XT.jsonpatch.apply(settings, patches)) {
       plv8.elog(NOTICE, 'Malformed patch document');
     }
+
+    /* update numbers */
+    if(settings['NextPurchaseOrderNumber']) {
+      plv8.execute('select setNextPoNumber($1)', [settings['NextPurchaseOrderNumber'] - 0]);
+    }
+    options.remove('NextPurchaseOrderNumber');
+
+    if(settings['NextVoucherNumber']) {
+      plv8.execute('select setNextVcNumber($1)', [settings['NextVoucherNumber'] - 0]);
+    }
+    options.remove('NextVoucherNumber');
+
+    if(settings['NextPurchaseRequestNumber']) {
+      plv8.execute('select setNextPrNumber($1)', [settings['NextPurchaseRequsetNumber'] - 0]);
+    }
+    options.remove('NextPurchaseRequestNumber');
 
     /* update remaining options as metrics
        first make sure we pass an object that only has valid metric options for this type */
