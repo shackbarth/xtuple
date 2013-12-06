@@ -103,10 +103,11 @@ then
 fi
 
 install_packages() {
-  wget -qO- http://anonscm.debian.org/loggerhead/pkg-postgresql/postgresql-common/trunk/download/head:/apt.postgresql.org.s-20130224224205-px3qyst90b3xp8zj-1/apt.postgresql.org.sh | sudo bash
-  sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
   log "installing debian packages..."
-  sudo apt-get -q install git libssl-dev postgresql-9.1 postgresql-contrib postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
+  sudo add-apt-repository 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main'
+  wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
+  sudo apt-get -q -y install git libssl-dev postgresql-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
 
   if ! type nvm; then
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
