@@ -244,8 +244,7 @@ white:true*/
     getAssignmentModel: function (privilegeModel) {
       var model = new XM.UserAccountPrivilegeAssignment(null, {isNew: true});
       model.set({
-        privilege: privilegeModel,
-        userAccount: this.getAssignedCollection().userAccount
+        privilege: privilegeModel
       });
       return model;
     },
@@ -375,8 +374,7 @@ white:true*/
      */
     getAssignmentModel: function (privilegeModel) {
       return new XM.UserAccountRolePrivilegeAssignment({
-        privilege: privilegeModel,
-        userAccountRole: this.getAssignedCollection().userAccountRole
+        privilege: privilegeModel
       }, {isNew: true});
     },
     /**

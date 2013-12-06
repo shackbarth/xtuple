@@ -25,7 +25,7 @@ white:true*/
       Builds a list of email addresses to send messages to.
       Looks for a contact primary email address, owner
       and assigned to user email addresses. Loops through dirty
-      records workflow, if it exists, and adds the same. Also removes 
+      records workflow, if it exists, and adds the same. Also removes
       the current user's address.
 
       @param {String} hard coded "to" addresses
@@ -98,7 +98,7 @@ white:true*/
         if (comments.length) {
 
           // Sort by date descending and take first
-          comments = _.sortBy(comments.models, function (comment) {
+          comments = _.sortBy(comments, function (comment) {
             return -1 * comment.get('created').getTime();
           });
           comment = comments[0];
