@@ -426,6 +426,13 @@
         }
       },
       {
+        "name": "releaseDate",
+        "attr": {
+          "type": "Date",
+          "column": "pohead_released"
+        }
+      },
+      {
         "name": "vendor",
         "toOne": {
           "type": "VendorRelation",
@@ -816,6 +823,24 @@
         }
       },
       {
+        "name": "workflow",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderWorkflow",
+          "column": "obj_uuid",
+          "inverse": "parent"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderComment",
+          "column": "pohead_id",
+          "inverse": "purchaseOrder"
+        }
+      },
+      {
         "name": "lineItems",
         "toMany": {
           "type": "PurchaseOrderLine",
@@ -1191,6 +1216,20 @@
         }
       },
       {
+        "name": "expenseCategory",
+        "toOne": {
+          "type": "ExpenseCategory",
+          "column": "poitem_expcat_id"
+        }
+      },
+      {
+        "name": "isMiscellaneous",
+        "attr": {
+          "type": "Boolean",
+          "column": "poitem_is_misc"
+        }
+      },
+      {
         "name": "vendorItemNumber",
         "attr": {
           "type": "String",
@@ -1261,24 +1300,17 @@
         }
       },
       {
-        "name": "notes",
-        "attr": {
-          "type": "String",
-          "column": "poitem_comments"
-        }
-      },
-      {
-        "name": "expenseCategory",
+        "name": "currency",
         "toOne": {
-          "type": "ExpenseCategory",
-          "column": "poitem_expcat_id"
+          "type": "Currency",
+          "column": "curr_id"
         }
       },
       {
-        "name": "itemSource",
+        "name": "extendedPrice",
         "attr": {
-          "type": "Number",
-          "column": "poitem_itemsrc_id"
+          "type": "Money",
+          "column": "extended_price"
         }
       },
       {
@@ -1289,17 +1321,24 @@
         }
       },
       {
-        "name": "freightReceived",
+        "name": "tax",
         "attr": {
-          "type": "Money",
-          "column": "poitem_freight_received"
+          "type": "PurchasePrice",
+          "column": "tax"
         }
       },
       {
-        "name": "freightVouchered",
+        "name": "notes",
         "attr": {
-          "type": "Money",
-          "column": "poitem_freight_vouchered"
+          "type": "String",
+          "column": "poitem_comments"
+        }
+      },
+      {
+        "name": "itemSource",
+        "attr": {
+          "type": "Number",
+          "column": "poitem_itemsrc_id"
         }
       },
       {
@@ -1424,25 +1463,7 @@
           "column": "pohead_id",
           "inverse": "purchaseOrder"
         }
-      },
-      {
-        "name": "workflow",
-        "toMany": {
-          "isNested": true,
-          "type": "PurchaseOrderWorkflow",
-          "column": "obj_uuid",
-          "inverse": "parent"
-        }
-      },
-      {
-        "name": "comments",
-        "toMany": {
-          "isNested": true,
-          "type": "PurchaseOrderComment",
-          "column": "pohead_id",
-          "inverse": "purchaseOrder"
-        }
-      },
+      }
     ],
     "isSystem": true
   },
