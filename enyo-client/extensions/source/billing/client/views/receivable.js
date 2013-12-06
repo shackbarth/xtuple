@@ -11,9 +11,7 @@ XT.extensions.billing.initReceivableView = function () {
   XM.ReceivableView = XM.EnyoView.extend({
 
     events: {
-      'view:notify': 'doNotify',
-      'statusChange': 'onStatusChange',
-      'change:documentType': 'onDocumentTypeChange'
+      'statusChange': 'onStatusChange'
     }
 
   });

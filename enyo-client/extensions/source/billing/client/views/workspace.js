@@ -61,8 +61,8 @@
     name: "XV.ReceivableWorkspace",
     kind: "XV.Workspace",
     title: "_receivable".loc(),
-    view: 'XM.ReceivableView',
     model: "XM.Receivable",
+    view: 'XM.ReceivableView',
     events: {
       onPrint: ""
     },
@@ -118,21 +118,23 @@
       @listens XM.ReceivableView#events
     */
     handlers: {
-      onStatusChange: "statusChanged",
-      onDocumentTypeChange: "documentTypeChanged",
+      onStatusChange: "statusChanged"
     },
 
     /**
-      The saveText property on the workspace will be 'Post' when
-      the status of the object is READY_NEW and 'Save' for any other status.
+      Only show taxes when the Receivable is not an invoice.
 
-      When the model is in a READY_NEW state a checkbox is visible
-      that provides the option to 'Print on Post.'
+      Set DocumentType field on the ReasonCodePicker to handle
+        filtering of ReasonCodes.
     */
-    documentTypeChanged: function (inSender, inEvent) {
-      var documentType = this.value.get("documentType"),
-        isInvoice = documentType === XM.Receivable.INVOICE;
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+      var documentType = this.value.get("documentType");
+      if (!documentType) {
+        return;
+      }
 
+      var isInvoice = documentType === XM.Receivable.INVOICE;
       this.$.taxTotal.setShowing(!isInvoice);
       this.$.taxes.setShowing(!isInvoice);
 
