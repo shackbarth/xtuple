@@ -104,8 +104,8 @@ fi
 
 install_packages() {
   log "installing debian packages..."
-  sudo add-apt-repository 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main'
-  wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  sudo add-apt-repository 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' > /dev/null
+  sudo wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
   sudo apt-get -q -y install git libssl-dev postgresql-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
 
@@ -155,16 +155,20 @@ setup_postgres() {
 	then
 		return 2
 	fi
+  log "copying configs..."
 	sudo cat $PGDIR/postgresql.conf.default | sed "s/#listen_addresses = \S*/listen_addresses = \'*\'/" | sed "s/#custom_variable_classes = ''/custom_variable_classes = 'plv8'/" | sudo tee -a $PGDIR/postgresql.conf > /dev/null
 	sudo chown postgres $PGDIR/postgresql.conf
 	sudo cp $PGDIR/pg_hba.conf $PGDIR/pg_hba.conf.default
 	sudo cat $PGDIR/pg_hba.conf.default | sed "s/local\s*all\s*postgres.*/local\tall\tpostgres\ttrust/" | sed "s/local\s*all\s*all.*/local\tall\tall\ttrust/" | sed "s#host\s*all\s*all\s*127\.0\.0\.1.*#host\tall\tall\t127.0.0.1/32\ttrust#" | sudo tee -a $PGDIR/pg_hba.conf > /dev/null
 	sudo chown postgres $PGDIR/pg_hba.conf
 
+  log "restarting postgres..."
 	sudo service postgresql restart
 
-	sudo dropdb -U postgres $DATABASE 2>&1
+  log "dropping existing db, if any..."
+	sudo -u postgres dropdb $DATABASE
 
+  log "determining lastest version..."
 	cdir $BASEDIR/postgres
 	sudo wget -q http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
 	wait
@@ -193,10 +197,10 @@ setup_postgres() {
 
 	log "Setup database"
 
-	sudo psql -q -U postgres -f 'init.sql' 2>&1 | tee -a $LOG_FILE
-	sudo createdb -U postgres -O admin $DATABASE 2>&1 | tee -a $LOG_FILE
-	sudo pg_restore -U postgres -d $DATABASE postbooks_demo-$NEWESTVERSION.backup 2>&1 | tee -a $LOG_FILE
-	sudo psql -U postgres $DATABASE -c "CREATE EXTENSION plv8" 2>&1 | tee -a $LOG_FILE
+	sudo -u postgres psql -q -f 'init.sql' 2>&1 | tee -a $LOG_FILE
+	sudo -u postgres createdb -O admin $DATABASE 2>&1 | tee -a $LOG_FILE
+	sudo -u postgres pg_restore -d $DATABASE postbooks_demo-$NEWESTVERSION.backup 2>&1 | tee -a $LOG_FILE
+	sudo -u postgres psql $DATABASE -c "CREATE EXTENSION plv8" 2>&1 | tee -a $LOG_FILE
   cp postbooks_demo-$NEWESTVERSION.backup $XT_DIR/test/lib/demo-test.backup
 }
 
@@ -229,20 +233,20 @@ init_everythings() {
 
 	cdir $XT_DIR
 	node scripts/build_app.js -d $DATABASE 2>&1 | tee -a $LOG_FILE
-	sudo psql -U postgres $DATABASE -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>&1 | tee -a $LOG_FILE
+	sudo -u postgres psql $DATABASE -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>&1 | tee -a $LOG_FILE
 
 	log "You can login to the database and mobile client with:"
-	log "\tusername: admin"
-	log "\tpassword: admin"
+	log "  username: admin"
+	log "  password: admin"
 	log "Installation now finished."
 	log "Run the following commands to start the datasource:"
 	if [ $USERNAME ]
 	then
-		log "cd ~/xtuple/node-datasource"
-		log "sudo node main.js"
+		log "cd node-datasource"
+		log "node main.js"
 	else
 		log "cd /usr/local/src/xtuple/node-datasource/"
-		log "sudo node main.js"
+		log "node main.js"
 	fi
 }
 
