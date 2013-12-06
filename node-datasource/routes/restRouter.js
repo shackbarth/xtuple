@@ -192,7 +192,7 @@ module.exports = (function () {
           type: 'Discovery',
           dispatch: {
             functionName: "getServices",
-            parameters: [null, rootUrl]
+            parameters: [null, rootUrl, true]
           }
         },
         session = getSession(req, next),
