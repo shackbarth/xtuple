@@ -156,7 +156,7 @@ white:true*/
 
         lineItems.each(function (lineItem) {
           var quantity = lineItem.get("quantity");
-          if (status === XM.TransferOrder.CLOSED_STATUS ||
+          if (status === XM.PurchaseOrder.CLOSED_STATUS ||
               lineItem.get("received") < quantity) {
             lineItem.set("status", status);
           }
@@ -176,9 +176,9 @@ white:true*/
         var status = this.getStatus(),
           K = XM.Model;
         if (status === K.READY_NEW) {
-
+          // TO DO
         } else if (status === K.READY_CLEAN) {
-
+          this.setReadOnly("lineItems", false);
         }
       },
 
@@ -302,7 +302,6 @@ white:true*/
         "received",
         "returned",
         "toReceive",
-        "unit",
         "unitCost",
         "vendorUnit",
         "vendorUnitRatio",

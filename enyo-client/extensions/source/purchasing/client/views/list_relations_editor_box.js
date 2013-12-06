@@ -103,12 +103,12 @@ trailing:true, white:true, strict:false*/
       title: "_workflow".loc(),
       editor: "XV.PurchaseOrderWorkflowEditor",
       parentKey: "purchaseOrder",
-      listRelations: "XV.TransferOrderWorkflowListRelations",
+      listRelations: "XV.PurchaseOrderWorkflowListRelations",
       fitButtons: false
     });
 
     // ..........................................................
-    // SITE
+    // PURCHASE TYPE
     //
 
     enyo.kind({

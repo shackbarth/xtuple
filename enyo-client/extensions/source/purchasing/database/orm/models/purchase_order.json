@@ -836,6 +836,7 @@
       {
         "name": "lineItems",
         "toMany": {
+          "isNested": true,
           "type": "PurchaseOrderLine",
           "column": "pohead_id",
           "inverse": "purchaseOrder"
@@ -1337,7 +1338,7 @@
         }
       },
       {
-        "name": "ordered",
+        "name": "quantity",
         "attr": {
           "type": "Quantity",
           "column": "poitem_qty_ordered"
@@ -1372,7 +1373,7 @@
         }
       },
       {
-        "name": "unitPrice",
+        "name": "price",
         "attr": {
           "type": "PurchasePrice",
           "column": "poitem_unitprice"

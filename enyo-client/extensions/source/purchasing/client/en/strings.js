@@ -15,7 +15,9 @@ strict:true, trailing:true, white:true */
     "_purchaseOrderWorkflow": "Purchase Workflow",
     "_purchaseOrders": "Purchase Orders",
     "_purchaseType": "Purchase Type",
-    "_purchaseTypes": "Purchase Types"
+    "_purchaseTypes": "Purchase Types",
+    "_releaseDate": "Release Date",
+    "_vouchered": "Vouchered"
   });
 
   if (typeof exports !== 'undefined') {

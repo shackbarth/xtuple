@@ -14,7 +14,7 @@ trailing:true, white:true, strict:false*/
     enyo.kind({
       name: "XV.PurchaseOrderLineGridBox",
       kind: "XV.GridBox",
-      classes: "large-panel",
+      classes: "medium-panel",
       title: "_lineItems".loc(),
       columns: [
         {classes: "line-number", header: "#", rows: [
@@ -38,8 +38,20 @@ trailing:true, white:true, strict:false*/
           {readOnlyAttr: "quantity",
             editor: {kind: "XV.QuantityWidget", attr: "quantity",
               name: "quantityWidget"}},
-          {readOnlyAttr: "unit",
-            editor: {kind: "XV.InputWidget", attr: "unit"}}
+          {readOnlyAttr: "vendorUnit",
+            editor: {kind: "XV.InputWidget", attr: "vendorUnit"}}
+        ]},
+        {classes: "price", header: "_price".loc(), rows: [
+          {readOnlyAttr: "price",
+            editor: {kind: "XV.MoneyWidget",
+              attr: {localValue: "price", currency: "currency"},
+              currencyDisabled: true, currencyShowing: false,
+              scale: XT.PURCHASE_PRICE_SCALE}},
+          {readOnlyAttr: "extendedPrice",
+            editor: {kind: "XV.MoneyWidget",
+              attr: {localValue: "extendedPrice", currency: "currency"},
+              currencyDisabled: true, currencyShowing: false,
+              scale: XT.EXTENDED_PRICE_SCALE}}
         ]},
         {classes: "date", header: "_dueDate".loc(), rows: [
           {readOnlyAttr: "dueDate",
@@ -47,10 +59,10 @@ trailing:true, white:true, strict:false*/
         ]},
         {classes: "quantity", header: ["_received".loc(), "_vouchered".loc()], rows: [
           {readOnlyAttr: "received",
-            editor: {kind: "XV.QuantityWidget", attr: "shipped",
+            editor: {kind: "XV.QuantityWidget", attr: "received",
               name: "shippedWidget"}},
           {readOnlyAttr: "vouchered",
-            editor: {kind: "XV.QuantityWidget", attr: "received",
+            editor: {kind: "XV.QuantityWidget", attr: "vouchered",
               name: "receivedWidget"}},
         ]}
       ],

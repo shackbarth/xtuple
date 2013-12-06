@@ -8,10 +8,14 @@ trailing:true, white:true*/
 
   XT.extensions.purchasing.initListRelations = function () {
 
+    // ..........................................................
+    // PURCHASE ORDER
+    //
+
     enyo.kind({
-      name: "XV.PurchaseTypeWorkflowListRelations",
+      name: "XV.PurchaseOrderWorkflowListRelations",
       kind: "XV.WorkflowListRelations",
-      parentKey: "purchaseType"
+      parentKey: "purchaseOrder"
     });
 
     // ..........................................................
@@ -19,7 +23,7 @@ trailing:true, white:true*/
     //
 
     enyo.kind({
-      name: "XV.PurchaseOrderLineItemListRelations",
+      name: "XV.PurchaseOrderLineListRelations",
       kind: "XV.ListRelations",
       parentKey: "purchaseOrder",
       orderBy: [
@@ -41,7 +45,7 @@ trailing:true, white:true*/
             ]},
             {kind: "XV.ListColumn", classes: "last", fit: true, components: [
               {kind: "XV.ListAttr", attr: "quantity", formatter: "formatQuantity"},
-              {kind: "XV.ListAttr", attr: "unit"}
+              {kind: "XV.ListAttr", attr: "vendorUnit"}
             ]}
           ]}
         ]}
@@ -50,6 +54,16 @@ trailing:true, white:true*/
         var scale = XT.locale.quantityScale;
         return Globalize.format(value, "n" + scale);
       }
+    });
+
+    // ..........................................................
+    // PURCHASE TYPE
+    //
+
+    enyo.kind({
+      name: "XV.PurchaseTypeWorkflowListRelations",
+      kind: "XV.WorkflowListRelations",
+      parentKey: "purchaseType"
     });
 
   };

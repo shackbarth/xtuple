@@ -116,6 +116,7 @@ trailing:true, white:true, strict: false*/
                 {kind: "XV.ContactWidget", attr: "shiptoContact"},
                 {kind: "XV.PurchaseOrderCharacteristicsWidget", attr: "characteristics"},
                 {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+                {kind: "XV.PurchaseTypePicker", attr: "purchaseType"},
                 {kind: "XV.TermsPicker", attr: "terms"},
                 {kind: "XV.TaxZonePicker", attr: "taxZone"},
                 {kind: "XV.AgentPicker", attr: "agent"},
@@ -135,7 +136,7 @@ trailing:true, white:true, strict: false*/
         this.inherited(arguments);
         if (enyo.platform.touch) {
           this.$.lineItemsPanel.createComponents([
-            {kind: "XV.PurchaseOrderLineItemBox", name: "purchaseOrderLineItemBox",
+            {kind: "XV.PurchaseOrderLineBox", name: "purchaseOrderLineItemBox",
               attr: "lineItems", fit: true}
           ], {owner: this});
           this.$.workflowPanel.createComponents([
@@ -143,7 +144,7 @@ trailing:true, white:true, strict: false*/
           ], {owner: this});
         } else {
           this.$.lineItemsPanel.createComponents([
-            {kind: "XV.PurchaseOrderLineGridBox", name: "purchaseOrderLineBox",
+            {kind: "XV.PurchaseOrderLineGridBox", name: "purchaseOrderLineItemBox",
               attr: "lineItems", fit: true}
           ], {owner: this});
           this.$.workflowPanel.createComponents([
