@@ -88,7 +88,7 @@
         "name": "vendorUnitRatio",
         "attr": {
           "type": "UnitRatio",
-          "column": "itemsrc_invvenduomratio"
+          "column": "itemsrc_invvendoruomratio"
         }
       },
       {
@@ -101,14 +101,14 @@
       {
         "name": "minimumOrderQuantity",
         "attr": {
-          "type": "String",
+          "type": "Quantity",
           "column": "itemsrc_minordqty"
         }
       },
       {
         "name": "multipleOrderQuantity",
         "attr": {
-          "type": "String",
+          "type": "Quantity",
           "column": "itemsrc_multordqty"
         }
       },
@@ -236,7 +236,7 @@
       },
       {
         "name": "currency",
-        "attr": {
+        "toOne": {
           "type": "Currency",
           "column": "itemsrcp_curr_id"
         }
@@ -250,7 +250,7 @@
       },
       {
         "name": "site",
-        "attr": {
+        "toOne": {
           "type": "SiteRelation",
           "column": "itemsrcp_warehous_id"
         }

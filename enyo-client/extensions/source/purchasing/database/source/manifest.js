@@ -1,7 +1,7 @@
 {
-  "name": "project",
-  "comment": "Project extension",
-  "loadOrder": 60,
+  "name": "purchasing",
+  "comment": "Purchasing extension",
+  "loadOrder": 50,
   "databaseScripts": [
     "xt/functions/po_freight_subtotal.sql",
     "xt/functions/po_line_extended_price.sql",

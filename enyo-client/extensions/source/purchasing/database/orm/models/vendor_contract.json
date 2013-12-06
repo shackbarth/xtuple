@@ -42,13 +42,6 @@
         }
       },
       {
-        "name": "isActive",
-        "attr": {
-          "type": "Boolean",
-          "column": "contrct_active"
-        }
-      },
-      {
         "name": "notes",
         "attr": {
           "type": "String",
@@ -101,13 +94,6 @@
           "isNested": true,
           "type": "VendorRelation",
           "column": "contrct_vend_id"
-        }
-      },
-      {
-        "name": "isActive",
-        "attr": {
-          "type": "Boolean",
-          "column": "contrct_active"
         }
       }
     ],

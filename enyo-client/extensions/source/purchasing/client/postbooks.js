@@ -5,8 +5,8 @@ trailing:true, white:true, strict:false*/
 
 (function () {
 
-  XT.extensions.project.initPostbooks = function () {
-    var module, dashboardModule, panels, relevantPrivileges;
+  XT.extensions.purchasing.initPostbooks = function () {
+    var module, panels, relevantPrivileges;
 
     // ..........................................................
     // APPLICATION

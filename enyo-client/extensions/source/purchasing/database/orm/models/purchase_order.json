@@ -95,7 +95,7 @@
     "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseType",
-    "table": "potype",
+    "table": "xt.potype",
     "idSequenceName": "potype_potype_id_seq",
     "isRest": true,
     "comment": "Purchase Type Map",
@@ -149,7 +149,7 @@
         "name": "characteristics",
         "toMany": {
           "isNested": true,
-          "type": "ProjectTypeCharacteristic",
+          "type": "PurchaseTypeCharacteristic",
           "column": "potype_id",
           "inverse": "purchaseType"
         }
@@ -455,7 +455,7 @@
         }
       },
       {
-        "name": "comments",
+        "name": "notes",
         "attr": {
           "type": "String",
           "column": "pohead_comments"
@@ -779,13 +779,6 @@
         }
       },
       {
-        "name": "releaseDate",
-        "attr": {
-          "type": "Date",
-          "column": "pohead_released"
-        }
-      },
-      {
         "name": "subtotal",
         "attr": {
           "type": "Money",
@@ -869,6 +862,92 @@
         ]
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Purchase Order Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "P"
+        }
+      },
+      {
+        "name": "purchaseOrder",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {
@@ -1374,6 +1453,101 @@
         "toOne": {
           "type": "TaxType",
           "column": "poitem_taxtype_id"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderLineComment",
+          "column": "poitem_id",
+          "inverse": "purchaseOrderLine"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderLineComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Purchasing Order Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "PI"
+        }
+      },
+      {
+        "name": "purchaseOrderLine",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
         }
       }
     ],
