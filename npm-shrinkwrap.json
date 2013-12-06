@@ -740,6 +740,10 @@
       "version": "0.0.1",
       "from": "xmla4js@git://github.com/rpbouman/xmla4js.git",
       "resolved": "git://github.com/rpbouman/xmla4js.git#cbfd568b4858c99f493e182722a12bed20bdee95"
+    },
+    "underscore.string": {
+      "version": "2.3.3",
+      "from": "underscore.string@"
     }
   }
 }
