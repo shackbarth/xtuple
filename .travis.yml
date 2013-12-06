@@ -7,7 +7,8 @@ install:
   - "bash scripts/install_xtuple.sh -ipn"
 
 before_script:
-  - "cd node-datasource ; sudo node main.js &"
+  - "cd node-datasource"
+  - "sudo env PATH=$PATH node main.js &"
   - "sleep 10"
   - "cd .."
 
