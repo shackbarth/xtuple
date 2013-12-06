@@ -162,7 +162,7 @@ setup_postgres() {
 
 	sudo service postgresql restart
 
-	sudo dropdb -U postgres --if-exists $DATABASE 2>&1
+	sudo dropdb -U postgres $DATABASE 2>&1
 
 	cdir $BASEDIR/postgres
 	sudo wget -q http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss

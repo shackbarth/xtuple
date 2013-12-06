@@ -47,12 +47,15 @@
     "html5": "0.3.13",
     "zombie": "1.4.x"
   },
-  "optionalDependencies": {},
+  "optionalDependencies": {
+    "xtuple-query": "~1.0.0"
+  },
   "engines": {
     "node": "0.8.x"
   },
   "main": "node-datasource/main.js",
   "scripts": {
+    "preinstall": "cd node-datasource/lib/query ; npm install",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
     "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*"
