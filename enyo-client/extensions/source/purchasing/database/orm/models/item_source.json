@@ -193,7 +193,6 @@
     "nameSpace": "XM",
     "type": "ItemSourcePrice",
     "table": "itemsrcp",
-    "isRest": true,
     "idSequenceName": "itemsrcp_itemsrcp_id_seq",
     "comment": "Item Source Price Map",
     "properties": [
