@@ -298,6 +298,7 @@ white:true*/
 
       readOnlyAttributes: [
         "expenseCategory",
+        "extendedPrice",
         "lineNumber",
         "received",
         "returned",
@@ -310,6 +311,7 @@ white:true*/
 
       handlers: {
         "statusChange": "statusChanged",
+        "change:expenseCategory": "isMiscellaneousChanged",
         "change:item": "itemChanged",
         "change:isMiscellaneous": "isMiscellaneousChanged",
         "change:purchaseOrder": "purchaseOrderChanged"
@@ -317,12 +319,14 @@ white:true*/
 
       isMiscellaneousChanged: function () {
         var isMisc = this.get("isMiscellaneous");
-        this.setReadOnly("itemSite", isMisc);
+        this.setReadOnly("isMiscellaneous", this.get("item") || this.get("expenseCategory"));
+        this.setReadOnly(["item", "site"], isMisc);
         this.setReadOnly("expenseCategory", !isMisc);
       },
 
       itemChanged: function () {
         var item = this.get("item");
+        this.isMiscellaneousChanged();
         this.set("unit", item ? item.getValue("inventoryUnit.name") : "");
         this.set("unitCost", item ? item.getValue("standardCost") : 0);
       },

@@ -1298,6 +1298,7 @@
       {
         "name": "expenseCategory",
         "toOne": {
+          "isNested": true,
           "type": "ExpenseCategory",
           "column": "poitem_expcat_id"
         }

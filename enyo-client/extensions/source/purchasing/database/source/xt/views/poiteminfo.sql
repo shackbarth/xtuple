@@ -8,7 +8,7 @@ select poitem.*,
   po_line_extended_price(poitem) as extended_price,
   po_line_tax(poitem) as tax
 from poitem
-  join itemsite on itemsite_id=poitem_itemsite_id
+  left join itemsite on itemsite_id=poitem_itemsite_id
   join pohead on pohead_id=poitem_pohead_id;
 
 $$, false);

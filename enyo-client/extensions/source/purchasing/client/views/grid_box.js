@@ -12,17 +12,53 @@ trailing:true, white:true, strict:false*/
     //
 
     enyo.kind({
+      name: "XV.PurchaseOrderLineRow",
+      kind: "XV.GridRow",
+      formatDescription: function (value, view, model) {
+        var item = model.get("item"),
+          expenseCategory = model.get("expenseCategory");
+        if (item) {
+          return item.get("description1");
+        } else if (expenseCategory) {
+          return expenseCategory.get("description");
+        }
+        return "";
+      },
+      formatNumber: function (value, view, model) {
+        var item = model.get("item"),
+          expenseCategory = model.get("expenseCategory");
+        if (item) {
+          return item.get("number");
+        } else if (expenseCategory) {
+          return expenseCategory.get("code");
+        }
+        return "";
+      },
+      formatSite: function (value, view, model) {
+        var site = model.get("site"),
+          expenseCategory = model.get("expenseCategory");
+        if (site) {
+          return site.get("code");
+        } else if (expenseCategory) {
+          return "(" + "_miscellaneous".loc() + ")";
+        }
+        return "";
+      }
+    });
+
+    enyo.kind({
       name: "XV.PurchaseOrderLineGridBox",
       kind: "XV.GridBox",
       classes: "medium-panel",
       title: "_lineItems".loc(),
+      gridRowKind: "XV.PurchaseOrderLineRow",
       columns: [
         {classes: "line-number", header: "#", rows: [
           {readOnlyAttr: "lineNumber",
             editor: {kind: "XV.NumberWidget", attr: "lineNumber"}}
         ]},
         {classes: "grid-item", header: "_item".loc(), rows: [
-          {readOnlyAttr: "item.number",
+          {formatter: "formatNumber",
             editor: {kind: "XV.ItemSiteWidget", attr:
             {item: "item", site: "site"},
             name: "itemSiteWidget",
@@ -30,8 +66,8 @@ trailing:true, white:true, strict:false*/
             {attribute: "isPurchased", value: true},
             {attribute: "isActive", value: true}
           ]}}},
-          {readOnlyAttr: "item.description1"},
-          {readOnlyAttr: "site.code"}
+          {formatter: "formatDescription"},
+          {formatter: "formatSite"}
         ]},
         {classes: "quantity", header: "_quantity".loc(), rows: [
           {readOnlyAttr: "quantity",

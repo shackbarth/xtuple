@@ -9,6 +9,7 @@ strict:true, trailing:true, white:true */
   var lang = XT.stringsFor("en_US", {
     "_itemSource": "Item Source",
     "_itemSources": "Item Sources",
+    "_manufacturer": "Manufacturer",
     "_purchasing": "Purchasing",
     "_purchaseOrder": "Purchase Order",
     "_purchaseOrderLine": "Purchase Order Line",
@@ -17,6 +18,7 @@ strict:true, trailing:true, white:true */
     "_purchaseType": "Purchase Type",
     "_purchaseTypes": "Purchase Types",
     "_releaseDate": "Release Date",
+    "_unitRatio": "Unit Ratio",
     "_vouchered": "Vouchered"
   });
 

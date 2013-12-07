@@ -343,7 +343,8 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ExpenseCategoryWidget",
     kind: "XV.RelationWidget",
     collection: "XM.ExpenseCategoryCollection",
-    list: "XV.ExpenseCategoryList"
+    list: "XV.ExpenseCategoryList",
+    keyAttribute: "code"
   });
 
   // ..........................................................

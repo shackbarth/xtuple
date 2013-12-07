@@ -220,7 +220,7 @@ trailing:true, white:true, strict: false*/
     enyo.kind({
       name: "XV.PurchaseOrderLineWorkspace",
       kind: "XV.ChildWorkspace",
-      title: "_purhaseOrderLine".loc(),
+      title: "_purchaseOrderLine".loc(),
       model: "XM.PurchaseOrderLine",
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -230,8 +230,8 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
               {kind: "XV.InputWidget", attr: "lineNumber"},
-              {kind: "XV.CheckboxWidget", attr: "isMisc"},
               {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"}},
+              {kind: "XV.CheckboxWidget", attr: "isMiscellaneous"},
               {kind: "XV.ExpenseCategoryWidget", attr: "expenseCategory"},
               {kind: "onyx.GroupboxHeader", content: "_quantity".loc()},
               {kind: "XV.QuantityWidget", attr: "quantity", label: "_ordered".loc()},
@@ -261,18 +261,18 @@ trailing:true, white:true, strict: false*/
                 currencyDisabled: true},
               {kind: "XV.MoneyWidget",
                 attr: {localValue: "freight", currency: "currency"},
-                label: "_extendedPrice".loc(), currencyShowing: true,
+                label: "_freight".loc(), currencyShowing: true,
                 currencyDisabled: true},
               {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
               {kind: "XV.TaxTypePicker", attr: "taxType"},
               {kind: "XV.MoneyWidget",
                 attr: {localValue: "tax", currency: "currency"},
                 scale: XT.PURCHASE_PRICE_SCALE,
-                label: "_extendedPrice".loc(), currencyShowing: true,
+                label: "_tax".loc(), currencyShowing: true,
                 currencyDisabled: true}
             ]}
           ]},
-          {kind: "XV.Groupbox", name: "mainPanel", title: "_itemSource".loc(),
+          {kind: "XV.Groupbox", name: "vendorPanel", title: "_itemSource".loc(),
             components: [
             {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
             {kind: "XV.ScrollableGroupbox", name: "itemSourceGroup", fit: true,
