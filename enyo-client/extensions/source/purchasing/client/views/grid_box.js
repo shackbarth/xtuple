@@ -27,8 +27,7 @@ trailing:true, white:true, strict:false*/
             {item: "item", site: "site"},
             name: "itemSiteWidget",
             query: {parameters: [
-            {attribute: "item.isPurchased", value: true},
-            {attribute: "item.isActive", value: true},
+            {attribute: "isPurchased", value: true},
             {attribute: "isActive", value: true}
           ]}}},
           {readOnlyAttr: "item.description1"},
