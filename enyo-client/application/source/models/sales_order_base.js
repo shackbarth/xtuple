@@ -1047,7 +1047,7 @@ white:true*/
       // The prevStatus is used because the current
       // status is BUSY_COMMITTING once save has begun.
       validItems = _.filter(lineItems.models, function (item) {
-        return item._prevStatus !== K.DESTROYED_DIRTY;
+        return item.previousStatus() !== K.DESTROYED_DIRTY;
       });
 
       if (!validItems.length) {

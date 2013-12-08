@@ -90,13 +90,14 @@ white:true*/
       numberPolicySetting: 'PONumberGeneration',
 
       defaults: function () {
+        var agent = XM.agents.find(function (agent) {
+            return agent.id === XM.currentUser.id;
+          });
         return {
           orderDate: XT.date.today(),
           status: XM.PurchaseOrder.UNRELEASED_STATUS,
           site: XT.defaultSite(),
-          agent: XM.agents.find(function (agent) {
-            return agent.id === XM.currentUser.id;
-          })
+          agent: agent ? agent.id : null
         };
       },
 
@@ -116,6 +117,13 @@ white:true*/
         "change:status": "purchaseOrderStatusChanged",
         "change:purchaseType": "purchaseTypeChanged",
         "change:vendor": "vendorChanged"
+      },
+
+      initialize: function (attributes, options) {
+        XM.Document.prototype.initialize.apply(this, arguments);
+        if (XT.session.settings.get("RequirePOTax")) {
+          this.requiredAttributes.push("taxZone");
+        }
       },
 
       vendorChanged: function () {
@@ -190,6 +198,25 @@ white:true*/
           this.lineItemsChanged();
         }
       },
+
+      validate: function () {
+        var err = XM.Document.prototype.validate.apply(this, arguments),
+          lineItems = this.get("lineItems"),
+          K = XM.Model,
+          validItems;
+
+        // Check that we have line items
+        if (!err) {
+          validItems = _.filter(lineItems.models, function (item) {
+            return item.previousStatus() !== K.DESTROYED_DIRTY;
+          });
+
+          if (!validItems.length) {
+            return XT.Error.clone('xt2012');
+          }
+        }
+        return err;
+      }
 
     });
 

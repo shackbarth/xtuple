@@ -408,21 +408,24 @@
         "attr": {
           "type": "String",
           "column": "pohead_number",
-          "isNaturalKey": true
+          "isNaturalKey": true,
+          "required": true
          }
       },
       {
         "name": "status",
         "attr": {
           "type": "String",
-          "column": "pohead_status"
+          "column": "pohead_status",
+          "required": true
         }
       },
       {
         "name": "orderDate",
         "attr": {
           "type": "Date",
-          "column": "pohead_orderdate"
+          "column": "pohead_orderdate",
+          "required": true
         }
       },
       {
@@ -437,7 +440,8 @@
         "toOne": {
           "type": "VendorRelation",
           "column": "pohead_vend_id",
-          "isNested": true
+          "isNested": true,
+          "required": true
         }
       },
       {
@@ -503,7 +507,8 @@
         "toOne": {
           "type": "Currency",
           "column": "pohead_curr_id",
-          "isNested": true
+          "isNested": true,
+          "required": true
         }
       },
       {

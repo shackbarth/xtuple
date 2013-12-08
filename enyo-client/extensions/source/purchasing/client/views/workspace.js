@@ -82,6 +82,8 @@ trailing:true, white:true, strict: false*/
       kind: "XV.Workspace",
       title: "_purchaseOrder".loc(),
       model: "XM.PurchaseOrder",
+      printOnSaveSetting: "DefaultPrintPOOnSave",
+      headerAttrs: ["number", "-", "vendor.name"],
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
