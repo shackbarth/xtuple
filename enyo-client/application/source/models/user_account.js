@@ -214,6 +214,20 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
     @extends XM.Info
   */
+  XM.UserAccountRoleListItem = XM.Info.extend({
+    /** @scope XM.UserAccountRoleListItem.prototype */
+
+    recordType: 'XM.UserAccountRoleListItem',
+
+    editableModel: 'XM.UserAccountRole'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
   XM.UserAccountRoleRelation = XM.Info.extend({
     /** @scope XM.UserAccountRoleRelation.prototype */
 
@@ -536,6 +550,18 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
    /** @scope XM.UserAccountRoleCollection.prototype */
 
     model: XM.UserAccountRole
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.UserAccountRoleListItemCollection = XM.Collection.extend({
+   /** @scope XM.UserAccountRoleListItemCollection.prototype */
+
+    model: XM.UserAccountRoleListItem
 
   });
 

@@ -25,26 +25,24 @@ white:true*/
         callback = function () {};
       } else {
         callback = function (response) {
-          if (response && response.isError) {
-            // handle error status centrally here before we return to the caller
+          notify(response);
 
+          if (response && response.isError) {
+            // notify the user in the case of error.
+            // Wait a second to make sure that whatever the expected callback
+            // function has time to do whatever it has to do. Not pretty,
+            // but works across a broad range of callback errors.
             errorMessage = response.status ? response.status.message : response.message;
             if (errorMessage) {
-              XT.app.$.postbooks.notify(null, {
-                type: XM.Model.CRITICAL,
-                message: errorMessage
-              });
+              console.log("Error:", errorMessage);
+              setTimeout(function () {
+                XT.app.$.postbooks.notify(null, {
+                  type: XM.Model.CRITICAL,
+                  message: errorMessage
+                });
+              }, 1000);
             }
-
-            if (response.code === "SESSION_NOT_FOUND") {
-              // The session couldn't be validated by the datasource.
-              // XXX might be dead code
-              XT.logout();
-            }
-
           }
-
-          notify(response);
         };
       }
 
