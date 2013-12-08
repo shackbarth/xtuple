@@ -26,7 +26,7 @@ It will prompt you for your `sudo` credentials; installation will take a few min
     cd node-datasource
     node main.js
 
-Launch your local browser and navigate to the address `localhost`. Default username and password are `admin`.
+Launch your local browser and navigate to the address `localhost:8888`. Default username and password are `admin`.
 
 ### Release Notes
 
