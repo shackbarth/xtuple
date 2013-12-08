@@ -10,6 +10,7 @@ strict:true, trailing:true, white:true */
     "_freightSubtotal": "Freight Subtotal",
     "_itemSource": "Item Source",
     "_itemSources": "Item Sources",
+    "_isDropShip": "Drop Ship",
     "_manufacturer": "Manufacturer",
     "_manufacturerItem": "Mfg. Item",
     "_purchasing": "Purchasing",

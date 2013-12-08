@@ -114,13 +114,6 @@ trailing:true, white:true, strict: false*/
                     postalCode: "shiptoPostalCode", country: "shiptoCountry"}
                 },
                 {kind: "XV.ContactWidget", attr: "shiptoContact"},
-                {kind: "XV.PurchaseOrderCharacteristicsWidget", attr: "characteristics"},
-                {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
-                {kind: "XV.PurchaseTypePicker", attr: "purchaseType"},
-                {kind: "XV.TermsPicker", attr: "terms"},
-                {kind: "XV.TaxZonePicker", attr: "taxZone"},
-                {kind: "XV.AgentPicker", attr: "agent"},
-                {kind: "XV.InputWidget", attr: "incoterms"},
                 {kind: "XV.ShipViaCombobox", attr: "shipVia"},
                 {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
                 {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -128,6 +121,22 @@ trailing:true, white:true, strict: false*/
             ]}
           ]},
           {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
+          {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
+            components: [
+            {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "settingsGroup",
+                classes: "in-panel", fit: true, components: [
+              {name: "settingsControl", components: [
+                {kind: "XV.PurchaseTypePicker", attr: "purchaseType"},
+                {kind: "XV.TermsPicker", attr: "terms"},
+                {kind: "XV.TaxZonePicker", attr: "taxZone"},
+                {kind: "XV.AgentPicker", attr: "agent"},
+                {kind: "XV.InputWidget", attr: "incoterms"},
+                {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+                {kind: "XV.PurchaseOrderCharacteristicsWidget", attr: "characteristics"},
+              ]}
+            ]}
+          ]},
           {kind: "FittableRows", title: "_workflow".loc(), name: "workflowPanel"},
           {kind: "XV.PurchaseOrderCommentBox", attr: "comments"}
         ]}
