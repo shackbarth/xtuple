@@ -93,14 +93,21 @@ white:true*/
         return {
           orderDate: XT.date.today(),
           status: XM.PurchaseOrder.UNRELEASED_STATUS,
-          site: XT.defaultSite()
+          site: XT.defaultSite(),
+          agent: XM.agents.find(function (agent) {
+            return agent.id === XM.currentUser.id;
+          })
         };
       },
 
       readOnlyAttributes: [
+        "freightSubtotal",
         "lineItems",
         "releaseDate",
-        "status"
+        "status",
+        "subtotal",
+        "taxTotal",
+        "total"
       ],
 
       handlers: {
@@ -143,7 +150,7 @@ white:true*/
 
       lineItemsChanged: function () {
         var hasLineItems = this.get("lineItems").length > 0;
-        this.setReadOnly(["vendor"], hasLineItems);
+        this.setReadOnly(["vendor", "currency"], hasLineItems);
         this.setReadOnly("status", !hasLineItems);
         if (!hasLineItems) {
           this.set("status", XM.PurchaseOrder.UNRELEASED_STATUS);
@@ -174,11 +181,13 @@ white:true*/
       statusDidChange: function () {
         XM.Document.prototype.statusDidChange.apply(this, arguments);
         var status = this.getStatus(),
-          K = XM.Model;
+          K = XM.Model,
+          lineCount;
         if (status === K.READY_NEW) {
           // TO DO
         } else if (status === K.READY_CLEAN) {
           this.setReadOnly("lineItems", false);
+          this.lineItemsChanged();
         }
       },
 
@@ -383,6 +392,17 @@ white:true*/
       recordType: "XM.PurchaseOrderListItem",
 
       editableModel: "XM.PurchaseOrder"
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.PurchaseOrderCharacteristic = XM.Model.extend(/** @lends XM.PurchaseOrderListItemCharacteristic.prototype */{
+
+      recordType: 'XM.PurchaseOrderListItemCharacteristic'
 
     });
 

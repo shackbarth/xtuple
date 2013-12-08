@@ -2358,16 +2358,16 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "contact1.phone", fit: true,
+              {kind: "XV.ListAttr", attr: "primaryContact.phone", fit: true,
                 classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact1.primaryEmail", classes: "right"}
+              {kind: "XV.ListAttr", attr: "primaryContact.primaryEmail", classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "contact1.name",
+            {kind: "XV.ListAttr", attr: "primaryContact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "address"}
           ]}

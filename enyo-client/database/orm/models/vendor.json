@@ -47,7 +47,7 @@
         }
       },
       {
-        "name": "contact1",
+        "name": "primaryContact",
         "toOne": {
           "type": "ContactRelation",
           "column": "vend_cntct1_id",
@@ -55,7 +55,7 @@
         }
       },
       {
-        "name": "contact2",
+        "name": "secondaryContact",
         "toOne": {
           "type": "ContactRelation",
           "column": "vend_cntct2_id",
@@ -169,7 +169,7 @@
         }
       },
       {
-        "name": "contact1",
+        "name": "primaryContact",
         "toOne": {
           "type": "ContactRelation",
           "column": "vend_cntct1_id",
@@ -177,7 +177,7 @@
         }
       },
       {
-        "name": "contact2",
+        "name": "secondaryContact",
         "toOne": {
           "type": "ContactRelation",
           "column": "vend_cntct2_id",

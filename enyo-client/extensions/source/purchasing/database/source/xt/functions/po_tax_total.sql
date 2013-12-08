@@ -1,5 +1,5 @@
 create or replace function xt.po_tax_total(pohead) returns numeric stable as $$
-  select sum(tax) as tax
+  select coalesce(sum(tax),0) as tax
   from (
     select round(sum(taxdetail_tax),2) as tax
     from tax

@@ -7,6 +7,7 @@ strict:true, trailing:true, white:true */
   "use strict";
 
   var lang = XT.stringsFor("en_US", {
+    "_freightSubtotal": "Freight Subtotal",
     "_itemSource": "Item Source",
     "_itemSources": "Item Sources",
     "_manufacturer": "Manufacturer",

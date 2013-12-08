@@ -160,6 +160,41 @@ trailing:true, white:true, strict:false*/
       fitButtons: false
     });
 
+    enyo.kind({
+      name: "XV.PurchaseOrderSummaryPanel",
+      classes: "xv-sales-summary-panel",
+      kind: "XV.RelationsEditor",
+      style: "margin-top: 10px;",
+      components: [
+        {kind: "XV.Groupbox", name: "totalGroup", classes: "xv-sales-summary-total-group",
+            components: [
+          {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+          {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+            {kind: "FittableRows", name: "summaryColumnOne", components: [
+              {kind: "XV.CurrencyPicker", attr: "currency"}
+            ]},
+            {kind: "FittableRows", name: "summaryColumnTwo", components: [
+              {kind: "XV.MoneyWidget",
+               attr: {localValue: "subtotal", currency: "currency"},
+               label: "_subtotal".loc(), currencyShowing: false},
+              {kind: "XV.MoneyWidget",
+                attr: {localValue: "freightSubtotal", currency: "currency"},
+               label: "_freightSubtotal".loc(), currencyShowing: false},
+              {kind: "XV.MoneyWidget",
+                attr: {localValue: "freight", currency: "currency"},
+               label: "_freight".loc(), currencyShowing: false},
+              {kind: "XV.MoneyWidget",
+               attr: {localValue: "taxTotal", currency: "currency"},
+               label: "_tax".loc(), currencyShowing: false},
+              {kind: "XV.MoneyWidget",
+               attr: {localValue: "total", currency: "currency"},
+               label: "_total".loc(), currencyShowing: false}
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
   };
 
 }());

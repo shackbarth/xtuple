@@ -52,6 +52,9 @@ trailing:true, white:true, strict:false*/
       classes: "large-panel",
       title: "_lineItems".loc(),
       gridRowKind: "XV.PurchaseOrderLineRow",
+      workspace: "XV.PurchaseOrderLineWorkspace",
+      summary: "XV.PurchaseOrderSummaryPanel",
+      parentKey: "purchaseOrder",
       columns: [
         {classes: "line-number", header: "#", rows: [
           {readOnlyAttr: "lineNumber",
@@ -105,8 +108,7 @@ trailing:true, white:true, strict:false*/
           {readOnlyAttr: "vouchered",
             editor: {kind: "XV.QuantityWidget", attr: "vouchered"}},
         ]}
-      ],
-      workspace: "XV.PurchaseOrderLineWorkspace"
+      ]
     });
 
     enyo.kind({
