@@ -125,6 +125,100 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "VendorListItem",
+    "table": "vendinfo",
+    "isRest": true,
+    "comment": "Vendor List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewVendors MaintainVendors",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "vend_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "vend_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "vend_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "vend_active"
+        }
+      },
+      {
+        "name": "contact1",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "vend_cntct1_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "contact2",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "vend_cntct2_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "type": "Address",
+          "column": "vend_addr_id"
+        }
+      },
+      {
+        "name": "vendorType",
+        "toOne": {
+          "type": "VendorType",
+          "column": "vend_vendtype_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "vend_curr_id"
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "vend_terms_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "VendorRelation",
     "table": "vendinfo",
     "isRest": true,

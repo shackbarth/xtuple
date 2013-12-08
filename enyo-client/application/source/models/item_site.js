@@ -257,10 +257,7 @@ white:true*/
     // Parse out customer
     param = _.findWhere(params, {attribute: "customer"});
 
-    // Only handle special case if a customer is involved
-    if (!param) {
-      return XM.Collection.prototype.fetch.call(this, options);
-    } else {
+    if (param) {
       // We have to do a special dispatch to fetch the data based on customer.
       // Because it's a dipatch call and not a fetch, the collection doesn't get
       // updated automatically. We have to do that by hand on success.

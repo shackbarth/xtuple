@@ -61,6 +61,19 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.VendorListITem = XM.Info.extend(/** @scope XM.VendorRelation.prototype */{
+
+    recordType: 'XM.VendorListItem',
+
+    editableModel: 'XM.Vendor'
+
+  });
+
   // ..........................................................
   // COLLECTIONS
   //
@@ -73,6 +86,17 @@ white:true*/
   XM.VendorRelationCollection = XM.Collection.extend(/** @lends XM.VendorRelationCollection.prototype */{
 
     model: XM.VendorRelation
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.VendorListItemCollection = XM.Collection.extend(/** @lends XM.VendorListItemCollection.prototype */{
+
+    model: XM.VendorListITem
 
   });
 
