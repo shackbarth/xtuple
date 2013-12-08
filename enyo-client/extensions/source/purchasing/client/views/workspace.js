@@ -286,7 +286,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.InputWidget", attr: "manufacturerName", label: "_name".loc()},
               {kind: "XV.InputWidget", attr: "manufacturerItemNumber", label: "_itemNumber".loc()},
               {kind: "onyx.GroupboxHeader", content: "_description".loc()},
-              {kind: "XV.TextArea", attr: "manufacturerDescription", fit: true}
+              {kind: "XV.TextArea", attr: "manufacturerItemDescription", fit: true}
             ]}
           ]},
           {kind: "XV.PurchaseOrderLineCommentBox", attr: "comments"}
