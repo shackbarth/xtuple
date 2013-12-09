@@ -43,7 +43,7 @@
       "from": "connect-ensure-login@0.1.x"
     },
     "ejs": {
-      "version": "0.8.4",
+      "version": "0.8.5",
       "from": "ejs@0.8.x"
     },
     "express": {
@@ -78,8 +78,7 @@
         },
         "commander": {
           "version": "0.6.1",
-          "from": "commander@0.6.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-0.6.1.tgz"
+          "from": "commander@0.6.1"
         },
         "range-parser": {
           "version": "0.0.4",
@@ -132,14 +131,14 @@
     },
     "moment": {
       "version": "2.4.0",
-      "from": "moment@~2.4.0"
+      "from": "moment@2.4.x"
     },
     "nodemailer": {
       "version": "0.3.44",
       "from": "nodemailer@0.3.x",
       "dependencies": {
         "mailcomposer": {
-          "version": "0.2.4",
+          "version": "0.2.6",
           "from": "mailcomposer@>= 0.1.29",
           "dependencies": {
             "mimelib": {
@@ -166,20 +165,27 @@
               "version": "1.2.9",
               "from": "mime@1.2.9"
             },
-            "ent": {
+            "he": {
+              "version": "0.3.6",
+              "from": "he@~0.3.6"
+            },
+            "punycode": {
+              "version": "1.2.3",
+              "from": "punycode@1.2.3"
+            },
+            "dkim-signer": {
               "version": "0.1.0",
-              "from": "ent@~0.1.0"
+              "from": "dkim-signer@~0.1.0"
             }
           }
         },
         "simplesmtp": {
-          "version": "0.3.15",
+          "version": "0.3.16",
           "from": "simplesmtp@>= 0.1.28",
           "dependencies": {
             "rai": {
               "version": "0.1.8",
-              "from": "rai@~0.1",
-              "resolved": "https://registry.npmjs.org/rai/-/rai-0.1.8.tgz"
+              "from": "rai@~0.1"
             },
             "xoauth2": {
               "version": "0.1.8",
@@ -292,7 +298,7 @@
       "from": "paynode@0.3.6",
       "dependencies": {
         "braintree": {
-          "version": "1.9.1",
+          "version": "1.9.2",
           "from": "braintree@*",
           "dependencies": {
             "dateformat": {
@@ -308,7 +314,7 @@
               "from": "xml2js@=0.1.13",
               "dependencies": {
                 "sax": {
-                  "version": "0.5.5",
+                  "version": "0.5.8",
                   "from": "sax@>=0.1.1"
                 }
               }
@@ -378,7 +384,7 @@
       }
     },
     "rimraf": {
-      "version": "2.2.2",
+      "version": "2.2.4",
       "from": "rimraf@2.2.x",
       "dependencies": {
         "graceful-fs": {
@@ -413,7 +419,8 @@
           "dependencies": {
             "uglify-js": {
               "version": "1.2.5",
-              "from": "uglify-js@1.2.5"
+              "from": "uglify-js@1.2.5",
+              "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-1.2.5.tgz"
             },
             "ws": {
               "version": "0.4.31",
@@ -421,8 +428,7 @@
               "dependencies": {
                 "commander": {
                   "version": "0.6.1",
-                  "from": "commander@~0.6.1",
-                  "resolved": "https://registry.npmjs.org/commander/-/commander-0.6.1.tgz"
+                  "from": "commander@~0.6.1"
                 },
                 "nan": {
                   "version": "0.3.2",
@@ -470,8 +476,7 @@
     },
     "underscore": {
       "version": "1.4.4",
-      "from": "underscore@1.4.x",
-      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.4.4.tgz"
+      "from": "underscore@1.4.x"
     },
     "winston": {
       "version": "0.7.2",
@@ -511,7 +516,7 @@
             },
             "mime": {
               "version": "1.2.11",
-              "from": "mime@~1.2.7"
+              "from": "mime@1.2.x"
             },
             "hawk": {
               "version": "0.10.2",
@@ -577,23 +582,12 @@
     },
     "xmla4js": {
       "version": "0.0.1",
-      "from": "xml4js@git://github.com/rpbouman/xmla4js.git",
+      "from": "xmla4js@git://github.com/rpbouman/xmla4js.git",
       "resolved": "git://github.com/rpbouman/xmla4js.git#cbfd568b4858c99f493e182722a12bed20bdee95"
     },
     "underscore.string": {
       "version": "2.3.3",
-      "from": "underscore.string@",
-      "resolved": "https://registry.npmjs.org/underscore.string/-/underscore.string-2.3.3.tgz"
-    },
-    "congruence": {
-      "version": "1.2.3",
-      "from": "congruence@",
-      "dependencies": {
-        "underscore": {
-          "version": "1.5.2",
-          "from": "underscore@1.5.2"
-        }
-      }
+      "from": "underscore.string@~2.3.3"
     }
   }
 }

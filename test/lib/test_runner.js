@@ -43,6 +43,8 @@ require:true, __dirname:true, console:true */
     specs,
     assert = require("chai").assert,
     zombieAuth = require("./zombie_auth");
+    
+  require('../rest');
 
   _.each(specFiles, function (specFile) {
     var specContents = require(path.join(__dirname, "../specs", specFile)),
@@ -58,7 +60,6 @@ require:true, __dirname:true, console:true */
         spec.updateHash = {};
         spec.updateHash[spec.updatableField] = "Test" + Math.random();
       }
-
 
       if (spec.skipBoilerplateTests && specContents.additionalTests) {
         specContents.additionalTests();
@@ -312,7 +313,6 @@ require:true, __dirname:true, console:true */
       if (specContents.additionalTests) {
         specContents.additionalTests();
       }
-
     });
   });
 }());

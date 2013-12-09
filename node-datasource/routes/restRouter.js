@@ -14,6 +14,7 @@ _.mixin(str.exports());
 
 /**
  * @class RestRouter
+ * @singleton
  */
 module.exports = (function () {
   'use strict';
@@ -25,35 +26,49 @@ module.exports = (function () {
        * Requests a representation of the specified resource.
        */
       GET: function (req, res, session, options) {
-        var ormType = options.ormType,
+        var query = _.omit(req.query, 'access_token'),
           callback = options.callback,
           payload = {
             nameSpace: 'XM',
-            type: ormType,
+            type: options.ormType,
             id: options.id
           },
           restQuery,
           freeQuery,
-          schema;
+          schema,
+          error;
+
+        console.log(req.params);
+        console.log(query);
+        console.log(options.id);
 
         if (options.id) {
           return routes.queryDatabase("get", payload, session, callback);
         }
 
-        freeQuery = new FreeTextQuery(req.query);
-        if (freeQuery.isValid()) {
-          schema = XT.session.schemas.XM.attributes[_.capitalize(_.camelize(payload.type))];
-          payload.query = freeQuery.toTarget(XtGetQuery, { schema: schema }).query;
-          return routes.queryDatabase("get", payload, session, callback);
+        if (query.q) {
+          freeQuery = new FreeTextQuery(query);
+          if (freeQuery.isValid()) {
+            schema = XT.session.schemas.XM.attributes[_.capitalize(_.camelize(payload.type))];
+            payload.query = freeQuery.toTarget(XtGetQuery, { schema: schema }).query;
+            return routes.queryDatabase("get", payload, session, callback);
+          }
+          else {
+            error = freeQuery.getErrors();
+          }
+        }
+        else {
+          restQuery = new RestQuery(query);
+          if (restQuery.isValid()) {
+            payload.query = restQuery.toTarget(XtGetQuery).query;
+            return routes.queryDatabase("get", payload, session, callback);
+          }
+          else {
+            error = restQuery.getErrors();
+          }
         }
 
-        restQuery = new RestQuery(req.query);
-        if (restQuery.isValid()) {
-          payload.query = restQuery.toTarget(XtGetQuery).query;
-          return routes.queryDatabase("get", payload, session, callback);
-        }
-
-        return res.send(400, "Bad Request");
+        return res.send(400, error);
       },
 
       /**
@@ -176,8 +191,10 @@ module.exports = (function () {
           if (result.isError) {
             return next(new Error("Invalid Request."));
           }
+          console.log('getResources time: ' + (new Date().valueOf() - t1));
           _getServices(req, res, next, orms, result.data);
-        };
+        },
+        t1 = new Date().valueOf();
 
       routes.queryDatabase("post", payload, session, callback);
     },
@@ -200,8 +217,10 @@ module.exports = (function () {
           if (result.isError) {
             return next(new Error("Invalid Request."));
           }
+          console.log('getServices time: ' + (new Date().valueOf() - t1));
           routeCall(req, res, next, orms, resources, result.data);
-        };
+        },
+        t1 = new Date().valueOf();
 
       routes.queryDatabase("post", payload, session, callback);
     },
@@ -267,7 +286,6 @@ module.exports = (function () {
    * @public
    */
   function getIsRestORMs(req, res, next) {
-    console.log(req.user);
     var payload = {
         nameSpace: 'XT',
         type: 'Discovery',
@@ -280,8 +298,11 @@ module.exports = (function () {
         if (result.isError) {
           return next(new Error("Invalid Request."));
         }
+        console.log('getIsRestORMs time: ' + (new Date().valueOf() - t1));
         _getResources(req, res, next, result.data);
-      };
+      },
+      t1 = new Date().valueOf();
+
     routes.queryDatabase("post", payload, session, callback);
   }
 
@@ -298,7 +319,16 @@ module.exports = (function () {
    * Create a session passport object given a req.user
    */
   function getPassport(user, next) {
-    if (!user) return next(new Error('user is not defined'));
+    //if (!user) return next(new Error('user is not defined'));
+    return {
+      user: {
+        id: 'admin',
+        username: 'admin',
+        organization: 'masterref'
+      }
+    };
+    /*
+     * XXX
     return {
       user: {
         id: user.get('username'),
@@ -306,6 +336,7 @@ module.exports = (function () {
         organizaion: user.get('organization'),
       }
     };
+    */
   }
 
   return {

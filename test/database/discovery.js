@@ -7,9 +7,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var zombie = require("zombie"),
     mocha = require("mocha"),
-    assert = require("chai").assert,
-    RJSON = require("rjson");
-
+    assert = require("chai").assert;
 
   var loginData = require('../lib/login_data'),
     database = loginData.data.org,
