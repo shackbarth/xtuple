@@ -38,7 +38,8 @@
     "underscore": "1.4.x",
     "winston": "0.7.x",
     "xmla4js": "git://github.com/rpbouman/xmla4js.git",
-    "underscore.string": "~2.3.3"
+    "underscore.string": "~2.3.3",
+    "congruence": "~1.2.4"
   },
   "devDependencies": {
     "chai": "1.5.x",

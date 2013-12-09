@@ -588,6 +588,16 @@
     "underscore.string": {
       "version": "2.3.3",
       "from": "underscore.string@~2.3.3"
+    },
+    "congruence": {
+      "version": "1.2.4",
+      "from": "congruence@",
+      "dependencies": {
+        "underscore": {
+          "version": "1.5.2",
+          "from": "underscore@1.5.2"
+        }
+      }
     }
   }
 }
