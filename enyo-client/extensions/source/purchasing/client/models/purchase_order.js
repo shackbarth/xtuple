@@ -202,7 +202,8 @@ white:true*/
       validate: function () {
         var err = XM.Document.prototype.validate.apply(this, arguments),
           lineItems = this.get("lineItems"),
-          K = XM.Model,
+          status = this.get("status"),
+          K = XM.PurchaseOrder,
           validItems;
 
         // Check that we have line items
@@ -215,6 +216,18 @@ white:true*/
             return XT.Error.clone('xt2012');
           }
         }
+
+        // Check for valid po status
+        if (status === K.UNRELEASED_STATUS) {
+          lineItems.each(function (item) {
+            if (item.get("toReceive") ||
+                item.get("received") ||
+                item.get("vouchered")) {
+              err = XT.Error.clone('xt2025');
+            }
+          })
+        }
+
         return err;
       }
 

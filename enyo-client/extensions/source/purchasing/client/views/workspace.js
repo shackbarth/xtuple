@@ -129,6 +129,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ScrollableGroupbox", name: "settingsGroup",
                 classes: "in-panel", fit: true, components: [
               {name: "settingsControl", components: [
+                {kind: "XV.PurchaseOrderStatusPicker", attr: "status"},
                 {kind: "XV.PurchaseTypePicker", attr: "purchaseType"},
                 {kind: "XV.TermsPicker", attr: "terms"},
                 {kind: "XV.TaxZonePicker", attr: "taxZone"},

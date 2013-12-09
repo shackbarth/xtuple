@@ -1346,7 +1346,7 @@
         "name": "toReceive",
         "attr": {
           "type": "Quantity",
-          "column": "poitem_qty_toreceive"
+          "column": "qty_toreceive"
         }
       },
       {

@@ -6,7 +6,8 @@ select poitem.*,
   case when poitem_itemsite_id is null then true else false end as poitem_is_misc,
   pohead_curr_id as curr_id,
   po_line_extended_price(poitem) as extended_price,
-  po_line_tax(poitem) as tax
+  po_line_tax(poitem) as tax,
+  coalesce(poitem_qty_toreceive,0) as qty_toreceive
 from poitem
   left join itemsite on itemsite_id=poitem_itemsite_id
   join pohead on pohead_id=poitem_pohead_id;
