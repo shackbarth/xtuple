@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "ERROR: No README data found!",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple"
@@ -13,7 +10,7 @@
   "author": "Travis Webb",
   "license": "BSD",
   "dependencies": {
-    "congruence": "1.2.3",
+    "congruence": "1.2.4",
     "moment": "~2.4.0",
     "underscore": "~1.5.2"
   },
