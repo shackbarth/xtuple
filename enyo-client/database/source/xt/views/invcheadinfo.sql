@@ -1,7 +1,7 @@
 select xt.create_view('xt.invcheadinfo', $$
 
 select invchead.*,
-  xt.invc_allocated_credit(invchead) as allocated_credit,
+  xt.invc_allocated_credit(invchead_id, invchead_curr_id, invchead_orderdate) as allocated_credit,
   xt.invc_outstanding_credit(invchead_cust_id, invchead_curr_id, invchead_invcdate) as outstanding_credit,
   xt.invc_subtotal(invchead) as subtotal,
   xt.invc_tax_total(invchead_id) as tax_total,

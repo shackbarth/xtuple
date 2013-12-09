@@ -5,6 +5,15 @@ white:true*/
 require:true, assert:true, setTimeout:true, clearTimeout:true, exports:true,
 it:true, describe:true, beforeEach:true, before:true, enyo:true */
 
+/*
+TODO:
+Is the charass CM?
+Authorized credit on cm_balance
+get rid of xt.invcheadinfo and xt.invciteminfo
+
+*/
+
+
 (function () {
   "use strict";
 
@@ -670,7 +679,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       it.skip("XM.ReturnListItem includes a \"void\" function that dispatches a" +
         "XM.Return.void function to the server", function () {
       });
-        
+
       /**
         @member ReturnRelation
         @memberof Return.prototype
