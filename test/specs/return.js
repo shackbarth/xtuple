@@ -26,7 +26,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     bpaint,
     btruck;
   /**
-    Here is some high-level description of what an Return is supposed to do.
+    Returns (Credit memo) are used to issue credit for sold Inventory
     @class
     @alias Return
     @property {String} number that is the documentKey and idAttribute
