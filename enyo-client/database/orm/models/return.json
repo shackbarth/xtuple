@@ -6,7 +6,7 @@
     "table": "cmhead",
     "isRest": true,
     "idSequenceName": "cmhead_cmhead_id_seq",
-    "orderSequence":"CreditMemoNumber",
+    "orderSequence":"CmNumber",
     "lockable": true,
     "comment": "Return Map",
     "privileges": {
@@ -240,15 +240,6 @@
         }
       },
       {
-        "name": "characteristics",
-        "toMany": {
-          "type": "ReturnCharacteristic",
-          "column": "cmhead_id",
-          "inverse": "return",
-          "isNested": true
-        }
-      },
-      {
         "name": "lineItems",
         "toMany": {
           "isNested": true,
@@ -424,72 +415,6 @@
         }
       }
     ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "ReturnCharacteristic",
-    "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
-    "comment": "Return Characteristic Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": true,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "charass_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "charass_target_type",
-          "value": "CM"
-        }
-      },
-      {
-        "name": "return",
-        "attr": {
-          "type": "Number",
-          "column": "charass_target_id"
-        }
-      },
-      {
-        "name": "characteristic",
-        "toOne": {
-          "type": "Characteristic",
-          "column": "charass_char_id",
-          "required": true
-        }
-      },
-      {
-        "name": "value",
-        "attr": {
-          "type": "String",
-          "column": "charass_value"
-        }
-      }
-    ],
-    "isNestedOnly": true,
     "isSystem": true
   },
   {

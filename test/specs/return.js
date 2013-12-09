@@ -6,10 +6,13 @@ require:true, assert:true, setTimeout:true, clearTimeout:true, exports:true,
 it:true, describe:true, beforeEach:true, before:true, enyo:true */
 
 /*
+QUESTIONS:
+Ok to skip doc assignments?
+
 TODO:
-Is the charass CM?
 Authorized credit on cm_balance
 get rid of xt.invcheadinfo and xt.invciteminfo
+item_from_itemsite won't persist
 */
 
 
@@ -70,7 +73,6 @@ get rid of xt.invcheadinfo and xt.invciteminfo
     @property {ReturnAllocation} allocations
     @property {ReturnTax} taxAdjustments
     @property {ReturnLine} lineItems
-    @property {ReturnCharacteristic} characteristics
     @property {ReturnContact} contacts
     @property {ReturnAccount} accounts
     @property {ReturnCustomer} customers
@@ -113,11 +115,9 @@ get rid of xt.invcheadinfo and xt.invciteminfo
       "billtoPhone", "currency", "terms", "salesRep", "commission",
       "saleType", "customerPurchaseOrderNumber", "taxZone", "notes",
       "subtotal", "taxTotal", "miscCharge", "total", "balance", "allocations",
-      "taxAdjustments", "lineItems", "characteristics", "contacts",
-      "accounts", "customers", "files", "urls", "items",
-      "orderNumber", "orderDate", "salesOrders", // these 3 from sales extension
-      "incidents", "opportunities", // these 2 from crm
-      "project", "projects"], // these 2 from project
+      "taxAdjustments", "lineItems",
+      "orderNumber", "orderDate", // this from sales extension
+      "projects"], // this from project
     requiredAttributes: ["number", "returnDate", "isPosted", "isVoid",
       "customer", "commission"],
     defaults: {
@@ -168,78 +168,6 @@ get rid of xt.invcheadinfo and xt.invciteminfo
   };
 
   var additionalTests = function () {
-    /**
-      @member -
-      @memberof Return.prototype
-      @description There is a setting "Valid Credit Card Days"
-      @default 7
-    */
-    describe("Setup for Return", function () {
-      it("The system settings option CCValidDays will default to 7 if " +
-          "not already in the db", function () {
-        assert.equal(XT.session.settings.get("CCValidDays"), 7);
-      });
-      /**
-        @member -
-        @memberof Return.prototype
-        @description Characteristics can be assigned as being for Returns
-      */
-      it("XM.Characteristic includes isReturns as a context attribute", function () {
-        var characteristic = new XM.Characteristic();
-        assert.isBoolean(characteristic.get("isReturns"));
-      });
-      /**
-        @member ReturnCharacteristic
-        @memberof Return.prototype
-        @description Follows the convention for characteristics
-        @see Characteristic
-      */
-      it("convention for characteristic assignments", function () {
-        var model;
-
-        assert.isFunction(XM.ReturnCharacteristic);
-        model = new XM.ReturnCharacteristic();
-        assert.isTrue(model instanceof XM.CharacteristicAssignment);
-      });
-      it("can be set by a widget in the characteristics workspace", function () {
-        var characteristicWorkspace = new XV.CharacteristicWorkspace();
-        assert.include(_.map(characteristicWorkspace.$, function (control) {
-          return control.attr;
-        }), "isReturns");
-      });
-    });
-    /**
-      @member -
-      @memberof Return.prototype
-      @description Documents should exist to connect a Return to:
-        Contact, Account, Customer, File, Url, Item
-    */
-    describe("Nested-only Document associations per the document convention", function () {
-      it("XM.ReturnContact", function () {
-        assert.isFunction(XM.ReturnContact);
-        assert.isTrue(XM.ReturnContact.prototype.isDocumentAssignment);
-      });
-      it("XM.ReturnAccount", function () {
-        assert.isFunction(XM.ReturnAccount);
-        assert.isTrue(XM.ReturnAccount.prototype.isDocumentAssignment);
-      });
-      it("XM.ReturnCustomer", function () {
-        assert.isFunction(XM.ReturnCustomer);
-        assert.isTrue(XM.ReturnCustomer.prototype.isDocumentAssignment);
-      });
-      it("XM.ReturnFile", function () {
-        assert.isFunction(XM.ReturnFile);
-        assert.isTrue(XM.ReturnFile.prototype.isDocumentAssignment);
-      });
-      it("XM.ReturnUrl", function () {
-        assert.isFunction(XM.ReturnUrl);
-        assert.isTrue(XM.ReturnUrl.prototype.isDocumentAssignment);
-      });
-      it("XM.ReturnItem", function () {
-        assert.isFunction(XM.ReturnItem);
-        assert.isTrue(XM.ReturnItem.prototype.isDocumentAssignment);
-      });
-    });
     describe("ReturnLine", function () {
       before(function (done) {
         async.parallel([
