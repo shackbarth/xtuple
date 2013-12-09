@@ -139,6 +139,7 @@
     "xt/javascript/init.sql",
     "xt/views/cohistinfo.sql",
     "xt/views/doc.sql",
+    "xt/views/cmiteminfo.sql",
     "xt/views/cntctinfo.sql",
     "xt/views/coheadinfo.sql",
     "xt/views/coiteminfo.sql",

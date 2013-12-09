@@ -585,7 +585,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ReturnLine",
-    "table": "cmitem",
+    "table": "xt.cmiteminfo",
     "isRest": true,
     "idSequenceName": "cmitem_cmitem_id_seq",
     "comment": "Return Line Map",
@@ -640,8 +640,7 @@
         "toOne": {
           "isNested": true,
           "type": "ItemRelation",
-          "derived": true,
-          "method": "xt.item_from_itemsite(cmitem_itemsite_id)",
+          "column": "cmitem_item_id",
           "required": true
         }
       },
@@ -650,8 +649,7 @@
         "toOne": {
           "isNested": true,
           "type": "SiteRelation",
-          "derived": true,
-          "method": "xt.site_from_itemsite(cmitem_itemsite_id)",
+          "column": "cmitem_warehous_id",
           "required": true
         }
       },
