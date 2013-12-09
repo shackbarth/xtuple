@@ -1995,7 +1995,6 @@
     "nameSpace": "SYS",
     "type": "CustomerRelation",
     "table": "custinfo",
-    "isRest": true,
     "comment": "Customer Relation Map",
     "privileges": {
       "all": {

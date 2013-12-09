@@ -69,6 +69,7 @@ select xt.install_js('XT','Orm','xtuple', $$
     if(!nameSpace) throw new Error("A name space is required");
     if(!type) throw new Error("A type is required");
     if(!context) throw new Error("A context is required");
+    if(isRest && nameSpace === 'SYS') throw new Error("SYS ORMs cannot be isRest: true.");
 
     sql = 'select orm_id as "id", ' +
           '  orm_json as "json", ' +
