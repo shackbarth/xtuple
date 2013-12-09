@@ -26,6 +26,7 @@
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
         "MaintainItemMasters",
+        "MaintainItemGroups",
         "MaintainMiscInvoices",
         "MaintainReasonCodes",
         "MaintainSalesCategories",
