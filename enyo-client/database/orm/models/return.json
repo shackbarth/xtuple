@@ -711,6 +711,26 @@
         }
       },
       {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "derived": true,
+          "method": "xt.item_from_itemsite(cmitem_itemsite_id)",
+          "required": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "derived": true,
+          "method": "xt.site_from_itemsite(cmitem_itemsite_id)",
+          "required": true
+        }
+      },
+      {
         "name": "quantity",
         "attr": {
           "type": "Quantity",

@@ -10,7 +10,6 @@ TODO:
 Is the charass CM?
 Authorized credit on cm_balance
 get rid of xt.invcheadinfo and xt.invciteminfo
-
 */
 
 
