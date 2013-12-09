@@ -249,6 +249,15 @@
         }
       },
       {
+        "name": "lineItems",
+        "toMany": {
+          "isNested": true,
+          "type": "ReturnLine",
+          "column": "cmhead_id",
+          "inverse": "return"
+        }
+      },
+      {
         "name": "taxAdjustments",
         "toMany": {
           "isNested": true,
@@ -641,6 +650,217 @@
         "toOne": {
           "type": "Currency",
           "column": "aropenalloc_curr_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ReturnLine",
+    "table": "cmitem",
+    "isRest": true,
+    "idSequenceName": "cmitem_cmitem_id_seq",
+    "comment": "Return Line Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCreditMemos",
+        "read": "ViewCreditMemos",
+        "update": "MaintainCreditMemos",
+        "delete": "MaintainCreditMemos"
+      },
+      "attribute": {
+        "taxType": {
+          "create": "OverrideTax",
+          "read": true,
+          "update": "OverrideTax"
+        }
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cmitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "return",
+        "attr": {
+          "type": "Number",
+          "column": "cmitem_cmhead_id"
+        }
+      },
+      {
+        "name": "lineNumber",
+        "attr": {
+          "type": "Number",
+          "column": "cmitem_linenumber"
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "cmitem_qtycredit"
+        }
+      },
+      {
+        "name": "quantityUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "cmitem_qty_uom_id"
+        }
+      },
+      {
+        "name": "quantityUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "cmitem_qty_invuomratio"
+        }
+      },
+      {
+        "name": "returned",
+        "attr": {
+          "type": "Quantity",
+          "column": "cmitem_qtyreturned"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "SalesPrice",
+          "column": "cmitem_unitprice"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "cmitem_price_uom_id"
+        }
+      },
+      {
+        "name": "priceUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "cmitem_price_invuomratio"
+        }
+      },
+      {
+        "name": "extendedPrice",
+        "attr": {
+          "type": "ExtendedPrice",
+          "derived": true,
+          "method": "xt.invc_line_extended_price(cmitem_qtycredit, cmitem_qty_invuomratio, cmitem_unitprice, cmitem_price_invuomratio)"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "cmitem_comments"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "cmitem_taxtype_id"
+        }
+      },
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cm_line_tax_total(cmitem_id)"
+        }
+      },
+      {
+        "name": "taxes",
+        "toMany": {
+          "isNested": true,
+          "type": "ReturnLineTax",
+          "column": "cmitem_id",
+          "inverse": "parent"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ReturnLineTax",
+    "table": "cmitemtax",
+    "isRest": true,
+    "idSequenceName": "taxhist_taxhist_id_seq",
+    "comment": "Return Line Tax Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "taxhist_taxtype_id"
+        }
+      },
+      {
+        "name": "taxCode",
+        "toOne": {
+          "type": "TaxCode",
+          "column": "taxhist_tax_id",
+          "required": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_parent_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_tax"
         }
       }
     ],
