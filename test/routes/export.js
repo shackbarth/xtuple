@@ -8,14 +8,14 @@ if (typeof XT === undefined) {
 _ = require("underscore");
 
 var assert = require("chai").assert,
-  exportRoute = require("../../../node-datasource/routes/export"),
-  dataRoute = require("../../../node-datasource/routes/data");
+  exportRoute = require("../../node-datasource/routes/export"),
+  dataRoute = require("../../node-datasource/routes/data");
 
-require("../../../node-datasource/xt/database");
-require("../../../lib/tools/source/foundation");
-require("../../../lib/tools/source/ext/string");
-require("../../../lib/tools/source/ext/proto/string");
-require("../../../node-datasource/lib/ext/datasource");
+require("../../node-datasource/xt/database");
+require("../../lib/tools/source/foundation");
+require("../../lib/tools/source/ext/string");
+require("../../lib/tools/source/ext/proto/string");
+require("../../node-datasource/lib/ext/datasource");
 
 X.options = {
   databaseServer: {}
