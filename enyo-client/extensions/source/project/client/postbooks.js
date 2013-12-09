@@ -73,6 +73,7 @@ trailing:true, white:true, strict:false*/
       "ViewTitles",
       "DeleteItemMasters",
       "MaintainItemMasters",
+      "MaintainItemGroups",
       "MaintainUOMs",
       "ViewClassCodes",
       "ViewItemMasters",

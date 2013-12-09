@@ -79,6 +79,7 @@ trailing:true, white:true*/
       "MaintainIncidentPriorities",
       "MaintainIncidentResolutions",
       "MaintainIncidentSeverities",
+      "MaintainItemGroups",
       "MaintainOpportunitySources",
       "MaintainOpportunityStages",
       "MaintainOpportunityTypes",

@@ -86,6 +86,7 @@ trailing:true, white:true*/
       "MaintainCostCategories",
       "MaintainCustomerMasters",
       "MaintainFreightClasses",
+      "MaintainItemGroups",
       "MaintainItemMasters",
       "MaintainItemSites",
       "MaintainQuotes",
