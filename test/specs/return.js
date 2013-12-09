@@ -99,7 +99,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     */
     idAttribute: "number",
     enforceUpperKey: true,
-    attributes: ["number", "ReturnDate", "isPosted", "isVoid", "customer",
+    attributes: ["number", "returnDate", "isPosted", "isVoid", "customer",
       "billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3",
       "billtoCity", "billtoState", "billtoPostalCode", "billtoCountry",
       "billtoPhone", "currency", "terms", "salesRep", "commission",
@@ -110,10 +110,10 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       "orderNumber", "orderDate", "salesOrders", // these 3 from sales extension
       "incidents", "opportunities", // these 2 from crm
       "project", "projects"], // these 2 from project
-    requiredAttributes: ["number", "ReturnDate", "isPosted", "isVoid",
+    requiredAttributes: ["number", "returnDate", "isPosted", "isVoid",
       "customer", "commission"],
     defaults: {
-      ReturnDate: new Date(),
+      returnDate: new Date(),
       isPosted: false,
       isVoid: false,
       commission: 0
@@ -834,7 +834,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         // XXX This is a wacky way to test this.
         // XXX Shouldn't the change to the allocated credit itself trigger a change
           //to allocatedCredit?
-        ReturnModel.set({ReturnDate: new Date("1/1/2010")});
+        ReturnModel.set({returnDate: new Date("1/1/2010")});
         assert.equal(ReturnModel.get("allocatedCredit"), 300);
       });
       /**
@@ -882,17 +882,17 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       it("The document date of the tax adjustment should be the Return date.",
           function () {
-        assert.equal(ReturnModel.get("ReturnDate"), ReturnTaxModel.get("documentDate"));
+        assert.equal(ReturnModel.get("returnDate"), ReturnTaxModel.get("documentDate"));
       });
       /**
         @member -
         @memberof Return.prototype
         @description When an Return is loaded where "isPosted" is true, then the following
           attributes will be made read only:
-          lineItems, number, ReturnDate, terms, salesrep, commission, taxZone, saleType
+          lineItems, number, returnDate, terms, salesrep, commission, taxZone, saleType
       */
       it("When an Return is loaded where isPosted is true, then the following " +
-          "attributes will be made read only: lineItems, number, ReturnDate, terms, " +
+          "attributes will be made read only: lineItems, number, returnDate, terms, " +
           "salesrep, commission, taxZone, saleType", function (done) {
         var postedReturn = new XM.Return(),
           statusChanged = function () {
@@ -900,7 +900,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
               postedReturn.off("statusChange", statusChanged);
               assert.isTrue(postedReturn.isReadOnly("lineItems"));
               assert.isTrue(postedReturn.isReadOnly("number"));
-              assert.isTrue(postedReturn.isReadOnly("ReturnDate"));
+              assert.isTrue(postedReturn.isReadOnly("returnDate"));
               assert.isTrue(postedReturn.isReadOnly("terms"));
               assert.isTrue(postedReturn.isReadOnly("salesRep"));
               assert.isTrue(postedReturn.isReadOnly("commission"));
@@ -1405,7 +1405,7 @@ does the following
 will be made read only:
   > lineItems
   > number
-  > ReturnDate
+  > returnDate
   > terms
   > salesrep
   > commission
