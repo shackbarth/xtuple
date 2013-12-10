@@ -233,13 +233,13 @@ test model.setIfExists
         @property {Quantity} quantity
         @property {Unit} quantityUnit
         @property {Number} quantityUnitRatio
-        @property {Quantity} toCredit
+        @property {Quantity} credited
         @property {Number} discountPercentFromSale
         @property {Number} customerPrice
         @property {SalesPrice} price
         @property {Unit} priceUnit
         @property {Number} priceUnitRatio
-        @property {ExtendedPrice} "extendedPrice" = toCredit * quantityUnitRatio *
+        @property {ExtendedPrice} "extendedPrice" = credited * quantityUnitRatio *
         (price / priceUnitRatio)
         @property {Number} notes
         @property {TaxType} taxType
@@ -305,51 +305,51 @@ test model.setIfExists
       /**
         @member -
         @memberof ReturnLine.prototype
-        @description returned and toCredit values can be fractional only if the item allows it
+        @description quantity and credited values can be fractional only if the item allows it
       */
-      it("When the item isFractional attribute=== false,decimal numbers should not be allowed " +
-          "for returned and toCredit values.", function () {
-        lineModel.set({returned: 1, toCredit: 1.5});
+      it("When the item isFractional attribute === false, decimal numbers should not be allowed " +
+          "for quantity and credited values.", function () {
+        lineModel.set({quantity: 1, credited: 1.5});
         assert.isObject(lineModel.validate(lineModel.attributes));
-        lineModel.set({returned: 2});
+        lineModel.set({credited: 2});
         assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
-        lineModel.set({returned: 1.5});
+        lineModel.set({quantity: 1.5});
         assert.isObject(lineModel.validate(lineModel.attributes));
-        lineModel.set({returned: 2});
+        lineModel.set({quantity: 2});
         assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
       });
       it("When the item isFractional attribute === true, decimal numbers should be allowed " +
-          "for returned values.", function (done) {
-        lineModel.set({item: bpaint, returned: 1.5});
+          "for quantity values.", function (done) {
+        lineModel.set({item: bpaint, quantity: 1.5});
         setTimeout(function () {
           assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
           done();
         }, 1900); // wait for line._isItemFractional to get updated from the item
       });
       it("When the item isFractional attribute === true, decimal numbers should be allowed " +
-          "for toCredit values.", function () {
-        lineModel.set({returned: 1.5, toCredit: 2});
+          "for credited values.", function () {
+        lineModel.set({quantity: 1.5, credited: 2});
         assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
       });
       /**
         @member -
         @memberof ReturnLine.prototype
-        @description Returned and toCredit should only allow positive values.
+        @description Returned and credited should only allow positive values.
       */
       it("Returned should only allow positive values", function () {
-        lineModel.set({returned: -1});
+        lineModel.set({quantity: -1});
         assert.isObject(lineModel.validate(lineModel.attributes));
-        lineModel.set({returned: 0});
+        lineModel.set({quantity: 0});
         assert.isObject(lineModel.validate(lineModel.attributes));
-        lineModel.set({returned: 2});
+        lineModel.set({quantity: 2});
         assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
       });
-      it("toCredit should only allow positive values", function () {
-        lineModel.set({toCredit: -1});
+      it("credited should only allow positive values", function () {
+        lineModel.set({credited: -1});
         assert.isObject(lineModel.validate(lineModel.attributes));
-        lineModel.set({toCredit: 0});
+        lineModel.set({credited: 0});
         assert.isObject(lineModel.validate(lineModel.attributes));
-        lineModel.set({toCredit: 2});
+        lineModel.set({credited: 2});
         assert.isUndefined(JSON.stringify(lineModel.validate(lineModel.attributes)));
       });
       /**
@@ -399,7 +399,7 @@ test model.setIfExists
         assert.isTrue(ReturnModel.isReadOnly("currency"));
       });
       it.skip("XM.ReturnLine should have a calculatePrice function that retrieves a price from " +
-          "the customer.itemPrice dispatch function based on the 'toCredit' value.", function () {
+          "the customer.itemPrice dispatch function based on the 'credited' value.", function () {
         // TODO: put under test (code is written)
         assert.fail();
       });
@@ -502,13 +502,13 @@ test model.setIfExists
         @memberof Return.prototype
         @description The Return numbering policy can be determined by the user.
       */
-      it("XM.Return should check the setting for InvcNumberGeneration to determine " + //Please change the variable InvcNumberGeneration accordingly
+      it("XM.Return should check the setting for CMNumberGeneration to determine " + //Please change the variable InvcNumberGeneration accordingly
           "numbering policy", function () {
         var model;
-        XT.session.settings.set({InvcNumberGeneration: "M"});
+        XT.session.settings.set({CMNumberGeneration: "M"});
         model = new XM.Return();
         assert.equal(model.numberPolicy, "M");
-        XT.session.settings.set({InvcNumberGeneration: "A"});
+        XT.session.settings.set({CMNumberGeneration: "A"});
         model = new XM.Return();
         assert.equal(model.numberPolicy, "A");
       });
@@ -561,8 +561,7 @@ test model.setIfExists
       it("A model called XM.ReturnListItem extending XM.Info should exist", function () {
         assert.isFunction(XM.ReturnListItem);
         var ReturnListItemModel = new XM.ReturnListItem(),
-          attrs = ["number", "isPrinted", "customer", "returnDate", "total", "isPosted", "isOpen",
-            "isVoid", "orderNumber"];
+          attrs = ["number", "customer", "returnDate", "total", "isPosted", "isVoid"];
 
         assert.isTrue(ReturnListItemModel instanceof XM.Info);
         assert.equal(ReturnListItemModel.idAttribute, "number");
@@ -570,16 +569,16 @@ test model.setIfExists
       });
       it("Only users that have ViewCreditMemos or MaintainCreditMemos may read " +
           "XV.ReturnListItem", function () {
-        XT.session.privileges.attributes.ViewMiscReturns = false;
-        XT.session.privileges.attributes.MaintainMiscReturns = false;
+        XT.session.privileges.attributes.ViewCreditMemos = false;
+        XT.session.privileges.attributes.MaintainCreditMemos = false;
         assert.isFalse(XM.ReturnListItem.canRead());
 
-        XT.session.privileges.attributes.ViewMiscReturns = true;
-        XT.session.privileges.attributes.MaintainMiscReturns = false;
+        XT.session.privileges.attributes.ViewCreditMemos = true;
+        XT.session.privileges.attributes.MaintainCreditMemos = false;
         assert.isTrue(XM.ReturnListItem.canRead());
 
-        XT.session.privileges.attributes.ViewMiscReturns = false;
-        XT.session.privileges.attributes.MaintainMiscReturns = true;
+        XT.session.privileges.attributes.ViewCreditMemos = false;
+        XT.session.privileges.attributes.MaintainCreditMemos = true;
         assert.isTrue(XM.ReturnListItem.canRead());
       });
       it("XM.ReturnListItem is not editable", function () {
@@ -607,10 +606,10 @@ test model.setIfExists
       */
       it("A model called XM.ReturnRelation extending XM.Info should exist with " +
           "attributes number (the idAttribute) " +
-          "customer, returnDate, isPosted, isOpen and isVoid", function () {
+          "customer, returnDate, isPosted and isVoid", function () {
         assert.isFunction(XM.ReturnRelation);
         var ReturnRelationModel = new XM.ReturnRelation(),
-          attrs = ["number", "customer", "returnDate", "isPosted", "isOpen", "isVoid"];
+          attrs = ["number", "customer", "returnDate", "isPosted", "isVoid"];
 
         assert.isTrue(ReturnRelationModel instanceof XM.Info);
         assert.equal(ReturnRelationModel.idAttribute, "number");
@@ -636,37 +635,31 @@ test model.setIfExists
           "populated from the customer: billtoName (= customer.name), billtoAddress1, " +
           "billtoAddress2, billtoAddress3, billtoCity, billtoState, billtoPostalCode, " +
           "billtoCountry should be populated by customer.billingContact.address." +
-          "salesRep, commission, terms, taxZone, currency, billtoPhone " +
-          "(= customer.billingContact.phone)", function () {
+          "salesRep, commission, taxZone, currency ", function () {
         assert.isUndefined(ReturnModel.get("billtoName"));
         ReturnModel.set({customer: ttoys});
         assert.equal(ReturnModel.get("billtoName"), "Tremendous Toys Incorporated");
         assert.equal(ReturnModel.get("billtoAddress2"), "101 Toys Place");
-        assert.equal(ReturnModel.get("billtoPhone"), "703-931-4269");
         assert.isString(ReturnModel.getValue("salesRep.number"),
           ttoys.getValue("salesRep.number"));
         assert.equal(ReturnModel.getValue("commission"), 0.075);
-        assert.equal(ReturnModel.getValue("terms.code"), "2-10N30");
         assert.equal(ReturnModel.getValue("taxZone.code"), "VA TAX");
         assert.equal(ReturnModel.getValue("currency.abbreviation"), "USD");
       });
       it("The following fields will be set to read only if the customer does not allow " +
           "free form billto: billtoName, billtoAddress1, billtoAddress2, billtoAddress3, " +
-          "billtoCity, billtoState, billtoPostalCode, billtoCountry, billtoPhone", function () {
+          "billtoCity, billtoState, billtoPostalCode, billtoCountry", function () {
         assert.isFalse(ReturnModel.isReadOnly("billtoName"), "TTOYS Name");
         assert.isFalse(ReturnModel.isReadOnly("billtoAddress3"), "TTOYS Address3");
-        assert.isFalse(ReturnModel.isReadOnly("billtoPhone"), "TTOYS Phone");
         ReturnModel.set({customer: vcol});
         assert.isTrue(ReturnModel.isReadOnly("billtoName"), "VCOL Name");
         assert.isTrue(ReturnModel.isReadOnly("billtoAddress3"), "VCOL Address3");
-        assert.isTrue(ReturnModel.isReadOnly("billtoPhone"), "VCOL Phone");
       });
       it("If the customer attribute is empty, the above fields should be unset.", function () {
         assert.isString(ReturnModel.get("billtoName"));
         ReturnModel.set({customer: null});
         assert.isUndefined(ReturnModel.get("billtoName"));
         assert.isUndefined(ReturnModel.get("billtoAddress2"));
-        assert.isUndefined(ReturnModel.get("billtoPhone"));
         assert.isNull(ReturnModel.get("salesRep"));
         assert.isNull(ReturnModel.get("terms"));
         assert.isNull(ReturnModel.get("taxZone"));
@@ -691,9 +684,9 @@ test model.setIfExists
       /**
         @member -
         @memberof ReturnLine.prototype
-        @description If price or toCredit change, extendedPrice should be recalculated.
+        @description If price or credited change, extendedPrice should be recalculated.
       */
-      it("If price or toCredit change, extendedPrice should be recalculated.", function () {
+      it("If price or credited change, extendedPrice should be recalculated.", function () {
         assert.equal(lineModel.get("extendedPrice"), 98.91);
       });
       /**
@@ -701,7 +694,7 @@ test model.setIfExists
         @memberof ReturnLine.prototype
         @description When billed is changed extendedPrice should be recalculated.
       */
-      it("When toCredit is changed extendedPrice should be recalculated", function (done) {
+      it("When credited is changed extendedPrice should be recalculated", function (done) {
         lineModel.set({billed: 20});
         setTimeout(function () {
           assert.equal(lineModel.get("extendedPrice"), 197.82);
@@ -1263,7 +1256,7 @@ test model.setIfExists
   };
 
   exports.spec = spec;
-  //exports.additionalTests = additionalTests;
+  exports.additionalTests = additionalTests;
 
 /*
 
