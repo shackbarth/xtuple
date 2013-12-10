@@ -1022,12 +1022,12 @@ test model.setIfExists
         @memberof Return.prototype
         @description The Return list should support multiple selections
       */
-      it.skip("The Return list should support multiple selections", function () {
+      it("The Return list should support multiple selections", function () {
         var list = new XV.ReturnList();
         assert.isTrue(list.getMultiSelect());
         // XXX it looks like trying to delete multiple items at once only deletes the first
       });
-      it.skip("The Return list has a parameter widget", function () {
+      it("The Return list has a parameter widget", function () {
         /*
           * The Return list should use a parameter widget that has the following options:
             > Returns
@@ -1053,13 +1053,13 @@ test model.setIfExists
         @memberof Return.prototype
         @description The ReturnList should be printable
       */
-      it.skip("XV.ReturnList should be printable", function () {
+      it("XV.ReturnList should be printable", function () {
         var list = new XV.ReturnList();
         assert.isTrue(list.getAllowPrint());
       });
 
     });
-    describe.skip("Return workspace", function () {
+    describe("Return workspace", function () {
       it("Has a customer relation model that's mapped correctly", function () {
         // TODO: generalize this into a relation widget test that's run against
         // every relation widget in the app.
@@ -1178,15 +1178,6 @@ test model.setIfExists
       });
     });
     describe("Sales Extension", function () {
-      /**
-        @member -
-        @memberof Return.prototype
-        @description If the sales extension is installed you can link Returns to sales orders
-      */
-      it.skip("XM.ReturnSalesOrder", function () {
-        assert.isFunction(XM.ReturnSalesOrder);
-        assert.isTrue(XM.ReturnSalesOrder.prototype.isDocumentAssignment);
-      });
       /**
         @member -
         @memberof Return.prototype

@@ -1827,6 +1827,24 @@ trailing:true, white:true, strict: false*/
   });
 
   // ..........................................................
+  // RETURN
+  //
+
+  enyo.kind({
+    name: "XV.ReturnList",
+    kind: "XV.InvoiceList",
+    label: "_returns".loc(),
+    parameterWidget: "XV.ReturnListParameters",
+    collection: "XM.ReturnListItemCollection",
+    actions: [
+      {name: "void", prerequisite: "canVoid", method: "doVoid" },
+      {name: "post", prerequisite: "canPost", method: "doPost" },
+      {name: "print", prerequisite: "canPrint", method: "doPrint" }
+    ]
+  });
+  XV.registerModelList("XM.ReturnRelation", "XV.ReturnList");
+
+  // ..........................................................
   // SALE TYPE
   //
 

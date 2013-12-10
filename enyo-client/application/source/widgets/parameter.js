@@ -937,6 +937,15 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // RETURN
+  //
+
+  enyo.kind({
+    name: "XV.ReturnListParameters",
+    kind: "XV.InvoiceListParameters"
+  });
+
+  // ..........................................................
   // SALES ORDER
   //
 
