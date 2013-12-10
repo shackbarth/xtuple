@@ -191,63 +191,7 @@ white:true*/
     model.trigger("refreshView", model);
   };
 
-
-
-  /**
-    @class
-
-    @extends XM.Document
-  */
-  XM.Invoice = XM.Document.extend({
-    /** @scope XM.Invoice.prototype */
-
-    //
-    // Attributes
-    //
-    recordType: 'XM.Invoice',
-
-    documentKey: 'number',
-
-    documentDateKey: 'invoiceDate',
-
-    idAttribute: 'number',
-
-    numberPolicySetting: 'InvcNumberGeneration',
-
-    defaults: function () {
-      return {
-        invoiceDate: new Date(),
-        isPosted: false,
-        isVoid: false,
-        isPrinted: false,
-        commission: 0,
-        taxTotal: 0,
-        miscCharge: 0
-      };
-    },
-
-    readOnlyAttributes: [
-      "isPosted",
-      "isVoid",
-      "isPrinted",
-      "miscCharge",
-      "lineItems",
-      "allocatedCredit",
-      "authorizedCredit"
-    ],
-
-    // like sales order, minus contact info
-    billtoAttrArray: [
-      "billtoName",
-      "billtoAddress1",
-      "billtoAddress2",
-      "billtoAddress3",
-      "billtoCity",
-      "billtoState",
-      "billtoPostalCode",
-      "billtoCountry",
-      "billtoPhone",
-    ],
+  XM.InvoiceMixin = {
 
     //
     // Core functions
@@ -401,11 +345,15 @@ white:true*/
           billtoName: customer.get("name"),
           salesRep: customer.get("salesRep"),
           commission: customer.get("commission"),
-          terms: customer.get("terms"),
           taxZone: customer.get("taxZone"),
-          currency: customer.get("currency") || this.get("currency"),
-          billtoPhone: billtoContact && billtoContact.getValue("phone")
+          currency: customer.get("currency") || this.get("currency")
         };
+        if (this.recordType === "XM.Invoice") {
+          billtoAttrs = _.extend(billtoAttrs, {
+            terms: customer.get("terms"),
+            billtoPhone: billtoContact && billtoContact.getValue("phone")
+          });
+        }
         if (billtoAddress) {
           _.extend(billtoAttrs, {
             billtoAddress1: billtoAddress.getValue("line1"),
@@ -507,7 +455,65 @@ white:true*/
       return;
     }
 
-  });
+  };
+
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.Invoice = XM.Document.extend(_.extend({}, XM.InvoiceMixin, {
+    /** @scope XM.Invoice.prototype */
+
+    //
+    // Attributes
+    //
+    recordType: 'XM.Invoice',
+
+    documentKey: 'number',
+
+    documentDateKey: 'invoiceDate',
+
+    idAttribute: 'number',
+
+    numberPolicySetting: 'InvcNumberGeneration',
+
+    defaults: function () {
+      return {
+        invoiceDate: new Date(),
+        isPosted: false,
+        isVoid: false,
+        isPrinted: false,
+        commission: 0,
+        taxTotal: 0,
+        miscCharge: 0
+      };
+    },
+
+    readOnlyAttributes: [
+      "isPosted",
+      "isVoid",
+      "isPrinted",
+      "miscCharge",
+      "lineItems",
+      "allocatedCredit",
+      "authorizedCredit"
+    ],
+
+    // like sales order, minus contact info
+    billtoAttrArray: [
+      "billtoName",
+      "billtoAddress1",
+      "billtoAddress2",
+      "billtoAddress3",
+      "billtoCity",
+      "billtoState",
+      "billtoPostalCode",
+      "billtoCountry",
+      "billtoPhone",
+    ]
+
+  }));
 
   /**
     @class
@@ -615,24 +621,7 @@ white:true*/
 
   });
 
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.InvoiceLine = XM.Model.extend({
-    /** @scope XM.InvoiceLine.prototype */
-
-    //
-    // Attributes
-    //
-    recordType: 'XM.InvoiceLine',
-
-    idAttribute: 'uuid',
-
-    sellingUnits: undefined,
-
-    parentKey: "invoice",
+  XM.InvoiceLineMixin = {
 
     readOnlyAttributes: [
       "lineNumber",
@@ -719,7 +708,7 @@ white:true*/
         item = this.get("item"),
         priceUnit = this.get("priceUnit"),
         priceUnitRatio = this.get("priceUnitRatio"),
-        quantity = this.get("billed"),
+        quantity = this.get(this.quantityAttribute),
         quantityUnit = this.get("quantityUnit"),
         updatePolicy = settings.get("UpdatePriceLineEdit"),
         parent = this.getParent(),
@@ -911,7 +900,30 @@ white:true*/
 
       return XM.Document.prototype.validate.apply(this, arguments);
     }
-  });
+  };
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.InvoiceLine = XM.Model.extend(_.extend({}, XM.InvoiceLineMixin, {
+    /** @scope XM.InvoiceLine.prototype */
+
+    //
+    // Attributes
+    //
+    recordType: 'XM.InvoiceLine',
+
+    idAttribute: 'uuid',
+
+    sellingUnits: undefined,
+
+    parentKey: "invoice",
+
+    quantityAttribute: "billed"
+
+  }));
 
   /**
     @class

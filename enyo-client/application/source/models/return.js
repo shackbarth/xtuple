@@ -12,7 +12,7 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.Return = XM.Document.extend({
+  XM.Return = XM.Document.extend(_.extend({}, XM.InvoiceMixin, {
     /** @scope XM.Return.prototype */
 
     //
@@ -58,11 +58,10 @@ white:true*/
       "billtoCity",
       "billtoState",
       "billtoPostalCode",
-      "billtoCountry",
-      "billtoPhone",
+      "billtoCountry"
     ]
 
-  });
+  }));
 
   /**
     @class
@@ -169,7 +168,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.ReturnLine = XM.Model.extend({
+  XM.ReturnLine = XM.Model.extend(_.extend({}, XM.InvoiceLineMixin, {
     /** @scope XM.ReturnLine.prototype */
 
     //
@@ -187,9 +186,11 @@ white:true*/
       "lineNumber",
       "extendedPrice",
       "taxTotal"
-    ]
+    ],
 
-  });
+    quantityAttribute: "quantity"
+
+  }));
 
   /**
     @class

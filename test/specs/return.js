@@ -53,9 +53,7 @@ item_from_itemsite won't persist
     @property {String} billtoState
     @property {String} billtoPostalCode
     @property {String} billtoCountry
-    @property {String} billtoPhone
     @property {Currency} currency
-    @property {Terms} terms
     @property {SalesRep} salesRep
     @property {Percent} commission required, default 0
     @property {SaleType} saleType
@@ -73,17 +71,6 @@ item_from_itemsite won't persist
     @property {ReturnAllocation} allocations
     @property {ReturnTax} taxAdjustments
     @property {ReturnLine} lineItems
-    @property {ReturnContact} contacts
-    @property {ReturnAccount} accounts
-    @property {ReturnCustomer} customers
-    @property {ReturnFile} files
-    @property {ReturnUrl} urls
-    @property {ReturnItem} items
-    @property {String} orderNumber Added by sales extension
-    @property {Date} orderDate Added by sales extension
-    @property {ReturnSalesOrder} salesOrders Added by sales extension
-    @property {ReturnIncident} incidents Added by crm extension
-    @property {ReturnOpportunity} opportunities Added by crm extension
   */
   var spec = {
     recordType: "XM.Return",
@@ -112,7 +99,7 @@ item_from_itemsite won't persist
     attributes: ["number", "returnDate", "isPosted", "isVoid", "customer",
       "billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3",
       "billtoCity", "billtoState", "billtoPostalCode", "billtoCountry",
-      "billtoPhone", "currency", "terms", "salesRep", "commission",
+      "currency", "salesRep", "commission",
       "saleType", "customerPurchaseOrderNumber", "taxZone", "notes",
       "subtotal", "taxTotal", "miscCharge", "total", "balance", "allocations",
       "taxAdjustments", "lineItems",
