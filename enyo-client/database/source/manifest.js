@@ -17,6 +17,7 @@
     "public/tables/cashrcpt.sql",
     "public/tables/cohead.sql",
     "public/tables/comment.sql",
+    "public/tables/cmitem.sql",
     "public/tables/cntct.sql",
     "public/tables/coitem.sql",
     "public/tables/cohist.sql",
