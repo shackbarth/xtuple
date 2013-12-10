@@ -14,7 +14,7 @@ white:true*/
     var K = model.getClass(),
       item = model.get("item"),
       priceUnit = model.get("priceUnit"),
-      quantity = model.get("billed"),
+      quantity = model.get(model.quantityAttribute),
       quantityUnit = model.get("quantityUnit"),
       readOnlyCache = model.isReadOnly("price"),
       parent = model.getParent(),
@@ -71,7 +71,6 @@ white:true*/
     itemOptions.quantityUnit = quantityUnit;
     itemOptions.priceUnit = priceUnit;
     itemOptions.success = function (resp) {
-
       // Handle no price found scenario
       if (resp.price === -9999 && !model._invalidPriceRequest) {
         model.notify("_noPriceFound".loc(), { type: K.WARNING });
@@ -682,7 +681,7 @@ white:true*/
       returns {Object} Receiver
     */
     calculateExtendedPrice: function () {
-      var billed = this.get("billed") || 0,
+      var billed = this.get(this.quantityUnit) || 0,
         quantityUnitRatio = this.get("quantityUnitRatio"),
         priceUnitRatio = this.get("priceUnitRatio"),
         price = this.get("price") || 0,
