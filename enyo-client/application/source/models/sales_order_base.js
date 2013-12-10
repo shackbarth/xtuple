@@ -223,9 +223,7 @@ white:true*/
   };
 
 
-  /**
-    Mixin for shared quote or sales order functions.
-  */
+  // Shared between SalesOrder, SalesOrderLine, Quote, QuoteLine
   XM.SalesOrderBaseMixin = {
     isActive: function () {
       var K = XM.SalesOrderBase,
@@ -1103,6 +1101,7 @@ white:true*/
 
 
 
+  // Shared among SalesOrderLine, QuoteLine, InvoiceLine, ReturnLine
   XM.OrderLineMixin = {
     /**
       Updates `sellingUnits` array from server
@@ -1251,7 +1250,17 @@ white:true*/
     },
 
     validate: function () {
-      var quantity = this.get("quantity");
+      var that = this,
+        quantity = this.get("quantity"),
+        hasBilled = _.contains(this.getAttributeNames(), "billed"),
+        billed = this.get("billed"),
+        extraRequiredFields = [],
+        requiredFieldsError;
+
+      // Check billed
+      if (hasBilled && (billed || 0) <= 0) {
+        return XT.Error.clone('xt2013'); // TODO: generalize error message
+      }
 
       // Check quantity
       if ((quantity || 0) <= 0) {
@@ -1262,11 +1271,35 @@ white:true*/
       if (!this._unitIsFractional && Math.round(quantity) !== quantity) {
         return XT.Error.clone('xt2014');
       }
+      if (!this._unitIsFractional && hasBilled && Math.round(billed) !== billed) {
+        return XT.Error.clone('xt2014');
+      }
+
+      // Checks item values line up with isMiscellaneous, if applicable
+      if (_.contains(this.getAttributeNames(), "isMiscellaneous")) {
+        extraRequiredFields = this.get("isMiscellaneous") ?
+          ["itemNumber", "itemDescription", "salesCategory"] :
+          ["item"];
+      }
+
+      _.each(extraRequiredFields, function (req) {
+        var value = that.get(req),
+          params = {recordType: that.recordType};
+
+        if (value === undefined || value === null || value === "") {
+          params.attr = ("_" + req).loc();
+          requiredFieldsError = XT.Error.clone('xt1004', { params: params });
+        }
+      });
+      if (requiredFieldsError) {
+        return requiredFieldsError;
+      }
 
       return XM.Document.prototype.validate.apply(this, arguments);
     }
   };
 
+  // Shared between SalesOrderLine and QuoteLine
   XM.SalesOrderLineMixin = {
 
     sellingUnits: undefined,
@@ -1868,6 +1901,7 @@ white:true*/
   // CLASS METHODS
   //
 
+  // Shared between SalesOrderLine and QuoteLine
   XM.SalesOrderLineStaticMixin = {
 
     // ..........................................................

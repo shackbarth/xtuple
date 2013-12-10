@@ -839,56 +839,8 @@ white:true*/
 
     priceDidChange: function () {
       this.calculateExtendedPrice();
-    },
-
-    // Refactor potential: this is like the one on sales order line base, but
-    // checks billed as well, and validates isMiscellaneous
-    validate: function () {
-      var that = this,
-        quantity = this.get("quantity"),
-        billed = this.get("billed"),
-        isMiscellaneous = this.get("isMiscellaneous"),
-        extraRequiredFields,
-        requiredFieldsError;
-
-      // Check billed
-      if ((billed || 0) <= 0) {
-        return XT.Error.clone('xt2013'); // TODO: generalize error message
-      }
-
-      // Check quantity
-      if ((quantity || 0) <= 0) {
-        return XT.Error.clone('xt2013');
-      }
-
-      // Check order quantity against fractional setting
-      if (!this._unitIsFractional &&
-          (Math.round(quantity) !== quantity || Math.round(billed) !== billed)) {
-        return XT.Error.clone('xt2014');
-      }
-
-      // Checks item values line up with isMiscellaneous
-      extraRequiredFields = isMiscellaneous ?
-        ["itemNumber", "itemDescription", "salesCategory"] :
-        ["item"];
-
-      _.each(extraRequiredFields, function (req) {
-        var value = that.get(req),
-          params = {recordType: that.recordType};
-
-        if (value === undefined || value === null || value === "") {
-          params.attr = ("_" + req).loc();
-          requiredFieldsError = XT.Error.clone('xt1004', { params: params });
-        }
-      });
-      if (requiredFieldsError) {
-        return requiredFieldsError;
-
-      }
-
-
-      return XM.Document.prototype.validate.apply(this, arguments);
     }
+
   };
 
   /**

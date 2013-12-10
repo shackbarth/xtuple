@@ -168,7 +168,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.ReturnLine = XM.Model.extend(_.extend({}, XM.InvoiceLineMixin, {
+  XM.ReturnLine = XM.Model.extend(_.extend({}, XM.OrderLineMixin, XM.InvoiceLineMixin, {
     /** @scope XM.ReturnLine.prototype */
 
     //
