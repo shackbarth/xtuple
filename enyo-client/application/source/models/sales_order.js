@@ -149,12 +149,7 @@ white:true*/
     }
   });
 
-  /**
-    @class
-
-    @extends XM.SalesOrderLineBase
-  */
-  XM.SalesOrderLine = XM.SalesOrderLineBase.extend(/** @lends XM.SalesOrderLine.prototype */{
+  XM.SalesOrderLine = XM.SalesOrderLineBase.extend(_.extend({}, XM.OrderLineMixin, {
 
     recordType: 'XM.SalesOrderLine',
 
@@ -173,7 +168,7 @@ white:true*/
 
       return defaults;
     }
-  });
+  }));
 
 
   /**

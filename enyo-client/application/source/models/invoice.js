@@ -347,11 +347,11 @@ white:true*/
           taxZone: customer.get("taxZone"),
           currency: customer.get("currency") || this.get("currency")
         };
-        if (this.recordType === "XM.Invoice") {
-          billtoAttrs = _.extend(billtoAttrs, {
-            terms: customer.get("terms"),
-            billtoPhone: billtoContact && billtoContact.getValue("phone")
-          });
+        if (_.contains(this.getAttributeNames(), "terms")) {
+          billtoAttrs.terms = customer.get("terms");
+        }
+        if (_.contains(this.getAttributeNames(), "billtoPhone")) {
+          billtoAttrs.billtoPhone = billtoContact && billtoContact.getValue("phone");
         }
         if (billtoAddress) {
           _.extend(billtoAttrs, {
@@ -657,16 +657,6 @@ white:true*/
     },
 
     //
-    // Shared code with sales order
-    // temp until we refactor these together
-    //
-    fetchSellingUnits: XM.SalesOrderLineBase.prototype.fetchSellingUnits,
-    priceUnitDidChange: XM.SalesOrderLineBase.prototype.priceUnitDidChange,
-    quantityUnitDidChange: XM.SalesOrderLineBase.prototype.quantityUnitDidChange,
-    recalculateParent: XM.SalesOrderLineBase.prototype.recalculateParent,
-    save: XM.SalesOrderLineBase.prototype.save,
-
-    //
     // Model-specific functions
     //
     billedDidChange: function () {
@@ -681,7 +671,7 @@ white:true*/
       returns {Object} Receiver
     */
     calculateExtendedPrice: function () {
-      var billed = this.get(this.quantityUnit) || 0,
+      var billed = this.get(this.quantityAttribute) || 0,
         quantityUnitRatio = this.get("quantityUnitRatio"),
         priceUnitRatio = this.get("priceUnitRatio"),
         price = this.get("price") || 0,
@@ -906,7 +896,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.InvoiceLine = XM.Model.extend(_.extend({}, XM.InvoiceLineMixin, {
+  XM.InvoiceLine = XM.Model.extend(_.extend({}, XM.OrderLineMixin, XM.InvoiceLineMixin, {
     /** @scope XM.InvoiceLine.prototype */
 
     //

@@ -1263,7 +1263,7 @@ item_from_itemsite won't persist
   };
 
   exports.spec = spec;
-  exports.additionalTests = additionalTests;
+  //exports.additionalTests = additionalTests;
 
 
 
