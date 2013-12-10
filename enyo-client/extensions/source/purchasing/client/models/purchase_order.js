@@ -113,10 +113,81 @@ white:true*/
 
       handlers: {
         "add:lineItems": "lineItemsChanged",
+        "add:lineItems remove:lineItems", "calculateTotals",
         "remove:lineItems": "lineItemsChanged",
         "change:status": "purchaseOrderStatusChanged",
         "change:purchaseType": "purchaseTypeChanged",
         "change:vendor": "vendorChanged"
+      },
+
+      calculateTotals: function () {
+        var freight = model.get("freight") || 0.0,
+          scale = XT.MONEY_SCALE,
+          add = XT.math.add,
+          subtract = XT.math.subtract,
+          subtotals = [],
+          taxDetails = [],
+          costs = [],
+          freightSubtotals [],
+          subtotal,
+          freightSubtotal,
+          taxTotal = 0.0,
+          total,
+          taxCodes;
+
+        // Collect line item detail
+        var forEachCalcFunction = function (lineItem) {
+          var extPrice = lineItem.get('extendedPrice') || 0,
+            quantity = lineItem.get("quantity") || 0,
+            freight = lineItem.get("freight") || 0,
+            item = lineItem.get("item"),
+            quantityUnitRatio = lineItem.get("quantityUnitRatio");
+
+          subtotals.push(extPrice);
+          freightSubtotals.push(freight);
+          taxDetails = taxDetails.concat(lineItem.taxDetail);
+        };
+
+        _.each(model.get('lineItems').models, forEachCalcFunction);
+
+        // Add freight taxes to the mix
+        taxDetails = taxDetails.concat(model.freightTaxDetail);
+
+        // Total taxes
+        // First group amounts by tax code
+        taxCodes = _.groupBy(taxDetails, function (detail) {
+          return detail.taxCode.id;
+        });
+
+        // Loop through each tax code group and subtotal
+        _.each(taxCodes, function (group) {
+          var taxes = [],
+            subtotal;
+
+          // Collect array of taxes
+          _.each(group, function (detail) {
+            taxes.push(detail.tax);
+          });
+
+          // Subtotal first to make sure we round by subtotal
+          subtotal = add(taxes, 6);
+
+          // Now add to tax grand total
+          taxTotal = add(taxTotal, subtotal, scale);
+        });
+
+        // Totaling calculations
+        freightSubtotal = add(freightSubtotals, scale);
+        subtotal = add(subtotals, scale);
+        margin = subtract(subtotal, costTotal, scale);
+        subtotals = subtotals.concat([freightSubtotal, freight, taxTotal]);
+        total = add(subtotals, scale);
+
+        // Set values
+        model.set("freightSubtotal", freightSubtotal);
+        model.set("subtotal", subtotal);
+        model.set("taxTotal", taxTotal);
+        model.set("total", total);
       },
 
       initialize: function (attributes, options) {
@@ -367,6 +438,13 @@ white:true*/
         "change:purchaseOrder": "purchaseOrderChanged"
       },
 
+      taxDetail: null,
+
+      initialize: function (attributes, options) {
+        XM.Model.prototype.initialize.apply(this, arguments);
+        this.taxDetail = [];
+      },
+
       destroy: function (options) {
         var status = this.getParent().get("status"),
           K = XM.PurchaseOrder,
@@ -440,6 +518,8 @@ white:true*/
       statusChanged: function () {
         if (this.getStatus() === XM.Model.READY_CLEAN) {
           this.isMiscellaneousChanged();
+        } else if (this.isDestroyed()) {
+          this.get("purchaseOrder").calculateTotals();
         }
       }
 
