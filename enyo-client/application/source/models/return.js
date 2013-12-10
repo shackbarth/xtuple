@@ -108,12 +108,16 @@ white:true*/
     },
 
     canPost: function (callback) {
-      callback(XT.session.privileges.get("PostCreditMemos") && !this.get("isPosted"));
+      callback(XT.session.privileges.get("PostARDocuments") && !this.get("isPosted"));
     },
 
     canVoid: function (callback) {
-      var response = XT.session.privileges.get("VoidCreditMemos") && this.get("isPosted");
+      var response = XT.session.privileges.get("VoidPostedARCreditMemos") && this.get("isPosted");
       callback(response || false);
+    },
+
+    canPrint: function (callback) {
+      callback(XT.session.privileges.get("PrintCreditMemos") || false);
     },
 
     // TODO: this.dispatch(this.editableModel...

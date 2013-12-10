@@ -26,7 +26,7 @@ test model.setIfExists
     smoke = require("../lib/smoke"),
     common = require("../lib/common"),
     assert = require("chai").assert,
-    ReturnModel,
+    returnModel,
     lineModel,
     allocationModel,
     ReturnTaxModel,
@@ -171,8 +171,8 @@ test model.setIfExists
             });
           },
           function (done) {
-            common.initializeModel(ReturnModel, XM.Return, function (err, model) {
-              ReturnModel = model;
+            common.initializeModel(returnModel, XM.Return, function (err, model) {
+              returnModel = model;
               done();
             });
           },
@@ -383,10 +383,10 @@ test model.setIfExists
       it("lineNumber must auto-number itself sequentially", function () {
         var dummyModel = new XM.ReturnLine();
         assert.isUndefined(lineModel.get("lineNumber"));
-        ReturnModel.get("lineItems").add(dummyModel);
-        ReturnModel.get("lineItems").add(lineModel);
+        returnModel.get("lineItems").add(dummyModel);
+        returnModel.get("lineItems").add(lineModel);
         assert.equal(lineModel.get("lineNumber"), 2);
-        ReturnModel.get("lineItems").remove(dummyModel);
+        returnModel.get("lineItems").remove(dummyModel);
         // TODO: be more thorough
       });
       /**
@@ -396,7 +396,7 @@ test model.setIfExists
       */
       it("Currency field should be read-only after a line item is added to the Return",
           function () {
-        assert.isTrue(ReturnModel.isReadOnly("currency"));
+        assert.isTrue(returnModel.isReadOnly("currency"));
       });
       it.skip("XM.ReturnLine should have a calculatePrice function that retrieves a price from " +
           "the customer.itemPrice dispatch function based on the 'credited' value.", function () {
@@ -636,34 +636,33 @@ test model.setIfExists
           "billtoAddress2, billtoAddress3, billtoCity, billtoState, billtoPostalCode, " +
           "billtoCountry should be populated by customer.billingContact.address." +
           "salesRep, commission, taxZone, currency ", function () {
-        assert.isUndefined(ReturnModel.get("billtoName"));
-        ReturnModel.set({customer: ttoys});
-        assert.equal(ReturnModel.get("billtoName"), "Tremendous Toys Incorporated");
-        assert.equal(ReturnModel.get("billtoAddress2"), "101 Toys Place");
-        assert.isString(ReturnModel.getValue("salesRep.number"),
+        assert.isUndefined(returnModel.get("billtoName"));
+        returnModel.set({customer: ttoys});
+        assert.equal(returnModel.get("billtoName"), "Tremendous Toys Incorporated");
+        assert.equal(returnModel.get("billtoAddress2"), "101 Toys Place");
+        assert.isString(returnModel.getValue("salesRep.number"),
           ttoys.getValue("salesRep.number"));
-        assert.equal(ReturnModel.getValue("commission"), 0.075);
-        assert.equal(ReturnModel.getValue("taxZone.code"), "VA TAX");
-        assert.equal(ReturnModel.getValue("currency.abbreviation"), "USD");
+        assert.equal(returnModel.getValue("commission"), 0.075);
+        assert.equal(returnModel.getValue("taxZone.code"), "VA TAX");
+        assert.equal(returnModel.getValue("currency.abbreviation"), "USD");
       });
       it("The following fields will be set to read only if the customer does not allow " +
           "free form billto: billtoName, billtoAddress1, billtoAddress2, billtoAddress3, " +
           "billtoCity, billtoState, billtoPostalCode, billtoCountry", function () {
-        assert.isFalse(ReturnModel.isReadOnly("billtoName"), "TTOYS Name");
-        assert.isFalse(ReturnModel.isReadOnly("billtoAddress3"), "TTOYS Address3");
-        ReturnModel.set({customer: vcol});
-        assert.isTrue(ReturnModel.isReadOnly("billtoName"), "VCOL Name");
-        assert.isTrue(ReturnModel.isReadOnly("billtoAddress3"), "VCOL Address3");
+        assert.isFalse(returnModel.isReadOnly("billtoName"), "TTOYS Name");
+        assert.isFalse(returnModel.isReadOnly("billtoAddress3"), "TTOYS Address3");
+        returnModel.set({customer: vcol});
+        assert.isTrue(returnModel.isReadOnly("billtoName"), "VCOL Name");
+        assert.isTrue(returnModel.isReadOnly("billtoAddress3"), "VCOL Address3");
       });
       it("If the customer attribute is empty, the above fields should be unset.", function () {
-        assert.isString(ReturnModel.get("billtoName"));
-        ReturnModel.set({customer: null});
-        assert.isUndefined(ReturnModel.get("billtoName"));
-        assert.isUndefined(ReturnModel.get("billtoAddress2"));
-        assert.isNull(ReturnModel.get("salesRep"));
-        assert.isNull(ReturnModel.get("terms"));
-        assert.isNull(ReturnModel.get("taxZone"));
-        assert.isNull(ReturnModel.get("currency"));
+        assert.isString(returnModel.get("billtoName"));
+        returnModel.set({customer: null});
+        assert.isUndefined(returnModel.get("billtoName"));
+        assert.isUndefined(returnModel.get("billtoAddress2"));
+        assert.isNull(returnModel.get("salesRep"));
+        assert.isNull(returnModel.get("taxZone"));
+        assert.isNull(returnModel.get("currency"));
       });
       /**
         @member -
@@ -672,10 +671,10 @@ test model.setIfExists
       */
       it("If the quantityUnit or sellingUnit are changed, \"calculatePrice\" should be " +
           "run.", function (done) {
-        ReturnModel.set({customer: ttoys});
+        returnModel.set({customer: ttoys});
         assert.isUndefined(lineModel.get("price"));
         lineModel.set({item: btruck});
-        lineModel.set({billed: 10});
+        lineModel.set({credited: 10});
         setTimeout(function () {
           assert.equal(lineModel.get("price"), 9.8910);
           done();
@@ -692,10 +691,10 @@ test model.setIfExists
       /**
         @member -
         @memberof ReturnLine.prototype
-        @description When billed is changed extendedPrice should be recalculated.
+        @description When credited is changed extendedPrice should be recalculated.
       */
       it("When credited is changed extendedPrice should be recalculated", function (done) {
-        lineModel.set({billed: 20});
+        lineModel.set({credited: 20});
         setTimeout(function () {
           assert.equal(lineModel.get("extendedPrice"), 197.82);
           done();
@@ -712,19 +711,19 @@ test model.setIfExists
         // frustratingly nondeterministic
         this.timeout(9000);
         var outstandingCreditChanged = function () {
-          if (ReturnModel.get("outstandingCredit")) {
+          if (returnModel.get("outstandingCredit")) {
             // second time, with valid currency
-            ReturnModel.off("change:outstandingCredit", outstandingCreditChanged);
-            assert.equal(ReturnModel.get("outstandingCredit"), 25250303.25);
+            returnModel.off("change:outstandingCredit", outstandingCreditChanged);
+            assert.equal(returnModel.get("outstandingCredit"), 25250303.25);
             done();
           } else {
             // first time, with invalid currency
-            ReturnModel.set({currency: usd});
+            returnModel.set({currency: usd});
           }
         };
 
-        ReturnModel.on("change:outstandingCredit", outstandingCreditChanged);
-        ReturnModel.set({currency: null});
+        returnModel.on("change:outstandingCredit", outstandingCreditChanged);
+        returnModel.set({currency: null});
       });
       /**
         @member -
@@ -734,10 +733,10 @@ test model.setIfExists
       */
       it("AllocatedCredit should be recalculated when XM.ReturnAllocation records " +
           "are added or removed", function () {
-        assert.isUndefined(ReturnModel.get("allocatedCredit"));
+        assert.isUndefined(returnModel.get("allocatedCredit"));
         allocationModel.set({currency: usd, amount: 200});
-        ReturnModel.get("allocations").add(allocationModel);
-        assert.equal(ReturnModel.get("allocatedCredit"), 200);
+        returnModel.get("allocations").add(allocationModel);
+        assert.equal(returnModel.get("allocatedCredit"), 200);
       });
       /**
         @member -
@@ -746,12 +745,8 @@ test model.setIfExists
       */
       it("When the Return date is changed allocated credit should be recalculated", function () {
         allocationModel.set({currency: usd, amount: 300});
-        assert.equal(ReturnModel.get("allocatedCredit"), 200);
-        // XXX This is a wacky way to test this.
-        // XXX Shouldn't the change to the allocated credit itself trigger a change
-          //to allocatedCredit?
-        ReturnModel.set({returnDate: new Date("1/1/2010")});
-        assert.equal(ReturnModel.get("allocatedCredit"), 300);
+        returnModel.set({returnDate: new Date("1/1/2010")});
+        assert.equal(returnModel.get("allocatedCredit"), 300);
       });
       /**
         @member -
@@ -761,9 +756,9 @@ test model.setIfExists
       */
       it("When subtotal, totalTax or miscCharge are changed, the total should be recalculated",
           function () {
-        assert.equal(ReturnModel.get("total"), 207.71);
-        ReturnModel.set({miscCharge: 40});
-        assert.equal(ReturnModel.get("total"), 247.71);
+        assert.equal(returnModel.get("total"), 207.71);
+        returnModel.set({miscCharge: 40});
+        assert.equal(returnModel.get("total"), 247.71);
       });
       /**
         @member -
@@ -773,32 +768,32 @@ test model.setIfExists
       */
       it("TotalTax should be recalculated when taxZone changes.", function (done) {
         var totalChanged = function () {
-          ReturnModel.off("change:total", totalChanged);
-          assert.equal(ReturnModel.get("taxTotal"), 10.88);
-          assert.equal(ReturnModel.get("total"), 248.70);
+          returnModel.off("change:total", totalChanged);
+          assert.equal(returnModel.get("taxTotal"), 10.88);
+          assert.equal(returnModel.get("total"), 248.70);
           done();
         };
 
-        assert.equal(ReturnModel.get("taxTotal"), 9.89);
-        ReturnModel.on("change:total", totalChanged);
-        ReturnModel.set({taxZone: nctax});
+        assert.equal(returnModel.get("taxTotal"), 9.89);
+        returnModel.on("change:total", totalChanged);
+        returnModel.set({taxZone: nctax});
       });
       it("TotalTax should be recalculated when taxAdjustments are added or removed.",
           function (done) {
         var totalChanged = function () {
-          ReturnModel.off("change:total", totalChanged);
-          assert.equal(ReturnModel.get("taxTotal"), 20.88);
-          assert.equal(ReturnModel.get("total"), 258.70);
+          returnModel.off("change:total", totalChanged);
+          assert.equal(returnModel.get("taxTotal"), 20.88);
+          assert.equal(returnModel.get("total"), 258.70);
           done();
         };
 
         ReturnTaxModel.set({taxCode: nctaxCode, amount: 10.00});
-        ReturnModel.on("change:total", totalChanged);
-        ReturnModel.get("taxAdjustments").add(ReturnTaxModel);
+        returnModel.on("change:total", totalChanged);
+        returnModel.get("taxAdjustments").add(ReturnTaxModel);
       });
       it("The document date of the tax adjustment should be the Return date.",
           function () {
-        assert.equal(ReturnModel.get("returnDate"), ReturnTaxModel.get("documentDate"));
+        assert.equal(returnModel.get("returnDate"), ReturnTaxModel.get("documentDate"));
       });
       /**
         @member -
@@ -817,7 +812,6 @@ test model.setIfExists
               assert.isTrue(postedReturn.isReadOnly("lineItems"));
               assert.isTrue(postedReturn.isReadOnly("number"));
               assert.isTrue(postedReturn.isReadOnly("returnDate"));
-              assert.isTrue(postedReturn.isReadOnly("terms"));
               assert.isTrue(postedReturn.isReadOnly("salesRep"));
               assert.isTrue(postedReturn.isReadOnly("commission"));
               assert.isTrue(postedReturn.isReadOnly("taxZone"));
@@ -827,7 +821,7 @@ test model.setIfExists
           };
 
         postedReturn.on("statusChange", statusChanged);
-        postedReturn.fetch({number: "60004"});
+        postedReturn.fetch({number: "70000"});
       });
       /**
         @member -
@@ -837,7 +831,7 @@ test model.setIfExists
       */
       it("Balance should be recalculated when total, allocatedCredit, or outstandingCredit " +
           "are changed", function () {
-        assert.equal(ReturnModel.get("balance"), 0);
+        assert.equal(returnModel.get("balance"), 0);
       });
       /**
         @member -
@@ -845,7 +839,7 @@ test model.setIfExists
         @description When allocatedCredit or lineItems exist, currency should become read only.
       */
       it("When allocatedCredit or lineItems exist, currency should become read only.", function () {
-        assert.isTrue(ReturnModel.isReadOnly("currency"));
+        assert.isTrue(returnModel.isReadOnly("currency"));
       });
       /**
         @member -
@@ -854,18 +848,18 @@ test model.setIfExists
           at least one line item.
       */
       it("Save validation: The total must not be less than zero", function () {
-        ReturnModel.set({customer: ttoys, number: "98765"});
-        assert.isUndefined(JSON.stringify(ReturnModel.validate(ReturnModel.attributes)));
-        ReturnModel.set({total: -1});
-        assert.isObject(ReturnModel.validate(ReturnModel.attributes));
-        ReturnModel.set({total: 1});
-        assert.isUndefined(JSON.stringify(ReturnModel.validate(ReturnModel.attributes)));
+        returnModel.set({customer: ttoys, number: "98765"});
+        assert.isUndefined(JSON.stringify(returnModel.validate(returnModel.attributes)));
+        returnModel.set({total: -1});
+        assert.isObject(returnModel.validate(returnModel.attributes));
+        returnModel.set({total: 1});
+        assert.isUndefined(JSON.stringify(returnModel.validate(returnModel.attributes)));
       });
       it("Save validation: There must be at least one line item.", function () {
-        var lineItems = ReturnModel.get("lineItems");
-        assert.isUndefined(JSON.stringify(ReturnModel.validate(ReturnModel.attributes)));
+        var lineItems = returnModel.get("lineItems");
+        assert.isUndefined(JSON.stringify(returnModel.validate(returnModel.attributes)));
         lineItems.remove(lineItems.at(0));
-        assert.isObject(ReturnModel.validate(ReturnModel.attributes));
+        assert.isObject(returnModel.validate(returnModel.attributes));
       });
 
       it("XM.Return includes a function calculateAuthorizedCredit", function (done) {
@@ -880,10 +874,10 @@ test model.setIfExists
         > The result should be set on the authorizedCredit attribute
         > On response, recalculate the balance (HINT#: Do not attempt to use bindings for this!)
         */
-        assert.isFunction(ReturnModel.calculateAuthorizedCredit);
-        ReturnModel.calculateAuthorizedCredit();
+        assert.isFunction(returnModel.calculateAuthorizedCredit);
+        returnModel.calculateAuthorizedCredit();
         setTimeout(function () {
-          assert.equal(ReturnModel.get("authorizedCredit"), 0);
+          assert.equal(returnModel.get("authorizedCredit"), 0);
           done();
         }, 1900);
       });
@@ -925,7 +919,7 @@ test model.setIfExists
         @description A list view should exist called XV.ReturnList. Users can perform the following actions from the list: Delete unposted
           Returns where the user has the MaintainCreditMemos  privilege, Post unposted
           Returns where the user has the "PostARDocuments" privilege, Void posted Returns
-          where the user has the "VoidPostedARCreditMemo" privilege, Print Return forms where
+          where the user has the "VoidPostedARCreditMemos" privilege, Print Return forms where
           the user has the "PrintCreditMemos" privilege.
       */
       it("Delete unposted Returns where the user has the MaintainCreditMemos privilege",
@@ -948,7 +942,7 @@ test model.setIfExists
       it("Cannot delete Returns that are already posted", function (done) {
         var model = new XM.ReturnListItem();
         model.set({isPosted: true});
-        XT.session.privileges.attributes.MaintainMiscReturns = true;
+        XT.session.privileges.attributes.MaintainCreditMemos = true;
         model.couldDestroy(function (response) {
           assert.isFalse(response);
           done();
@@ -979,21 +973,21 @@ test model.setIfExists
           done();
         });
       });
-      it("Void posted Returns where the user has the VoidPostedARCreditMemo privilege",
+      it("Void posted Returns where the user has the VoidPostedARCreditMemos privilege",
           function (done) {
         var model = new XM.ReturnListItem();
         model.set({isPosted: true});
-        XT.session.privileges.attributes.VoidPostedARCreditMemo = true;
+        XT.session.privileges.attributes.VoidPostedARCreditMemos = true;
         model.canVoid(function (response) {
           assert.isTrue(response);
           done();
         });
       });
-      it("Cannot void Returns where the user has no VoidPostedARCreditMemo privilege",
+      it("Cannot void Returns where the user has no VoidPostedARCreditMemos privilege",
           function (done) {
         var model = new XM.ReturnListItem();
         model.set({isPosted: true});
-        XT.session.privileges.attributes.VoidPostedARCreditMemo = false;
+        XT.session.privileges.attributes.VoidPostedARCreditMemos = false;
         model.canVoid(function (response) {
           assert.isFalse(response);
           done();
@@ -1002,7 +996,7 @@ test model.setIfExists
       it("Cannot void Returns that are not already posted", function (done) {
         var model = new XM.ReturnListItem();
         model.set({isPosted: false});
-        XT.session.privileges.attributes.VoidPostedARCreditMemo = true;
+        XT.session.privileges.attributes.VoidPostedARCreditMemos = true;
         model.canVoid(function (response) {
           assert.isFalse(response);
           done();
@@ -1028,12 +1022,12 @@ test model.setIfExists
         @memberof Return.prototype
         @description The Return list should support multiple selections
       */
-      it("The Return list should support multiple selections", function () {
+      it.skip("The Return list should support multiple selections", function () {
         var list = new XV.ReturnList();
         assert.isTrue(list.getMultiSelect());
         // XXX it looks like trying to delete multiple items at once only deletes the first
       });
-      it("The Return list has a parameter widget", function () {
+      it.skip("The Return list has a parameter widget", function () {
         /*
           * The Return list should use a parameter widget that has the following options:
             > Returns
@@ -1059,13 +1053,13 @@ test model.setIfExists
         @memberof Return.prototype
         @description The ReturnList should be printable
       */
-      it("XV.ReturnList should be printable", function () {
+      it.skip("XV.ReturnList should be printable", function () {
         var list = new XV.ReturnList();
         assert.isTrue(list.getAllowPrint());
       });
 
     });
-    describe("Return workspace", function () {
+    describe.skip("Return workspace", function () {
       it("Has a customer relation model that's mapped correctly", function () {
         // TODO: generalize this into a relation widget test that's run against
         // every relation widget in the app.
@@ -1189,7 +1183,7 @@ test model.setIfExists
         @memberof Return.prototype
         @description If the sales extension is installed you can link Returns to sales orders
       */
-      it("XM.ReturnSalesOrder", function () {
+      it.skip("XM.ReturnSalesOrder", function () {
         assert.isFunction(XM.ReturnSalesOrder);
         assert.isTrue(XM.ReturnSalesOrder.prototype.isDocumentAssignment);
       });
@@ -1206,32 +1200,15 @@ test model.setIfExists
       */
       it("authorizedCredit", function () {
         // TODO: better testing
-        assert.equal(ReturnModel.get("authorizedCredit"), 0);
+        assert.equal(returnModel.get("authorizedCredit"), 0);
       });
       it("When currency or Return date is changed authorized credit should be" +
         "recalculated.", function () {
       });
       it.skip("When freight is changed the total should be recalculated", function () {
       });
-      /**
-        @member -
-        @memberof Return.prototype
-        @description sales extension order date defaults to today
-      */
-      it("Sales extension order date default today", function () {
-        assert.equal(ReturnModel.get("orderDate").getDate(), new Date().getDate());
-      });
     });
     describe("Project extension", function () {
-      /**
-        @member -
-        @memberof Return.prototype
-        @description If the project extension is installed you can link Returns to projects
-      */
-      it("XM.ReturnProject", function () {
-        assert.isFunction(XM.ReturnProject);
-        assert.isTrue(XM.ReturnProject.prototype.isDocumentAssignment);
-      });
       /**
         @member -
         @memberof Return.prototype

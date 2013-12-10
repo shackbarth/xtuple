@@ -200,10 +200,10 @@ white:true*/
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on("change:customer", this.customerDidChange);
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
-      this.on("change:invoiceDate add:taxAdjustments", this.setTaxAllocationDate);
-      this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
-      this.on("change:invoiceDate change:currency", this.calculateAuthorizedCredit);
-      this.on("change:invoiceDate add:allocations remove:allocations",
+      this.on("change:" + this.documentDateKey + " add:taxAdjustments", this.setTaxAllocationDate);
+      this.on("change:" + this.documentDateKey + " change:currency", this.calculateOutstandingCredit);
+      this.on("change:" + this.documentDateKey + " change:currency", this.calculateAuthorizedCredit);
+      this.on("change:" + this.documentDateKey + " add:allocations remove:allocations",
         this.calculateAllocatedCredit);
       this.on("add:lineItems remove:lineItems change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
       this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
@@ -241,8 +241,12 @@ white:true*/
     applyIsPostedRules: function () {
       var isPosted = this.get("isPosted");
 
-      this.setReadOnly(["lineItems", "number", "invoiceDate", "terms", "salesRep", "commission",
+      this.setReadOnly(["lineItems", "number", this.documentDateKey, "salesRep", "commission",
         "taxZone", "saleType", "taxAdjustments"], isPosted);
+
+      if (_.contains(this.getAttributeNames(), "terms")) {
+        this.setReadOnly("terms", isPosted);
+      }
     },
 
     /**
@@ -306,7 +310,7 @@ white:true*/
       this.dispatch("XM.Invoice", "outstandingCredit",
         [this.getValue("customer.number"),
           this.getValue("currency.abbreviation"),
-          this.getValue("invoiceDate")],
+          this.getValue(this.documentDateKey)],
         {success: success, error: error});
     },
 
@@ -410,9 +414,9 @@ white:true*/
       The document date on any misc tax adjustments should be the invoice date
     */
     setTaxAllocationDate: function () {
-      var invoiceDate = this.get("invoiceDate");
+      var documentDate = this.get(this.documentDateKey);
       _.each(this.get("taxAdjustments").models, function (taxAdjustment) {
-        taxAdjustment.set({documentDate: invoiceDate});
+        taxAdjustment.set({documentDate: documentDate});
       });
     },
 
@@ -639,7 +643,8 @@ white:true*/
     bindEvents: function (attributes, options) {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on("change:item", this.itemDidChange);
-      this.on("change:billed", this.billedDidChange);
+      this.on("change:billed", this.recalculatePrice);
+      this.on("change:credited", this.recalculatePrice);
       this.on('change:price', this.priceDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
@@ -657,10 +662,6 @@ white:true*/
     //
     // Model-specific functions
     //
-    billedDidChange: function () {
-      this.calculatePrice();
-      this.recalculateParent();
-    },
 
     // XXX with the uncommented stuff back in, it's identical to the one in salesOrderBase
     /**

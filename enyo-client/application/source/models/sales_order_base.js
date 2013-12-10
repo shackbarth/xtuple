@@ -1227,6 +1227,11 @@ white:true*/
       if (parent) { parent.calculateTotals(calcFreight); }
     },
 
+    recalculatePrice: function () {
+      this.calculatePrice();
+      this.recalculateParent();
+    },
+
     save: function () {
       var quantity = this.get("quantity"),
         quantityUnitRatio = this.get("quantityUnitRatio"),
@@ -1333,7 +1338,7 @@ white:true*/
       this.on("change:item", this.itemDidChange);
       this.on("change:site", this.siteDidChange);
       this.on("change:price", this.priceDidChange);
-      this.on('change:quantity', this.quantityDidChange);
+      this.on('change:quantity', this.recalculatePrice);
       this.on('change:unitCost', this.calculateMarkupPrice);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
@@ -1708,7 +1713,6 @@ white:true*/
       return this;
     },
 
-
     itemDidChange: function () {
       var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
@@ -1860,11 +1864,6 @@ white:true*/
       this.calculatePercentages();
     },
 
-    quantityDidChange: function () {
-      this.calculatePrice();
-      this.recalculateParent();
-    },
-
     scheduleDateDidChange: function () {
       var item = this.getValue("item"),
         parent = this.getParent(),
@@ -1901,8 +1900,6 @@ white:true*/
         this.setReadOnly("site");
       }
     },
-
-
 
   };
 
