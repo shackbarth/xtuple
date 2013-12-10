@@ -77,7 +77,9 @@ trailing:true, white:true, strict:false*/
             editor: {kind: "XV.QuantityWidget", attr: "quantity",
               name: "quantityWidget"}},
           {readOnlyAttr: "vendorUnit",
-            editor: {kind: "XV.InputWidget", attr: "vendorUnit"}}
+            editor: {kind: "XV.InputWidget", attr: "vendorUnit"}},
+          {readOnlyAttr: "getPurchaseOrderStatusString",
+            editor: {kind: "XV.PurchaseOrderStatusPicker", attr: "status"}}
         ]},
         {classes: "price", header: "_price".loc(), rows: [
           {readOnlyAttr: "price",

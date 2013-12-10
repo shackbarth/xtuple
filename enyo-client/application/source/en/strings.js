@@ -898,6 +898,7 @@ strict:true, trailing:true, white:true */
     "_accountExists": "This number is currently assigned to an Account.",
     "_automaticFreight": "Manually clearing the freight will enable automatic " +
       "Freight recalculations.",
+    "_closeLine?": "Are you sure you want to close this line?",
     "_continue?": " Do you want to continue?",
     "_convertAccount": "Convert this Account to a Customer?",
     "_convertAccountEmployee": "Convert this Account to an Employee?",
@@ -913,6 +914,7 @@ strict:true, trailing:true, white:true */
     "_creditHold": "This customer is on credit hold.",
     "_customerExists": "A customer with this number already exists.",
     "_customerOrProspect": "Would you like to create a new Customer or a new Prospect?",
+    "_deleteLine?": "Are you sure you want to delete this line?",
     "_exitPageWarning": "You are about to leave the xTuple application.",
     "_manualFreight": "Manually editing the freight will disable automatic freight recalculations.",
     "_mustSave": "You must save your changes before proceeding.",

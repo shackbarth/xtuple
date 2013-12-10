@@ -225,7 +225,7 @@ white:true*/
                 item.get("vouchered")) {
               err = XT.Error.clone('xt2025');
             }
-          })
+          });
         }
 
         return err;
@@ -351,6 +351,7 @@ white:true*/
         "lineNumber",
         "received",
         "returned",
+        "status", 
         "toReceive",
         "unitCost",
         "vendorUnit",
@@ -366,6 +367,41 @@ white:true*/
         "change:purchaseOrder": "purchaseOrderChanged"
       },
 
+      destroy: function (options) {
+        var status = this.getParent().get("status"),
+          K = XM.PurchaseOrder,
+          that = this,
+          payload = {
+            type: K.QUESTION,
+          },
+          args = arguments,
+          message;
+
+        if (status === K.UNRELEASED_STATUS) {
+          message = "_deleteLine?".loc();
+          payload.callback = function (response) {
+            if (response.answer) {
+              XM.Model.prototype.destroy.apply(that, args);
+            }
+          };
+        } else if (status === K.OPEN_STATUS) {
+          message = "_closeLine?".loc();
+          payload.callback = function (response) {
+            if (response.answer) {
+              that.set("status", K.CLOSED_STATUS);
+              if (options && options.success) {
+                options.success(that, response, options);
+              }
+            }
+          };
+        } else {
+          // Must be closed, shouldn't have come here.
+          return;
+        }
+
+        this.notify(message, payload);
+      },
+
       isMiscellaneousChanged: function () {
         var isMisc = this.get("isMiscellaneous");
         this.setReadOnly("isMiscellaneous", this.get("item") || this.get("expenseCategory"));
@@ -376,7 +412,7 @@ white:true*/
       itemChanged: function () {
         var item = this.get("item");
         this.isMiscellaneousChanged();
-        this.set("unit", item ? item.getValue("inventoryUnit.name") : "");
+        this.set("vendorUnit", item ? item.getValue("inventoryUnit.name") : "");
         this.set("unitCost", item ? item.getValue("standardCost") : 0);
       },
 
@@ -408,6 +444,8 @@ white:true*/
       }
 
     });
+
+    XM.PurchaseOrderLine = XM.PurchaseOrderLine.extend(XM.PurchaseOrderMixin);
 
     /**
       @class
