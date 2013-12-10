@@ -40,7 +40,8 @@ white:true*/
         }
 
         var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
-        model.set({customerPrice: totalPrice, price: totalPrice});
+        model.set({price: totalPrice});
+        model.setIfExists({customerPrice: totalPrice});
         model.calculateExtendedPrice();
       };
 
@@ -622,6 +623,10 @@ white:true*/
 
   XM.InvoiceLineMixin = {
 
+    idAttribute: 'uuid',
+
+    sellingUnits: undefined,
+
     readOnlyAttributes: [
       "lineNumber",
       "extendedPrice",
@@ -642,13 +647,6 @@ white:true*/
       this.on('change:isMiscellaneous', this.isMiscellaneousDidChange);
 
       this.isMiscellaneousDidChange();
-    },
-
-    defaults: function () {
-      return {
-        site: XT.defaultSite(),
-        isMiscellaneous: false
-      };
     },
 
     initialize: function (attributes, options) {
@@ -856,13 +854,16 @@ white:true*/
     //
     recordType: 'XM.InvoiceLine',
 
-    idAttribute: 'uuid',
-
-    sellingUnits: undefined,
-
     parentKey: "invoice",
 
-    quantityAttribute: "billed"
+    quantityAttribute: "billed",
+
+    defaults: function () {
+      return {
+        site: XT.defaultSite(),
+        isMiscellaneous: false
+      };
+    }
 
   }));
 

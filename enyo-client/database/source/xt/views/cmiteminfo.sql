@@ -44,7 +44,7 @@ create or replace rule "_INSERT" as on insert to xt.cmiteminfo do instead
     new.cmitem_price_uom_id,
     new.cmitem_price_invuomratio,
     new.cmitem_raitem_id,
-    new.cmitem_updateinv,
+    COALESCE(new.cmitem_updateinv, false),
     new.obj_uuid
   from itemsite
   where itemsite_item_id=new.cmitem_item_id

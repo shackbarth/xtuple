@@ -200,6 +200,14 @@
         }
       },
       {
+        "name": "authorizedCredit",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.invc_authorized_credit(cmhead_invcnumber)"
+        }
+      },
+      {
         "name": "outstandingCredit",
         "attr": {
           "type": "Money",
@@ -586,6 +594,7 @@
     "nameSpace": "XM",
     "type": "ReturnLine",
     "table": "xt.cmiteminfo",
+    "lockTable": "cmitem",
     "isRest": true,
     "idSequenceName": "cmitem_cmitem_id_seq",
     "comment": "Return Line Map",
@@ -655,6 +664,14 @@
       },
       {
         "name": "quantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "cmitem_qtyreturned",
+          "required": true
+        }
+      },
+      {
+        "name": "credited",
         "attr": {
           "type": "Quantity",
           "column": "cmitem_qtycredit"
@@ -742,13 +759,14 @@
         }
       }
     ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ReturnLineTax",
-    "table": "cmitemtax",
+    "table": "xt.cmitemtaxinfo",
     "isRest": true,
     "idSequenceName": "taxhist_taxhist_id_seq",
     "comment": "Return Line Tax Map",

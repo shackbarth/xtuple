@@ -1251,7 +1251,9 @@ white:true*/
 
     validate: function () {
       var that = this,
-        quantity = this.get("quantity"),
+        quantity = this.get("quantity") || this.get("quantity"),
+        hasCredited = _.contains(this.getAttributeNames(), "credited"),
+        credited = this.get("credited"),
         hasBilled = _.contains(this.getAttributeNames(), "billed"),
         billed = this.get("billed"),
         extraRequiredFields = [],
@@ -1259,6 +1261,11 @@ white:true*/
 
       // Check billed
       if (hasBilled && (billed || 0) <= 0) {
+        return XT.Error.clone('xt2013'); // TODO: generalize error message
+      }
+
+      // Check credited
+      if (hasCredited && (credited || 0) <= 0) {
         return XT.Error.clone('xt2013'); // TODO: generalize error message
       }
 
@@ -1272,6 +1279,9 @@ white:true*/
         return XT.Error.clone('xt2014');
       }
       if (!this._unitIsFractional && hasBilled && Math.round(billed) !== billed) {
+        return XT.Error.clone('xt2014');
+      }
+      if (!this._unitIsFractional && hasCredited && Math.round(credited) !== credited) {
         return XT.Error.clone('xt2014');
       }
 

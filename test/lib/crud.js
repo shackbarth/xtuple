@@ -50,6 +50,7 @@ var _ = require("underscore"),
       return;
     }
     var hashToTest = data.updated ? _.extend(JSON.parse(JSON.stringify(data.createHash)), data.updateHash) : data.createHash;
+    console.log("testing", JSON.stringify(hashToTest));
     _.each(hashToTest, function (value, key) {
       // depending on how we represent sub-objects, we want to verify them in different ways
       if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
@@ -72,7 +73,8 @@ var _ = require("underscore"),
 
       } else {
         // default case, such as comparing strings to strings etc.
-        assert.equal(data.model.get(key), value);
+        console.log(data.model.get(key), value, key);
+        assert.equal(data.model.get(key), value, "attribute is " + key);
       }
     });
   };
@@ -275,7 +277,7 @@ var _ = require("underscore"),
 
           // Model should not be used at this point
           options.success = function (used) {
-            assert.equal(used, 0);
+            assert.equal(used, 0, "Model is used but shouldn't be");
             callback();
           };
           model.used(options);

@@ -8,11 +8,13 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 /*
 QUESTIONS:
 Ok to skip doc assignments?
+should qtyreturned go in inventory?
 
 TODO:
 Authorized credit on cm_balance
 get rid of xt.invcheadinfo and xt.invciteminfo
 item_from_itemsite won't persist
+test model.setIfExists
 */
 
 
@@ -102,9 +104,7 @@ item_from_itemsite won't persist
       "currency", "salesRep", "commission",
       "saleType", "customerPurchaseOrderNumber", "taxZone", "notes",
       "subtotal", "taxTotal", "miscCharge", "total", "balance", "allocations",
-      "taxAdjustments", "lineItems",
-      "orderNumber", "orderDate", // this from sales extension
-      "projects"], // this from project
+      "taxAdjustments", "lineItems"],
     requiredAttributes: ["number", "returnDate", "isPosted", "isVoid",
       "customer", "commission"],
     defaults: {
@@ -1264,8 +1264,6 @@ item_from_itemsite won't persist
 
   exports.spec = spec;
   //exports.additionalTests = additionalTests;
-
-
 
 /*
 

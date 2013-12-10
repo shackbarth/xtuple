@@ -176,10 +176,6 @@ white:true*/
     //
     recordType: 'XM.ReturnLine',
 
-    idAttribute: 'uuid',
-
-    sellingUnits: undefined,
-
     parentKey: "return",
 
     readOnlyAttributes: [
@@ -188,7 +184,14 @@ white:true*/
       "taxTotal"
     ],
 
-    quantityAttribute: "quantity"
+    quantityAttribute: "credited",
+
+    defaults: function () {
+      return {
+        site: XT.defaultSite()
+      };
+    }
+
 
   }));
 
