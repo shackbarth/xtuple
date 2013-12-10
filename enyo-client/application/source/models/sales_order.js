@@ -149,7 +149,8 @@ white:true*/
     }
   });
 
-  XM.SalesOrderLine = XM.SalesOrderLineBase.extend(_.extend({}, XM.OrderLineMixin, {
+  XM.SalesOrderLine = XM.Model.extend(_.extend({}, XM.OrderLineMixin,
+      XM.SalesOrderBaseMixin, XM.SalesOrderLineMixin, {
 
     recordType: 'XM.SalesOrderLine',
 
@@ -161,14 +162,14 @@ white:true*/
       Add defaults for firm, and subnumber.
      */
     defaults: function () {
-      var defaults = XM.SalesOrderLineBase.prototype.defaults.apply(this, arguments);
+      var defaults = XM.SalesOrderLineMixin.defaults.apply(this, arguments);
 
       defaults.firm = false;
       defaults.subnumber = 0;
 
       return defaults;
     }
-  }));
+  }), XM.SalesOrderLineStaticMixin);
 
 
   /**

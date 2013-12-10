@@ -42,7 +42,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   //
-  // Useful for any model that uses XM.SalesOrderLineBase
+  // Useful for any model that uses XM.SalesOrderLineMixin
   //
   var getBeforeSaveAction = function (lineRecordType) {
     return function (data, next) {

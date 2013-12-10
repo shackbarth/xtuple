@@ -1267,12 +1267,7 @@ white:true*/
     }
   };
 
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SalesOrderLineBase = XM.Model.extend(/** @lends XM.SalesOrderLineBase.prototype */{
+  XM.SalesOrderLineMixin = {
 
     sellingUnits: undefined,
 
@@ -1866,15 +1861,14 @@ white:true*/
 
 
 
-  });
-  XM.SalesOrderLineBase = XM.SalesOrderLineBase.extend(XM.SalesOrderBaseMixin);
+  };
 
 
   // ..........................................................
   // CLASS METHODS
   //
 
-  _.extend(XM.SalesOrderLineBase, /** @lends XM.SalesOrderLine# */{
+  XM.SalesOrderLineStaticMixin = {
 
     // ..........................................................
     // CONSTANTS
@@ -1920,6 +1914,6 @@ white:true*/
     */
     ALWAYS_UPDATE: 3
 
-  });
+  };
 
 }());
