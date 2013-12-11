@@ -94,6 +94,11 @@
         myCount: 1,
         myIncrementer: function () {
           this.myCount += 5;
+        },
+        defaults: function () {
+          return {
+            myDefault: 7
+          };
         }
       });
     });
@@ -165,6 +170,20 @@
       var model = new XM.TestModel();
       model.myIncrementer();
       assert.equal(model.myCount, 18);
+    });
+
+    it('will mix together defaults from functions', function () {
+      XM.TestModel.prototype.augment({
+        defaults: function () {
+          return {
+            mySecondDefault: 17
+          };
+        }
+      });
+
+      var defaults = new XM.TestModel.prototype.defaults();
+      assert.equal(defaults.myDefault, 7);
+      assert.equal(defaults.mySecondDefault, 17);
     });
 
     it('should error on illegal augmentation', function () {

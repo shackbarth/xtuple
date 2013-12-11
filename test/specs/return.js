@@ -10,6 +10,11 @@ QUESTIONS:
 Ok to skip doc assignments?
 should qtyreturned go in inventory?
 is there a sales order line on return lines? There's raitem_id
+can't find String "shipDate"
+  > String "shiptoPhone"
+  > ShipCharge "shipCharge"
+  > String "shipVia"
+  > String "incoterms" // HINT: This is the "invchead_fob" field
 
 REFACTOR:
 get rid of xt.invcheadinfo
