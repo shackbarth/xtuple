@@ -121,7 +121,7 @@ install_packages() {
     nvm install $NODE_VERSION 
   fi
   log "installing npm modules..."
-  npm install > /dev/null 2>&1 | tee -a $LOG_FILE
+  npm install | tee -a $LOG_FILE
 }
 
 # Use only if running from a debian package install for the first time
