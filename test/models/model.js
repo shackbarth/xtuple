@@ -51,6 +51,37 @@
     });
   });
 
+  describe('XM.Model.setIfExists()', function () {
+
+    beforeEach(function () {
+      XM.TestModel = XM.Model.extend({
+        recordType: "XM.TestModel",
+        getAttributeNames: function () {
+          return ["one", "two", "three"];
+        }
+      });
+    });
+
+    it('should set values that exist in the schema', function () {
+      var model = new XM.TestModel();
+      model.setIfExists("one", "en");
+      assert.equal(model.get("one"), "en");
+    });
+
+    it('should not set values that do not exist in the schema', function () {
+      var model = new XM.TestModel();
+      model.setIfExists("four", "fire");
+      assert.isUndefined(model.get("four"));
+    });
+
+    it('works with an object parameter', function () {
+      var model = new XM.TestModel();
+      model.setIfExists({two: "to", five: "fem"});
+      assert.equal(model.get("two"), "to");
+      assert.isUndefined(model.get("five"));
+    });
+  });
+
   describe('XM.Model.augment()', function () {
 
     beforeEach(function () {

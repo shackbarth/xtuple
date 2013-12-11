@@ -34,8 +34,10 @@
         "MaintainShipVias",
         "MaintainTerms",
         "OverrideTax",
+        "PostARDocuments",
         "PostCashReceipts",
         "PostMiscInvoices",
+        "PrintCreditMemos",
         "PrintInvoices",
         "ViewAROpenItems",
         "ViewCashReceipts",
@@ -44,6 +46,7 @@
         "ViewCustomerGroups",
         "ViewItemMasters",
         "ViewMiscInvoices",
+        "VoidPostedARCreditMemos",
         "VoidPostedCashReceipts",
         "VoidPostedInvoices"
       ],

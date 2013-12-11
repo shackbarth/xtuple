@@ -10,11 +10,11 @@ QUESTIONS:
 Ok to skip doc assignments?
 should qtyreturned go in inventory?
 
+REFACTOR:
+get rid of xt.invcheadinfo
+
 TODO:
-Authorized credit on cm_balance
-get rid of xt.invcheadinfo and xt.invciteminfo
-item_from_itemsite won't persist
-test model.setIfExists
+
 */
 
 
@@ -1193,7 +1193,7 @@ test model.setIfExists
         // TODO: better testing
         assert.equal(returnModel.get("authorizedCredit"), 0);
       });
-      it("When currency or Return date is changed authorized credit should be" +
+      it.skip("When currency or Return date is changed authorized credit should be" +
         "recalculated.", function () {
       });
       it.skip("When freight is changed the total should be recalculated", function () {

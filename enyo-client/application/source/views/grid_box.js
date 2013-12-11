@@ -94,7 +94,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         {readOnlyAttr: "item.description1"},
         {readOnlyAttr: "site.code"}
       ]},
-      {classes: "quantity", header: ["_ordered".loc(), "_billed".loc()], rows: [
+      {classes: "quantity", header: ["_ordered".loc(), "_credited".loc()], rows: [
         {readOnlyAttr: "quantity",
           editor: {kind: "XV.QuantityWidget", attr: "quantity",
             name: "quantityWidget"}},

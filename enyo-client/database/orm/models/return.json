@@ -244,7 +244,7 @@
         "attr": {
           "type": "Money",
           "derived": true,
-          "method": "xt.cm_balance(cmhead_id, cmhead_freight, cmhead_misc, cmhead_curr_id, cmhead_docdate, cmhead_cust_id)"
+          "method": "xt.cm_balance(cmhead_id, cmhead_freight, cmhead_misc, cmhead_curr_id, cmhead_docdate, cmhead_cust_id, cmhead_invcnumber)"
         }
       },
       {
