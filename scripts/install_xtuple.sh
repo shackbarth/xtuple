@@ -171,7 +171,8 @@ setup_postgres() {
   log "dropping existing db, if any..."
 	sudo -u postgres dropdb $DATABASE
 
-  log "determining lastest version..."
+  log "determining latest version..."
+
 	cdir $BASEDIR/postgres
 	sudo wget -q http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
 	wait
@@ -183,6 +184,8 @@ setup_postgres() {
 		NEWESTVERSION="4.2.0"
 		log "Couldn't find the latest version. Using $NEWESTVERSION instead."
 	fi
+
+  log "using: $NEWESTVERSION"
 
 	if [ ! -f postbooks_demo-$NEWESTVERSION.backup ]
 	then
