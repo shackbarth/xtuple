@@ -29,7 +29,7 @@ LIBS_ONLY=
 XT_DIR=$RUN_DIR
 XTUPLE_REPO='http://sourceforge.net/projects/postbooks/files/mobile-debian'
 
-while getopts ":ipnhm-:" opt; do
+while getopts ":ipnhmx-:" opt; do
   case $opt in
     i)
       # Install packages
@@ -71,13 +71,12 @@ while getopts ":ipnhm-:" opt; do
 	 echo "To install everything, run sudo ./scripts/install_xtuple.sh"
 	 echo "Everything will go in /usr/local/src/xtuple"
 	 echo ""
-	 echo -e "  -b\t\t"
-	 echo -e "  -c\t\t"
-	 echo -e "  -g\t\t"
 	 echo -e "  -h\t\t"
 	 echo -e "  -i\t\t"
-	 echo -e "  -n\t\t"
 	 echo -e "  -p\t\t"
+	 echo -e "  -n\t\t"
+	 echo -e "  -m\t\t"
+	 echo -e "  -x\t\t"
    exit 0;
       ;;
   esac
@@ -109,19 +108,19 @@ install_packages() {
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
   sudo apt-get -q -y install curl build-essential git libssl-dev postgresql-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
 
-  if [ ! -d "$NVM_DIR" ]; then
+  if [ ! -d "$HOME/.nvm" ]; then
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
-    source ~/.nvm/nvm.sh
+
     ## To install nvm (and therefore node and npm) as root:
     ##  1. sudo su
     ##  2. wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
     ##  3. source ~/.profile
     ##  4. nvm install <version>
     ##  5. use npm/node as usual as root
-    nvm install $NODE_VERSION 
-    nvm use $NODE_VERSION 
-    nvm version
   fi
+  source $HOME/.nvm/nvm.sh
+  nvm install $NODE_VERSION 
+  nvm use $NODE_VERSION 
   log "installing npm modules..."
   npm install | tee -a $LOG_FILE
 }
