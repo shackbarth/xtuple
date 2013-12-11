@@ -107,7 +107,7 @@ install_packages() {
   echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' | sudo tee /etc/apt/sources.list.d/pgdg.list
   sudo wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
-  sudo apt-get -q -y install build-essential git libssl-dev postgresql-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
+  sudo apt-get -q -y install curl build-essential git libssl-dev postgresql-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
 
   if ! type nvm 2> /dev/null; then
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
