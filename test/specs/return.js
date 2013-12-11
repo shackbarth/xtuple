@@ -13,6 +13,8 @@ is there a sales order line on return lines? There's raitem_id
 can't find String "shipDate"
   > String "shiptoPhone"
   > ShipCharge "shipCharge"
+* When the customer changes will copy the following attributes from the customer model:
+  > shipCharge
   > String "shipVia"
   > String "incoterms" // HINT: This is the "invchead_fob" field
 
