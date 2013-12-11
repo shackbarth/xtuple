@@ -31,6 +31,7 @@ The password is also `admin.
 #### 3. Setup and run the server
 Open a new terminal. Then:
 
+    nvm use 0.8
     cd node-datasource
     node main.js
 
