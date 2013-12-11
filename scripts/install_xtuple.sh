@@ -105,13 +105,13 @@ fi
 install_packages() {
   log "installing debian packages..."
   echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' | sudo tee /etc/apt/sources.list.d/pgdg.list
-  sudo wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  sudo wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
   sudo apt-get -q -y install curl build-essential git libssl-dev postgresql-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
 
-  if ! type nvm 2> /dev/null; then
+  if [ ! -d "$NVM_DIR" ]; then
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
-    source $HOME/.nvm/nvm.sh
+    source $NVM_DIR/nvm.sh
     ## To install nvm (and therefore node and npm) as root:
     ##  1. sudo su
     ##  2. wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
@@ -119,6 +119,8 @@ install_packages() {
     ##  4. nvm install <version>
     ##  5. use npm/node as usual as root
     nvm install $NODE_VERSION 
+    nvm use $NODE_VERSION 
+    nvm version
   fi
   log "installing npm modules..."
   npm install | tee -a $LOG_FILE
