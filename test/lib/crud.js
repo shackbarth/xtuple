@@ -50,7 +50,6 @@ var _ = require("underscore"),
       return;
     }
     var hashToTest = data.updated ? _.extend(JSON.parse(JSON.stringify(data.createHash)), data.updateHash) : data.createHash;
-    console.log("testing", JSON.stringify(hashToTest));
     _.each(hashToTest, function (value, key) {
       // depending on how we represent sub-objects, we want to verify them in different ways
       if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
@@ -73,7 +72,6 @@ var _ = require("underscore"),
 
       } else {
         // default case, such as comparing strings to strings etc.
-        console.log(data.model.get(key), value, key);
         assert.equal(data.model.get(key), value, "attribute is " + key);
       }
     });
