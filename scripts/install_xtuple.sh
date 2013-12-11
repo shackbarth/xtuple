@@ -111,7 +111,7 @@ install_packages() {
 
   if [ ! -d "$NVM_DIR" ]; then
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
-    source $NVM_DIR/nvm.sh
+    source ~/.nvm/nvm.sh
     ## To install nvm (and therefore node and npm) as root:
     ##  1. sudo su
     ##  2. wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
