@@ -50,9 +50,7 @@
         description: "_billingDescription".loc(),
         workspace: "XV.BillingWorkspace"
       },
-      salesPanels = [
-        {name: "sales_invoiceList", kind: "XV.InvoiceList"}
-      ],
+      salesPanels,
       setupPanels = [
         {name: "bankAccountList", kind: "XV.BankAccountList"},
         {name: "reasonCodeList", kind: "XV.ReasonCodeList"},
@@ -61,7 +59,12 @@
       ];
 
     XT.app.$.postbooks.appendPanels("setup", setupPanels);
-    XT.app.$.postbooks.appendPanels("sales", salesPanels);
+    if (XT.extensions.sales) {
+      salesPanels = [
+        {name: "sales_invoiceList", kind: "XV.InvoiceList"}
+      ];
+      XT.app.$.postbooks.appendPanels("sales", salesPanels);
+    }
 
     XM.configurations.add(new XM.ConfigurationModel(configuration));
     XT.app.$.postbooks.insertModule(module, 0);
