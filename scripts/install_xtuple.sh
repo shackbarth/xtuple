@@ -112,7 +112,6 @@ install_packages() {
     touch ~/.bash_profile
     echo ". ~/.bash_profile" >> ~/.bashrc
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
-    nvm alias default $NODE_VERSION
 
     ## To install nvm (and therefore node and npm) as root:
     ##  1. sudo su
@@ -122,6 +121,7 @@ install_packages() {
     ##  5. use npm/node as usual as root
   fi
   source $HOME/.nvm/nvm.sh
+  nvm alias default $NODE_VERSION
   nvm install $NODE_VERSION 
   log "installing npm modules..."
   npm install | tee -a $LOG_FILE
