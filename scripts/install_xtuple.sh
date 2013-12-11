@@ -118,9 +118,11 @@ install_packages() {
     ##  4. nvm install <version>
     ##  5. use npm/node as usual as root
   fi
-  source $HOME/.nvm/nvm.sh
+  echo "[[ -s "$HOME/.nvm/nvm.sh" ]] && . $HOME/.nvm/nvm.sh" >> ~/.bashrc
+  source ~/.bashrc
   nvm install $NODE_VERSION 
   nvm use $NODE_VERSION 
+  echo "nvm use $NODE_VERSION" >> ~/.bashrc
   log "installing npm modules..."
   npm install | tee -a $LOG_FILE
 }
