@@ -113,7 +113,7 @@ white:true*/
 
       handlers: {
         "add:lineItems": "lineItemsChanged",
-        "add:lineItems remove:lineItems", "calculateTotals",
+        "add:lineItems remove:lineItems": "calculateTotals",
         "remove:lineItems": "lineItemsChanged",
         "change:status": "purchaseOrderStatusChanged",
         "change:purchaseType": "purchaseTypeChanged",
@@ -121,14 +121,14 @@ white:true*/
       },
 
       calculateTotals: function () {
-        var freight = model.get("freight") || 0.0,
+        var freight = this.get("freight") || 0.0,
           scale = XT.MONEY_SCALE,
           add = XT.math.add,
           subtract = XT.math.subtract,
           subtotals = [],
           taxDetails = [],
           costs = [],
-          freightSubtotals [],
+          freightSubtotals = [],
           subtotal,
           freightSubtotal,
           taxTotal = 0.0,
@@ -148,10 +148,10 @@ white:true*/
           taxDetails = taxDetails.concat(lineItem.taxDetail);
         };
 
-        _.each(model.get('lineItems').models, forEachCalcFunction);
+        _.each(this.get('lineItems').models, forEachCalcFunction);
 
         // Add freight taxes to the mix
-        taxDetails = taxDetails.concat(model.freightTaxDetail);
+        taxDetails = taxDetails.concat(this.freightTaxDetail);
 
         // Total taxes
         // First group amounts by tax code
@@ -179,15 +179,14 @@ white:true*/
         // Totaling calculations
         freightSubtotal = add(freightSubtotals, scale);
         subtotal = add(subtotals, scale);
-        margin = subtract(subtotal, costTotal, scale);
         subtotals = subtotals.concat([freightSubtotal, freight, taxTotal]);
         total = add(subtotals, scale);
 
         // Set values
-        model.set("freightSubtotal", freightSubtotal);
-        model.set("subtotal", subtotal);
-        model.set("taxTotal", taxTotal);
-        model.set("total", total);
+        this.set("freightSubtotal", freightSubtotal);
+        this.set("subtotal", subtotal);
+        this.set("taxTotal", taxTotal);
+        this.set("total", total);
       },
 
       initialize: function (attributes, options) {
@@ -422,7 +421,7 @@ white:true*/
         "lineNumber",
         "received",
         "returned",
-        "status", 
+        "status",
         "toReceive",
         "unitCost",
         "vendorUnit",
