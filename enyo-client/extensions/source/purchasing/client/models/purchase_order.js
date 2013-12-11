@@ -155,9 +155,11 @@ white:true*/
 
         // Total taxes
         // First group amounts by tax code
+        /*
         taxCodes = _.groupBy(taxDetails, function (detail) {
           return detail.taxCode.id;
         });
+        */
 
         // Loop through each tax code group and subtotal
         _.each(taxCodes, function (group) {
