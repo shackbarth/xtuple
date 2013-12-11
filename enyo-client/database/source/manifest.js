@@ -82,8 +82,6 @@
     "xt/functions/cm_tax_total.sql",
     "xt/functions/cm_total.sql",
     "xt/functions/cm_balance.sql",
-    "xt/functions/item_from_itemsite.sql",
-    "xt/functions/site_from_itemsite.sql",
     "xt/functions/mergecrmaccts.sql",
     "xt/functions/pg_advisory_unlock.sql",
     "xt/functions/quote_line_base_price.sql",

@@ -474,7 +474,6 @@ select xt.install_js('XT','Orm','xtuple', $$
         col,
         alias,
         toOne,
-        toOneColumn,
         table,
         type,
         inverse,
@@ -514,7 +513,7 @@ select xt.install_js('XT','Orm','xtuple', $$
              * If a method is given, do not attempt to prefix with table alias.
              */
             if (attr.derived && attr.method) {
-              plv8.elog(NOTICE, 'using function for derived property: ' + prop.name + ' -> '+ attr.method);
+              plv8.elog(NOTICE, 'using function for derived property: '+ prop.name + ' -> '+ attr.method);
               col = attr.method;
             }
             else {
@@ -614,14 +613,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           col = '({select}) as "{alias}"';
           if (!type) { throw new Error('No type was defined on property ' + prop.name); }
           if (DEBUG) { XT.debug('building toOne'); }
-
-          if (toOne.derived && toOne.method) {
-            plv8.elog(NOTICE, 'using function for derived property: ' + toOne.name + ' -> '+ toOne.method);
-            toOneColumn = attr.method;
-          } else {
-            toOneColumn = tblAlias + '.' + toOne.column;
-          }
-          conditions = '"' + type + '"."' + inverse + '" = ' + toOneColumn;
+          conditions = '"' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
 
           /* handle the nested and natural key cases */
           if (prop.toOne.isNested === true || nkey) {

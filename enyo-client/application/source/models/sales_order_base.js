@@ -257,6 +257,7 @@ white:true*/
 
     @extends XM.Document
   */
+  // TODO #refactor this can just be a mixin, as with XM.SalesOrderLineBase -> XM.SalesOrderLineMixin
   XM.SalesOrderBase = XM.Document.extend(/** @lends XM.SalesOrderBase.prototype */{
 
     freightDetail: undefined,

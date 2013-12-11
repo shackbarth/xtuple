@@ -120,8 +120,6 @@ white:true*/
       callback(XT.session.privileges.get("PrintCreditMemos") || false);
     },
 
-    // TODO: this.dispatch(this.editableModel...
-    // TODO: write the function wrapper
     doPost: function (options) {
       this.dispatch("XM.Return", "post", [this.id], {
         success: options && options.success,
@@ -149,21 +147,6 @@ white:true*/
     recordType: 'XM.ReturnRelation',
 
     editableModel: 'XM.Return'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Characteristic
-  */
-  XM.ReturnCharacteristic = XM.CharacteristicAssignment.extend({
-    /** @scope XM.ReturnCharacteristic.prototype */
-
-    recordType: 'XM.ReturnCharacteristic',
-
-    // TODO: verify this
-    which: 'isCreditMemos'
 
   });
 
