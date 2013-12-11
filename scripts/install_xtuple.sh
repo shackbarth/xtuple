@@ -106,10 +106,13 @@ install_packages() {
   echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' | sudo tee /etc/apt/sources.list.d/pgdg.list
   sudo wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
-  sudo apt-get -q -y install curl build-essential git libssl-dev postgresql-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
+  sudo apt-get -q -y install curl build-essential git libssl-dev postgresql-9.1 postgresql-server-dev-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
 
   if [ ! -d "$HOME/.nvm" ]; then
+    touch ~/.bash_profile
+    echo ". ~/.bash_profile" >> ~/.bashrc
     wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
+    nvm alias default $NODE_VERSION
 
     ## To install nvm (and therefore node and npm) as root:
     ##  1. sudo su
@@ -118,11 +121,8 @@ install_packages() {
     ##  4. nvm install <version>
     ##  5. use npm/node as usual as root
   fi
-  echo "[[ -s "$HOME/.nvm/nvm.sh" ]] && . $HOME/.nvm/nvm.sh" >> ~/.bashrc
-  source ~/.bashrc
+  source $HOME/.nvm/nvm.sh
   nvm install $NODE_VERSION 
-  nvm use $NODE_VERSION 
-  echo "nvm use $NODE_VERSION" >> ~/.bashrc
   log "installing npm modules..."
   npm install | tee -a $LOG_FILE
 }
