@@ -1201,6 +1201,7 @@ strict: false*/
     kind: "XV.Workspace",
     title: "_invoice".loc(),
     model: "XM.Invoice",
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1416,6 +1417,7 @@ strict: false*/
             {kind: "XV.ClassCodePicker", attr: "classCode"},
             {kind: "XV.FreightClassPicker", attr: "freightClass"},
             {kind: "XV.UnitPicker", attr: "inventoryUnit"},
+            {kind: "XV.InputWidget", attr: "barcode", label: "_upcCode".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
             {kind: "XV.CheckboxWidget", attr: "isPicklist"},
             {kind: "onyx.GroupboxHeader", content: "_product".loc()},
@@ -1434,7 +1436,8 @@ strict: false*/
           ]}
         ]},
         {kind: "XV.ItemCommentBox", attr: "comments"},
-        {kind: "XV.ItemDocumentsBox", attr: "documents"}
+        {kind: "XV.ItemDocumentsBox", attr: "documents"},
+        {kind: "XV.ItemAliasBox", attr: "aliases"}
       ]}
     ]
   });
@@ -1468,6 +1471,7 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.ItemGroup", "XV.ItemGroupWorkspace");
+  XV.registerModelWorkspace("XM.ItemGroupItem", "XV.ItemGroupWorkspace");
 
   // ..........................................................
   // ITEM SITE
@@ -1947,6 +1951,7 @@ strict: false*/
               {attribute: "isSold", value: true},
               {attribute: "isActive", value: true}
             ]}},
+            {kind: "XV.InputWidget", attr: "customerPartNumber"},
             {kind: "XV.QuantityWidget", attr: "quantity"},
             {kind: "XV.UnitPicker", name: "quantityUnitPicker",
               attr: "quantityUnit"},

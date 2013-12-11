@@ -234,16 +234,16 @@ white:true*/
   });
 
   /**
-    If we have a special extra filter enabled, we need to perform a dispatch
-    instead of a fetch to get the data we need. This is because we only want
+    The dispatch in here serves two purposes. First, we sometimes only want
     to show items that are associated with particular customers, shiptos,
-    or effective dates.
+    or effective dates. But even if that special filter isn't applied, we
+    want to be able to search by item number, alias, or bar code.
    */
   var fetch = function (options) {
     options = options ? options : {};
     var that = this,
       params = options.query ? options.query.parameters : [],
-      param = _.findWhere(params, {attribute: "customer"}),
+      param,
       customerId,
       shiptoId,
       effectiveDate,
@@ -254,43 +254,40 @@ white:true*/
         });
       };
 
+    // Parse out customer
+    param = _.findWhere(params, {attribute: "customer"});
     if (param) {
-
       // We have to do a special dispatch to fetch the data based on customer.
       // Because it's a dipatch call and not a fetch, the collection doesn't get
       // updated automatically. We have to do that by hand on success.
       customerId = param.value.id;
       params = omit(params, "customer");
-
-      // Find shipto
-      param = _.findWhere(params, {attribute: "shipto"});
-      if (param) {
-        shiptoId = param.value.id;
-        params = omit(params, "shipto");
-      }
-
-      // Find effective Date
-      param = _.findWhere(params, {attribute: "effectiveDate"});
-      if (param) {
-        effectiveDate = param ? param.value : null;
-        params = omit(params, "effectiveDate");
-      }
-      options.query.parameters = params;
-      XM.Collection.formatParameters("XM.ItemSiteListItem", options.query.parameters);
-
-      // Dispatch the query
-      success = options.success;
-      options.success = function (data) {
-        that.reset(data);
-        if (success) { success(data); }
-      };
-      XM.ModelMixin.dispatch("XM.ItemSite", "itemsForCustomer",
-        [customerId, shiptoId, effectiveDate, options.query], options);
-
-    } else {
-      // Otherwise just do a normal fetch
-      XM.Collection.prototype.fetch.call(this, options);
     }
+
+    // Parse out shipto
+    param = _.findWhere(params, {attribute: "shipto"});
+    if (param) {
+      shiptoId = param.value.id;
+      params = omit(params, "shipto");
+    }
+
+    // Parse out effective date
+    param = _.findWhere(params, {attribute: "effectiveDate"});
+    if (param) {
+      effectiveDate = param ? param.value : null;
+      params = omit(params, "effectiveDate");
+    }
+    options.query.parameters = params;
+    XM.Collection.formatParameters("XM.ItemSiteListItem", options.query.parameters);
+
+    // Dispatch the query
+    success = options.success;
+    options.success = function (data) {
+      that.reset(data);
+      if (success) { success(data); }
+    };
+    XM.ModelMixin.dispatch("XM.ItemSite", "itemsForCustomer",
+      [customerId, shiptoId, effectiveDate, options.query], options);
   };
 
   /**

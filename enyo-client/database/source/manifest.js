@@ -32,6 +32,7 @@
     "public/tables/invcitemtax.sql",
     "public/tables/itemsite.sql",
     "public/tables/metric.sql",
+    "public/tables/pohead.sql",
     "public/tables/poitem.sql",
     "public/tables/ophead.sql",
     "public/tables/prj.sql",

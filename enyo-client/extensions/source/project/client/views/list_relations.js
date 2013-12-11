@@ -122,55 +122,14 @@ trailing:true, white:true, strict:false*/
 
     enyo.kind({
       name: "XV.ProjectWorkflowListRelations",
-      kind: "XV.ListRelations",
-      orderBy: [
-        {attribute: "dueDate"}
-      ],
+      kind: "XV.WorkflowListRelations",
       parentKey: "project",
-      components: [
-        {kind: "XV.ListItem", components: [
-          {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "first", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "name", classes: "bold"},
-                {kind: "XV.ListAttr", attr: "dueDate", fit: true,
-                  formatter: "formatDueDate",
-                  classes: "right"}
-              ]},
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "getWorkflowStatusString"},
-                {kind: "XV.ListAttr", attr: "assignedTo.username", fit: true,
-                  classes: "right"}
-              ]}
-            ]}
-          ]}
-        ]}
-      ],
-      formatDueDate: XV.ProjectList.prototype.formatDueDate
     });
 
     enyo.kind({
       name: "XV.ProjectTypeWorkflowListRelations",
-      kind: "XV.ListRelations",
-      orderBy: [
-        {attribute: "sequence"}
-      ],
-      parentKey: "project",
-      components: [
-        {kind: "XV.ListItem", components: [
-          {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "first", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "name", classes: "bold"}
-              ]},
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "description"}
-              ]}
-            ]}
-          ]}
-        ]}
-      ],
-      formatDueDate: XV.ProjectList.prototype.formatDueDate
+      kind: "XV.WorkflowListRelations",
+      parentKey: "project"
     });
 
     // ..........................................................

@@ -426,6 +426,13 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
+        }
+      },
+      {
         "name": "number",
         "attr": {
           "type": "String",
@@ -434,7 +441,7 @@
           "required": true
         }
       },
-            {
+      {
         "name": "projectType",
         "toOne": {
           "type": "ProjectType",

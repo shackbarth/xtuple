@@ -93,6 +93,8 @@ strict:true, trailing:true, white:true */
     "_advanced" : "Advanced",
     "_agent": "Agent",
     "_alarms": "Alarms",
+    "_alias": "Alias",
+    "_aliases": "Aliases",
     "_allocate": "Allocate",
     "_allocatedCredit": "Allocated Credit",
     "_allowableItems": "Allowable Items",
@@ -663,6 +665,7 @@ strict:true, trailing:true, white:true */
     "_unreleased": "Unreleased",
     "_unsupportedGateway": "Unsupported Gateway",
     "_uom": "UOM",
+    "_upcCode": "UPC Code",
     "_updated": "Updated",
     "_updatedBy": "Updated By",
     "_url": "Link",
@@ -927,6 +930,8 @@ strict:true, trailing:true, white:true */
     "_updateFractional": "The quantity ordered and unit of measure selected will result in a " +
       "fractional inventory qty for this item. This item does not allow fractional quantities; " +
       "the quantity will be updated accordingly.",
+    "_updateHoldType?": "Would you like to over-write the existing hold type with the " +
+      "default for this selection?",
     "_updatePrice?": "You have changed the price basis, do you want to update the Price?",
     "_whatToDo": "What would you like to do?"
   });
