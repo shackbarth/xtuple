@@ -361,7 +361,8 @@ var _ = require("underscore"),
     //
     it('can be loaded with a zombie session', function (done) {
       this.timeout(40 * 1000);
-      zombieAuth.loadApp({callback: done, verbose: false /* data.verbose */});
+      zombieAuth.loadApp({callback: done, verbose: data.verbose,
+        loginDataPath: data.loginDataPath});
     });
 
     //

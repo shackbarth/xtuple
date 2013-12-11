@@ -49,7 +49,8 @@ require:true, __dirname:true, console:true */
         // even if we skip CRUD we have to create a model
         it('can be loaded with a zombie session', function (done) {
           this.timeout(40 * 1000);
-          zombieAuth.loadApp({callback: done, verbose: false /* data.verbose */});
+          zombieAuth.loadApp({callback: done, verbose: spec.verbose,
+            loginDataPath: spec.loginDataPath});
         });
         it('can be created', function () {
           spec.model = new XM[spec.recordType.substring(3)]();
@@ -284,6 +285,9 @@ require:true, __dirname:true, console:true */
 
       if (specContents.additionalTests) {
         specContents.additionalTests();
+      }
+      if (specContents.extensionTests) {
+        specContents.extensionTests();
       }
 
     });
