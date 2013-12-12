@@ -1771,7 +1771,7 @@ strict: false*/
                   city: "billtoCity", state: "billtoState",
                   postalCode: "billtoPostalCode", country: "billtoCountry"}
               },
-              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc(), name: "notesHeader"},
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
           ]}

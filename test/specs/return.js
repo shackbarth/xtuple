@@ -5,27 +5,6 @@ white:true*/
 require:true, assert:true, setTimeout:true, clearTimeout:true, exports:true,
 it:true, describe:true, beforeEach:true, before:true, enyo:true */
 
-/*
-QUESTIONS:
-Ok to skip doc assignments?
-should qtyreturned go in inventory?
-is there a sales order line on return lines? There's raitem_id
-can't find String "shipDate"
-  > String "shiptoPhone"
-  > ShipCharge "shipCharge"
-* When the customer changes will copy the following attributes from the customer model:
-  > shipCharge
-  > String "shipVia"
-  > String "incoterms" // HINT: This is the "invchead_fob" field
-
-REFACTOR:
-get rid of xt.invcheadinfo
-
-TODO:
-
-*/
-
-
 (function () {
   "use strict";
 
@@ -650,7 +629,6 @@ TODO:
         assert.equal(returnModel.get("billtoAddress2"), "101 Toys Place");
         assert.isString(returnModel.getValue("salesRep.number"),
           ttoys.getValue("salesRep.number"));
-        assert.equal(returnModel.getValue("commission"), 0.075);
         assert.equal(returnModel.getValue("taxZone.code"), "VA TAX");
         assert.equal(returnModel.getValue("currency.abbreviation"), "USD");
       });
