@@ -29,7 +29,6 @@ minutes.
 
 #### 3. Setup and run the server
 
-    nvm use 0.8
     cd node-datasource
     node main.js
 
