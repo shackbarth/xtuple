@@ -954,7 +954,7 @@ white:true*/
     shiptoDidChange: function () {
       var shipto = this.get("shipto"),
         shiptoContact = shipto ? shipto.get("contact") : false,
-        shiptoAddress = shiptoContact ? shiptoContact.get("address") : false,
+        shiptoAddress = shipto ? shipto.get("address") : false,
         shiptoAttrs;
 
       if (!shipto) { return; }
@@ -993,6 +993,8 @@ white:true*/
           shiptoCountry: shiptoAddress.getValue("country")
         });
       }
+      // XXX in XM.Return I got this to work using {silent: true}, which
+      // is tjw-approved. -SMH
       this.off(this.shipAddressEvents, this.shiptoAddressDidChange);
       this.set(shiptoAttrs);
       this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
