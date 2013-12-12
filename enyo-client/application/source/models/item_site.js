@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true,eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, _:true, console:true */
+/*global XT:true, XM:true, _:true, console:true, Backbone: true */
 
 (function () {
   "use strict";
@@ -46,7 +46,14 @@ white:true*/
       return this.getValue("item.number") + " " + this.getValue("site.code");
     },
 
+    initialize: function () {
+      XM.Model.prototype.initialize.apply(this, arguments);
+      this.meta = new Backbone.Model();
+      this.meta("_itemSites", new XM.ItemSiteRelationCollection());
+    },
+
     defaults: function () {
+      this.meta = new Backbone.Model();
       return {
         isActive: true
       };
@@ -56,6 +63,10 @@ white:true*/
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:item change:site', this.checkDuplicatePair);
       this.on('statusChange', this.statusDidChange);
+      this.meta.on('change:_itemSites', function () {
+        // success or error
+        console.log("itemSites has changed");
+      });
     },
 
     /**
@@ -281,10 +292,10 @@ white:true*/
     XM.Collection.formatParameters("XM.ItemSiteListItem", options.query.parameters);
 
     // Dispatch the query
-    success = options.success;
+    //success = options.success;
     options.success = function (data) {
       that.reset(data);
-      if (success) { success(data); }
+      //if (success) { success(data); }
     };
     XM.ModelMixin.dispatch("XM.ItemSite", "itemsForCustomer",
       [customerId, shiptoId, effectiveDate, options.query], options);

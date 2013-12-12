@@ -402,6 +402,7 @@ trailing:true, white:true*/
         parent.off("change:orderDate", this.salesOrderDateChanged, this);
         this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
       }
+      // this is what clears the itemsite widget name/description
       XV.RelationsEditor.prototype.setValue.apply(this, arguments);
       // Add new bindings
       if (this.value) {
