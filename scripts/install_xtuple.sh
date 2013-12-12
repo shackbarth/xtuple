@@ -120,7 +120,7 @@ install_packages() {
   sudo nvm alias default $NODE_VERSION
   sudo nvm alias xtuple $NODE_VERSION
   log "installing npm modules..."
-  npm install | tee -a $LOG_FILE
+  npm install 2>&1 | tee -a $LOG_FILE
 }
 
 # Use only if running from a debian package install for the first time
@@ -234,7 +234,7 @@ init_everythings() {
 
 	cdir $XT_DIR
 	node scripts/build_app.js -d $DATABASE 2>&1 | tee -a $LOG_FILE
-	sudo -u postgres psql $DATABASE -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>&1 | tee -a $LOG_FILE
+	sudo -u postgres psql -w $DATABASE -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>&1 | tee -a $LOG_FILE
 
 	log "You can login to the database and mobile client with:"
 	log "  username: admin"
