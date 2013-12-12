@@ -9,6 +9,14 @@ trailing:true, white:true*/
     var extensions;
 
     // ..........................................................
+    // ACTIVITY
+    //
+
+    XV.ActivityListParameters.prototype.activityTypes.purchasing = [
+      {type: "PurchaseOrderWorkflow", label: "_orderWorkflow".loc()}
+    ];
+
+    // ..........................................................
     // PURCHASE ORDER LIST
     //
 

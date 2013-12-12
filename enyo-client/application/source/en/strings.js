@@ -458,6 +458,7 @@ strict:true, trailing:true, white:true */
     "_orderNumber": "Order Number",
     "_orderNotes": "Order Notes",
     "_orderType": "Order Type",
+    "_orderWorkflow": "Order Workflow",
     "_ordered": "Ordered",
     "_other": "Other",
     "_outsideProcess": "Outside Process",

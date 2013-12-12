@@ -6,6 +6,15 @@ trailing:true, white:true*/
 (function () {
 
   XT.extensions.sales.initParameters = function () {
+
+    // ..........................................................
+    // ACTIVITY
+    //
+
+    XV.ActivityListParameters.prototype.activityTypes.sales = [
+      {type: "SalesOrderWorkflow", label: "_orderWorkflow".loc()}
+    ];
+
     // ..........................................................
     // SALES HISTORY
     //
