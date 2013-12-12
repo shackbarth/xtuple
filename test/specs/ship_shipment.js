@@ -45,7 +45,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       /**
         @member -
         @memberof ShipShipment.prototype
-        @description Approve for Billing', 'Create and Print Invoice' options should be enabled when
+        @description 'Approve for Billing', 'Create and Print Invoice' options should be enabled when
         'SelectBilling' privilege is enabled for the user"
       */
       it("'Approve for Billing', 'Create and Print Invoice' options should be enabled when" +
@@ -54,19 +54,12 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       /**
         @member -
         @memberof ShipShipment.prototype
-        @description 'Approve for Billing' should be automatically be checked when the metric
+        @description 'Approve for Billing' should be automatically checked when the metric
         'AutoSelectForBilling' is set to true
       */
-      it("'Approve for Billing' should be automatically be checked when the metric '" +
+      it("'Approve for Billing' should be automatically checked when the metric '" +
           "'AutoSelectForBilling' is set to true", function () {
       });
-      /**
-        @member -
-        @memberof ShipShipment.prototype
-        @description 'Approve for Billing' option should be automatically checked when
-        'Create and Print Invoice' option is checked by the user and unchecked when the
-        user unchecks the 'Create and Print Invoice' option
-      */
       it("'Approve for Billing' option should be automatically checked when " +
           "'Create and Print Invoice' option is checked by the user", function () {
       });
@@ -76,7 +69,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       /**
         @member -
         @memberof ShipShipment.prototype
-        @description Selected Sales order should be selected for billing on selecting to
+        @description Related Sales order should be selected for billing on selecting to
         Ship the Shipment with 'Approve for billing' ooption checked
       */
       it("Related Sales order should be selected for Billing on selecting to Ship the" +
@@ -86,7 +79,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       /**
         @member -
         @memberof ShipShipment.prototype
-        @description Invoice should be created and print for the Selected Sales order
+        @description Invoice should be created and printed for the Selected Sales order
         on selecting to Ship the Shipment with 'Create and Print Invoice' option checked
       */
       it("When 'Create and Print Invoice' option is checked, selecting to Ship the" +
