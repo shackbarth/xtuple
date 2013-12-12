@@ -38,24 +38,24 @@
     "underscore": "1.4.x",
     "winston": "0.7.x",
     "xmla4js": "git://github.com/rpbouman/xmla4js.git",
-    "underscore.string": "~2.3.3",
-    "congruence": "~1.2.3"
+    "underscore.string": "~2.3.3"
   },
   "devDependencies": {
     "chai": "1.5.x",
     "mocha": "1.9.x",
     "require-uncache": "0.0.x",
     "html5": "0.3.13",
-    "zombie": "1.4.x",
-    "vows": "0.7.x",
-    "less": "1.5.0"
+    "zombie": "1.4.x"
   },
-  "optionalDependencies": {},
+  "optionalDependencies": {
+    "xtuple-query": "~1.0.0"
+  },
   "engines": {
     "node": "0.8.x"
   },
   "main": "node-datasource/main.js",
   "scripts": {
+    "preinstall": "cd node-datasource/lib/query ; npm install",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
     "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*"
