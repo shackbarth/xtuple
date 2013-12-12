@@ -6,7 +6,7 @@ NODE_VERSION=0.8.26
 
 RUN_DIR=$(pwd)
 LOG_FILE=$RUN_DIR/install.log
-sudo cp $LOG_FILE $LOG_FILE.old 2>&1
+cp $LOG_FILE $LOG_FILE.old 2>&1 &> /dev/null
 log() {
 	echo "xtuple >> $@"
 	echo $@ >> $LOG_FILE
@@ -103,26 +103,22 @@ fi
 
 install_packages() {
   log "installing debian packages..."
-  echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' | sudo tee /etc/apt/sources.list.d/pgdg.list
+  echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
   sudo wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get -qq update 2>&1 | tee -a $LOG_FILE
-  sudo apt-get -q -y install curl build-essential git libssl-dev postgresql-9.1 postgresql-server-dev-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
+  sudo apt-get -q -y install curl build-essential libssl-dev postgresql-9.1 postgresql-server-dev-9.1 postgresql-contrib-9.1 postgresql-9.1-plv8 2>&1 | tee -a $LOG_FILE
 
-  if [ ! -d "$HOME/.nvm" ]; then
-    touch ~/.bash_profile
-    echo ". ~/.bash_profile" >> ~/.bashrc
-    wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
-
-    ## To install nvm (and therefore node and npm) as root:
-    ##  1. sudo su
-    ##  2. wget -qO- https://raw.github.com/xtuple/nvm/master/install.sh | bash
-    ##  3. source ~/.profile
-    ##  4. nvm install <version>
-    ##  5. use npm/node as usual as root
+  if [ ! -d "/usr/local/nvm" ]; then
+    sudo rm -f /usr/local/bin/nvm
+    sudo mkdir /usr/local/nvm
+    sudo git clone https://github.com/xtuple/nvm.git /usr/local/nvm
+    sudo ln -s /usr/local/nvm/nvm_bin.sh /usr/local/bin/nvm
+    sudo chmod +x /usr/local/bin/nvm
   fi
-  source $HOME/.nvm/nvm.sh
-  nvm alias default $NODE_VERSION
-  nvm install $NODE_VERSION 
+  sudo nvm install $NODE_VERSION 
+  sudo nvm use $NODE_VERSION
+  sudo nvm alias default $NODE_VERSION
+  sudo nvm alias xtuple $NODE_VERSION
   log "installing npm modules..."
   npm install | tee -a $LOG_FILE
 }
@@ -154,16 +150,14 @@ setup_postgres() {
 	fi
 
 	PGDIR=/etc/postgresql/9.1/main
-	sudo cp $PGDIR/postgresql.conf $PGDIR/postgresql.conf.default
-	if [ $? -ne 0 ]
-	then
-		return 2
-	fi
+
   log "copying configs..."
-	sudo cat $PGDIR/postgresql.conf.default | sed "s/#listen_addresses = \S*/listen_addresses = \'*\'/" | sed "s/#custom_variable_classes = ''/custom_variable_classes = 'plv8'/" | sudo tee -a $PGDIR/postgresql.conf > /dev/null
+	sudo cp $PGDIR/postgresql.conf $PGDIR/postgresql.conf.default
+	sudo cat $PGDIR/postgresql.conf.default | sed "s/#listen_addresses = \S*/listen_addresses = \'*\'/" | sed "s/#custom_variable_classes = ''/custom_variable_classes = 'plv8'/" | sudo tee $PGDIR/postgresql.conf > /dev/null
 	sudo chown postgres $PGDIR/postgresql.conf
+
 	sudo cp $PGDIR/pg_hba.conf $PGDIR/pg_hba.conf.default
-	sudo cat $PGDIR/pg_hba.conf.default | sed "s/local\s*all\s*postgres.*/local\tall\tpostgres\ttrust/" | sed "s/local\s*all\s*all.*/local\tall\tall\ttrust/" | sed "s#host\s*all\s*all\s*127\.0\.0\.1.*#host\tall\tall\t127.0.0.1/32\ttrust#" | sudo tee -a $PGDIR/pg_hba.conf > /dev/null
+	sudo cat $PGDIR/pg_hba.conf.default | sed "s/local\s*all\s*postgres.*/local\tall\tpostgres\ttrust/" | sed "s/local\s*all\s*all.*/local\tall\tall\ttrust/" | sed "s#host\s*all\s*all\s*127\.0\.0\.1.*#host\tall\tall\t127.0.0.1/32\ttrust#" | sudo tee $PGDIR/pg_hba.conf > /dev/null
 	sudo chown postgres $PGDIR/pg_hba.conf
 
   log "restarting postgres..."
