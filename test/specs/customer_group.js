@@ -10,7 +10,8 @@
   var crud = require('../lib/crud');
 
   /**
-  Customer Group...
+  Customer Group is used to categorize customers.
+  TIP: Create your customer groups using a logical, hierarchical structure. This will make it easier to retrieve customer group information in the future.
   @class
   @alias CustomerGroup
   @property {String} Name

@@ -8,12 +8,14 @@
   "use strict";
 
   /**
-  Incident Category...
+  Incident categories are used by the incident management system to categorize incidents.
+  TIP: You must manually create incident categories if you want the ability to assign them to incidents. If no incident categories are defined, then none will be available when entering incidents.
   @class
   @alias IncidentCategory
   @property {String} Name
   @property {String} Description
   @property {Number} Order
+  @property {Option} Email Delivery Profile
   **/
 
   var spec = {

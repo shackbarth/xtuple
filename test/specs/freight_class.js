@@ -10,7 +10,8 @@
   var crud = require('../lib/crud');
 
   /**
-  Freight Class...
+  Freight Class is used to label specific freight types.
+  TIP: Create your freight classes using a logical, hierarchical structure. This will make it easier to retrieve freight class information in the future.
   @class
   @alias FreightClass
   @property {String} Code
