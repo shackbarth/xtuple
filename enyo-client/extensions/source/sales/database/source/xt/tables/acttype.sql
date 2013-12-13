@@ -58,6 +58,7 @@ insert into xt.acttype (
   acttype_col_due_date,
   acttype_col_assigned_date,
   acttype_col_completed_Date,
+  acttype_col_action,
   acttype_col_parent_uuid,
   acttype_join
 ) values (
@@ -65,7 +66,7 @@ insert into xt.acttype (
   'coheadwf',
   'SalesOrderWorkflow',
   'coheadwf.obj_uuid',
-  'cohead_number',
+  'case when wf_type in (''P'', ''S'') then cohead.obj_uuid::text else cohead_number end',
   'acttype_code',
   'wf_name',
   'wf_status not in (''C'',''D'')',
@@ -78,6 +79,7 @@ insert into xt.acttype (
   'wf_due_date',
   'wf_assigned_date',
   'wf_completed_date',
+  'wf_type',
   'cohead.obj_uuid',
   'join cohead on cohead.obj_uuid=wf_parent_uuid'
 );

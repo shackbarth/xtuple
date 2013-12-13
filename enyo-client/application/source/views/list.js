@@ -84,6 +84,12 @@ trailing:true, white:true, strict: false*/
     label: "_activities".loc(),
     collection: "XM.ActivityListItemCollection",
     parameterWidget: "XV.ActivityListParameters",
+    published: {
+      activityActions: []
+    },
+    events: {
+      "onNotify": ""
+    },
     query: {orderBy: [
       {attribute: 'dueDate'},
       {attribute: 'name'},
@@ -159,11 +165,24 @@ trailing:true, white:true, strict: false*/
     },
     itemTap: function (inSender, inEvent) {
       var model = this.getModel(inEvent.index),
-        oldId = model.id;
-      model.id = model.get("editorKey");
-      this._lastTapIndex = inEvent.index;
-      this.inherited(arguments);
-      model.id = oldId;
+        key = model.get("editorKey"),
+        oldId = model.id,
+        type = model.get("activityType"),
+        action = model.get("activityAction"),
+        actActions = this.getActivityActions(),
+        actAction = _.find(actActions, function (item) {
+          return item.activityType === type && item.activityAction === action;
+        });
+
+      if (actAction) {
+        inEvent.model = model;
+        actAction.method.call(this, inSender, inEvent);
+      } else {
+        model.id = key;
+        this._lastTapIndex = inEvent.index;
+        this.inherited(arguments);
+        model.id = oldId;
+      }
     },
   });
 

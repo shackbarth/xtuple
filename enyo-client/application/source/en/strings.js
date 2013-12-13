@@ -920,6 +920,7 @@ strict:true, trailing:true, white:true */
     "_customerOrProspect": "Would you like to create a new Customer or a new Prospect?",
     "_deleteLine?": "Are you sure you want to delete this line?",
     "_exitPageWarning": "You are about to leave the xTuple application.",
+    "_insufficientPrivileges": "You have insufficient privileges to perform this action.",
     "_manualFreight": "Manually editing the freight will disable automatic freight recalculations.",
     "_mustSave": "You must save your changes before proceeding.",
     "_noPriceFound": "This item is marked as exclusive and no qualifying price was found.",
