@@ -2,7 +2,7 @@
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
 /*global XT:true, XM:true, XV:true, exports:true, describe:true, it:true,
-require:true, __dirname:true, console:true */
+require:true, __dirname:true, console:true, process:true */
 
 
 /**
@@ -34,7 +34,12 @@ require:true, __dirname:true, console:true */
       return path.extname(fileName) === '.js';
     }),
     specs = _.map(specFiles, function (specFile) {
-      return require(path.join(__dirname, "../specs", specFile));
+      var fileExports = require(path.join(__dirname, "../specs", specFile));
+      if (!fileExports || !fileExports.spec) {
+        console.log(specFile, "must export a spec. Use skipAll to skip it.");
+        process.exit(1);
+      }
+      return fileExports;
     }),
     runSpec = require("./runner_engine").runSpec;
 
