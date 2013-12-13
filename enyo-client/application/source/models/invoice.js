@@ -307,6 +307,11 @@ white:true*/
           that.set({outstandingCredit: null});
         };
 
+      if (!this.get("customer")) {
+        // don't bother if there's no customer
+        return;
+      }
+
       this.dispatch("XM.Invoice", "outstandingCredit",
         [this.getValue("customer.number"),
           this.getValue("currency.abbreviation"),

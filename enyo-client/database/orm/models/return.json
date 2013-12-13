@@ -692,13 +692,6 @@
         }
       },
       {
-        "name": "returned",
-        "attr": {
-          "type": "Quantity",
-          "column": "cmitem_qtyreturned"
-        }
-      },
-      {
         "name": "price",
         "attr": {
           "type": "SalesPrice",

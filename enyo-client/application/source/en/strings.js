@@ -541,6 +541,7 @@ strict:true, trailing:true, white:true */
     "_resolution": "Resolution",
     "_return": "Return",
     "_returnDate": "Return Date",
+    "_returnLine": "Return Line",
     "_returns": "Returns",
     "_roles": "Roles",
     "_salesEmailProfile": "Sales Email Profile",
