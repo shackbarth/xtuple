@@ -31,9 +31,7 @@ white:true*/
     // Purchase Order Workflow
     K = XM.PurchaseOrderWorkflow;
     var purchaseOrderWorkflowTypeJson = [
-      { id: K.TYPE_OTHER, name: "_other".loc() },
-      { id: K.TYPE_RECEIVE, name: "_receive".loc() },
-      { id: K.TYPE_POST_RECEIPT, name: "_postReceipt".loc() }
+      { id: K.TYPE_OTHER, name: "_other".loc() }
     ];
     XM.PurchaseOrderWorkflowTypeModel = Backbone.Model.extend({});
     XM.PurchaseOrderWorkflowTypeCollection = Backbone.Collection.extend({

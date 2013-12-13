@@ -264,7 +264,11 @@ white:true*/
 
     recordType: 'XM.SalesOrderWorkflow',
 
-    parentStatusAttribute: 'holdType'
+    parentStatusAttribute: 'holdType',
+
+    getSalesOrderWorkflowStatusString: function () {
+      return XM.SalesOrderWorkflow.prototype.getWorkflowStatusString.call(this);
+    }
 
   });
   _.extend(XM.SalesOrderWorkflow, /** @lends XM.SalesOrderLine# */{

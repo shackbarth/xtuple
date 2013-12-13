@@ -15,7 +15,11 @@ white:true*/
     */
     XM.PurchaseType = XM.Model.extend({
 
-      recordType: "XM.PurchaseType"
+      recordType: "XM.PurchaseType",
+
+      defaults: {
+        isActive: true
+      }
 
     });
 
@@ -384,17 +388,17 @@ white:true*/
     */
     XM.PurchaseOrderWorkflow = XM.Workflow.extend(/** @lends XM.PurchaseOrderWorkflow.prototype */{
 
-      recordType: 'XM.PurchaseOrderWorkflow'
+      recordType: 'XM.PurchaseOrderWorkflow',
+
+      getPurchaseOrderWorkflowStatusString: function () {
+        return XM.PurchaseOrderWorkflow.prototype.getWorkflowStatusString.call(this);
+      }
 
     });
 
     _.extend(XM.PurchaseOrderWorkflow, /** @lends XM.PurchaseOrderWorkflow# */{
 
-      TYPE_OTHER: "O",
-
-      TYPE_RECEIVE: "R",
-
-      TYPE_POST_RECEIPTS: "P"
+      TYPE_OTHER: "O"
 
     });
 

@@ -109,13 +109,15 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.ListAttr", attr: "description",
-                placeholder: "_noDescription".loc()},
+            {kind: "XV.ListAttr", attr: "activityType",
+              placeholder: "_noDescription".loc()},
             {kind: "XV.ListAttr", attr: "parent.name"}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "owner.username"},
-            {kind: "XV.ListAttr", attr: "assignedTo.username"}
+            {kind: "XV.ListAttr", attr: "owner.username",
+              placeholder: "_noOwner".loc()},
+            {kind: "XV.ListAttr", attr: "assignedTo.username",
+              placeholder: "_noAssignedTo".loc()}
             /*
             {kind: "XV.ListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()}
