@@ -58,6 +58,7 @@ insert into xt.acttype (
   acttype_col_due_date,
   acttype_col_assigned_date,
   acttype_col_completed_Date,
+  acttype_col_action,
   acttype_col_parent_uuid,
   acttype_join
 ) values (
@@ -78,6 +79,7 @@ insert into xt.acttype (
   'wf_due_date',
   'wf_assigned_date',
   'wf_completed_date',
+  'wf_type',
   'pohead.obj_uuid::uuid',
   'join pohead on pohead.obj_uuid=wf_parent_uuid'
 );

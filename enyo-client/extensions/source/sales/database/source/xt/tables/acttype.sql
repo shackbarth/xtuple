@@ -66,7 +66,7 @@ insert into xt.acttype (
   'coheadwf',
   'SalesOrderWorkflow',
   'coheadwf.obj_uuid',
-  'case when wf_type in (''P'', ''S'') then cohead.obj_uuid::text else cohead_number end',
+  'cohead_number',
   'acttype_code',
   'wf_name',
   'wf_status not in (''C'',''D'')',
