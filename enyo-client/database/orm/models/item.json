@@ -56,7 +56,7 @@
     "privileges": {
       "all": {
         "create": "MaintainFreightClasses",
-        "read": true,
+        "read": "ViewFreightClasses",
         "update": "MaintainFreightClasses",
         "delete": "MaintainFreightClasses"
       }
