@@ -131,23 +131,20 @@ trailing:true, white:true*/
         fn2 = this.populateFromUserPref,
         actTypes = this.getActivityTypes(),
         keys = _.keys(actTypes),
-        that = this,
-        userHeader;
+        that = this;
 
       // Temporary stomp
       this.defaultFilterChanged = function () {};
       this.populateFromUserPref = function () {};
 
       this.inherited(arguments);
-      userHeader = this.$.userHeader;
 
       // Build up toggle check boxes for activity types
       _.each(keys, function (key) {
         // Create header
         that.createComponent({
           kind: "onyx.GroupboxHeader",
-          content: ("_" + key).loc(),
-          addBefore: userHeader
+          content: ("_" + key).loc()
         });
 
         _.each(actTypes[key], function (obj) {
@@ -155,8 +152,7 @@ trailing:true, white:true*/
           that.createComponent({
             name: _namify(obj),
             label: obj.label ? obj.label : ("_" + obj.type.pluralize().camelize()).loc(),
-            defaultKind: "XV.ToggleButtonWidget",
-            addBefore: userHeader
+            defaultKind: "XV.ToggleButtonWidget"
           });
         });
       });

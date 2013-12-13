@@ -95,14 +95,13 @@ trailing:true, white:true, strict: false*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name", isKey: true},
+              {kind: "XV.ListAttr", formatter: "formatName", isKey: true},
               {kind: "XV.ListAttr", attr: "dueDate", fit: true,
                 formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
                 classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "activityType",
-                formatter: "formatType"},
+              {kind: "XV.ListAttr", formatter: "formatDescription1"},
               {kind: "XV.ListAttr", attr: "getActivityStatusString",
                 classes: "right"}
             ]}
@@ -110,8 +109,9 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "second",
             components: [
             {kind: "XV.ListAttr", attr: "activityType",
+              formatter: "formatType",
               placeholder: "_noDescription".loc()},
-            {kind: "XV.ListAttr", attr: "parent.name"}
+            {kind: "XV.ListAttr", formatter: "formatDescription2"}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "owner.username",
@@ -138,6 +138,21 @@ trailing:true, white:true, strict: false*/
           XT.date.compareDate(value, today) < 1);
       view.addRemoveClass("error", isLate);
       return value;
+    },
+    formatName: function (value, view, model) {
+      var parent = model.get("parent");
+      if (parent) { return parent.get("name"); }
+      return model.get("name");
+    },
+    formatDescription1: function (value, view, model) {
+      var parent = model.get("parent");
+      if (parent) { return model.get("name"); }
+      return model.get("description");
+    },
+    formatDescription2: function (value, view, model) {
+      var parent = model.get("parent");
+      if (!parent) { return ""; }
+      return model.get("description");
     },
     formatType: function (value) {
       return ("_" + value.slice(0, 1).toLowerCase() + value.slice(1)).loc();

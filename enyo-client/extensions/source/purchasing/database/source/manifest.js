@@ -6,6 +6,7 @@
     "xt/functions/po_freight_subtotal.sql",
     "xt/functions/po_line_extended_price.sql",
     "xt/functions/po_line_tax.sql",
+    "xt/functions/po_schedule_date.sql",
     "xt/functions/po_subtotal.sql",
     "xt/functions/po_tax_total.sql",
     "xt/functions/po_total.sql",

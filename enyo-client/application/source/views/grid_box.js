@@ -174,8 +174,10 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       {classes: "user", header: ["_owner".loc(), "_assignedTo".loc()],
         rows: [
         {readOnlyAttr: "owner.username",
+          placeholder: "_noOwner".loc(),
           editor: {kind: "XV.UserAccountWidget", attr: "owner"}},
         {readOnlyAttr: "assignedTo.username",
+          placeholder: "_noAssignedTo".loc(),
           editor: {kind: "XV.UserAccountWidget", attr: "assignedTo"}},
         {readOnlyAttr: "priority.name",
           editor: {kind: "XV.PriorityPicker", attr: "priority"}}

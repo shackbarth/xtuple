@@ -167,6 +167,9 @@ trailing:true, white:true, strict: false*/
       }
     });
 
+    XV.registerModelWorkspace("XM.PurchaseOrder", "XV.PurchaseOrderWorkspace");
+    XV.registerModelWorkspace("XM.PurchaseOrderWorkflow", "XV.PurchaseOrderWorkspace");
+    XV.registerModelWorkspace("XM.PurchaseOrderRelation", "XV.PurchaseOrderWorkspace");
     XV.registerModelWorkspace("XM.PurchaseOrderListItem", "XV.PurchaseOrderWorkspace");
 
     // ..........................................................

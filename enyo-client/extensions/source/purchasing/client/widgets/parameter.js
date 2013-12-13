@@ -13,7 +13,8 @@ trailing:true, white:true*/
     //
 
     XV.ActivityListParameters.prototype.activityTypes.purchasing = [
-      {type: "PurchaseOrderWorkflow", label: "_orderWorkflow".loc()}
+      {type: "PurchaseOrder", label: "_orders".loc()},
+      {type: "PurchaseOrderWorkflow", label: "_workflow".loc()}
     ];
 
     // ..........................................................

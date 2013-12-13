@@ -71,6 +71,10 @@ white:true*/
       }
     },
 
+    getSalesOrderStatusString: function () {
+      return XM.SalesOrder.prototype.getOrderStatusString.call(this);
+    },
+
     holdTypeDidChange: function () {
       if (!this.get("holdType")) {
         _.each(this.get("workflow").where(

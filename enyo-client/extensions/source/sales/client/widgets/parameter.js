@@ -12,6 +12,7 @@ trailing:true, white:true*/
     //
 
     XV.ActivityListParameters.prototype.activityTypes.sales = [
+      {type: "SalesOrder", label: "_salesOrders".loc()},
       {type: "SalesOrderWorkflow", label: "_orderWorkflow".loc()}
     ];
 
