@@ -387,28 +387,19 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       it.skip("For the Workflow items copied from the Sale types, the start date and due date " +
         "should be calculated correctly based on the offset", function () {
       });
-      /**
-        @member -
-        @memberof SalesOrder
-        @description When a Sale type with characteristics, of an existing sales order is changed," +
-        "to a sale type with no characteristics, the existing characteristics should be cleared" +
-        "on the sales order
-      */
-      it.skip("When a Sale type with characteristics, of an existing sales order is changed," +
-        "to a sale type with no characteristics, the existing characteristics should be cleared" +
-        "on the sales order", function () {
-      });
+
       /**
         @member -
         @memberof SalesOrder
         @description When a Sale type with workflows, of an existing sales order is changed," +
-        "to a sale type with no workflows, the existing characteristics should be cleared" +
+        "to a sale type with no workflows, the existing workflows should be cleared" +
         "on the sales order
       */
       it.skip("When a Sale type with workflows, of an existing sales order is changed," +
-        "to a sale type with no workflows, the existing characteristics should be cleared" +
+        "to a sale type with no workflows, the existing workflows should be cleared" +
         "on the sales order", function () {
       });
+      
       /**
         @member -
         @memberof SalesOrder
@@ -537,6 +528,11 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
         lineItem.set({item: item});
         assert.equal(lineItem.get("customerPartNumber"), aliasNumber);
+      });
+      it.skip("For a new sales order, enter the customer, Start the first line item." +
+        "Type \"BTRUCK1\" in for the item number" +
+        "Tab and put in quantity.Tab all the way through until the next line is created." +
+        "The second line should not be populated with the item number", function () {
       });
     });
   };
