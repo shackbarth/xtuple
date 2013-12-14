@@ -792,6 +792,7 @@ strict:true, trailing:true, white:true */
     "_maintainImages": "Maintain Images",
     "_maintainItemMasters": "Maintain Item Masters",
     "_maintainItemSites": "Maintain Item Sites",
+    "_maintainItemGroups": "Maintain Item Groups",
     "_maintainLocations": "Maintain Locations",
     "_maintainPackingListBatch": "Maintain Packing List Batch",
     "_maintainProductCategories": "Maintain Product Categories",

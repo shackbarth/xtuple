@@ -27,6 +27,7 @@
         "MaintainCustomerGroups",
         "MaintainIncidentCategories",
         "MaintainItemMasters",
+        "MaintainItemGroups",
         "MaintainMiscInvoices",
         "MaintainReasonCodes",
         "MaintainSalesCategories",
@@ -57,6 +58,8 @@
         {name: "reasonCodeList", kind: "XV.ReasonCodeList"},
         {name: "salesCategoryList", kind: "XV.SalesCategoryList"},
         {name: "termsList", kind: "XV.TermsList"},
+        {name: "itemList", kind: "XV.ItemList"},
+        {name: "itemGroupList", kind: "XV.ItemGroupList"}
       ];
 
     XT.app.$.postbooks.appendPanels("setup", setupPanels);
