@@ -1739,6 +1739,178 @@ strict: false*/
   XV.registerModelWorkspace("XM.ProspectListItem", "XV.ProspectWorkspace");
 
   // ..........................................................
+  // RETURN
+  //
+  hash = {
+    name: "XV.ReturnWorkspace",
+    kind: "XV.Workspace",
+    title: "_return".loc(),
+    model: "XM.Return",
+    allowPrint: true,
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", fit: true, components: [
+            {name: "mainSubgroup", components: [ // not a scroller, so we can addBefore
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.DateWidget", attr: "returnDate"},
+              {kind: "XV.CheckboxWidget", name: "isPosted", attr: "isPosted"},
+              {kind: "XV.CheckboxWidget", name: "isVoid", attr: "isVoid"},
+              {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
+              {kind: "XV.BillingCustomerWidget", attr: "customer",
+                 name: "customerWidget", showAddress: true,
+                 label: "_customer".loc(), nameAttribute: ""
+              },
+              {kind: "XV.AddressFieldsWidget",
+                name: "addressWidget", attr:
+                {name: "billtoName", line1: "billtoAddress1",
+                  line2: "billtoAddress2", line3: "billtoAddress3",
+                  city: "billtoCity", state: "billtoState",
+                  postalCode: "billtoPostalCode", country: "billtoCountry"}
+              },
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc(), name: "notesHeader"},
+              {kind: "XV.TextArea", attr: "notes", fit: true}
+            ]}
+          ]}
+        ]},
+        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
+        {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.CurrencyPicker", attr: "currency"},
+            {kind: "XV.SalesRepPicker", attr: "salesRep"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            {kind: "XV.SaleTypePicker", attr: "saleType"},
+            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
+              label: "_custPO".loc()},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+          ]}
+        ]},
+        //{kind: "XV.ReturnAllocationsBox", attr: "allocations", title: "_allocatedCredit".loc()},
+        // TODO: nest the next two items in a groupbox
+        {kind: "XV.ReturnTaxBox", attr: "taxes", title: "_taxes".loc()},
+        {kind: "XV.ReturnTaxAdjustmentBox", attr: "taxAdjustments", title: "_taxAdjustments".loc()}
+        //{kind: "XV.ReturnDocumentsBox", attr: "documents"}
+      ]}
+    ],
+    create: function () {
+      this.inherited(arguments);
+      if (enyo.platform.touch) {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.ReturnLineItemBox", name: "returnLineItemBox", attr: "lineItems", fit: true}
+        ], {owner: this});
+      } else {
+        this.$.lineItemsPanel.createComponents([
+          // Line Item Box
+          {kind: "XV.ReturnLineItemGridBox", name: "returnLineItemBox",
+            attr: "lineItems", fit: true}
+        ], {owner: this});
+      }
+      this.processExtensions(true);
+    }
+  };
+  hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
+  enyo.kind(hash);
+
+  XV.registerModelWorkspace("XM.ReturnListItem", "XV.ReturnWorkspace");
+
+  enyo.kind({
+    name: "XV.ReturnLineWorkspace",
+    kind: "XV.ChildWorkspace",
+    title: "_returnLine".loc(),
+    model: "XM.ReturnLine",
+    published: {
+      currencyKey: "return.currency",
+      effectiveKey: "return.returnDate"
+    },
+    components: [
+      {kind: "Panels", name: "salesLinePanels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", fit: true, components: [
+            {kind: "XV.NumberWidget", attr: "lineNumber"},
+            {kind: "XV.CheckboxWidget", attr: "isMiscellaneous"},
+            {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"},
+              name: "itemSiteWidget",
+              query: {parameters: [
+              {attribute: "item.isSold", value: true},
+              {attribute: "item.isActive", value: true},
+              {attribute: "isSold", value: true},
+              {attribute: "isActive", value: true}
+            ]}},
+            {kind: "XV.SalesPriceWidget", attr: "item.listPrice", label: "_listPrice".loc()},
+            {kind: "XV.SalesPriceWidget", attr: "item.wholesalePrice",
+              label: "_wholesalePrice".loc()},
+            {kind: "XV.InputWidget", attr: "customerPartNumber"},
+            {kind: "XV.InputWidget", attr: "itemNumber"},
+            {kind: "XV.InputWidget", attr: "itemDescription"},
+            {kind: "XV.SalesCategoryPicker", attr: "salesCategory"},
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "pricePanel", title: "_price".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_price".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "priceGroup",
+              classes: "in-panel", fit: true, components: [
+            {kind: "XV.QuantityWidget", attr: "quantity", label: "_ordered".loc()},
+            {kind: "XV.QuantityWidget", attr: "credited"},
+            {kind: "XV.UnitPicker", name: "quantityUnitPicker",
+              attr: "quantityUnit"},
+            {kind: "XV.MoneyWidget", attr:
+              {localValue: "price", currency: ""},
+              label: "_price".loc(), currencyDisabled: true,
+              scale: XT.SALES_PRICE_SCALE},
+            {kind: "XV.UnitPicker", name: "priceUnitPicker",
+              attr: "priceUnit"},
+            {kind: "XV.MoneyWidget", attr:
+              {localValue: "extendedPrice", currency: ""},
+              label: "_extendedPrice".loc(), currencyDisabled: true,
+              scale: XT.EXTENDED_PRICE_SCALE}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "detailsPanel", title: "_detail".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_detail".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "detailGroup",
+            classes: "in-panel", fit: true, components: [
+            {kind: "XV.MoneyWidget", attr: {baseValue: "unitCost"},
+              label: "_unitCost".loc(), isEditableProperty: "baseValue",
+              currencyDisabled: true},
+            {kind: "XV.MoneyWidget", attr: {localValue: "customerPrice"},
+              label: "_customerPrice".loc(), scale: XT.SALES_PRICE_SCALE,
+              currencyDisabled: true},
+            {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
+            {kind: "XV.TaxTypePicker", attr: "taxType"},
+            {kind: "XV.NumberWidget", attr: "taxTotal"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]},
+        {kind: "XV.InvoiceLineTaxBox", attr: "taxes"}
+      ]}
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var effectiveKey = this.getEffectiveKey(),
+        currencyKey = this.getCurrencyKey();
+
+      // Set currency and effective attributes on money widgets
+      this.getComponents().forEach(function (ctl) {
+        if (ctl.kind === "XV.MoneyWidget") {
+          ctl.attr.currency = currencyKey;
+          ctl.attr.effective = effectiveKey;
+        }
+      });
+    }
+  });
+  // ..........................................................
   // SALES ORDER BASE
   //
 

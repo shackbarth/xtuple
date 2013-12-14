@@ -12,6 +12,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     smoke = require("../lib/smoke"),
     assert = require("chai").assert;
   var spec = {
+    skipAll: true,
     recordType: "XM.IssueMaterial",
     collectionType: "XM.IssueMaterialCollection",
     cacheName: null,
@@ -76,6 +77,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     });
   };
   //Disabling the test as it requires the manufacturing extension to be installed and enabled
-  //exports.spec = spec;
-  //exports.additionalTests = additionalTests;
+  exports.spec = spec;
+  exports.additionalTests = additionalTests;
 }());

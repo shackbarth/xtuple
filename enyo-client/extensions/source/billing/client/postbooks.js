@@ -10,6 +10,7 @@
         panels: [
           {name: "billing_customerList", kind: "XV.CustomerList"},
           {name: "invoiceList", kind: "XV.InvoiceList"},
+          {name: "returnList", kind: "XV.ReturnList"},
           {name: "receivableList", kind: "XV.ReceivableList"},
           {name: "cashReceiptList", kind: "XV.CashReceiptList"}
         ]
@@ -22,6 +23,7 @@
         "EditAROpenItem",
         "MaintainBankAccounts",
         "MaintainCashReceipts",
+        "MaintainCreditMemos",
         "MaintainCurrencies",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
@@ -34,15 +36,19 @@
         "MaintainShipVias",
         "MaintainTerms",
         "OverrideTax",
+        "PostARDocuments",
         "PostCashReceipts",
         "PostMiscInvoices",
+        "PrintCreditMemos",
         "PrintInvoices",
         "ViewAROpenItems",
         "ViewCashReceipts",
+        "ViewCreditMemos",
         "ViewCustomerMasters",
         "ViewCustomerGroups",
         "ViewItemMasters",
         "ViewMiscInvoices",
+        "VoidPostedARCreditMemos",
         "VoidPostedCashReceipts",
         "VoidPostedInvoices"
       ],

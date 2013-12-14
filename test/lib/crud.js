@@ -72,7 +72,7 @@ var _ = require("underscore"),
 
       } else {
         // default case, such as comparing strings to strings etc.
-        assert.equal(data.model.get(key), value);
+        assert.equal(data.model.get(key), value, "attribute is " + key);
       }
     });
   };
@@ -275,7 +275,7 @@ var _ = require("underscore"),
 
           // Model should not be used at this point
           options.success = function (used) {
-            assert.equal(used, 0);
+            assert.equal(used, 0, "Model is used but shouldn't be");
             callback();
           };
           model.used(options);
@@ -361,7 +361,8 @@ var _ = require("underscore"),
     //
     it('can be loaded with a zombie session', function (done) {
       this.timeout(40 * 1000);
-      zombieAuth.loadApp({callback: done, verbose: false /* data.verbose */});
+      zombieAuth.loadApp({callback: done, verbose: data.verbose,
+        loginDataPath: data.loginDataPath});
     });
 
     //
