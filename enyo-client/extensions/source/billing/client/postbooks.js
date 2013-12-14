@@ -25,6 +25,7 @@
         "MaintainCurrencies",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
+        "MaintainIncidentCategories",
         "MaintainItemMasters",
         "MaintainMiscInvoices",
         "MaintainReasonCodes",
