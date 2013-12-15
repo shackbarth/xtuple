@@ -119,6 +119,7 @@ trailing:true, white:true, strict:false*/
           classes: "in-panel", components: [
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.InputWidget", attr: "description"},
+          {kind: "XV.WorkflowStatusPicker", attr: "status"},
           {kind: "XV.PurchaseOrderWorkflowTypePicker", attr: "workflowType",
             label: "_type".loc()},
           {kind: "XV.PriorityPicker", attr: "priority", showNone: false},

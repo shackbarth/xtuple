@@ -271,6 +271,13 @@
         }
       },
       {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_status"
+        }
+      },
+      {
         "name": "startSet",
         "attr": {
           "type": "Boolean",
