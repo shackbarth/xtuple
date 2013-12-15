@@ -800,7 +800,6 @@ strict:true, trailing:true, white:true */
     "_maintainItemGroups": "Maintain Item Groups",
     "_maintainItemMasters": "Maintain Item Masters",
     "_maintainItemSites": "Maintain Item Sites",
-    "_maintainItemGroups": "Maintain Item Groups",
     "_maintainLocations": "Maintain Locations",
     "_maintainPackingListBatch": "Maintain Packing List Batch",
     "_maintainProductCategories": "Maintain Product Categories",
