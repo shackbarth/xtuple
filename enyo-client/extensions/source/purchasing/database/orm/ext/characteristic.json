@@ -1,0 +1,26 @@
+[
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "Characteristic",
+    "table": "char",
+    "isExtension": true,
+    "comment": "Extended by Purchasing",
+    "relations": [
+      {
+        "column": "char_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "isPurchaseOrders",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_purchaseorders"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

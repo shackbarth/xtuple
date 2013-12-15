@@ -2383,6 +2383,8 @@ strict: false*/
     }
   });
 
+  XV.registerModelWorkspace("XM.SalesOrder", "XV.SalesOrderWorkspace");
+  XV.registerModelWorkspace("XM.SalesOrderWorkflow", "XV.SalesOrderWorkspace");
   XV.registerModelWorkspace("XM.SalesOrderRelation", "XV.SalesOrderWorkspace");
   XV.registerModelWorkspace("XM.SalesOrderListItem", "XV.SalesOrderWorkspace");
 

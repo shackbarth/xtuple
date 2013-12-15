@@ -71,6 +71,10 @@ white:true*/
       }
     },
 
+    getSalesOrderStatusString: function () {
+      return XM.SalesOrder.prototype.getOrderStatusString.call(this);
+    },
+
     holdTypeDidChange: function () {
       if (!this.get("holdType")) {
         _.each(this.get("workflow").where(
@@ -260,7 +264,11 @@ white:true*/
 
     recordType: 'XM.SalesOrderWorkflow',
 
-    parentStatusAttribute: 'holdType'
+    parentStatusAttribute: 'holdType',
+
+    getSalesOrderWorkflowStatusString: function () {
+      return XM.SalesOrderWorkflow.prototype.getWorkflowStatusString.call(this);
+    }
 
   });
   _.extend(XM.SalesOrderWorkflow, /** @lends XM.SalesOrderLine# */{

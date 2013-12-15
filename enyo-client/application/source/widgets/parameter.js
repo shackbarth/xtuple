@@ -73,17 +73,29 @@ trailing:true, white:true*/
   // ACTIVITY
   //
 
+  /* @private */
+  var _namify = function (obj) {
+    return "show" + obj.type.pluralize();
+  };
+
   enyo.kind({
     name: "XV.ActivityListParameters",
     kind: "XV.ParameterWidget",
+    published: {
+      activityTypes: {}
+    },
     defaultParameters: function () {
-      return {
-        showInactive: false,
-        showProjects: true,
-        showProjectTasks: true,
-        showProjectWorkflow: true,
-        user: XM.currentUser
-      };
+      var actTypes = this.getActivityTypes(),
+        keys = _.keys(actTypes),
+        params = {user: XM.currentUser};
+
+      _.each(keys, function (key) {
+        _.each(actTypes[key], function (obj) {
+          params[_namify(obj)] = true;
+        });
+      });
+
+      return params;
     },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_activities".loc()},
@@ -102,17 +114,7 @@ trailing:true, white:true*/
       },
       {name: "name", label: "_name".loc(), attr: "name"},
       {name: "description", label: "_description".loc(), attr: "description"},
-      {kind: "onyx.GroupboxHeader", content: "_project".loc()},
-      {name: "showProjects", label: "_projects".loc(), defaultKind: "XV.ToggleButtonWidget"},
-      {name: "showProjectTasks", label: "_tasks".loc(), defaultKind: "XV.ToggleButtonWidget"},
-      {name: "showProjectWorkflow", label: "_workflow".loc(), defaultKind: "XV.ToggleButtonWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_crm".loc()},
-      {name: "showToDos", label: "_toDos".loc(), defaultKind: "XV.ToggleButtonWidget"},
-      {name: "showOpportunities", label: "_opportunities".loc(), defaultKind: "XV.ToggleButtonWidget"},
-      {name: "showIncidents", label: "_incidents".loc(), defaultKind: "XV.ToggleButtonWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_sales".loc()},
-      {name: "showSalesOrderWorkflow", label: "_workflow".loc(), defaultKind: "XV.ToggleButtonWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc(), name: "userHeader"},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
@@ -124,37 +126,68 @@ trailing:true, white:true*/
         filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ],
+    create: function () {
+      var fn1 = this.defaultFilterChanged, // Cache to intercept
+        fn2 = this.populateFromUserPref,
+        actTypes = this.getActivityTypes(),
+        keys = _.keys(actTypes),
+        that = this;
+
+      // Temporary stomp
+      this.defaultFilterChanged = function () {};
+      this.populateFromUserPref = function () {};
+
+      this.inherited(arguments);
+
+      // Build up toggle check boxes for activity types
+      _.each(keys, function (key) {
+        // Create header
+        that.createComponent({
+          kind: "onyx.GroupboxHeader",
+          content: ("_" + key).loc()
+        });
+
+        _.each(actTypes[key], function (obj) {
+          // Create filter Widget
+          that.createComponent({
+            name: _namify(obj),
+            label: obj.label ? obj.label : ("_" + obj.type.pluralize().camelize()).loc(),
+            defaultKind: "XV.ToggleButtonWidget"
+          });
+        });
+      });
+
+      // Unstomp
+      this.defaultFilterChanged = fn1;
+      this.defaultFilterChanged();
+      this.populateFromUserPref = fn2;
+      this.populateFromUserPref();
+    },
     getParameters: function () {
       var params = this.inherited(arguments),
+        actTypes = this.getActivityTypes(),
+        keys = _.keys(actTypes),
         param = {},
-        value = [];
-      if (this.$.showProjects.getValue()) {
-        value.push('Project');
-      }
-      if (this.$.showProjectTasks.getValue()) {
-        value.push('ProjectTask');
-      }
-      if (this.$.showProjectWorkflow.getValue()) {
-        value.push('ProjectWorkflow');
-      }
-      if (this.$.showIncidents.getValue()) {
-        value.push('Incident');
-      }
-      if (this.$.showOpportunities.getValue()) {
-        value.push('Opportunity');
-      }
-      if (this.$.showToDos.getValue()) {
-        value.push('ToDo');
-      }
-      if (this.$.showSalesOrderWorkflow.getValue()) {
-        value.push('SalesOrderWorkflow');
-      }
+        value = [],
+        that = this;
+
+      // For each dynamically added object type
+      // see if toggle is on and update params
+      _.each(keys, function (key) {
+        _.each(actTypes[key], function (obj) {
+          if (that.$[_namify(obj)].getValue()) {
+            value.push(obj.type);
+          }
+        });
+      });
+
       if (value.length) {
         param.attribute = "activityType";
         param.operator = "ANY";
         param.value = value;
         params.push(param);
       }
+
       return params;
     }
   });
