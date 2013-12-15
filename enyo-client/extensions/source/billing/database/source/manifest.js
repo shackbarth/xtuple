@@ -5,6 +5,7 @@
   "databaseScripts": [
     "xm/javascript/billing.sql",
     "xm/javascript/invoice.sql",
+    "xm/javascript/return.sql",
     "xm/javascript/receivable.sql",
     "xm/javascript/sales_category.sql",
     "xt/functions/ar_balance.sql",

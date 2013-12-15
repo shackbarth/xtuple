@@ -25,6 +25,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
   @property {ShipShipmentLine} lineItems
   **/
   var spec = {
+    skipAll: true,
     recordType: "XM.ShipShipment",
     cacheName: null,
     instanceOf: "XM.Model",
@@ -87,6 +88,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
     });
   };
-  //exports.spec = spec;
-  //exports.additionalTests = additionalTests;
+  exports.spec = spec;
+  exports.additionalTests = additionalTests;
 }());

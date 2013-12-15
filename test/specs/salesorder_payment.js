@@ -55,5 +55,9 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
     });
   };
-  //exports.additionalTests = additionalTests;
+
+  exports.spec = {
+    skipAll: true
+  };
+  exports.additionalTests = additionalTests;
 }());

@@ -42,7 +42,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   //
-  // Useful for any model that uses XM.SalesOrderLineBase
+  // Useful for any model that uses XM.SalesOrderLineMixin
   //
   var getBeforeSaveAction = function (lineRecordType) {
     return function (data, next) {
@@ -51,7 +51,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           var unitUpdated = function () {
             // make sure all the fields we need to save successfully have been calculated
             if (lineItem.get("price") &&
-                lineItem.get("customerPrice")) {
+                (!_.contains(lineItem.getAttributeNames(), "customerPrice") || lineItem.get("customerPrice"))) {
 
               //lineItem.off("all", unitUpdated);
               if (!movedOn) {
@@ -70,10 +70,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
             return curr.get("isBase");
           });
           data.model.set({currency: currency});
-          lineItem.set({quantity: 7});
-          if (lineRecordType === "XM.InvoiceLine") {
-            lineItem.set({billed: 7});
-          }
+          lineItem.setIfExists({quantity: 7});
+          lineItem.setIfExists({billed: 7});
+          lineItem.setIfExists({credited: 7});
           lineItem.set({item: submodels.itemModel});
           lineItem.set({site: submodels.siteModel});
         };
