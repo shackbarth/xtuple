@@ -136,8 +136,24 @@ body {
 
 .app > * {
   width: 320px;
+  height: 100%;
   .box-shadow(-4px -4px 4px rgba(0,0,0,0.3));
   background: @charcoal;
+}
+
+/*
+  Media query for responsive design. This adapts to smaller
+  displays.
+*/
+@media (max-width: 480px) {
+  .pullout-menu {
+    display: block;
+    margin: 0;
+  }
+  .app > * {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
 
 .panels > * {
@@ -152,21 +168,6 @@ body {
 .scroll-ios {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-}
-
-/*
-  Media query for responsive design. This adapts to smaller
-  displays.
-*/
-@media (max-width: 480px) {
-  .pullout-menu {
-    display: block;
-    margin: 0;
-  }
-  .app-panels > * {
-       min-width: 100%;
-       max-width: 100%;
-   }
 }
 
 .item {

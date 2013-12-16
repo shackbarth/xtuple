@@ -1748,7 +1748,7 @@ ul.icons-ul > li .icon-li {
   right: 0;
 }
 .selectable-chart .chart-bottom {
-  background-color: #F8F8F5;
+  background-color: #555555;
   border: 1px solid #444444;
   border-top: none;
   -webkit-border-bottom-right-radius: 10px;
@@ -1760,7 +1760,7 @@ ul.icons-ul > li .icon-li {
 }
 .selectable-chart .chart-bottom .xv-picker-label {
   width: 100px;
-  color: #000000;
+  color: #ffffff;
 }
 .selectable-chart .chart-bottom .onyx-button {
   width: 130px;
@@ -2520,10 +2520,25 @@ body {
 }
 .app > * {
   width: 320px;
+  height: 100%;
   -webkit-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
   box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
   background: #555555;
+}
+/*
+  Media query for responsive design. This adapts to smaller
+  displays.
+*/
+@media (max-width: 480px) {
+  .pullout-menu {
+    display: block;
+    margin: 0;
+  }
+  .app > * {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
 .panels > * {
   border: 2px solid #333333;
@@ -2535,20 +2550,6 @@ body {
 .scroll-ios {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-}
-/*
-  Media query for responsive design. This adapts to smaller
-  displays.
-*/
-@media (max-width: 480px) {
-  .pullout-menu {
-    display: block;
-    margin: 0;
-  }
-  .app-panels > * {
-    min-width: 100%;
-    max-width: 100%;
-  }
 }
 .item {
   position: relative;
