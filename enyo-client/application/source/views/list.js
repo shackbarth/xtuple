@@ -574,6 +574,7 @@ trailing:true, white:true, strict: false*/
       {attribute: 'number'}
     ]},
     allowPrint: true,
+    multiSelect: true,
     parameterWidget: "XV.CustomerListParameters",
     components: [
       {kind: "XV.ListItem", components: [

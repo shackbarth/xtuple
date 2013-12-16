@@ -71,6 +71,7 @@ XT.extensions.billing.initLists = function () {
     collection: "XM.ReceivableListItemCollection",
     parameterWidget: "XV.ReceivableListParameters",
     allowPrint: true,
+    multiSelect: true,
     showDeleteAction: false,
     query: {orderBy: [
       {attribute: 'documentNumber'}

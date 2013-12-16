@@ -10,6 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     and redirect to pentaho with a key that will allow pentaho to access the report.
    */
   var data = require("./data");
+  var request = require("request");
 
   var queryForData = function (session, query, callback) {
 
@@ -108,15 +109,36 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         },
         success = function () {
           var biUrl = X.options.datasource.biUrl || "",
-            redirectUrl = biUrl + "&name=" + fileName +
+            reportUrl = biUrl + "&name=" + fileName +
               "&org=" + req.session.passport.user.organization +
-              "&datasource=" + req.headers.host + "&datakey=" + randomKey;
+              "&datasource=" + req.headers.host + "&datakey=" + randomKey +
+              "&print=" + requestDetails.print;
 
           if (requestDetails.culture) {
             res.set("Accept-Language", requestDetails.culture);
           }
-          // step 3: redirect to the report tool
-          res.redirect(redirectUrl);
+          // step 3: redirect to the report URL or if the print option is true
+          // get the report URL
+          if (requestDetails.print === "false") {
+            X.log("redirect to: " + reportUrl);
+            res.redirect(reportUrl);
+          }
+          else {
+            X.log("request get: " + reportUrl);
+            request({
+              uri: reportUrl,
+              method: "GET",
+            },
+            function (err, response, body) {
+              X.log("request body: " + body);
+              if (err) {
+                res.send({ isError: true,
+                  error: err,
+                  message: err
+                });
+              }
+            });
+          }
         },
         error = function (model, err, options) {
           res.send({
