@@ -344,6 +344,41 @@
         }
       },
       {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "cmhead_curr_id"
+        }
+      },
+      {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtoname"
+        }
+      },
+      {
+        "name": "billtoCity",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtocity"
+        }
+      },
+      {
+        "name": "billtoState",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtostate"
+        }
+      },
+      {
+        "name": "billtoCountry",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtocountry"
+        }
+      },
+      {
         "name": "customer",
         "toOne": {
           "type": "BillingCustomer",

@@ -1178,28 +1178,45 @@ trailing:true, white:true, strict: false*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "isPrinted", fit: true,
-                formatter: "formatPrinted", classes: "right"}
+              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+              {kind: "XV.ListAttr", attr: "isPosted", fit: true,
+                formatter: "formatPosted", style: "padding-left: 24px"},
+              {kind: "XV.ListAttr", name: "dateField", attr: "invoiceDate",
+                formatter: "formatInvoiceDate", classes: "right",
+                placeholder: "_noDate".loc()}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "invoiceDate"},
-              {kind: "XV.ListAttr", attr: "isPosted", fit: true,
-                formatter: "formatPosted", classes: "right"}
+              {kind: "XV.ListAttr", attr: "customer.name"},
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatTotal",
+                classes: "right"}
             ]}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "customer.name"},
-            {kind: "XV.ListAttr", attr: "total"}
+          {kind: "XV.ListColumn", classes: "last", components: [
+            {kind: "XV.ListAttr", attr: "billtoName"},
+            {kind: "XV.ListAttr", formatter: "formatBillto"}
           ]}
         ]}
       ]}
     ],
-    formatPosted: function (value) {
-      return value ? "_posted".loc() : "";
+    formatBillto: function (value, view, model) {
+      var city = model.get("billtoCity"),
+        state = model.get("billtoState"),
+        country = model.get("billtoCountry");
+      return XM.Address.formatShort(city, state, country);
     },
-    formatPrinted: function (value) {
-      return value ? "_printed".loc() : "";
+    formatPosted: function (value) {
+      return value ? "_posted".loc() : "_unposted".loc();
+    },
+    formatInvoiceDate: function (value, view, model) {
+      var isLate = model && model.get(model.documentDateKey) &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    },
+    formatTotal: function (value, view, model) {
+      var currency = model ? model.get("currency") : false,
+        scale = XT.locale.moneyScale;
+      return currency ? currency.format(value, scale) : "";
     },
   });
   XV.registerModelList("XM.InvoiceRelation", "XV.InvoiceList");
@@ -1825,7 +1842,11 @@ trailing:true, white:true, strict: false*/
       {name: "void", prerequisite: "canVoid", method: "doVoid" },
       {name: "post", prerequisite: "canPost", method: "doPost" },
       {name: "print", prerequisite: "canPrint", method: "doPrint" }
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      this.$.dateField.setAttr("returnDate");
+    }
   });
   XV.registerModelList("XM.ReturnRelation", "XV.ReturnList");
 

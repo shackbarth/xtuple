@@ -106,6 +106,8 @@ white:true*/
 
     editableModel: 'XM.Return',
 
+    documentDateKey: 'returnDate',
+
     couldDestroy: function (callback) {
       callback(XT.session.privileges.get("MaintainCreditMemos") && !this.get("isPosted"));
     },

@@ -567,6 +567,8 @@ white:true*/
 
     editableModel: 'XM.Invoice',
 
+    documentDateKey: 'invoiceDate',
+
     couldDestroy: function (callback) {
       callback(XT.session.privileges.get("MaintainMiscInvoices") && !this.get("isPosted"));
     },
