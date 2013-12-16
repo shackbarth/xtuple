@@ -572,7 +572,7 @@ trailing:true, white:true*/
     name: "XV.InvoiceListParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_invoice".loc()},
+      {kind: "onyx.GroupboxHeader", name: "invoiceHeader", content: "_invoice".loc()},
       {name: "number", label: "_number".loc(), attr: "number"},
       {kind: "onyx.GroupboxHeader", content: "_show".loc()},
       {name: "showUnposted", label: "_showUnposted".loc(),
@@ -620,7 +620,7 @@ trailing:true, white:true*/
     - Type Pattern (text)
     - Group
       */
-      {kind: "onyx.GroupboxHeader", content: "_invoiceDate".loc()},
+      {kind: "onyx.GroupboxHeader", name: "invoiceDateHeader", content: "_invoiceDate".loc()},
       {name: "fromDate", label: "_fromDate".loc(), attr: "invoiceDate", operator: ">=",
         defaultKind: "XV.DateWidget"},
       {name: "toDate", label: "_toDate".loc(), attr: "invoiceDate", operator: "<=",
@@ -975,7 +975,17 @@ trailing:true, white:true*/
 
   enyo.kind({
     name: "XV.ReturnListParameters",
-    kind: "XV.InvoiceListParameters"
+    kind: "XV.InvoiceListParameters",
+    create: function () {
+      this.inherited(arguments);
+      // swap out the header text
+      this.$.invoiceHeader.setContent("_return".loc());
+      this.$.invoiceDateHeader.setContent("_returnDate".loc());
+      // swap out date attribute
+      this.$.fromDate.setAttr("returnDate");
+      this.$.toDate.setAttr("returnDate");
+    }
+
   });
 
   // ..........................................................
