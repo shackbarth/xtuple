@@ -14,7 +14,7 @@ white:true*/
     var K = model.getClass(),
       item = model.get("item"),
       priceUnit = model.get("priceUnit"),
-      quantity = model.get(model.quantityAttribute),
+      quantity = model.get(model.altQuantityAttribute),
       quantityUnit = model.get("quantityUnit"),
       readOnlyCache = model.isReadOnly("price"),
       parent = model.getParent(),
@@ -77,7 +77,7 @@ white:true*/
         model.notify("_noPriceFound".loc(), { type: K.WARNING });
         model.unset("customerPrice");
         model.unset("price");
-        model.unset("billed");
+        model.unset(model.altQuantityAttribute);
         model.unset("quantity");
 
       // Handle normal scenario
@@ -483,6 +483,8 @@ white:true*/
 
     documentDateKey: 'invoiceDate',
 
+    altQuantityAttribute: 'billed',
+
     idAttribute: 'number',
 
     numberPolicySetting: 'InvcNumberGeneration',
@@ -653,8 +655,7 @@ white:true*/
     bindEvents: function (attributes, options) {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on("change:item", this.itemDidChange);
-      this.on("change:billed", this.recalculatePrice);
-      this.on("change:credited", this.recalculatePrice);
+      this.on("change:" + this.altQuantityAttribute, this.recalculatePrice);
       this.on('change:price', this.priceDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
@@ -680,7 +681,7 @@ white:true*/
       returns {Object} Receiver
     */
     calculateExtendedPrice: function () {
-      var billed = this.get(this.quantityAttribute) || 0,
+      var billed = this.get(this.altQuantityAttribute) || 0,
         quantityUnitRatio = this.get("quantityUnitRatio"),
         priceUnitRatio = this.get("priceUnitRatio"),
         price = this.get("price") || 0,
@@ -706,7 +707,7 @@ white:true*/
         item = this.get("item"),
         priceUnit = this.get("priceUnit"),
         priceUnitRatio = this.get("priceUnitRatio"),
-        quantity = this.get(this.quantityAttribute),
+        quantity = this.get(this.altQuantityAttribute),
         quantityUnit = this.get("quantityUnit"),
         updatePolicy = settings.get("UpdatePriceLineEdit"),
         parent = this.getParent(),
@@ -867,7 +868,7 @@ white:true*/
 
     parentKey: "invoice",
 
-    quantityAttribute: "billed",
+    altQuantityAttribute: "billed",
 
     defaults: function () {
       return {

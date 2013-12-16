@@ -24,6 +24,8 @@ white:true*/
 
     documentDateKey: 'returnDate',
 
+    altQuantityAttribute: 'credited',
+
     idAttribute: 'number',
 
     numberPolicySetting: 'CMNumberGeneration',
@@ -176,7 +178,7 @@ white:true*/
       "taxTotal"
     ],
 
-    quantityAttribute: "credited",
+    altQuantityAttribute: "credited",
 
     defaults: function () {
       return {
