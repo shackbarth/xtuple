@@ -1265,8 +1265,9 @@ white:true*/
         extraRequiredFields = [],
         requiredFieldsError;
 
-      // Check alt billed
+      // Check alt quantity
       if (hasAltQuantity && (altQuantity || 0) <= 0) {
+        // TODO: put in attribute name as param
         return XT.Error.clone('xt2013');
       }
 
