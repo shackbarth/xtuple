@@ -73,7 +73,10 @@ white:true*/
 
     recordType: 'XM.ReturnTax',
 
-    idAttribute: 'uuid'
+    idAttribute: 'uuid',
+
+    // make up the the field that is "value"'ed in the ORM
+    taxType: "Adjustment"
 
   });
 
