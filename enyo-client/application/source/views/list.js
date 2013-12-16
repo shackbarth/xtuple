@@ -84,6 +84,12 @@ trailing:true, white:true, strict: false*/
     label: "_activities".loc(),
     collection: "XM.ActivityListItemCollection",
     parameterWidget: "XV.ActivityListParameters",
+    published: {
+      activityActions: []
+    },
+    events: {
+      "onNotify": ""
+    },
     query: {orderBy: [
       {attribute: 'dueDate'},
       {attribute: 'name'},
@@ -95,27 +101,29 @@ trailing:true, white:true, strict: false*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name", isKey: true},
+              {kind: "XV.ListAttr", formatter: "formatName", isKey: true},
               {kind: "XV.ListAttr", attr: "dueDate", fit: true,
                 formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
                 classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "activityType",
-                formatter: "formatType"},
+              {kind: "XV.ListAttr", formatter: "formatDescription1"},
               {kind: "XV.ListAttr", attr: "getActivityStatusString",
                 classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.ListAttr", attr: "description",
-                placeholder: "_noDescription".loc()},
-            {kind: "XV.ListAttr", attr: "parent.name"}
+            {kind: "XV.ListAttr", attr: "activityType",
+              formatter: "formatType",
+              placeholder: "_noDescription".loc()},
+            {kind: "XV.ListAttr", formatter: "formatDescription2"}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "owner.username"},
-            {kind: "XV.ListAttr", attr: "assignedTo.username"}
+            {kind: "XV.ListAttr", attr: "owner.username",
+              placeholder: "_noOwner".loc()},
+            {kind: "XV.ListAttr", attr: "assignedTo.username",
+              placeholder: "_noAssignedTo".loc()}
             /*
             {kind: "XV.ListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()}
@@ -137,16 +145,44 @@ trailing:true, white:true, strict: false*/
       view.addRemoveClass("error", isLate);
       return value;
     },
+    formatName: function (value, view, model) {
+      var parent = model.get("parent");
+      if (parent) { return parent.get("name"); }
+      return model.get("name");
+    },
+    formatDescription1: function (value, view, model) {
+      var parent = model.get("parent");
+      if (parent) { return model.get("name"); }
+      return model.get("description");
+    },
+    formatDescription2: function (value, view, model) {
+      var parent = model.get("parent");
+      if (!parent) { return ""; }
+      return model.get("description");
+    },
     formatType: function (value) {
       return ("_" + value.slice(0, 1).toLowerCase() + value.slice(1)).loc();
     },
     itemTap: function (inSender, inEvent) {
       var model = this.getModel(inEvent.index),
-        oldId = model.id;
-      model.id = model.get("editorKey");
-      this._lastTapIndex = inEvent.index;
-      this.inherited(arguments);
-      model.id = oldId;
+        key = model.get("editorKey"),
+        oldId = model.id,
+        type = model.get("activityType"),
+        action = model.get("activityAction"),
+        actActions = this.getActivityActions(),
+        actAction = _.find(actActions, function (item) {
+          return item.activityType === type && item.activityAction === action;
+        });
+
+      if (actAction) {
+        inEvent.model = model;
+        actAction.method.call(this, inSender, inEvent);
+      } else {
+        model.id = key;
+        this._lastTapIndex = inEvent.index;
+        this.inherited(arguments);
+        model.id = oldId;
+      }
     },
   });
 
@@ -1553,57 +1589,6 @@ trailing:true, white:true, strict: false*/
   XV.registerModelList("XM.ProspectRelation", "XV.ProspectList");
 
   // ..........................................................
-  // PURCHASE ORDER
-  //
-
-  enyo.kind({
-    name: "XV.PurchaseOrderList",
-    kind: "XV.List",
-    label: "_purchaseOrders".loc(),
-    collection: "XM.PurchaseOrderListItemCollection",
-    parameterWidget: "XV.PurchaseOrderListItemParameters",
-    query: {orderBy: [
-      {attribute: 'number'}
-    ]},
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "status"}
-            ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "vendor.number"},
-            {kind: "XV.ListAttr", attr: "vendor.name"}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "isPrinted"},
-              {kind: "XV.ListAttr", attr: "orderDate"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "agentUserName", classes: "right"}
-            ]}
-          ]}
-        ]}
-      ]}
-    ]
-    /*
-    formatPrice: function (value, view, model) {
-      var currency = model ? model.get("currency") : false,
-        scale = XT.locale.salesPriceScale;
-      return currency ? currency.format(value, scale) : "";
-    } */
-  });
-
-  XV.registerModelList("XM.PurchaseOrderRelation", "XV.PurchaseOrderList");
-  XV.registerModelList("XM.PurchaseOrderListItem", "XV.PurchaseOrderList");
-
-  // ..........................................................
   // SALES EMAIL PROFILE
   //
 
@@ -1825,6 +1810,24 @@ trailing:true, white:true, strict: false*/
       ]}
     ]
   });
+
+  // ..........................................................
+  // RETURN
+  //
+
+  enyo.kind({
+    name: "XV.ReturnList",
+    kind: "XV.InvoiceList",
+    label: "_returns".loc(),
+    parameterWidget: "XV.ReturnListParameters",
+    collection: "XM.ReturnListItemCollection",
+    actions: [
+      {name: "void", prerequisite: "canVoid", method: "doVoid" },
+      {name: "post", prerequisite: "canPost", method: "doPost" },
+      {name: "print", prerequisite: "canPrint", method: "doPrint" }
+    ]
+  });
+  XV.registerModelList("XM.ReturnRelation", "XV.ReturnList");
 
   // ..........................................................
   // SALE TYPE
@@ -2397,7 +2400,7 @@ trailing:true, white:true, strict: false*/
     name: "XV.VendorList",
     kind: "XV.List",
     label: "_vendors".loc(),
-    collection: "XM.VendorRelationCollection",
+    collection: "XM.VendorListItemCollection",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -2409,16 +2412,16 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "contact1.phone", fit: true,
+              {kind: "XV.ListAttr", attr: "primaryContact.phone", fit: true,
                 classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact1.primaryEmail", classes: "right"}
+              {kind: "XV.ListAttr", attr: "primaryContact.primaryEmail", classes: "right"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "contact1.name",
+            {kind: "XV.ListAttr", attr: "primaryContact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "address"}
           ]}

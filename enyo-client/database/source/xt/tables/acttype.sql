@@ -18,7 +18,8 @@ select
   null::date as act_due_date,
   null::date as act_assigned_date,
   null::date as act_completed_date,
-  null::uuid as act_parent_uuid;
+  null::uuid as act_parent_uuid,
+  null::text as act_action;
 
 select dropIfExists('TRIGGER', 'acttype_did_change', 'xt');
 
@@ -44,6 +45,7 @@ select xt.add_column('acttype','acttype_col_due_date', 'text');
 select xt.add_column('acttype','acttype_col_assigned_date', 'text');
 select xt.add_column('acttype','acttype_col_completed_date', 'text');
 select xt.add_column('acttype','acttype_col_parent_uuid', 'text');
+select xt.add_column('acttype','acttype_col_action', 'text');
 select xt.add_column('acttype','acttype_join', 'text');
 
 comment on table xt.acttype is 'Activity Type Map';
