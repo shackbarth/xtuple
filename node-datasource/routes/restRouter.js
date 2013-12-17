@@ -41,8 +41,8 @@ module.exports = (function () {
           return routes.queryDatabase("get", payload, session, callback);
         }
 
-        if (query.q) {
-          freeQuery = new FreeTextQuery(query);
+        if (req.query.q) {
+          freeQuery = new FreeTextQuery(req.query);
           if (freeQuery.isValid()) {
             schema = XT.session.schemas.XM.attributes[_.capitalize(_.camelize(payload.type))];
             payload.query = freeQuery.toTarget(XtGetQuery, { schema: schema }).query;
@@ -53,7 +53,7 @@ module.exports = (function () {
           }
         }
         else {
-          restQuery = new RestQuery(query);
+          restQuery = new RestQuery(req.query);
           if (restQuery.isValid()) {
             payload.query = restQuery.toTarget(XtGetQuery).query;
             return routes.queryDatabase("get", payload, session, callback);
