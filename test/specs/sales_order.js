@@ -593,6 +593,17 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         " existing Sales order line and tabbing out to the second line should display the" +
         " changed quantity in line 1", function () {
       });
+      /**
+        @member -
+        @memberof SalesOrder
+        @description Selecting to change the sales order line item quantity should display
+          a confirmation dialog asking whether to update the price or not.Selecting 'Yes', should
+          update the price, selecting 'No' should remain the prices unchanged
+      */
+      it.skip("Selecting to change the sales order line item quantity should display" +
+        "a confirmation dialog asking whether to update the price or not.Selecting 'Yes', should" +
+        "update the price, selecting 'No' should remain the prices unchanged", function () {
+      });
     });
   };
 
