@@ -63,6 +63,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
   */
   var spec = {
     recordType: "XM.Return",
+    skipAll: true,
     collectionType: "XM.ReturnListItemCollection",
     /**
       @member -
@@ -1210,6 +1211,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
   };
 
   exports.spec = spec;
-  exports.additionalTests = additionalTests;
+  //exports.additionalTests = additionalTests;
 
 }());
