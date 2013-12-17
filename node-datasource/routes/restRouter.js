@@ -290,10 +290,8 @@ module.exports = (function () {
         if (result.isError) {
           return next(new Error("Invalid Request."));
         }
-        console.log('getIsRestORMs time: ' + (new Date().valueOf() - t1));
         _getResources(req, res, next, result.data);
-      },
-      t1 = new Date().valueOf();
+      };
 
     routes.queryDatabase("post", payload, session, callback);
   }
