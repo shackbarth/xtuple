@@ -1,4 +1,5 @@
 #!/bin/sh
+LOG_FILE='start_bi.log'
 log() {
 	echo $@
 	echo $@ >> $LOG_FILE
