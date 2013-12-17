@@ -41,6 +41,13 @@
         }
       },
       {
+        "name": "activityAction",
+        "attr": {
+          "type": "String",
+          "column": "act_action"
+        }
+      },
+      {
         "name": "editorKey",
         "attr": {
           "type": "String",

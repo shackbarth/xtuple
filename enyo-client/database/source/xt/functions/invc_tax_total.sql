@@ -8,5 +8,6 @@ create or replace function xt.invc_tax_total(invchead_id integer) returns numeri
     from invcitemtax
     inner join invcitem on taxhist_parent_id = invcitem_id
     where invcitem_invchead_id = $1
-    group by taxhist_tax_id) as data;
+    group by taxhist_tax_id
+  ) as data;
 $$ language sql;

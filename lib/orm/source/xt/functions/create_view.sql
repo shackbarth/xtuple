@@ -24,7 +24,6 @@ create or replace function xt.create_view(view_name text, select_text text, read
 
   plv8.execute("grant all on table " + view_name + " to xtrole;");
 
-
   if (read_only) {
     sql = ruleSql.replace("{name}", '"_CREATE"').replace("{action}", "insert");
     plv8.execute(sql);

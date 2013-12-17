@@ -70,7 +70,7 @@ Simplest possible usage:
 
     if (!username || !password) {
       try {
-        loginData = require('./login_data');
+        loginData = require(options.loginDataPath || './login_data');
       } catch (err) {
         console.log("Make sure you put your login credentials in the /test/lib/login_data.js file");
         process.exit(1);

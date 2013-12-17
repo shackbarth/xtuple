@@ -42,7 +42,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   //
-  // Useful for any model that uses XM.SalesOrderLineBase
+  // Useful for any model that uses XM.SalesOrderLineMixin
   //
   var getBeforeSaveAction = function (lineRecordType) {
     return function (data, next) {
@@ -51,7 +51,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           var unitUpdated = function () {
             // make sure all the fields we need to save successfully have been calculated
             if (lineItem.get("price") &&
-                lineItem.get("customerPrice")) {
+                (!_.contains(lineItem.getAttributeNames(), "customerPrice") || lineItem.get("customerPrice"))) {
 
               //lineItem.off("all", unitUpdated);
               if (!movedOn) {
@@ -70,10 +70,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
             return curr.get("isBase");
           });
           data.model.set({currency: currency});
-          lineItem.set({quantity: 7});
-          if (lineRecordType === "XM.InvoiceLine") {
-            lineItem.set({billed: 7});
-          }
+          lineItem.setIfExists({quantity: 7});
+          lineItem.setIfExists({billed: 7});
+          lineItem.setIfExists({credited: 7});
           lineItem.set({item: submodels.itemModel});
           lineItem.set({site: submodels.siteModel});
         };
@@ -387,28 +386,19 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       it.skip("For the Workflow items copied from the Sale types, the start date and due date " +
         "should be calculated correctly based on the offset", function () {
       });
-      /**
-        @member -
-        @memberof SalesOrder
-        @description When a Sale type with characteristics, of an existing sales order is changed," +
-        "to a sale type with no characteristics, the existing characteristics should be cleared" +
-        "on the sales order
-      */
-      it.skip("When a Sale type with characteristics, of an existing sales order is changed," +
-        "to a sale type with no characteristics, the existing characteristics should be cleared" +
-        "on the sales order", function () {
-      });
+
       /**
         @member -
         @memberof SalesOrder
         @description When a Sale type with workflows, of an existing sales order is changed," +
-        "to a sale type with no workflows, the existing characteristics should be cleared" +
+        "to a sale type with no workflows, the existing workflows should be cleared" +
         "on the sales order
       */
       it.skip("When a Sale type with workflows, of an existing sales order is changed," +
-        "to a sale type with no workflows, the existing characteristics should be cleared" +
+        "to a sale type with no workflows, the existing workflows should be cleared" +
         "on the sales order", function () {
       });
+      
       /**
         @member -
         @memberof SalesOrder
@@ -537,6 +527,11 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
         lineItem.set({item: item});
         assert.equal(lineItem.get("customerPartNumber"), aliasNumber);
+      });
+      it.skip("For a new sales order, enter the customer, Start the first line item." +
+        "Type \"BTRUCK1\" in for the item number" +
+        "Tab and put in quantity.Tab all the way through until the next line is created." +
+        "The second line should not be populated with the item number", function () {
       });
     });
   };

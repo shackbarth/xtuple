@@ -14,7 +14,7 @@ white:true*/
     var K = model.getClass(),
       item = model.get("item"),
       priceUnit = model.get("priceUnit"),
-      quantity = model.get("billed"),
+      quantity = model.get(model.quantityAttribute),
       quantityUnit = model.get("quantityUnit"),
       readOnlyCache = model.isReadOnly("price"),
       parent = model.getParent(),
@@ -40,7 +40,8 @@ white:true*/
         }
 
         var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
-        model.set({customerPrice: totalPrice, price: totalPrice});
+        model.set({price: totalPrice});
+        model.setIfExists({customerPrice: totalPrice});
         model.calculateExtendedPrice();
       };
 
@@ -71,7 +72,6 @@ white:true*/
     itemOptions.quantityUnit = quantityUnit;
     itemOptions.priceUnit = priceUnit;
     itemOptions.success = function (resp) {
-
       // Handle no price found scenario
       if (resp.price === -9999 && !model._invalidPriceRequest) {
         model.notify("_noPriceFound".loc(), { type: K.WARNING });
@@ -191,63 +191,7 @@ white:true*/
     model.trigger("refreshView", model);
   };
 
-
-
-  /**
-    @class
-
-    @extends XM.Document
-  */
-  XM.Invoice = XM.Document.extend({
-    /** @scope XM.Invoice.prototype */
-
-    //
-    // Attributes
-    //
-    recordType: 'XM.Invoice',
-
-    documentKey: 'number',
-
-    documentDateKey: 'invoiceDate',
-
-    idAttribute: 'number',
-
-    numberPolicySetting: 'InvcNumberGeneration',
-
-    defaults: function () {
-      return {
-        invoiceDate: new Date(),
-        isPosted: false,
-        isVoid: false,
-        isPrinted: false,
-        commission: 0,
-        taxTotal: 0,
-        miscCharge: 0
-      };
-    },
-
-    readOnlyAttributes: [
-      "isPosted",
-      "isVoid",
-      "isPrinted",
-      "miscCharge",
-      "lineItems",
-      "allocatedCredit",
-      "authorizedCredit"
-    ],
-
-    // like sales order, minus contact info
-    billtoAttrArray: [
-      "billtoName",
-      "billtoAddress1",
-      "billtoAddress2",
-      "billtoAddress3",
-      "billtoCity",
-      "billtoState",
-      "billtoPostalCode",
-      "billtoCountry",
-      "billtoPhone",
-    ],
+  XM.InvoiceMixin = {
 
     //
     // Core functions
@@ -256,10 +200,10 @@ white:true*/
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on("change:customer", this.customerDidChange);
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
-      this.on("change:invoiceDate add:taxAdjustments", this.setTaxAllocationDate);
-      this.on("change:invoiceDate change:currency", this.calculateOutstandingCredit);
-      this.on("change:invoiceDate change:currency", this.calculateAuthorizedCredit);
-      this.on("change:invoiceDate add:allocations remove:allocations",
+      this.on("change:" + this.documentDateKey + " add:taxAdjustments", this.setTaxAllocationDate);
+      this.on("change:" + this.documentDateKey + " change:currency", this.calculateOutstandingCredit);
+      this.on("change:" + this.documentDateKey + " change:currency", this.calculateAuthorizedCredit);
+      this.on("change:" + this.documentDateKey + " add:allocations remove:allocations",
         this.calculateAllocatedCredit);
       this.on("add:lineItems remove:lineItems change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
       this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
@@ -297,8 +241,12 @@ white:true*/
     applyIsPostedRules: function () {
       var isPosted = this.get("isPosted");
 
-      this.setReadOnly(["lineItems", "number", "invoiceDate", "terms", "salesRep", "commission",
+      this.setReadOnly(["lineItems", "number", this.documentDateKey, "salesRep", "commission",
         "taxZone", "saleType", "taxAdjustments"], isPosted);
+
+      if (_.contains(this.getAttributeNames(), "terms")) {
+        this.setReadOnly("terms", isPosted);
+      }
     },
 
     /**
@@ -359,10 +307,15 @@ white:true*/
           that.set({outstandingCredit: null});
         };
 
+      if (!this.get("customer")) {
+        // don't bother if there's no customer
+        return;
+      }
+
       this.dispatch("XM.Invoice", "outstandingCredit",
         [this.getValue("customer.number"),
           this.getValue("currency.abbreviation"),
-          this.getValue("invoiceDate")],
+          this.getValue(this.documentDateKey)],
         {success: success, error: error});
     },
 
@@ -401,11 +354,15 @@ white:true*/
           billtoName: customer.get("name"),
           salesRep: customer.get("salesRep"),
           commission: customer.get("commission"),
-          terms: customer.get("terms"),
           taxZone: customer.get("taxZone"),
-          currency: customer.get("currency") || this.get("currency"),
-          billtoPhone: billtoContact && billtoContact.getValue("phone")
+          currency: customer.get("currency") || this.get("currency")
         };
+        if (_.contains(this.getAttributeNames(), "terms")) {
+          billtoAttrs.terms = customer.get("terms");
+        }
+        if (_.contains(this.getAttributeNames(), "billtoPhone")) {
+          billtoAttrs.billtoPhone = billtoContact && billtoContact.getValue("phone");
+        }
         if (billtoAddress) {
           _.extend(billtoAttrs, {
             billtoAddress1: billtoAddress.getValue("line1"),
@@ -462,9 +419,9 @@ white:true*/
       The document date on any misc tax adjustments should be the invoice date
     */
     setTaxAllocationDate: function () {
-      var invoiceDate = this.get("invoiceDate");
+      var documentDate = this.get(this.documentDateKey);
       _.each(this.get("taxAdjustments").models, function (taxAdjustment) {
-        taxAdjustment.set({documentDate: invoiceDate});
+        taxAdjustment.set({documentDate: documentDate});
       });
     },
 
@@ -507,7 +464,65 @@ white:true*/
       return;
     }
 
-  });
+  };
+
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.Invoice = XM.Document.extend(_.extend({}, XM.InvoiceMixin, {
+    /** @scope XM.Invoice.prototype */
+
+    //
+    // Attributes
+    //
+    recordType: 'XM.Invoice',
+
+    documentKey: 'number',
+
+    documentDateKey: 'invoiceDate',
+
+    idAttribute: 'number',
+
+    numberPolicySetting: 'InvcNumberGeneration',
+
+    defaults: function () {
+      return {
+        invoiceDate: new Date(),
+        isPosted: false,
+        isVoid: false,
+        isPrinted: false,
+        commission: 0,
+        taxTotal: 0,
+        miscCharge: 0
+      };
+    },
+
+    readOnlyAttributes: [
+      "isPosted",
+      "isVoid",
+      "isPrinted",
+      "miscCharge",
+      "lineItems",
+      "allocatedCredit",
+      "authorizedCredit"
+    ],
+
+    // like sales order, minus contact info
+    billtoAttrArray: [
+      "billtoName",
+      "billtoAddress1",
+      "billtoAddress2",
+      "billtoAddress3",
+      "billtoCity",
+      "billtoState",
+      "billtoPostalCode",
+      "billtoCountry",
+      "billtoPhone",
+    ]
+
+  }));
 
   /**
     @class
@@ -615,24 +630,11 @@ white:true*/
 
   });
 
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.InvoiceLine = XM.Model.extend({
-    /** @scope XM.InvoiceLine.prototype */
-
-    //
-    // Attributes
-    //
-    recordType: 'XM.InvoiceLine',
+  XM.InvoiceLineMixin = {
 
     idAttribute: 'uuid',
 
     sellingUnits: undefined,
-
-    parentKey: "invoice",
 
     readOnlyAttributes: [
       "lineNumber",
@@ -646,7 +648,8 @@ white:true*/
     bindEvents: function (attributes, options) {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on("change:item", this.itemDidChange);
-      this.on("change:billed", this.billedDidChange);
+      this.on("change:billed", this.recalculatePrice);
+      this.on("change:credited", this.recalculatePrice);
       this.on('change:price', this.priceDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
@@ -656,35 +659,14 @@ white:true*/
       this.isMiscellaneousDidChange();
     },
 
-    defaults: function () {
-      return {
-        site: XT.defaultSite(),
-        isMiscellaneous: false
-      };
-    },
-
     initialize: function (attributes, options) {
       XM.Model.prototype.initialize.apply(this, arguments);
       this.sellingUnits = new XM.UnitCollection();
     },
 
     //
-    // Shared code with sales order
-    // temp until we refactor these together
-    //
-    fetchSellingUnits: XM.SalesOrderLineBase.prototype.fetchSellingUnits,
-    priceUnitDidChange: XM.SalesOrderLineBase.prototype.priceUnitDidChange,
-    quantityUnitDidChange: XM.SalesOrderLineBase.prototype.quantityUnitDidChange,
-    recalculateParent: XM.SalesOrderLineBase.prototype.recalculateParent,
-    save: XM.SalesOrderLineBase.prototype.save,
-
-    //
     // Model-specific functions
     //
-    billedDidChange: function () {
-      this.calculatePrice();
-      this.recalculateParent();
-    },
 
     // XXX with the uncommented stuff back in, it's identical to the one in salesOrderBase
     /**
@@ -693,7 +675,7 @@ white:true*/
       returns {Object} Receiver
     */
     calculateExtendedPrice: function () {
-      var billed = this.get("billed") || 0,
+      var billed = this.get(this.quantityAttribute) || 0,
         quantityUnitRatio = this.get("quantityUnitRatio"),
         priceUnitRatio = this.get("priceUnitRatio"),
         price = this.get("price") || 0,
@@ -719,7 +701,7 @@ white:true*/
         item = this.get("item"),
         priceUnit = this.get("priceUnit"),
         priceUnitRatio = this.get("priceUnitRatio"),
-        quantity = this.get("billed"),
+        quantity = this.get(this.quantityAttribute),
         quantityUnit = this.get("quantityUnit"),
         updatePolicy = settings.get("UpdatePriceLineEdit"),
         parent = this.getParent(),
@@ -861,57 +843,35 @@ white:true*/
 
     priceDidChange: function () {
       this.calculateExtendedPrice();
-    },
-
-    // Refactor potential: this is like the one on sales order line base, but
-    // checks billed as well, and validates isMiscellaneous
-    validate: function () {
-      var that = this,
-        quantity = this.get("quantity"),
-        billed = this.get("billed"),
-        isMiscellaneous = this.get("isMiscellaneous"),
-        extraRequiredFields,
-        requiredFieldsError;
-
-      // Check billed
-      if ((billed || 0) <= 0) {
-        return XT.Error.clone('xt2013'); // TODO: generalize error message
-      }
-
-      // Check quantity
-      if ((quantity || 0) <= 0) {
-        return XT.Error.clone('xt2013');
-      }
-
-      // Check order quantity against fractional setting
-      if (!this._unitIsFractional &&
-          (Math.round(quantity) !== quantity || Math.round(billed) !== billed)) {
-        return XT.Error.clone('xt2014');
-      }
-
-      // Checks item values line up with isMiscellaneous
-      extraRequiredFields = isMiscellaneous ?
-        ["itemNumber", "itemDescription", "salesCategory"] :
-        ["item"];
-
-      _.each(extraRequiredFields, function (req) {
-        var value = that.get(req),
-          params = {recordType: that.recordType};
-
-        if (value === undefined || value === null || value === "") {
-          params.attr = ("_" + req).loc();
-          requiredFieldsError = XT.Error.clone('xt1004', { params: params });
-        }
-      });
-      if (requiredFieldsError) {
-        return requiredFieldsError;
-
-      }
-
-
-      return XM.Document.prototype.validate.apply(this, arguments);
     }
-  });
+
+  };
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.InvoiceLine = XM.Model.extend(_.extend({}, XM.OrderLineMixin, XM.InvoiceLineMixin, {
+    /** @scope XM.InvoiceLine.prototype */
+
+    //
+    // Attributes
+    //
+    recordType: 'XM.InvoiceLine',
+
+    parentKey: "invoice",
+
+    quantityAttribute: "billed",
+
+    defaults: function () {
+      return {
+        site: XT.defaultSite(),
+        isMiscellaneous: false
+      };
+    }
+
+  }));
 
   /**
     @class
