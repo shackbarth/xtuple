@@ -110,7 +110,7 @@ module.exports = (function () {
 
         routes.queryDatabase("delete", payload, session, callback);
       },
-      
+
       /**
        * Apply partial modifications to a resource.
        * @private
