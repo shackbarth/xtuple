@@ -26,8 +26,7 @@ module.exports = (function () {
        * Requests a representation of the specified resource.
        */
       GET: function (req, res, session, options) {
-        var query = _.omit(req.query, 'access_token'),
-          callback = options.callback,
+        var callback = options.callback,
           payload = {
             nameSpace: 'XM',
             type: options.ormType
