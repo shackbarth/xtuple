@@ -29,14 +29,14 @@ module.exports = (function () {
           callback = options.callback,
           payload = {
             nameSpace: 'XM',
-            type: ormType,
-            id: options.id
+            type: ormType
           },
           restQuery,
           freeQuery,
           schema;
 
         if (options.id) {
+          payload.id = options.id;
           return routes.queryDatabase("get", payload, session, callback);
         }
 
@@ -192,7 +192,7 @@ module.exports = (function () {
           type: 'Discovery',
           dispatch: {
             functionName: "getServices",
-            parameters: [null, rootUrl]
+            parameters: [null, rootUrl, true]
           }
         },
         session = getSession(req, next),
@@ -267,7 +267,6 @@ module.exports = (function () {
    * @public
    */
   function getIsRestORMs(req, res, next) {
-    console.log(req.user);
     var payload = {
         nameSpace: 'XT',
         type: 'Discovery',
@@ -303,7 +302,7 @@ module.exports = (function () {
       user: {
         id: user.get('username'),
         username: user.get('username'),
-        organizaion: user.get('organization'),
+        organization: user.get('organization'),
       }
     };
   }
