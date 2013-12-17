@@ -42,7 +42,8 @@
         '(?)pagetoken': _.isFinite,
         '(?)count': function (count) {
           return _.contains([ true, false, 1, 0], count);
-        }
+        },
+        '(?)access_token': _.isString
       }
     },
 
