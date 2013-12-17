@@ -1990,6 +1990,7 @@ ul.icons-ul > li .icon-li {
 }
 .xv-groupbox.xv-parameter {
   min-width: 280px;
+  max-width: 320px;
   margin: 4px 0 8px 4px;
   padding: 0;
 }
@@ -2524,7 +2525,7 @@ body {
   -webkit-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
   box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
-  background: #555555;
+  background: #696969;
 }
 /*
   Media query for responsive design. This adapts to smaller
