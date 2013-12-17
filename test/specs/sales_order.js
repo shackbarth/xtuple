@@ -589,6 +589,10 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         "Tab and put in quantity.Tab all the way through until the next line is created." +
         "The second line should not be populated with the item number", function () {
       });
+      it.skip("In a sales order with multiple line items, selecting to change the quantity of an" +
+        " existing Sales order line and tabbing out to the second line should display the" +
+        " changed quantity in line 1", function () {
+      });
     });
   };
 
