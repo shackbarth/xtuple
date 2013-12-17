@@ -14,6 +14,7 @@ _.mixin(str.exports());
 
 /**
  * @class RestRouter
+ * @singleton
  */
 module.exports = (function () {
   'use strict';
@@ -25,35 +26,45 @@ module.exports = (function () {
        * Requests a representation of the specified resource.
        */
       GET: function (req, res, session, options) {
-        var ormType = options.ormType,
+        var query = _.omit(req.query, 'access_token'),
           callback = options.callback,
           payload = {
             nameSpace: 'XM',
-            type: ormType
+            type: options.ormType
           },
           restQuery,
           freeQuery,
-          schema;
+          schema,
+          error;
 
         if (options.id) {
           payload.id = options.id;
           return routes.queryDatabase("get", payload, session, callback);
         }
 
-        freeQuery = new FreeTextQuery(req.query);
-        if (freeQuery.isValid()) {
-          schema = XT.session.schemas.XM.attributes[_.capitalize(_.camelize(payload.type))];
-          payload.query = freeQuery.toTarget(XtGetQuery, { schema: schema }).query;
-          return routes.queryDatabase("get", payload, session, callback);
+        if (query.q) {
+          freeQuery = new FreeTextQuery(query);
+          if (freeQuery.isValid()) {
+            schema = XT.session.schemas.XM.attributes[_.capitalize(_.camelize(payload.type))];
+            payload.query = freeQuery.toTarget(XtGetQuery, { schema: schema }).query;
+            return routes.queryDatabase("get", payload, session, callback);
+          }
+          else {
+            error = freeQuery.getErrors();
+          }
+        }
+        else {
+          restQuery = new RestQuery(query);
+          if (restQuery.isValid()) {
+            payload.query = restQuery.toTarget(XtGetQuery).query;
+            return routes.queryDatabase("get", payload, session, callback);
+          }
+          else {
+            error = restQuery.getErrors();
+          }
         }
 
-        restQuery = new RestQuery(req.query);
-        if (restQuery.isValid()) {
-          payload.query = restQuery.toTarget(XtGetQuery).query;
-          return routes.queryDatabase("get", payload, session, callback);
-        }
-
-        return res.send(400, "Bad Request");
+        return res.send(400, error);
       },
 
       /**
@@ -279,8 +290,11 @@ module.exports = (function () {
         if (result.isError) {
           return next(new Error("Invalid Request."));
         }
+        console.log('getIsRestORMs time: ' + (new Date().valueOf() - t1));
         _getResources(req, res, next, result.data);
-      };
+      },
+      t1 = new Date().valueOf();
+
     routes.queryDatabase("post", payload, session, callback);
   }
 
@@ -302,7 +316,7 @@ module.exports = (function () {
       user: {
         id: user.get('username'),
         username: user.get('username'),
-        organization: user.get('organization'),
+        organization: user.get('organization')
       }
     };
   }
