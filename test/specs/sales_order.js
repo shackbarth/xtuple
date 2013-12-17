@@ -177,6 +177,62 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         salesOrder.on('change:number', initCallback);
         salesOrder.initialize(null, {isNew: true});
       });
+    /**
+      @member -
+      @memberof SalesOrder
+      @description An Action gear exists in the Sales order workspace with two options
+       - Issue to Shipping
+       - Express Checkout
+    */
+      it.skip("Action gear exists in the Salesorder workspace with two options :" +
+                "Issue to Shipping and Express Checkout", function () {
+      });
+      /**
+      @member -
+      @memberof SalesOrder
+      @description Selecting 'Issue to Shipping' opens the Issue to Shipping screen
+      with the sales order number prepopulated
+      */
+      it.skip("Selecting 'Issue to Shipping' should open the Issue to Shipping screen" +
+                "with the Sales order prepopulated", function () {
+      });
+      /**
+      @member -
+      @memberof SalesOrder
+      @description User will be asked to save the sales order when 'Issue to Shipping' action
+      is selected if the sales order is in unsaved state
+      */
+      it.skip("The user should be required to save the sales order before issuing to  " +
+                "shipping if the sales order is in unsaved state", function () {
+      });
+      /**
+      @member -
+      @memberof SalesOrder
+      @description Express Checkout should do the following:
+        - Issue all outstanding materials
+        - Prompt user for distribution detail if applicable
+        - Approve for billing
+        - Create and print invoice
+      */
+      describe.skip("Express Checkout", function () {
+        it("should Issue all outstanding materials", function () {
+        });
+        it("should Prompt user for distribution detail if applicable", function () {
+        });
+        it("should Approve for billing", function () {
+        });
+        it("should create and print invoice", function () {
+        });
+      });
+      /**
+      @member -
+      @memberof SalesOrder
+      @description Express Checkout option will be only available to the user if
+      'IssueStockToShipping' and 'PostMiscInvoices' privileges are assigned to it
+      */
+      it.skip("User requires 'IssueStockToShipping' and 'PostMiscInvoices' privileges assigned" +
+                "to it to access Express Checkout option", function () {
+      });
     });
     describe("Sales order characteristics", function () {
       /**
