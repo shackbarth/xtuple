@@ -2582,20 +2582,6 @@ body {
 .text-shadow-0 {
   text-shadow: 0 0 #000000;
 }
-.xt-app {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-.xt-app .xv-postbooks {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
 .xv-my-account-popup {
   background-color: #ffffff;
   color: #000;
