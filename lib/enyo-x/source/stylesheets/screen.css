@@ -2568,15 +2568,6 @@ body {
 .left {
   color: #ffffff;
 }
-.right-float {
-  float: right;
-  display: block;
-}
-.left-float {
-  float: left;
-  display: block;
-  margin-right: 3px;
-}
 .text-shadow-none {
   text-shadow: none;
 }
@@ -2745,6 +2736,9 @@ body {
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {
   width: 220px;
+}
+.xv-toolbar-label {
+  width: 180px;
 }
 .xv-totals-panel {
   padding: 0;
