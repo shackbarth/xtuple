@@ -530,6 +530,10 @@ var  async = require('async'),
 
         "delete from xt.ext where ext_name = $1;"];
 
+    if (extension.charAt(extension.length - 1) === "/") {
+      // remove trailing slash if present
+      extension = extension.substring(0, extension.length - 1);
+    }
     winston.info("Unregistering extension:", extension);
     var unregisterEach = function (spec, callback) {
       var options = JSON.parse(JSON.stringify(creds));
