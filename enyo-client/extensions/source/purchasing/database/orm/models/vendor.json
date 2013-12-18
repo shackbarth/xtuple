@@ -1,0 +1,111 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PurchaseVendor",
+    "table": "vendinfo",
+    "isRest": true,
+    "comment": "Purchase Vendor Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPurchaseOrders",
+        "read": "ViewPurchaseOrders",
+        "update": "MaintainPurchaseOrders",
+        "delete": "MaintainPurchaseOrders"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "vend_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "vend_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "vend_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "vend_active"
+        }
+      },
+      {
+        "name": "primaryContact",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "vend_cntct1_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "secondaryContact",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "vend_cntct2_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "type": "Address",
+          "column": "vend_addr_id"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "vend_curr_id"
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "vend_terms_id"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "vend_taxzone_id"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "vend_shipvia"
+        }
+      },
+      {
+        "name": "alternateAddresses",
+        "toMany": {
+          "isNested": true,
+          "type": "VendorAddress",
+          "column": "vend_id",
+          "inverse": "vendor"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

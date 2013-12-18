@@ -42,7 +42,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   //
-  // Useful for any model that uses XM.SalesOrderLineBase
+  // Useful for any model that uses XM.SalesOrderLineMixin
   //
   var getBeforeSaveAction = function (lineRecordType) {
     return function (data, next) {
@@ -51,7 +51,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           var unitUpdated = function () {
             // make sure all the fields we need to save successfully have been calculated
             if (lineItem.get("price") &&
-                lineItem.get("customerPrice")) {
+                (!_.contains(lineItem.getAttributeNames(), "customerPrice") || lineItem.get("customerPrice"))) {
 
               //lineItem.off("all", unitUpdated);
               if (!movedOn) {
@@ -70,10 +70,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
             return curr.get("isBase");
           });
           data.model.set({currency: currency});
-          lineItem.set({quantity: 7});
-          if (lineRecordType === "XM.InvoiceLine") {
-            lineItem.set({billed: 7});
-          }
+          lineItem.setIfExists({quantity: 7});
+          lineItem.setIfExists({billed: 7});
+          lineItem.setIfExists({credited: 7});
           lineItem.set({item: submodels.itemModel});
           lineItem.set({site: submodels.siteModel});
         };
@@ -177,6 +176,62 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
         salesOrder.on('change:number', initCallback);
         salesOrder.initialize(null, {isNew: true});
+      });
+    /**
+      @member -
+      @memberof SalesOrder
+      @description An Action gear exists in the Sales order workspace with two options
+       - Issue to Shipping
+       - Express Checkout
+    */
+      it.skip("Action gear exists in the Salesorder workspace with two options :" +
+                "Issue to Shipping and Express Checkout", function () {
+      });
+      /**
+      @member -
+      @memberof SalesOrder
+      @description Selecting 'Issue to Shipping' opens the Issue to Shipping screen
+      with the sales order number prepopulated
+      */
+      it.skip("Selecting 'Issue to Shipping' should open the Issue to Shipping screen" +
+                "with the Sales order prepopulated", function () {
+      });
+      /**
+      @member -
+      @memberof SalesOrder
+      @description User will be asked to save the sales order when 'Issue to Shipping' action
+      is selected if the sales order is in unsaved state
+      */
+      it.skip("The user should be required to save the sales order before issuing to  " +
+                "shipping if the sales order is in unsaved state", function () {
+      });
+      /**
+      @member -
+      @memberof SalesOrder
+      @description Express Checkout should do the following:
+        - Issue all outstanding materials
+        - Prompt user for distribution detail if applicable
+        - Approve for billing
+        - Create and print invoice
+      */
+      describe.skip("Express Checkout", function () {
+        it("should Issue all outstanding materials", function () {
+        });
+        it("should Prompt user for distribution detail if applicable", function () {
+        });
+        it("should Approve for billing", function () {
+        });
+        it("should create and print invoice", function () {
+        });
+      });
+      /**
+      @member -
+      @memberof SalesOrder
+      @description Express Checkout option will be only available to the user if
+      'IssueStockToShipping' and 'PostMiscInvoices' privileges are assigned to it
+      */
+      it.skip("User requires 'IssueStockToShipping' and 'PostMiscInvoices' privileges assigned" +
+                "to it to access Express Checkout option", function () {
       });
     });
     describe("Sales order characteristics", function () {
@@ -387,28 +442,19 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       it.skip("For the Workflow items copied from the Sale types, the start date and due date " +
         "should be calculated correctly based on the offset", function () {
       });
-      /**
-        @member -
-        @memberof SalesOrder
-        @description When a Sale type with characteristics, of an existing sales order is changed," +
-        "to a sale type with no characteristics, the existing characteristics should be cleared" +
-        "on the sales order
-      */
-      it.skip("When a Sale type with characteristics, of an existing sales order is changed," +
-        "to a sale type with no characteristics, the existing characteristics should be cleared" +
-        "on the sales order", function () {
-      });
+
       /**
         @member -
         @memberof SalesOrder
         @description When a Sale type with workflows, of an existing sales order is changed," +
-        "to a sale type with no workflows, the existing characteristics should be cleared" +
+        "to a sale type with no workflows, the existing workflows should be cleared" +
         "on the sales order
       */
       it.skip("When a Sale type with workflows, of an existing sales order is changed," +
-        "to a sale type with no workflows, the existing characteristics should be cleared" +
+        "to a sale type with no workflows, the existing workflows should be cleared" +
         "on the sales order", function () {
       });
+      
       /**
         @member -
         @memberof SalesOrder
@@ -537,6 +583,26 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
         lineItem.set({item: item});
         assert.equal(lineItem.get("customerPartNumber"), aliasNumber);
+      });
+      it.skip("For a new sales order, enter the customer, Start the first line item." +
+        "Type \"BTRUCK1\" in for the item number" +
+        "Tab and put in quantity.Tab all the way through until the next line is created." +
+        "The second line should not be populated with the item number", function () {
+      });
+      it.skip("In a sales order with multiple line items, selecting to change the quantity of an" +
+        " existing Sales order line and tabbing out to the second line should display the" +
+        " changed quantity in line 1", function () {
+      });
+      /**
+        @member -
+        @memberof SalesOrder
+        @description Selecting to change the sales order line item quantity should display
+          a confirmation dialog asking whether to update the price or not.Selecting 'Yes', should
+          update the price, selecting 'No' should remain the prices unchanged
+      */
+      it.skip("Selecting to change the sales order line item quantity should display" +
+        "a confirmation dialog asking whether to update the price or not.Selecting 'Yes', should" +
+        "update the price, selecting 'No' should remain the prices unchanged", function () {
       });
     });
   };

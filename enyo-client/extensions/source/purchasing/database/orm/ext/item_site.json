@@ -1,0 +1,74 @@
+[
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "ItemSite",
+    "table": "xt.itemsiteinfo",
+    "isExtension": true,
+    "comment": "Extended by Purchasing",
+    "relations": [
+      {
+        "column": "itemsite_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "isPurchased",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_posupply"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "ItemSiteListItem",
+    "table": "itemsite",
+    "isExtension": true,
+    "comment": "Extended by Purchasing",
+    "relations": [
+      {
+        "column": "itemsite_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "isPurchased",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_posupply"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "ItemSiteRelation",
+    "table": "xt.itemsiteinfo",
+    "isExtension": true,
+    "comment": "Extended by Purchasing",
+    "relations": [
+      {
+        "column": "itemsite_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "isPurchased",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_posupply"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

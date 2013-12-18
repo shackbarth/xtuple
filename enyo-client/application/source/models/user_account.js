@@ -467,6 +467,18 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
   });
 
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.ShareUsers = XM.Model.extend({
+    /** @scope XM.Agent.prototype */
+
+    recordType: 'XM.ShareUsers'
+
+  });
+
 
   // ..........................................................
   // COLLECTIONS
@@ -609,6 +621,18 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
    /** @scope XM.AgentCollection.prototype */
 
     model: XM.Agent
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.ShareUsersCollection = XM.Collection.extend({
+   /** @scope XM.ShareUsersCollection.prototype */
+
+    model: XM.ShareUsers
 
   });
 
