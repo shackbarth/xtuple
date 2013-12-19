@@ -55,6 +55,7 @@ trailing:true, white:true, strict:false*/
       workspace: "XV.PurchaseOrderLineWorkspace",
       summary: "XV.PurchaseOrderSummaryPanel",
       parentKey: "purchaseOrder",
+      orderBy: [{attribute: 'lineNumber'}],
       columns: [
         {classes: "line-number", header: "#", rows: [
           {readOnlyAttr: "lineNumber",
