@@ -100,6 +100,7 @@ white:true*/
         return {
           orderDate: XT.date.today(),
           status: XM.PurchaseOrder.UNRELEASED_STATUS,
+          currency: XT.baseCurrency(),
           site: XT.defaultSite(),
           agent: agent ? agent.id : null
         };
@@ -205,13 +206,40 @@ white:true*/
       vendorChanged: function () {
         var vendor = this.get("vendor"),
           address = vendor ? vendor.get("address") : false,
-          contact = vendor ? vendor.get("contact") : false,
-          attrs = {}; // TODO: Defaults
+          contact = vendor ? vendor.get("primaryContact") : false,
+          attrs = {
+            vendorAddress1: "",
+            vendorAddress2: "",
+            vendorAddress3: "",
+            vendorCity: "",
+            vendorState: "",
+            vendorPostalCode: "",
+            vendorCountry: "",
+            vendorContact: null,
+            vendorContactHonorific: "",
+            vendorContactFirstName: "",
+            vendorContactLastName: "",
+            vendorContactMiddle: "",
+            vendorContactSuffix: "",
+            vendorContactTitle: "",
+            vendorContactPhone: "",
+            vendorContactFax: "",
+            vendorContactEmail: ""
+          },
+          K = XM.Vendor,
+          source;
 
         if (vendor) {
-          //attrs.destinationName = site.get("code");
+          source = vendor.get("incotermsSource") === K.INCOTERMS_VENDOR ?
+            vendor : this.get("site");
+          attrs.incoterms = source.get("incoterms");
+          attrs.currency = vendor.get("currency");
+          attrs.terms = vendor.get("terms");
+          attrs.taxZone = vendor.get("taxZone");
+          attrs.shipVia = vendor.get("shipVia");
 
           if (address) {
+            attrs.vendorAddress = address.id;
             attrs.vendorAddress1 = address.get("line1");
             attrs.vendorAddress2 = address.get("line2");
             attrs.vendorAddress3 = address.get("line3");
@@ -223,8 +251,15 @@ white:true*/
 
           if (contact) {
             attrs.vendorContact = contact.id;
-            attrs.vendorContactName = contact.get("name");
-            attrs.vendorPhone = contact.get("phone");
+            attrs.vendorContactHonorific = contact.get("honorific");
+            attrs.vendorContactFirstName = contact.get("firstName");
+            attrs.vendorContactLastName = contact.get("lastName");
+            attrs.vendorContactMiddle = contact.get("middle");
+            attrs.vendorContactSuffix = contact.get("suffix");
+            attrs.vendorContactTitle = contact.get("title");
+            attrs.vendorContactPhone = contact.get("phone");
+            attrs.vendorContactFax = contact.get("fax");
+            attrs.vendorContactEmail = contact.get("primaryEmail");
           }
         }
 

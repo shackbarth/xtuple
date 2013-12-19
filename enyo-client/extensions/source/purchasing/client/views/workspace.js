@@ -97,7 +97,7 @@ trailing:true, white:true, strict: false*/
                 {kind: "XV.DateWidget", attr: "releaseDate"},
                 {kind: "XV.PurchaseOrderStatusPicker", attr: "status"},
                 {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
-                {kind: "XV.VendorWidget", attr: "vendor"},
+                {kind: "XV.PurchaseVendorWidget", attr: "vendor"},
                 {kind: "XV.AddressFieldsWidget",
                   name: "vendorAddressWidget", attr:
                   {line1: "vendorAddress1",
@@ -105,7 +105,8 @@ trailing:true, white:true, strict: false*/
                     city: "vendorCity", state: "vendorState",
                     postalCode: "vendorPostalCode", country: "vendorCountry"}
                 },
-                {kind: "XV.ContactWidget", attr: "vendorContact"},
+                {kind: "XV.ContactWidget", attr: "vendorContact",
+                  name: "vendorContactWidget"},
                 {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
                 {kind: "XV.SitePicker", attr: "site", showNone: false},
                 {kind: "XV.AddressFieldsWidget",
@@ -115,7 +116,8 @@ trailing:true, white:true, strict: false*/
                     city: "shiptoCity", state: "shiptoState",
                     postalCode: "shiptoPostalCode", country: "shiptoCountry"}
                 },
-                {kind: "XV.ContactWidget", attr: "shiptoContact"},
+                {kind: "XV.ContactWidget", attr: "shiptoContact",
+                  name: "shiptoContactWidget"},
                 {kind: "XV.ShipViaCombobox", attr: "shipVia"},
                 {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
                 {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -144,6 +146,16 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.PurchaseOrderCommentBox", attr: "comments"}
         ]}
       ],
+      attributesChanged: function (inSender, inEvent) {
+        this.inherited(arguments);
+        this.vendorChanged();
+      },
+      controlValueChanged: function (inSender, inEvent) {
+        this.inherited(arguments);
+        if (inEvent.originator.name === 'vendorWidget') {
+          this.vendorChanged();
+        }
+      },
       create: function () {
         this.inherited(arguments);
         if (enyo.platform.touch) {
@@ -164,7 +176,18 @@ trailing:true, white:true, strict: false*/
           ], {owner: this});
         }
         this.processExtensions(true);
-      }
+      },
+      vendorChanged: function () {
+        var vendor = this.$.purchaseVendorWidget.getValue();
+        if (vendor) {
+          this.$.vendorContactWidget.addParameter({
+            attribute: ["account", "accountParent"],
+            value: vendor.id
+          }, true);
+        } else {
+          this.$.vendorContactWidget.removeParameter("account");
+        }
+      },
     });
 
     XV.registerModelWorkspace("XM.PurchaseOrder", "XV.PurchaseOrderWorkspace");

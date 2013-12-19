@@ -2,16 +2,16 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "PurchaseVendor",
+    "type": "PurchaseVendorRelation",
     "table": "vendinfo",
     "isRest": true,
     "comment": "Purchase Vendor Map",
     "privileges": {
       "all": {
-        "create": "MaintainPurchaseOrders",
-        "read": "ViewPurchaseOrders",
-        "update": "MaintainPurchaseOrders",
-        "delete": "MaintainPurchaseOrders"
+        "create": false,
+        "read": "ViewPurchaseOrders MaintainPurchaseOrders",
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -54,17 +54,10 @@
         }
       },
       {
-        "name": "secondaryContact",
-        "toOne": {
-          "type": "ContactRelation",
-          "column": "vend_cntct2_id",
-          "isNested": true
-        }
-      },
-      {
         "name": "address",
         "toOne": {
-          "type": "Address",
+          "isNested": true,
+          "type": "AddressInfo",
           "column": "vend_addr_id"
         }
       },
@@ -97,15 +90,93 @@
         }
       },
       {
+        "name": "incotermsSource",
+        "attr": {
+          "type": "String",
+          "column": "vend_fobsource"
+        }
+      },
+      {
+        "name": "incoterms",
+        "attr": {
+          "type": "String",
+          "column": "vend_fob"
+        }
+      },
+      {
         "name": "alternateAddresses",
         "toMany": {
           "isNested": true,
-          "type": "VendorAddress",
+          "type": "PurchaseVendorAddress",
           "column": "vend_id",
           "inverse": "vendor"
         }
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PurchaseVendorAddress",
+    "table": "vendaddrinfo",
+    "comment": "Vendor Address Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "vendaddr_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "vendaddr_code",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "vendor",
+        "attr": {
+          "type": "Number",
+          "column": "vendaddr_vend_id"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "vendaddr_name"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "vendaddr_addr_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "vendaddr_cntct_id"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "vendaddr_comments"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   }
 ]

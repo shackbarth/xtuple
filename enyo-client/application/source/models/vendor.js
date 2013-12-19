@@ -39,11 +39,59 @@ white:true*/
   // ..........................................................
   // CLASS METHODS
   //
+
   _.extend(XM.Vendor, /** @lends XM.Vendor# */{
 
     used: function (id, options) {
       return XM.ModelMixin.dispatch('XM.Vendor', 'used', [id], options);
-    }
+    },
+
+    // ..........................................................
+    // CONSTANTS
+    //
+
+    INCOTERMS_SITE: "W",
+
+    INCOTERMS_VENDOR: "V"
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Comment
+  */
+  XM.VendorComment = XM.Comment.extend({
+    /** @scope XM.VendorComment.prototype */
+
+    recordType: 'XM.VendorComment',
+
+    sourceName: 'V'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.CharacteristicAssignment
+  */
+  XM.VendorCharacteristic = XM.CharacteristicAssignment.extend({
+    /** @scope XM.VendorCharacteristic.prototype */
+
+    recordType: 'XM.VendorCharacteristic',
+
+    which: 'isVendors'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.VendorAddress = XM.Model.extend(/** @scope XM.VendorAddress.prototype */{
+
+    recordType: 'XM.VendorAddresss'
 
   });
 
@@ -66,11 +114,23 @@ white:true*/
 
     @extends XM.Info
   */
-  XM.VendorListITem = XM.Info.extend(/** @scope XM.VendorRelation.prototype */{
+  XM.VendorListItem = XM.Info.extend(/** @scope XM.VendorListItem.prototype */{
 
     recordType: 'XM.VendorListItem',
 
     editableModel: 'XM.Vendor'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.VendorListItemCharacteristic = XM.Model.extend({
+    /** @scope XM.VendorListItemCharacteristic.prototype */
+
+    recordType: 'XM.VendorListItemCharacteristic'
 
   });
 
@@ -96,7 +156,7 @@ white:true*/
   */
   XM.VendorListItemCollection = XM.Collection.extend(/** @lends XM.VendorListItemCollection.prototype */{
 
-    model: XM.VendorListITem
+    model: XM.VendorListItem
 
   });
 

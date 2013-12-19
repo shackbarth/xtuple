@@ -452,7 +452,7 @@
       {
         "name": "vendor",
         "toOne": {
-          "type": "VendorRelation",
+          "type": "PurchaseVendorRelation",
           "column": "pohead_vend_id",
           "isNested": true,
           "required": true
@@ -504,7 +504,7 @@
       {
         "name": "site",
         "toOne": {
-          "type": "Site",
+          "type": "SiteRelation",
           "column": "pohead_warehous_id",
           "isNested": true
         }
