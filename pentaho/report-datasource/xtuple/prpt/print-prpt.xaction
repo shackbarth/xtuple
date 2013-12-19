@@ -4,7 +4,7 @@
   <version>1</version>
   <logging-level>TRACE</logging-level>
   <documentation> 
-    <author>Jeff Gunderson</author>  
+    <author>Jeffrey Gunderson</author>  
     <description>PRPT to Print Via Javascript</description>  
     <help/>  
     <result-type>report</result-type>  
