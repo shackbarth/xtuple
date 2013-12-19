@@ -175,8 +175,11 @@ trailing:true, white:true, strict: false*/
         });
 
       if (actAction) {
-        inEvent.model = model;
-        actAction.method.call(this, inSender, inEvent);
+        if (!this.getToggleSelected() || inEvent.originator.isKey) {
+          inEvent.model = model;
+          actAction.method.call(this, inSender, inEvent);
+          return true;
+        }
       } else {
         model.id = key;
         this._lastTapIndex = inEvent.index;

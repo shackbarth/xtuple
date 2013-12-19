@@ -1650,7 +1650,15 @@
           "column": "pohead_id",
           "inverse": "purchaseOrder"
         }
-      }
+      },
+      {
+        "name": "saved",
+        "attr": { 
+          "type": "Boolean",
+          "column": "pohead_saved",
+          "value": true
+        }
+      } 
     ],
     "isSystem": true
   },
