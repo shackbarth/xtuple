@@ -17,7 +17,6 @@
   @property {String} Name
   @property {String} Description
   @property {Number} Order
-  @property {Option} Email Delivery Profile
   **/
  var spec = {
     recordType: "XM.IncidentSeverity",
@@ -26,10 +25,36 @@
     listKind: "XV.IncidentSeverityList",
     instanceOf: "XM.Document",
     attributes: ["id", "name", "order", "description"],
+    /**
+      @member -
+      @memberof IncidentSeverity.prototype
+      @description The ID attribute is "name", which will not be automatically uppercased.
+    */
     idAttribute: "name",
-    extensions: ["crm"], 
+    /**
+      @member -
+      @memberof IncidentSeverity.prototype
+      @description Used in the crm module
+    */
+    extensions: ["crm"],
+    /**
+      @member -
+      @memberof IncidentSeverity.prototype
+      @description IncidentSeveritys are lockable.
+    */
     isLockable: true,
+    /**
+    @member -
+    @memberof IncidentSeverity.prototype
+    @description The Incident Severity collection is cached.
+    */
     cacheName: "XM.incidentSeverities",
+    /**
+      @member -
+      @memberof IncidentSeverity.prototype
+      @description IncidentSeveritys can be read by anyone but can only be created, updated,
+        or deleted by users with the "MaintainIncidentSeverities" privilege.
+    */
     privileges: {
       createUpdateDelete: "MaintainIncidentSeverities",
       read: true

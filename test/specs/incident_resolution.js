@@ -25,10 +25,36 @@
     listKind: "XV.IncidentResolutionList",
     instanceOf: "XM.Document",
     attributes: ["id", "name", "order", "description"],
+    /**
+      @member -
+      @memberof IncidentResolution.prototype
+      @description The ID attribute is "name", which will not be automatically uppercased.
+    */
     idAttribute: "name",
+    /**
+      @member -
+      @memberof IncidentResolution.prototype
+      @description Used in the crm module
+    */
     extensions: ["crm"],
+    /**
+      @member -
+      @memberof IncidentResolution.prototype
+      @description Incident Resolutions are lockable.
+    */
     isLockable: true,
+    /**
+    @member -
+    @memberof IncidentResolution.prototype
+    @description The Incident Resolution collection is cached.
+    */
     cacheName: "XM.incidentResolutions",
+    /**
+      @member -
+      @memberof IncidentResolution.prototype
+      @description Incident Resolutions can be read by anyone but can only be created, updated,
+        or deleted by users with the "MaintainIncidentResolutions" privilege.
+    */
     privileges: {
       createUpdateDelete: "MaintainIncidentResolutions",
       read: true
