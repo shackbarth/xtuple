@@ -923,7 +923,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
   XT.Discovery.sanitize = function (schema) {
     "use strict";
 
-    var inverse,
+    var childOrm,
+        inverse,
         parentOrm,
         parentOrmProp,
         propName,
@@ -942,9 +943,12 @@ select xt.install_js('XT','Discovery','xtuple', $$
           parentOrmProp = XT.Orm.getProperty(parentOrm, propName);
           if (parentOrmProp.toMany && parentOrmProp.toMany.type && parentOrmProp.toMany.inverse) {
             inverse = parentOrmProp.toMany.inverse;
+            childOrm = XT.Orm.fetch("XM", parentOrmProp.toMany.type, {"silentError": true});
 
             /* Delete the inverse property from the Child JSON-Schema. */
-            if (schema[parentOrmProp.toMany.type] && schema[parentOrmProp.toMany.type].properties[inverse]) {
+            if (childOrm && childOrm.isNestedOnly && schema[parentOrmProp.toMany.type] &&
+              schema[parentOrmProp.toMany.type].properties[inverse]) {
+
               delete schema[parentOrmProp.toMany.type].properties[inverse];
             }
           }
