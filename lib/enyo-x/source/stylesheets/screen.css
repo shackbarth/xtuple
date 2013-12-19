@@ -1577,7 +1577,7 @@ ul.icons-ul > li .icon-li {
   width: 100%;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
-  height: 25px;
+  height: 26px;
   padding-top: 3px;
   width: 100%;
   font-size: 13px;
@@ -1660,6 +1660,7 @@ ul.icons-ul > li .icon-li {
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
   text-indent: 0;
   padding-bottom: 0;
+  padding-top: 8px;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
   display: none;
@@ -1748,7 +1749,7 @@ ul.icons-ul > li .icon-li {
   right: 0;
 }
 .selectable-chart .chart-bottom {
-  background-color: #F8F8F5;
+  background-color: #555555;
   border: 1px solid #444444;
   border-top: none;
   -webkit-border-bottom-right-radius: 10px;
@@ -1760,7 +1761,7 @@ ul.icons-ul > li .icon-li {
 }
 .selectable-chart .chart-bottom .xv-picker-label {
   width: 100px;
-  color: #000000;
+  color: #ffffff;
 }
 .selectable-chart .chart-bottom .onyx-button {
   width: 130px;
@@ -1990,6 +1991,7 @@ ul.icons-ul > li .icon-li {
 }
 .xv-groupbox.xv-parameter {
   min-width: 280px;
+  max-width: 320px;
   margin: 4px 0 8px 4px;
   padding: 0;
 }
@@ -2520,10 +2522,25 @@ body {
 }
 .app > * {
   width: 320px;
+  height: 100%;
   -webkit-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
   box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
-  background: #555555;
+  background: #696969;
+}
+/*
+  Media query for responsive design. This adapts to smaller
+  displays.
+*/
+@media (max-width: 480px) {
+  .pullout-menu {
+    display: block;
+    margin: 0;
+  }
+  .app > * {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
 .panels > * {
   border: 2px solid #333333;
@@ -2535,20 +2552,6 @@ body {
 .scroll-ios {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-}
-/*
-  Media query for responsive design. This adapts to smaller
-  displays.
-*/
-@media (max-width: 480px) {
-  .pullout-menu {
-    display: block;
-    margin: 0;
-  }
-  .app-panels > * {
-    min-width: 100%;
-    max-width: 100%;
-  }
 }
 .item {
   position: relative;
@@ -2565,34 +2568,11 @@ body {
 .left {
   color: #ffffff;
 }
-.right-float {
-  float: right;
-  display: block;
-}
-.left-float {
-  float: left;
-  display: block;
-  margin-right: 3px;
-}
 .text-shadow-none {
   text-shadow: none;
 }
 .text-shadow-0 {
   text-shadow: 0 0 #000000;
-}
-.xt-app {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-.xt-app .xv-postbooks {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 .xv-my-account-popup {
   background-color: #ffffff;
@@ -2756,6 +2736,9 @@ body {
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {
   width: 220px;
+}
+.xv-toolbar-label {
+  width: 180px;
 }
 .xv-totals-panel {
   padding: 0;

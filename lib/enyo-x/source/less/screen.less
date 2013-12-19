@@ -136,8 +136,24 @@ body {
 
 .app > * {
   width: 320px;
+  height: 100%;
   .box-shadow(-4px -4px 4px rgba(0,0,0,0.3));
-  background: @charcoal;
+  background: @dim-gray;
+}
+
+/*
+  Media query for responsive design. This adapts to smaller
+  displays.
+*/
+@media (max-width: 480px) {
+  .pullout-menu {
+    display: block;
+    margin: 0;
+  }
+  .app > * {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
 
 .panels > * {
@@ -152,21 +168,6 @@ body {
 .scroll-ios {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-}
-
-/*
-  Media query for responsive design. This adapts to smaller
-  displays.
-*/
-@media (max-width: 480px) {
-  .pullout-menu {
-    display: block;
-    margin: 0;
-  }
-  .app-panels > * {
-       min-width: 100%;
-       max-width: 100%;
-   }
 }
 
 .item {
@@ -189,17 +190,6 @@ body {
   color: @white;
 }
 
-.right-float {
-  float: right;
-  display: block;
-}
-
-.left-float {
-  float: left;
-  display: block;
-  margin-right: 3px;
-}
-
 // XXX hack here (and in other places that reference issue 18397)
 // can be removed once enyo fixes ENYO-1104
 .text-shadow-none {
@@ -209,21 +199,6 @@ body {
   text-shadow: 0 0 @black;
 }
 // end hack
-
-.xt-app {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  .xv-postbooks {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-}
 
 .xv-my-account-popup {
   background-color: @white;
@@ -422,6 +397,10 @@ body {
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {
   width: 220px;
+}
+
+.xv-toolbar-label {
+  width: 180px;
 }
 
 .xv-totals-panel {

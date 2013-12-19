@@ -1,0 +1,282 @@
+[
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "ItemSource",
+    "table": "itemsrc",
+    "isRest": true,
+    "idSequenceName": "itemsrc_itemsrc_id_seq",
+    "lockable": true,
+    "comment": "Item Source Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainItemSources",
+        "read": "ViewItemSources",
+        "update": "MaintainItemSources",
+        "delete": "MaintainItemSources"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "itemsrc_item_id"
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "isNested": true,
+          "type": "VendorRelation",
+          "column": "itemsrc_vend_id"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsrc_active"
+        }
+      },
+      {
+        "name": "isDefault",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsrc_default"
+        }
+      },
+      {
+        "name": "vendorItemNumber",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_vend_item_number"
+        }
+      },
+      {
+        "name": "vendorItemDescription",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_vend_item_descrip"
+        }
+      },
+      {
+        "name": "vendorUnit",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_vend_uom"
+        }
+      },
+      {
+        "name": "vendorUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "itemsrc_invvendoruomratio"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_comments"
+        }
+      },
+      {
+        "name": "minimumOrderQuantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "itemsrc_minordqty"
+        }
+      },
+      {
+        "name": "multipleOrderQuantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "itemsrc_multordqty"
+        }
+      },
+      {
+        "name": "leadTime",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_leadtime"
+        }
+      },
+      {
+        "name": "ranking",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrc_ranking"
+        }
+      },
+      {
+        "name": "manufacturerName",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_manuf_name"
+        }
+      },
+      {
+        "name": "manufacturerItemNumber",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_manuf_item_number"
+        }
+      },
+      {
+        "name": "manufacturerItemDescription",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_manuf_item_descrip"
+        }
+      },
+      {
+        "name": "barcode",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_upccode"
+        }
+      },
+      {
+        "name": "effective",
+        "attr": {
+          "type": "Date",
+          "column": "itemsrc_effective"
+        }
+      },
+      {
+        "name": "expires",
+        "attr": {
+          "type": "DueDate",
+          "column": "itemsrc_expires"
+        }
+      },
+      {
+        "name": "contract",
+        "toOne": {
+          "isNested": true,
+          "type": "VendorContractRelation",
+          "column": "itemsrc_contrct_id"
+        }
+      },
+      {
+        "name": "Prices",
+        "toMany": {
+          "isNested": true,
+          "type": "ItemSourcePrice",
+          "column": "itemsrc_id",
+          "inverse": "itemSource"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "ItemSourcePrice",
+    "table": "itemsrcp",
+    "idSequenceName": "itemsrcp_itemsrcp_id_seq",
+    "comment": "Item Source Price Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrcp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "itemSource",
+        "attr": {
+          "type": "Number",
+          "column": "itemsrcp_itemsrc_id"
+        }
+      },
+      {
+        "name": "quantityBreak",
+        "attr": {
+          "type": "Quantity",
+          "column": "itemsrcp_qtybreak"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "PurchasePrice",
+          "column": "itemsrcp_price"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "itemsrcp_curr_id"
+        }
+      },
+      {
+        "name": "dropShip",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsrcp_dropship"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "itemsrcp_warehous_id"
+        }
+      },
+      {
+        "name": "priceType",
+        "attr": {
+          "type": "String",
+          "column": "itemsrcp_type"
+        }
+      },
+      {
+        "name": "percentDiscount",
+        "attr": {
+          "type": "Percent",
+          "column": "itemsrcp_discntprcnt"
+        }
+      },
+      {
+        "name": "fixedDiscount",
+        "attr": {
+          "type": "Money",
+          "column": "itemsrcp_fixedamtdiscount"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

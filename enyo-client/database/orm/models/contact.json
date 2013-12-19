@@ -22,13 +22,19 @@
         "update": "MaintainPersonalContacts",
         "delete": "MaintainPersonalContacts",
         "properties": [
-          "owner.username"
+          "owner.username",
+          "crmaccountUsers"
         ]
       },
       "attribute": {
         "owner": {
           "create": "EditOwner",
           "update": "EditOwner"
+        },
+        "crmaccountUsers": {
+          "view": false,
+          "create": false,
+          "update": false
         }
       }
     },
@@ -242,6 +248,14 @@
           "column": "cntct_id",
           "inverse": "source",
           "isNested": true
+        }
+      },
+      {
+        "name": "crmaccountUsers",
+        "toMany": {
+          "type": "ShareUsers",
+          "column": "obj_uuid",
+          "inverse": "uuid"
         }
       }
     ],

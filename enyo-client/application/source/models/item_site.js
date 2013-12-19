@@ -267,6 +267,7 @@ white:true*/
 
     // Parse out customer
     param = _.findWhere(params, {attribute: "customer"});
+
     if (param) {
       // We have to do a special dispatch to fetch the data based on customer.
       // Because it's a dipatch call and not a fetch, the collection doesn't get

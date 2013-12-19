@@ -339,6 +339,18 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // EXPENSE CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.ExpenseCategoryWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.ExpenseCategoryCollection",
+    list: "XV.ExpenseCategoryList",
+    keyAttribute: "code"
+  });
+
+  // ..........................................................
   // INCIDENT
   //
 

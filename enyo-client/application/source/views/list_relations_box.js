@@ -457,4 +457,16 @@ trailing:true, white:true*/
     listRelations: "XV.LocationItemListRelations"
   });
 
+  // ..........................................................
+  // RETURN TAX
+  //
+
+  enyo.kind({
+    name: "XV.ReturnTaxBox",
+    kind: "XV.ListRelationsBox",
+    title: "_taxes".loc(),
+    listRelations: "XV.ReturnTaxListRelations",
+    canOpen: false
+  });
+
 }());

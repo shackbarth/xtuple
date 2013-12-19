@@ -645,6 +645,66 @@ trailing:true, white:true, strict:false*/
   });
 
   // ..........................................................
+  // RETURN LINE
+  //
+
+  enyo.kind({
+    name: "XV.ReturnLineItemListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "return",
+    orderBy: [
+      {attribute: "lineNumber"}
+    ],
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "lineNumber", isKey: true}
+              ]}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "item.number"},
+              {kind: "XV.ListAttr", attr: "site.code"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "quantity", formatter: "formatQuantity"},
+            {kind: "XV.ListAttr", attr: "credited", formatter: "formatCredited"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatCredited: function (value) {
+      return "_credited".loc() + ": " + value;
+    },
+    formatQuantity: function (value) {
+      return "_quantity".loc() + ": " + value;
+    },
+  });
+
+  // ..........................................................
+  // RETURN TAX
+  // Summarized read-only models of line item taxes
+
+  enyo.kind({
+    name: "XV.ReturnTaxListRelations",
+    kind: "XV.InvoiceTaxListRelations",
+    parentKey: "return"
+  });
+
+  // ..........................................................
+  // RETURN TAX ADJUSTMENT
+  //
+
+  enyo.kind({
+    name: "XV.ReturnTaxAdjustmentListRelations",
+    kind: "XV.InvoiceTaxAdjustmentListRelations",
+    parentKey: "return"
+  });
+
+  // ..........................................................
   // SALES ORDER LINE ITEM
   //
 

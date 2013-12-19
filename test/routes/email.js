@@ -3,9 +3,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, XT:true, describe:true, it:true, before:true, _:true */
 
 var assert = require("chai").assert,
-  emailRoute = require("../../../node-datasource/routes/email");
+  emailRoute = require("../../node-datasource/routes/email");
 
-require("../../../node-datasource/xt");
+require("../../node-datasource/xt");
 
 (function () {
   "use strict";

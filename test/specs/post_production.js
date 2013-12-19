@@ -11,11 +11,10 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     smoke = require("../lib/smoke"),
     assert = require("chai").assert,
     spec = {
-    recordType: "XM.PostProduction",
-    skipModelConfig: true,
-    skipSmoke: true,
-    skipCrud: true
-  };
+      recordType: "XM.PostProduction",
+      skipAll: true
+    };
+
   var additionalTests = function () {
     describe.skip("Post Production", function () {
       it("Work Orders in Imploded and closed state should not be available" +
@@ -67,6 +66,6 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     });
   };
   //Disabling the test as it requires the manufacturing extension to be installed and enabled
-  //exports.spec = spec;
-  //exports.additionalTests = additionalTests;
+  exports.spec = spec;
+  exports.additionalTests = additionalTests;
 }());
