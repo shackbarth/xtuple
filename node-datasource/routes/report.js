@@ -119,7 +119,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           }
           // step 3: redirect to the report URL or if the print option is true
           // get the report URL
-          if (requestDetails.print === "false") {
+          if (requestDetails.print === false) {
             X.log("redirect to: " + reportUrl);
             res.redirect(reportUrl);
           }
