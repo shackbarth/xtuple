@@ -83,17 +83,21 @@ white:true*/
     editableModel: 'XM.WorkOrder',
 
     canIssueMaterial: function (callback) {
-      var hasPrivilege = XT.session.privileges.get("IssueWoMaterials");
+      var hasPrivilege = XT.session.privileges.get("IssueWoMaterials"),
+        inventoryInstalled = XT.extensions.inventory || false,
+        status = this.getValue("status");
       if (callback) {
-        callback(hasPrivilege);
+        callback(hasPrivilege && inventoryInstalled && status !== "C");
       }
       return this;
     },
 
     canPostProduction: function (callback) {
-      var hasPrivilege = XT.session.privileges.get("PostProduction");
+      var hasPrivilege = XT.session.privileges.get("PostProduction"),
+        inventoryInstalled = XT.extensions.inventory ? true : false,
+        status = this.getValue("status");
       if (callback) {
-        callback(hasPrivilege);
+        callback(hasPrivilege && inventoryInstalled && status !== "C");
       }
       return this;
     }

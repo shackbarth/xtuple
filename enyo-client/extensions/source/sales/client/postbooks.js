@@ -109,6 +109,7 @@ trailing:true, white:true*/
       "OverrideSODate",
       "OverrideTax",
       "ProcessCreditCards",
+      "SelectBilling",
       "ShowMarginsOnSalesOrder",
       "UpdateCustomerCreditStatus",
       "ViewCosts",

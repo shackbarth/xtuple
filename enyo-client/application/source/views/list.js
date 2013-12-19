@@ -1609,6 +1609,11 @@ trailing:true, white:true, strict: false*/
     label: "_salesOrders".loc(),
     collection: "XM.SalesOrderListItemCollection",
     parameterWidget: "XV.SalesOrderListParameters",
+    actions: [
+      {name: "issueToShipping", method: "issueToShipping",
+          isViewMethod: true, notify: false,
+          prerequisite: "canIssueItem"}
+    ],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -1680,6 +1685,14 @@ trailing:true, white:true, strict: false*/
         state = model.get(stateAttr),
         country = model.get(countryAttr);
       return XM.Address.formatShort(city, state, country);
+    },
+    issueToShipping: function (inEvent) {
+      var index = inEvent.index,
+        model = this.getValue().at(index),
+        that = this,
+        panel = XT.app.$.postbooks.createComponent({kind: "XV.IssueToShipping", model: model.attributes.uuid});
+      panel.render();
+      XT.app.$.postbooks.setIndex(XT.app.$.postbooks.getPanels().length - 1);
     }
   });
 
@@ -2488,16 +2501,15 @@ trailing:true, white:true, strict: false*/
     ],
     issueMaterial: function (inEvent) {
       var index = inEvent.index,
-        workOrder = this.getValue().at(index),
+        model = this.getValue().at(index),
         that = this,
-        panel = XT.app.$.postbooks.createComponent({kind: "XV.IssueMaterial", model: workOrder.id});
+        panel = XT.app.$.postbooks.createComponent({kind: "XV.IssueMaterial", model: model.id});
       panel.render();
-      XT.app.$.postbooks.reflow();
       XT.app.$.postbooks.setIndex(XT.app.$.postbooks.getPanels().length - 1);
     },
     postProduction: function (inEvent) {
       var index = inEvent.index,
-        workOrder = this.getValue().at(index),
+        model = this.getValue().at(index),
         that = this,
         callback = function (resp) {
           var options = {
@@ -2519,11 +2531,11 @@ trailing:true, white:true, strict: false*/
             }
           };
           // Refresh row if shipped
-          if (resp) { workOrder.fetch(options); }
+          if (resp) { model.fetch(options); }
         };
       this.doWorkspace({
         workspace: "XV.PostProductionWorkspace",
-        id: workOrder.id,
+        id: model.id,
         callback: callback
       });
     }
