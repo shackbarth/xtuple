@@ -12,6 +12,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.InvoiceLineItemGridBox",
     kind: "XV.GridBox",
     classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
     title: "_lineItems".loc(),
     columns: [
       {classes: "line-number", header: "#", rows: [
@@ -74,6 +75,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.ReturnLineItemGridBox",
     kind: "XV.GridBox",
     classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
     title: "_lineItems".loc(),
     columns: [
       {classes: "line-number", header: "#", rows: [
@@ -140,6 +142,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.SalesOrderLineItemGridBox",
     kind: "XV.GridBox",
     classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
     title: "_lineItems".loc(),
     columns: [
       {classes: "line-number", header: "#", rows: [

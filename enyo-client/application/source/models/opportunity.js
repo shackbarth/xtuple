@@ -112,7 +112,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Characteristic
+    @extends XM.CharacteristicAssignment
   */
   XM.OpportunityCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.OpportunityCharacteristic.prototype */
