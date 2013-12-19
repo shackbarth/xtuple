@@ -271,6 +271,13 @@
         }
       },
       {
+        "name": "workflowType",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_type"
+        }
+      },
+      {
         "name": "status",
         "attr": {
           "type": "String",
