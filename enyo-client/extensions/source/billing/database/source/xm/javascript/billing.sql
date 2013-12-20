@@ -59,7 +59,7 @@ select xt.install_js('XM','Billing','xtuple', $$
     ret.NextARMemoNumber = plv8.execute('select currentARMemoNumber() as value', [])[0].value;
     ret.NextCashRcptNumber = plv8.execute('select currentCashRcptNumber() as value',[])[0].value;
 
-    ret = XT.extend(ret, data.retrieveMetrics(keys));
+    ret = XT.extend(data.retrieveMetrics(keys), ret);
     return ret;
   }
 

@@ -67,6 +67,7 @@ XT.extensions.billing.initLists = function () {
   enyo.kind({
     name: "XV.ReceivableList",
     kind: "XV.List",
+    view: 'XM.ReceivableView',
     label: "_receivables".loc(),
     collection: "XM.ReceivableListItemCollection",
     parameterWidget: "XV.ReceivableListParameters",

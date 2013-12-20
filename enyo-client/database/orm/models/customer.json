@@ -779,6 +779,15 @@
         }
       },
       {
+        "name": "shiptos",
+        "toMany": {
+          "isNested": true,
+          "type": "CustomerShipto",
+          "column": "cust_id",
+          "inverse": "customer"
+        }
+      },
+      {
         "name": "currency",
         "toOne": {
           "type": "Currency",
@@ -1995,7 +2004,6 @@
     "nameSpace": "SYS",
     "type": "CustomerRelation",
     "table": "custinfo",
-    "isRest": true,
     "comment": "Customer Relation Map",
     "privileges": {
       "all": {

@@ -7,6 +7,16 @@ trailing:true, white:true*/
 
   XT.extensions.project.initParameters = function () {
     var extensions;
+
+    // ..........................................................
+    // ACTIVITY
+    //
+
+    XV.ActivityListParameters.prototype.activityTypes.project = [
+      {type: "Project"},
+      {type: "ProjectTask", label: "_tasks".loc()},
+      {type: "ProjectWorkflow", label: "_workflow".loc()}
+    ];
  
     // ..........................................................
     // INCIDENT

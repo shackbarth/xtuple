@@ -1959,7 +1959,6 @@
     "nameSpace": "SYS",
     "type": "SalesOrderRelation",
     "table": "xt.coheadinfo",
-    "isRest": true,
     "comment": "Sales Order Relation Map",
     "privileges": {
       "all": {

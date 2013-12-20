@@ -563,6 +563,65 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // RETURN LINE
+  //
+  enyo.kind({
+    name: "XV.ReturnLineItemEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.NumberWidget", attr: "lineNumber"},
+        {kind: "XV.ItemSiteWidget",
+          attr: {item: "item", site: "site"},
+          name: "itemSiteWidget"},
+        {kind: "XV.QuantityWidget", attr: "quantity", name: "quantityWidget"},
+        {kind: "XV.QuantityWidget", attr: "credited", name: "creditedWidget"},
+        {kind: "XV.UnitCombobox", attr: "quantityUnit", showLabel: true,
+          name: "quantityUnitPicker"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "price", currency: ""},
+          label: "_price".loc(), currencyDisabled: true,
+          scale: XT.SALES_PRICE_SCALE},
+        {kind: "XV.UnitPicker", attr: "priceUnit",
+          name: "priceUnitPicker"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "extendedPrice", currency: ""},
+          label: "_extendedPrice".loc(), currencyDisabled: true,
+          scale: XT.EXTENDED_PRICE_SCALE},
+      ]}
+    ]
+  });
+  enyo.kind({
+    name: "XV.ReturnLineItemBox",
+    kind: "XV.ListRelationsEditorBox",
+    childWorkspace: "XV.ReturnLineWorkspace",
+    classes: "xv-short-relations-box",
+    title: "_lineItems".loc(),
+    editor: "XV.ReturnLineItemEditor",
+    parentKey: "return",
+    listRelations: "XV.ReturnLineItemListRelations",
+    fitButtons: false
+  });
+
+  // ..........................................................
+  // RETURN TAX ADJUSTMENT
+  //
+  enyo.kind({
+    name: "XV.ReturnTaxAdjustmentEditor",
+    kind: "XV.InvoiceTaxAdjustmentEditor"
+  });
+  enyo.kind({
+    name: "XV.ReturnTaxAdjustmentBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_taxAdjustments".loc(),
+    editor: "XV.ReturnTaxAdjustmentEditor",
+    parentKey: "return",
+    listRelations: "XV.ReturnTaxAdjustmentListRelations",
+    fitButtons: false
+  });
+
+  // ..........................................................
   // SALE TYPE AND SALES ORDER WORKFLOW
   //
   enyo.kind({

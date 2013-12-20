@@ -45,6 +45,7 @@ DO $$
       /* Drop saleshistory views. */
       plv8.execute("DROP VIEW saleshistory;");
       plv8.execute("DROP VIEW saleshistorymisc;");
+      plv8.execute("drop schema if exists xtstd cascade;");
 
       /* Alter xt.obj type. */
       plv8.execute("alter table xt.obj alter column obj_uuid type uuid using obj_uuid::uuid;");
