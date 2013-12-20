@@ -1836,6 +1836,7 @@ trailing:true, white:true, strict: false*/
     name: "XV.ReturnList",
     kind: "XV.InvoiceList",
     label: "_returns".loc(),
+    multiSelect: false,
     parameterWidget: "XV.ReturnListParameters",
     collection: "XM.ReturnListItemCollection",
     actions: [

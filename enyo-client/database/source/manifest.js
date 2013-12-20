@@ -20,6 +20,7 @@
     "public/tables/cashrcpt.sql",
     "public/tables/cohead.sql",
     "public/tables/comment.sql",
+    "public/tables/cmhead.sql",
     "public/tables/cmitem.sql",
     "public/tables/cmitemtax.sql",
     "public/tables/cntct.sql",
