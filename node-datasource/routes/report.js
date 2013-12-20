@@ -138,21 +138,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           }
           // step 3: redirect to the report URL or if the print option is true
           if (requestDetails.print === false) {
-            X.log("redirect to: " + reportUrl);
             res.redirect(reportUrl);
           }
+          // or request print service for report
           else {
-            X.log("request get: " + printUrl);
             request({
               uri: printUrl,
               method: "POST",
             },
             function (err, response, body) {
-              X.log("response: " + response);
               if (err) {
+                if (XT.session.config.debugging) {
+                  XT.log("Report route failed to print.  Response: ", response.statusCode);
+                }
                 res.send({ isError: true,
                   error: err,
                   message: err
+                });
+              }
+              else {
+                res.send({ isError: false,
+                  message: response.statusCode
                 });
               }
             });
