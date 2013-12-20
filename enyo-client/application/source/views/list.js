@@ -2442,7 +2442,7 @@ trailing:true, white:true, strict: false*/
   enyo.kind({
     name: "XV.VendorAddressList",
     kind: "XV.List",
-    collection: "XM.VendorAddressRelationCollection",
+    collection: "XM.VendorAddressListItemCollection",
     parameterWidget: "XV.VendorAddressParameters",
     components: [
       {kind: "XV.ListItem", components: [

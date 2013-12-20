@@ -91,7 +91,7 @@ white:true*/
   */
   XM.VendorAddress = XM.Model.extend(/** @scope XM.VendorAddress.prototype */{
 
-    recordType: 'XM.VendorAddresss'
+    recordType: 'XM.VendorAddress'
 
   });
 
@@ -102,7 +102,7 @@ white:true*/
   */
   XM.VendorAddressRelation = XM.Info.extend(/** @scope XM.VendorAddressRelation.prototype */{
 
-    recordType: 'XM.VendorAddresssRelation',
+    recordType: 'XM.VendorAddressRelation',
 
     editableModel: 'XM.VendorAddress'
 
@@ -115,7 +115,7 @@ white:true*/
   */
   XM.VendorAddressListItem = XM.Model.extend(/** @scope XM.VendorAddressListItem.prototype */{
 
-    recordType: 'XM.VendorAddresssListItem',
+    recordType: 'XM.VendorAddressListItem',
 
     editableModel: 'XM.VendorAddress'
 

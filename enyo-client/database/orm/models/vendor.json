@@ -439,8 +439,9 @@
       },
       {
         "name": "vendor",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "isNested": true,
+          "type": "VendorRelation",
           "column": "vend_id"
         }
       },
@@ -503,8 +504,9 @@
       },
       {
         "name": "vendor",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "isNested": true,
+          "type": "VendorRelation",
           "column": "vend_id"
         }
       },

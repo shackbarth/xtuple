@@ -26,7 +26,8 @@ white:true, strict:false*/
       kind: "XV.RelationWidget",
       collection: "XM.VendorAddressRelationCollection",
       list: "XV.VendorAddressList",
-      keyAttribute: "code"
+      keyAttribute: "code",
+      nameAttribute: ""
     });
 
   };

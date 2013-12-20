@@ -691,6 +691,7 @@ strict:true, trailing:true, white:true */
     "_valueAfter": "Value After",
     "_valueBefore": "Value Before",
     "_vendor": "Vendor",
+    "_vendorAddress": "Vendor Address",
     "_vendorType": "Vendor Type",
     "_version": "Version",
     "_visa": "Visa",
