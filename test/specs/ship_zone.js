@@ -50,8 +50,8 @@
     /**
       @member -
       @memberof ShipZone.prototype
-      @description ShipZones can be read by users with "ViewShipiZones" privilege and can be created, updated,
-        or deleted by users with the "MaintainShipZones" privilege.
+      @description ShipZones can be read by users with "ViewShippingZones" privilege and can be created, updated,
+        or deleted by users with the "MaintainShippingZones" privilege.
     */
     privileges: {
       createUpdateDelete: "MaintainShippingZones",
