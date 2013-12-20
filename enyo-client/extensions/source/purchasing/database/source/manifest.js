@@ -17,6 +17,7 @@
     "xt/tables/wftype.sql",
     "xt/tables/acttype.sql",
     "xt/tables/poheadext.sql",
+    "xt/views/itemsrcmfg.sql",
     "xt/views/poheadinfo.sql",
     "xt/views/poiteminfo.sql",
     "xm/javascript/purchasing.sql"

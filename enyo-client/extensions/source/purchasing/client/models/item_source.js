@@ -30,6 +30,18 @@ white:true*/
 
     });
 
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.ItemSourceManufacturer = XM.Model.extend({
+
+      recordType: "XM.ItemSourceManufacturer"
+
+    });
+
+
 
     // ..........................................................
     // COLLECTIONS
@@ -44,6 +56,17 @@ white:true*/
     XM.ItemSourceCollection = XM.Collection.extend({
 
       model: XM.ItemSource
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.ItemSourceManufacturerCollection = XM.Collection.extend({
+
+      model: XM.ItemSourceManufacturer
 
     });
 

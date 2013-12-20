@@ -330,7 +330,7 @@ trailing:true, white:true, strict: false*/
               {kind: "onyx.GroupboxHeader", content: "_description".loc()},
               {kind: "XV.TextArea", attr: "vendorDescription", label: "_description".loc()},
               {kind: "onyx.GroupboxHeader", content: "_manufacturer".loc()},
-              {kind: "XV.InputWidget", attr: "manufacturerName", label: "_name".loc()},
+              {kind: "XV.ItemSourceManufacturerCombobox", attr: "manufacturerName", label: "_name".loc()},
               {kind: "XV.InputWidget", attr: "manufacturerItemNumber", label: "_itemNumber".loc()},
               {kind: "onyx.GroupboxHeader", content: "_description".loc()},
               {kind: "XV.TextArea", attr: "manufacturerItemDescription", fit: true}

@@ -278,5 +278,32 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "ItemSourceManufacturer",
+    "table": "xt.itemsrcmfg",
+    "isRest": true,
+    "comment": "Item Source Manufacturer Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "manufacturerName",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_manuf_name",
+          "isPrimaryKey": true
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]
