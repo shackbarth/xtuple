@@ -14,7 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   X.olapCatalog = X.Object.extend({
   
     className: "X.olapCatalog",
-    hostname: X.options.biServer.hostname || "localhost",
+    hostname: X.options.biServer.bihost || "localhost",
     port: X.options.biServer.port || 8080,
     
     xmlaConnect: new X.xmla.Xmla({

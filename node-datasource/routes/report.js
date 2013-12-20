@@ -119,7 +119,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             // printer-name is not currently set so it should print on default printer until we
             // supply a printer name from user preferences.
             //
-            printServerHost = X.options.printServer.hostname || "",
+            printServerHost = X.options.printServer.printhost || "",
             printServerPort = X.options.printServer.port || "",
             printServerUser = X.options.printServer.user || "",
             printServerPassword = X.options.printServer.password || "",

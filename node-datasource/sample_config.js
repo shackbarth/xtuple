@@ -81,7 +81,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       password: "admin"
     },
     biServer: {
-      hostname: "192.168.56.101",
+      bihost: "localhost",
       port: 8080,
       httpsport: 8443,
       catalog: "xTuple",
@@ -89,7 +89,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       keyFile: "./lib/rest-keys/server.key"
     }, 
     printServer: {
-      hostname: "192.168.56.101",
+      printhost: "localhost",
       port: 8080,
       httpsport: 8443,
       user: "reports",

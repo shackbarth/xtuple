@@ -1,6 +1,6 @@
 #!/bin/sh
 RUN_DIR=$(pwd)
-LOG_FILE=$RUN_DIR/install_bi.log
+LOG_FILE=$RUN_DIR/instalLOG_FLl_bi.log
 mv $LOG_FILE $LOG_FILE.old
 log() {
 	echo $@
@@ -251,7 +251,8 @@ prep_mobile() {
 	sed 's#biServerUrl: .*#biServerUrl: \"https://'$COMMONNAME':8443/pentaho/\",#'| \
 	sed 's#uniqueTenantId: .*#uniqueTenantId: \"'$TENANT'",#' | \
 	sed 's#biUrl: .*#biUrl: \"https://'$COMMONNAME':8443/pentaho/content/reporting/reportviewer/report.html\?solution=xtuple\&path=%2Fprpt\&locale=en_US\&userid=reports\&password=password\&output-target=pageable/pdf\",#' | \
-	sed 's#biserverhostname#'$COMMONNAME'#' \
+	sed 's#bihost: .*#bihost: \"'$COMMONNAME'\",#'| \
+	sed 's#printhost: .*#printhost: \"'$COMMONNAME'\",#' \
 	> config.js
 }
 
