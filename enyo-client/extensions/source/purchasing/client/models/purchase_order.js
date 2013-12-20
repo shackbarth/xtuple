@@ -117,13 +117,40 @@ white:true*/
       ],
 
       handlers: {
-        "add:lineItems": "lineItemsChanged",
-        "add:lineItems remove:lineItems": "calculateTotals",
-        "remove:lineItems": "lineItemsChanged",
-        "change:status": "purchaseOrderStatusChanged",
+        "add:lineItems remove:lineItems": "lineItemsChanged",
+        "change:freight": "calculateFreightTax",
         "change:purchaseType": "purchaseTypeChanged",
+        "change:site": "siteChanged",
+        "change:status": "purchaseOrderStatusChanged",
+        "change:taxZone": "recalculateTaxes",
         "change:vendor": "vendorChanged",
         "change:vendorAddress": "vendorAddressChanged"
+      },
+
+      taxDetail: undefined,
+
+      freightTaxDetail: undefined,
+
+      calculateFreightTax: function () {
+        var amount = this.get("freight"),
+          taxType = _.where(_.pluck(XM.taxTypes.models, "attributes"), {name: "Freight"})[0],
+          taxTypeId = taxType.id,
+          taxZoneId = this.getValue("taxZone.id"),
+          effective = this.get("orderDate"),
+          currency = this.get("currency"),
+          that = this,
+          dispOptions = {},
+          params;
+
+        if (effective && currency && amount) {
+          params = [taxZoneId, taxTypeId, effective, currency.id, amount];
+          dispOptions.success = function (resp) {
+            that.freightTaxDetail = resp;
+            that.calculateTotals();
+          };
+          this.dispatch("XM.Tax", "taxDetail", params, dispOptions);
+        }
+        return this;
       },
 
       calculateTotals: function () {
@@ -161,11 +188,9 @@ white:true*/
 
         // Total taxes
         // First group amounts by tax code
-        /*
         taxCodes = _.groupBy(taxDetails, function (detail) {
           return detail.taxCode.id;
         });
-        */
 
         // Loop through each tax code group and subtotal
         _.each(taxCodes, function (group) {
@@ -202,6 +227,8 @@ white:true*/
         if (XT.session.settings.get("RequirePOTax")) {
           this.requiredAttributes.push("taxZone");
         }
+        this.taxDetail = [];
+        this.freightTaxDetail = [];
       },
 
       vendorChanged: function () {
@@ -266,7 +293,7 @@ white:true*/
         }
 
         if (contact) {
-          attrs.vendorContact = contact.id;
+          attrs.vendorContact = contact;
           attrs.vendorContactHonorific = contact.get("honorific");
           attrs.vendorContactFirstName = contact.get("firstName");
           attrs.vendorContactLastName = contact.get("lastName");
@@ -288,6 +315,7 @@ white:true*/
         if (!hasLineItems) {
           this.set("status", XM.PurchaseOrder.UNRELEASED_STATUS);
         }
+        this.calculateTotals();
       },
 
       purchaseOrderStatusChanged: function () {
@@ -311,13 +339,75 @@ white:true*/
         );
       },
 
+      /**
+        Re-evaluate taxes for all line items and freight.
+      */
+      recalculateTaxes: function () {
+        _.each(this.get("lineItems").models, function (lineItem) {
+          lineItem.calculateTax();
+        });
+        this.calculateFreightTax();
+      },
+
+      siteChanged: function () {
+        var site = this.get("site"),
+          address = site ? site.get("address"): false,
+          contact = site ? site.get("contact") : false,
+          attrs = {
+            shiptoAddress: null,
+            shiptoAddress1: "",
+            shiptoAddress2: "",
+            shiptoAddress3: "",
+            shiptoCity: "",
+            shiptoState: "",
+            shiptoPostalCode: "",
+            shiptoCountry: "",
+            shiptoContact: null,
+            shiptoContactHonorific: "",
+            shiptoContactFirstName: "",
+            shiptoContactLastName: "",
+            shiptoContactMiddle: "",
+            shiptoContactSuffix: "",
+            shiptoContactTitle: "",
+            shiptoContactPhone: "",
+            shiptoContactFax: "",
+            shiptoContactEmail: ""
+          };
+
+        if (address) {
+          attrs.shiptoAddress = address;
+          attrs.shiptoAddress1 = address.get("line1");
+          attrs.shiptoAddress2 = address.get("line2");
+          attrs.shiptoAddress3 = address.get("line3");
+          attrs.shiptoCity = address.get("city");
+          attrs.shiptoState = address.get("state");
+          attrs.shiptoPostalCode = address.get("postalCode");
+          attrs.shiptoCountry = address.get("country");
+        }
+
+        if (contact) {
+          attrs.shiptoContact = contact;
+          attrs.shiptoContactHonorific = contact.get("honorific");
+          attrs.shiptoContactFirstName = contact.get("firstName");
+          attrs.shiptoContactLastName = contact.get("lastName");
+          attrs.shiptoContactMiddle = contact.get("middle");
+          attrs.shiptoContactSuffix = contact.get("suffix");
+          attrs.shiptoContactTitle = contact.get("title");
+          attrs.shiptoContactPhone = contact.get("phone");
+          attrs.shiptoContactFax = contact.get("fax");
+          attrs.shiptoContactEmail = contact.get("primaryEmail");
+        }
+
+        this.set(attrs);
+      },
+
       statusDidChange: function () {
         XM.Document.prototype.statusDidChange.apply(this, arguments);
         var status = this.getStatus(),
           K = XM.Model,
           lineCount;
         if (status === K.READY_NEW) {
-          // TO DO
+          this.siteChanged();
         } else if (status === K.READY_CLEAN) {
           this.setReadOnly("lineItems", false);
           this.lineItemsChanged();
@@ -487,9 +577,10 @@ white:true*/
       handlers: {
         "statusChange": "statusChanged",
         "change:expenseCategory": "isMiscellaneousChanged",
+        "change:freight": "calculateTax",
         "change:item": "itemChanged",
         "change:isMiscellaneous": "isMiscellaneousChanged",
-        "change:purchaseOrder": "purchaseOrderChanged"
+        "change:purchaseOrder": "purchaseOrderChanged",
       },
 
       taxDetail: null,
@@ -566,6 +657,57 @@ white:true*/
 
         if (currency) {
           this.set("currency", currency);
+        }
+      },
+
+      calculateTax: function () {
+        var parent = this.getParent(),
+          amount = this.get("extendedPrice"),
+          freight = this.get("freight"),
+          taxTypeId = this.getValue("taxType.id"),
+          taxZoneId,
+          effective,
+          currencyId,
+          that = this,
+          options = {},
+          params,
+          count = 0,
+          tax = 0;
+
+        // If no parent, don't bother
+        if (!parent) { return; }
+
+        taxZoneId = parent.getValue("taxZone.id");
+        effective = parent.get("orderDate");
+        currencyId = parent.getValue("currency.id");
+
+        if (effective && currencyId && (amount || freight)) {
+          this.taxDetail = [];
+          options.success = function (resp) {
+            count--;
+            that.taxDetail = that.taxDetail.concat(resp);
+            if (resp.length) {
+              tax = XT.math.add(_.pluck(resp, "tax"), 6);
+            }
+
+            if (count === 0) {
+              that.set("tax", XT.math.round(tax, XT.PURCHASE_PRICE_SCALE));
+              parent.calculateTotals();
+            }
+          };
+          if (amount) { count++; }
+          if (freight) { count++; }
+          if (amount) {
+            params = [taxZoneId, taxTypeId, effective, currencyId, amount];
+            this.dispatch("XM.Tax", "taxDetail", params, options);
+          }
+          if (freight) {
+            taxTypeId = _.where(_.pluck(XM.taxTypes.models, "attributes"), {name: "Freight"})[0].id;
+            params = [taxZoneId, taxTypeId, effective, currencyId, freight];
+            this.dispatch("XM.Tax", "taxDetail", params, options);
+          }
+        } else {
+          this.set("tax", tax);
         }
       },
 

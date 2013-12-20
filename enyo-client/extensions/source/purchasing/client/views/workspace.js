@@ -121,7 +121,6 @@ trailing:true, white:true, strict: false*/
                 },
                 {kind: "XV.ContactWidget", attr: "shiptoContact",
                   name: "shiptoContactWidget"},
-                {kind: "XV.ShipViaCombobox", attr: "shipVia"},
                 {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
                 {kind: "XV.TextArea", attr: "notes", fit: true}
               ]}

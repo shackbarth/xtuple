@@ -97,6 +97,7 @@
     "type": "PurchaseType",
     "table": "xt.potype",
     "idSequenceName": "potype_potype_id_seq",
+    "lockable": true,
     "isRest": true,
     "comment": "Purchase Type Map",
     "privileges": {
@@ -389,6 +390,8 @@
     "nameSpace": "XM",
     "type": "PurchaseOrder",
     "table": "xt.poheadinfo",
+    "lockable": true,
+    "lockTable": "pohead",
     "orderSequence": "PoNumber",
     "idSequenceName": "pohead_pohead_id_seq",
     "isRest": true,
@@ -728,7 +731,7 @@
         }
       },
       {
-        "name": "vendorShiptoContact",
+        "name": "shiptoContact",
         "toOne": {
           "type": "ContactRelation",
           "column": "pohead_shipto_cntct_id",
@@ -736,63 +739,63 @@
         }
       },
       {
-        "name": "vendorShiptoContactHonorific",
+        "name": "shiptoContactHonorific",
         "attr": {
           "type": "String",
           "column": "pohead_shipto_cntct_honorific"
         }
       },
       {
-        "name": "vendorShiptoContactFirstName",
+        "name": "shiptoContactFirstName",
         "attr": {
           "type": "String",
           "column": "pohead_shipto_cntct_first_name"
         }
       },
       {
-        "name": "vendorShiptoContactMiddleName",
+        "name": "shiptoContactMiddleName",
         "attr": {
           "type": "String",
           "column": "pohead_shipto_cntct_middle"
         }
       },
       {
-        "name": "vendorShiptoContactLastName",
+        "name": "shiptoContactLastName",
         "attr": {
           "type": "String",
           "column": "pohead_shipto_cntct_last_name"
         }
       },
       {
-        "name": "vendorShiptoContactSuffix",
+        "name": "shiptoContactSuffix",
         "attr": {
           "type": "String",
           "column": "pohead_shipto_cntct_suffix"
         }
       },
       {
-        "name": "vendorShiptoContactPhone",
+        "name": "shiptoContactPhone",
         "attr": {
           "type": "String",
           "column": "pohead_shipto_cntct_phone"
         }
       },
       {
-        "name": "vendorShiptoContactTitle",
+        "name": "shiptoContactTitle",
         "attr": {
           "type": "String",
           "column": "pohead_shipto_cntct_title"
         }
       },
       {
-        "name": "vendorShiptoContactFax",
+        "name": "shiptoContactFax",
         "attr": {
           "type": "String",
           "column": "pohead_shipto_cntct_fax"
         }
       },
       {
-        "name": "vendorShiptoContactEmail",
+        "name": "shiptoContactEmail",
         "attr": {
           "type": "String",
           "column": "pohead_shipto_cntct_email"

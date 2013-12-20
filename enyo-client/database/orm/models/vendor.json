@@ -449,8 +449,7 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "code",
-          "isNaturalKey": true
+          "column": "code"
         }
       },
       {
