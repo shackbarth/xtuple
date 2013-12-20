@@ -48,6 +48,7 @@
         "ViewCustomerGroups",
         "ViewItemMasters",
         "ViewMiscInvoices",
+        "ViewShipVias",
         "VoidPostedARCreditMemos",
         "VoidPostedCashReceipts",
         "VoidPostedInvoices"
