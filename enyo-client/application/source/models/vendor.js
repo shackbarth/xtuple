@@ -108,19 +108,6 @@ white:true*/
 
   });
 
-  /**
-    @class
-
-    @extends XM.Info
-  */
-  XM.VendorAddressListItem = XM.Model.extend(/** @scope XM.VendorAddressListItem.prototype */{
-
-    recordType: 'XM.VendorAddressListItem',
-
-    editableModel: 'XM.VendorAddress'
-
-  });
-
 
   /**
     @class
@@ -163,17 +150,6 @@ white:true*/
   // ..........................................................
   // COLLECTIONS
   //
-
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  XM.VendorAddressListItemCollection = XM.Collection.extend(/** @lends XM.VendorAddressListItemCollection.prototype */{
-
-    model: XM.VendorAddressListItem
-
-  });
 
   /**
     @class

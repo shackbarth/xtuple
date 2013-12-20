@@ -417,9 +417,9 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "VendorAddressListItem",
+    "type": "VendorAddressRelation",
     "table": "xt.vendaddr",
-    "comment": "Vendor Address List Item Map",
+    "comment": "Vendor Address Relation Map",
     "privileges": {
       "all": {
         "create": false,
@@ -474,55 +474,6 @@
           "isNested": true,
           "type": "ContactRelation",
           "column": "cntct_id"
-        }
-      }
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "VendorAddressRelation",
-    "table": "xt.vendaddr",
-    "comment": "Vendor Address Relation Map",
-    "privileges": {
-      "all": {
-        "create": false,
-        "read": true,
-        "update": false,
-        "delete": false
-      }
-    },
-    "properties": [
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "uuid",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "vendor",
-        "toOne": {
-          "isNested": true,
-          "type": "VendorRelation",
-          "column": "vend_id"
-        }
-      },
-      {
-        "name": "code",
-        "attr": {
-          "type": "String",
-          "column": "code",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "name",
-        "attr": {
-          "type": "String",
-          "column": "name"
         }
       }
     ],

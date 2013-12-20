@@ -148,7 +148,7 @@ trailing:true, white:true, strict: false*/
     formatName: function (value, view, model) {
       var parent = model.get("parent");
       if (parent) { return parent.get("name"); }
-      return model.get("name");s
+      return model.get("name");
     },
     formatDescription1: function (value, view, model) {
       var parent = model.get("parent");
@@ -2442,7 +2442,7 @@ trailing:true, white:true, strict: false*/
   enyo.kind({
     name: "XV.VendorAddressList",
     kind: "XV.List",
-    collection: "XM.VendorAddressListItemCollection",
+    collection: "XM.VendorAddressRelationCollection",
     parameterWidget: "XV.VendorAddressParameters",
     components: [
       {kind: "XV.ListItem", components: [
@@ -2451,12 +2451,18 @@ trailing:true, white:true, strict: false*/
             components: [
             {kind: "XV.ListAttr", attr: "code", isKey: true}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "name"}
+          {kind: "XV.ListColumn", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"},
+            {kind: "XV.ListAttr", formatter: "formatAddress",
+              classes: "xv-addresslist-attr", allowHtml: true}
           ]}
         ]}
       ]}
-    ]
+    ],
+    formatAddress: function (value, view, model) {
+      var address = model.get("address");
+      return address.format(true);
+    }
   });
 
   XV.registerModelList("XM.VendarAddressRelation", "XV.VendorAddressList");

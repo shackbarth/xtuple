@@ -122,7 +122,8 @@ white:true*/
         "remove:lineItems": "lineItemsChanged",
         "change:status": "purchaseOrderStatusChanged",
         "change:purchaseType": "purchaseTypeChanged",
-        "change:vendor": "vendorChanged"
+        "change:vendor": "vendorChanged",
+        "change:vendorAddress": "vendorAddressChanged"
       },
 
       calculateTotals: function () {
@@ -210,6 +211,31 @@ white:true*/
           contact = vendor ? vendor.get("primaryContact") : false,
           attrs = {
             vendorAddress: null,
+            vendorCountry: ""
+          },
+          K = XM.Vendor,
+          source;
+
+        if (vendor) {
+          source = vendor.get("incotermsSource") === K.INCOTERMS_VENDOR ?
+            vendor : this.get("site");
+          attrs.incoterms = source.get("incoterms");
+          attrs.currency = vendor.get("currency");
+          attrs.terms = vendor.get("terms");
+          attrs.taxZone = vendor.get("taxZone");
+          attrs.shipVia = vendor.get("shipVia");
+          attrs.vendorAddress = vendorAddress;
+        }
+
+        this.set(attrs);
+        this.setReadOnly("lineItems", !vendor);
+      },
+
+      vendorAddressChanged: function () {
+        var vendorAddress = this.get("vendorAddress"),
+          address = vendorAddress ? vendorAddress.get("address"): false,
+          contact = vendorAddress ? vendorAddress.get("contact") : false,
+          attrs = {
             vendorAddress1: "",
             vendorAddress2: "",
             vendorAddress3: "",
@@ -227,46 +253,32 @@ white:true*/
             vendorContactPhone: "",
             vendorContactFax: "",
             vendorContactEmail: ""
-          },
-          K = XM.Vendor,
-          source;
+          };
 
-        if (vendor) {
-          source = vendor.get("incotermsSource") === K.INCOTERMS_VENDOR ?
-            vendor : this.get("site");
-          attrs.incoterms = source.get("incoterms");
-          attrs.currency = vendor.get("currency");
-          attrs.terms = vendor.get("terms");
-          attrs.taxZone = vendor.get("taxZone");
-          attrs.shipVia = vendor.get("shipVia");
-          attrs.vendorAddress = vendorAddress;
+        if (address) {
+          attrs.vendorAddress1 = address.get("line1");
+          attrs.vendorAddress2 = address.get("line2");
+          attrs.vendorAddress3 = address.get("line3");
+          attrs.vendorCity = address.get("city");
+          attrs.vendorState = address.get("state");
+          attrs.vendorPostalCode = address.get("postalCode");
+          attrs.vendorCountry = address.get("country");
+        }
 
-          if (address) {
-            attrs.vendorAddress1 = address.get("line1");
-            attrs.vendorAddress2 = address.get("line2");
-            attrs.vendorAddress3 = address.get("line3");
-            attrs.vendorCity = address.get("city");
-            attrs.vendorState = address.get("state");
-            attrs.vendorPostalCode = address.get("postalCode");
-            attrs.vendorCountry = address.get("country");
-          }
-
-          if (contact) {
-            attrs.vendorContact = contact.id;
-            attrs.vendorContactHonorific = contact.get("honorific");
-            attrs.vendorContactFirstName = contact.get("firstName");
-            attrs.vendorContactLastName = contact.get("lastName");
-            attrs.vendorContactMiddle = contact.get("middle");
-            attrs.vendorContactSuffix = contact.get("suffix");
-            attrs.vendorContactTitle = contact.get("title");
-            attrs.vendorContactPhone = contact.get("phone");
-            attrs.vendorContactFax = contact.get("fax");
-            attrs.vendorContactEmail = contact.get("primaryEmail");
-          }
+        if (contact) {
+          attrs.vendorContact = contact.id;
+          attrs.vendorContactHonorific = contact.get("honorific");
+          attrs.vendorContactFirstName = contact.get("firstName");
+          attrs.vendorContactLastName = contact.get("lastName");
+          attrs.vendorContactMiddle = contact.get("middle");
+          attrs.vendorContactSuffix = contact.get("suffix");
+          attrs.vendorContactTitle = contact.get("title");
+          attrs.vendorContactPhone = contact.get("phone");
+          attrs.vendorContactFax = contact.get("fax");
+          attrs.vendorContactEmail = contact.get("primaryEmail");
         }
 
         this.set(attrs);
-        this.setReadOnly("lineItems", !vendor);
       },
 
       lineItemsChanged: function () {
