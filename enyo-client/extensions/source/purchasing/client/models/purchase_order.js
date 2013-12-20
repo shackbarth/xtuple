@@ -205,9 +205,11 @@ white:true*/
 
       vendorChanged: function () {
         var vendor = this.get("vendor"),
-          address = vendor ? vendor.get("address") : false,
+          vendorAddress = vendor ? vendor.get("vendorAddress") : false,
+          address = vendorAddress ? vendorAddress.getValue("address") : false,
           contact = vendor ? vendor.get("primaryContact") : false,
           attrs = {
+            vendorAddress: null,
             vendorAddress1: "",
             vendorAddress2: "",
             vendorAddress3: "",
@@ -237,9 +239,9 @@ white:true*/
           attrs.terms = vendor.get("terms");
           attrs.taxZone = vendor.get("taxZone");
           attrs.shipVia = vendor.get("shipVia");
+          attrs.vendorAddress = vendorAddress;
 
           if (address) {
-            attrs.vendorAddress = address.id;
             attrs.vendorAddress1 = address.get("line1");
             attrs.vendorAddress2 = address.get("line2");
             attrs.vendorAddress3 = address.get("line3");

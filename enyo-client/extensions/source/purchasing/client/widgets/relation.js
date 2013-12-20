@@ -17,6 +17,18 @@ white:true, strict:false*/
       collection: "XM.PurchaseVendorRelationCollection"
     });
 
+    // ..........................................................
+    // VENDOR ADDRESS
+    //
+
+    enyo.kind({
+      name: "XV.VendorAddressWidget",
+      kind: "XV.RelationWidget",
+      collection: "XM.VendorAddressRelationCollection",
+      list: "XV.VendorAddressList",
+      keyAttribute: "code"
+    });
+
   };
 
 }());

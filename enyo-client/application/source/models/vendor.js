@@ -95,6 +95,32 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.VendorAddressRelation = XM.Info.extend(/** @scope XM.VendorAddressRelation.prototype */{
+
+    recordType: 'XM.VendorAddresssRelation',
+
+    editableModel: 'XM.VendorAddress'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.VendorAddressListItem = XM.Model.extend(/** @scope XM.VendorAddressListItem.prototype */{
+
+    recordType: 'XM.VendorAddresssListItem',
+
+    editableModel: 'XM.VendorAddress'
+
+  });
+
 
   /**
     @class
@@ -137,6 +163,28 @@ white:true*/
   // ..........................................................
   // COLLECTIONS
   //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.VendorAddressListItemCollection = XM.Collection.extend(/** @lends XM.VendorAddressListItemCollection.prototype */{
+
+    model: XM.VendorAddressListItem
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.VendorAddressRelationCollection = XM.Collection.extend(/** @lends XM.VendorAddressRelationCollection.prototype */{
+
+    model: XM.VendorAddressRelation
+
+  });
 
   /**
     @class

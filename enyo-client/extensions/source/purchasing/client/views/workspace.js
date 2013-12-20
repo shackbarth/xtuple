@@ -96,11 +96,14 @@ trailing:true, white:true, strict: false*/
                 {kind: "XV.DateWidget", attr: "orderDate"},
                 {kind: "XV.DateWidget", attr: "releaseDate"},
                 {kind: "XV.PurchaseOrderStatusPicker", attr: "status"},
-                {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
+                {kind: "onyx.GroupboxHeader", content: "_source".loc()},
                 {kind: "XV.PurchaseVendorWidget", attr: "vendor"},
+                {kind: "XV.VendorAddressWidget", attr: "vendorAddress",
+                  label: "_address".loc()},
                 {kind: "XV.AddressFieldsWidget",
-                  name: "vendorAddressWidget", attr:
-                  {line1: "vendorAddress1",
+                  name: "vendorAddressFieldsWidget", attr:
+                  {name: "vendorAddressCode",
+                    line1: "vendorAddress1",
                     line2: "vendorAddress2", line3: "vendorAddress3",
                     city: "vendorCity", state: "vendorState",
                     postalCode: "vendorPostalCode", country: "vendorCountry"}
@@ -184,10 +187,17 @@ trailing:true, white:true, strict: false*/
             attribute: ["account", "accountParent"],
             value: vendor.id
           }, true);
+
+          this.$.vendorAddressWidget.setDisabled(false);
+          this.$.vendorAddressWidget.addParameter({
+            attribute: "vendor",
+            value: vendor.id
+          });
         } else {
           this.$.vendorContactWidget.removeParameter("account");
+          this.$.vendorAddressWidget.setDisabled(true);
         }
-      },
+      }
     });
 
     XV.registerModelWorkspace("XM.PurchaseOrder", "XV.PurchaseOrderWorkspace");

@@ -1353,6 +1353,21 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // VENDOR ADDRESS
+  //
+
+  enyo.kind({
+    name: "XV.VendorAddressParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_vendorAddress".loc()},
+      {name: "vendor", label: "_vendor".loc(), attr: "vendor", defaultKind: "XV.VendorWidget"},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "name", label: "_name".loc(), attr: "name"}
+    ]
+  });
+
+  // ..........................................................
   // WORK ORDER
   //
 

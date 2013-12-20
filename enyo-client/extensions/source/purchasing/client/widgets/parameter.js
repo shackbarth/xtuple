@@ -56,6 +56,7 @@ trailing:true, white:true*/
           defaultKind: "XV.DateWidget"}
       ]
     });
+
   };
 
 }());

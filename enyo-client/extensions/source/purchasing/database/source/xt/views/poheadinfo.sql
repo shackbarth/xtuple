@@ -1,11 +1,13 @@
 select xt.create_view('xt.poheadinfo', $$
 
-select pohead.*, 
+select pohead.*,
+  uuid as vendaddr_uuid,
   xt.po_freight_subtotal(pohead) as freight_subtotal,
   xt.po_subtotal(pohead) as subtotal,
   xt.po_tax_total(pohead) as tax_total,
   xt.po_total(pohead) as total
 from pohead
+  left join xt.vendaddr on vend_id=pohead_vend_id and id=pohead_vendaddr_id
 
 $$, false);
 
@@ -82,7 +84,7 @@ insert into pohead (
   coalesce(new.pohead_printed, false),
   new.pohead_terms_id,
   new.pohead_warehous_id,
-  new.pohead_vendaddr_id,
+  coalesce((select vendaddr_id from vendaddrinfo where obj_uuid=new.vendaddr_uuid), -1),
   new.pohead_agent_username,
   coalesce(new.pohead_curr_id, basecurrid()),
   true,
@@ -129,7 +131,7 @@ insert into pohead (
   coalesce(new.obj_uuid, xt.uuid_generate_v4())
 )
 
-returning pohead.*, null::numeric, null::numeric, null::numeric, null::numeric;
+returning pohead.*, null::uuid, null::numeric, null::numeric, null::numeric, null::numeric;
 
 create or replace rule "_UPDATE" as on update to xt.poheadinfo do instead
 
@@ -145,7 +147,7 @@ update pohead set
   pohead_printed=new.pohead_printed,
   pohead_terms_id=new.pohead_terms_id,
   pohead_warehous_id=new.pohead_warehous_id,
-  pohead_vendaddr_id=new.pohead_vendaddr_id,
+  pohead_vendaddr_id=coalesce((select vendaddr_id from vendaddrinfo where obj_uuid=new.vendaddr_uuid), -1),
   pohead_agent_username=new.pohead_agent_username,
   pohead_curr_id=new.pohead_curr_id,
   pohead_taxzone_id=new.pohead_taxzone_id,

@@ -542,6 +542,64 @@
         }
       },
       {
+        "name": "vendorAddress",
+        "toOne": {
+          "type": "VendorAddressRelation",
+          "column": "vendaddr_uuid",
+          "isNested": true,
+          "inverse": "uuid"
+        }
+      },
+      {
+        "name": "vendorAddress1",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress1"
+        }
+      },
+      {
+        "name": "vendorAddress2",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress2"
+        }
+      },
+      {
+        "name": "vendorAddress3",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress3"
+        }
+      },
+      {
+        "name": "vendorCity",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendcity"
+        }
+      },
+      {
+        "name": "vendorState",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendstate"
+        }
+      },
+      {
+        "name": "vendorPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendzipcode"
+        }
+      },
+      {
+        "name": "vendorCountry",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendcountry"
+        }
+      },
+      {
         "name": "vendorContact",
         "toOne": {
           "type": "ContactRelation",
@@ -613,60 +671,60 @@
         }
       },
       {
-        "name": "vendorAddress",
+        "name": "shiptoAddress",
         "toOne": {
-          "type": "Address",
-          "column": "pohead_vendaddr_id",
+          "type": "AddressInfo",
+          "column": "pohead_shiptoaddress_id",
           "isNested": true
         }
       },
       {
-        "name": "vendorAddress1",
+        "name": "shiptoAddress1",
         "attr": {
           "type": "String",
-          "column": "pohead_vendaddress1"
+          "column": "pohead_shiptoaddress1"
         }
       },
       {
-        "name": "vendorAddress2",
+        "name": "shiptoAddress2",
         "attr": {
           "type": "String",
-          "column": "pohead_vendaddress2"
+          "column": "pohead_shiptoaddress2"
         }
       },
       {
-        "name": "vendorAddress3",
+        "name": "shiptoAddress3",
         "attr": {
           "type": "String",
-          "column": "pohead_vendaddress3"
+          "column": "pohead_shiptoaddress3"
         }
       },
       {
-        "name": "vendorCity",
+        "name": "shiptoCity",
         "attr": {
           "type": "String",
-          "column": "pohead_vendcity"
+          "column": "pohead_shiptocity"
         }
       },
       {
-        "name": "vendorState",
+        "name": "shiptoState",
         "attr": {
           "type": "String",
-          "column": "pohead_vendstate"
+          "column": "pohead_shiptostate"
         }
       },
       {
-        "name": "vendorPostalCode",
+        "name": "shiptoPostalCode",
         "attr": {
           "type": "String",
-          "column": "pohead_vendzipcode"
+          "column": "pohead_shiptozipcode"
         }
       },
       {
-        "name": "vendorCountry",
+        "name": "shiptoCountry",
         "attr": {
           "type": "String",
-          "column": "pohead_vendcountry"
+          "column": "pohead_shiptocountry"
         }
       },
       {
@@ -738,63 +796,6 @@
         "attr": {
           "type": "String",
           "column": "pohead_shipto_cntct_email"
-        }
-      },
-      {
-        "name": "shiptoAddress",
-        "toOne": {
-          "type": "AddressInfo",
-          "column": "pohead_shiptoaddress_id",
-          "isNested": true
-        }
-      },
-      {
-        "name": "shiptoAddress1",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shiptoaddress1"
-        }
-      },
-      {
-        "name": "shiptoAddress2",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shiptoaddress2"
-        }
-      },
-      {
-        "name": "shiptoAddress3",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shiptoaddress3"
-        }
-      },
-      {
-        "name": "shiptoCity",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shiptocity"
-        }
-      },
-      {
-        "name": "shiptoState",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shiptostate"
-        }
-      },
-      {
-        "name": "shiptoPostalCode",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shiptozipcode"
-        }
-      },
-      {
-        "name": "shiptoCountry",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shiptocountry"
         }
       },
       {
