@@ -24,11 +24,27 @@
       listKind: "XV.CostCategoryList",
       instanceOf: "XM.Document",
       attributes: ["code", "description"],
+      /**
+      @member -
+      @memberof CostCategory.prototype
+      @description The ID attribute is "code", which will be automatically uppercased.
+    */
       idAttribute: "code",
+      /**
+      @member -
+      @memberof CostCategory.prototype
+      @description Used in the Sales and Inventory modules
+    */
       extensions: ["sales"], //Incident 22101
       //extensions: ["inventory", "sales"], //Inventory is not in postbooks
       isLockable: true,
       cacheName: "XM.costCategories",
+      /**
+      @member -
+      @memberof CostCategory.prototype
+      @description Cost Categories can be read by anyone but can only be created, updated,
+        or deleted by users with the "MaintainCostCategories" privilege.
+      */
       privileges: {
         createUpdateDelete: "MaintainCostCategories",
         read: "ViewCostCategories" //Incident 22100
