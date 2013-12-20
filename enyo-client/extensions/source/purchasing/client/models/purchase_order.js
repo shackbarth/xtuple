@@ -410,7 +410,7 @@ white:true*/
           this.siteChanged();
         } else if (status === K.READY_CLEAN) {
           this.setReadOnly("lineItems", false);
-          this.lineItemsChanged();
+          this.setReadOnly(["number", "orderDate", "site", "vendor"])
         }
       },
 
