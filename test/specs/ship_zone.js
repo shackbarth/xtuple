@@ -7,16 +7,16 @@
 (function () {
   "use strict";
    /**
-  Shipping Zones are used to define geographic regions into which sold Items are shipped. 
-  Sales Orders are linked to Shipping Zones through the Ship-To Address master. 
-  This assignment of Shipping Zones to Sales Order enables you to analyze sales activity 
+  Shipping Zones are used to define geographic regions into which sold Items are shipped.
+  Sales Orders are linked to Shipping Zones through the Ship-To Address master.
+  This assignment of Shipping Zones to Sales Order enables you to analyze sales activity
   by geographic region
   @class
   @alias ShipZone
   @property {String} name
   @property {String} description
   **/
- var spec = {
+  var spec = {
     recordType: "XM.ShipZone",
     enforceUpperKey: false,
     collectionType: "XM.ShipZoneCollection",
@@ -57,10 +57,10 @@
       createUpdateDelete: "MaintainShippingZones",
       read: "ViewShippingZones"
     },
-      createHash : {
-        name: "TESTSHIPZONE" + Math.random(),
-        description: "Test Ship Zone"
-      },
+    createHash : {
+      name: "TESTSHIPZONE" + Math.random(),
+      description: "Test Ship Zone"
+    },
     updatableField: "description"
   };
   exports.spec = spec;
