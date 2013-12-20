@@ -2250,7 +2250,7 @@
     "privileges": {
       "all": {
         "create": "MaintainShippingZones",
-        "read": true,
+        "read": "ViewShippingZones",
         "update": "MaintainShippingZones",
         "delete": "MaintainShippingZones"
       }

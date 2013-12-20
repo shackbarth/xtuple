@@ -44,7 +44,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     /**
       @member -
       @memberof ShipVia.prototype
-      @description Ship Vias can be read by anyone but can only be created, updated,
+      @description Ship Vias can be read by users with "ViewShipVias" privilege and can be created, updated,
         or deleted by users with the "MaintainShipVias" privilege.
     */
     privileges: {
