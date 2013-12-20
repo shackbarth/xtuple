@@ -2206,7 +2206,7 @@
     "privileges": {
       "all": {
         "create": "MaintainShipVias",
-        "read": true,
+        "read": "ViewShipVias",
         "update": "MaintainShipVias",
         "delete": "MaintainShipVias"
       }

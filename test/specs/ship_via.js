@@ -49,7 +49,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     */
     privileges: {
       createUpdateDelete: "MaintainShipVias",
-      read: true
+      read: "ViewShipVias"
     },
     createHash: {
       code: "TestShipVia" + Math.random(),
