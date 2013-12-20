@@ -10,7 +10,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     and redirect to pentaho with a key that will allow pentaho to access the report.
    */
   var data = require("./data");
-  var request = require("request"); 
+  var request = require("request");
+  var https = require("https");
 
   var queryForData = function (session, query, callback) {
 
@@ -112,6 +113,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             reportUrl = biUrl + "&name=" + fileName +
               "&org=" + req.session.passport.user.organization +
               "&datasource=" + req.headers.host + "&datakey=" + randomKey +
+              "&print=" + requestDetails.print,
+            //
+            // Use the new config.js entries for the print URL.  We need to convert the others too!
+            // printer-name is not currently set so it should print on default printer until we
+            // supply a printer name from user preferences.
+            //
+            printServerHost = X.options.printServer.hostname || "",
+            printServerPort = X.options.printServer.port || "",
+            printServerUser = X.options.printServer.user || "",
+            printServerPassword = X.options.printServer.password || "",
+            printUrl = "http://" + printServerHost + ":" + printServerPort +
+              "/pentaho/ViewAction?solution=xtuple&path=prpt&action=print-prpt.xaction" +
+              "&locale=en_US&output-target=pageable/pdf&printer-name=PDF" +
+              "&userid=" + printServerUser +
+              "&password=" + printServerPassword +
+              "&name=" + fileName +
+              "&org=" + req.session.passport.user.organization +
+              "&datasource=" + req.headers.host + "&datakey=" + randomKey +
               "&print=" + requestDetails.print;
 
           if (requestDetails.culture) {
@@ -123,13 +142,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             res.redirect(reportUrl);
           }
           else {
-            X.log("request get: " + reportUrl);
+            X.log("request get: " + printUrl);
             request({
-              uri: reportUrl,
-              method: "GET",
+              uri: printUrl,
+              method: "POST",
             },
             function (err, response, body) {
-              X.log("request body: " + body);
+              X.log("response: " + response);
               if (err) {
                 res.send({ isError: true,
                   error: err,

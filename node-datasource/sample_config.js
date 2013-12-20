@@ -81,11 +81,20 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       password: "admin"
     },
     biServer: {
-        hostname: "biserverhostname",
-        port: 8080,
-        catalog: "xTuple",
-        tenantname: "default",
-        keyFile: "./lib/rest-keys/server.key"
-      }
-    };
+      hostname: "192.168.56.101",
+      port: 8080,
+      httpsport: 8443,
+      catalog: "xTuple",
+      tenantname: "default",
+      keyFile: "./lib/rest-keys/server.key"
+    }, 
+    printServer: {
+      hostname: "192.168.56.101",
+      port: 8080,
+      httpsport: 8443,
+      user: "reports",
+      password: "password",
+      format: "pageable/pdf"
+    }
+  };
 }());
