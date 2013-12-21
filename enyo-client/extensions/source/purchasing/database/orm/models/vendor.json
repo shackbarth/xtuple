@@ -103,7 +103,14 @@
           "type": "String",
           "column": "vend_fob"
         }
-      }
+      },
+      {
+        "name": "itemSourceRequired",
+        "attr": {
+          "type": "Boolean",
+          "column": "vend_restrictpurch"
+        }
+      }      
     ],
     "isSystem": true
   },
