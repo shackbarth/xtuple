@@ -52,6 +52,7 @@ trailing:true, white:true, strict:false*/
       classes: "large-panel",
       title: "_lineItems".loc(),
       gridRowKind: "XV.PurchaseOrderLineRow",
+      editorMixin: XV.PurchaseOrderLineMixin,
       workspace: "XV.PurchaseOrderLineWorkspace",
       summary: "XV.PurchaseOrderSummaryPanel",
       parentKey: "purchaseOrder",
@@ -67,7 +68,6 @@ trailing:true, white:true, strict:false*/
             {item: "item", site: "site"},
             name: "itemSiteWidget",
             query: {parameters: [
-            {attribute: "isPurchased", value: true},
             {attribute: "isActive", value: true}
           ]}}},
           {formatter: "formatDescription"},

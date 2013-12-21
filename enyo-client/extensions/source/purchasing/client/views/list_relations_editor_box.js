@@ -7,11 +7,68 @@ trailing:true, white:true, strict:false*/
 
   XT.extensions.purchasing.initListRelationsEditorBox = function () {
 
+    /**
+      Mixin for Sales Order Specific Line functions
+    */
+    XV.PurchaseOrderLineMixin = {
+      setValue: function (value) {
+        XV.RelationsEditor.prototype.setValue.apply(this, arguments);
+        var K = XM.Item,
+          param = {
+            attribute: "item.itemType",
+            operator: "ANY",
+            value: [K.PURCHASED, K.OUTSIDE_PROCESS, K.TOOLING, K.MANUFACTURED]
+          },
+          parent,
+          parentSite,
+          childSite,
+          vendor,
+          itemSourceRequired;
+
+        // Add new bindings
+        if (this.value) {
+          parent = value.getParent();
+
+          // Handle Site
+          parentSite = parent ? parent.get("site") : false;
+          childSite = this.$.itemSiteWidget.getSite();
+          if (parentSite && !childSite) {
+            this.$.itemSiteWidget.setSite(parentSite);
+          }
+
+          // Handle Vendor
+          vendor = parent ? parent.get("vendor") : false;
+          if (vendor) {
+            itemSourceRequired = vendor ? vendor.get("itemSourceRequired") : false;
+            param = {
+              attribute: "vendor",
+              value: vendor.id
+            };
+            this.changeItemSiteParameter("vendor", "vendor", itemSourceRequired);
+          }
+
+          // Handle Item types
+          param = {
+            attribute: "item.itemType",
+            operator: "ANY",
+            value: [K.PURCHASED, K.OUTSIDE_PROCESS, K.TOOLING, K.MANUFACTURED]
+          };
+          if (itemSourceRequired) {
+            this.$.itemSiteWidget.removeParameter(param);
+          } else {
+            this.$.itemSiteWidget.addParameter(param);
+          }
+        }
+      },
+      // Borrow from XV.LineMixin for Sales Orders and Quotes
+      changeItemSiteParameter: XV.LineMixin.changeItemSiteParameter
+    };
+
     // ..........................................................
     // PURCHASE ORDER LINE
     //
-
-    enyo.kind({
+    
+    var lineEditor = {
       name: "XV.PurchaseOrderLineEditor",
       kind: "XV.RelationsEditor",
       components: [
@@ -19,7 +76,10 @@ trailing:true, white:true, strict:false*/
           classes: "in-panel", components: [
           {kind: "XV.InputWidget", attr: "lineNumber"},
           {kind: "XV.CheckboxWidget", attr: "isMisc"},
-          {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"}},
+          {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"},
+            query: {parameters: [
+            {attribute: "isActive", value: true}
+          ]}},
           {kind: "XV.ExpenseCategoryWidget", attr: "expenseCategory"},
           {kind: "XV.QuantityWidget", attr: "quantity", label: "_ordered".loc()},
           {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
@@ -49,7 +109,10 @@ trailing:true, white:true, strict:false*/
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]}
       ]
-    });
+    };
+
+    enyo.mixin(lineEditor, XV.PurchaseOrderLineMixin);
+    enyo.kind(lineEditor);
 
     enyo.kind({
       name: "XV.PurchaseOrderLineBox",

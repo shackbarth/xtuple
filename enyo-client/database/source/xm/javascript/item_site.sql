@@ -75,11 +75,18 @@ select xt.install_js('XM','item_site','xtuple', $$
 
     clause = XT.Data.buildClause(namespace, type, query.parameters, query.orderBy);
 
+    /* If customer passed, restrict results to item sites allowed to be sold to that customer */
     if (customerId) {
-      sql = sql + ' and (item).id in (select * from custitem(${p3}, ${p4}::integer, ${p5}::date)) ';
+      sql += ' and (item).id in (select * from custitem(${p3}, ${p4}::integer, ${p5}::date)) ';
     }
+    
+    /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
     if (vendorId) {
-      /* TODO */
+      sql +=  ' and (item).id in (' +
+              '  select itemsrc_item_id ' +
+              '  from itemsrc ' +
+              '  where itemsrc_active ' + 
+              '    and itemsrc_vend_id=' + vendorId + ')';
     }
 
     sql = XT.format(sql + '{orderBy} %3$s %4$s) {orderBy}',
