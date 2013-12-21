@@ -2444,6 +2444,9 @@ trailing:true, white:true, strict: false*/
     kind: "XV.List",
     collection: "XM.VendorAddressRelationCollection",
     parameterWidget: "XV.VendorAddressParameters",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
