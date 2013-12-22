@@ -19,6 +19,7 @@ trailing:true, white:true, strict:false*/
             operator: "ANY",
             value: [K.PURCHASED, K.OUTSIDE_PROCESS, K.TOOLING, K.MANUFACTURED]
           },
+          itemSourceWidget = this.$.itemSourceWidget,
           parent,
           parentSite,
           childSite,
@@ -45,6 +46,10 @@ trailing:true, white:true, strict:false*/
               value: vendor.id
             };
             this.changeItemSiteParameter("vendor", "vendor", itemSourceRequired);
+            
+            if (itemSourceWidget) {
+              itemSourceWidget.addParameter(param);
+            }
           }
 
           // Handle Item types

@@ -410,7 +410,7 @@ white:true*/
           this.siteChanged();
         } else if (status === K.READY_CLEAN) {
           this.setReadOnly("lineItems", false);
-          this.setReadOnly(["number", "orderDate", "site", "vendor"])
+          this.setReadOnly(["number", "orderDate", "site", "vendor"]);
         }
       },
 
@@ -579,15 +579,43 @@ white:true*/
         "change:expenseCategory": "isMiscellaneousChanged",
         "change:freight": "calculateTax",
         "change:item": "itemChanged",
+        "change:itemSource": "itemSourceChanged",
         "change:isMiscellaneous": "isMiscellaneousChanged",
         "change:purchaseOrder": "purchaseOrderChanged",
       },
 
       taxDetail: null,
 
-      initialize: function (attributes, options) {
-        XM.Model.prototype.initialize.apply(this, arguments);
-        this.taxDetail = [];
+      calculatePrice: function () {
+        var itemSource = this.get("itemSource"),
+          item = this.get("item"),
+          site = this.get("site") || {},
+          quantity = this.get("quantity"),
+          prices = _.pluck(itemSource, "attributes"),
+          K = XM.ItemSourcePrice,
+          itemSourcePrice,
+          wholesalePrice,
+          price = 0;
+
+        if (itemSource && item && quantity) {
+          itemSourcePrice = _.first(prices, function (price) {
+            var priceSite = price.get("site");
+            return price.get("quantityBreak") <= quantity &&
+              !priceSite || priceSite.id === site.id;
+          });
+          if (itemSourcePrice) {
+            switch (itemSourcePrice.get("priceType"))
+            {
+            case K.TYPE_NOMINAL:
+              price = itemSourcePrice.get("price");
+              break;
+            case K.TYPE_DISCOUNT:
+              wholesalePrice = item.get("wholesalePrice");
+              price = wholesalePrice - (wholesalePrice * itemSourcePrice.get("discountPercent"));
+            }
+          }
+        }
+        return price;
       },
 
       destroy: function (options) {
@@ -625,6 +653,11 @@ white:true*/
         this.notify(message, payload);
       },
 
+      initialize: function (attributes, options) {
+        XM.Model.prototype.initialize.apply(this, arguments);
+        this.taxDetail = [];
+      },
+
       isMiscellaneousChanged: function () {
         var isMisc = this.get("isMiscellaneous");
         this.setReadOnly("isMiscellaneous", this.get("item") || this.get("expenseCategory"));
@@ -639,8 +672,57 @@ white:true*/
         this.set("unitCost", item ? item.getValue("standardCost") : 0);
       },
 
+      itemSourceChanged: function () {
+        var itemSource = this.get("itemSource"),
+          item = this.get("item"),
+          quantity = this.get("quantity"),
+          attrs = {
+            vendorUnit: "",
+            vendorUnitRatio: 1
+          },
+          prices;
+
+        if (itemSource) {
+          attrs = {
+            item: itemSource.get("item"),
+            vendorItemNumber: itemSource.get("vendorItemNumber"),
+            vendorItemDescription: itemSource.get("vendorItemDescription"),
+            vendorUnit: itemSource.get("vendorUnit"),
+            vendorUnitRatio: itemSource.get("vendorUnitRatio"),
+            manufacturerName: itemSource.get("manufacturerName"),
+            manufacturerItemNumber: itemSource.get("manufacturerItemNumber"),
+            manufacturerItemDescription: itemSource.get("manufacturerItemDescription"),
+          };
+
+          // Sort prices descending by quantity
+          prices = itemSource.get("prices");
+          prices.comparator = function (a, b) {
+            var attr = "quantityBreak",
+              aval = a.get(attr),
+              bval = b.get(attr);
+            if (aval !== bval) {
+              return bval > aval ? 1 : -1;
+            }
+            return 0;
+          };
+          prices.sort();
+
+        // Clear if item, if expense leave vendor data alone
+        } else if (item) {
+          attrs.vendorItemNumber = "";
+          attrs.vendorItemDescription = "";
+          attrs.manufacturerName = "";
+          attrs.manufacturerItemNumber = "";
+          attrs.manufacturerItemDescription = "";
+        }
+
+        this.set(attrs);
+
+        if (itemSource && quantity) { this.calculatePrice(); }
+      },
+
       purchaseOrderChanged: function () {
-        var parent = this.getParent(),
+        var parent = this.get("purchaseOrder"),
          lineNumber = this.get("lineNumber"),
          currency = parent ? parent.get("currency") : false,
          lineNumberArray,
@@ -661,7 +743,7 @@ white:true*/
       },
 
       calculateTax: function () {
-        var parent = this.getParent(),
+        var purchaseOrder = this.get("purchaseOrder"),
           amount = this.get("extendedPrice"),
           freight = this.get("freight"),
           taxTypeId = this.getValue("taxType.id"),
@@ -675,11 +757,11 @@ white:true*/
           tax = 0;
 
         // If no parent, don't bother
-        if (!parent) { return; }
+        if (!purchaseOrder) { return; }
 
-        taxZoneId = parent.getValue("taxZone.id");
-        effective = parent.get("orderDate");
-        currencyId = parent.getValue("currency.id");
+        taxZoneId = purchaseOrder.getValue("taxZone.id");
+        effective = purchaseOrder.get("orderDate");
+        currencyId = purchaseOrder.getValue("currency.id");
 
         if (effective && currencyId && (amount || freight)) {
           this.taxDetail = [];
@@ -692,7 +774,7 @@ white:true*/
 
             if (count === 0) {
               that.set("tax", XT.math.round(tax, XT.PURCHASE_PRICE_SCALE));
-              parent.calculateTotals();
+              purchaseOrder.calculateTotals();
             }
           };
           if (amount) { count++; }

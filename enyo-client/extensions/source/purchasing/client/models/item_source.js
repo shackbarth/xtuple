@@ -30,6 +30,33 @@ white:true*/
 
     });
 
+    // ..........................................................
+    // CONSTANTS
+    //
+    _.extend(XM.ItemSourcePrice, /** @lends XM.ItemSourcePrice# */{
+
+      /**
+        Nominal price.
+
+        @static
+        @constant
+        @type String
+        @default N
+      */
+      TYPE_NOMINAL: "N",
+
+      /**
+        Discount price.
+
+        @static
+        @constant
+        @type String
+        @default D
+      */
+      TYPE_DISCOUNT: "D"
+
+    });
+
     /**
       @class
 
