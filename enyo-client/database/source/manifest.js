@@ -22,6 +22,7 @@
     "public/tables/comment.sql",
     "public/tables/cmhead.sql",
     "public/tables/cmitem.sql",
+    "public/tables/cmheadtax.sql",
     "public/tables/cmitemtax.sql",
     "public/tables/cntct.sql",
     "public/tables/coitem.sql",

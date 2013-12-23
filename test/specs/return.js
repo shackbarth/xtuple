@@ -63,6 +63,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
   */
   var spec = {
     recordType: "XM.Return",
+    verbose: true,
     collectionType: "XM.ReturnListItemCollection",
     /**
       @member -
@@ -1006,12 +1007,11 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       /**
         @member -
         @memberof Return.prototype
-        @description The Return list should support multiple selections
+        @description The Return list should not support multiple selections
       */
-      it("The Return list should support multiple selections", function () {
+      it("The Return list should not support multiple selections", function () {
         var list = new XV.ReturnList();
-        assert.isTrue(list.getMultiSelect());
-        // XXX it looks like trying to delete multiple items at once only deletes the first
+        assert.isFalse(list.getMultiSelect());
       });
       it("The Return list has a parameter widget", function () {
         /*
