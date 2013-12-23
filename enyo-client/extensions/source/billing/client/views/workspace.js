@@ -253,6 +253,7 @@
             {kind: 'XV.InputWidget', attr: 'number'},
             {kind: 'XV.CheckboxWidget', attr: 'isPosted', label: '_posted'.loc()},
             {kind: 'XV.SalesCustomerWidget', attr: 'customer'},
+            {kind: 'XV.BankAccountWidget', attr: 'bankAccount'},
             {kind: 'XV.FundsTypePicker', attr: 'fundsType', onSelect: 'fundsTypeSelected'},
             {kind: 'XV.CashReceiptApplyOptionsPicker',
               attr: 'useCustomerDeposit',
@@ -302,7 +303,7 @@
      * @listens onValueChange
      */
     valueChanged: function () {
-      this.log(this.value);
+      this.warn(this.value);
     },
 
     newCashReceiptLineTapped: function (inSender, inEvent) {

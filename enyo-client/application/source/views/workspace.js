@@ -2323,12 +2323,19 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
+        {kind: "XV.CashReceiptAllocations", attr: "allocations"},
         {kind: "FittableRows", title: "_workflow".loc(), name: "workflowPanel"},
         {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
           attr: "comments"},
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
     ],
+
+    valueChanged: function () {
+      this.inherited(arguments);
+      this.warn(this.value);
+    },
+
     /**
       Inserts additional components where they should be rendered.
     */

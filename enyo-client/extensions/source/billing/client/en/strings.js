@@ -52,6 +52,7 @@
     "_otherCreditCard": 'Other Credit Card',
     "_orderNumber": "Order #",
     "_other": 'Other',
+    "_payment": 'Payment',
     "_postARDocuments": "Post A/R Documents",
     "_postCashReceipts": "Post Cash Receipts",
     "_postMiscInvoices": "Post Invoices",

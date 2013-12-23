@@ -45,14 +45,46 @@ trailing:true, white:true*/
 
     /**
      * @class XV.CashReceiptLineList
-     * @extends XV.List
+     * @extends XV.ListRelations
      * @see XV.CashReceiptApplicationsList
      */
     enyo.kind({
-      name: 'XV.CashReceiptLineListRelation',
+      name: 'XV.CashReceiptLineList',
       kind: 'XV.ListRelations',
-      collection: 'XM.CashReceiptLineListItemCollection',
       parentKey: 'cashReceipt',
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+              {kind: "XV.ListAttr", attr: "cashReceiptReceivable.receivable.documentNumber", classes: "bold"}
+            ]},
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "amount", formatter: 'formatMoney'}
+            ]}
+          ]}
+        ]}
+      ],
+      valueChanged: function () {
+        this.inherited(arguments);
+        this.warn(this.value);
+        this.warn(this.list);
+      },
+      formatMoney: function (value, view, model) {
+        var currency = model ? model.getValue('cashReceipt.currency') : false,
+          scale = XT.locale.moneyScale;
+        return currency ? currency.format(value, scale) : "";
+      }
+    });
+
+    /**
+     * @class XV.CashReceiptAllocationList
+     * @extends XV.ListRelations
+     * @see XV.CashReceiptAllocationList
+     */
+    enyo.kind({
+      name: 'XV.CashReceiptAllocationList',
+      kind: 'XV.ListRelations',
+      parentKey: 'target',
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
@@ -60,13 +92,24 @@ trailing:true, white:true*/
               {kind: "XV.ListAttr", attr: "receivable.documentNumber", classes: "bold"}
             ]},
             {kind: "XV.ListColumn", components: [
-              {kind: "XV.ListAttr", attr: "amount"}
+              {kind: "XV.ListAttr", attr: "amount", formatter: 'formatMoney'}
             ]}
           ]}
         ]}
-      ]
+      ],
+      valueChanged: function () {
+        this.inherited(arguments);
+        this.warn(this.value);
+        this.warn(this.list);
+      },
+      formatMoney: function (value, view, model) {
+        var currency = model ? model.getValue('currency') : false,
+          scale = XT.locale.moneyScale;
+        return currency ? currency.format(value, scale) : "";
+      }
     });
   };
 
+  XV.registerModelList('XM.CashReceiptAllocationListItem', 'XV.CashReceiptAllocationList');
   XV.registerModelList('XM.CashReceiptLineListItem', 'XV.CashReceiptLineList');
 }());

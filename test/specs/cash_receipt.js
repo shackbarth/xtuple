@@ -37,7 +37,7 @@
       dueDate: new Date(),
       amount: 100,
       currency: {abbreviation: "USD"},
-      documentNumber: "DocumentNumber" + Math.random()
+      //documentNumber: "DocumentNumber" + Math.random()
     },
     /**
      * Existing bank expected to be in the test database.
@@ -50,11 +50,8 @@
       notes: "Test bank account notes"
     },
     cashReceiptHash = {
-      //number: Math.random() * 10000,
-      isPosted: false,
       amount: 10000,
       applicationDate: new Date(),
-      currencyRate: 1.0,
       bankAccount: bankAccountHash,
       useCustomerDeposit: true,
       currency: {
@@ -63,37 +60,41 @@
       customer: {
         number: 'TTOYS'
       },
-      /*
       lineItems: [
         {
           amount: 100,
           discount: 0,
-          receivable: _.defaults({
-            documentDate: NOW,
-            amount: 100,
-            currency: { abbreviation: 'USD' }
-          }, receivableHash)
+          cashReceiptReceivable: {
+            receivable: _.defaults({
+              documentDate: NOW,
+              amount: 100,
+              currency: { abbreviation: 'USD' }
+            }, receivableHash)
+          }
         },
         {
           amount: 100,
           discount: 50,
-          receivable: _.defaults({
-            documentDate: moment(NOW).subtract('days', 10),
-            amount: (Math.random() * 100) + 100,
-            currency: { abbreviation: 'USD' }
-          }, receivableHash)
+          cashReceiptReceivable: {
+            receivable: _.defaults({
+              documentDate: moment(NOW).subtract('days', 10),
+              amount: (Math.random() * 100) + 100,
+              currency: { abbreviation: 'USD' }
+            }, receivableHash)
+          }
         },
         {
           amount: 100,
           discount: 0,
-          receivable: _.defaults({
-            documentDate: moment(NOW).subtract('days', 1),
-            amount: (Math.random() * 100) + 100,
-            currency: { abbreviation: 'EUR' }
-          }, receivableHash)
+          cashReceiptReceivable: {
+            receivable: _.defaults({
+              documentDate: moment(NOW).subtract('days', 1),
+              amount: (Math.random() * 100) + 100,
+              currency: { abbreviation: 'EUR' }
+            }, receivableHash)
+          }
         }
       ]
-      */
     },
     cashReceiptSpec = {
       recordType: 'XM.CashReceipt',
@@ -115,7 +116,8 @@
         'bankAccount', 'applicationDate', 'isPosted', 'useCustomerDeposit'
       ],
       defaults: {
-        isPosted: false
+        isPosted: false,
+        currencyRate: 1.0
       },
       privileges: {
         create: 'MaintainCashReceipts',

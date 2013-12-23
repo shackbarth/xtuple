@@ -156,8 +156,75 @@
         "name": "lineItems",
         "toMany": {
           "column": "cashrcpt_id",
-          "type": "CashReceiptLine",
+          "type": "CashReceiptLineListItem",
           "inverse": "cashReceipt",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "CashReceiptLineListItem",
+    "table": "cashrcptitem",
+    "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
+    "isRest": true,
+    "comment": "Cash Receipt Line List Item",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "cashrcptitem_amount",
+          "required": true
+        }
+      },
+      {
+        "name": "discountAmount",
+        "attr": {
+          "type": "Money",
+          "column": "cashrcptitem_discount",
+          "required": true
+        }
+      },
+      {
+        "name": "cashReceipt",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_cashrcpt_id"
+        }
+      },
+      {
+        "name": "cashReceiptReceivable",
+        "toOne": {
+          "type": "CashReceiptReceivable",
+          "column": "cashrcptitem_aropen_id",
           "isNested": true
         }
       }
@@ -229,7 +296,6 @@
         }
       }
     ],
-    "isNestedOnly": true,
     "isSystem": true
   },
   {
@@ -367,7 +433,7 @@
     "nameSpace": "XM",
     "type": "CashReceiptReceivable",
     "table": "aropen",
-    "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
+    "idSequenceName": "aropen_aropen_id_seq",
     "isRest": true,
     "lockable": true,
     "comment": "Cash Receipt Receivable",
@@ -442,7 +508,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewCashReceipts MaintainCashReceipts",
+        "read": "ViewCashReceipts",
         "update": false,
         "delete": false
       }
@@ -526,5 +592,136 @@
       }
     ],
     "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "CashReceiptAllocation",
+    "table": "xt.cashrcpt_allocation",
+    "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
+    "comment": "Cash Receipt Allocation",
+    "isRest": true,
+    "privileges": {
+      "all": {
+        "create": "MaintainCashReceipts",
+        "read": "ViewCashReceipts",
+        "update": "MaintainCashReceipts",
+        "delete": "MaintainCashReceipts"
+      }
+    },
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "aropenalloc_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "target",
+        "attr": {
+          "type": "Number",
+          "column": "aropenalloc_doc_id"
+        }
+      },
+      {
+        "name": "documentType",
+        "attr": {
+          "type": "String",
+          "column": "aropenalloc_doctype"
+        }
+      },
+      {
+        "name": "receivable",
+        "toOne": {
+          "type": "ReceivableRelation",
+          "column": "aropenalloc_aropen_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "aropenalloc_amount"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "aropenalloc_curr_id",
+          "required": true
+        }
+      },
+      {
+        "name": "line",
+        "toOne": {
+          "column": "cashrcptitem_aropen_id",
+          "type": "CashReceiptLine",
+          "isNested": true
+        }
+      },
+      {
+        "name": "cashReceipt",
+        "toOne": {
+          "column": "cashrcptitem_cashrcpt_id",
+          "type": "CashReceiptRelation",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "CashReceiptAllocationListItem",
+    "table": "xt.cashrcpt_allocation",
+    "comment": "Cash Receipt Allocation",
+    "isRest": true,
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "aropenalloc_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "target",
+        "attr": {
+          "type": "Number",
+          "column": "aropenalloc_doc_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "aropenalloc_amount"
+        }
+      },
+      {
+        "name": "receivable",
+        "toOne": {
+          "type": "ReceivableRelation",
+          "column": "aropenalloc_aropen_id",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
   }
+
 ]

@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
-/*global XT:true, XM:true, XV:true, enyo:true*/
+/*global XT:true, XV:true, enyo:true*/
 
 (function () {
 
@@ -37,6 +37,14 @@ trailing:true, white:true*/
       listRelations: "XV.ReceivableApplicationListRelations"
     });
 
+    enyo.kind({
+      name: 'XV.CashReceiptAllocations',
+      kind: 'XV.ListRelationsEditorBox',
+      editor: 'XV.CashReceiptEditor',
+      listRelations: 'XV.CashReceiptAllocationList',
+      title: '_payment'.loc()
+    });
+
     /**
      * @class XV.CashReceiptApplicationsBox
      * @extends XV.ListRelationsBox
@@ -46,7 +54,8 @@ trailing:true, white:true*/
       name: 'XV.CashReceiptApplicationsBox',
       kind: 'XV.ListRelationsEditorBox',
       editor: 'XV.CashReceiptLineEditor',
-      listRelations: 'XV.CashReceiptLineListRelation',
+      parentKey: 'cashReceipt',
+      listRelations: 'XV.CashReceiptLineList',
       title: '_cashReceiptApplications'.loc(),
       /*
       create: function () {

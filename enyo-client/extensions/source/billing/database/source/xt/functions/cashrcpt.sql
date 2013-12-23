@@ -84,7 +84,8 @@ $$ language sql;
  *
  * @param {Number}  aropen_id
  */
-create or replace function xt.cashrcpt_receivable_balance(numeric) returns numeric stable as $$
+create or replace function xt.cashrcpt_receivable_balance(numeric)
+returns numeric stable as $$
 
   select
     coalesce(
