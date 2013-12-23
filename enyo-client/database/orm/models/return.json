@@ -464,7 +464,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ReturnTax",
-    "table": "cmheadtax",
+    "table": "xt.cmheadtaxinfo",
     "isRest": true,
     "idSequenceName": "taxhist_taxhist_id_seq",
     "comment": "Return Tax Map",
