@@ -47,13 +47,12 @@ white:true*/
     },
 
     initialize: function () {
-      XM.Model.prototype.initialize.apply(this, arguments);
       this.meta = new Backbone.Model();
-      this.meta("_itemSites", new XM.ItemSiteRelationCollection());
+      this.meta.set("_itemSites", new XM.ItemSiteRelationCollection());
+      XM.Model.prototype.initialize.apply(this, arguments);
     },
 
     defaults: function () {
-      this.meta = new Backbone.Model();
       return {
         isActive: true
       };
