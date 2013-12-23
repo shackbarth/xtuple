@@ -53,6 +53,7 @@
     "characteristics", "contacts", "incidents", "items", "files", "urls", "accounts",
     "opportunities", "toDos", "incidentRelations", "opportunityRelations", "toDoRelations",
     "projects", "projectRelations", "customer", "prospect", "customers"],
+    requiredAttributes: ["number", "name", "isActive", "accountType"],
     /**
       @member -
       @memberof Account.prototype
@@ -128,6 +129,13 @@
     /**
     @member -
     @memberof Account.prototype
+    @description Comments panel should exist to add new comments to the Account
+    */
+    it.skip("Comments panel should exist to add new comments to the Account", function () {
+    });
+    /**
+    @member -
+    @memberof Account.prototype
     @description Documents panel should exist to connect the Accounts to : Account, contact,
       Customer, File, Incident, Item, Link, Opportunity, Project, To do
     */
@@ -168,6 +176,55 @@
     @description Projects panel should exist to attach existing/new Projects to the Account
     */
     it.skip("Projects panel should exist to attach existing/new Projects to the Account", function () {
+    });
+    /**
+    @member -
+    @memberof Account.prototype
+    @description Delete option should be disabled for the Accounts with a role
+    */
+    it.skip("Accounts with a role cannot be deleted", function () {
+    });
+    /**
+    @member -
+    @memberof Account.prototype
+    @description Delete option should be disabled for the Accounts assigned with a contact
+    */
+    it.skip("Accounts linked to a contact cannot be deleted", function () {
+    });
+    /**
+    @member -
+    @memberof Account.prototype
+    @description Account Number should follow the Number policy in the Configure CRM screen
+    */
+    describe("Account Number should follow the Number policy in the Configure" +
+    "CRM screen", function () {
+      /**
+      @member -
+      @memberof Account.prototype
+      @description - Account Number should be blank for a new Account when Number policy is
+      set to 'Manual'
+      */
+      it.skip("Account Number should be blank for a new Account when Number policy is" +
+      "set to 'Manual'", function () {
+      });
+      /**
+      @member -
+      @memberof Account.prototype
+      @description - Account Number should be populated with 'Next Number' for a new Account
+      when Number policy is set to 'Automatic'
+      */
+      it.skip("Account Number should be populated with 'Next Number' for a new Account " +
+      "when Number policy is set to 'Automatic'", function () {
+      });
+      /**
+      @member -
+      @memberof Account.prototype
+      @description - Account Number should be populated with 'Next Number' but editable for a
+      new Account when Number policy is set to 'Override Allowed'
+      */
+      it.skip("Account Number should be populated with 'Next Number' but editable for a " +
+      "new Account when Number policy is set to 'Override Allowed'", function () {
+      });
     });
   };
   exports.spec = spec;

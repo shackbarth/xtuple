@@ -31,6 +31,7 @@
     listKind: "XV.AddressList",
     instanceOf: "XM.Document",
     attributes: ["id", "number", "isActive", "line1", "line2", "line3", "city", "state", "postalCode", "country", "notes", "comments", "characteristics", "crmaccountUsers"],
+    requireAttributes: ["number"],
     /**
       @member -
       @memberof Address.prototype
@@ -72,20 +73,55 @@
     updatableField: "line1"
   };
   var additionalTests = function () {
+    /**
+      @member -
+      @memberof Address.prototype
+      @description Selecting 'Edit' button in the 'ADDRESS' panel of a record should open new Address
+        workspace
+    */
     it.skip("Selecting 'Edit' button in the 'ADDRESS' panel of a record should open new Address" +
     "workspace", function () {
     });
+    /**
+      @member -
+      @memberof Address.prototype
+      @description Selecting 'Search' button in the 'ADDRESS' panel of a record should display the
+        Addresses list
+    */
     it.skip("Selecting 'Search' button in the 'ADDRESS' panel of a record should display the" +
       "ADDRESSES list", function () {
     });
+    /**
+      @member -
+      @memberof Address.prototype
+      @description Editing an address shared by multiple records should display a confirmation dialog
+      'There are multiple records sharing this address. Would you like to update the address
+      across all of them?'
+     */
     it.skip("Editing an address shared by multiple records should display a confirmation dialog" +
       "'There are multiple records sharing this address. Would you like to update the address" +
       "across all of them?", function () {
     });
-    it.skip("Selecting 'Yes' in the dialog should update the across all the records", function () {
+    /**
+      @member -
+      @memberof Address.prototype
+      @description - Selecting 'Yes' in the dialog should update the across all the records
+    */
+    it.skip("Selecting 'Yes' in the dialog should update the address across all the records", function () {
     });
+    /**
+      @member -
+      @memberof Address.prototype
+      @description - Selecting 'No' in the dialog should update only the current record
+    */
     it.skip("Selecting 'No' in the dialog should update only the current record", function () {
     });
+    /**
+      @member -
+      @memberof Address.prototype
+      @description - Selecting 'Cancel' in the dialog should undo the changes on the
+      current record
+    */
     it.skip("Selecting 'Cancel' in the dialog should undo the changes on the" +
       "current record", function () {
     });
