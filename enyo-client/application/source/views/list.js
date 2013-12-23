@@ -103,7 +103,7 @@ trailing:true, white:true, strict: false*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", formatter: "formatName", isKey: true},
               {kind: "XV.ListAttr", attr: "dueDate", fit: true,
-                formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
+                placeholder: "_noDueDate".loc(),
                 classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
@@ -137,13 +137,6 @@ trailing:true, white:true, strict: false*/
         model = collection.at(this._lastTapIndex),
         recordType = "XM." + model.get("activityType");
       return XV.getWorkspace(recordType);
-    },
-    formatDueDate: function (value, view, model) {
-      var today = new Date(),
-        isLate = (model.get('isActive') &&
-          XT.date.compareDate(value, today) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
     },
     formatName: function (value, view, model) {
       var parent = model.get("parent");
@@ -1064,7 +1057,8 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "updated", fit: true, formatter: "formatDate",
+              {kind: "XV.ListAttr", attr: "updated", fit: true,
+                formatter: "formatDate",
                 classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "description"}
@@ -1087,9 +1081,10 @@ trailing:true, white:true, strict: false*/
       ]}
     ],
     formatDate: function (value, view, model) {
-      var isToday = !XT.date.compareDate(value, new Date());
+      var date = value ? XT.date.applyTimezoneOffset(value, true) : "",
+        isToday = date ? !XT.date.compareDate(date, new Date()) : false;
       view.addRemoveClass("bold", isToday);
-      return XT.date.isEndOfTime(value) ? "" : value;
+      return date ? Globalize.format(date, "d") : "";
     },
     getStyle: function (model) {
       var settings = XT.session.getSettings(),
@@ -1415,7 +1410,6 @@ trailing:true, white:true, strict: false*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "targetClose", fit: true,
-                formatter: "formatTargetClose",
                 placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
             ]},
@@ -1450,12 +1444,6 @@ trailing:true, white:true, strict: false*/
       var currency = model ? model.get("currency") : false,
         scale = XT.locale.moneyScale;
       return currency ? currency.format(value, scale) : "";
-    },
-    formatTargetClose: function (value, view, model) {
-      var isLate = model && model.get('isActive') &&
-        (XT.date.compareDate(value, new Date()) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
     }
   });
 
@@ -1624,8 +1612,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ListAttr", attr: "getOrderStatusString",
                 style: "padding-left: 24px"},
               {kind: "XV.ListAttr", attr: "scheduleDate",
-                formatter: "formatScheduleDate", classes: "right",
-                placeholder: "_noSchedule".loc()}
+                classes: "right", placeholder: "_noSchedule".loc()}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "customer.name"},
@@ -1645,12 +1632,6 @@ trailing:true, white:true, strict: false*/
         state = model.get("billtoState"),
         country = model.get("billtoCountry");
       return XM.Address.formatShort(city, state, country);
-    },
-    formatScheduleDate: function (value, view, model) {
-      var isLate = model && model.get('scheduleDate') &&
-        (XT.date.compareDate(value, new Date()) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
     },
     /**
       Returns Shipto Name if one exists, otherwise Billto Name.
@@ -2263,8 +2244,7 @@ trailing:true, white:true, strict: false*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name", isKey: true},
               {kind: "XV.ListAttr", attr: "dueDate", fit: true,
-                formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
-                classes: "right"}
+                placeholder: "_noDueDate".loc(), classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "description",
               placeholder: "_noDescription".loc()}
@@ -2286,14 +2266,7 @@ trailing:true, white:true, strict: false*/
           ]}
         ]}
       ]}
-    ],
-    formatDueDate: function (value, view, model) {
-      var today = new Date(),
-        isLate = (model.get('isActive') &&
-          XT.date.compareDate(value, today) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
-    }
+    ]
   });
 
   XV.registerModelList("XM.ToDoRelation", "XV.ToDoList");

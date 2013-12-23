@@ -165,14 +165,14 @@
       {
         "name": "effective",
         "attr": {
-          "type": "Date",
+          "type": "EffectiveDate",
           "column": "itemsrc_effective"
         }
       },
       {
         "name": "expires",
         "attr": {
-          "type": "DueDate",
+          "type": "ExpireDate",
           "column": "itemsrc_expires"
         }
       },

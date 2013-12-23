@@ -51,14 +51,14 @@
       {
         "name": "effective",
         "attr": {
-          "type": "Date",
+          "type": "EffectiveDate",
           "column": "contrct_effective"
         }
       },
       {
         "name": "expires",
         "attr": {
-          "type": "DueDate",
+          "type": "ExpireDate",
           "column": "contrct_expires"
         }
       }

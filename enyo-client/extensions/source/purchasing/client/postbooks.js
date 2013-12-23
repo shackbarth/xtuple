@@ -30,6 +30,7 @@ trailing:true, white:true, strict:false*/
       name: "purchasing",
       label: "_purchasing".loc(),
       panels: [
+        {name: "ItemSourceList", kind: "XV.ItemSourceList"},
         {name: "purchaseOrderList", kind: "XV.PurchaseOrderList"},
         {name: "activityList", kind: "XV.ActivityList"}
       ]

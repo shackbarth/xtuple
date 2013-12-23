@@ -27,6 +27,7 @@ strict:true, trailing:true, white:true */
     "_purchaseType": "Purchase Type",
     "_purchaseTypes": "Purchase Types",
     "_releaseDate": "Release Date",
+    "_ranking": "Ranking",
     "_unitRatio": "Unit Ratio",
     "_vendorItem": "Vendor Item",
     "_vouchered": "Vouchered"

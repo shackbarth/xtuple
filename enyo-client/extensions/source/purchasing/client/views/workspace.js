@@ -28,6 +28,59 @@ trailing:true, white:true, strict: false*/
     // CONFIGURE
     //
 
+    // ..........................................................
+    // ITEM SOURCE
+    //
+
+    enyo.kind({
+      name: "XV.ItemSourceWorkspace",
+      kind: "XV.Workspace",
+      title: "_itemSource".loc(),
+      model: "XM.ItemSource",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.ItemWidget", attr: "item"},
+              {kind: "XV.VendorWidget", attr: "vendor"},
+              {kind: "XV.CheckboxWidget", attr: "isActive"},
+              {kind: "XV.CheckboxWidget", attr: "isDefault"},
+              {kind: "XV.QuantityWidget", attr: "multipleOrderQuantity"},
+              {kind: "XV.QuantityWidget", attr: "minimumOrderQuantity"},
+              {kind: "XV.NumberSpinnerWidget", attr: "leadTime"},
+              {kind: "XV.NumberSpinnerWidget", attr: "ranking"},
+              {kind: "XV.DateWidget", attr: "effective"},
+              {kind: "XV.DateWidget", attr: "expires"},
+               {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "XV.TextArea", attr: "notes", label: "_notes".loc()},
+            ]}
+          ]},
+          {kind: "XV.Groupbox", name: "vendorPanel", title: "_vendor".loc(), components: [
+            {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "vendorGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.InputWidget", attr: "vendorItemNumber", label: "_number".loc()},
+              {kind: "XV.InputWidget", attr: "vendorUnit", label: "_unit".loc()},
+              {kind: "XV.UnitRatioWidget", attr: "vendorUnitRatio", label: "_unitRatio".loc()},
+              {kind: "XV.InputWidget", attr: "barcode"},
+              {kind: "onyx.GroupboxHeader", content: "_description".loc()},
+              {kind: "XV.TextArea", attr: "vendorItemDescription", label: "_description".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_manufacturer".loc()},
+              {kind: "XV.ItemSourceManufacturerCombobox", attr: "manufacturerName", label: "_name".loc()},
+              {kind: "XV.InputWidget", attr: "manufacturerItemNumber", label: "_number".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_description".loc()},
+              {kind: "XV.TextArea", attr: "manufacturerItemDescription", fit: true}
+            ]}
+          ]},
+        ]}
+      ]
+    });
+
+    XV.registerModelWorkspace("XM.ItemSource", "XV.ItemSourceWorkspace");
+
     // TODO
 
     // ..........................................................

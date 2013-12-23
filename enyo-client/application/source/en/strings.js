@@ -1,7 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 strict:true, trailing:true, white:true */
-/*global XT:true */
 
 // Place strings you want to localize here.  In your app, use the key and
 // localize it using "key string".loc().  HINT: For your key names, use the
@@ -29,6 +28,7 @@ strict:true, trailing:true, white:true */
     "_bankAccounts": "Bank Accounts",
     "_bankAccountType": "Account Type",
     "_bankName": "Bank Name",
+    "_barcode": "Barcode",
     "_biWeekly": "Bi-Weekly",
     "_cancelled": "Cancelled",
     "_closed": "Closed",
@@ -595,6 +595,7 @@ strict:true, trailing:true, white:true */
     "_showCompleted": "Show Complete",
     "_showCompletedOnly": "Show Complete Only",
     "_showExpired": "Show Expired",
+    "_showFuture": "Show Future",
     "_showInactive": "Show Inactive",
     "_showOnlyTopLevel": "Show Only Top Level",
     "_showPosted": "Show Posted",

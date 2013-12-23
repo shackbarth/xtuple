@@ -666,10 +666,53 @@ white:true*/
       },
 
       itemChanged: function () {
-        var item = this.get("item");
+        var item = this.get("item"),
+          itemSource = this.get("itemSource"),
+          purchaseOrder = this.get("purchaseOrder"),
+          orderDate = purchaseOrder ? purchaseOrder.get("orderDate") : false,
+          vendor = this.getValue("purchaseOrder.vendor"),
+          itemSourceCollection,
+          that = this,
+          options = {},
+          expires,
+          success,
+          count;
+
         this.isMiscellaneousChanged();
         this.set("vendorUnit", item ? item.getValue("inventoryUnit.name") : "");
-        this.set("unitCost", item ? item.getValue("standardCost") : 0);
+        this.set("unitCost", item ? item.get("standardCost") : 0);
+
+        if (!item) {
+          this.unset("itemSource");
+
+        // Look up item source if applicable.
+        } else if (purchaseOrder && orderDate && item &&
+           (!itemSource || itemSource.get("item").id !== item.id)) {
+          this._isCount = this._isCount ? this._isCount + 1 : 1;
+          count = this._isCount;
+
+          expires = new Date();
+          expires.setDate(orderDate.getDate() + 1);
+
+          options.query = {
+            parameters: [
+              {attribute: "vendor", value: vendor},
+              {attribute: "item", value: item},
+              {attribute: "isActive", value: true},
+              {attribute: "effective", operator: ">=", value: orderDate},
+              {attribute: "expires", operator: "<=", value: expires}
+            ]
+          };
+
+          options.success = function () {
+            if (count === that._isCount && itemSourceCollection.length) {
+              that.set("itemSource", itemSourceCollection.at(0));
+            }
+          };
+
+          itemSourceCollection = new XM.itemSourceCollection();
+          itemSourceCollection.fetch(options);
+        }
       },
 
       itemSourceChanged: function () {

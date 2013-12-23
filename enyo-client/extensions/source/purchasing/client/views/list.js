@@ -8,6 +8,58 @@ trailing:true, white:true, strict:false*/
   XT.extensions.purchasing.initLists = function () {
 
     // ..........................................................
+    // ITEM SOURCE
+    //
+
+    enyo.kind({
+      name: "XV.ItemSourceList",
+      kind: "XV.List",
+      label: "_itemSources".loc(),
+      collection: "XM.ItemSourceCollection",
+      query: {orderBy: [
+        {attribute: 'item.number'},
+        {attribute: 'vendor.name'}
+      ]},
+      parameterWidget: "XV.ItemSourceListParameters",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "vendorItemNumber", isKey: true},
+                {kind: "XV.ListAttr", attr: "vendorUnit", fit: true,
+                  classes: "right"}
+              ]},
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "vendor.name"},
+                {kind: "XV.ListAttr", attr: "contract.number", fit: true,
+                  classes: "right"}
+              ]},
+            ]},
+            {kind: "XV.ListColumn", classes: "first",
+              components: [
+              {kind: "XV.ListAttr", attr: "item.number", classes: "italic"},
+              {kind: "XV.ListAttr", formatter: "formatDescription"}
+            ]},
+            {kind: "XV.ListColumn", classes: "last", components: [
+              {kind: "XV.ListAttr", attr: "effective"},
+              {kind: "XV.ListAttr", attr: "expires"}
+            ]}
+          ]}
+        ]}
+      ],
+      formatDescription: function (value, view, model) {
+        var item = model.get("item"),
+          descrip1 = item.get("description1") || "",
+          descrip2 = item.get("description2") || "",
+          sep = descrip2 ? " - " : "";
+        return descrip1 + sep + descrip2;
+      }
+    });
+
+    XV.registerModelList("XM.ItemSource", "XV.ItemSourceList");
+
+    // ..........................................................
     // PURCHASE EMAIL PROFILE
     //
 
