@@ -109,20 +109,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           created: new Date()
         },
         success = function () {
-          var biUrl = X.options.datasource.biUrl || "",
-            reportUrl = biUrl + "&name=" + fileName +
+          var printServerHost = X.options.printServer.printhost || "localhost",
+            printServerPort = X.options.printServer.port || "8080",
+            printServerPortHttps = X.options.printServer.httpsport || "8443",
+            printServerUser = X.options.printServer.user || "reports",
+            printServerPassword = X.options.printServer.password || "password",
+            printServerformat = X.options.printServer.format || "pageable/pdf",
+            
+            reportUrl = "https://" + printServerHost + ":" + printServerPortHttps +
+              "/pentaho/content/reporting/reportviewer/report.html?solution=xtuple&path=%2Fprpt&locale=en_US" +
+              "&userid=" + printServerUser +
+              "&password=" + printServerPassword +
+              "&output-target=" + printServerformat +
+              "&name=" + fileName +
               "&org=" + req.session.passport.user.organization +
               "&datasource=" + req.headers.host + "&datakey=" + randomKey +
               "&print=" + requestDetails.print,
             //
-            // Use the new config.js entries for the print URL.  We need to convert the others too!
             // printer-name is not currently set so it should print on default printer until we
             // supply a printer name from user preferences.
             //
-            printServerHost = X.options.printServer.printhost || "",
-            printServerPort = X.options.printServer.port || "",
-            printServerUser = X.options.printServer.user || "",
-            printServerPassword = X.options.printServer.password || "",
             printUrl = "http://" + printServerHost + ":" + printServerPort +
               "/pentaho/ViewAction?solution=xtuple&path=prpt&action=print-prpt.xaction" +
               "&locale=en_US&output-target=pageable/pdf&printer-name=PDF" +

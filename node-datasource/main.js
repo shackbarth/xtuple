@@ -604,7 +604,8 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           data: session.passport.user,
           code: 1,
           debugging: X.options.datasource.debugging,
-          biUrl: X.options.datasource.biUrl,
+          biServer: X.options.biServer,
+          printServer: X.options.printServer,
           version: X.version
         });
       callback(callbackObj);

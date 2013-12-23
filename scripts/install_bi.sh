@@ -247,10 +247,7 @@ prep_mobile() {
 	cdir $XT_DIR/node-datasource
 	mv config.js config.js.old 2>&1 | tee -a $LOG_FILE
 	cat config.js.old | \
-	sed 's#biKeyFile: .*#biKeyFile: \"./lib/rest-keys/server.key\",#' | \
-	sed 's#biServerUrl: .*#biServerUrl: \"https://'$COMMONNAME':8443/pentaho/\",#'| \
-	sed 's#uniqueTenantId: .*#uniqueTenantId: \"'$TENANT'",#' | \
-	sed 's#biUrl: .*#biUrl: \"https://'$COMMONNAME':8443/pentaho/content/reporting/reportviewer/report.html\?solution=xtuple\&path=%2Fprpt\&locale=en_US\&userid=reports\&password=password\&output-target=pageable/pdf\",#' | \
+	sed 's#tenantname: .*#tenantname: \"'$TENANT'",#' | \
 	sed 's#bihost: .*#bihost: \"'$COMMONNAME'\",#'| \
 	sed 's#printhost: .*#printhost: \"'$COMMONNAME'\",#' \
 	> config.js
