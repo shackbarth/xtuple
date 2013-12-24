@@ -45,7 +45,7 @@ white:true, strict:false*/
             {name: "completer", kind: "XV.Completer", onSelect: "itemSelected"}
           ]}
         ]},
-        {kind: "FittableColumns", components: [
+        {kind: "FittableColumns", name: "detailColumns", components: [
           {name: "labels", classes: "xv-relationwidget-column left",
             components: [
             {name: "contractLabel", content: "_contract".loc() + ":",
@@ -75,6 +75,12 @@ white:true, strict:false*/
           ]}
         ]}
       ],
+      create: function () {
+        this.inherited(arguments);
+        if (!this.getShowDetail()) {
+          this.$.detailColumns.setStyle("display: none");
+        }
+      },
       disabledChanged: function () {
         this.inherited(arguments);
         var disabled = this.getDisabled();

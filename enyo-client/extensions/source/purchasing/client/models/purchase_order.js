@@ -118,13 +118,16 @@ white:true*/
 
       handlers: {
         "add:lineItems remove:lineItems": "lineItemsChanged",
+        "change:currency": "handleLineItems",
         "change:freight": "calculateFreightTax",
         "change:purchaseType": "purchaseTypeChanged",
         "change:site": "siteChanged",
         "change:status": "purchaseOrderStatusChanged",
         "change:taxZone": "recalculateTaxes",
         "change:vendor": "vendorChanged",
-        "change:vendorAddress": "vendorAddressChanged"
+        "change:vendorAddress": "vendorAddressChanged",
+        "status:READY_CLEAN": "statusReadyClean",
+        "status:READY_NEW": "statusReadyNew"
       },
 
       taxDetail: undefined,
@@ -222,6 +225,13 @@ white:true*/
         this.set("total", total);
       },
 
+      handleLineItems: function () {
+        var vendor = this.get("vendor"),
+          currency = this.get("currency"),
+          site = this.get("site");
+        this.setReadOnly("lineItems", !vendor || !currency || !site);
+      },
+
       initialize: function (attributes, options) {
         XM.Document.prototype.initialize.apply(this, arguments);
         if (XT.session.settings.get("RequirePOTax")) {
@@ -229,83 +239,6 @@ white:true*/
         }
         this.taxDetail = [];
         this.freightTaxDetail = [];
-      },
-
-      vendorChanged: function () {
-        var vendor = this.get("vendor"),
-          vendorAddress = vendor ? vendor.get("vendorAddress") : false,
-          address = vendorAddress ? vendorAddress.getValue("address") : false,
-          contact = vendor ? vendor.get("primaryContact") : false,
-          attrs = {
-            vendorAddress: null,
-            vendorCountry: ""
-          },
-          K = XM.Vendor,
-          source;
-
-        if (vendor) {
-          source = vendor.get("incotermsSource") === K.INCOTERMS_VENDOR ?
-            vendor : this.get("site");
-          attrs.incoterms = source.get("incoterms");
-          attrs.currency = vendor.get("currency");
-          attrs.terms = vendor.get("terms");
-          attrs.taxZone = vendor.get("taxZone");
-          attrs.shipVia = vendor.get("shipVia");
-          attrs.vendorAddress = vendorAddress;
-        }
-
-        this.set(attrs);
-        this.setReadOnly("lineItems", !vendor);
-      },
-
-      vendorAddressChanged: function () {
-        var vendorAddress = this.get("vendorAddress"),
-          address = vendorAddress ? vendorAddress.get("address"): false,
-          contact = vendorAddress ? vendorAddress.get("contact") : false,
-          attrs = {
-            vendorAddress1: "",
-            vendorAddress2: "",
-            vendorAddress3: "",
-            vendorCity: "",
-            vendorState: "",
-            vendorPostalCode: "",
-            vendorCountry: "",
-            vendorContact: null,
-            vendorContactHonorific: "",
-            vendorContactFirstName: "",
-            vendorContactLastName: "",
-            vendorContactMiddle: "",
-            vendorContactSuffix: "",
-            vendorContactTitle: "",
-            vendorContactPhone: "",
-            vendorContactFax: "",
-            vendorContactEmail: ""
-          };
-
-        if (address) {
-          attrs.vendorAddress1 = address.get("line1");
-          attrs.vendorAddress2 = address.get("line2");
-          attrs.vendorAddress3 = address.get("line3");
-          attrs.vendorCity = address.get("city");
-          attrs.vendorState = address.get("state");
-          attrs.vendorPostalCode = address.get("postalCode");
-          attrs.vendorCountry = address.get("country");
-        }
-
-        if (contact) {
-          attrs.vendorContact = contact;
-          attrs.vendorContactHonorific = contact.get("honorific");
-          attrs.vendorContactFirstName = contact.get("firstName");
-          attrs.vendorContactLastName = contact.get("lastName");
-          attrs.vendorContactMiddle = contact.get("middle");
-          attrs.vendorContactSuffix = contact.get("suffix");
-          attrs.vendorContactTitle = contact.get("title");
-          attrs.vendorContactPhone = contact.get("phone");
-          attrs.vendorContactFax = contact.get("fax");
-          attrs.vendorContactEmail = contact.get("primaryEmail");
-        }
-
-        this.set(attrs);
       },
 
       lineItemsChanged: function () {
@@ -399,19 +332,16 @@ white:true*/
         }
 
         this.set(attrs);
+        this.handleLineItems();
       },
 
-      statusDidChange: function () {
-        XM.Document.prototype.statusDidChange.apply(this, arguments);
-        var status = this.getStatus(),
-          K = XM.Model,
-          lineCount;
-        if (status === K.READY_NEW) {
-          this.siteChanged();
-        } else if (status === K.READY_CLEAN) {
-          this.setReadOnly("lineItems", false);
-          this.setReadOnly(["number", "orderDate", "site", "vendor"]);
-        }
+      statusReadyClean: function () {
+        this.setReadOnly("lineItems", false);
+        this.setReadOnly(["number", "orderDate", "site", "vendor"]);
+      },
+
+      statusReadyNew: function () {
+        this.siteChanged();
       },
 
       validate: function () {
@@ -444,6 +374,83 @@ white:true*/
         }
 
         return err;
+      },
+
+      vendorChanged: function () {
+        var vendor = this.get("vendor"),
+          vendorAddress = vendor ? vendor.get("vendorAddress") : false,
+          address = vendorAddress ? vendorAddress.getValue("address") : false,
+          contact = vendor ? vendor.get("primaryContact") : false,
+          attrs = {
+            vendorAddress: null,
+            vendorCountry: ""
+          },
+          K = XM.Vendor,
+          source;
+
+        if (vendor) {
+          source = vendor.get("incotermsSource") === K.INCOTERMS_VENDOR ?
+            vendor : this.get("site");
+          attrs.incoterms = source.get("incoterms");
+          attrs.currency = vendor.get("currency");
+          attrs.terms = vendor.get("terms");
+          attrs.taxZone = vendor.get("taxZone");
+          attrs.shipVia = vendor.get("shipVia");
+          attrs.vendorAddress = vendorAddress;
+        }
+
+        this.set(attrs);
+        this.handleLineItems();
+      },
+
+      vendorAddressChanged: function () {
+        var vendorAddress = this.get("vendorAddress"),
+          address = vendorAddress ? vendorAddress.get("address"): false,
+          contact = vendorAddress ? vendorAddress.get("contact") : false,
+          attrs = {
+            vendorAddress1: "",
+            vendorAddress2: "",
+            vendorAddress3: "",
+            vendorCity: "",
+            vendorState: "",
+            vendorPostalCode: "",
+            vendorCountry: "",
+            vendorContact: null,
+            vendorContactHonorific: "",
+            vendorContactFirstName: "",
+            vendorContactLastName: "",
+            vendorContactMiddle: "",
+            vendorContactSuffix: "",
+            vendorContactTitle: "",
+            vendorContactPhone: "",
+            vendorContactFax: "",
+            vendorContactEmail: ""
+          };
+
+        if (address) {
+          attrs.vendorAddress1 = address.get("line1");
+          attrs.vendorAddress2 = address.get("line2");
+          attrs.vendorAddress3 = address.get("line3");
+          attrs.vendorCity = address.get("city");
+          attrs.vendorState = address.get("state");
+          attrs.vendorPostalCode = address.get("postalCode");
+          attrs.vendorCountry = address.get("country");
+        }
+
+        if (contact) {
+          attrs.vendorContact = contact;
+          attrs.vendorContactHonorific = contact.get("honorific");
+          attrs.vendorContactFirstName = contact.get("firstName");
+          attrs.vendorContactLastName = contact.get("lastName");
+          attrs.vendorContactMiddle = contact.get("middle");
+          attrs.vendorContactSuffix = contact.get("suffix");
+          attrs.vendorContactTitle = contact.get("title");
+          attrs.vendorContactPhone = contact.get("phone");
+          attrs.vendorContactFax = contact.get("fax");
+          attrs.vendorContactEmail = contact.get("primaryEmail");
+        }
+
+        this.set(attrs);
       }
 
     });
@@ -556,7 +563,8 @@ white:true*/
           isMiscellaneous: false,
           received: 0,
           toReceive: 0,
-          unitCost: 0
+          unitCost: 0,
+          status: XM.PurchaseOrder.UNRELEASED_STATUS
         };
       },
 
@@ -797,24 +805,35 @@ white:true*/
       },
 
       purchaseOrderChanged: function () {
-        var parent = this.get("purchaseOrder"),
+        var purchaseOrder = this.get("purchaseOrder"),
          lineNumber = this.get("lineNumber"),
-         currency = parent ? parent.get("currency") : false,
+         currency = purchaseOrder ? purchaseOrder.get("currency") : false,
+         status = purchaseOrder ? purchaseOrder.get("status") : false,
+         site = this.get("site"),
          lineNumberArray,
          maxLineNumber;
 
         // Set next line number to be 1 more than the highest living model
-        if (parent && !lineNumber) {
-          lineNumberArray = _.compact(_.map(parent.get("lineItems").models, function (model) {
+        if (purchaseOrder && !lineNumber) {
+          lineNumberArray = _.compact(_.map(purchaseOrder.get("lineItems").models, function (model) {
             return model.isDestroyed() ? null : model.get("lineNumber");
           }));
           maxLineNumber = lineNumberArray.length > 0 ? Math.max.apply(null, lineNumberArray) : 0;
           this.set("lineNumber", maxLineNumber + 1);
         }
 
+        if (status) {
+          this.set("status", status);
+        }
+
         if (currency) {
           this.set("currency", currency);
         }
+
+        if (!site) {
+          this.set("site", purchaseOrder.get("site"));
+        }
+
       },
 
       statusChanged: function () {
