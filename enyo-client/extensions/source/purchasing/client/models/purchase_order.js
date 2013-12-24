@@ -748,10 +748,10 @@ white:true*/
 
           options.success = function () {
             if (count === that._isCount && itemSourceCollection.length) {
-              that.off("change:price", that.caclulateExtendedPrice, that);
+              that.off("change:price", that.caclulateExtendedPrice);
               that.set("itemSource", itemSourceCollection.at(0));
-              that.caclulateExtendedPrice();
-              that.on("change:price", that.caclulateExtendedPrice, that);
+              that.calculateExtendedPrice();
+              that.on("change:price", that.caclulateExtendedPrice);
             }
           };
 

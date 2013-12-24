@@ -7,6 +7,7 @@ strict:true, trailing:true, white:true */
   "use strict";
 
   var lang = XT.stringsFor("en_US", {
+    "_earliestDate": "Earliest Date",
     "_freightSubtotal": "Freight Subtotal",
     "_itemSource": "Item Source",
     "_itemSources": "Item Sources",
@@ -33,7 +34,7 @@ strict:true, trailing:true, white:true */
     "_vouchered": "Vouchered"
   });
 
-  if (typeof exports !== 'undefined') {
+  if (typeof exports !== "undefined") {
     exports.language = lang;
   }
 }());

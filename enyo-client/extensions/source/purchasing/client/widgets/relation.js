@@ -97,6 +97,7 @@ white:true, strict:false*/
           this.$.multipleQtyLabel.setShowing(multipleQty);
           this.$.multipleQty.setShowing(multipleQty);
           this.$.multipleQty.setContent(Globalize.format(multipleQty, "n" + scale));
+          this.$.earliestDateLabel.setShowing(earliestDate);
           this.$.earliestDate.setShowing(earliestDate);
           this.$.earliestDate.setContent(Globalize.format(earliestDate, "d"));
         }

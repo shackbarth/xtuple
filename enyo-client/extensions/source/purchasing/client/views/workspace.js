@@ -207,7 +207,7 @@ trailing:true, white:true, strict: false*/
       },
       controlValueChanged: function (inSender, inEvent) {
         this.inherited(arguments);
-        if (inEvent.originator.name === 'vendorWidget') {
+        if (inEvent.originator.name === "vendorWidget") {
           this.vendorChanged();
         }
       },
@@ -381,7 +381,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.InputWidget", attr: "vendorUnit", label: "_unit".loc()},
               {kind: "XV.InputWidget", attr: "vendorUnitRatio", label: "_unitRatio".loc()},
               {kind: "onyx.GroupboxHeader", content: "_description".loc()},
-              {kind: "XV.TextArea", attr: "vendorDescription", label: "_description".loc()},
+              {kind: "XV.TextArea", attr: "vendorItemDescription", label: "_description".loc()},
               {kind: "onyx.GroupboxHeader", content: "_manufacturer".loc()},
               {kind: "XV.ItemSourceManufacturerCombobox", attr: "manufacturerName", label: "_name".loc()},
               {kind: "XV.InputWidget", attr: "manufacturerItemNumber", label: "_itemNumber".loc()},
