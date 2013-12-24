@@ -1294,7 +1294,8 @@
         "name": "dueDate",
         "attr": {
           "type": "Date",
-          "column": "poitem_duedate"
+          "column": "poitem_duedate",
+          "required": true
         }
       },
       {

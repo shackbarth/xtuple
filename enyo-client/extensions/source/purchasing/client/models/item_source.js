@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, _:true */
+/*global XT:true, XM:true, _:true, console:true */
 
 (function () {
   "use strict";
@@ -17,7 +17,19 @@ white:true*/
 
       recordType: "XM.ItemSource",
 
+      defaults: function () {
+        return {
+          isActive: true,
+          isDefault: false,
+          effective: XT.date.startOfTime(),
+          expires: XT.date.endOfTime(),
+          leadTime: 0,
+          ranking: 1
+        };
+      },
+
       handlers: {
+        "change:item change:vendor change:effective change:expires": "checkDuplicate",
         "status:READY_CLEAN": "statusReadyClean"
       },
 
@@ -55,6 +67,56 @@ white:true*/
         return price;
       },
 
+      checkDuplicate: function (callback) {
+        var that = this,
+          item = this.get("item"),
+          vendor = this.get("vendor"),
+          effective = this.get("effective"),
+          expires = this.get("expires"),
+          options = {},
+          params;
+
+        if (!item || !vendor || !effective || !expires) {
+          // no need to check for duplicates unless both fields are set
+          if (typeof callback === "function") {
+            callback();
+          }
+          return;
+        }
+
+        options.success = function (resp) {
+          var err, params = {};
+
+          if (resp) {
+            // validation fail. This pair already exists
+            params.attr = "_item".loc() + " " + "_and".loc() + " " + "_vendor".loc();
+            params.value = [that.getValue("item.number"), that.getValue("vendor.number")];
+            params.response = resp;
+            err = XT.Error.clone("xt1008", { params: params });
+            that.trigger("invalid", that, err, options);
+            if (typeof callback === "function") {
+              callback(err);
+            }
+
+          } else {
+            if (typeof callback === "function") {
+              callback();
+            }
+          }
+        };
+
+        options.error = function (err) {
+          console.log("Error searching for duplicate item source", err);
+          if (typeof callback === "function") {
+            callback(true);
+          }
+        };
+
+        params = [this.id, item.id, vendor.id, effective, expires];
+
+        this.dispatch("XM.ItemSource", "hasDuplicate", params, options);
+      },
+
       statusReadyClean: function () {
         var prices;
         // Sort prices descending by quantity
@@ -69,6 +131,27 @@ white:true*/
           return 0;
         };
         prices.sort();
+        this.setReadOnly(["vendor", "item"]);
+      },
+
+      save: function (key, value, options) {
+        var that = this,
+          K = XM.Model,
+          status = this.getStatus(),
+          callback = function () {
+            XM.Model.prototype.save.call(this, key, value, options);
+          };
+
+        // Check for duplicates if we should
+        if (status === K.READY_NEW ||
+           (this.get("effective") !== this.original("effective") ||
+            this.get("expires") !== this.original("expires"))) {
+          this.checkDuplicate(callback);
+
+        // Otherwise just go ahead and save
+        } else {
+          callback();
+        }
       }
 
     });
@@ -80,7 +163,14 @@ white:true*/
     */
     XM.ItemSourcePrice = XM.Model.extend({
 
-      recordType: "XM.ItemSourcePrice"
+      recordType: "XM.ItemSourcePrice",
+
+      defaults: function () {
+        return {
+          currency: XT.baseCurrency,
+          priceType: XM.ItemSourcePrice.TYPE_NOMINAL
+        };
+      }
 
     });
 

@@ -17,6 +17,7 @@ strict:true, trailing:true, white:true */
     "_maintainPurchaseTypes": "Maintain Purchase Types",
     "_manufacturer": "Manufacturer",
     "_manufacturerItem": "Mfg. Item",
+    "_noVendorNumber": "No Vendor Item Number",
     "_purchase": "Purchase",
     "_purchasing": "Purchasing",
     "_purchaseEmailProfile": "Purchase Email Profile",

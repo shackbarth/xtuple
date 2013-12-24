@@ -17,16 +17,26 @@ trailing:true, white:true, strict:false*/
       label: "_itemSources".loc(),
       collection: "XM.ItemSourceCollection",
       query: {orderBy: [
-        {attribute: 'vendorItemNumber'},
-        {attribute: 'vendor.name'}
+        {attribute: "item.number"},
+        {attribute: "vendor.name"}
       ]},
       parameterWidget: "XV.ItemSourceListParameters",
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first",
+              components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "item.number", isKey: true},
+                {kind: "XV.ListAttr", attr: "item.inventoryUnit.name", fit: true,
+                  classes: "right"}
+              ]},
+              {kind: "XV.ListAttr", formatter: "formatDescription"}
+            ]},
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "vendorItemNumber", isKey: true},
+                {kind: "XV.ListAttr", attr: "vendorItemNumber", classes: "italic",
+                  placeholder: "_noVendorNumber".loc()},
                 {kind: "XV.ListAttr", attr: "vendorUnit", fit: true,
                   classes: "right"}
               ]},
@@ -35,15 +45,6 @@ trailing:true, white:true, strict:false*/
                 {kind: "XV.ListAttr", attr: "contract.number", fit: true,
                   classes: "right"}
               ]},
-            ]},
-            {kind: "XV.ListColumn", classes: "first",
-              components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "item.number", classes: "italic"},
-                {kind: "XV.ListAttr", attr: "item.inventoryUnit.name", fit: true,
-                  classes: "right"}
-              ]},
-              {kind: "XV.ListAttr", formatter: "formatDescription"}
             ]},
             {kind: "XV.ListColumn", classes: "last", components: [
               {kind: "XV.ListAttr", attr: "effective"},

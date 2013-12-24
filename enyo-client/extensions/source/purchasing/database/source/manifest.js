@@ -20,6 +20,7 @@
     "xt/views/itemsrcmfg.sql",
     "xt/views/poheadinfo.sql",
     "xt/views/poiteminfo.sql",
+    "xm/javascript/item_source.sql",
     "xm/javascript/purchasing.sql"
   ]
 }

@@ -38,7 +38,8 @@
         "toOne": {
           "isNested": true,
           "type": "ItemRelation",
-          "column": "itemsrc_item_id"
+          "column": "itemsrc_item_id",
+          "required": true
         }
       },
       {
@@ -46,21 +47,24 @@
         "toOne": {
           "isNested": true,
           "type": "VendorRelation",
-          "column": "itemsrc_vend_id"
+          "column": "itemsrc_vend_id",
+          "required": true
         }
       },
       {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "itemsrc_active"
+          "column": "itemsrc_active",
+          "required": true
         }
       },
       {
         "name": "isDefault",
         "attr": {
           "type": "Boolean",
-          "column": "itemsrc_default"
+          "column": "itemsrc_default",
+          "required": true
         }
       },
       {
@@ -81,14 +85,16 @@
         "name": "vendorUnit",
         "attr": {
           "type": "String",
-          "column": "itemsrc_vend_uom"
+          "column": "itemsrc_vend_uom",
+          "required": true
         }
       },
       {
         "name": "vendorUnitRatio",
         "attr": {
           "type": "UnitRatio",
-          "column": "itemsrc_invvendoruomratio"
+          "column": "itemsrc_invvendoruomratio",
+          "required": true
         }
       },
       {
@@ -116,7 +122,8 @@
         "name": "leadTime",
         "attr": {
           "type": "Number",
-          "column": "itemsrc_leadtime"
+          "column": "itemsrc_leadtime",
+          "required": true
         }
       },
       {
@@ -131,7 +138,8 @@
         "name": "ranking",
         "attr": {
           "type": "Number",
-          "column": "itemsrc_ranking"
+          "column": "itemsrc_ranking",
+          "required": true
         }
       },
       {
@@ -166,14 +174,16 @@
         "name": "effective",
         "attr": {
           "type": "EffectiveDate",
-          "column": "itemsrc_effective"
+          "column": "itemsrc_effective",
+          "required": true
         }
       },
       {
         "name": "expires",
         "attr": {
           "type": "ExpireDate",
-          "column": "itemsrc_expires"
+          "column": "itemsrc_expires",
+          "required": true
         }
       },
       {
@@ -231,35 +241,40 @@
         "name": "quantityBreak",
         "attr": {
           "type": "Quantity",
-          "column": "itemsrcp_qtybreak"
+          "column": "itemsrcp_qtybreak",
+          "required": true
         }
       },
       {
         "name": "price",
         "attr": {
           "type": "PurchasePrice",
-          "column": "itemsrcp_price"
+          "column": "itemsrcp_price",
+          "required": true
         }
       },
       {
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "itemsrcp_curr_id"
+          "column": "itemsrcp_curr_id",
+          "required": true
         }
       },
       {
         "name": "site",
         "toOne": {
           "type": "SiteRelation",
-          "column": "itemsrcp_warehous_id"
+          "column": "itemsrcp_warehous_id",
+          "nullValue": "-1"
         }
       },
       {
         "name": "priceType",
         "attr": {
           "type": "String",
-          "column": "itemsrcp_type"
+          "column": "itemsrcp_type",
+          "required": "true"
         }
       },
       {
