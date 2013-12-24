@@ -56,7 +56,7 @@ trailing:true, white:true, strict:false*/
       workspace: "XV.PurchaseOrderLineWorkspace",
       summary: "XV.PurchaseOrderSummaryPanel",
       parentKey: "purchaseOrder",
-      orderBy: [{attribute: 'lineNumber'}],
+      orderBy: [{attribute: "lineNumber"}],
       columns: [
         {classes: "line-number", header: "#", rows: [
           {readOnlyAttr: "lineNumber",
@@ -98,12 +98,13 @@ trailing:true, white:true, strict:false*/
           {readOnlyAttr: "dueDate",
             editor: {kind: "XV.DateWidget", attr: "dueDate"}}
         ]},
-        {classes: "date", header: ["_vendorItem".loc(), "_manufacturerItem".loc()], rows: [
+        {classes: "grid-item", header: ["_vendorItem".loc(), "_manufacturerItem".loc()],
+          rows: [
           {readOnlyAttr: "vendorItemNumber",
-            editor: {kind: "XV.InputWidget", attr: "vendorItemNumber"}},
+            editor: {kind: "XV.ItemSourceWidget", attr: "itemSource", showDetail: false}},
           {readOnlyAttr: "manufacturerItemNumber",
             editor: {kind: "XV.InputWidget", attr: "manufacturerItemNumber"}},
-        ]},
+        ]} /*,
         {classes: "quantity", header: ["_received".loc(), "_vouchered".loc()], rows: [
           {readOnlyAttr: "received",
             editor: {kind: "XV.QuantityWidget", attr: "received",
@@ -111,6 +112,7 @@ trailing:true, white:true, strict:false*/
           {readOnlyAttr: "vouchered",
             editor: {kind: "XV.QuantityWidget", attr: "vouchered"}},
         ]}
+        */
       ]
     });
 

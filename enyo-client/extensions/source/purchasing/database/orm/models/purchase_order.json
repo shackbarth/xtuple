@@ -1270,21 +1270,24 @@
         "attr": {
           "type": "Number",
           "column": "poitem_pohead_id",
-          "isNested": true
+          "isNested": true,
+          "required": true
          }
       },
       {
         "name": "status",
         "attr": {
           "type": "String",
-          "column": "poitem_status"
+          "column": "poitem_status",
+          "required": true
         }
       },
       {
         "name": "lineNumber",
         "attr": {
           "type": "Number",
-          "column": "poitem_linenumber"
+          "column": "poitem_linenumber",
+          "required": true
         }
       },
       {
@@ -1357,7 +1360,8 @@
         "name": "quantity",
         "attr": {
           "type": "Quantity",
-          "column": "poitem_qty_ordered"
+          "column": "poitem_qty_ordered",
+          "required": true
         }
       },
       {
@@ -1392,7 +1396,8 @@
         "name": "price",
         "attr": {
           "type": "PurchasePrice",
-          "column": "poitem_unitprice"
+          "column": "poitem_unitprice",
+          "required": true
         }
       },
       {

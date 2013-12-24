@@ -25,7 +25,10 @@ trailing:true, white:true, strict: false*/
       kind: "XV.ParameterWidget",
       components: [
         {kind: "onyx.GroupboxHeader", content: "_itemSource".loc()},
-        {name: "showInactive", label: "_showInactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",
+        {name: "item", label: "_item".loc(), attr: "item", defaultKind: "XV.ItemWidget"},
+        {name: "vendor", label: "_vendor".loc(), attr: "vendor", defaultKind: "XV.VendorWidget"},
+        {kind: "onyx.GroupboxHeader", content: "_show".loc()},
+        {name: "showInactive", label: "_inactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",
           getParameter: function () {
             var param;
             if (!this.getValue()) {
@@ -37,7 +40,7 @@ trailing:true, white:true, strict: false*/
             return param;
           }
         },
-        {name: "showFuture", label: "_showFuture".loc(), attr: "effective", defaultKind: "XV.CheckboxWidget",
+        {name: "showFuture", label: "_future".loc(), attr: "effective", defaultKind: "XV.CheckboxWidget",
           getParameter: function () {
             var param;
             if (!this.getValue()) {
@@ -50,7 +53,7 @@ trailing:true, white:true, strict: false*/
             return param;
           }
         },
-        {name: "showExpired", label: "_showExpired".loc(), attr: "expires", defaultKind: "XV.CheckboxWidget",
+        {name: "showExpired", label: "_expired".loc(), attr: "expires", defaultKind: "XV.CheckboxWidget",
           getParameter: function () {
             var param,
               today = XT.date.today(),
@@ -65,9 +68,7 @@ trailing:true, white:true, strict: false*/
             }
             return param;
           }
-        },
-        {name: "item", label: "_item".loc(), attr: "item", defaultKind: "XV.ItemWidget"},
-        {name: "vendor", label: "_vendor".loc(), attr: "vendor", defaultKind: "XV.VendorWidget"}
+        }
       ]
     });
 

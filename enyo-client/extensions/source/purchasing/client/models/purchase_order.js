@@ -30,9 +30,9 @@ white:true*/
     */
     XM.PurchaseTypeCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.PurchaseTypeCharacteristic.prototype */{
 
-      recordType: 'XM.PurchaseTypeCharacteristic',
+      recordType: "XM.PurchaseTypeCharacteristic",
 
-      which: 'isPurchaseOrders'
+      which: "isPurchaseOrders"
 
     });
 
@@ -54,7 +54,7 @@ white:true*/
     */
     XM.PurchaseEmailProfile = XM.Model.extend(/** @lends XM.PurchaseEmail.prototype */{
 
-      recordType: 'XM.PurchaseEmailProfile'
+      recordType: "XM.PurchaseEmailProfile"
 
     });
 
@@ -66,16 +66,16 @@ white:true*/
       */
       getPurchaseOrderStatusString: function () {
         var K = XM.PurchaseOrder,
-          status = this.get('status');
+          status = this.get("status");
 
         switch (status)
         {
         case K.UNRELEASED_STATUS:
-          return '_unreleased'.loc();
+          return "_unreleased".loc();
         case K.OPEN_STATUS:
-          return '_open'.loc();
+          return "_open".loc();
         case K.CLOSED_STATUS:
-          return '_closed'.loc();
+          return "_closed".loc();
         }
       }
     };
@@ -91,7 +91,7 @@ white:true*/
 
       documentKey: "number",
 
-      numberPolicySetting: 'PONumberGeneration',
+      numberPolicySetting: "PONumberGeneration",
 
       defaults: function () {
         var agent = XM.agents.find(function (agent) {
@@ -170,7 +170,7 @@ white:true*/
 
         // Collect line item detail
         var forEachCalcFunction = function (lineItem) {
-          var extPrice = lineItem.get('extendedPrice') || 0,
+          var extPrice = lineItem.get("extendedPrice") || 0,
             quantity = lineItem.get("quantity") || 0,
             freight = lineItem.get("freight") || 0,
             item = lineItem.get("item"),
@@ -181,7 +181,7 @@ white:true*/
           taxDetails = taxDetails.concat(lineItem.taxDetail);
         };
 
-        _.each(this.get('lineItems').models, forEachCalcFunction);
+        _.each(this.get("lineItems").models, forEachCalcFunction);
 
         // Add freight taxes to the mix
         taxDetails = taxDetails.concat(this.freightTaxDetail);
@@ -428,7 +428,7 @@ white:true*/
           });
 
           if (!validItems.length) {
-            return XT.Error.clone('xt2012');
+            return XT.Error.clone("xt2012");
           }
         }
 
@@ -438,7 +438,7 @@ white:true*/
             if (item.get("toReceive") ||
                 item.get("received") ||
                 item.get("vouchered")) {
-              err = XT.Error.clone('xt2025');
+              err = XT.Error.clone("xt2025");
             }
           });
         }
@@ -501,9 +501,9 @@ white:true*/
     */
     XM.PurchaseOrderCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.PurchaseOrderCharacteristic.prototype */{
 
-      recordType: 'XM.PurchaseOrderCharacteristic',
+      recordType: "XM.PurchaseOrderCharacteristic",
 
-      which: 'isPurchaseOrders'
+      which: "isPurchaseOrders"
 
     });
 
@@ -527,7 +527,7 @@ white:true*/
     */
     XM.PurchaseOrderWorkflow = XM.Workflow.extend(/** @lends XM.PurchaseOrderWorkflow.prototype */{
 
-      recordType: 'XM.PurchaseOrderWorkflow',
+      recordType: "XM.PurchaseOrderWorkflow",
 
       getPurchaseOrderWorkflowStatusString: function () {
         return XM.PurchaseOrderWorkflow.prototype.getWorkflowStatusString.call(this);
@@ -581,41 +581,83 @@ white:true*/
         "change:item": "itemChanged",
         "change:itemSource": "itemSourceChanged",
         "change:isMiscellaneous": "isMiscellaneousChanged",
+        "change:price": "calculateExtendedPrice",
         "change:purchaseOrder": "purchaseOrderChanged",
+        "change:quantity change:site": "calculatePrice"
       },
 
       taxDetail: null,
 
+      calculateExtendedPrice: function () {
+        var quantity = this.get("quantity") || 0,
+          price = this.get("price") || 0,
+          purchaseOrder = this.get("purchaseOrder");
+        this.set("extendedPrice", quantity * price);
+        if (purchaseOrder) { purchaseOrder.calculateTotals(); }
+      },
+
       calculatePrice: function () {
         var itemSource = this.get("itemSource"),
           item = this.get("item"),
-          site = this.get("site") || {},
-          quantity = this.get("quantity"),
-          prices = _.pluck(itemSource, "attributes"),
-          K = XM.ItemSourcePrice,
-          itemSourcePrice,
-          wholesalePrice,
+          site = this.get("site"),
+          quantity = this.get("quantity") || 0,
           price = 0;
 
-        if (itemSource && item && quantity) {
-          itemSourcePrice = _.first(prices, function (price) {
-            var priceSite = price.get("site");
-            return price.get("quantityBreak") <= quantity &&
-              !priceSite || priceSite.id === site.id;
-          });
-          if (itemSourcePrice) {
-            switch (itemSourcePrice.get("priceType"))
-            {
-            case K.TYPE_NOMINAL:
-              price = itemSourcePrice.get("price");
-              break;
-            case K.TYPE_DISCOUNT:
-              wholesalePrice = item.get("wholesalePrice");
-              price = wholesalePrice - (wholesalePrice * itemSourcePrice.get("discountPercent"));
-            }
-          }
+        if (itemSource) {
+          price = itemSource.calculatePrice(quantity, site);
         }
-        return price;
+        this.set("price", price);
+      },
+
+      calculateTax: function () {
+        var purchaseOrder = this.get("purchaseOrder"),
+          amount = this.get("extendedPrice"),
+          freight = this.get("freight"),
+          taxTypeId = this.getValue("taxType.id"),
+          taxZoneId,
+          effective,
+          currencyId,
+          that = this,
+          options = {},
+          params,
+          count = 0,
+          tax = 0;
+
+        // If no parent, don't bother
+        if (!purchaseOrder) { return; }
+
+        taxZoneId = purchaseOrder.getValue("taxZone.id");
+        effective = purchaseOrder.get("orderDate");
+        currencyId = purchaseOrder.getValue("currency.id");
+
+        if (effective && currencyId && (amount || freight)) {
+          this.taxDetail = [];
+          options.success = function (resp) {
+            count--;
+            that.taxDetail = that.taxDetail.concat(resp);
+            if (resp.length) {
+              tax = XT.math.add(_.pluck(resp, "tax"), 6);
+            }
+
+            if (count === 0) {
+              that.set("tax", XT.math.round(tax, XT.PURCHASE_PRICE_SCALE));
+              purchaseOrder.calculateTotals();
+            }
+          };
+          if (amount) { count++; }
+          if (freight) { count++; }
+          if (amount) {
+            params = [taxZoneId, taxTypeId, effective, currencyId, amount];
+            this.dispatch("XM.Tax", "taxDetail", params, options);
+          }
+          if (freight) {
+            taxTypeId = _.where(_.pluck(XM.taxTypes.models, "attributes"), {name: "Freight"})[0].id;
+            params = [taxZoneId, taxTypeId, effective, currencyId, freight];
+            this.dispatch("XM.Tax", "taxDetail", params, options);
+          }
+        } else {
+          this.set("tax", tax);
+        }
       },
 
       destroy: function (options) {
@@ -699,8 +741,8 @@ white:true*/
               {attribute: "vendor", value: vendor},
               {attribute: "item", value: item},
               {attribute: "isActive", value: true},
-              {attribute: "effective", operator: ">=", value: orderDate},
-              {attribute: "expires", operator: "<=", value: expires}
+              {attribute: "effective", operator: "<=", value: orderDate},
+              {attribute: "expires", operator: ">=", value: expires}
             ]
           };
 
@@ -710,7 +752,7 @@ white:true*/
             }
           };
 
-          itemSourceCollection = new XM.itemSourceCollection();
+          itemSourceCollection = new XM.ItemSourceCollection();
           itemSourceCollection.fetch(options);
         }
       },
@@ -737,19 +779,6 @@ white:true*/
             manufacturerItemDescription: itemSource.get("manufacturerItemDescription"),
           };
 
-          // Sort prices descending by quantity
-          prices = itemSource.get("prices");
-          prices.comparator = function (a, b) {
-            var attr = "quantityBreak",
-              aval = a.get(attr),
-              bval = b.get(attr);
-            if (aval !== bval) {
-              return bval > aval ? 1 : -1;
-            }
-            return 0;
-          };
-          prices.sort();
-
         // Clear if item, if expense leave vendor data alone
         } else if (item) {
           attrs.vendorItemNumber = "";
@@ -761,7 +790,7 @@ white:true*/
 
         this.set(attrs);
 
-        if (itemSource && quantity) { this.calculatePrice(); }
+        if (itemSource) { this.calculatePrice(); }
       },
 
       purchaseOrderChanged: function () {
@@ -785,62 +814,12 @@ white:true*/
         }
       },
 
-      calculateTax: function () {
-        var purchaseOrder = this.get("purchaseOrder"),
-          amount = this.get("extendedPrice"),
-          freight = this.get("freight"),
-          taxTypeId = this.getValue("taxType.id"),
-          taxZoneId,
-          effective,
-          currencyId,
-          that = this,
-          options = {},
-          params,
-          count = 0,
-          tax = 0;
-
-        // If no parent, don't bother
-        if (!purchaseOrder) { return; }
-
-        taxZoneId = purchaseOrder.getValue("taxZone.id");
-        effective = purchaseOrder.get("orderDate");
-        currencyId = purchaseOrder.getValue("currency.id");
-
-        if (effective && currencyId && (amount || freight)) {
-          this.taxDetail = [];
-          options.success = function (resp) {
-            count--;
-            that.taxDetail = that.taxDetail.concat(resp);
-            if (resp.length) {
-              tax = XT.math.add(_.pluck(resp, "tax"), 6);
-            }
-
-            if (count === 0) {
-              that.set("tax", XT.math.round(tax, XT.PURCHASE_PRICE_SCALE));
-              purchaseOrder.calculateTotals();
-            }
-          };
-          if (amount) { count++; }
-          if (freight) { count++; }
-          if (amount) {
-            params = [taxZoneId, taxTypeId, effective, currencyId, amount];
-            this.dispatch("XM.Tax", "taxDetail", params, options);
-          }
-          if (freight) {
-            taxTypeId = _.where(_.pluck(XM.taxTypes.models, "attributes"), {name: "Freight"})[0].id;
-            params = [taxZoneId, taxTypeId, effective, currencyId, freight];
-            this.dispatch("XM.Tax", "taxDetail", params, options);
-          }
-        } else {
-          this.set("tax", tax);
-        }
-      },
-
       statusChanged: function () {
+        var purchaseOrder = this.get("purchaseOrder");
         if (this.getStatus() === XM.Model.READY_CLEAN) {
           this.isMiscellaneousChanged();
         } else if (this.isDestroyed()) {
-          this.get("purchaseOrder").calculateTotals();
+          if (purchaseOrder) { purchaseOrder.calculateTotals(); }
         }
       }
 
@@ -881,7 +860,7 @@ white:true*/
     */
     XM.PurchaseOrderCharacteristic = XM.Model.extend(/** @lends XM.PurchaseOrderListItemCharacteristic.prototype */{
 
-      recordType: 'XM.PurchaseOrderListItemCharacteristic'
+      recordType: "XM.PurchaseOrderListItemCharacteristic"
 
     });
 
@@ -893,7 +872,7 @@ white:true*/
     XM.PurchaseOrderListItemCharacteristic = XM.Model.extend({
       /** @scope XM.PurchaseOrderListItemCharacteristic.prototype */
 
-      recordType: 'XM.PurchaseOrderListItemCharacteristic'
+      recordType: "XM.PurchaseOrderListItemCharacteristic"
 
     });
 

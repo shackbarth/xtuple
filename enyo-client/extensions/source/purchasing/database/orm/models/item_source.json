@@ -185,7 +185,7 @@
         }
       },
       {
-        "name": "Prices",
+        "name": "prices",
         "toMany": {
           "isNested": true,
           "type": "ItemSourcePrice",

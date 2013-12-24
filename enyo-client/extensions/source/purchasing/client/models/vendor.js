@@ -30,6 +30,31 @@ white:true*/
 
     });
 
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.VendorContract = XM.Model.extend(/** @lends XM.VendorContract.prototype */{
+
+      recordType: 'XM.VendorContract'
+
+    });
+
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.VendorContractRelation = XM.Info.extend(/** @lends XM.VendorContractRelation.prototype */{
+
+      recordType: 'XM.VendorContractRelation',
+
+      editableModle: 'XM.VendorContract'
+
+    });
+
     // ..........................................................
     // COLLECTIONS
     //
@@ -42,6 +67,28 @@ white:true*/
     XM.PurchaseVendorRelationCollection = XM.Collection.extend({
 
       model: XM.PurchaseVendorRelation
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.VendorContractCollection = XM.Collection.extend({
+
+      model: XM.VendorContract
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Collection
+    */
+    XM.VendorContractRelationCollection = XM.Collection.extend({
+
+      model: XM.VendorContractRelation
 
     });
 

@@ -17,7 +17,7 @@ trailing:true, white:true, strict:false*/
       label: "_itemSources".loc(),
       collection: "XM.ItemSourceCollection",
       query: {orderBy: [
-        {attribute: 'item.number'},
+        {attribute: 'vendorItemNumber'},
         {attribute: 'vendor.name'}
       ]},
       parameterWidget: "XV.ItemSourceListParameters",
@@ -38,7 +38,11 @@ trailing:true, white:true, strict:false*/
             ]},
             {kind: "XV.ListColumn", classes: "first",
               components: [
-              {kind: "XV.ListAttr", attr: "item.number", classes: "italic"},
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "item.number", classes: "italic"},
+                {kind: "XV.ListAttr", attr: "item.inventoryUnit.name", fit: true,
+                  classes: "right"}
+              ]},
               {kind: "XV.ListAttr", formatter: "formatDescription"}
             ]},
             {kind: "XV.ListColumn", classes: "last", components: [
