@@ -156,6 +156,7 @@ var _ = require("underscore"),
     async.map(hashAsArray, setAttribute, function (err, results) {
       if (err) {
         assert.fail(err);
+        done();
       } else {
         done();
       }
