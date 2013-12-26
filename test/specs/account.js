@@ -75,14 +75,14 @@
     /**
     @member -
     @memberof Account.prototype
-    @description Account has no cached defined
+    @description Account has no cache defined
     */
     cacheName: null,
     /**
       @member -
       @memberof Account.prototype
-      @description Accounts can be read by users with "ViewAllCRMAccounts" privilege and can be created, updated,
-        or deleted by users with the "MaintainAllCRMAccounts" privilege.
+      @description Accounts can be read by users with "ViewAllCRMAccounts" privilege and can be 
+        created, updated, or deleted by users with the "MaintainAllCRMAccounts" privilege.
     */
     privileges: {
       createUpdateDelete: "MaintainAllCRMAccounts",
@@ -95,6 +95,19 @@
     updatableField: "name"
   };
   var additionalTests = function () {
+    /**
+    @member -
+    @memberof Account.prototype
+    @description Users with "ViewPersonalCRMAccounts" privilege can read their personal accounts 
+    but cannot read the accounts owned by other users. Users with "MaintainPersonalCRMAccounts" privilege
+    can create, update or delete their personal accounts but not the accounts owned by other users 
+    */
+    it.skip("Users with \"ViewPersonalCRMAccounts\" privilege can read their personal accounts" +
+      "but cannot read the Accounts owned by other users. ", function () {
+    });
+    it.skip("Users with \"MaintainPersonalCRMAccounts\" privilege can create, update or delete" +
+    "their personal accounts but not the accounts owned by other users", function () {
+    });
     /**
     @member -
     @memberof Account.prototype
