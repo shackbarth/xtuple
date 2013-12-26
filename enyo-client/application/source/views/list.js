@@ -1192,17 +1192,22 @@ trailing:true, white:true, strict: false*/
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "XV.ListAttr", attr: "billtoName"},
-            {kind: "XV.ListAttr", formatter: "formatBillto"}
+            {kind: "XV.ListAttr", formatter: "formatName"},
+            {kind: "XV.ListAttr", formatter: "formatAddress"}
           ]}
         ]}
       ]}
     ],
-    formatBillto: function (value, view, model) {
+    // some extensions may override this function (i.e. inventory)
+    formatAddress: function (value, view, model) {
       var city = model.get("billtoCity"),
         state = model.get("billtoState"),
         country = model.get("billtoCountry");
       return XM.Address.formatShort(city, state, country);
+    },
+    // some extensions may override this function (i.e. inventory)
+    formatName: function (value, view, model) {
+      return model.get("billtoName");
     },
     formatPosted: function (value) {
       return value ? "_posted".loc() : "_unposted".loc();
