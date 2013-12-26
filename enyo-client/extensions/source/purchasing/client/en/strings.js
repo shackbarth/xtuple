@@ -7,6 +7,9 @@ strict:true, trailing:true, white:true */
   "use strict";
 
   var lang = XT.stringsFor("en_US", {
+    "_CopyPRtoPOItem": "Copy to Order",
+    "_DefaultPrintPOOnSave": "Print on Save",
+    "_defaultShipVia": "Default Ship Via",
     "_earliestDate": "Earliest Date",
     "_freightSubtotal": "Freight Subtotal",
     "_itemSource": "Item Source",
@@ -26,11 +29,15 @@ strict:true, trailing:true, white:true */
     "_purchaseOrderLine": "Purchase Order Line",
     "_purchaseOrderWorkflow": "Purchase Workflow",
     "_purchaseOrders": "Purchase Orders",
+    "_purchaseRequest": "Purchase Request",
     "_purchaseType": "Purchase Type",
     "_purchaseTypes": "Purchase Types",
     "_releaseDate": "Release Date",
     "_ranking": "Ranking",
+    "_RequirePOTax": "Require Tax",
+    "_RequireStdCostForPOItem": "Require Standard Cost",
     "_unitRatio": "Unit Ratio",
+    "_UseEarliestAvailDateOnPOItem": "Use Earliest Date",
     "_vendorItem": "Vendor Item",
     "_vendorItemNumber": "VendorItemNumber",
     "_vouchered": "Vouchered"

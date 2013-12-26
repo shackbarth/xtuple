@@ -61,13 +61,12 @@ trailing:true, white:true, strict:false*/
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
 
-    /*
     XM.configurations.add(new XM.ConfigurationModel({
       model: "XM.purchasing",
       name: "_purchasing".loc(),
       description: "_purchasing".loc(),
       workspace: "XV.PurchasingWorkspace"
     }));
-    */
+
   };
 }());

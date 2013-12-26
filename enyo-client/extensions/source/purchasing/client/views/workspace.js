@@ -28,6 +28,50 @@ trailing:true, white:true, strict: false*/
     // CONFIGURE
     //
 
+    /* TODO: 
+      "BillDropShip",
+      "EnableDropShipments",
+      "NextVoucherNumber"
+    */
+    enyo.kind({
+      name: "XV.PurchasingWorkspace",
+      kind: "XV.Workspace",
+      title: "_configure".loc() + " " + "_purchasing".loc(),
+      model: "XM.Purchasing",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+              classes: "in-panel", components: [
+              {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
+              {kind: "XV.InputWidget", attr: "DefaultPOShipVia",
+                label: "_defaultShipVia".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "VendorChangeLog",
+                label: "_changeLog".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_purchaseOrder".loc()},
+              {kind: "XV.NumberPolicyPicker", attr: "PONumberGeneration",
+                label: "_number".loc() + " " + "_policy".loc()},
+              {kind: "XV.NumberWidget", attr: "NextPurchaseOrderNumber",
+                label: "_nextNumber".loc(), formatting: false},
+              {kind: "XV.ToggleButtonWidget", attr: "POChangeLog",
+                label: "_changeLog".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "RequireStdCostForPOItem"},
+              {kind: "XV.ToggleButtonWidget", attr: "DefaultPrintPOOnSave"},
+              {kind: "XV.ToggleButtonWidget", attr: "UseEarliestAvailDateOnPOItem"},
+              {kind: "XV.ToggleButtonWidget", attr: "RequirePOTax"},
+              {kind: "onyx.GroupboxHeader", content: "_purchaseRequest".loc()},
+              {kind: "XV.NumberPolicyPicker", attr: "PrNumberGeneration",
+                label: "_number".loc() + " " + "_policy".loc()},
+              {kind: "XV.NumberWidget", attr: "NextPurchaseRequestNumber",
+                label: "_nextNumber".loc(), formatting: false},
+              {kind: "XV.ToggleButtonWidget", attr: "CopyPRtoPOItem"}
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
     // ..........................................................
     // ITEM SOURCE
     //
@@ -54,7 +98,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.NumberSpinnerWidget", attr: "ranking"},
               {kind: "XV.DateWidget", attr: "effective"},
               {kind: "XV.DateWidget", attr: "expires"},
-               {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
               {kind: "XV.TextArea", attr: "notes", label: "_notes".loc()},
             ]}
           ]},
