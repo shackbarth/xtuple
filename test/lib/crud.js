@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global _:true, console:true, XM:true, require:true, assert:true,
+/*global _:true, console:true, XM:true, XT:true, require:true, assert:true,
 setTimeout:true, clearTimeout:true, exports:true, it:true */
 
 var _ = require("underscore"),
@@ -124,24 +124,21 @@ var _ = require("underscore"),
           // swap in this model for the mock
           data.model.set(options.key, model);
           asyncCallback();
-        },
-        fetchError = function (err) {
-          asyncCallback("Fetch error" + JSON.stringify(err));
         };
 
       if (typeof value === 'object' && !_.isDate(value)) {
         // if it's an object we want to set on the model, flesh it out
         var fetchObject = {
             success: fetchSuccess,
-            error: fetchError,
+            error: asyncCallback,
             key: key
           },
-          relatedModel,
           relatedModelName = _.find(data.model.relations, function (relation) {
             return relation.key === key;
-          }).relatedModel;
+          }).relatedModel,
+          Klass = XT.getObjectByName(relatedModelName),
+          relatedModel = new Klass();
 
-        relatedModel = new XM[relatedModelName.substring(3)]();
         fetchObject.id = value[relatedModel.idAttribute];
         relatedModel.fetch(fetchObject);
       } else {
@@ -150,6 +147,7 @@ var _ = require("underscore"),
         asyncCallback();
       }
     },
+      // put the hash in a form that async is comfortable with
       hashAsArray = _.map(data.createHash, function (value, key) {
         return {key: key, value: value};
       });
