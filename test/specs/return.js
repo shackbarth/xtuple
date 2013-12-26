@@ -119,7 +119,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     },
     createHash: {
       number: "30" + (100 + Math.round(Math.random() * 900)),
-      customer: {number: "XRETAIL"}
+      customer: {number: "TTOYS"}
     },
     updatableField: "notes",
     beforeSaveActions: [{it: 'sets up a valid line item',

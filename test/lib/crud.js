@@ -126,8 +126,10 @@ var _ = require("underscore"),
           callback();
         }
       },
-      fetchError = function () {
-        // proceed anyway.
+      fetchError = function (err) {
+        // do not proceed
+        assert.fail("Fetch error" + JSON.stringify(err));
+        /*
         if (data.verbose) {
           console.log("Fetch error", arguments);
         }
@@ -135,6 +137,7 @@ var _ = require("underscore"),
         if (objectsFetched === objectsToFetch) {
           callback();
         }
+        */
       };
     _.each(data.createHash, function (value, key) {
       if (typeof value === 'object' && !_.isDate(value)) {
