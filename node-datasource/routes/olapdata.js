@@ -33,7 +33,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       audience = datasource + database + "/oauth/token",
       superuser = X.options.databaseServer.user,
       tenant = X.options.biServer.tenantname || "default",
-      biKeyFile = X.options.biServer.keyfile || "./lib/rest-keys/server.key";
+      biKeyFile = X.options.biServer.keyfile || "";
 
     // get private key from path in config
     privKey = X.fs.readFileSync(biKeyFile);

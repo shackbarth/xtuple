@@ -1,6 +1,6 @@
 #!/bin/sh
 RUN_DIR=$(pwd)
-LOG_FILE=$RUN_DIR/instalLOG_FLl_bi.log
+LOG_FILE=$RUN_DIR/install_bi.log
 mv $LOG_FILE $LOG_FILE.old
 log() {
 	echo $@

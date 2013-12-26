@@ -145,9 +145,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // step 3: redirect to the report URL or if the print option is true
           if (requestDetails.print === false) {
             res.redirect(reportUrl);
-          }
           // or request print service for report
-          else {
+          } else {
             request({
               uri: printUrl,
               method: "POST",
@@ -161,8 +160,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
                   error: err,
                   message: err
                 });
-              }
-              else {
+              } else {
                 res.send({ isError: false,
                   message: response.statusCode
                 });
