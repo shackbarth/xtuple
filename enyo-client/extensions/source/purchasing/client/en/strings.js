@@ -13,6 +13,7 @@ strict:true, trailing:true, white:true */
     "_earliestDate": "Earliest Date",
     "_freightSubtotal": "Freight Subtotal",
     "_itemSource": "Item Source",
+    "_itemSourceItemInactive": "Item Source can not be active when Item is inactive",
     "_itemSources": "Item Sources",
     "_isDropShip": "Drop Ship",
     "_maintainPurchaseOrders": "Maintain Purchase Orders",

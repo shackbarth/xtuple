@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, _:true, console:true */
+/*global XT:true, XM:true, _:true, console:true, Globalize:true */
 
 (function () {
   "use strict";
@@ -154,6 +154,25 @@ white:true*/
         } else {
           callback();
         }
+      },
+
+      validate: function () {
+        var err = XM.Model.prototype.validate.apply(this, arguments),
+          effective = this.get("effective"),
+          expires = this.get("expires"),
+          params = {};
+        
+        if (!err) {
+          if (XT.date.compare(effective, expires) > -1) {
+            params.start = Globalize.format(effective, "d");
+            params.end = Globalize.format(expires, "d");
+            err = XT.Error.clone("xt2015", {params: params});
+          } else if (this.get("isActive") && !this.getValue("item.isActive")) {
+            err = XT.Error.clone("pur1001");
+          }
+        }
+
+        return err;
       }
 
     });
