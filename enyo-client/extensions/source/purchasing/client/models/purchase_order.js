@@ -336,8 +336,13 @@ white:true*/
       },
 
       statusReadyClean: function () {
-        this.setReadOnly("lineItems", false);
-        this.setReadOnly(["number", "orderDate", "site", "vendor"]);
+        var status = this.get("status"); // Purchase order status
+        if (status === XM.PurchaseOrder.CLOSED_STATUS) {
+          this.setReadOnly(true);
+        } else {
+          this.setReadOnly("lineItems", false);
+          this.setReadOnly(["number", "orderDate", "site", "vendor"]);
+        }
       },
 
       statusReadyNew: function () {
@@ -575,6 +580,7 @@ white:true*/
         "received",
         "returned",
         "status",
+        "tax",
         "toReceive",
         "unitCost",
         "vendorUnit",
@@ -585,13 +591,14 @@ white:true*/
       handlers: {
         "statusChange": "statusChanged",
         "change:expenseCategory": "isMiscellaneousChanged",
-        "change:freight": "calculateTax",
+        "change:extendedPrice change:freight change:taxType": "calculateTax",
         "change:item": "itemChanged",
         "change:itemSource": "itemSourceChanged",
         "change:isMiscellaneous": "isMiscellaneousChanged",
         "change:price": "calculateExtendedPrice",
         "change:purchaseOrder": "purchaseOrderChanged",
-        "change:quantity change:site": "calculatePrice"
+        "change:quantity change:site": "calculatePrice",
+        "change:quantity": "calculateExtendedPrice"
       },
 
       taxDetail: null,
