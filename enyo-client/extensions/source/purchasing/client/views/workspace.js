@@ -119,6 +119,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.TextArea", attr: "manufacturerItemDescription", fit: true}
             ]}
           ]},
+          {kind: "XV.ItemSourcePriceBox", attr: "prices"}
         ]}
       ]
     });

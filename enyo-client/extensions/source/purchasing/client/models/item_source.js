@@ -8,6 +8,17 @@ white:true*/
 
   XT.extensions.purchasing.initItemSourceModels = function () {
 
+    /** @private */
+    var _descComparator = function (a, b) {
+      var attr = "quantityBreak",
+        aval = a.get(attr),
+        bval = b.get(attr);
+      if (aval !== bval) {
+        return bval > aval ? 1 : -1;
+      }
+      return 0;
+    };
+
     /**
       @class
 
@@ -30,21 +41,38 @@ white:true*/
 
       handlers: {
         "change:item change:vendor change:effective change:expires": "checkDuplicate",
+        "change:vendor": "vendorChanged",
         "status:READY_CLEAN": "statusReadyClean"
       },
 
       nameAttribute: "vendorItemNumber",
 
+      readOnlyAttributes: [
+        "prices"
+      ],
+
       findPrice: function (quantity, site) {
         site = site || {};
         quantity = quantity || 0;
-        var prices = this.get("prices");
+        var prices = this.get("prices"),
+         prvComparator = prices.comparator,
+         itemSourcePrice;
 
-        return _.find(prices.models, function (price) {
+        // Cache comparator
+        prices.comparator = _descComparator;
+        prices.sort();
+
+        itemSourcePrice = _.find(prices.models, function (price) {
           var priceSite = price.get("site");
           return price.get("quantityBreak") <= quantity &&
             !priceSite || priceSite.id === site.id;
         });
+
+        // Set back to previous sort
+        prices.comparator = prvComparator;
+        prices.sort();
+
+        return itemSourcePrice;
       },
 
       calculatePrice: function (quantity, site) {
@@ -52,6 +80,8 @@ white:true*/
           K = XM.ItemSourcePrice,
           itemSourcePrice,
           wholesalePrice,
+          discountPercent,
+          fixedDiscount,
           price = 0;
 
         itemSourcePrice = this.findPrice(quantity, site);
@@ -63,7 +93,9 @@ white:true*/
             break;
           case K.TYPE_DISCOUNT:
             wholesalePrice = item.get("wholesalePrice");
-            price = wholesalePrice - (wholesalePrice * itemSourcePrice.get("discountPercent"));
+            discountPercent = this.get("discountPercent");
+            fixedDiscount = this.get("fixedDiscount");
+            price = wholesalePrice - (wholesalePrice * discountPercent) - fixedDiscount;
           }
         }
         return price;
@@ -120,20 +152,8 @@ white:true*/
       },
 
       statusReadyClean: function () {
-        var prices;
-        // Sort prices descending by quantity
-        prices = this.get("prices");
-        prices.comparator = function (a, b) {
-          var attr = "quantityBreak",
-            aval = a.get(attr),
-            bval = b.get(attr);
-          if (aval !== bval) {
-            return bval > aval ? 1 : -1;
-          }
-          return 0;
-        };
-        prices.sort();
         this.setReadOnly(["vendor", "item"]);
+        this.setReadOnly("prices", false);
       },
 
       save: function (key, value, options) {
@@ -173,6 +193,10 @@ white:true*/
         }
 
         return err;
+      },
+
+      vendorChanged: function () {
+        this.setReadOnly("prices", !_.isObject(this.get("vendor")));
       }
 
     });
@@ -188,10 +212,43 @@ white:true*/
 
       defaults: function () {
         return {
-          currency: XT.baseCurrency,
           priceType: XM.ItemSourcePrice.TYPE_NOMINAL
         };
-      }
+      },
+
+      handlers: {
+        "change:itemSource": "itemSourceChanged",
+        "change:priceType": "priceTypeChanged"
+      },
+
+      canView: function (attr) {
+        var isNominal = this.attributes ? this.get("priceType") === XM.ItemSourcePrice.TYPE_NOMINAL : false;
+        if (attr === "price") {
+          return isNominal;
+        } else if (attr === "discountPercent" ||
+                   attr === "fixedDiscount") {
+          return !isNominal;
+        }
+        return XM.Model.prototype.canView.apply(this, arguments);
+      },
+
+      itemSourceChanged: function () {
+        var itemSource = this.get("itemSource");
+        if (itemSource) {
+          this.set("currency", itemSource.getValue("vendor.currency"));
+        }
+      },
+
+      priceTypeChanged: function () {
+        var priceType = this.get("priceType"),
+         isNominal = priceType === XM.ItemSourcePrice.TYPE_NOMINAL;
+        if (isNominal) {
+          this.unset("discountPercent");
+          this.unset("fixedDiscount");
+        } else {
+          this.unset("price");
+        }
+      },
 
     });
 

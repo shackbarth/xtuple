@@ -250,8 +250,7 @@
         "name": "price",
         "attr": {
           "type": "PurchasePrice",
-          "column": "itemsrcp_price",
-          "required": true
+          "column": "itemsrcp_price"
         }
       },
       {

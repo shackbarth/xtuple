@@ -7,8 +7,49 @@ trailing:true, white:true, strict:false*/
 
   XT.extensions.purchasing.initListRelationsEditorBox = function () {
 
+    // ..........................................................
+    // ITEM SOURCE PRICE
+    //
+
+    enyo.kind({
+      name: "XV.ItemSourcePriceEditor",
+      kind: "XV.RelationsEditor",
+      components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+          classes: "in-panel", components: [
+          {kind: "XV.QuantityWidget", attr: "quantityBreak"},
+          {kind: "XV.SitePicker", attr: "site", showNone: true,
+            noneText: "_any".loc()},
+          {kind: "XV.ItemSourcePriceTypePicker", attr: "priceType"},
+          {kind: "XV.MoneyWidget",
+            attr: {localValue: "price", currency: "currency"},
+            label: "_price".loc(), currencyShowing: true,
+            currencyDisabled: false},
+          {kind: "XV.PercentWidget", attr: "discountPercent"},
+          {kind: "XV.MoneyWidget",
+            attr: {localValue: "fixedDiscount", currency: "currency"},
+            label: "_fixedDiscount".loc(), currencyShowing: true,
+            currencyDisabled: false}
+        ]}
+      ]
+    });
+
+    enyo.kind({
+      name: "XV.ItemSourcePriceBox",
+      kind: "XV.ListRelationsEditorBox",
+      title: "_prices".loc(),
+      editor: "XV.ItemSourcePriceEditor",
+      parentKey: "itemSource",
+      listRelations: "XV.ItemSourcePriceListRelations",
+      fitButtons: false
+    });
+
+    // ..........................................................
+    // PURCHASE ORDER LINE
+    //
+
     /**
-      Mixin for Sales Order Specific Line functions
+      Mixin for Purchase Order Line functions
     */
     XV.PurchaseOrderLineMixin = {
       setValue: function (value) {
@@ -68,10 +109,6 @@ trailing:true, white:true, strict:false*/
       // Borrow from XV.LineMixin for Sales Orders and Quotes
       changeItemSiteParameter: XV.LineMixin.changeItemSiteParameter
     };
-
-    // ..........................................................
-    // PURCHASE ORDER LINE
-    //
     
     var lineEditor = {
       name: "XV.PurchaseOrderLineEditor",
