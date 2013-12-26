@@ -71,7 +71,8 @@
         "name": "vendorItemNumber",
         "attr": {
           "type": "String",
-          "column": "itemsrc_vend_item_number"
+          "column": "itemsrc_vend_item_number",
+          "required": true
         }
       },
       {

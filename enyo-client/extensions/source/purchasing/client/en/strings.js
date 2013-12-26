@@ -32,6 +32,7 @@ strict:true, trailing:true, white:true */
     "_ranking": "Ranking",
     "_unitRatio": "Unit Ratio",
     "_vendorItem": "Vendor Item",
+    "_vendorItemNumber": "VendorItemNumber",
     "_vouchered": "Vouchered"
   });
 

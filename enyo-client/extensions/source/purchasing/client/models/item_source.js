@@ -33,6 +33,8 @@ white:true*/
         "status:READY_CLEAN": "statusReadyClean"
       },
 
+      nameAttribute: "vendorItemNumber",
+
       findPrice: function (quantity, site) {
         site = site || {};
         quantity = quantity || 0;
@@ -79,7 +81,7 @@ white:true*/
         if (!item || !vendor || !effective || !expires) {
           // no need to check for duplicates unless both fields are set
           if (typeof callback === "function") {
-            callback();
+            callback.call(that);
           }
           return;
         }
@@ -95,12 +97,12 @@ white:true*/
             err = XT.Error.clone("xt1008", { params: params });
             that.trigger("invalid", that, err, options);
             if (typeof callback === "function") {
-              callback(err);
+              callback.call(that, err);
             }
 
           } else {
             if (typeof callback === "function") {
-              callback();
+              callback.call(that);
             }
           }
         };
@@ -108,7 +110,7 @@ white:true*/
         options.error = function (err) {
           console.log("Error searching for duplicate item source", err);
           if (typeof callback === "function") {
-            callback(true);
+            callback.call(that, true);
           }
         };
 
