@@ -140,15 +140,9 @@ var _ = require("underscore"),
           relatedModel = new Klass();
 
         fetchObject.id = value[relatedModel.idAttribute];
-        console.log("fetchobj id is", fetchObject.id);
         relatedModel.fetch(fetchObject);
       } else {
         // otherwise it's easy to set the value on the model
-        console.log("record type is", data.recordType);
-        console.log("value is", value);
-        if (data.recordType === "XM.Return") {
-          assert.equal(value, "12345");
-        }
         data.model.set(key, value);
         asyncCallback();
       }
@@ -162,7 +156,6 @@ var _ = require("underscore"),
     async.map(hashAsArray, setAttribute, function (err, results) {
       if (err) {
         assert.fail(err);
-        done();
       } else {
         done();
       }

@@ -118,7 +118,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       read: "ViewCreditMemos"
     },
     createHash: {
-      number: "30" + (100 + Math.round(Math.random() * 900)),
       customer: {number: "TTOYS"}
     },
     updatableField: "notes",
