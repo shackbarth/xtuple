@@ -76,7 +76,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       httpsport: 8443,
       catalog: "xTuple",
       tenantname: "default",
-      keyfile: "/etc/xtuple/lib/rest-keys"
+      restkeyfile: "/etc/xtuple/lib/rest-keys"
     }, 
     printServer: {
       printhost: "localhost",

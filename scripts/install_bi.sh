@@ -247,6 +247,7 @@ prep_mobile() {
 	cdir $XT_DIR/node-datasource
 	mv config.js config.js.old 2>&1 | tee -a $LOG_FILE
 	cat config.js.old | \
+	sed 's#restkeyfile: .*#restkeyfile: \"./lib/rest-keys/server.key\",#' | \
 	sed 's#tenantname: .*#tenantname: \"'$TENANT'",#' | \
 	sed 's#bihost: .*#bihost: \"'$COMMONNAME'\",#'| \
 	sed 's#printhost: .*#printhost: \"'$COMMONNAME'\",#' \
