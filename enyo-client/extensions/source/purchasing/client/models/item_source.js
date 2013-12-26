@@ -80,7 +80,7 @@ white:true*/
           K = XM.ItemSourcePrice,
           itemSourcePrice,
           wholesalePrice,
-          discountPercent,
+          percentDiscount,
           fixedDiscount,
           price = 0;
 
@@ -93,12 +93,12 @@ white:true*/
             break;
           case K.TYPE_DISCOUNT:
             wholesalePrice = item.get("wholesalePrice");
-            discountPercent = this.get("discountPercent");
+            percentDiscount = this.get("percentDiscount");
             fixedDiscount = this.get("fixedDiscount");
-            price = wholesalePrice - (wholesalePrice * discountPercent) - fixedDiscount;
+            price = wholesalePrice - (wholesalePrice * percentDiscount) - fixedDiscount;
           }
         }
-        return price;
+        return price >= 0 ? price : 0;
       },
 
       checkDuplicate: function (callback) {
@@ -212,6 +212,7 @@ white:true*/
 
       defaults: function () {
         return {
+          currency: XT.baseCurrency(),
           priceType: XM.ItemSourcePrice.TYPE_NOMINAL
         };
       },
@@ -225,7 +226,7 @@ white:true*/
         var isNominal = this.attributes ? this.get("priceType") === XM.ItemSourcePrice.TYPE_NOMINAL : false;
         if (attr === "price") {
           return isNominal;
-        } else if (attr === "discountPercent" ||
+        } else if (attr === "percentDiscount" ||
                    attr === "fixedDiscount") {
           return !isNominal;
         }
@@ -233,9 +234,11 @@ white:true*/
       },
 
       itemSourceChanged: function () {
-        var itemSource = this.get("itemSource");
+        var itemSource = this.get("itemSource"),
+          currency;
         if (itemSource) {
-          this.set("currency", itemSource.getValue("vendor.currency"));
+          currency = itemSource.getValue("vendor.currency") || XT.baseCurrency();
+          this.set("currency", currency);
         }
       },
 
@@ -243,7 +246,7 @@ white:true*/
         var priceType = this.get("priceType"),
          isNominal = priceType === XM.ItemSourcePrice.TYPE_NOMINAL;
         if (isNominal) {
-          this.unset("discountPercent");
+          this.unset("percentDiscount");
           this.unset("fixedDiscount");
         } else {
           this.unset("price");

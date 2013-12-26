@@ -20,10 +20,9 @@ trailing:true, white:true*/
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
-                {kind: "FittableColumns", components: [
-                  {kind: "XV.ListAttr", attr: "quantityBreak"},
-                  {kind: "XV.ListAttr", attr: "site.code"}
-                ]}
+                {kind: "XV.ListAttr", attr: "quantityBreak"},
+                {kind: "XV.ListAttr", formatter: "formatUnit"},
+                {kind: "XV.ListAttr", attr: "site.code", classes: "right"}
               ]},
               {kind: "FittableColumns", components: [
                 {kind: "XV.ListAttr", attr: "priceType", formatter: "formatPriceType"},
@@ -36,20 +35,26 @@ trailing:true, white:true*/
       formatPriceType: function (value) {
         return value === XM.ItemSourcePrice.TYPE_NOMINAL ? "_nominal".loc() : "_discount".loc();
       },
+      formatUnit: function (value, view, model) {
+        return model.getValue("itemSource.vendorUnit");
+      },
       formatValue: function (value, view, model) {
         var priceType = model.get("priceType"),
-          currency = model.getValue("itemSource.currency"),
-          discount = model.get("discountPercent"),
-          fixed = model.get("fixedDiscount");
-        if (priceType === XM.ItemSourcePrice.NOMINAL) {
-          value = currency.format(model.get("price"));
+          currency = model.get("currency"),
+          discount = model.get("percentDiscount"),
+          fixed = model.get("fixedDiscount"),
+          wholesale = model.getValue("itemSource.item.wholesalePrice"),
+          mscale = XT.locale.purchasePriceScale,
+          pscale = XT.locale.percentScale;
+        if (priceType === XM.ItemSourcePrice.TYPE_NOMINAL) {
+          value = currency.format(model.get("price"), mscale);
         } else {
           if (fixed && discount) {
-            value = Globalize.format(discount, "p" + XT.PERCENT_SCALE) + " " + currency.format(fixed);
+            value = Globalize.format(discount, "p" + pscale) + " " + currency.format(fixed, mscale);
           } else if (discount) {
-            value = Globalize.format(discount, "p" + XT.PERCENT_SCALE);
+            value = Globalize.format(discount, "p" + pscale);
           } else {
-            value = currency.format(fixed);
+            value = currency.format(fixed, mscale);
           }
         }
         return value;

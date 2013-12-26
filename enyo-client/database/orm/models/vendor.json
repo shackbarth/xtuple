@@ -297,6 +297,13 @@
           "type": "Boolean",
           "column": "vend_active"
         }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "vend_curr_id"
+        }
       }
     ],
     "isSystem": true

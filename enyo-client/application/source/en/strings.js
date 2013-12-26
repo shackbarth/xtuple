@@ -290,6 +290,7 @@ strict:true, trailing:true, white:true */
     "_financials": "Financials",
     "_firstName": "First Name",
     "_fiveYears": "Five Years",
+    "_fixed": "Fixed",
     "_flag": "Flag",
     "_fob": "F.O.B.",
     "_for": "For",

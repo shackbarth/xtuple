@@ -24,12 +24,18 @@ trailing:true, white:true, strict:false*/
           {kind: "XV.MoneyWidget",
             attr: {localValue: "price", currency: "currency"},
             label: "_price".loc(), currencyShowing: true,
+            scale: XT.PURCHASE_PRICE_SCALE,
             currencyDisabled: false},
-          {kind: "XV.PercentWidget", attr: "discountPercent"},
+          {kind: "XV.PercentWidget", attr: "percentDiscount", label: "percent".loc()},
           {kind: "XV.MoneyWidget",
             attr: {localValue: "fixedDiscount", currency: "currency"},
-            label: "_fixedDiscount".loc(), currencyShowing: true,
-            currencyDisabled: false}
+            label: "_fixed".loc(), currencyShowing: true,
+            scale: XT.PURCHASE_PRICE_SCALE,
+            currencyDisabled: false},
+          {kind: "XV.MoneyWidget",
+            attr: {localValue: "itemSource.item.wholesalePrice"},
+            label: "_wholesalePrice".loc(), currencyShowing: true,
+            currencyDisabled: true}
         ]}
       ]
     });
