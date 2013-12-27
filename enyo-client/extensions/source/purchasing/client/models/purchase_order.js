@@ -600,7 +600,6 @@ white:true*/
       ],
 
       handlers: {
-        "statusChange": "statusChanged",
         "change:expenseCategory": "isMiscellaneousChanged",
         "change:extendedPrice change:freight change:taxType": "calculateTax",
         "change:item": "itemChanged",
@@ -609,7 +608,9 @@ white:true*/
         "change:price": "calculateExtendedPrice",
         "change:purchaseOrder": "purchaseOrderChanged",
         "change:quantity change:site": "calculatePrice",
-        "change:quantity": "calculateExtendedPrice"
+        "change:quantity": "calculateExtendedPrice",
+        "status:READY_CLEAN": "statusReadyClean",
+        "status:DESTROYED_DIRTY": "statusDestroyedDirty"
       },
 
       taxDetail: null,
@@ -838,6 +839,8 @@ white:true*/
          lineNumberArray,
          maxLineNumber;
 
+        if (!this.isReady()) { return; } // Can't silence backbone relation events
+
         // Set next line number to be 1 more than the highest living model
         if (purchaseOrder && !lineNumber) {
           lineNumberArray = _.compact(_.map(purchaseOrder.get("lineItems").models, function (model) {
@@ -861,13 +864,12 @@ white:true*/
 
       },
 
-      statusChanged: function () {
-        var purchaseOrder = this.get("purchaseOrder");
-        if (this.getStatus() === XM.Model.READY_CLEAN) {
-          this.isMiscellaneousChanged();
-        } else if (this.isDestroyed()) {
-          if (purchaseOrder) { purchaseOrder.calculateTotals(); }
-        }
+      statusReadyClean: function () {
+        this.setReadOnly(["isMiscellaneous", "item", "expenseCategory"]);
+      },
+
+      statusDestroyedDirty: function () {
+        this.get("purchaseOrder").calculateTotals();
       }
 
     });
