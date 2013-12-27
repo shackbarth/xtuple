@@ -97,17 +97,8 @@ white:true, strict:false*/
         this.$.multipleQty.addRemoveClass("disabled", disabled);
         this.$.earliestDate.addRemoveClass("disabled", disabled);
       },
-      /*
-      getValue: function () {
-        return {
-          itemSource: this.value,
-          vendorItemNumber: this.getVendorItemNumber()
-        };
-      },
-      */
       /**
-        This version of setValue is a little crazy. Can accept
-        a two property object with an item source and vendor item number
+        Can accept a two property object with an item source and vendor item number
         or a full XM.ItemSource object.
       */
       setValue: function (obj, options) {
@@ -207,6 +198,19 @@ white:true, strict:false*/
           this.$.earliestDate.setShowing(earliestDate);
           this.$.earliestDate.setContent(Globalize.format(earliestDate, "d"));
         }
+      },
+
+      /** @protected */
+      _fetchSuccess: function () {
+        if (this._relationSelected) { return; }
+        var value = this._collection.length ? this._collection.models[0] : null,
+          vendorItemNumber = value ? value.get("vendorItemSource") : this.$.input.getValue(),
+          target = enyo.dispatcher.captureTarget;
+        this.setValue({
+          itemSource: value,
+          vendorItemNumber: vendorItemNumber
+        });
+        enyo.dispatcher.captureTarget = target;
       }
     });
 

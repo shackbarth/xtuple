@@ -353,6 +353,8 @@ white:true*/
         var err = XM.Document.prototype.validate.apply(this, arguments),
           lineItems = this.get("lineItems"),
           status = this.get("status"),
+          isMisc = this.get("isMiscellaneous"),
+          params = {},
           K = XM.PurchaseOrder,
           validItems;
 
@@ -365,6 +367,15 @@ white:true*/
           if (!validItems.length) {
             return XT.Error.clone("xt2012");
           }
+        }
+
+        // Check that we've ordered something legit
+        if (isMisc && !this.get("expenseCategory")) {
+          params.attr = "_expenseCategory".loc();
+          return XT.Error.clone("xt1004", { params: params });
+        } else if (!this.get("item")) {
+          params.attr = "_item".loc();
+          return XT.Error.clone("xt1004", { params: params });
         }
 
         // Check for valid po status
@@ -717,7 +728,13 @@ white:true*/
 
       isMiscellaneousChanged: function () {
         var isMisc = this.get("isMiscellaneous");
-        this.setReadOnly("isMiscellaneous", this.get("item") || this.get("expenseCategory"));
+        if (isMisc) {
+          this.unset("item");
+        } else {
+          this.unset("expenseCategory");
+        }
+        this.setReadOnly("isMiscellaneous", !_.isNull(this.get("item"))  ||
+                                            !_.isNull(this.get("expenseCategory")));
         this.setReadOnly(["item", "site"], isMisc);
         this.setReadOnly("expenseCategory", !isMisc);
       },
@@ -787,6 +804,7 @@ white:true*/
 
         if (itemSource) {
           attrs = {
+            isMiscellaneous: false,
             item: itemSource.get("item"),
             vendorItemNumber: itemSource.get("vendorItemNumber"),
             vendorItemDescription: itemSource.get("vendorItemDescription"),
