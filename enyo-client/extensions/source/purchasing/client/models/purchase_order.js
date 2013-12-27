@@ -353,8 +353,6 @@ white:true*/
         var err = XM.Document.prototype.validate.apply(this, arguments),
           lineItems = this.get("lineItems"),
           status = this.get("status"),
-          isMisc = this.get("isMiscellaneous"),
-          params = {},
           K = XM.PurchaseOrder,
           validItems;
 
@@ -367,15 +365,6 @@ white:true*/
           if (!validItems.length) {
             return XT.Error.clone("xt2012");
           }
-        }
-
-        // Check that we've ordered something legit
-        if (isMisc && !this.get("expenseCategory")) {
-          params.attr = "_expenseCategory".loc();
-          return XT.Error.clone("xt1004", { params: params });
-        } else if (!this.get("item")) {
-          params.attr = "_item".loc();
-          return XT.Error.clone("xt1004", { params: params });
         }
 
         // Check for valid po status
@@ -628,7 +617,7 @@ white:true*/
           item = this.get("item"),
           site = this.get("site"),
           quantity = this.get("quantity") || 0,
-          price = 0;
+          price = this.get("price") || 0;
 
         if (itemSource) {
           price = itemSource.calculatePrice(quantity, site);
@@ -871,7 +860,24 @@ white:true*/
 
       statusDestroyedDirty: function () {
         this.get("purchaseOrder").calculateTotals();
-      }
+      },
+
+      validate: function () {
+        var err = XM.Document.prototype.validate.apply(this, arguments),
+          isMisc = this.get("isMiscellaneous"),
+          params = {};
+
+        // Check that we've ordered something legit
+        if (isMisc && !this.get("expenseCategory")) {
+          params.attr = "_expenseCategory".loc();
+          return XT.Error.clone("xt1004", { params: params });
+        } else if (!isMisc && !this.get("item")) {
+          params.attr = "_item".loc();
+          return XT.Error.clone("xt1004", { params: params });
+        }
+
+        return err;
+      },
 
     });
 
