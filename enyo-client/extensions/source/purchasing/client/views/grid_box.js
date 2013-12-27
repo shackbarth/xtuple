@@ -101,7 +101,8 @@ trailing:true, white:true, strict:false*/
         {classes: "grid-item", header: ["_vendorItem".loc(), "_manufacturerItem".loc()],
           rows: [
           {readOnlyAttr: "vendorItemNumber",
-            editor: {kind: "XV.ItemSourceWidget", attr: "itemSource", showDetail: false}},
+            editor: {kind: "XV.ItemSourceWidget", showDetail: false,
+            attr: {itemSource: "itemSource", vendoorItemNumber: "VendorItemNumber"}}},
           {readOnlyAttr: "manufacturerItemNumber",
             editor: {kind: "XV.InputWidget", attr: "manufacturerItemNumber"}},
         ]} /*,

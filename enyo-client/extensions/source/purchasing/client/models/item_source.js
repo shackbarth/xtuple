@@ -65,12 +65,12 @@ white:true*/
         itemSourcePrice = _.find(prices.models, function (price) {
           var priceSite = price.get("site");
           return price.get("quantityBreak") <= quantity &&
-            !priceSite || priceSite.id === site.id;
+            (!priceSite || priceSite.id === site.id);
         });
 
         // Set back to previous sort
         prices.comparator = prvComparator;
-        prices.sort();
+        if (prvComparator) { prices.sort(); }
 
         return itemSourcePrice;
       },
