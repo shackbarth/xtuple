@@ -423,7 +423,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ScrollableGroupbox", name: "itemSourceGroup", fit: true,
               classes: "in-panel", components: [
               {kind: "XV.ItemSourceWidget", label: "_number".loc(),
-                attr: {itemSource: "itemSource", vendoorItemNumber: "VendorItemNumber"}},
+                attr: {itemSource: "itemSource", vendorItemNumber: "vendorItemNumber"}},
               {kind: "XV.InputWidget", attr: "vendorUnit", label: "_unit".loc()},
               {kind: "XV.InputWidget", attr: "vendorUnitRatio", label: "_unitRatio".loc()},
               {kind: "onyx.GroupboxHeader", content: "_description".loc()},

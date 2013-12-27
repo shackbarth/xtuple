@@ -102,7 +102,7 @@ trailing:true, white:true, strict:false*/
           rows: [
           {readOnlyAttr: "vendorItemNumber",
             editor: {kind: "XV.ItemSourceWidget", showDetail: false,
-            attr: {itemSource: "itemSource", vendoorItemNumber: "VendorItemNumber"}}},
+            attr: {itemSource: "itemSource", vendorItemNumber: "vendorItemNumber"}}},
           {readOnlyAttr: "manufacturerItemNumber",
             editor: {kind: "XV.InputWidget", attr: "manufacturerItemNumber"}},
         ]} /*,
