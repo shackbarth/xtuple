@@ -32,9 +32,7 @@ trailing:true, white:true, strict:false*/
                   classes: "right"}
               ]},
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "vendor.name"},
-                {kind: "XV.ListAttr", attr: "contract.number", fit: true,
-                  classes: "right"}
+                {kind: "XV.ListAttr", attr: "vendor.name"}
               ]},
             ]},
             {kind: "XV.ListColumn", classes: "first",
