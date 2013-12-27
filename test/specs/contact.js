@@ -103,6 +103,17 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       account: { number: "TTOYS"},
       notes: "contact notes"
     },
+    beforeSaveUIActions: [{
+      it: "Can add an address",
+      action: function (workspace, done) {
+        workspace.$.addressWidget.edit();
+        setTimeout(function () {
+          workspace.$.addressWidget.$.line1.setValue("100 School Street");
+          workspace.$.addressWidget.$.city.setValue("Carlisle");
+          done();
+        }, 1000);
+      }
+    }],
     updatableField: "firstName"
   };
   var additionalTests = function () {
