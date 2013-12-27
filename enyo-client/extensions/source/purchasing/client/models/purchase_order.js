@@ -731,6 +731,7 @@ white:true*/
         var isMisc = this.get("isMiscellaneous");
         if (isMisc) {
           this.unset("item");
+          this.unset("site");
         } else {
           this.unset("expenseCategory");
         }
