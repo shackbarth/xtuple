@@ -1879,7 +1879,7 @@
     "privileges": {
       "all": {
         "create": "MaintainCustomerTypes",
-        "read": true,
+        "read": "ViewCustomerTypes",
         "update": "MaintainCustomerTypes",
         "delete": "MaintainCustomerTypes"
       }
