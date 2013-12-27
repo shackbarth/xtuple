@@ -1,6 +1,6 @@
 [
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseVendorRelation",
     "table": "vendinfo",
@@ -115,7 +115,7 @@
     "isSystem": true
   },
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseVendorAddress",
     "table": "xt.vendaddr",
@@ -157,107 +157,6 @@
           "isNested": true,
           "type": "ContactRelation",
           "column": "cntct_id"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "purchasing",
-    "nameSpace": "XM",
-    "type": "VendorContract",
-    "table": "contrct",
-    "isRest": true,
-    "idSequenceName": "contrct_contrct_id_seq",
-    "lockable": true,
-    "comment": "Vendor Contract Map",
-    "privileges": {
-      "all": {
-        "create": "MaintainVendorContracts",
-        "read": "ViewVendorContracts",
-        "update": "MaintainVendorContracts",
-        "delete": "MaintainVendorContracts"
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "contrct_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "number",
-        "attr": {
-          "type": "String",
-          "column": "contrct_number",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "vendor",
-        "toOne": {
-          "isNested": true,
-          "type": "VendorRelation",
-          "column": "contrct_vend_id"
-        }
-      },
-      {
-        "name": "notes",
-        "attr": {
-          "type": "String",
-          "column": "contrct_note"
-        }
-      },
-      {
-        "name": "effective",
-        "attr": {
-          "type": "EffectiveDate",
-          "column": "contrct_effective"
-        }
-      },
-      {
-        "name": "expires",
-        "attr": {
-          "type": "ExpireDate",
-          "column": "contrct_expires"
-        }
-      }
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "purchasing",
-    "nameSpace": "XM",
-    "type": "VendorContractRelation",
-    "table": "contrct",
-    "comment": "Vendor Contract Relation Map",
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "contrct_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "number",
-        "attr": {
-          "type": "String",
-          "column": "contrct_number",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "vendor",
-        "toOne": {
-          "isNested": true,
-          "type": "VendorRelation",
-          "column": "contrct_vend_id"
         }
       }
     ],

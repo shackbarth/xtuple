@@ -15,7 +15,7 @@ white:true*/
     */
     XM.PurchaseVendorRelation = XM.Model.extend(/** @lends XM.PurchaseVendorRelation.prototype */{
 
-      recordType: 'XM.PurchaseVendorRelation'
+      recordType: "XM.PurchaseVendorRelation"
 
     });
 
@@ -26,32 +26,7 @@ white:true*/
     */
     XM.PurchaseVendorAddress = XM.Model.extend(/** @lends XM.PurchaseVendorAddress.prototype */{
 
-      recordType: 'XM.PurchaseVendorAddress'
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.VendorContract = XM.Model.extend(/** @lends XM.VendorContract.prototype */{
-
-      recordType: 'XM.VendorContract'
-
-    });
-
-
-    /**
-      @class
-
-      @extends XM.Model
-    */
-    XM.VendorContractRelation = XM.Info.extend(/** @lends XM.VendorContractRelation.prototype */{
-
-      recordType: 'XM.VendorContractRelation',
-
-      editableModle: 'XM.VendorContract'
+      recordType: "XM.PurchaseVendorAddress"
 
     });
 
@@ -67,28 +42,6 @@ white:true*/
     XM.PurchaseVendorRelationCollection = XM.Collection.extend({
 
       model: XM.PurchaseVendorRelation
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Collection
-    */
-    XM.VendorContractCollection = XM.Collection.extend({
-
-      model: XM.VendorContract
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Collection
-    */
-    XM.VendorContractRelationCollection = XM.Collection.extend({
-
-      model: XM.VendorContractRelation
 
     });
 

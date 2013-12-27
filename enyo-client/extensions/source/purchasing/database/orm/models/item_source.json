@@ -188,14 +188,6 @@
         }
       },
       {
-        "name": "contract",
-        "toOne": {
-          "isNested": true,
-          "type": "VendorContractRelation",
-          "column": "itemsrc_contrct_id"
-        }
-      },
-      {
         "name": "prices",
         "toMany": {
           "isNested": true,
