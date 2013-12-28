@@ -378,6 +378,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"}},
               {kind: "XV.CheckboxWidget", attr: "isMiscellaneous"},
               {kind: "XV.ExpenseCategoryWidget", attr: "expenseCategory"},
+              {kind: "XV.ProjectWidget", attr: "project"},
               {kind: "onyx.GroupboxHeader", content: "_quantity".loc()},
               {kind: "XV.QuantityWidget", attr: "quantity", label: "_ordered".loc()},
               {kind: "XV.QuantityWidget", attr: "toReceive"},

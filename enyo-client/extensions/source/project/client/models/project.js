@@ -16,102 +16,11 @@ white:true*/
     XM.ProjectEmailProfile = XM.Document.extend(
       /** @scope XM.ProjectEmailProfile.prototype */ {
 
-      recordType: 'XM.ProjectEmailProfile',
+      recordType: "XM.ProjectEmailProfile",
 
-      documentKey: 'name'
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Document
-    */
-    XM.ProjectType = XM.Document.extend(
-      /** @scope XM.ProjectType.prototype */ {
-
-      recordType: 'XM.ProjectType',
-
-      documentKey: 'code',
-
-      enforceUpperKey: false,
-
-      defaults: {
-        isActive: true
-      }
+      documentKey: "name"
 
     });
-
-    /**
-      @class
-
-      @extends XM.CharacteristicAssignment
-    */
-    XM.ProjectTypeCharacteristic = XM.CharacteristicAssignment.extend(
-      /** @scope XM.ProjectTypeCharacteristic.prototype */ {
-
-      recordType: 'XM.ProjectTypeCharacteristic',
-
-      which: 'isProjects'
-
-    });
-
-    /**
-      @class
-
-      @extends XM.WorkflowSource
-    */
-    XM.ProjectTypeWorkflow = XM.WorkflowSource.extend(
-      /** @scope XM.ProjectTypeWorkflow.prototype */ {
-
-      recordType: 'XM.ProjectTypeWorkflow'
-
-    });
-
-    /**
-      @namespace
-
-      A mixin shared by project models that share common project status
-      functionality.
-    */
-    XM.ProjectStatus = {
-      /** @scope XM.ProjectStatus */
-
-      /**
-      Returns project status as a localized string.
-
-      @returns {String}
-      */
-      getProjectStatusString: function () {
-        var K = XM.Project,
-          status = this.get('status');
-
-        switch (status)
-        {
-        case K.CONCEPT:
-          return '_concept'.loc();
-        case K.REVIEW:
-          return '_review'.loc();
-        case K.REVISION:
-          return '_revision'.loc();
-        case K.APPROVED:
-          return '_approved'.loc();
-        case K.IN_PROCESS:
-          return '_inProcess'.loc();
-        case K.COMPLETED:
-          return '_completed'.loc();
-        case K.REJECTED:
-          return '_rejected'.loc();
-        }
-      },
-
-      isActive: function () {
-        var K = XM.Project,
-          status = this.get('status');
-        return (status !== K.COMPLETED && status !== K.REJECTED);
-      }
-
-    };
 
     /**
       @class
@@ -141,22 +50,22 @@ white:true*/
 
       bindEvents: function () {
         XM.Document.prototype.bindEvents.apply(this, arguments);
-        this.on('change:status', this.projectStatusDidChange);
-        this.on('change:percentComplete', this.percentCompleteDidChange);
+        this.on("change:status", this.projectStatusDidChange);
+        this.on("change:percentComplete", this.percentCompleteDidChange);
         this.statusDidChange();
       },
 
       statusDidChange: function () {
         var K = XM.Model,
           isReadOnly = this.getStatus() !== K.READY_NEW;
-        this.setReadOnly('number', isReadOnly);
+        this.setReadOnly("number", isReadOnly);
       },
 
       /**
         Reimplemented to handle automatic date setting.
       */
       percentCompleteDidChange: function () {
-        var percentComplete = this.get('percentComplete');
+        var percentComplete = this.get("percentComplete");
         if (percentComplete >= 1) {
           this.set("status", XM.Project.COMPLETED);
         }
@@ -166,18 +75,18 @@ white:true*/
       Reimplemented to handle automatic date setting.
       */
       projectStatusDidChange: function () {
-        var status = this.get('status'),
+        var status = this.get("status"),
           date = new Date(),
           K = XM.Project;
-        if (status === K.IN_PROCESS && !this.get('assignDate')) {
-          this.set('assignDate', date);
+        if (status === K.IN_PROCESS && !this.get("assignDate")) {
+          this.set("assignDate", date);
         } else if (status === K.COMPLETED) {
-          if (!this.get('completeDate')) {
-            this.set('completeDate', date);
+          if (!this.get("completeDate")) {
+            this.set("completeDate", date);
           }
-          this.off('change:percentComplete', this.percentCompleteDidChange);
+          this.off("change:percentComplete", this.percentCompleteDidChange);
           this.set("percentComplete", 1);
-          this.on('change:percentComplete', this.percentCompleteDidChange);
+          this.on("change:percentComplete", this.percentCompleteDidChange);
         }
       }
 
@@ -195,7 +104,7 @@ white:true*/
     XM.Project = XM.ProjectBase.extend({
       /** @scope XM.Project.prototype */
 
-      recordType: 'XM.Project',
+      recordType: "XM.Project",
 
       defaults: function () {
         var result = XM.ProjectBase.prototype.defaults.call(this);
@@ -216,8 +125,8 @@ white:true*/
 
       bindEvents: function () {
         XM.ProjectBase.prototype.bindEvents.apply(this, arguments);
-        this.on('add:tasks remove:tasks', this.tasksDidChange);
-        this.on('change:projectType', this.projectTypeDidChange);
+        this.on("add:tasks remove:tasks", this.tasksDidChange);
+        this.on("change:projectType", this.projectTypeDidChange);
       },
 
       /**
@@ -250,15 +159,15 @@ white:true*/
         this.actualExpensesTotal = 0.0;
 
         // Total up task data
-        _.each(this.get('tasks').models, function (task) {
+        _.each(this.get("tasks").models, function (task) {
           that.budgetedHoursTotal = XT.math.add(that.budgetedHoursTotal,
-            task.get('budgetedHours'), XT.QTY_SCALE);
+            task.get("budgetedHours"), XT.QTY_SCALE);
           that.actualHoursTotal = XT.math.add(that.actualHoursTotal,
-            task.get('actualHours'), XT.QTY_SCALE);
+            task.get("actualHours"), XT.QTY_SCALE);
           that.budgetedExpensesTotal = XT.math.add(that.budgetedExpensesTotal,
-            task.get('budgetedExpenses'), XT.MONEY_SCALE);
+            task.get("budgetedExpenses"), XT.MONEY_SCALE);
           that.actualExpensesTotal = XT.math.add(that.actualExpensesTotal,
-            task.get('actualExpenses'), XT.MONEY_SCALE);
+            task.get("actualExpenses"), XT.MONEY_SCALE);
         });
         this.balanceHoursTotal = XT.math.subtract(this.budgetedHoursTotal,
           this.actualHoursTotal, XT.QTY_SCALE);
@@ -309,7 +218,7 @@ white:true*/
     // CLASS METHODS
     //
 
-    _.extend(XM.Project, {
+    _.extend(XM.Project, XM.ProjectStatusMixin, {
       /** @scope XM.Project */
 
       /**
@@ -336,7 +245,7 @@ white:true*/
         var obj,
           prop,
           i,
-          dueDate = new Date(project.get('dueDate').valueOf()),
+          dueDate = new Date(project.get("dueDate").valueOf()),
           idAttribute = XM.Project.prototype.idAttribute,
           result;
         offset = offset || 0;
@@ -368,7 +277,7 @@ white:true*/
 
         // Fix up remaining arrays
         for (prop in obj) {
-          if (obj.hasOwnProperty(prop)  && prop !== 'tasks' &&
+          if (obj.hasOwnProperty(prop)  && prop !== "tasks" &&
               _.isArray(obj[prop])) {
             idAttribute = project.get(prop).model.prototype.idAttribute;
             for (i = 0; i < obj[prop].length; i += 1) {
@@ -380,79 +289,7 @@ white:true*/
         result = new XM.Project(obj, {isNew: true});
         result.documentKeyDidChange();
         return result;
-      },
-
-      // ..........................................................
-      // CONSTANTS
-      //
-
-      /**
-        Concept status for project.
-
-        @static
-        @constant
-        @type String
-        @default P
-      */
-      CONCEPT: 'P',
-
-      /**
-        Review status for project.
-
-        @static
-        @constant
-        @type String
-        @default R
-      */
-      REVIEW: 'R',
-
-      /**
-        Revision status for project.
-
-        @static
-        @constant
-        @type String
-        @default V
-      */
-      REVISION: 'V',
-
-      /**
-        Approved status for project.
-
-        @static
-        @constant
-        @type String
-        @default A
-      */
-      APPROVED: 'A',
-
-      /**
-        In-Process status for project.
-
-        @static
-        @constant
-        @type String
-        @default O
-      */
-      IN_PROCESS: 'O',
-
-      /**
-        Completed status for project.
-        @static
-        @constant
-        @type String
-        @default C
-      */
-      COMPLETED: 'C',
-
-      /**
-        Rejected status for project.
-        @static
-        @constant
-        @type String
-        @default J
-      */
-      REJECTED: 'J'
+      }
 
     });
 
@@ -464,7 +301,7 @@ white:true*/
     XM.ProjectTask = XM.ProjectBase.extend({
       /** @scope XM.ProjectTask.prototype */
 
-      recordType: 'XM.ProjectTask',
+      recordType: "XM.ProjectTask",
 
       enforceUpperKey: false,
 
@@ -485,10 +322,10 @@ white:true*/
 
       bindEvents: function () {
         XM.ProjectBase.prototype.bindEvents.apply(this, arguments);
-        var event = 'change:budgetedHours change:actualHours ' +
-                    'change:budgetedExpenses change:actualExpenses';
+        var event = "change:budgetedHours change:actualHours " +
+                    "change:budgetedExpenses change:actualExpenses";
         this.on(event, this.valuesDidChange);
-        this.on('change:project', this.projectDidChange);
+        this.on("change:project", this.projectDidChange);
       },
 
       getProjectTaskStatusString: function () {
@@ -499,16 +336,16 @@ white:true*/
         Set defaults from project.
       */
       projectDidChange: function () {
-        var project = this.get('project'),
+        var project = this.get("project"),
           K = XM.Model,
           status = this.getStatus();
         if (project && status === K.READY_NEW) {
-          this.set('owner', this.get('owner') || project.get('owner'));
-          this.set('assignedTo', this.get('owner') || project.get('assignedTo'));
-          this.set('startDate', this.get('startDate') || project.get('startDate'));
-          this.set('assignDate', this.get('assignDate') || project.get('assignDate'));
-          this.set('dueDate', this.get('dueDate') || project.get('dueDate'));
-          this.set('completeDate', this.get('completeDate') || project.get('completeDate'));
+          this.set("owner", this.get("owner") || project.get("owner"));
+          this.set("assignedTo", this.get("owner") || project.get("assignedTo"));
+          this.set("startDate", this.get("startDate") || project.get("startDate"));
+          this.set("assignDate", this.get("assignDate") || project.get("assignDate"));
+          this.set("dueDate", this.get("dueDate") || project.get("dueDate"));
+          this.set("completeDate", this.get("completeDate") || project.get("completeDate"));
         }
       },
 
@@ -516,7 +353,7 @@ white:true*/
         Update project totals when values change.
       */
       valuesDidChange: function () {
-        var project = this.get('project');
+        var project = this.get("project");
         if (project && project.tasksDidChange) {
           project.tasksDidChange();
         }
@@ -532,9 +369,9 @@ white:true*/
     XM.ProjectComment = XM.Comment.extend({
       /** @scope XM.ProjectComment.prototype */
 
-      recordType: 'XM.ProjectComment',
+      recordType: "XM.ProjectComment",
 
-      sourceName: 'J'
+      sourceName: "J"
 
     });
 
@@ -546,7 +383,7 @@ white:true*/
     XM.ProjectAccount = XM.Model.extend({
       /** @scope XM.ProjectAccount.prototype */
 
-      recordType: 'XM.ProjectAccount',
+      recordType: "XM.ProjectAccount",
 
       isDocumentAssignment: true
 
@@ -560,7 +397,7 @@ white:true*/
     XM.ProjectContact = XM.Model.extend({
       /** @scope XM.ProjectContact.prototype */
 
-      recordType: 'XM.ProjectContact',
+      recordType: "XM.ProjectContact",
 
       isDocumentAssignment: true
 
@@ -574,7 +411,7 @@ white:true*/
     XM.ProjectItem = XM.Model.extend({
       /** @scope XM.ProjectItem.prototype */
 
-      recordType: 'XM.ProjectItem',
+      recordType: "XM.ProjectItem",
 
       isDocumentAssignment: true
 
@@ -588,7 +425,7 @@ white:true*/
     XM.ProjectFile = XM.Model.extend({
       /** @scope XM.ProjectFile.prototype */
 
-      recordType: 'XM.ProjectFile',
+      recordType: "XM.ProjectFile",
 
       isDocumentAssignment: true
 
@@ -602,7 +439,7 @@ white:true*/
     XM.ProjectUrl = XM.Model.extend({
       /** @scope XM.ProjectUrl.prototype */
 
-      recordType: 'XM.ProjectUrl'
+      recordType: "XM.ProjectUrl"
 
     });
 
@@ -614,7 +451,7 @@ white:true*/
     XM.ProjectProject = XM.Model.extend({
       /** @scope XM.ProjectProject.prototype */
 
-      recordType: 'XM.ProjectProject',
+      recordType: "XM.ProjectProject",
 
       isDocumentAssignment: true
 
@@ -628,7 +465,7 @@ white:true*/
     XM.ProjectCustomer = XM.Model.extend(
       /** @scope XM.ProjectCustomer.prototype */ {
 
-      recordType: 'XM.ProjectCustomer',
+      recordType: "XM.ProjectCustomer",
 
       isDocumentAssignment: true
 
@@ -642,7 +479,7 @@ white:true*/
     XM.ProjectRecurrence = XM.Model.extend({
       /** @scope XM.ProjectRecurrence.prototype */
 
-      recordType: 'XM.ProjectRecurrence'
+      recordType: "XM.ProjectRecurrence"
 
     });
 
@@ -654,9 +491,9 @@ white:true*/
     XM.ProjectTaskComment = XM.Comment.extend({
       /** @scope XM.ProjectTaskComment.prototype */
 
-      recordType: 'XM.ProjectTaskComment',
+      recordType: "XM.ProjectTaskComment",
 
-      sourceName: 'TA'
+      sourceName: "TA"
 
     });
 
@@ -668,7 +505,7 @@ white:true*/
     XM.ProjectTaskAlarm = XM.Alarm.extend({
       /** @scope XM.ProjectTaskAlarm.prototype */
 
-      recordType: 'XM.ProjectTaskAlarm'
+      recordType: "XM.ProjectTaskAlarm"
 
     });
 
@@ -680,9 +517,9 @@ white:true*/
     XM.ProjectRelation = XM.Info.extend({
       /** @scope XM.ProjectRelation.prototype */
 
-      recordType: 'XM.ProjectRelation',
+      recordType: "XM.ProjectRelation",
 
-      editableModel: 'XM.Project'
+      editableModel: "XM.Project"
 
     });
 
@@ -696,28 +533,11 @@ white:true*/
     XM.ProjectTaskRelation = XM.Info.extend({
       /** @scope XM.Task.prototype */
 
-      recordType: 'XM.ProjectTaskRelation',
+      recordType: "XM.ProjectTaskRelation",
 
-      editableModel: 'XM.ProjectTask'
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Info
-      @extends XM.ProjectStatus
-    */
-    XM.ProjectListItem = XM.Info.extend({
-      /** @scope XM.ProjectListItem.prototype */
-
-      recordType: 'XM.ProjectListItem',
-
-      editableModel: 'XM.Project'
+      editableModel: "XM.ProjectTask"
 
     });
-
-    XM.ProjectListItem = XM.ProjectListItem.extend(XM.ProjectStatus);
 
 
     /**
@@ -728,7 +548,7 @@ white:true*/
     XM.Task = XM.ProjectTask.extend({
       /** @scope XM.Task.prototype */
 
-      recordType: 'XM.Task',
+      recordType: "XM.Task",
 
       statusDidChange: function () {
         XM.ProjectTask.prototype.statusDidChange.apply(this, arguments);
@@ -747,9 +567,9 @@ white:true*/
     XM.TaskComment = XM.Comment.extend({
       /** @scope XM.ProjectTaskComment.prototype */
 
-      recordType: 'XM.TaskComment',
+      recordType: "XM.TaskComment",
 
-      sourceName: 'TA'
+      sourceName: "TA"
 
     });
 
@@ -761,9 +581,9 @@ white:true*/
     XM.TaskRelation = XM.Info.extend({
       /** @scope XM.ProjectTaskListItem.prototype */
 
-      recordType: 'XM.TaskRelation',
+      recordType: "XM.TaskRelation",
 
-      editableModel: 'XM.Task'
+      editableModel: "XM.Task"
 
     });
 
@@ -775,7 +595,7 @@ white:true*/
     XM.TaskProjectRelation = XM.Info.extend({
       /** @scope XM.TaskProjectRelation.prototype */
 
-      recordType: 'XM.TaskProjectRelation'
+      recordType: "XM.TaskProjectRelation"
 
     });
 
@@ -788,9 +608,9 @@ white:true*/
     XM.TaskListItem = XM.Info.extend({
       /** @scope XM.ProjectTaskListItem.prototype */
 
-      recordType: 'XM.TaskListItem',
+      recordType: "XM.TaskListItem",
 
-      editableModel: 'XM.Task'
+      editableModel: "XM.Task"
 
     });
 
@@ -804,7 +624,7 @@ white:true*/
     XM.ProjectWorkflow = XM.Workflow.extend(
       /** @scope XM.ProjectWorkflow.prototype */ {
 
-      recordType: 'XM.ProjectWorkflow',
+      recordType: "XM.ProjectWorkflow",
 
       getProjectWorkflowStatusString: function () {
         return XM.ProjectWorkflow.prototype.getWorkflowStatusString.call(this);
@@ -820,9 +640,9 @@ white:true*/
     XM.ProjectWorkflowRelation = XM.Info.extend(
       /** @scope XM.ProjectWorkflow.prototype */ {
 
-      recordType: 'XM.ProjectWorkflowRelation',
+      recordType: "XM.ProjectWorkflowRelation",
 
-      editableModel: 'XM.ProjectWorkflow'
+      editableModel: "XM.ProjectWorkflow"
 
     });
 
@@ -834,7 +654,7 @@ white:true*/
     XM.ProjectIncident = XM.Model.extend(
       /** @scope XM.ProjectIncident.prototype */ {
 
-      recordType: 'XM.ProjectIncident',
+      recordType: "XM.ProjectIncident",
 
       isDocumentAssignment: true
 
@@ -848,7 +668,7 @@ white:true*/
     XM.ProjectOpportunity = XM.Model.extend(
       /** @scope XM.ProjectOpportunity.prototype */ {
 
-      recordType: 'XM.ProjectOpportunity',
+      recordType: "XM.ProjectOpportunity",
 
       isDocumentAssignment: true
 
@@ -862,7 +682,7 @@ white:true*/
     XM.ProjectToDo = XM.Model.extend(
       /** @scope XM.ProjectToDo.prototype */ {
 
-      recordType: 'XM.ProjectToDo',
+      recordType: "XM.ProjectToDo",
 
       isDocumentAssignment: true
 
@@ -876,23 +696,9 @@ white:true*/
     XM.ProjectCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectCharacteristic.prototype */ {
 
-      recordType: 'XM.ProjectCharacteristic',
+      recordType: "XM.ProjectCharacteristic",
 
-      which: 'isProjects'
-
-    });
-
-    /**
-      @class
-
-      @extends XM.CharacteristicAssignment
-    */
-    XM.ProjectListItemCharacteristic = XM.CharacteristicAssignment.extend(
-      /** @scope XM.ProjectListItemCharacteristic.prototype */ {
-
-      recordType: 'XM.ProjectListItemCharacteristic',
-
-      which: 'isProjects'
+      which: "isProjects"
 
     });
 
@@ -904,9 +710,9 @@ white:true*/
     XM.ProjectTaskCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.ProjectTaskCharacteristic.prototype */ {
 
-      recordType: 'XM.ProjectTaskCharacteristic',
+      recordType: "XM.ProjectTaskCharacteristic",
 
-      which: 'isTasks'
+      which: "isTasks"
 
     });
 
@@ -918,23 +724,9 @@ white:true*/
     XM.TaskCharacteristic = XM.CharacteristicAssignment.extend(
       /** @scope XM.TaskCharacteristic.prototype */ {
 
-      recordType: 'XM.TaskCharacteristic',
+      recordType: "XM.TaskCharacteristic",
 
-      which: 'isTasks'
-
-    });
-
-    /**
-      @class
-
-      @extends XM.CharacteristicAssignment
-    */
-    XM.TaskListItemCharacteristic = XM.CharacteristicAssignment.extend(
-      /** @scope XM.TaskListItemCharacteristic.prototype */ {
-
-      recordType: 'XM.TaskListItemCharacteristic',
-
-      which: 'isTasks'
+      which: "isTasks"
 
     });
 
@@ -946,7 +738,7 @@ white:true*/
     XM.Resource = XM.Model.extend(
       /** @scope XM.Resource.prototype */ {
 
-      recordType: 'XM.Resource'
+      recordType: "XM.Resource"
 
     });
 
@@ -958,7 +750,7 @@ white:true*/
     XM.TaskResource = XM.Document.extend(
       /** @scope XM.TaskResource.prototype */ {
 
-      recordType: 'XM.TaskResource',
+      recordType: "XM.TaskResource",
 
       idAttribute: "uuid",
 
@@ -978,7 +770,7 @@ white:true*/
     XM.TaskResourceAnalysis = XM.Model.extend(
       /** @scope XM.TaskResourceAnalysis.prototype */ {
 
-      recordType: 'XM.TaskResourceAnalysis',
+      recordType: "XM.TaskResourceAnalysis",
 
       idAttribute: "id"
 
@@ -997,42 +789,6 @@ white:true*/
       /** @scope XM.ProjectEmailProfileCollection.prototype */
 
       model: XM.ProjectEmailProfile
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Collection
-    */
-    XM.ProjectTypeCollection = XM.Collection.extend({
-      /** @scope XM.ProjectTypeCollection.prototype */
-
-      model: XM.ProjectType
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Collection
-    */
-    XM.ProjectListItemCollection = XM.Collection.extend({
-      /** @scope XM.ProjectListItemCollection.prototype */
-
-      model: XM.ProjectListItem
-
-    });
-
-    /**
-      @class
-
-      @extends XM.Collection
-    */
-    XM.ProjectRelationCollection = XM.Collection.extend({
-      /** @scope XM.ProjectRelationCollection.prototype */
-
-      model: XM.ProjectRelation
 
     });
 

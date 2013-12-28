@@ -128,6 +128,8 @@
     "xt/tables/pkgreport.sql",
     "xt/tables/pkgscript.sql",
     "xt/tables/pkguiform.sql",
+    "xt/tables/prjext.sql",
+    "xt/tables/prjtypewf.sql",
     "xt/tables/ordtype.sql",
     "xt/tables/userpref.sql",
     "xt/tables/usrchart.sql",

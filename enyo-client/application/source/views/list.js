@@ -1507,6 +1507,92 @@ trailing:true, white:true, strict: false*/
   });
 
   // ..........................................................
+  // PROJECT
+  //
+
+  enyo.kind({
+    name: "XV.ProjectList",
+    kind: "XV.List",
+    label: "_projects".loc(),
+    collection: "XM.ProjectListItemCollection",
+    query: {orderBy: [
+      {attribute: "number" }
+    ]},
+    parameterWidget: "XV.ProjectListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name"},
+              {kind: "XV.ListAttr", attr: "priority.name",
+                fit: true, classes: "right",
+                placeholder: "_noPriority".loc()}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "account.name"},
+              {kind: "XV.ListAttr", attr: "percentComplete", fit: true,
+                classes: "right"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", style: "width: 100px;",
+            components: [
+            {kind: "XV.ListAttr", attr: "getProjectStatusString"},
+            {kind: "XV.ListAttr", attr: "assignedTo.username",
+              placeholder: "_noAssignedTo".loc()},
+            {kind: "XV.ListAttr", attr: "department.number",
+              placeholder: "_noDepartment".loc()},
+          ]},
+          {kind: "XV.ListColumn", style: "width: 80px;",
+            components: [
+            {content: "_budgeted".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"},
+            {content: "_actual".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"},
+            {content: "_balance".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"}
+          ]},
+          {kind: "XV.ListColumn", classes: "money", components: [
+            {kind: "XV.ListAttr", attr: "budgetedExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.ListAttr", attr: "actualExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.ListAttr", attr: "balanceExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"}
+          ]},
+          {kind: "XV.ListColumn", classes: "money", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "budgetedHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.ListAttr", attr: "actualHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.ListAttr", attr: "balanceHours",
+              classes: "text-align-right", formatter: "formatHours"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatHours: function (value, view, model) {
+      view.addRemoveClass("error", value < 0);
+      var scale = XT.locale.quantityScale;
+      return Globalize.format(value, "n" + scale) + " " + "_hrs".loc();
+    },
+    formatExpenses: function (value, view, model) {
+      view.addRemoveClass("error", value < 0);
+      var scale = XT.locale.currencyScale;
+      return Globalize.format(value, "c" + scale);
+    }
+
+  });
+
+  XV.registerModelList("XM.ProjectListItem", "XV.ProjectList");
+  XV.registerModelList("XM.ProjectRelation", "XV.ProjectList");
+
+  // ..........................................................
   // PROSPECT
   //
 

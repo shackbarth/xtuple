@@ -1480,6 +1480,13 @@
         }
       },
       {
+        "name": "project",
+        "toOne": {
+          "type": "ProjectRelation",
+          "column": "poitem_prj_id"
+        }
+      },
+      {
         "name": "characteristics",
         "toMany": {
           "isNested": true,
