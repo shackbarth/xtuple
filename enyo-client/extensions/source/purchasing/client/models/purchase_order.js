@@ -734,16 +734,24 @@ white:true*/
         var item = this.get("item"),
           itemSource = this.get("itemSource"),
           purchaseOrder = this.get("purchaseOrder"),
+          taxZone = purchaseOrder ? purchaseOrder.get("taxZone") : null,
           orderDate = purchaseOrder ? purchaseOrder.get("orderDate") : false,
           vendor = this.getValue("purchaseOrder.vendor"),
+          characteristics = this.get("characteristics"),
           itemSourceCollection,
           that = this,
           options = {},
+          taxOptions = {},
+          itemCharAttrs,
+          charTypes,
           expires,
           success,
-          count;
+          count,
+          len,
+          i;
 
         this.isMiscellaneousChanged();
+        this.unset("taxType");
         this.set("vendorUnit", item ? item.getValue("inventoryUnit.name") : "");
         this.set("unitCost", item ? item.get("standardCost") : 0);
 
@@ -781,6 +789,52 @@ white:true*/
           itemSourceCollection = new XM.ItemSourceCollection();
           itemSourceCollection.fetch(options);
         }
+
+        // Fetch and update tax type
+        options.success = function (id) {
+          var taxType = XM.taxTypes.get(id);
+          if (taxType) {
+            that.set("taxType", taxType);
+          } else {
+            that.unset("taxType");
+          }
+        };
+        item.taxType(taxZone, options);
+
+        // Destroy old characteristics
+        len = characteristics.length;
+        for (i = 0; i < len; i++) {
+          characteristics.at(0).destroy();
+        }
+
+        // Set sort for characteristics
+        if (!characteristics.comparator) {
+          characteristics.comparator = function (a, b) {
+            var aOrd = a.getValue("characteristic.order"),
+              aName = a.getValue("characteristic.name"),
+              bOrd = b.getValue("characteristic.order"),
+              bName = b.getValue("characteristic.name");
+            if (aOrd === bOrd) {
+              return aName === bName ? 0 : (aName > bName ? 1 : -1);
+            } else {
+              return aOrd > bOrd ? 1 : -1;
+            }
+          };
+        }
+
+        // Build characteristics
+        itemCharAttrs = _.pluck(item.get("characteristics").models, "attributes");
+        charTypes = _.unique(_.pluck(itemCharAttrs, "characteristic"));
+        _.each(charTypes, function (char) {
+          var lineChar = new XM.PurchaseOrderLineCharacteristic(null, {isNew: true}),
+            defaultChar = _.find(itemCharAttrs, function (attrs) {
+              return attrs.isDefault === true &&
+                attrs.characteristic.id === char.id;
+            });
+          lineChar.set("characteristic", char);
+          lineChar.set("value", defaultChar ? defaultChar.value : "");
+          characteristics.add(lineChar);
+        });
       },
 
       itemSourceChanged: function () {
@@ -882,6 +936,22 @@ white:true*/
     });
 
     XM.PurchaseOrderLine = XM.PurchaseOrderLine.extend(XM.PurchaseOrderMixin);
+
+    /**
+      @class
+
+      @extends XM.CharacteristicAssignment
+    */
+    XM.PurchaseOrderLineCharacteristic = XM.CharacteristicAssignment.extend(
+      /** @lends XM.PurchaseOrderLineCharacteristic.prototype */{
+
+      recordType: "XM.PurchaseOrderLineCharacteristic",
+
+      canView: function () {
+        return true;
+      }
+
+    });
 
     /**
       @class

@@ -7,24 +7,23 @@ white:true, strict: false*/
 
   XT.extensions.purchasing.initCombobox = function () {
 
-  // ..........................................................
-  // MANUFACTURER
-  //
+    // ..........................................................
+    // MANUFACTURER
+    //
 
-  /**
-    @class A combobox backed by the XM.countries collection.
-    @name XV.ManufacturerCombobox
-    @extends XV.Combobox
-   */
-  enyo.kind(
-    /** @lends XV.CountryCombobox# */{
-    name: "XV.ItemSourceManufacturerCombobox",
-    kind: "XV.ComboboxWidget",
-    collection: "XM.itemSourceManufacturers",
-    keyAttribute: "manufacturerName",
-    label: "_manufacturer".loc(),
-  });
-
+    /**
+      @class A combobox backed by the XM.countries collection.
+      @name XV.ManufacturerCombobox
+      @extends XV.Combobox
+     */
+    enyo.kind(
+      /** @lends XV.CountryCombobox# */{
+      name: "XV.ItemSourceManufacturerCombobox",
+      kind: "XV.ComboboxWidget",
+      collection: "XM.itemSourceManufacturers",
+      keyAttribute: "manufacturerName",
+      label: "_manufacturer".loc(),
+    });
 
   };
 

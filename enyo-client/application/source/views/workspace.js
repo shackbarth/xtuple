@@ -2145,7 +2145,7 @@ strict: false*/
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "promiseDate", showing: false,
               name: "promiseDate"},
-            {kind: "XV.QuoteLineCharacteristicsWidget",
+            {kind: "XV.PurchaseOrderLineCharacteristicsWidget",
               attr: "characteristics"}
           ]}
         ]},

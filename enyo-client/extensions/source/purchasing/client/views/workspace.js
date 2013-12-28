@@ -414,7 +414,9 @@ trailing:true, white:true, strict: false*/
                 attr: {localValue: "tax", currency: "currency"},
                 scale: XT.PURCHASE_PRICE_SCALE,
                 label: "_tax".loc(), currencyShowing: true,
-                currencyDisabled: true}
+                currencyDisabled: true},
+              {kind: "XV.PurchaseOrderLineCharacteristicsWidget",
+                attr: "characteristics"}
             ]}
           ]},
           {kind: "XV.Groupbox", name: "vendorPanel", title: "_itemSource".loc(),

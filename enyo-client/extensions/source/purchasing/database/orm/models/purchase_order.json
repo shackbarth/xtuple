@@ -1480,12 +1480,79 @@
         }
       },
       {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderLineCharacteristic",
+          "column": "poitem_id",
+          "inverse": "purchaseOrderLine"
+        }
+      },
+      {
         "name": "comments",
         "toMany": {
           "isNested": true,
           "type": "PurchaseOrderLineComment",
           "column": "poitem_id",
           "inverse": "purchaseOrderLine"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderLineCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Purchase Order Line Characteristic Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "PI"
+        }
+      },
+      {
+        "name": "purchaseOrderLine",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
         }
       }
     ],
