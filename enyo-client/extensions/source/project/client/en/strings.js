@@ -37,6 +37,7 @@ strict:true, trailing:true, white:true */
     "_projectUpdated": "The following project has been UPDATED",
     "_projectWorkflow": "Project Workflow",
     "_rejected": "Rejected",
+    "_requireProjectAssignment": "Require Project Assignment",
     "_resource": "Resource",
     "_resources": "Resources",
     "_review": "Review",

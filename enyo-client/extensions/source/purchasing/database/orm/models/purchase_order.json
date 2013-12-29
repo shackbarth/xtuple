@@ -1482,6 +1482,7 @@
       {
         "name": "project",
         "toOne": {
+          "isNested": true,
           "type": "ProjectRelation",
           "column": "poitem_prj_id"
         }

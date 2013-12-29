@@ -46,7 +46,9 @@ trailing:true, white:true, strict:false*/
               classes: "in-panel", components: [
               {kind: "onyx.GroupboxHeader", content: "_setup".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "UseProjects",
-                label: "_useProjects".loc()}
+                label: "_useProjects".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "RequireProjectAssignment",
+                label: "_requireProjectAssignment".loc()}
             ]}
           ]}
         ]}

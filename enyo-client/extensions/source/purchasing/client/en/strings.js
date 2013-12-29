@@ -21,6 +21,8 @@ strict:true, trailing:true, white:true */
     "_maintainPurchaseTypes": "Maintain Purchase Types",
     "_manufacturer": "Manufacturer",
     "_manufacturerItem": "Mfg. Item",
+    "_na": "N/A",
+    "_noManufacturerNumber": "No Manufacturer Item Number",
     "_noVendorNumber": "No Vendor Item Number",
     "_priceType": "Price Type",
     "_purchase": "Purchase",

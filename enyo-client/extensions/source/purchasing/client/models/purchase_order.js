@@ -569,7 +569,8 @@ white:true*/
           received: 0,
           toReceive: 0,
           unitCost: 0,
-          status: XM.PurchaseOrder.UNRELEASED_STATUS
+          status: XM.PurchaseOrder.UNRELEASED_STATUS,
+          vouchered: 0
         };
       },
 
@@ -713,6 +714,9 @@ white:true*/
 
       initialize: function (attributes, options) {
         XM.Model.prototype.initialize.apply(this, arguments);
+        if (XT.session.settings.get("RequireProjectAssignment")) {
+          this.requiredAttributes.push("project");
+        }
         this.taxDetail = [];
       },
 

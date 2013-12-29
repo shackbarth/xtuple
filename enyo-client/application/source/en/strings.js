@@ -742,6 +742,7 @@ strict:true, trailing:true, white:true */
     "_noOwner": "No Owner",
     "_noPhone": "No Phone",
     "_noPriority": "No Priority",
+    "_noProject": "No Project",
     "_noPurchaseOrder": "No Purchase Order Number",
     "_noSalesRep": "No Sales Rep",
     "_noSchedule": "No Schedule",
