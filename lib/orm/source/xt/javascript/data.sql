@@ -312,7 +312,7 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         }
       }
-plv8.elog(NOTICE, "??", JSON.stringify(clauses));
+
       ret.conditions = (clauses.length ? '(' + XT.format(clauses.join(' and '), identifiers) + ')' : ret.conditions) || true;
 
       /* Massage ordeBy with quoted identifiers. */
