@@ -243,7 +243,7 @@ white:true*/
 
       lineItemsChanged: function () {
         if (!this.isReady()) { return; }
-        
+
         var hasLineItems = this.get("lineItems").length > 0;
         this.setReadOnly(["vendor", "currency"], hasLineItems);
         this.setReadOnly("status", !hasLineItems);
@@ -610,9 +610,15 @@ white:true*/
       calculateExtendedPrice: function () {
         var quantity = this.get("quantity") || 0,
           price = this.get("price") || 0,
-          purchaseOrder = this.get("purchaseOrder");
-        this.set("extendedPrice", quantity * price);
-        if (purchaseOrder) { purchaseOrder.calculateTotals(); }
+          purchaseOrder = this.get("purchaseOrder"),
+          oldExtendedPrice = this.get("extendedPrice"),
+          extendedPrice = quantity * price;
+
+        // Don't let no-change trigger events get tangled
+        if (extendedPrice !== oldExtendedPrice) {
+          this.set("extendedPrice", quantity * price);
+          if (purchaseOrder) { purchaseOrder.calculateTotals(); }
+        }
       },
 
       calculatePrice: function () {
@@ -620,12 +626,17 @@ white:true*/
           item = this.get("item"),
           site = this.get("site"),
           quantity = this.get("quantity") || 0,
-          price = this.get("price") || 0;
+          oldPrice = this.get("price"),
+          price = oldPrice || 0;
 
         if (itemSource) {
           price = itemSource.calculatePrice(quantity, site);
         }
-        this.set("price", price);
+
+        // Don't let no-change trigger events get tangled
+        if (price !== oldPrice) {
+          this.set("price", price);
+        }
       },
 
       calculateTax: function () {
