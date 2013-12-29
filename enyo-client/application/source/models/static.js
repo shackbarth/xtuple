@@ -421,4 +421,27 @@ white:true*/
   _.each(salesOrderWorkflowTypeJson, function (obj) {
     XM.salesOrderWorkflowTypes.add(new XM.SalesOrderWorkflowTypeModel(obj));
   });
+
+  // Project Status
+  K = XM.ProjectStatusMixin;
+  var projectStatusJson = [
+    { id: K.CONCEPT, name: "_concept".loc() },
+    { id: K.REVIEW, name: "_review".loc() },
+    { id: K.REVISION, name: "_revision".loc() },
+    { id: K.APPROVED, name: "_approved".loc() },
+    { id: K.IN_PROCESS, name: "_inProcess".loc() },
+    { id: K.COMPLETED, name: "_completed".loc() },
+    { id: K.REJECTED, name: "_rejected".loc() }
+  ];
+  XM.ProjectStatusModel = Backbone.Model.extend({
+  });
+  XM.ProjectStatusCollection = Backbone.Collection.extend({
+    model: XM.ProjectStatusModel
+  });
+  XM.projectStatuses = new XM.ProjectStatusCollection();
+  for (i = 0; i < projectStatusJson.length; i++) {
+    var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
+    XM.projectStatuses.add(projectStatus);
+  }
+
 }());

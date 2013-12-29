@@ -686,7 +686,16 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
     name: "XV.ProjectWidget",
     kind: "XV.RelationWidget",
     collection: "XM.ProjectRelationCollection",
-    list: "XV.ProjectList"
+    list: "XV.ProjectList",
+    create: function () {
+      this.inherited(arguments);
+      this.setShowing(XT.session.settings.get("UseProjects"));
+    },
+    setShowing: function (showing) {
+      if (!showing || showing && XT.session.settings.get("UseProjects")) {
+        this.inherited(arguments);
+      }
+    }
   });
 
   // ..........................................................

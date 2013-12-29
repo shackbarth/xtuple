@@ -164,7 +164,7 @@ white:true*/
     },
 
     isActive: function () {
-      var K = XM.Project,
+      var K = XM.ProjectStatusMixin,
         status = this.get("status");
       return (status !== K.COMPLETED && status !== K.REJECTED);
     }
@@ -210,9 +210,7 @@ white:true*/
   XM.ProjectRelation = XM.Info.extend({
     /** @scope XM.ProjectRelation.prototype */
 
-    recordType: "XM.ProjectRelation",
-
-    editableModel: "XM.Project"
+    recordType: "XM.ProjectRelation"
 
   });
 

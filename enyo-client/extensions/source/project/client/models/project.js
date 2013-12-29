@@ -296,6 +296,18 @@ white:true*/
     /**
       @class
 
+      @extends XM.ProjecRelation
+    */
+    XM.ProjectRelation = XM.ProjectRelation.extend({
+      /** @scope XM.ProjectRelation.prototype */
+
+      editableModel: "XM.Project"
+
+    });
+
+    /**
+      @class
+
       @extends XM.ProjectBase
     */
     XM.ProjectTask = XM.ProjectBase.extend({
@@ -508,22 +520,6 @@ white:true*/
       recordType: "XM.ProjectTaskAlarm"
 
     });
-
-    /**
-      @class
-
-      @extends XM.Info
-    */
-    XM.ProjectRelation = XM.Info.extend({
-      /** @scope XM.ProjectRelation.prototype */
-
-      recordType: "XM.ProjectRelation",
-
-      editableModel: "XM.Project"
-
-    });
-
-    XM.ProjectRelation = XM.ProjectRelation.extend(XM.ProjectStatus);
 
     /**
       @class

@@ -43,10 +43,11 @@ strict:true, trailing:true, white:true */
     "_revision": "Revision",
     "_start": "Start",
     "_startSet": "Calculate",
-    "_startOffset": "Offset Days"
+    "_startOffset": "Offset Days",
+    "_useProjects": "Use Projects"
   });
 
-  if (typeof exports !== 'undefined') {
+  if (typeof exports !== "undefined") {
     exports.language = lang;
   }
 }());
