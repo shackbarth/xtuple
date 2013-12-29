@@ -110,7 +110,6 @@ white:true*/
         "freightSubtotal",
         "lineItems",
         "releaseDate",
-        "status",
         "subtotal",
         "taxTotal",
         "total"
