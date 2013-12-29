@@ -293,17 +293,7 @@ white:true*/
 
     });
 
-    /**
-      @class
-
-      @extends XM.ProjecRelation
-    */
-    XM.ProjectRelation = XM.ProjectRelation.extend({
-      /** @scope XM.ProjectRelation.prototype */
-
-      editableModel: "XM.Project"
-
-    });
+    XM.ProjectRelation.prototype.editableModel = "XM.Project";
 
     /**
       @class

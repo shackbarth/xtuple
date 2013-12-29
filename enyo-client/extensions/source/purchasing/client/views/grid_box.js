@@ -106,7 +106,7 @@ trailing:true, white:true, strict:false*/
             placeholder: "_noManufacturerNumber".loc(),
             editor: {kind: "XV.InputWidget", attr: "manufacturerItemNumber"}},
           {readOnlyAttr: "project.number",
-            placeHolder: "_noProject".loc(),
+            placeholder: "_noProject".loc(),
             editor: {kind: "XV.ProjectWidget", attr: "project"}}
         ]},
         {classes: "date", header: ["_received".loc(), "_vouchered".loc(), "_status".loc()], rows: [

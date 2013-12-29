@@ -242,6 +242,8 @@ white:true*/
       },
 
       lineItemsChanged: function () {
+        if (!this.isReady()) { return; }
+        
         var hasLineItems = this.get("lineItems").length > 0;
         this.setReadOnly(["vendor", "currency"], hasLineItems);
         this.setReadOnly("status", !hasLineItems);

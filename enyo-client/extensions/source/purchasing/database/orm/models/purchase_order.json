@@ -1310,8 +1310,7 @@
         "name": "site",
         "toOne": {
           "type": "SiteRelation",
-          "column": "warehous_id",
-          "isNested": true
+          "column": "warehous_id"
         }
       },
       {
