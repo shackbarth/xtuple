@@ -25,7 +25,9 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     });
   };
   exports.spec = {
-    skipAll: true
+    skipAll: true,
+    // XXX very awkward
+    recordType: "WorksheetTimeCosts"
   };
   exports.additionalTests = additionalTests;
 }());

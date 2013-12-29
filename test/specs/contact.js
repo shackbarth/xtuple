@@ -50,7 +50,6 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @property {ContactCustomers} Customers
   */
   var spec = {
-    skipSmoke: true,
     recordType: "XM.Contact",
     collectionType: null,
     /**
@@ -72,10 +71,10 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     attributes: ["id", "number", "isActive", "honorific", "firstName", "middleName", "lastName",
     "suffix", "jobTitle", "initials", "phone", "alternate", "fax", "primaryEmail", "webAddress",
     "account", "owner", "notes", "address", "email", "comments", "characteristics", "accounts",
-    "contacts", "items", "files", "urls", "crmaccountUsers", "incidents", "opportunities", 
-    "toDos", "incidentRelations", "opportunityRelations", "toDoRelations", "projects", 
+    "contacts", "items", "files", "urls", "crmaccountUsers", "incidents", "opportunities",
+    "toDos", "incidentRelations", "opportunityRelations", "toDoRelations", "projects",
     "projectRelations", "customers"],
-    requiredAttributes: ["number"], 
+    requiredAttributes: ["number"],
     /**
       @member -
       @memberof Contact.prototype
@@ -93,28 +92,38 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       read: "ViewAllContacts"
     },
     createHash: {
-    firstName: "Michael" + Math.random(),
-    middleName: "mtext",
-    lastName: "ltext",
-    suffix: "Jr",
-    jobTitle: "Dev",
-    initials: "K",
-    phone: "111-222-333",
-    webAddress: "www.example.com",
-    primaryEmail: "modonnell@xtuple.com",
-    account: { number: "TTOYS"},
-    notes: "contact notes"
+      firstName: "Michael" + Math.random(),
+      middleName: "mtext",
+      lastName: "ltext",
+      suffix: "Jr",
+      jobTitle: "Dev",
+      phone: "111-222-333",
+      webAddress: "www.example.com",
+      primaryEmail: "modonnell@xtuple.com",
+      account: { number: "TTOYS"},
+      notes: "contact notes"
     },
+    beforeSaveUIActions: [{
+      it: "Can add an address",
+      action: function (workspace, done) {
+        workspace.$.addressWidget.edit();
+        setTimeout(function () {
+          workspace.$.addressWidget.$.line1.setValue("100 School Street");
+          workspace.$.addressWidget.$.city.setValue("Carlisle");
+          done();
+        }, 1000);
+      }
+    }],
     updatableField: "firstName"
   };
-  var additionalTests = function () {  
+  var additionalTests = function () {
   /**
     @member -
     @memberof Contact.prototype
-    @description Users with "ViewPersonalContacts" privilege can read their personal contacts 
-    but cannot read the contact's owned by other users. Users with "MaintainPersonalContacts" 
+    @description Users with "ViewPersonalContacts" privilege can read their personal contacts
+    but cannot read the contact's owned by other users. Users with "MaintainPersonalContacts"
     privilege can create, update or delete their personal contacts but not the contacts owned
-    by other users 
+    by other users
     */
     it.skip("Users with \"ViewPersonalContacts\" privilege can read their personal contacts" +
       "but cannot read the contacts owned by other users. ", function () {
@@ -143,8 +152,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @memberof Contact.prototype
     @description Email Addresses panel should exist to add email addresses related to the contact
     */
-    it.skip("Email Addresses panel should exist to add email addresses related to the contact"
-      , function () {
+    it.skip("Email Addresses panel should exist to add email addresses related to the contact",
+        function () {
     });
     /**
     @member -
@@ -177,7 +186,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     /**
     @member -
     @memberof Contact.prototype
-    @description Contacts attached as a primary/secondary contact to a CRM account cannot be 
+    @description Contacts attached as a primary/secondary contact to a CRM account cannot be
     deleted
     */
     it.skip("Contacts attached as a primary/secondary contact to a CRM account cannot be " +
