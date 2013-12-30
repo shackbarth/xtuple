@@ -1,4 +1,5 @@
 #!/bin/sh
+LOG_FILE='stop_bi.log'
 log() {
 	echo $@
 	echo $@ >> $LOG_FILE
@@ -16,3 +17,4 @@ log "######################################################"
 log ""
 cdir ../../ErpBI/biserver-ce/
 ./stop-pentaho.sh
+

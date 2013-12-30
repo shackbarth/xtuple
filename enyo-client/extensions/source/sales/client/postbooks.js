@@ -66,7 +66,7 @@ trailing:true, white:true*/
       ]
     };
 
-    isBiAvailable = XT.session.config.biUrl && XT.session.privileges.get("ViewSalesHistory");
+    isBiAvailable = XT.session.config.biServer && XT.session.privileges.get("ViewSalesHistory");
     if (isBiAvailable) {
       module.panels.push({name: "salesAnalysisPage", kind: "analysisFrame"});
     }
@@ -85,6 +85,7 @@ trailing:true, white:true*/
       "CreateSOForWarnCustomer",
       "MaintainCostCategories",
       "MaintainCustomerMasters",
+      "MaintainCustomerTypes",
       "MaintainFreightClasses",
       "MaintainItemGroups",
       "MaintainItemMasters",
@@ -94,7 +95,7 @@ trailing:true, white:true*/
       "MaintainSalesOrders",
       "MaintainSalesReps",
       "MaintainShipVias",
-      "MaintainShipZones",
+      "MaintainShippingZones",
       "MaintainTaxAssignments",
       "MaintainTaxClasses",
       "MaintainTaxCodes",
@@ -117,6 +118,7 @@ trailing:true, white:true*/
       "ViewFreightClasses",
       "ViewCostCategories",
       "ViewCustomerGroups",
+      "ViewCustomerTypes",
       "ViewItemMasters",
       "ViewItemSites",
       "ViewQuotes",
@@ -132,7 +134,8 @@ trailing:true, white:true*/
       "ViewSalesOrders",
       "ViewSalesReps",
       "ViewSaleTypes",
-      "ViewShipZones",
+      "ViewShipVias",
+      "ViewShippingZones",
       "ViewTerms"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);

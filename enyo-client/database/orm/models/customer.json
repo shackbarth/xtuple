@@ -1879,7 +1879,7 @@
     "privileges": {
       "all": {
         "create": "MaintainCustomerTypes",
-        "read": true,
+        "read": "ViewCustomerTypes",
         "update": "MaintainCustomerTypes",
         "delete": "MaintainCustomerTypes"
       }
@@ -2206,7 +2206,7 @@
     "privileges": {
       "all": {
         "create": "MaintainShipVias",
-        "read": true,
+        "read": "ViewShipVias",
         "update": "MaintainShipVias",
         "delete": "MaintainShipVias"
       }
@@ -2250,7 +2250,7 @@
     "privileges": {
       "all": {
         "create": "MaintainShippingZones",
-        "read": true,
+        "read": "ViewShippingZones",
         "update": "MaintainShippingZones",
         "delete": "MaintainShippingZones"
       }

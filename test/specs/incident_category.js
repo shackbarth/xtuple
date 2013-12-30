@@ -19,29 +19,55 @@
   **/
 
   var spec = {
-      recordType: "XM.IncidentCategory",
-      enforceUpperKey: false,
-      collectionType: "XM.IncidentCategoryCollection",
-      listKind: "XV.IncidentCategoryList",
-      instanceOf: "XM.Document",
-      attributes: ["name", "description", "order"],
-      idAttribute: "name",
-      extensions: ["crm", "billing"],
-      isLockable: true,
-      cacheName: "XM.incidentCategories",
-      privileges: {
-        createUpdateDelete: "MaintainIncidentCategories",
-        read:  true
-      },
-      createHash: {
-        name: 'tested' + Math.random(),
-        description: 'description'
-      },
-      updatableField: "name",
-      defaults: {
-        order: 0
-      }
-    };
+    recordType: "XM.IncidentCategory",
+    enforceUpperKey: false,
+    collectionType: "XM.IncidentCategoryCollection",
+    listKind: "XV.IncidentCategoryList",
+    instanceOf: "XM.Document",
+    attributes: ["id", "description", "name", "order", "emailProfile"],
+    /**
+      @member -
+      @memberof IncidentCategory.prototype
+      @description The ID attribute is "name", which will not be automatically uppercased.
+    */
+    idAttribute: "name",
+    /**
+      @member -
+      @memberof IncidentCategory.prototype
+      @description Used in the crm and billing modules
+    */
+    extensions: ["crm", "billing"],
+    /**
+      @member -
+      @memberof IncidentCategory.prototype
+      @description IncidentCategories are lockable.
+    */
+    isLockable: true,
+    /**
+    @member -
+    @memberof IncidentCategory.prototype
+    @description The Incident Category collection is cached.
+    */
+    cacheName: "XM.incidentCategories",
+    /**
+      @member -
+      @memberof IncidentCategory.prototype
+      @description IncidentCategories can be read by anyone but can only be created, updated,
+        or deleted by users with the "MaintainIncidentCategories" privilege.
+    */
+    privileges: {
+      createUpdateDelete: "MaintainIncidentCategories",
+      read:  true
+    },
+    createHash: {
+      name: 'tested' + Math.random(),
+      description: 'description'
+    },
+    updatableField: "name",
+    defaults: {
+      order: 0
+    }
+  };
 
   exports.spec = spec;
 
