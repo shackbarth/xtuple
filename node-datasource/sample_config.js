@@ -29,7 +29,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       port: 8443,
       keyFile: "./lib/private/key.pem",
       certFile: "./lib/private/server.crt",
-      caFile: null,
+      caFile: null, // needs to be an array of strings
       saltFile: "./lib/private/salt.txt",
       xTupleDbDir: "/usr/local/xtuple/databases",
       psqlPath: "psql",
