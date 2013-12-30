@@ -49,14 +49,6 @@ white:true*/
       this.on('change:holdType', this.holdTypeDidChange);
     },
 
-    canIssueItem: function (callback) {
-      var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
-        inventoryInstalled = XT.extensions.inventory ? true : false;
-      if (callback) {
-        callback(XM.SalesOrderBase.OPEN_STATUS && hasPrivilege && inventoryInstalled);
-      }
-      return this;
-    },
     /**
       Add default for wasQuote.
      */
@@ -323,16 +315,7 @@ white:true*/
 
     recordType: 'XM.SalesOrderListItem',
 
-    editableModel: 'XM.SalesOrder',
-
-    canIssueItem: function (callback) {
-      var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
-        inventoryInstalled = XT.extensions.inventory ? true : false;
-      if (callback) {
-        callback(XM.SalesOrderBase.OPEN_STATUS && hasPrivilege && inventoryInstalled);
-      }
-      return this;
-    }
+    editableModel: 'XM.SalesOrder'
 
   });
 

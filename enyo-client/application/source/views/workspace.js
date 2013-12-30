@@ -2250,14 +2250,10 @@ strict: false*/
       onMagstripeCapture: "handleMagstripeCapture",
       onSavePrompt: "savePrompt"
     },
-    actions: [
-      {name: "issueToShipping", prerequisite: "canIssueToShipping", isViewMethod: true},
-      {name: "expressCheckout", prerequisite: "canExpressCheckout", isViewMethod: true}
-    ],
+    actions: [],
     events: {
       onNotify: "",
-      onSavePrompt: "",
-      onIssueAll: "" //Can I pass this even with my createComponent call below?
+      onSavePrompt: ""
     },
     model: "XM.SalesOrder",
     hideActionButton: false,
@@ -2382,47 +2378,6 @@ strict: false*/
         ], {owner: this});
       }
     },
-    canIssueToShipping: function () {
-      var hasPrivilege = XT.session.privileges.get("IssueStockToShipping"),
-        inventoryInstalled = XT.extensions.inventory ? true : false;
-      return hasPrivilege && inventoryInstalled;
-    },
-    canExpressCheckout: function () {
-      var hasPrivileges = XT.session.privileges.get("IssueStockToShipping") &&
-          XT.session.privileges.get("SelectBilling") &&
-          XT.session.privileges.get("MaintainMiscInvoices") &&
-          XT.session.privileges.get("PrintInvoices"),
-        inventoryInstalled = XT.extensions.inventory ? true : false;
-      return hasPrivileges && inventoryInstalled;
-    },
-    expressCheckout: function (inSender, inEvent) {
-      var that = this,
-        uuid = this.value.attributes.uuid,
-        panel,
-        prompt,
-        goToIssueToShipping = function (valid) {
-          if (valid) {
-            /*  Call issueAll. How? Event? I think I need to pass issueAll in with my panel object.
-
-                Then check to see if any line items requireDetail. 
-                If no, call Issue All, Ship, Select for Billing, Create and Print Invoice.
-                If requireDetail, the Issue All method should be called within a callback,
-                when callback returns true move on and call the remaining methods.
-
-                Or, maybe everything there is a public function to do everything after Ship?
-            */
-            panel = XT.app.$.postbooks.createComponent({kind: "XV.IssueToShipping", model: uuid});
-            panel.render();
-            XT.app.$.postbooks.setIndex(XT.app.$.postbooks.getPanels().length - 1);
-          }
-        };
-      
-      if (that.isDirty()) {
-        that.doSavePrompt({callback: goToIssueToShipping});
-      } else {
-        goToIssueToShipping(true);
-      }
-    },
     handleHotKey: function (keyCode) {
       switch (String.fromCharCode(keyCode)) {
       case "L":
@@ -2436,25 +2391,6 @@ strict: false*/
       if (this.$.creditCardBox && !this.$.creditCardBox.$.newButton.disabled) { // XXX sloppy
         this.$.salesPanels.setIndex(this.$.salesPanels.getPanels().length);
         this.$.creditCardBox.newItemWithData(inEvent.data);
-      }
-    },
-    issueToShipping: function (inSender, inEvent) {
-      var that = this,
-        uuid = this.value.attributes.uuid,
-        panel,
-        prompt,
-        goToIssueToShipping = function (valid) {
-          if (valid) {
-            panel = XT.app.$.postbooks.createComponent({kind: "XV.IssueToShipping", model: uuid});
-            panel.render();
-            XT.app.$.postbooks.setIndex(XT.app.$.postbooks.getPanels().length - 1);
-          }
-        };
-      
-      if (that.isDirty()) {
-        that.doSavePrompt({callback: goToIssueToShipping});
-      } else {
-        goToIssueToShipping(true);
       }
     },
     /**

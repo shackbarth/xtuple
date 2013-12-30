@@ -1609,11 +1609,7 @@ trailing:true, white:true, strict: false*/
     label: "_salesOrders".loc(),
     collection: "XM.SalesOrderListItemCollection",
     parameterWidget: "XV.SalesOrderListParameters",
-    actions: [
-      {name: "issueToShipping", method: "issueToShipping",
-          isViewMethod: true, notify: false,
-          prerequisite: "canIssueItem"}
-    ],
+    actions: [],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -1685,14 +1681,6 @@ trailing:true, white:true, strict: false*/
         state = model.get(stateAttr),
         country = model.get(countryAttr);
       return XM.Address.formatShort(city, state, country);
-    },
-    issueToShipping: function (inEvent) {
-      var index = inEvent.index,
-        model = this.getValue().at(index),
-        that = this,
-        panel = XT.app.$.postbooks.createComponent({kind: "XV.IssueToShipping", model: model.attributes.uuid});
-      panel.render();
-      XT.app.$.postbooks.setIndex(XT.app.$.postbooks.getPanels().length - 1);
     }
   });
 
@@ -2456,14 +2444,7 @@ trailing:true, white:true, strict: false*/
     collection: "XM.WorkOrderListItemCollection",
     parameterWidget: "XV.WorkOrderListParameters",
     canAddNew: false,
-    actions: [
-      {name: "postProduction", method: "postProduction",
-          isViewMethod: true, notify: false,
-          prerequisite: "canPostProduction"},
-      {name: "issueMaterial", method: "issueMaterial",
-          isViewMethod: true, notify: false,
-          prerequisite: "canIssueMaterial"}
-    ],
+    actions: [],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -2498,47 +2479,7 @@ trailing:true, white:true, strict: false*/
           ]}
         ]}
       ]}
-    ],
-    issueMaterial: function (inEvent) {
-      var index = inEvent.index,
-        model = this.getValue().at(index),
-        that = this,
-        panel = XT.app.$.postbooks.createComponent({kind: "XV.IssueMaterial", model: model.id});
-      panel.render();
-      XT.app.$.postbooks.setIndex(XT.app.$.postbooks.getPanels().length - 1);
-    },
-    postProduction: function (inEvent) {
-      var index = inEvent.index,
-        model = this.getValue().at(index),
-        that = this,
-        callback = function (resp) {
-          var options = {
-            success: function () {
-              // Re-render the row if showing shipped, otherwise remove it
-              var query = that.getQuery(),
-                param,
-                collection,
-                model;
-              param = _.findWhere(query.parameters, {attribute: "getWorkOrderStatusString"});
-              if (param === "Closed") {
-                collection = that.getValue();
-                model = collection.at(index);
-                collection.remove(model);
-                that.fetched();
-              } else {
-                that.renderRow(index);
-              }
-            }
-          };
-          // Refresh row if shipped
-          if (resp) { model.fetch(options); }
-        };
-      this.doWorkspace({
-        workspace: "XV.PostProductionWorkspace",
-        id: model.id,
-        callback: callback
-      });
-    }
+    ]
   });
 
   XV.registerModelList("XM.WorkOrderListItem", "XV.WorkOrderList");
