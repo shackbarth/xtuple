@@ -2250,7 +2250,6 @@ strict: false*/
       onMagstripeCapture: "handleMagstripeCapture",
       onSavePrompt: "savePrompt"
     },
-    actions: [],
     events: {
       onNotify: "",
       onSavePrompt: ""
