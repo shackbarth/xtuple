@@ -252,7 +252,6 @@ regexp:true, undef:true, trailing:true, white:true */
       {
       case 'searchItem':
         callback = function (value) {
-          console.log("search item callback");
           that.setValue(value);
         };
         this.doSearch({
