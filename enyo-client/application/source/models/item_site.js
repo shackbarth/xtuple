@@ -47,8 +47,8 @@ white:true*/
     },
 
     initialize: function () {
-      this.meta = new Backbone.Model();
-      this.meta.set("_itemSites", new XM.ItemSiteRelationCollection());
+      // this.meta = new Backbone.Model();
+      // this.meta("_itemSites", new XM.ItemSiteRelationCollection());
       XM.Model.prototype.initialize.apply(this, arguments);
     },
 
@@ -62,10 +62,6 @@ white:true*/
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:item change:site', this.checkDuplicatePair);
       this.on('statusChange', this.statusDidChange);
-      this.meta.on('change:_itemSites', function () {
-        // success or error
-        console.log("itemSites has changed");
-      });
     },
 
     /**
@@ -292,10 +288,10 @@ white:true*/
     XM.Collection.formatParameters("XM.ItemSiteListItem", options.query.parameters);
 
     // Dispatch the query
-    //success = options.success;
+    success = options.success;
     options.success = function (data) {
       that.reset(data);
-      //if (success) { success(data); }
+      if (success) { success(data); }
     };
     XM.ModelMixin.dispatch("XM.ItemSite", "itemsForCustomer",
       [customerId, shiptoId, effectiveDate, options.query], options);
