@@ -8,9 +8,12 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   "use strict";
 
   /**
-    A title, such as Mr. or Mrs.
+    Ship Vias describe the transportation method used to ship Sales Order Items.
+    Shipping companies, for example, are considered to be Ship Vias
     @class
-    @alias Honorific
+    @alias ShipVia
+    @property {String} Code
+    @property {String} Description
   */
   var spec = {
     recordType: "XM.ShipVia",
@@ -18,14 +21,35 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     cacheName: "XM.shipVias",
     listKind: "XV.ShipViaList",
     instanceOf: "XM.Document",
+    /**
+      @member -
+      @memberof ShipVia.prototype
+      @description Ship Vias are lockable.
+    */
     isLockable: true,
+    /**
+      @member -
+      @memberof ShipVia.prototype
+      @description The ID attribute is "name, which will not be automatically uppercased.
+    */
     idAttribute: "code",
     enforceUpperKey: false,
     attributes: ["code", "description"],
+    /**
+      @member -
+      @memberof ShipVia.prototype
+      @description Used in the Billing and Sales modules
+    */
     extensions: ["billing", "sales"],
+    /**
+      @member -
+      @memberof ShipVia.prototype
+      @description Ship Vias can be read by users with "ViewShipVias" privilege and can be created, updated,
+        or deleted by users with the "MaintainShipVias" privilege.
+    */
     privileges: {
       createUpdateDelete: "MaintainShipVias",
-      read: true
+      read: "ViewShipVias"
     },
     createHash: {
       code: "TestShipVia" + Math.random(),

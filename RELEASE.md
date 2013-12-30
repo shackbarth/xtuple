@@ -1,3 +1,13 @@
+1.5.2 (201x/xx/xx)
+==================
+Critical deployment changes
+---------------------------
+Mobile Client connections to Pentaho are no longer defined by biUrl and biServerUrl in config.js.  They are now defined
+by biServer and printServer.  See the details in:
+
+https://github.com/xtuple/xtuple/wiki/xTuple-Business-Intelligence
+
+
 1.5.1 (2013/12/04)
 ===============
 
