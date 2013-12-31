@@ -95,7 +95,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           "should display the related item for selection", function (done) {
         var widget = new XV.ItemSiteWidget(),
           mockReturn = function (results) {
-            assert.equal(results[0].item.number, "BTRUCK1");
+            assert.equal(results.models[0].getValue("item.number"), "BTRUCK1");
             done();
           };
 
@@ -106,7 +106,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           "Active Alias Items on selection", function (done) {
         var widget = new XV.ItemSiteWidget(),
           mockReturn = function (results) {
-            assert.equal(results[0].item.number, "BPAINT1");
+            assert.equal(results.models[0].getValue("item.number"), "BPAINT1");
             done();
           };
 
@@ -120,8 +120,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       it("Should be able to search the Item through Bar Code", function (done) {
         var widget = new XV.ItemSiteWidget(),
           mockReturn = function (results) {
-            assert.include(_.map(results, function (result) {
-              return result.item.number;
+            assert.include(_.map(results.models, function (result) {
+              return result.getValue("item.number");
             }), "BTRUCK1");
             done();
           };

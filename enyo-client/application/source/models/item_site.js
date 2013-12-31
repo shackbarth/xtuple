@@ -48,7 +48,8 @@ white:true*/
 
     defaults: function () {
       return {
-        isActive: true
+        isActive: true,
+        site: XT.defaultSite()
       };
     },
 
@@ -251,7 +252,7 @@ white:true*/
     success = options.success;
     options.success = function (data) {
       that.reset(data);
-      if (success) { success(data); }
+      if (success) { success(that); }
     };
     XM.ModelMixin.dispatch("XM.ItemSite", "fetch", [recordType, options.query], options);
   };

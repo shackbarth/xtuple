@@ -1256,22 +1256,16 @@ white:true*/
 
     validate: function () {
       var that = this,
-        quantity = this.get("quantity") || this.get("quantity"),
-        hasCredited = _.contains(this.getAttributeNames(), "credited"),
-        credited = this.get("credited"),
-        hasBilled = _.contains(this.getAttributeNames(), "billed"),
-        billed = this.get("billed"),
+        quantity = this.get("quantity"),
+        hasAltQuantity = _.contains(this.getAttributeNames(), this.altQuantityAttribute),
+        altQuantity = this.get(this.altQuantityAttribute),
         extraRequiredFields = [],
         requiredFieldsError;
 
-      // Check billed
-      if (hasBilled && (billed || 0) <= 0) {
-        return XT.Error.clone('xt2013'); // TODO: generalize error message
-      }
-
-      // Check credited
-      if (hasCredited && (credited || 0) <= 0) {
-        return XT.Error.clone('xt2013'); // TODO: generalize error message
+      // Check alt quantity
+      if (hasAltQuantity && (altQuantity || 0) <= 0) {
+        // TODO: put in attribute name as param
+        return XT.Error.clone('xt2013');
       }
 
       // Check quantity
@@ -1283,10 +1277,7 @@ white:true*/
       if (!this._unitIsFractional && Math.round(quantity) !== quantity) {
         return XT.Error.clone('xt2014');
       }
-      if (!this._unitIsFractional && hasBilled && Math.round(billed) !== billed) {
-        return XT.Error.clone('xt2014');
-      }
-      if (!this._unitIsFractional && hasCredited && Math.round(credited) !== credited) {
+      if (!this._unitIsFractional && hasAltQuantity && Math.round(altQuantity) !== altQuantity) {
         return XT.Error.clone('xt2014');
       }
 
