@@ -591,6 +591,7 @@ white:true*/
       ],
 
       handlers: {
+        "change:dueDate": "dueDateChanged",
         "change:expenseCategory": "isMiscellaneousChanged",
         "change:extendedPrice change:freight change:taxType": "calculateTax",
         "change:item": "itemChanged",
@@ -687,6 +688,33 @@ white:true*/
         } else {
           this.set("tax", tax);
         }
+      },
+
+      dueDateChanged: function (model, resp, options) {
+        options = options || {};
+        var itemSource = this.get("itemSource"),
+          dueDate = this.get("dueDate"),
+          that = this,
+          K = XM.Model,
+          earliestDate,
+          success = options.success;
+
+        if (itemSource && dueDate) {
+          earliestDate = itemSource.get("earliestDate");
+          if (XT.date.compareDate(dueDate, earliestDate) < 0) {
+            this.notify("_updateToEarliestDate?".loc(), {
+              type: K.QUESTION,
+              callback: function (response) {
+                if (response.answer) {
+                  that.set("dueDate", earliestDate);
+                }
+                if (success) { success(this, resp, options); }
+              }
+            });
+            return;
+          }
+        }
+        if (success) { success(this, resp, options); }
       },
 
       destroy: function (options) {
@@ -857,11 +885,13 @@ white:true*/
         var itemSource = this.get("itemSource"),
           item = this.get("item"),
           quantity = this.get("quantity"),
+          that = this,
           attrs = {
             vendorUnit: "",
             vendorUnitRatio: 1
           },
-          prices;
+          prices,
+          callback;
 
         if (itemSource) {
           attrs = {
@@ -888,7 +918,10 @@ white:true*/
         this.set(attrs);
 
         if (itemSource) {
-          this.quantityChanged(); // Force quantity validation and repricing.
+          callback = function () {
+            that.quantityChanged();  // Force quantity validation and repricing.
+          };
+          this.dueDateChanged(this, null, {success: callback});
         }
       },
 

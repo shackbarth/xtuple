@@ -42,6 +42,7 @@ strict:true, trailing:true, white:true */
     "_RequirePOTax": "Require Tax",
     "_RequireStdCostForPOItem": "Require Standard Cost",
     "_unitRatio": "Unit Ratio",
+    "_updateToEarliestDate?": "The due date does not fall within the lead time for this Item Source. Do you wish to update it?",
     "_updateToMinimumQuantity?": "The quantity is below the minimum order quantity for this Item Source. Do you wish to update it?",
     "_updateToMultipleQuantity?": "The quantity does not fall within the order multiple quantity for this Item Source. Do you wish to update it?",
     "_UseEarliestAvailDateOnPOItem": "Use Earliest Date",
