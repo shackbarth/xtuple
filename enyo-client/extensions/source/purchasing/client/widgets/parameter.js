@@ -82,26 +82,19 @@ trailing:true, white:true, strict: false*/
       characteristicsRole: "isPurchaseOrders",
       defaultParameters: function () {
         return {
-          user: XM.currentUser
+          user: XM.currentUser,
+          isUnreleased: true,
+          isOpen: true
         };
       },
       components: [
         {kind: "onyx.GroupboxHeader", content: "_purchaseOrder".loc()},
-        {name: "showClosed", label: "_showClosed".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
-          getParameter: function () {
-            var param;
-            if (!this.getValue()) {
-              param = {
-                attribute: this.getAttr(),
-                operator: "!=",
-                value: "C"
-              };
-            }
-            return param;
-          }
-        },
         {name: "number", label: "_number".loc(), attr: "number"},
         {name: "vendor", label: "_vendor".loc(), attr: "vendor", defaultKind: "XV.VendorWidget"},
+        {kind: "onyx.GroupboxHeader", content: "_show".loc()},
+        {name: "isUnreleased", label: "_unreleased".loc(), defaultKind: "XV.CheckboxWidget"},
+        {name: "isOpen", label: "_open".loc(), defaultKind: "XV.CheckboxWidget"},
+        {name: "isClosed", label: "_closed".loc(), defaultKind: "XV.CheckboxWidget"},
         {kind: "onyx.GroupboxHeader", content: "_orderDate".loc()},
         {name: "fromOrderDate", label: "_fromDate".loc(), attr: "orderDate", operator: ">=",
           filterLabel: "_from".loc() + " " + "_orderDate".loc() + " " + "_date".loc(),
@@ -109,7 +102,29 @@ trailing:true, white:true, strict: false*/
         {name: "toDueDate", label: "_toDate".loc(), attr: "orderDate", operator: "<=",
           filterLabel: "_to".loc() + " " + "_orderDate".loc() + " " + "_date".loc(),
           defaultKind: "XV.DateWidget"}
-      ]
+      ],
+      getParameters: function () {
+        var params = this.inherited(arguments),
+          K = XM.PurchaseOrder,
+          param = {},
+          value = [];
+        if (this.$.isUnreleased.getValue()) {
+          value.push(K.UNRELEASED_STATUS);
+        }
+        if (this.$.isOpen.getValue()) {
+          value.push(K.OPEN_STATUS);
+        }
+        if (this.$.isClosed.getValue()) {
+          value.push(K.CLOSED_STATUS);
+        }
+        if (value.length) {
+          param.attribute = "status";
+          param.operator = "ANY";
+          param.value = value;
+          params.push(param);
+        }
+        return params;
+      }
     });
 
   };
