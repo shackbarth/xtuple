@@ -7,6 +7,9 @@ strict:true, trailing:true, white:true */
   "use strict";
 
   var lang = XT.stringsFor("en_US", {
+    "_correctToEarliestDate?": "The due date does not fall within the lead time for this Item Source. Would you like it corrected?",
+    "_correctToMinimumQuantity?": "The quantity is below the minimum order quantity for this Item Source. Would you like it corrected?",
+    "_correctToMultipleQuantity?": "The quantity does not fall within the order multiple quantity for this Item Source. Would you like it corrected?",
     "_CopyPRtoPOItem": "Copy to Order",
     "_DefaultPrintPOOnSave": "Print on Save",
     "_defaultShipVia": "Default Ship Via",
@@ -42,13 +45,11 @@ strict:true, trailing:true, white:true */
     "_RequirePOTax": "Require Tax",
     "_RequireStdCostForPOItem": "Require Standard Cost",
     "_unitRatio": "Unit Ratio",
-    "_updateToEarliestDate?": "The due date does not fall within the lead time for this Item Source. Do you wish to update it?",
-    "_updateToMinimumQuantity?": "The quantity is below the minimum order quantity for this Item Source. Do you wish to update it?",
-    "_updateToMultipleQuantity?": "The quantity does not fall within the order multiple quantity for this Item Source. Do you wish to update it?",
     "_UseEarliestAvailDateOnPOItem": "Use Earliest Date",
     "_vendorItem": "Vendor Item",
     "_vendorItemNumber": "VendorItemNumber",
-    "_vouchered": "Vouchered"
+    "_vouchered": "Vouchered",
+    "_warnMaxCostExceeded": "The price is above the maximum desired cost of {maximumDesiredCost} for this Item.",
   });
 
   if (typeof exports !== "undefined") {

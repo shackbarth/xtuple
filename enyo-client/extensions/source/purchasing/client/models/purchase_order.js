@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, _:true */
+/*global XT:true, XM:true, _:true, Globalize:true */
 
 (function () {
   "use strict";
@@ -597,7 +597,7 @@ white:true*/
         "change:item": "itemChanged",
         "change:itemSource": "itemSourceChanged",
         "change:isMiscellaneous": "isMiscellaneousChanged",
-        "change:price": "calculateExtendedPrice",
+        "change:price": "priceChanged",
         "change:purchaseOrder": "purchaseOrderChanged",
         "change:site": "calculatePrice",
         "change:quantity": "quantityChanged",
@@ -702,7 +702,7 @@ white:true*/
         if (itemSource && dueDate) {
           earliestDate = itemSource.get("earliestDate");
           if (XT.date.compareDate(dueDate, earliestDate) < 0) {
-            this.notify("_updateToEarliestDate?".loc(), {
+            this.notify("_correctToEarliestDate?".loc(), {
               type: K.QUESTION,
               callback: function (response) {
                 if (response.answer) {
@@ -823,10 +823,10 @@ white:true*/
 
           options.success = function () {
             if (count === that._isCount && itemSourceCollection.length) {
-              that.off("change:price", that.caclulateExtendedPrice);
+              that.off("change:price", that.priceChanged);
               that.set("itemSource", itemSourceCollection.at(0));
               that.calculateExtendedPrice();
-              that.on("change:price", that.caclulateExtendedPrice);
+              that.on("change:price", that.priceChanged);
             }
           };
 
@@ -921,7 +921,34 @@ white:true*/
           callback = function () {
             that.quantityChanged();  // Force quantity validation and repricing.
           };
+          // Need a callback in case multiple async questions are asked
           this.dueDateChanged(this, null, {success: callback});
+        }
+      },
+
+      priceChanged: function () {
+        var price = this.get("price"),
+          item = this.get("item"),
+          K = XM.Model,
+          that = this,
+          vendorUnitRatio,
+          curCost,
+          maxCost,
+          message;
+
+        this.calculateExtendedPrice();
+
+        if (item && _.isNumber(price)) {
+          // TODO: This really should consider currency conversion as well
+          vendorUnitRatio = this.get("vendorUnitRatio") || 1;
+          curCost = price / vendorUnitRatio;
+          maxCost = item.get("maximumDesiredCost");
+          if (maxCost < curCost) {
+            message = "_warnMaxCostExceeded".loc();
+            maxCost = Globalize.format(maxCost, "c" + XT.COST_SCALE);
+            message = message.replace("{maximumDesiredCost}", maxCost);
+            this.notify(message, {type: K.WARNING});
+          }
         }
       },
 
@@ -971,7 +998,7 @@ white:true*/
         if (itemSource && quantity) {
           minimumOrderQuantity = itemSource.get("minimumOrderQuantity");
           if (quantity < minimumOrderQuantity) {
-            this.notify("_updateToMinimumQuantity?".loc(), {
+            this.notify("_correctToMinimumQuantity?".loc(), {
               type: K.QUESTION,
               callback: function (response) {
                 if (response.answer) {
@@ -983,7 +1010,7 @@ white:true*/
             multipleOrderQuantity = itemSource.get("multipleOrderQuantity");
             quotient = quantity / multipleOrderQuantity;
             if (quotient !== Math.round(quotient)) {
-              this.notify("_updateToMultipleQuantity?".loc(), {
+              this.notify("_correctToMultipleQuantity?".loc(), {
                 type: K.QUESTION,
                 callback: function (response) {
                   if (response.answer) {
