@@ -285,7 +285,6 @@ regexp:true, undef:true, trailing:true, white:true */
             value,
             options = {};
           options.success = function () {
-            console.log("popup callback");
             that.setValue(value);
           };
           attrs[Model.prototype.idAttribute] = model.id;
