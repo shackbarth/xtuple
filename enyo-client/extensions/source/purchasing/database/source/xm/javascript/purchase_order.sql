@@ -24,6 +24,7 @@ select xt.install_js('XM','PurchaseOrder','purchasing', $$
     }
 
     XT.executeFunction("releasePurchaseOrder", [id]);
+    return true;
   };
 
   /**
@@ -42,6 +43,7 @@ select xt.install_js('XM','PurchaseOrder','purchasing', $$
     }
 
     XT.executeFunction("unreleasePurchaseOrder", [id]);
+    return true;
   };
 
   /**
