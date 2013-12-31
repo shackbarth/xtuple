@@ -1132,6 +1132,28 @@ white:true*/
 
     });
 
+    /** @private */
+    var _doDispatch = function (method, callback, params) {
+      var that = this,
+        options = {};
+      params = params || [];
+      params.unshift(this.id);
+      options.success = function (resp) {
+        var fetchOpts = {};
+        fetchOpts.success = function () {
+          if (callback) { callback(resp); }
+        };
+        if (resp) {
+          that.fetch(fetchOpts);
+        }
+      };
+      options.error = function (resp) {
+        if (callback) { callback(resp); }
+      };
+      this.dispatch("XM.PurchaseOrder", method, params, options);
+      return this;
+    };
+
     /**
       @class
 
@@ -1141,7 +1163,45 @@ white:true*/
 
       recordType: "XM.PurchaseOrderListItem",
 
-      editableModel: "XM.PurchaseOrder"
+      editableModel: "XM.PurchaseOrder",
+
+      canRelease: function (callback) {
+        var status = this.get("status"),
+          ret = XT.session.privileges.get("ReleasePurchaseOrders") &&
+            status === XM.PurchaseOrder.UNRELEASED_STATUS;
+        if (callback) {
+          callback(ret);
+        }
+        return ret;
+      },
+
+      canUnrelease: function (callback) {
+        var status = this.get("status"),
+          ret = XT.session.privileges.get("ReleasePurchaseOrders") &&
+            status === XM.PurchaseOrder.OPEN_STATUS,
+            options = {},
+            params;
+        if (ret) {
+          params = [this.id, true];
+          options.success = function (resp) {
+            if (callback) { callback(!resp); }
+          };
+          this.dispatch("XM.PurchaseOrder", "used", params, options);
+        } else {
+          if (callback) {
+            callback(ret);
+          }
+          return ret;
+        }
+      },
+
+      doRelease: function (callback) {
+        return _doDispatch.call(this, "release", callback);
+      },
+
+      doUnrelease: function (callback) {
+        return _doDispatch.call(this, "unrelease", callback);
+      }
 
     });
 

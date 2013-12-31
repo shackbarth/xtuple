@@ -83,6 +83,13 @@ trailing:true, white:true, strict:false*/
       label: "_purchaseOrders".loc(),
       collection: "XM.PurchaseOrderListItemCollection",
       parameterWidget: "XV.PurchaseOrderListParameters",
+      multiSelect: true,
+      actions: [
+        {name: "release", prerequisite: "canRelease", method: "doRelease",
+          notify: false},
+        {name: "unrelease", prerequisite: "canUnrelease",
+          method: "doUnrelease", notify: false}
+      ],
       query: {orderBy: [
         {attribute: 'number'}
       ]},
