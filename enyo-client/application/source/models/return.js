@@ -24,6 +24,8 @@ white:true*/
 
     documentDateKey: 'returnDate',
 
+    altQuantityAttribute: 'credited',
+
     idAttribute: 'number',
 
     numberPolicySetting: 'CMNumberGeneration',
@@ -73,7 +75,10 @@ white:true*/
 
     recordType: 'XM.ReturnTax',
 
-    idAttribute: 'uuid'
+    idAttribute: 'uuid',
+
+    // make up the the field that is "value"'ed in the ORM
+    taxType: "Adjustment"
 
   });
 
@@ -102,6 +107,8 @@ white:true*/
     recordType: 'XM.ReturnListItem',
 
     editableModel: 'XM.Return',
+
+    documentDateKey: 'returnDate',
 
     couldDestroy: function (callback) {
       callback(XT.session.privileges.get("MaintainCreditMemos") && !this.get("isPosted"));
@@ -171,7 +178,7 @@ white:true*/
       "taxTotal"
     ],
 
-    quantityAttribute: "credited",
+    altQuantityAttribute: "credited",
 
     defaults: function () {
       return {
