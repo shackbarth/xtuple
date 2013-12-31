@@ -598,8 +598,8 @@ white:true*/
         "change:isMiscellaneous": "isMiscellaneousChanged",
         "change:price": "calculateExtendedPrice",
         "change:purchaseOrder": "purchaseOrderChanged",
-        "change:quantity change:site": "calculatePrice",
-        "change:quantity": "calculateExtendedPrice",
+        "change:site": "calculatePrice",
+        "change:quantity": "quantityChanged",
         "status:READY_CLEAN": "statusReadyClean",
         "status:DESTROYED_DIRTY": "statusDestroyedDirty"
       },
@@ -887,7 +887,9 @@ white:true*/
 
         this.set(attrs);
 
-        if (itemSource) { this.calculatePrice(); }
+        if (itemSource) {
+          this.quantityChanged(); // Force quantity validation and repricing.
+        }
       },
 
       purchaseOrderChanged: function () {
@@ -924,6 +926,46 @@ white:true*/
 
       },
 
+      quantityChanged: function () {
+        var itemSource = this.get("itemSource"),
+          quantity = this.get("quantity"),
+          that = this,
+          K = XM.Model,
+          minimumOrderQuantity,
+          multipleOrderQuantity,
+          quotient;
+
+        if (itemSource && quantity) {
+          minimumOrderQuantity = itemSource.get("minimumOrderQuantity");
+          if (quantity < minimumOrderQuantity) {
+            this.notify("_updateToMinimumQuantity?".loc(), {
+              type: K.QUESTION,
+              callback: function (response) {
+                if (response.answer) {
+                  that.set("quantity", minimumOrderQuantity);
+                }
+              }
+            });
+          } else {
+            multipleOrderQuantity = itemSource.get("multipleOrderQuantity");
+            quotient = quantity / multipleOrderQuantity;
+            if (quotient !== Math.round(quotient)) {
+              this.notify("_updateToMultipleQuantity?".loc(), {
+                type: K.QUESTION,
+                callback: function (response) {
+                  if (response.answer) {
+                    quantity = Math.ceil(quotient) * multipleOrderQuantity;
+                    that.set("quantity", quantity);
+                  }
+                }
+              });
+            }
+          }
+        }
+
+        this.calculatePrice();
+      },
+
       statusReadyClean: function () {
         this.setReadOnly(["isMiscellaneous", "item", "expenseCategory"]);
       },
@@ -941,13 +983,18 @@ white:true*/
         if (isMisc && !this.get("expenseCategory")) {
           params.attr = "_expenseCategory".loc();
           return XT.Error.clone("xt1004", { params: params });
-        } else if (!isMisc && !this.get("item")) {
-          params.attr = "_item".loc();
-          return XT.Error.clone("xt1004", { params: params });
+        } else if (!isMisc) {
+          if (!this.get("item")) {
+            params.attr = "_item".loc();
+            return XT.Error.clone("xt1004", { params: params });
+          } else if (!this.get("site")) {
+            params.attr = "_site".loc();
+            return XT.Error.clone("xt1004", { params: params });
+          }
         }
 
         return err;
-      },
+      }
 
     });
 

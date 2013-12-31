@@ -390,6 +390,7 @@ strict:true, trailing:true, white:true */
     "_language": "Language",
     "_lastName": "Last Name",
     "_latestComment": "Latest Comment",
+    "_leadTime": "Lead Time",
     "_ledgerAccount": "Ledger Account",
     "_ledgerAccounts": "Ledger Accounts",
     "_limitToList": "Limit to List",
