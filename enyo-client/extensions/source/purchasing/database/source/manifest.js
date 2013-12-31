@@ -23,6 +23,7 @@
     "xt/views/poiteminfo.sql",
     "xm/javascript/item_source.sql",
     "xm/javascript/purchasing.sql",
+    "xm/javascript/purchase_order.sql",
     "public/tables/itemsrc.sql"
   ]
 }

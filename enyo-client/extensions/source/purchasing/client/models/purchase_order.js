@@ -256,7 +256,7 @@ white:true*/
         var status = this.get("status"),
           lineItems = this.get("lineItems"),
           received = function (lineItem) {
-            return lineItem.get("received");
+            return lineItem.get("received") + lineItem.get("toReceive");
           },
           K = XM.Model,
           that = this,
@@ -495,6 +495,10 @@ white:true*/
     // CONSTANTS
     //
     _.extend(XM.PurchaseOrder, /** @lends XM.PurchaseOrder# */{
+
+      used: function (id, options) {
+        return XM.ModelMixin.dispatch('XM.PurchaseOrder', 'used', [id], options);
+      },
 
       /**
         Order is unreleased.
