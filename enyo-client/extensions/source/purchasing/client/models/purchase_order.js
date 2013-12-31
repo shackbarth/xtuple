@@ -782,17 +782,35 @@ white:true*/
           orderDate = purchaseOrder ? purchaseOrder.get("orderDate") : false,
           vendor = this.getValue("purchaseOrder.vendor"),
           characteristics = this.get("characteristics"),
+          K = XM.Model,
           itemSourceCollection,
           that = this,
           options = {},
           taxOptions = {},
+          standardCost,
           itemCharAttrs,
           charTypes,
           expires,
           success,
+          message,
           count,
           len,
           i;
+
+        if (item && XT.session.settings.get("RequireStdCostForPOItem")) {
+          standardCost = item.get("standardCost") || 0;
+          if (!standardCost) {
+            message = "_errorStandardCostRequired".loc();
+            message = message.replace("{number}", item.get("number"));
+            this.notify(message, {
+              type: K.CRITICAL,
+              callback: function () {
+                that.unset("item");
+              }
+            });
+            return;
+          }
+        }
 
         this.isMiscellaneousChanged();
         this.unset("taxType");

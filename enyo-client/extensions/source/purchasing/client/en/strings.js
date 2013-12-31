@@ -14,6 +14,7 @@ strict:true, trailing:true, white:true */
     "_DefaultPrintPOOnSave": "Print on Save",
     "_defaultShipVia": "Default Ship Via",
     "_earliestDate": "Earliest Date",
+    "_errorStandardCostRequired": "The Item {number} can not be used because has no standard cost.",
     "_freightSubtotal": "Freight Subtotal",
     "_itemSource": "Item Source",
     "_itemSourceItemInactive": "Item Source can not be active when Item is inactive",
@@ -49,7 +50,7 @@ strict:true, trailing:true, white:true */
     "_vendorItem": "Vendor Item",
     "_vendorItemNumber": "VendorItemNumber",
     "_vouchered": "Vouchered",
-    "_warnMaxCostExceeded": "The price is above the maximum desired cost of {maximumDesiredCost} for this Item.",
+    "_warnMaxCostExceeded": "The price is above the maximum desired cost of {maximumDesiredCost} for this Item."
   });
 
   if (typeof exports !== "undefined") {
