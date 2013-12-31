@@ -254,7 +254,28 @@ white:true*/
 
       purchaseOrderStatusChanged: function () {
         var status = this.get("status"),
-          lineItems = this.get("lineItems");
+          lineItems = this.get("lineItems"),
+          received = function (lineItem) {
+            return lineItem.get("received");
+          },
+          K = XM.Model,
+          that = this,
+          prevStatus,
+          transacted,
+          message;
+
+        if (status === XM.PurchaseOrder.UNRELEASED_STATUS &&
+            _.some(lineItems.models, received)) {
+          message = "_transactedPoNotUnreleased".loc();
+          prevStatus = this.previous("status");
+          this.notify(message, {
+            type: K.CRITICAL,
+            callback: function () {
+              that.set("status", prevStatus);
+            }
+          });
+          return;
+        }
 
         lineItems.each(function (lineItem) {
           var quantity = lineItem.get("quantity");

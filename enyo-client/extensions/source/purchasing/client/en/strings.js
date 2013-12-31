@@ -45,6 +45,7 @@ strict:true, trailing:true, white:true */
     "_ranking": "Ranking",
     "_RequirePOTax": "Require Tax",
     "_RequireStdCostForPOItem": "Require Standard Cost",
+    "_transactedPoNotUnreleased": "This Purchase Order has transactions and can not be Unreleased.",
     "_unitRatio": "Unit Ratio",
     "_UseEarliestAvailDateOnPOItem": "Use Earliest Date",
     "_vendorItem": "Vendor Item",
