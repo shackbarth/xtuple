@@ -34,7 +34,7 @@ white:true*/
             // but works across a broad range of callback errors.
             errorMessage = response.status ? response.status.message : response.message;
             if (errorMessage) {
-              console.log("Error:", errorMessage);
+              XT.log("Error:", errorMessage);
               setTimeout(function () {
                 XT.app.$.postbooks.notify(null, {
                   type: XM.Model.CRITICAL,

@@ -61,7 +61,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     },
     createHash: {
       name: "DQ Islands" + Math.random(),
-      abbreviation: "DQ",
+      abbreviation: "X" + Math.random().toString(36).slice(3, 4),
       currencyName: "US Dollar",
       currencySymbol: "$",
       currencyAbbreviation: "USD",
