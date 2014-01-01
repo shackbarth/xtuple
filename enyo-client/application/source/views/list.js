@@ -1212,10 +1212,11 @@ trailing:true, white:true, strict: false*/
       return value ? "_posted".loc() : "_unposted".loc();
     },
     formatInvoiceDate: function (value, view, model) {
-      var isLate = model && model.get(model.documentDateKey) &&
+      var isLate = model && !model.get("isPosted") &&
+        model.get(model.documentDateKey) &&
         (XT.date.compareDate(value, new Date()) < 1);
       view.addRemoveClass("error", isLate);
-      return value;
+      return Globalize.format(value, "d");
     },
     formatTotal: function (value, view, model) {
       var currency = model ? model.get("currency") : false,
