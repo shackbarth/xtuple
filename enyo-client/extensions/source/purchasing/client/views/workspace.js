@@ -111,7 +111,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ScrollableGroupbox", name: "vendorGroup",
               classes: "in-panel", fit: true, components: [
               {kind: "XV.InputWidget", attr: "vendorItemNumber", label: "_number".loc()},
-              {kind: "XV.InputWidget", attr: "vendorUnit", label: "_unit".loc()},
+              {kind: "XV.UnitCombobox", attr: "vendorUnit", label: "_unit".loc(), showLabel: true},
               {kind: "XV.UnitRatioWidget", attr: "vendorUnitRatio", label: "_unitRatio".loc()},
               {kind: "XV.InputWidget", attr: "barcode"},
               {kind: "onyx.GroupboxHeader", content: "_description".loc()},
