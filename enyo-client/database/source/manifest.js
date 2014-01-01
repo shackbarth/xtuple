@@ -48,7 +48,6 @@
     "public/tables/usrpriv.sql",
     "public/tables/vendinfo.sql",
     "public/tables/vendaddrinfo.sql",
-    "public/tables/wo.sql",
     "public/tables/womatl.sql",
     "xt/functions/add_priv.sql",
     "xt/functions/average_cost.sql",

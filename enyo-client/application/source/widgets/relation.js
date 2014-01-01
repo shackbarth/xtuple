@@ -759,16 +759,4 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
     list: "XV.VendorList"
   });
 
-  // ..........................................................
-  // WORK ORDER
-  //
-
-  enyo.kind({
-    name: "XV.WorkOrderWidget",
-    kind: "XV.RelationWidget",
-    collection: "XM.WorkOrderRelationCollection",
-    keyAttribute: "number",
-    list: "XV.WorkOrderList"
-  });
-
 }());
