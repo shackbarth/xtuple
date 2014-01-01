@@ -174,7 +174,6 @@
     "xt/views/todoiteminfo.sql",
     "xt/views/usrinfo.sql",
     "xt/views/vendaddr.sql",
-    "xt/views/woinfo.sql",
     "xt/tables/usrlite.sql",
     "xm/javascript/account.sql",
     "xm/javascript/address.sql",
