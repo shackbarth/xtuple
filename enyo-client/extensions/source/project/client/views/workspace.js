@@ -101,34 +101,32 @@ trailing:true, white:true, strict:false*/
       model: "XM.Project",
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
-          classes: "xv-top-panel", fit: true, components: [
+          fit: true, components: [
           {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
-              {name: "overviewControl", components: [
-                {kind: "XV.InputWidget", attr: "number"},
-                {kind: "XV.InputWidget", attr: "name"},
-                {kind: "XV.DepartmentWidget", attr: "department"},
-                {kind: "XV.ProjectTypePicker", attr: "projectType"},
-                {kind: "XV.ProjectStatusPicker", attr: "status"},
-                {kind: "XV.PriorityPicker", attr: "priority"},
-                {kind: "XV.PercentWidget", attr: "percentComplete"},
-                {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-                {kind: "XV.DateWidget", attr: "dueDate"},
-                {kind: "XV.DateWidget", attr: "startDate"},
-                {kind: "XV.DateWidget", attr: "assignDate"},
-                {kind: "XV.DateWidget", attr: "completeDate"},
-                {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-                {kind: "XV.UserAccountWidget", attr: "owner"},
-                {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-                {kind: "XV.ProjectCharacteristicsWidget", attr: "characteristics"},
-                {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-                {kind: "XV.TextArea", attr: "notes", fit: true},
-                {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-                {kind: "XV.AccountWidget", attr: "account"},
-                {kind: "XV.ContactWidget", attr: "contact"}
-              ]}
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.InputWidget", attr: "name"},
+              {kind: "XV.DepartmentWidget", attr: "department"},
+              {kind: "XV.ProjectTypePicker", attr: "projectType"},
+              {kind: "XV.ProjectStatusPicker", attr: "status"},
+              {kind: "XV.PriorityPicker", attr: "priority"},
+              {kind: "XV.PercentWidget", attr: "percentComplete"},
+              {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+              {kind: "XV.DateWidget", attr: "dueDate"},
+              {kind: "XV.DateWidget", attr: "startDate"},
+              {kind: "XV.DateWidget", attr: "assignDate"},
+              {kind: "XV.DateWidget", attr: "completeDate"},
+              {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+              {kind: "XV.UserAccountWidget", attr: "owner"},
+              {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+              {kind: "XV.ProjectCharacteristicsWidget", attr: "characteristics"},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "XV.TextArea", attr: "notes", fit: true},
+              {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+              {kind: "XV.AccountWidget", attr: "account"},
+              {kind: "XV.ContactWidget", attr: "contact"}
             ]}
           ]},
           {kind: "XV.ProjectCommentBox", attr: "comments"},
