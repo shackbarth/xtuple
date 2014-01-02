@@ -80,9 +80,13 @@ white:true*/
   });
   XM.creditCardGateways = new XM.CreditCardGatewayCollection();
   // new and better way
-  _.each([{ id: "Authorize.Net", name: "Authorize.Net" }], function (attrs) {
-    XM.creditCardGateways.add(new XM.CreditCardGatewayModel(attrs));
-  });
+  _.each([
+      { id: "Authorize.Net", name: "Authorize.Net" },
+      { id: "External", name: "External" }
+    ], function (attrs) {
+      XM.creditCardGateways.add(new XM.CreditCardGatewayModel(attrs));
+    }
+  );
 
   // Credit Card Type
   var creditCardTypeJson = [
