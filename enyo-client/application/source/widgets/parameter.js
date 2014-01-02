@@ -1,6 +1,6 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
+trailing:true, white:true, strict:false*/
 /*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
 
 (function () {
@@ -12,7 +12,7 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.AccountListParameters",
     kind: "XV.ParameterWidget",
-    characteristicsRole: 'isAccounts',
+    characteristicsRole: "isAccounts",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_account".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
@@ -21,7 +21,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -56,7 +56,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -105,7 +105,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -207,7 +207,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -230,7 +230,7 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.ContactListParameters",
     kind: "XV.ParameterWidget",
-    characteristicsRole: 'isContacts',
+    characteristicsRole: "isContacts",
     showLayout: true,
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
@@ -240,7 +240,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -304,7 +304,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -361,7 +361,7 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.EmployeeListParameters",
     kind: "XV.ParameterWidget",
-    characteristicsRole: 'isEmployees',
+    characteristicsRole: "isEmployees",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_account".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
@@ -370,7 +370,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -468,7 +468,7 @@ trailing:true, white:true*/
         user: XM.currentUser
       };
     },
-    characteristicsRole: 'isIncidents',
+    characteristicsRole: "isIncidents",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
       {name: "number", label: "_number".loc(), attr: "number"},
@@ -491,8 +491,8 @@ trailing:true, white:true*/
             if (value) {
               param = {
                 attribute: "priorityOrder",
-                operator: '<',
-                value: value.get('order')
+                operator: "<",
+                value: value.get("order")
               };
             }
             return param;
@@ -509,29 +509,29 @@ trailing:true, white:true*/
             param;
           switch (value)
           {
-          case 'N':
+          case "N":
             value = 0;
             break;
-          case 'F':
+          case "F":
             value = 1;
             break;
-          case 'C':
+          case "C":
             value = 2;
             break;
-          case 'A':
+          case "A":
             value = 3;
             break;
-          case 'R':
+          case "R":
             value = 4;
             break;
-          case 'L':
+          case "L":
             value = 5;
             break;
           }
           if (value) {
             param = {
               attribute: "statusOrder",
-              operator: '<',
+              operator: "<",
               value: value
             };
           }
@@ -582,7 +582,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -596,7 +596,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: false
             };
           }
@@ -641,7 +641,7 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.ItemListParameters",
     kind: "XV.ParameterWidget",
-    characteristicsRole: 'isItems',
+    characteristicsRole: "isItems",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_item".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
@@ -650,7 +650,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -687,7 +687,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -730,7 +730,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -757,7 +757,7 @@ trailing:true, white:true*/
         user: XM.currentUser
       };
     },
-    characteristicsRole: 'isOpportunities',
+    characteristicsRole: "isOpportunities",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_opportunity".loc()},
       {name: "showInactive", label: "_showInactive".loc(), attr: "isActive",
@@ -767,7 +767,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -815,6 +815,71 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // PROJECT
+  //
+
+  enyo.kind({
+    name: "XV.ProjectListParameters",
+    kind: "XV.ParameterWidget",
+    characteristicsRole: "isProjects",
+    defaultParameters: function () {
+      return {
+        user: XM.currentUser
+      };
+    },
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_project".loc()},
+      {name: "showCompleted", label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: "!=",
+              value: "C"
+            };
+          }
+          return param;
+        }
+      },
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "department", label: "_department".loc(), attr: "department", defaultKind: "XV.DepartmentWidget"},
+      {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
+      {name: "statusHeader", kind: "onyx.GroupboxHeader", content: "_status".loc()},
+      {name: "status", label: "_status".loc(), attr: "status",
+        defaultKind: "XV.ProjectStatusPicker"},
+      {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
+      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "user", label: "_user".loc(), attr: ["owner.username", "assignedTo.username"], defaultKind: "XV.UserAccountWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
+      {name: "fromDueDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"},
+      {name: "toDueDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"}
+    ],
+    /**
+      Special handling for status.
+    */
+    setParameterItemValues: function (items) {
+      this.inherited(arguments);
+      var i;
+      for (i = 0; i < items.length; i++) {
+        if (items[i].name === "status" &&
+            items[i].showing === false) {
+          this.$.showCompleted.hide();
+          this.$.statusHeader.hide();
+        }
+      }
+
+    }
+  });
+
+  // ..........................................................
   // PROSPECT
   //
 
@@ -829,7 +894,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -865,7 +930,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '!=',
+              operator: "!=",
               value: "U"
             };
           }
@@ -878,7 +943,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '!=',
+              operator: "!=",
               value: "C"
             };
           }
@@ -916,7 +981,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '>=',
+              operator: ">=",
               value: new Date(),
               includeNull: true
             };
@@ -930,8 +995,8 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '!=',
-              value: 'C'
+              operator: "!=",
+              value: "C"
             };
           }
           return param;
@@ -943,7 +1008,7 @@ trailing:true, white:true*/
           if (this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '!=',
+              operator: "!=",
               value: "P"
             };
           }
@@ -1003,7 +1068,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              value: 'O'
+              value: "O"
             };
           }
           return param;
@@ -1042,7 +1107,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -1069,7 +1134,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -1097,7 +1162,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -1285,7 +1350,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -1340,7 +1405,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '=',
+              operator: "=",
               value: true
             };
           }
@@ -1363,6 +1428,21 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // VENDOR ADDRESS
+  //
+
+  enyo.kind({
+    name: "XV.VendorAddressParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_vendorAddress".loc()},
+      {name: "vendor", label: "_vendor".loc(), attr: "vendor", defaultKind: "XV.VendorWidget"},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "name", label: "_name".loc(), attr: "name"}
+    ]
+  });
+
+  // ..........................................................
   // WORK ORDER
   //
 
@@ -1379,7 +1459,7 @@ trailing:true, white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '!=',
+              operator: "!=",
               value: "C"
             };
           }

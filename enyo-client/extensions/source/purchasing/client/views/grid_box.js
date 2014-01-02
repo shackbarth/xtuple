@@ -52,9 +52,11 @@ trailing:true, white:true, strict:false*/
       classes: "large-panel",
       title: "_lineItems".loc(),
       gridRowKind: "XV.PurchaseOrderLineRow",
+      editorMixin: XV.PurchaseOrderLineMixin,
       workspace: "XV.PurchaseOrderLineWorkspace",
       summary: "XV.PurchaseOrderSummaryPanel",
       parentKey: "purchaseOrder",
+      orderBy: [{attribute: "lineNumber"}],
       columns: [
         {classes: "line-number", header: "#", rows: [
           {readOnlyAttr: "lineNumber",
@@ -66,22 +68,22 @@ trailing:true, white:true, strict:false*/
             {item: "item", site: "site"},
             name: "itemSiteWidget",
             query: {parameters: [
-            {attribute: "isPurchased", value: true},
             {attribute: "isActive", value: true}
           ]}}},
           {formatter: "formatDescription"},
           {formatter: "formatSite"}
         ]},
-        {classes: "quantity", header: "_quantity".loc(), rows: [
+        {classes: "quantity", header: ["_quantity".loc(), "_unit".loc(), "_dueDate".loc()], rows: [
           {readOnlyAttr: "quantity",
             editor: {kind: "XV.QuantityWidget", attr: "quantity",
               name: "quantityWidget"}},
           {readOnlyAttr: "vendorUnit",
+            placeholder: "_na".loc(),
             editor: {kind: "XV.InputWidget", attr: "vendorUnit"}},
-          {readOnlyAttr: "getPurchaseOrderStatusString",
-            editor: {kind: "XV.PurchaseOrderStatusPicker", attr: "status"}}
+          {readOnlyAttr: "dueDate",
+            editor: {kind: "XV.DateWidget", attr: "dueDate"}}
         ]},
-        {classes: "price", header: "_price".loc(), rows: [
+        {classes: "price", header: ["_price".loc(), "_extended".loc()], rows: [
           {readOnlyAttr: "price",
             editor: {kind: "XV.MoneyWidget",
               attr: {localValue: "price", currency: "currency"},
@@ -93,23 +95,30 @@ trailing:true, white:true, strict:false*/
               currencyDisabled: true, currencyShowing: false,
               scale: XT.EXTENDED_PRICE_SCALE}}
         ]},
-        {classes: "date", header: "_dueDate".loc(), rows: [
-          {readOnlyAttr: "dueDate",
-            editor: {kind: "XV.DateWidget", attr: "dueDate"}}
-        ]},
-        {classes: "date", header: ["_vendorItem".loc(), "_manufacturerItem".loc()], rows: [
+        {classes: "grid-item",
+          header: ["_vendorItem".loc(), "_manufacturerItem".loc(), "_project".loc()],
+          rows: [
           {readOnlyAttr: "vendorItemNumber",
-            editor: {kind: "XV.InputWidget", attr: "vendorItemNumber"}},
+            placeholder: "_noVendorNumber".loc(),
+            editor: {kind: "XV.ItemSourceWidget", showDetail: false,
+            attr: {itemSource: "itemSource", vendorItemNumber: "vendorItemNumber"}}},
           {readOnlyAttr: "manufacturerItemNumber",
+            placeholder: "_noManufacturerNumber".loc(),
             editor: {kind: "XV.InputWidget", attr: "manufacturerItemNumber"}},
+          {readOnlyAttr: "project.number",
+            placeholder: "_noProject".loc(),
+            editor: {kind: "XV.ProjectWidget", attr: "project"}}
         ]},
-        {classes: "quantity", header: ["_received".loc(), "_vouchered".loc()], rows: [
+        {classes: "date", header: ["_received".loc(), "_vouchered".loc(), "_status".loc()], rows: [
           {readOnlyAttr: "received",
             editor: {kind: "XV.QuantityWidget", attr: "received",
               name: "shippedWidget"}},
           {readOnlyAttr: "vouchered",
-            editor: {kind: "XV.QuantityWidget", attr: "vouchered"}},
-        ]}
+            editor: {kind: "XV.QuantityWidget", attr: "vouchered",
+              name: "voucheredWidget"}},
+          {readOnlyAttr: "getPurchaseOrderStatusString",
+            editor: {kind: "XV.PurchaseOrderStatusPicker", attr: "status"}}
+        ]},
       ]
     });
 

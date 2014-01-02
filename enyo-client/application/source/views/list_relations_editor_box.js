@@ -625,13 +625,14 @@ trailing:true, white:true*/
   // SALE TYPE AND SALES ORDER WORKFLOW
   //
   enyo.kind({
-    name: "XV.SalesWorkflowEditor",
+    name: "XV.SaleTypeWorkflowEditor",
     kind: "XV.RelationsEditor",
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
         {kind: "XV.InputWidget", attr: "name"},
         {kind: "XV.InputWidget", attr: "description"},
+        {kind: "XV.WorkflowStatusPicker", attr: "status"},
         {kind: "XV.SalesOrderWorkflowTypePicker", attr: "workflowType" },
         {kind: "XV.PriorityPicker", attr: "priority", showNone: false},
         {kind: "XV.NumberSpinnerWidget", attr: "sequence"},
@@ -661,13 +662,38 @@ trailing:true, white:true*/
   });
 
   enyo.kind({
-    name: "XV.SaleTypeWorkflowEditor",
-    kind: "XV.SalesWorkflowEditor",
-  });
-
-  enyo.kind({
     name: "XV.SalesOrderWorkflowEditor",
-    kind: "XV.SalesWorkflowEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "name"},
+        {kind: "XV.InputWidget", attr: "description"},
+        {kind: "XV.WorkflowStatusPicker", attr: "status"},
+        {kind: "XV.PriorityPicker", attr: "priority", showNone: false},
+        {kind: "XV.NumberSpinnerWidget", attr: "sequence"},
+        {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+        {kind: "XV.DateWidget", attr: "dueDate"},
+        {kind: "XV.DateWidget", attr: "startDate"},
+        {kind: "XV.DateWidget", attr: "assignDate"},
+        {kind: "XV.DateWidget", attr: "completeDate"},
+        {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+        {kind: "XV.UserAccountWidget", attr: "owner"},
+        {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+        {kind: "onyx.GroupboxHeader", content: "_onCompletion".loc()},
+        {kind: "XV.SalesOrderStatusPicker", attr: "completedParentStatus",
+          noneText: "_noChange".loc(), label: "_nextStatus".loc()},
+        {kind: "XV.DependenciesWidget",
+          attr: {workflow: "parent.workflow", successors: "completedSuccessors"}},
+        {kind: "onyx.GroupboxHeader", content: "_onDeferred".loc()},
+        {kind: "XV.SalesOrderStatusPicker", attr: "deferredParentStatus",
+          noneText: "_noChange".loc(), label: "_nextStatus".loc()},
+        {kind: "XV.DependenciesWidget",
+          attr: {workflow: "parent.workflow", successors: "deferredSuccessors"}},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes", fit: true}
+      ]}
+    ]
   });
 
   enyo.kind({

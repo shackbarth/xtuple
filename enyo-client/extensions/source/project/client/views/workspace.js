@@ -44,9 +44,11 @@ trailing:true, white:true, strict:false*/
           {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "XV.ScrollableGroupbox", name: "mainGroup",
               classes: "in-panel", components: [
-              {kind: "onyx.GroupboxHeader", content: "_default".loc()},
-              {kind: "XV.PriorityPicker", attr: "DefaultPriority",
-                label: "_priority".loc()}
+              {kind: "onyx.GroupboxHeader", content: "_setup".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "UseProjects",
+                label: "_useProjects".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "RequireProjectAssignment",
+                label: "_requireProjectAssignment".loc()}
             ]}
           ]}
         ]}
