@@ -435,7 +435,7 @@ var _ = require("underscore"),
       // Step 7: save the updated model to the database
       //
       it('can be re-saved to the database', function (done) {
-        this.timeout(10 * 1000);
+        this.timeout(20 * 1000);
         save(data, done);
       });
     }
@@ -452,7 +452,7 @@ var _ = require("underscore"),
 
     if (!data.skipDelete) {
       it('can be deleted from the database', function (done) {
-        this.timeout(10 * 1000);
+        this.timeout(20 * 1000);
         destroy(data, done);
       });
     }
