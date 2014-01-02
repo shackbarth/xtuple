@@ -10,6 +10,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     and redirect to pentaho with a key that will allow pentaho to access the report.
    */
   var data = require("./data");
+  var request = require("request");
+  var https = require("https");
 
   var queryForData = function (session, query, callback) {
 
@@ -107,16 +109,64 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           created: new Date()
         },
         success = function () {
-          var biUrl = X.options.datasource.biUrl || "",
-            redirectUrl = biUrl + "&name=" + fileName +
+          var printServerHost = X.options.printServer.printhost || "localhost",
+            printServerPort = X.options.printServer.port || "8080",
+            printServerPortHttps = X.options.printServer.httpsport || "8443",
+            printServerUser = X.options.printServer.user || "reports",
+            printServerPassword = X.options.printServer.password || "password",
+            printServerformat = X.options.printServer.format || "pageable/pdf",
+            
+            reportUrl = "https://" + printServerHost + ":" + printServerPortHttps +
+              "/pentaho/content/reporting/reportviewer/report.html?solution=xtuple&path=%2Fprpt&locale=en_US" +
+              "&userid=" + printServerUser +
+              "&password=" + printServerPassword +
+              "&output-target=" + printServerformat +
+              "&name=" + fileName +
               "&org=" + req.session.passport.user.organization +
-              "&datasource=" + req.headers.host + "&datakey=" + randomKey;
+              "&datasource=" + req.headers.host + "&datakey=" + randomKey +
+              "&print=" + requestDetails.print,
+            //
+            // printer-name is not currently set so it should print on default printer until we
+            // supply a printer name from user preferences.
+            //
+            printUrl = "http://" + printServerHost + ":" + printServerPort +
+              "/pentaho/ViewAction?solution=xtuple&path=prpt&action=print-prpt.xaction" +
+              "&locale=en_US&output-target=pageable/pdf&printer-name=PDF" +
+              "&userid=" + printServerUser +
+              "&password=" + printServerPassword +
+              "&name=" + fileName +
+              "&org=" + req.session.passport.user.organization +
+              "&datasource=" + req.headers.host + "&datakey=" + randomKey +
+              "&print=" + requestDetails.print;
 
           if (requestDetails.culture) {
             res.set("Accept-Language", requestDetails.culture);
           }
-          // step 3: redirect to the report tool
-          res.redirect(redirectUrl);
+          // step 3: redirect to the report URL or if the print option is true
+          if (requestDetails.print === false) {
+            res.redirect(reportUrl);
+          // or request print service for report
+          } else {
+            request({
+              uri: printUrl,
+              method: "POST",
+            },
+            function (err, response, body) {
+              if (err) {
+                if (XT.session.config.debugging) {
+                  XT.log("Report route failed to print.  Response: ", response.statusCode);
+                }
+                res.send({ isError: true,
+                  error: err,
+                  message: err
+                });
+              } else {
+                res.send({ isError: false,
+                  message: response.statusCode
+                });
+              }
+            });
+          }
         },
         error = function (model, err, options) {
           res.send({

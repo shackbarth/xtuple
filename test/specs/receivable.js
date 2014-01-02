@@ -264,7 +264,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
       });
     });
 
-    describe("XM.ReceivableApplication", function () {
+    describe.skip("XM.ReceivableApplication", function () {
       var applicationModel;
 
       before(function (done) {
@@ -306,12 +306,13 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
       });
     });
 
-    describe("XM.ReceivableListItem", function () {
+    describe.skip("XM.ReceivableListItem", function () {
       var listModelCollection;
 
       before(function (done) {
         assert.isDefined(XM.ReceivableListItem);
         listModel = new XM.ReceivableListItem();
+        // XXX FIXME that's not a uuid
         listModel.fetch({uuid: "6087", success: done()});
 
         listModelCollection = new XM.ReceivableListItemCollection();
@@ -354,7 +355,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
 
     });
 
-    describe("XV.ReceivableList", function () {
+    describe.skip("XV.ReceivableList", function () {
       var listView, parameterWidget;
 
       before(function () {
@@ -436,7 +437,7 @@ setTimeout:true, clearTimeout:true, exports:true, it:true, before: true, describ
       });
     });
 
-    describe("XV.ReceivableWorkspace", function () {
+    describe.skip("XV.ReceivableWorkspace", function () {
       var receivableWorkspace;
 
       before(function () {

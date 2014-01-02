@@ -29,9 +29,8 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       port: 8443,
       keyFile: "./lib/private/key.pem",
       certFile: "./lib/private/server.crt",
-      caFile: null,
+      caFile: null, // needs to be an array of strings
       saltFile: "./lib/private/salt.txt",
-      biKeyFile: "",
       xTupleDbDir: "/usr/local/xtuple/databases",
       psqlPath: "psql",
       nodePath: "node",
@@ -42,15 +41,6 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       smtpPort: 587,
       smtpUser: "_smtp_user_",
       smtpPassword: "_smtp_password_",
-
-      // URL of BI server
-      // Leave this empty unless reports are installed
-      // "http://yourserver.com:8080/pentaho/content/reporting/reportviewer/report.html?",
-      biUrl: "",
-      // "http://yourserver.com:8080/pentaho/"
-      biServerUrl: "",
-      // To support multitenant in Pentaho, it must have a unique database key
-      uniqueTenantId: "default",
 
       // these properties are dynamically registered with the
       // node discovery service
@@ -81,11 +71,20 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       password: "admin"
     },
     biServer: {
-        hostname: "biserverhostname",
-        port: 8080,
-        catalog: "xTuple",
-        tenantname: "default",
-        keyFile: "./lib/rest-keys/server.key"
-      }
-    };
+      bihost: "localhost",
+      port: 8080,
+      httpsport: 8443,
+      catalog: "xTuple",
+      tenantname: "default",
+      restkeyfile: "/etc/xtuple/lib/rest-keys"
+    }, 
+    printServer: {
+      printhost: "localhost",
+      port: 8080,
+      httpsport: 8443,
+      user: "reports",
+      password: "password",
+      format: "pageable/pdf"
+    }
+  };
 }());
