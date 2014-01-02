@@ -1122,7 +1122,7 @@ white:true*/
     /**
       @class
 
-      @extends XM.Model
+      @extends XM.Comment
     */
     XM.PurchaseOrderLineComment = XM.Comment.extend({
 
@@ -1210,7 +1210,8 @@ white:true*/
 
       @extends XM.Model
     */
-    XM.PurchaseOrderCharacteristic = XM.Model.extend(/** @lends XM.PurchaseOrderListItemCharacteristic.prototype */{
+    XM.PurchaseOrderCharacteristic = XM.Model.extend(
+      /** @lends XM.PurchaseOrderCharacteristic.prototype */{
 
       recordType: "XM.PurchaseOrderListItemCharacteristic"
 
