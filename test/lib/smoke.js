@@ -265,11 +265,11 @@
       });
     });
     it('can save the workspace', function (done) {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
       saveWorkspace(workspace, done);
     });
     it('can delete the item from the list', function (done) {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
       deleteFromList(XT.app, workspace.value, done);
     });
   };
