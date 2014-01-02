@@ -12,6 +12,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.InvoiceLineItemGridBox",
     kind: "XV.GridBox",
     classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
     title: "_lineItems".loc(),
     columns: [
       {classes: "line-number", header: "#", rows: [
@@ -74,6 +75,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.ReturnLineItemGridBox",
     kind: "XV.GridBox",
     classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
     title: "_lineItems".loc(),
     columns: [
       {classes: "line-number", header: "#", rows: [
@@ -140,6 +142,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.SalesOrderLineItemGridBox",
     kind: "XV.GridBox",
     classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
     title: "_lineItems".loc(),
     columns: [
       {classes: "line-number", header: "#", rows: [
@@ -225,11 +228,11 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       {classes: "grid-item", header: ["_name".loc(), "_description".loc()],
         rows: [
         {readOnlyAttr: "name",
-          editor: {kind: "XV.InputWidget", attr: "name",
-            placeholder: "_name".loc()}},
+          placeholder: "_name".loc(),
+          editor: {kind: "XV.InputWidget", attr: "name"}},
         {readOnlyAttr: "description",
-          editor: {kind: "XV.InputWidget", attr: "description",
-            placeholder: "_description".loc()}},
+          placeholder: "_description".loc(),
+          editor: {kind: "XV.InputWidget", attr: "description"}},
         {readOnlyAttr: "getWorkflowStatusString",
           editor: {kind: "XV.WorkflowStatusPicker", attr: "status"}}
       ]},

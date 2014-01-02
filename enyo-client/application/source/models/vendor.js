@@ -39,11 +39,72 @@ white:true*/
   // ..........................................................
   // CLASS METHODS
   //
+
   _.extend(XM.Vendor, /** @lends XM.Vendor# */{
 
     used: function (id, options) {
       return XM.ModelMixin.dispatch('XM.Vendor', 'used', [id], options);
-    }
+    },
+
+    // ..........................................................
+    // CONSTANTS
+    //
+
+    INCOTERMS_SITE: "W",
+
+    INCOTERMS_VENDOR: "V"
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Comment
+  */
+  XM.VendorComment = XM.Comment.extend({
+    /** @scope XM.VendorComment.prototype */
+
+    recordType: 'XM.VendorComment',
+
+    sourceName: 'V'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.CharacteristicAssignment
+  */
+  XM.VendorCharacteristic = XM.CharacteristicAssignment.extend({
+    /** @scope XM.VendorCharacteristic.prototype */
+
+    recordType: 'XM.VendorCharacteristic',
+
+    which: 'isVendors'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.VendorAddress = XM.Model.extend(/** @scope XM.VendorAddress.prototype */{
+
+    recordType: 'XM.VendorAddress'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.VendorAddressRelation = XM.Info.extend(/** @scope XM.VendorAddressRelation.prototype */{
+
+    recordType: 'XM.VendorAddressRelation',
+
+    editableModel: 'XM.VendorAddress'
 
   });
 
@@ -66,7 +127,7 @@ white:true*/
 
     @extends XM.Info
   */
-  XM.VendorListITem = XM.Info.extend(/** @scope XM.VendorRelation.prototype */{
+  XM.VendorListItem = XM.Info.extend(/** @scope XM.VendorListItem.prototype */{
 
     recordType: 'XM.VendorListItem',
 
@@ -74,9 +135,32 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.VendorListItemCharacteristic = XM.Model.extend({
+    /** @scope XM.VendorListItemCharacteristic.prototype */
+
+    recordType: 'XM.VendorListItemCharacteristic'
+
+  });
+
   // ..........................................................
   // COLLECTIONS
   //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.VendorAddressRelationCollection = XM.Collection.extend(/** @lends XM.VendorAddressRelationCollection.prototype */{
+
+    model: XM.VendorAddressRelation
+
+  });
 
   /**
     @class
@@ -96,7 +180,7 @@ white:true*/
   */
   XM.VendorListItemCollection = XM.Collection.extend(/** @lends XM.VendorListItemCollection.prototype */{
 
-    model: XM.VendorListITem
+    model: XM.VendorListItem
 
   });
 

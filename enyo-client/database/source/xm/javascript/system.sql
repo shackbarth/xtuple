@@ -8,7 +8,10 @@ select xt.install_js('XM','System','xtuple', $$
     "CCPassword",
     "CCCompany",
     "CCTest",
-    "CCRequireCCV"
+    "CCRequireCCV",
+    "DefaultPriority",
+    "RequireProjectAssignment",
+    "UseProjects"
   ],
     i, option;
 

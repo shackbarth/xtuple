@@ -97,6 +97,7 @@
     "type": "PurchaseType",
     "table": "xt.potype",
     "idSequenceName": "potype_potype_id_seq",
+    "lockable": true,
     "isRest": true,
     "comment": "Purchase Type Map",
     "privileges": {
@@ -271,6 +272,20 @@
         }
       },
       {
+        "name": "workflowType",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_type"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_status"
+        }
+      },
+      {
         "name": "startSet",
         "attr": {
           "type": "Boolean",
@@ -375,6 +390,8 @@
     "nameSpace": "XM",
     "type": "PurchaseOrder",
     "table": "xt.poheadinfo",
+    "lockable": true,
+    "lockTable": "pohead",
     "orderSequence": "PoNumber",
     "idSequenceName": "pohead_pohead_id_seq",
     "isRest": true,
@@ -438,7 +455,7 @@
       {
         "name": "vendor",
         "toOne": {
-          "type": "VendorRelation",
+          "type": "PurchaseVendorRelation",
           "column": "pohead_vend_id",
           "isNested": true,
           "required": true
@@ -490,7 +507,7 @@
       {
         "name": "site",
         "toOne": {
-          "type": "Site",
+          "type": "SiteRelation",
           "column": "pohead_warehous_id",
           "isNested": true
         }
@@ -525,6 +542,64 @@
           "type": "TaxType",
           "column": "pohead_taxtype_id",
           "isNested": true
+        }
+      },
+      {
+        "name": "vendorAddress",
+        "toOne": {
+          "type": "VendorAddressRelation",
+          "column": "vendaddr_uuid",
+          "isNested": true,
+          "inverse": "uuid"
+        }
+      },
+      {
+        "name": "vendorAddress1",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress1"
+        }
+      },
+      {
+        "name": "vendorAddress2",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress2"
+        }
+      },
+      {
+        "name": "vendorAddress3",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress3"
+        }
+      },
+      {
+        "name": "vendorCity",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendcity"
+        }
+      },
+      {
+        "name": "vendorState",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendstate"
+        }
+      },
+      {
+        "name": "vendorPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendzipcode"
+        }
+      },
+      {
+        "name": "vendorCountry",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendcountry"
         }
       },
       {
@@ -599,134 +674,6 @@
         }
       },
       {
-        "name": "vendorAddress",
-        "toOne": {
-          "type": "Address",
-          "column": "pohead_vendaddr_id",
-          "isNested": true
-        }
-      },
-      {
-        "name": "vendorAddress1",
-        "attr": {
-          "type": "String",
-          "column": "pohead_vendaddress1"
-        }
-      },
-      {
-        "name": "vendorAddress2",
-        "attr": {
-          "type": "String",
-          "column": "pohead_vendaddress2"
-        }
-      },
-      {
-        "name": "vendorAddress3",
-        "attr": {
-          "type": "String",
-          "column": "pohead_vendaddress3"
-        }
-      },
-      {
-        "name": "vendorCity",
-        "attr": {
-          "type": "String",
-          "column": "pohead_vendcity"
-        }
-      },
-      {
-        "name": "vendorState",
-        "attr": {
-          "type": "String",
-          "column": "pohead_vendstate"
-        }
-      },
-      {
-        "name": "vendorPostalCode",
-        "attr": {
-          "type": "String",
-          "column": "pohead_vendzipcode"
-        }
-      },
-      {
-        "name": "vendorCountry",
-        "attr": {
-          "type": "String",
-          "column": "pohead_vendcountry"
-        }
-      },
-      {
-        "name": "vendorShiptoContact",
-        "toOne": {
-          "type": "ContactRelation",
-          "column": "pohead_shipto_cntct_id",
-          "isNested": true
-        }
-      },
-      {
-        "name": "vendorShiptoContactHonorific",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shipto_cntct_honorific"
-        }
-      },
-      {
-        "name": "vendorShiptoContactFirstName",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shipto_cntct_first_name"
-        }
-      },
-      {
-        "name": "vendorShiptoContactMiddleName",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shipto_cntct_middle"
-        }
-      },
-      {
-        "name": "vendorShiptoContactLastName",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shipto_cntct_last_name"
-        }
-      },
-      {
-        "name": "vendorShiptoContactSuffix",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shipto_cntct_suffix"
-        }
-      },
-      {
-        "name": "vendorShiptoContactPhone",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shipto_cntct_phone"
-        }
-      },
-      {
-        "name": "vendorShiptoContactTitle",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shipto_cntct_title"
-        }
-      },
-      {
-        "name": "vendorShiptoContactFax",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shipto_cntct_fax"
-        }
-      },
-      {
-        "name": "vendorShiptoContactEmail",
-        "attr": {
-          "type": "String",
-          "column": "pohead_shipto_cntct_email"
-        }
-      },
-      {
         "name": "shiptoAddress",
         "toOne": {
           "type": "AddressInfo",
@@ -781,6 +728,77 @@
         "attr": {
           "type": "String",
           "column": "pohead_shiptocountry"
+        }
+      },
+      {
+        "name": "shiptoContact",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "pohead_shipto_cntct_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "shiptoContactHonorific",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_honorific"
+        }
+      },
+      {
+        "name": "shiptoContactFirstName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_first_name"
+        }
+      },
+      {
+        "name": "shiptoContactMiddleName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_middle"
+        }
+      },
+      {
+        "name": "shiptoContactLastName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_last_name"
+        }
+      },
+      {
+        "name": "shiptoContactSuffix",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_suffix"
+        }
+      },
+      {
+        "name": "shiptoContactPhone",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_phone"
+        }
+      },
+      {
+        "name": "shiptoContactTitle",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_title"
+        }
+      },
+      {
+        "name": "shiptoContactFax",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_fax"
+        }
+      },
+      {
+        "name": "shiptoContactEmail",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_email"
         }
       },
       {
@@ -1252,28 +1270,32 @@
         "attr": {
           "type": "Number",
           "column": "poitem_pohead_id",
-          "isNested": true
+          "isNested": true,
+          "required": true
          }
       },
       {
         "name": "status",
         "attr": {
           "type": "String",
-          "column": "poitem_status"
+          "column": "poitem_status",
+          "required": true
         }
       },
       {
         "name": "lineNumber",
         "attr": {
           "type": "Number",
-          "column": "poitem_linenumber"
+          "column": "poitem_linenumber",
+          "required": true
         }
       },
       {
         "name": "dueDate",
         "attr": {
           "type": "Date",
-          "column": "poitem_duedate"
+          "column": "poitem_duedate",
+          "required": true
         }
       },
       {
@@ -1288,8 +1310,7 @@
         "name": "site",
         "toOne": {
           "type": "SiteRelation",
-          "column": "warehous_id",
-          "isNested": true
+          "column": "warehous_id"
         }
       },
       {
@@ -1339,7 +1360,8 @@
         "name": "quantity",
         "attr": {
           "type": "Quantity",
-          "column": "poitem_qty_ordered"
+          "column": "poitem_qty_ordered",
+          "required": true
         }
       },
       {
@@ -1374,7 +1396,8 @@
         "name": "price",
         "attr": {
           "type": "PurchasePrice",
-          "column": "poitem_unitprice"
+          "column": "poitem_unitprice",
+          "required": true
         }
       },
       {
@@ -1414,8 +1437,9 @@
       },
       {
         "name": "itemSource",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemSource",
           "column": "poitem_itemsrc_id"
         }
       },
@@ -1455,12 +1479,87 @@
         }
       },
       {
+        "name": "project",
+        "toOne": {
+          "isNested": true,
+          "type": "ProjectRelation",
+          "column": "poitem_prj_id"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderLineCharacteristic",
+          "column": "poitem_id",
+          "inverse": "purchaseOrderLine"
+        }
+      },
+      {
         "name": "comments",
         "toMany": {
           "isNested": true,
           "type": "PurchaseOrderLineComment",
           "column": "poitem_id",
           "inverse": "purchaseOrderLine"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderLineCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Purchase Order Line Characteristic Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "PI"
+        }
+      },
+      {
+        "name": "purchaseOrderLine",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
         }
       }
     ],
@@ -1643,7 +1742,15 @@
           "column": "pohead_id",
           "inverse": "purchaseOrder"
         }
-      }
+      },
+      {
+        "name": "saved",
+        "attr": { 
+          "type": "Boolean",
+          "column": "pohead_saved",
+          "value": true
+        }
+      } 
     ],
     "isSystem": true
   },

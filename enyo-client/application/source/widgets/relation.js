@@ -1,5 +1,5 @@
 /*jshint node:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, trailing:true, white:true */
+regexp:true, undef:true, trailing:true, white:true, strict:false */
 /*global XT:true, XV:true, XM:true, Backbone:true, window:true, enyo:true, _:true */
 
 (function () {
@@ -37,18 +37,18 @@ regexp:true, undef:true, trailing:true, white:true */
         {name: "label", content: "", fit: true, classes: "xv-decorated-label"},
         {kind: "onyx.InputDecorator", name: "decorator",
           classes: "xv-input-decorator", components: [
-          {name: 'input', kind: "onyx.Input", classes: "xv-subinput",
+          {name: "input", kind: "onyx.Input", classes: "xv-subinput",
             onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
             onfocus: "receiveFocus"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
             {kind: "onyx.IconButton", classes: "icon-folder-open-alt"},
-            {name: 'popupMenu', floating: true, kind: "onyx.Menu",
+            {name: "popupMenu", floating: true, kind: "onyx.Menu",
               components: [
-              {kind: "XV.MenuItem", name: 'searchItem', content: "_search".loc()},
-              {kind: "XV.MenuItem", name: 'openItem', content: "_open".loc(),
+              {kind: "XV.MenuItem", name: "searchItem", content: "_search".loc()},
+              {kind: "XV.MenuItem", name: "openItem", content: "_open".loc(),
                 disabled: true},
-              {kind: "XV.MenuItem", name: 'newItem', content: "_new".loc(),
+              {kind: "XV.MenuItem", name: "newItem", content: "_new".loc(),
                 disabled: true}
             ]}
           ]},
@@ -115,13 +115,13 @@ regexp:true, undef:true, trailing:true, white:true */
         // so for now we can just stop here.
         return;
       }
-      var jobTitle = value ? value.get('jobTitle') : "",
-        phone = value ? value.get('phone') : "",
-        alternate = value ? value.get('alternate') : "",
-        fax = value ? value.get('fax') : "",
-        primaryEmail = value ? value.get('primaryEmail') : "",
-        webAddress = value ? value.get('webAddress') : "",
-        address = value ? XM.Address.format(value.get('address')) : "",
+      var jobTitle = value ? value.get("jobTitle") : "",
+        phone = value ? value.get("phone") : "",
+        alternate = value ? value.get("alternate") : "",
+        fax = value ? value.get("fax") : "",
+        primaryEmail = value ? value.get("primaryEmail") : "",
+        webAddress = value ? value.get("webAddress") : "",
+        address = value ? XM.Address.format(value.get("address")) : "",
         showAddress = this.getShowAddress();
       this.$.jobTitleLabel.setShowing(jobTitle);
       this.$.phoneLabel.setShowing(phone);
@@ -142,24 +142,24 @@ regexp:true, undef:true, trailing:true, white:true */
       if (showAddress) { this.$.address.setContent(address); }
     },
     openWindow: function () {
-      var address = this.value ? this.value.get('webAddress') : null;
-      if (address) { window.open('http://' + address); }
+      var address = this.value ? this.value.get("webAddress") : null;
+      if (address) { window.open("http://" + address); }
       return true;
     },
     callPhone: function () {
-      var phoneNumber = this.value ? this.value.get('phone') : null,
+      var phoneNumber = this.value ? this.value.get("phone") : null,
         win;
       if (phoneNumber) {
-        win = window.open('tel://' + phoneNumber);
+        win = window.open("tel://" + phoneNumber);
         win.close();
       }
       return true;
     },
     sendMail: function () {
-      var email = this.value ? this.value.get('primaryEmail') : null,
+      var email = this.value ? this.value.get("primaryEmail") : null,
         win;
       if (email) {
-        win = window.open('mailto:' + email);
+        win = window.open("mailto:" + email);
         win.close();
       }
       return true;
@@ -250,7 +250,7 @@ regexp:true, undef:true, trailing:true, white:true */
 
       switch (menuItem.name)
       {
-      case 'searchItem':
+      case "searchItem":
         callback = function (value) {
           that.setValue(value);
         };
@@ -260,11 +260,11 @@ regexp:true, undef:true, trailing:true, white:true */
           callback: callback
         });
         break;
-      case 'openItem':
+      case "openItem":
         K = model.getClass();
         status = model.get("status");
         id = model ? model.id : null;
-        workspace = status === K.PROSPECT_STATUS ? 'XV.ProspectWorkspace' : 'XV.CustomerWorkspace';
+        workspace = status === K.PROSPECT_STATUS ? "XV.ProspectWorkspace" : "XV.CustomerWorkspace";
 
         this.doWorkspace({
           workspace: workspace,
@@ -272,7 +272,7 @@ regexp:true, undef:true, trailing:true, white:true */
           allowNew: false
         });
         break;
-      case 'newItem':
+      case "newItem":
         this.$.customerOrProspectPopup.show();
       }
     },
@@ -442,7 +442,7 @@ regexp:true, undef:true, trailing:true, white:true */
         options = {},
         site,
         item;
-      if (inEvent.originator.name === 'privateItemSiteWidget') {
+      if (inEvent.originator.name === "privateItemSiteWidget") {
         sitePicker.itemSites.reset();
         sitePicker.buildList();
         if (value && value.get) {
@@ -461,9 +461,13 @@ regexp:true, undef:true, trailing:true, white:true */
             sitePicker.setDisabled(disabledCache || that.getDisabled());
           };
           sitePicker.itemSites.fetch(options);
+        } else {
+          this.setValue({
+            item: null
+          });
         }
         return true;
-      } else if (inEvent.originator.name === 'sitePicker') {
+      } else if (inEvent.originator.name === "sitePicker") {
         this.setValue({site: value});
         this.$.privateItemSiteWidget.setDisabled(isNull);
         if (isNull) {
@@ -490,7 +494,7 @@ regexp:true, undef:true, trailing:true, white:true */
           var ids;
           if (this.itemSites.length) {
             // Consolidate all the site ids
-            ids = _.pluck(_.compact(_.pluck(_.pluck(this.itemSites.models, "attributes"), 'site')), 'id');
+            ids = _.pluck(_.compact(_.pluck(_.pluck(this.itemSites.models, "attributes"), "site")), "id");
             return _.filter(models, function (model) {
               return _.contains(ids, model.id);
             });
@@ -638,7 +642,7 @@ regexp:true, undef:true, trailing:true, white:true */
           if (attr[key].indexOf(".") === -1) {
             changed[attr[key]] = value[key];
           }
-          this[key + 'Changed']();
+          this[key + "Changed"]();
         }
       }
 
@@ -682,7 +686,16 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ProjectWidget",
     kind: "XV.RelationWidget",
     collection: "XM.ProjectRelationCollection",
-    list: "XV.ProjectList"
+    list: "XV.ProjectList",
+    create: function () {
+      this.inherited(arguments);
+      this.setShowing(XT.session.settings.get("UseProjects"));
+    },
+    setShowing: function (showing) {
+      if (!showing || showing && XT.session.settings.get("UseProjects")) {
+        this.inherited(arguments);
+      }
+    }
   });
 
   // ..........................................................

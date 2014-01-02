@@ -19,31 +19,8 @@ white:true, strict:false*/
     });
 
     // ..........................................................
-    // PROJECT STATUS
-    //
-
-    enyo.kind({
-      name: "XV.ProjectStatusPicker",
-      kind: "XV.PickerWidget",
-      collection: "XM.projectStatuses",
-      showNone: false
-    });
-
-
-    // ..........................................................
-    // PROJECT TYPE
-    //
-
-    enyo.kind({
-      name: "XV.ProjectTypePicker",
-      kind: "XV.PickerWidget",
-      collection: "XM.projectTypes",
-      nameAttribute: "code"
-    });
-
-    // ..........................................................
     // RESOURCE
-    // TODO: use picker instead
+    // TODO: use relation instead
 
     enyo.kind({
       name: "XV.ResourcePicker",

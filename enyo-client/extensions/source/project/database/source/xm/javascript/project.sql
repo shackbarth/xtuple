@@ -8,7 +8,7 @@ select xt.install_js('XM','ProjectManagement','project', $$
 
   XM.ProjectManagement.options = [
     "UseProjects",
-    "DefaultPriority"
+    "RequireProjectAssignment"
   ];
 
   /*
