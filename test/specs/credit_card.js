@@ -30,6 +30,7 @@
   @property {String} CreditCardType
   **/
   var spec = {
+    skipAll: true,
     recordType: "XM.CreditCard",
     enforceUpperKey: false,
     collectionType: "XM.CreditCardCollection",
@@ -114,8 +115,8 @@
         next();
       }
     }],
-    skipDelete: true,
-    skipSmoke: true
+    skipDelete: true
+    
   };
-  //exports.spec = spec;
+  exports.spec = spec;
 }());
