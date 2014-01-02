@@ -58,7 +58,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @property {CustomerAccount} CRMAccount
     */
   var spec = {
-    skipAll: true,
     recordType: "XM.Customer",
     collectionType: "XM.CustomerListItemCollection",
     /**
@@ -114,7 +113,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     },
     createHash : require("../lib/model_data").customer,
     updatableField: "name",
-    beforeSaveActions: [{
+    /*beforeSaveActions: [{
       it: "should add a credit card",
       action: function (data, next) {
         var creditCardModel = new XM.CreditCard(),
@@ -147,7 +146,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         assert.equal(data.model.get("creditCards").models[0].get("number"), "************1111");
         next();
       }
-    }],
+    }],*/
     beforeDeleteActions: crud.accountBeforeDeleteActions,
     afterDeleteActions: crud.accountAfterDeleteActions
   };
