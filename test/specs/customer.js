@@ -58,6 +58,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @property {CustomerAccount} CRMAccount
     */
   var spec = {
+    skipAll: true,
     recordType: "XM.Customer",
     collectionType: "XM.CustomerListItemCollection",
     /**
