@@ -646,9 +646,9 @@ select xt.install_js('XT','Orm','xtuple', $$
           inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
           ormp = Orm.getProperty(iorm, inverse);
           if (ormp && ormp.toOne && ormp.toOne.isNested) {
-            conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
+            conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + (toMany.isBase ? "t1" : tblAlias) + "." + toMany.column : 'true';
           } else {
-            conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
+            conditions = toMany.column ? type + '."' + inverse + '" = ' + (toMany.isBase ? "t1" : tblAlias) + '.' + toMany.column : 'true';
           }
 
           /* build select */
