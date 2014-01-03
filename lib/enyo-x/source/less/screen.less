@@ -34,9 +34,9 @@
 @dark-gray: #333;
 @blue-gray: #93a1a1;
 @near-black: #0e0e0e;
-@black: #000;
+@black: #070707;
 @white: #fff;
-@ghost: #f8f8ff;
+@ghost: #f8f8f8;
 @red: #c51616;
 @bright-red: #ff0000;
 @green: #009000;
@@ -57,6 +57,7 @@
 /**
   Import for Font-Awesome icons
 */
+// libs
 @import "../../lib/font-awesome/less/font-awesome.less";
 @import "../../lib/font-onyx/lib/Icon.less";
 
@@ -170,6 +171,14 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+/**
+  Sets a fixed height on all of the toolbars
+  so that they're not dependent on the icon height
+*/
+.onyx-menu-toolbar {
+  height: 57px;
+}
+
 .item {
   position: relative;
   padding: 16px 12px;
@@ -186,6 +195,8 @@ body {
   }
 }
 
+// TODO: this is a bad name for this harkening back to the
+// dark ages when there was a white label on the "left" of the toolbar
 .left {
   color: @white;
 }
@@ -286,7 +297,7 @@ body {
 }
 
 .xv-assignment-box {
-  .xv-decorated-label {
+  .xv-flexible-label {
     width: 85%;
   }
   .xv-label {
@@ -335,13 +346,18 @@ body {
   vertical-align: middle;
 }
 
-.xv-label, .xv-decorated-label {
+.xv-label, .xv-flexible-label {
   padding: 8px;
   text-align: right;
   &.disabled {
     color: @dim-gray;
   }
 }
+
+/**
+  This label style has a fixed width, while
+  the flexible label depends on a fit: true
+*/
 .xv-label {
   width: 130px;
 }
