@@ -2333,17 +2333,6 @@ strict: false*/
         {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
           attr: "comments"},
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
-      ]},
-      {kind: "onyx.Popup", name: "savePromptPopup", centered: true,
-        modal: true, floating: true, scrim: true,
-        onHide: "popupHidden", components: [
-        {content: "_mustSave".loc() },
-        {content: "_saveYourWork?".loc() },
-        {tag: "br"},
-        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "savePromptCancel",
-          classes: "xv-popup-button"},
-        {kind: "onyx.Button", content: "_save".loc(), ontap: "savePromptSave",
-          classes: "onyx-blue xv-popup-button"}
       ]}
     ],
     /**
@@ -2404,26 +2393,6 @@ strict: false*/
         gridBox.valueChanged();
         gridBox.$.editableGridRow.setShowing(false);
       }
-    },
-    savePrompt: function (inSender, inEvent) {
-      this._popupDone = false;
-      this._inEvent = inEvent;
-      this.$.savePromptPopup.show();
-    },
-    savePromptCancel: function () {
-      this._popupDone = true;
-      this._inEvent.callback(false);
-      this.$.savePromptPopup.hide();
-    },
-    savePromptSave: function () {
-      var that = this,
-        options = {};
-      options.success = function () {
-        that._inEvent.callback(true);
-      };
-      this._popupDone = true;
-      this.$.savePromptPopup.hide();
-      this.save(options);
     }
   });
 
