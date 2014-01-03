@@ -17,7 +17,7 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
    * @class RestQuery
    */
   function RestQuery(query) {
-    // Use keywork "query" for REST API queries. Convery to "attributes" for internal use.
+    // Use keywork "query" for REST API queries. Convert to "attributes" for internal use.
     // e.g. ?query[code][BEGINS_WITH]=TOYS
     if (query.query) {
       query.attributes = query.query;
