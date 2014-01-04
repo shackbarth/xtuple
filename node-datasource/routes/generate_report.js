@@ -55,6 +55,45 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       {attr: "price", label: "Unit Price", width: 100},
       {attr: "extendedPrice", label: "Ext. Price", width: 100}
     ];
+    var _headerDef = [
+      {
+        element: "print",
+        definition: [
+          {text: "Invoice"},
+          {attr: "invoiceDate", label: true},
+          {attr: "terms", label: true},
+          {attr: "orderDate", label: true}
+        ],
+        options: {x: 350, y: 0, align: "right"}
+      },
+      {
+        element: "print",
+        definition: [
+          {attr: "number", label: "Invoice Number"},
+        ],
+        options: {fontBold: true, x: 200, y: 150}
+      },
+      {
+        element: "image",
+        definition: "./temp/x.png",
+        options: {x: 200, y: 0, width: 150}
+      },
+      {
+        element: "fontBold"
+      },
+      {
+        element: "band",
+        definition: _detailDef,
+        transform: "detailHeader",
+        options: {border: 0, width: 0}
+      },
+      {
+        element: "fontNormal"
+      },
+      {
+        element: "bandLine"
+      },
+    ];
 
     // fluent expects the data to be in a single array with the head info copied redundantly
     // and the detail info having prefixed keys
@@ -138,56 +177,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 
       var printHeader = function (report, data) {
-        var _headerDef = [
-          {
-            element: "print",
-            definition: [
-              "Invoice",
-              "Invoice Date: " + data.invoiceDate,
-              "Terms: " + data.terms,
-              "Order Date: " + data.orderDate
-            ],
-            options: {x: 350, y: 0, align: "right"}
-          },
-          {
-            element: "print",
-            definition: "InvoiceNumber" + data.number,
-            options: {fontBold: true, x: 200, y: 150}
-          },
-          {
-            element: "image",
-            definition: "./temp/x.png",
-            options: {x: 200, y: 0, width: 150}
-          },
-          {
-            element: "fontBold"
-          },
-          {
-            element: "band",
-            definition: _detailDef,
-            transform: "detailHeader",
-            options: {border: 0, width: 0}
-          },
-          {
-            element: "fontNormal"
-          },
-          {
-            element: "bandLine"
-          },
-        ];
 
         _.each(_headerDef, function (def) {
-          var data;
+          var elementData;
 
-          switch (def.transform) {
-          case "detailHeader":
-            data = getDetailHeader(def.definition);
-            break;
-          default:
-            data = def.definition;
-            break;
+          if (def.transform === "detailHeader") {
+            elementData = getDetailHeader(def.definition);
+            console.log("data is", data);
+
+          } else if (def.element === "print") {
+            elementData = _.map(def.definition, function (defElement) {
+              var returnData = defElement.attr ? data[defElement.attr] : defElement.text;
+              if (defElement.label === true) {
+                returnData = ("_" + defElement.attr).loc() + ": " + returnData;
+              } else if (defElement.label) {
+                returnData = defElement.label + ": " + returnData;
+              }
+              return returnData;
+            });
+
+          } else {
+            elementData = def.definition;
           }
-          report[def.element](data, def.options);
+          report[def.element](elementData, def.options);
         });
       };
 
