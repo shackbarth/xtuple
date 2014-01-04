@@ -47,6 +47,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // TODO: move these to json descriptor in database
     var pageHeader = "Invoice";
     var detailAttribute = "lineItems";
+    var _defaultFontSize = 14;
     var _detailDef = [
       {attr: "quantity", label: "Qty. Shipped", width: 100},
       {attr: "quantityUnit", label: "UOM", width: 50},
@@ -93,6 +94,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       {
         element: "bandLine"
       },
+    ];
+    var _footerDef = [
+      {
+        element: "print",
+        definition: [
+          {attr: "subtotal", label: true},
+          {attr: "taxTotal", label: true},
+          {attr: "total", label: true}
+        ],
+        options: {y: 400, align: "right"}
+      }
     ];
 
     // fluent expects the data to be in a single array with the head info copied redundantly
@@ -174,51 +186,47 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         report.band(detail, {border: 1, width: 0, wrap: 1});
       };
 
+      var transformElementData = function (def, data) {
+        if (def.transform === "detailHeader") {
+          return getDetailHeader(def.definition);
 
+        } else if (def.element === "print") {
+          return _.map(def.definition, function (defElement) {
+            var returnData = defElement.attr ? data[defElement.attr] : defElement.text;
+            if (defElement.label === true) {
+              returnData = ("_" + defElement.attr).loc() + ": " + returnData;
+            } else if (defElement.label) {
+              returnData = defElement.label + ": " + returnData;
+            }
+            return returnData;
+          });
+
+        } else {
+          return def.definition;
+        }
+      };
 
       var printHeader = function (report, data) {
+        printGeneral(report, data, _headerDef);
+      };
 
-        _.each(_headerDef, function (def) {
-          var elementData;
+      var printFooter = function (report, data) {
+        printGeneral(report, data, _footerDef);
+      };
 
-          if (def.transform === "detailHeader") {
-            elementData = getDetailHeader(def.definition);
-            console.log("data is", data);
-
-          } else if (def.element === "print") {
-            elementData = _.map(def.definition, function (defElement) {
-              var returnData = defElement.attr ? data[defElement.attr] : defElement.text;
-              if (defElement.label === true) {
-                returnData = ("_" + defElement.attr).loc() + ": " + returnData;
-              } else if (defElement.label) {
-                returnData = defElement.label + ": " + returnData;
-              }
-              return returnData;
-            });
-
-          } else {
-            elementData = def.definition;
-          }
+      var printGeneral = function (report, data, definition) {
+        _.each(definition, function (def) {
+          var elementData = transformElementData(def, data);
           report[def.element](elementData, def.options);
         });
       };
 
-      var printFooter = function (report, data) {
-        report.print([
-          "Subtotal: " + data.subtotal,
-          "Taxes: " + data.taxTotal,
-          "Total: " + data.total
-        ], {y: 400, align: "right"});
-      };
-
       var rpt = new Report("./temp/" + reportName)
-          .autoPrint(true) // Optional
-          .userdata({hi: 1})// Optional
-          .data(reportData)        // REQUIRED
+          .data(reportData)
           .detail(printDetail)
           .footer(printFooter)
           .header(printHeader)
-          .fontSize(14); // Optional
+          .fontSize(_defaultFontSize);
 
       // Debug output is always nice (Optional, to help you see the structure)
       //rpt.printStructure();
