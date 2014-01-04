@@ -20,6 +20,7 @@ strict:true, trailing:true, white:true */
     "_itemSourceItemInactive": "Item Source can not be active when Item is inactive",
     "_itemSources": "Item Sources",
     "_isDropShip": "Drop Ship",
+    "_isMisc": "Miscellaneous",
     "_maintainPurchaseOrders": "Maintain Purchase Orders",
     "_maintainPurchaseEmailProfiles": "Maintain Purchase Email Profiles",
     "_maintainPurchaseTypes": "Maintain Purchase Types",
