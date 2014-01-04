@@ -30,19 +30,39 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
+  var getDetailHeader = function (detailDef) {
+    return _.map(detailDef, function (def) {
+      return {
+        data: def.label || def.attr,
+        width: def.width,
+        align: 2
+      };
+    });
+  };
+
 
 
   exports.generateReport = function (req, res) {
 
+    // TODO: move these to json descriptor in database
     var pageHeader = "Invoice";
     var detailAttribute = "lineItems";
+    var _detailDef = [
+      {attr: "quantity", label: "Qty. Shipped", width: 100},
+      {attr: "quantityUnit", label: "UOM", width: 50},
+      {attr: "item.number", label: "Item", width: 100},
+      {attr: "parent.currency", label: "Currency", width: 80},
+      {attr: "price", label: "Unit Price", width: 100},
+      {attr: "extendedPrice", label: "Ext. Price", width: 100}
+    ];
+
     // fluent expects the data to be in a single array with the head info copied redundantly
     // and the detail info having prefixed keys
     var transformDataStructure = function (data) {
       return _.map(data[detailAttribute], function (detail) {
         var pathedDetail = {};
         _.each(detail, function (detailValue, detailKey) {
-          pathedDetail[detailAttribute + "." + detailKey] = detailValue;
+          pathedDetail[detailAttribute + "_" + detailKey] = detailValue;
         });
         return _.extend({}, data, pathedDetail);
       });
@@ -79,22 +99,49 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         center: 2
       */
 
-      var detail = function (report, data) {
-        report.band([
-          ["~" + data["lineItems.quantity"], 60, 2],
-          [data["lineItems.quantityUnit"], 60, 2],
-          [data["lineItems.item"].number, 60, 2],
-          [data.currency, 120, 2],
-          ["~" + data["lineItems.price"], 60, 2],
-          [data["lineItems.extendedPrice"], 60, 2]
-        ], {border: 1, width: 0, wrap: 1});
+      var getDetail = function (detailDef, data) {
+        return _.map(detailDef, function (def) {
+          var key,
+            fieldData;
+
+          // inelegant, but works
+          // handles cases like "parent.currency", "item.number", "quantityUnit"
+          if (def.attr.indexOf("parent.") === 0) {
+            key = def.attr.substring("parent.".length);
+          } else {
+            key = detailAttribute + "_" + def.attr;
+          }
+          if (key.indexOf(".") >= 0) {
+            fieldData = data;
+            while (key.indexOf(".") >= 0) {
+              fieldData = fieldData[key.prefix()];
+              key = key.suffix();
+            }
+            fieldData = fieldData[key];
+          } else {
+            fieldData = data[key];
+          }
+
+          return {
+            data: "~" + fieldData, // TODO: no tildes
+            width: def.width,
+            align: 2
+          };
+        });
       };
 
-      var header = function (report, data) {
+
+      var printDetail = function (report, data) {
+        var detail = getDetail(_detailDef, data);
+        report.band(detail, {border: 1, width: 0, wrap: 1});
+      };
+
+      var printHeader = function (report, data) {
         // TOP-RIGHT
         report.print([
           "Invoice",
           "Invoice Date: " + data.invoiceDate,
+          "Terms: " + data.terms,
           "Order Date: " + data.orderDate
         ], {align: "right"});
 
@@ -104,23 +151,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         report.newline();
         report.newline();
         report.newline();
+        report.newline();
+        report.newline();
+        report.newline();
 
         // Detail Header
         report.fontBold();
-        report.band([
-          {data: "Qty. Shipped", width: 60, align: 2},
-          {data: "UOM", width: 60, align: 2},
-          {data: 'Item Number', width: 60, align: 2},
-          {data: 'Invoice Currency:', width: 90, align: 2},
-          {data: data.currency, width: 30, align: 3},
-          {data: 'Unit Price', width: 60, align: 3},
-          {data: 'Ext. Price', width: 60, align: 3},
-        ], {border: 0, width: 0});
+        report.band(getDetailHeader(_detailDef), {border: 0, width: 0});
         report.fontNormal();
         report.bandLine();
       };
 
-      var footer = function (report, data) {
+      var printFooter = function (report, data) {
         report.print("baz", {fontBold: true});
       };
 
@@ -128,10 +170,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           .autoPrint(false) // Optional
           .userdata({hi: 1})// Optional
           .data(reportData)        // REQUIRED
-          .detail(detail) // Optional
-          .footer(footer)
-          .header(header)
-          .fontSize(8); // Optional
+          .detail(printDetail)
+          .footer(printFooter)
+          .header(printHeader)
+          .fontSize(14); // Optional
 
       // Debug output is always nice (Optional, to help you see the structure)
       //rpt.printStructure();
