@@ -13,11 +13,31 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     fs = require("fs"),
     path = require("path"),
     Report = require('fluentreports').Report,
-    data = require("./data");
+    queryForData = require("./report").queryForData;
 
+  // https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
 
   exports.generateReport = function (req, res) {
 
+    var reportData;
+    var generateData = function (done) {
+      var requestDetails = {
+        nameSpace: req.query.nameSpace,
+        type: req.query.type,
+        id: req.query.id
+      };
+      var callback = function (result) {
+        if (!result || result.isError) {
+          done(result || "Invalid query");
+          return;
+        }
+        reportData = result.data.data;
+        done();
+      };
+
+      // step 1: get the data
+      queryForData(req.session, requestDetails, callback);
+    };
 
     // You don't have to pass in a report name; it will default to "report.pdf"
     var reportName = "demo1.pdf";
@@ -163,16 +183,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     async.series([
-      //generateData,
+      generateData,
       printReport,
       sendReport
     ], function (err, results) {
-      console.log("all done", err, results);
+      if (err) {
+        res.send({isError: true, message: err.description});
+      }
     });
 
-
-    // step 1: get the data
-    //queryForData(req.session, requestDetails, queryForDataCallback);
   };
 
 }());
