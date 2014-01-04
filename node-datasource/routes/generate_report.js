@@ -135,30 +135,60 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         report.band(detail, {border: 1, width: 0, wrap: 1});
       };
 
+
+
       var printHeader = function (report, data) {
-        // TOP-RIGHT
-        report.print([
-          "Invoice",
-          "Invoice Date: " + data.invoiceDate,
-          "Terms: " + data.terms,
-          "Order Date: " + data.orderDate
-        ], {x: 350, y: 0, align: "right"});
+        var _headerDef = [
+          {
+            element: "print",
+            definition: [
+              "Invoice",
+              "Invoice Date: " + data.invoiceDate,
+              "Terms: " + data.terms,
+              "Order Date: " + data.orderDate
+            ],
+            options: {x: 350, y: 0, align: "right"}
+          },
+          {
+            element: "print",
+            definition: "InvoiceNumber" + data.number,
+            options: {fontBold: true, x: 200, y: 150}
+          },
+          {
+            element: "image",
+            definition: "./temp/x.png",
+            options: {x: 200, y: 0, width: 150}
+          },
+          {
+            element: "fontBold"
+          },
+          {
+            element: "band",
+            definition: _detailDef,
+            transform: "detailHeader",
+            options: {border: 0, width: 0}
+          },
+          {
+            element: "fontNormal"
+          },
+          {
+            element: "bandLine"
+          },
+        ];
 
-        report.print("InvoiceNumber" + data.number, {fontBold: true});
+        _.each(_headerDef, function (def) {
+          var data;
 
-        report.image("./temp/x.png", {x: 200, y: 0, width: 150});
-        report.newline();
-        report.newline();
-        report.newline();
-        report.newline();
-        report.newline();
-        report.newline();
-
-        // Detail Header
-        report.fontBold();
-        report.band(getDetailHeader(_detailDef), {border: 0, width: 0});
-        report.fontNormal();
-        report.bandLine();
+          switch (def.transform) {
+          case "detailHeader":
+            data = getDetailHeader(def.definition);
+            break;
+          default:
+            data = def.definition;
+            break;
+          }
+          report[def.element](data, def.options);
+        });
       };
 
       var printFooter = function (report, data) {
