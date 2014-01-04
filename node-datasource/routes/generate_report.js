@@ -9,19 +9,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     When a client asks us to run a report, run it, save it in a temporary table,
     and redirect to pentaho with a key that will allow pentaho to access the report.
    */
-  var data = require("./data");
-  var fs = require("fs");
-  var Report = require('fluentreports').Report;
+  var async = require("async"),
+    fs = require("fs"),
+    path = require("path"),
+    Report = require('fluentreports').Report,
+    data = require("./data");
+
 
   exports.generateReport = function (req, res) {
 
 
     // You don't have to pass in a report name; it will default to "report.pdf"
     var reportName = "demo1.pdf";
-
-    function printreport() {
+    var printReport = function (done) {
       var mydata = [
-          {name: "John Doe", week: 20, day: "Monday\nis- this is some really long text that shouldn't\noverflow the text container but be wrapped", hours: 4},
+          {name: "John Doe", week: 20, day: "Monday\nis- this is some long text that shouldn't\noverflow the text container but be wrapped", hours: 4},
           {name: "John Doe", week: 20, day: "Tuesday", hours: 8},
           {name: "John Doe", week: 20, day: "Wednesday", hours: 8},
           {name: "John Doe", week: 21, day: "Thursday", hours: 2},
@@ -52,10 +54,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {name: "Jane Doe", week: 25, day: "Monday", hours: 5},
           {name: "Jane Doe", week: 25, day: "Tuesday", hours: 8},
           {name: "Jane Doe", week: 26, day: "Wednesday", hours: 7},
-          {name: "Jane Doe", week: 26, day: "Thursday\nis- this is some really long text that shouldn't\noverflow the text container but be wrapped", hours: 8},
-          {name: "Jane Doe", week: 26, day: "Friday\nis- this is some really long text that shouldn't\noverflow the text container but be wrapped", hours: 8}
-
-
+          {name: "Jane Doe", week: 26, day: "Thursday\nis- this is some long text that shouldn't\noverflow the text container but be wrapped", hours: 8},
+          {name: "Jane Doe", week: 26, day: "Friday\nis- this is some long text that shouldn't\noverflow the text container but be wrapped", hours: 8}
         ];
 
       var daydetail = function (report, data) {
@@ -119,25 +119,57 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           } else {
             console.log("Report is named:", name);
           }
+          done(err, name);
         }
       );
 
-    }
+    };
 
+    var sendReport = function (done) {
+      fs.readFile(path.join(".", reportName), function (err, data) {
+        if (err) {
+          res.send({isError: true, error: err});
+          return;
+        }
+        if (req.query.action === "email") {
+          var mailContent = {
+            from: "no-reply@xtuple.com",
+            to: "shackbarth@xtuple.com",
+            subject: "hi",
+            text: "Here is your email",
+            attachments: [{fileName: reportName, contents: data, contentType: "application/pdf"}]
+          };
+          var callback = function (error, response) {
+              if (error) {
+                X.log("Email error", error);
+                res.send({isError: true, message: "Error emailing"});
+              } else {
+                res.send({message: "Email success"});
+              }
+            };
 
+          X.smtpTransport.sendMail(mailContent, callback);
+          done();
+          return;
+        }
+        res.header("Content-Type", "application/pdf");
 
-    printreport();
+        if (req.query.action === "download") {
+          res.attachment(reportName);
+        }
+        res.send(data);
+        done();
+      });
+    };
 
-    fs.readFile("./" + reportName, function (err, data) {
-      if (err) {
-        res.send({isError: true, error: err});
-        return;
-      }
-      res.header("Content-Type", "application/pdf");
-      //res.attachment(reportName);
-      res.send(data);
-
+    async.series([
+      //generateData,
+      printReport,
+      sendReport
+    ], function (err, results) {
+      console.log("all done", err, results);
     });
+
 
     // step 1: get the data
     //queryForData(req.session, requestDetails, queryForDataCallback);
