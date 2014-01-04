@@ -1293,7 +1293,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "poitem_duedate",
           "required": true
         }

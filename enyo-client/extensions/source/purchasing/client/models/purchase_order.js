@@ -785,6 +785,10 @@ white:true*/
         this.taxDetail = [];
       },
 
+      isActive: function () {
+        return this.get("status") !== XM.PurchaseOrder.CLOSED_STATUS;
+      },
+
       isMiscellaneousChanged: function () {
         var isMisc = this.get("isMiscellaneous");
         if (isMisc) {
