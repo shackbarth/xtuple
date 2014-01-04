@@ -8,7 +8,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
   /*
     TODO: fetch images from database
-
+    TODO: translations
 
   */
 
@@ -51,14 +51,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return _.map(data[reportDefinition.detailAttribute], function (detail) {
         var pathedDetail = {};
         _.each(detail, function (detailValue, detailKey) {
-          pathedDetail[reportDefinition.detailAttribute + "_" + detailKey] = detailValue;
+          pathedDetail[reportDefinition.detailAttribute + "*" + detailKey] = detailValue;
         });
         return _.extend({}, data, pathedDetail);
       });
     };
 
-    // Probably temporary
-    var getDetailHeader = function (detailDef) {
+    var transformBand = function (detailDef) {
       return _.map(detailDef, function (def) {
         return {
           data: def.text,
@@ -74,26 +73,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     var getDetail = function (detailDef, data) {
       return _.map(detailDef, function (def) {
-        var key,
-          fieldData;
-
-        // inelegant, but works
-        // handles cases like "parent.currency", "item.number", "quantityUnit"
-        if (def.attr.indexOf("parent.") === 0) {
-          key = def.attr.substring("parent.".length);
-        } else {
-          key = reportDefinition.detailAttribute + "_" + def.attr;
-        }
-        if (key.indexOf(".") >= 0) {
+        var key = def.attr,
           fieldData = data;
-          while (key.indexOf(".") >= 0) {
-            fieldData = fieldData[key.prefix()];
-            key = key.suffix();
-          }
-          fieldData = fieldData[key];
-        } else {
-          fieldData = data[key];
+
+        while (key.indexOf(".") >= 0) {
+          fieldData = fieldData[key.prefix()];
+          key = key.suffix();
         }
+        fieldData = fieldData[key];
 
         return {
           data: "~" + fieldData, // TODO: no tildes
@@ -107,11 +94,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Custom transformations for various element descriptions.
      */
     var transformElementData = function (def, data) {
-      if (def.transform === "detailHeader") {
-        return getDetailHeader(def.definition);
-
-      } else if (def.transform === "detail") {
+      if (def.transform === "detail") {
         return getDetail(def.definition, data);
+
+      } else if (def.element === "band") {
+        return transformBand(def.definition);
 
       } else if (def.element === "print") {
         return _.map(def.definition, function (defElement) {
@@ -154,19 +141,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // TODO: actually go to the database
       reportDefinition = {
         pageHeader: "Invoice",
-        detailAttribute: "lineItems",
+        detailAttribute: "lineItems", // TODO: this could be inferred
         defaultFontSize: 14,
         detailElements: [
           {
             element: "band",
             transform: "detail",
             definition: [
-              {attr: "quantity", label: "Qty. Shipped", width: 100},
-              {attr: "quantityUnit", label: "UOM", width: 50},
-              {attr: "item.number", label: "Item", width: 100},
-              {attr: "parent.currency", label: "Currency", width: 80},
-              {attr: "price", label: "Unit Price", width: 100},
-              {attr: "extendedPrice", label: "Ext. Price", width: 100}
+              {attr: "lineItems*quantity", width: 100},
+              {attr: "lineItems*quantityUnit", width: 50},
+              {attr: "lineItems*item.number", width: 100},
+              {attr: "currency", width: 80},
+              {attr: "lineItems*price", width: 100},
+              {attr: "lineItems*extendedPrice", width: 100}
             ],
             options: {border: 1, width: 0, wrap: 1}
           }
@@ -207,7 +194,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               {text: "Unit Price", width: 100},
               {text: "Ext. Price", width: 100}
             ],
-            transform: "detailHeader",
             options: {border: 0, width: 0}
           },
           {
