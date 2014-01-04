@@ -5,10 +5,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  /**
-    When a client asks us to run a report, run it, save it in a temporary table,
-    and redirect to pentaho with a key that will allow pentaho to access the report.
-   */
+  // https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
+  /*
+    TODO: fetch images from database
+
+
+  */
+
+
   var _ = require("underscore"),
     async = require("async"),
     fs = require("fs"),
@@ -16,10 +20,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Report = require('fluentreports').Report,
     queryForData = require("./report").queryForData;
 
-  // https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
+  var createTempDir = function (done) {
+    fs.exists("./temp", function (exists) {
+      if (exists) {
+        done();
+      } else {
+        fs.mkdir("./temp", done);
+      }
+    });
+  };
+
+
 
   exports.generateReport = function (req, res) {
 
+    var pageHeader = "Invoice";
     var detailAttribute = "lineItems";
     // fluent expects the data to be in a single array with the head info copied redundantly
     // and the detail info having prefixed keys
@@ -57,66 +72,85 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // You don't have to pass in a report name; it will default to "report.pdf"
     var reportName = "demo1.pdf";
     var printReport = function (done) {
-      var mydata = [
-        {quantityUnit: "Tuesday", price: 8}
-      ];
+
+      /* "align" cribsheet:
+        left: 1,
+        right: 3,
+        center: 2
+      */
 
       var detail = function (report, data) {
         report.band([
-          ["", 80],
-          [data["lineItems.quantityUnit"], 100],
-          ["Price" + data["lineItems.price"], 100, 3]
+          ["~" + data["lineItems.quantity"], 60, 2],
+          [data["lineItems.quantityUnit"], 60, 2],
+          [data["lineItems.item"].number, 60, 2],
+          [data.currency, 120, 2],
+          ["~" + data["lineItems.price"], 60, 2],
+          [data["lineItems.extendedPrice"], 60, 2]
         ], {border: 1, width: 0, wrap: 1});
       };
 
-      var namefooter = function (report, data, state) {
+      var header = function (report, data) {
+        // TOP-RIGHT
+        report.print([
+          "Invoice",
+          "Invoice Date: " + data.invoiceDate,
+          "Order Date: " + data.orderDate
+        ], {align: "right"});
+
+        report.print("InvoiceNumber" + data.number, {fontBold: true});
+
+        report.image("./temp/x.png", {x: 200, y: 0});
+        report.newline();
+        report.newline();
+        report.newline();
+
+        // Detail Header
+        report.fontBold();
         report.band([
-          ["Totals for " + data.name, 180],
-          [report.totals.hours, 100, 3]
-        ]);
-        report.newLine();
+          {data: "Qty. Shipped", width: 60, align: 2},
+          {data: "UOM", width: 60, align: 2},
+          {data: 'Item Number', width: 60, align: 2},
+          {data: 'Invoice Currency:', width: 90, align: 2},
+          {data: data.currency, width: 30, align: 3},
+          {data: 'Unit Price', width: 60, align: 3},
+          {data: 'Ext. Price', width: 60, align: 3},
+        ], {border: 0, width: 0});
+        report.fontNormal();
+        report.bandLine();
       };
 
-      var header = function (report, data) {
-        console.log("data number", data.number, typeof data.number);
-        report.print("InvoiceNumber" + data.number, {fontBold: true});
-      };
       var footer = function (report, data) {
         report.print("baz", {fontBold: true});
       };
 
-      var rpt = new Report(reportName)
+      var rpt = new Report("./temp/" + reportName)
           .autoPrint(false) // Optional
-          .pageHeader(["Employee Hours"])// Optional
           .userdata({hi: 1})// Optional
           .data(reportData)        // REQUIRED
-          .sum("hours")        // Optional
           .detail(detail) // Optional
           .footer(footer)
           .header(header)
           .fontSize(8); // Optional
 
       // Debug output is always nice (Optional, to help you see the structure)
-      rpt.printStructure();
-
+      //rpt.printStructure();
 
       // This does the MAGIC...  :-)
       console.time("Rendered");
-      var a = rpt.render(function (err, name) {
-          console.timeEnd("Rendered");
-          if (err) {
-            console.error("Report had an error", err);
-          } else {
-            console.log("Report is named:", name);
-          }
-          done(err, name);
+      rpt.render(function (err, name) {
+        console.timeEnd("Rendered");
+        if (err) {
+          console.error("Report had an error", err);
+        } else {
+          console.log("Report is named:", name);
         }
-      );
-
+        done(err, name);
+      });
     };
 
     var sendReport = function (done) {
-      fs.readFile(path.join(".", reportName), function (err, data) {
+      fs.readFile(path.join("./temp", reportName), function (err, data) {
         if (err) {
           res.send({isError: true, error: err});
           return;
@@ -127,7 +161,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             to: "shackbarth@xtuple.com",
             subject: "hi",
             text: "Here is your email",
-            attachments: [{fileName: reportName, contents: data, contentType: "application/pdf"}]
+            attachments: [{fileName: "./temp/" + reportName, contents: data, contentType: "application/pdf"}]
           };
           var callback = function (error, response) {
               if (error) {
@@ -145,7 +179,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.header("Content-Type", "application/pdf");
 
         if (req.query.action === "download") {
-          res.attachment(reportName);
+          res.attachment("./temp/" + reportName);
         }
         res.send(data);
         done();
@@ -153,6 +187,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     async.series([
+      createTempDir,
       generateData,
       printReport,
       sendReport
