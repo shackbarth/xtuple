@@ -26,14 +26,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 
   //
+  // VARIABLES THAT SPAN MULTIPLE STEPS
+  //
+
+  var reportDefinition;
+  var reportData;
+  var reportName = "demo1.pdf";
+
+  //
   // HELPER FUNCTIONS FOR DATA TRANSFORMATION
   //
 
-  // TODO: move these to json descriptor in database
+  /**
+    We receive the data in the form we're familiar with: an object that represents the head,
+    which has an array that represents item data (such as InvoiceLines).
 
+    Fluent expects the data to be an array, which is the array of the line items with
+    head info copied redundantly/
 
-  // fluent expects the data to be in a single array with the head info copied redundantly
-  // and the detail info having prefixed keys
+    As a convention we'll put a prefix in front of the keys of the item data.
+  */
   var transformDataStructure = function (data) {
     return _.map(data[reportDefinition.detailAttribute], function (detail) {
       var pathedDetail = {};
@@ -55,6 +67,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
+  /**
+    Resolve the xTuple JSON convention for report element definition to the
+    output expected from fluentReports
+   */
   var getDetail = function (detailDef, data) {
     return _.map(detailDef, function (def) {
       var key,
@@ -67,7 +83,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       } else {
         key = reportDefinition.detailAttribute + "_" + def.attr;
       }
-      console.log("data is", data);
       if (key.indexOf(".") >= 0) {
         fieldData = data;
         while (key.indexOf(".") >= 0) {
@@ -82,15 +97,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return {
         data: "~" + fieldData, // TODO: no tildes
         width: def.width,
-        align: 2
+        align: def.align || 2 // default to "center"
       };
     });
   };
 
-
+  /**
+    Custom transformations for various element descriptions.
+   */
   var transformElementData = function (def, data) {
     if (def.transform === "detailHeader") {
-      console.log("def is", def.definition);
       return getDetailHeader(def.definition);
 
     } else if (def.transform === "detail") {
@@ -117,6 +133,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // STEPS TO PERFORM ROUTE
   //
 
+  /**
+    Make a directory node-datasource/temp if none exists
+   */
   var createTempDir = function (done) {
     fs.exists("./temp", function (exists) {
       if (exists) {
@@ -127,26 +146,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  var reportData;
-  var fetchData = function (req, done) {
-    var requestDetails = {
-      nameSpace: req.query.nameSpace,
-      type: req.query.type,
-      id: req.query.id
-    };
-    var callback = function (result) {
-      if (!result || result.isError) {
-        done(result || "Invalid query");
-        return;
-      }
-      reportData = transformDataStructure(result.data.data);
-      done();
-    };
-
-    queryForData(req.session, requestDetails, callback);
-  };
-
-  var reportDefinition;
+  /**
+    Fetch the highest-grade report definition for this business object.
+   */
   var fetchReportDefinition = function (done) {
     // TODO: actually go to the database
     reportDefinition = {
@@ -230,8 +232,40 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     done();
   };
 
-  // You don't have to pass in a report name; it will default to "report.pdf"
-  var reportName = "demo1.pdf";
+  var fetchImages = function (done) {
+    // TODO
+    done();
+  };
+
+  var fetchBarcodes = function (done) {
+    // TODO
+    done();
+  };
+
+  /**
+    Get the data for this business object.
+   */
+  var fetchData = function (req, done) {
+    var requestDetails = {
+      nameSpace: req.query.nameSpace,
+      type: req.query.type,
+      id: req.query.id
+    };
+    var callback = function (result) {
+      if (!result || result.isError) {
+        done(result || "Invalid query");
+        return;
+      }
+      reportData = transformDataStructure(result.data.data);
+      done();
+    };
+
+    queryForData(req.session, requestDetails, callback);
+  };
+
+  /**
+    Generate the report by calling fluentReports.
+   */
   var printReport = function (done) {
 
     /* "align" cribsheet:
@@ -317,6 +351,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     async.series([
       createTempDir,
       fetchReportDefinition,
+      fetchImages,
+      fetchBarcodes,
       function (done) {
         fetchData(req, done);
       },
