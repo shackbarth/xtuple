@@ -9,7 +9,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     When a client asks us to run a report, run it, save it in a temporary table,
     and redirect to pentaho with a key that will allow pentaho to access the report.
    */
-  var async = require("async"),
+  var _ = require("underscore"),
+    async = require("async"),
     fs = require("fs"),
     path = require("path"),
     Report = require('fluentreports').Report,
@@ -18,6 +19,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
 
   exports.generateReport = function (req, res) {
+
+    var detailAttribute = "lineItems";
+    // fluent expects the data to be in a single array with the head info copied redundantly
+    // and the detail info having prefixed keys
+    var transformDataStructure = function (data) {
+      return _.map(data[detailAttribute], function (detail) {
+        var pathedDetail = {};
+        _.each(detail, function (detailValue, detailKey) {
+          pathedDetail[detailAttribute + "." + detailKey] = detailValue;
+        });
+        return _.extend({}, data, pathedDetail);
+      });
+    };
 
     var reportData;
     var generateData = function (done) {
@@ -31,7 +45,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           done(result || "Invalid query");
           return;
         }
-        reportData = result.data.data;
+        reportData = transformDataStructure(result.data.data);
+        console.log(reportData);
         done();
       };
 
@@ -46,11 +61,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         {quantityUnit: "Tuesday", price: 8}
       ];
 
-      var daydetail = function (report, data) {
+      var detail = function (report, data) {
         report.band([
           ["", 80],
-          [data.quantityUnit, 100],
-          ["Price" + data.price, 100, 3]
+          [data["lineItems.quantityUnit"], 100],
+          ["Price" + data["lineItems.price"], 100, 3]
         ], {border: 1, width: 0, wrap: 1});
       };
 
@@ -64,29 +79,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       var header = function (report, data) {
         console.log("data number", data.number, typeof data.number);
-        report.print("foo" + data.number, {fontBold: true});
+        report.print("InvoiceNumber" + data.number, {fontBold: true});
       };
       var footer = function (report, data) {
         report.print("baz", {fontBold: true});
       };
 
-      var weekdetail = function (report, data) {
-        report.print(["Week Number: " + data.week], {x: 100});
-      };
-
-      var totalFormatter = function (data, callback) {
-       // if (data.hours) { data.hours = ': ' + data.hours; }
-        callback(null, data);
-      };
-
-      console.log("rd", reportData.number);
       var rpt = new Report(reportName)
           .autoPrint(false) // Optional
           .pageHeader(["Employee Hours"])// Optional
           .userdata({hi: 1})// Optional
-          .data([reportData])        // REQUIRED
+          .data(reportData)        // REQUIRED
           .sum("hours")        // Optional
-          .detail(daydetail) // Optional
+          .detail(detail) // Optional
           .footer(footer)
           .header(header)
           .fontSize(8); // Optional
