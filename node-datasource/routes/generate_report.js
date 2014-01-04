@@ -85,7 +85,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         done();
       };
 
-      // step 1: get the data
       queryForData(req.session, requestDetails, callback);
     };
 
@@ -143,11 +142,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           "Invoice Date: " + data.invoiceDate,
           "Terms: " + data.terms,
           "Order Date: " + data.orderDate
-        ], {align: "right"});
+        ], {x: 350, y: 0, align: "right"});
 
         report.print("InvoiceNumber" + data.number, {fontBold: true});
 
-        report.image("./temp/x.png", {x: 200, y: 0});
+        report.image("./temp/x.png", {x: 200, y: 0, width: 150});
         report.newline();
         report.newline();
         report.newline();
@@ -163,11 +162,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       var printFooter = function (report, data) {
-        report.print("baz", {fontBold: true});
+        report.print([
+          "Subtotal: " + data.subtotal,
+          "Taxes: " + data.taxTotal,
+          "Total: " + data.total
+        ], {y: 400, align: "right"});
       };
 
       var rpt = new Report("./temp/" + reportName)
-          .autoPrint(false) // Optional
+          .autoPrint(true) // Optional
           .userdata({hi: 1})// Optional
           .data(reportData)        // REQUIRED
           .detail(printDetail)
