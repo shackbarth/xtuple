@@ -43,46 +43,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var reportName = "demo1.pdf";
     var printReport = function (done) {
       var mydata = [
-          {name: "John Doe", week: 20, day: "Monday\nis- this is some long text that shouldn't\noverflow the text container but be wrapped", hours: 4},
-          {name: "John Doe", week: 20, day: "Tuesday", hours: 8},
-          {name: "John Doe", week: 20, day: "Wednesday", hours: 8},
-          {name: "John Doe", week: 21, day: "Thursday", hours: 2},
-          {name: "John Doe", week: 21, day: "Friday", hours: 8},
-          {name: "Jane Doe", week: 20, day: "Monday", hours: 5},
-          {name: "Jane Doe", week: 20, day: "Tuesday", hours: 8},
-          {name: "Jane Doe", week: 21, day: "Wednesday", hours: 7},
-          {name: "Jane Doe", week: 21, day: "Thursday", hours: 8},
-          {name: "Jane Doe", week: 21, day: "Friday", hours: 8},
-
-
-          {name: "John Doe", week: 22, day: "Monday", hours: 4},
-          {name: "John Doe", week: 22, day: "Tuesday", hours: 8},
-          {name: "John Doe", week: 22, day: "Wednesday", hours: 8},
-          {name: "John Doe", week: 23, day: "Thursday", hours: 2},
-          {name: "John Doe", week: 23, day: "Friday", hours: 8},
-          {name: "Jane Doe", week: 22, day: "Monday", hours: 5},
-          {name: "Jane Doe", week: 22, day: "Tuesday", hours: 8},
-          {name: "Jane Doe", week: 23, day: "Wednesday", hours: 7},
-          {name: "Jane Doe", week: 23, day: "Thursday", hours: 8},
-          {name: "Jane Doe", week: 23, day: "Friday", hours: 8},
-
-          {name: "John Doe", week: 25, day: "Monday", hours: 4},
-          {name: "John Doe", week: 25, day: "Tuesday", hours: 8},
-          {name: "John Doe", week: 25, day: "Wednesday", hours: 8},
-          {name: "John Doe", week: 26, day: "Thursday", hours: 2},
-          {name: "John Doe", week: 26, day: "Friday", hours: 8},
-          {name: "Jane Doe", week: 25, day: "Monday", hours: 5},
-          {name: "Jane Doe", week: 25, day: "Tuesday", hours: 8},
-          {name: "Jane Doe", week: 26, day: "Wednesday", hours: 7},
-          {name: "Jane Doe", week: 26, day: "Thursday\nis- this is some long text that shouldn't\noverflow the text container but be wrapped", hours: 8},
-          {name: "Jane Doe", week: 26, day: "Friday\nis- this is some long text that shouldn't\noverflow the text container but be wrapped", hours: 8}
-        ];
+        {quantityUnit: "Tuesday", price: 8}
+      ];
 
       var daydetail = function (report, data) {
         report.band([
           ["", 80],
-          [data.day, 100],
-          [data.hours, 100, 3]
+          [data.quantityUnit, 100],
+          ["Price" + data.price, 100, 3]
         ], {border: 1, width: 0, wrap: 1});
       };
 
@@ -94,8 +62,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         report.newLine();
       };
 
-      var nameheader = function (report, data) {
-        report.print(data.name, {fontBold: true});
+      var header = function (report, data) {
+        console.log("data number", data.number, typeof data.number);
+        report.print("foo" + data.number, {fontBold: true});
+      };
+      var footer = function (report, data) {
+        report.print("baz", {fontBold: true});
       };
 
       var weekdetail = function (report, data) {
@@ -107,24 +79,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         callback(null, data);
       };
 
-
+      console.log("rd", reportData.number);
       var rpt = new Report(reportName)
-              .autoPrint(false) // Optional
+          .autoPrint(false) // Optional
           .pageHeader(["Employee Hours"])// Optional
-          .finalSummary(["Total Hours:", "hours", 3])// Optional
           .userdata({hi: 1})// Optional
-          .data(mydata)        // REQUIRED
+          .data([reportData])        // REQUIRED
           .sum("hours")        // Optional
           .detail(daydetail) // Optional
-          .totalFormatter(totalFormatter) // Optional
+          .footer(footer)
+          .header(header)
           .fontSize(8); // Optional
-
-      rpt.groupBy("name")
-          .sum("hours")
-          .header(nameheader)
-          .footer(namefooter)
-          .groupBy("week")
-             .header(weekdetail);
 
       // Debug output is always nice (Optional, to help you see the structure)
       rpt.printStructure();
