@@ -33,14 +33,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var getDetailHeader = function (detailDef) {
     return _.map(detailDef, function (def) {
       return {
-        data: def.label || def.attr,
+        data: def.text,
         width: def.width,
         align: 2
       };
     });
   };
-
-
 
   exports.generateReport = function (req, res) {
 
@@ -49,12 +47,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var detailAttribute = "lineItems";
     var _defaultFontSize = 14;
     var _detailDef = [
-      {attr: "quantity", label: "Qty. Shipped", width: 100},
-      {attr: "quantityUnit", label: "UOM", width: 50},
-      {attr: "item.number", label: "Item", width: 100},
-      {attr: "parent.currency", label: "Currency", width: 80},
-      {attr: "price", label: "Unit Price", width: 100},
-      {attr: "extendedPrice", label: "Ext. Price", width: 100}
+      {
+        element: "band",
+        transform: "detail",
+        definition: [
+          {attr: "quantity", label: "Qty. Shipped", width: 100},
+          {attr: "quantityUnit", label: "UOM", width: 50},
+          {attr: "item.number", label: "Item", width: 100},
+          {attr: "parent.currency", label: "Currency", width: 80},
+          {attr: "price", label: "Unit Price", width: 100},
+          {attr: "extendedPrice", label: "Ext. Price", width: 100}
+        ],
+        options: {border: 1, width: 0, wrap: 1}
+      }
     ];
     var _headerDef = [
       {
@@ -84,7 +89,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       },
       {
         element: "band",
-        definition: _detailDef,
+        definition: [
+          {text: "Qty. Shipped", width: 100},
+          {text: "UOM", width: 50},
+          {text: "Item", width: 100},
+          {text: "Currency", width: 80},
+          {text: "Unit Price", width: 100},
+          {text: "Ext. Price", width: 100}
+        ],
         transform: "detailHeader",
         options: {border: 0, width: 0}
       },
@@ -132,7 +144,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           return;
         }
         reportData = transformDataStructure(result.data.data);
-        console.log(reportData);
         done();
       };
 
@@ -161,6 +172,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           } else {
             key = detailAttribute + "_" + def.attr;
           }
+          console.log("data is", data);
           if (key.indexOf(".") >= 0) {
             fieldData = data;
             while (key.indexOf(".") >= 0) {
@@ -181,14 +193,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
 
-      var printDetail = function (report, data) {
-        var detail = getDetail(_detailDef, data);
-        report.band(detail, {border: 1, width: 0, wrap: 1});
-      };
-
       var transformElementData = function (def, data) {
         if (def.transform === "detailHeader") {
+          console.log("def is", def.definition);
           return getDetailHeader(def.definition);
+
+        } else if (def.transform === "detail") {
+          return getDetail(def.definition, data);
 
         } else if (def.element === "print") {
           return _.map(def.definition, function (defElement) {
@@ -208,6 +219,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       var printHeader = function (report, data) {
         printGeneral(report, data, _headerDef);
+      };
+
+      var printDetail = function (report, data) {
+        printGeneral(report, data, _detailDef);
       };
 
       var printFooter = function (report, data) {
@@ -232,16 +247,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //rpt.printStructure();
 
       // This does the MAGIC...  :-)
-      console.time("Rendered");
-      rpt.render(function (err, name) {
-        console.timeEnd("Rendered");
-        if (err) {
-          console.error("Report had an error", err);
-        } else {
-          console.log("Report is named:", name);
-        }
-        done(err, name);
-      });
+      rpt.render(done);
     };
 
     var sendReport = function (done) {
