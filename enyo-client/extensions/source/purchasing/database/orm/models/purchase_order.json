@@ -1735,6 +1735,13 @@
          }
       },
       {
+        "name": "currency",
+        "toOne": { 
+          "type": "Currency",
+          "column": "pohead_curr_id"
+         }
+      },      
+      {
         "name": "characteristics",
         "toMany": {
           "isNested": true,
