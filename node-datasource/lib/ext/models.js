@@ -72,6 +72,10 @@ white:true*/
 
   });
 
+  SYS.ReportDefinition = XM.SimpleModel.extend({
+    recordType: 'SYS.ReportDefinition'
+  });
+
   /**
     @class
 
@@ -292,6 +296,12 @@ white:true*/
     /** @scope SYS.RecoverCollection.prototype */
 
     model: SYS.Recover
+
+  });
+
+  SYS.ReportDefinitionCollection = XM.Collection.extend({
+
+    model: SYS.ReportDefinition
 
   });
 }());
