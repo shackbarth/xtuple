@@ -141,11 +141,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // TODO: actually go to the database
       var reportDefinitionColl = new SYS.ReportDefinitionCollection(),
         afterFetch = function () {
-          console.log(reportDefinitionColl.getStatus());
-          console.log(reportDefinitionColl.length);
           if (reportDefinitionColl.getStatus() === XM.Model.READY_CLEAN) {
             reportDefinitionColl.off("statusChange", afterFetch);
-            console.log(reportDefinitionColl.models[0].get("definition"));
             reportDefinition = JSON.parse(reportDefinitionColl.models[0].get("definition"));
             done();
           }
@@ -156,10 +153,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         query: {
           parameters: [{
             attribute: "recordType",
-            value: "XM.Invoice"
-          }, {
+            value: req.query.nameSpace + "." + req.query.type
+          }],
+          rowLimit: 1,
+          orderBy: [{
             attribute: "grade",
-            value: 0
+            descending: true
           }]
         },
         database: req.session.passport.user.organization,
@@ -192,7 +191,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           return;
         }
         reportData = transformDataStructure(result.data.data);
-        console.log(reportData);
         done();
       };
 

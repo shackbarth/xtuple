@@ -1,22 +1,6 @@
 select xt.add_report_definition('XM.Invoice', 0, $${
-  "pageHeader": "Invoice",
   "detailAttribute": "lineItems",
   "defaultFontSize": 14,
-  "detailElements": [
-    {
-      "element": "band",
-      "transform": "detail",
-      "definition": [
-        {"attr": "lineItems*quantity", "width": 100},
-        {"attr": "lineItems*quantityUnit", "width": 50},
-        {"attr": "lineItems*item.number", "width": 100},
-        {"attr": "currency", "width": 80},
-        {"attr": "lineItems*price", "width": 100},
-        {"attr": "lineItems*extendedPrice", "width": 100}
-      ],
-      "options": {"border": 1, "width": 0, "wrap": 1}
-    }
-  ],
   "headerElements": [
     {
       "definition": [
@@ -88,6 +72,21 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "element": "bandLine"
+    }
+  ],
+  "detailElements": [
+    {
+      "element": "band",
+      "transform": "detail",
+      "definition": [
+        {"attr": "lineItems*quantity", "width": 100},
+        {"attr": "lineItems*quantityUnit", "width": 50},
+        {"attr": "lineItems*item.number", "width": 100},
+        {"attr": "currency", "width": 80},
+        {"attr": "lineItems*price", "width": 100},
+        {"attr": "lineItems*extendedPrice", "width": 100}
+      ],
+      "options": {"border": 1, "width": 0, "wrap": 1}
     }
   ],
   "footerElements": [
