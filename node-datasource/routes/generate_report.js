@@ -67,23 +67,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     };
 
+    var traverseDots = function (data, key) {
+      while (key.indexOf(".") >= 0) {
+        data = data[key.prefix()];
+        key = key.suffix();
+      }
+      return data[key];
+    };
+
     /**
       Resolve the xTuple JSON convention for report element definition to the
       output expected from fluentReports
      */
     var getDetail = function (detailDef, data) {
       return _.map(detailDef, function (def) {
-        var key = def.attr,
-          fieldData = data;
-
-        while (key.indexOf(".") >= 0) {
-          fieldData = fieldData[key.prefix()];
-          key = key.suffix();
-        }
-        fieldData = fieldData[key];
-
         return {
-          data: "~" + fieldData, // TODO: no tildes
+          data: "~" + traverseDots(data, def.attr), // TODO: no tildes
           width: def.width,
           align: def.align || 2 // default to "center"
         };
@@ -100,9 +99,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       } else if (def.element === "band") {
         return transformBand(def.definition);
 
-      } else if (def.element === "print") {
+      } else if (def.element === "print" || !def.element) {
         return _.map(def.definition, function (defElement) {
-          var returnData = defElement.attr ? data[defElement.attr] : defElement.text;
+          var returnData = defElement.attr ? "~" + traverseDots(data, defElement.attr) : defElement.text;
           if (defElement.label === true) {
             returnData = ("_" + defElement.attr).loc() + ": " + returnData;
           } else if (defElement.label) {
@@ -160,7 +159,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         ],
         headerElements: [
           {
-            element: "print",
             definition: [
               {text: "Invoice"},
               {attr: "invoiceDate", label: true},
@@ -170,11 +168,41 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             options: {x: 350, y: 0, align: "right"}
           },
           {
-            element: "print",
+            definition: [{text: "Customer Number: "}],
+            options: {fontBold: true, x: 0, y: 150}
+          },
+          {
+            definition: [{attr: "customer.number"}],
+            options: {x: 250, y: 150}
+          },
+          {
+            definition: [{text: "Invoice Number: "}],
+            options: {fontBold: true, x: 0, y: 170}
+          },
+          {
+            definition: [{attr: "number"}],
+            options: {x: 250, y: 170}
+          },
+          {
             definition: [
-              {attr: "number", label: "Invoice Number"},
+              {text: "_billto".loc() + ": "}
             ],
-            options: {fontBold: true, x: 200, y: 150}
+            options: {x: 1, y: 200, width: 100, fontBold: true, align: "right"}
+          },
+          {
+            definition: [
+              {attr: "billtoName"},
+              {attr: "billtoAddress1"},
+              {attr: "billtoAddress2"},
+              {attr: "billtoAddress3"},
+              // TODO: make this go in one row
+              {attr: "billtoCity"},
+              {attr: "billtoState"},
+              {attr: "billtoPostalCode"},
+              {attr: "billtoCountry"},
+              {attr: "billtoPhone"}
+            ],
+            options: {x: 100, y: 200, width: 250}
           },
           {
             element: "image",
@@ -205,13 +233,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         ],
         footerElements: [
           {
-            element: "print",
             definition: [
               {attr: "subtotal", label: true},
               {attr: "taxTotal", label: true},
               {attr: "total", label: true}
             ],
-            options: {y: 400, align: "right"}
+            options: {align: "right"}
           }
         ]
       };
@@ -244,6 +271,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           return;
         }
         reportData = transformDataStructure(result.data.data);
+        console.log(reportData);
         done();
       };
 
@@ -277,7 +305,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var printGeneral = function (report, data, definition) {
         _.each(definition, function (def) {
           var elementData = transformElementData(def, data);
-          report[def.element](elementData, def.options);
+          report[def.element || "print"](elementData, def.options);
         });
       };
 
