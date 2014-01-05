@@ -58,16 +58,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     };
 
-    var transformBand = function (detailDef) {
-      return _.map(detailDef, function (def) {
-        return {
-          data: def.text,
-          width: def.width,
-          align: 2
-        };
-      });
-    };
-
+    // I'm sure this is already written somewhere else in our app.
     var traverseDots = function (data, key) {
       while (key.indexOf(".") >= 0) {
         data = data[key.prefix()];
@@ -78,12 +69,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     /**
       Resolve the xTuple JSON convention for report element definition to the
-      output expected from fluentReports
+      output expected from fluentReports by swapping in the data fields.
      */
-    var getDetail = function (detailDef, data) {
+    var marryData = function (detailDef, data, textOnly) {
       return _.map(detailDef, function (def) {
+        var text = def.attr ? "~" + traverseDots(data, def.attr) : def.text;
+        if (def.label === true) {
+          text = ("_" + def.attr).loc() + ": " + text;
+        } else if (def.label) {
+          text = def.label + ": " + text;
+        }
+        if (textOnly) {
+          return text;
+        }
+
+        // TODO: maybe support any attributes?
         return {
-          data: "~" + traverseDots(data, def.attr), // TODO: no tildes
+          data: text,
           width: def.width,
           align: def.align || 2 // default to "center"
         };
@@ -91,29 +93,30 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     /**
-      Custom transformations for various element descriptions.
+      Custom transformations depending on the element descriptions.
      */
     var transformElementData = function (def, data) {
-      if (def.transform === "detail") {
-        return getDetail(def.definition, data);
+      var textOnly;
 
-      } else if (def.element === "band") {
-        return transformBand(def.definition);
-
-      } else if (def.element === "print" || !def.element) {
-        return _.map(def.definition, function (defElement) {
-          var returnData = defElement.attr ? "~" + traverseDots(data, defElement.attr) : defElement.text;
-          if (defElement.label === true) {
-            returnData = ("_" + defElement.attr).loc() + ": " + returnData;
-          } else if (defElement.label) {
-            returnData = defElement.label + ": " + returnData;
-          }
-          return returnData;
-        });
-
-      } else {
+      if (typeof def.definition === 'string') {
+        // element: image, for example
         return def.definition;
       }
+
+      // print elements (which is the default) only want strings as the definition
+      textOnly = def.element === "print" || !def.element;
+      return marryData(def.definition, data, textOnly);
+    };
+
+    /**
+      The "element" (default to "print") is the method on the report
+     object that we are going to call to draw the pdf
+    */
+    var printDefinition = function (report, data, definition) {
+      _.each(definition, function (def) {
+        var elementData = transformElementData(def, data);
+        report[def.element || "print"](elementData, def.options);
+      });
     };
 
 
@@ -138,7 +141,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Fetch the highest-grade report definition for this business object.
      */
     var fetchReportDefinition = function (done) {
-      // TODO: actually go to the database
       var reportDefinitionColl = new SYS.ReportDefinitionCollection(),
         afterFetch = function () {
           if (reportDefinitionColl.getStatus() === XM.Model.READY_CLEAN) {
@@ -202,30 +204,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     var printReport = function (done) {
 
-      /* "align" cribsheet:
-        left: 1,
-        right: 3,
-        center: 2
-      */
-
-
       var printHeader = function (report, data) {
-        printGeneral(report, data, reportDefinition.headerElements);
+        printDefinition(report, data, reportDefinition.headerElements);
       };
 
       var printDetail = function (report, data) {
-        printGeneral(report, data, reportDefinition.detailElements);
+        printDefinition(report, data, reportDefinition.detailElements);
       };
 
       var printFooter = function (report, data) {
-        printGeneral(report, data, reportDefinition.footerElements);
-      };
-
-      var printGeneral = function (report, data, definition) {
-        _.each(definition, function (def) {
-          var elementData = transformElementData(def, data);
-          report[def.element || "print"](elementData, def.options);
-        });
+        printDefinition(report, data, reportDefinition.footerElements);
       };
 
       var rpt = new Report("./temp/" + reportName)
