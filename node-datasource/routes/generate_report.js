@@ -73,7 +73,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     var marryData = function (detailDef, data, textOnly) {
       return _.map(detailDef, function (def) {
-        var text = def.attr ? "~" + traverseDots(data, def.attr) : def.text;
+        var text = def.attr ? traverseDots(data, def.attr) : def.text;
         if (def.label === true) {
           text = ("_" + def.attr).loc() + ": " + text;
         } else if (def.label) {
