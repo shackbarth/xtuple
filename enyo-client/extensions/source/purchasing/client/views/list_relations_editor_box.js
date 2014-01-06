@@ -8,10 +8,115 @@ trailing:true, white:true, strict:false*/
   XT.extensions.purchasing.initListRelationsEditorBox = function () {
 
     // ..........................................................
-    // PURCHASE ORDER LINE
+    // ITEM SOURCE PRICE
     //
 
     enyo.kind({
+      name: "XV.ItemSourcePriceEditor",
+      kind: "XV.RelationsEditor",
+      components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+          classes: "in-panel", components: [
+          {kind: "XV.QuantityWidget", attr: "quantityBreak"},
+          {kind: "XV.SitePicker", attr: "site", showNone: true,
+            noneText: "_any".loc()},
+          {kind: "XV.ItemSourcePriceTypePicker", attr: "priceType"},
+          {kind: "XV.MoneyWidget",
+            attr: {localValue: "price", currency: "currency"},
+            label: "_price".loc(), currencyShowing: true,
+            scale: XT.PURCHASE_PRICE_SCALE,
+            currencyDisabled: false},
+          {kind: "XV.PercentWidget", attr: "percentDiscount", label: "percent".loc()},
+          {kind: "XV.MoneyWidget",
+            attr: {localValue: "fixedDiscount", currency: "currency"},
+            label: "_fixed".loc(), currencyShowing: true,
+            scale: XT.PURCHASE_PRICE_SCALE,
+            currencyDisabled: false},
+          {kind: "XV.MoneyWidget",
+            attr: {localValue: "itemSource.item.wholesalePrice"},
+            label: "_wholesalePrice".loc(), currencyShowing: true,
+            currencyDisabled: true}
+        ]}
+      ]
+    });
+
+    enyo.kind({
+      name: "XV.ItemSourcePriceBox",
+      kind: "XV.ListRelationsEditorBox",
+      title: "_prices".loc(),
+      editor: "XV.ItemSourcePriceEditor",
+      parentKey: "itemSource",
+      listRelations: "XV.ItemSourcePriceListRelations",
+      fitButtons: false
+    });
+
+    // ..........................................................
+    // PURCHASE ORDER LINE
+    //
+
+    /**
+      Mixin for Purchase Order Line functions
+    */
+    XV.PurchaseOrderLineMixin = {
+      setValue: function (value) {
+        XV.RelationsEditor.prototype.setValue.apply(this, arguments);
+        var K = XM.Item,
+          param = {
+            attribute: "item.itemType",
+            operator: "ANY",
+            value: [K.PURCHASED, K.OUTSIDE_PROCESS, K.TOOLING, K.MANUFACTURED]
+          },
+          itemSourceWidget = this.$.itemSourceWidget,
+          parent,
+          parentSite,
+          childSite,
+          vendor,
+          itemSourceRequired;
+
+        // Add new bindings
+        if (this.value) {
+          parent = value.getParent();
+
+          // Handle Site
+          parentSite = parent ? parent.get("site") : false;
+          childSite = this.$.itemSiteWidget.getSite();
+          if (parentSite && !childSite) {
+            this.$.itemSiteWidget.setSite(parentSite);
+          }
+
+          // Handle Vendor
+          vendor = parent ? parent.get("vendor") : false;
+          if (vendor) {
+            itemSourceRequired = vendor ? vendor.get("itemSourceRequired") : false;
+            param = {
+              attribute: "vendor",
+              value: vendor.id
+            };
+            this.changeItemSiteParameter("vendor", "vendor", itemSourceRequired);
+            
+            if (itemSourceWidget) {
+              itemSourceWidget.addParameter(param);
+            }
+          }
+
+          // Handle Item types
+          param = {
+            attribute: "item.itemType",
+            operator: "ANY",
+            value: [K.PURCHASED, K.OUTSIDE_PROCESS, K.TOOLING, K.MANUFACTURED]
+          };
+          if (itemSourceRequired) {
+            this.$.itemSiteWidget.removeParameter(param);
+          } else {
+            this.$.itemSiteWidget.addParameter(param);
+          }
+        }
+      },
+      // Borrow from XV.LineMixin for Sales Orders and Quotes
+      changeItemSiteParameter: XV.LineMixin.changeItemSiteParameter
+    };
+    
+    var lineEditor = {
       name: "XV.PurchaseOrderLineEditor",
       kind: "XV.RelationsEditor",
       components: [
@@ -19,7 +124,10 @@ trailing:true, white:true, strict:false*/
           classes: "in-panel", components: [
           {kind: "XV.InputWidget", attr: "lineNumber"},
           {kind: "XV.CheckboxWidget", attr: "isMisc"},
-          {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"}},
+          {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"},
+            query: {parameters: [
+            {attribute: "isActive", value: true}
+          ]}},
           {kind: "XV.ExpenseCategoryWidget", attr: "expenseCategory"},
           {kind: "XV.QuantityWidget", attr: "quantity", label: "_ordered".loc()},
           {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
@@ -49,7 +157,10 @@ trailing:true, white:true, strict:false*/
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]}
       ]
-    });
+    };
+
+    enyo.mixin(lineEditor, XV.PurchaseOrderLineMixin);
+    enyo.kind(lineEditor);
 
     enyo.kind({
       name: "XV.PurchaseOrderLineBox",
@@ -119,6 +230,7 @@ trailing:true, white:true, strict:false*/
           classes: "in-panel", components: [
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.InputWidget", attr: "description"},
+          {kind: "XV.WorkflowStatusPicker", attr: "status"},
           {kind: "XV.PurchaseOrderWorkflowTypePicker", attr: "workflowType",
             label: "_type".loc()},
           {kind: "XV.PriorityPicker", attr: "priority", showNone: false},

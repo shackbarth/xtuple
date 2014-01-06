@@ -1,3 +1,7 @@
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true,
+noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
+/*global _:true */
+
 (function () {
   'use strict';
 
@@ -6,7 +10,7 @@
   /**
    * @constructor
    */
-  function SourceQuery (query) {
+  function SourceQuery(query) {
     Query.call(this, query);
   }
 
@@ -14,7 +18,7 @@
    * @extends Query
    */
   SourceQuery.prototype = _.extend(Object.create(Query.prototype), {
-    
+
     /**
      * @private
      * @abstract
@@ -35,4 +39,3 @@
 
   module.exports = SourceQuery;
 })();
-

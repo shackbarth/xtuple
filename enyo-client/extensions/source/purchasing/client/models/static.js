@@ -7,11 +7,27 @@ white:true*/
   "use strict";
 
   XT.extensions.purchasing.initStaticModels = function () {
-
-    // Purchase Order
-    var K = XM.PurchaseOrder,
+    var K = XM.ItemSourcePrice,
      i;
 
+    // Item Source Price Types
+    var itemSourcePriceTypesJson = [
+      { id: K.TYPE_NOMINAL, name: "_nominal".loc() },
+      { id: K.TYPE_DISCOUNT, name: "_discount".loc() }
+    ];
+    XM.ItemSourcePriceTypeModel = Backbone.Model.extend({
+    });
+    XM.ItemSourcePriceTypeCollection = Backbone.Collection.extend({
+      model: XM.ItemSourcePriceTypeModel
+    });
+    XM.itemSourcePriceTypes = new XM.ItemSourcePriceTypeCollection();
+    for (i = 0; i < itemSourcePriceTypesJson.length; i++) {
+      var itemSourcePriceType = new XM.ItemSourcePriceTypeModel(itemSourcePriceTypesJson[i]);
+      XM.itemSourcePriceTypes.add(itemSourcePriceType);
+    }
+
+    // Purchase Order
+    K = XM.PurchaseOrder;
     var purchaseOrderStatusesJson = [
       { id: K.UNRELEASED_STATUS, name: "_unreleased".loc() },
       { id: K.OPEN_STATUS, name: "_open".loc() },
