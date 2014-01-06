@@ -297,6 +297,13 @@
           "type": "Boolean",
           "column": "vend_active"
         }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "vend_curr_id"
+        }
       }
     ],
     "isSystem": true
@@ -359,11 +366,18 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "vendaddr_code",
-          "isNaturalKey": true
+          "column": "vendaddr_code"
         }
       },
       {
@@ -405,6 +419,70 @@
       }
     ],
     "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "VendorAddressRelation",
+    "table": "xt.vendaddr",
+    "comment": "Vendor Address Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "isNested": true,
+          "type": "VendorRelation",
+          "column": "vend_id"
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "code"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "name"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "addr_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "cntct_id"
+        }
+      }
+    ],
     "isSystem": true
   },
   {

@@ -1,5 +1,7 @@
 enyo.depends(
   "characteristics.js",
+  "combobox.js",
   "parameter.js",
-  "picker.js"
+  "picker.js",
+  "relation.js"
 );

@@ -110,14 +110,14 @@
       {
         "name": "effective",
         "attr": {
-          "type": "Date",
+          "type": "EffectiveDate",
           "column": "curr_effective"
         }
       },
       {
         "name": "expires",
         "attr": {
-          "type": "Date",
+          "type": "ExpireDate",
           "column": "curr_expires"
         }
       }

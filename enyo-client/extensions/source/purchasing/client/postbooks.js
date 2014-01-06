@@ -30,6 +30,7 @@ trailing:true, white:true, strict:false*/
       name: "purchasing",
       label: "_purchasing".loc(),
       panels: [
+        {name: "ItemSourceList", kind: "XV.ItemSourceList"},
         {name: "purchaseOrderList", kind: "XV.PurchaseOrderList"},
         {name: "activityList", kind: "XV.ActivityList"}
       ]
@@ -60,13 +61,12 @@ trailing:true, white:true, strict:false*/
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
 
-    /*
     XM.configurations.add(new XM.ConfigurationModel({
       model: "XM.purchasing",
       name: "_purchasing".loc(),
       description: "_purchasing".loc(),
       workspace: "XV.PurchasingWorkspace"
     }));
-    */
+
   };
 }());

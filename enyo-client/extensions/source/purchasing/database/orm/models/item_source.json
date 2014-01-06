@@ -11,7 +11,7 @@
     "privileges": {
       "all": {
         "create": "MaintainItemSources",
-        "read": "ViewItemSources",
+        "read": "ViewItemSources MaintainPurchaseOrders ViewPurchaseOrders",
         "update": "MaintainItemSources",
         "delete": "MaintainItemSources"
       }
@@ -38,7 +38,8 @@
         "toOne": {
           "isNested": true,
           "type": "ItemRelation",
-          "column": "itemsrc_item_id"
+          "column": "itemsrc_item_id",
+          "required": true
         }
       },
       {
@@ -46,28 +47,32 @@
         "toOne": {
           "isNested": true,
           "type": "VendorRelation",
-          "column": "itemsrc_vend_id"
+          "column": "itemsrc_vend_id",
+          "required": true
         }
       },
       {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "itemsrc_active"
+          "column": "itemsrc_active",
+          "required": true
         }
       },
       {
         "name": "isDefault",
         "attr": {
           "type": "Boolean",
-          "column": "itemsrc_default"
+          "column": "itemsrc_default",
+          "required": true
         }
       },
       {
         "name": "vendorItemNumber",
         "attr": {
           "type": "String",
-          "column": "itemsrc_vend_item_number"
+          "column": "itemsrc_vend_item_number",
+          "required": true
         }
       },
       {
@@ -81,14 +86,16 @@
         "name": "vendorUnit",
         "attr": {
           "type": "String",
-          "column": "itemsrc_vend_uom"
+          "column": "itemsrc_vend_uom",
+          "required": true
         }
       },
       {
         "name": "vendorUnitRatio",
         "attr": {
           "type": "UnitRatio",
-          "column": "itemsrc_invvendoruomratio"
+          "column": "itemsrc_invvendoruomratio",
+          "required": true
         }
       },
       {
@@ -116,14 +123,24 @@
         "name": "leadTime",
         "attr": {
           "type": "Number",
-          "column": "itemsrc_leadtime"
+          "column": "itemsrc_leadtime",
+          "required": true
+        }
+      },
+      {
+        "name": "earliestDate",
+        "attr": {
+          "type": "Date",
+          "derived": true,
+          "method": "(current_date + itemsrc_leadtime)"
         }
       },
       {
         "name": "ranking",
         "attr": {
           "type": "Number",
-          "column": "itemsrc_ranking"
+          "column": "itemsrc_ranking",
+          "required": true
         }
       },
       {
@@ -157,27 +174,21 @@
       {
         "name": "effective",
         "attr": {
-          "type": "Date",
-          "column": "itemsrc_effective"
+          "type": "EffectiveDate",
+          "column": "itemsrc_effective",
+          "required": true
         }
       },
       {
         "name": "expires",
         "attr": {
-          "type": "DueDate",
-          "column": "itemsrc_expires"
+          "type": "ExpireDate",
+          "column": "itemsrc_expires",
+          "required": true
         }
       },
       {
-        "name": "contract",
-        "toOne": {
-          "isNested": true,
-          "type": "VendorContractRelation",
-          "column": "itemsrc_contrct_id"
-        }
-      },
-      {
-        "name": "Prices",
+        "name": "prices",
         "toMany": {
           "isNested": true,
           "type": "ItemSourcePrice",
@@ -223,7 +234,8 @@
         "name": "quantityBreak",
         "attr": {
           "type": "Quantity",
-          "column": "itemsrcp_qtybreak"
+          "column": "itemsrcp_qtybreak",
+          "required": true
         }
       },
       {
@@ -237,28 +249,24 @@
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "itemsrcp_curr_id"
-        }
-      },
-      {
-        "name": "dropShip",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsrcp_dropship"
+          "column": "itemsrcp_curr_id",
+          "required": true
         }
       },
       {
         "name": "site",
         "toOne": {
           "type": "SiteRelation",
-          "column": "itemsrcp_warehous_id"
+          "column": "itemsrcp_warehous_id",
+          "nullValue": "-1"
         }
       },
       {
         "name": "priceType",
         "attr": {
           "type": "String",
-          "column": "itemsrcp_type"
+          "column": "itemsrcp_type",
+          "required": "true"
         }
       },
       {
@@ -277,6 +285,33 @@
       }
     ],
     "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "ItemSourceManufacturer",
+    "table": "xt.itemsrcmfg",
+    "isRest": true,
+    "comment": "Item Source Manufacturer Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "manufacturerName",
+        "attr": {
+          "type": "String",
+          "column": "itemsrc_manuf_name",
+          "isPrimaryKey": true
+        }
+      }
+    ],
     "isSystem": true
   }
 ]

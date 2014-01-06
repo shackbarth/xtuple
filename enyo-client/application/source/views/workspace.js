@@ -446,6 +446,9 @@ strict: false*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", title: "_creditCard".loc(),
           components: [
+          {kind: "onyx.GroupboxHeader", content: "_default".loc()},
+          {kind: "XV.PriorityPicker", attr: "DefaultPriority",
+            label: "_priority".loc()},
           {kind: "onyx.GroupboxHeader", content: "_creditCard".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
             {kind: "XV.CreditCardGatewayCombobox", attr: "CCCompany",
@@ -2145,7 +2148,7 @@ strict: false*/
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "promiseDate", showing: false,
               name: "promiseDate"},
-            {kind: "XV.QuoteLineCharacteristicsWidget",
+            {kind: "XV.PurchaseOrderLineCharacteristicsWidget",
               attr: "characteristics"}
           ]}
         ]},

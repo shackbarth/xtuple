@@ -17,43 +17,85 @@ select xt.install_js('XM','item_site','xtuple', $$
   },
 
   /**
-    Runs what amounts to a fetch based on the query, with the extra
-    restriction that the results are limited by the custitem function,
-    which makes sure that the customer (and/or shipto) is allowed to
-    ship this function
+    Returns item site list items using usual query means with additional special support for:
+      * Attributes `customer`,`shipto`, and `effectiveDate` for exclusive item rules.
+      * Attribute `vendor` to filter on only items with associated item sources.
+      * Cross check on `alias` and `barcode` attributes for item numbers.
 
-    @param {Number} Customer Id
-    @param {Number} Shipto Id
-    @param {Number} As Of Date
+    @param {String} Record type. Must have `itemsite` or related view as its orm source table.
     @param {Object} Additional query filter (Optional)
     @returns {Array}
-   */
-  XM.ItemSite.itemsForCustomer = function (customerNumber, shiptoId, effectiveDate, query) {
-    customerId = customerNumber ? XT.Data.getId(XT.Orm.fetch('XM', 'CustomerProspectRelation'), customerNumber) : null;
-    shiptoId = shiptoId ? XT.Data.getId(XT.Orm.fetch('XM', 'CustomerShipto'), shiptoId) : -1;
-    effectiveDate = effectiveDate || new Date();
+  */
+  XM.ItemSite.fetch = function (recordType, query) {
     query = query || {};
-    var limit = query.rowLimit ? 'limit ' + Number(query.rowLimit) : '',
+    var namespace = recordType.beforeDot(),
+      type = recordType.afterDot(),
+      customerId = null,
+      shiptoId = -1,
+      effectiveDate = new Date(),
+      vendorId = null,
+      limit = query.rowLimit ? 'limit ' + Number(query.rowLimit) : '',
       offset = query.rowOffset ? 'offset ' + Number(query.rowOffset) : '',
-      clause = XT.Data.buildClause("XM", "ItemSite", query.parameters, query.orderBy),
+      clause,
       spliceIndex,
       twoIfSplice = 0,
       aliasInjection,
+      customerNumber,
       itemNumber,
-      sql = 'select * from xm.item_site_list_item where id in ' +
+      sql = 'select * from %1$I.%2$I where id in ' +
             '(select id ' +
-            ' from xm.item_site_list_item ' +
+            ' from %1$I.%2$I ' +
             ' where {conditions} ';
 
-    if (customerId) {
-      sql = sql + ' and (item).id in (select * from custitem(${p3}, ${p4}::integer, ${p5}::date)) ';
+    /* Handle special parameters */
+    if (query.parameters) {
+      query.parameters = query.parameters.filter(function (param) {
+        var result = false;
+        switch (param.attribute)
+        {
+        case "customer":
+          customerNumber = param.value;
+          customerId = XT.Data.getId(XT.Orm.fetch('XM', 'CustomerProspectRelation'), param.value);
+          break;
+        case "shipto":
+          shiptoId = XT.Data.getId(XT.Orm.fetch('XM', 'CustomerShipto'), param.value);
+          break;
+        case "effectiveDate":
+          effectiveDate = param.value;
+          break;
+        case "vendor":
+          vendorId = XT.Data.getId(XT.Orm.fetch('XM', 'VendorRelation'), param.value);
+          break;
+        default:
+          result = true;
+        }
+        return result;
+      })
     }
-    sql = sql + '{orderBy} {limit} {offset}) ' +
-      '{orderBy}';
 
-    /* crazily splice in the option of querying by alias in the middle of the item number part of the WHERE.
-      In the future conditions should be able to generate this sort of code itself with the
-      proposed aliases*number format. Once that's ready, take this ugly code out */
+    clause = XT.Data.buildClause(namespace, type, query.parameters, query.orderBy);
+
+    /* If customer passed, restrict results to item sites allowed to be sold to that customer */
+    if (customerId) {
+      sql += ' and (item).id in (select * from custitem(${p3}, ${p4}::integer, ${p5}::date)) ';
+    }
+
+    /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
+    if (vendorId) {
+      sql +=  ' and (item).id in (' +
+              '  select itemsrc_item_id ' +
+              '  from itemsrc ' +
+              '  where itemsrc_active ' +
+              '    and itemsrc_vend_id=' + vendorId + ')';
+    }
+
+    sql = XT.format(sql + '{orderBy} %3$s %4$s) {orderBy}',
+                    [namespace.decamelize(), type.decamelize(), limit, offset]);
+
+    /* Crazily splice in the option of querying by alias in the middle of the item number part of the WHERE.
+       In the future conditions should be able to generate this sort of code itself with the
+       proposed aliases*number format. Once that's ready, take this ugly code out. */
+
     spliceIndex = clause.conditions.indexOf('or (item).barcode');
     if (spliceIndex >= 0) {
       twoIfSplice = 2;
@@ -64,13 +106,15 @@ select xt.install_js('XM','item_site','xtuple', $$
         "where itemalias_number ~^ ${p1} " +
         "and (crmacct_number is null or crmacct_number = ${p2}) " +
         ") ";
-      clause.conditions = clause.conditions.substring(0, spliceIndex) + aliasInjection + clause.conditions.substring(spliceIndex);
+      clause.conditions = clause.conditions.substring(0, spliceIndex) +
+        aliasInjection + clause.conditions.substring(spliceIndex);
+
       itemNumber = query.parameters.filter(function (param) {
         return param.attribute && param.attribute.length && param.attribute.indexOf("item.number") >= 0;
       })[0].value;
     }
 
-    /* query the model */
+    /* Query the model */
     sql = sql.replace('{conditions}', clause.conditions)
              .replace(/{orderBy}/g, clause.orderBy)
              .replace('{limit}', limit)
@@ -92,7 +136,7 @@ select xt.install_js('XM','item_site','xtuple', $$
       plv8.elog(NOTICE, 'parameters = ', clause.parameters);
     }
     return plv8.execute(sql, clause.parameters);
-  };
+  }
 
 }());
 
