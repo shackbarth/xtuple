@@ -30,7 +30,7 @@
   @property {String} CreditCardType
   **/
   var spec = {
-    skipSmoke: true,
+    skipAll: true,
     recordType: "XM.CreditCard",
     enforceUpperKey: false,
     collectionType: "XM.CreditCardCollection",

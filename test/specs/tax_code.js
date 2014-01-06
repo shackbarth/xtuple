@@ -23,6 +23,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     @property {TaxCode} Basis
     */
   var spec = {
+    skipSmoke: true,
     recordType: "XM.TaxCode",
     collectionType: "XM.TaxCodeCollection",
     /**

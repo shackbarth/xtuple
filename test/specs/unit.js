@@ -27,7 +27,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     /**
       @member -
       @memberof Unit
-      @description The Tax Type collection is cached.
+      @description The Unit collection is cached.
     */
     cacheName: "XM.units",
     listKind: "XV.UnitList",
