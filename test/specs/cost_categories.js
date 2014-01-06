@@ -42,7 +42,7 @@
       /**
       @member -
       @memberof CostCategory.prototype
-      @description Cost Categories can be read by anyone but can only be created, updated,
+      @description Cost Categories can be read by users with privilege "ViewCostCategories" and can only be created, updated,
         or deleted by users with the "MaintainCostCategories" privilege.
       */
       privileges: {
