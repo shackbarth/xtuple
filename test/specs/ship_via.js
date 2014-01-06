@@ -23,13 +23,13 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     instanceOf: "XM.Document",
     /**
       @member -
-      @memberof ShipVia.prototype
+      @memberof ShipVia
       @description Ship Vias are lockable.
     */
     isLockable: true,
     /**
       @member -
-      @memberof ShipVia.prototype
+      @memberof ShipVia
       @description The ID attribute is "name, which will not be automatically uppercased.
     */
     idAttribute: "code",
@@ -37,13 +37,13 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     attributes: ["code", "description"],
     /**
       @member -
-      @memberof ShipVia.prototype
+      @memberof ShipVia
       @description Used in the Billing and Sales modules
     */
     extensions: ["billing", "sales"],
     /**
       @member -
-      @memberof ShipVia.prototype
+      @memberof ShipVia
       @description Ship Vias can be read by users with "ViewShipVias" privilege and can be created, updated,
         or deleted by users with the "MaintainShipVias" privilege.
     */
