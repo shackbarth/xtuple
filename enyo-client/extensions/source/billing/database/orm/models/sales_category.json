@@ -11,7 +11,7 @@
     "privileges": {
       "all": {
         "create": "MaintainSalesCategories",
-        "read": true,
+        "read": "ViewSalesCategories",
         "update": "MaintainSalesCategories",
         "delete": "MaintainSalesCategories"
       }
