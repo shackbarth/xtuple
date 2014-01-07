@@ -118,6 +118,16 @@ var _ = require("underscore"),
    */
   var setModel = function (data, done) {
     var timeoutId,
+      eventLog = [],
+      logEvent = function () {
+        eventLog.push(arguments);
+      },
+      invalid = function (model, error) {
+        assert.fail(JSON.stringify(error) || "Unspecified error", "");
+        clearTimeout(timeoutId);
+        data.model.off('invalid', invalid);
+        data.model.off('all', logEvent);
+      },
       setAttribute = function (attribute, asyncCallback) {
         var value = attribute.value,
           key = attribute.key,
@@ -155,12 +165,19 @@ var _ = require("underscore"),
 
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
-      assert.fail("timeout was reached on set " + data.recordType, "");
+      data.model.off('invalid', invalid);
+      data.model.off('all', logEvent);
+      assert.fail("timeout was reached on set " + data.recordType + JSON.stringify(eventLog), "");
       done();
     }, waitTime);
 
+    data.model.on('invalid', invalid);
+    data.model.on('all', logEvent);
+
     async.map(hashAsArray, setAttribute, function (err, results) {
       clearTimeout(timeoutId);
+      data.model.off('invalid', invalid);
+      data.model.off('all', logEvent);
       if (err) {
         assert.fail(err);
       } else {
