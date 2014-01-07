@@ -119,7 +119,9 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
   function toXtGetQuery(source) {
     var target = {
       parameters: (function () {
-        return _.flatten(
+
+        // Return source.parameters when doing a FreeTextQuery or build up from attributes.
+        return source.parameters || _.flatten(
           _.map(source.attributes, function (clause, attr) {
             return _.map(clause, function (operand, operator) {
               return {
