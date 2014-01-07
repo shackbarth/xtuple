@@ -71,9 +71,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "element": "fontNormal"
-    },
-    {
-      "element": "bandLine"
     }
   ],
   "detailElements": [
