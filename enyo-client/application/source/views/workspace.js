@@ -2252,7 +2252,8 @@ strict: false*/
     },
     events: {
       onNotify: "",
-      onSavePrompt: ""
+      onSavePrompt: "",
+      onWorkspace: ""
     },
     model: "XM.SalesOrder",
     hideActionButton: false,
