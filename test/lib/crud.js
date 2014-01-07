@@ -133,6 +133,8 @@ var _ = require("underscore"),
           key = attribute.key,
           fetchSuccess = function (model, response, options) {
             // swap in this model for the mock
+            model.off('invalid', invalid);
+            model.off('all', logEvent);
             data.model.set(options.key, model);
             asyncCallback();
           };
@@ -151,6 +153,8 @@ var _ = require("underscore"),
             relatedModel = new Klass();
 
           fetchObject.id = value[relatedModel.idAttribute];
+          relatedModel.on('invalid', invalid);
+          relatedModel.on('all', logEvent);
           relatedModel.fetch(fetchObject);
         } else {
           // otherwise it's easy to set the value on the model
@@ -167,7 +171,8 @@ var _ = require("underscore"),
     timeoutId = setTimeout(function () {
       data.model.off('invalid', invalid);
       data.model.off('all', logEvent);
-      assert.fail("timeout was reached on set " + data.recordType + JSON.stringify(eventLog), "");
+      assert.fail("timeout was reached on set " + data.recordType +
+        " " + JSON.stringify(eventLog), "");
       done();
     }, waitTime);
 
