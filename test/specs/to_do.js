@@ -130,7 +130,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     });
     /**
     @member -
-    @memberof Contact.prototype
+    @memberof ToDo
     @description Documents panel should exist to link the To Do Item to New/Existing Account,
     contact, Customer, File, Incident, Item, Link, Opportunity, Project, To do
     */
