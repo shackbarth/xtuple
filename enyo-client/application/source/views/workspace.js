@@ -2252,6 +2252,7 @@ strict: false*/
     },
     events: {
       onNotify: "",
+      onProcessingChanged: "",
       onSavePrompt: "",
       onWorkspace: ""
     },
