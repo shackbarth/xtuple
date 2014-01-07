@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true,eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, _:true, console:true */
+/*global XT:true, XM:true, _:true, console:true, Backbone: true */
 
 (function () {
   "use strict";
@@ -44,6 +44,12 @@ white:true*/
 
     name: function () {
       return this.getValue("item.number") + " " + this.getValue("site.code");
+    },
+
+    initialize: function () {
+      // this.meta = new Backbone.Model();
+      // this.meta("_itemSites", new XM.ItemSiteRelationCollection());
+      XM.Model.prototype.initialize.apply(this, arguments);
     },
 
     defaults: function () {
