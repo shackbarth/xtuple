@@ -2257,7 +2257,6 @@ strict: false*/
       onWorkspace: ""
     },
     model: "XM.SalesOrder",
-    hideActionButton: false,
     components: [
       {kind: "Panels", name: "salesPanels", arrangerKind: "CarouselArranger",
         fit: true, components: [
