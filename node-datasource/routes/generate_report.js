@@ -9,7 +9,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   /*
     TODO: fetch images from database
     TODO: translations
-    TODO: get on 0.0.2
+    TODO: get on fluentreports 0.0.2. Pity Nathanael hasn't published 0.0.2 to npm yet.
 
   */
 
@@ -33,6 +33,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     //
     var reportDefinition;
     var reportData;
+    // TODO: invoice60017.pdf would be an excellent naming convention. Doesn't really matter
+    // (as we can name it whatever we want when we send it back) unless we want to cache it.
     var reportName = "demo1.pdf";
 
     //
@@ -43,22 +45,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       We receive the data in the form we're familiar with: an object that represents the head,
       which has an array that represents item data (such as InvoiceLines).
 
-      Fluent expects the data to be an array, which is the array of the line items with
-      head info copied redundantly/
+      Fluent expects the data to be just an array, which is the array of the line items with
+      head info copied redundantly.
 
-      As a convention we'll put a prefix in front of the keys of the item data.
+      As a convention we'll put a * as prefix in front of the keys of the item data.
+
+      This function performs both these transformtations on the data object.
     */
     var transformDataStructure = function (data) {
-      return _.map(data[reportDefinition.detailAttribute], function (detail) {
+      // TODO: detailAttribute could be inferred by looking at whatever comes before the *
+      // in the detailElements definition.
+      return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
         var pathedDetail = {};
         _.each(detail, function (detailValue, detailKey) {
-          pathedDetail[reportDefinition.detailAttribute + "*" + detailKey] = detailValue;
+          pathedDetail[reportDefinition.settings.detailAttribute + "*" + detailKey] = detailValue;
         });
         return _.extend({}, data, pathedDetail);
       });
     };
 
-    // I'm sure this is already written somewhere else in our app.
+    // I'm sure this is already written somewhere else in our app. Akin to getValue() on a model.
     var traverseDots = function (data, key) {
       while (key.indexOf(".") >= 0) {
         data = data[key.prefix()];
@@ -70,6 +76,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     /**
       Resolve the xTuple JSON convention for report element definition to the
       output expected from fluentReports by swapping in the data fields.
+
+      FluentReports wants its definition key to be a string in some cases (see the
+      textOnly parameter), and in other cases in the "data" attribute of an object.
+
+      The xTuple standard is to use "text" or "attr" instead of data. Text means text,
+      attr refers to the attribute name on the data object. This function accepts either
+      and crams the appropriate value into "data" for fluent (or just returns the string).
      */
     var marryData = function (detailDef, data, textOnly) {
       return _.map(detailDef, function (def) {
@@ -83,7 +96,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           return text;
         }
 
-        // TODO: maybe support any attributes?
+        // TODO: maybe support any attributes? Right now we ignore all but these three
         return {
           data: text,
           width: def.width,
@@ -94,6 +107,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     /**
       Custom transformations depending on the element descriptions.
+
+      TODO: support custom transforms like def.transform === 'address' which would need
+      to do stuff like smash city state zip into one line. The function to do this can't live
+      in the json definition, but we can support a set of custom transformations here
+      that can be referred to in the json definition.
      */
     var transformElementData = function (def, data) {
       var textOnly;
@@ -103,14 +121,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return def.definition;
       }
 
-      // print elements (which is the default) only want strings as the definition
+      // "print" elements (aka the default) only want strings as the definition
       textOnly = def.element === "print" || !def.element;
       return marryData(def.definition, data, textOnly);
     };
 
     /**
       The "element" (default to "print") is the method on the report
-     object that we are going to call to draw the pdf
+      object that we are going to call to draw the pdf. That's the magic
+      that lets us represent the fluentReport functions as json objects.
     */
     var printDefinition = function (report, data, definition) {
       _.each(definition, function (def) {
@@ -126,6 +145,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     /**
       Make a directory node-datasource/temp if none exists
+      TODO: maybe put files in temp/qatest, temp/dev, temp/masterref, and the like
+      TODO: that would help with caching (images like logos, particularly)
      */
     var createTempDir = function (done) {
       fs.exists("./temp", function (exists) {
@@ -168,11 +189,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     };
 
+    /**
+      TODO
+      We support an image element in the json definition. The definition of that element
+      is a string that could refer to a description (or perhaps name) of a XM.File. We
+      can fetch that file, put it in the temp directory, and then refer to it by whatever
+      name we like when we build the report. Then we have to worry about cleaning it up,
+      or caching it.
+     */
     var fetchImages = function (done) {
       // TODO
       done();
     };
 
+    /**
+      TODO: develop a protocol for defining barcodes in the definition file. A simple
+      implementation would then involve creating an image file in the temp directory
+      using some npm package, and then including it as an image in the report.
+     */
     var fetchBarcodes = function (done) {
       // TODO
       done();
@@ -180,6 +214,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     /**
       Get the data for this business object.
+      TODO: support lists (i.e. no id)
      */
     var fetchData = function (done) {
       var requestDetails = {
@@ -221,17 +256,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           .detail(printDetail)
           .footer(printFooter)
           .header(printHeader)
-          .fontSize(reportDefinition.defaultFontSize);
+          .fontSize(reportDefinition.settings.defaultFontSize);
 
       // Debug output is always nice (Optional, to help you see the structure)
       //rpt.printStructure();
 
-      // This does the MAGIC...  :-)
       rpt.render(done);
     };
 
 
+    /**
+      Dispatch the report however the client wants it
+        -Email (TODO: implement for real)
+        -Silent Print (TODO)
+        -Stream download
+        -Display to browser
 
+      TODO: each of these options could be its own function, and this function
+      can just call the appropriate one.
+    */
     var sendReport = function (done) {
       fs.readFile(path.join("./temp", reportName), function (err, data) {
         if (err) {
@@ -269,6 +312,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     };
 
+    /**
+     TODO
+     Do we want to clean these all up every time? Do we want to cache them? Do we want to worry
+     about files getting left there if the route crashes before cleanup?
+     */
+    var cleanUpFiles = function (done) {
+      // TODO
+      done();
+    };
+
     async.series([
       createTempDir,
       fetchReportDefinition,
@@ -276,7 +329,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       fetchBarcodes,
       fetchData,
       printReport,
-      sendReport
+      sendReport,
+      cleanUpFiles
     ], function (err, results) {
       if (err) {
         res.send({isError: true, message: err.description});

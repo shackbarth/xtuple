@@ -1,6 +1,8 @@
 select xt.add_report_definition('XM.Invoice', 0, $${
-  "detailAttribute": "lineItems",
-  "defaultFontSize": 14,
+  "settings": {
+    "detailAttribute": "lineItems",
+    "defaultFontSize": 14
+  },
   "headerElements": [
     {
       "definition": [
