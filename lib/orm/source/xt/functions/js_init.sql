@@ -520,6 +520,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     @param {Array} casts. Optional. Array of strings
    */
   XT.executeFunction = function (functionName, params, casts) {
+    params = params || [];
     var cast,
       errorString,
       i,
