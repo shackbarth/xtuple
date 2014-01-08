@@ -2247,14 +2247,7 @@ strict: false*/
     kind: "XV.SalesOrderBase",
     title: "_salesOrder".loc(),
     handlers: {
-      onMagstripeCapture: "handleMagstripeCapture",
-      onSavePrompt: "savePrompt"
-    },
-    events: {
-      onNotify: "",
-      onProcessingChanged: "",
-      onSavePrompt: "",
-      onWorkspace: ""
+      onMagstripeCapture: "handleMagstripeCapture"
     },
     model: "XM.SalesOrder",
     components: [
