@@ -35,6 +35,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       reportData,
       username = req.session.passport.user.id,
       databaseName = req.session.passport.user.organization,
+      // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
       reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
       workingDir = path.join(__dirname, "../temp", databaseName),
       reportPath = path.join(workingDir, reportName),
