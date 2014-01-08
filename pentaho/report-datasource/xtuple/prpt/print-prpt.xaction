@@ -4,7 +4,7 @@
   <version>1</version>
   <logging-level>TRACE</logging-level>
   <documentation> 
-    <author>Jeffrey Gunderson</author>  
+    <author>Jeff Gunderson</author>  
     <description>PRPT to Print Via Javascript</description>  
     <help/>  
     <result-type>report</result-type>  
@@ -12,16 +12,17 @@
   </documentation>
 
   <inputs> 
-    <outputTarget type="string"> 
-      <default-value><![CDATA[pageable/pdf]]></default-value>  
+    <format type="string"> 
+      <default-value><![CDATA[application/pdf]]></default-value>  
       <sources> 
-        <request>output-target</request> 
+        <request>format</request> 
       </sources> 
-    </outputTarget>  
+    </format>  
     <printerName type="string"> 
       <sources> 
         <request>printer-name</request> 
-      </sources> 
+      </sources>  
+      <default-value/>
     </printerName>  
     <path type="string"> 
       <sources> 
@@ -64,7 +65,7 @@
       <component-name>JavascriptRule</component-name>
       <action-type>Print PRPT</action-type>
       <action-inputs> 
-        <outputTarget type="string"/>  
+        <format type="string"/>  
         <locale type="string"/>  
         <datasource type="string"/>  
         <datakey type="string"/>  
@@ -87,7 +88,7 @@ var reportStream = new java.io.FileInputStream(reportPath);
 // Set up Reporting component with our report stream
 //
 var rc = new Packages.org.pentaho.reporting.platform.plugin.SimpleReportingComponent();
-rc.setOutputType('application/pdf');
+rc.setOutputType(format);
 rc.setReportDefinitionInputStream(reportStream);
 //
 // Set report parameters
