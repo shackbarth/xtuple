@@ -179,6 +179,10 @@ var _ = require("underscore"),
     data.model.on('invalid', invalid);
     data.model.on('all', logEvent);
 
+    if (data.recordType === "XM.Return") {
+      assert.equal("foo", data.createHash);
+    }
+
     async.map(hashAsArray, setAttribute, function (err, results) {
       clearTimeout(timeoutId);
       data.model.off('invalid', invalid);
