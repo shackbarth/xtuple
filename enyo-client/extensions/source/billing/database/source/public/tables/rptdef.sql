@@ -51,7 +51,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "element": "image",
-      "definition": "./temp/x.png",
+      "definition": "Invoice Logo",
       "options": {"x": 200, "y": 0, "width": 150}
     },
     {

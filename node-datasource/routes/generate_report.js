@@ -33,10 +33,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     //
     var reportDefinition;
     var reportData;
-    // TODO: invoice60017.pdf would be an excellent naming convention. Doesn't really matter
-    // (as we can name it whatever we want when we send it back) unless we want to cache it.
-    var reportName = "demo1.pdf";
-
+    var username = req.session.passport.user.id;
+    var databaseName = req.session.passport.user.organization;
+    var reportName = req.query.type.toLowerCase() + req.query.id + ".pdf";
+    var reportPath = path.join(__dirname, "../temp", databaseName, reportName);
     //
     // HELPER FUNCTIONS FOR DATA TRANSFORMATION
     //
@@ -145,8 +145,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     /**
       Make a directory node-datasource/temp if none exists
-      TODO: maybe put files in temp/qatest, temp/dev, temp/masterref, and the like
-      TODO: that would help with caching (images like logos, particularly)
      */
     var createTempDir = function (done) {
       fs.exists("./temp", function (exists) {
@@ -154,6 +152,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           done();
         } else {
           fs.mkdir("./temp", done);
+        }
+      });
+    };
+
+    /**
+      Make a directory node-datasource/temp/orgname if none exists
+     */
+    var createTempOrgDir = function (done) {
+      fs.exists("./temp/" + databaseName, function (exists) {
+        if (exists) {
+          done();
+        } else {
+          fs.mkdir("./temp/" + databaseName, done);
         }
       });
     };
@@ -184,8 +195,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             descending: true
           }]
         },
-        database: req.session.passport.user.organization,
-        username: req.session.passport.user.id
+        database: databaseName,
+        username: username
       });
     };
 
@@ -251,7 +262,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         printDefinition(report, data, reportDefinition.footerElements);
       };
 
-      var rpt = new Report("./temp/" + reportName)
+      var rpt = new Report(reportPath)
           .data(reportData)
           .detail(printDetail)
           .footer(printFooter)
@@ -276,7 +287,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       can just call the appropriate one.
     */
     var sendReport = function (done) {
-      fs.readFile(path.join("./temp", reportName), function (err, data) {
+      fs.readFile(reportPath, function (err, data) {
         if (err) {
           res.send({isError: true, error: err});
           return;
@@ -287,7 +298,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             to: "shackbarth@xtuple.com",
             subject: "hi",
             text: "Here is your email",
-            attachments: [{fileName: "./temp/" + reportName, contents: data, contentType: "application/pdf"}]
+            attachments: [{fileName: reportPath, contents: data, contentType: "application/pdf"}]
           };
           var callback = function (error, response) {
               if (error) {
@@ -305,7 +316,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.header("Content-Type", "application/pdf");
 
         if (req.query.action === "download") {
-          res.attachment("./temp/" + reportName);
+          res.attachment(reportPath);
         }
         res.send(data);
         done();
@@ -322,8 +333,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       done();
     };
 
+    //
+    // Actually perform the operations, one at a time
+    //
+
     async.series([
       createTempDir,
+      createTempOrgDir,
       fetchReportDefinition,
       fetchImages,
       fetchBarcodes,
@@ -333,6 +349,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       cleanUpFiles
     ], function (err, results) {
       if (err) {
+        console.log(err);
         res.send({isError: true, message: err.description});
       }
     });
