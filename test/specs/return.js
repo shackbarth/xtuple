@@ -118,7 +118,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       read: "ViewCreditMemos"
     },
     createHash: {
-      customer: {number: "TTOYS"}
+      customer: {number: "XRETAIL"}
     },
     updatableField: "notes",
     beforeSaveActions: [{it: 'sets up a valid line item',

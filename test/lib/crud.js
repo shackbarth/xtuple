@@ -117,43 +117,72 @@ var _ = require("underscore"),
     specified, we just do a simple model.set.
    */
   var setModel = function (data, done) {
-    var setAttribute = function (attribute, asyncCallback) {
-      var value = attribute.value,
-        key = attribute.key,
-        fetchSuccess = function (model, response, options) {
-          // swap in this model for the mock
-          data.model.set(options.key, model);
+    var timeoutId,
+      eventLog = [],
+      logEvent = function () {
+        eventLog.push(arguments);
+      },
+      invalid = function (model, error) {
+        assert.fail(JSON.stringify(error) || "Unspecified error", "");
+        clearTimeout(timeoutId);
+        data.model.off('invalid', invalid);
+        data.model.off('all', logEvent);
+      },
+      setAttribute = function (attribute, asyncCallback) {
+        var value = attribute.value,
+          key = attribute.key,
+          fetchSuccess = function (model, response, options) {
+            // swap in this model for the mock
+            model.off('invalid', invalid);
+            model.off('all', logEvent);
+            data.model.set(options.key, model);
+            asyncCallback();
+          };
+
+        if (typeof value === 'object' && !_.isDate(value)) {
+          // if it's an object we want to set on the model, flesh it out
+          var fetchObject = {
+              success: fetchSuccess,
+              error: asyncCallback,
+              key: key
+            },
+            relatedModelName = _.find(data.model.relations, function (relation) {
+              return relation.key === key;
+            }).relatedModel,
+            Klass = XT.getObjectByName(relatedModelName),
+            relatedModel = new Klass();
+
+          fetchObject.id = value[relatedModel.idAttribute];
+          relatedModel.on('invalid', invalid);
+          relatedModel.on('all', logEvent);
+          relatedModel.fetch(fetchObject);
+        } else {
+          // otherwise it's easy to set the value on the model
+          data.model.set(key, value);
           asyncCallback();
-        };
-
-      if (typeof value === 'object' && !_.isDate(value)) {
-        // if it's an object we want to set on the model, flesh it out
-        var fetchObject = {
-            success: fetchSuccess,
-            error: asyncCallback,
-            key: key
-          },
-          relatedModelName = _.find(data.model.relations, function (relation) {
-            return relation.key === key;
-          }).relatedModel,
-          Klass = XT.getObjectByName(relatedModelName),
-          relatedModel = new Klass();
-
-        fetchObject.id = value[relatedModel.idAttribute];
-        relatedModel.fetch(fetchObject);
-      } else {
-        // otherwise it's easy to set the value on the model
-        data.model.set(key, value);
-        asyncCallback();
-      }
-    },
+        }
+      },
       // put the hash in a form that async is comfortable with
       hashAsArray = _.map(data.createHash, function (value, key) {
         return {key: key, value: value};
       });
 
+    // If we don't hear back, keep going
+    timeoutId = setTimeout(function () {
+      data.model.off('invalid', invalid);
+      data.model.off('all', logEvent);
+      assert.fail("timeout was reached on set " + data.recordType +
+        " " + JSON.stringify(eventLog), "");
+      done();
+    }, waitTime);
+
+    data.model.on('invalid', invalid);
+    data.model.on('all', logEvent);
 
     async.map(hashAsArray, setAttribute, function (err, results) {
+      clearTimeout(timeoutId);
+      data.model.off('invalid', invalid);
+      data.model.off('all', logEvent);
       if (err) {
         assert.fail(err);
       } else {
@@ -435,7 +464,7 @@ var _ = require("underscore"),
       // Step 7: save the updated model to the database
       //
       it('can be re-saved to the database', function (done) {
-        this.timeout(10 * 1000);
+        this.timeout(20 * 1000);
         save(data, done);
       });
     }
@@ -452,7 +481,7 @@ var _ = require("underscore"),
 
     if (!data.skipDelete) {
       it('can be deleted from the database', function (done) {
-        this.timeout(10 * 1000);
+        this.timeout(20 * 1000);
         destroy(data, done);
       });
     }

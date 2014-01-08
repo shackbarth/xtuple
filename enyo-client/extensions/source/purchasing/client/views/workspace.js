@@ -28,7 +28,7 @@ trailing:true, white:true, strict: false*/
     // CONFIGURE
     //
 
-    /* TODO: 
+    /* TODO:
       "BillDropShip",
       "EnableDropShipments",
       "NextVoucherNumber"
