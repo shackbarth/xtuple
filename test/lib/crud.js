@@ -172,7 +172,7 @@ var _ = require("underscore"),
       data.model.off('invalid', invalid);
       data.model.off('all', logEvent);
       assert.fail("timeout was reached on set " + data.recordType +
-        " " + JSON.stringify(eventLog), "");
+        " " + JSON.stringify(data.model.toJSON()), "");
       done();
     }, waitTime);
 
@@ -183,6 +183,7 @@ var _ = require("underscore"),
       clearTimeout(timeoutId);
       data.model.off('invalid', invalid);
       data.model.off('all', logEvent);
+      //console.log(JSON.stringify(data.model.toJSON()));
       if (err) {
         assert.fail(err);
       } else {
