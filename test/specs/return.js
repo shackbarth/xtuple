@@ -238,7 +238,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         @property {ReturnLineTax} taxes
         @property {SalesOrderLine} salesOrderLine Added by sales extension
       */
-      var ReturnLine = it("A nested only model called XM.ReturnLine extending " +
+      it("A nested only model called XM.ReturnLine extending " +
           "XM.Model should exist", function () {
         var lineModel;
         assert.isFunction(XM.ReturnLine);
@@ -1213,6 +1213,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
   };
 
   exports.spec = spec;
-  //exports.additionalTests = additionalTests;
+  exports.additionalTests = additionalTests;
 
 }());
