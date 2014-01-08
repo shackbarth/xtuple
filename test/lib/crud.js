@@ -123,10 +123,10 @@ var _ = require("underscore"),
         eventLog.push(arguments);
       },
       invalid = function (model, error) {
-        assert.fail(JSON.stringify(error) || "Unspecified error", "");
         clearTimeout(timeoutId);
         data.model.off('invalid', invalid);
         data.model.off('all', logEvent);
+        assert.fail(JSON.stringify(error) || "Unspecified error", "");
       },
       setAttribute = function (attribute, asyncCallback) {
         var value = attribute.value,
