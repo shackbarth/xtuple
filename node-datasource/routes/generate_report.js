@@ -31,12 +31,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     //
     // VARIABLES THAT SPAN MULTIPLE STEPS
     //
-    var reportDefinition;
-    var reportData;
-    var username = req.session.passport.user.id;
-    var databaseName = req.session.passport.user.organization;
-    var reportName = req.query.type.toLowerCase() + req.query.id + ".pdf";
-    var reportPath = path.join(__dirname, "../temp", databaseName, reportName);
+    var reportDefinition,
+      reportData,
+      username = req.session.passport.user.id,
+      databaseName = req.session.passport.user.organization,
+      reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
+      workingDir = path.join(__dirname, "../temp", databaseName),
+      reportPath = path.join(workingDir, reportName),
+      imageFilenameMap = {};
+
+
     //
     // HELPER FUNCTIONS FOR DATA TRANSFORMATION
     //
@@ -116,9 +120,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var transformElementData = function (def, data) {
       var textOnly;
 
-      if (typeof def.definition === 'string') {
-        // element: image, for example
-        return def.definition;
+      if (def.element === 'image') {
+        // we save the images under a different name then they're described in the definition
+        return path.join(workingDir, imageFilenameMap[def.definition]);
       }
 
       // "print" elements (aka the default) only want strings as the definition
@@ -200,17 +204,76 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     };
 
+    //
+    // Helper function for fetchImages
+    //
+    var queryDatabaseForImages = function (imageNames, done) {
+      var fileCollection = new SYS.FileCollection(),
+        afterFetch = function () {
+          if (fileCollection.getStatus() === XM.Model.READY_CLEAN) {
+            fileCollection.off("statusChange", afterFetch);
+            done(null, fileCollection);
+          }
+        };
+
+      fileCollection.on("statusChange", afterFetch);
+      fileCollection.fetch({
+        query: {
+          parameters: [{
+            attribute: "name",
+            operator: "ANY",
+            value: imageNames
+          }]
+        },
+        database: databaseName,
+        username: username
+      });
+    };
+
+    //
+    // Helper function for fetchImages
+    //
+    var writeImageToFilesystem = function (fileModel, done) {
+      // XXX this might be an expensive synchronous operation
+      var buffer = new Buffer(fileModel.get("data"));
+
+      imageFilenameMap[fileModel.get("name")] = fileModel.get("description");
+      fs.writeFile(path.join(workingDir, fileModel.get("description")), buffer, done);
+    };
+
     /**
-      TODO
       We support an image element in the json definition. The definition of that element
-      is a string that could refer to a description (or perhaps name) of a XM.File. We
-      can fetch that file, put it in the temp directory, and then refer to it by whatever
-      name we like when we build the report. Then we have to worry about cleaning it up,
-      or caching it.
+      is a string that is the name of an XM.File. We fetch these files and put them in the
+      temp directory for future use.
      */
     var fetchImages = function (done) {
-      // TODO
-      done();
+      //
+      // Figure out what images we need to fetch, if any
+      //
+      var allElements = _.flatten(_.union(reportDefinition.headerElements,
+          reportDefinition.detailElements, reportDefinition.footerElements)),
+        allImages = _.unique(_.pluck(_.where(allElements, {element: "image"}), "definition"));
+        // thanks Jeremy
+
+      if (allImages.length === 0) {
+        // no need to try to fetch no images
+        done();
+        return;
+      }
+
+      //
+      // TODO: use the working dir as a cache
+      //
+
+      //
+      // Get the images
+      //
+      queryDatabaseForImages(allImages, function (err, fileCollection) {
+        //
+        // Write the images to the filesystem
+        //
+        async.map(fileCollection.models, writeImageToFilesystem, done);
+      });
     };
 
     /**

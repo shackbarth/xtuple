@@ -76,7 +76,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
   "detailElements": [
     {
       "element": "band",
-      "transform": "detail",
       "definition": [
         {"attr": "lineItems*quantity", "width": 100},
         {"attr": "lineItems*quantityUnit", "width": 50},
