@@ -152,7 +152,7 @@ Simplest possible usage:
               XT.log = function (message, obj) {
                 if (message && message.toLowerCase().indexOf("error") === 0) {
                   // errors from the datasource should cause the test to fail
-                  assert.fail(JSON.stringify(obj));
+                  assert.fail(message + " " + JSON.stringify(obj));
                 }
                 // log if verbose mode or if the log is a warning
                 if (verboseMode || (message && message.code)) {
