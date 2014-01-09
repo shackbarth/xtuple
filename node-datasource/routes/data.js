@@ -66,8 +66,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       };
 
-    payload.username = session.passport.user.username;
-    payload.encryptionKey = X.options.encryptionKey;
+    // If the payload is an array, then append internal processing info to each object
+    if (payload.length) {
+      payload.forEach(function (obj) {
+        obj.username = session.passport.user.username;
+        obj.encryptionKey = X.options.encryptionKey;
+      });
+    } else {
+      payload.username = session.passport.user.username;
+      payload.encryptionKey = X.options.encryptionKey;
+    }
     org = session.passport.user.organization;
 
     // Make sure the user isn't asking for node-internal data
