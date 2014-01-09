@@ -19,7 +19,10 @@ _.mixin(str.exports());
 module.exports = (function () {
   'use strict';
 
-  var handlers = {
+  var getIsRestORMsStore,
+    getResourcesStore,
+    getServicesStore,
+    handlers = {
 
       /**
        * @private
@@ -63,7 +66,7 @@ module.exports = (function () {
           }
         }
 
-        return res.send(400, error);
+        return res.json(error.error.code, error);
       },
 
       /**
@@ -186,10 +189,16 @@ module.exports = (function () {
           if (result.isError) {
             return next(new Error("Invalid Request."));
           }
+
+          getResourcesStore = result.data;
           _getServices(req, res, next, orms, result.data);
         };
 
-      routes.queryDatabase("post", payload, session, callback);
+      if (getResourcesStore) {
+        _getServices(req, res, next, orms, getResourcesStore);
+      } else {
+        routes.queryDatabase("post", payload, session, callback);
+      }
     },
 
     /**
@@ -210,10 +219,16 @@ module.exports = (function () {
           if (result.isError) {
             return next(new Error("Invalid Request."));
           }
+
+          getServicesStore = result.data;
           routeCall(req, res, next, orms, resources, result.data);
         };
 
-      routes.queryDatabase("post", payload, session, callback);
+      if (getServicesStore) {
+        routeCall(req, res, next, orms, resources, getServicesStore);
+      } else {
+        routes.queryDatabase("post", payload, session, callback);
+      }
     },
 
     /**
@@ -289,10 +304,16 @@ module.exports = (function () {
         if (result.isError) {
           return next(new Error("Invalid Request."));
         }
+
+        getIsRestORMsStore = result.data;
         _getResources(req, res, next, result.data);
       };
 
-    routes.queryDatabase("post", payload, session, callback);
+    if (getIsRestORMsStore) {
+      _getResources(req, res, next, getIsRestORMsStore);
+    } else {
+      routes.queryDatabase("post", payload, session, callback);
+    }
   }
 
   /**

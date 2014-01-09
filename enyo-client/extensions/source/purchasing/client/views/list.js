@@ -8,6 +8,61 @@ trailing:true, white:true, strict:false*/
   XT.extensions.purchasing.initLists = function () {
 
     // ..........................................................
+    // ITEM SOURCE
+    //
+
+    enyo.kind({
+      name: "XV.ItemSourceList",
+      kind: "XV.List",
+      label: "_itemSources".loc(),
+      collection: "XM.ItemSourceCollection",
+      query: {orderBy: [
+        {attribute: "vendorItemNumber"},
+        {attribute: "vendor.name"}
+      ]},
+      parameterWidget: "XV.ItemSourceListParameters",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "vendorItemNumber", isKey: true,
+                  placeholder: "_noVendorNumber".loc()},
+                {kind: "XV.ListAttr", attr: "vendorUnit", fit: true,
+                  classes: "right"}
+              ]},
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "vendor.name"}
+              ]},
+            ]},
+            {kind: "XV.ListColumn", classes: "first",
+              components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "item.number", classes: "italic"},
+                {kind: "XV.ListAttr", attr: "item.inventoryUnit.name", fit: true,
+                  classes: "right"}
+              ]},
+              {kind: "XV.ListAttr", formatter: "formatDescription"}
+            ]},
+            {kind: "XV.ListColumn", classes: "last", components: [
+              {kind: "XV.ListAttr", attr: "effective"},
+              {kind: "XV.ListAttr", attr: "expires"}
+            ]}
+          ]}
+        ]}
+      ],
+      formatDescription: function (value, view, model) {
+        var item = model.get("item"),
+          descrip1 = item.get("description1") || "",
+          descrip2 = item.get("description2") || "",
+          sep = descrip2 ? " - " : "";
+        return descrip1 + sep + descrip2;
+      }
+    });
+
+    XV.registerModelList("XM.ItemSource", "XV.ItemSourceList");
+
+    // ..........................................................
     // PURCHASE EMAIL PROFILE
     //
 
@@ -28,6 +83,13 @@ trailing:true, white:true, strict:false*/
       label: "_purchaseOrders".loc(),
       collection: "XM.PurchaseOrderListItemCollection",
       parameterWidget: "XV.PurchaseOrderListParameters",
+      multiSelect: true,
+      actions: [
+        {name: "release", prerequisite: "canRelease", method: "doRelease",
+          notify: false},
+        {name: "unrelease", prerequisite: "canUnrelease",
+          method: "doUnrelease", notify: false}
+      ],
       query: {orderBy: [
         {attribute: 'number'}
       ]},

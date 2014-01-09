@@ -28,6 +28,108 @@ trailing:true, white:true, strict: false*/
     // CONFIGURE
     //
 
+    /* TODO:
+      "BillDropShip",
+      "EnableDropShipments",
+      "NextVoucherNumber"
+    */
+    enyo.kind({
+      name: "XV.PurchasingWorkspace",
+      kind: "XV.Workspace",
+      title: "_configure".loc() + " " + "_purchasing".loc(),
+      model: "XM.Purchasing",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+              classes: "in-panel", components: [
+              {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
+              {kind: "XV.InputWidget", attr: "DefaultPOShipVia",
+                label: "_defaultShipVia".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "VendorChangeLog",
+                label: "_changeLog".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_purchaseOrder".loc()},
+              {kind: "XV.NumberPolicyPicker", attr: "PONumberGeneration",
+                label: "_number".loc() + " " + "_policy".loc()},
+              {kind: "XV.NumberWidget", attr: "NextPurchaseOrderNumber",
+                label: "_nextNumber".loc(), formatting: false},
+              {kind: "XV.ToggleButtonWidget", attr: "POChangeLog",
+                label: "_changeLog".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "RequireStdCostForPOItem"},
+              {kind: "XV.ToggleButtonWidget", attr: "DefaultPrintPOOnSave"},
+              {kind: "XV.ToggleButtonWidget", attr: "UseEarliestAvailDateOnPOItem"},
+              {kind: "XV.ToggleButtonWidget", attr: "RequirePOTax"},
+              {kind: "onyx.GroupboxHeader", content: "_purchaseRequest".loc()},
+              {kind: "XV.NumberPolicyPicker", attr: "PrNumberGeneration",
+                label: "_number".loc() + " " + "_policy".loc()},
+              {kind: "XV.NumberWidget", attr: "NextPurchaseRequestNumber",
+                label: "_nextNumber".loc(), formatting: false},
+              {kind: "XV.ToggleButtonWidget", attr: "CopyPRtoPOItem"}
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
+    // ..........................................................
+    // ITEM SOURCE
+    //
+
+    enyo.kind({
+      name: "XV.ItemSourceWorkspace",
+      kind: "XV.Workspace",
+      title: "_itemSource".loc(),
+      model: "XM.ItemSource",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.ItemWidget", attr: "item"},
+              {kind: "XV.VendorWidget", attr: "vendor"},
+              {kind: "XV.CheckboxWidget", attr: "isActive"},
+              {kind: "XV.CheckboxWidget", attr: "isDefault"},
+              {kind: "XV.QuantityWidget", attr: "multipleOrderQuantity"},
+              {kind: "XV.QuantityWidget", attr: "minimumOrderQuantity"},
+              {kind: "XV.NumberSpinnerWidget", attr: "leadTime"},
+              {kind: "XV.NumberSpinnerWidget", attr: "ranking"},
+              {kind: "XV.DateWidget", attr: "effective",
+                nullValue: XT.date.startOfTime(),
+                nullText: "_always".loc()},
+              {kind: "XV.DateWidget", attr: "expires",
+                nullValue: XT.date.endOfTime(),
+                nullText: "_never".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "XV.TextArea", attr: "notes", label: "_notes".loc()},
+            ]}
+          ]},
+          {kind: "XV.Groupbox", name: "vendorPanel", title: "_vendor".loc(), components: [
+            {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "vendorGroup",
+              classes: "in-panel", fit: true, components: [
+              {kind: "XV.InputWidget", attr: "vendorItemNumber", label: "_number".loc()},
+              {kind: "XV.UnitCombobox", attr: "vendorUnit", label: "_unit".loc(), showLabel: true},
+              {kind: "XV.UnitRatioWidget", attr: "vendorUnitRatio", label: "_unitRatio".loc()},
+              {kind: "XV.InputWidget", attr: "barcode"},
+              {kind: "onyx.GroupboxHeader", content: "_description".loc()},
+              {kind: "XV.TextArea", attr: "vendorItemDescription", label: "_description".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_manufacturer".loc()},
+              {kind: "XV.ItemSourceManufacturerCombobox", attr: "manufacturerName", label: "_name".loc()},
+              {kind: "XV.InputWidget", attr: "manufacturerItemNumber", label: "_number".loc()},
+              {kind: "onyx.GroupboxHeader", content: "_description".loc()},
+              {kind: "XV.TextArea", attr: "manufacturerItemDescription", fit: true}
+            ]}
+          ]},
+          {kind: "XV.ItemSourcePriceBox", attr: "prices"}
+        ]}
+      ]
+    });
+
+    XV.registerModelWorkspace("XM.ItemSource", "XV.ItemSourceWorkspace");
+
     // TODO
 
     // ..........................................................
@@ -96,16 +198,20 @@ trailing:true, white:true, strict: false*/
                 {kind: "XV.DateWidget", attr: "orderDate"},
                 {kind: "XV.DateWidget", attr: "releaseDate"},
                 {kind: "XV.PurchaseOrderStatusPicker", attr: "status"},
-                {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
-                {kind: "XV.VendorWidget", attr: "vendor"},
+                {kind: "onyx.GroupboxHeader", content: "_source".loc()},
+                {kind: "XV.PurchaseVendorWidget", attr: "vendor"},
+                {kind: "XV.VendorAddressWidget", attr: "vendorAddress",
+                  label: "_address".loc()},
                 {kind: "XV.AddressFieldsWidget",
-                  name: "vendorAddressWidget", attr:
-                  {line1: "vendorAddress1",
+                  name: "vendorAddressFieldsWidget", attr:
+                  {name: "vendorAddressCode",
+                    line1: "vendorAddress1",
                     line2: "vendorAddress2", line3: "vendorAddress3",
                     city: "vendorCity", state: "vendorState",
                     postalCode: "vendorPostalCode", country: "vendorCountry"}
                 },
-                {kind: "XV.ContactWidget", attr: "vendorContact"},
+                {kind: "XV.ContactWidget", attr: "vendorContact",
+                  name: "vendorContactWidget"},
                 {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
                 {kind: "XV.SitePicker", attr: "site", showNone: false},
                 {kind: "XV.AddressFieldsWidget",
@@ -115,8 +221,8 @@ trailing:true, white:true, strict: false*/
                     city: "shiptoCity", state: "shiptoState",
                     postalCode: "shiptoPostalCode", country: "shiptoCountry"}
                 },
-                {kind: "XV.ContactWidget", attr: "shiptoContact"},
-                {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+                {kind: "XV.ContactWidget", attr: "shiptoContact",
+                  name: "shiptoContactWidget"},
                 {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
                 {kind: "XV.TextArea", attr: "notes", fit: true}
               ]}
@@ -144,6 +250,16 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.PurchaseOrderCommentBox", attr: "comments"}
         ]}
       ],
+      attributesChanged: function (inSender, inEvent) {
+        this.inherited(arguments);
+        this.vendorChanged();
+      },
+      controlValueChanged: function (inSender, inEvent) {
+        this.inherited(arguments);
+        if (inEvent.originator.name === "vendorWidget") {
+          this.vendorChanged();
+        }
+      },
       create: function () {
         this.inherited(arguments);
         if (enyo.platform.touch) {
@@ -164,6 +280,24 @@ trailing:true, white:true, strict: false*/
           ], {owner: this});
         }
         this.processExtensions(true);
+      },
+      vendorChanged: function () {
+        var vendor = this.$.purchaseVendorWidget.getValue();
+        if (vendor) {
+          this.$.vendorContactWidget.addParameter({
+            attribute: ["account", "accountParent"],
+            value: vendor.id
+          }, true);
+
+          this.$.vendorAddressWidget.setDisabled(false);
+          this.$.vendorAddressWidget.addParameter({
+            attribute: "vendor",
+            value: vendor.id
+          });
+        } else {
+          this.$.vendorContactWidget.removeParameter("account");
+          this.$.vendorAddressWidget.setDisabled(true);
+        }
       }
     });
 
@@ -248,6 +382,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"}},
               {kind: "XV.CheckboxWidget", attr: "isMiscellaneous"},
               {kind: "XV.ExpenseCategoryWidget", attr: "expenseCategory"},
+              {kind: "XV.ProjectWidget", attr: "project"},
               {kind: "onyx.GroupboxHeader", content: "_quantity".loc()},
               {kind: "XV.QuantityWidget", attr: "quantity", label: "_ordered".loc()},
               {kind: "XV.QuantityWidget", attr: "toReceive"},
@@ -284,7 +419,9 @@ trailing:true, white:true, strict: false*/
                 attr: {localValue: "tax", currency: "currency"},
                 scale: XT.PURCHASE_PRICE_SCALE,
                 label: "_tax".loc(), currencyShowing: true,
-                currencyDisabled: true}
+                currencyDisabled: true},
+              {kind: "XV.PurchaseOrderLineCharacteristicsWidget",
+                attr: "characteristics"}
             ]}
           ]},
           {kind: "XV.Groupbox", name: "vendorPanel", title: "_itemSource".loc(),
@@ -292,13 +429,14 @@ trailing:true, white:true, strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_vendor".loc()},
             {kind: "XV.ScrollableGroupbox", name: "itemSourceGroup", fit: true,
               classes: "in-panel", components: [
-              {kind: "XV.InputWidget", attr: "vendorItemNumber", label: "_number".loc()},
+              {kind: "XV.ItemSourceWidget", label: "_number".loc(),
+                attr: {itemSource: "itemSource", vendorItemNumber: "vendorItemNumber"}},
               {kind: "XV.InputWidget", attr: "vendorUnit", label: "_unit".loc()},
               {kind: "XV.InputWidget", attr: "vendorUnitRatio", label: "_unitRatio".loc()},
               {kind: "onyx.GroupboxHeader", content: "_description".loc()},
-              {kind: "XV.TextArea", attr: "vendorDescription", label: "_description".loc()},
+              {kind: "XV.TextArea", attr: "vendorItemDescription", label: "_description".loc()},
               {kind: "onyx.GroupboxHeader", content: "_manufacturer".loc()},
-              {kind: "XV.InputWidget", attr: "manufacturerName", label: "_name".loc()},
+              {kind: "XV.ItemSourceManufacturerCombobox", attr: "manufacturerName", label: "_name".loc()},
               {kind: "XV.InputWidget", attr: "manufacturerItemNumber", label: "_itemNumber".loc()},
               {kind: "onyx.GroupboxHeader", content: "_description".loc()},
               {kind: "XV.TextArea", attr: "manufacturerItemDescription", fit: true}

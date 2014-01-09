@@ -8,13 +8,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   exports.queryOlapCatalog = function (req, res) {
 
-    //X.log("..............query: " + JSON.stringify(req.query.mdx));
+    X.debug("olapdata query: " + JSON.stringify(req.query.mdx));
     var query = req.query.mdx,
       // Format xmla response as json and return
       queryCallback = function (xmlaResponse) {
         var obj = xmlaResponse.fetchAllAsObject();
         obj = {data :  obj};
-        //X.log("..............return: " + JSON.stringify(obj));
+        X.debug("olapdata query result: " + JSON.stringify(obj));
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.write(JSON.stringify(obj));
         res.end();

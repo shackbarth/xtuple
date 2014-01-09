@@ -27,7 +27,7 @@ trailing:true, white:true*/
         welcome = _.findWhere(children, {name: "welcomePage"}),
         url = XT.session.settings.get("MobileWelcomePage"),
         params = "?client=mobileweb" +
-          "&username=" + XT.session.details.id +
+          //"&username=" + XT.session.details.id +
           "&hostname=" + window.location.hostname +
           "&organization=" + XT.session.details.organization +
           "&version=" + XT.session.config.version;

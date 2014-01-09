@@ -383,7 +383,6 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
     ]
   });
 
-
   // ..........................................................
   // MONTH
   //
@@ -484,6 +483,29 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
     orderBy: [
       {attribute: 'code'}
     ]
+  });
+
+  // ..........................................................
+  // PROJECT STATUS
+  //
+
+  enyo.kind({
+    name: "XV.ProjectStatusPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.projectStatuses",
+    showNone: false
+  });
+
+
+  // ..........................................................
+  // PROJECT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.ProjectTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.projectTypes",
+    nameAttribute: "code"
   });
 
   // ..........................................................

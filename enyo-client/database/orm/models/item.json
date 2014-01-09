@@ -1627,7 +1627,7 @@
     "privileges": {
       "all": {
         "create": "MaintainUOMs",
-        "read": true,
+        "read": "ViewUOMs",
         "update": "MaintainUOMs",
         "delete": "MaintainUOMs"
       }

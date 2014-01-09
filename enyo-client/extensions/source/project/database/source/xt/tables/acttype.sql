@@ -110,7 +110,7 @@ insert into xt.acttype (
   'prj_number::text',
   'acttype_code',
   'prj_number',
-  'wf_status not in (''C'',''D'')',
+  'wf_status = ''I''',
   'wf_status',
   'wf_priority_id',
   'wf_name',
