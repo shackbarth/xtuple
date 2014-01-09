@@ -118,15 +118,8 @@ var _ = require("underscore"),
    */
   var setModel = function (data, done) {
     var timeoutId,
-      eventLog = [],
-      logEvent = function () {
-        eventLog.push(arguments);
-      },
       invalid = function (model, error) {
-        clearTimeout(timeoutId);
-        data.model.off('invalid', invalid);
-        data.model.off('all', logEvent);
-        assert.fail(JSON.stringify(error) || "Unspecified error", "");
+        assert.fail(JSON.stringify(error) || "Unspecified invalidity in " + data.recordType);
       },
       setAttribute = function (attribute, asyncCallback) {
         var value = attribute.value,
@@ -134,7 +127,6 @@ var _ = require("underscore"),
           fetchSuccess = function (model, response, options) {
             // swap in this model for the mock
             model.off('invalid', invalid);
-            model.off('all', logEvent);
             data.model.set(options.key, model);
             asyncCallback();
           };
@@ -153,8 +145,7 @@ var _ = require("underscore"),
             relatedModel = new Klass();
 
           fetchObject.id = value[relatedModel.idAttribute];
-          relatedModel.on('invalid', invalid);
-          relatedModel.on('all', logEvent);
+          relatedModel.once('invalid', invalid);
           relatedModel.fetch(fetchObject);
         } else {
           // otherwise it's easy to set the value on the model
@@ -167,23 +158,9 @@ var _ = require("underscore"),
         return {key: key, value: value};
       });
 
-    // If we don't hear back, keep going
-    timeoutId = setTimeout(function () {
-      data.model.off('invalid', invalid);
-      data.model.off('all', logEvent);
-      assert.fail("timeout was reached on set " + data.recordType +
-        " " + JSON.stringify(data.model.toJSON()), "");
-      done();
-    }, waitTime);
-
-    data.model.on('invalid', invalid);
-    data.model.on('all', logEvent);
+    data.model.once('invalid', invalid);
 
     async.map(hashAsArray, setAttribute, function (err, results) {
-      clearTimeout(timeoutId);
-      data.model.off('invalid', invalid);
-      data.model.off('all', logEvent);
-      //console.log(JSON.stringify(data.model.toJSON()));
       if (err) {
         assert.fail(err);
       } else {
