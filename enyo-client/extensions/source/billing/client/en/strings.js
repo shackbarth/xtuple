@@ -55,6 +55,7 @@
     "_payment": 'Payment',
     "_postARDocuments": "Post A/R Documents",
     "_postCashReceipts": "Post Cash Receipts",
+    "_postCashPayment": "Post Cash Payment",
     "_postMiscInvoices": "Post Invoices",
     "_printInvoices": "Print Invoices",
     "_printOnPost": "Print on Post",

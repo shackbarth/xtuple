@@ -4,6 +4,7 @@
   "loadOrder": 30,
   "databaseScripts": [
     "xm/javascript/billing.sql",
+    "xm/javascript/cashrcpt.sql",
     "xm/javascript/invoice.sql",
     "xm/javascript/return.sql",
     "xm/javascript/receivable.sql",

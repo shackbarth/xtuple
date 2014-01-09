@@ -8,6 +8,10 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
 
   XM.SalesOrder.isDispatchable = true;
 
+  XM.SalesOrder.findByDocumentNumber = function (documentNumber) {
+    return plv8.execute('select * from cohead where cohead_number = $1', [documentNumber])[0];
+  };
+
   /**
     Return whether a Sales Order is referenced by another table.
 

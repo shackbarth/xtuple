@@ -8,8 +8,8 @@
     "comment": "SalesOrder: Extended by Billing",
     "relations": [
       {
-        "column": "cohead_id",
-        "inverse": "id"
+        "column": "cohead_number",
+        "inverse": "number"
       }
     ],
     "properties": [
@@ -17,9 +17,9 @@
         "name": "allocations",
         "toMany": {
           "isNested": true,
-          "type": "CashReceiptAllocation",
-          "column": "cohead_id",
-          "inverse": "target"
+          "type": "CashAllocation",
+          "column": "cohead_number",
+          "inverse": "targetDocument"
         }
       }
     ]

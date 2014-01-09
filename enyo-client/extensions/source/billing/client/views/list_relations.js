@@ -32,7 +32,7 @@ trailing:true, white:true*/
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+            {kind: "XV.ListColumn", fit: true, components: [
               {kind: "XV.ListAttr", attr: "documentNumber", classes: "bold"}
             ]},
             {kind: "XV.ListColumn", components: [
@@ -77,31 +77,27 @@ trailing:true, white:true*/
     });
 
     /**
-     * @class XV.CashReceiptAllocationList
+     * @class XV.CashAllocationList
      * @extends XV.ListRelations
-     * @see XV.CashReceiptAllocationList
+     * @see XV.CashAllocationList
      */
     enyo.kind({
-      name: 'XV.CashReceiptAllocationList',
+      name: 'XV.CashAllocationList',
       kind: 'XV.ListRelations',
-      parentKey: 'target',
+      parentKey: 'targetDocument',
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "short", fit: true, components: [
-              {kind: "XV.ListAttr", attr: "receivable.documentNumber", classes: "bold"}
-            ]},
             {kind: "XV.ListColumn", components: [
-              {kind: "XV.ListAttr", attr: "amount", formatter: 'formatMoney'}
+              {kind: "XV.ListAttr", attr: "amount", formatter: 'formatMoney',
+                  classes: 'bold', fit: true}
+            ]},
+            {kind: "XV.ListColumn", classes: "short", components: [
+              {kind: "XV.ListAttr", attr: "documentDate"}
             ]}
           ]}
         ]}
       ],
-      valueChanged: function () {
-        this.inherited(arguments);
-        this.warn(this.value);
-        this.warn(this.list);
-      },
       formatMoney: function (value, view, model) {
         var currency = model ? model.getValue('currency') : false,
           scale = XT.locale.moneyScale;
@@ -109,7 +105,4 @@ trailing:true, white:true*/
       }
     });
   };
-
-  XV.registerModelList('XM.CashReceiptAllocationListItem', 'XV.CashReceiptAllocationList');
-  XV.registerModelList('XM.CashReceiptLineListItem', 'XV.CashReceiptLineList');
 }());

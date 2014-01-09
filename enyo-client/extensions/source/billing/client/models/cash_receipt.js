@@ -5,11 +5,12 @@ XT.extensions.billing.initCashReceipt = function () {
   /**
    * @class XM.CashReceipt
    * @extends XM.Document
-   * @mixes XM.FundsTypeEnum
+   * @mixes XM.core.HasTransients
    */
   XM.CashReceipt = XM.Document.extend({
     recordType: 'XM.CashReceipt',
     idAttribute: 'number',
+    documentKey: 'number',
     documentDateKey: 'documentDate',
     enforceUpperKey: false,
     numberPolicy: XM.Document.AUTO_NUMBER,
@@ -22,7 +23,7 @@ XT.extensions.billing.initCashReceipt = function () {
         useCustomerDeposit: false,
         currency: XM.baseCurrency,
         currencyRate: 1.0,
-        applicationDate: new Date(),
+        documentDate: new Date(),
         amount: 0,
         lineItems: new XM.CashReceiptLineCollection()
       };
@@ -373,12 +374,68 @@ XT.extensions.billing.initCashReceipt = function () {
   }, _.invert(XM.FundsTypeEnum));
 
   /**
+   * @class XM.CashAllocation
+   * @extends XM.CashReceipt
+   */
+  XM.CashAllocation = XM.CashReceipt.extend({
+    recordType: 'XM.CashAllocation',
+
+    handlers: {
+      'change:targetDocument': 'targetDocumentChanged'
+    },
+
+    defaults: function () {
+      return _.extend({
+          applicationDate: new Date()
+        },
+        _.omit(XM.CashReceipt.prototype.defaults(), [
+          'lineItems',
+          'documentDate'
+        ])
+      );
+    },
+
+    post: function (targetDocument) {
+      // TODO this should be moved to into a server-side transaction
+      console.warn(targetDocument);
+      var that = this,
+        documentKind = targetDocument.recordType.suffix();
+
+      console.warn('posting ' + documentKind);
+      this.dispatch('XM.CashAllocation', 'post', [this.get('number'), documentKind], {
+        success: function () {
+          console.warn(arguments);
+        },
+        error: function () {
+          console.warn(arguments);
+        }
+      });
+    },
+
+    /**
+     * @listens change:targetDocumentChanged
+     */
+    targetDocumentChanged: function () {
+      var target = this.get('targetDocument');
+      if (!target || !this.isNew()) { return; }
+
+      this.set(_.extend(_.pick(target.attributes, [ 'currency', 'customer' ]), {
+        isPosted: true,
+        useCustomerDeposit: XT.session.settings.get('EnableCustomerDeposits'),
+        amount: target.get('balance')
+      }));
+
+      this.listenTo(this.get('targetDocument'), 'sync', this.post);
+    }
+  });
+
+  /**
    * @class XM.CashReceiptLine
    * @extends XM.Model
    */
   XM.CashReceiptLine = XM.Document.extend({
     recordType: 'XM.CashReceiptLine',
-    idAttribute: 'uuid',
+    //idAttribute: 'uuid',
     enforceUpperKey: false,
     numberPolicy: XM.Document.AUTO_NUMBER,
     defaults: {
@@ -393,7 +450,7 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceiptLinePending = XM.Model.extend({
     recordType: 'XM.CashReceiptLinePending',
-    idAttribute: 'uuid',
+    //idAttribute: 'uuid',
     readOnly: true
   });
 
@@ -437,10 +494,10 @@ XT.extensions.billing.initCashReceipt = function () {
 
   /**
    * @class XM.CashReceiptListItem
-   * @extends XM.ListItem
+   * @extends XM.Info
    * @see XM.CashReceipt
    */
-  XM.CashReceiptListItem = XM.ListItem.extend({
+  XM.CashReceiptListItem = XM.Info.extend({
     recordType: 'XM.CashReceiptListItem',
     editableModel: 'XM.CashReceipt',
     idAttribute: 'number',
@@ -455,55 +512,25 @@ XT.extensions.billing.initCashReceipt = function () {
 
   /**
    * @class XM.CashReceiptLineListItem
-   * @extends XM.ListItem
+   * @extends XM.Info
    * @see XM.CashReceipt
    */
-  XM.CashReceiptLineListItem = XM.ListItem.extend({
+  XM.CashReceiptLineListItem = XM.Info.extend({
     recordType: 'XM.CashReceiptLineListItem',
     editableModel: 'XM.CashReceiptLine',
     idAttribute: 'number',
     canPost: function (callback) {
-      callback(XT.session.privileges.get("MaintainCashReceipts"));
+      callback(XT.session.privileges.get("PostCashReceipts"));
     }
   });
 
   /**
    * @class XM.CashReceiptRelation
-   * @extends XM.ListItem
+   * @extends XM.Info
    */
   XM.CashReceiptRelation = XM.Info.extend({
     recordType: 'XM.CashReceiptRelation',
     editableModel: 'XM.CashReceipt'
-  });
-
-  XM.CashReceiptAllocation = XM.Document.extend({
-    recordType: 'XM.CashReceiptAllocation',
-    numberPolicy: XM.Document.AUTO_NUMBER,
-    handlers: {
-      'change:cashReceipt': 'handleCashReceiptChange'
-    },
-    handleCashReceiptChange: function (model, value) {
-      this.warn(this.attributes);
-      this.setReadOnly([
-        'currency',
-        'amount',
-        'documentNumber',
-        'orderNumber'
-      ], !this.get('cashReceipt'));
-    }
-  });
-
-  XM.CashReceiptAllocationListItem = XM.ListItem.extend({
-    recordType: 'XM.CashReceiptAllocationListItem',
-    editableModel: 'XM.CashReceiptAllocation'
-  });
-  
-  XM.CashReceiptAllocationCollection = XM.Collection.extend({
-    model: 'XM.CashReceiptAllocation'
-  });
-
-  XM.CashReceiptAllocationListItemCollection = XM.Collection.extend({
-    model: 'XM.CashReceiptAllocationListItem'
   });
 
   /**

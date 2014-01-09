@@ -1,74 +1,26 @@
 XT.extensions.billing.initListRelationsEditors = function () {
 
   /**
-   * @class CashReceiptAllocationEditor
+   * @class CashReceiptPaymentEditor
    */
   enyo.kind({
-    name: 'XV.CashReceiptAllocationEditor',
+    name: 'XV.CashAllocationEditor',
     kind: 'XV.RelationsEditor',
-    style: 'width: 100%',
+    controlClasses: 'in-panel',
     components: [
-      {kind: 'XV.Groupbox', name: 'mainPanel', components: [
-        {kind: 'onyx.GroupboxHeader', content: '_overview'.loc()},
-        {kind: 'XV.ScrollableGroupbox', name: 'mainGroup',
-            classes: 'in-panel', components: [
-          {kind: 'XV.InputWidget', attr: 'number'},
-          {kind: 'XV.CheckboxWidget', attr: 'isPosted', label: '_posted'.loc()},
-          {kind: 'XV.SalesCustomerWidget', attr: 'customer'},
-          {kind: 'XV.BankAccountWidget', attr: 'bankAccount'},
-          {kind: 'XV.FundsTypePicker', attr: 'fundsType', onSelect: 'fundsTypeSelected'},
-          {kind: 'XV.CashReceiptApplyOptionsPicker',
-            attr: 'useCustomerDeposit',
-            onSelect: 'applyOptionSelected'
-          },
-          {tag: 'hr'},
-          {kind: 'XV.DateWidget', attr: 'documentDate'},
-          {kind: 'XV.DateWidget', attr: 'distributionDate'},
-          {kind: 'XV.DateWidget', attr: 'applicationDate'},
-          {tag: 'hr'},
-          {kind: 'XV.MoneyWidget',
-            name: 'balance',
-            label: '_balance'.loc(),
-            attr: { localValue: 'balance', currency: 'currency' },
-            disableCurrency: true
-          },
-          {kind: 'XV.MoneyWidget',
-            label: '_amount'.loc(),
-            attr: { localValue: 'amount', currency: 'currency' },
-            disableCurrency: true
-          },
-          {kind: 'XV.MoneyWidget',
-            label: '_appliedAmount'.loc(),
-            attr: { localValue: 'appliedAmount', currency: 'currency' },
-            disableCurrency: true
-          },
-          {kind: 'onyx.GroupboxHeader', content: '_notes'.loc()},
-          {kind: 'XV.TextArea', attr: 'notes'},
-        ]}
-      ]}
+      {kind: 'XV.InputWidget', attr: 'number'},
+      {kind: 'XV.DateWidget', attr: 'documentDate'},
+      {kind: 'XV.BankAccountWidget', attr: 'bankAccount'},
+      {kind: 'XV.FundsTypePicker', attr: 'fundsType', onSelect: 'fundsTypeSelected'},
+      {kind: 'XV.CashReceiptApplyOptionsPicker', attr: 'useCustomerDeposit',
+          onSelect: 'applyOptionSelected'},
+      {tag: 'hr'},
+      {kind: 'XV.MoneyWidget', label: '_amount'.loc(),
+          attr: { localValue: 'amount', currency: 'currency' }}
     ],
-  /*
-    components: [
-      {kind: 'XV.ScrollableGroupbox', fit: true, classes: 'in-panel', components: [
-        {kind: 'XV.CashReceiptWidget', attr: 'cashReceipt'},
-        {kind: 'XV.InputWidget', attr: 'receivable.documentNumber',
-            label: '_documentNumber'.loc()},
-        {kind: "XV.InputWidget", attr: "target.number",
-            label: '_order'.loc()},
-        {kind: "XV.DateWidget", attr: "receivable.dueDate",
-            label: '_dueDate'.loc()},
-        {kind: 'XV.MoneyWidget',
-          attr: { localValue: 'amount', currency: 'currency' },
-          label: '_amount'.loc(), disableCurrency: true},
-        {kind: 'XV.MoneyWidget',
-          attr: { localValue: 'target.total', currency: 'currency' },
-          label: '_total'.loc(), disableCurrency: true}
-      ]}
-    ],
-    */
     valueChanged: function () {
       this.inherited(arguments);
-      this.warn(this.value);
+      this.bubbleUp('onCashAllocationChange');
     }
   });
 

@@ -38,11 +38,53 @@ trailing:true, white:true*/
     });
 
     enyo.kind({
-      name: 'XV.CashReceiptAllocations',
+      name: 'XV.CashAllocationBox',
       kind: 'XV.ListRelationsEditorBox',
-      editor: 'XV.CashReceiptEditor',
-      listRelations: 'XV.CashReceiptAllocationList',
-      title: '_payment'.loc()
+      editor: 'XV.CashAllocationEditor',
+      listRelations: 'XV.CashAllocationList',
+      searchList: 'XV.CashReceiptList',
+      title: '_payment'.loc(),
+
+      handlers: {
+        onCashAllocationChange: 'handleCashAllocationChange'
+      },
+
+      create: function () {
+        this.inherited(arguments);
+        this.$.prevButton.setShowing(false);
+        this.$.nextButton.setShowing(false);
+      },
+
+      // XXX #refactor: distinction between "value" and "controlValue" is confusing
+      handleCashAllocationChange: function () {
+        this.inherited(arguments);
+        if (!this.$.editor.value) { return; }
+
+        this.warn(this.$.editor.value);
+        this.warn(this.$.editor.value.isNew());
+
+        if (this.$.editor.value.isNew()) {
+          this.$.doneButton.setContent("_postCashPayment".loc());
+          this.$.doneButton.addClass('onyx-blue');
+        }
+        else {
+          this.$.doneButton.setContent("_done".loc());
+          this.$.doneButton.removeClass('onyx-blue');
+        }
+
+        return true;
+      },
+      doneItem: function () {
+        this.inherited(arguments);
+        var cashReceipt = this.$.editor.value;
+
+        if (cashReceipt && cashReceipt.isNew() && cashReceipt.isValid()) {
+          //cashReceipt.post('SalesOrder');
+        }
+        this.warn(cashReceipt);
+
+        return true;
+      }
     });
 
     /**
@@ -56,18 +98,7 @@ trailing:true, white:true*/
       editor: 'XV.CashReceiptLineEditor',
       parentKey: 'cashReceipt',
       listRelations: 'XV.CashReceiptLineList',
-      title: '_cashReceiptApplications'.loc(),
-      /*
-      create: function () {
-        this.inherited(arguments);
-
-        this.$.buttonsPanel.createComponents([
-          { content: 'Apply Balance', ontap: 'onApplyBalanceTap' },
-          { content: 'Apply Line', ontap: 'onApplyLineTap' },
-          { content: 'Clear Line', ontap: 'onClearLineTap' },
-        ]);
-      }
-      */
+      title: '_cashReceiptApplications'.loc()
     });
   };
 

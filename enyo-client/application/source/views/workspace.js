@@ -2323,7 +2323,7 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
-        {kind: "XV.CashReceiptAllocations", attr: "allocations"},
+        {kind: "XV.CashAllocationBox", title: '_payment'.loc(), attr: 'allocations'},
         {kind: "FittableRows", title: "_workflow".loc(), name: "workflowPanel"},
         {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
           attr: "comments"},

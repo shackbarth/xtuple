@@ -596,132 +596,141 @@
   {
     "context": "billing",
     "nameSpace": "XM",
-    "type": "CashReceiptAllocation",
-    "table": "xt.cashrcpt_allocation",
-    "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
-    "comment": "Cash Receipt Allocation",
+    "type": "CashAllocation",
+    "table": "cashrcpt",
+    "idSequenceName": "cashrcpt_cashrcpt_id_seq",
+    "orderSequence": "CashRcptNumber",
     "isRest": true,
+    "lockable": true,
+    "comment": "Cash Receipt",
     "privileges": {
       "all": {
         "create": "MaintainCashReceipts",
-        "read": "ViewCashReceipts",
+        "read": true,
         "update": "MaintainCashReceipts",
         "delete": "MaintainCashReceipts"
       }
     },
     "properties": [
       {
-        "name": "uuid",
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcpt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
         "attr": {
           "type": "String",
-          "column": "aropenalloc_uuid",
+          "column": "cashrcpt_number",
           "isNaturalKey": true
         }
       },
       {
-        "name": "target",
-        "attr": {
-          "type": "Number",
-          "column": "aropenalloc_doc_id"
-        }
-      },
-      {
-        "name": "documentType",
+        "name": "documentNumber",
         "attr": {
           "type": "String",
-          "column": "aropenalloc_doctype"
+          "column": "cashrcpt_docnumber"
         }
       },
       {
-        "name": "receivable",
+        "name": "targetDocument",
+        "attr": {
+          "type": "String",
+          "column": "cashrcpt_docnumber"
+        }
+      },
+      {
+        "name": "customer",
         "toOne": {
-          "type": "ReceivableRelation",
-          "column": "aropenalloc_aropen_id",
-          "isNested": true
+          "isNested": true,
+          "type": "CustomerRelation",
+          "column": "cashrcpt_cust_id",
+          "required": true
+        }
+      },
+      {
+        "name": "useCustomerDeposit",
+        "attr": {
+          "type": "Boolean",
+          "column": "cashrcpt_usecustdeposit",
+          "required": true
         }
       },
       {
         "name": "amount",
         "attr": {
-          "type": "Number",
-          "column": "aropenalloc_amount"
+          "type": "Money",
+          "column": "cashrcpt_amount",
+          "required": true
         }
       },
       {
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "aropenalloc_curr_id",
+          "column": "cashrcpt_curr_id",
           "required": true
         }
       },
       {
-        "name": "line",
-        "toOne": {
-          "column": "cashrcptitem_aropen_id",
-          "type": "CashReceiptLine",
-          "isNested": true
+        "name": "currencyRate",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcpt_curr_rate",
+          "required": true
         }
       },
       {
-        "name": "cashReceipt",
-        "toOne": {
-          "column": "cashrcptitem_cashrcpt_id",
-          "type": "CashReceiptRelation",
-          "isNested": true
-        }
-      }
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "billing",
-    "nameSpace": "XM",
-    "type": "CashReceiptAllocationListItem",
-    "table": "xt.cashrcpt_allocation",
-    "comment": "Cash Receipt Allocation",
-    "isRest": true,
-    "privileges": {
-      "all": {
-        "create": false,
-        "read": true,
-        "update": false,
-        "delete": false
-      }
-    },
-    "properties": [
-      {
-        "name": "uuid",
+        "name": "fundsType",
         "attr": {
           "type": "String",
-          "column": "aropenalloc_uuid",
-          "isNaturalKey": true
+          "column": "cashrcpt_fundstype",
+          "required": true
         }
       },
       {
-        "name": "target",
+        "name": "documentDate",
         "attr": {
-          "type": "Number",
-          "column": "aropenalloc_doc_id"
+          "type": "Date",
+          "column": "cashrcpt_docdate"
         }
       },
       {
-        "name": "amount",
-        "attr": {
-          "type": "Number",
-          "column": "aropenalloc_amount"
-        }
-      },
-      {
-        "name": "receivable",
+        "name": "bankAccount",
         "toOne": {
-          "type": "ReceivableRelation",
-          "column": "aropenalloc_aropen_id",
-          "isNested": true
+          "type": "BankAccountRelation",
+          "column": "cashrcpt_bankaccnt_id",
+          "isNested": true,
+          "required": true
+        }
+      },
+      {
+        "name": "distributionDate",
+        "attr": {
+          "type": "Date",
+          "column": "cashrcpt_distdate"
+        }
+      },
+      {
+        "name": "applicationDate",
+        "attr": {
+          "type": "Date",
+          "column": "cashrcpt_applydate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "cashrcpt_posted",
+          "required": true
         }
       }
     ],
     "isSystem": true
   }
-
 ]

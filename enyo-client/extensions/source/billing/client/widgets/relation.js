@@ -5,21 +5,7 @@ XT.extensions.billing.initRelationWidgets = function () {
     kind: 'XV.RelationWidget',
     collection: 'XM.BankAccountRelationCollection',
     list: 'XV.BankAccountList',
-    keyAttribute: 'name'
+    keyAttribute: 'name',
+    nameAttribute: 'description'
   });
-
-
-  enyo.kind({
-    name: 'XV.CashReceiptWidget',
-    kind: 'XV.RelationWidget',
-    collection: 'XM.CashReceiptRelationCollection',
-    list: 'XV.CashReceiptList',
-    keyAttribute: 'number',
-    query: {
-      parameters: [
-        { attribute: 'isPosted', value: false }
-      ]
-    }
-  });
-
 };
