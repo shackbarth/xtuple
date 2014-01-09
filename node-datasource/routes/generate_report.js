@@ -7,10 +7,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   // https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
   /*
-    TODO: fetch images from database
-    TODO: translations
     TODO: get on fluentreports 0.0.2. Pity Nathanael hasn't published 0.0.2 to npm yet.
-
   */
 
 
@@ -39,7 +36,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
       workingDir = path.join(__dirname, "../temp", databaseName),
       reportPath = path.join(workingDir, reportName),
-      imageFilenameMap = {};
+      imageFilenameMap = {},
+      translations;
 
 
     //
@@ -79,6 +77,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     /**
+      Helper function to translate strings
+     */
+    var loc = function (s) {
+      return translations[s] || s;
+    };
+
+    /**
       Resolve the xTuple JSON convention for report element definition to the
       output expected from fluentReports by swapping in the data fields.
 
@@ -91,11 +96,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     var marryData = function (detailDef, data, textOnly) {
       return _.map(detailDef, function (def) {
-        var text = def.attr ? traverseDots(data, def.attr) : def.text;
-        if (def.label === true) {
-          text = ("_" + def.attr).loc() + ": " + text;
+        var text = def.attr ? traverseDots(data, def.attr) : loc(def.text);
+        if (def.text && def.label === true) {
+          // label=true on text just means add a colon
+          text = text + ": ";
+        } else if (def.label === true) {
+          // label=true on an attr means add the attr name as a label
+          text = loc("_" + def.attr) + ": " + text;
         } else if (def.label) {
-          text = def.label + ": " + text;
+          // custom label
+          text = loc(def.label) + ": " + text;
         }
         if (textOnly) {
           return text;
@@ -288,6 +298,36 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     /**
+      Fetch all the translatable strings in the user's language for use
+      when we render.
+      XXX cribbed from locale route
+      TODO: these could be cached
+     */
+    var fetchTranslations = function (done) {
+      var sql = 'select xt.post($${"nameSpace":"XT","type":"Session",' +
+         '"dispatch":{"functionName":"locale","parameters":null},"username":"%@"}$$)'
+         .f(req.session.passport.user.username),
+        org = req.session.passport.user.organization,
+        queryOptions = XT.dataSource.getAdminCredentials(org),
+        dataObj;
+
+      XT.dataSource.query(sql, queryOptions, function (err, results) {
+        var localeObj;
+        if (err) {
+          done(err);
+          return;
+        }
+        localeObj = JSON.parse(results.rows[0].post);
+        // the translations come back in an array, with one object per extension.
+        // cram them all into one object
+        translations = _.reduce(localeObj.strings, function (memo, extStrings) {
+          return _.extend(memo, extStrings);
+        }, {});
+        done();
+      });
+    };
+
+    /**
       Get the data for this business object.
       TODO: support lists (i.e. no id)
      */
@@ -407,6 +447,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       fetchReportDefinition,
       fetchImages,
       fetchBarcodes,
+      fetchTranslations,
       fetchData,
       printReport,
       sendReport,

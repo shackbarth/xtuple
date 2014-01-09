@@ -6,7 +6,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
   "headerElements": [
     {
       "definition": [
-        {"text": "Invoice"},
+        {"text": "_invoice"},
         {"attr": "invoiceDate", "label": true},
         {"attr": "terms", "label": true},
         {"attr": "orderDate", "label": true}
@@ -14,7 +14,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "options": {"x": 350, "y": 0, "align": "right"}
     },
     {
-      "definition": [{"text": "Customer Number: "}],
+      "definition": [{"text": "_customer", "label": true}],
       "options": {"fontBold": true, "x": 0, "y": 150}
     },
     {
@@ -22,7 +22,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "options": {"x": 250, "y": 150}
     },
     {
-      "definition": [{"text": "Invoice Number: "}],
+      "definition": [{"text": "_invoice", "label": true}],
       "options": {"fontBold": true, "x": 0, "y": 170}
     },
     {
@@ -31,7 +31,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [
-        {"text": "_billto: "}
+        {"text": "_billto", "label": true}
       ],
       "options": {"x": 1, "y": 200, "width": 100, "fontBold": true, "align": "right"}
     },
@@ -60,12 +60,12 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     {
       "element": "band",
       "definition": [
-        {"text": "Qty. Shipped", "width": 100},
-        {"text": "UOM", "width": 50},
-        {"text": "Item", "width": 100},
-        {"text": "Currency", "width": 80},
-        {"text": "Unit Price", "width": 100},
-        {"text": "Ext. Price", "width": 100}
+        {"text": "_quantityShipped", "width": 100},
+        {"text": "_uom", "width": 50},
+        {"text": "_item", "width": 100},
+        {"text": "_currency", "width": 80},
+        {"text": "_unitPrice", "width": 100},
+        {"text": "_extendedPrice", "width": 100}
       ],
       "options": {"border": 0, "width": 0}
     },
