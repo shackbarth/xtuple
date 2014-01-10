@@ -123,18 +123,23 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     updatableField: "notes",
     beforeSaveActions: [{it: 'sets up a valid line item',
       action: require("./sales_order").getBeforeSaveAction("XM.ReturnLine")}],
-    skipSmoke: true,
     beforeSaveUIActions: [{it: 'sets up a valid line item',
       action: function (workspace, done) {
-        var gridRow;
+        var gridRow,
+          // XXX we really need a standard way of doing this
+          primeSubmodels = require("./sales_order").primeSubmodels;
 
-        workspace.value.on("change:total", done);
-        workspace.$.ReturnLineItemBox.newItem();
-        gridRow = workspace.$.ReturnLineItemBox.$.editableGridRow;
-        // TODO
-        //gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel,
-          //site: submodels.siteModel}});
-        gridRow.$.quantityWidget.doValueChange({value: 5});
+        primeSubmodels(function (submodels) {
+          workspace.$.returnLineItemBox.newItem();
+          gridRow = workspace.$.returnLineItemBox.$.editableGridRow;
+          gridRow.$.itemSiteWidget.doValueChange({value: {item: submodels.itemModel,
+            site: submodels.siteModel}});
+          gridRow.$.quantityWidget.doValueChange({value: 5});
+          gridRow.$.creditedWidget.doValueChange({value: 5});
+          setTimeout(function () {
+            done();
+          }, 3000);
+        });
 
       }
     }]
@@ -233,7 +238,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         @property {ReturnLineTax} taxes
         @property {SalesOrderLine} salesOrderLine Added by sales extension
       */
-      var ReturnLine = it("A nested only model called XM.ReturnLine extending " +
+      it("A nested only model called XM.ReturnLine extending " +
           "XM.Model should exist", function () {
         var lineModel;
         assert.isFunction(XM.ReturnLine);
