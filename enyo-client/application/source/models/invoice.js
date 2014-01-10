@@ -1,7 +1,8 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global Globalize:true, XT:true, XM:true, Backbone:true, _:true, console:true, async:true */
+/*global Globalize:true, XT:true, XM:true, Backbone:true, _:true,
+  console:true, async:true, window:true */
 
 (function () {
   "use strict";
@@ -596,8 +597,8 @@ white:true*/
     },
 
     doPrint: function () {
-      // TODO
-      console.log("TODO: print invoices");
+      window.open(XT.getOrganizationPath() +
+        "/generate-report?nameSpace=XM&type=Invoice&id=%@".f(this.id), "_newtab");
     },
 
     doVoid: function (options) {
