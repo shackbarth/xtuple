@@ -62,6 +62,65 @@
   },
   {
     "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "File",
+    "table": "file",
+    "idSequenceName": "file_file_id_seq",
+    "comment": "File Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "file_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "file_title",
+          "required": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "file_descrip",
+          "required": true
+        }
+      },
+      {
+        "name": "data",
+        "attr": {
+          "type": "String",
+          "column": "file_stream"
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "FILE"
+  },
+  {
+    "context": "xtuple",
     "nameSpace": "XM",
     "type": "FileRelation",
     "table": "file",
