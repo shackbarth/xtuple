@@ -364,6 +364,10 @@ trailing:true, white:true, strict: false*/
       ]
     });
 
+    // ..........................................................
+    // PURCHASE ORDER LINE
+    //
+
     enyo.kind({
       name: "XV.PurchaseOrderLineWorkspace",
       kind: "XV.ChildWorkspace",
