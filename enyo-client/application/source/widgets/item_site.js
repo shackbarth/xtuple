@@ -257,6 +257,7 @@ regexp:true, undef:true, trailing:true, white:true */
     setValue: function (value, options) {
       options = options || {};
       var attr = this.getAttr(),
+        that = this,
         changed = {},
         hasChanges = false,
         old = {},
@@ -264,7 +265,7 @@ regexp:true, undef:true, trailing:true, white:true */
         key,
         i,
         expireFetches = _.once(function () {
-          this._itemSiteCounter++;
+          that._itemSiteCounter++;
         });
 
       // Loop through the properties and update them directly,
