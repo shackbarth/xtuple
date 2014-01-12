@@ -258,10 +258,14 @@ regexp:true, undef:true, trailing:true, white:true */
       options = options || {};
       var attr = this.getAttr(),
         changed = {},
+        hasChanges = false,
         old = {},
         keys = _.keys(value),
         key,
-        i;
+        i,
+        expireFetches = _.once(function () {
+          this._itemSiteCounter++;
+        });
 
       // Loop through the properties and update them directly,
       // then call the appropriate "set" functions and add to "changed"
@@ -287,6 +291,8 @@ regexp:true, undef:true, trailing:true, white:true */
               changed[attr[key]] = value[key];
             }
 
+            expireFetches();
+
             this[key + 'Changed']();
           }
         }
@@ -294,9 +300,6 @@ regexp:true, undef:true, trailing:true, white:true */
 
       // Bubble changes if applicable
       if (!_.isEmpty(changed)) {
-        // This will expire outstanding fetches
-        this._itemSiteCounter++;
-
         if (!options.silent) {
           options.value = changed;
           this.doValueChange(options);
