@@ -19,10 +19,6 @@ regexp:true, undef:true, trailing:true, white:true */
     classes: "xv-private-item-site-widget"
   });
 
-  /**
-    The value for this widget is an object potentially consisting
-    of multiple key/value pairs for the item and site controls.
-  */
   enyo.kind({
     name: "XV.ItemSiteWidget",
     published: {
@@ -37,54 +33,20 @@ regexp:true, undef:true, trailing:true, white:true */
       isEditableKey: "item",
       horizontalOrientation: false
     },
+    handlers: {
+      "onValueChange": "controlValueChanged"
+    },
     events: {
-      onValueChange: ""
+      "onValueChange": ""
     },
     components: [
       {kind: "enyo.Control", name: "fittableContainer",
       components: [
         {kind: _privateItemSiteWidget, name: "privateItemSiteWidget",
-          label: "_item".loc(), onValueChange: 'handleItemSiteChange'},
-        {kind: "XV.SitePicker", name: "sitePicker", label: "_site".loc(),
-          onValueChange: 'handleSiteChange'}
+          label: "_item".loc()},
+        {kind: "XV.SitePicker", name: "sitePicker", label: "_site".loc()}
       ]}
     ],
-
-    create: function () {
-      this.inherited(arguments);
-
-      // changes layout of relation widget/picker
-      if (this.getHorizontalOrientation()) {
-        this.$.fittableContainer.setLayoutKind("FittableColumnsLayout");
-      } else {
-        this.$.fittableContainer.setLayoutKind("FittableRowsLayout");
-      }
-
-      // Filter for site picker. Limit list of models if item sites
-      // are specified
-      var filter = function (models, options) {
-          var ids;
-          if (this.itemSites.length) {
-            // Consolidate all the site ids
-            ids = _.pluck(_.compact(_.pluck(_.pluck(this.itemSites.models, "attributes"), 'site')), 'id');
-            return _.filter(models, function (model) {
-              return _.contains(ids, model.id);
-            });
-          }
-          return models;
-        },
-        callback,
-        that = this;
-
-      // TODO: There doesn't need to be two collections here
-      this._itemSites = new XM.ItemSiteRelationCollection();
-      this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
-      this.$.sitePicker.filter = filter;
-      this.$.sitePicker.$.pickerButton.setAttribute("tabIndex", -1);
-
-      this.queryChanged();
-    },
-
     /**
       Add a parameter to the query object on the widget. Parameter conventions should
       follow those described in the documentation for `XM.Collection`.
@@ -102,24 +64,115 @@ regexp:true, undef:true, trailing:true, white:true */
     clear: function (options) {
       this.$.privateItemSiteWidget.clear(options);
     },
+    controlValueChanged: function (inSender, inEvent) {
+      var value = inEvent.value,
+        sitePicker = this.$.sitePicker,
+        disabledCache = sitePicker.getDisabled(),
+        isNull = _.isNull(value),
+        that = this,
+        itemSite,
+        options = {},
+        site,
+        item;
+      if (inEvent.originator.name === 'privateItemSiteWidget') {
+        sitePicker.itemSites.reset();
+        sitePicker.buildList();
+        if (value && value.get) {
+          item = value.get("item");
+          site = value.get("site");
+          this.setValue({
+            item: item,
+            site: site
+          }); // In case an id was transformed to a model
+          // Don't allow another selection until we've fetch an updated list
+          sitePicker.setDisabled(true);
+          // Go fetch alternate sites for this item
+          options.query = { parameters: [{attribute: "item", value: item}]};
+          options.success = function () {
+            sitePicker.buildList();
+            sitePicker.setDisabled(disabledCache || that.getDisabled());
+          };
+          sitePicker.itemSites.fetch(options);
+        }
+        return true;
+      } else if (inEvent.originator.name === 'sitePicker') {
+        this.setValue({site: value});
+        this.$.privateItemSiteWidget.setDisabled(isNull);
+        if (isNull) {
+          this.$.privateItemSiteWidget.clear();
+        } else {
+          itemSite = this.$.privateItemSiteWidget.getValue();
+          // Change item site selection if the site changed
+          if (itemSite && itemSite.getValue("site.id") !== value &&
+              sitePicker.itemSites.length) {
+            itemSite = _.find(sitePicker.itemSites.models, function (model) {
+              return model.getValue("site.id") === value;
+            });
+            this.$.privateItemSiteWidget.setValue(itemSite);
+          }
+        }
+        return true;
+      }
+    },
+    create: function () {
+      this.inherited(arguments);
+      // Filter for site picker. Limit list of models if item sites
+      // are specified
+      var filter = function (models, options) {
+          var ids;
+          if (this.itemSites.length) {
+            // Consolidate all the site ids
+            ids = _.pluck(_.compact(_.pluck(_.pluck(this.itemSites.models, "attributes"), 'site')), 'id');
+            return _.filter(models, function (model) {
+              return _.contains(ids, model.id);
+            });
+          }
+          return models;
+        },
+        callback,
+        that = this;
+
+      this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
+      this.$.sitePicker.filter = filter;
+      this.$.sitePicker.$.pickerButton.setAttribute("tabIndex", -1);
+
+      // Keep track of requests, we'll ignore stale ones
+      this._itemSiteCounter = 0;
+
+      if (this.getHorizontalOrientation()) {
+        this.$.fittableContainer.setLayoutKind("FittableColumnsLayout");
+      } else {
+        this.$.fittableContainer.setLayoutKind("FittableRowsLayout");
+      }
+
+      //
+      // Prevent an ugly thick line if the site picker is hidden.
+      //
+      callback = function () {
+        if (!XT.session.settings.get("MultiWhs")) {
+          that.$.privateItemSiteWidget.applyStyle("border-bottom-width", "0px");
+        }
+      };
+      // If not everything is loaded yet, come back to it later
+      if (!XT.session || !XT.session.settings) {
+        XT.getStartupManager().registerCallback(callback);
+      } else {
+        callback();
+      }
+
+      this._itemSites = new XM.ItemSiteRelationCollection();
+      this.queryChanged();
+    },
     /**
-      This is an override on the component's focus to properly set
-      focus on the item widget.
+     @todo Document the focus method.
      */
     focus: function () {
       this.$.privateItemSiteWidget.focus();
     },
-    /**
-      @todo document this function
-     */
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();
       this.$.privateItemSiteWidget.setPlaceholder(placeholder);
     },
-    /**
-      Sets the relation widget with the query from the Item
-        Site widget.
-     */
     queryChanged: function () {
       this.$.privateItemSiteWidget.setQuery(this.getQuery());
     },
@@ -132,107 +185,22 @@ regexp:true, undef:true, trailing:true, white:true */
     removeParameter: function (attr) {
       this.$.privateItemSiteWidget.removeParameter(attr);
     },
-    /**
-      Disables the two widgets in the compound widget
-        if the disabled flag is set
-     */
     disabledChanged: function () {
       var isDisabled = this.getDisabled();
       this.$.privateItemSiteWidget.setDisabled(isDisabled);
       this.$.sitePicker.setDisabled(isDisabled);
-    },
-    /**
-      @todo document this function
-     */
-    validate: function (value) {
-      return value;
-    },
-
-    /**
-      Handles a change in the value which is an
-      object potentially consisting of multiple key/value pairs for the
-      item and site controls.
-    */
-    valueChanged: function () {
-      var attr = this.getAttr(),
-        that = this,
-        inEvent;
-
-      this.setItem(this.getValue().item);
-      this.setSite(this.getValue().site);
-
-      inEvent = { originator: this, value: this.getValue() };
-      this.doValueChange(inEvent);
-    },
-
-    /**
-      Handles change fired from the privateItemSiteWidget
-    */
-    handleItemSiteChange: function (inSender, inEvent) {
-      var value = inEvent.value,
-        sitePicker = this.$.sitePicker,
-        disabledCache = sitePicker.getDisabled(),
-        isNull = _.isNull(value),
-        options = {},
-        that = this,
-        site,
-        item;
-
-      sitePicker.itemSites.reset();
-      sitePicker.buildList();
-
-      if (value && value.get) {
-        item = value.get("item");
-        site = value.get("site");
-        this.setValue({
-          item: item,
-          site: site
-        });
-        // disable selection until list is updated
-        sitePicker.setDisabled(true);
-        // Go fetch alternate sites for this item
-        options.query = { parameters: [{attribute: "item", value: item}]};
-
-        options.success = function () {
-          sitePicker.buildList();
-          sitePicker.setDisabled(disabledCache || that.getDisabled());
-        };
-        sitePicker.itemSites.fetch(options);
-      }
-    },
-    /**
-      Handles change fired from the site picker
-    */
-    handleSiteChange: function (inSender, inEvent) {
-      var value = inEvent.value,
-        sitePicker = this.$.sitePicker,
-        isNull = _.isNull(value),
-        itemSiteModel;
-
-      this.setValue({site: value});
-      this.$.privateItemSiteWidget.setDisabled(isNull);
-      if (isNull) {
-        this.clear();
-      } else {
-        itemSiteModel = this.$.privateItemSiteWidget.getValue();
-        // Change item site selection if the site changed
-        if (itemSiteModel && itemSiteModel.getValue("site.id") !== value &&
-            sitePicker.itemSites.length) {
-          itemSiteModel = _.find(sitePicker.itemSites.models, function (model) {
-            return model.getValue("site.id") === value;
-          });
-          this.$.privateItemSiteWidget.setValue(itemSiteModel);
-        }
-      }
     },
 
     itemChanged: function () {
       var item = this.getItem(),
         site = this.getSite(),
         options = {},
-        that = this;
+        that = this,
+        i;
 
       if (item && site) {
+        // Keep track of requests, we'll ignore stale ones
+        i = this._itemSiteCounter;
         options.query = {
           parameters: [
             {
@@ -246,16 +214,18 @@ regexp:true, undef:true, trailing:true, white:true */
           ]
         };
         options.success = function () {
+          // I only smell freshness
+          if (i < that._itemSiteCounter) { return; }
+
           if (!that.destroyed && that._itemSites.length) {
             that.$.privateItemSiteWidget.setValue(that._itemSites.at(0));
           }
         };
         this._itemSites.fetch(options);
       } else if (!item) {
-        this.clear();
+        this.$.privateItemSiteWidget.clear();
       }
     },
-
     siteChanged: function () {
       var site = this.getSite(),
         item = this.getItem();
@@ -268,7 +238,62 @@ regexp:true, undef:true, trailing:true, white:true */
       } else {
         this.$.privateItemSiteWidget.removeParameter("site.code");
       }
-    }
+      this.itemChanged();
+    },
+    validate: function (value) {
+      return value;
+    },
+    /**
+      This setValue function handles a value which is an
+      object potentially consisting of multiple key/value pairs for the
+      item and site controls.
+
+      @param {Object} Value
+      @param {Object} [value.item] Item
+      @param {Date} [value.site] Site
+    */
+    setValue: function (value, options) {
+      options = options || {};
+      var attr = this.getAttr(),
+        changed = {},
+        keys = _.keys(value),
+        key,
+        i;
+
+      // Loop through the properties and update them directly,
+      // then call the appropriate "set" functions and add to "changed"
+      // object if applicable. We want to make sure that both item
+      // and site are set to their new, appropriate values before
+      // functions like itemChanged or siteChanged get called, to avoid
+      // having a mismatched old value for the fetch that those functions
+      // call.
+      for (i = 0; i < keys.length; i++) {
+        key = keys[i];
+
+        this[key] = value[key];
+      }
+      for (i = 0; i < keys.length; i++) {
+        key = keys[i];
+        if (attr[key]) {
+          // Don't bubble on path attributes that are by definition read only
+          if (attr[key].indexOf(".") === -1) {
+            changed[attr[key]] = value[key];
+          }
+          this[key + 'Changed']();
+        }
+      }
+
+      // Bubble changes if applicable
+      if (!_.isEmpty(changed)) {
+        // This will expire outstanding fetches
+        this._itemSiteCounter++;
+
+        if (!options.silent) {
+          options.value = changed;
+          this.doValueChange(options);
+        }
+      }
+    },
   });
 
 }());
