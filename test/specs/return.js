@@ -1213,6 +1213,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
   };
 
   exports.spec = spec;
-  //exports.additionalTests = additionalTests;
+  exports.additionalTests = additionalTests;
 
 }());
