@@ -1794,15 +1794,17 @@ select xt.install_js('XT','Data','xtuple', $$
         context.nameSpace = context.nameSpace || context.recordType.beforeDot();
         context.type = context.type || context.recordType.afterDot()
         context.map = this.fetchOrm(context.nameSpace, context.type);
-        context.underlyingTable = context.map.table,
+        context.prop = XT.Orm.getProperty(context.map, context.relation);
+        context.pertinentExtension = XT.Orm.getProperty(context.map, context.relation, true);
+        context.underlyingTable = context.pertinentExtension.table,
         context.underlyingNameSpace = context.underlyingTable.indexOf(".") > 0 ? 
           context.underlyingTable.beforeDot() : 
           "public";
         context.underlyingType = context.underlyingTable.indexOf(".") > 0 ? 
           context.underlyingTable.afterDot() : 
           context.underlyingTable;
-        context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.fkey = context.prop.toMany.inverse;
+        context.fkeyColumn = context.prop.toMany.column;
         context.pkey = XT.Orm.naturalKey(context.map) || XT.Orm.primaryKey(context.map);
         params.attribute = context.pkey;
         params.value = context.value;
