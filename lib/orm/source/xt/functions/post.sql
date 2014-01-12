@@ -196,6 +196,9 @@
     }$$);
 */
 create or replace function xt.post(data_hash text) returns text as $$
+
+return (function () {
+
   var dataArray = JSON.parse(data_hash),
     isArray = XT.typeOf(dataArray) === 'array',
     result = [],
@@ -327,5 +330,7 @@ create or replace function xt.post(data_hash text) returns text as $$
   } catch (err) {
     XT.error(err);
   }
+
+}());
 
 $$ language plv8;

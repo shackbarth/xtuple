@@ -39,6 +39,9 @@
     ]');
 */
 create or replace function xt.delete(data_hash text) returns boolean as $$
+
+return (function () {
+
   var dataArray = JSON.parse(data_hash),
     isArray = XT.typeOf(dataArray) === 'array',
     result = [],
@@ -81,5 +84,7 @@ create or replace function xt.delete(data_hash text) returns boolean as $$
   } catch (err) {
     XT.error(err);
   }
+
+}());
 
 $$ language plv8;

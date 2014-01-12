@@ -76,6 +76,9 @@
     ]');
 */
 create or replace function xt.patch(data_hash text) returns text as $$
+
+return (function () {
+
   var dataArray = JSON.parse(data_hash),
     isArray = XT.typeOf(dataArray) === 'array',
     data = Object.create(XT.Data),
@@ -146,6 +149,8 @@ create or replace function xt.patch(data_hash text) returns text as $$
   } catch (err) {
     XT.error(err);
   }
+
+}());
 
 $$ language plv8;
 

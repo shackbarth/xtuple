@@ -3,6 +3,8 @@ drop function if exists xt.set_dictionary(text, text, text);
 create or replace function xt.set_dictionary(strings text, context text, language text) 
     returns boolean volatile as $$
 
+return (function () {
+
   var isDatabase = (context === '_database_') ? true : false,
     isFramework = (context === '_framework_') ? true : false,
     sqlExtension = "select ext_id from xt.ext where ext_name = $1",
@@ -38,5 +40,7 @@ create or replace function xt.set_dictionary(strings text, context text, languag
   } else {
     plv8.execute(sqlInsert, [strings, language, extensionId, isDatabase, isFramework]);
   }
+
+}());
 
 $$ language plv8;

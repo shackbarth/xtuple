@@ -2,6 +2,8 @@ drop function if exists xt.js_init();
 
 create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
 
+return (function () {
+
   if (plv8.__initialized && debug !== true) {
     return;
   }
@@ -898,5 +900,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     }
     plv8.__initialized = true;
   }
+
+}());
 
 $$ language plv8;
