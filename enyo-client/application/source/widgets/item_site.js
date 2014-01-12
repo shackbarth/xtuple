@@ -200,6 +200,7 @@ regexp:true, undef:true, trailing:true, white:true */
 
       if (item && site) {
         // Keep track of requests, we'll ignore stale ones
+        this._itemSiteCounter = this._itemSiteCounter + 1;
         i = this._itemSiteCounter;
         options.query = {
           parameters: [
