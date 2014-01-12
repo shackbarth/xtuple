@@ -90,6 +90,7 @@ regexp:true, undef:true, trailing:true, white:true */
           options.query = { parameters: [{attribute: "item", value: item}]};
           options.success = function () {
             sitePicker.buildList();
+            sitePicker.setValue(site);
             sitePicker.setDisabled(disabledCache || that.getDisabled());
           };
           sitePicker.itemSites.fetch(options);
@@ -257,6 +258,7 @@ regexp:true, undef:true, trailing:true, white:true */
       options = options || {};
       var attr = this.getAttr(),
         changed = {},
+        old = {},
         keys = _.keys(value),
         key,
         i;
@@ -270,17 +272,23 @@ regexp:true, undef:true, trailing:true, white:true */
       // call.
       for (i = 0; i < keys.length; i++) {
         key = keys[i];
-
+        old[key] = this[key];
         this[key] = value[key];
       }
       for (i = 0; i < keys.length; i++) {
         key = keys[i];
         if (attr[key]) {
-          // Don't bubble on path attributes that are by definition read only
-          if (attr[key].indexOf(".") === -1) {
-            changed[attr[key]] = value[key];
+          if (!_.isObject(value[key]) ||
+              !_.isObject(old[key]) ||
+              value[key].id !== old[key].id) {
+
+            // Don't bubble on path attributes that are by definition read only
+            if (attr[key].indexOf(".") === -1) {
+              changed[attr[key]] = value[key];
+            }
+
+            this[key + 'Changed']();
           }
-          this[key + 'Changed']();
         }
       }
 
