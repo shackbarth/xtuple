@@ -1832,6 +1832,8 @@ white:true*/
           this.set("scheduleDate", scheduleDate);
         }
         parent.calculateScheduleDate();
+
+        this.set("site", parent.get("site") || XT.defaultSite());
       }
     },
 
