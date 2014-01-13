@@ -224,6 +224,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     kind: "XV.GridBox",
     classes: "small-panel",
     title: "_workflow".loc(),
+    parentKey: "parent",
     columns: [
       {classes: "grid-item", header: ["_name".loc(), "_description".loc()],
         rows: [
