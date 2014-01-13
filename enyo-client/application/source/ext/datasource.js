@@ -185,7 +185,7 @@ white:true*/
               return;
             }
 
-            // Handle exception case where an entire collection was passed
+            // Handle case where an entire collection was saved
             if (options.collection) {
               options.collection.each(function (model) {
                 var cHash = _.find(dataHash, function (item) {
@@ -200,6 +200,11 @@ white:true*/
                   cAttrs = cHash.data;
                 }
                 model.etag = cHash.etag;
+
+                // This is a hack to work around Backbone messing with 
+                // attributes when we don't want it to. Parse function
+                // on model handles the other side of this
+                options.fixAttributes = model.attributes;
 
                 options.success.call(that, model, cAttrs, options);
               });
