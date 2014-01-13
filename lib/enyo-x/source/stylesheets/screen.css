@@ -1871,9 +1871,6 @@ ul.icons-ul > li .icon-li {
   text-overflow: ellipsis;
   color: #070707;
 }
-.xv-list-attr.name {
-  width: 14em;
-}
 .xv-list-attr.header {
   padding: 4px;
   background: #8d8d8d;
