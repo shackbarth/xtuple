@@ -2,6 +2,8 @@ create or replace function xt.usrpref_did_change() returns trigger as $$
 /* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
+return (function () {
+
   if (typeof XT === 'undefined') { 
     plv8.execute("select xt.js_init();"); 
   }
@@ -35,5 +37,7 @@ create or replace function xt.usrpref_did_change() returns trigger as $$
  }
  
  return NEW;
+
+}());
 
 $$ language plv8;
