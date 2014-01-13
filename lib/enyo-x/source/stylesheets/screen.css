@@ -1800,8 +1800,8 @@ ul.icons-ul > li .icon-li {
 .xv-list .xv-list-item .xv-list-column.name-column {
   width: 14em;
 }
-.xv-list .xv-list-item .xv-list-column.hyperlink-column {
-  width: 10em;
+.xv-list .xv-list-item .xv-list-column.right-column {
+  width: 9em;
   text-align: right;
 }
 .xv-list .xv-list-item .xv-list-column.short {
