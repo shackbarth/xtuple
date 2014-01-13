@@ -611,19 +611,15 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "billingContact.phone", fit: true,
-                classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "billingContact.primaryEmail",
-                classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "name-column", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true},
+            {kind: "XV.ListAttr", attr: "name"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "hyperlink-column", components: [
+            {kind: "XV.ListAttr", attr: "billingContact.phone", },
+            {kind: "XV.ListAttr", attr: "billingContact.primaryEmail"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "billingContact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "billingContact.address"}
@@ -677,19 +673,15 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "contact.phone", fit: true,
-                classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact.primaryEmail",
-                classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "name-column", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true},
+            {kind: "XV.ListAttr", attr: "name"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "hyperlink-column", components: [
+            {kind: "XV.ListAttr", attr: "contact.phone", },
+            {kind: "XV.ListAttr", attr: "contact.primaryEmail"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "contact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
@@ -801,18 +793,15 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "code", isKey: true},
-              {kind: "XV.ListAttr", attr: "contact.phone", fit: true,
-                classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact.primaryEmail", classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "name-column", components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true},
+            {kind: "XV.ListAttr", attr: "name"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "hyperlink-column", components: [
+            {kind: "XV.ListAttr", attr: "contact.phone", },
+            {kind: "XV.ListAttr", attr: "contact.primaryEmail"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "contact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
@@ -1259,7 +1248,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "listPrice", formatter: "formatPrice"},
             {kind: "XV.ListAttr", attr: "isFractional", formatter: "formatFractional"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "priceUnit.name", formatter: "formatPriceUnit"},
             {kind: "XV.ListAttr", attr: "productCategory.code"}
           ]}
