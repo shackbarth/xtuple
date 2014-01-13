@@ -184,7 +184,29 @@ white:true*/
               options.success(dataHash, options);
               return;
             }
-            if (dataHash.patches) {
+
+            // Handle exception case where an entire collection was passed
+            if (options.collection) {
+              options.collection.each(function (model) {
+                var cHash = _.find(dataHash, function (item) {
+                    return item.id === model.id;
+                  }),
+                  cAttrs;
+
+                if (cHash.patches) {
+                  cAttrs = model.toJSON({includeNested: true});
+                  XM.jsonpatch.apply(cAttrs, cHash.patches);
+                } else {
+                  cAttrs = cHash.data;
+                }
+                model.etag = cHash.etag;
+
+                options.success.call(that, model, cAttrs, options);
+              });
+              return;
+
+            // Handle normal single model case
+            } else if (dataHash.patches) {
               if (obj) {
                 attrs = obj.toJSON({includeNested: true});
                 XM.jsonpatch.apply(attrs, dataHash.patches);

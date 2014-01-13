@@ -142,10 +142,10 @@ return (function () {
       XT.username = undefined;
 
       XT.message(200, "OK");
-      result.push(JSON.stringify(ret, null, prettyPrint));
+      result.push(ret);
     });
 
-    return isArray ? result : result[0];
+    return JSON.stringify(isArray ? result : result[0], null, prettyPrint);
   } catch (err) {
     XT.error(err);
   }

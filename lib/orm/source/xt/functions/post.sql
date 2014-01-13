@@ -286,7 +286,9 @@ return (function () {
           observer.object = ret.data;
           delete ret.data;
           ret.patches = XT.jsonpatch.generate(observer);
-          ret = JSON.stringify(ret, null, prettyPrint);
+          if (!isArray) {
+            ret = JSON.stringify(ret, null, prettyPrint);
+          }
         }
 
       /* if it's a function dispatch call then execute it */
@@ -326,7 +328,7 @@ return (function () {
       result.push(ret);
     })
 
-    return isArray ? result : result[0];
+    return isArray ? JSON.stringify(result, null, prettyPrint) : result[0];
   } catch (err) {
     XT.error(err);
   }
