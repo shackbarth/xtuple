@@ -505,6 +505,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
       key = url.parse(handshakeData.headers.referer).path.split("/")[1];
     } else if (X.options.datasource.testDatabase) {
       // for some reason zombie doesn't send the referrer in the socketio call
+      // https://groups.google.com/forum/#!msg/socket_io/MPpXrP5N9k8/xAyk1l8Iw8YJ
       key = X.options.datasource.testDatabase;
     } else {
       return callback(null, false);
@@ -603,7 +604,8 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           data: session.passport.user,
           code: 1,
           debugging: X.options.datasource.debugging,
-          biUrl: X.options.datasource.biUrl,
+          biServer: X.options.biServer,
+          printServer: X.options.printServer,
           version: X.version
         });
       callback(callbackObj);

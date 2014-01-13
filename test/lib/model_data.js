@@ -31,11 +31,6 @@ Here's how you can use CRUD to create a model to use for your own tests:
   var async = require("async"),
     _ = require("underscore"),
   assert = require("chai").assert;
-
-
-
-
-
   //
   // Data for each business object under test
   //
@@ -46,7 +41,7 @@ Here's how you can use CRUD to create a model to use for your own tests:
   };
 
   exports.customer = {
-    number: "ZZZCUSTOMER" + Math.random(),
+    number: "CUSTOMER" + Math.random(),
     name: "TestCust",
     customerType: { code: "NORMAL" },
     salesRep: { number: "JSMITH" },

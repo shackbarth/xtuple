@@ -38,7 +38,8 @@
     "underscore": "1.4.x",
     "winston": "0.7.x",
     "xmla4js": "git://github.com/rpbouman/xmla4js.git",
-    "underscore.string": "~2.3.3"
+    "underscore.string": "~2.3.3",
+    "congruence": "~1.2.4"
   },
   "devDependencies": {
     "chai": "1.5.x",
@@ -48,7 +49,8 @@
     "zombie": "1.4.x"
   },
   "optionalDependencies": {
-    "xtuple-query": "~1.0.0"
+    "xtuple-query": "~1.0.0",
+    "googleapis": "~0.4.6"
   },
   "engines": {
     "node": "0.8.x"

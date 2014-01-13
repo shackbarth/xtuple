@@ -9,13 +9,17 @@ white:true*/
     name: "App",
     kind: "XV.App",
     keyCapturePatterns: [
-      {method: "captureMagstripe", start: [16, 53, 16, 66], end: [191, 13], falsePositives: 1}
+      {method: "captureMagstripe", start: [16, 53, 16, 66], end: [191, 13], falsePositives: 1},
+      {method: "captureBarcodeScanner", start: [192], end: [13]}
     ],
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
       { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" },
       { name: "signals", kind: enyo.Signals, onkeydown: "handleKeyDown" }
     ],
+    captureBarcodeScanner: function (value) {
+      this.$.postbooks.getActive().waterfall("onBarcodeCapture", {data: value});
+    },
     captureMagstripe: function (value) {
       var parseMagstripe = function (input) {
         var parseObj = {};

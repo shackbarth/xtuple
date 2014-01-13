@@ -15,6 +15,8 @@ trailing:true, white:true, strict:false*/
       name: "XV.ProjectTasksGridBox",
       kind: "XV.GridBox",
       classes: "large-panel",
+      workspace: "XV.ProjectTaskWorkspace",
+      orderBy: [{attribute: 'number'}],
       title: "_tasks".loc(),
       columns: [
         {classes: "grid-item", header: ["_number".loc(), "_description".loc()],
@@ -72,8 +74,7 @@ trailing:true, white:true, strict:false*/
           {readOnlyAttr: "percentComplete",
             editor: {kind: "XV.PercentWidget", attr: "percentComplete"}},
         ]}
-      ],
-      workspace: "XV.ProjectTaskWorkspace"
+      ]
     });
 
     enyo.kind({

@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true,eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, _:true, console:true */
+/*global XT:true, XM:true, _:true, console:true, Backbone: true */
 
 (function () {
   "use strict";
@@ -46,9 +46,16 @@ white:true*/
       return this.getValue("item.number") + " " + this.getValue("site.code");
     },
 
+    initialize: function () {
+      // this.meta = new Backbone.Model();
+      // this.meta("_itemSites", new XM.ItemSiteRelationCollection());
+      XM.Model.prototype.initialize.apply(this, arguments);
+    },
+
     defaults: function () {
       return {
-        isActive: true
+        isActive: true,
+        site: XT.defaultSite()
       };
     },
 
@@ -234,60 +241,26 @@ white:true*/
   });
 
   /**
-    The dispatch in here serves two purposes. First, we sometimes only want
-    to show items that are associated with particular customers, shiptos,
-    or effective dates. But even if that special filter isn't applied, we
-    want to be able to search by item number, alias, or bar code.
+    Returns item sites using usual query means with additional special support for:
+      * Attributes `customer`,`shipto`, and `effectiveDate` for exclusive item rules.
+      * Attribute `vendor` to filter on only items with associated item sources.
+      * Cross check on `alias` and `barcode` attributes for item numbers.
    */
   var fetch = function (options) {
     options = options ? options : {};
     var that = this,
-      params = options.query ? options.query.parameters : [],
-      param,
-      customerId,
-      shiptoId,
-      effectiveDate,
-      success,
-      omit = function (params, attr) {
-        return _.filter(params, function (param) {
-          return param.attribute !== attr;
-        });
-      };
+      recordType = this.model.prototype.recordType,
+      success;
 
-    // Parse out customer
-    param = _.findWhere(params, {attribute: "customer"});
-    if (param) {
-      // We have to do a special dispatch to fetch the data based on customer.
-      // Because it's a dipatch call and not a fetch, the collection doesn't get
-      // updated automatically. We have to do that by hand on success.
-      customerId = param.value.id;
-      params = omit(params, "customer");
-    }
-
-    // Parse out shipto
-    param = _.findWhere(params, {attribute: "shipto"});
-    if (param) {
-      shiptoId = param.value.id;
-      params = omit(params, "shipto");
-    }
-
-    // Parse out effective date
-    param = _.findWhere(params, {attribute: "effectiveDate"});
-    if (param) {
-      effectiveDate = param ? param.value : null;
-      params = omit(params, "effectiveDate");
-    }
-    options.query.parameters = params;
     XM.Collection.formatParameters("XM.ItemSiteListItem", options.query.parameters);
 
     // Dispatch the query
     success = options.success;
     options.success = function (data) {
       that.reset(data);
-      if (success) { success(data); }
+      if (success) { success(that); }
     };
-    XM.ModelMixin.dispatch("XM.ItemSite", "itemsForCustomer",
-      [customerId, shiptoId, effectiveDate, options.query], options);
+    XM.ModelMixin.dispatch("XM.ItemSite", "fetch", [recordType, options.query], options);
   };
 
   /**

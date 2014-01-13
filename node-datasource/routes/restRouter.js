@@ -14,46 +14,59 @@ _.mixin(str.exports());
 
 /**
  * @class RestRouter
+ * @singleton
  */
 module.exports = (function () {
   'use strict';
 
-  var handlers = {
+  var getIsRestORMsStore,
+    getResourcesStore,
+    getServicesStore,
+    handlers = {
 
       /**
        * @private
        * Requests a representation of the specified resource.
        */
       GET: function (req, res, session, options) {
-        var ormType = options.ormType,
-          callback = options.callback,
+        var callback = options.callback,
           payload = {
             nameSpace: 'XM',
-            type: ormType,
-            id: options.id
+            type: options.ormType
           },
           restQuery,
           freeQuery,
-          schema;
+          schema,
+          error;
 
         if (options.id) {
+          payload.id = options.id;
           return routes.queryDatabase("get", payload, session, callback);
         }
 
-        freeQuery = new FreeTextQuery(req.query);
-        if (freeQuery.isValid()) {
-          schema = XT.session.schemas.XM.attributes[_.capitalize(_.camelize(payload.type))];
-          payload.query = freeQuery.toTarget(XtGetQuery, { schema: schema }).query;
-          return routes.queryDatabase("get", payload, session, callback);
+        if (req.query.q) {
+          freeQuery = new FreeTextQuery(req.query);
+          if (freeQuery.isValid()) {
+            schema = XT.session.schemas.XM.attributes[_.capitalize(_.camelize(payload.type))];
+            payload.query = freeQuery.toTarget(XtGetQuery, { schema: schema }).query;
+            return routes.queryDatabase("get", payload, session, callback);
+          }
+          else {
+            error = freeQuery.getErrors();
+          }
+        }
+        else {
+          restQuery = new RestQuery(req.query);
+          if (restQuery.isValid()) {
+            payload.query = restQuery.toTarget(XtGetQuery).query;
+            return routes.queryDatabase("get", payload, session, callback);
+          }
+          else {
+            error = restQuery.getErrors();
+          }
         }
 
-        restQuery = new RestQuery(req.query);
-        if (restQuery.isValid()) {
-          payload.query = restQuery.toTarget(XtGetQuery).query;
-          return routes.queryDatabase("get", payload, session, callback);
-        }
-
-        return res.send(400, "Bad Request");
+        return res.json(error.error.code, error);
       },
 
       /**
@@ -110,7 +123,7 @@ module.exports = (function () {
 
         routes.queryDatabase("delete", payload, session, callback);
       },
-      
+
       /**
        * Apply partial modifications to a resource.
        * @private
@@ -176,10 +189,16 @@ module.exports = (function () {
           if (result.isError) {
             return next(new Error("Invalid Request."));
           }
+
+          getResourcesStore = result.data;
           _getServices(req, res, next, orms, result.data);
         };
 
-      routes.queryDatabase("post", payload, session, callback);
+      if (getResourcesStore) {
+        _getServices(req, res, next, orms, getResourcesStore);
+      } else {
+        routes.queryDatabase("post", payload, session, callback);
+      }
     },
 
     /**
@@ -192,7 +211,7 @@ module.exports = (function () {
           type: 'Discovery',
           dispatch: {
             functionName: "getServices",
-            parameters: [null, rootUrl]
+            parameters: [null, rootUrl, true]
           }
         },
         session = getSession(req, next),
@@ -200,10 +219,16 @@ module.exports = (function () {
           if (result.isError) {
             return next(new Error("Invalid Request."));
           }
+
+          getServicesStore = result.data;
           routeCall(req, res, next, orms, resources, result.data);
         };
 
-      routes.queryDatabase("post", payload, session, callback);
+      if (getServicesStore) {
+        routeCall(req, res, next, orms, resources, getServicesStore);
+      } else {
+        routes.queryDatabase("post", payload, session, callback);
+      }
     },
 
     /**
@@ -267,7 +292,6 @@ module.exports = (function () {
    * @public
    */
   function getIsRestORMs(req, res, next) {
-    console.log(req.user);
     var payload = {
         nameSpace: 'XT',
         type: 'Discovery',
@@ -280,9 +304,16 @@ module.exports = (function () {
         if (result.isError) {
           return next(new Error("Invalid Request."));
         }
+
+        getIsRestORMsStore = result.data;
         _getResources(req, res, next, result.data);
       };
-    routes.queryDatabase("post", payload, session, callback);
+
+    if (getIsRestORMsStore) {
+      _getResources(req, res, next, getIsRestORMsStore);
+    } else {
+      routes.queryDatabase("post", payload, session, callback);
+    }
   }
 
   /**
@@ -303,7 +334,7 @@ module.exports = (function () {
       user: {
         id: user.get('username'),
         username: user.get('username'),
-        organizaion: user.get('organization'),
+        organization: user.get('organization')
       }
     };
   }

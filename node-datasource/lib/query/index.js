@@ -1,3 +1,7 @@
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true,
+noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
+/*global _:true */
+
 _ = require('underscore');
 moment = require('moment');
 
@@ -5,9 +9,11 @@ _.mixin(require('congruence'));
 
 // TODO move this mixin to a separate util module
 _.mixin({
-  compactObject: function(o) {
-    _.each(o, function(v, k){
-      if(!v) {
+  compactObject: function (o) {
+    "use strict";
+
+    _.each(o, function (v, k) {
+      if (!v) {
         delete o[k];
       }
     });

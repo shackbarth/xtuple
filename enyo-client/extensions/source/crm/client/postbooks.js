@@ -27,6 +27,7 @@ trailing:true, white:true*/
 
     panels = [
       {name: "itemList", kind: "XV.ItemList"},
+      {name: "itemGroupList", kind: "XV.ItemGroupList"},
       {name: "currencyList", kind: "XV.CurrencyList"},
       {name: "stateList", kind: "XV.StateList"},
       {name: "countryList", kind: "XV.CountryList"},
@@ -54,6 +55,7 @@ trailing:true, white:true*/
         {name: "crmDashboard", kind: "XV.CrmDashboard"},
         {name: "accountList", kind: "XV.AccountList"},
         {name: "contactList", kind: "XV.ContactList"},
+        {name: "activityList", kind: "XV.ActivityList"},
         {name: "toDoList", kind: "XV.ToDoList"},
         {name: "opportunityList", kind: "XV.OpportunityList"},
         {name: "incidentList", kind: "XV.IncidentList", toggleSelected: false}
@@ -78,6 +80,7 @@ trailing:true, white:true*/
       "MaintainIncidentPriorities",
       "MaintainIncidentResolutions",
       "MaintainIncidentSeverities",
+      "MaintainItemGroups",
       "MaintainOpportunitySources",
       "MaintainOpportunityStages",
       "MaintainOpportunityTypes",
@@ -89,6 +92,7 @@ trailing:true, white:true*/
       "MaintainPersonalToDoItems",
       "MaintainTitles",
       "ReassignToDoItems",
+      "ViewAddresses",
       "ViewAllContacts",
       "ViewAllCRMAccounts",
       "ViewAllIncidentHistory",

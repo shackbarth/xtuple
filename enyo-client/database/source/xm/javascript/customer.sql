@@ -1,5 +1,5 @@
 select xt.install_js('XM','Customer','xtuple', $$
-/* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
+/* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
    See www.xtuple.com/CPAL for the full text of the software license. */
 
 (function () {
@@ -124,9 +124,9 @@ select xt.install_js('XM','Customer','xtuple', $$
   }
 
   /**
-    Return whether a tax authority is referenced by another table.
+    Return whether a Customer is referenced by another table.
     
-    @param {String} Tax Authority Number
+    @param {String} Customer Number
   */
   XM.Customer.used = function(id) {
     var exceptions = ["public.crmacct"];

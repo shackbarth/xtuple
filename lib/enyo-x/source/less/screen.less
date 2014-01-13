@@ -34,9 +34,9 @@
 @dark-gray: #333;
 @blue-gray: #93a1a1;
 @near-black: #0e0e0e;
-@black: #000;
+@black: #070707;
 @white: #fff;
-@ghost: #f8f8ff;
+@ghost: #f8f8f8;
 @red: #c51616;
 @bright-red: #ff0000;
 @green: #009000;
@@ -57,6 +57,7 @@
 /**
   Import for Font-Awesome icons
 */
+// libs
 @import "../../lib/font-awesome/less/font-awesome.less";
 @import "../../lib/font-onyx/lib/Icon.less";
 
@@ -136,8 +137,24 @@ body {
 
 .app > * {
   width: 320px;
+  height: 100%;
   .box-shadow(-4px -4px 4px rgba(0,0,0,0.3));
-  background: @charcoal;
+  background: @dim-gray;
+}
+
+/*
+  Media query for responsive design. This adapts to smaller
+  displays.
+*/
+@media (max-width: 480px) {
+  .pullout-menu {
+    display: block;
+    margin: 0;
+  }
+  .app > * {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
 
 .panels > * {
@@ -154,19 +171,12 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/*
-  Media query for responsive design. This adapts to smaller
-  displays.
+/**
+  Sets a fixed height on all of the toolbars
+  so that they're not dependent on the icon height
 */
-@media (max-width: 480px) {
-  .pullout-menu {
-    display: block;
-    margin: 0;
-  }
-  .app-panels > * {
-       min-width: 100%;
-       max-width: 100%;
-   }
+.onyx-menu-toolbar {
+  height: 57px;
 }
 
 .item {
@@ -185,19 +195,10 @@ body {
   }
 }
 
+// TODO: this is a bad name for this harkening back to the
+// dark ages when there was a white label on the "left" of the toolbar
 .left {
   color: @white;
-}
-
-.right-float {
-  float: right;
-  display: block;
-}
-
-.left-float {
-  float: left;
-  display: block;
-  margin-right: 3px;
 }
 
 // XXX hack here (and in other places that reference issue 18397)
@@ -209,21 +210,6 @@ body {
   text-shadow: 0 0 @black;
 }
 // end hack
-
-.xt-app {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  .xv-postbooks {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-}
 
 .xv-my-account-popup {
   background-color: @white;
@@ -311,7 +297,7 @@ body {
 }
 
 .xv-assignment-box {
-  .xv-decorated-label {
+  .xv-flexible-label {
     width: 85%;
   }
   .xv-label {
@@ -360,13 +346,18 @@ body {
   vertical-align: middle;
 }
 
-.xv-label, .xv-decorated-label {
+.xv-label, .xv-flexible-label {
   padding: 8px;
   text-align: right;
   &.disabled {
     color: @dim-gray;
   }
 }
+
+/**
+  This label style has a fixed width, while
+  the flexible label depends on a fit: true
+*/
 .xv-label {
   width: 130px;
 }
@@ -419,9 +410,13 @@ body {
   }
 }
 
-/* This is for styling the moved items in the more toolbar*/
+/* This is for styling the moved items in the more toolbar */
 .xv-toolbar-moved {
   width: 220px;
+}
+
+.xv-toolbar-label {
+  width: 180px;
 }
 
 .xv-totals-panel {
@@ -434,9 +429,6 @@ body {
   .onyx-input, .onyx-button {
     font-size: 13px;
   }
-}
-
-.xv-totals-panel {
   .xv-label, .onyx-input-decorator {
     padding: 3px;
   }

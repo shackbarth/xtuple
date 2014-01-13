@@ -147,7 +147,7 @@ download_files () {
 	rm -R ErpBI
 	rm ErpBI.zip
 	wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
-	unzip ErpBI.zip  2>&1 | tee -a $LOG_FILE
+	unzip ErpBI.zip
 	
 	cdir $BISERVER_HOME/biserver-ce/
 	chmod 755 -R . 2>&1 | tee -a $LOG_FILE
@@ -164,7 +164,7 @@ download_files () {
 	mv pentaho.xml pentaho.xml.sample
 	cat pentaho.xml.sample | \
 	sed s/org.h2.Driver/org.postgresql.Driver/ | \
-	sed s#jdbc:h2:../../../h2database/erpbi#jdbc:postgresql://localhost:5432/erpbi# \
+	sed s#jdbc:h2:../../../h2database/demomfg#jdbc:postgresql://localhost:5432/erpbi# \
 	> pentaho.xml  2>&1 | tee -a $LOG_FILE
 }
 
@@ -188,6 +188,10 @@ run_scripts() {
 	mvn process-resources 2>&1 | tee -a $LOG_FILE
 
 	cdir ../dynschema
+	mvn install 2>&1 | tee -a $LOG_FILE
+	mvn process-resources 2>&1 | tee -a $LOG_FILE
+	
+	cdir ../utils
 	mvn install 2>&1 | tee -a $LOG_FILE
 	mvn process-resources 2>&1 | tee -a $LOG_FILE
 
@@ -231,7 +235,10 @@ prep_mobile() {
 	log "######################################################"
 	log "######################################################"
 	log ""
-	mkdir $XT_DIR/node-datasource/lib/rest-keys
+	if [ ! -d $XT_DIR/node-datasource/lib/rest-keys ]
+    then
+      mkdir $XT_DIR/node-datasource/lib/rest-keys
+    fi
 	cdir $XT_DIR/node-datasource/lib/rest-keys
 	openssl genrsa -out server.key 1024 2>&1 | tee -a $LOG_FILE
 	openssl rsa -in server.key -pubout > server.pub 2>&1 | tee -a $LOG_FILE
@@ -247,11 +254,10 @@ prep_mobile() {
 	cdir $XT_DIR/node-datasource
 	mv config.js config.js.old 2>&1 | tee -a $LOG_FILE
 	cat config.js.old | \
-	sed 's#biKeyFile: .*#biKeyFile: \"./lib/rest-keys/server.key\",#' | \
-	sed 's#biServerUrl: .*#biServerUrl: \"https://'$COMMONNAME':8443/pentaho/\",#'| \
-	sed 's#uniqueTenantId: .*#uniqueTenantId: \"'$TENANT'",#' | \
-	sed 's#biUrl: .*#biUrl: \"https://'$COMMONNAME':8443/pentaho/content/reporting/reportviewer/report.html\?solution=xtuple\&path=%2Fprpt\&locale=en_US\&userid=reports\&password=password\&output-target=pageable/pdf\",#' | \
-	sed 's#biserverhostname#'$COMMONNAME'#' \
+	sed 's#restkeyfile: .*#restkeyfile: \"./lib/rest-keys/server.key\",#' | \
+	sed 's#tenantname: .*#tenantname: \"'$TENANT'",#' | \
+	sed 's#bihost: .*#bihost: \"'$COMMONNAME'\",#'| \
+	sed 's#printhost: .*#printhost: \"'$COMMONNAME'\",#' \
 	> config.js
 }
 

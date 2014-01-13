@@ -37,16 +37,18 @@ strict:true, trailing:true, white:true */
     "_projectUpdated": "The following project has been UPDATED",
     "_projectWorkflow": "Project Workflow",
     "_rejected": "Rejected",
+    "_requireProjectAssignment": "Require Project Assignment",
     "_resource": "Resource",
     "_resources": "Resources",
     "_review": "Review",
     "_revision": "Revision",
     "_start": "Start",
     "_startSet": "Calculate",
-    "_startOffset": "Offset Days"
+    "_startOffset": "Offset Days",
+    "_useProjects": "Use Projects"
   });
 
-  if (typeof exports !== 'undefined') {
+  if (typeof exports !== "undefined") {
     exports.language = lang;
   }
 }());

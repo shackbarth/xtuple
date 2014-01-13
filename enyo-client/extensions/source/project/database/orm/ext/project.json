@@ -2,6 +2,31 @@
   {
     "context": "project",
     "nameSpace": "XM",
+    "type": "ProjectType",
+    "table": "xt.prjtypeext",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "prjtypeext_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "emailProfile",
+        "toOne": {
+          "type": "ProjectEmailProfile",
+          "column": "prjtypeext_emlprofile_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
     "type": "IncidentRelation",
     "table": "incdt",
     "isExtension": true,

@@ -1,5 +1,5 @@
 create or replace function xt.acttype_did_change() returns trigger as $$
-/* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple.
+/* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
  var sql,
@@ -26,7 +26,8 @@ create or replace function xt.acttype_did_change() returns trigger as $$
        row.acttype_col_due_date + " as act_due_date, " +
        row.acttype_col_assigned_date + " as act_assigned_date, " +
        row.acttype_col_completed_date + " as act_completed_date, " +
-       row.acttype_col_parent_uuid + " as act_parent_uuid " +
+       row.acttype_col_parent_uuid + " as act_parent_uuid, " +
+       (row.acttype_col_action || 'null') + " as act_action " +
        "from " + row.acttype_nsname + "." + row.acttype_tblname;
      if (row.acttype_join) {
        sql = sql + " " + row.acttype_join;

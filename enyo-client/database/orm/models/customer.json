@@ -668,7 +668,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewMiscInvoices",
+        "read": "ViewMiscInvoices ViewCreditMemos",
         "update": false,
         "delete": false
       }
@@ -776,6 +776,15 @@
           "type": "Boolean",
           "column": "cust_ffbillto",
           "required": true
+        }
+      },
+      {
+        "name": "shiptos",
+        "toMany": {
+          "isNested": true,
+          "type": "CustomerShipto",
+          "column": "cust_id",
+          "inverse": "customer"
         }
       },
       {
@@ -1870,7 +1879,7 @@
     "privileges": {
       "all": {
         "create": "MaintainCustomerTypes",
-        "read": true,
+        "read": "ViewCustomerTypes",
         "update": "MaintainCustomerTypes",
         "delete": "MaintainCustomerTypes"
       }
@@ -2197,7 +2206,7 @@
     "privileges": {
       "all": {
         "create": "MaintainShipVias",
-        "read": true,
+        "read": "ViewShipVias",
         "update": "MaintainShipVias",
         "delete": "MaintainShipVias"
       }
@@ -2241,7 +2250,7 @@
     "privileges": {
       "all": {
         "create": "MaintainShippingZones",
-        "read": true,
+        "read": "ViewShippingZones",
         "update": "MaintainShippingZones",
         "delete": "MaintainShippingZones"
       }

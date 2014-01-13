@@ -70,7 +70,7 @@ Simplest possible usage:
 
     if (!username || !password) {
       try {
-        loginData = require('./login_data');
+        loginData = require(options.loginDataPath || './login_data');
       } catch (err) {
         console.log("Make sure you put your login credentials in the /test/lib/login_data.js file");
         process.exit(1);
@@ -150,11 +150,9 @@ Simplest possible usage:
               XZ.database = database;
 
               XT.log = function (message, obj) {
-                if (obj && obj.isError) {
+                if (message && message.toLowerCase().indexOf("error") === 0) {
                   // errors from the datasource should cause the test to fail
-                  // I believe this is dead code now that we report these through notify instead
-                  console.log(JSON.stringify(obj));
-                  assert.fail(JSON.stringify(obj));
+                  assert.fail(message + " " + JSON.stringify(obj));
                 }
                 // log if verbose mode or if the log is a warning
                 if (verboseMode || (message && message.code)) {

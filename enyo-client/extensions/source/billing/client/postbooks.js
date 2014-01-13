@@ -10,6 +10,7 @@
         panels: [
           {name: "billing_customerList", kind: "XV.CustomerList"},
           {name: "invoiceList", kind: "XV.InvoiceList"},
+          {name: "returnList", kind: "XV.ReturnList"},
           {name: "receivableList", kind: "XV.ReceivableList"},
           {name: "cashReceiptList", kind: "XV.CashReceiptList"}
         ]
@@ -22,25 +23,34 @@
         "EditAROpenItem",
         "MaintainBankAccounts",
         "MaintainCashReceipts",
+        "MaintainCreditMemos",
         "MaintainCurrencies",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
+        "MaintainIncidentCategories",
         "MaintainItemMasters",
+        "MaintainItemGroups",
         "MaintainMiscInvoices",
         "MaintainReasonCodes",
         "MaintainSalesCategories",
         "MaintainShipVias",
         "MaintainTerms",
         "OverrideTax",
+        "PostARDocuments",
         "PostCashReceipts",
         "PostMiscInvoices",
+        "PrintCreditMemos",
         "PrintInvoices",
         "ViewAROpenItems",
         "ViewCashReceipts",
+        "ViewCreditMemos",
         "ViewCustomerMasters",
         "ViewCustomerGroups",
         "ViewItemMasters",
         "ViewMiscInvoices",
+        "ViewSalesCategories",
+        "ViewShipVias",
+        "VoidPostedARCreditMemos",
         "VoidPostedCashReceipts",
         "VoidPostedInvoices"
       ],
@@ -56,6 +66,8 @@
         {name: "reasonCodeList", kind: "XV.ReasonCodeList"},
         {name: "salesCategoryList", kind: "XV.SalesCategoryList"},
         {name: "termsList", kind: "XV.TermsList"},
+        {name: "itemList", kind: "XV.ItemList"},
+        {name: "itemGroupList", kind: "XV.ItemGroupList"}
       ];
 
     XT.app.$.postbooks.appendPanels("setup", setupPanels);

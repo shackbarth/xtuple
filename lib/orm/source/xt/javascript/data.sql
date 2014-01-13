@@ -160,9 +160,35 @@ select xt.install_js('XT','Data','xtuple', $$
 
           /* Array comparisons handle another way. e.g. %1$I !<@ ARRAY[$1,$2] */
           } else if (op === '<@' || op === '!<@') {
-            identifiers.push(param.attribute);
-            params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
-            pcount = params.length - 1;
+            /* Handle paths if applicable. */
+            if (param.attribute.indexOf('.') > -1) {
+              parts = param.attribute.split('.');
+              childOrm = this.fetchOrm(nameSpace, type);
+              params.push("");
+              pcount = params.length - 1;
+
+              for (var n = 0; n < parts.length; n++) {
+                /* Validate attribute. */
+                prop = XT.Orm.getProperty(childOrm, parts[n]);
+                if (!prop) {
+                  plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                }
+
+                /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                identifiers.push(parts[n]);
+                params[pcount] += "%" + identifiers.length + "$I";
+                if (n < parts.length - 1) {
+                  params[pcount] = "(" + params[pcount] + ").";
+                  childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                } else {
+                  params[pcount] += op + ' ARRAY[' + param.value.join(',') + ']';
+                }
+              }
+            } else {
+              identifiers.push(param.attribute);
+              params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
+              pcount = params.length - 1;
+            }
             clauses.push(params[pcount]);
 
           /* Everything else handle another. */

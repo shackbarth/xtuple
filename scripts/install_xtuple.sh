@@ -115,12 +115,12 @@ install_packages() {
     sudo ln -s /usr/local/nvm/nvm_bin.sh /usr/local/bin/nvm
     sudo chmod +x /usr/local/bin/nvm
   fi
-  sudo nvm install $NODE_VERSION 
+  sudo nvm install $NODE_VERSION
   sudo nvm use $NODE_VERSION
   sudo nvm alias default $NODE_VERSION
   sudo nvm alias xtuple $NODE_VERSION
   log "installing npm modules..."
-  npm install 2>&1 | tee -a $LOG_FILE
+  npm install --unsafe-perm 2>&1 | tee -a $LOG_FILE
 }
 
 # Use only if running from a debian package install for the first time

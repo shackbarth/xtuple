@@ -80,23 +80,7 @@ white:true*/
 
     recordType: 'XM.WorkOrderListItem',
 
-    editableModel: 'XM.WorkOrder',
-
-    canIssueMaterial: function (callback) {
-      var hasPrivilege = XT.session.privileges.get("IssueWoMaterials");
-      if (callback) {
-        callback(hasPrivilege);
-      }
-      return this;
-    },
-
-    canPostProduction: function (callback) {
-      var hasPrivilege = XT.session.privileges.get("PostProduction");
-      if (callback) {
-        callback(hasPrivilege);
-      }
-      return this;
-    }
+    editableModel: 'XM.WorkOrder'
 
   });
 

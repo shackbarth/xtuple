@@ -12,6 +12,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.InvoiceLineItemGridBox",
     kind: "XV.GridBox",
     classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
     title: "_lineItems".loc(),
     columns: [
       {classes: "line-number", header: "#", rows: [
@@ -67,6 +68,69 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
   });
 
   // ..........................................................
+  // RETURN (only change from invoice is billed->credited
+  //
+
+  enyo.kind({
+    name: "XV.ReturnLineItemGridBox",
+    kind: "XV.GridBox",
+    classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
+    title: "_lineItems".loc(),
+    columns: [
+      {classes: "line-number", header: "#", rows: [
+        {readOnlyAttr: "lineNumber",
+          editor: {kind: "XV.NumberWidget", attr: "lineNumber"}}
+      ]},
+      {classes: "grid-item", header: ["_item".loc(), "_site".loc()], rows: [
+        {readOnlyAttr: "item.number",
+          editor: {kind: "XV.ItemSiteWidget", attr:
+          {item: "item", site: "site"},
+          name: "itemSiteWidget",
+          query: {parameters: [
+          {attribute: "item.isSold", value: true},
+          {attribute: "item.isActive", value: true},
+          {attribute: "isSold", value: true},
+          {attribute: "isActive", value: true}
+        ]}}},
+        {readOnlyAttr: "item.description1"},
+        {readOnlyAttr: "site.code"}
+      ]},
+      {classes: "quantity", header: ["_ordered".loc(), "_credited".loc()], rows: [
+        {readOnlyAttr: "quantity",
+          editor: {kind: "XV.QuantityWidget", attr: "quantity",
+            name: "quantityWidget"}},
+        {readOnlyAttr: "billed",
+          editor: {kind: "XV.QuantityWidget", attr: "credited", placeholder: "_credited".loc(),
+            name: "creditedWidget"}},
+        {readOnlyAttr: "quantityUnit.name",
+          editor: {kind: "XV.UnitCombobox", attr: "quantityUnit",
+            name: "quantityUnitPicker", tabStop: false }}
+      ]},
+      {classes: "price", header: ["_price".loc(), "_extendedPrice".loc()], rows: [
+        {readOnlyAttr: "price",
+          editor: {kind: "XV.MoneyWidget",
+            attr: {localValue: "price", currency: ""},
+            currencyDisabled: true, currencyShowing: false,
+            scale: XT.SALES_PRICE_SCALE}},
+        {readOnlyAttr: "priceUnit.name",
+          editor: {kind: "XV.UnitCombobox", attr: "priceUnit",
+            name: "priceUnitPicker",
+            tabStop: false}},
+        {readOnlyAttr: "extendedPrice",
+          editor: {kind: "XV.MoneyWidget",
+            attr: {localValue: "extendedPrice", currency: ""},
+            currencyDisabled: true, currencyShowing: false,
+            scale: XT.EXTENDED_PRICE_SCALE}}
+      ]}
+    ],
+    //editorMixin: salesOrderGridRow,
+    summary: "XV.SalesSummaryPanel",
+    workspace: "XV.ReturnLineWorkspace",
+    parentKey: "return"
+  });
+
+  // ..........................................................
   // SALES ORDER / QUOTE
   //
 
@@ -78,6 +142,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
     name: "XV.SalesOrderLineItemGridBox",
     kind: "XV.GridBox",
     classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
     title: "_lineItems".loc(),
     columns: [
       {classes: "line-number", header: "#", rows: [
@@ -163,19 +228,21 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
       {classes: "grid-item", header: ["_name".loc(), "_description".loc()],
         rows: [
         {readOnlyAttr: "name",
-          editor: {kind: "XV.InputWidget", attr: "name",
-            placeholder: "_name".loc()}},
+          placeholder: "_name".loc(),
+          editor: {kind: "XV.InputWidget", attr: "name"}},
         {readOnlyAttr: "description",
-          editor: {kind: "XV.InputWidget", attr: "description",
-            placeholder: "_description".loc()}},
+          placeholder: "_description".loc(),
+          editor: {kind: "XV.InputWidget", attr: "description"}},
         {readOnlyAttr: "getWorkflowStatusString",
           editor: {kind: "XV.WorkflowStatusPicker", attr: "status"}}
       ]},
       {classes: "user", header: ["_owner".loc(), "_assignedTo".loc()],
         rows: [
         {readOnlyAttr: "owner.username",
+          placeholder: "_noOwner".loc(),
           editor: {kind: "XV.UserAccountWidget", attr: "owner"}},
         {readOnlyAttr: "assignedTo.username",
+          placeholder: "_noAssignedTo".loc(),
           editor: {kind: "XV.UserAccountWidget", attr: "assignedTo"}},
         {readOnlyAttr: "priority.name",
           editor: {kind: "XV.PriorityPicker", attr: "priority"}}

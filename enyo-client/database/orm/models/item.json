@@ -56,7 +56,7 @@
     "privileges": {
       "all": {
         "create": "MaintainFreightClasses",
-        "read": true,
+        "read": "ViewFreightClasses",
         "update": "MaintainFreightClasses",
         "delete": "MaintainFreightClasses"
       }
@@ -1627,7 +1627,7 @@
     "privileges": {
       "all": {
         "create": "MaintainUOMs",
-        "read": true,
+        "read": "ViewUOMs",
         "update": "MaintainUOMs",
         "delete": "MaintainUOMs"
       }

@@ -14,6 +14,7 @@ trailing:true, white:true, strict:false*/
     panels = [
       {name: "honorificList", kind: "XV.HonorificList"},
       {name: "itemList", kind: "XV.ItemList"},
+      {name: "itemGroupList", kind: "XV.ItemGroupList"},
       {name: "classCodeList", kind: "XV.ClassCodeList"},
       {name: "unitList", kind: "XV.UnitList"},
       {name: "stateList", kind: "XV.StateList"},
@@ -72,6 +73,7 @@ trailing:true, white:true, strict:false*/
       "ViewTitles",
       "DeleteItemMasters",
       "MaintainItemMasters",
+      "MaintainItemGroups",
       "MaintainUOMs",
       "ViewClassCodes",
       "ViewItemMasters",

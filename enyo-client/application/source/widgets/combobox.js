@@ -18,8 +18,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     collection: "XM.creditCardGateways",
     controlValueChanged: function (inSender, inEvent) {
-      console.log(inEvent);
-      if (inEvent.value !== "Authorize.Net") {
+      if (!XM.creditCardGateways.find(function (model) { return model.id === inEvent.value; })) {
         this.doNotify({message: "_unsupportedGateway".loc()});
       }
       return this.inherited(arguments);
@@ -57,18 +56,6 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: "code",
     label: "_honorific".loc(),
     collection: "XM.honorifics"
-  });
-
-  // ..........................................................
-  // LOT / SERIAL (TRACE)
-  //
-
-  enyo.kind({
-    name: "XV.TraceCombobox",
-    kind: "XV.ComboboxWidget",
-    collection: "XM.traceRelations",
-    label: "_trace".loc(),
-    keyAttribute: "number"
   });
 
   // ..........................................................

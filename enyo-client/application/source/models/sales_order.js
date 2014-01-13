@@ -71,6 +71,10 @@ white:true*/
       }
     },
 
+    getSalesOrderStatusString: function () {
+      return XM.SalesOrder.prototype.getOrderStatusString.call(this);
+    },
+
     holdTypeDidChange: function () {
       if (!this.get("holdType")) {
         _.each(this.get("workflow").where(
@@ -149,12 +153,8 @@ white:true*/
     }
   });
 
-  /**
-    @class
-
-    @extends XM.SalesOrderLineBase
-  */
-  XM.SalesOrderLine = XM.SalesOrderLineBase.extend(/** @lends XM.SalesOrderLine.prototype */{
+  XM.SalesOrderLine = XM.Model.extend(_.extend({}, XM.OrderLineMixin,
+      XM.SalesOrderBaseMixin, XM.SalesOrderLineMixin, {
 
     recordType: 'XM.SalesOrderLine',
 
@@ -166,14 +166,14 @@ white:true*/
       Add defaults for firm, and subnumber.
      */
     defaults: function () {
-      var defaults = XM.SalesOrderLineBase.prototype.defaults.apply(this, arguments);
+      var defaults = XM.SalesOrderLineMixin.defaults.apply(this, arguments);
 
       defaults.firm = false;
       defaults.subnumber = 0;
 
       return defaults;
     }
-  });
+  }), XM.SalesOrderLineStaticMixin);
 
 
   /**
@@ -264,7 +264,11 @@ white:true*/
 
     recordType: 'XM.SalesOrderWorkflow',
 
-    parentStatusAttribute: 'holdType'
+    parentStatusAttribute: 'holdType',
+
+    getSalesOrderWorkflowStatusString: function () {
+      return XM.SalesOrderWorkflow.prototype.getWorkflowStatusString.call(this);
+    }
 
   });
   _.extend(XM.SalesOrderWorkflow, /** @lends XM.SalesOrderLine# */{

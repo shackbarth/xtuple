@@ -199,6 +199,7 @@ create or replace function xt.post(data_hash text) returns text as $$
       pkey = XT.Orm.primaryKey(orm);
       nkey = XT.Orm.naturalKey(orm);
       prv = JSON.parse(JSON.stringify(dataHash.data));
+      sql = "select nextval($1);";
 
       /* set status */
       XT.jsonpatch.updateState(dataHash.data, "create");
@@ -226,15 +227,16 @@ create or replace function xt.post(data_hash text) returns text as $$
           } else {
             throw new handleError("A unique id must be provided", 449);
           }
+        } else if (orm.idSequenceName) {
+          dataHash.id = dataHash.data[pkey] || plv8.execute(sql, [orm.idSequenceName])[0].nextval;
         } else {
-          dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
+          throw new handleError("A unique id must be provided", 449);
         }
       }
 
       /* commit the record */
       data.commitRecord(dataHash);
 
-      XT.debug("HERE" + JSON.stringify(dataHash));
       if (dataHash.requery === false) {
         /* The requestor doesn't care to know what the record looks like now */
         ret = true;

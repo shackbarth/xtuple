@@ -36,6 +36,8 @@ trailing:true, white:true*/
       {name: "termsList", kind: "XV.TermsList"},
       {name: "customerGroupList", kind: "XV.CustomerGroupList"},
       {name: "freightClassList", kind: "XV.FreightClassList"},
+      {name: "itemList", kind: "XV.ItemList"},
+      {name: "itemGroupList", kind: "XV.ItemGroupList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
       {name: "plannerCodeList", kind: "XV.PlannerCodeList"},
@@ -64,7 +66,7 @@ trailing:true, white:true*/
       ]
     };
 
-    isBiAvailable = XT.session.config.biUrl && XT.session.privileges.get("ViewSalesHistory");
+    isBiAvailable = XT.session.config.biServer && XT.session.privileges.get("ViewSalesHistory");
     if (isBiAvailable) {
       module.panels.push({name: "salesAnalysisPage", kind: "analysisFrame"});
     }
@@ -83,15 +85,18 @@ trailing:true, white:true*/
       "CreateSOForWarnCustomer",
       "MaintainCostCategories",
       "MaintainCustomerMasters",
+      "MaintainCustomerTypes",
       "MaintainFreightClasses",
+      "MaintainItemGroups",
       "MaintainItemMasters",
       "MaintainItemSites",
+      "MaintainProspectMasters",
       "MaintainQuotes",
       "MaintainSalesEmailProfiles",
       "MaintainSalesOrders",
       "MaintainSalesReps",
       "MaintainShipVias",
-      "MaintainShipZones",
+      "MaintainShippingZones",
       "MaintainTaxAssignments",
       "MaintainTaxClasses",
       "MaintainTaxCodes",
@@ -106,6 +111,7 @@ trailing:true, white:true*/
       "OverrideSODate",
       "OverrideTax",
       "ProcessCreditCards",
+      "SelectBilling",
       "ShowMarginsOnSalesOrder",
       "UpdateCustomerCreditStatus",
       "ViewCosts",
@@ -113,8 +119,10 @@ trailing:true, white:true*/
       "ViewFreightClasses",
       "ViewCostCategories",
       "ViewCustomerGroups",
+      "ViewCustomerTypes",
       "ViewItemMasters",
       "ViewItemSites",
+      "ViewProspectMasters",
       "ViewQuotes",
       "ViewTaxAssignments",
       "ViewTaxClasses",
@@ -128,7 +136,8 @@ trailing:true, white:true*/
       "ViewSalesOrders",
       "ViewSalesReps",
       "ViewSaleTypes",
-      "ViewShipZones",
+      "ViewShipVias",
+      "ViewShippingZones",
       "ViewTerms"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
