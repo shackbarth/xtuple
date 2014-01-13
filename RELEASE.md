@@ -14,7 +14,7 @@ https://github.com/xtuple/xtuple/wiki/xTuple-Business-Intelligence
 Features and bugfixes
 ---------------------
 
-- Duplicate
+- Fixed
   issue #[22394](http://www.xtuple.org/xtincident/view/bugs/22394)
   _Context queries can have punishingly slow performance_ 
 
