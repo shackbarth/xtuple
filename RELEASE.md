@@ -1,3 +1,13 @@
+1.5.2 (2013/1/13)
+===============
+
+Features and bugfixes
+---------------------
+
+- Duplicate
+  issue #[22394](http://www.xtuple.org/xtincident/view/bugs/22394)
+  _Context queries can have punishingly slow performance_ 
+
 1.5.1 (2013/12/04)
 ===============
 
@@ -10,81 +20,87 @@ Critical deployment changes
 * If you have inventory registered you will have to change its location
   `update xt.ext set ext_location = '/private-extensions' where ext_name = 'inventory'`
 
-- Implemented VM773:39
-  issue #[21224](http://www.xtuple.org/xtincident/view/bugs/21224) VM773:40
-  _REST - Add support for a query "operator" to the REST API and Discovery Docs_ VM773:41
-- Implemented VM773:39
-  issue #[21587](http://www.xtuple.org/xtincident/view/bugs/21587) VM773:40
-  _Add Billing configuration_ VM773:41
-- Implemented VM773:39
-  issue #[21625](http://www.xtuple.org/xtincident/view/bugs/21625) VM773:40
-  _Implement Reason Code_ VM773:41
-- Fixed VM773:39
-  issue #[21757](http://www.xtuple.org/xtincident/view/bugs/21757) VM773:40
-  _Add Project Type to Project_ VM773:41
-- Fixed VM773:39
-  issue #[21866](http://www.xtuple.org/xtincident/view/bugs/21866) VM773:40
-  _Cost in Time Sheet (Worksheet) is null when entered through mobile_ VM773:41
-- Fixed VM773:39
-  issue #[21979](http://www.xtuple.org/xtincident/view/bugs/21979) VM773:40
-  _Arrowing up down through grid entry to not commit edited value to the model_ VM773:41
-- Implemented VM773:39
-  issue #[21982](http://www.xtuple.org/xtincident/view/bugs/21982) VM773:40
-  _Print invoices_ VM773:41
-- Implemented VM773:39
-  issue #[21986](http://www.xtuple.org/xtincident/view/bugs/21986) VM773:40
-  _Add support for Workflow to Sales Orders_ VM773:41
-- Implemented VM773:39
-  issue #[21989](http://www.xtuple.org/xtincident/view/bugs/21989) VM773:40
-  _Add support on item relation widget to search barcode and alias_ VM773:41
-- Implemented VM773:39
-  issue #[21992](http://www.xtuple.org/xtincident/view/bugs/21992) VM773:40
-  _Move inventory to the private-extensions repository_ VM773:41
-- Fixed VM773:39
-  issue #[22031](http://www.xtuple.org/xtincident/view/bugs/22031) VM773:40
-  _Can not change settings_ VM773:41
-- Completed VM773:39
-  issue #[22049](http://www.xtuple.org/xtincident/view/bugs/22049) VM773:40
-  _Cleanup the test folder_ VM773:41
-- Fixed VM773:39
-  issue #[22063](http://www.xtuple.org/xtincident/view/bugs/22063) VM773:40
-  _*Selecting to assign a privilege to a user account role displays 'Internal Server Error' dialog_ VM773:41
-- Fixed VM773:39
-  issue #[22093](http://www.xtuple.org/xtincident/view/bugs/22093) VM773:40
-  _View Characteristics disabled still allows Characteristics to be viewed_ VM773:41
-- Fixed VM773:39
-  issue #[22094](http://www.xtuple.org/xtincident/view/bugs/22094) VM773:40
-  _Characteristic Privilege declared by the CRM extension error_ VM773:41
-- Fixed VM773:39
-  issue #[22098](http://www.xtuple.org/xtincident/view/bugs/22098) VM773:40
-  _Disabled ViewClassCodes priv still allows user to view Class Code_ VM773:41
-- Fixed VM773:39
-  issue #[22100](http://www.xtuple.org/xtincident/view/bugs/22100) VM773:40
-  _Disable ViewCostCategory Priv still allows user to view Cost Category_ VM773:41
-- Fixed VM773:39
-  issue #[22101](http://www.xtuple.org/xtincident/view/bugs/22101) VM773:40
-  _Cost Category Privs not declared by extensions_ VM773:41
-- Fixed VM773:39
-  issue #[22102](http://www.xtuple.org/xtincident/view/bugs/22102) VM773:40
-  _MaintainClassCodes priv not declared by the project extension_ VM773:41
-- Fixed VM773:39
-  issue #[22103](http://www.xtuple.org/xtincident/view/bugs/22103) VM773:40
-  _Billing extension will not load without Sales_ VM773:41
-- Fixed VM773:39
-  issue #[22104](http://www.xtuple.org/xtincident/view/bugs/22104) VM773:40
-  _Incident Plus will not load without Project_ VM773:41
-- Fixed VM773:39
-  issue #[22138](http://www.xtuple.org/xtincident/view/bugs/22138) VM773:40
-  _Save on incident fails_ VM773:41
-- Fixed VM773:39
-  issue #[22143](http://www.xtuple.org/xtincident/view/bugs/22143) VM773:40
-  _Agent is required for New User Account_ VM773:41
-- Fixed VM773:39
-  issue #[22166](http://www.xtuple.org/xtincident/view/bugs/22166) VM773:40
-  _incident list color is all white_ VM773:41
+Features and bugfixes
+---------------------
+
+- Implemented 
+  issue #[21224](http://www.xtuple.org/xtincident/view/bugs/21224) 
+  _REST - Add support for a query "operator" to the REST API and Discovery Docs_ 
+- Implemented 
+  issue #[21587](http://www.xtuple.org/xtincident/view/bugs/21587) 
+  _Add Billing configuration_ 
+- Implemented 
+  issue #[21625](http://www.xtuple.org/xtincident/view/bugs/21625) 
+  _Implement Reason Code_ 
+- Fixed 
+  issue #[21757](http://www.xtuple.org/xtincident/view/bugs/21757) 
+  _Add Project Type to Project_ 
+- Fixed 
+  issue #[21866](http://www.xtuple.org/xtincident/view/bugs/21866) 
+  _Cost in Time Sheet (Worksheet) is null when entered through mobile_ 
+- Fixed 
+  issue #[21979](http://www.xtuple.org/xtincident/view/bugs/21979) 
+  _Arrowing up down through grid entry to not commit edited value to the model_ 
+- Implemented 
+  issue #[21982](http://www.xtuple.org/xtincident/view/bugs/21982) 
+  _Print invoices_ 
+- Implemented 
+  issue #[21986](http://www.xtuple.org/xtincident/view/bugs/21986) 
+  _Add support for Workflow to Sales Orders_ 
+- Implemented 
+  issue #[21989](http://www.xtuple.org/xtincident/view/bugs/21989) 
+  _Add support on item relation widget to search barcode and alias_ 
+- Implemented 
+  issue #[21992](http://www.xtuple.org/xtincident/view/bugs/21992) 
+  _Move inventory to the private-extensions repository_ 
+- Fixed 
+  issue #[22031](http://www.xtuple.org/xtincident/view/bugs/22031) 
+  _Can not change settings_ 
+- Completed 
+  issue #[22049](http://www.xtuple.org/xtincident/view/bugs/22049) 
+  _Cleanup the test folder_ 
+- Fixed 
+  issue #[22063](http://www.xtuple.org/xtincident/view/bugs/22063) 
+  _*Selecting to assign a privilege to a user account role displays 'Internal Server Error' dialog_ 
+- Fixed 
+  issue #[22093](http://www.xtuple.org/xtincident/view/bugs/22093) 
+  _View Characteristics disabled still allows Characteristics to be viewed_ 
+- Fixed 
+  issue #[22094](http://www.xtuple.org/xtincident/view/bugs/22094) 
+  _Characteristic Privilege declared by the CRM extension error_ 
+- Fixed 
+  issue #[22098](http://www.xtuple.org/xtincident/view/bugs/22098) 
+  _Disabled ViewClassCodes priv still allows user to view Class Code_ 
+- Fixed 
+  issue #[22100](http://www.xtuple.org/xtincident/view/bugs/22100) 
+  _Disable ViewCostCategory Priv still allows user to view Cost Category_ 
+- Fixed 
+  issue #[22101](http://www.xtuple.org/xtincident/view/bugs/22101) 
+  _Cost Category Privs not declared by extensions_ 
+- Fixed 
+  issue #[22102](http://www.xtuple.org/xtincident/view/bugs/22102) 
+  _MaintainClassCodes priv not declared by the project extension_ 
+- Fixed 
+  issue #[22103](http://www.xtuple.org/xtincident/view/bugs/22103) 
+  _Billing extension will not load without Sales_ 
+- Fixed 
+  issue #[22104](http://www.xtuple.org/xtincident/view/bugs/22104) 
+  _Incident Plus will not load without Project_ 
+- Fixed 
+  issue #[22138](http://www.xtuple.org/xtincident/view/bugs/22138) 
+  _Save on incident fails_ 
+- Fixed 
+  issue #[22143](http://www.xtuple.org/xtincident/view/bugs/22143) 
+  _Agent is required for New User Account_ 
+- Fixed 
+  issue #[22166](http://www.xtuple.org/xtincident/view/bugs/22166) 
+  _incident list color is all white_ 
 
 1.5.0 (2013/11/19)
 ==================
+
+Features and bugfixes
+---------------------
 
 - Implemented
   issue #[18917](http://www.xtuple.org/xtincident/view/bugs/18917)
@@ -253,6 +269,10 @@ in config.js.  Also, the Sales Dashboard is now structured in a private extensio
 
 1.4.5 (2013/10/11)
 ==================
+
+Features and bugfixes
+---------------------
+
 - Fixed
   issue #[19869](http://www.xtuple.org/xtincident/view/bugs/19869)
   _*Omnibus: Locked record is displayed on selecting to open a contact after discarding new contact screen opened from it _
