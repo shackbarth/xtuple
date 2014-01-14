@@ -14,11 +14,14 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "options": {"x": 350, "y": 0, "align": "right"}
     },
     {
-      "definition": [{"text": "_customer", "label": true}],
+      "element": "newline"
+    },
+    {
+      "definition": [{"text": "_orderNumber", "label": true}],
       "options": {"fontBold": true, "x": 0, "y": 150}
     },
     {
-      "definition": [{"attr": "customer.number"}],
+      "definition": [{"attr": "orderNumber"}],
       "options": {"x": 250, "y": 150}
     },
     {
@@ -30,10 +33,29 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "options": {"x": 250, "y": 170}
     },
     {
+      "definition": [{"text": "_custPO", "label": true}],
+      "options": {"fontBold": true, "x": 0, "y": 190}
+    },
+    {
+      "definition": [{"attr": "customerPurchaseOrderNumber"}],
+      "options": {"x": 250, "y": 190}
+    },
+    {
+      "definition": [{"text": "_customer", "label": true}],
+      "options": {"fontBold": true, "x": 0, "y": 210}
+    },
+    {
+      "definition": [{"attr": "customer.number"}],
+      "options": {"x": 250, "y": 210}
+    },
+    {
+      "element": "newline"
+    },
+    {
       "definition": [
         {"text": "_billto", "label": true}
       ],
-      "options": {"x": 1, "y": 200, "width": 100, "fontBold": true, "align": "right"}
+      "options": {"x": 1, "y": 250, "width": 100, "fontBold": true, "align": "right"}
     },
     {
       "definition": [
@@ -47,12 +69,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "billtoCountry"},
         {"attr": "billtoPhone"}
       ],
-      "options": {"x": 100, "y": 200, "width": 250}
-    },
-    {
-      "element": "image",
-      "definition": "Invoice Logo",
-      "options": {"x": 200, "y": 0, "width": 150}
+      "options": {"x": 100, "y": 250, "width": 250}
     },
     {
       "element": "fontBold"
@@ -60,14 +77,14 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     {
       "element": "band",
       "definition": [
-        {"text": "_quantityShipped", "width": 100},
+        {"text": "_quantity", "width": 100},
         {"text": "_uom", "width": 50},
         {"text": "_item", "width": 100},
         {"text": "_currency", "width": 80},
         {"text": "_unitPrice", "width": 100},
         {"text": "_extendedPrice", "width": 100}
       ],
-      "options": {"border": 0, "width": 0}
+      "options": {"border": 1, "width": 0}
     },
     {
       "element": "fontNormal"
@@ -84,10 +101,13 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "lineItems*price", "width": 100},
         {"attr": "lineItems*extendedPrice", "width": 100}
       ],
-      "options": {"border": 1, "width": 0, "wrap": 1}
+      "options": {"border": 0, "width": 0, "wrap": 1}
     }
   ],
   "footerElements": [
+    {"element": "newline"},
+    {"element": "newline"},
+    {"element": "bandline"},
     {
       "definition": [
         {"attr": "subtotal", "label": true},

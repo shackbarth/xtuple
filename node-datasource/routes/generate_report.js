@@ -112,11 +112,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
 
         // TODO: maybe support any attributes? Right now we ignore all but these three
-        return {
+        var obj = {
           data: text,
           width: def.width,
           align: def.align || 2 // default to "center"
         };
+        // DEBUG
+        //console.log(obj);
+        return obj;
       });
     };
 
