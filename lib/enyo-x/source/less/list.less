@@ -5,17 +5,18 @@
 /* List */
 .xv-list {
   background-color: @white;
+
   .xv-list-item > * {
     display: inline-block;
     vertical-align: middle;
   }
+
   .xv-list-item {
-    // this isn't valid so it isn't really doing anything
-    // @include box-sizing(border-box);
     background-color: @white;
     border-bottom: 1px solid @smoke;
     min-height: 32px;
-    padding: 2px 36px 2px 2px;
+    padding: 2px;
+    padding-right: 36px;
     &.header {
       padding-top: 0;
     }
@@ -32,6 +33,13 @@
       }
     }
     .xv-list-column {
+      &.name-column {
+        width: 12em;
+      }
+      &.right-column {
+        width: 8em;
+        text-align: right;
+      }
       &.short {
         width: 9em;
       }
@@ -111,9 +119,9 @@
     color: @black;
   }
   &.right {
+    // TODO: get rid of this absolute positioning
     position: absolute;
     right: 10px;
-    height: 20px;
   }
   &.text-align-right {
     text-align: right;
