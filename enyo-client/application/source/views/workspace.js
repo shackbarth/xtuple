@@ -1839,7 +1839,6 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {kind: "XV.CheckboxWidget", attr: "isMiscellaneous"},
             {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"},
               name: "itemSiteWidget",
               query: {parameters: [
@@ -1850,11 +1849,7 @@ strict: false*/
             ]}},
             {kind: "XV.SalesPriceWidget", attr: "item.listPrice", label: "_listPrice".loc()},
             {kind: "XV.SalesPriceWidget", attr: "item.wholesalePrice",
-              label: "_wholesalePrice".loc()},
-            {kind: "XV.InputWidget", attr: "customerPartNumber"},
-            {kind: "XV.InputWidget", attr: "itemNumber"},
-            {kind: "XV.InputWidget", attr: "itemDescription"},
-            {kind: "XV.SalesCategoryPicker", attr: "salesCategory"},
+              label: "_wholesalePrice".loc()}
           ]}
         ]},
         {kind: "XV.Groupbox", name: "pricePanel", title: "_price".loc(), components: [

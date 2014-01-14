@@ -414,7 +414,7 @@ select xt.install_js('XT','Orm','xtuple', $$
     @param {String} property
     @returns Object
   */
-  XT.Orm.getProperty = function (orm, property) {
+  XT.Orm.getProperty = function (orm, property, returnEntireOrm) {
     var i,
       ret;
 
@@ -422,13 +422,13 @@ select xt.install_js('XT','Orm','xtuple', $$
     if (orm) {
       for (i = 0; i < orm.properties.length; i++) {
         if(orm.properties[i].name === property)
-          return orm.properties[i];
+          return returnEntireOrm ? orm : orm.properties[i];
       }
 
       /* look recursively for property on extensions */
       if(orm.extensions) {
         for (i = 0; i < orm.extensions.length; i++) {
-          ret = XT.Orm.getProperty(orm.extensions[i], property);
+          ret = XT.Orm.getProperty(orm.extensions[i], property, returnEntireOrm);
           if(ret) return ret;
         }
       }
