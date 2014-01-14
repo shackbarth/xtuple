@@ -32,7 +32,7 @@ strict:true, trailing:true, white:true */
     "_priceType": "Price Type",
     "_purchase": "Purchase",
     "_purchasing": "Purchasing",
-    "_purchaseEmailProfile": "Purchase Email Profile",
+    "_purchaseEmailProfile": "Email Profile",
     "_purchaseEmailProfiles": "Purchase Email",
     "_purchaseOrder": "Purchase Order",
     "_purchaseOrderLine": "Purchase Order Line",

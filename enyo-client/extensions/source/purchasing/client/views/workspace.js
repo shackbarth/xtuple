@@ -139,7 +139,7 @@ trailing:true, white:true, strict: false*/
     enyo.kind({
       name: "XV.PurchaseEmailProfileWorkspace",
       kind: "XV.EmailProfileWorkspace",
-      title: "_siteEmailProfile".loc(),
+      title: "_purchaseEmailProfile".loc(),
       model: "XM.PurchaseEmailProfile",
     });
 
