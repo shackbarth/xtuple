@@ -39,7 +39,7 @@ select xt.install_js('XM','Item','xtuple', $$
    @returns {Array}
   */
   XM.Item.materialIssueUnits = function(itemId) {
-     return _units(itemId, '"MaterialIssue"');
+     return _units(itemId, 'MaterialIssue');
   }
 
   /**
@@ -124,7 +124,7 @@ select xt.install_js('XM','Item','xtuple', $$
             "  join item on itemuomconv_item_id=item_id " +
             "where uomtype_name=$2 " +
             " and item_number=$1) as units ";
-
+plv8.elog(NOTICE, "sql->", sql)
      return plv8.execute(sql, [itemId, type])[0].units;
   }
 
