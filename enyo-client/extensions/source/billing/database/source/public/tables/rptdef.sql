@@ -13,9 +13,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       ],
       "options": {"x": 350, "y": 0, "align": "right"}
     },
-    {
-      "element": "newline"
-    },
+    {"element": "newline"},
     {
       "definition": [{"text": "_orderNumber", "label": true}],
       "options": {"fontBold": true, "x": 0, "y": 150}
@@ -48,9 +46,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "definition": [{"attr": "customer.number"}],
       "options": {"x": 250, "y": 210}
     },
-    {
-      "element": "newline"
-    },
+    {"element": "newline"},
     {
       "definition": [
         {"text": "_billto", "label": true}
@@ -69,11 +65,10 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "billtoCountry"},
         {"attr": "billtoPhone"}
       ],
-      "options": {"x": 100, "y": 250, "width": 250}
+      "options": {"x": 110, "y": 250, "width": 250}
     },
-    {
-      "element": "fontBold"
-    },
+    {"element": "newline"},
+    {"element": "fontBold"},
     {
       "element": "band",
       "definition": [
@@ -84,11 +79,10 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"text": "_unitPrice", "width": 100},
         {"text": "_extendedPrice", "width": 100}
       ],
-      "options": {"border": 1, "width": 0}
+      "options": {"border": 0, "width": 0}
     },
-    {
-      "element": "fontNormal"
-    }
+    {"element": "bandline"},
+    {"element": "fontNormal"}
   ],
   "detailElements": [
     {
@@ -102,6 +96,11 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "lineItems*extendedPrice", "width": 100}
       ],
       "options": {"border": 0, "width": 0, "wrap": 1}
+    },
+    {
+      "definition:": [
+        {"attr": "notes", "label": true}
+      ]
     }
   ],
   "footerElements": [
