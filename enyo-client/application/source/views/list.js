@@ -1170,7 +1170,10 @@ trailing:true, white:true, strict: false*/
     actions: [
       {name: "void", prerequisite: "canVoid", method: "doVoid" },
       {name: "post", prerequisite: "canPost", method: "doPost" },
-      {name: "print", prerequisite: "canPrint", method: "doPrint" }
+      {name: "print", prerequisite: "canPrint", method: "doPrint", isViewMethod: true },
+      {name: "download", prerequisite: "canPrint", method: "doDownload", isViewMethod: true },
+      {name: "email", prerequisite: "canPrint", method: "doEmail" },
+
     ],
     components: [
       {kind: "XV.ListItem", components: [
@@ -1197,6 +1200,21 @@ trailing:true, white:true, strict: false*/
         ]}
       ]}
     ],
+    doPrint: function (options) {
+      if (XT.session.config.printServer) {
+        // send it to be printed silently by the server
+        options.model.doPrint();
+      } else {
+        // no print server set up: just pop open a tab
+        window.open(XT.getOrganizationPath() + options.model.getReportUrl(),
+          "_newtab");
+      }
+    },
+    doDownload: function (options) {
+      window.open(XT.getOrganizationPath() + options.model.getReportUrl() +
+          "&action=download",
+        "_newtab");
+    },
     // some extensions may override this function (i.e. inventory)
     formatAddress: function (value, view, model) {
       var city = model.get("billtoCity"),

@@ -589,6 +589,11 @@ white:true*/
       callback(XT.session.privileges.get("PrintInvoices") || false);
     },
 
+    doEmail: function () {
+      // TODO
+      console.log("Silent email via ajax");
+    },
+
     doPost: function (options) {
       this.dispatch("XM.Invoice", "post", [this.id], {
         success: options && options.success,
@@ -597,8 +602,8 @@ white:true*/
     },
 
     doPrint: function () {
-      window.open(XT.getOrganizationPath() +
-        "/generate-report?nameSpace=XM&type=Invoice&id=%@".f(this.id), "_newtab");
+      // TODO
+      console.log("Silent print via ajax");
     },
 
     doVoid: function (options) {
