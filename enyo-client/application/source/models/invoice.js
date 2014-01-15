@@ -590,8 +590,11 @@ white:true*/
     },
 
     doEmail: function () {
-      // TODO
-      console.log("Silent email via ajax");
+      XT.dataSource.callRoute("generate-report", this.getReportPayload("email"), {
+        success: function () {
+          console.log("email success");
+        }
+      });
     },
 
     doPost: function (options) {
@@ -602,8 +605,11 @@ white:true*/
     },
 
     doPrint: function () {
-      // TODO
-      console.log("Silent print via ajax");
+      XT.dataSource.callRoute("generate-report", this.getReportPayload("print"), {
+        success: function () {
+          console.log("email success");
+        }
+      });
     },
 
     doVoid: function (options) {
