@@ -95,6 +95,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       and crams the appropriate value into "data" for fluent (or just returns the string).
      */
     var marryData = function (detailDef, data, textOnly) {
+
       return _.map(detailDef, function (def) {
         var text = def.attr ? traverseDots(data, def.attr) : loc(def.text);
         if (def.text && def.label === true) {
@@ -132,12 +133,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       that can be referred to in the json definition.
      */
     var transformElementData = function (def, data) {
+      //console.log("def: " + JSON.stringify(def));
+
       var textOnly;
 
       if (def.element === 'image') {
         // we save the images under a different name then they're described in the definition
         return path.join(workingDir, imageFilenameMap[def.definition]);
       }
+
+      if (def.element === 'bandLine') { console.log(def);}
 
       // "print" elements (aka the default) only want strings as the definition
       textOnly = def.element === "print" || !def.element;

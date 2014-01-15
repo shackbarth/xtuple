@@ -5,13 +5,16 @@ select xt.add_report_definition('XM.Invoice', 0, $${
   },
   "headerElements": [
     {
+      "definition": [{"text": "_invoice"}],
+      "options": {"fontBold": true, "fontSize": 18, "x": 0, "y": 0, "align": "right"}
+    },   
+    {
       "definition": [
-        {"text": "_invoice"},
         {"attr": "invoiceDate", "label": true},
         {"attr": "terms", "label": true},
         {"attr": "orderDate", "label": true}
       ],
-      "options": {"x": 350, "y": 0, "align": "right"}
+      "options": {"x": 0, "y": 0, "align": "right"}
     },
     {"element": "newline"},
     {
@@ -81,7 +84,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       ],
       "options": {"border": 0, "width": 0}
     },
-    {"element": "bandline"},
+    {"element": "bandLine"},
     {"element": "fontNormal"}
   ],
   "detailElements": [
@@ -106,7 +109,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
   "footerElements": [
     {"element": "newline"},
     {"element": "newline"},
-    {"element": "bandline"},
+    {"element": "bandLine", "definition": 3},
     {
       "definition": [
         {"attr": "subtotal", "label": true},
@@ -114,6 +117,8 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "total", "label": true}
       ],
       "options": {"align": "right"}
-    }
+    },
+    {"element": "newline"},
+    {"element": "standardHeader"}
   ]
 }$$);
