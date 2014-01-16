@@ -1211,8 +1211,7 @@ trailing:true, white:true, strict: false*/
       }
     },
     doDownload: function (options) {
-      window.open(XT.getOrganizationPath() + options.model.getReportUrl() +
-          "&action=download",
+      window.open(XT.getOrganizationPath() + options.model.getReportUrl("download"),
         "_newtab");
     },
     // some extensions may override this function (i.e. inventory)

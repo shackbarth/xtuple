@@ -590,7 +590,12 @@ white:true*/
     },
 
     doEmail: function () {
+      // TODO: a way for an unwatched model to set the scrim
       XT.dataSource.callRoute("generate-report", this.getReportPayload("email"), {
+        error: function (error) {
+          // TODO: a way for an unwatched model to trigger the notify popup
+          console.log("email error", error);
+        },
         success: function () {
           console.log("email success");
         }
