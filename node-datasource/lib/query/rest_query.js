@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true,
 noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global _:true */
+/*global _:true, moment:true */
 
 (function () {
   'use strict';
@@ -118,7 +118,10 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   function toXtGetQuery(source) {
     var target = {
-      parameters: (function () {
+      count: function () {
+        return source.count;
+      },
+      parameters: function () {
 
         // Return source.parameters when doing a FreeTextQuery or build up from attributes.
         return source.parameters || _.flatten(
@@ -132,21 +135,21 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
             });
           })
         );
-      })(),
-      orderBy: (function () {
+      },
+      orderBy: function () {
         return _.map(source.orderby, function (direction, attr) {
           return {
             attribute: attr,
             descending: /desc/i.test(direction)
           };
         });
-      })(),
-      rowOffset: (function () {
+      },
+      rowOffset: function () {
         return (+source.pagetoken || 0) * (+source.maxresults || 100);
-      })(),
-      rowLimit: (function () {
+      },
+      rowLimit: function () {
         return Math.max(+source.maxresults || 100);
-      })()
+      }
     };
     return _.compactObject(target);
   }

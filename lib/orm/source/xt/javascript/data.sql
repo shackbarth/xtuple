@@ -1668,11 +1668,27 @@ select xt.install_js('XT','Data','xtuple', $$
         ids = [],
         idParams = [],
         counter = 1,
+        sqlCount,
         sql1 = 'select %3$I as id from %1$I.%2$I where {conditions} {orderBy} {limit} {offset};',
         sql2 = 'select * from %1$I.%2$I where %3$I in ({ids}) {orderBy}';
 
       /* Validate - don't bother running the query if the user has no privileges. */
       if (!this.checkPrivileges(nameSpace, type)) { return []; }
+
+      if (query.count) {
+        /* Just get the count of rows that match the conditions */
+        sqlCount = 'select count(*) as count from %1$I.%2$I where {conditions} {limit};';
+        sqlCount = XT.format(sqlCount, [nameSpace.decamelize(), type.decamelize()]);
+        sqlCount = sqlCount.replace('{conditions}', clause.conditions)
+                   .replace('{limit}', limit); /* count with limit? we support crazy people */
+
+        if (DEBUG) {
+          XT.debug('fetch sqlCount = ', sqlCount);
+          XT.debug('fetch values = ', clause.parameters);
+        }
+
+        return plv8.execute(sqlCount, clause.parameters) || [];
+      }
 
       /* Query the model. */
       sql1 = XT.format(sql1, [nameSpace.decamelize(), type.decamelize(), key]);
