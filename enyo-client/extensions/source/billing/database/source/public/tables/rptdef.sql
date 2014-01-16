@@ -68,9 +68,11 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "billtoCountry"},
         {"attr": "billtoPhone"}
       ],
+      "transform": "address",
       "options": {"x": 110, "y": 250, "width": 250}
     },
     {"element": "newline"},
+    {"element": "bandLine", "size": 2},
     {"element": "fontBold"},
     {
       "element": "band",
@@ -84,7 +86,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       ],
       "options": {"border": 0, "width": 0}
     },
-    {"element": "bandLine"},
+    {"element": "bandLine", "size": 2},
     {"element": "fontNormal"}
   ],
   "detailElements": [
@@ -109,16 +111,17 @@ select xt.add_report_definition('XM.Invoice', 0, $${
   "footerElements": [
     {"element": "newline"},
     {"element": "newline"},
-    {"element": "bandLine", "definition": 3},
+    {"element": "bandLine", "size": 2},
     {
       "definition": [
         {"attr": "subtotal", "label": true},
         {"attr": "taxTotal", "label": true},
         {"attr": "total", "label": true}
       ],
-      "options": {"align": "right"}
+      "options": {"align": "right", "x": 0, "y": 0}
     },
     {"element": "newline"},
-    {"element": "standardHeader"}
+    {"element": "standardHeader"},
+    {"element": "currentPage"}
   ]
 }$$);

@@ -118,6 +118,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           width: def.width,
           align: def.align || 2 // default to "center"
         };
+
         // DEBUG
         //console.log(obj);
         return obj;
@@ -142,7 +143,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return path.join(workingDir, imageFilenameMap[def.definition]);
       }
 
-      if (def.element === 'bandLine') { console.log(def);}
+      // these elements are expecting a parameter that is a number, not
+      if (def.element === 'bandLine' || def.element === 'fontSize') {
+        return def.size;
+      }
 
       // "print" elements (aka the default) only want strings as the definition
       textOnly = def.element === "print" || !def.element;
@@ -157,6 +161,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var printDefinition = function (report, data, definition) {
       _.each(definition, function (def) {
         var elementData = transformElementData(def, data);
+        console.log(def.element);
+        console.log(elementData);
         report[def.element || "print"](elementData, def.options);
       });
     };
