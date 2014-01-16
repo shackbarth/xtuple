@@ -38,6 +38,16 @@
         }
       }
     },
+    "congruence": {
+      "version": "1.2.4",
+      "from": "congruence@",
+      "dependencies": {
+        "underscore": {
+          "version": "1.5.2",
+          "from": "underscore@1.5.2"
+        }
+      }
+    },
     "connect-ensure-login": {
       "version": "0.1.1",
       "from": "connect-ensure-login@0.1.1"
@@ -124,6 +134,22 @@
         }
       }
     },
+    "fluentreports": {
+      "version": "0.0.1",
+      "from": "fluentreports@",
+      "dependencies": {
+        "pdfkit": {
+          "version": "0.2.6",
+          "from": "pdfkit@",
+          "dependencies": {
+            "png-js": {
+              "version": "0.1.1",
+              "from": "png-js@>=0.1.0"
+            }
+          }
+        }
+      }
+    },
     "json-patch": {
       "version": "0.0.1",
       "from": "json-patch@git://github.com/xtuple/JSON-Patch.git#eb69a78f6d041b2f630a9747a5b227c42c8df077",
@@ -135,7 +161,7 @@
       "dependencies": {
         "mime": {
           "version": "1.2.11",
-          "from": "mime@~1.2.7"
+          "from": "mime@1.2.11"
         },
         "mkdirp": {
           "version": "0.3.5",
@@ -467,19 +493,19 @@
               "dependencies": {
                 "commander": {
                   "version": "0.6.1",
-                  "from": "commander@~0.6.1"
+                  "from": "commander@0.6.1"
                 },
                 "nan": {
                   "version": "0.3.2",
-                  "from": "nan@~0.3.0"
+                  "from": "nan@0.3.2"
                 },
                 "tinycolor": {
                   "version": "0.0.1",
-                  "from": "tinycolor@0.x"
+                  "from": "tinycolor@0.0.1"
                 },
                 "options": {
                   "version": "0.0.5",
-                  "from": "options@>=0.0.5"
+                  "from": "options@0.0.5"
                 }
               }
             },
@@ -555,7 +581,7 @@
             },
             "mime": {
               "version": "1.2.11",
-              "from": "mime@~1.2.7"
+              "from": "mime@1.2.11"
             },
             "hawk": {
               "version": "0.10.2",
@@ -638,7 +664,7 @@
         },
         "underscore": {
           "version": "1.5.2",
-          "from": "underscore@~1.5.2"
+          "from": "underscore@1.5.2"
         }
       }
     }
