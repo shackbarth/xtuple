@@ -118,38 +118,27 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   function toXtGetQuery(source) {
     var target = {
-      count: function () {
-        return source.count;
-      },
-      parameters: function () {
-
-        // Return source.parameters when doing a FreeTextQuery or build up from attributes.
-        return source.parameters || _.flatten(
-          _.map(source.attributes, function (clause, attr) {
-            return _.map(clause, function (operand, operator) {
-              return {
-                attribute: attr,
-                operator: RestQuery.operators[operator],
-                value: operand
-              };
-            });
-          })
-        );
-      },
-      orderBy: function () {
-        return _.map(source.orderby, function (direction, attr) {
-          return {
-            attribute: attr,
-            descending: /desc/i.test(direction)
-          };
-        });
-      },
-      rowOffset: function () {
-        return (+source.pagetoken || 0) * (+source.maxresults || 100);
-      },
-      rowLimit: function () {
-        return Math.max(+source.maxresults || 100);
-      }
+      count: source.count,
+      // Return source.parameters when doing a FreeTextQuery or build up from attributes.
+      parameters: source.parameters || _.flatten(
+        _.map(source.attributes, function (clause, attr) {
+          return _.map(clause, function (operand, operator) {
+            return {
+              attribute: attr,
+              operator: RestQuery.operators[operator],
+              value: operand
+            };
+          });
+        })
+      ),
+      orderBy: _.map(source.orderby, function (direction, attr) {
+        return {
+          attribute: attr,
+          descending: /desc/i.test(direction)
+        };
+      }),
+      rowOffset: (+source.pagetoken || 0) * (+source.maxresults || 100),
+      rowLimit: (+source.maxresults || 100),
     };
     return _.compactObject(target);
   }
