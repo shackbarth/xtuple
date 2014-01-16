@@ -403,5 +403,53 @@
       }
     ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "ReportDefinition",
+    "table": "xt.rptdef",
+    "idSequenceName": "rptdef_rptdef_id_seq",
+    "comment": "Report Definition Table Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "rptdef_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "recordType",
+        "attr": {
+          "type": "String",
+          "column": "rptdef_record_type"
+        }
+      },
+      {
+        "name": "grade",
+        "attr": {
+          "type": "Number",
+          "column": "rptdef_grade"
+        }
+      },
+      {
+        "name": "definition",
+        "attr": {
+          "type": "String",
+          "column": "rptdef_definition"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]
