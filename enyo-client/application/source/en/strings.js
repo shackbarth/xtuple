@@ -720,8 +720,6 @@ strict:true, trailing:true, white:true */
     "_wholesalePrice": "Wholesale Price",
     "_workflow": "Workflow",
     "_workflowType": "Workflow Type",
-    "_workOrder": "Work Order",
-    "_workOrders": "Work Orders",
     "_xtuplePostbooks": "PostBooks",
     "_yearExpired": "Expiration Year",
 

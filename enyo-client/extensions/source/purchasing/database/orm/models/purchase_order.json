@@ -1293,7 +1293,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "poitem_duedate",
           "required": true
         }
@@ -1735,6 +1735,13 @@
          }
       },
       {
+        "name": "currency",
+        "toOne": { 
+          "type": "Currency",
+          "column": "pohead_curr_id"
+         }
+      },      
+      {
         "name": "characteristics",
         "toMany": {
           "isNested": true,
@@ -1783,63 +1790,6 @@
           "type": "String",
           "column": "charass_target_type",
           "value": "PO"
-        }
-      },
-      {
-        "name": "purchaseOrder",
-        "attr": {
-          "type": "Number",
-          "column": "charass_target_id"
-        }
-      },
-      {
-        "name": "characteristic",
-        "toOne": {
-          "type": "Characteristic",
-          "column": "charass_char_id",
-          "required": true
-        }
-      },
-      {
-        "name": "value",
-        "attr": {
-          "type": "String",
-          "column": "charass_value"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "purchasing",
-    "nameSpace": "XM",
-    "type": "PurchaseOrderListItemCharacteristic",
-    "table": "charass",
-    "comment": "Purchase Order Characteristic Map",
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "charass_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "charass_target_type",
-          "value": "P"
         }
       },
       {

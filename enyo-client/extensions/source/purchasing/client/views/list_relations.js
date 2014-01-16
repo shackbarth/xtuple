@@ -85,24 +85,47 @@ trailing:true, white:true*/
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "XV.ListColumn", classes: "second", components: [
               {kind: "FittableColumns", components: [
-                {kind: "FittableColumns", components: [
-                  {kind: "XV.ListAttr", attr: "lineNumber", isKey: true}
-                ]}
+                {kind: "XV.ListAttr", attr: "lineNumber", classes: "bold"},
+                {kind: "XV.ListAttr", attr: "item.number", fit: true},
               ]},
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "item.number"},
-                {kind: "XV.ListAttr", attr: "item.description1"}
-              ]}
+              {kind: "XV.ListAttr", attr: "item.description1",
+                fit: true,  style: "text-indent: 18px;"},
+              {kind: "XV.ListAttr", attr: "site.code",
+                style: "text-indent: 18px;"}
             ]},
-            {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-              {kind: "XV.ListAttr", attr: "quantity"},
-              {kind: "XV.ListAttr", attr: "vendorUnit"}
-            ]}
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "quantity",
+                style: "text-align: right"},
+              {kind: "XV.ListAttr", attr: "vendorUnit",
+                style: "text-align: right"},
+              {kind: "XV.ListAttr", attr: "dueDate",
+                style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "price",
+                style: "text-align: right"},
+              {kind: "XV.ListAttr", attr: "extendedPrice",
+                style: "text-align: right"}
+            ]},
+            {kind: "XV.ListColumn", classes: "second", components: [
+              {kind: "XV.ListAttr", attr: "vendorItemNumber",
+                placeholder: "_noVendorNumber".loc()},
+              {kind: "XV.ListAttr", attr: "manufacturerItemNumber",
+                placeholder: "_noManufacturerNumber".loc()},
+              {kind: "XV.ListAttr", attr: "project.number",
+                placeholder: "_noProject".loc()}
+            ]},
+            {kind: "XV.ListColumn", classes: "money", components: [
+              {kind: "XV.ListAttr", attr: "received"},
+              {kind: "XV.ListAttr", attr: "vouchered"},
+              {kind: "XV.ListAttr", attr: "getPurchaseOrderStatusString"}
+            ]},
           ]}
         ]}
       ]
+
     });
 
     // ..........................................................

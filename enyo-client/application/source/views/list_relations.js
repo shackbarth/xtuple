@@ -603,9 +603,9 @@ trailing:true, white:true, strict:false*/
           ]},
           {kind: "XV.ListColumn", classes: "money", components: [
             {kind: "XV.ListAttr", attr: "quantity",
-              formatter: "formatQuantity", style: "text-align: right"},
+              style: "text-align: right"},
             {kind: "XV.ListAttr", attr: "price",
-              formatter: "formatPrice", style: "text-align: right"}
+              style: "text-align: right"}
           ]},
           {kind: "XV.ListColumn", classes: "money", components: [
             {kind: "XV.ListAttr", attr: "quantityUnit.name"},
@@ -615,33 +615,11 @@ trailing:true, white:true, strict:false*/
             {kind: "XV.ListAttr", attr: "scheduleDate",
               style: "text-align: right"},
             {kind: "XV.ListAttr", attr: "extendedPrice",
-              style: "text-align: right", formatter: "formatExtendedPrice"}
+              style: "text-align: right"}
           ]}
         ]}
       ]}
-    ],
-    formatExtendedPrice: function (value, view, model) {
-      var parent = model.getParent(),
-        currency = parent ? parent.get("currency") : false,
-        scale = XT.locale.extendedPriceScale;
-      return currency ? currency.format(value, scale) : "";
-    },
-    formatPercentage: function (value, view, model) {
-      var parent = model.getParent(),
-        currency = parent ? parent.get("currency") : false,
-        scale = XT.locale.percentPriceScale;
-      return currency ? currency.format(value, scale) : "";
-    },
-    formatPrice: function (value, view, model) {
-      var parent = model.getParent(),
-        currency = parent ? parent.get("currency") : false,
-        scale = XT.locale.salesPriceScale;
-      return currency ? currency.format(value, scale) : "";
-    },
-    formatQuantity: function (value, view, model) {
-      var scale = XT.locale.quantityScale;
-      return Globalize.format(value, "n" + scale);
-    }
+    ]
   });
 
   // ..........................................................

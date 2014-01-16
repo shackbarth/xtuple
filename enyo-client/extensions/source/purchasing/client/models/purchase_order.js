@@ -785,6 +785,10 @@ white:true*/
         this.taxDetail = [];
       },
 
+      isActive: function () {
+        return this.get("status") !== XM.PurchaseOrder.CLOSED_STATUS;
+      },
+
       isMiscellaneousChanged: function () {
         var isMisc = this.get("isMiscellaneous");
         if (isMisc) {
@@ -1122,7 +1126,7 @@ white:true*/
     /**
       @class
 
-      @extends XM.Model
+      @extends XM.Comment
     */
     XM.PurchaseOrderLineComment = XM.Comment.extend({
 
@@ -1210,7 +1214,8 @@ white:true*/
 
       @extends XM.Model
     */
-    XM.PurchaseOrderCharacteristic = XM.Model.extend(/** @lends XM.PurchaseOrderListItemCharacteristic.prototype */{
+    XM.PurchaseOrderCharacteristic = XM.Model.extend(
+      /** @lends XM.PurchaseOrderCharacteristic.prototype */{
 
       recordType: "XM.PurchaseOrderListItemCharacteristic"
 

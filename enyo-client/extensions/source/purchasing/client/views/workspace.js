@@ -139,7 +139,7 @@ trailing:true, white:true, strict: false*/
     enyo.kind({
       name: "XV.PurchaseEmailProfileWorkspace",
       kind: "XV.EmailProfileWorkspace",
-      title: "_siteEmailProfile".loc(),
+      title: "_purchaseEmailProfile".loc(),
       model: "XM.PurchaseEmailProfile",
     });
 
@@ -191,41 +191,39 @@ trailing:true, white:true, strict: false*/
           fit: true, components: [
           {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-            {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-                classes: "in-panel", fit: true, components: [
-              {name: "overviewControl", components: [
-                {kind: "XV.InputWidget", attr: "number"},
-                {kind: "XV.DateWidget", attr: "orderDate"},
-                {kind: "XV.DateWidget", attr: "releaseDate"},
-                {kind: "XV.PurchaseOrderStatusPicker", attr: "status"},
-                {kind: "onyx.GroupboxHeader", content: "_source".loc()},
-                {kind: "XV.PurchaseVendorWidget", attr: "vendor"},
-                {kind: "XV.VendorAddressWidget", attr: "vendorAddress",
-                  label: "_address".loc()},
-                {kind: "XV.AddressFieldsWidget",
-                  name: "vendorAddressFieldsWidget", attr:
-                  {name: "vendorAddressCode",
-                    line1: "vendorAddress1",
-                    line2: "vendorAddress2", line3: "vendorAddress3",
-                    city: "vendorCity", state: "vendorState",
-                    postalCode: "vendorPostalCode", country: "vendorCountry"}
-                },
-                {kind: "XV.ContactWidget", attr: "vendorContact",
-                  name: "vendorContactWidget"},
-                {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
-                {kind: "XV.SitePicker", attr: "site", showNone: false},
-                {kind: "XV.AddressFieldsWidget",
-                  name: "destinationAddressWidget", attr:
-                  {line1: "shiptoAddress1",
-                    line2: "shiptoAddress2", line3: "shiptoAddress3",
-                    city: "shiptoCity", state: "shiptoState",
-                    postalCode: "shiptoPostalCode", country: "shiptoCountry"}
-                },
-                {kind: "XV.ContactWidget", attr: "shiptoContact",
-                  name: "shiptoContactWidget"},
-                {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-                {kind: "XV.TextArea", attr: "notes", fit: true}
-              ]}
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+              classes: "in-panel", components: [
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.DateWidget", attr: "orderDate"},
+              {kind: "XV.DateWidget", attr: "releaseDate"},
+              {kind: "XV.PurchaseOrderStatusPicker", attr: "status"},
+              {kind: "onyx.GroupboxHeader", content: "_source".loc()},
+              {kind: "XV.PurchaseVendorWidget", attr: "vendor"},
+              {kind: "XV.VendorAddressWidget", attr: "vendorAddress",
+                label: "_address".loc()},
+              {kind: "XV.AddressFieldsWidget",
+                name: "vendorAddressFieldsWidget", attr:
+                {name: "vendorAddressCode",
+                  line1: "vendorAddress1",
+                  line2: "vendorAddress2", line3: "vendorAddress3",
+                  city: "vendorCity", state: "vendorState",
+                  postalCode: "vendorPostalCode", country: "vendorCountry"}
+              },
+              {kind: "XV.ContactWidget", attr: "vendorContact",
+                name: "vendorContactWidget"},
+              {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
+              {kind: "XV.SitePicker", attr: "site", showNone: false},
+              {kind: "XV.AddressFieldsWidget",
+                name: "destinationAddressWidget", attr:
+                {line1: "shiptoAddress1",
+                  line2: "shiptoAddress2", line3: "shiptoAddress3",
+                  city: "shiptoCity", state: "shiptoState",
+                  postalCode: "shiptoPostalCode", country: "shiptoCountry"}
+              },
+              {kind: "XV.ContactWidget", attr: "shiptoContact",
+                name: "shiptoContactWidget"},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
           ]},
           {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
@@ -365,6 +363,10 @@ trailing:true, white:true, strict: false*/
         ]}
       ]
     });
+
+    // ..........................................................
+    // PURCHASE ORDER LINE
+    //
 
     enyo.kind({
       name: "XV.PurchaseOrderLineWorkspace",
