@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true,
 strict: false*/
-/*global XV:true, XM:true, _:true, enyo:true, XT:true, onyx:true*/
+/*global XV:true, XM:true, _:true, enyo:true, XT:true, onyx:true, window:true */
 
 (function () {
 
