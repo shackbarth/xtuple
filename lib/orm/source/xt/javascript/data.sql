@@ -1677,10 +1677,9 @@ select xt.install_js('XT','Data','xtuple', $$
 
       if (query.count) {
         /* Just get the count of rows that match the conditions */
-        sqlCount = 'select count(*) as count from %1$I.%2$I where {conditions} {limit};';
+        sqlCount = 'select count(*) as count from %1$I.%2$I where {conditions};';
         sqlCount = XT.format(sqlCount, [nameSpace.decamelize(), type.decamelize()]);
-        sqlCount = sqlCount.replace('{conditions}', clause.conditions)
-                   .replace('{limit}', limit); /* count with limit? we support crazy people */
+        sqlCount = sqlCount.replace('{conditions}', clause.conditions);
 
         if (DEBUG) {
           XT.debug('fetch sqlCount = ', sqlCount);
