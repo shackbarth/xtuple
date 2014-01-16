@@ -589,31 +589,10 @@ white:true*/
       callback(XT.session.privileges.get("PrintInvoices") || false);
     },
 
-    doEmail: function () {
-      // TODO: a way for an unwatched model to set the scrim
-      XT.dataSource.callRoute("generate-report", this.getReportPayload("email"), {
-        error: function (error) {
-          // TODO: a way for an unwatched model to trigger the notify popup
-          console.log("email error", error);
-        },
-        success: function () {
-          console.log("email success");
-        }
-      });
-    },
-
     doPost: function (options) {
       this.dispatch("XM.Invoice", "post", [this.id], {
         success: options && options.success,
         error: options && options.error
-      });
-    },
-
-    doPrint: function () {
-      XT.dataSource.callRoute("generate-report", this.getReportPayload("print"), {
-        success: function () {
-          console.log("email success");
-        }
       });
     },
 
