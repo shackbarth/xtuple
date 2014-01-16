@@ -1,5 +1,8 @@
-select xt.install_js('XM','item','xtuple', $$
-  /* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+/* Delete previously misnamed record */
+delete from xt.js where js_context='xtuple' and js_type = 'item';
+
+select xt.install_js('XM','Item','xtuple', $$
+  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
 (function () {
@@ -36,7 +39,7 @@ select xt.install_js('XM','item','xtuple', $$
    @returns {Array}
   */
   XM.Item.materialIssueUnits = function(itemId) {
-     return _units(itemId, '"MaterialIssue"');
+     return _units(itemId, 'MaterialIssue');
   }
 
   /**
@@ -121,7 +124,7 @@ select xt.install_js('XM','item','xtuple', $$
             "  join item on itemuomconv_item_id=item_id " +
             "where uomtype_name=$2 " +
             " and item_number=$1) as units ";
-
+plv8.elog(NOTICE, "sql->", sql)
      return plv8.execute(sql, [itemId, type])[0].units;
   }
 

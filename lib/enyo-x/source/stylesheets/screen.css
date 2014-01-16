@@ -1781,7 +1781,8 @@ ul.icons-ul > li .icon-li {
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
   min-height: 32px;
-  padding: 2px 36px 2px 2px;
+  padding: 2px;
+  padding-right: 36px;
 }
 .xv-list .xv-list-item.header {
   padding-top: 0;
@@ -1795,6 +1796,13 @@ ul.icons-ul > li .icon-li {
 }
 .xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
   color: #8d8d8d;
+}
+.xv-list .xv-list-item .xv-list-column.name-column {
+  width: 14em;
+}
+.xv-list .xv-list-item .xv-list-column.right-column {
+  width: 8em;
+  text-align: right;
 }
 .xv-list .xv-list-item .xv-list-column.short {
   width: 9em;
@@ -1882,7 +1890,6 @@ ul.icons-ul > li .icon-li {
 .xv-list-attr.right {
   position: absolute;
   right: 10px;
-  height: 20px;
 }
 .xv-list-attr.text-align-right {
   text-align: right;
