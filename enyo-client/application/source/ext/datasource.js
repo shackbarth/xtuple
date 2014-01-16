@@ -187,26 +187,32 @@ white:true*/
 
             // Handle case where an entire collection was saved
             if (options.collection) {
-              options.collection.each(function (model) {
-                var cHash = _.find(dataHash, function (item) {
-                    return item.id === model.id;
-                  }),
-                  cAttrs;
+              _.each(dataHash, function (data) {
+                var cModel;
 
-                if (cHash.patches) {
-                  cAttrs = model.toJSON({includeNested: true});
-                  XM.jsonpatch.apply(cAttrs, cHash.patches);
-                } else {
-                  cAttrs = cHash.data;
+                if (data.patches) {
+                  cModel = _.find(options.collection.models, function (model) {
+                    return data.id === model.id;
+                  });
+                  attrs = cModel.toJSON({includeNested: true});
+                  XM.jsonpatch.apply(attrs, data.patches);
+                  cModel.etag = data.etag;
+
+                  // This is a hack to work around Backbone messing with 
+                  // attributes when we don't want it to. Parse function
+                  // on model handles the other side of this
+                  options.fixAttributes = cModel.attributes;
+
+                  options.success.call(that, cModel, attrs, options);
+
+                  options.collection.remove(cModel);
                 }
-                model.etag = cHash.etag;
+              });
 
-                // This is a hack to work around Backbone messing with 
-                // attributes when we don't want it to. Parse function
-                // on model handles the other side of this
-                options.fixAttributes = model.attributes;
-
-                options.success.call(that, model, cAttrs, options);
+              // This typically happens when requery option === false
+              // and no patches were found
+              options.collection.each(function (model) {
+                options.success.call(that, model, true, options);
               });
               return;
 
