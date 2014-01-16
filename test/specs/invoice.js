@@ -732,6 +732,8 @@ TODO deferred to later sprint:
         XT.session.privileges.attributes.ViewMiscInvoices = false;
         XT.session.privileges.attributes.MaintainMiscInvoices = true;
         assert.isTrue(XM.InvoiceListItem.canRead());
+
+        XT.session.privileges.attributes.ViewMiscInvoices = true;
       });
       it("XM.InvoiceListItem is not editable", function () {
         assert.isFalse(XM.InvoiceListItem.canCreate());

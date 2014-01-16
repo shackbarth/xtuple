@@ -1,11 +1,11 @@
 select xt.install_js('XM','item_site','xtuple', $$
-  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
+  /* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
 (function () {
 
   if (!XM.ItemSite) { XM.ItemSite = {}; }
-  
+
   XM.ItemSite.isDispatchable = true;
 
   /**
@@ -79,13 +79,13 @@ select xt.install_js('XM','item_site','xtuple', $$
     if (customerId) {
       sql += ' and (item).id in (select * from custitem(${p3}, ${p4}::integer, ${p5}::date)) ';
     }
-    
+
     /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
     if (vendorId) {
       sql +=  ' and (item).id in (' +
               '  select itemsrc_item_id ' +
               '  from itemsrc ' +
-              '  where itemsrc_active ' + 
+              '  where itemsrc_active ' +
               '    and itemsrc_vend_id=' + vendorId + ')';
     }
 
@@ -93,21 +93,22 @@ select xt.install_js('XM','item_site','xtuple', $$
                     [namespace.decamelize(), type.decamelize(), limit, offset]);
 
     /* Crazily splice in the option of querying by alias in the middle of the item number part of the WHERE.
-       In the future conditions should be able to generate this sort of code itself with the 
+       In the future conditions should be able to generate this sort of code itself with the
        proposed aliases*number format. Once that's ready, take this ugly code out. */
+
     spliceIndex = clause.conditions.indexOf('or (item).barcode');
     if (spliceIndex >= 0) {
       twoIfSplice = 2;
       aliasInjection = " or (item).number in (" +
         "select item_number from item " +
         "inner join itemalias on item_id = itemalias_item_id " +
-        "left join crmacct on itemalias_crmacct_id = crmacct_id " + 
-        "where itemalias_number ~^ ${p1} " + 
+        "left join crmacct on itemalias_crmacct_id = crmacct_id " +
+        "where itemalias_number ~^ ${p1} " +
         "and (crmacct_number is null or crmacct_number = ${p2}) " +
         ") ";
       clause.conditions = clause.conditions.substring(0, spliceIndex) +
         aliasInjection + clause.conditions.substring(spliceIndex);
-        
+
       itemNumber = query.parameters.filter(function (param) {
         return param.attribute && param.attribute.length && param.attribute.indexOf("item.number") >= 0;
       })[0].value;
@@ -130,9 +131,9 @@ select xt.install_js('XM','item_site','xtuple', $$
     if (customerId) {
       clause.parameters = clause.parameters.concat([customerId, shiptoId, effectiveDate]);
     }
-    if (DEBUG) { 
-      plv8.elog(NOTICE, 'sql = ', sql); 
-      plv8.elog(NOTICE, 'parameters = ', clause.parameters); 
+    if (DEBUG) {
+      plv8.elog(NOTICE, 'sql = ', sql);
+      plv8.elog(NOTICE, 'parameters = ', clause.parameters);
     }
     return plv8.execute(sql, clause.parameters);
   }

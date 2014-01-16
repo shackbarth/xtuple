@@ -118,11 +118,15 @@ var _ = require("underscore"),
    */
   var setModel = function (data, done) {
     var timeoutId,
+      invalid = function (model, error) {
+        assert.fail(JSON.stringify(error) || "Unspecified invalidity in " + data.recordType);
+      },
       setAttribute = function (attribute, asyncCallback) {
         var value = attribute.value,
           key = attribute.key,
           fetchSuccess = function (model, response, options) {
             // swap in this model for the mock
+            model.off('invalid', invalid);
             data.model.set(options.key, model);
             asyncCallback();
           };
@@ -141,6 +145,7 @@ var _ = require("underscore"),
             relatedModel = new Klass();
 
           fetchObject.id = value[relatedModel.idAttribute];
+          relatedModel.once('invalid', invalid);
           relatedModel.fetch(fetchObject);
         } else {
           // otherwise it's easy to set the value on the model
@@ -153,14 +158,9 @@ var _ = require("underscore"),
         return {key: key, value: value};
       });
 
-    // If we don't hear back, keep going
-    timeoutId = setTimeout(function () {
-      assert.fail("timeout was reached on set " + data.recordType, "");
-      done();
-    }, waitTime);
+    data.model.once('invalid', invalid);
 
     async.map(hashAsArray, setAttribute, function (err, results) {
-      clearTimeout(timeoutId);
       if (err) {
         assert.fail(err);
       } else {

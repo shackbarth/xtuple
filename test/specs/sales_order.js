@@ -454,7 +454,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         "to a sale type with no workflows, the existing workflows should be cleared" +
         "on the sales order", function () {
       });
-      
+
       /**
         @member -
         @memberof SalesOrder
@@ -608,6 +608,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   };
 
   exports.spec = spec;
+  exports.primeSubmodels = primeSubmodels;
   exports.additionalTests = additionalTests;
   exports.getBeforeSaveAction = getBeforeSaveAction;
 

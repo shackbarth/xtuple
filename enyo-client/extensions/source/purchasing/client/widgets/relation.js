@@ -12,7 +12,7 @@ white:true, strict:false*/
     //
 
     /**
-      This relation widget requires attribute mappings as an object for 
+      This relation widget requires attribute mappings as an object for
       `itemSource` and `vendorItemNumber`. If a vendor item number is keyed
       in that is not found, or a null item source is passed in while a vendor
       item number has a legitimate string, then the vendor item number will
@@ -33,7 +33,7 @@ white:true, strict:false*/
       },
       components: [
         {kind: "FittableColumns", components: [
-          {name: "label", content: "", fit: true, classes: "xv-decorated-label"},
+          {name: "label", content: "", fit: true, classes: "xv-flexible-label"},
           {kind: "onyx.InputDecorator", name: "decorator",
             classes: "xv-input-decorator", components: [
             {name: "input", kind: "onyx.Input", classes: "xv-subinput",
