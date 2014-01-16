@@ -95,6 +95,9 @@ white:true*/
       if (options.effective) {
         opts.effective = options.effective;
       }
+      if (options.site) {
+        opts.siteId = options.site.id;
+      }
       params = [this.id, item.id, quantity, opts];
       this.dispatch("XM.Customer", "itemPrice", params, options);
       return this;

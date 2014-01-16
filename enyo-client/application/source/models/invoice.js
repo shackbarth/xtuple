@@ -13,6 +13,7 @@ white:true*/
   var _calculatePrice = function (model) {
     var K = model.getClass(),
       item = model.get("item"),
+      site = model.get("site"),
       priceUnit = model.get("priceUnit"),
       quantity = model.get(model.altQuantityAttribute),
       quantityUnit = model.get("quantityUnit"),
@@ -65,6 +66,7 @@ white:true*/
     itemOptions.asOf = asOf;
     itemOptions.currency = currency;
     itemOptions.effective = parentDate;
+    itemOptions.site = site;
     itemOptions.error = function (err) {
       model.trigger("invalid", err);
     };
