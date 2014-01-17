@@ -1,6 +1,4 @@
-/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true,
-latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-strict:true, trailing:true, white:true */
+/* jshint maxlen: false */
 
 // Place strings you want to localize here.  In your app, use the key and
 // localize it using "key string".loc().  HINT: For your key names, use the
@@ -200,6 +198,8 @@ strict:true, trailing:true, white:true */
     "_customerPartNumber": "Customer P/N",
     "_custPrice": "Cust. Price",
     "_customer": "Customer",
+    "_customerEmailProfile": "Customer Email Profile",
+    "_customerEmailProfiles": "Customer Email",
     "_customerGroup": "Customer Groups",
     "_customerType": "Customer Type",
     "_customerTypePattern": "Customer Type (Pattern)",

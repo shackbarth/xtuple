@@ -7,4 +7,4 @@ select xt.add_constraint('custemlprofile','custemlprofile_pkey', 'primary key (e
 comment on table xt.poemlprofile is 'Table for customer email profiles';
 
 -- this priv does not exist in postbooks so create it here
-select xt.add_priv('MaintainCustomerEmailProfiles', 'Can Maintain Customer Email Profiles', 'Customers', 'Customer');
+select xt.add_priv('MaintainCustomerEmailProfiles', 'Can Maintain Customer Email Profiles', 'Customer', 'Customer');

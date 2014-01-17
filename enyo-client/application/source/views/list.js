@@ -608,8 +608,17 @@ trailing:true, white:true, strict: false*/
       ]}
     ]
   });
-
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
+
+  // ..........................................................
+  // PROJECT EMAIL PROFILE
+  //
+  enyo.kind({
+    name: "XV.CustomerEmailProfileList",
+    kind: "XV.EmailProfileList",
+    label: "_customerEmailProfiles".loc(),
+    collection: "XM.CustomerEmailProfileCollection"
+  });
 
   // ..........................................................
   // CUSTOMER GROUP

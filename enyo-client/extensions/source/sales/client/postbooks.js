@@ -19,6 +19,7 @@ trailing:true, white:true*/
 
     panels = [
       {name: "bankAccountList", kind: "XV.BankAccountList"},
+      {name: "customerEmailProfileList", kind: "XV.CustomerEmailProfileList"},
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
       {name: "saleTypeList", kind: "XV.SaleTypeList"},
@@ -84,6 +85,7 @@ trailing:true, white:true*/
       "CreateSOForHoldCustomer",
       "CreateSOForWarnCustomer",
       "MaintainCostCategories",
+      "MaintainCustomerEmailProfiles",
       "MaintainCustomerMasters",
       "MaintainCustomerTypes",
       "MaintainFreightClasses",
