@@ -611,7 +611,7 @@ trailing:true, white:true, strict: false*/
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
 
   // ..........................................................
-  // PROJECT EMAIL PROFILE
+  // CUSTOMER EMAIL PROFILE
   //
   enyo.kind({
     name: "XV.CustomerEmailProfileList",
