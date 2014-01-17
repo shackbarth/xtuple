@@ -153,6 +153,69 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     };
 
+    //
+    // WAYS TO RETURN TO THE USER
+    //
+
+    /**
+      Stream the pdf to the browser (on a separate tab, presumably)
+     */
+    var responseDisplay = function (res, data, done) {
+      res.header("Content-Type", "application/pdf");
+      res.send(data);
+      done();
+    };
+
+    /**
+      Stream the pdf to the user as a download
+     */
+    var responseDownload = function (res, data, done) {
+      res.header("Content-Type", "application/pdf");
+      res.attachment(reportPath);
+      res.send(data);
+      done();
+    };
+
+    /**
+      Send an email
+     */
+    var responseEmail = function (res, data, done) {
+      var mailContent = {
+        from: "no-reply@xtuple.com",
+        to: "shackbarth@xtuple.com",
+        subject: "hi",
+        text: "Here is your email",
+        attachments: [{fileName: reportPath, contents: data, contentType: "application/pdf"}]
+      };
+      var callback = function (error, response) {
+          if (error) {
+            X.log("Email error", error);
+            res.send({isError: true, message: "Error emailing"});
+          } else {
+            res.send({message: "Email success"});
+          }
+        };
+
+      X.smtpTransport.sendMail(mailContent, callback);
+      done();
+    };
+
+    /**
+      Silent-print to a printer registered in the node-datasource.
+     */
+    var responsePrint = function (res, data, done) {
+      // TODO
+      done();
+    };
+
+    // Convenience hash to avoid log if-else
+    var responseFunctions = {
+      display: responseDisplay,
+      download: responseDownload,
+      email: responseEmail,
+      print: responsePrint
+    };
+
 
     //
     // STEPS TO PERFORM ROUTE
@@ -396,34 +459,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           res.send({isError: true, error: err});
           return;
         }
-        if (req.query.action === "email") {
-          var mailContent = {
-            from: "no-reply@xtuple.com",
-            to: "shackbarth@xtuple.com",
-            subject: "hi",
-            text: "Here is your email",
-            attachments: [{fileName: reportPath, contents: data, contentType: "application/pdf"}]
-          };
-          var callback = function (error, response) {
-              if (error) {
-                X.log("Email error", error);
-                res.send({isError: true, message: "Error emailing"});
-              } else {
-                res.send({message: "Email success"});
-              }
-            };
-
-          X.smtpTransport.sendMail(mailContent, callback);
-          done();
-          return;
-        }
-        res.header("Content-Type", "application/pdf");
-
-        if (req.query.action === "download") {
-          res.attachment(reportPath);
-        }
-        res.send(data);
-        done();
+        // Send the appropriate response back the client
+        responseFunctions[req.query.action || "display"](res, data, done);
       });
     };
 
