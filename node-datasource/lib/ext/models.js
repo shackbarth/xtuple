@@ -28,6 +28,10 @@ white:true*/
 
   });
 
+  SYS.CustomerEmailProfile = XM.SimpleModel.extend({
+    recordType: 'SYS.CustomerEmailProfile'
+  });
+
   /**
     @class
 

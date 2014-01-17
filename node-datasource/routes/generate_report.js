@@ -180,25 +180,59 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Send an email
      */
     var responseEmail = function (res, data, done) {
-      var mailContent = {
-        from: "no-reply@xtuple.com",
-        to: "shackbarth@xtuple.com",
-        subject: "hi",
-        text: "Here is your email",
-        attachments: [{fileName: reportPath, contents: data, contentType: "application/pdf"}]
-      };
-      var callback = function (error, response) {
-        if (error) {
-          X.log("Email error", error);
-          res.send({isError: true, message: "Error emailing"});
-          done();
-        } else {
-          res.send({message: "Email success"});
-          done();
+
+      var emailProfile;
+      var fetchEmailProfile = function (done) {
+        var emailProfileId = reportData[0].customer.emailProfile,
+          statusChanged = function (model, status, options) {
+            if (status === XM.Model.READY_CLEAN) {
+              emailProfile.off("statusChange", statusChanged);
+              done();
+            }
+          };
+        if (!emailProfileId) {
+          done({isError: true, message: "Error: no email profile associated with customer"});
+          return;
         }
+        emailProfile = new SYS.CustomerEmailProfile();
+        emailProfile.on("statusChange", statusChanged);
+        emailProfile.fetch({
+          id: emailProfileId,
+          database: databaseName,
+          username: username
+        });
       };
 
-      X.smtpTransport.sendMail(mailContent, callback);
+      var sendEmail = function (done) {
+        // TODO: format the {details}
+        var mailContent = {
+          from: emailProfile.get("from"),
+          replyTo: emailProfile.get("replyTo"),
+          to: emailProfile.get("to"),
+          cc: emailProfile.get("cc"),
+          bcc: emailProfile.get("bcc"),
+          subject: emailProfile.get("subject"),
+          text: emailProfile.get("body"),
+          attachments: [{fileName: reportPath, contents: data, contentType: "application/pdf"}]
+        };
+        var callback = function (error, response) {
+          if (error) {
+            X.log("Email error", error);
+            res.send({isError: true, message: "Error emailing"});
+            done();
+          } else {
+            res.send({message: "Email success"});
+            done();
+          }
+        };
+
+        X.smtpTransport.sendMail(mailContent, callback);
+      };
+
+      async.series([
+        fetchEmailProfile,
+        sendEmail
+      ], done);
     };
 
     /**
