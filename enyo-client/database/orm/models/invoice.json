@@ -54,6 +54,20 @@
         }
       },
       {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "due_date"
+        }
+      },
+      {
+        "name": "discountDate",
+        "attr": {
+          "type": "Date",
+          "column": "dis_date"
+        }
+      },
+      {
         "name": "isPrinted",
         "attr": {
           "type": "Boolean",
