@@ -7,54 +7,55 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     {
       "definition": [{"text": "_invoice"}],
       "options": {"fontBold": true, "fontSize": 18, "x": 0, "y": 0, "align": "right"}
-    },   
+    },
+    {"element": "fontSize", "size": 12},   
     {
       "definition": [
         {"attr": "invoiceDate", "label": true},
-        {"attr": "terms", "label": true},
+        {"attr": "dueDate", "label": true},
+        {"attr": "discountDate", "label": true},
+        {"attr": "terms.description", "label": "_terms"},
         {"attr": "orderDate", "label": true}
       ],
       "options": {"x": 0, "y": 0, "align": "right"}
     },
     {"element": "newline"},
+    {"element": "newline"},
     {
       "definition": [{"text": "_orderNumber", "label": true}],
-      "options": {"fontBold": true, "x": 0, "y": 150}
+      "options": {"fontBold": true, "x": 0, "y": 180}
     },
     {
       "definition": [{"attr": "orderNumber"}],
-      "options": {"x": 250, "y": 150}
+      "options": {"x": 200, "y": 180}
     },
     {
-      "definition": [{"text": "_invoice", "label": true}],
-      "options": {"fontBold": true, "x": 0, "y": 170}
+      "definition": [{"text": "_invoiceNumber", "label": true}],
+      "options": {"fontBold": true, "x": 0, "y": 200}
     },
     {
       "definition": [{"attr": "number"}],
-      "options": {"x": 250, "y": 170}
+      "options": {"x": 200, "y": 200}
     },
     {
-      "definition": [{"text": "_custPO", "label": true}],
-      "options": {"fontBold": true, "x": 0, "y": 190}
+      "definition": [{"text": "_purchaseOrderNumber", "label": true}],
+      "options": {"fontBold": true, "x": 0, "y": 220}
     },
     {
       "definition": [{"attr": "customerPurchaseOrderNumber"}],
-      "options": {"x": 250, "y": 190}
+      "options": {"x": 200, "y": 220}
     },
     {
-      "definition": [{"text": "_customer", "label": true}],
-      "options": {"fontBold": true, "x": 0, "y": 210}
+      "definition": [{"text": "_customerNumber", "label": true}],
+      "options": {"fontBold": true, "x": 0, "y": 240}
     },
     {
       "definition": [{"attr": "customer.number"}],
-      "options": {"x": 250, "y": 210}
+      "options": {"x": 200, "y": 240}
     },
-    {"element": "newline"},
     {
-      "definition": [
-        {"text": "_billto", "label": true}
-      ],
-      "options": {"x": 1, "y": 250, "width": 100, "fontBold": true, "align": "right"}
+      "definition": [{"text": "_billto", "label": true}],
+      "options": {"x": 0, "y": 280, "fontBold": true}
     },
     {
       "definition": [
@@ -69,7 +70,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "billtoPhone"}
       ],
       "transform": "address",
-      "options": {"x": 110, "y": 250, "width": 250}
+      "options": {"x": 120, "y": 280, "width": 250}
     },
     {"element": "newline"},
     {"element": "bandLine", "size": 2},
@@ -112,7 +113,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     {"element": "newline"},
     {"element": "newline"},
     {"element": "bandLine", "size": 2},
-    {
+    { 
       "definition": [
         {"attr": "subtotal", "label": true},
         {"attr": "taxTotal", "label": true},
@@ -121,7 +122,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "options": {"align": "right", "x": 0, "y": 0}
     },
     {"element": "newline"},
-    {"element": "standardHeader"},
-    {"element": "currentPage"}
+    {"element": "standardHeader"}
   ]
 }$$);

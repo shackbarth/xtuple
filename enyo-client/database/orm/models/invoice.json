@@ -160,7 +160,8 @@
         "name": "terms",
         "toOne": {
           "type": "Terms",
-          "column": "invchead_terms_id"
+          "column": "invchead_terms_id",
+          "isNested": true
         }
       },
       {

@@ -120,7 +120,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         };
 
         // DEBUG
-        //console.log(obj);
         return obj;
       });
     };
@@ -134,12 +133,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       that can be referred to in the json definition.
      */
     var transformElementData = function (def, data) {
-      //console.log("def: " + JSON.stringify(def));
-
       var textOnly;
 
       if (def.element === 'image') {
-        // we save the images under a different name then they're described in the definition
+        // we save the images under a different name then thfey're described in the definition
         return path.join(workingDir, imageFilenameMap[def.definition]);
       }
 
@@ -161,8 +158,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var printDefinition = function (report, data, definition) {
       _.each(definition, function (def) {
         var elementData = transformElementData(def, data);
-        console.log(def.element);
-        console.log(elementData);
         report[def.element || "print"](elementData, def.options);
       });
     };
@@ -302,6 +297,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     /**
+
+    */
+    var fetchCurrentUser = function (done) {
+      // TODO
+      done();
+    };
+
+    /**
       TODO: develop a protocol for defining barcodes in the definition file. A simple
       implementation would then involve creating an image file in the temp directory
       using some npm package, and then including it as an image in the report.
@@ -382,9 +385,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       var rpt = new Report(reportPath)
           .data(reportData)
+          .header(printHeader)
           .detail(printDetail)
           .footer(printFooter)
-          .header(printHeader)
           .fontSize(reportDefinition.settings.defaultFontSize);
 
       // Debug output is always nice (Optional, to help you see the structure)
@@ -468,7 +471,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       cleanUpFiles
     ], function (err, results) {
       if (err) {
-        console.log(err);
         res.send({isError: true, message: err.description});
       }
     });
