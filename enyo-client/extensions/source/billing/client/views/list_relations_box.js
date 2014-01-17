@@ -7,6 +7,59 @@ trailing:true, white:true*/
 
   XT.extensions.billing.initListRelationsBox = function () {
 
+    // ..........................................................
+    // RECEIVABLE TAXES
+    //
+
+    enyo.kind({
+      name: "XV.ReceivableTaxBox",
+      kind: "XV.ListRelationsEditorBox",
+      title: "_tax".loc(),
+      editor: "XV.ReceivableTaxEditor",
+      parentKey: "receivable",
+      listRelations: "XV.ReceivableTaxListRelations",
+      fitButtons: false,
+      create: function () {
+        this.inherited(arguments);
+        this.$.deleteButton.setShowing(false);
+      }
+    });
+
+    // ..........................................................
+    // RECEIVABLE APPLICATIONS
+    //
+
+    enyo.kind({
+      name: "XV.ReceivableApplicationsListRelationsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_applications".loc(),
+      parentKey: "receivable",
+      listRelations: "XV.ReceivableApplicationListRelations"
+    });
+
+    /**
+     * @class XV.CashReceiptApplicationsBox
+     * @extends XV.ListRelationsBox
+     * @see XV.CashReceiptApplicationsList
+     */
+    enyo.kind({
+      name: 'XV.CashReceiptApplicationsBox',
+      kind: 'XV.ListRelationsEditorBox',
+      editor: 'XV.CashReceiptLineEditor',
+      listRelations: 'XV.CashReceiptLineListRelation',
+      title: '_cashReceiptApplications'.loc(),
+      /*
+      create: function () {
+        this.inherited(arguments);
+
+        this.$.buttonsPanel.createComponents([
+          { content: 'Apply Balance', ontap: 'onApplyBalanceTap' },
+          { content: 'Apply Line', ontap: 'onApplyLineTap' },
+          { content: 'Clear Line', ontap: 'onClearLineTap' },
+        ]);
+      }
+      */
+    });
   };
 
 }());

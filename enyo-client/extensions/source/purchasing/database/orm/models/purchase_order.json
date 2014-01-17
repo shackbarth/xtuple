@@ -1,0 +1,1821 @@
+[
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseEmailProfile",
+    "table": "xt.poemlprofile",
+    "isRest": true,
+    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "comment": "Purchase Email Profile Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPurchaseEmailProfiles",
+        "read": true,
+        "update": "MaintainPurchaseEmailProfiles",
+        "delete": "MaintainPurchaseEmailProfiles"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emlprofile_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_descrip"
+        }
+      },
+      {
+        "name": "from",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_from"
+        }
+      },
+      {
+        "name": "replyTo",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_replyto"
+        }
+      },
+      {
+        "name": "to",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_to"
+        }
+      },
+      {
+        "name": "cc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_cc"
+        }
+      },
+      {
+        "name": "bcc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_bcc"
+        }
+      },
+      {
+        "name": "subject",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_subject"
+        }
+      },
+      {
+        "name": "body",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_body"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseType",
+    "table": "xt.potype",
+    "idSequenceName": "potype_potype_id_seq",
+    "lockable": true,
+    "isRest": true,
+    "comment": "Purchase Type Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPurchaseTypes",
+        "read": true,
+        "update": "MaintainPurchaseTypes",
+        "delete": "MaintainPurchaseTypes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "potype_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "potype_code",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "potype_active"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "potype_descr"
+        }
+      },
+      {
+        "name": "emailProfile",
+        "toOne": {
+          "type": "PurchaseEmailProfile",
+          "column": "potype_emlprofile_id"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseTypeCharacteristic",
+          "column": "potype_id",
+          "inverse": "purchaseType"
+        }
+      },
+      {
+        "name": "workflow",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseTypeWorkflow",
+          "column": "potype_id",
+          "inverse": "parent"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseTypeCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Purchase Type Characteristic Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "POTYPE"
+        }
+      },
+      {
+        "name": "purchaseType",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseTypeWorkflow",
+    "table": "xt.potypewf",
+    "comment": "Purchase Type Workflow Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_parent_id",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_name",
+          "required": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_description"
+        }
+      },
+      {
+        "name": "workflowType",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_type"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_status"
+        }
+      },
+      {
+        "name": "startSet",
+        "attr": {
+          "type": "Boolean",
+          "column": "wfsrc_start_set"
+        }
+      },
+      {
+        "name": "startOffset",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_start_offset"
+        }
+      },
+      {
+        "name": "dueSet",
+        "attr": {
+          "type": "Boolean",
+          "column": "wfsrc_due_set"
+        }
+      },
+      {
+        "name": "dueOffset",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_due_offset"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_notes"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "wfsrc_priority_id",
+          "required": true
+        }
+      },
+      {
+        "name": "sequence",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_sequence"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wfsrc_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wfsrc_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "completedParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_completed_parent_status"
+        }
+      },
+      {
+        "name": "deferredParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_deferred_parent_status"
+        }
+      },
+      {
+        "name": "completedSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_completed_successors"
+        }
+      },
+      {
+        "name": "deferredSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_deferred_successors"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrder",
+    "table": "xt.poheadinfo",
+    "lockable": true,
+    "lockTable": "pohead",
+    "orderSequence": "PoNumber",
+    "idSequenceName": "pohead_pohead_id_seq",
+    "isRest": true,
+    "comment": "Purchase Order Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPurchaseOrders",
+        "read": "ViewPurchaseOrders",
+        "update": "MaintainPurchaseOrders",
+        "delete": "MaintainPurchaseOrders"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "pohead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "pohead_number",
+          "isNaturalKey": true,
+          "required": true
+         }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "pohead_status",
+          "required": true
+        }
+      },
+      {
+        "name": "orderDate",
+        "attr": {
+          "type": "Date",
+          "column": "pohead_orderdate",
+          "required": true
+        }
+      },
+      {
+        "name": "releaseDate",
+        "attr": {
+          "type": "Date",
+          "column": "pohead_released"
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "type": "PurchaseVendorRelation",
+          "column": "pohead_vend_id",
+          "isNested": true,
+          "required": true
+        }
+      },
+      {
+        "name": "incoterms",
+        "attr": {
+          "type": "String",
+          "column": "pohead_fob"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipvia"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "pohead_comments"
+        }
+      },
+      {
+        "name": "freight",
+        "attr": {
+          "type": "Number",
+          "column": "pohead_freight"
+        }
+      },
+      {
+        "name": "isPrinted",
+        "attr": {
+          "type": "Boolean",
+          "column": "pohead_printed"
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "pohead_terms_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "pohead_warehous_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "agent",
+        "attr": {
+          "type": "String",
+          "column": "pohead_agent_username"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "pohead_curr_id",
+          "isNested": true,
+          "required": true
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "pohead_taxzone_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "pohead_taxtype_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "vendorAddress",
+        "toOne": {
+          "type": "VendorAddressRelation",
+          "column": "vendaddr_uuid",
+          "isNested": true,
+          "inverse": "uuid"
+        }
+      },
+      {
+        "name": "vendorAddress1",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress1"
+        }
+      },
+      {
+        "name": "vendorAddress2",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress2"
+        }
+      },
+      {
+        "name": "vendorAddress3",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendaddress3"
+        }
+      },
+      {
+        "name": "vendorCity",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendcity"
+        }
+      },
+      {
+        "name": "vendorState",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendstate"
+        }
+      },
+      {
+        "name": "vendorPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendzipcode"
+        }
+      },
+      {
+        "name": "vendorCountry",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vendcountry"
+        }
+      },
+      {
+        "name": "vendorContact",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "pohead_vend_cntct_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "vendorContactHonorific",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_honorific"
+        }
+      },
+      {
+        "name": "vendorContactFirstName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_first_name"
+        }
+      },
+      {
+        "name": "vendorContactMiddleName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_middle"
+        }
+      },
+      {
+        "name": "vendorContactLastName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_last_name"
+        }
+      },
+      {
+        "name": "vendorContactSuffic",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_suffix"
+        }
+      },
+      {
+        "name": "vendorContactPhone",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_phone"
+        }
+      },
+      {
+        "name": "vendorContactTitle",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_title"
+        }
+      },
+      {
+        "name": "vendorContactFax",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_fax"
+        }
+      },
+      {
+        "name": "vendorContactEmail",
+        "attr": {
+          "type": "String",
+          "column": "pohead_vend_cntct_email"
+        }
+      },
+      {
+        "name": "shiptoAddress",
+        "toOne": {
+          "type": "AddressInfo",
+          "column": "pohead_shiptoaddress_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "shiptoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptoaddress1"
+        }
+      },
+      {
+        "name": "shiptoAddress2",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptoaddress2"
+        }
+      },
+      {
+        "name": "shiptoAddress3",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptoaddress3"
+        }
+      },
+      {
+        "name": "shiptoCity",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptocity"
+        }
+      },
+      {
+        "name": "shiptoState",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptostate"
+        }
+      },
+      {
+        "name": "shiptoPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptozipcode"
+        }
+      },
+      {
+        "name": "shiptoCountry",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shiptocountry"
+        }
+      },
+      {
+        "name": "shiptoContact",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "pohead_shipto_cntct_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "shiptoContactHonorific",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_honorific"
+        }
+      },
+      {
+        "name": "shiptoContactFirstName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_first_name"
+        }
+      },
+      {
+        "name": "shiptoContactMiddleName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_middle"
+        }
+      },
+      {
+        "name": "shiptoContactLastName",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_last_name"
+        }
+      },
+      {
+        "name": "shiptoContactSuffix",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_suffix"
+        }
+      },
+      {
+        "name": "shiptoContactPhone",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_phone"
+        }
+      },
+      {
+        "name": "shiptoContactTitle",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_title"
+        }
+      },
+      {
+        "name": "shiptoContactFax",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_fax"
+        }
+      },
+      {
+        "name": "shiptoContactEmail",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipto_cntct_email"
+        }
+      },
+      {
+        "name": "subtotal",
+        "attr": {
+          "type": "Money",
+          "column": "subtotal"
+        }
+      }, 
+      {
+        "name": "freightSubtotal",
+        "attr": {
+          "type": "Money",
+          "column": "freight_subtotal"
+        }
+      }, 
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Money",
+          "column": "tax_total"
+        }
+      }, 
+      {
+        "name": "total",
+        "attr": {
+          "type": "Money",
+          "column": "total"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderCharacteristic",
+          "column": "pohead_id",
+          "inverse": "purchaseOrder"
+        }
+      },
+      {
+        "name": "workflow",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderWorkflow",
+          "column": "obj_uuid",
+          "inverse": "parent"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderComment",
+          "column": "pohead_id",
+          "inverse": "purchaseOrder"
+        }
+      },
+      {
+        "name": "lineItems",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderLine",
+          "column": "pohead_id",
+          "inverse": "purchaseOrder"
+        }
+      }
+    ],
+    "extensions": [
+      {
+        "table": "xt.poheadext",
+        "relations": [
+          {
+            "column": "poheadext_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "purchaseType",
+            "toOne": {
+              "type": "PurchaseType",
+              "column": "poheadext_potype_id"
+            }
+          }
+        ]
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Purchase Order Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "P"
+        }
+      },
+      {
+        "name": "purchaseOrder",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Purchase Order Characteristic Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "PO"
+        }
+      },
+      {
+        "name": "purchaseOrder",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderWorkflow",
+    "table": "xt.powf",
+    "comment": "Purchase Order Workflow Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "wf_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "String",
+          "column": "wf_parent_uuid"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "wf_name",
+          "required": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "wf_description"
+        }
+      },
+      {
+        "name": "workflowType",
+        "attr": {
+          "type": "String",
+          "column": "wf_type"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "wf_status"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "wf_start_date"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "DueDate",
+          "column": "wf_due_date"
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "wf_assigned_date"
+        }
+      },
+      {
+        "name": "completeDate",
+        "attr": {
+          "type": "Date",
+          "column": "wf_completed_date"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "wf_notes"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "wf_priority_id",
+          "required": true
+        }
+      },
+      {
+        "name": "sequence",
+        "attr": {
+          "type": "Number",
+          "column": "wf_sequence"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wf_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wf_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "completedParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wf_completed_parent_status"
+        }
+      },
+      {
+        "name": "deferredParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wf_deferred_parent_status"
+        }
+      },
+      {
+        "name": "completedSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wf_completed_successors"
+        }
+      },
+      {
+        "name": "deferredSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wf_deferred_successors"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderRelation",
+    "table": "pohead",
+    "isRest": true,
+    "comment": "Purchase Order Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "pohead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "pohead_number",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "type": "VendorRelation",
+          "column": "pohead_vend_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "pohead_shipvia"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderLine",
+    "table": "xt.poiteminfo",
+    "idSequenceName": "poitem_poitem_id_seq",
+    "comment": "Purchase Order Line Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "poitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "purchaseOrder",
+        "attr": {
+          "type": "Number",
+          "column": "poitem_pohead_id",
+          "isNested": true,
+          "required": true
+         }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "poitem_status",
+          "required": true
+        }
+      },
+      {
+        "name": "lineNumber",
+        "attr": {
+          "type": "Number",
+          "column": "poitem_linenumber",
+          "required": true
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "DueDate",
+          "column": "poitem_duedate",
+          "required": true
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "type": "ItemRelation",
+          "column": "item_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "warehous_id"
+        }
+      },
+      {
+        "name": "expenseCategory",
+        "toOne": {
+          "isNested": true,
+          "type": "ExpenseCategory",
+          "column": "poitem_expcat_id"
+        }
+      },
+      {
+        "name": "isMiscellaneous",
+        "attr": {
+          "type": "Boolean",
+          "column": "poitem_is_misc"
+        }
+      },
+      {
+        "name": "vendorItemNumber",
+        "attr": {
+          "type": "String",
+          "column": "poitem_vend_item_number"
+        }
+      },
+      {
+        "name": "vendorItemDescription",
+        "attr": {
+          "type": "String",
+          "column": "poitem_vend_item_descrip"
+        }
+      },
+      {
+        "name": "vendorUnit",
+        "attr": {
+          "type": "String",
+          "column": "poitem_vend_uom"
+        }
+      },
+      {
+        "name": "vendorUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "poitem_invvenduomratio"
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "poitem_qty_ordered",
+          "required": true
+        }
+      },
+      {
+        "name": "toReceive",
+        "attr": {
+          "type": "Quantity",
+          "column": "qty_toreceive"
+        }
+      },
+      {
+        "name": "received",
+        "attr": {
+          "type": "Quantity",
+          "column": "poitem_qty_received"
+        }
+      },
+      {
+        "name": "returned",
+        "attr": {
+          "type": "Quantity",
+          "column": "poitem_qty_returned"
+        }
+      },
+      {
+        "name": "vouchered",
+        "attr": {
+          "type": "Quantity",
+          "column": "poitem_qty_vouchered"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "PurchasePrice",
+          "column": "poitem_unitprice",
+          "required": true
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "curr_id"
+        }
+      },
+      {
+        "name": "extendedPrice",
+        "attr": {
+          "type": "Money",
+          "column": "extended_price"
+        }
+      },
+      {
+        "name": "freight",
+        "attr": {
+          "type": "Money",
+          "column": "poitem_freight"
+        }
+      },
+      {
+        "name": "tax",
+        "attr": {
+          "type": "PurchasePrice",
+          "column": "tax"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "poitem_comments"
+        }
+      },
+      {
+        "name": "itemSource",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemSource",
+          "column": "poitem_itemsrc_id"
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Cost",
+          "column": "poitem_stdcost"
+        }
+      },
+      {
+        "name": "manufacturerName",
+        "attr": {
+          "type": "String",
+          "column": "poitem_manuf_name"
+        }
+      },
+      {
+        "name": "manufacturerItemNumber",
+        "attr": {
+          "type": "String",
+          "column": "poitem_manuf_item_number"
+        }
+      },
+      {
+        "name": "manufacturerItemDescription",
+        "attr": {
+          "type": "String",
+          "column": "poitem_manuf_item_descrip"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "poitem_taxtype_id"
+        }
+      },
+      {
+        "name": "project",
+        "toOne": {
+          "isNested": true,
+          "type": "ProjectRelation",
+          "column": "poitem_prj_id"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderLineCharacteristic",
+          "column": "poitem_id",
+          "inverse": "purchaseOrderLine"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderLineComment",
+          "column": "poitem_id",
+          "inverse": "purchaseOrderLine"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderLineCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Purchase Order Line Characteristic Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "PI"
+        }
+      },
+      {
+        "name": "purchaseOrderLine",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderLineComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Purchasing Order Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "PI"
+        }
+      },
+      {
+        "name": "purchaseOrderLine",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderListItem",
+    "table": "xt.poheadinfo",
+    "isRest": true,
+    "comment": "Purchase Order List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "pohead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "pohead_number",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "type": "VendorRelation",
+          "column": "pohead_vend_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "orderDate",
+        "attr": {
+          "type": "Date",
+          "column": "pohead_orderdate"
+         }
+      },
+      {
+        "name": "site",
+        "toOne": { 
+          "type": "SiteRelation",
+          "column": "pohead_warehous_id"
+         }
+      },
+      {
+        "name": "agent",
+        "attr": {
+          "type": "String",
+          "column": "pohead_agent_username"
+         }
+      },
+      {
+        "name": "isPrinted",
+        "attr": {
+          "type": "Boolean",
+          "column": "pohead_printed"
+         }
+      },
+      {
+        "name": "status",
+        "attr": { 
+          "type": "String",
+          "column": "pohead_status"
+         }
+      },
+      {
+        "name": "total",
+        "attr": { 
+          "type": "Money",
+          "column": "total"
+         }
+      },
+      {
+        "name": "currency",
+        "toOne": { 
+          "type": "Currency",
+          "column": "pohead_curr_id"
+         }
+      },      
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "PurchaseOrderListItemCharacteristic",
+          "column": "pohead_id",
+          "inverse": "purchaseOrder"
+        }
+      },
+      {
+        "name": "saved",
+        "attr": { 
+          "type": "Boolean",
+          "column": "pohead_saved",
+          "value": true
+        }
+      } 
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseOrderListItemCharacteristic",
+    "table": "charass",
+    "comment": "Purchase Order List Item Characteristic Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "PO"
+        }
+      },
+      {
+        "name": "purchaseOrder",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

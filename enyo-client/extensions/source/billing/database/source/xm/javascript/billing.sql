@@ -1,9 +1,11 @@
 select xt.install_js('XM','Billing','xtuple', $$
-/* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple.
+/* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
    See www.xtuple.com/CPAL for the full text of the software license. */
 
 (function () {
   var billingOptions = [
+    "CCValidDays",
+    "InvcNumberGeneration",
     "NextARMemoNumber",
     "NextCashRcptNumber",
     "HideApplyToBalance",
@@ -57,7 +59,7 @@ select xt.install_js('XM','Billing','xtuple', $$
     ret.NextARMemoNumber = plv8.execute('select currentARMemoNumber() as value', [])[0].value;
     ret.NextCashRcptNumber = plv8.execute('select currentCashRcptNumber() as value',[])[0].value;
 
-    ret = XT.extend(ret, data.retrieveMetrics(keys));
+    ret = XT.extend(data.retrieveMetrics(keys), ret);
     return ret;
   }
 
@@ -76,7 +78,7 @@ select xt.install_js('XM','Billing','xtuple', $$
     if(!data.checkPrivilege('ConfigureAR')) throw new Error('Access Denied');
 
     /* Compose our commit settings by applying the patch to what we already have */
-    settings = JSON.parse(XM.Billing.settings());
+    settings = XM.Billing.settings();
     if (!XT.jsonpatch.apply(settings, patches)) {
       plv8.elog(NOTICE, 'Malformed patch document');
     }

@@ -1,5 +1,5 @@
 select xt.install_js('XM','SalesOrder','xtuple', $$
-/* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
+/* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
    See www.xtuple.com/CPAL for the full text of the software license. */
 
 (function () {
@@ -10,7 +10,7 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
 
   /**
     Return whether a Sales Order is referenced by another table.
-    
+
     @param {String} SalesOrder Number
   */
   XM.SalesOrder.used = function(id) {
@@ -48,7 +48,7 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
   /**
     Return a sales order object from a quote. Does not
     take any action on the original quote
-    
+
     @param {String} Quote Number
     @returns {Object}
   */
@@ -95,7 +95,7 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
         id: id,
         superUser: true
       });
-    
+
       /* Need to convert from customer/prospect to customer */
       customer = data.retrieveRecord({
         nameSpace: "XM",
@@ -116,15 +116,15 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
     /* Check for errors */
     if (result < 0) {
       errorString = XT.errorToString("convertQuote", result, [id]);
-      throw new handleError(errorString, 424); 
+      throw new handleError(errorString, 424);
     }
 
     /* If number is already used, get another */
     if (plv8.execute(sql3, [id]).length) {
       id = plv8.execute("select fetchsonumber() as num;")[0].num;
     }
-    
-    /* Effetively copy the quote, but manipulate a few 
+
+    /* Effetively copy the quote, but manipulate a few
        data points along the way */
     salesOrder = XT.extend(quote.data, {
       number: id,
@@ -143,6 +143,6 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
   };
 
 }());
-  
+
 $$ );
 

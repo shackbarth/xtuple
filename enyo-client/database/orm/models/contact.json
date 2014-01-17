@@ -23,13 +23,18 @@
         "delete": "MaintainPersonalContacts",
         "properties": [
           "owner.username",
-          "account.number"
+          "crmaccountUsers"
         ]
       },
       "attribute": {
         "owner": {
           "create": "EditOwner",
           "update": "EditOwner"
+        },
+        "crmaccountUsers": {
+          "view": false,
+          "create": false,
+          "update": false
         }
       }
     },
@@ -109,35 +114,35 @@
       {
         "name": "phone",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_phone"
         }
       },
       {
         "name": "alternate",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_phone2"
         }
       },
       {
         "name": "fax",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_fax"
         }
       },
       {
         "name": "primaryEmail",
         "attr": {
-          "type": "String",
+          "type": "Email",
           "column": "cntct_email"
         }
       },
       {
         "name": "webAddress",
         "attr": {
-          "type": "String",
+          "type": "Url",
           "column": "cntct_webaddr"
         }
       },
@@ -243,6 +248,14 @@
           "column": "cntct_id",
           "inverse": "source",
           "isNested": true
+        }
+      },
+      {
+        "name": "crmaccountUsers",
+        "toMany": {
+          "type": "ShareUsers",
+          "column": "obj_uuid",
+          "inverse": "uuid"
         }
       }
     ],
@@ -351,35 +364,35 @@
       {
         "name": "phone",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_phone"
         }
       },
       {
         "name": "alternate",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_phone2"
         }
       },
       {
         "name": "fax",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_fax"
         }
       },
       {
         "name": "primaryEmail",
         "attr": {
-          "type": "String",
+          "type": "Email",
           "column": "cntct_email"
         }
       },
       {
         "name": "webAddress",
         "attr": {
-          "type": "String",
+          "type": "Url",
           "column": "cntct_webaddr"
         }
       },
@@ -827,7 +840,7 @@
       {
         "name": "email",
         "attr": {
-          "type": "String",
+          "type": "Email",
           "column": "cntcteml_email",
           "required": true
         }
@@ -990,35 +1003,35 @@
       {
         "name": "phone",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_phone"
         }
       },
       {
         "name": "alternate",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_phone2"
         }
       },
       {
         "name": "fax",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_fax"
         }
       },
       {
         "name": "primaryEmail",
         "attr": {
-          "type": "String",
+          "type": "Email",
           "column": "cntct_email"
         }
       },
       {
         "name": "webAddress",
         "attr": {
-          "type": "String",
+          "type": "Url",
           "column": "cntct_webaddr"
         }
       },
@@ -1147,35 +1160,35 @@
       {
         "name": "phone",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_phone"
         }
       },
       {
         "name": "alternate",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_phone2"
         }
       },
       {
         "name": "fax",
         "attr": {
-          "type": "String",
+          "type": "Phone",
           "column": "cntct_fax"
         }
       },
       {
         "name": "primaryEmail",
         "attr": {
-          "type": "String",
+          "type": "Email",
           "column": "cntct_email"
         }
       },
       {
         "name": "webAddress",
         "attr": {
-          "type": "String",
+          "type": "Url",
           "column": "cntct_webaddr"
         }
       },

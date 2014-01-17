@@ -1,5 +1,5 @@
 select xt.install_js('XT','Session','xtuple', $$
-  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple.
+  /* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   XT.Session = {};
@@ -56,15 +56,16 @@ select xt.install_js('XT','Session','xtuple', $$
       throw "No result for locale. Username probably does not exist in the instance database";
     } else if (rec.language && rec.country) {
       culture = rec.language + '_' + rec.country;
-    } else if (rec.language) {
-      culture = rec.language;
+    } else {
+      /* Sensible default if locale is not fully set */
+      culture = "en_US";
     }
     rec.culture = culture;
-
 
     /* might as well request the translations in here too */
     strings = plv8.execute(dictionarySql, [culture, XT.username]);
     if(strings.length === 0) {
+      /* Sensible default if locale is fully set but no dictionary exists */
       strings = plv8.execute(dictionarySql, ["en_US"]);
     }
     rec.strings = strings.map(function (row) {
@@ -124,7 +125,7 @@ select xt.install_js('XT','Session','xtuple', $$
   XT.Session.preferences = function() {
     var sql = "select * from xt.userpref where userpref_usr_username = $1 " +
               "and userpref_name != 'PreferredWarehouse' " +
-              "union " + 
+              "union " +
               /* Sorry, we've just got to share this one... */
               "select usrpref_id, usrpref_username, usrpref_name, warehous_code " +
               "from usrpref " +

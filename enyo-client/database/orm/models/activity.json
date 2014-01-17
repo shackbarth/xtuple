@@ -1,0 +1,227 @@
+[
+  {
+    "context":"xtuple",
+    "nameSpace":"XM",
+    "type":"ActivityListItem",
+    "table":"xt.act",
+    "isRest":true,
+    "comment":"Activity List Item Map",
+    "privileges":{
+      "all":{
+        "create":false,
+        "read":true,
+        "update":false,
+        "delete":false
+      },
+      "personal":{
+        "create":false,
+        "read":true,
+        "update":false,
+        "delete":true,
+        "properties":[
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties":[
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "act_uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "activityType",
+        "attr": {
+          "type": "String",
+          "column": "act_type"
+        }
+      },
+      {
+        "name": "activityAction",
+        "attr": {
+          "type": "String",
+          "column": "act_action"
+        }
+      },
+      {
+        "name": "editorKey",
+        "attr": {
+          "type": "String",
+          "column": "act_editor_key"
+        }
+      },
+      {
+        "name": "parent",
+        "toOne": {
+          "isNested": true,
+          "type": "ActivityRelation",
+          "column": "act_parent_uuid",
+          "inverse": "uuid"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "act_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "act_description"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "act_status"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "act_priority_id"
+        }
+      },      
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "act_active"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "act_start_date"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "act_due_date"
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "act_assigned_date"
+        }
+      },
+      {
+        "name": "completeDate",
+        "attr": {
+          "type": "Date",
+          "column": "act_completed_date"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "act_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "act_assigned_username",
+          "inverse": "username"
+        }
+      }
+    ],
+    "isSystem":true
+  },
+  {
+    "context":"xtuple",
+    "nameSpace":"XM",
+    "type":"ActivityRelation",
+    "table":"xt.act",
+    "isRest":true,
+    "comment":"Activity Relation Map",
+    "privileges":{
+      "all":{
+        "create":false,
+        "read":true,
+        "update":false,
+        "delete":false
+      },
+      "personal":{
+        "create":false,
+        "read":true,
+        "update":false,
+        "delete":true,
+        "properties":[
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties":[
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "act_uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "activityType",
+        "attr": {
+          "type": "String",
+          "column": "act_type"
+        }
+      },      
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "act_name",
+          "required": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "act_description"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "act_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "act_assigned_username",
+          "inverse": "username"
+        }
+      }
+    ],
+    "isSystem":true
+  }
+]

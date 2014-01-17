@@ -111,6 +111,7 @@ white:true*/
     });
   };
 
+  XT.cacheCollection("XM.agents", "XM.AgentCollection", "username");
   XT.cacheCollection("XM.characteristics", "XM.CharacteristicCollection", "order name");
   XT.cacheCollection("XM.commentTypes", "XM.CommentTypeCollection");
   XT.cacheCollection("XM.countries", "XM.CountryCollection", "name");
@@ -122,6 +123,8 @@ white:true*/
   XT.cacheCollection("XM.locales", "XM.LocaleCollection");
   XT.cacheCollection("XM.priorities", "XM.PriorityCollection");
   XT.cacheCollection("XM.privileges", "XM.PrivilegeCollection");
+  XT.cacheCollection("XM.projectTypes", "XM.ProjectTypeCollection", "code");
+  XT.cacheCollection("XM.siteRelations", "XM.SiteRelationCollection", "code");
   XT.cacheCollection("XM.shifts", "XM.ShiftCollection", "number");
   XT.cacheCollection("XM.sources", "XM.SourceCollection");
   XT.cacheCollection("XM.states", "XM.StateCollection", "abbreviation");

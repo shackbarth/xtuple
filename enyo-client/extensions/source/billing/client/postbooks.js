@@ -1,40 +1,58 @@
-/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
-latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true, white:true*/
-/*global XT:true, XV:true, XM:true, enyo:true*/
-
 (function () {
-
-  var billing = XT.extensions.billing;
 
   /**
    * Billing Module.
    */
-  billing.initPostbooks = function () {
+  XT.extensions.billing.initPostbooks = function () {
     var module = {
-        name: billing.name,
+        name: XT.extensions.billing.name,
         label: "_billing".loc(),
         panels: [
-          {name: "customerList", kind: "XV.CustomerList"},
-          {name: "invoiceList", kind: "XV.InvoiceList"}
+          {name: "billing_customerList", kind: "XV.CustomerList"},
+          {name: "invoiceList", kind: "XV.InvoiceList"},
+          {name: "returnList", kind: "XV.ReturnList"},
+          {name: "receivableList", kind: "XV.ReceivableList"},
+          {name: "cashReceiptList", kind: "XV.CashReceiptList"}
         ]
       },
       relevantPrivileges = [
+        "ApplyARMemos",
         "ConfigureAR",
+        "CreateNewCurrency",
         "DeleteItemMasters",
+        "EditAROpenItem",
         "MaintainBankAccounts",
+        "MaintainCashReceipts",
+        "MaintainCreditMemos",
+        "MaintainCurrencies",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
+        "MaintainIncidentCategories",
         "MaintainItemMasters",
+        "MaintainItemGroups",
         "MaintainMiscInvoices",
         "MaintainReasonCodes",
         "MaintainSalesCategories",
         "MaintainShipVias",
         "MaintainTerms",
+        "OverrideTax",
+        "PostARDocuments",
+        "PostCashReceipts",
+        "PostMiscInvoices",
+        "PrintCreditMemos",
+        "PrintInvoices",
+        "ViewAROpenItems",
+        "ViewCashReceipts",
+        "ViewCreditMemos",
         "ViewCustomerMasters",
         "ViewCustomerGroups",
         "ViewItemMasters",
-        "ViewMiscInvoices"
+        "ViewMiscInvoices",
+        "ViewSalesCategories",
+        "ViewShipVias",
+        "VoidPostedARCreditMemos",
+        "VoidPostedCashReceipts",
+        "VoidPostedInvoices"
       ],
       configuration = {
         model: "XM.billing",
@@ -42,18 +60,28 @@ trailing:true, white:true*/
         description: "_billingDescription".loc(),
         workspace: "XV.BillingWorkspace"
       },
+      salesPanels,
       setupPanels = [
         {name: "bankAccountList", kind: "XV.BankAccountList"},
+        {name: "fileList", kind: "XV.FileList"},
+        {name: "itemList", kind: "XV.ItemList"},
+        {name: "itemGroupList", kind: "XV.ItemGroupList"},
         {name: "reasonCodeList", kind: "XV.ReasonCodeList"},
         {name: "salesCategoryList", kind: "XV.SalesCategoryList"},
-        {name: "termsList", kind: "XV.TermsList"},
+        {name: "termsList", kind: "XV.TermsList"}
       ];
 
     XT.app.$.postbooks.appendPanels("setup", setupPanels);
+    if (XT.extensions.sales) {
+      salesPanels = [
+        {name: "sales_invoiceList", kind: "XV.InvoiceList"}
+      ];
+      XT.app.$.postbooks.appendPanels("sales", salesPanels);
+    }
 
     XM.configurations.add(new XM.ConfigurationModel(configuration));
     XT.app.$.postbooks.insertModule(module, 0);
-    XT.session.addRelevantPrivileges(billing.name, relevantPrivileges);
+    XT.session.addRelevantPrivileges(XT.extensions.billing.name, relevantPrivileges);
   };
 
 }());

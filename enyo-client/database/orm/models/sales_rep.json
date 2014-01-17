@@ -12,7 +12,7 @@
     "privileges": {
       "all": {
         "create": "MaintainSalesReps",
-        "read": true,
+        "read": "ViewSalesReps",
         "update": "MaintainSalesReps",
         "delete": "MaintainSalesReps"
       }

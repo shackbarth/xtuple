@@ -5,12 +5,18 @@
 /* List */
 .xv-list {
   background-color: @white;
+
+  .xv-list-item > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   .xv-list-item {
-    @include box-sizing(border-box);
     background-color: @white;
-    padding: 3px;
     border-bottom: 1px solid @smoke;
     min-height: 32px;
+    padding: 2px;
+    padding-right: 36px;
     &.header {
       padding-top: 0;
     }
@@ -19,7 +25,7 @@
       color: @black;
       .xv-list-column {
         .xv-list-attr {
-          background-color: @gray;
+          background: transparent;
           &.placeholder {
             color: @gray;
           }
@@ -27,6 +33,13 @@
       }
     }
     .xv-list-column {
+      &.name-column {
+        width: 12em;
+      }
+      &.right-column {
+        width: 8em;
+        text-align: right;
+      }
       &.short {
         width: 9em;
       }
@@ -58,6 +71,7 @@
     }
     &.item-selected {
       background: @item-hilite-background;
+      #gradient > .vertical(@item-hilite-background, @dark-slate-blue);
 
       .xv-list-attr {
         color: @white;
@@ -75,7 +89,7 @@
     }
     .xv-list-item-gear {
       position: absolute;
-      right: 4px;
+      right: 0px;
       z-index: 999;
     }
   }
@@ -105,9 +119,9 @@
     color: @black;
   }
   &.right {
+    // TODO: get rid of this absolute positioning
     position: absolute;
     right: 10px;
-    height: 20px;
   }
   &.text-align-right {
     text-align: right;

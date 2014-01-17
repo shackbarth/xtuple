@@ -1,0 +1,71 @@
+
+.xv-addresswidget {
+  background-color: @white;
+  padding: 4px;
+  .xv-addresswidget-viewer {
+    border: 0;
+    font-size: medium;
+    display: inline;
+    &.placeholder {
+      font-style: italic;
+      color: @blue-gray;
+    }
+    &.hyperlink {
+      color: @blue;
+    }
+    &.disabled {
+      color: @dim-gray;
+    }
+  }
+
+  .xv-addresswidget-buttons {
+    margin-top: 4px;
+    .xv-addresswidget-button {
+      margin-right: 4px;
+    }
+  }
+}
+
+.xv-addresswidget-input-decorator, .xv-addresswidget-combobox-decorator {
+  background: @white;
+  display: block;
+  margin: 4px;
+  input {
+    width: 100%;
+  }
+  .enyo-fittable-columns-layout > * {
+      vertical-align: middle;
+  }
+  &.short {
+    width: 40%;
+  }
+}
+.xv-addresswidget-combobox-decorator {
+  width: 60%;
+}
+
+.xv-button-section {
+  .xv-addresswidget-buttons {
+    margin: 0;
+    background-color: @charcoal;
+  }
+}
+
+.xv-addresswidget-editor-header {
+  padding: 4px;
+}
+
+.xv-addresswidget-editor {
+  width: 320px;
+  padding: 8px;
+  padding-right: 16px;
+}
+
+.xv-addresslist-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: normal;
+  overflow: auto;
+  color: @black;
+  background-color: @white;
+}

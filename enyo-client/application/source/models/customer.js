@@ -346,7 +346,9 @@ white:true*/
   XM.CustomerCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.CustomerCharacteristic.prototype */
 
-    recordType: 'XM.CustomerCharacteristic'
+    recordType: 'XM.CustomerCharacteristic',
+
+    which: 'isCustomers'
 
   });
 
@@ -457,6 +459,18 @@ white:true*/
     recordType: 'XM.CustomerGroup',
 
     documentKey: 'name'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.CustomerCustomerGroup = XM.Model.extend({
+    /** @scope XM.CustomerCustomerGroup.prototype */
+
+    recordType: 'XM.CustomerCustomerGroup'
 
   });
 
@@ -633,6 +647,21 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.AccountDocument
+  */
+  XM.BillingCustomer = XM.AccountDocument.extend({
+    /** @scope XM.BillingCustomer.prototype */
+
+    recordType: 'XM.BillingCustomer',
+
+    descriptionKey: "name"
+
+  });
+
+  XM.BillingCustomer = XM.BillingCustomer.extend(XM.CustomerMixin);
 
   /**
     @class
@@ -798,6 +827,18 @@ white:true*/
 
     @extends XM.Collection
   */
+  XM.BillingCustomerCollection = XM.Collection.extend({
+    /** @scope XM.BillingCustomerCollection.prototype */
+
+    model: XM.BillingCustomer
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   XM.SalesCustomerCollection = XM.Collection.extend({
     /** @scope XM.SalesCustomerCollection.prototype */
 
@@ -838,6 +879,18 @@ white:true*/
     /** @scope XM.CustomerTypeCollection.prototype */
 
     model: XM.CustomerType
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerCustomerGroupCollection = XM.Collection.extend({
+    /** @scope XM.CustomerCustomerGroupCollection.prototype */
+
+    model: XM.CustomerCustomerGroup
 
   });
 

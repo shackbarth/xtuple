@@ -37,6 +37,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     olapData = require('./olapdata'),
     dataFromKey = require('./data_from_key'),
     file = require('./file'),
+    generateReport = require('./generate_report'),
     locale = require('./locale'),
     passport = require('passport'),
     redirector = require('./redirector'),
@@ -69,7 +70,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.get = [ensureLogin, data.get];
   exports.patch = [ensureLogin, data.patch];
   exports.post = [ensureLogin, data.post];
-  
+
   //
   //  OLAP query route
   //
@@ -98,6 +99,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.email = [ensureLogin, email.email];
   exports.exxport = [ensureLogin, exxport.exxport];
   exports.file = [ensureLogin, file.file];
+  exports.generateReport = [ensureLogin, generateReport.generateReport];
   exports.locale = [ensureLogin, locale.locale];
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];

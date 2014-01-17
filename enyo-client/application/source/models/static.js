@@ -80,9 +80,13 @@ white:true*/
   });
   XM.creditCardGateways = new XM.CreditCardGatewayCollection();
   // new and better way
-  _.each([{ id: "Authorize.Net", name: "Authorize.Net" }], function (attrs) {
-    XM.creditCardGateways.add(new XM.CreditCardGatewayModel(attrs));
-  });
+  _.each([
+      { id: "Authorize.Net", name: "Authorize.Net" },
+      { id: "External", name: "External" }
+    ], function (attrs) {
+      XM.creditCardGateways.add(new XM.CreditCardGatewayModel(attrs));
+    }
+  );
 
   // Credit Card Type
   var creditCardTypeJson = [
@@ -215,24 +219,6 @@ white:true*/
   for (i = 0; i < numberPolicyJson.length; i++) {
     var numberPolicy = new XM.NumberPolicyModel(numberPolicyJson[i]);
     XM.numberPolicies.add(numberPolicy);
-  }
-
-  // Project Status
-  K = XM.Project;
-  var projectStatusJson = [
-    { id: K.CONCEPT, name: "_concept".loc() },
-    { id: K.IN_PROCESS, name: "_inProcess".loc() },
-    { id: K.COMPLETED, name: "_completed".loc() }
-  ];
-  XM.ProjectStatusModel = Backbone.Model.extend({
-  });
-  XM.ProjectStatusCollection = Backbone.Collection.extend({
-    model: XM.ProjectStatusModel
-  });
-  XM.projectStatuses = new XM.ProjectStatusCollection();
-  for (i = 0; i < projectStatusJson.length; i++) {
-    var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
-    XM.projectStatuses.add(projectStatus);
   }
 
   // Characteristic Type
@@ -406,6 +392,60 @@ white:true*/
   for (i = 0; i < bankAccountTypeJson.length; i++) {
     var bankAccountType = new XM.BankAccountTypeModel(bankAccountTypeJson[i]);
     XM.bankAccountTypes.add(bankAccountType);
+  }
+
+  // Workflow Status
+  K = XM.Workflow;
+  var workflowStatusJson = [
+    { id: K.PENDING, name: "_pending".loc() },
+    { id: K.IN_PROCESS, name: "_inProcess".loc() },
+    { id: K.COMPLETED, name: "_completed".loc() },
+    { id: K.DEFERRED, name: "_deferred".loc() },
+  ];
+  XM.WorkflowStatusModel = Backbone.Model.extend({});
+  XM.WorkflowStatusCollection = Backbone.Collection.extend({
+    model: XM.WorkflowStatusModel
+  });
+  XM.workflowStatuses = new XM.WorkflowStatusCollection();
+  for (i = 0; i < workflowStatusJson.length; i++) {
+    var workflowStatus = new XM.WorkflowStatusModel(workflowStatusJson[i]);
+    XM.workflowStatuses.add(workflowStatus);
+  }
+
+  // Workflow Type
+  var salesOrderWorkflowTypeJson = [
+    { id: XM.SalesOrderWorkflow.TYPE_OTHER, name: "_other".loc() },
+    { id: XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK, name: "_creditCheck".loc() }//,
+  ];
+  XM.SalesOrderWorkflowTypeModel = Backbone.Model.extend({});
+  XM.SalesOrderWorkflowTypeCollection = Backbone.Collection.extend({
+    model: XM.SalesOrderWorkflowTypeModel
+  });
+  XM.salesOrderWorkflowTypes = new XM.SalesOrderWorkflowTypeCollection();
+  _.each(salesOrderWorkflowTypeJson, function (obj) {
+    XM.salesOrderWorkflowTypes.add(new XM.SalesOrderWorkflowTypeModel(obj));
+  });
+
+  // Project Status
+  K = XM.ProjectStatusMixin;
+  var projectStatusJson = [
+    { id: K.CONCEPT, name: "_concept".loc() },
+    { id: K.REVIEW, name: "_review".loc() },
+    { id: K.REVISION, name: "_revision".loc() },
+    { id: K.APPROVED, name: "_approved".loc() },
+    { id: K.IN_PROCESS, name: "_inProcess".loc() },
+    { id: K.COMPLETED, name: "_completed".loc() },
+    { id: K.REJECTED, name: "_rejected".loc() }
+  ];
+  XM.ProjectStatusModel = Backbone.Model.extend({
+  });
+  XM.ProjectStatusCollection = Backbone.Collection.extend({
+    model: XM.ProjectStatusModel
+  });
+  XM.projectStatuses = new XM.ProjectStatusCollection();
+  for (i = 0; i < projectStatusJson.length; i++) {
+    var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
+    XM.projectStatuses.add(projectStatus);
   }
 
 }());

@@ -6,7 +6,7 @@ white:true*/
 (function () {
 
   "use strict";
- 
+
   var CREDIT_OK = 0;
   var CREDIT_WARN = 1;
   var CREDIT_HOLD = 2;
@@ -43,6 +43,12 @@ white:true*/
 
     documentDateKey: "orderDate",
 
+    bindEvents: function () {
+      XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
+      var pricePolicy = XT.session.settings.get("soPriceEffective");
+      this.on('change:holdType', this.holdTypeDidChange);
+    },
+
     /**
       Add default for wasQuote.
      */
@@ -65,6 +71,47 @@ white:true*/
       }
     },
 
+    getSalesOrderStatusString: function () {
+      return XM.SalesOrder.prototype.getOrderStatusString.call(this);
+    },
+
+    holdTypeDidChange: function () {
+      if (!this.get("holdType")) {
+        _.each(this.get("workflow").where(
+            {workflowType: XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK}),
+            function (workflow) {
+
+          workflow.set({status: XM.Workflow.COMPLETED});
+        });
+      }
+    },
+
+    saleTypeDidChange: function () {
+      var that = this,
+        currentHoldType = this.get("holdType"),
+        defaultHoldType = this.getValue("saleType.defaultHoldType") || null;
+
+      this.inheritWorkflowSource(this.get("saleType"), "XM.SalesOrderCharacteristic",
+        "XM.SalesOrderWorkflow");
+
+      if (this.getStatus() === XM.Model.EMPTY) {
+        // on a new order, set the hold type to the sale type default
+        this.set({holdType: defaultHoldType});
+
+      } else if (defaultHoldType !== currentHoldType) {
+        // otherwise, if the sale type wants to drive a change to the hold type,
+        // prompt the user.
+        this.notify("_updateHoldType?".loc(), {
+          type: XM.Model.QUESTION,
+          callback: function (response) {
+            if (response.answer) {
+              that.set({holdType: defaultHoldType});
+            }
+          }
+        });
+      }
+    },
+
     validate: function () {
       var creditStatus = _checkCredit.call(this);
       if (creditStatus === CREDIT_WARN) {
@@ -76,6 +123,7 @@ white:true*/
       return XM.SalesOrderBase.prototype.validate.apply(this, arguments);
     }
   });
+  _.extend(XM.SalesOrder.prototype, XM.WorkflowMixin);
 
   // ..........................................................
   // CLASS METHODS
@@ -105,12 +153,8 @@ white:true*/
     }
   });
 
-  /**
-    @class
-
-    @extends XM.SalesOrderLineBase
-  */
-  XM.SalesOrderLine = XM.SalesOrderLineBase.extend(/** @lends XM.SalesOrderLine.prototype */{
+  XM.SalesOrderLine = XM.Model.extend(_.extend({}, XM.OrderLineMixin,
+      XM.SalesOrderBaseMixin, XM.SalesOrderLineMixin, {
 
     recordType: 'XM.SalesOrderLine',
 
@@ -122,14 +166,14 @@ white:true*/
       Add defaults for firm, and subnumber.
      */
     defaults: function () {
-      var defaults = XM.SalesOrderLineBase.prototype.defaults.apply(this, arguments);
+      var defaults = XM.SalesOrderLineMixin.defaults.apply(this, arguments);
 
       defaults.firm = false;
       defaults.subnumber = 0;
 
       return defaults;
     }
-  });
+  }), XM.SalesOrderLineStaticMixin);
 
 
   /**
@@ -195,6 +239,43 @@ white:true*/
 
     isDocumentAssignment: true
 
+  });
+
+  /**
+    @class
+
+    @extends XM.CharacteristicAssignment
+  */
+  XM.SalesOrderCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.SalesOrderCharacteristic.prototype */{
+
+    recordType: 'XM.SalesOrderCharacteristic',
+
+    which: 'isSalesOrders'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Workflow
+  */
+  XM.SalesOrderWorkflow = XM.Workflow.extend(
+    /** @scope XM.SalesOrderWorkflow.prototype */ {
+
+    recordType: 'XM.SalesOrderWorkflow',
+
+    parentStatusAttribute: 'holdType',
+
+    getSalesOrderWorkflowStatusString: function () {
+      return XM.SalesOrderWorkflow.prototype.getWorkflowStatusString.call(this);
+    }
+
+  });
+  _.extend(XM.SalesOrderWorkflow, /** @lends XM.SalesOrderLine# */{
+
+    TYPE_OTHER: "O",
+
+    TYPE_CREDIT_CHECK: "C",
   });
 
   /**

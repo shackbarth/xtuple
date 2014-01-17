@@ -137,7 +137,7 @@ insert into itemsite (
   coalesce(new.itemsite_location_dist, false),
   coalesce(new.itemsite_recvlocation_dist, false),
   coalesce(new.itemsite_issuelocation_dist, false),
-  coalesce(new.obj_uuid, xt.generate_uuid())
+  coalesce(new.obj_uuid, xt.uuid_generate_v4())
 );
 
 create or replace rule "_UPDATE" as on update to xt.itemsiteinfo do instead

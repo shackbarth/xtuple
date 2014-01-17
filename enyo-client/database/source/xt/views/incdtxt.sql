@@ -23,7 +23,7 @@ $$ language plv8;
 revoke all on xt.incdtxt from public;
 grant all on table xt.incdtxt to group xtrole;
 
-create or replace rule "_INSERT" as on insert to xt.incdtxt do instead 
+create or replace rule "_INSERT" as on insert to xt.incdtxt do instead
 
 insert into incdt (
   incdt_id,
@@ -40,7 +40,6 @@ insert into incdt (
   incdt_incdtseverity_id,
   incdt_incdtpriority_id,
   incdt_incdtresolution_id,
-  incdt_lotserial,
   incdt_ls_id,
   incdt_aropen_id,
   incdt_owner_username,
@@ -57,22 +56,21 @@ insert into incdt (
   new.incdt_summary,
   new.incdt_descrip,
   new.incdt_item_id,
-  new.incdt_timestamp,
-  new.incdt_status,
+  coalesce(new.incdt_timestamp, now()),
+  coalesce(new.incdt_status, 'N'),
   new.incdt_assigned_username,
   new.incdt_incdtcat_id,
   new.incdt_incdtseverity_id,
   new.incdt_incdtpriority_id,
   new.incdt_incdtresolution_id,
-  new.incdt_lotserial,
   new.incdt_ls_id,
   new.incdt_aropen_id,
   new.incdt_owner_username,
   new.incdt_recurring_incdt_id,
-  new.incdt_updated,
+  coalesce(new.incdt_updated, now()),
   new.incdt_prj_id,
   new.incdt_public,
-  new.obj_uuid
+  coalesce(new.obj_uuid, xt.uuid_generate_v4())
 );
 
 create or replace rule "_UPDATE" as on update to xt.incdtxt do instead
@@ -91,7 +89,6 @@ update incdt set
   incdt_incdtseverity_id = new.incdt_incdtseverity_id,
   incdt_incdtpriority_id = new.incdt_incdtpriority_id,
   incdt_incdtresolution_id = new.incdt_incdtresolution_id,
-  incdt_lotserial = new.incdt_lotserial,
   incdt_ls_id = new.incdt_ls_id,
   incdt_aropen_id = new.incdt_aropen_id,
   incdt_owner_username = new.incdt_owner_username,

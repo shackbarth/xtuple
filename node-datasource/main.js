@@ -8,6 +8,7 @@ Backbone = require("backbone");
 _ = require("underscore");
 jsonpatch = require("json-patch");
 SYS = {};
+XT = { };
 
 (function () {
   "use strict";
@@ -66,9 +67,13 @@ SYS = {};
   X.setup(options);
 
   // load some more required files
-  require("./lib/ext/datasource");
+  var datasource = require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
+
+  datasource.setupPgListeners(X.options.datasource.databases, {
+    email: X.smtpTransport.sendMail
+  });
 
   if (typeof X.options.biServer !== 'undefined') {
     require("./olapcatalog");
@@ -371,6 +376,7 @@ app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
 app.get('/:org/file', routes.file);
+app.get('/:org/generate-report', routes.generateReport);
 app.get('/:org/locale', routes.locale);
 app.get('/:org/report', routes.report);
 app.get('/:org/reset-password', routes.resetPassword);
@@ -399,15 +405,11 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
   });
 }
 
-
-
 // Set up the other servers we run on different ports.
-//var unexposedServer = express();
-//unexposedServer.listen(X.options.datasource.maintenancePort);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
-redirectServer.listen(X.options.datasource.redirectPort);
+redirectServer.listen(X.options.datasource.redirectPort, X.options.datasource.bindAddress);
 
 /**
  * Start the express server. This is the NEW way.
@@ -415,8 +417,9 @@ redirectServer.listen(X.options.datasource.redirectPort);
 // TODO - Active browser sessions can make calls to this server when it hasn't fully started.
 // That can cause it to crash at startup.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
-io = socketio.listen(server.listen(X.options.datasource.port));
+io = socketio.listen(server.listen(X.options.datasource.port, X.options.datasource.bindAddress));
 
+X.log("Server listening at: ", X.options.datasource.bindAddress);
 X.log("node-datasource started on port: ", X.options.datasource.port);
 X.log("redirectServer started on port: ", X.options.datasource.redirectPort);
 X.log("Databases accessible from this server: \n", JSON.stringify(X.options.datasource.databases, null, 2));
@@ -504,6 +507,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
       key = url.parse(handshakeData.headers.referer).path.split("/")[1];
     } else if (X.options.datasource.testDatabase) {
       // for some reason zombie doesn't send the referrer in the socketio call
+      // https://groups.google.com/forum/#!msg/socket_io/MPpXrP5N9k8/xAyk1l8Iw8YJ
       key = X.options.datasource.testDatabase;
     } else {
       return callback(null, false);
@@ -602,7 +606,8 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           data: session.passport.user,
           code: 1,
           debugging: X.options.datasource.debugging,
-          biUrl: X.options.datasource.biUrl,
+          biServer: X.options.biServer,
+          printServer: X.options.printServer,
           version: X.version
         });
       callback(callbackObj);

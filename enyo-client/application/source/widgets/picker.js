@@ -1,8 +1,18 @@
 /*jshint node:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, trailing:true, white:true */
+regexp:true, undef:true, trailing:true, white:true, strict:false */
 /*global XT:true, XM:true, enyo:true, _:true */
 
 (function () {
+
+  // ..........................................................
+  // AGENT
+
+  enyo.kind({
+    name: "XV.AgentPicker",
+    kind: "XV.PickerWidget",
+    nameAttribute: "username",
+    collection: "XM.agents"
+  });
 
   // ..........................................................
   // ACCOUNT TYPE
@@ -374,22 +384,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // LOCATION
-  //
-
-  enyo.kind({
-    name: "XV.LocationPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.location",
-    nameAttribute: "format",
-    orderBy: [
-      {attribute: 'format'}
-    ],
-    valueAttribute: "id"
-  });
-
-
-  // ..........................................................
   // MONTH
   //
 
@@ -498,7 +492,20 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ProjectStatusPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.projectStatuses"
+    collection: "XM.projectStatuses",
+    showNone: false
+  });
+
+
+  // ..........................................................
+  // PROJECT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.ProjectTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.projectTypes",
+    nameAttribute: "code"
   });
 
   // ..........................................................
@@ -563,6 +570,30 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // SALES CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.SalesCategoryPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.salesCategories",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+
+  // ..........................................................
+  // SALES EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.SalesEmailProfilePicker",
+    kind: "XV.PickerWidget",
+    label: "_emailProfile".loc(),
+    collection: "XM.salesEmailProfiles"
+  });
+
+  // ..........................................................
   // SALES REP
   //
 
@@ -612,19 +643,6 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.shipZones",
     orderBy: [
       {attribute: 'name'}
-    ]
-  });
-
-  // ..........................................................
-  // SITE ZONE
-  //
-
-  enyo.kind({
-    name: "XV.SiteZonePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.siteZoneRelations",
-    orderBy: [
-      {attribute: 'code'}
     ]
   });
 
@@ -863,6 +881,28 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.wagePeriods",
     showNone: false,
     valueAttribute: "id"
+  });
+
+  // ..........................................................
+  // WORKFLOW STATUS
+  //
+
+  enyo.kind({
+    name: "XV.WorkflowStatusPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.workflowStatuses"
+  });
+
+  // ..........................................................
+  // WORKFLOW TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkflowTypePicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.salesOrderWorkflowTypes"
   });
 
   // ..........................................................

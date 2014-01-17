@@ -158,14 +158,12 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.Model
   */
-  XM.ItemGroup = XM.Document.extend({
+  XM.ItemGroup = XM.Model.extend({
     /** @scope XM.ItemGroup.prototype */
 
-    recordType: 'XM.ItemGroup',
-
-    documentKey: 'name'
+    recordType: 'XM.ItemGroup'
 
   });
 
@@ -532,7 +530,9 @@ white:true*/
   XM.ItemListItemCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.ItemListItmeCharacteristic.prototype */
 
-    recordType: 'XM.ItemListItemCharacteristic'
+    recordType: 'XM.ItemListItemCharacteristic',
+
+    which: "isItems"
 
   });
 
@@ -558,7 +558,9 @@ white:true*/
   XM.ItemCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.ItemCharacteristic.prototype */
 
-    recordType: 'XM.ItemCharacteristic'
+    recordType: 'XM.ItemCharacteristic',
+
+    which: 'isItems'
 
   });
 
@@ -571,6 +573,38 @@ white:true*/
     /** @scope XM.ItemItemSiteRelation.prototype */
 
     recordType: 'XM.ItemItemSiteRelation'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.ItemAlias = XM.Model.extend({
+    /** @scope XM.ItemAlias.prototype */
+
+    recordType: 'XM.ItemAlias',
+
+    defaults: {
+      useDescription: false
+    },
+
+    bindEvents: function () {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on('change:useDescription', this.useDescriptionDidChange);
+
+      this.useDescriptionDidChange();
+    },
+
+    useDescriptionDidChange: function () {
+      // clear out the description if we don't use it
+      if (!this.get("useDescription") && this.get("description1")) {
+        this.set({description1: ""});
+      }
+      this.setReadOnly("description1", !this.get("useDescription"));
+    }
+
 
   });
 
@@ -671,7 +705,9 @@ white:true*/
   XM.ItemRelationCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.ItemRelationCharacteristic.prototype */
 
-    recordType: 'XM.ItemRelationCharacteristic'
+    recordType: 'XM.ItemRelationCharacteristic',
+
+    which: 'isItems'
 
   });
 
@@ -712,18 +748,6 @@ white:true*/
    /** @scope XM.ItemGroupCollection.prototype */
 
     model: XM.ItemGroup
-
-  });
-
-  /**
-   @class
-
-   @extends XM.Collection
-  */
-  XM.ItemGroupItemCollection = XM.Collection.extend({
-   /** @scope XM.ItemGroupCollection.prototype */
-
-    model: XM.ItemGroupItem
 
   });
 

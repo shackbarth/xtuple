@@ -1,13 +1,57 @@
-/* LESS version of screen.scss file previously in login
+/**
 
-	To compile to .css: lessc screen.less > ../stylesheets/screen.css
-	Use -compress for a compressed .css with no comments
+  Css classes for the login area in node-datasource.
 
 */
-/*
-	These variables will show in css as their hex values
-*/
-/* Helper classes for css3 */
+* {
+  margin: 0;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin: 0 0 160px; /* bottom = footer height */
+}
+
+html {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 160px;
+  width: 100%;
+  background-color: #eee;
+}
+
+.footer-container {
+  position: relative;
+  margin: 0 auto;
+  padding: 30px 5px 0 5px;
+  max-width: 700px;
+}
+.footer-container p {
+  color: #888;
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 1em;
+  text-align: center;
+  line-height: 1.6em;
+}
+.footer-container a {
+  color: #4183c4;
+  text-decoration: none;
+}
+.footer-container a:hover {
+  text-decoration: underline;
+}
+
 .clearfix {
   *zoom: 1;
 }
@@ -20,6 +64,7 @@
 .clearfix:after {
   clear: both;
 }
+
 .hide-text {
   font: 0/0 a;
   color: transparent;
@@ -27,6 +72,7 @@
   background-color: transparent;
   border: 0;
 }
+
 .input-block-level {
   display: block;
   width: 100%;
@@ -35,24 +81,7 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-}
-body {
-  /*  width: 320px;*/
 
-}
-body.enyo-unselectable.enyo-body-fit {
-  margin: 0 auto;
-  padding: 0;
-  height: auto;
-}
 label.login-message-box {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -63,33 +92,41 @@ label.login-message-box {
   width: 100%;
   text-align: center;
 }
+
 label.login-message-box.error {
   color: #ff0000;
 }
+
 #login {
   position: relative;
   width: 280px;
   margin: 80px auto;
+  padding-bottom: 20px;
 }
+
 #header_image {
   display: block;
   margin: 0 auto 5px auto;
   width: 162px;
   text-align: center;
 }
+
 #oauth {
   display: table;
   padding-bottom: 5px;
 }
+
 #oauth_icon {
   display: table-cell;
   float: left;
   margin-right: 5px;
 }
+
 #oauth_request {
   display: table-cell;
   vertical-align: middle;
 }
+
 #oauth_party {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -104,6 +141,7 @@ label.login-message-box.error {
   z-index: 2;
   color: #ffffff;
 }
+
 #oauth_party .login-button {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
   font-size: 11px;
@@ -118,6 +156,7 @@ label.login-message-box.error {
   font-weight: 500;
   float: right;
 }
+
 #main {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -131,12 +170,15 @@ label.login-message-box.error {
   overflow: visible;
   z-index: 2;
 }
+
 #main div {
   position: relative;
 }
+
 #main #form-fields {
   margin: 0 auto;
 }
+
 #main .login-input {
   display: block;
   width: 97%;
@@ -148,15 +190,19 @@ label.login-message-box.error {
   font-size: 14px;
   line-height: 1.5em;
 }
+
 #main .login-input:-moz-placeholder {
   color: #d5d5d5;
 }
+
 #main .login-input:-ms-input-placeholder {
   color: #d5d5d5;
 }
+
 #main .login-input::-webkit-input-placeholder {
   color: #d5d5d5;
 }
+
 #main .login-label {
   display: block;
   margin: 15px auto 7px auto;
@@ -164,6 +210,7 @@ label.login-message-box.error {
   color: #ffffff;
   text-shadow: #2f6c9d 2px 2px 1px;
 }
+
 #main .login-button {
   display: block;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
@@ -178,10 +225,12 @@ label.login-message-box.error {
   text-shadow: #ccc 0 0 0;
   font-weight: 500;
 }
+
 #main #organizations {
   position: relative;
   max-height: 200px;
 }
+
 .organization-item {
   padding: 8px;
   margin: 10px 0;
@@ -192,30 +241,17 @@ label.login-message-box.error {
   color: #ff6600;
   cursor:default;
 }
+
 .forgot-password {
   color: orange;
   text-decoration: none;
 }
+
 .forgot-password:hover {
   text-decoration: underline;
 }
+
 @include box-sizing(border-box);
 #main #organizations .organization-item:hover {
   background-color: #ffffff;
-}
-#X {
-  position: fixed;
-  top: 50%;
-  right: -300px;
-  height: 600px;
-  margin-top: -300px;
-  text-align: center;
-  font-size: 1000px;
-  line-height: 550px;
-  font-weight: bold;
-  color: #b8b8b8;
-  color: rgba(255, 255, 255, 0.3);
-  text-rendering: optimizeLegibility;
-  text-shadow: -1px -1px rgba(0, 0, 0, 0.2);
-  opacity: 0.5;
 }

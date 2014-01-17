@@ -2,9 +2,9 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true*/
 
+_ = require('underscore');
 
-var _ = require('underscore'),
-  async = require('async'),
+var  async = require('async'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
@@ -72,14 +72,14 @@ var _ = require('underscore'),
       credsClone = JSON.parse(JSON.stringify(creds));
     // the calls to drop and create the database need to be run against the database "postgres"
     credsClone.database = "postgres";
-    winston.log("Dropping database " + databaseName);
+    winston.info("Dropping database " + databaseName);
     dataSource.query("drop database if exists " + databaseName + ";", credsClone, function (err, res) {
       if (err) {
         winston.error("drop db error", err.message, err.stack, err);
         callback(err);
         return;
       }
-      winston.log("Creating and restoring database " + databaseName);
+      winston.info("Creating and restoring database " + databaseName);
       dataSource.query("create database " + databaseName + " template template1", credsClone, function (err, res) {
         if (err) {
           winston.error("create db error", err.message, err.stack, err);
@@ -521,12 +521,19 @@ var _ = require('underscore'),
         "delete from xt.clientcode where clientcode_id in " +
         "(select clientcode_id from xt.clientcode inner join xt.ext on clientcode_ext_id = ext_id where ext_name = $1);",
 
+        "delete from xt.dict where dict_id in " +
+        "(select dict_id from xt.dict inner join xt.ext on dict_ext_id = ext_id where ext_name = $1);",
+
         "delete from xt.extdep where extdep_id in " +
         "(select extdep_id from xt.extdep inner join xt.ext " +
         "on extdep_from_ext_id = ext_id or extdep_to_ext_id = ext_id where ext_name = $1);",
 
         "delete from xt.ext where ext_name = $1;"];
 
+    if (extension.charAt(extension.length - 1) === "/") {
+      // remove trailing slash if present
+      extension = extension.substring(0, extension.length - 1);
+    }
     winston.info("Unregistering extension:", extension);
     var unregisterEach = function (spec, callback) {
       var options = JSON.parse(JSON.stringify(creds));

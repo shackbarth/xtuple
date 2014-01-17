@@ -1,0 +1,9 @@
+enyo.depends(
+  "characteristic.js",
+  "configure.js",
+  "item_source.js",
+  "purchase_order.js",
+  "vendor.js",
+  "static.js",
+  "startup.js"
+);
