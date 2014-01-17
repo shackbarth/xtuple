@@ -1686,7 +1686,8 @@ select xt.install_js('XT','Data','xtuple', $$
           XT.debug('fetch values = ', clause.parameters);
         }
 
-        return plv8.execute(sqlCount, clause.parameters) || [];
+        return ret.data = plv8.execute(sqlCount, clause.parameters);
+        return ret;
       }
 
       /* Query the model. */
