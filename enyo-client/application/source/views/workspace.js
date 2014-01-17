@@ -115,8 +115,7 @@ strict: false*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel",
-          fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
@@ -765,6 +764,19 @@ strict: false*/
   XV.registerModelWorkspace("XM.CustomerRelation", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerListItem", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerProspectListItem", "XV.CustomerWorkspace");
+
+  // ..........................................................
+  // CUSTOMER EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerEmailProfileWorkspace",
+    kind: "XV.EmailProfileWorkspace",
+    title: "_customerEmailProfile".loc(),
+    model: "XM.CustomerEmailProfile",
+  });
+
+  XV.registerModelWorkspace("XM.CustomerEmailProfile", "XV.CustomerEmailProfileWorkspace");
 
   // ..........................................................
   // CUSTOMER GROUP
