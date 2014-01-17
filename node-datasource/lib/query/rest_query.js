@@ -116,8 +116,8 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   function toXtGetQuery(source) {
     var target = {
-      // coerce to boolean
-      count: _.contains(["false", "0"], source.count) ? false : !!source.count,
+      // coerce to boolean with our own whitelist of truthiness
+      count: _.contains([true, "true", "TRUE", 1, "1"], source.count),
       // Return source.parameters when doing a FreeTextQuery or build up from attributes.
       parameters: source.parameters || _.flatten(
         _.map(source.attributes, function (clause, attr) {
