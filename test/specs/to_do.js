@@ -75,7 +75,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     /**
       @member -
       @memberof ToDo
-      @description Tax Rate is used in CRM module
+      @description To Do Items are used in CRM module
     */
     extensions: ["crm"],
     /**
