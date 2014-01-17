@@ -188,16 +188,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         attachments: [{fileName: reportPath, contents: data, contentType: "application/pdf"}]
       };
       var callback = function (error, response) {
-          if (error) {
-            X.log("Email error", error);
-            res.send({isError: true, message: "Error emailing"});
-          } else {
-            res.send({message: "Email success"});
-          }
-        };
+        if (error) {
+          X.log("Email error", error);
+          res.send({isError: true, message: "Error emailing"});
+          done();
+        } else {
+          res.send({message: "Email success"});
+          done();
+        }
+      };
 
       X.smtpTransport.sendMail(mailContent, callback);
-      done();
     };
 
     /**

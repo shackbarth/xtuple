@@ -116,6 +116,7 @@
     "xt/tables/acttype.sql",
     "xt/tables/sharetype.sql",
     "xt/tables/emlprofile.sql",
+    "xt/tables/custemlprofile.sql",
     "xt/tables/salesemlprofile.sql",
     "xt/tables/saletypeext.sql",
     "xt/tables/filter.sql",
