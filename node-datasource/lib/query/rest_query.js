@@ -67,7 +67,9 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
         },
         '(?)maxresults': _.isFinite,
         '(?)pagetoken': _.isFinite,
-        '(?)count': _.isBoolean,
+        '(?)count': function (count) {
+          return true;
+        },
         '(?)access_token': _.isString
       }
     },
