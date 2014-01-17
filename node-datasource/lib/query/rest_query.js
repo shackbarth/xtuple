@@ -67,9 +67,7 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
         },
         '(?)maxresults': _.isFinite,
         '(?)pagetoken': _.isFinite,
-        '(?)count': function (count) {
-          return _.contains([ true, false, 1, 0], count);
-        },
+        '(?)count': _.isBoolean,
         '(?)access_token': _.isString
       }
     },
@@ -118,7 +116,8 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   function toXtGetQuery(source) {
     var target = {
-      count: source.count,
+      // coerce to boolean
+      count: _.contains(["false", "0"], source.count) ? false : !!source.count,
       // Return source.parameters when doing a FreeTextQuery or build up from attributes.
       parameters: source.parameters || _.flatten(
         _.map(source.attributes, function (clause, attr) {
