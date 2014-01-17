@@ -678,6 +678,7 @@ strict: false*/
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
             {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
+            {kind: "XV.CustomerEmailProfilePicker", attr: "emailProfile"},
             {kind: "XV.CheckboxWidget", attr: "backorder"},
             {kind: "XV.CheckboxWidget", attr: "partialShip"},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
