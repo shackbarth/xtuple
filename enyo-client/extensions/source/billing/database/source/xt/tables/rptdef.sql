@@ -8,7 +8,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "definition": [{"text": "_invoice"}],
       "options": {"fontBold": true, "fontSize": 18, "x": 0, "y": 0, "align": "right"}
     },
-    {"element": "fontSize", "size": 12},   
+    {"element": "fontSize", "size": 12},
     {
       "definition": [
         {"attr": "invoiceDate", "label": true},
@@ -113,7 +113,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     {"element": "newline"},
     {"element": "newline"},
     {"element": "bandLine", "size": 2},
-    { 
+    {
       "definition": [
         {"attr": "subtotal", "label": true},
         {"attr": "taxTotal", "label": true},

@@ -299,7 +299,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     /**
 
     */
-    var fetchCurrentUser = function (done) {
+    var fetchRemitTo = function (done) {
       // TODO
       done();
     };

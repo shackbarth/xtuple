@@ -3,7 +3,7 @@
   "comment": "Billing extension",
   "loadOrder": 30,
   "databaseScripts": [
-    "public/tables/rptdef.sql",
+    "xt/tables/rptdef.sql",
     "xm/javascript/billing.sql",
     "xm/javascript/invoice.sql",
     "xm/javascript/return.sql",
