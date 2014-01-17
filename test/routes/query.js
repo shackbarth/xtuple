@@ -2,7 +2,6 @@ describe('Query', function () {
   var querylib, assert,
     RestQuery,
     FreeTextQuery,
-    
     XtGetQuery;
 
   before(function () {
@@ -81,7 +80,7 @@ describe('Query', function () {
         });
       });
       describe('#toTarget()', function () {
-        describe('@param XtGetQuery', function () {
+        describe.skip('@param XtGetQuery', function () {
           it('should translate simple query', function () {
             var fq1 = new FreeTextQuery(simpleQuery1);
 
@@ -127,11 +126,25 @@ describe('Query', function () {
           maxresults: 50,
           pagetoken: 5
         },
+        countQuery1 = {
+          attributes: {
+            'customer.number': { EQUALS: 'XTRM' },
+            'amount': { GREATER_THAN: 5000 }
+          },
+          count:true
+        },
         invalidQuery1 = {
           attributes: {
             'customer.number': { EQUALS: 'XTRM' },
             'amount': { BETTER_THAN: 'you' }
           }
+        },
+        invalidCountQuery1 = {
+          attributes: {
+            'customer.number': { EQUALS: 'XTRM' },
+            'amount': { GREATER_THAN: 5000 }
+          },
+          count:"yes"
         };
 
       it('is sane', function () {
@@ -152,13 +165,15 @@ describe('Query', function () {
         it('should validate a simple query', function () {
           var rq1 = new RestQuery(simpleQuery1),
               rq2 = new RestQuery(simpleQuery2);
-
           assert.isTrue(rq1.isValid());
           assert.isTrue(rq2.isValid());
         });
         it('should validate a compound query', function () {
           var rq1 = new RestQuery(compoundQuery1);
-
+          assert.isTrue(rq1.isValid());
+        });
+        it('should validate a count query', function () {
+          var rq1 = new RestQuery(countQuery1);
           assert.isTrue(rq1.isValid());
         });
         it('should invalidate a nonsense query', function () {
@@ -167,6 +182,10 @@ describe('Query', function () {
         });
         it('should invalidate a plausible but bad query', function () {
           var rq1 = new RestQuery(invalidQuery1);
+          assert.isFalse(rq1.isValid());
+        });
+        it('should invalidate an invalid count query', function () {
+          var rq1 = new RestQuery(invalidCountQuery1);
           assert.isFalse(rq1.isValid());
         });
       });
@@ -200,6 +219,7 @@ describe('Query', function () {
         ],
         "rowOffset":0,
         "rowLimit":50,
+        "count":false,
         "parameters":[
           {"attribute":"isPosted","operator":"=","value":true},
           {"attribute":"invoiceDate","operator":">=","isCharacteristic":false,"value":"2000-12-03T00:00:00.000Z"}
