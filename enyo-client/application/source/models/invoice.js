@@ -656,7 +656,8 @@ white:true*/
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
-      this.on('change:isMiscellaneous', this.isMiscellaneousDidChange);
+      this.on('change:taxType', this.calculateTax);
+      this.on('change:isMiscellaneous', this.calculateTax);
 
       this.isMiscellaneousDidChange();
     },
@@ -736,7 +737,9 @@ white:true*/
         processTaxResponses,
         that = this,
         options = {},
-        params;
+        params,
+        taxTotal = 0.00,
+        taxesTotal = [];
 
       // If no parent, don't bother
       if (!parent) { return; }
@@ -758,6 +761,7 @@ white:true*/
                 amount: resp.tax
               });
               that.get("taxes").add(taxModel);
+              taxesTotal.push(resp.tax);
               callback();
             };
             var taxModel = new XM.InvoiceLineTax();
@@ -767,10 +771,11 @@ white:true*/
           var finish = function () {
             that.recalculateParent(false);
           };
-
           that.get("taxes").reset(); // empty it out so we can populate it
 
           async.map(responses, processTaxResponse, finish);
+          taxTotal = XT.math.add(taxesTotal, XT.COST_SCALE);
+          that.set("taxTotal", taxTotal);
         };
         options.success = processTaxResponses;
         this.dispatch("XM.Tax", "taxDetail", params, options);

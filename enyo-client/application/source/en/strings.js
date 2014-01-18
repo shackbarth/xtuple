@@ -647,6 +647,7 @@ strict:true, trailing:true, white:true */
     "_taxClass": "Tax Class",
     "_taxRate": "Tax Rate",
     "_taxRegistration": "Tax Registrations",
+    "_taxTotal": "Tax Total",
     "_taxZone": "Tax Zone",
     "_terms": "Terms",
     "_testMode": "Test Mode",

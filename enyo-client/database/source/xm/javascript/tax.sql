@@ -20,6 +20,7 @@ select xt.install_js('XM','Tax','xtuple', $$
   */
   XM.Tax.taxDetail = function(taxZoneId, taxTypeId, effective, currencyId, amount) {
     var ret,
+        presql = 'delete from '
         sql = 'select tx as "taxCode", bs as "basisTaxCode", ' 
             + '  taxdetail_taxclass_sequence as "sequence", taxdetail_taxrate_percent as "percent", '
             + '  taxdetail_taxrate_amount as "amount", taxdetail_tax as "tax" '
