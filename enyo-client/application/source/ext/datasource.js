@@ -187,6 +187,14 @@ white:true*/
 
             // Handle case where an entire collection was saved
             if (options.collection) {
+              // Destroyed models won't have a response unless they made the whole
+              // request fail. Assume successful destruction.
+              options.collection.each(function (model) {
+                if (model.getStatus() === XM.Model.DESTROYED_DIRTY) {
+                  model.trigger("destroy", model, model.collection, options);
+                }
+              });
+
               if (dataHash[0].patches) {
                 _.each(dataHash, function (data) {
                   var cModel;
