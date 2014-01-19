@@ -70,6 +70,7 @@
       "nameSpace":"XM",
       "type": "Contact",
       "id": "10009",
+      "method": "post",
       "data" : {
         "number": "10009",
         "firstName": "Bob",
@@ -82,6 +83,7 @@
       "nameSpace":"XM",
       "type": "Contact",
       "id": "10010",
+      "method": "post",
       "data" : {
         "number": "10010",
         "firstName": "Ziggy",
