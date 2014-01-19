@@ -1348,8 +1348,7 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
             {kind: "XV.MoneyWidget", attr: {localValue: "taxTotal"},
-              label: "_taxTotal".loc(), scale: XT.COST_SCALE,
-              currencyDisabled: true},
+              label: "_tax".loc(), currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
@@ -1879,15 +1878,13 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_detail".loc()},
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
-            {kind: "XV.MoneyWidget", attr: {baseValue: "unitCost"},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "item.standardCost"},
               label: "_unitCost".loc(), isEditableProperty: "baseValue",
-              currencyDisabled: true},
-            {kind: "XV.MoneyWidget", attr: {localValue: "customerPrice"},
-              label: "_customerPrice".loc(), scale: XT.SALES_PRICE_SCALE,
               currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
-            {kind: "XV.NumberWidget", attr: "taxTotal"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "taxTotal"},
+              label: "_taxTotal".loc(), currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
@@ -2170,8 +2167,7 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
             {kind: "XV.MoneyWidget", attr: {localValue: "tax"},
-              label: "_tax".loc(), scale: XT.COST_SCALE,
-              currencyDisabled: true},
+              label: "_tax".loc(), currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
