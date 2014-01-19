@@ -187,10 +187,10 @@ white:true*/
 
             // Handle case where an entire collection was saved
             if (options.collection) {
-              _.each(dataHash, function (data) {
-                var cModel;
+              if (dataHash[0].patches) {
+                _.each(dataHash, function (data) {
+                  var cModel;
 
-                if (data.patches) {
                   cModel = _.find(options.collection.models, function (model) {
                     return data.id === model.id;
                   });
@@ -206,14 +206,12 @@ white:true*/
                   options.success.call(that, cModel, attrs, options);
 
                   options.collection.remove(cModel);
-                }
-              });
-
-              // This typically happens when requery option === false
-              // and no patches were found
-              options.collection.each(function (model) {
-                options.success.call(that, model, true, options);
-              });
+                });
+              } else {
+                // This typically happens when requery option === false
+                // and no patches were found
+                options.success.call(that, options.collection.at(0), true, options);
+              }
               return;
 
             // Handle normal single model case
