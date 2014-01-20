@@ -1,3 +1,7 @@
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true,
+noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
+/*global _:true, moment:true */
+
 (function () {
   'use strict';
 
@@ -7,8 +11,8 @@
   /**
    * @constructor
    */
-  function XtGetQuery (query) {
-    this.template || (this.template = XtGetQuery.template);
+  function XtGetQuery(query) {
+    this.template = this.template || XtGetQuery.template;
     TargetQuery.call(this, query);
   }
 
@@ -41,7 +45,8 @@
           });
         },
         '(?)rowLimit':  _.isFinite,
-        '(?)rowOffset': _.isFinite
+        '(?)rowOffset': _.isFinite,
+        '(?)count': _.isBoolean
       }
     }
   });

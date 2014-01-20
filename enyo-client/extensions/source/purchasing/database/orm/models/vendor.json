@@ -1,17 +1,17 @@
 [
   {
-    "context": "xtuple",
+    "context": "purchasing",
     "nameSpace": "XM",
-    "type": "PurchaseVendor",
+    "type": "PurchaseVendorRelation",
     "table": "vendinfo",
     "isRest": true,
     "comment": "Purchase Vendor Map",
     "privileges": {
       "all": {
-        "create": "MaintainPurchaseOrders",
-        "read": "ViewPurchaseOrders",
-        "update": "MaintainPurchaseOrders",
-        "delete": "MaintainPurchaseOrders"
+        "create": false,
+        "read": "ViewPurchaseOrders MaintainPurchaseOrders",
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -46,26 +46,20 @@
         }
       },
       {
+        "name": "vendorAddress",
+        "toOne": {
+          "isNested": true,
+          "type": "VendorAddressRelation",
+          "column": "obj_uuid",
+          "inverse": "uuid"
+        }
+      },
+      {
         "name": "primaryContact",
         "toOne": {
           "type": "ContactRelation",
           "column": "vend_cntct1_id",
           "isNested": true
-        }
-      },
-      {
-        "name": "secondaryContact",
-        "toOne": {
-          "type": "ContactRelation",
-          "column": "vend_cntct2_id",
-          "isNested": true
-        }
-      },
-      {
-        "name": "address",
-        "toOne": {
-          "type": "Address",
-          "column": "vend_addr_id"
         }
       },
       {
@@ -97,15 +91,76 @@
         }
       },
       {
-        "name": "alternateAddresses",
-        "toMany": {
+        "name": "incotermsSource",
+        "attr": {
+          "type": "String",
+          "column": "vend_fobsource"
+        }
+      },
+      {
+        "name": "incoterms",
+        "attr": {
+          "type": "String",
+          "column": "vend_fob"
+        }
+      },
+      {
+        "name": "itemSourceRequired",
+        "attr": {
+          "type": "Boolean",
+          "column": "vend_restrictpurch"
+        }
+      }      
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseVendorAddress",
+    "table": "xt.vendaddr",
+    "comment": "Purchase Vendor Address Map",
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "code"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "name"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
           "isNested": true,
-          "type": "VendorAddress",
-          "column": "vend_id",
-          "inverse": "vendor"
+          "type": "AddressInfo",
+          "column": "addr_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "cntct_id"
         }
       }
     ],
+    "isNestedOnly": true,
     "isSystem": true
   }
 ]

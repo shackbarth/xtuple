@@ -186,13 +186,6 @@
         }
       },
       {
-        "name": "isPicklist",
-        "attr": {
-          "type": "Boolean",
-          "column": "item_picklist"
-        }
-      },
-      {
         "name": "notes",
         "attr": {
           "type": "String",
@@ -1627,7 +1620,7 @@
     "privileges": {
       "all": {
         "create": "MaintainUOMs",
-        "read": true,
+        "read": "ViewUOMs",
         "update": "MaintainUOMs",
         "delete": "MaintainUOMs"
       }

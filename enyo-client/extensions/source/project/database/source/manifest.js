@@ -7,8 +7,6 @@
     "public/tables/empgrp.sql",
     "xt/tables/prjemlprofile.sql",
     "xt/tables/prjtypeext.sql",
-    "xt/tables/prjtypewf.sql",
-    "xt/tables/prjext.sql",
     "xt/tables/prjtaskext.sql",
     "xt/tables/prjwf.sql",
     "xt/tables/tskresource.sql",

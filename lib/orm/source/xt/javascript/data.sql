@@ -160,9 +160,35 @@ select xt.install_js('XT','Data','xtuple', $$
 
           /* Array comparisons handle another way. e.g. %1$I !<@ ARRAY[$1,$2] */
           } else if (op === '<@' || op === '!<@') {
-            identifiers.push(param.attribute);
-            params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
-            pcount = params.length - 1;
+            /* Handle paths if applicable. */
+            if (param.attribute.indexOf('.') > -1) {
+              parts = param.attribute.split('.');
+              childOrm = this.fetchOrm(nameSpace, type);
+              params.push("");
+              pcount = params.length - 1;
+
+              for (var n = 0; n < parts.length; n++) {
+                /* Validate attribute. */
+                prop = XT.Orm.getProperty(childOrm, parts[n]);
+                if (!prop) {
+                  plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                }
+
+                /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                identifiers.push(parts[n]);
+                params[pcount] += "%" + identifiers.length + "$I";
+                if (n < parts.length - 1) {
+                  params[pcount] = "(" + params[pcount] + ").";
+                  childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                } else {
+                  params[pcount] += op + ' ARRAY[' + param.value.join(',') + ']';
+                }
+              }
+            } else {
+              identifiers.push(param.attribute);
+              params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
+              pcount = params.length - 1;
+            }
             clauses.push(params[pcount]);
 
           /* Everything else handle another. */
@@ -1642,11 +1668,27 @@ select xt.install_js('XT','Data','xtuple', $$
         ids = [],
         idParams = [],
         counter = 1,
+        sqlCount,
         sql1 = 'select %3$I as id from %1$I.%2$I where {conditions} {orderBy} {limit} {offset};',
         sql2 = 'select * from %1$I.%2$I where %3$I in ({ids}) {orderBy}';
 
       /* Validate - don't bother running the query if the user has no privileges. */
       if (!this.checkPrivileges(nameSpace, type)) { return []; }
+
+      if (query.count) {
+        /* Just get the count of rows that match the conditions */
+        sqlCount = 'select count(*) as count from %1$I.%2$I where {conditions};';
+        sqlCount = XT.format(sqlCount, [nameSpace.decamelize(), type.decamelize()]);
+        sqlCount = sqlCount.replace('{conditions}', clause.conditions);
+
+        if (DEBUG) {
+          XT.debug('fetch sqlCount = ', sqlCount);
+          XT.debug('fetch values = ', clause.parameters);
+        }
+
+        ret.data = plv8.execute(sqlCount, clause.parameters);
+        return ret;
+      }
 
       /* Query the model. */
       sql1 = XT.format(sql1, [nameSpace.decamelize(), type.decamelize(), key]);
@@ -1769,17 +1811,25 @@ select xt.install_js('XT','Data','xtuple', $$
         context.type = context.type || context.recordType.afterDot()
         context.map = this.fetchOrm(context.nameSpace, context.type);
         context.prop = XT.Orm.getProperty(context.map, context.relation);
+        context.pertinentExtension = XT.Orm.getProperty(context.map, context.relation, true);
+        context.underlyingTable = context.pertinentExtension.table,
+        context.underlyingNameSpace = context.underlyingTable.indexOf(".") > 0 ? 
+          context.underlyingTable.beforeDot() : 
+          "public";
+        context.underlyingType = context.underlyingTable.indexOf(".") > 0 ? 
+          context.underlyingTable.afterDot() : 
+          context.underlyingTable;
         context.fkey = context.prop.toMany.inverse;
+        context.fkeyColumn = context.prop.toMany.column;
         context.pkey = XT.Orm.naturalKey(context.map) || XT.Orm.primaryKey(context.map);
         params.attribute = context.pkey;
         params.value = context.value;
 
-        join = 'join %1$I.%2$I on (%3$I.%4$I = %5$I.%6$I)';
+        join = 'join %1$I.%2$I on (%1$I.%2$I.%3$I = %4$I.%5$I)';
         join = XT.format(join, [
-            context.recordType.beforeDot().decamelize(),
-            context.recordType.afterDot().decamelize(),
-            context.type.decamelize(),
-            context.pkey,
+            context.underlyingNameSpace,
+            context.underlyingType,
+            context.fkeyColumn,
             type.decamelize(),
             context.fkey
           ]);

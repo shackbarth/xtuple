@@ -1393,7 +1393,7 @@ ul.icons-ul > li .icon-li {
   position: absolute;
   right: 0;
   margin: 0 10px 0 2px;
-  color: #000000;
+  color: #070707;
 }
 .xv-picker-button {
   text-align: left;
@@ -1406,7 +1406,7 @@ ul.icons-ul > li .icon-li {
   color: #696969;
 }
 .xv-picker-label {
-  color: #000000;
+  color: #070707;
   padding: 20px 8px 8px 8px;
   text-align: right;
   width: 130px;
@@ -1454,7 +1454,7 @@ ul.icons-ul > li .icon-li {
   border: 0;
 }
 .xv-grid-box .xv-scroller {
-  background: #f8f8ff;
+  background: #f8f8f8;
 }
 .xv-grid-box .xv-grid-attr.bold {
   font-weight: bold;
@@ -1556,7 +1556,7 @@ ul.icons-ul > li .icon-li {
   width: 100px;
 }
 .xv-grid-box .xv-grid-row.readonly {
-  background: #f8f8ff;
+  background: #f8f8f8;
   min-height: 56px;
 }
 .xv-grid-box .xv-grid-row.selected {
@@ -1651,19 +1651,15 @@ ul.icons-ul > li .icon-li {
   padding-top: 6px;
   width: 100%;
 }
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-decorated-label {
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label,
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-flexible-label,
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
   display: none;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
   text-indent: 0;
   padding-bottom: 0;
   padding-top: 8px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
-  display: none;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
   border-bottom: 0;
@@ -1785,20 +1781,28 @@ ul.icons-ul > li .icon-li {
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
   min-height: 32px;
-  padding: 2px 36px 2px 2px;
+  padding: 2px;
+  padding-right: 36px;
 }
 .xv-list .xv-list-item.header {
   padding-top: 0;
 }
 .xv-list .xv-list-item.inactive {
   background-color: #8d8d8d;
-  color: #000000;
+  color: #070707;
 }
 .xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
   background: transparent;
 }
 .xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
   color: #8d8d8d;
+}
+.xv-list .xv-list-item .xv-list-column.name-column {
+  width: 14em;
+}
+.xv-list .xv-list-item .xv-list-column.right-column {
+  width: 8em;
+  text-align: right;
 }
 .xv-list .xv-list-item .xv-list-column.short {
   width: 9em;
@@ -1865,7 +1869,7 @@ ul.icons-ul > li .icon-li {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #000000;
+  color: #070707;
 }
 .xv-list-attr.header {
   padding: 4px;
@@ -1881,12 +1885,11 @@ ul.icons-ul > li .icon-li {
   font-size: .7em;
   font-weight: bold;
   text-transform: uppercase;
-  color: #000000;
+  color: #070707;
 }
 .xv-list-attr.right {
   position: absolute;
   right: 10px;
-  height: 20px;
 }
 .xv-list-attr.text-align-right {
   text-align: right;
@@ -2030,10 +2033,10 @@ ul.icons-ul > li .icon-li {
   background-color: #ffffff;
 }
 .xv-parameter-item .xv-label {
-  color: #000;
+  color: #070707;
 }
-.xv-parameter-item .xv-decorated-label {
-  color: #000;
+.xv-parameter-item .xv-flexible-label {
+  color: #070707;
 }
 .xv-parameter-item .xv-picker {
   width: 150px;
@@ -2170,7 +2173,7 @@ ul.icons-ul > li .icon-li {
 }
 .xv-relationwidget-column.left {
   padding-right: 18px;
-  color: #000000;
+  color: #070707;
   width: 140px;
 }
 .xv-relationwidget-icon {
@@ -2312,7 +2315,7 @@ ul.icons-ul > li .icon-li {
   font-size: 13px;
   white-space: normal;
   overflow: auto;
-  color: #000000;
+  color: #070707;
   background-color: #ffffff;
 }
 /**
@@ -2553,6 +2556,13 @@ body {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
+/**
+  Sets a fixed height on all of the toolbars
+  so that they're not dependent on the icon height
+*/
+.onyx-menu-toolbar {
+  height: 57px;
+}
 .item {
   position: relative;
   padding: 16px 12px;
@@ -2572,7 +2582,7 @@ body {
   text-shadow: none;
 }
 .text-shadow-0 {
-  text-shadow: 0 0 #000000;
+  text-shadow: 0 0 #070707;
 }
 .xv-my-account-popup {
   background-color: #ffffff;
@@ -2598,7 +2608,7 @@ body {
 }
 .xv-sort-popup {
   background-color: #ffffff;
-  color: #000000;
+  color: #070707;
 }
 .xv-sort-popup .xv-groupbox > *:last-child {
   text-align: center;
@@ -2643,7 +2653,7 @@ body {
 .xv-negative {
   color: #c51616;
 }
-.xv-assignment-box .xv-decorated-label {
+.xv-assignment-box .xv-flexible-label {
   width: 85%;
 }
 .xv-assignment-box .xv-label {
@@ -2690,14 +2700,18 @@ body {
   vertical-align: middle;
 }
 .xv-label,
-.xv-decorated-label {
+.xv-flexible-label {
   padding: 8px;
   text-align: right;
 }
 .xv-label.disabled,
-.xv-decorated-label.disabled {
+.xv-flexible-label.disabled {
   color: #696969;
 }
+/**
+  This label style has a fixed width, while
+  the flexible label depends on a fit: true
+*/
 .xv-label {
   width: 130px;
 }
@@ -2710,7 +2724,7 @@ body {
   min-height: 100px;
   margin: 6px;
   border: #ddd 2px solid;
-  color: #000000;
+  color: #070707;
 }
 .xv-documents-picker-label {
   width: 85px;
@@ -2733,7 +2747,7 @@ body {
 .xv-menuitem.disabled {
   color: #696969;
 }
-/* This is for styling the moved items in the more toolbar*/
+/* This is for styling the moved items in the more toolbar */
 .xv-toolbar-moved {
   width: 220px;
 }

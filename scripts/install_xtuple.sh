@@ -115,12 +115,12 @@ install_packages() {
     sudo ln -s /usr/local/nvm/nvm_bin.sh /usr/local/bin/nvm
     sudo chmod +x /usr/local/bin/nvm
   fi
-  sudo nvm install $NODE_VERSION 
+  sudo nvm install $NODE_VERSION
   sudo nvm use $NODE_VERSION
   sudo nvm alias default $NODE_VERSION
   sudo nvm alias xtuple $NODE_VERSION
   log "installing npm modules..."
-  npm install 2>&1 | tee -a $LOG_FILE
+  npm install --unsafe-perm 2>&1 | tee -a $LOG_FILE
 }
 
 # Use only if running from a debian package install for the first time
@@ -171,7 +171,7 @@ setup_postgres() {
 	cdir $BASEDIR/postgres
 	sudo wget -q http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
 	wait
-  NEWESTVERSION=$(cat rss | grep -o '03%20PostBooks-databases\/4.[0-9].[0-9]\(RC\)\?\/postbooks_demo-4.[0-9].[0-9]\(RC\)\?.backup\/download' | grep -o '4.[0-9].[0-9]\(RC\)\?' | head -1)
+  NEWESTVERSION=$(cat rss | grep -o '03%20PostBooks-databases\/4.2.1\/postbooks_demo-4.2.1.backup\/download' | grep -o '4.2.1' | head -1)
 	sudo rm rss
 
 	if [ -z "$NEWESTVERSION" ]

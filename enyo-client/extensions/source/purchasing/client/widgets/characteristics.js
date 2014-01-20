@@ -19,6 +19,17 @@ white:true, strict: false*/
     });
 
     // ..........................................................
+    // PURCHASE ORDER LINE
+    //
+
+    enyo.kind({
+      name: "XV.PurchaseOrderLineCharacteristicsWidget",
+      kind: "XV.OrderCharacteristicsWidget",
+      parentKey: "purchaseOrderLine",
+      model: "XM.PurchaseOrderLineCharacteristic"
+    });
+
+    // ..........................................................
     // PURCHASE TYPE
     //
 

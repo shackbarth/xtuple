@@ -1,7 +1,7 @@
 /**
     Procedure for creating a new record or dispatching a JavaScript function in the database.
 
-    @param {Text} Data hash that can parsed into a JavaScript object.
+    @param {Text} Data hash that can parsed into a JavaScript object or array.
     @param {String} [dataHash.username] Username. Required.
     @param {String} [dataHash.nameSpace] Namespace. Required.
     @param {String} [dataHash.type] Type. Required.
@@ -18,9 +18,9 @@
       "username": "admin",
       "nameSpace":"XM",
       "type": "Contact",
-      "id": "99999",
+      "id": "10009",
       "data" : {
-        "number": "99999",
+        "number": "10009",
         "firstName": "Bob",
         "lastName": "Marley",
         "email":[
@@ -55,7 +55,7 @@
       "username": "admin",
       "nameSpace":"XM",
       "type": "Contact",
-      "id": 10,
+      "id": "10009",
       "data" : {
         "number": "10009",
         "firstName": "Bob",
@@ -63,6 +63,33 @@
       },
       "prettyPrint": true
     }');
+
+    select xt.post('[
+      {
+      "username": "admin",
+      "nameSpace":"XM",
+      "type": "Contact",
+      "id": "10009",
+      "data" : {
+        "number": "10009",
+        "firstName": "Bob",
+        "lastName": "Marley"
+      },
+      "prettyPrint": true
+      },
+      {
+      "username": "admin",
+      "nameSpace":"XM",
+      "type": "Contact",
+      "id": "10010",
+      "data" : {
+        "number": "10010",
+        "firstName": "Ziggy",
+        "lastName": "Marley"
+      },
+      "prettyPrint": true
+      }
+    ]');
 
     select xt.post($${
       "username": "admin",
@@ -169,125 +196,143 @@
     }$$);
 */
 create or replace function xt.post(data_hash text) returns text as $$
+
+return (function () {
+
+  var dataArray = JSON.parse(data_hash),
+    isArray = XT.typeOf(dataArray) === 'array',
+    result = [],
+    data = Object.create(XT.Data),
+    prettyPrint,
+    dispatch,
+    fetchCol,
+    fetchRes,
+    fetchSql,
+    orm,
+    pkey,
+    prv,
+    sql,
+    observer,
+    ret,
+    obj,
+    f,
+    params,
+    args,
+    method;
+
+  /* Make sure the input is an array */
+  dataArray = isArray ? dataArray : [dataArray];
+
   try {
-    var dataHash = JSON.parse(data_hash),
-      prettyPrint = dataHash.prettyPrint ? 2 : null,
-      dispatch = dataHash.dispatch,
-      data,
-      fetchCol,
-      fetchRes,
-      fetchSql,
-      orm,
-      pkey,
-      prv,
-      sql,
-      observer,
-      ret,
-      obj,
-      f,
-      params,
-      args,
-      method;
+    /* Loop through each input and do the work */
+    dataArray.forEach(function (dataHash) {
+      prettyPrint = dataHash.prettyPrint ? 2 : null;
+      dispatch = dataHash.dispatch;
+      dataHash.superUser = false;
+      if (dataHash.username) { XT.username = dataHash.username; }
 
-    dataHash.superUser = false;
-    if (dataHash.username) { XT.username = dataHash.username; }
+      /* if there's data then commit it */
+      if (dataHash.data) {
+        orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type);
+        pkey = XT.Orm.primaryKey(orm);
+        nkey = XT.Orm.naturalKey(orm);
+        prv = JSON.parse(JSON.stringify(dataHash.data));
+        sql = "select nextval($1);";
 
-    /* if there's data then commit it */
-    if (dataHash.data) {
-      data = Object.create(XT.Data)
-      orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type);
-      pkey = XT.Orm.primaryKey(orm);
-      nkey = XT.Orm.naturalKey(orm);
-      prv = JSON.parse(JSON.stringify(dataHash.data));
-      sql = "select nextval($1);";
+        /* set status */
+        XT.jsonpatch.updateState(dataHash.data, "create");
 
-      /* set status */
-      XT.jsonpatch.updateState(dataHash.data, "create");
-
-      /* Set natural key number if not provided. */
-      if (nkey && (nkey !== pkey) && !dataHash.data[nkey]) {
-        if (nkey === 'uuid') {
-          dataHash.data[nkey] = XT.generateUUID();
-        } else {
-          /* Check if this is a fetchable number. */
-          if (orm.orderSequence) {
-            /* Since this is null, but required, fetch the next number for this and use it. */
-            dataHash.data[nkey] = XM.Model.fetchNumber(dataHash.nameSpace + '.' + dataHash.type);
+        /* Set natural key number if not provided. */
+        if (nkey && (nkey !== pkey) && !dataHash.data[nkey]) {
+          if (nkey === 'uuid') {
+            dataHash.data[nkey] = XT.generateUUID();
           } else {
-            throw new handleError("A unique " + nkey + " must be provided", 449);
+            /* Check if this is a fetchable number. */
+            if (orm.orderSequence) {
+              /* Since this is null, but required, fetch the next number for this and use it. */
+              dataHash.data[nkey] = XM.Model.fetchNumber(dataHash.nameSpace + '.' + dataHash.type);
+            } else {
+              throw new handleError("A unique " + nkey + " must be provided", 449);
+            }
           }
         }
-      }
 
-      /* Set id if not provided. */
-      if (!dataHash.id) {
-        if (nkey) {
-          if (dataHash.data[nkey] || nkey === 'uuid') {
-            dataHash.id = dataHash.data[nkey] || XT.generateUUID();
+        /* Set id if not provided. */
+        if (!dataHash.id) {
+          if (nkey) {
+            if (dataHash.data[nkey] || nkey === 'uuid') {
+              dataHash.id = dataHash.data[nkey] || XT.generateUUID();
+            } else {
+              throw new handleError("A unique id must be provided", 449);
+            }
+          } else if (orm.idSequenceName) {
+            dataHash.id = dataHash.data[pkey] || plv8.execute(sql, [orm.idSequenceName])[0].nextval;
           } else {
             throw new handleError("A unique id must be provided", 449);
           }
-        } else if (orm.idSequenceName) {
-          dataHash.id = dataHash.data[pkey] || plv8.execute(sql, [orm.idSequenceName])[0].nextval;
-        } else {
-          throw new handleError("A unique id must be provided", 449);
         }
+
+        /* commit the record */
+        data.commitRecord(dataHash);
+
+        if (dataHash.requery === false) {
+          /* The requestor doesn't care to know what the record looks like now */
+          ret = true;
+        } else {
+          /* calculate a patch of the modifed version */
+          observer = XT.jsonpatch.observe(prv);
+          dataHash.superUser = true;
+          ret = data.retrieveRecord(dataHash);
+          observer.object = ret.data;
+          delete ret.data;
+          ret.patches = XT.jsonpatch.generate(observer);
+          if (!isArray) {
+            ret = JSON.stringify(ret, null, prettyPrint);
+          }
+        }
+
+      /* if it's a function dispatch call then execute it */
+      } else if (dispatch) {
+        obj = plv8[dataHash.nameSpace][dataHash.type];
+        f = dispatch.functionName;
+        params = dispatch.parameters;
+        args = params instanceof Array ? params : [params];
+
+        if (obj[f]) {
+          method = obj[f].curry(args);
+        } else {
+          XT.username = undefined;
+          throw new Error('Function ' + dataHash.nameSpace +
+             '.' + dataHash.type + '.' + f + ' not found.');
+        }
+
+        ret = obj.isDispatchable ? method() : false;
+
+        /**
+         * Remove the requirement of passing 'isJSON' around.
+         * Based on underscore: http://underscorejs.org/docs/underscore.html#section-88
+         */
+        ret = toString.call(ret) != '[object Number]' ?
+          JSON.stringify(ret, null, prettyPrint) : ret;
       }
 
-      /* commit the record */
-      data.commitRecord(dataHash);
+      /* Unset XT.username so it isn't cached for future queries. */
+      XT.username = undefined;
 
-      if (dataHash.requery === false) {
-        /* The requestor doesn't care to know what the record looks like now */
-        ret = true;
+      if (dataHash.dispatch) {
+        XT.message(200, "OK");
       } else {
-        /* calculate a patch of the modifed version */
-        observer = XT.jsonpatch.observe(prv);
-        dataHash.superUser = true;
-        ret = data.retrieveRecord(dataHash);
-        observer.object = ret.data;
-        delete ret.data;
-        ret.patches = XT.jsonpatch.generate(observer);
-        ret = JSON.stringify(ret, null, prettyPrint);
+        XT.message(201, "Created");
       }
 
-    /* if it's a function dispatch call then execute it */
-    } else if (dispatch) {
-      obj = plv8[dataHash.nameSpace][dataHash.type];
-      f = dispatch.functionName;
-      params = dispatch.parameters;
-      args = params instanceof Array ? params : [params];
+      result.push(ret);
+    })
 
-      if (obj[f]) {
-        method = obj[f].curry(args);
-      } else {
-        XT.username = undefined;
-        throw new Error('Function ' + dataHash.nameSpace +
-           '.' + dataHash.type + '.' + f + ' not found.');
-      }
-
-      ret = obj.isDispatchable ? method() : false;
-
-      /**
-       * Remove the requirement of passing 'isJSON' around.
-       * Based on underscore: http://underscorejs.org/docs/underscore.html#section-88
-       */
-      ret = toString.call(ret) != '[object Number]' ?
-        JSON.stringify(ret, null, prettyPrint) : ret;
-    }
-
-    /* Unset XT.username so it isn't cached for future queries. */
-    XT.username = undefined;
-
-    if (dataHash.dispatch) {
-      XT.message(200, "OK");
-    } else {
-      XT.message(201, "Created");
-    }
-
-    return ret;
+    return isArray ? JSON.stringify(result, null, prettyPrint) : result[0];
   } catch (err) {
     XT.error(err);
   }
+
+}());
 
 $$ language plv8;

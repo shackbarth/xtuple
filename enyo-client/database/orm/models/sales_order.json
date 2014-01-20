@@ -1753,6 +1753,13 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
+        }
+      },
+      {
         "name": "customer",
         "toOne": {
           "isNested": true,

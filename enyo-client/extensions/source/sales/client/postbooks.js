@@ -66,7 +66,7 @@ trailing:true, white:true*/
       ]
     };
 
-    isBiAvailable = XT.session.config.biUrl && XT.session.privileges.get("ViewSalesHistory");
+    isBiAvailable = XT.session.config.biServer && XT.session.privileges.get("ViewSalesHistory");
     if (isBiAvailable) {
       module.panels.push({name: "salesAnalysisPage", kind: "analysisFrame"});
     }
@@ -85,10 +85,12 @@ trailing:true, white:true*/
       "CreateSOForWarnCustomer",
       "MaintainCostCategories",
       "MaintainCustomerMasters",
+      "MaintainCustomerTypes",
       "MaintainFreightClasses",
       "MaintainItemGroups",
       "MaintainItemMasters",
       "MaintainItemSites",
+      "MaintainProspectMasters",
       "MaintainQuotes",
       "MaintainSalesEmailProfiles",
       "MaintainSalesOrders",
@@ -109,6 +111,7 @@ trailing:true, white:true*/
       "OverrideSODate",
       "OverrideTax",
       "ProcessCreditCards",
+      "SelectBilling",
       "ShowMarginsOnSalesOrder",
       "UpdateCustomerCreditStatus",
       "ViewCosts",
@@ -116,8 +119,10 @@ trailing:true, white:true*/
       "ViewFreightClasses",
       "ViewCostCategories",
       "ViewCustomerGroups",
+      "ViewCustomerTypes",
       "ViewItemMasters",
       "ViewItemSites",
+      "ViewProspectMasters",
       "ViewQuotes",
       "ViewTaxAssignments",
       "ViewTaxClasses",

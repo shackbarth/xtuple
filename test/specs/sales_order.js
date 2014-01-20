@@ -454,7 +454,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         "to a sale type with no workflows, the existing workflows should be cleared" +
         "on the sales order", function () {
       });
-      
+
       /**
         @member -
         @memberof SalesOrder
@@ -529,7 +529,6 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           .set({workflowType: XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK});
         salesOrderModel.set({saleType: saleTypeModel});
         assert.equal(salesOrderModel.get("workflow").length, 1);
-
         salesOrderModel.set({holdType: XM.holdTypes.models[0]});
         copiedWorkflow = salesOrderModel.get("workflow").models[0];
         assert.notEqual(copiedWorkflow.get("status"), XM.Workflow.COMPLETED);
@@ -605,9 +604,138 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         "update the price, selecting 'No' should remain the prices unchanged", function () {
       });
     });
+    /**
+    @class SalesOrderPayment
+    @memberof SalesOrder
+    @description A Payment panel should exist in the Sales Order screen
+    */
+    describe.skip("Sales Order Payment", function () {
+      it("Change 'credit card' to 'payment' panel", function () {
+      });
+      /**
+      @member -
+      @memberof SalesOrderPayment
+      @description fundsType will control the behavior of the screen, when an option like
+      'Credit Card' is selected the credit card information entry will be visible
+      */
+      it("fundsType will control the behavior of the screen, when an option like 'Credit Card'" +
+      "is selected the credit card information entry will be visible", function () {
+      });
+      describe.skip("CashReceipt panel/view", function () {
+        /**
+        @member -
+        @memberof SalesOrderPayment
+        @description Payment panel should contain the following fields:
+        Order Total' which is equal to SO cash total and is uneditable,
+        'Balance' which is equal SO Cash balance and is uneditable,
+        'Amount Received' which is the total cash received with selectable currency and
+        is editable,
+        'Funds Type' picker menu: Cash, Visa, American Express, Discover, MasterCard, 
+        Other Credit Card, Check, Certified Check, Wire Transfer, Other --picker should 
+        coincide with XM.FundsTypes,
+        check/Document- editable string field 'documentNumber',
+        'Post Cash Payment' selectable button, this option will 'save' the Sales Order and
+        post the payment to the Sales Order
+        */
+        describe("Following fields should be shown:", function () {
+          it("orderTotal from SO _cashTotal, uneditable", function () {
+          });
+          it("balance from SO _cashBalance, uneditable", function () {
+          });
+          it("amountReceived which is the total _cashReceived with selectable currency and" +
+          "editable field", function () {
+          });
+          it("Funds Type picker menu should contain the following options: Cash, Visa, " +
+            "American Express, Discover, MasterCard, Other Credit Card, Check," +
+              "Certified Check, Wired Transfer, Other", function () {
+          });
+          it("check/Document- editable string field 'documentNumber'", function () {
+          });
+          it("Post Cash Payment selectable button, this option will 'save' the Sales Order and " +
+            "post the payment to the Sales Order", function () {
+          });
+        });
+      });
+      describe.skip("Privs/Validation", function () {
+        /**
+        @member -
+        @memberof SalesOrderPayment
+        @description Payment details can be viewed by any user
+        */
+        it("Any user should be able to a view a XM.CashReceipt object.", function () {
+        });
+        /**
+        @member -
+        @memberof SalesOrderPayment
+        @description Only users with the 'MaintainCashReceipts' privilege should be should be able
+        to create, update or delete a payment
+        */
+        it("Only users with the 'MaintainCashReceipts' privilege should be should be able" +
+        "to create, update or delete a XM.CashReceipt object.", function () {
+        });
+        it(" A XM.CashReceipt object can not be deleted if it has been posted.", function () {
+        });
+        /**
+        @member -
+        @memberof SalesOrderPayment
+        @description If currency on salesOrder does not match 'PostTo' bank account
+        (ex. USD on SO, EUR on account), return prompt to ask user if they'd like to
+        convert to bankAccount currency
+        */
+        it("If currency on salesOrder does not match 'PostTo' bank account" +
+          "(ex. USD on SO, EUR on account), return prompt to ask user if they'd like to convert" +
+          "to bankAccount currency", function () {
+        });
+        /**
+        @member -
+        @memberof SalesOrderPayment
+        @description Selecting to post cash payment with 'Amount Received' is greater than
+          balance return error
+        */
+        it("Selecting to post cash payment with 'Amount Received' is greater than" +
+          "balance return error", function () {
+        });
+        /**
+        @member -
+        @memberof SalesOrderPayment
+        @description Selecting to post cash payment with blank or zero in 'Amount Received' 
+          field should display an error message
+        */
+        it("Selecting to post cash payment with blank or zero in 'Amount Received'  " +
+          "field should display an error message", function () {
+        });
+      });
+      /**
+        @member -
+        @memberof SalesOrderPayment
+        @description Balance amount should be recalculated on selecting to
+          Post Cash Payment
+        */
+      it("Balance amount should be recalculated on selecting to" +
+          "Post Cash Payment", function () {
+      });
+      /**
+        @member -
+        @memberof SalesOrderPayment
+        @description Allocated Credit field in the Line Items panel should display the
+          amount posted
+      */
+      it("Allocated Credit field in the Line Items panel should display the " +
+          "amount posted", function () {
+      });
+      /**
+        @member -
+        @memberof SalesOrderPayment
+        @description Selecting to Save the sales order without posting the cash payment
+          should display an error dialog
+      */
+      it("Selecting to Save the sales order without posting the cash payment" +
+          "should display an error dialog", function () {
+      });
+    });
   };
-
   exports.spec = spec;
+  exports.primeSubmodels = primeSubmodels;
   exports.additionalTests = additionalTests;
   exports.getBeforeSaveAction = getBeforeSaveAction;
 

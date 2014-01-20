@@ -202,6 +202,9 @@
 
 */
 create or replace function xt.get(data_hash text) returns text as $$
+
+return (function () {
+
   try {
     var handled = null;
     var dataHash = JSON.parse(data_hash),
@@ -227,5 +230,7 @@ create or replace function xt.get(data_hash text) returns text as $$
   } catch (err) {
     XT.error(err);
   }
+
+}());
 
 $$ language plv8;

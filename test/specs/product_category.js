@@ -13,7 +13,7 @@
   @property {String} Code
   @property {String} Description
   **/
- var spec = {
+  var spec = {
     recordType: "XM.ProductCategory",
     enforceUpperKey: false,
     collectionType: "XM.ProductCategoryCollection",

@@ -180,6 +180,13 @@ select xt.install_js('XT','Discovery','xtuple', $$
      * Parameters section.
      */
     discovery.parameters = {
+      "oauth_token": {
+        "type": "string",
+        "description": "OAuth 2.0 token for the current user.",
+        "location": "query"
+      }
+/* TODO: Add support for these to the REST API routes. */
+/*
       "alt": {
         "type": "string",
         "description": "Data format for the response.",
@@ -197,17 +204,13 @@ select xt.install_js('XT','Discovery','xtuple', $$
         "description": "Selector specifying which fields to include in a partial response.",
         "location": "query"
       },
-      "oauth_token": {
-        "type": "string",
-        "description": "OAuth 2.0 token for the current user.",
-        "location": "query"
-      },
       "prettyPrint": {
         "type": "boolean",
         "description": "Returns response with indentations and line breaks.",
         "default": "true",
         "location": "query"
       }
+*/
     };
 
     /*
@@ -545,6 +548,17 @@ select xt.install_js('XT','Discovery','xtuple', $$
         };
 
         resources[ormType].methods.list.parameters = {
+          "query": {
+            "type": "object",
+            "description": "Query different resource properties based on their JSON-Schema. e.g. ?query[property1][BEGINS_WITH]=foo&query[property2][EQUALS]=bar",
+            "location": "query",
+            "$ref": "TODO: add this when moving to JSON-Schema draft v5"
+          },
+          "orderby": {
+            "type": "object",
+            "description": "Specify the order of results for a filtered list request.",
+            "location": "query"
+          },
           "maxResults": {
             "type": "integer",
             "description": "Maximum number of entries returned on one result page. Optional.",
@@ -552,95 +566,22 @@ select xt.install_js('XT','Discovery','xtuple', $$
             "minimum": "1",
             "location": "query"
           },
+          "pageToken": {
+            "type": "string",
+            "description": "Token specifying which result page to return. Optional.",
+            "location": "query"
+          },
           "q": {
             "type": "string",
             "description": "Free text search terms to find events that match these terms in any field. Optional.",
             "location": "query"
           },
-          "pageToken": {
-            "type": "string",
-            "description": "Token specifying which result page to return. Optional.",
+          "count": {
+            "type": "boolean",
+            "description": "Return the a count of the total number of results from a filtered list request.",
             "location": "query"
           }
         };
-
-        thisListOrm = XT.Orm.fetch(ormNamespace, listModel, {"superUser": true});
-
-        thisListOrm.properties.map(function (prop) {
-          var attr = prop.attr,
-            childAttr,
-            childProp,
-            childResource,
-            childOrm,
-            childNKey,
-            childPKey,
-            childKey,
-            resourceParams = resources[ormType].methods.list.parameters,
-            paramObj;
-
-          if (attr) {
-            paramObj = {
-              "type": attr.type.toLowerCase(),
-              "location": "query"
-            };
-
-            if (attr.type === 'String') {
-              paramObj.description = "Case-insensitive full-text match on " + prop.name;
-              resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
-            } else {
-              paramObj.description = "Exact match on " + prop.name;
-              resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
-            }
-
-            if (attr.type !== 'Boolean') {
-              paramObj.description = "Greater than or equal match on " + prop.name;
-              resourceParams[prop.name + "Min"] = JSON.parse(JSON.stringify(paramObj));
-              paramObj.description = "Less than or equal match on " + prop.name;
-              resourceParams[prop.name + "Max"] = JSON.parse(JSON.stringify(paramObj));
-            }
-          } else {
-            /* Handle some types of child relations. */
-            if (prop.toOne && !prop.toOne.isNested) {
-              /* Handle toOne key relations. */
-
-              childResource = prop.toOne.type;
-
-              /* Assuming XM here. */
-              childOrm = XT.Orm.fetch(ormNamespace, childResource, {"superUser": true});
-              childNKey = XT.Orm.naturalKey(childOrm);
-              childPKey = XT.Orm.primaryKey(childOrm);
-              childKey = childNKey || childPKey;
-              childProp = XT.Orm.getProperty(childOrm, childKey);
-              childAttr = childProp && childProp.attr ? childProp.attr : null;
-
-              if (childAttr) {
-                paramObj = {
-                  "type": childAttr.type.toLowerCase(),
-                  "location": "query"
-                };
-
-                if (childAttr.type === 'String') {
-                  paramObj.description = "Case-insensitive full-text match on " + prop.name;
-                  resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
-                } else {
-                  paramObj.description = "Exact match on " + prop.name;
-                  resourceParams[prop.name] = JSON.parse(JSON.stringify(paramObj));
-                }
-
-                if (childAttr.type !== 'Boolean') {
-                  paramObj.description = "Greater than or equal match on " + prop.name;
-                  resourceParams[prop.name + "Min"] = JSON.parse(JSON.stringify(paramObj));
-                  paramObj.description = "Less than or equal match on " + prop.name;
-                  resourceParams[prop.name + "Max"] = JSON.parse(JSON.stringify(paramObj));
-                }
-              }
-            } else if (prop.toMany && !prop.toMany.isNested) {
-              /* Handle toOne key relations. */
-
-              /* TODO */
-            }
-          }
-        });
 
         resources[ormType].methods.list.response = {
           "$ref": listModel
@@ -665,6 +606,17 @@ select xt.install_js('XT','Discovery','xtuple', $$
         };
 
         resources[ormType].methods.listhead.parameters = {
+          "query": {
+            "type": "object",
+            "description": "Query different resource properties based on their JSON-Schema. e.g. ?query[property1][BEGINS_WITH]=foo&query[property2][EQUALS]=bar",
+            "location": "query",
+            "$ref": "TODO"
+          },
+          "orderby": {
+            "type": "object",
+            "description": "Specify the order of results for a filtered list request.",
+            "location": "query"
+          },
           "maxResults": {
             "type": "integer",
             "description": "Maximum number of entries returned on one result page. Optional.",
@@ -672,14 +624,19 @@ select xt.install_js('XT','Discovery','xtuple', $$
             "minimum": "1",
             "location": "query"
           },
+          "pageToken": {
+            "type": "string",
+            "description": "Token specifying which result page to return. Optional.",
+            "location": "query"
+          },
           "q": {
             "type": "string",
             "description": "Free text search terms to find events that match these terms in any field. Optional.",
             "location": "query"
           },
-          "pageToken": {
-            "type": "string",
-            "description": "Token specifying which result page to return. Optional.",
+          "count": {
+            "type": "boolean",
+            "description": "Return the a count of the total number of results from a filtered list request.",
             "location": "query"
           }
         };

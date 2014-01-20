@@ -1,6 +1,6 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
-white:true*/
+white:true, strict:false*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
 (function () {
@@ -14,12 +14,18 @@ white:true*/
     XM.ProjectManagement = XM.Settings.extend(
       /** @scope XM.ProjectManagement.Settings.prototype */ {
 
-      recordType: 'XM.ProjectManagement',
+      recordType: "XM.ProjectManagement",
       privileges: true,
 
-      bindEvents: function () {
-        XM.Settings.prototype.bindEvents.apply(this, arguments);
-        this.on('statusChange', this.statusDidChange);
+      handlers: {
+        "change:UseProjects": "useProjectsChanged"
+      },
+
+      useProjectsChanged: function () {
+        var useProjects = this.get("UseProjects");
+        if (!useProjects) {
+          this.set("RequireProjectAssignment", false);
+        }
       }
 
     });

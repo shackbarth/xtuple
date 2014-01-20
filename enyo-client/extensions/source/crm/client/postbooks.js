@@ -92,6 +92,7 @@ trailing:true, white:true*/
       "MaintainPersonalToDoItems",
       "MaintainTitles",
       "ReassignToDoItems",
+      "ViewAddresses",
       "ViewAllContacts",
       "ViewAllCRMAccounts",
       "ViewAllIncidentHistory",

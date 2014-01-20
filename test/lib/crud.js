@@ -1,12 +1,13 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global _:true, console:true, XM:true, require:true, assert:true,
+/*global _:true, console:true, XM:true, XT:true, require:true, assert:true,
 setTimeout:true, clearTimeout:true, exports:true, it:true */
 
 var _ = require("underscore"),
   zombieAuth = require("./zombie_auth"),
-  assert = require("chai").assert;
+  assert = require("chai").assert,
+  async = require("async");
 
 (function () {
   "use strict";
@@ -115,56 +116,57 @@ var _ = require("underscore"),
     flesh them out here. This is very very clever. If no mocks are
     specified, we just do a simple model.set.
    */
-  var setModel = function (data, callback) {
-    var objectsToFetch = 0,
-      objectsFetched = 0,
-      fetchSuccess = function (model, response, options) {
-        // swap in this model for the mock
-        data.model.set(options.key, model);
-        objectsFetched++;
-        if (objectsFetched === objectsToFetch) {
-          callback();
+  var setModel = function (data, done) {
+    var timeoutId,
+      invalid = function (model, error) {
+        assert.fail(JSON.stringify(error) || "Unspecified invalidity in " + data.recordType);
+      },
+      setAttribute = function (attribute, asyncCallback) {
+        var value = attribute.value,
+          key = attribute.key,
+          fetchSuccess = function (model, response, options) {
+            // swap in this model for the mock
+            model.off('invalid', invalid);
+            data.model.set(options.key, model);
+            asyncCallback();
+          };
+
+        if (typeof value === 'object' && !_.isDate(value)) {
+          // if it's an object we want to set on the model, flesh it out
+          var fetchObject = {
+              success: fetchSuccess,
+              error: asyncCallback,
+              key: key
+            },
+            relatedModelName = _.find(data.model.relations, function (relation) {
+              return relation.key === key;
+            }).relatedModel,
+            Klass = XT.getObjectByName(relatedModelName),
+            relatedModel = new Klass();
+
+          fetchObject.id = value[relatedModel.idAttribute];
+          relatedModel.once('invalid', invalid);
+          relatedModel.fetch(fetchObject);
+        } else {
+          // otherwise it's easy to set the value on the model
+          data.model.set(key, value);
+          asyncCallback();
         }
       },
-      fetchError = function () {
-        // proceed anyway.
-        if (data.verbose) {
-          console.log("Fetch error", arguments);
-        }
-        objectsFetched++;
-        if (objectsFetched === objectsToFetch) {
-          callback();
-        }
-      };
-    _.each(data.createHash, function (value, key) {
-      if (typeof value === 'object' && !_.isDate(value)) {
-        // if it's an object we want to set on the model, flesh it out
-        var fetchObject = {
-            success: fetchSuccess,
-            error: fetchError,
-            key: key
-          },
-          relatedModel,
-          relatedModelName = _.find(data.model.relations, function (relation) {
-            return relation.key === key;
-          }).relatedModel;
+      // put the hash in a form that async is comfortable with
+      hashAsArray = _.map(data.createHash, function (value, key) {
+        return {key: key, value: value};
+      });
 
-        relatedModel = new XM[relatedModelName.substring(3)]();
-        fetchObject.id = value[relatedModel.idAttribute];
-        relatedModel.fetch(fetchObject);
-        objectsToFetch++;
+    data.model.once('invalid', invalid);
+
+    async.map(hashAsArray, setAttribute, function (err, results) {
+      if (err) {
+        assert.fail(err);
       } else {
-        // otherwise it's easy to set the value on the model
-        data.model.set(key, value);
+        done();
       }
     });
-
-    // if there are no models to substitute we won't be doing this whole fetching
-    // rigamorole.
-    if (objectsToFetch === 0) {
-      data.model.set(data.createHash);
-      callback();
-    }
   };
 
   /**
@@ -440,7 +442,7 @@ var _ = require("underscore"),
       // Step 7: save the updated model to the database
       //
       it('can be re-saved to the database', function (done) {
-        this.timeout(10 * 1000);
+        this.timeout(20 * 1000);
         save(data, done);
       });
     }
@@ -457,7 +459,7 @@ var _ = require("underscore"),
 
     if (!data.skipDelete) {
       it('can be deleted from the database', function (done) {
-        this.timeout(10 * 1000);
+        this.timeout(20 * 1000);
         destroy(data, done);
       });
     }

@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true,
 strict: false*/
-/*global XV:true, XM:true, _:true, enyo:true, XT:true, onyx:true*/
+/*global XV:true, XM:true, _:true, enyo:true, XT:true, onyx:true, window:true */
 
 (function () {
 
@@ -446,6 +446,9 @@ strict: false*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", title: "_creditCard".loc(),
           components: [
+          {kind: "onyx.GroupboxHeader", content: "_default".loc()},
+          {kind: "XV.PriorityPicker", attr: "DefaultPriority",
+            label: "_priority".loc()},
           {kind: "onyx.GroupboxHeader", content: "_creditCard".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
             {kind: "XV.CreditCardGatewayCombobox", attr: "CCCompany",
@@ -1419,7 +1422,6 @@ strict: false*/
             {kind: "XV.UnitPicker", attr: "inventoryUnit"},
             {kind: "XV.InputWidget", attr: "barcode", label: "_upcCode".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
-            {kind: "XV.CheckboxWidget", attr: "isPicklist"},
             {kind: "onyx.GroupboxHeader", content: "_product".loc()},
             {kind: "XV.CheckboxWidget", attr: "isSold"},
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
@@ -1837,7 +1839,6 @@ strict: false*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {kind: "XV.CheckboxWidget", attr: "isMiscellaneous"},
             {kind: "XV.ItemSiteWidget", attr: {item: "item", site: "site"},
               name: "itemSiteWidget",
               query: {parameters: [
@@ -1848,11 +1849,7 @@ strict: false*/
             ]}},
             {kind: "XV.SalesPriceWidget", attr: "item.listPrice", label: "_listPrice".loc()},
             {kind: "XV.SalesPriceWidget", attr: "item.wholesalePrice",
-              label: "_wholesalePrice".loc()},
-            {kind: "XV.InputWidget", attr: "customerPartNumber"},
-            {kind: "XV.InputWidget", attr: "itemNumber"},
-            {kind: "XV.InputWidget", attr: "itemDescription"},
-            {kind: "XV.SalesCategoryPicker", attr: "salesCategory"},
+              label: "_wholesalePrice".loc()}
           ]}
         ]},
         {kind: "XV.Groupbox", name: "pricePanel", title: "_price".loc(), components: [
@@ -2145,7 +2142,7 @@ strict: false*/
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "promiseDate", showing: false,
               name: "promiseDate"},
-            {kind: "XV.QuoteLineCharacteristicsWidget",
+            {kind: "XV.PurchaseOrderLineCharacteristicsWidget",
               attr: "characteristics"}
           ]}
         ]},

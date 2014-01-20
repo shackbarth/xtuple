@@ -50,19 +50,15 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "primaryContact.phone", fit: true,
-                classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "primaryContact.primaryEmail",
-                classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "name-column", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true},
+            {kind: "XV.ListAttr", attr: "name"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "right-column", components: [
+            {kind: "XV.ListAttr", attr: "primaryContact.phone", },
+            {kind: "XV.ListAttr", attr: "primaryContact.primaryEmail"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "primaryContact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "primaryContact.address"}
@@ -99,18 +95,13 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", formatter: "formatName", isKey: true},
-              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
-                formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
-                classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", formatter: "formatDescription1"},
-              {kind: "XV.ListAttr", attr: "getActivityStatusString",
-                classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "name-column", components: [
+            {kind: "XV.ListAttr", formatter: "formatName", isKey: true},
+            {kind: "XV.ListAttr", formatter: "formatDescription1"},
+          ]},
+          {kind: "XV.ListColumn", classes: "right-column", components: [
+            {kind: "XV.ListAttr", attr: "dueDate", placeholder: "_noDueDate".loc()},
+            {kind: "XV.ListAttr", attr: "getActivityStatusString"}
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
@@ -119,15 +110,11 @@ trailing:true, white:true, strict: false*/
               placeholder: "_noDescription".loc()},
             {kind: "XV.ListAttr", formatter: "formatDescription2"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "owner.username",
               placeholder: "_noOwner".loc()},
             {kind: "XV.ListAttr", attr: "assignedTo.username",
               placeholder: "_noAssignedTo".loc()}
-            /*
-            {kind: "XV.ListAttr", attr: "priority.name",
-              placeholder: "_noPriority".loc()}
-            */
           ]}
         ]}
       ]}
@@ -137,13 +124,6 @@ trailing:true, white:true, strict: false*/
         model = collection.at(this._lastTapIndex),
         recordType = "XM." + model.get("activityType");
       return XV.getWorkspace(recordType);
-    },
-    formatDueDate: function (value, view, model) {
-      var today = new Date(),
-        isLate = (model.get('isActive') &&
-          XT.date.compareDate(value, today) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
     },
     formatName: function (value, view, model) {
       var parent = model.get("parent");
@@ -175,8 +155,11 @@ trailing:true, white:true, strict: false*/
         });
 
       if (actAction) {
-        inEvent.model = model;
-        actAction.method.call(this, inSender, inEvent);
+        if (!this.getToggleSelected() || inEvent.originator.isKey) {
+          inEvent.model = model;
+          actAction.method.call(this, inSender, inEvent);
+          return true;
+        }
       } else {
         model.id = key;
         this._lastTapIndex = inEvent.index;
@@ -354,29 +337,22 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
+          {kind: "XV.ListColumn", classes: "name-column", components: [
             {kind: "FittableColumns", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "firstName",
-                  formatter: "formatFirstName", isKey: true},
-                {kind: "XV.ListAttr", attr: "lastName", fit: true,
-                  style: "padding-left: 0px;", isKey: true}
-              ]},
-              {kind: "XV.ListAttr", attr: "phone", classes: "right", fit: true,
-                allowLayout: true}
+              {kind: "XV.ListAttr", attr: "firstName",
+                formatter: "formatFirstName", isKey: true},
+              {kind: "XV.ListAttr", attr: "lastName", fit: true,
+                style: "padding-left: 0px;", isKey: true}
             ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "jobTitle", allowLayout: true,
-                showPlaceholder: true},
-              {kind: "XV.ListAttr", attr: "primaryEmail", classes: "right", fit: true,
-                allowLayout: true}
-            ]}
+            {kind: "XV.ListAttr", attr: "jobTitle", showPlaceholder: true}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "account.name", allowLayout: true,
-              showPlaceholder: true},
-            {kind: "XV.ListAttr", attr: "address", allowLayout: true,
-              showPlaceholder: true}
+          {kind: "XV.ListColumn", classes: "right-column", components: [
+            {kind: "XV.ListAttr", attr: "phone"},
+            {kind: "XV.ListAttr", attr: "primaryEmail"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "account.name", showPlaceholder: true},
+            {kind: "XV.ListAttr", attr: "address", showPlaceholder: true}
           ]}
         ]}
       ]}
@@ -610,23 +586,20 @@ trailing:true, white:true, strict: false*/
       {attribute: 'number'}
     ]},
     allowPrint: true,
+    multiSelect: true,
     parameterWidget: "XV.CustomerListParameters",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "billingContact.phone", fit: true,
-                classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "billingContact.primaryEmail",
-                classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "name-column", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true},
+            {kind: "XV.ListAttr", attr: "name"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "right-column", components: [
+            {kind: "XV.ListAttr", attr: "billingContact.phone", },
+            {kind: "XV.ListAttr", attr: "billingContact.primaryEmail"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "billingContact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "billingContact.address"}
@@ -680,19 +653,15 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "contact.phone", fit: true,
-                classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact.primaryEmail",
-                classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "name-column", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true},
+            {kind: "XV.ListAttr", attr: "name"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "right-column", components: [
+            {kind: "XV.ListAttr", attr: "contact.phone", },
+            {kind: "XV.ListAttr", attr: "contact.primaryEmail"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "contact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
@@ -804,18 +773,15 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "code", isKey: true},
-              {kind: "XV.ListAttr", attr: "contact.phone", fit: true,
-                classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "contact.primaryEmail", classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "name-column", components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true},
+            {kind: "XV.ListAttr", attr: "name"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "right-column", components: [
+            {kind: "XV.ListAttr", attr: "contact.phone", },
+            {kind: "XV.ListAttr", attr: "contact.primaryEmail"}
+          ]},
+          {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "contact.name",
               placeholder: "_noContact".loc()},
             {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
@@ -1061,7 +1027,8 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "updated", fit: true, formatter: "formatDate",
+              {kind: "XV.ListAttr", attr: "updated", fit: true,
+                formatter: "formatDate",
                 classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "description"}
@@ -1084,9 +1051,10 @@ trailing:true, white:true, strict: false*/
       ]}
     ],
     formatDate: function (value, view, model) {
-      var isToday = !XT.date.compareDate(value, new Date());
+      var date = value ? XT.date.applyTimezoneOffset(value, true) : "",
+        isToday = date ? !XT.date.compareDate(date, new Date()) : false;
       view.addRemoveClass("bold", isToday);
-      return XT.date.isEndOfTime(value) ? "" : value;
+      return date ? Globalize.format(date, "d") : "";
     },
     getStyle: function (model) {
       var settings = XT.session.getSettings(),
@@ -1171,35 +1139,75 @@ trailing:true, white:true, strict: false*/
     actions: [
       {name: "void", prerequisite: "canVoid", method: "doVoid" },
       {name: "post", prerequisite: "canPost", method: "doPost" },
-      {name: "print", prerequisite: "canPrint", method: "doPrint" }
+      {name: "print", prerequisite: "canPrint", method: "doPrint", isViewMethod: true },
+      {name: "download", prerequisite: "canPrint", method: "doDownload", isViewMethod: true },
+      {name: "email", prerequisite: "canPrint", method: "doEmail" },
+
     ],
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "isPrinted", fit: true,
-                formatter: "formatPrinted", classes: "right"}
+              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+              {kind: "XV.ListAttr", attr: "isPosted", fit: true,
+                formatter: "formatPosted", style: "padding-left: 24px"},
+              {kind: "XV.ListAttr", name: "dateField", attr: "invoiceDate",
+                formatter: "formatInvoiceDate", classes: "right",
+                placeholder: "_noDate".loc()}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "invoiceDate"},
-              {kind: "XV.ListAttr", attr: "isPosted", fit: true,
-                formatter: "formatPosted", classes: "right"}
+              {kind: "XV.ListAttr", attr: "customer.name"},
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatTotal",
+                classes: "right"}
             ]}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "customer.name"},
-            {kind: "XV.ListAttr", attr: "total"}
+          {kind: "XV.ListColumn", classes: "last", components: [
+            {kind: "XV.ListAttr", formatter: "formatName"},
+            {kind: "XV.ListAttr", formatter: "formatAddress"}
           ]}
         ]}
       ]}
     ],
-    formatPosted: function (value) {
-      return value ? "_posted".loc() : "";
+    doPrint: function (options) {
+      if (XT.session.config.printServer) {
+        // send it to be printed silently by the server
+        options.model.doPrint();
+      } else {
+        // no print server set up: just pop open a tab
+        window.open(XT.getOrganizationPath() + options.model.getReportUrl(),
+          "_newtab");
+      }
     },
-    formatPrinted: function (value) {
-      return value ? "_printed".loc() : "";
+    doDownload: function (options) {
+      window.open(XT.getOrganizationPath() + options.model.getReportUrl("download"),
+        "_newtab");
+    },
+    // some extensions may override this function (i.e. inventory)
+    formatAddress: function (value, view, model) {
+      var city = model.get("billtoCity"),
+        state = model.get("billtoState"),
+        country = model.get("billtoCountry");
+      return XM.Address.formatShort(city, state, country);
+    },
+    // some extensions may override this function (i.e. inventory)
+    formatName: function (value, view, model) {
+      return model.get("billtoName");
+    },
+    formatPosted: function (value) {
+      return value ? "_posted".loc() : "_unposted".loc();
+    },
+    formatInvoiceDate: function (value, view, model) {
+      var isLate = model && !model.get("isPosted") &&
+        model.get(model.documentDateKey) &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return Globalize.format(value, "d");
+    },
+    formatTotal: function (value, view, model) {
+      var currency = model ? model.get("currency") : false,
+        scale = XT.locale.moneyScale;
+      return currency ? currency.format(value, scale) : "";
     },
   });
   XV.registerModelList("XM.InvoiceRelation", "XV.InvoiceList");
@@ -1237,7 +1245,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "listPrice", formatter: "formatPrice"},
             {kind: "XV.ListAttr", attr: "isFractional", formatter: "formatFractional"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", fit: true, components: [
             {kind: "XV.ListAttr", attr: "priceUnit.name", formatter: "formatPriceUnit"},
             {kind: "XV.ListAttr", attr: "productCategory.code"}
           ]}
@@ -1412,7 +1420,6 @@ trailing:true, white:true, strict: false*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "targetClose", fit: true,
-                formatter: "formatTargetClose",
                 placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
             ]},
@@ -1447,12 +1454,6 @@ trailing:true, white:true, strict: false*/
       var currency = model ? model.get("currency") : false,
         scale = XT.locale.moneyScale;
       return currency ? currency.format(value, scale) : "";
-    },
-    formatTargetClose: function (value, view, model) {
-      var isLate = model && model.get('isActive') &&
-        (XT.date.compareDate(value, new Date()) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
     }
   });
 
@@ -1514,6 +1515,92 @@ trailing:true, white:true, strict: false*/
       ]}
     ]
   });
+
+  // ..........................................................
+  // PROJECT
+  //
+
+  enyo.kind({
+    name: "XV.ProjectList",
+    kind: "XV.List",
+    label: "_projects".loc(),
+    collection: "XM.ProjectListItemCollection",
+    query: {orderBy: [
+      {attribute: "number" }
+    ]},
+    parameterWidget: "XV.ProjectListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name"},
+              {kind: "XV.ListAttr", attr: "priority.name",
+                fit: true, classes: "right",
+                placeholder: "_noPriority".loc()}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "account.name"},
+              {kind: "XV.ListAttr", attr: "percentComplete", fit: true,
+                classes: "right"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", style: "width: 100px;",
+            components: [
+            {kind: "XV.ListAttr", attr: "getProjectStatusString"},
+            {kind: "XV.ListAttr", attr: "assignedTo.username",
+              placeholder: "_noAssignedTo".loc()},
+            {kind: "XV.ListAttr", attr: "department.number",
+              placeholder: "_noDepartment".loc()},
+          ]},
+          {kind: "XV.ListColumn", style: "width: 80px;",
+            components: [
+            {content: "_budgeted".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"},
+            {content: "_actual".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"},
+            {content: "_balance".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"}
+          ]},
+          {kind: "XV.ListColumn", classes: "money", components: [
+            {kind: "XV.ListAttr", attr: "budgetedExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.ListAttr", attr: "actualExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.ListAttr", attr: "balanceExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"}
+          ]},
+          {kind: "XV.ListColumn", classes: "money", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "budgetedHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.ListAttr", attr: "actualHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.ListAttr", attr: "balanceHours",
+              classes: "text-align-right", formatter: "formatHours"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatHours: function (value, view, model) {
+      view.addRemoveClass("error", value < 0);
+      var scale = XT.locale.quantityScale;
+      return Globalize.format(value, "n" + scale) + " " + "_hrs".loc();
+    },
+    formatExpenses: function (value, view, model) {
+      view.addRemoveClass("error", value < 0);
+      var scale = XT.locale.currencyScale;
+      return Globalize.format(value, "c" + scale);
+    }
+
+  });
+
+  XV.registerModelList("XM.ProjectListItem", "XV.ProjectList");
+  XV.registerModelList("XM.ProjectRelation", "XV.ProjectList");
 
   // ..........................................................
   // PROSPECT
@@ -1609,6 +1696,7 @@ trailing:true, white:true, strict: false*/
     label: "_salesOrders".loc(),
     collection: "XM.SalesOrderListItemCollection",
     parameterWidget: "XV.SalesOrderListParameters",
+    actions: [],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -1621,8 +1709,7 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.ListAttr", attr: "getOrderStatusString",
                 style: "padding-left: 24px"},
               {kind: "XV.ListAttr", attr: "scheduleDate",
-                formatter: "formatScheduleDate", classes: "right",
-                placeholder: "_noSchedule".loc()}
+                classes: "right", placeholder: "_noSchedule".loc()}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "customer.name"},
@@ -1642,12 +1729,6 @@ trailing:true, white:true, strict: false*/
         state = model.get("billtoState"),
         country = model.get("billtoCountry");
       return XM.Address.formatShort(city, state, country);
-    },
-    formatScheduleDate: function (value, view, model) {
-      var isLate = model && model.get('scheduleDate') &&
-        (XT.date.compareDate(value, new Date()) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
     },
     /**
       Returns Shipto Name if one exists, otherwise Billto Name.
@@ -1819,13 +1900,18 @@ trailing:true, white:true, strict: false*/
     name: "XV.ReturnList",
     kind: "XV.InvoiceList",
     label: "_returns".loc(),
+    multiSelect: false,
     parameterWidget: "XV.ReturnListParameters",
     collection: "XM.ReturnListItemCollection",
     actions: [
       {name: "void", prerequisite: "canVoid", method: "doVoid" },
       {name: "post", prerequisite: "canPost", method: "doPost" },
       {name: "print", prerequisite: "canPrint", method: "doPrint" }
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      this.$.dateField.setAttr("returnDate");
+    }
   });
   XV.registerModelList("XM.ReturnRelation", "XV.ReturnList");
 
@@ -2260,8 +2346,7 @@ trailing:true, white:true, strict: false*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name", isKey: true},
               {kind: "XV.ListAttr", attr: "dueDate", fit: true,
-                formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
-                classes: "right"}
+                placeholder: "_noDueDate".loc(), classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "description",
               placeholder: "_noDescription".loc()}
@@ -2283,14 +2368,7 @@ trailing:true, white:true, strict: false*/
           ]}
         ]}
       ]}
-    ],
-    formatDueDate: function (value, view, model) {
-      var today = new Date(),
-        isLate = (model.get('isActive') &&
-          XT.date.compareDate(value, today) < 1);
-      view.addRemoveClass("error", isLate);
-      return value;
-    }
+    ]
   });
 
   XV.registerModelList("XM.ToDoRelation", "XV.ToDoList");
@@ -2433,103 +2511,39 @@ trailing:true, white:true, strict: false*/
   XV.registerModelList("XM.VendorRelation", "XV.VendorList");
 
   // ..........................................................
-  // WORK ORDER
+  // VENDOR ADDRESS
   //
 
   enyo.kind({
-    name: "XV.WorkOrderList",
+    name: "XV.VendorAddressList",
     kind: "XV.List",
-    label: "_workOrders".loc(),
-    collection: "XM.WorkOrderListItemCollection",
-    parameterWidget: "XV.WorkOrderListParameters",
-    canAddNew: false,
-    actions: [
-      {name: "postProduction", method: "postProduction",
-          isViewMethod: true, notify: false,
-          prerequisite: "canPostProduction"},
-      {name: "issueMaterial", method: "issueMaterial",
-          isViewMethod: true, notify: false,
-          prerequisite: "canIssueMaterial"}
-    ],
+    collection: "XM.VendorAddressRelationCollection",
+    parameterWidget: "XV.VendorAddressParameters",
     query: {orderBy: [
-      {attribute: 'number'}
+      {attribute: 'code'}
     ]},
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "number", fit: true},
-            {kind: "XV.ListAttr", attr: "itemSite.site.code", style: "padding-left: 12px"}
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
           ]},
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "getWorkOrderStatusString"},
-              {kind: "XV.ListAttr", attr: "itemSite.item.number",
-                classes: "bold"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "itemSite.item.description1", classes: "italic"}
-            ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "dueDate", classes: "right"}
-            ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "itemSite.item.inventoryUnit.name"},
-              {kind: "XV.ListAttr", attr: "ordered"},
-              {kind: "XV.ListAttr", attr: "quantityReceived"}
-            ]}
+          {kind: "XV.ListColumn", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"},
+            {kind: "XV.ListAttr", formatter: "formatAddress",
+              classes: "xv-addresslist-attr", allowHtml: true}
           ]}
         ]}
       ]}
     ],
-    issueMaterial: function (inEvent) {
-      var index = inEvent.index,
-        workOrder = this.getValue().at(index),
-        that = this,
-        panel = XT.app.$.postbooks.createComponent({kind: "XV.IssueMaterial", model: workOrder.id});
-      panel.render();
-      XT.app.$.postbooks.reflow();
-      XT.app.$.postbooks.setIndex(XT.app.$.postbooks.getPanels().length - 1);
-    },
-    postProduction: function (inEvent) {
-      var index = inEvent.index,
-        workOrder = this.getValue().at(index),
-        that = this,
-        callback = function (resp) {
-          var options = {
-            success: function () {
-              // Re-render the row if showing shipped, otherwise remove it
-              var query = that.getQuery(),
-                param,
-                collection,
-                model;
-              param = _.findWhere(query.parameters, {attribute: "getWorkOrderStatusString"});
-              if (param === "Closed") {
-                collection = that.getValue();
-                model = collection.at(index);
-                collection.remove(model);
-                that.fetched();
-              } else {
-                that.renderRow(index);
-              }
-            }
-          };
-          // Refresh row if shipped
-          if (resp) { workOrder.fetch(options); }
-        };
-      this.doWorkspace({
-        workspace: "XV.PostProductionWorkspace",
-        id: workOrder.id,
-        callback: callback
-      });
+    formatAddress: function (value, view, model) {
+      var address = model.get("address");
+      return address.format(true);
     }
   });
 
-  XV.registerModelList("XM.WorkOrderListItem", "XV.WorkOrderList");
+  XV.registerModelList("XM.VendarAddressRelation", "XV.VendorAddressList");
 
   enyo.kind({
     name: "XV.NameList",

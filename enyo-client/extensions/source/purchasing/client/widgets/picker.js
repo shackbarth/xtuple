@@ -8,7 +8,19 @@ white:true, strict:false*/
   XT.extensions.purchasing.initPickers = function () {
 
     // ..........................................................
-    // PURCHAS EMAIL PROFILE
+    // ITEM SOURCE PRICE TYPE
+    //
+
+    enyo.kind({
+      name: "XV.ItemSourcePriceTypePicker",
+      kind: "XV.PickerWidget",
+      collection: "XM.itemSourcePriceTypes",
+      valueAttribute: "id",
+      showNone: false
+    });
+
+    // ..........................................................
+    // PURCHASE EMAIL PROFILE
     //
 
     enyo.kind({

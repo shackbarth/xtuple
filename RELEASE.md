@@ -1,3 +1,162 @@
+1.6.0 (2014/01/15)
+==================
+
+Features and bugfixes
+---------------------
+
+- Fixed
+  issue #[18338](http://www.xtuple.org/xtincident/view/bugs/18338)
+  _Error running merge contacts in dogfood_
+- Fixed
+  issue #[18401](http://www.xtuple.org/xtincident/view/bugs/18401)
+  _Relation autocompleter menu gets in the way_
+- Fixed
+  issue #[18505](http://www.xtuple.org/xtincident/view/bugs/18505)
+  _Advanced search panel is blank on iPad_
+- Fixed
+  issue #[18521](http://www.xtuple.org/xtincident/view/bugs/18521)
+  _Automatically-added comments have "admin" as the name_
+- Fixed
+  issue #[18635](http://www.xtuple.org/xtincident/view/bugs/18635)
+  _Creating a user account in the mobile client does not create a CRM Account_
+- Implemented
+  issue #[18637](http://www.xtuple.org/xtincident/view/bugs/18637)
+  _Extend "Personal" privilege methodology to any property that can be tied back to a UserAccount ID_
+- Fixed
+  issue #[18640](http://www.xtuple.org/xtincident/view/bugs/18640)
+  _error in CRM Acct Merge_
+- Fixed
+  issue #[18692](http://www.xtuple.org/xtincident/view/bugs/18692)
+  _List Relation Box should be disabled for new records_
+- Fixed
+  issue #[18695](http://www.xtuple.org/xtincident/view/bugs/18695)
+  _Comments don't work on iPad_
+- Fixed
+  issue #[18698](http://www.xtuple.org/xtincident/view/bugs/18698)
+  _iPad sorts strings as numbers_
+- Fixed
+  issue #[18699](http://www.xtuple.org/xtincident/view/bugs/18699)
+classes: "right"  _iPad does not scroll smoothly_
+- Fixed
+  issue #[18707](http://www.xtuple.org/xtincident/view/bugs/18707)
+  _Can't switch databases on iPad_
+- Fixed
+  issue #[18730](http://www.xtuple.org/xtincident/view/bugs/18730)
+  _Task number read only status is erratic_
+- Fixed
+  issue #[18731](http://www.xtuple.org/xtincident/view/bugs/18731)
+  _Address placeholders are not translated_
+- Fixed
+  issue #[18732](http://www.xtuple.org/xtincident/view/bugs/18732)
+  _All postgres users are showing up in user list_
+- Fixed
+  issue #[18769](http://www.xtuple.org/xtincident/view/bugs/18769)
+  _Cookies are not being deleted in any test-cases_
+- Completed
+  issue #[18770](http://www.xtuple.org/xtincident/view/bugs/18770)
+  _Integrate node-router into node-datasource_
+- Fixed
+  issue #[19017](http://www.xtuple.org/xtincident/view/bugs/19017)
+  _*Unable to select the project on selecting to create a new incident in dogfood_
+- Fixed
+  issue #[19199](http://www.xtuple.org/xtincident/view/bugs/19199)
+  _Security on reset password._
+- Implemented
+  issue #[20689](http://www.xtuple.org/xtincident/view/bugs/20689)
+  _Support for Barcode_
+- Implemented
+  issue #[20962](http://www.xtuple.org/xtincident/view/bugs/20962)
+  _Add support to enter Receipt transactions_
+- Implemented
+  issue #[21038](http://www.xtuple.org/xtincident/view/bugs/21038)
+  _Complete Issue to Shipping_
+- Fixed
+  issue #[21476](http://www.xtuple.org/xtincident/view/bugs/21476)
+  _*Unable to select back 'External' option as the Gateway for Credit cards in System Configuration screen_
+- Implemented
+  issue #[21508](http://www.xtuple.org/xtincident/view/bugs/21508)
+  _Add support for basic Work Order transactions_
+- Implemented
+  issue #[21584](http://www.xtuple.org/xtincident/view/bugs/21584)
+  _Organize pentaho properties in config.js_
+- Fixed
+  issue #[21686](http://www.xtuple.org/xtincident/view/bugs/21686)
+  _*Toolbar overlaps the Export icon making it unable to select in mobile devices_
+- Fixed
+  issue #[21889](http://www.xtuple.org/xtincident/view/bugs/21889)
+  _Mobile Web Client List View Items Overlap_
+- Fixed
+  issue #[21909](http://www.xtuple.org/xtincident/view/bugs/21909)
+  _ErpBI configuration not production ready_
+- Fixed
+  issue #[21978](http://www.xtuple.org/xtincident/view/bugs/21978)
+  _Item auto-populates on Sales Order when it should not_
+- Implemented
+  issue #[22059](http://www.xtuple.org/xtincident/view/bugs/22059)
+  _Implement Approve for Billing(select for billing)/Create Invoice at time of Shipping_
+- Implemented
+  issue #[22067](http://www.xtuple.org/xtincident/view/bugs/22067)
+  _Implement returns(credit memo)_
+- Implemented
+  issue #[22072](http://www.xtuple.org/xtincident/view/bugs/22072)
+  _Add support for Transfer Order_
+- Implemented
+  issue #[22129](http://www.xtuple.org/xtincident/view/bugs/22129)
+  _Support system printers for reports_
+- Fixed
+  issue #[22151](http://www.xtuple.org/xtincident/view/bugs/22151)
+  _Selecting ITEM-GROUP produces internal server error_
+- Fixed
+  issue #[22152](http://www.xtuple.org/xtincident/view/bugs/22152)
+  _Site is required in PostBooks_
+- Fixed
+  issue #[22172](http://www.xtuple.org/xtincident/view/bugs/22172)
+  _Item Group does not appear in Postbooks_
+- Implemented
+  issue #[22175](http://www.xtuple.org/xtincident/view/bugs/22175)
+  _Add the ability to issue to shipping and ship from Sales Order_
+- Fixed
+  issue #[22214](http://www.xtuple.org/xtincident/view/bugs/22214)
+  _Inventory gear options not showing on small devices_
+- Fixed
+  issue #[22224](http://www.xtuple.org/xtincident/view/bugs/22224)
+  _*Selecting 'Issue to Shipping' displays a JS console error and does not displays any response_
+- No Change Required
+  issue #[22227](http://www.xtuple.org/xtincident/view/bugs/22227)
+  _*Selecting to open an existing shipment hangs the application_
+- Fixed
+  issue #[22298](http://www.xtuple.org/xtincident/view/bugs/22298)
+  _*Selecting to add an address to a record displays an irrelevant dialog_
+- Implemented
+  issue #[22313](http://www.xtuple.org/xtincident/view/bugs/22313)
+  _Improve dev BI script_
+- Fixed
+  issue #[22368](http://www.xtuple.org/xtincident/view/bugs/22368)
+  _*Date format is displayed incorrectly in Transfer order list and Issue to shipping screens_
+- Fixed
+  issue #[22407](http://www.xtuple.org/xtincident/view/bugs/22407)
+  _*Selecting 'Issue to Shipping' without saving the Sales order and then selecting 'Save', doesn't populate the Sales order number_
+- Fixed
+  issue #[22408](http://www.xtuple.org/xtincident/view/bugs/22408)
+  _*Selecting Express Checkout without saving the Sales order and then selecting 'No' in the confirmation dialog displays a console_
+
+Critical deployment changes
+---------------------------
+Mobile Client connections to Pentaho are no longer defined by biUrl and biServerUrl in config.js.  They are now defined
+by biServer and printServer.  See the details in:
+
+https://github.com/xtuple/xtuple/wiki/xTuple-Business-Intelligence
+
+1.5.2 (2014/01/13)
+===============
+
+Features and bugfixes
+---------------------
+
+- Fixed
+  issue #[22394](http://www.xtuple.org/xtincident/view/bugs/22394)
+  _Context queries can have punishingly slow performance_
+
 1.5.1 (2013/12/04)
 ===============
 
@@ -10,81 +169,87 @@ Critical deployment changes
 * If you have inventory registered you will have to change its location
   `update xt.ext set ext_location = '/private-extensions' where ext_name = 'inventory'`
 
-- Implemented VM773:39
-  issue #[21224](http://www.xtuple.org/xtincident/view/bugs/21224) VM773:40
-  _REST - Add support for a query "operator" to the REST API and Discovery Docs_ VM773:41
-- Implemented VM773:39
-  issue #[21587](http://www.xtuple.org/xtincident/view/bugs/21587) VM773:40
-  _Add Billing configuration_ VM773:41
-- Implemented VM773:39
-  issue #[21625](http://www.xtuple.org/xtincident/view/bugs/21625) VM773:40
-  _Implement Reason Code_ VM773:41
-- Fixed VM773:39
-  issue #[21757](http://www.xtuple.org/xtincident/view/bugs/21757) VM773:40
-  _Add Project Type to Project_ VM773:41
-- Fixed VM773:39
-  issue #[21866](http://www.xtuple.org/xtincident/view/bugs/21866) VM773:40
-  _Cost in Time Sheet (Worksheet) is null when entered through mobile_ VM773:41
-- Fixed VM773:39
-  issue #[21979](http://www.xtuple.org/xtincident/view/bugs/21979) VM773:40
-  _Arrowing up down through grid entry to not commit edited value to the model_ VM773:41
-- Implemented VM773:39
-  issue #[21982](http://www.xtuple.org/xtincident/view/bugs/21982) VM773:40
-  _Print invoices_ VM773:41
-- Implemented VM773:39
-  issue #[21986](http://www.xtuple.org/xtincident/view/bugs/21986) VM773:40
-  _Add support for Workflow to Sales Orders_ VM773:41
-- Implemented VM773:39
-  issue #[21989](http://www.xtuple.org/xtincident/view/bugs/21989) VM773:40
-  _Add support on item relation widget to search barcode and alias_ VM773:41
-- Implemented VM773:39
-  issue #[21992](http://www.xtuple.org/xtincident/view/bugs/21992) VM773:40
-  _Move inventory to the private-extensions repository_ VM773:41
-- Fixed VM773:39
-  issue #[22031](http://www.xtuple.org/xtincident/view/bugs/22031) VM773:40
-  _Can not change settings_ VM773:41
-- Completed VM773:39
-  issue #[22049](http://www.xtuple.org/xtincident/view/bugs/22049) VM773:40
-  _Cleanup the test folder_ VM773:41
-- Fixed VM773:39
-  issue #[22063](http://www.xtuple.org/xtincident/view/bugs/22063) VM773:40
-  _*Selecting to assign a privilege to a user account role displays 'Internal Server Error' dialog_ VM773:41
-- Fixed VM773:39
-  issue #[22093](http://www.xtuple.org/xtincident/view/bugs/22093) VM773:40
-  _View Characteristics disabled still allows Characteristics to be viewed_ VM773:41
-- Fixed VM773:39
-  issue #[22094](http://www.xtuple.org/xtincident/view/bugs/22094) VM773:40
-  _Characteristic Privilege declared by the CRM extension error_ VM773:41
-- Fixed VM773:39
-  issue #[22098](http://www.xtuple.org/xtincident/view/bugs/22098) VM773:40
-  _Disabled ViewClassCodes priv still allows user to view Class Code_ VM773:41
-- Fixed VM773:39
-  issue #[22100](http://www.xtuple.org/xtincident/view/bugs/22100) VM773:40
-  _Disable ViewCostCategory Priv still allows user to view Cost Category_ VM773:41
-- Fixed VM773:39
-  issue #[22101](http://www.xtuple.org/xtincident/view/bugs/22101) VM773:40
-  _Cost Category Privs not declared by extensions_ VM773:41
-- Fixed VM773:39
-  issue #[22102](http://www.xtuple.org/xtincident/view/bugs/22102) VM773:40
-  _MaintainClassCodes priv not declared by the project extension_ VM773:41
-- Fixed VM773:39
-  issue #[22103](http://www.xtuple.org/xtincident/view/bugs/22103) VM773:40
-  _Billing extension will not load without Sales_ VM773:41
-- Fixed VM773:39
-  issue #[22104](http://www.xtuple.org/xtincident/view/bugs/22104) VM773:40
-  _Incident Plus will not load without Project_ VM773:41
-- Fixed VM773:39
-  issue #[22138](http://www.xtuple.org/xtincident/view/bugs/22138) VM773:40
-  _Save on incident fails_ VM773:41
-- Fixed VM773:39
-  issue #[22143](http://www.xtuple.org/xtincident/view/bugs/22143) VM773:40
-  _Agent is required for New User Account_ VM773:41
-- Fixed VM773:39
-  issue #[22166](http://www.xtuple.org/xtincident/view/bugs/22166) VM773:40
-  _incident list color is all white_ VM773:41
+Features and bugfixes
+---------------------
+
+- Implemented
+  issue #[21224](http://www.xtuple.org/xtincident/view/bugs/21224)
+  _REST - Add support for a query "operator" to the REST API and Discovery Docs_
+- Implemented
+  issue #[21587](http://www.xtuple.org/xtincident/view/bugs/21587)
+  _Add Billing configuration_
+- Implemented
+  issue #[21625](http://www.xtuple.org/xtincident/view/bugs/21625)
+  _Implement Reason Code_
+- Fixed
+  issue #[21757](http://www.xtuple.org/xtincident/view/bugs/21757)
+  _Add Project Type to Project_
+- Fixed
+  issue #[21866](http://www.xtuple.org/xtincident/view/bugs/21866)
+  _Cost in Time Sheet (Worksheet) is null when entered through mobile_
+- Fixed
+  issue #[21979](http://www.xtuple.org/xtincident/view/bugs/21979)
+  _Arrowing up down through grid entry to not commit edited value to the model_
+- Implemented
+  issue #[21982](http://www.xtuple.org/xtincident/view/bugs/21982)
+  _Print invoices_
+- Implemented
+  issue #[21986](http://www.xtuple.org/xtincident/view/bugs/21986)
+  _Add support for Workflow to Sales Orders_
+- Implemented
+  issue #[21989](http://www.xtuple.org/xtincident/view/bugs/21989)
+  _Add support on item relation widget to search barcode and alias_
+- Implemented
+  issue #[21992](http://www.xtuple.org/xtincident/view/bugs/21992)
+  _Move inventory to the private-extensions repository_
+- Fixed
+  issue #[22031](http://www.xtuple.org/xtincident/view/bugs/22031)
+  _Can not change settings_
+- Completed
+  issue #[22049](http://www.xtuple.org/xtincident/view/bugs/22049)
+  _Cleanup the test folder_
+- Fixed
+  issue #[22063](http://www.xtuple.org/xtincident/view/bugs/22063)
+  _*Selecting to assign a privilege to a user account role displays 'Internal Server Error' dialog_
+- Fixed
+  issue #[22093](http://www.xtuple.org/xtincident/view/bugs/22093)
+  _View Characteristics disabled still allows Characteristics to be viewed_
+- Fixed
+  issue #[22094](http://www.xtuple.org/xtincident/view/bugs/22094)
+  _Characteristic Privilege declared by the CRM extension error_
+- Fixed
+  issue #[22098](http://www.xtuple.org/xtincident/view/bugs/22098)
+  _Disabled ViewClassCodes priv still allows user to view Class Code_
+- Fixed
+  issue #[22100](http://www.xtuple.org/xtincident/view/bugs/22100)
+  _Disable ViewCostCategory Priv still allows user to view Cost Category_
+- Fixed
+  issue #[22101](http://www.xtuple.org/xtincident/view/bugs/22101)
+  _Cost Category Privs not declared by extensions_
+- Fixed
+  issue #[22102](http://www.xtuple.org/xtincident/view/bugs/22102)
+  _MaintainClassCodes priv not declared by the project extension_
+- Fixed
+  issue #[22103](http://www.xtuple.org/xtincident/view/bugs/22103)
+  _Billing extension will not load without Sales_
+- Fixed
+  issue #[22104](http://www.xtuple.org/xtincident/view/bugs/22104)
+  _Incident Plus will not load without Project_
+- Fixed
+  issue #[22138](http://www.xtuple.org/xtincident/view/bugs/22138)
+  _Save on incident fails_
+- Fixed
+  issue #[22143](http://www.xtuple.org/xtincident/view/bugs/22143)
+  _Agent is required for New User Account_
+- Fixed
+  issue #[22166](http://www.xtuple.org/xtincident/view/bugs/22166)
+  _incident list color is all white_
 
 1.5.0 (2013/11/19)
 ==================
+
+Features and bugfixes
+---------------------
 
 - Implemented
   issue #[18917](http://www.xtuple.org/xtincident/view/bugs/18917)
@@ -239,7 +404,7 @@ Critical deployment changes
 ---------------------------
 - The Sales Dashboard has been redesigned to show sales data from analytic cubes.  To connect to the BI Server
 you must define:
- 
+
    biServer: {
         hostname: "localhost",
         port: 8080,
@@ -248,11 +413,15 @@ you must define:
         keyFile: "./lib/rest-keys/server.key"
       }
 in config.js.  Also, the Sales Dashboard is now structured in a private extension:
- 
+
    https://github.com/xtuple/private-extensions/tree/master/source/bi
 
 1.4.5 (2013/10/11)
 ==================
+
+Features and bugfixes
+---------------------
+
 - Fixed
   issue #[19869](http://www.xtuple.org/xtincident/view/bugs/19869)
   _*Omnibus: Locked record is displayed on selecting to open a contact after discarding new contact screen opened from it _

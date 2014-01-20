@@ -106,10 +106,10 @@ select xt.install_js('XT','Orm','xtuple', $$
       var ormTypeMappings = {
         "A": ["Array"],
         "B": ["Boolean"],
-        "D": ["Date","DueDate"],
+        "D": ["Date","DueDate", "EffectiveDate", "ExpireDate"],
         "N": ["Cost", "ExtendedPrice", "Hours", "Money", "Number", "Percent",
           "PurchasePrice", "Quantity", "QuantityPer", "SalesPrice", "UnitRatio", "Weight"],
-        "S": ["String"],
+        "S": ["String", "Phone", "Url", "Email"],
         "U": ["String"], /* e.g. char */
         "X": ["Null"]
       };
@@ -414,7 +414,7 @@ select xt.install_js('XT','Orm','xtuple', $$
     @param {String} property
     @returns Object
   */
-  XT.Orm.getProperty = function (orm, property) {
+  XT.Orm.getProperty = function (orm, property, returnEntireOrm) {
     var i,
       ret;
 
@@ -422,13 +422,13 @@ select xt.install_js('XT','Orm','xtuple', $$
     if (orm) {
       for (i = 0; i < orm.properties.length; i++) {
         if(orm.properties[i].name === property)
-          return orm.properties[i];
+          return returnEntireOrm ? orm : orm.properties[i];
       }
 
       /* look recursively for property on extensions */
       if(orm.extensions) {
         for (i = 0; i < orm.extensions.length; i++) {
-          ret = XT.Orm.getProperty(orm.extensions[i], property);
+          ret = XT.Orm.getProperty(orm.extensions[i], property, returnEntireOrm);
           if(ret) return ret;
         }
       }
@@ -646,9 +646,9 @@ select xt.install_js('XT','Orm','xtuple', $$
           inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
           ormp = Orm.getProperty(iorm, inverse);
           if (ormp && ormp.toOne && ormp.toOne.isNested) {
-            conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
+            conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + (toMany.isBase ? "t1" : tblAlias) + "." + toMany.column : 'true';
           } else {
-            conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
+            conditions = toMany.column ? type + '."' + inverse + '" = ' + (toMany.isBase ? "t1" : tblAlias) + '.' + toMany.column : 'true';
           }
 
           /* build select */
