@@ -139,7 +139,7 @@ describe('Query', function () {
             'amount': { BETTER_THAN: 'you' }
           }
         },
-        invalidCountQuery1 = {
+        falseyCountQuery1 = {
           attributes: {
             'customer.number': { EQUALS: 'XTRM' },
             'amount': { GREATER_THAN: 5000 }
@@ -184,10 +184,6 @@ describe('Query', function () {
           var rq1 = new RestQuery(invalidQuery1);
           assert.isFalse(rq1.isValid());
         });
-        it('should invalidate an invalid count query', function () {
-          var rq1 = new RestQuery(invalidCountQuery1);
-          assert.isFalse(rq1.isValid());
-        });
       });
 
       describe('#toTarget()', function () {
@@ -205,6 +201,20 @@ describe('Query', function () {
 
             assert.isTrue(target.isValid());
             assert.isArray(target.query.parameters);
+          });
+          it('should translate a truthy count query', function () {
+            var rq1 = new RestQuery(countQuery1),
+              target = rq1.toTarget(XtGetQuery);
+
+            assert.isTrue(target.isValid());
+            assert.isTrue(target.query.count);
+          });
+          it('should translate a falsey count query', function () {
+            var rq1 = new RestQuery(falseyCountQuery1),
+              target = rq1.toTarget(XtGetQuery);
+
+            assert.isTrue(target.isValid());
+            assert.isUndefined(target.query.count);
           });
         });
       });
