@@ -297,11 +297,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     /**
-
+      Fetch the remit to name and address information, but only if it
+      is needed.
     */
     var fetchRemitTo = function (done) {
-      // TODO
-      done();
+      var allElements = _.flatten(reportDefinition.headerElements),
+        definitions = _.flatten(_.compact(_.pluck(allElements, "definition"))),
+        remitToFields = _.findWhere(definitions, {attr: 'remitto'});
+
+      if (!remitToFields || remitToFields.length === 0) {
+        // no need to try to fetch
+        done();
+        return;
+      }
+
+      // fetch the Remit to Information
+
     };
 
     /**
@@ -463,6 +474,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       createTempOrgDir,
       fetchReportDefinition,
       fetchImages,
+      fetchRemitTo,
       fetchBarcodes,
       fetchTranslations,
       fetchData,

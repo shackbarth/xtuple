@@ -4,11 +4,23 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     "defaultFontSize": 14
   },
   "headerElements": [
+    {"element": "fontSize", "size": 12},
+    {
+      "definition": [
+        {"attr": "remitto_name"},
+        {"attr": "remitto_addr"}
+      ],
+      "options": {"x": 0, "y": 40}
+    },
+    {
+      "element": "image",
+       "definition": "Invoice Logo",
+       "options": {"x": 220, "y": 40, "width": 150}
+    },
     {
       "definition": [{"text": "_invoice"}],
-      "options": {"fontBold": true, "fontSize": 18, "x": 0, "y": 0, "align": "right"}
+      "options": {"fontBold": true, "fontSize": 18, "x": 400, "y": 40, "align": "right"}
     },
-    {"element": "fontSize", "size": 12},
     {
       "definition": [
         {"attr": "invoiceDate", "label": true},
@@ -17,10 +29,8 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "terms.description", "label": "_terms"},
         {"attr": "orderDate", "label": true}
       ],
-      "options": {"x": 0, "y": 0, "align": "right"}
+      "options": {"x": 400, "y": 60, "align": "right"}
     },
-    {"element": "newline"},
-    {"element": "newline"},
     {
       "definition": [{"text": "_orderNumber", "label": true}],
       "options": {"fontBold": true, "x": 0, "y": 180}
