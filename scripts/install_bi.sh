@@ -98,7 +98,7 @@ then
     exit 1
 fi
 
-if  ! test -d $PRIVATE_DIR ;
+if  [ ! test -d $PRIVATE_DIR && $RUNALL ]  
 then
 	log ""
 	log "####################################################################################"
