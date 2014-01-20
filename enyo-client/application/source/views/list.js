@@ -1183,7 +1183,7 @@ trailing:true, white:true, strict: false*/
       this.inherited(arguments);
     },
     doPrint: function (options) {
-      if (XT.session.config.printServer) {
+      if (XT.session.config.printAvailable) {
         // send it to be printed silently by the server
         options.model.doPrint();
       } else {

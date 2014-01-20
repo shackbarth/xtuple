@@ -77,14 +77,6 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       catalog: "xTuple",
       tenantname: "default",
       restkeyfile: "/etc/xtuple/lib/rest-keys"
-    },
-    printServer: {
-      printhost: "localhost",
-      port: 8080,
-      httpsport: 8443,
-      user: "reports",
-      password: "password",
-      format: "pageable/pdf"
     }
   };
 }());
