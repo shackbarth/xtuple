@@ -37,10 +37,10 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
       // These fields need to be filled in for the datasource
       // to be able to email
-      smtpHost: "mercury.xtuple.com",
+      smtpHost: "",
       smtpPort: 587,
-      smtpUser: "_smtp_user_",
-      smtpPassword: "_smtp_password_",
+      smtpUser: "",
+      smtpPassword: "",
 
       // these properties are dynamically registered with the
       // node discovery service
@@ -77,7 +77,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       catalog: "xTuple",
       tenantname: "default",
       restkeyfile: "/etc/xtuple/lib/rest-keys"
-    }, 
+    },
     printServer: {
       printhost: "localhost",
       port: 8080,

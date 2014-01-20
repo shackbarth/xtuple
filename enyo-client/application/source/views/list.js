@@ -1149,9 +1149,7 @@ trailing:true, white:true, strict: false*/
       {name: "void", prerequisite: "canVoid", method: "doVoid" },
       {name: "post", prerequisite: "canPost", method: "doPost" },
       {name: "print", prerequisite: "canPrint", method: "doPrint", isViewMethod: true },
-      {name: "download", prerequisite: "canPrint", method: "doDownload", isViewMethod: true },
-      {name: "email", prerequisite: "canPrint", method: "doEmail" },
-
+      {name: "download", prerequisite: "canPrint", method: "doDownload", isViewMethod: true }
     ],
     components: [
       {kind: "XV.ListItem", components: [
@@ -1178,6 +1176,12 @@ trailing:true, white:true, strict: false*/
         ]}
       ]}
     ],
+    create: function () {
+      if (XT.session.config.emailAvailable) {
+        this.actions.push({name: "email", prerequisite: "canPrint", method: "doEmail" });
+      }
+      this.inherited(arguments);
+    },
     doPrint: function (options) {
       if (XT.session.config.printServer) {
         // send it to be printed silently by the server

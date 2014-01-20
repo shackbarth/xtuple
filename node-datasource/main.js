@@ -606,7 +606,9 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           code: 1,
           debugging: X.options.datasource.debugging,
           biServer: X.options.biServer,
+          // TODO: the client only needs a boolean for printServer, and likely biServer as well
           printServer: X.options.printServer,
+          emailAvailable: _.isString(X.options.datasource.smtpUser) && X.options.datasource.smtpUser !== "",
           version: X.version
         });
       callback(callbackObj);
