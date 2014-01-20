@@ -21,16 +21,49 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "definition": [{"text": "_invoice"}],
       "options": {"fontBold": true, "fontSize": 18, "x": 400, "y": 40, "align": "right"}
     },
+
     {
-      "definition": [
-        {"attr": "invoiceDate", "label": true},
-        {"attr": "dueDate", "label": true},
-        {"attr": "discountDate", "label": true},
-        {"attr": "terms.description", "label": "_terms"},
-        {"attr": "orderDate", "label": true}
-      ],
-      "options": {"x": 400, "y": 60, "align": "right"}
+      "definition": [{"text": "_invoiceDate", "label": true}],
+      "options": {"fontBold": true, "x": 400, "y": 60}
     },
+    {
+      "definition": [{"attr": "invoiceDate"}],
+      "options": {"x": 480, "y": 60}
+    },
+    {
+      "definition": [{"text": "_dueDate", "label": true}],
+      "options": {"fontBold": true, "x": 400, "y": 75}
+    },
+    {
+      "definition": [{"attr": "dueDate"}],
+      "options": {"x": 490, "y": 75}
+    },
+    {
+      "definition": [{"text": "_discountDate", "label": true}],
+      "options": {"fontBold": true, "x": 400, "y": 90}
+    },
+    {
+      "definition": [{"attr": "discountDate"}],
+      "options": {"x": 490, "y": 90}
+    },
+    {
+      "definition": [{"text": "_orderDate", "label": true}],
+      "options": {"fontBold": true, "x": 400, "y": 105}
+    },
+    {
+      "definition": [{"attr": "orderDate"}],
+      "options": {"x": 490, "y": 105}
+    },
+    {
+      "definition": [{"text": "_terms", "label": true}],
+      "options": {"fontBold": true, "x": 400, "y": 120}
+    },
+    {
+      "definition": [{"attr": "terms.description"}],
+      "options": {"x": 490, "y": 120}
+    },
+
+    
     {
       "definition": [{"text": "_orderNumber", "label": true}],
       "options": {"fontBold": true, "x": 0, "y": 180}
@@ -41,27 +74,27 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"text": "_invoiceNumber", "label": true}],
-      "options": {"fontBold": true, "x": 0, "y": 200}
+      "options": {"fontBold": true, "x": 0, "y": 195}
     },
     {
       "definition": [{"attr": "number"}],
-      "options": {"x": 200, "y": 200}
+      "options": {"x": 200, "y": 195}
     },
     {
       "definition": [{"text": "_purchaseOrderNumber", "label": true}],
-      "options": {"fontBold": true, "x": 0, "y": 220}
+      "options": {"fontBold": true, "x": 0, "y": 210}
     },
     {
       "definition": [{"attr": "customerPurchaseOrderNumber"}],
-      "options": {"x": 200, "y": 220}
+      "options": {"x": 200, "y": 210}
     },
     {
       "definition": [{"text": "_customerNumber", "label": true}],
-      "options": {"fontBold": true, "x": 0, "y": 240}
+      "options": {"fontBold": true, "x": 0, "y": 225}
     },
     {
       "definition": [{"attr": "customer.number"}],
-      "options": {"x": 200, "y": 240}
+      "options": {"x": 200, "y": 225}
     },
     {
       "definition": [{"text": "_billto", "label": true}],
