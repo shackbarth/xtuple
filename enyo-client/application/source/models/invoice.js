@@ -540,7 +540,19 @@ white:true*/
     idAttribute: 'uuid',
 
     // make up the the field that is "value"'ed in the ORM
-    taxType: "Adjustment"
+    taxType: "Adjustment",
+
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on("change:amount", this.calculateTotalTax);
+    },
+
+    calculateTotalTax: function () {
+      var parent = this.getParent();
+      if (parent) {
+        parent.calculateTotalTax();
+      }
+    }
 
   });
 
@@ -658,6 +670,7 @@ white:true*/
       this.on('change:' + this.parentKey, this.parentDidChange);
       this.on('change:taxType', this.calculateTax);
       this.on('change:isMiscellaneous', this.calculateTax);
+      this.on('statusChange', this.statusDidChange);
 
       this.isMiscellaneousDidChange();
     },
@@ -850,6 +863,14 @@ white:true*/
 
     priceDidChange: function () {
       this.calculateExtendedPrice();
+    },
+
+    statusDidChange: function () {
+      var status = this.getStatus(),
+        parent = this.getParent();
+      if (status === XM.Model.DESTROYED_DIRTY && parent) {
+        parent.calculateTotals();
+      }
     }
 
   };
