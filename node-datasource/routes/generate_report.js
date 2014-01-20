@@ -67,15 +67,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     };
 
-    // I'm sure this is already written somewhere else in our app. Akin to getValue() on a model.
-    var traverseDots = function (data, key) {
-      while (key.indexOf(".") >= 0) {
-        data = data[key.prefix()];
-        key = key.suffix();
-      }
-      return data[key];
-    };
-
     /**
       Helper function to translate strings
      */
@@ -96,7 +87,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     var marryData = function (detailDef, data, textOnly) {
       return _.map(detailDef, function (def) {
-        var text = def.attr ? traverseDots(data, def.attr) : loc(def.text);
+        var text = def.attr ? XT.String.traverseDots(data, def.attr) : loc(def.text);
         if (def.text && def.label === true) {
           // label=true on text just means add a colon
           text = text + ": ";
@@ -204,29 +195,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       var sendEmail = function (done) {
-        // TODO: format the {details}
-        var mailContent = {
-          from: emailProfile.get("from"),
-          replyTo: emailProfile.get("replyTo"),
-          to: emailProfile.get("to"),
-          cc: emailProfile.get("cc"),
-          bcc: emailProfile.get("bcc"),
-          subject: emailProfile.get("subject"),
-          text: emailProfile.get("body"),
-          attachments: [{fileName: reportPath, contents: data, contentType: "application/pdf"}]
-        };
-        var callback = function (error, response) {
-          if (error) {
-            X.log("Email error", error);
-            res.send({isError: true, message: "Error emailing"});
-            done();
-          } else {
-            res.send({message: "Email success"});
-            done();
-          }
-        };
+        var formattedContent = {},
+          callback = function (error, response) {
+            if (error) {
+              X.log("Email error", error);
+              res.send({isError: true, message: "Error emailing"});
+              done();
+            } else {
+              res.send({message: "Email success"});
+              done();
+            }
+          };
 
-        X.smtpTransport.sendMail(mailContent, callback);
+        // populate the template
+        _.each(emailProfile.attributes, function (value, key, list) {
+          if (typeof value === 'string') {
+            formattedContent[key] = XT.String.formatBraces(reportData[0], value);
+          }
+        });
+        formattedContent.text = formattedContent.body;
+        formattedContent.attachments = [{fileName: reportPath, contents: data, contentType: "application/pdf"}];
+
+        X.smtpTransport.sendMail(formattedContent, callback);
       };
 
       async.series([
