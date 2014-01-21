@@ -355,6 +355,11 @@ white:true*/
 
   });
 
+  XM.CustomerEmailProfile = XM.Model.extend({
+
+    recordType: "XM.CustomerEmailProfile"
+
+  });
   /**
     @class
 
@@ -909,6 +914,9 @@ white:true*/
 
   });
 
+  XM.CustomerEmailProfileCollection = XM.Collection.extend({
+    model: XM.CustomerEmailProfile
+  });
   /**
     @class
 
