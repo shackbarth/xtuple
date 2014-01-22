@@ -375,6 +375,7 @@ app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
 app.get('/:org/file', routes.file);
+app.get('/:org/generate-report', routes.generateReport);
 app.get('/:org/locale', routes.locale);
 app.get('/:org/report', routes.report);
 app.get('/:org/reset-password', routes.resetPassword);
@@ -604,8 +605,9 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           data: session.passport.user,
           code: 1,
           debugging: X.options.datasource.debugging,
-          biServer: X.options.biServer,
-          printServer: X.options.printServer,
+          biAvailable: _.isObject(X.options.biServer) && !_.isEmpty(X.options.biServer),
+          emailAvailable: _.isString(X.options.datasource.smtpUser) && X.options.datasource.smtpUser !== "",
+          printAvailable: false,
           version: X.version
         });
       callback(callbackObj);

@@ -37,7 +37,7 @@ select xt.install_js('XM','Customer','xtuple', $$
   */
   XM.Customer.itemPrice = function(customerId, itemId, quantity, options) {
     options = options || {};
-    var sql = "select itemipsprice(item_id, cust_id, $3, $4, $5, $6, $7, $8::date, $9::date, null) as result " +
+    var sql = "select itemipsprice(item_id, cust_id, $3, $4, $5, $6, $7, $8::date, $9::date, $10) as result " +
               "from custinfo, item where item_number = $1 and cust_number = $2",
       today = new Date(),
       shiptoId,
@@ -47,6 +47,7 @@ select xt.install_js('XM','Customer','xtuple', $$
       currencyId,
       effective,
       asOf,
+      siteId,
       result,
       err;
 
@@ -70,9 +71,11 @@ select xt.install_js('XM','Customer','xtuple', $$
     currencyId = options.currencyId ?
       XT.Data.getId(XT.Orm.fetch('XM', 'Currency'), options.currencyId) :
       lplv8.execute("select basecurrid() as result")[0].result;
+    siteId = options.siteId ?
+      XT.Data.getId(XT.Orm.fetch('XM', 'Site'), options.siteId) : null;
     effective = options.effective ? new Date(options.effective) : today;
     asOf = options.asOf ? new Date(options.asOf) : today;
-    result = plv8.execute(sql, [itemId, customerId, shiptoId, quantity, quantityUnitId, priceUnitId, currencyId, effective, asOf])[0].result;
+    result = plv8.execute(sql, [itemId, customerId, shiptoId, quantity, quantityUnitId, priceUnitId, currencyId, effective, asOf, siteId])[0].result;
 
     result = { price: result.itemprice_price, type: result.itemprice_type };
     return result; 

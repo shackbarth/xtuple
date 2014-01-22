@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true,
 noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global _:true */
+/*global _:true, moment:true */
 
 (function () {
   'use strict';
@@ -68,7 +68,7 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
         '(?)maxresults': _.isFinite,
         '(?)pagetoken': _.isFinite,
         '(?)count': function (count) {
-          return _.contains([ true, false, 1, 0], count);
+          return true;
         },
         '(?)access_token': _.isString
       }
@@ -118,35 +118,28 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   function toXtGetQuery(source) {
     var target = {
-      parameters: (function () {
-
-        // Return source.parameters when doing a FreeTextQuery or build up from attributes.
-        return source.parameters || _.flatten(
-          _.map(source.attributes, function (clause, attr) {
-            return _.map(clause, function (operand, operator) {
-              return {
-                attribute: attr,
-                operator: RestQuery.operators[operator],
-                value: operand
-              };
-            });
-          })
-        );
-      })(),
-      orderBy: (function () {
-        return _.map(source.orderby, function (direction, attr) {
-          return {
-            attribute: attr,
-            descending: /desc/i.test(direction)
-          };
-        });
-      })(),
-      rowOffset: (function () {
-        return (+source.pagetoken || 0) * (+source.maxresults || 100);
-      })(),
-      rowLimit: (function () {
-        return Math.max(+source.maxresults || 100);
-      })()
+      // coerce to boolean with our own whitelist of truthiness
+      count: _.contains([true, "true", "TRUE", 1, "1"], source.count),
+      // Return source.parameters when doing a FreeTextQuery or build up from attributes.
+      parameters: source.parameters || _.flatten(
+        _.map(source.attributes, function (clause, attr) {
+          return _.map(clause, function (operand, operator) {
+            return {
+              attribute: attr,
+              operator: RestQuery.operators[operator],
+              value: operand
+            };
+          });
+        })
+      ),
+      orderBy: _.map(source.orderby, function (direction, attr) {
+        return {
+          attribute: attr,
+          descending: /desc/i.test(direction)
+        };
+      }),
+      rowOffset: (+source.pagetoken || 0) * (+source.maxresults || 100),
+      rowLimit: (+source.maxresults || 100),
     };
     return _.compactObject(target);
   }

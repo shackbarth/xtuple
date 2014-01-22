@@ -608,8 +608,17 @@ trailing:true, white:true, strict: false*/
       ]}
     ]
   });
-
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
+
+  // ..........................................................
+  // CUSTOMER EMAIL PROFILE
+  //
+  enyo.kind({
+    name: "XV.CustomerEmailProfileList",
+    kind: "XV.EmailProfileList",
+    label: "_customerEmailProfiles".loc(),
+    collection: "XM.CustomerEmailProfileCollection"
+  });
 
   // ..........................................................
   // CUSTOMER GROUP
@@ -1141,7 +1150,9 @@ trailing:true, white:true, strict: false*/
         method: "doVoid" },
       {name: "post", privilege: "PostMiscInvoices", prerequisite: "canPost",
         method: "doPost" },
-      {name: "print", privilege: "PrintInvoices", method: "doPrint" }
+      {name: "print", privilege: "PrintInvoices", method: "doPrint" },
+      {name: "download", privilege: "PrintInvoices", method: "doDownload",
+        isViewMethod: true }
     ],
     components: [
       {kind: "XV.ListItem", components: [
@@ -1168,6 +1179,26 @@ trailing:true, white:true, strict: false*/
         ]}
       ]}
     ],
+    create: function () {
+      if (XT.session.config.emailAvailable) {
+        this.actions.push({name: "email", prerequisite: "canPrint", method: "doEmail" });
+      }
+      this.inherited(arguments);
+    },
+    doPrint: function (options) {
+      if (XT.session.config.printAvailable) {
+        // send it to be printed silently by the server
+        options.model.doPrint();
+      } else {
+        // no print server set up: just pop open a tab
+        window.open(XT.getOrganizationPath() + options.model.getReportUrl(),
+          "_newtab");
+      }
+    },
+    doDownload: function (options) {
+      window.open(XT.getOrganizationPath() + options.model.getReportUrl("download"),
+        "_newtab");
+    },
     // some extensions may override this function (i.e. inventory)
     formatAddress: function (value, view, model) {
       var city = model.get("billtoCity"),

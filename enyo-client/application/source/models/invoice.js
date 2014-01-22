@@ -1,7 +1,8 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global Globalize:true, XT:true, XM:true, Backbone:true, _:true, console:true, async:true */
+/*global Globalize:true, XT:true, XM:true, Backbone:true, _:true,
+  console:true, async:true, window:true */
 
 (function () {
   "use strict";
@@ -13,6 +14,7 @@ white:true*/
   var _calculatePrice = function (model) {
     var K = model.getClass(),
       item = model.get("item"),
+      site = model.get("site"),
       priceUnit = model.get("priceUnit"),
       quantity = model.get(model.altQuantityAttribute),
       quantityUnit = model.get("quantityUnit"),
@@ -65,6 +67,7 @@ white:true*/
     itemOptions.asOf = asOf;
     itemOptions.currency = currency;
     itemOptions.effective = parentDate;
+    itemOptions.site = site;
     itemOptions.error = function (err) {
       model.trigger("invalid", err);
     };
@@ -589,11 +592,6 @@ white:true*/
         success: options && options.success,
         error: options && options.error
       });
-    },
-
-    doPrint: function () {
-      // TODO
-      console.log("TODO: print invoices");
     },
 
     doVoid: function (options) {

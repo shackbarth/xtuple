@@ -25,6 +25,7 @@
         "MaintainCashReceipts",
         "MaintainCreditMemos",
         "MaintainCurrencies",
+        "MaintainCustomerEmailProfiles",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
         "MaintainIncidentCategories",
@@ -63,11 +64,13 @@
       salesPanels,
       setupPanels = [
         {name: "bankAccountList", kind: "XV.BankAccountList"},
+        {name: "customerEmailProfileList", kind: "XV.CustomerEmailProfileList"},
+        {name: "fileList", kind: "XV.FileList"},
+        {name: "itemList", kind: "XV.ItemList"},
+        {name: "itemGroupList", kind: "XV.ItemGroupList"},
         {name: "reasonCodeList", kind: "XV.ReasonCodeList"},
         {name: "salesCategoryList", kind: "XV.SalesCategoryList"},
-        {name: "termsList", kind: "XV.TermsList"},
-        {name: "itemList", kind: "XV.ItemList"},
-        {name: "itemGroupList", kind: "XV.ItemGroupList"}
+        {name: "termsList", kind: "XV.TermsList"}
       ];
 
     XT.app.$.postbooks.appendPanels("setup", setupPanels);

@@ -44,6 +44,7 @@
     "_maintainCashReceipts": "Maintain Cash Receipts",
     "_maintainCreditMemos": "Maintain Credit Memos",
     "_maintainCurrencies": "Maintain Currencies",
+    "_maintainCustomerEmailProfiles": "Maintain Customer Email Profiles",
     "_maintainMiscInvoices": "Maintain Invoices",
     "_maintainSalesCategories": "Maintain Sales Categories",
     "_mastercard": 'Mastercard',
