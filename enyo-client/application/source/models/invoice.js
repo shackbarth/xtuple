@@ -669,7 +669,8 @@ white:true*/
     readOnlyAttributes: [
       "lineNumber",
       "extendedPrice",
-      "taxTotal"
+      "taxTotal",
+      "customerPrice"
     ],
 
     //
@@ -706,8 +707,7 @@ white:true*/
       returns {Object} Receiver
     */
     calculateExtendedPrice: function () {
-      var parent = this.getParent(),
-        billed = this.get(this.altQuantityAttribute) || 0,
+      var billed = this.get(this.altQuantityAttribute) || 0,
         quantityUnitRatio = this.get("quantityUnitRatio"),
         priceUnitRatio = this.get("priceUnitRatio"),
         price = this.get("price") || 0,
@@ -715,9 +715,7 @@ white:true*/
       extPrice = XT.toExtendedPrice(extPrice);
       this.set("extendedPrice", extPrice);
       this.calculateTax();
-      if (parent) {
-        parent.calculateTotals();
-      }
+      this.recalculateParent();
       return this;
     },
 
