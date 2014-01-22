@@ -2588,7 +2588,6 @@ trailing:true, white:true, strict: false*/
       or collection attribute.
     */
     create: function () {
-      this.inherited(arguments);
       var kindName = this.kind.substring(0, this.kind.length - 4).substring(3);
       if (!this.getLabel()) {
         this.setLabel(this.determineLabel(kindName));
@@ -2596,6 +2595,7 @@ trailing:true, white:true, strict: false*/
       if (!this.getCollection()) {
         this.setCollection("XM." + kindName + "Collection");
       }
+      this.inherited(arguments);
     },
 
     determineLabel: function (kindName) {
