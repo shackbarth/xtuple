@@ -111,6 +111,7 @@ white:true*/
       lineItemTaxDetails = [],
       adjustmentTaxDetails = [],
       subtotal,
+      freight = model.get("freight"),
       taxTotal = 0.0,
       taxModel,
       total,
@@ -134,7 +135,12 @@ white:true*/
       adjustmentTaxDetails = adjustmentTaxDetails.concat(taxAdjustment);
     };
 
-    _.each(model.get('lineItems').models, forEachLineItemFunction);
+    // Line items should not include deleted.
+    var lineItems = _.filter(model.get("lineItems").models, function (item) {
+      return item.status !== XM.Model.DESTROYED_DIRTY;
+    });
+
+    _.each(lineItems, forEachLineItemFunction);
     _.each(model.get('taxAdjustments').models, forEachTaxAdjustmentFunction);
 
     //
@@ -184,7 +190,7 @@ white:true*/
 
     // Totaling calculations
     subtotal = add(subtotals, scale);
-    subtotals = subtotals.concat([miscCharge, taxTotal]);
+    subtotals = subtotals.concat([miscCharge, taxTotal, freight]);
     total = add(subtotals, scale);
 
     // Set values
@@ -498,7 +504,10 @@ white:true*/
         isPrinted: false,
         commission: 0,
         taxTotal: 0,
-        miscCharge: 0
+        miscCharge: 0,
+        subtotal: 0,
+        freight: 0,
+        total: 0
       };
     },
 
@@ -511,7 +520,6 @@ white:true*/
       "allocatedCredit",
       "authorizedCredit",
       "balance",
-      "margin",
       "miscCharge",
       "status",
       "subtotal",
@@ -698,7 +706,8 @@ white:true*/
       returns {Object} Receiver
     */
     calculateExtendedPrice: function () {
-      var billed = this.get(this.altQuantityAttribute) || 0,
+      var parent = this.getParent(),
+        billed = this.get(this.altQuantityAttribute) || 0,
         quantityUnitRatio = this.get("quantityUnitRatio"),
         priceUnitRatio = this.get("priceUnitRatio"),
         price = this.get("price") || 0,
@@ -706,7 +715,9 @@ white:true*/
       extPrice = XT.toExtendedPrice(extPrice);
       this.set("extendedPrice", extPrice);
       this.calculateTax();
-      this.recalculateParent();
+      if (parent) {
+        parent.calculateTotals();
+      }
       return this;
     },
 

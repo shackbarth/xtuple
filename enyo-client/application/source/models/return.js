@@ -48,7 +48,14 @@ white:true*/
       "miscCharge",
       "lineItems",
       "allocatedCredit",
-      "authorizedCredit"
+      "authorizedCredit",
+      "balance",
+      "margin",
+      "miscCharge",
+      "status",
+      "subtotal",
+      "taxTotal",
+      "total"
     ],
 
     // like sales order, minus contact info
