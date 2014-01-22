@@ -8,8 +8,9 @@ install:
 before_script:
   - "cd node-datasource"
   - "node main.js &"
-  - "sleep 5"
+  - "sleep 10"
   - "cd .."
 
 script:
   - "npm run-script test"
+  - "npm run-script test-datasource"

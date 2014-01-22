@@ -187,10 +187,18 @@ white:true*/
 
             // Handle case where an entire collection was saved
             if (options.collection) {
-              _.each(dataHash, function (data) {
-                var cModel;
+              // Destroyed models won't have a response unless they made the whole
+              // request fail. Assume successful destruction.
+              options.collection.each(function (model) {
+                if (model.getStatus() === XM.Model.DESTROYED_DIRTY) {
+                  model.trigger("destroy", model, model.collection, options);
+                }
+              });
 
-                if (data.patches) {
+              if (dataHash[0].patches) {
+                _.each(dataHash, function (data) {
+                  var cModel;
+
                   cModel = _.find(options.collection.models, function (model) {
                     return data.id === model.id;
                   });
@@ -206,14 +214,12 @@ white:true*/
                   options.success.call(that, cModel, attrs, options);
 
                   options.collection.remove(cModel);
-                }
-              });
-
-              // This typically happens when requery option === false
-              // and no patches were found
-              options.collection.each(function (model) {
-                options.success.call(that, model, true, options);
-              });
+                });
+              } else {
+                // This typically happens when requery option === false
+                // and no patches were found
+                options.success.call(that, options.collection.at(0), true, options);
+              }
               return;
 
             // Handle normal single model case

@@ -107,6 +107,7 @@ white:true*/
   var _calculatePrice = function (model) {
     var K = model.getClass(),
       item = model.get("item"),
+      site = model.get("site"),
       characteristics = model.get("characteristics"),
       isConfigured = item ? item.get("isConfigured") : false,
       counter = isConfigured ? characteristics.length + 1 : 1,
@@ -167,6 +168,7 @@ white:true*/
     itemOptions.asOf = asOf;
     itemOptions.currency = currency;
     itemOptions.effective = parentDate;
+    itemOptions.site = site;
     itemOptions.error = function (err) {
       model.trigger("invalid", err);
     };

@@ -88,8 +88,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       created, updated, or deleted by users with the "MaintainAllContacts" privilege.
     */
     privileges: {
-      createUpdateDelete: "MaintainAllContacts",
-      read: "ViewAllContacts"
+      createUpdateDelete: ["MaintainAllContacts", "MaintainPersonalContacts"],
+      read: ["ViewAllContacts", "ViewPersonalContacts"]
     },
     createHash: {
       firstName: "Michael" + Math.random(),
