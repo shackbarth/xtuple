@@ -115,7 +115,8 @@ XT = { };
     process.once('exit', _.bind(X.cleanup, X));
 
     _.forEach(["SIGINT", "SIGHUP", "SIGQUIT", "SIGKILL", "SIGSEGV", "SIGILL"], function (sig) {
-      process.once(sig, _.bind(sighandler, X, sig));
+      // XXX why does this fail?
+      //process.once(sig, _.bind(sighandler, X, sig));
     });
   });
 }());
