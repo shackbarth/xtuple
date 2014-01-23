@@ -68,7 +68,7 @@ XT.extensions.billing.initLists = function () {
       }}
     ],
     actions: [
-      {name: "open", prerequisite: "canOpen",
+      {name: "open", privilege: "ViewAROpenItems", prerequisite: "canOpen",
         method: "openReceivable", notify: false, isViewMethod: true}
     ],
     components: [

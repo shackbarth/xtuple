@@ -399,7 +399,7 @@ select xt.install_js('XT','Data','xtuple', $$
         for (var i = 1; i < privArray.length; i++) {
           sql = sql + ' or priv_name = $' + (i + 2);
         }
-        sql = sql + ";";
+        sql = sql + "order by granted desc limit 1;";
 
         /* Cleverness: the query parameters are just the priv array with the username tacked on front. */
         privArray.unshift(XT.username);

@@ -85,9 +85,11 @@ trailing:true, white:true, strict:false*/
       parameterWidget: "XV.PurchaseOrderListParameters",
       multiSelect: true,
       actions: [
-        {name: "release", prerequisite: "canRelease", method: "doRelease",
+        {name: "release", privilege: "ReleasePurchaseOrders",
+          prerequisite: "canRelease", method: "doRelease",
           notify: false},
-        {name: "unrelease", prerequisite: "canUnrelease",
+        {name: "unrelease", privilege: "ReleasePurchaseOrders",
+          prerequisite: "canUnrelease",
           method: "doUnrelease", notify: false}
       ],
       query: {orderBy: [
