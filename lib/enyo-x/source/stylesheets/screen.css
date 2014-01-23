@@ -1283,6 +1283,7 @@ ul.icons-ul > li .icon-li {
      * Icon size set per Onyx standard:
      * https://github.com/enyojs/onyx/blob/master/source/Icon.js#L5
      */
+
   width: 32px;
   height: 32px;
   padding: 3px;
@@ -1348,6 +1349,7 @@ ul.icons-ul > li .icon-li {
   /**
         * Default styling for a model's id (as designated by 'idAttribute')
         */
+
 }
 .xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-id {
   color: blue;
@@ -1437,6 +1439,7 @@ ul.icons-ul > li .icon-li {
     This is the most general grid row that
     is not specific to read-only or selected
   */
+
 }
 .xv-grid-box.small-panel {
   width: 600px;
@@ -1492,6 +1495,7 @@ ul.icons-ul > li .icon-li {
   /**
       This is the grid header row
     */
+
 }
 .xv-grid-box .xv-grid-row > * {
   display: inline-block;
@@ -1706,6 +1710,7 @@ ul.icons-ul > li .icon-li {
     These styles will only be used
     if the chart is in a dashboard
   */
+
 }
 .dashboard .charts-panels {
   overflow-y: auto;
@@ -1798,7 +1803,7 @@ ul.icons-ul > li .icon-li {
   color: #8d8d8d;
 }
 .xv-list .xv-list-item .xv-list-column.name-column {
-  width: 14em;
+  width: 12em;
 }
 .xv-list .xv-list-item .xv-list-column.right-column {
   width: 8em;
@@ -1964,6 +1969,7 @@ ul.icons-ul > li .icon-li {
       TODO: this is weird and indicates the REAL need to change the
       whatever the css system is...this relative path is different...
     **/
+
   background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
   background-size: 20px 2px;
 }
@@ -2051,6 +2057,7 @@ ul.icons-ul > li .icon-li {
 }
 .xv-tree .xv-tree-node {
   /* These picker styles are for the ListAttr node */
+
 }
 .xv-tree .xv-tree-node .xv-pickerwidget {
   display: inline-block;
@@ -2190,6 +2197,7 @@ ul.icons-ul > li .icon-li {
   font-size: small;
   padding-bottom: 4px;
   max-width: 325px;
+  color: black;
 }
 .xv-relationwidget-description.disabled {
   color: #696969;
@@ -2408,6 +2416,7 @@ ul.icons-ul > li .icon-li {
   border: 1px #aaaaaa solid;
   border-top-width: 0;
   /* reset styles that make 'item' look bad if they happen to be there */
+
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -2515,6 +2524,7 @@ body {
 }
 .bggrad {
   /* Radial Gradient */
+
   background-color: #333333;
   background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(#696969), to(#333333));
   background-image: -webkit-radial-gradient(circle, #696969, #333333);
@@ -2666,6 +2676,7 @@ body {
 }
 .xv-comment-box {
   /* Resets the margin/padding value for blockquote tag in comments */
+
 }
 .xv-comment-box .onxy-groupbox-header {
   max-width: 320px;

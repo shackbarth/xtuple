@@ -13,7 +13,7 @@
     @param {Any} [dataHash.dispatch.parameters] One or many parameters to pass to the function call.
 
     Sample usage:
-    select xt.js_init();
+    select xt.js_init(true);
     select xt.post('{
       "username": "admin",
       "nameSpace":"XM",
@@ -70,6 +70,7 @@
       "nameSpace":"XM",
       "type": "Contact",
       "id": "10009",
+      "method": "post",
       "data" : {
         "number": "10009",
         "firstName": "Bob",
@@ -82,6 +83,7 @@
       "nameSpace":"XM",
       "type": "Contact",
       "id": "10010",
+      "method": "post",
       "data" : {
         "number": "10010",
         "firstName": "Ziggy",
@@ -118,16 +120,6 @@
       "dispatch":{
         "functionName":"useCount",
         "parameters": 41
-      }
-    }$$);
-
-    select xt.post($${
-      "username": "admin",
-      "nameSpace": "XM",
-      "type": "Model",
-      "dispatch":{
-        "functionName":"fetchId",
-        "parameters":"XM.Address"
       }
     }$$);
 
@@ -199,136 +191,45 @@ create or replace function xt.post(data_hash text) returns text as $$
 
 return (function () {
 
-  var dataArray = JSON.parse(data_hash),
-    isArray = XT.typeOf(dataArray) === 'array',
-    result = [],
-    data = Object.create(XT.Data),
+  var dataHash = JSON.parse(data_hash),
+    isNotDispatch = (typeof dataHash.data == "object"),
     prettyPrint,
-    dispatch,
-    fetchCol,
-    fetchRes,
-    fetchSql,
-    orm,
-    pkey,
-    prv,
-    sql,
-    observer,
-    ret,
-    obj,
-    f,
-    params,
-    args,
-    method;
-
-  /* Make sure the input is an array */
-  dataArray = isArray ? dataArray : [dataArray];
+    ret = [];
 
   try {
-    /* Loop through each input and do the work */
-    dataArray.forEach(function (dataHash) {
-      prettyPrint = dataHash.prettyPrint ? 2 : null;
-      dispatch = dataHash.dispatch;
-      dataHash.superUser = false;
-      if (dataHash.username) { XT.username = dataHash.username; }
-
-      /* if there's data then commit it */
-      if (dataHash.data) {
-        orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type);
-        pkey = XT.Orm.primaryKey(orm);
-        nkey = XT.Orm.naturalKey(orm);
-        prv = JSON.parse(JSON.stringify(dataHash.data));
-        sql = "select nextval($1);";
-
-        /* set status */
-        XT.jsonpatch.updateState(dataHash.data, "create");
-
-        /* Set natural key number if not provided. */
-        if (nkey && (nkey !== pkey) && !dataHash.data[nkey]) {
-          if (nkey === 'uuid') {
-            dataHash.data[nkey] = XT.generateUUID();
-          } else {
-            /* Check if this is a fetchable number. */
-            if (orm.orderSequence) {
-              /* Since this is null, but required, fetch the next number for this and use it. */
-              dataHash.data[nkey] = XM.Model.fetchNumber(dataHash.nameSpace + '.' + dataHash.type);
-            } else {
-              throw new handleError("A unique " + nkey + " must be provided", 449);
-            }
-          }
+    /* If the request is an array of objects loop through them */
+    if (dataHash.length) {
+      dataHash.forEach(function (obj) {
+        switch (obj.method)
+        {
+        case "post":
+          ret.push(XT.Rest.post(obj));
+          break;
+        case "patch":
+          ret.push(XT.Rest.patch(obj));
+          break;
+        case "delete":
+          XT.Rest.delete(obj);
+          break;
+        default:
+          plv8.elog(ERROR, "Unknown or unsupported method");
         }
+      });
 
-        /* Set id if not provided. */
-        if (!dataHash.id) {
-          if (nkey) {
-            if (dataHash.data[nkey] || nkey === 'uuid') {
-              dataHash.id = dataHash.data[nkey] || XT.generateUUID();
-            } else {
-              throw new handleError("A unique id must be provided", 449);
-            }
-          } else if (orm.idSequenceName) {
-            dataHash.id = dataHash.data[pkey] || plv8.execute(sql, [orm.idSequenceName])[0].nextval;
-          } else {
-            throw new handleError("A unique id must be provided", 449);
-          }
-        }
+      return JSON.stringify(ret, null, dataHash[0].prettyPrint);
+    }
 
-        /* commit the record */
-        data.commitRecord(dataHash);
+    /* If just one object, deal with it normally */
+    ret = XT.Rest.post(dataHash);
 
-        if (dataHash.requery === false) {
-          /* The requestor doesn't care to know what the record looks like now */
-          ret = true;
-        } else {
-          /* calculate a patch of the modifed version */
-          observer = XT.jsonpatch.observe(prv);
-          dataHash.superUser = true;
-          ret = data.retrieveRecord(dataHash);
-          observer.object = ret.data;
-          delete ret.data;
-          ret.patches = XT.jsonpatch.generate(observer);
-          if (!isArray) {
-            ret = JSON.stringify(ret, null, prettyPrint);
-          }
-        }
+    /* Dispatches handle stringify internally.
+       We'll stringify any commit results here */
+    if (isNotDispatch) {
+      ret = JSON.stringify(ret, null, dataHash.prettyPrint);
+    }
 
-      /* if it's a function dispatch call then execute it */
-      } else if (dispatch) {
-        obj = plv8[dataHash.nameSpace][dataHash.type];
-        f = dispatch.functionName;
-        params = dispatch.parameters;
-        args = params instanceof Array ? params : [params];
+    return ret;
 
-        if (obj[f]) {
-          method = obj[f].curry(args);
-        } else {
-          XT.username = undefined;
-          throw new Error('Function ' + dataHash.nameSpace +
-             '.' + dataHash.type + '.' + f + ' not found.');
-        }
-
-        ret = obj.isDispatchable ? method() : false;
-
-        /**
-         * Remove the requirement of passing 'isJSON' around.
-         * Based on underscore: http://underscorejs.org/docs/underscore.html#section-88
-         */
-        ret = toString.call(ret) != '[object Number]' ?
-          JSON.stringify(ret, null, prettyPrint) : ret;
-      }
-
-      /* Unset XT.username so it isn't cached for future queries. */
-      XT.username = undefined;
-
-      if (dataHash.dispatch) {
-        XT.message(200, "OK");
-      } else {
-        XT.message(201, "Created");
-      }
-
-      result.push(ret);
-    })
-
-    return isArray ? JSON.stringify(result, null, prettyPrint) : result[0];
   } catch (err) {
     XT.error(err);
   }
