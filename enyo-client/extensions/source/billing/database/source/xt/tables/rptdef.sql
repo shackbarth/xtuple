@@ -7,8 +7,8 @@ select xt.add_report_definition('XM.Invoice', 0, $${
   "headerElements": [
     {
       "definition": [
-        {"attr": "remitto_name"},
-        {"attr": "remitto_addr"}
+        {"attr": "remitto.name"},
+        {"attr": "remitto.address"}
       ],
       "options": {"x": 0, "y": 40}
     },
@@ -19,12 +19,12 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"text": "_invoice"}],
-      "options": {"fontBold": true, "fontSize": 18, "x": 400, "y": 40, "align": "right"}
+      "options": {"fontBold": true, "fontSize": 18, "x": 500, "y": 40, "align": "right"}
     },
 
     {
       "definition": [{"text": "_invoiceDate", "label": true}],
-      "options": {"fontBold": true, "x": 370, "y": 60}
+      "options": {"fontBold": true, "x": 400, "y": 60}
     },
     {
       "definition": [{"attr": "invoiceDate"}],
@@ -32,7 +32,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"text": "_dueDate", "label": true}],
-      "options": {"fontBold": true, "x": 370, "y": 75}
+      "options": {"fontBold": true, "x": 400, "y": 75}
     },
     {
       "definition": [{"attr": "dueDate"}],
@@ -40,7 +40,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"text": "_discountDate", "label": true}],
-      "options": {"fontBold": true, "x": 370, "y": 90}
+      "options": {"fontBold": true, "x": 400, "y": 90}
     },
     {
       "definition": [{"attr": "discountDate"}],
@@ -48,7 +48,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"text": "_orderDate", "label": true}],
-      "options": {"fontBold": true, "x": 370, "y": 105}
+      "options": {"fontBold": true, "x": 400, "y": 105}
     },
     {
       "definition": [{"attr": "orderDate"}],
@@ -56,7 +56,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"text": "_terms", "label": true}],
-      "options": {"fontBold": true, "x": 370, "y": 120}
+      "options": {"fontBold": true, "x": 400, "y": 120}
     },
     {
       "definition": [{"attr": "terms.description"}],

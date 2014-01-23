@@ -84,7 +84,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     var queryDatasource = function () {
       query = queryString.f(functionName, JSON.stringify(payload));
-      console.log(query);
       queryOptions = XT.dataSource.getAdminCredentials(org);
       XT.dataSource.query(query, queryOptions, adaptorCallback);
     };

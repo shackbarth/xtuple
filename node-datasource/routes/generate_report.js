@@ -29,7 +29,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // VARIABLES THAT SPAN MULTIPLE STEPS
     //
     var reportDefinition,
-      reportData,
+      rawData = {}, // raw data object
+      reportData, // array with report data
       username = req.session.passport.user.id,
       databaseName = req.session.passport.user.organization,
       // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
@@ -57,6 +58,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var transformDataStructure = function (data) {
       // TODO: detailAttribute could be inferred by looking at whatever comes before the *
       // in the detailElements definition.
+
       return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
         var pathedDetail = {};
         _.each(detail, function (detailValue, detailKey) {
@@ -303,7 +305,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var fetchRemitTo = function (done) {
       var allElements = _.flatten(reportDefinition.headerElements),
         definitions = _.flatten(_.compact(_.pluck(allElements, "definition"))),
-        remitToFields = _.findWhere(definitions, {attr: 'remitto_name'});
+        remitToFields = _.findWhere(definitions, {attr: 'remitto.name'});
 
       if (!remitToFields || remitToFields.length === 0) {
         // no need to try to fetch
@@ -321,13 +323,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           done(result || "Invalid query");
           return;
         }
-        //reportData = transformDataStructure(result.data.data);
-        console.log("fetch of remitto complete");
-        console.log(result.data.data);
+        // Add the remit to data to the raw
+        // data object
+        rawData.remitto = result.data.data;
         done();
       };
-
-      console.log(requestDetails);
       queryForData(req.session, requestDetails, callback);
     };
 
@@ -386,7 +386,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           done(result || "Invalid query");
           return;
         }
-        reportData = transformDataStructure(result.data.data);
+        rawData = _.extend(rawData, result.data.data);
+        // take the raw data and added detail fields and put
+        // into array format for the report
+        reportData = transformDataStructure(rawData);
         done();
       };
 
