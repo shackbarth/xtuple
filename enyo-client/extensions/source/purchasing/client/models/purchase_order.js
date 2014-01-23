@@ -1170,21 +1170,21 @@ white:true*/
       editableModel: "XM.PurchaseOrder",
 
       canRelease: function (callback) {
-        var status = this.get("status"),
-          ret = XT.session.privileges.get("ReleasePurchaseOrders") &&
-            status === XM.PurchaseOrder.UNRELEASED_STATUS;
+        var status = this.get("status");
+
         if (callback) {
-          callback(ret);
+          callback(status === XM.PurchaseOrder.UNRELEASED_STATUS);
         }
-        return ret;
+
+        return this;
       },
 
       canUnrelease: function (callback) {
         var status = this.get("status"),
-          ret = XT.session.privileges.get("ReleasePurchaseOrders") &&
-            status === XM.PurchaseOrder.OPEN_STATUS,
-            options = {},
-            params;
+          ret = status === XM.PurchaseOrder.OPEN_STATUS,
+          options = {},
+          params;
+
         if (ret) {
           params = [this.id, true];
           options.success = function (resp) {

@@ -1650,10 +1650,11 @@ strict: false*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
+        {kind: "XV.Groupbox", name: "mainPanel",
+          components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
+            classes: "in-panel", fit: true, components: [
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "name"}
           ]}
