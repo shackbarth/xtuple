@@ -39,7 +39,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       imageFilenameMap = {},
       translations;
 
-
     //
     // HELPER FUNCTIONS FOR DATA TRANSFORMATION
     //
@@ -141,7 +140,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
 
       // these elements are expecting a parameter that is a number, not
-      if (def.element === 'bandLine' || def.element === 'fontSize') {
+      if (def.element === 'bandLine' || def.element === 'fontSize' ||
+        def.element === 'margins') {
         return def.size;
       }
 
@@ -251,7 +251,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     //
-    // Helper function for fetchImages
+    // Helper function for writing image
     //
     var writeImageToFilesystem = function (fileModel, done) {
       // XXX this might be an expensive synchronous operation
@@ -303,7 +303,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var fetchRemitTo = function (done) {
       var allElements = _.flatten(reportDefinition.headerElements),
         definitions = _.flatten(_.compact(_.pluck(allElements, "definition"))),
-        remitToFields = _.findWhere(definitions, {attr: 'remitto'});
+        remitToFields = _.findWhere(definitions, {attr: 'remitto_name'});
 
       if (!remitToFields || remitToFields.length === 0) {
         // no need to try to fetch
@@ -311,8 +311,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
 
-      // fetch the Remit to Information
+      var requestDetails = {
+        nameSpace: "XM",
+        type: "RemitTo",
+        id: 1
+      };
+      var callback = function (result) {
+        if (!result || result.isError) {
+          done(result || "Invalid query");
+          return;
+        }
+        //reportData = transformDataStructure(result.data.data);
+        console.log("fetch of remitto complete");
+        console.log(result.data.data);
+        done();
+      };
 
+      console.log(requestDetails);
+      queryForData(req.session, requestDetails, callback);
     };
 
     /**
@@ -399,7 +415,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           .header(printHeader)
           .detail(printDetail)
           .footer(printFooter)
-          .fontSize(reportDefinition.settings.defaultFontSize);
+          .fontSize(reportDefinition.settings.defaultFontSize)
+          .margins(reportDefinition.settings.defaultMarginSize);
 
       // Debug output is always nice (Optional, to help you see the structure)
       //rpt.printStructure();

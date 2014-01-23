@@ -173,6 +173,7 @@
     "xt/views/prjinfo.sql",
     "xt/views/quheadinfo.sql",
     "xt/views/quiteminfo.sql",
+    "xt/views/remitto.sql",
     "xt/views/site.sql",
     "xt/views/todoiteminfo.sql",
     "xt/views/usrinfo.sql",

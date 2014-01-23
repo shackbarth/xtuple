@@ -1,10 +1,10 @@
 select xt.add_report_definition('XM.Invoice', 0, $${
   "settings": {
     "detailAttribute": "lineItems",
-    "defaultFontSize": 14
+    "defaultFontSize": 12,
+    "defaultMarginSize": 30
   },
   "headerElements": [
-    {"element": "fontSize", "size": 12},
     {
       "definition": [
         {"attr": "remitto_name"},
@@ -28,7 +28,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"attr": "invoiceDate"}],
-      "options": {"x": 450, "y": 60, "align": "right"}
+      "options": {"x": 500, "y": 60, "align": "right"}
     },
     {
       "definition": [{"text": "_dueDate", "label": true}],
@@ -36,7 +36,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"attr": "dueDate"}],
-      "options": {"x": 450, "y": 75, "align": "right"}
+      "options": {"x": 500, "y": 75, "align": "right"}
     },
     {
       "definition": [{"text": "_discountDate", "label": true}],
@@ -44,7 +44,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"attr": "discountDate"}],
-      "options": {"x": 450, "y": 90, "align": "right"}
+      "options": {"x": 500, "y": 90, "align": "right"}
     },
     {
       "definition": [{"text": "_orderDate", "label": true}],
@@ -52,7 +52,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"attr": "orderDate"}],
-      "options": {"x": 450, "y": 105, "align": "right"}
+      "options": {"x": 500, "y": 105, "align": "right"}
     },
     {
       "definition": [{"text": "_terms", "label": true}],
@@ -60,7 +60,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"attr": "terms.description"}],
-      "options": {"x": 425, "y": 120, "align": "right"}
+      "options": {"x": 475, "y": 120, "align": "right"}
     },
 
     {
