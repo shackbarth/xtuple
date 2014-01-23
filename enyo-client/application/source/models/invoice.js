@@ -602,20 +602,16 @@ white:true*/
     documentDateKey: 'invoiceDate',
 
     couldDestroy: function (callback) {
-      callback(XT.session.privileges.get("MaintainMiscInvoices") && !this.get("isPosted"));
+      callback(!this.get("isPosted"));
     },
 
     canPost: function (callback) {
-      callback(XT.session.privileges.get("PostMiscInvoices") && !this.get("isPosted"));
+      callback(!this.get("isPosted"));
     },
 
     canVoid: function (callback) {
-      var response = XT.session.privileges.get("VoidPostedInvoices") && this.get("isPosted");
+      var response = this.get("isPosted");
       callback(response || false);
-    },
-
-    canPrint: function (callback) {
-      callback(XT.session.privileges.get("PrintInvoices") || false);
     },
 
     doPost: function (options) {

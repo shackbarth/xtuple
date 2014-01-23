@@ -1146,10 +1146,13 @@ trailing:true, white:true, strict: false*/
       {attribute: 'number'}
     ]},
     actions: [
-      {name: "void", prerequisite: "canVoid", method: "doVoid" },
-      {name: "post", prerequisite: "canPost", method: "doPost" },
-      {name: "print", prerequisite: "canPrint", method: "doPrint", isViewMethod: true },
-      {name: "download", prerequisite: "canPrint", method: "doDownload", isViewMethod: true }
+      {name: "void", privilege: "VoidPostedInvoices", prerequisite: "canVoid",
+        method: "doVoid" },
+      {name: "post", privilege: "PostMiscInvoices", prerequisite: "canPost",
+        method: "doPost" },
+      {name: "print", privilege: "PrintInvoices", method: "doPrint" },
+      {name: "download", privilege: "PrintInvoices", method: "doDownload",
+        isViewMethod: true }
     ],
     components: [
       {kind: "XV.ListItem", components: [
@@ -1630,6 +1633,7 @@ trailing:true, white:true, strict: false*/
     actions: [{
       name: "convert",
       method: "convertProspect",
+      privilege: "MaintainCustomerMasters",
       isViewMethod: true
     }],
     query: {orderBy: [
@@ -1795,6 +1799,7 @@ trailing:true, white:true, strict: false*/
     actions: [{
       name: "convert",
       method: "convertQuote",
+      privilege: "ConvertQuotes",
       isViewMethod: true,
       notify: false
     }],
@@ -1917,9 +1922,12 @@ trailing:true, white:true, strict: false*/
     parameterWidget: "XV.ReturnListParameters",
     collection: "XM.ReturnListItemCollection",
     actions: [
-      {name: "void", prerequisite: "canVoid", method: "doVoid" },
-      {name: "post", prerequisite: "canPost", method: "doPost" },
-      {name: "print", prerequisite: "canPrint", method: "doPrint" }
+      {name: "void", privilege: "VoidPostedARCreditMemos",
+        prerequisite: "canVoid", method: "doVoid" },
+      {name: "post", privilege: "PostARDocuments",
+        prerequisite: "canPost", method: "doPost" },
+      {name: "print", privileg: "PrintCreditMemos",
+        method: "doPrint" }
     ],
     create: function () {
       this.inherited(arguments);
@@ -2580,7 +2588,6 @@ trailing:true, white:true, strict: false*/
       or collection attribute.
     */
     create: function () {
-      this.inherited(arguments);
       var kindName = this.kind.substring(0, this.kind.length - 4).substring(3);
       if (!this.getLabel()) {
         this.setLabel(this.determineLabel(kindName));
@@ -2588,6 +2595,7 @@ trailing:true, white:true, strict: false*/
       if (!this.getCollection()) {
         this.setCollection("XM." + kindName + "Collection");
       }
+      this.inherited(arguments);
     },
 
     determineLabel: function (kindName) {

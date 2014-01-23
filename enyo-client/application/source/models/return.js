@@ -118,20 +118,16 @@ white:true*/
     documentDateKey: 'returnDate',
 
     couldDestroy: function (callback) {
-      callback(XT.session.privileges.get("MaintainCreditMemos") && !this.get("isPosted"));
+      callback(!this.get("isPosted"));
     },
 
     canPost: function (callback) {
-      callback(XT.session.privileges.get("PostARDocuments") && !this.get("isPosted"));
+      callback(!this.get("isPosted"));
     },
 
     canVoid: function (callback) {
-      var response = XT.session.privileges.get("VoidPostedARCreditMemos") && this.get("isPosted");
+      var response = this.get("isPosted");
       callback(response || false);
-    },
-
-    canPrint: function (callback) {
-      callback(XT.session.privileges.get("PrintCreditMemos") || false);
     },
 
     doPost: function (options) {
