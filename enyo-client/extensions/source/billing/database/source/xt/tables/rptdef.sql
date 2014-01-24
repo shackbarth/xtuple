@@ -2,7 +2,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
   "settings": {
     "detailAttribute": "lineItems",
     "defaultFontSize": 12,
-    "defaultMarginSize": 30
+    "defaultMarginSize": 20
   },
   "headerElements": [
     {
@@ -115,7 +115,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "options": {"x": 120, "y": 280, "width": 250}
     },
     {"element": "newline"},
-    {"element": "bandLine", "size": 2},
     {"element": "fontBold"},
     {
       "element": "band",
@@ -145,14 +144,14 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       ],
       "options": {"border": 0, "width": 0, "wrap": 1}
     },
+    {"element": "newline"},
+    {"element": "newline"},
     {
-      "definition:": [
-        {"attr": "notes", "label": true}
-      ]
+      "definition": [{"attr": "notes", "label": true}],
+        "options": {"fontSize": 8, "width": 250}
     }
   ],
   "footerElements": [
-    {"element": "newline"},
     {"element": "newline"},
     {"element": "bandLine", "size": 2},
     {
@@ -161,7 +160,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "taxTotal", "label": true},
         {"attr": "total", "label": true}
       ],
-      "options": {"align": "right", "x": 0, "y": 0}
+      "options": {"x": 460, "y": 0}
     },
     {"element": "newline"},
     {"element": "standardHeader"}

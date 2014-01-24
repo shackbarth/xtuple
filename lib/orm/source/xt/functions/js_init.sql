@@ -792,6 +792,30 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   };
 
   /**
+   * Wrap formatAddr()
+   *
+   * @param String addr1
+   * @param String addr2
+   * @param String addr3
+   * @param String cityState
+   * @param String country
+   * @returns {String} Formatted Address
+  */
+  XT.formatAddr = function (addr1, addr2, addr3, cityState, country) {
+    var query = "select formatAddr($1, $2, $3, $4, $5);"
+    if (DEBUG) {
+      XT.debug('XT.formatAddr sql =', query);
+      XT.debug('XT.formatAddr arg1 =', addr1);
+      XT.debug('XT.formatAddr arg2 =', addr2);
+      XT.debug('XT.formatAddr arg2 =', addr3);
+      XT.debug('XT.formatAddr arg2 =', cityState);
+      XT.debug('XT.formatAddr arg2 =', country);
+    }
+    ret = plv8.execute(query, [addr1, addr2, addr3, cityState, country])[0];
+    return ret;
+  };
+
+  /**
     Return a universally unique identifier.
 
     We're using this solution:
