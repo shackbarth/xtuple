@@ -25,6 +25,7 @@
         "MaintainCashReceipts",
         "MaintainCreditMemos",
         "MaintainCurrencies",
+        "MaintainCustomerEmailProfiles",
         "MaintainCustomerMasters",
         "MaintainCustomerGroups",
         "MaintainIncidentCategories",
@@ -63,6 +64,7 @@
       salesPanels,
       setupPanels = [
         {name: "bankAccountList", kind: "XV.BankAccountList"},
+        {name: "customerEmailProfileList", kind: "XV.CustomerEmailProfileList"},
         {name: "fileList", kind: "XV.FileList"},
         {name: "itemList", kind: "XV.ItemList"},
         {name: "itemGroupList", kind: "XV.ItemGroupList"},

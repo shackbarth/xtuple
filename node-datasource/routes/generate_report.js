@@ -68,15 +68,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     };
 
-    // I'm sure this is already written somewhere else in our app. Akin to getValue() on a model.
-    var traverseDots = function (data, key) {
-      while (key.indexOf(".") >= 0) {
-        data = data[key.prefix()];
-        key = key.suffix();
-      }
-      return data[key];
-    };
-
     /**
       Helper function to translate strings
      */
@@ -98,7 +89,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var marryData = function (detailDef, data, textOnly) {
 
       return _.map(detailDef, function (def) {
-        var text = def.attr ? traverseDots(data, def.attr) : loc(def.text);
+        var text = def.attr ? XT.String.traverseDots(data, def.attr) : loc(def.text);
         if (def.text && def.label === true) {
           // label=true on text just means add a colon
           text = text + ": ";
@@ -162,6 +153,103 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var elementData = transformElementData(def, data);
         report[def.element || "print"](elementData, def.options);
       });
+    };
+
+    //
+    // WAYS TO RETURN TO THE USER
+    //
+
+    /**
+      Stream the pdf to the browser (on a separate tab, presumably)
+     */
+    var responseDisplay = function (res, data, done) {
+      res.header("Content-Type", "application/pdf");
+      res.send(data);
+      done();
+    };
+
+    /**
+      Stream the pdf to the user as a download
+     */
+    var responseDownload = function (res, data, done) {
+      res.header("Content-Type", "application/pdf");
+      res.attachment(reportPath);
+      res.send(data);
+      done();
+    };
+
+    /**
+      Send an email
+     */
+    var responseEmail = function (res, data, done) {
+
+      var emailProfile;
+      var fetchEmailProfile = function (done) {
+        var emailProfileId = reportData[0].customer.emailProfile,
+          statusChanged = function (model, status, options) {
+            if (status === XM.Model.READY_CLEAN) {
+              emailProfile.off("statusChange", statusChanged);
+              done();
+            }
+          };
+        if (!emailProfileId) {
+          done({isError: true, message: "Error: no email profile associated with customer"});
+          return;
+        }
+        emailProfile = new SYS.CustomerEmailProfile();
+        emailProfile.on("statusChange", statusChanged);
+        emailProfile.fetch({
+          id: emailProfileId,
+          database: databaseName,
+          username: username
+        });
+      };
+
+      var sendEmail = function (done) {
+        var formattedContent = {},
+          callback = function (error, response) {
+            if (error) {
+              X.log("Email error", error);
+              res.send({isError: true, message: "Error emailing"});
+              done();
+            } else {
+              res.send({message: "Email success"});
+              done();
+            }
+          };
+
+        // populate the template
+        _.each(emailProfile.attributes, function (value, key, list) {
+          if (typeof value === 'string') {
+            formattedContent[key] = XT.String.formatBraces(reportData[0], value);
+          }
+        });
+        formattedContent.text = formattedContent.body;
+        formattedContent.attachments = [{fileName: reportPath, contents: data, contentType: "application/pdf"}];
+
+        X.smtpTransport.sendMail(formattedContent, callback);
+      };
+
+      async.series([
+        fetchEmailProfile,
+        sendEmail
+      ], done);
+    };
+
+    /**
+      Silent-print to a printer registered in the node-datasource.
+     */
+    var responsePrint = function (res, data, done) {
+      // TODO
+      done();
+    };
+
+    // Convenience hash to avoid log if-else
+    var responseFunctions = {
+      display: responseDisplay,
+      download: responseDownload,
+      email: responseEmail,
+      print: responsePrint
     };
 
 
@@ -444,34 +532,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           res.send({isError: true, error: err});
           return;
         }
-        if (req.query.action === "email") {
-          var mailContent = {
-            from: "no-reply@xtuple.com",
-            to: "shackbarth@xtuple.com",
-            subject: "hi",
-            text: "Here is your email",
-            attachments: [{fileName: reportPath, contents: data, contentType: "application/pdf"}]
-          };
-          var callback = function (error, response) {
-              if (error) {
-                X.log("Email error", error);
-                res.send({isError: true, message: "Error emailing"});
-              } else {
-                res.send({message: "Email success"});
-              }
-            };
-
-          X.smtpTransport.sendMail(mailContent, callback);
-          done();
-          return;
-        }
-        res.header("Content-Type", "application/pdf");
-
-        if (req.query.action === "download") {
-          res.attachment(reportPath);
-        }
-        res.send(data);
-        done();
+        // Send the appropriate response back the client
+        responseFunctions[req.query.action || "display"](res, data, done);
       });
     };
 

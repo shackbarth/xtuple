@@ -1,7 +1,8 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global Globalize:true, XT:true, XM:true, Backbone:true, _:true, console:true, async:true */
+/*global Globalize:true, XT:true, XM:true, Backbone:true, _:true,
+  console:true, async:true, window:true */
 
 (function () {
   "use strict";
@@ -13,6 +14,7 @@ white:true*/
   var _calculatePrice = function (model) {
     var K = model.getClass(),
       item = model.get("item"),
+      site = model.get("site"),
       priceUnit = model.get("priceUnit"),
       quantity = model.get(model.altQuantityAttribute),
       quantityUnit = model.get("quantityUnit"),
@@ -65,6 +67,7 @@ white:true*/
     itemOptions.asOf = asOf;
     itemOptions.currency = currency;
     itemOptions.effective = parentDate;
+    itemOptions.site = site;
     itemOptions.error = function (err) {
       model.trigger("invalid", err);
     };
@@ -572,20 +575,16 @@ white:true*/
     documentDateKey: 'invoiceDate',
 
     couldDestroy: function (callback) {
-      callback(XT.session.privileges.get("MaintainMiscInvoices") && !this.get("isPosted"));
+      callback(!this.get("isPosted"));
     },
 
     canPost: function (callback) {
-      callback(XT.session.privileges.get("PostMiscInvoices") && !this.get("isPosted"));
+      callback(!this.get("isPosted"));
     },
 
     canVoid: function (callback) {
-      var response = XT.session.privileges.get("VoidPostedInvoices") && this.get("isPosted");
+      var response = this.get("isPosted");
       callback(response || false);
-    },
-
-    canPrint: function (callback) {
-      callback(XT.session.privileges.get("PrintInvoices") || false);
     },
 
     doPost: function (options) {
@@ -593,11 +592,6 @@ white:true*/
         success: options && options.success,
         error: options && options.error
       });
-    },
-
-    doPrint: function () {
-      // TODO
-      console.log("TODO: print invoices");
     },
 
     doVoid: function (options) {

@@ -118,7 +118,8 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       read: "ViewCreditMemos"
     },
     createHash: {
-      customer: {number: "XRETAIL"}
+      //customer: {number: "XRETAIL"}
+      customer: {number: "TTOYS"}
     },
     updatableField: "notes",
     beforeSaveActions: [{it: 'sets up a valid line item',
@@ -920,15 +921,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
           done();
         });
       });
-      it("Cannot delete unposted Returns where the user has no MaintainCreditMemos privilege",
-          function (done) {
-        var model = new XM.ReturnListItem();
-        XT.session.privileges.attributes.MaintainCreditMemos = false;
-        model.couldDestroy(function (response) {
-          assert.isFalse(response);
-          done();
-        });
-      });
       it("Cannot delete Returns that are already posted", function (done) {
         var model = new XM.ReturnListItem();
         model.set({isPosted: true});
@@ -943,14 +935,6 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         var model = new XM.ReturnListItem();
         model.canPost(function (response) {
           assert.isTrue(response);
-          done();
-        });
-      });
-      it("Cannot post Returns where the user has no PostARDocuments privilege", function (done) {
-        var model = new XM.ReturnListItem();
-        XT.session.privileges.attributes.PostARDocuments = false;
-        model.canPost(function (response) {
-          assert.isFalse(response);
           done();
         });
       });
@@ -973,36 +957,11 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
           done();
         });
       });
-      it("Cannot void Returns where the user has no VoidPostedARCreditMemos privilege",
-          function (done) {
-        var model = new XM.ReturnListItem();
-        model.set({isPosted: true});
-        XT.session.privileges.attributes.VoidPostedARCreditMemos = false;
-        model.canVoid(function (response) {
-          assert.isFalse(response);
-          done();
-        });
-      });
       it("Cannot void Returns that are not already posted", function (done) {
         var model = new XM.ReturnListItem();
         model.set({isPosted: false});
         XT.session.privileges.attributes.VoidPostedARCreditMemos = true;
         model.canVoid(function (response) {
-          assert.isFalse(response);
-          done();
-        });
-      });
-      it("Print Returns where the user has the PrintCreditMemos privilege", function (done) {
-        var model = new XM.ReturnListItem();
-        model.canPrint(function (response) {
-          assert.isTrue(response);
-          done();
-        });
-      });
-      it("Cannot print Returns where the user has no PrintCreditMemos privilege", function (done) {
-        var model = new XM.ReturnListItem();
-        XT.session.privileges.attributes.PrintCreditMemos = false;
-        model.canPrint(function (response) {
           assert.isFalse(response);
           done();
         });

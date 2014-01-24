@@ -2,6 +2,8 @@ drop function if exists xt.js_init();
 
 create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
 
+return (function () {
+
   if (plv8.__initialized && debug !== true) {
     return;
   }
@@ -520,6 +522,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     @param {Array} casts. Optional. Array of strings
    */
   XT.executeFunction = function (functionName, params, casts) {
+    params = params || [];
     var cast,
       errorString,
       i,
@@ -540,6 +543,10 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     }
     sql = sql + ") as result";
 
+    if (DEBUG) {
+      XT.debug('sql =', sql);
+      XT.debug('params =', params);
+    }
     var result = plv8.execute(sql, params)[0].result;
     if(typeof result === 'number' && result < 0) {
       errorString = XT.errorToString(functionName, result);
@@ -917,5 +924,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     }
     plv8.__initialized = true;
   }
+
+}());
 
 $$ language plv8;

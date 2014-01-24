@@ -184,7 +184,46 @@ white:true*/
               options.success(dataHash, options);
               return;
             }
-            if (dataHash.patches) {
+
+            // Handle case where an entire collection was saved
+            if (options.collection) {
+              // Destroyed models won't have a response unless they made the whole
+              // request fail. Assume successful destruction.
+              options.collection.each(function (model) {
+                if (model.getStatus() === XM.Model.DESTROYED_DIRTY) {
+                  model.trigger("destroy", model, model.collection, options);
+                }
+              });
+
+              if (dataHash[0].patches) {
+                _.each(dataHash, function (data) {
+                  var cModel;
+
+                  cModel = _.find(options.collection.models, function (model) {
+                    return data.id === model.id;
+                  });
+                  attrs = cModel.toJSON({includeNested: true});
+                  XM.jsonpatch.apply(attrs, data.patches);
+                  cModel.etag = data.etag;
+
+                  // This is a hack to work around Backbone messing with 
+                  // attributes when we don't want it to. Parse function
+                  // on model handles the other side of this
+                  options.fixAttributes = cModel.attributes;
+
+                  options.success.call(that, cModel, attrs, options);
+
+                  options.collection.remove(cModel);
+                });
+              } else {
+                // This typically happens when requery option === false
+                // and no patches were found
+                options.success.call(that, options.collection.at(0), true, options);
+              }
+              return;
+
+            // Handle normal single model case
+            } else if (dataHash.patches) {
               if (obj) {
                 attrs = obj.toJSON({includeNested: true});
                 XM.jsonpatch.apply(attrs, dataHash.patches);

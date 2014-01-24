@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true,
 strict: false*/
-/*global XV:true, XM:true, _:true, enyo:true, XT:true, onyx:true*/
+/*global XV:true, XM:true, _:true, enyo:true, XT:true, onyx:true, window:true */
 
 (function () {
 
@@ -115,8 +115,7 @@ strict: false*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel",
-          fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
@@ -679,6 +678,7 @@ strict: false*/
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
             {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
+            {kind: "XV.CustomerEmailProfilePicker", attr: "emailProfile"},
             {kind: "XV.CheckboxWidget", attr: "backorder"},
             {kind: "XV.CheckboxWidget", attr: "partialShip"},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
@@ -765,6 +765,19 @@ strict: false*/
   XV.registerModelWorkspace("XM.CustomerRelation", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerListItem", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerProspectListItem", "XV.CustomerWorkspace");
+
+  // ..........................................................
+  // CUSTOMER EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerEmailProfileWorkspace",
+    kind: "XV.EmailProfileWorkspace",
+    title: "_customerEmailProfile".loc(),
+    model: "XM.CustomerEmailProfile",
+  });
+
+  XV.registerModelWorkspace("XM.CustomerEmailProfile", "XV.CustomerEmailProfileWorkspace");
 
   // ..........................................................
   // CUSTOMER GROUP
@@ -1422,7 +1435,6 @@ strict: false*/
             {kind: "XV.UnitPicker", attr: "inventoryUnit"},
             {kind: "XV.InputWidget", attr: "barcode", label: "_upcCode".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
-            {kind: "XV.CheckboxWidget", attr: "isPicklist"},
             {kind: "onyx.GroupboxHeader", content: "_product".loc()},
             {kind: "XV.CheckboxWidget", attr: "isSold"},
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
@@ -1638,10 +1650,11 @@ strict: false*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
+        {kind: "XV.Groupbox", name: "mainPanel",
+          components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
+            classes: "in-panel", fit: true, components: [
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "name"}
           ]}

@@ -608,8 +608,17 @@ trailing:true, white:true, strict: false*/
       ]}
     ]
   });
-
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
+
+  // ..........................................................
+  // CUSTOMER EMAIL PROFILE
+  //
+  enyo.kind({
+    name: "XV.CustomerEmailProfileList",
+    kind: "XV.EmailProfileList",
+    label: "_customerEmailProfiles".loc(),
+    collection: "XM.CustomerEmailProfileCollection"
+  });
 
   // ..........................................................
   // CUSTOMER GROUP
@@ -1137,9 +1146,13 @@ trailing:true, white:true, strict: false*/
       {attribute: 'number'}
     ]},
     actions: [
-      {name: "void", prerequisite: "canVoid", method: "doVoid" },
-      {name: "post", prerequisite: "canPost", method: "doPost" },
-      {name: "print", prerequisite: "canPrint", method: "doPrint" }
+      {name: "void", privilege: "VoidPostedInvoices", prerequisite: "canVoid",
+        method: "doVoid" },
+      {name: "post", privilege: "PostMiscInvoices", prerequisite: "canPost",
+        method: "doPost" },
+      {name: "print", privilege: "PrintInvoices", method: "doPrint" },
+      {name: "download", privilege: "PrintInvoices", method: "doDownload",
+        isViewMethod: true }
     ],
     components: [
       {kind: "XV.ListItem", components: [
@@ -1166,6 +1179,26 @@ trailing:true, white:true, strict: false*/
         ]}
       ]}
     ],
+    create: function () {
+      if (XT.session.config.emailAvailable) {
+        this.actions.push({name: "email", prerequisite: "canPrint", method: "doEmail" });
+      }
+      this.inherited(arguments);
+    },
+    doPrint: function (options) {
+      if (XT.session.config.printAvailable) {
+        // send it to be printed silently by the server
+        options.model.doPrint();
+      } else {
+        // no print server set up: just pop open a tab
+        window.open(XT.getOrganizationPath() + options.model.getReportUrl(),
+          "_newtab");
+      }
+    },
+    doDownload: function (options) {
+      window.open(XT.getOrganizationPath() + options.model.getReportUrl("download"),
+        "_newtab");
+    },
     // some extensions may override this function (i.e. inventory)
     formatAddress: function (value, view, model) {
       var city = model.get("billtoCity"),
@@ -1600,6 +1633,7 @@ trailing:true, white:true, strict: false*/
     actions: [{
       name: "convert",
       method: "convertProspect",
+      privilege: "MaintainCustomerMasters",
       isViewMethod: true
     }],
     query: {orderBy: [
@@ -1765,6 +1799,7 @@ trailing:true, white:true, strict: false*/
     actions: [{
       name: "convert",
       method: "convertQuote",
+      privilege: "ConvertQuotes",
       isViewMethod: true,
       notify: false
     }],
@@ -1887,9 +1922,12 @@ trailing:true, white:true, strict: false*/
     parameterWidget: "XV.ReturnListParameters",
     collection: "XM.ReturnListItemCollection",
     actions: [
-      {name: "void", prerequisite: "canVoid", method: "doVoid" },
-      {name: "post", prerequisite: "canPost", method: "doPost" },
-      {name: "print", prerequisite: "canPrint", method: "doPrint" }
+      {name: "void", privilege: "VoidPostedARCreditMemos",
+        prerequisite: "canVoid", method: "doVoid" },
+      {name: "post", privilege: "PostARDocuments",
+        prerequisite: "canPost", method: "doPost" },
+      {name: "print", privileg: "PrintCreditMemos",
+        method: "doPrint" }
     ],
     create: function () {
       this.inherited(arguments);
@@ -2528,57 +2566,6 @@ trailing:true, white:true, strict: false*/
 
   XV.registerModelList("XM.VendarAddressRelation", "XV.VendorAddressList");
 
-  // ..........................................................
-  // WORK ORDER
-  //
-
-  enyo.kind({
-    name: "XV.WorkOrderList",
-    kind: "XV.List",
-    label: "_workOrders".loc(),
-    collection: "XM.WorkOrderListItemCollection",
-    parameterWidget: "XV.WorkOrderListParameters",
-    canAddNew: false,
-    actions: [],
-    query: {orderBy: [
-      {attribute: 'number'}
-    ]},
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "number", fit: true},
-            {kind: "XV.ListAttr", attr: "itemSite.site.code", style: "padding-left: 12px"}
-          ]},
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "getWorkOrderStatusString"},
-              {kind: "XV.ListAttr", attr: "itemSite.item.number",
-                classes: "bold"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "itemSite.item.description1", classes: "italic"}
-            ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "dueDate", classes: "right"}
-            ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "itemSite.item.inventoryUnit.name"},
-              {kind: "XV.ListAttr", attr: "ordered"},
-              {kind: "XV.ListAttr", attr: "quantityReceived"}
-            ]}
-          ]}
-        ]}
-      ]}
-    ]
-  });
-
-  XV.registerModelList("XM.WorkOrderListItem", "XV.WorkOrderList");
-
   enyo.kind({
     name: "XV.NameList",
     kind: "XV.List",
@@ -2601,7 +2588,6 @@ trailing:true, white:true, strict: false*/
       or collection attribute.
     */
     create: function () {
-      this.inherited(arguments);
       var kindName = this.kind.substring(0, this.kind.length - 4).substring(3);
       if (!this.getLabel()) {
         this.setLabel(this.determineLabel(kindName));
@@ -2609,6 +2595,7 @@ trailing:true, white:true, strict: false*/
       if (!this.getCollection()) {
         this.setCollection("XM." + kindName + "Collection");
       }
+      this.inherited(arguments);
     },
 
     determineLabel: function (kindName) {

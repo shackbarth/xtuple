@@ -9,6 +9,7 @@ white:true*/
   XT.extensions.sales.initStartup = function () {
     XT.cacheCollection("XM.classCodes", "XM.ClassCodeCollection", "code");
     XT.cacheCollection("XM.costCategories", "XM.CostCategoryCollection", "code");
+    XT.cacheCollection("XM.customerEmailProfiles", "XM.CustomerEmailProfileCollection");
     XT.cacheCollection("XM.customerTypes", "XM.CustomerTypeCollection");
     XT.cacheCollection("XM.freightClasses", "XM.FreightClassCollection", "code");
     XT.cacheCollection("XM.plannerCodes", "XM.PlannerCodeCollection", "code");

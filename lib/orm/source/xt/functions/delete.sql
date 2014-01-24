@@ -1,7 +1,7 @@
 /**
     Procedure for deleting a record and its children from the database.
 
-    @param {Text} Data hash that can parsed into a JavaScript object.
+    @param {Text} Data hash that can parsed into a JavaScript object or array.
     @param {String} [dataHash.username] Username. Required.
     @param {String} [dataHash.nameSpace] Namespace. Required.
     @param {String} [dataHash.type] Type. Required.
@@ -16,43 +16,23 @@
       "username": "admin",
       "nameSpace":"XM",
       "type": "Contact",
-      "id": "99999",
+      "id": "10009",
       "etag": "e5b73834-492d-47b1-89a2-10b354b8f5e3",
       "prettyPrint": true
     }');
+
 */
 create or replace function xt.delete(data_hash text) returns boolean as $$
+
+return (function () {
+  
   try {
-    var dataHash = JSON.parse(data_hash),
-      data = Object.create(XT.Data),
-      options = JSON.parse(JSON.stringify(dataHash)),
-      prettyPrint = dataHash.prettyPrint ? 2 : null,
-      observer,
-      rec,
-      ret;
-
-    dataHash.superUser = false;
-    if (dataHash.username) { XT.username = dataHash.username; }
-
-    /* get the current version of the record */
-    dataHash.includeKeys = true;
-    rec = data.retrieveRecord(dataHash);
-    if (!rec.data) { plv8.elog(ERROR, "Record not found"); };
-    dataHash.data = rec.data;
-
-    /* mark for deletion */
-    XT.jsonpatch.updateState(dataHash.data, "delete");
-
-    /* commit the record */
-    data.commitRecord(dataHash);
-
-    /* Unset XT.username so it isn't cached for future queries. */
-    XT.username = undefined;
-
-    XT.message(204, "No Content");
-    return true;
+    return XT.Rest.delete(JSON.parse(data_hash));
+    
   } catch (err) {
     XT.error(err);
   }
+
+}());
 
 $$ language plv8;

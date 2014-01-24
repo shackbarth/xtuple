@@ -1,6 +1,5 @@
 enyo.depends(
   "email.js",
-  "workflow.js",
   "account.js",
   "activity.js",
   "address.js",
@@ -40,6 +39,5 @@ enyo.depends(
   "user_account.js",
   "user_chart.js",
   "vendor.js",
-  "work_order.js",
   "static.js"
 );
