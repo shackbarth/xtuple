@@ -1823,6 +1823,11 @@ ul.icons-ul > li .icon-li {
 }
 .xv-list .xv-list-item .xv-list-column.money {
   width: 5em;
+  text-align: right;
+}
+.xv-list .xv-list-item .xv-list-column.quantity {
+  width: 5em;
+  text-align: right;
 }
 .xv-list .xv-list-item .xv-list-column.descr {
   width: 15.56em;
