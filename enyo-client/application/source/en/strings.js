@@ -676,6 +676,7 @@
     "_transactionSuccessful": "Transaction Successful",
     "_trigger": "Trigger",
     "_type": "Type",
+    "_typePattern": "Type Pattern",
     "_unit": "Unit",
     "_unitPrice": "Net Unit Price",
     "_unitCosts": "Unit Costs",

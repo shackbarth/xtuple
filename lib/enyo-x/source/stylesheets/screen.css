@@ -1926,6 +1926,9 @@ ul.icons-ul > li .icon-li {
 .xv-list-attr.hyperlink {
   color: blue;
 }
+.xv-list-attr.disabled {
+  color: #696969;
+}
 /* Navigator */
 .xv-navigator-header {
   font-size: small;
