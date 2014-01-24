@@ -14,6 +14,9 @@ var buildAll = require('../../scripts/lib/build_all'),
     this.timeout(100 * 60 * 1000);
 
     var loginData = require(path.join(__dirname, "../lib/login_data.js")).data,
+      datasource = require('../../../xtuple/node-datasource/lib/ext/datasource').dataSource,
+      config = require(path.join(__dirname, "../../node-datasource/config.js")),
+      creds = config.databaseServer,
       databaseName = loginData.org;
 
     it('should build without error on a brand-new database', function (done) {
@@ -22,6 +25,21 @@ var buildAll = require('../../scripts/lib/build_all'),
         initialize: true,
         backup: path.join(__dirname, "../lib/demo-test.backup")
       }, function (err, res) {
+        assert.isNull(err);
+        done();
+      });
+    });
+
+    it('should grant all privileges to the user', function (done) {
+      var sql = "insert into usrpriv (usrpriv_username, usrpriv_priv_id) " +
+        "select $1, priv_id " +
+        "from priv " +
+        "left join usrpriv on priv_id = usrpriv_priv_id and usrpriv_username = $1 " +
+        "where usrpriv_id is null";
+
+      creds.database = databaseName;
+      creds.parameters = [loginData.username];
+      datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
         done();
       });

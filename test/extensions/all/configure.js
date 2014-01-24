@@ -21,7 +21,7 @@
     });
 
     it('should all be accessible', function (done) {
-      this.timeout(30 * 1000);
+      this.timeout(80 * 1000);
       var navigator, workspace,
         list,
         i = -1;
@@ -38,7 +38,6 @@
         workspaceContainer = XT.app.$.postbooks.getActive();
         assert.equal(workspaceContainer.kind, "XV.WorkspaceContainer");
         workspace = workspaceContainer.$.workspace;
-
         //workspace.value.set("test", "test");
         //workspaceContainer.saveAndClose({force: true});
 
