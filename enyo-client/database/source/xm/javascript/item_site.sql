@@ -17,19 +17,10 @@ select xt.install_js('XM','ItemSite','xtuple', $$
   XM.ItemSite.cost = function (itemsiteId) {
     if (!XT.Data.checkPrivilege('ViewCosts')) { return null };
     return plv8.execute('select itemcost(itemsite_id) as cost from itemsite where obj_uuid = $1;', [itemsiteId])[0].cost;
-  },
+  };
 
-  /**
-    Returns item site list items using usual query means with additional special support for:
-      * Attributes `customer`,`shipto`, and `effectiveDate` for exclusive item rules.
-      * Attribute `vendor` to filter on only items with associated item sources.
-      * Cross check on `alias` and `barcode` attributes for item numbers.
-
-    @param {String} Record type. Must have `itemsite` or related view as its orm source table.
-    @param {Object} Additional query filter (Optional)
-    @returns {Array}
-  */
-  XM.ItemSite.fetch = function (recordType, query) {
+  /** @private */
+  var _fetch = function (recordType, query) {
     query = query || {};
     var namespace = recordType.beforeDot(),
       type = recordType.afterDot(),
@@ -139,7 +130,43 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       plv8.elog(NOTICE, 'parameters = ', clause.parameters);
     }
     return plv8.execute(sql, clause.parameters);
-  }
+  };
+
+  if (!XM.ItemSiteListItem) { XM.ItemSiteListItem = {}; }
+
+  XM.ItemSiteListItem.isDispatchable = true;
+
+  /**
+    Returns item site list items using usual query means with additional special support for:
+      * Attributes `customer`,`shipto`, and `effectiveDate` for exclusive item rules.
+      * Attribute `vendor` to filter on only items with associated item sources.
+      * Cross check on `alias` and `barcode` attributes for item numbers.
+
+    @param {String} Record type. Must have `itemsite` or related view as its orm source table.
+    @param {Object} Additional query filter (Optional)
+    @returns {Array}
+  */
+  XM.ItemSiteListItem.fetch = function (query) {
+    return _fetch("XM.ItemSiteListItem", query);
+  };
+
+  if (!XM.ItemSiteRelation) { XM.ItemSiteRelation = {}; }
+
+  XM.ItemSiteRelation.isDispatchable = true;
+
+  /**
+    Returns item site relatinos using usual query means with additional special support for:
+      * Attributes `customer`,`shipto`, and `effectiveDate` for exclusive item rules.
+      * Attribute `vendor` to filter on only items with associated item sources.
+      * Cross check on `alias` and `barcode` attributes for item numbers.
+
+    @param {String} Record type. Must have `itemsite` or related view as its orm source table.
+    @param {Object} Additional query filter (Optional)
+    @returns {Array}
+  */
+  XM.ItemSiteRelation.fetch = function (query) {
+    return _fetch("XM.ItemSiteRelation", query);
+  };
 
 }());
 
