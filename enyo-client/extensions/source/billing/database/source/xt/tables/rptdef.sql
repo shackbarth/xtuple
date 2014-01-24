@@ -21,7 +21,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "definition": [{"text": "_invoice"}],
       "options": {"fontBold": true, "fontSize": 18, "x": 500, "y": 40, "align": "right"}
     },
-
     {
       "definition": [{"text": "_invoiceDate", "label": true}],
       "options": {"fontBold": true, "x": 400, "y": 60}
@@ -62,7 +61,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "definition": [{"attr": "terms.description"}],
       "options": {"x": 475, "y": 120, "align": "right"}
     },
-
     {
       "definition": [{"text": "_orderNumber", "label": true}],
       "options": {"fontBold": true, "x": 0, "y": 180}
