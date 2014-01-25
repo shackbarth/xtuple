@@ -1,5 +1,7 @@
 select xt.install_js('XT','Schema','xtuple', $$
 
+(function () {
+
   /**
    * @class
    *
@@ -558,5 +560,7 @@ select xt.install_js('XT','Schema','xtuple', $$
     /* return the results */
     return ret;
   };
+
+}());
 
 $$ );

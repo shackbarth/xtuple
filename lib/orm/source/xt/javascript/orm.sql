@@ -1,5 +1,7 @@
 select xt.install_js('XT','Orm','xtuple', $$
 
+(function () {
+
   /**
    @class
 
@@ -646,9 +648,11 @@ select xt.install_js('XT','Orm','xtuple', $$
           inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
           ormp = Orm.getProperty(iorm, inverse);
           if (ormp && ormp.toOne && ormp.toOne.isNested) {
-            conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + (toMany.isBase ? "t1" : tblAlias) + "." + toMany.column : 'true';
+            conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' +
+              (toMany.isBase ? "t1" : tblAlias) + "." + toMany.column : 'true';
           } else {
-            conditions = toMany.column ? type + '."' + inverse + '" = ' + (toMany.isBase ? "t1" : tblAlias) + '.' + toMany.column : 'true';
+            conditions = toMany.column ? type + '."' + inverse + '" = ' +
+              (toMany.isBase ? "t1" : tblAlias) + '.' + toMany.column : 'true';
           }
 
           /* build select */
@@ -798,7 +802,9 @@ select xt.install_js('XT','Orm','xtuple', $$
       query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
       res = plv8.execute(query, [schemaName, tableName]);
       if (res.length) {
-        query = 'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
+        query = 'create trigger {tableName}_did_change after ' +
+                'insert or update or delete on {table} for each row ' +
+                'execute procedure xt.record_did_change();';
         query =  query.replace(/{tableName}/g, tableName)
                       .replace(/{table}/g, lockTable);
 
@@ -810,4 +816,7 @@ select xt.install_js('XT','Orm','xtuple', $$
     }
 
   };
+
+}());
+
 $$ );
