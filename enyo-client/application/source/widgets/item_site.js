@@ -12,7 +12,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     collection: "XM.ItemSiteRelationCollection",
     list: "XV.ItemSiteList",
-    keyAttribute: ["item.number", "item.barcode"],
+    keyAttribute: ["number", "barcode"],
     nameAttribute: "item.description1",
     descripAttribute: "item.description2",
     skipCompleterFilter: true,

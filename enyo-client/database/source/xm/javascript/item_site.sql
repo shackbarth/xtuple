@@ -25,7 +25,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     var namespace = recordType.beforeDot(),
       type = recordType.afterDot(),
       customerId = null,
-      shiptoId = -1,
+      shiptoId,
       effectiveDate = new Date(),
       vendorId = null,
       limit = query.rowLimit ? 'limit ' + Number(query.rowLimit) : '',
@@ -71,7 +71,19 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
     /* If customer passed, restrict results to item sites allowed to be sold to that customer */
     if (customerId) {
-      sql += ' and (item).id in (select * from custitem(${p3}, ${p4}::integer, ${p5}::date)) ';
+      sql += ' and (item).id in (' +
+             'select item_id from item where item_sold and not item_exclusive ' +
+             'union ' +
+             'select item_id from xt.custitem where cust_id=${p3} ' +
+             '  and ${p5}::date between effective and (expires - 1) ';
+
+      if (shiptoId) {
+        sql += 'union ' +
+               'select item_id from xt.shiptoitem where shipto_id=${p4}::integer ' +
+               '  and ${p5}::date between effective and (expires - 1) ';
+      }
+
+      sql += ") ";
     }
 
     /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
@@ -115,9 +127,9 @@ select xt.install_js('XM','ItemSite','xtuple', $$
              .replace('{offset}', offset)
              .replace('{p1}', clause.parameters.length + 1)
              .replace('{p2}', clause.parameters.length + 2)
-             .replace('{p3}', clause.parameters.length + 1 + twoIfSplice)
-             .replace('{p4}', clause.parameters.length + 2 + twoIfSplice)
-             .replace('{p5}', clause.parameters.length + 3 + twoIfSplice);
+             .replace(/{p3}/g, clause.parameters.length + 1 + twoIfSplice)
+             .replace(/{p4}/g, clause.parameters.length + 2 + twoIfSplice)
+             .replace(/{p5}/g, clause.parameters.length + 3 + twoIfSplice);
 
     if (spliceIndex >= 0) {
       clause.parameters = clause.parameters.concat([itemNumber, customerNumber]);
@@ -126,7 +138,8 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       clause.parameters = clause.parameters.concat([customerId, shiptoId, effectiveDate]);
     }
     if (DEBUG) {
-      plv8.elog(NOTICE, 'sql = ', sql);
+      plv8.elog(NOTICE, 'sql = ', sql.substr(0,500));
+      plv8.elog(NOTICE, 'sql = ', sql.substr(501, 1000));
       plv8.elog(NOTICE, 'parameters = ', clause.parameters);
     }
     return plv8.execute(sql, clause.parameters);
