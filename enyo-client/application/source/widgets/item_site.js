@@ -16,7 +16,9 @@ regexp:true, undef:true, trailing:true, white:true */
     nameAttribute: "item.description1",
     descripAttribute: "item.description2",
     skipCompleterFilter: true,
-    classes: "xv-private-item-site-widget"
+    classes: "xv-private-item-site-widget",
+    // Key search: give the search attribute special treatment on the server
+    keySearch: true
   });
 
   enyo.kind({
