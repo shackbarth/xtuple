@@ -64,11 +64,6 @@ trailing:true, white:true*/
           ]}
         ]}
       ],
-      valueChanged: function () {
-        this.inherited(arguments);
-        this.warn(this.value);
-        this.warn(this.list);
-      },
       formatMoney: function (value, view, model) {
         var currency = model ? model.getValue('cashReceipt.currency') : false,
           scale = XT.locale.moneyScale;
