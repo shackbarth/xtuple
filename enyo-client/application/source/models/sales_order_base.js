@@ -1344,7 +1344,6 @@ white:true*/
       this.on('change:taxType', this.calculateTax);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
-      this.on('statusChange', this.statusDidChange);
 
       // Only recalculate price on date changes if pricing is date driven
       if (settings.get("soPriceEffective") === "ScheduleDate") {

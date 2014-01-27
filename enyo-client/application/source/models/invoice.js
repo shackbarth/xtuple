@@ -513,7 +513,6 @@ white:true*/
         freight: 0,
         total: 0,
         balance: 0,
-        allocatedCredit: 0,
         authorizedCredit: 0
       
       };
@@ -687,7 +686,7 @@ white:true*/
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
       this.on('change:taxType', this.calculateTax);
-      this.on('change:isMiscellaneous', this.calculateTax);
+      this.on('change:isMiscellaneous', this.isMiscellaneousDidChange);
 
       this.isMiscellaneousDidChange();
     },
