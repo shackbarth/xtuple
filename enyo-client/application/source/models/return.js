@@ -37,7 +37,8 @@ white:true*/
         isVoid: false,
         commission: 0,
         taxTotal: 0,
-        miscCharge: 0
+        miscCharge: 0,
+        freight: 0
       };
     },
 
@@ -45,10 +46,15 @@ white:true*/
       "isPosted",
       "isVoid",
       "isPrinted",
-      "miscCharge",
       "lineItems",
       "allocatedCredit",
-      "authorizedCredit"
+      "authorizedCredit",
+      "balance",
+      "margin",
+      "status",
+      "subtotal",
+      "taxTotal",
+      "total"
     ],
 
     // like sales order, minus contact info

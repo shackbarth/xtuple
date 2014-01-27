@@ -242,6 +242,13 @@
         }
       },
       {
+        "name": "freight",
+        "attr": {
+          "type": "Money",
+          "column": "invchead_freight"
+        }
+      },
+      {
         "name": "taxTotal",
         "attr": {
           "type": "Money",
@@ -670,24 +677,21 @@
         "name": "basis",
         "attr": {
           "type": "Money",
-          "column": "taxhist_basis",
-          "value": 0
+          "column": "taxhist_basis"
         }
       },
       {
         "name": "percent",
         "attr": {
           "type": "Money",
-          "column": "taxhist_percent",
-          "value": 0
+          "column": "taxhist_percent"
         }
       },
       {
-        "name": "amount",
+        "name": "taxRateAmount",
         "attr": {
           "type": "Money",
-          "column": "taxhist_amount",
-          "value": 0
+          "column": "taxhist_amount"
         }
       },
       {

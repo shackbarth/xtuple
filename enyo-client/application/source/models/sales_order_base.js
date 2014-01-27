@@ -50,7 +50,12 @@ white:true*/
       taxDetails = taxDetails.concat(lineItem.taxDetail);
     };
 
-    _.each(model.get('lineItems').models, forEachCalcFunction);
+    // Line items should not include deleted.
+    var lineItems = _.filter(model.get("lineItems").models, function (item) {
+      return item.status !== XM.Model.DESTROYED_DIRTY;
+    });
+
+    _.each(lineItems, forEachCalcFunction);
 
     // Add freight taxes to the mix
     taxDetails = taxDetails.concat(model.freightTaxDetail);
@@ -276,6 +281,7 @@ white:true*/
           freight: 0,
           miscCharge: 0,
           total: 0,
+          balance: 0,
           site: XT.defaultSite().toJSON(),
           currency: XT.baseCurrency().id
         };
@@ -1889,10 +1895,13 @@ white:true*/
     },
 
     statusDidChange: function () {
-      var status = this.getStatus();
+      var status = this.getStatus(),
+        parent = this.getParent();
       if (status === XM.Model.READY_CLEAN) {
         this.setReadOnly("item");
         this.setReadOnly("site");
+      } else if (status === XM.Model.DESTROYED_DIRTY) {
+        parent.calculateTotals();
       }
     },
 
