@@ -465,6 +465,7 @@
     "_open": "Open",
     "_options": "Options",
     "_order": "Order",
+    "_order#": "Order #",
     "_orderDate": "Order Date",
     "_orderNumber": "Order Number",
     "_orderNotes": "Order Notes",

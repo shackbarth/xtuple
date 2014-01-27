@@ -1793,6 +1793,15 @@ ul.icons-ul > li .icon-li {
 .xv-list-header .xv-list-column.first {
   padding-left: 7px;
 }
+.xv-list-header .xv-list-column.second {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.third {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.descr {
+  padding-left: 7px;
+}
 /* List */
 .xv-list-column.name-column {
   width: 200px;
