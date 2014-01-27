@@ -1,8 +1,65 @@
 /**
   Styles relating to Lists
 */
+.xv-list-header {
+  background-color: @gray;
+  color: @white;
+  font-size: .6em;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid @silver;
+  .xv-list-column {
+    &.last {
+      border-right: none;
+    }
+    &.name-column {
+      padding-left: 7px;
+    }
+    &.first {
+      padding-left: 7px;
+    }
+  }
+}
 
 /* List */
+.xv-list-column {
+  &.name-column {
+    width: 200px
+  }
+  &.right-column {
+    width: 100px;
+    text-align: right;
+  }
+  &.short {
+    width: 100px;
+  }
+  &.first {
+    width: 300px;
+  }
+  &.second {
+    width: 200px;
+  }
+  &.third {
+    width: 100px;
+  }
+  &.money {
+    width: 75px;
+    text-align: right;
+  }
+  &.quantity {
+    width: 75px;
+    text-align: right;
+  }
+  &.descr {
+    width: 200px;
+  }
+  &.icon {
+    width: 10px;
+  }
+}
+
 .xv-list {
   background-color: @white;
 
@@ -33,39 +90,6 @@
       }
     }
     .xv-list-column {
-      &.name-column {
-        width: 12em;
-      }
-      &.right-column {
-        width: 8em;
-        text-align: right;
-      }
-      &.short {
-        width: 9em;
-      }
-      &.first {
-        width: 19em;
-      }
-      &.second {
-        width: 10em;
-      }
-      &.third {
-        width: 4.5em;
-      }
-      &.money {
-        width: 5em;
-        text-align: right;
-      }
-      &.quantity {
-        width: 5em;
-        text-align: right;
-      }
-      &.descr {
-        width: 15.56em;
-      }
-      &.icon {
-        width: 1.5em;
-      }
       .list-icon {
         padding: 2px;
         color: @charcoal;

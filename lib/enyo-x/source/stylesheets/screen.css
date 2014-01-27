@@ -1774,7 +1774,59 @@ ul.icons-ul > li .icon-li {
 /**
   Styles relating to Lists
 */
+.xv-list-header {
+  background-color: #8d8d8d;
+  color: #ffffff;
+  font-size: .6em;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #aaaaaa;
+}
+.xv-list-header .xv-list-column.last {
+  border-right: none;
+}
+.xv-list-header .xv-list-column.name-column {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.first {
+  padding-left: 7px;
+}
 /* List */
+.xv-list-column.name-column {
+  width: 200px;
+}
+.xv-list-column.right-column {
+  width: 100px;
+  text-align: right;
+}
+.xv-list-column.short {
+  width: 100px;
+}
+.xv-list-column.first {
+  width: 300px;
+}
+.xv-list-column.second {
+  width: 200px;
+}
+.xv-list-column.third {
+  width: 100px;
+}
+.xv-list-column.money {
+  width: 75px;
+  text-align: right;
+}
+.xv-list-column.quantity {
+  width: 75px;
+  text-align: right;
+}
+.xv-list-column.descr {
+  width: 200px;
+}
+.xv-list-column.icon {
+  width: 10px;
+}
 .xv-list {
   background-color: #ffffff;
 }
@@ -1801,39 +1853,6 @@ ul.icons-ul > li .icon-li {
 }
 .xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
   color: #8d8d8d;
-}
-.xv-list .xv-list-item .xv-list-column.name-column {
-  width: 12em;
-}
-.xv-list .xv-list-item .xv-list-column.right-column {
-  width: 8em;
-  text-align: right;
-}
-.xv-list .xv-list-item .xv-list-column.short {
-  width: 9em;
-}
-.xv-list .xv-list-item .xv-list-column.first {
-  width: 19em;
-}
-.xv-list .xv-list-item .xv-list-column.second {
-  width: 10em;
-}
-.xv-list .xv-list-item .xv-list-column.third {
-  width: 4.5em;
-}
-.xv-list .xv-list-item .xv-list-column.money {
-  width: 5em;
-  text-align: right;
-}
-.xv-list .xv-list-item .xv-list-column.quantity {
-  width: 5em;
-  text-align: right;
-}
-.xv-list .xv-list-item .xv-list-column.descr {
-  width: 15.56em;
-}
-.xv-list .xv-list-item .xv-list-column.icon {
-  width: 1.5em;
 }
 .xv-list .xv-list-item .xv-list-column .list-icon {
   padding: 2px;
@@ -1921,7 +1940,7 @@ ul.icons-ul > li .icon-li {
 }
 .xv-list-attr.placeholder {
   font-style: italic;
-  color: #93a1a1;
+  color: #696969;
 }
 .xv-list-attr.hyperlink {
   color: blue;
