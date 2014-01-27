@@ -214,7 +214,8 @@ white:true*/
       this.on("change:" + this.documentDateKey + " change:currency", this.calculateAuthorizedCredit);
       this.on("change:" + this.documentDateKey + " add:allocations remove:allocations",
         this.calculateAllocatedCredit);
-      this.on("add:lineItems remove:lineItems change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
+      this.on("add:lineItems remove:lineItems change:lineItems change:subtotal" +
+        "change:freight change:taxTotal change:miscCharge", this.calculateTotals);
       this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
       this.on("change:taxZone", this.recalculateTaxes);
       this.on("change:total change:allocatedCredit change:outstandingCredit",
@@ -300,6 +301,7 @@ white:true*/
     calculateBalance: function () {
       var rawBalance = this.get("total") -
           this.get("allocatedCredit") -
+          this.get("authorizedCredit") -
           this.get("outstandingCredit"),
         balance = Math.max(0, rawBalance);
 
@@ -509,7 +511,11 @@ white:true*/
         miscCharge: 0,
         subtotal: 0,
         freight: 0,
-        total: 0
+        total: 0,
+        balance: 0,
+        allocatedCredit: 0,
+        authorizedCredit: 0
+      
       };
     },
 
@@ -517,12 +523,10 @@ white:true*/
       "isPosted",
       "isVoid",
       "isPrinted",
-      "miscCharge",
       "lineItems",
       "allocatedCredit",
       "authorizedCredit",
       "balance",
-      "miscCharge",
       "status",
       "subtotal",
       "taxTotal",
@@ -684,7 +688,6 @@ white:true*/
       this.on('change:' + this.parentKey, this.parentDidChange);
       this.on('change:taxType', this.calculateTax);
       this.on('change:isMiscellaneous', this.calculateTax);
-      this.on('statusChange', this.statusDidChange);
 
       this.isMiscellaneousDidChange();
     },
@@ -877,14 +880,6 @@ white:true*/
 
     priceDidChange: function () {
       this.calculateExtendedPrice();
-    },
-
-    statusDidChange: function () {
-      var status = this.getStatus(),
-        parent = this.getParent();
-      if (status === XM.Model.DESTROYED_DIRTY && parent) {
-        parent.calculateTotals();
-      }
     }
 
   };

@@ -575,6 +575,7 @@
     "_scheduleDate": "Schedule Date",
     "_secondaryContact": "Secondary Contact",
     "_selectOrganization": "Select Organization",
+    "_selectBilling": "Select Sales Order for Billing",
     "_sense": "Sense",
     "_sequence": "Sequence",
     "_series": "Series",
