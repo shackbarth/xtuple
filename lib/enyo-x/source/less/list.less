@@ -54,6 +54,11 @@
       }
       &.money {
         width: 5em;
+        text-align: right;
+      }
+      &.quantity {
+        width: 5em;
+        text-align: right;
       }
       &.descr {
         width: 15.56em;
@@ -143,10 +148,13 @@
   }
   &.placeholder {
     font-style: italic;
-    color: @blue-gray;
+    color: @dim-gray;
   }
   &.hyperlink {
     color: blue;
+  }
+  &.disabled {
+    color: @dim-gray;
   }
 }
 
