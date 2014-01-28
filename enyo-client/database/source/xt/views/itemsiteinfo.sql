@@ -1,5 +1,5 @@
 select xt.create_view('xt.itemsiteinfo', $$
-   select i.*,
+   select i.*, item_number, item_upccode,
      case
        when i.itemsite_location_id != -1 or length(i.itemsite_location) > 0 then true
        else false
@@ -8,6 +8,7 @@ select xt.create_view('xt.itemsiteinfo', $$
      case when i.itemsite_supply_itemsite_id is null then false else true end as planned_transfers,
      s.itemsite_warehous_id as supply_warehous_id
    from itemsite i
+     join item on item_id=i.itemsite_item_id
      left join itemsite s on s.itemsite_id = i.itemsite_supply_itemsite_id;
 $$, false);
 

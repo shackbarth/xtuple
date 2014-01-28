@@ -1,5 +1,7 @@
 select xt.install_js('XT','Data','xtuple', $$
 
+(function () {
+
   /**
    * @class
    *
@@ -2244,5 +2246,7 @@ select xt.install_js('XT','Data','xtuple', $$
       return false;
     }
   }
+
+}());
 
 $$ );
