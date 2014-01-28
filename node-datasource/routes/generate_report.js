@@ -128,7 +128,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var textOnly;
 
       if (def.element === 'image') {
-        // we save the images under a different name then thfey're described in the definition
+        // if the image is not found, we don't want to print it
+        if (!imageFilenameMap[def.definition]) {
+          return "";
+        }
+
+        // we save the images under a different name then they're described in the definition
         return path.join(workingDir, imageFilenameMap[def.definition]);
       }
 
@@ -151,6 +156,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var printDefinition = function (report, data, definition) {
       _.each(definition, function (def) {
         var elementData = transformElementData(def, data);
+        if (!elementData) {
+          // without this placeholder, the report prints oddly
+          report.print("Cannot find image", {});
+          return true;
+        }
         report[def.element || "print"](elementData, def.options);
       });
     };
@@ -322,6 +332,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         afterFetch = function () {
           if (fileCollection.getStatus() === XM.Model.READY_CLEAN) {
             fileCollection.off("statusChange", afterFetch);
+            if (fileCollection.length === 0) { done(); }
             done(null, fileCollection);
           }
         };
@@ -382,6 +393,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         //
         // Write the images to the filesystem
         //
+
+        if (!fileCollection) {
+          done();
+          return;
+        }
+
         async.map(fileCollection.models, writeImageToFilesystem, done);
       });
     };
@@ -555,11 +572,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       createTempDir,
       createTempOrgDir,
       fetchReportDefinition,
-      fetchImages,
       fetchRemitTo,
       fetchBarcodes,
       fetchTranslations,
       fetchData,
+      fetchImages,
       printReport,
       sendReport,
       cleanUpFiles

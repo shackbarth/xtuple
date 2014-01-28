@@ -14,7 +14,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "element": "image",
-       "definition": "Invoice Logo",
+       "definition": "nothing",
        "options": {"x": 200, "y": 40, "width": 150}
     },
     {
@@ -147,10 +147,10 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     {
       "definition": [{"attr": "notes", "label": true}],
         "options": {"fontSize": 8, "width": 250}
-    }
+    },
+    {"element": "newline"}
   ],
   "footerElements": [
-    {"element": "newline"},
     {"element": "bandLine", "size": 2},
     {
       "definition": [
@@ -158,9 +158,12 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "taxTotal", "label": true},
         {"attr": "total", "label": true}
       ],
-      "options": {"x": 460, "y": 0}
+      "options": {"align": "right"}
     },
     {"element": "newline"},
-    {"element": "standardHeader"}
+    {
+      "element": "pageNumber", "definition": [],
+      "options": {"align": "center"}
+    }  
   ]
 }$$);
