@@ -67,10 +67,6 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
       throw new handleError('Could not find CashReceipt [number=' + cashReceiptNumber + ']', 404);
     }
 
-    if (!isPosted) {
-      throw new handleError('Cannot make payment using un-posted CashReceipt [number=' + cashReceiptNumber + '].', 404);
-    }
-
     var salesOrder = XM.SalesOrder.findByNumber(salesOrderNumber);
 
     if (!salesOrder) {
@@ -78,6 +74,7 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
     }
 
     var journalNumber = XM.CashReceipt.fetchJournalNumber();
+      post = !isPosted && XT.executeFunction('postCashReceipt', [cashReceipt.cashrcpt_id, journalNumber ]),
       cashReceiptLine = plv8.execute(
         "select cashrcptitem_aropen_id FROM cashrcptitem "+
         "WHERE cashrcptitem_cashrcpt_id=$1",

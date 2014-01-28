@@ -2258,7 +2258,8 @@ strict: false*/
     kind: "XV.SalesOrderBase",
     title: "_salesOrder".loc(),
     handlers: {
-      onMagstripeCapture: "handleMagstripeCapture"
+      onMagstripeCapture: "handleMagstripeCapture",
+      onPaymentPosted: 'handlePaymentPosted',
     },
     model: "XM.SalesOrder",
     components: [
@@ -2341,6 +2342,13 @@ strict: false*/
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
     ],
+
+    /**
+     * @listens onPaymentPosted
+     */
+    handlePaymentPosted: function (inSender, inEvent) {
+      this.requery();
+    },
 
     valueChanged: function () {
       this.inherited(arguments);

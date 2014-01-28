@@ -11,7 +11,7 @@ XT.extensions.billing.initListRelationsEditors = function () {
       salesOrder: null
     },
     events: {
-      onSalesOrderPaymentChange: ''
+      onPaymentPosted: ''
     },
     components: [
       {kind: 'onyx.GroupboxHeader', content: '_payment'.loc()},
@@ -31,6 +31,7 @@ XT.extensions.billing.initListRelationsEditors = function () {
       ]}
     ],
     valueChanged: function () {
+      this.clear();
       this.inherited(arguments);
       /*
       this.value.on('status:READY_CLEAN status:READY_NEW', function (payment, status, options) {
@@ -43,35 +44,69 @@ XT.extensions.billing.initListRelationsEditors = function () {
     salesOrderChanged: function () {
       var that = this,
         onReady = function (order) {
-          console.log(order);
           that.$.postButton.setDisabled(false);
-          that.setValue(new XM.CashReceipt({
-            balance: order.get('balance'),
-            amount: order.get('balance'),
-            customer: order.get('customer'),
-            documentDate: new Date(),
-            applicationDate: order.get('orderDate'),
-            distributionDate: order.get('orderDate'),
-            currency: order.get('currency'),
-            isPosted: true
-          }, { isNew: true }));
+          that.newItem();
+        },
+        onDirty = function (order) {
+          that.$.postButton.setDisabled(true);
         };
 
       if (this.salesOrder.getStatus() === XM.Model.READY_CLEAN) {
         onReady(this.salesOrder);
       }
+      if (this.salesOrder.getStatus() === XM.Model.READY_DIRTY) {
+        onDirty(this.salesOrder);
+      }
       this.salesOrder.on('status:READY_CLEAN', onReady);
+      this.salesOrder.on('status:READY_DIRTY', onDirty);
+    },
+    /**
+     * @override
+     */
+    newItem: function () {
+      var order = this.salesOrder;
+
+      this.setValue(new XM.CashReceipt({
+        balance: order.get('balance'),
+        amount: order.get('balance'),
+        customer: order.get('customer'),
+        documentDate: new Date(),
+        applicationDate: order.get('orderDate'),
+        distributionDate: order.get('orderDate'),
+        currency: order.get('currency')
+      }, { isNew: true }));
     },
     handlePayment: function (inSender, inEvent) {
-      var payment = this.value;
-      this.log(payment);
-      this.log(payment.validate(payment.attributes));
+      var editor = this,
+        payment = editor.value;
 
-      if (payment && payment.isNew() && payment.isValid()) {
-        this.salesOrder.addPayment(payment);
+      this.salesOrder.once('payment:success', function () {
+        // TODO probably want to change this to a growl-type notification
+        editor.doNotify({
+          type: XM.Model.NOTICE,
+          message: '_salesOrderPaymentSuccess'.loc(),
+          callback: function () {
+            editor.doPaymentPosted();
+          }
+        });
+      });
+      this.salesOrder.once('payment:error', function (error) {
+        editor.doNotify({
+          type: XM.Model.WARNING,
+          message: '_salesOrderPaymentFailure'.loc()
+        });
+      });
+
+      if (!payment || !payment.isNew() || !payment.isValid()) {
+        // TODO piggyback off of the existing invalid handler, wherever it is
+        editor.doNotify({
+          type: XM.Model.NOTICE,
+          message: 'Please correct errors in the Payment editor'
+        });
+        return true;
       }
 
-      return true;
+      this.salesOrder.addPayment(payment);
     }
   });
 

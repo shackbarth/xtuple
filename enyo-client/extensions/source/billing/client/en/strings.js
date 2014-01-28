@@ -66,6 +66,8 @@
     "_recurringInvoiceBuffer": "Recurring Invoice Buffer Days",
     "_salesCategories": "Sales Categories",
     "_salesCategory": "Sales Category",
+    "_salesOrderPaymentFailure": "We encountered a problem posting payment to this Sales Order",
+    "_salesOrderPaymentSuccess": "Payment Successfully posted to Sales Order",
     "_taxes": "Taxes",
     "_taxTotal": "Tax Total",
     "_unposted": "Unposted",
