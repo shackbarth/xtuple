@@ -116,6 +116,14 @@
         }
       },
       {
+        "name": "soldRanking",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_soldranking",
+          "required": true
+        }
+      },
+      {
         "name": "plannerCode",
         "toOne": {
           "type": "PlannerCode",

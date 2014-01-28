@@ -572,7 +572,9 @@ white:true*/
   XM.ItemItemSiteRelation = XM.Model.extend({
     /** @scope XM.ItemItemSiteRelation.prototype */
 
-    recordType: 'XM.ItemItemSiteRelation'
+    recordType: 'XM.ItemItemSiteRelation',
+
+    editableModel: 'XM.ItemSite'
 
   });
 
