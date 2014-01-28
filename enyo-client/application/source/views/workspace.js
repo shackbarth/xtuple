@@ -1515,7 +1515,7 @@ strict: false*/
             {kind: "XV.PlannerCodePicker", attr: "plannerCode"},
             {kind: "XV.CostCategoryPicker", attr: "costCategory"},
             {kind: "XV.CheckboxWidget", attr: "isSold"},
-            {kind: "XV.NumberWidget", attr: "soldRanking"},
+            {kind: "XV.NumberSpinnerWidget", attr: "soldRanking"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
@@ -1526,6 +1526,7 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.ItemSiteRelation", "XV.ItemSiteWorkspace");
+  XV.registerModelWorkspace("XM.ItemItemSiteRelation", "XV.ItemSiteWorkspace");
   XV.registerModelWorkspace("XM.ItemSiteListItem", "XV.ItemSiteWorkspace");
 
   // ..........................................................
