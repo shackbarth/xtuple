@@ -241,29 +241,6 @@ white:true*/
   });
 
   /**
-    Returns item sites using usual query means with additional special support for:
-      * Attributes `customer`,`shipto`, and `effectiveDate` for exclusive item rules.
-      * Attribute `vendor` to filter on only items with associated item sources.
-      * Cross check on `alias` and `barcode` attributes for item numbers.
-   */
-  var fetch = function (options) {
-    options = options ? options : {};
-    var that = this,
-      recordType = this.model.prototype.recordType,
-      success;
-
-    XM.Collection.formatParameters("XM.ItemSiteListItem", options.query.parameters);
-
-    // Dispatch the query
-    success = options.success;
-    options.success = function (data) {
-      that.reset(data);
-      if (success) { success(that); }
-    };
-    XM.ModelMixin.dispatch("XM.ItemSite", "fetch", [recordType, options.query], options);
-  };
-
-  /**
     @class
 
     @extends XM.Collection
@@ -272,7 +249,7 @@ white:true*/
 
     model: XM.ItemSiteRelation,
 
-    fetch: fetch,
+    dispatch: true,
 
     comparator: function (itemSite) {
       var defaultSiteId = this.defaultSite ? this.defaultSite.id : -5;
@@ -291,7 +268,7 @@ white:true*/
 
     model: XM.ItemSiteListItem,
 
-    fetch: fetch
+    dispatch: true
 
   });
 

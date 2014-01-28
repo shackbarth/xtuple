@@ -12,11 +12,13 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     collection: "XM.ItemSiteRelationCollection",
     list: "XV.ItemSiteList",
-    keyAttribute: ["item.number", "item.barcode"],
+    keyAttribute: ["number", "barcode"],
     nameAttribute: "item.description1",
     descripAttribute: "item.description2",
     skipCompleterFilter: true,
-    classes: "xv-private-item-site-widget"
+    classes: "xv-private-item-site-widget",
+    // Key search: give the search attribute special treatment on the server
+    keySearch: true
   });
 
   enyo.kind({

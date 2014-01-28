@@ -1,5 +1,7 @@
 select xt.install_js('XT','Discovery','xtuple', $$
 
+(function () {
+
   /**
    * @class
    *
@@ -1136,5 +1138,6 @@ select xt.install_js('XT','Discovery','xtuple', $$
     }
   };
 
+}());
 
 $$ );
