@@ -14,7 +14,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "element": "image",
-       "definition": "nothing",
+       "definition": "Invoice Logo",
        "options": {"x": 200, "y": 40, "width": 150}
     },
     {
@@ -164,6 +164,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     {
       "element": "pageNumber", "definition": [],
       "options": {"align": "center"}
-    }  
+    }
   ]
 }$$);

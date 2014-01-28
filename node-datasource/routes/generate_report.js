@@ -157,9 +157,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       _.each(definition, function (def) {
         var elementData = transformElementData(def, data);
         if (!elementData) {
-          // without this placeholder, the report prints oddly
-          report.print("Cannot find image", {});
-          return true;
+          // without this placeholder, only get "loading" box the first time
+          report.print("", {});
+          return;
         }
         report[def.element || "print"](elementData, def.options);
       });
