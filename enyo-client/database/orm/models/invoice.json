@@ -677,21 +677,24 @@
         "name": "basis",
         "attr": {
           "type": "Money",
-          "column": "taxhist_basis"
+          "column": "taxhist_basis",
+          "value": 0
         }
       },
       {
         "name": "percent",
         "attr": {
           "type": "Money",
-          "column": "taxhist_percent"
+          "column": "taxhist_percent",
+          "value": 0
         }
       },
       {
         "name": "taxRateAmount",
         "attr": {
           "type": "Money",
-          "column": "taxhist_amount"
+          "column": "taxhist_amount",
+          "value": 0
         }
       },
       {

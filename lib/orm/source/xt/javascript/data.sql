@@ -1036,6 +1036,9 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
+      /* Okay, now lets handle arrays. */
+      this.commitArrays(orm, data, encryptionKey);
+
       /* Handle extensions on the same table. */
       for (var i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
@@ -1094,9 +1097,6 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         }
       }
-
-      /* Okay, now lets handle arrays. */
-      this.commitArrays(orm, data, encryptionKey);
 
       /* Release any lock. */
       if (orm.lockable) {

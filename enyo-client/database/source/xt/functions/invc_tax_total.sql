@@ -1,5 +1,5 @@
 create or replace function xt.invc_tax_total(invchead_id integer) returns numeric stable as $$
-  SELECT SUM(tax) AS tax 
+  SELECT COALESCE(SUM(tax), 0) AS tax 
   FROM (
     SELECT ROUND(SUM(taxdetail_tax),2) AS tax 
     FROM tax 
