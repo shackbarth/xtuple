@@ -339,7 +339,7 @@
         }
       },
       {
-        "name": "itemSiteRelations",
+        "name": "itemSites",
         "toMany": {
           "type": "ItemItemSiteRelation",
           "column": "item_id",
@@ -685,6 +685,75 @@
       }
     ],
     "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemItemSiteRelation",
+    "table": "xt.itemsiteinfo",
+    "isRest": true,
+    "comment": "Itemsite Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      },
+      "attribute": {
+        "unitCost": {
+          "view": "ViewCosts MaintainCosts"
+        }
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_item_id"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "itemsite_warehous_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_active"
+        }
+      },
+      {
+        "name": "controlMethod",
+        "attr": {
+          "type": "String",
+          "column": "itemsite_controlmethod"
+        }
+      }
+    ],
     "isSystem": true
   },
   {

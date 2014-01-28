@@ -73,6 +73,19 @@ trailing:true, white:true, strict: false*/
     });
 
     // ..........................................................
+    // ITEM
+    //
+
+    extensions = [
+      {kind: "onyx.GroupboxHeader", content: "_purchasing".loc(),
+        container: "settingsGroup"},
+      {kind: "XV.PurchasePriceWidget", attr: "maximumDesiredCost",
+        container: "settingsGroup"}
+    ];
+
+    XV.appendExtension("XV.ItemWorkspace", extensions);
+
+    // ..........................................................
     // ITEM SOURCE
     //
 

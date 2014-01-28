@@ -1431,23 +1431,27 @@ strict: false*/
             {kind: "XV.InputWidget", attr: "description2"},
             {kind: "XV.ItemTypePicker", attr: "itemType", showNone: false},
             {kind: "XV.ClassCodePicker", attr: "classCode"},
-            {kind: "XV.FreightClassPicker", attr: "freightClass"},
             {kind: "XV.UnitPicker", attr: "inventoryUnit"},
-            {kind: "XV.InputWidget", attr: "barcode", label: "_upcCode".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
-            {kind: "onyx.GroupboxHeader", content: "_product".loc()},
-            {kind: "XV.CheckboxWidget", attr: "isSold"},
-            {kind: "XV.ProductCategoryPicker", attr: "productCategory",
-              label: "_category".loc()},
-            {kind: "XV.SalesPriceWidget", attr: "listPrice"},
-            {kind: "XV.SalesPriceWidget", attr: "wholesalePrice"},
-            {kind: "XV.UnitPicker", attr: "priceUnit"},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader",
               content: "_extendedDescription".loc()},
             {kind: "XV.TextArea", attr: "extendedDescription"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
+          components: [
+          {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+            {kind: "XV.CheckboxWidget", attr: "isSold"},
+            {kind: "XV.ProductCategoryPicker", attr: "productCategory",
+              label: "_category".loc()},
+            {kind: "XV.SalesPriceWidget", attr: "listPrice"},
+            {kind: "XV.SalesPriceWidget", attr: "wholesalePrice"},
+            {kind: "XV.UnitPicker", attr: "priceUnit"}
           ]}
         ]},
         {kind: "XV.ItemCommentBox", attr: "comments"},

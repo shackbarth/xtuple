@@ -26,6 +26,7 @@ strict:true, trailing:true, white:true */
     "_maintainPurchaseTypes": "Maintain Purchase Types",
     "_manufacturer": "Manufacturer",
     "_manufacturerItem": "Mfg. Item",
+    "_maximumDesiredCost": "Maximum Cost",
     "_na": "N/A",
     "_noManufacturerNumber": "No Manufacturer Item",
     "_noVendorNumber": "No Vendor Item",
