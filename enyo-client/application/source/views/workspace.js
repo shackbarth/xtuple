@@ -115,8 +115,7 @@ strict: false*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel",
-          fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
@@ -679,6 +678,7 @@ strict: false*/
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
             {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
+            {kind: "XV.CustomerEmailProfilePicker", attr: "emailProfile"},
             {kind: "XV.CheckboxWidget", attr: "backorder"},
             {kind: "XV.CheckboxWidget", attr: "partialShip"},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
@@ -765,6 +765,19 @@ strict: false*/
   XV.registerModelWorkspace("XM.CustomerRelation", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerListItem", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerProspectListItem", "XV.CustomerWorkspace");
+
+  // ..........................................................
+  // CUSTOMER EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerEmailProfileWorkspace",
+    kind: "XV.EmailProfileWorkspace",
+    title: "_customerEmailProfile".loc(),
+    model: "XM.CustomerEmailProfile",
+  });
+
+  XV.registerModelWorkspace("XM.CustomerEmailProfile", "XV.CustomerEmailProfileWorkspace");
 
   // ..........................................................
   // CUSTOMER GROUP
@@ -1935,6 +1948,7 @@ strict: false*/
       this.build();
       this.getComponents().forEach(function (ctl) {
         if (ctl.kind === "XV.MoneyWidget") {
+          // XXX #refactor -- what does this do?
           ctl.getAttr().effective = effectiveKey; // append this property onto the object
         }
       });
@@ -2320,23 +2334,44 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
+        {kind: "FittableRows", title: "_payment".loc(), name: "paymentPanel"},
         {kind: "FittableRows", title: "_workflow".loc(), name: "workflowPanel"},
         {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
           attr: "comments"},
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
     ],
+
+    valueChanged: function () {
+      this.inherited(arguments);
+      if (this.$.salesOrderPaymentBox && this.value) {
+        this.$.salesOrderPaymentBox.setSalesOrder(this.value);
+      }
+    },
+
     /**
       Inserts additional components where they should be rendered.
     */
     build: function () {
+
+      if (XV.SalesOrderPaymentBox && XT.session.privileges.get('PostCashReceipts')) {
+        this.$.paymentPanel.createComponent({kind: "XV.SalesOrderPaymentBox"}, {owner: this});
+        if (this.value) {
+          this.$.salesOrderPaymentBox.setSalesOrder(this.value);
+        }
+      }
+
       if (XT.session.privileges.get("ProcessCreditCards") &&
           XT.session.settings.get("CCCompany") === "Authorize.Net") {
-        this.$.salesPanels.createComponent(
-          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards",
-            addBefore: this.$.salesOrderCommentBox},
+        this.$.paymentPanel.createComponent(
+          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards", fit: true},
           {owner: this}
         );
+
+        // XXX altering this line will break the New button. if I add this to
+        // paymentPanel, I get 'object has no method getValue' when I click
+        // 'New' -tjw
+        this.$.creditCardBox.parent.parent = this;
       }
 
       if (enyo.platform.touch) {

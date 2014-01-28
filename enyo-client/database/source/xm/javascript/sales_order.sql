@@ -6,11 +6,13 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
 
   if (!XM.SalesOrder) { XM.SalesOrder = {}; }
 
+  XM.SalesOrder.idAttribute = 'cohead_id';
   XM.SalesOrder.isDispatchable = true;
 
-  XM.SalesOrder.findByDocumentNumber = function (documentNumber) {
-    return plv8.execute('select * from cohead where cohead_number = $1', [documentNumber])[0];
+  XM.SalesOrder.findByNumber = function (number) {
+    return plv8.execute('select * from cohead where cohead_number = $1', [number])[0];
   };
+
 
   /**
     Return whether a Sales Order is referenced by another table.
@@ -47,6 +49,60 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
         }
       };
     }
+  };
+
+  /**
+   * Post a Payment to this Sales Order
+   *
+   * @see https://github.com/xtuple/qt-client/blob/master/guiclient/salesOrder.cpp#L4512
+   */
+  XM.SalesOrder.addPayment = function (cashReceiptNumber, salesOrderNumber) {
+    var cashReceipt = XM.CashReceipt.findByNumber(cashReceiptNumber),
+      isPosted = cashReceipt.cashrcpt_posted;
+
+    if (!cashReceipt) {
+      /**
+       * XXX maybe standardize 404-type error messages? or maybe it already is?
+       */
+      throw new handleError('Could not find CashReceipt [number=' + cashReceiptNumber + ']', 404);
+    }
+
+    if (!isPosted) {
+      throw new handleError('Cannot make payment using un-posted CashReceipt [number=' + cashReceiptNumber + '].', 404);
+    }
+
+    var salesOrder = XM.SalesOrder.findByNumber(salesOrderNumber);
+
+    if (!salesOrder) {
+      throw new handleError('Could not find SalesOrder [number=' + salesOrderNumber + ']', 404);
+    }
+
+    var journalNumber = XM.CashReceipt.fetchJournalNumber();
+      cashReceiptLine = plv8.execute(
+        "select cashrcptitem_aropen_id FROM cashrcptitem "+
+        "WHERE cashrcptitem_cashrcpt_id=$1",
+        [cashReceipt.cashrcpt_id]
+      )[0],
+      receivableId = cashReceiptLine && cashReceiptLine.cashrcptitem_aropen_id,
+      payment = plv8.execute([
+        'insert into aropenalloc (',
+          'aropenalloc_aropen_id,',
+          'aropenalloc_doctype,',
+          'aropenalloc_doc_id,',
+          'aropenalloc_amount,',
+          'aropenalloc_curr_id',
+        ') values ($1, $2, $3, $4, $5)'
+        ].join(' '), [
+          receivableId,
+          'S',
+          salesOrder[XM.SalesOrder.idAttribute],
+          cashReceipt.cashrcpt_amount,
+          cashReceipt.cashrcpt_curr_id
+        ]);
+
+    return {
+      paid: !!payment
+    };
   };
 
   /**

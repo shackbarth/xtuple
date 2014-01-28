@@ -481,6 +481,7 @@
     "_pattern": "Pattern",
     "_password": "Password",
     "_path": "Path",
+    "_payment": "Payment",
     "_pending": "Pending",
     "_percent": "Percent",
     "_period": "Period",

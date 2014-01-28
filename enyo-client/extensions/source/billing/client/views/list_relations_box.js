@@ -37,16 +37,17 @@ trailing:true, white:true*/
       listRelations: "XV.ReceivableApplicationListRelations"
     });
 
+    /*
     enyo.kind({
-      name: 'XV.CashAllocationBox',
+      name: 'XV.SalesOrderPaymentBox',
       kind: 'XV.ListRelationsEditorBox',
-      editor: 'XV.CashAllocationEditor',
-      listRelations: 'XV.CashAllocationList',
+      editor: 'XV.SalesOrderPaymentEditor',
+      listRelations: 'XV.SalesOrderPaymentList',
       searchList: 'XV.CashReceiptList',
       title: '_payment'.loc(),
 
       handlers: {
-        onCashAllocationChange: 'handleCashAllocationChange'
+        onSalesOrderPaymentChange: 'handleSalesOrderPaymentChange'
       },
 
       create: function () {
@@ -56,7 +57,7 @@ trailing:true, white:true*/
       },
 
       // XXX #refactor: distinction between "value" and "controlValue" is confusing
-      handleCashAllocationChange: function () {
+      handleSalesOrderPaymentChange: function () {
         this.inherited(arguments);
         if (!this.$.editor.value) { return; }
 
@@ -86,6 +87,7 @@ trailing:true, white:true*/
         return true;
       }
     });
+    */
 
     /**
      * @class XV.CashReceiptApplicationsBox

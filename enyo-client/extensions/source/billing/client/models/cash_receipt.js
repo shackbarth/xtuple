@@ -3,9 +3,7 @@ XT.extensions.billing.initCashReceipt = function () {
   'use strict';
 
   /**
-   * @class XM.CashReceipt
-   * @extends XM.Document
-   * @mixes XM.core.HasTransients
+   * @mixin CashReceiptMixin
    */
   XM.CashReceipt = XM.Document.extend({
     recordType: 'XM.CashReceipt',
@@ -372,62 +370,6 @@ XT.extensions.billing.initCashReceipt = function () {
       lines.remove(lines.where({ receivable: receivable }));
     }
   }, _.invert(XM.FundsTypeEnum));
-
-  /**
-   * @class XM.CashAllocation
-   * @extends XM.CashReceipt
-   */
-  XM.CashAllocation = XM.CashReceipt.extend({
-    recordType: 'XM.CashAllocation',
-
-    handlers: {
-      'change:targetDocument': 'targetDocumentChanged'
-    },
-
-    defaults: function () {
-      return _.extend({
-          applicationDate: new Date()
-        },
-        _.omit(XM.CashReceipt.prototype.defaults(), [
-          'lineItems',
-          'documentDate'
-        ])
-      );
-    },
-
-    post: function (targetDocument) {
-      // TODO this should be moved to into a server-side transaction
-      console.warn(targetDocument);
-      var that = this,
-        documentKind = targetDocument.recordType.suffix();
-
-      console.warn('posting ' + documentKind);
-      this.dispatch('XM.CashAllocation', 'post', [this.get('number'), documentKind], {
-        success: function () {
-          console.warn(arguments);
-        },
-        error: function () {
-          console.warn(arguments);
-        }
-      });
-    },
-
-    /**
-     * @listens change:targetDocumentChanged
-     */
-    targetDocumentChanged: function () {
-      var target = this.get('targetDocument');
-      if (!target || !this.isNew()) { return; }
-
-      this.set(_.extend(_.pick(target.attributes, [ 'currency', 'customer' ]), {
-        isPosted: true,
-        useCustomerDeposit: XT.session.settings.get('EnableCustomerDeposits'),
-        amount: target.get('balance')
-      }));
-
-      this.listenTo(this.get('targetDocument'), 'sync', this.post);
-    }
-  });
 
   /**
    * @class XM.CashReceiptLine

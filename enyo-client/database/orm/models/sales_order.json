@@ -440,7 +440,8 @@
         "toOne": {
           "type": "Currency",
           "column": "cohead_curr_id",
-          "required": true
+          "required": true,
+          "isNested": true
         }
       },
       {
