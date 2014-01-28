@@ -598,13 +598,32 @@ white:true*/
     },
 
     useDescriptionDidChange: function () {
+      var noDescription = !this.get("useDescription");
+
       // clear out the description if we don't use it
-      if (!this.get("useDescription") && this.get("description1")) {
-        this.set({description1: ""});
+      if (noDescription) {
+        this.set({
+          description1: "",
+          description2: ""
+        });
       }
-      this.setReadOnly("description1", !this.get("useDescription"));
+      this.setReadOnly(
+        ["description1", "description2"],
+        noDescription
+      );
     }
 
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.ItemRelationAlias = XM.Model.extend({
+    /** @scope XM.ItemRelationAlias.prototype */
+
+    recordType: 'XM.ItemRelationAlias',
 
   });
 

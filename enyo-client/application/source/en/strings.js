@@ -94,6 +94,7 @@
     "_alarms": "Alarms",
     "_alias": "Alias",
     "_aliases": "Aliases",
+    "_allAccounts": "All Accounts",
     "_allocate": "Allocate",
     "_allocatedCredit": "Allocated Credit",
     "_allowableItems": "Allowable Items",

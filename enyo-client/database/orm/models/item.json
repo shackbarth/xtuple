@@ -495,18 +495,68 @@
         }
       },
       {
+        "name": "description2",
+        "attr": {
+          "type": "String",
+          "column": "itemalias_descrip2"
+        }
+      },
+      {
         "name": "account",
         "toOne": {
           "isNested": true,
           "type": "AccountRelation",
           "column": "itemalias_crmacct_id"
         }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemRelationAlias",
+    "table": "itemalias",
+    "comment": "Item Alias Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemalias_id",
+          "isPrimaryKey": true
+        }
       },
       {
-        "name": "description2",
+        "name": "uuid",
         "attr": {
           "type": "String",
-          "column": "itemalias_descrip2"
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "itemalias_item_id"
+        }
+      },
+      {
+        "name": "aliasNumber",
+        "attr": {
+          "type": "String",
+          "column": "itemalias_number",
+          "required": true
         }
       }
     ],
@@ -1391,7 +1441,7 @@
         "name": "aliases",
         "toMany": {
           "isNested": true,
-          "type": "ItemAlias",
+          "type": "ItemRelationAlias",
           "column": "item_id",
           "inverse": "item"
         }
