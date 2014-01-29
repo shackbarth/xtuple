@@ -14,7 +14,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "element": "image",
-       "definition": "nothing",
+       "definition": "Invoice Logo",
        "options": {"x": 200, "y": 40, "width": 150}
     },
     {
@@ -95,7 +95,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "definition": [{"text": "_billto", "label": true}],
-      "options": {"x": 0, "y": 280, "fontBold": true}
+      "options": {"x": 0, "y": 250, "fontBold": true}
     },
     {
       "definition": [
@@ -110,8 +110,9 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "billtoPhone"}
       ],
       "transform": "address",
-      "options": {"x": 120, "y": 280, "width": 250}
+      "options": {"x": 120, "y": 250, "width": 250}
     },
+    {"element": "newline"},
     {"element": "newline"},
     {"element": "fontBold"},
     {
@@ -124,12 +125,12 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"text": "_unitPrice", "width": 100},
         {"text": "_extendedPrice", "width": 100}
       ],
-      "options": {"border": 0, "width": 0}
-    },
-    {"element": "bandLine", "size": 2},
-    {"element": "fontNormal"}
+      "options": {"border": 1}
+    }
   ],
   "detailElements": [
+    {"element": "newline"},
+    {"element": "fontNormal"},    
     {
       "element": "band",
       "definition": [
@@ -140,17 +141,18 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "lineItems*price", "width": 100},
         {"attr": "lineItems*extendedPrice", "width": 100}
       ],
-      "options": {"border": 0, "width": 570, "wrap": 1}
-    },
-    {"element": "newline"},
-    {"element": "newline"},
-    {
-      "definition": [{"attr": "notes", "label": true}],
-        "options": {"fontSize": 8, "width": 250}
-    },
-    {"element": "newline"}
+      "options": {"fontBold": true, "border": 0}
+    }
   ],
   "footerElements": [
+    {"element": "newline"},
+    {
+      "definition": [
+        {"attr": "notes", "label": true}
+      ],
+      "options": {"fontBold": false, "fontSize": 8, "width": 300}
+    },
+    {"element": "newline"},
     {"element": "bandLine", "size": 2},
     {
       "definition": [
@@ -158,8 +160,9 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "taxTotal", "label": true},
         {"attr": "total", "label": true}
       ],
-      "options": {"align": "right"}
+      "options": {"width": 525, "align": "right"}
     },
+    {"element": "newline"},
     {"element": "newline"},
     {
       "element": "pageNumber", "definition": [],

@@ -119,13 +119,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     /**
       Custom transformations depending on the element descriptions.
 
-      TODO: support custom transforms like def.transform === 'address' which would need
+      TODO: support more custom transforms like def.transform === 'address' which would need
       to do stuff like smash city state zip into one line. The function to do this can't live
       in the json definition, but we can support a set of custom transformations here
       that can be referred to in the json definition.
      */
     var transformElementData = function (def, data) {
       var textOnly;
+
+      if (def.transform === 'address') {
+        var params = marryData(def.definition, data, true);
+        return formatAddress.apply(this, params);
+      }
 
       if (def.element === 'image') {
         // if the image is not found, we don't want to print it
@@ -146,6 +151,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // "print" elements (aka the default) only want strings as the definition
       textOnly = def.element === "print" || !def.element;
       return marryData(def.definition, data, textOnly);
+    };
+
+    var formatAddress = function (name, address1, address2, address3, city, state, code, country) {
+      if (!arguments[0]) { return; }
+      var address = [];
+
+      if (name) { address.push(name); }
+      if (address1) {address.push(address1); }
+      if (address2) {address.push(address2); }
+      if (address3) {address.push(address3); }
+      if (city || state || code) {
+        var cityStateZip = (city || '') +
+              (city && (state || code) ? ' '  : '') +
+              (state || '') +
+              (state && code ? ' '  : '') +
+              (code || '');
+        address.push(cityStateZip);
+      }
+      if (country) { address.push(country); }
+      return address;
     };
 
     /**
