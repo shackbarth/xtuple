@@ -14,7 +14,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     },
     {
       "element": "image",
-       "definition": "Invoice Logo",
+       "definition": "nothing",
        "options": {"x": 200, "y": 40, "width": 150}
     },
     {
@@ -140,7 +140,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "lineItems*price", "width": 100},
         {"attr": "lineItems*extendedPrice", "width": 100}
       ],
-      "options": {"border": 0, "width": 0, "wrap": 1}
+      "options": {"border": 0, "width": 570, "wrap": 1}
     },
     {"element": "newline"},
     {"element": "newline"},

@@ -156,12 +156,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var printDefinition = function (report, data, definition) {
       _.each(definition, function (def) {
         var elementData = transformElementData(def, data);
-        if (!elementData) {
-          // without this placeholder, only get "loading" box the first time
-          report.print("", {});
-          return;
+        if (elementData) {
+          // debug
+          // console.log(elementData);
+          report[def.element || "print"](elementData, def.options);
         }
-        report[def.element || "print"](elementData, def.options);
       });
     };
 
@@ -332,7 +331,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         afterFetch = function () {
           if (fileCollection.getStatus() === XM.Model.READY_CLEAN) {
             fileCollection.off("statusChange", afterFetch);
-            if (fileCollection.length === 0) { done(); }
             done(null, fileCollection);
           }
         };
@@ -393,11 +391,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         //
         // Write the images to the filesystem
         //
-
-        if (!fileCollection) {
-          done();
-          return;
-        }
 
         async.map(fileCollection.models, writeImageToFilesystem, done);
       });
