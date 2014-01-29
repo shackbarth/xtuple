@@ -30,6 +30,8 @@ white:true*/
 
     numberPolicySetting: 'CMNumberGeneration',
 
+    extraSubtotalFields: [],
+
     defaults: function () {
       return {
         returnDate: new Date(),
@@ -38,7 +40,6 @@ white:true*/
         commission: 0,
         taxTotal: 0,
         miscCharge: 0,
-        freight: 0,
         balance: 0
       };
     },

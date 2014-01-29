@@ -192,13 +192,6 @@
         }
       },
       {
-        "name": "freight",
-        "attr": {
-          "type": "Money",
-          "column": "cmhead_freight"
-        }
-      },
-      {
         "name": "allocatedCredit",
         "attr": {
           "type": "Money",

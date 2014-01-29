@@ -113,7 +113,6 @@ white:true*/
       lineItemTaxDetails = [],
       adjustmentTaxDetails = [],
       subtotal,
-      freight = model.get("freight"),
       taxTotal = 0.0,
       taxModel,
       total,
@@ -191,8 +190,16 @@ white:true*/
     });
 
     // Totaling calculations
+    // First get additional subtotal attributes (i.e. freight) that were added outside of core
+    if (model.extraSubtotalFields && model.extraSubtotalFields.length) {
+      _.each(model.extraSubtotalFields, function (attr) {
+        var attrVal = model.get(attr);
+        subtotals.push(attrVal);
+      });
+    }
+
     subtotal = add(subtotals, scale);
-    subtotals = subtotals.concat([miscCharge, taxTotal, freight]);
+    subtotals = subtotals.concat([miscCharge, taxTotal]);
     total = add(subtotals, scale);
 
     // Set values
@@ -215,7 +222,7 @@ white:true*/
       this.on("change:" + this.documentDateKey + " add:allocations remove:allocations",
         this.calculateAllocatedCredit);
       this.on("add:lineItems remove:lineItems change:lineItems change:subtotal" +
-        "change:freight change:taxTotal change:miscCharge", this.calculateTotals);
+        "change:taxTotal change:miscCharge", this.calculateTotals);
       this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
       this.on("change:taxZone", this.recalculateTaxes);
       this.on("change:total change:allocatedCredit change:outstandingCredit",
@@ -500,6 +507,8 @@ white:true*/
 
     numberPolicySetting: 'InvcNumberGeneration',
 
+    extraSubtotalFields: [],
+
     defaults: function () {
       return {
         invoiceDate: new Date(),
@@ -510,7 +519,6 @@ white:true*/
         taxTotal: 0,
         miscCharge: 0,
         subtotal: 0,
-        freight: 0,
         total: 0,
         balance: 0,
         authorizedCredit: 0

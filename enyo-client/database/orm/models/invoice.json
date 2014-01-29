@@ -242,13 +242,6 @@
         }
       },
       {
-        "name": "freight",
-        "attr": {
-          "type": "Money",
-          "column": "invchead_freight"
-        }
-      },
-      {
         "name": "taxTotal",
         "attr": {
           "type": "Money",
