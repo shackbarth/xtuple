@@ -34,13 +34,34 @@
       attributes: ["name", "characteristicType", "isSearchable", "notes", "mask", "validator",
                   "isAddresses", "isContacts", "isAccounts", "isItems", "isInvoices",
                   "isEmployees", "isIncidents", "isOpportunities", "isProjects", "isSalesOrders"],
+      /**
+        @member -
+        @memberof Characteristic
+        @description The ID attribute is "name", which will not be automatically uppercased.
+      */
       idAttribute: "name",
-      extensions: ["crm"],  //Incident 22094
+      /**
+        @member -
+        @memberof Characteristic
+        @description Used in the CRM module
+      */
+      extensions: ["crm"],
+      /**
+        @member -
+        @memberof Characteristic
+        @description Characteristics are lockable.
+      */
       isLockable: true,
       cacheName: "XM.characteristics",
+       /**
+        @member -
+        @memberof Characteristic
+        @description Characteristics can be read by users with "ViewCharacteristics" privilege and can be created, updated,
+          or deleted by users with the "MaintainCharacteristics" privilege.
+      */
       privileges: {
         createUpdateDelete: "MaintainCharacteristics",
-        read: "ViewCharacteristics"  //Incident 22093
+        read: "ViewCharacteristics"
       },
       createHash: {
         name: "Test Characteristic" + Math.random(),

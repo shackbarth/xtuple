@@ -95,14 +95,47 @@
       ]
       */
     },
+    /**
+    Cash Receipts may be applied to either an open Invoice or an open miscellaneous Debit Memo
+    @class
+    @alias CashReceipt
+    @property {String} number
+    @property {Customer} customer
+    @property {Number} amount
+    @property {Currency} currency
+    @property {Number} currencyRate
+    @property {String} documentNumber
+    @property {Date} documentDate 
+    @property {BankAccount} bankAccount
+    @property {Date} distributionDate defaults to the current date
+    @property {Date} applicationDate defaults to the current date
+    @property {String} notes
+    @property {Boolean} isPosted
+    @property {Number} balance
+    */
     cashReceiptSpec = {
       recordType: 'XM.CashReceipt',
       collectionType: 'XM.CashReceiptCollection',
+      /**
+      @member -
+      @memberof CashReceipt.prototype
+      @description CashReceipt has no cached defined
+      */
       cacheName: null,
       skipSmoke: true,
     // skipCrud: true,
       instanceOf: 'XM.Document',
+      /**
+      @member -
+      @memberof CashReceipt.prototype
+      @description CashReceipts are lockable.
+    */
       isLockable: true,
+      /**
+      @member -
+      @memberof CashReceipt.prototype
+      @description The ID attribute is "number", which will not be automatically uppercased.
+      */
       idAttribute: 'number',
       enforceUpperKey: false,
       attributes: [
@@ -117,12 +150,23 @@
       defaults: {
         isPosted: false
       },
+      /**
+      @member -
+      @memberof CashReceipt.prototype
+      @description CashReceipts can be read by any users and can be created, updated,
+        or deleted by users with the "MaintainCashReceipts" privilege.
+      */
       privileges: {
         create: 'MaintainCashReceipts',
         read: true,
         update: 'MaintainCashReceipts',
         delete: 'MaintainCashReceipts'
       },
+      /**
+      @member -
+      @memberof CashReceipt.prototype
+      @description Used in the Billing module
+      */
       extensions: ["billing"],
       updatableField: 'notes',
       listKind: 'XV.CashReceiptList',
@@ -169,23 +213,45 @@
           * * The numbering sequence used should be 'CashRcptNumber'.
           */
         describe('privileges', function () {
-          it.skip('Any user should be able to a view a XM.CashReceipt object.', function () {
+          it.skip('Any user should be able to view a XM.CashReceipt object.', function () {
           });
           it.skip('A XM.CashReceipt object can not be deleted if it has been posted.', function () {
 
           });
         });
+        /**
+        @member -
+        @memberof CashReceipt.prototype
+        @description Amount applied should be the calculated sum of all applications
+        in the Cash Receipt currency
+        */
         it.skip('Money "applied" that is the calculated sum of all applications ' +
           'in the Cash Receipt currency', function () {
-
         });
+        /**
+        @member -
+        @memberof CashReceipt.prototype
+        @description Discount should be the calculated sum of all discounts
+        in the Cash Receipt currency
+        */
         it.skip('Money "discount" that is the calculated sum of all discounts ' +
           'in the Cash Receipt currency', function () {
 
         });
+        /**
+        @member -
+        @memberof CashReceipt.prototype
+        @description Balance amount is the calculated value of amount - applied
+        */
         it.skip('Money "balance" that is the calculated value of amount - applied', function () {
 
         });
+        /**
+        @member -
+        @memberof CashReceipt.prototype
+        @description 'useCustomerDeposit' should default to the value of setting
+        'EnableCustomerDeposits'
+        */
         it.skip('Boolean "useCustomerDeposit" defaulting to the metric' +
             'setting "EnableCustomerDeposits" || false', function () {
 
@@ -196,6 +262,11 @@
             assert.ok(XM.FundsTypeEnum);
             assert.equal(_.keys(XM.FundsTypeEnum).length, 10);
           });
+          /**
+          @member -
+          @memberof CashReceipt.prototype
+          @description FundsType value should default to 'CHECK' 
+          */
           it('CashReceipt "fundsType" required, defaulting to XM.CashReceipt.CHECK', function () {
             assert.equal(new XM.CashReceipt().get('fundsType'), XM.CashReceipt.CHECK);
           });
@@ -208,15 +279,17 @@
         it('status:READY_CLEAN handled by #onReadyClean()', function () {
 
           /**
-          * If the funds type is one of the four credit card types then make
-          * the following attributes read only:
-          *   - amount
-          *   - fundsType
-          *   - documentNumber
-          *   - documentDate
-          *   - bankAccount
-          *   - distributionDate
-          *   - applicationDate
+          @member -
+          @memberof CashReceipt.prototype
+          @description If the funds type is one of the four credit card types then make
+           the following attributes read only:
+              amount,
+              fundsType,
+              documentNumber,
+              documentDate,
+              bankAccount,
+              distributionDate,
+              applicationDate
           */
           it.skip('should handle FundsType = a credit card type', function (done) {
             var cr = new XM.CashReceipt({ fundsType: XM.FundsType.VISA });
@@ -237,9 +310,10 @@
           });
 
           /**
-            * If the cash receipt is posted make the entire record read only
-            * TODO this does work, but disabled for easier development.
-            */
+          @member -
+          @memberof CashReceipt.prototype
+          @description If the cash receipt is posted then the Cash Receipt should be read only
+          */
           it.skip('should handle isPosted = true', function (done) {
             var cr = new XM.CashReceipt({ isPosted: true });
 
@@ -253,16 +327,20 @@
         });
 
         /**
-         * When XM.CashReceipt amount or applied values have been updated
-         * the balance should be recalculated
+          @member -
+          @memberof CashReceipt.prototype
+          @description When amount or applied values have been updated
+          the balance should be recalculated
          */
         it.skip('change:amount handled by #amountChanged()', function () {
           // TODO
         });
 
         /**
-         * When the customer is changed on the cash receipt, the currency
-         * will be set to that of the customer
+          @member -
+          @memberof CashReceipt.prototype
+          @description When the customer is changed on the cash receipt, the currency
+          will be set to that of the customer
          */
         it('change:customer is handled by #customerChanged()', function () {
           var cr = new XM.CashReceipt();
@@ -305,9 +383,10 @@
         });
 
         /**
-        * When the currency or distribution date is changed on the cash
-        * receipt, the currency rate for that currency and date should
-        * be fetched and set.
+          @member -
+          @memberof CashReceipt.prototype
+          @description  When the currency or distribution date is changed on the cash
+          receipt, the currency rate for that currency and date should be fetched and set.
         */
         it('change:distributionDate handled by #distributionDateChanged()', function () {
           var cr = new XM.CashReceipt(),
@@ -320,9 +399,10 @@
         });
 
         /**
-         * When one or more cash receipt line items have been added to a
-         * cash receipt customer, bank account and currency will be made
-         * read only.
+          @member -
+          @memberof CashReceipt.prototype
+          @description When one or more cash receipt line items have been added to a
+          cash receipt, customer, bank account and currency will be made read only.
          */
         it.skip('add:lineItems handled by #lineItemAdded()', function () {
           //var cr = new XM.CashReceipt();
@@ -344,6 +424,14 @@
             XM.date.startOfTime() if no line items exist.
           */
         });
+        /**
+          @member -
+          @memberof CashReceipt.prototype
+          @description If the currency on the Cash receipt does not match the bank account currency
+          a warning dialog should be displayed with message ' This transaction is specified in %1 while
+          the Bank Account is specified in %2.Do you wish to convert at the current Exchange Rate?
+          (%1 and %2 are the Currency abbreviations)
+         */
         it.skip('#checkCurrency()', function () {
 
         /*
@@ -358,7 +446,6 @@
           *   > Store a cache variable indicating the user has been warned.
         */
         });
-
         it.skip('#dateDidChange()', function () {
           /*
           *   * A function "dateDidChange" should exist on XM.CashReceipt that returns the receiver.
@@ -378,6 +465,14 @@
           */
 
         });
+        /**
+          @member -
+          @memberof CashReceipt.prototype
+          @description An error message should be displayed in the following cases:
+          1) if the amount to apply is greater than the balance of the cash receipt
+          2) if the amount to apply plus the discount is greater than the balance of the receivable
+          3) if a discount is passed where the receivable is a credit
+        */
         it.skip('#applyAmount(receivable, amount, discount)', function () {
           /*
         *   * XM.CashReceipt should include a function "applyAmount" on the prototype that accepts a XM.CashReceiptReceivable,
@@ -396,6 +491,12 @@
           *   > Call dateDidChange()
           */
         });
+        /**
+          @member -
+          @memberof CashReceipt.prototype
+          @description Selecting 'Clear' button should clear the applied amount from the
+          cash receipt line
+        */
         it.skip('#clearLine', function () {
 
           /*
@@ -408,8 +509,12 @@
         *   */
 
         });
-
-
+        /**
+          @member -
+          @memberof CashReceipt.prototype
+          @description Selecting 'Apply Line Balance' button should apply as much of the
+          cash receipt balance as possible to the selected receivable
+        */
         it.skip('#applyLineBalance(receivable, callback)', function () {
           /*
         *   * XM.CashReceipt should include a function "applyLineBalance" on the prototype that accepts arguments
@@ -494,6 +599,12 @@
           */
 
         });
+        /**
+          @member -
+          @memberof CashReceipt.prototype
+          @description Selecting 'Apply to Balance' button should apply as much cash from
+          the cash receipt as possible to open receivables
+        */
         it.skip('#applyBalance(receivables, applyCredits)', function () {
           // * XM.CashReceipt should include a function "applyBalance" on the prototype that
           // accepts arguments for a XM.CashReceiptReceivablesCollection and "includeCredits" and returns the receiver.

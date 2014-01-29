@@ -23,13 +23,34 @@
       listKind: "XV.ClassCodeList",
       instanceOf: "XM.Document",
       attributes: ["code", "description"],
+      /**
+        @member -
+        @memberof ClassCode
+        @description The ID attribute is "code", which will not be automatically uppercased.
+      */
       idAttribute: "code",
-      extensions: ["crm", "project"], //Incident 22102
+      /**
+        @member -
+        @memberof ClassCode
+        @description Used in the CRM and Project module
+      */
+      extensions: ["crm", "project"], 
+      /**
+        @member -
+        @memberof ClassCode
+        @description Class Codes are lockable.
+      */
       isLockable: true,
       cacheName: "XM.classCodes",
+      /**
+        @member -
+        @memberof ClassCode
+        @description Class Codes can be read by users with "ViewClassCodes" privilege and can be created, updated,
+          or deleted by users with the "MaintainClassCodes" privilege.
+      */
       privileges: {
         createUpdateDelete: "MaintainClassCodes",
-        read: "ViewClassCodes" //Incident 22098
+        read: "ViewClassCodes"
       },
       createHash: {
         code: "CCode" + Math.random(),
