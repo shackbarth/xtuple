@@ -382,6 +382,20 @@
         }
       },
       {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "item_number"
+        }
+      },
+      {
+        "name": "barcode",
+        "attr": {
+          "type": "String",
+          "column": "item_upccode"
+        }
+      },
+      {
         "name": "item",
         "toOne": {
           "type": "ItemRelation",

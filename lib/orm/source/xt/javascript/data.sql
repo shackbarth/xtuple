@@ -1,5 +1,7 @@
 select xt.install_js('XT','Data','xtuple', $$
 
+(function () {
+
   /**
    * @class
    *
@@ -1916,6 +1918,8 @@ select xt.install_js('XT','Data','xtuple', $$
         itemAttr,
         filteredProps,
         val,
+        preOffsetDate,
+        offsetDate,
         check = function (p) {
           return p.name === itemAttr;
         };
@@ -1959,7 +1963,9 @@ select xt.install_js('XT','Data','xtuple', $$
           if (printFormat && !prop.toOne && !prop.toMany) {
             switch(prop.attr.type) {
               case "Date":
-                item[itemAttr] = XT.formatDate(item[itemAttr]).formatdate;
+                preOffsetDate = item[itemAttr];
+                offsetDate = new Date(preOffsetDate.valueOf() + 60000 * preOffsetDate.getTimezoneOffset());
+                item[itemAttr] = XT.formatDate(offsetDate).formatdate;
               break;
               case "Cost":
                 item[itemAttr] = XT.formatCost(item[itemAttr]).formatcost.toString();
@@ -2244,5 +2250,7 @@ select xt.install_js('XT','Data','xtuple', $$
       return false;
     }
   }
+
+}());
 
 $$ );

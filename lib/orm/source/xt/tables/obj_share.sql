@@ -38,3 +38,4 @@ select xt.add_index('obj_share', 'obj_share_username', 'obj_share_username_index
 comment on table xt.obj_share is 'Keep track of record-level personal privilege access grants.';
 
 grant all on xt.obj_share to xtrole;
+grant usage, select on sequence xt.obj_share_obj_share_id_seq to xtrole;
