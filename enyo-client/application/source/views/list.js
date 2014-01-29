@@ -1181,7 +1181,7 @@ trailing:true, white:true, strict: false*/
     ],
     create: function () {
       if (XT.session.config.emailAvailable) {
-        this.actions.push({name: "email", prerequisite: "canPrint", method: "doEmail" });
+        this.actions.push({name: "email", method: "doEmail" });
       }
       this.inherited(arguments);
     },
