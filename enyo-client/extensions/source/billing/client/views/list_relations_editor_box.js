@@ -24,22 +24,17 @@ XT.extensions.billing.initListRelationsEditors = function () {
       {kind: 'XV.MoneyWidget', label: '_balance'.loc(),
           attr: { localValue: 'balance', currency: 'currency' }},
       {kind: "FittableColumns", components: [
-        //{kind: 'onyx.Button', content: '_clear'.loc(), ontap: 'handleClearTap'},
         // XXX #refactor out style attr
         {kind: 'onyx.Button', name: 'postButton', content: '_postCashPayment'.loc(), classes: 'onyx-blue',
           fit: true, ontap: 'handlePayment', disabled: true}
       ]}
     ],
     valueChanged: function () {
-      this.clear();
+      // XXX if I could inherit CashReceipt, this logic would go in that submodel.
+      // Will this be a problem if I try to then open this cashreceipt in another
+      // workspace?
+      this.value.off('change:amount');
       this.inherited(arguments);
-      /*
-      this.value.on('status:READY_CLEAN status:READY_NEW', function (payment, status, options) {
-        console.log(payment.relations);
-      });
-      console.log(this.value.relations);
-      */
-      //this.doSalesOrderPaymentChange();
     },
     salesOrderChanged: function () {
       var that = this,
@@ -51,14 +46,18 @@ XT.extensions.billing.initListRelationsEditors = function () {
           that.$.postButton.setDisabled(true);
         };
 
+      // XXX I don't know if this level of safety is necessary
       if (this.salesOrder.getStatus() === XM.Model.READY_CLEAN) {
         onReady(this.salesOrder);
       }
       if (this.salesOrder.getStatus() === XM.Model.READY_DIRTY) {
         onDirty(this.salesOrder);
       }
-      this.salesOrder.on('status:READY_CLEAN', onReady);
-      this.salesOrder.on('status:READY_DIRTY', onDirty);
+      // XXX the difference between sync and READY_CLEAN is not clear to me, so
+      // I'm just listening for both
+      this.salesOrder.once('status:READY_CLEAN', onReady);
+      this.salesOrder.once('status:READY_DIRTY', onDirty);
+      //this.salesOrder.on('sync', _.bind(this, this.newItem));
     },
     /**
      * @override
@@ -87,6 +86,13 @@ XT.extensions.billing.initListRelationsEditors = function () {
           message: '_salesOrderPaymentSuccess'.loc(),
           callback: function () {
             editor.doPaymentPosted();
+
+            // XXX 123 because there's no combination of backbone status handlers I've
+            // tried that seems to listen for when the salesOrder is clean and
+            // contains the updated values effected by cashreceipt posting
+            setTimeout(function () {
+              editor.newItem();
+            }, 2000);
           }
         });
       });
@@ -95,9 +101,15 @@ XT.extensions.billing.initListRelationsEditors = function () {
           type: XM.Model.WARNING,
           message: '_salesOrderPaymentFailure'.loc()
         });
+        // XXX bug? 456
+        // if I save, and then change a value in the workspace, then re-call save,
+        // it tries to validate against the old value, not the value that is currently
+        // in the editor input field. workaround: clear editor on error
+        // edit: maybe related to 123 above?
+        editor.newItem();
       });
 
-      if (!payment || !payment.isNew() || !payment.isValid()) {
+      if (!payment || !payment.isValid()) {
         // TODO piggyback off of the existing invalid handler, wherever it is
         editor.doNotify({
           type: XM.Model.NOTICE,

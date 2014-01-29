@@ -2118,6 +2118,9 @@ strict: false*/
   var lineItem = {
     kind: "XV.Workspace",
     modelAmnesty: true,
+    handlers: {
+      onBarcodeCapture: "handleBarcodeCapture"
+    },
     components: [
       {kind: "Panels", name: "salesLinePanels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -2204,6 +2207,10 @@ strict: false*/
 
       // Add the Comment Box to Panels
       this.$.salesLinePanels.createComponents([comments], {owner: this});
+    },
+    handleBarcodeCapture: function (inSender, inEvent) {
+      this.$.itemSiteWidget.$.privateItemSiteWidget.$.input.setValue(inEvent.data);
+      this.$.itemSiteWidget.$.privateItemSiteWidget.autocomplete();
     }
   };
   enyo.mixin(lineItem, XV.LineMixin);

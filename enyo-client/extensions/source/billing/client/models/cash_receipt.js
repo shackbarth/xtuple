@@ -23,6 +23,8 @@ XT.extensions.billing.initCashReceipt = function () {
         currencyRate: 1.0,
         documentDate: new Date(),
         amount: 0,
+        appliedAmount: 0,
+        balance: 0,
         lineItems: new XM.CashReceiptLineCollection()
       };
     },
