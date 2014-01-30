@@ -59,10 +59,32 @@ white:true*/
         options = options ? _.clone(options) : {};
         var isPurchased = this.get("isPurchased"),
           itemType = this.getValue("item.itemType"),
-          K = XM.Item;
+          K = XM.Item,
+          that = this,
+          itemSources,
+          item,
+          fetchOptions = {},
+          afterFetch = function () {
+            if (!itemSources.length) {
+              that.notify("_noItemSources".loc());
+            }
+          };
 
-        if (isPurchased && itemType === K.PURCHASED ||
-          itemType === K.OUTSIDE_PROCESS) {
+        if (isPurchased && !options.isLoading &&
+          (itemType === K.PURCHASED || itemType === K.OUTSIDE_PROCESS)) {
+
+          // Notfiy the user if they should create Item Sources
+          itemSources = new XM.ItemSourceCollection();
+          item = this.get("item");
+          options = {
+            query: {
+              parameters: [{attribute: "item", value: item}],
+              rowLimit: 1
+            },
+            success: afterFetch
+          };
+          itemSources.fetch(options);
+
           this.setReadOnly([
             "isCreatePurchaseRequestsForSalesOrders",
             "isCreatePurchaseOrdersForSalesOrders"
