@@ -536,16 +536,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         printDefinition(report, data, reportDefinition.footerElements);
       };
 
+      var printFinalSummary = function (report, data) {
+        printDefinition(report, data, reportDefinition.finalSummaryElements);
+      };
+
       var rpt = new Report(reportPath)
           .data(reportData)
           .header(printHeader)
           .detail(printDetail)
           .footer(printFooter)
+          .finalSummary(printFinalSummary)
           .fontSize(reportDefinition.settings.defaultFontSize)
           .margins(reportDefinition.settings.defaultMarginSize);
 
       // Debug output is always nice (Optional, to help you see the structure)
-      //rpt.printStructure();
+      // rpt.printStructure();
 
       rpt.render(done);
     };

@@ -112,8 +112,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "transform": "address",
       "options": {"x": 120, "y": 250, "width": 250}
     },
-    {"element": "newline"},
-    {"element": "newline"},
     {"element": "fontBold"},
     {
       "element": "band",
@@ -125,12 +123,12 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"text": "_unitPrice", "width": 100},
         {"text": "_extendedPrice", "width": 100}
       ],
-      "options": {"border": 1}
-    }
+      "options": {"border": 0, "padding": 5}
+    },
+    {"element": "bandLine", "size": 2}
   ],
   "detailElements": [
-    {"element": "newline"},
-    {"element": "fontNormal"},    
+    {"element": "fontNormal"},
     {
       "element": "band",
       "definition": [
@@ -141,17 +139,18 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "lineItems*price", "width": 100},
         {"attr": "lineItems*extendedPrice", "width": 100}
       ],
-      "options": {"fontBold": true, "border": 0}
-    }
-  ],
-  "footerElements": [
+      "options": {"fontBold": true, "border": 0, "padding": 5}
+    },
     {"element": "newline"},
     {
       "definition": [
         {"attr": "notes", "label": true}
       ],
-      "options": {"fontBold": false, "fontSize": 8, "width": 300}
-    },
+      "options": {"fontSize": 8, "width": 300}
+    }
+  ],
+  "footerElements": [
+    {"element": "newline"},
     {"element": "newline"},
     {"element": "bandLine", "size": 2},
     {
@@ -162,11 +161,10 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       ],
       "options": {"width": 525, "align": "right"}
     },
-    {"element": "newline"},
-    {"element": "newline"},
     {
       "element": "pageNumber", "definition": [],
       "options": {"align": "center"}
     }
-  ]
+  ],
+  "finalSummaryElements": []
 }$$);
