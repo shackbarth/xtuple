@@ -45,6 +45,7 @@ white:true*/
 
     bindEvents: function () {
       XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
+      // XXX #refactor: what's the point of pricePolicy here?
       var pricePolicy = XT.session.settings.get("soPriceEffective");
       this.on('change:holdType', this.holdTypeDidChange);
     },
@@ -72,6 +73,7 @@ white:true*/
     },
 
     getSalesOrderStatusString: function () {
+      // XXX #refactor
       return XM.SalesOrder.prototype.getOrderStatusString.call(this);
     },
 

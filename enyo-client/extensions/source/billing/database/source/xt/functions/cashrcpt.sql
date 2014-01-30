@@ -67,12 +67,13 @@ returns numeric stable as $$
     )
 
   from
-    cashrcptitem
-    inner join aropen on (aropen_id = cashrcptitem_aropen_id)
+    aropen 
+    inner join cashrcptitem on (aropen_id = cashrcptitem_aropen_id)
     inner join cashrcpt on (cashrcptitem_cashrcpt_id = cashrcpt_id)
 
   where
-    cashrcptitem_applied = $2;
+    aropen_id = $1 and
+    cashrcptitem_applied = $2
 
 $$ language sql;
 
@@ -84,7 +85,8 @@ $$ language sql;
  *
  * @param {Number}  aropen_id
  */
-create or replace function xt.cashrcpt_receivable_balance(numeric) returns numeric stable as $$
+create or replace function xt.cashrcpt_receivable_balance(numeric)
+returns numeric stable as $$
 
   select
     coalesce(

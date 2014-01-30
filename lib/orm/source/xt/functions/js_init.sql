@@ -525,12 +525,10 @@ return (function () {
     params = params || [];
     var cast,
       errorString,
-      i,
-      param;
+      i;
 
     var sql = "select " + functionName + "(";
     for (i = 0; i < params.length; i++) {
-      param = params[i];
       cast = casts && casts[i];
       if (i > 0) {
         sql = sql + ",";

@@ -1007,6 +1007,14 @@ white:true*/
     },
 
     shiptoAddressDidChange: function () {
+      // XXX #refactor
+      // what if relation widget just validated its fields against its backing
+      // entity and notified the user of mismatch? then there's no
+      // abraKadabra('shiptoAddress') if they hit a stray key while tabbing
+      // through the form and the on/off problem is solved as a byproduct.
+      // we could address later the problem that the View knows more about which 
+      // attributes are shared in relations than the ORM
+      //
       // If the address was manually changed, then clear shipto
       this.unset("shipto");
     },

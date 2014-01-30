@@ -242,7 +242,6 @@
     view: 'XM.CashReceiptView',
     model: 'XM.CashReceipt',
     title: '_cashReceipt'.loc(),
-
     components: [
       {kind: 'Panels', arrangerKind: 'CarouselArranger',
           fit: true, components: [
@@ -253,6 +252,7 @@
             {kind: 'XV.InputWidget', attr: 'number'},
             {kind: 'XV.CheckboxWidget', attr: 'isPosted', label: '_posted'.loc()},
             {kind: 'XV.SalesCustomerWidget', attr: 'customer'},
+            {kind: 'XV.BankAccountWidget', attr: 'bankAccount'},
             {kind: 'XV.FundsTypePicker', attr: 'fundsType', onSelect: 'fundsTypeSelected'},
             {kind: 'XV.CashReceiptApplyOptionsPicker',
               attr: 'useCustomerDeposit',
@@ -298,13 +298,6 @@
       newItem: 'newCashReceiptLineTapped'
     },
 
-    /**
-     * @listens onValueChange
-     */
-    valueChanged: function () {
-      this.log(this.value);
-    },
-
     newCashReceiptLineTapped: function (inSender, inEvent) {
       this.log(inEvent);
     },
@@ -320,6 +313,13 @@
      * @listens onDateChange
      */
     dateChanged: function (inSender, inEvent) {
+      // XXX also the DateWidget is broken and is mangling the dates. there seems
+      // to be an off-by-one error in both directions, maybe it's a timezone issue.
+      // #bug
+      //
+      // XXX I don't think this code makes sense. I need to revisit the spec
+      // and figure out what's going on here
+      /*
       if (moment(this.value.get('distributionDate'))
           .isBefore(this.value.get('applicationDate'))) {
         this.$.fundsTypePicker.setLabel('_recordReceiptAs'.loc());
@@ -327,16 +327,9 @@
       else {
         this.$.fundsTypePicker.setLabel('_applyBalanceAs'.loc());
       }
-    },
-
-    fundsTypeSelected: function (inSender, inEvent) {
-      this.log(inEvent);
-      this.log(this.value);
-    },
-
-    applyOptionSelected: function (inSender, inEvent) {
-      this.log(inEvent);
+      */
     }
+
   });
 
   XV.registerModelWorkspace('XM.CashReceipt', 'XV.CashReceiptWorkspace');
