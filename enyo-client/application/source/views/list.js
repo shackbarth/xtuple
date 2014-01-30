@@ -1926,7 +1926,7 @@ trailing:true, white:true, strict: false*/
         prerequisite: "canVoid", method: "doVoid" },
       {name: "post", privilege: "PostARDocuments",
         prerequisite: "canPost", method: "doPost" },
-      {name: "print", privileg: "PrintCreditMemos",
+      {name: "print", privilege: "PrintCreditMemos",
         method: "doPrint" }
     ],
     create: function () {

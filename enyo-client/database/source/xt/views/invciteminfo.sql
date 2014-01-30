@@ -5,7 +5,7 @@ select xt.create_view('xt.invciteminfo', $$
   -- two dozen group-bys
   select distinct on (invcitem_id) invcitem.*, 
   case when invcitem_item_id = -1 then true else false end as invcitem_is_misc,
-  invcitem_ordered * invcitem_qty_invuomratio 
+  invcitem_billed * invcitem_qty_invuomratio 
     * (invcitem_price / invcitem_price_invuomratio) as invcitem_ext_price,
   sum(taxhist_tax) as invcitem_tax_total
   from invcitem
