@@ -53,11 +53,8 @@ XT.extensions.billing.initListRelationsEditors = function () {
       if (this.salesOrder.getStatus() === XM.Model.READY_DIRTY) {
         onDirty(this.salesOrder);
       }
-      // XXX the difference between sync and READY_CLEAN is not clear to me, so
-      // I'm just listening for both
       this.salesOrder.once('status:READY_CLEAN', onReady);
       this.salesOrder.once('status:READY_DIRTY', onDirty);
-      //this.salesOrder.on('sync', _.bind(this, this.newItem));
     },
     /**
      * @override

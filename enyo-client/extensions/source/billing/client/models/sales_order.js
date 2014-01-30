@@ -9,7 +9,7 @@ XT.extensions.billing.extendSalesOrder = function () {
    * Post a Cash Receipt payment to a Sales Order
    */
   XM.SalesOrder.prototype.addPayment = function (cashReceipt) {
-    var order = this;
+    var that = this;
 
     if (this.isDirty() || this.isNew()) {
       this.notify('Cannot add payment to an unsaved Sales Order');
@@ -18,18 +18,18 @@ XT.extensions.billing.extendSalesOrder = function () {
 
     cashReceipt.once('sync', function (cashReceipt, resp, options) {
       // XXX should this be moved to into a server-side transaction?
-      order.dispatch('XM.SalesOrder', 'addPayment', [cashReceipt.get('number'), order.get('number')], {
+      that.dispatch('XM.SalesOrder', 'addPayment', [cashReceipt.get('number'), that.get('number')], {
         success: function (result) {
           if (result.paid) {
-            order.trigger('payment:success');
+            that.trigger('payment:success');
           }
           else {
             // TODO better error message
-            order.trigger('payment:error', 'not paid');
+            that.trigger('payment:error', 'Not able to post payment');
           }
         },
         error: function (error) {
-          order.trigger('payment:error', error);
+          that.trigger('payment:error', error);
         }
       });
     });

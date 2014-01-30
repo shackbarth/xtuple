@@ -62,7 +62,7 @@ XT.extensions.billing.initCashReceiptView = function () {
         ]}
       ],
       actions: [
-        {name: 'post', privilege: "PostCashReceipts",prerequisite: 'canPost',
+        {name: 'post', privilege: "PostCashReceipts", prerequisite: 'canPost',
           method: 'post'},
         {name: 'void', privilege: "VoidPostedCashReceipts",
           prerequisite: 'canVoid', method: 'void'}

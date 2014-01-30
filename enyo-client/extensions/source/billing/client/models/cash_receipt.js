@@ -18,7 +18,7 @@ XT.extensions.billing.initCashReceipt = function () {
       return {
         isPosted: false,
         fundsType: XM.CashReceipt.CHECK,
-        useCustomerDeposit: false,
+        useCustomerDeposit: 0,
         currency: XM.baseCurrency,
         currencyRate: 1.0,
         documentDate: new Date(),
@@ -43,8 +43,29 @@ XT.extensions.billing.initCashReceipt = function () {
       'change:currency': 'currencyChanged',
       'change:distributionDate': 'distributionDateChanged',
       'change:applicationDate': 'dateChanged',
+      'change:useCustomerDeposit': 'useCustomerDepositChanged',
       'add': 'lineItemAdded'
     },
+
+    useCustomerDepositChanged: function () {
+      // XXX our picker widget still doesn't work correctly with booleans. you
+      // can set this value, but it cannot render. fix later, need to submit
+      // pull nownownow. i thought i had fixed this awhile ago but it seems to
+      // not be as of now.
+      this.attributes.useCustomerDeposit = (this.get('useCustomerDeposit') === '1');
+    },
+
+    /**
+     * XXX error if i try to override this method
+     * Uncaught TypeError: Cannot read property 'patches' of null 
+     *
+    toJSON: function () {
+      console.log(this.attributes);
+      // cast useCustomerDeposit to boolean
+      this.attributes.useCustomerDeposit = (this.get('useCustomerDeposit') === '1');
+      XM.Document.prototype.toJSON.apply(this, arguments);
+    },
+    */
 
     /**
      * @listens change:distributionDate
