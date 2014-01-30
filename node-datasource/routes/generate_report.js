@@ -541,11 +541,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       var printPageFooter = function (report, data) {
+        console.log(reportDefinition);
+        console.log(reportDefinition.pageFooterElements);
         printDefinition(report, data, reportDefinition.pageFooterElements);
       };
 
       var printFinalSummary = function (report, data) {
-        console.log("summary " + data);
         printDefinition(report, data, reportDefinition.finalSummaryElements);
       };
 

@@ -4,8 +4,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     "defaultFontSize": 12,
     "defaultMarginSize": 20
   },
-  "pageheaderElements": [],
-  "headerElements": [
+  "pageHeaderElements": [
     {
       "definition": [
         {"attr": "remitto.name"},
@@ -126,6 +125,14 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       ],
       "options": {"border": 0, "padding": 5}
     },
+    {
+      "definition": [
+        {"attr": "notes", "label": true}
+      ],
+      "options": {"fontSize": 8, "width": 300}
+    }
+  ],
+  "headerElements": [
     {"element": "bandLine", "size": 2}
   ],
   "detailElements": [
@@ -142,24 +149,16 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       ],
       "options": {"fontBold": true, "border": 0, "padding": 5}
     },
-    {"element": "newline"},
-    {
-      "definition": [
-        {"attr": "notes", "label": true}
-      ],
-      "options": {"fontSize": 8, "width": 300}
-    }
+    {"element": "newline"}
   ],
   "footerElements": [],
   "pageFooterElements": [
-    {"element": "newline"},
     {
       "element": "pageNumber", "definition": [],
       "options": {"align": "center"}
     }
   ],
   "finalSummaryElements": [
-    {"element": "newline"},
     {"element": "bandLine", "size": 2},
     {
       "definition": [
