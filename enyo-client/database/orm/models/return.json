@@ -532,7 +532,7 @@
         }
       },
       {
-        "name": "amount",
+        "name": "taxRateAmount",
         "attr": {
           "type": "Money",
           "column": "taxhist_amount",

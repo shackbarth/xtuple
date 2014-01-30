@@ -16,6 +16,7 @@ from (
   from aropen
   left join aropenalloc on aropen_id = aropenalloc_aropen_id
   where aropen_cust_id = $1
+  and aropen_open
   --and aropen_posted = false
   group by aropen_id
 ) unalloc;
