@@ -4,6 +4,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     "defaultFontSize": 12,
     "defaultMarginSize": 20
   },
+  "pageheaderElements": [],
   "headerElements": [
     {
       "definition": [
@@ -166,5 +167,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "options": {"align": "center"}
     }
   ],
+  "pageFooterElements": [],
   "finalSummaryElements": []
 }$$);

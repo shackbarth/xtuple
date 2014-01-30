@@ -111,7 +111,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           align: def.align || 2 // default to "center"
         };
 
-        // DEBUG
         return obj;
       });
     };
@@ -150,6 +149,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // "print" elements (aka the default) only want strings as the definition
       textOnly = def.element === "print" || !def.element;
+
       return marryData(def.definition, data, textOnly);
     };
 
@@ -524,6 +524,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     var printReport = function (done) {
 
+      var printPageHeader = function (report, data) {
+        printDefinition(report, data, reportDefinition.pageHeaderElements);
+      };
+
       var printHeader = function (report, data) {
         printDefinition(report, data, reportDefinition.headerElements);
       };
@@ -536,15 +540,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         printDefinition(report, data, reportDefinition.footerElements);
       };
 
+      var printPageFooter = function (report, data) {
+        printDefinition(report, data, reportDefinition.pageFooterElements);
+      };
+
       var printFinalSummary = function (report, data) {
         printDefinition(report, data, reportDefinition.finalSummaryElements);
       };
 
       var rpt = new Report(reportPath)
           .data(reportData)
+          .pageHeader(printPageHeader)
           .header(printHeader)
           .detail(printDetail)
           .footer(printFooter)
+          .pageFooter(printPageFooter)
           .finalSummary(printFinalSummary)
           .fontSize(reportDefinition.settings.defaultFontSize)
           .margins(reportDefinition.settings.defaultMarginSize);
