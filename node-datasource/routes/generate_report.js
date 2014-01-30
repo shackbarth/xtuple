@@ -545,16 +545,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       var printFinalSummary = function (report, data) {
+        console.log("summary " + data);
         printDefinition(report, data, reportDefinition.finalSummaryElements);
       };
 
       var rpt = new Report(reportPath)
           .data(reportData)
           .pageHeader(printPageHeader)
+          .pageFooter(printPageFooter)
           .header(printHeader)
           .detail(printDetail)
           .footer(printFooter)
-          .pageFooter(printPageFooter)
           .finalSummary(printFinalSummary)
           .fontSize(reportDefinition.settings.defaultFontSize)
           .margins(reportDefinition.settings.defaultMarginSize);

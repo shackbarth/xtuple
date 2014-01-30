@@ -150,8 +150,15 @@ select xt.add_report_definition('XM.Invoice', 0, $${
       "options": {"fontSize": 8, "width": 300}
     }
   ],
-  "footerElements": [
+  "footerElements": [],
+  "pageFooterElements": [
     {"element": "newline"},
+    {
+      "element": "pageNumber", "definition": [],
+      "options": {"align": "center"}
+    }
+  ],
+  "finalSummaryElements": [
     {"element": "newline"},
     {"element": "bandLine", "size": 2},
     {
@@ -161,12 +168,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "total", "label": true}
       ],
       "options": {"width": 525, "align": "right"}
-    },
-    {
-      "element": "pageNumber", "definition": [],
-      "options": {"align": "center"}
     }
-  ],
-  "pageFooterElements": [],
-  "finalSummaryElements": []
+  ]
 }$$);
