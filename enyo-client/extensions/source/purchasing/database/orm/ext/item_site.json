@@ -19,6 +19,20 @@
           "type": "Boolean",
           "column": "itemsite_posupply"
         }
+      },
+      {
+        "name": "isCreatesPurchaseRequestsForSalesOrders",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_createsopr"
+        }
+      },
+      {
+        "name": "isCreatesPurchaseOrdersForSalesOrders",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_createsopo"
+        }
       }
     ],
     "isSystem": true
