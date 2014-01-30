@@ -21,14 +21,14 @@
         }
       },
       {
-        "name": "isCreatesPurchaseRequestsForSalesOrders",
+        "name": "isCreatePurchaseRequestsForSalesOrders",
         "attr": {
           "type": "Boolean",
           "column": "itemsite_createsopr"
         }
       },
       {
-        "name": "isCreatesPurchaseOrdersForSalesOrders",
+        "name": "isCreatePurchaseOrdersForSalesOrders",
         "attr": {
           "type": "Boolean",
           "column": "itemsite_createsopo"
