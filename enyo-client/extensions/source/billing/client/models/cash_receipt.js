@@ -18,7 +18,7 @@ XT.extensions.billing.initCashReceipt = function () {
       return {
         isPosted: false,
         fundsType: XM.CashReceipt.CHECK,
-        useCustomerDeposit: 0,
+        useCustomerDeposit: false,
         currency: XM.baseCurrency,
         currencyRate: 1.0,
         documentDate: new Date(),
