@@ -2,7 +2,7 @@ select xt.create_view('xt.invcheadinfo', $$
 
 select invchead.*,
   xt.invc_allocated_credit(invchead_id, invchead_curr_id, invchead_orderdate) as allocated_credit,
-  xt.invc_outstanding_credit(invchead_cust_id, invchead_curr_id, invchead_invcdate) as outstanding_credit,
+  xt.cust_outstanding_credit(invchead_cust_id, invchead_curr_id, invchead_invcdate) as outstanding_credit,
   xt.invc_subtotal(invchead) as subtotal,
   xt.invc_tax_total(invchead_id) as tax_total,
   xt.invc_total(invchead) as total,
@@ -11,7 +11,7 @@ select invchead.*,
     xt.invc_total(invchead)
     - COALESCE(xt.invc_allocated_credit(invchead_id, invchead_curr_id, invchead_orderdate), 0)
     - COALESCE(xt.invc_authorized_credit(invchead_invcnumber), 0)
-    - COALESCE(xt.invc_outstanding_credit(invchead_cust_id, invchead_curr_id, invchead_invcdate), 0))
+    - COALESCE(xt.cust_outstanding_credit(invchead_cust_id, invchead_curr_id, invchead_invcdate), 0))
   ) as balance,
   cust_number,
   determineDueDate(invchead_terms_id, invchead_invcdate) AS due_date,
