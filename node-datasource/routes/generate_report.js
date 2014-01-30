@@ -5,12 +5,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  // https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
-  /*
-    TODO: get on fluentreports 0.0.2. Pity Nathanael hasn't published 0.0.2 to npm yet.
-  */
-
-
   //
   // DEPENDENCIES
   //
@@ -22,7 +16,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Report = require('fluentreports').Report,
     queryForData = require("./report").queryForData;
 
+  /**
+    Generates a report using fluentReports
 
+    @property req.query.nameSpace
+    @property req.query.type
+    @property req.query.id
+    @property req.query.action
+
+    Sample URL:
+    https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
+
+   */
   var generateReport = function (req, res) {
 
     //
