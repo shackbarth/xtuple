@@ -1,4 +1,4 @@
-create or replace function xt.invc_outstanding_credit(cust_id integer, applicable_currency integer, applicable_date date) returns numeric stable as $$
+create or replace function xt.cust_outstanding_credit(cust_id integer, applicable_currency integer, applicable_date date) returns numeric stable as $$
 -- sum of all unallocated credits for a customer
     -- TODO: subtract cash receipts pending
 

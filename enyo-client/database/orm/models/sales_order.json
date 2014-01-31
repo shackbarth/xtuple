@@ -503,6 +503,20 @@
         }
       },
       {
+        "name": "authorizedCredit",
+        "attr": {
+          "type": "Number",
+          "column": "authorized_credit"
+        }
+      },
+      {
+        "name": "outstandingCredit",
+        "attr": {
+          "type": "Number",
+          "column": "outstanding_credit"
+        }
+      },
+      {
         "name": "balance",
         "attr": {
           "type": "Number",

@@ -2385,7 +2385,7 @@ strict: false*/
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true},
+          {kind: "XV.SalesOrderLineItemBox", name: "salesOrderLineItemBox", attr: "lineItems", fit: true},
         ], {owner: this});
         this.$.workflowPanel.createComponents([
           {kind: "XV.SalesOrderWorkflowBox", attr: "workflow", fit: true}
@@ -2393,7 +2393,7 @@ strict: false*/
       } else {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems", fit: true},
+          {kind: "XV.SalesOrderLineItemGridBox", name: "salesOrderLineItemBox", attr: "lineItems", fit: true},
         ], {owner: this});
         this.$.workflowPanel.createComponents([
           {kind: "XV.SalesOrderWorkflowGridBox", attr: "workflow", fit: true}

@@ -281,7 +281,6 @@ white:true*/
           freight: 0,
           miscCharge: 0,
           total: 0,
-          balance: 0,
           site: XT.defaultSite().toJSON(),
           currency: XT.baseCurrency().id
         };
