@@ -1799,6 +1799,12 @@ ul.icons-ul > li .icon-li {
 .xv-list-header .xv-list-column.third {
   padding-left: 7px;
 }
+.xv-list-header .xv-list-column.short {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.medium {
+  padding-left: 7px;
+}
 .xv-list-header .xv-list-column.descr {
   padding-left: 7px;
 }
@@ -1812,6 +1818,9 @@ ul.icons-ul > li .icon-li {
 }
 .xv-list-column.short {
   width: 100px;
+}
+.xv-list-column.medium {
+  width: 150px;
 }
 .xv-list-column.first {
   width: 300px;
