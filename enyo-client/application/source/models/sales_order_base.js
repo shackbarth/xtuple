@@ -1006,6 +1006,14 @@ white:true*/
     },
 
     shiptoAddressDidChange: function () {
+      // XXX #refactor
+      // what if relation widget just validated its fields against its backing
+      // entity and notified the user of mismatch? then there's no
+      // abraKadabra('shiptoAddress') if they hit a stray key while tabbing
+      // through the form and the on/off problem is solved as a byproduct.
+      // we could address later the problem that the View knows more about which 
+      // attributes are shared in relations than the ORM
+      //
       // If the address was manually changed, then clear shipto
       this.unset("shipto");
     },
@@ -1343,7 +1351,6 @@ white:true*/
       this.on('change:taxType', this.calculateTax);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
-      this.on('statusChange', this.statusDidChange);
 
       // Only recalculate price on date changes if pricing is date driven
       if (settings.get("soPriceEffective") === "ScheduleDate") {

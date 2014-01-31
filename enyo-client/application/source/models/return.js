@@ -30,6 +30,8 @@ white:true*/
 
     numberPolicySetting: 'CMNumberGeneration',
 
+    extraSubtotalFields: [],
+
     defaults: function () {
       return {
         returnDate: new Date(),
@@ -37,7 +39,8 @@ white:true*/
         isVoid: false,
         commission: 0,
         taxTotal: 0,
-        miscCharge: 0
+        miscCharge: 0,
+        balance: 0
       };
     },
 
@@ -45,13 +48,11 @@ white:true*/
       "isPosted",
       "isVoid",
       "isPrinted",
-      "miscCharge",
       "lineItems",
       "allocatedCredit",
       "authorizedCredit",
       "balance",
       "margin",
-      "miscCharge",
       "status",
       "subtotal",
       "taxTotal",
@@ -85,7 +86,19 @@ white:true*/
     idAttribute: 'uuid',
 
     // make up the the field that is "value"'ed in the ORM
-    taxType: "Adjustment"
+    taxType: "Adjustment",
+
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on("change:amount", this.calculateTotalTax);
+    },
+
+    calculateTotalTax: function () {
+      var parent = this.getParent();
+      if (parent) {
+        parent.calculateTotalTax();
+      }
+    }
 
   });
 

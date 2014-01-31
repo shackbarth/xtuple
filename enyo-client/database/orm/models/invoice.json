@@ -54,6 +54,20 @@
         }
       },
       {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "due_date"
+        }
+      },
+      {
+        "name": "discountDate",
+        "attr": {
+          "type": "Date",
+          "column": "dis_date"
+        }
+      },
+      {
         "name": "isPrinted",
         "attr": {
           "type": "Boolean",
@@ -160,7 +174,8 @@
         "name": "terms",
         "toOne": {
           "type": "Terms",
-          "column": "invchead_terms_id"
+          "column": "invchead_terms_id",
+          "isNested": true
         }
       },
       {
@@ -239,13 +254,6 @@
         "attr": {
           "type": "Money",
           "column": "subtotal"
-        }
-      },
-      {
-        "name": "freight",
-        "attr": {
-          "type": "Money",
-          "column": "invchead_freight"
         }
       },
       {
@@ -677,21 +685,24 @@
         "name": "basis",
         "attr": {
           "type": "Money",
-          "column": "taxhist_basis"
+          "column": "taxhist_basis",
+          "value": 0
         }
       },
       {
         "name": "percent",
         "attr": {
           "type": "Money",
-          "column": "taxhist_percent"
+          "column": "taxhist_percent",
+          "value": 0
         }
       },
       {
         "name": "taxRateAmount",
         "attr": {
           "type": "Money",
-          "column": "taxhist_amount"
+          "column": "taxhist_amount",
+          "value": 0
         }
       },
       {

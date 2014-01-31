@@ -115,7 +115,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             printServerUser = X.options.printServer.user || "reports",
             printServerPassword = X.options.printServer.password || "password",
             printServerFormat = X.options.printServer.format || "pageable/pdf",
-            
+
             reportUrl = "https://" + printServerHost + ":" + printServerPortHttps +
               "/pentaho/content/reporting/reportviewer/report.html?solution=xtuple&path=%2Fprpt&locale=en_US" +
               "&userid=" + printServerUser +
@@ -137,12 +137,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               "&org=" + req.session.passport.user.organization +
               "&datasource=" + req.headers.host + "&datakey=" + randomKey +
               "&print=" + requestDetails.print;
-          
+
           if (printServerFormat === "pageable/pdf") {
-              printUrl += "&format=application/pdf";
+            printUrl += "&format=application/pdf";
           }
           if (printServerFormat === "table/html;page-mode=stream") {
-              printUrl += "&format=text/html";
+            printUrl += "&format=text/html";
           }
           if (requestDetails.culture) {
             res.set("Accept-Language", requestDetails.culture);
