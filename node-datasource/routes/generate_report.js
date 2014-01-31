@@ -529,10 +529,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     var printReport = function (done) {
 
-      var printPageHeader = function (report, data) {
-        printDefinition(report, data, reportDefinition.pageHeaderElements);
-      };
-
       var printHeader = function (report, data) {
         printDefinition(report, data, reportDefinition.headerElements);
       };
@@ -549,27 +545,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         printDefinition(report, data, reportDefinition.pageFooterElements);
       };
 
-      var printFinalSummary = function (report, data) {
-        printDefinition(report, data, reportDefinition.finalSummaryElements);
-      };
-
       var rpt = new Report(reportPath)
-          .data(reportData)
-          .pageHeader(printPageHeader)
-          .header(printHeader)
-          .detail(printDetail)
-          .footer(printFooter)
-          .pageFooter(printPageFooter)
-          .finalSummary(printFinalSummary)
-          .fontSize(reportDefinition.settings.defaultFontSize)
-          .margins(reportDefinition.settings.defaultMarginSize);
+        .data(reportData)
+        .detail(printDetail)
+        .pageFooter(printPageFooter)
+        .fontSize(reportDefinition.settings.defaultFontSize)
+        .margins(reportDefinition.settings.defaultMarginSize);
 
-      // Debug output is always nice (Optional, to help you see the structure)
-      // rpt.printStructure();
+      rpt.groupBy(req.query.id)
+        .header(printHeader)
+        .footer(printFooter);
 
       rpt.render(done);
     };
-
 
     /**
       Dispatch the report however the client wants it

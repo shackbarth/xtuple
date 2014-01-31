@@ -4,7 +4,6 @@ select xt.add_report_definition('XM.Invoice', 0, $${
     "defaultFontSize": 12,
     "defaultMarginSize": 20
   },
-  "pageheaderElements": [],
   "headerElements": [
     {
       "definition": [
@@ -124,7 +123,7 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"text": "_unitPrice", "width": 100},
         {"text": "_extendedPrice", "width": 100}
       ],
-      "options": {"border": 0, "padding": 5}
+      "options": {"border": 0, "padding": 5, "x": 0, "y": 325}
     },
     {"element": "bandLine", "size": 2}
   ],
@@ -140,19 +139,16 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "lineItems*price", "width": 100},
         {"attr": "lineItems*extendedPrice", "width": 100}
       ],
-      "options": {"fontBold": true, "border": 0, "padding": 5}
-    },
-    {"element": "newline"},
+      "options": {"fontBold": true, "border": 0, "padding": 12}
+    }
+  ],
+  "footerElements": [
     {
       "definition": [
         {"attr": "notes", "label": true}
       ],
-      "options": {"fontSize": 8, "width": 300}
-    }
-  ],
-  "footerElements": [
-    {"element": "newline"},
-    {"element": "newline"},
+      "options": {"fontSize": 10, "width": 400}
+    },
     {"element": "bandLine", "size": 2},
     {
       "definition": [
@@ -161,12 +157,12 @@ select xt.add_report_definition('XM.Invoice', 0, $${
         {"attr": "total", "label": true}
       ],
       "options": {"width": 525, "align": "right"}
-    },
+    }
+  ],
+  "pageFooterElements": [
     {
       "element": "pageNumber", "definition": [],
       "options": {"align": "center"}
     }
-  ],
-  "pageFooterElements": [],
-  "finalSummaryElements": []
+  ]
 }$$);
