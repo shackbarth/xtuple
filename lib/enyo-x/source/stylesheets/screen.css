@@ -1802,6 +1802,9 @@ ul.icons-ul > li .icon-li {
 .xv-list-header .xv-list-column.short {
   padding-left: 7px;
 }
+.xv-list-header .xv-list-column.small {
+  padding-left: 7px;
+}
 .xv-list-header .xv-list-column.medium {
   padding-left: 7px;
 }
@@ -1818,6 +1821,9 @@ ul.icons-ul > li .icon-li {
 }
 .xv-list-column.short {
   width: 100px;
+}
+.xv-list-column.small {
+  width: 125px;
 }
 .xv-list-column.medium {
   width: 150px;
@@ -2414,6 +2420,15 @@ ul.icons-ul > li .icon-li {
 }
 .xv-groupbox.panel {
   min-width: 330px;
+}
+.xv-groupbox.small-panel {
+  width: 600px;
+}
+.xv-groupbox.medium-panel {
+  width: 700px;
+}
+.xv-groupbox.large-panel {
+  width: 800px;
 }
 .xv-groupbox > .onyx-input-decorator {
   border-color: #aaaaaa;
