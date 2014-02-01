@@ -1,63 +1,80 @@
 //task 1
-function getCombinations(input) {
+var getCombinations = function(input) {
   var result = [];
   var f = function(prefix, input) {
     for (var i = 0; i < input.length; i++) {
-      result.push(prefix + '->' + input[i]);
-      f(prefix + '->' + input[i], input.slice(i + 1));
+      result.push(prefix + ' ' + input[i]);
+      f(prefix + ' ' + input[i], input.slice(i + 1));
     }
   }
   f('', input);
 
-  //remove excess white space and add arrow notation
+  //remove excess white space
   for(var i = 0; i < result.length; ++i){
     if (result[i].charAt(0) === ' '){
         result[i] = result[i].substr(1);
     }
-
-    if (result[i].charAt(0) === '-' && result[i].charAt(1) === '>'){
-        result[i] = result[i].substr(2);
-    }
   }
 
-  return result;
+  return stringToArray(result);
 }
 
-//thanks Guffa @ stackOverflow for combination
+//converts array of strings into array of arrays.
+var stringToArray = function(result){
+  var newArray = []
+  for(var i = 0; i < result.length; ++i){
+    newArray.push(result[i].split(" "));
+  }
+
+  return newArray;
+}//credit http://codereview.stackexchange.com/a/7042 for combination
 
 //task 2
-//add to userDepCheck dictionary in order to find
-var userDepCheck = [
+//add to fromTo dictionary in order to find
+var fromTo = [ //user input
     {"fromExt": "foo", "toExt": "bar"},
     {"fromExt": "foo", "toExt": "baz"}
 ]
 
-var depTree = ["foo","bar","baz"];
+var depTree = ["foo","bar","baz"]; //user input
 
-function prepareForCheck (thing) {
+var depCheck = function(thing) {
     var placeholder = []
     for(var i = 0; i < thing.length; ++i){
-        placeholder.push((thing[i].fromExt + '->' + thing[i].toExt));
+        placeholder.push((thing[i].fromExt + ' ' + thing[i].toExt));
     }
 
-    return placeholder;
+    return stringToArray(placeholder);
 }
 
-function screenIllegalCombinations(combo, dep){
-    //find intersection
-    return findDep(combo, dep);
-}
-
-function findDep(a, b) {
-    a = prepareForCheck(a); //where a is userDepCheck
+var findDep = function(a, b) {
+    a = depCheck(a); //where a is fromTo
     b = getCombinations(b); //where b is depTree
 
-    var t;
-    if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
-    return a.filter(function (e) {
-        if (b.indexOf(e) !== -1) return true;
-    });
-}
-//thanks Paul S. @ stackOverflow for intersect
+    var array = []
+    for (var i = 0; i < a.length; i++) {
+      for (var j = 0; j < b.length; j++) {
+        if (arrayEquivalence(a[i],b[j])){
+          array.push(a[i]);
+        }
+      };
+    };
 
-findDep(userDepCheck,depTree);
+    return array;
+
+}
+
+function arrayEquivalence(a, b) {
+  if (a === b) {return true;}
+  if (a == null || b == null) {return false;}
+  if (a.length != b.length) {return false;}
+
+  for (var i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  } return true;
+} //credit http://stackoverflow.com/a/16436975 for concept
+
+
+findDep(fromTo,depTree);
