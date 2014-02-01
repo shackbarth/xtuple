@@ -2002,7 +2002,7 @@ ul.icons-ul > li .icon-li {
 .pullout {
   position: absolute;
   top: 57px;
-  left: 0;
+  left: 0px;
   bottom: 0;
   width: 320px;
   background: #dddddd;
@@ -2014,8 +2014,8 @@ ul.icons-ul > li .icon-li {
 .pullout .pullout-shadow {
   position: absolute;
   height: 100%;
-  width: 20px;
-  right: -20px;
+  width: 2px;
+  right: -2px;
   /**
       TODO: this is weird and indicates the REAL need to change the
       whatever the css system is...this relative path is different...
