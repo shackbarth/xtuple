@@ -1,5 +1,6 @@
 /**
  * @alias XM.CashReceiptLinePending
+ *
  * Return only XM.CashReceiptLine items that are pending, i.e.
  * cashrcpt_posted = false.
  */

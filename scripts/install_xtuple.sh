@@ -169,23 +169,14 @@ setup_postgres() {
   log "determining latest version..."
 
 	cdir $BASEDIR/postgres
-	sudo wget -q http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
-	wait
-  NEWESTVERSION=$(cat rss | grep -o '03%20PostBooks-databases\/4.2.1\/postbooks_demo-4.2.1.backup\/download' | grep -o '4.2.1' | head -1)
-	sudo rm rss
-
-	if [ -z "$NEWESTVERSION" ]
-	then
-		NEWESTVERSION="4.2.0"
-		log "Couldn't find the latest version. Using $NEWESTVERSION instead."
-	fi
+    NEWESTVERSION="4.3.0"
 
   log "using: $NEWESTVERSION"
 
 	if [ ! -f postbooks_demo-$NEWESTVERSION.backup ]
 	then
 		sudo wget -qO postbooks_demo-$NEWESTVERSION.backup http://sourceforge.net/projects/postbooks/files/03%20PostBooks-databases/$NEWESTVERSION/postbooks_demo-$NEWESTVERSION.backup/download
-		sudo wget -qO init.sql http://sourceforge.net/projects/postbooks/files/03%20PostBooks-databases/$NEWESTVERSION/init.sql/download
+		sudo wget -qO init.sql http://sourceforge.net/projects/postbooks/files/03%20PostBooks-databases/4.2.1/init.sql/download
 		wait
 		if [ ! -f postbooks_demo-$NEWESTVERSION.backup ]
 		then

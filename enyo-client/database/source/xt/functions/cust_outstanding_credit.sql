@@ -1,4 +1,4 @@
-create or replace function xt.invc_outstanding_credit(cust_id integer, applicable_currency integer, applicable_date date) returns numeric stable as $$
+create or replace function xt.cust_outstanding_credit(cust_id integer, applicable_currency integer, applicable_date date) returns numeric stable as $$
 -- sum of all unallocated credits for a customer
     -- TODO: subtract cash receipts pending
 
@@ -16,6 +16,7 @@ from (
   from aropen
   left join aropenalloc on aropen_id = aropenalloc_aropen_id
   where aropen_cust_id = $1
+  and aropen_open
   --and aropen_posted = false
   group by aropen_id
 ) unalloc;

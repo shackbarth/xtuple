@@ -32,7 +32,7 @@ trailing:true, white:true*/
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+            {kind: "XV.ListColumn", fit: true, components: [
               {kind: "XV.ListAttr", attr: "documentNumber", classes: "bold"}
             ]},
             {kind: "XV.ListColumn", components: [
@@ -45,28 +45,59 @@ trailing:true, white:true*/
 
     /**
      * @class XV.CashReceiptLineList
-     * @extends XV.List
+     * @extends XV.ListRelations
      * @see XV.CashReceiptApplicationsList
      */
     enyo.kind({
-      name: 'XV.CashReceiptLineListRelation',
+      name: 'XV.CashReceiptLineList',
       kind: 'XV.ListRelations',
-      collection: 'XM.CashReceiptLineListItemCollection',
       parentKey: 'cashReceipt',
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
             {kind: "XV.ListColumn", classes: "short", fit: true, components: [
-              {kind: "XV.ListAttr", attr: "receivable.documentNumber", classes: "bold"}
+              {kind: "XV.ListAttr", attr: "cashReceiptReceivable.receivable.documentNumber", classes: "bold"}
             ]},
             {kind: "XV.ListColumn", components: [
-              {kind: "XV.ListAttr", attr: "amount"}
+              {kind: "XV.ListAttr", attr: "amount", formatter: 'formatMoney'}
             ]}
           ]}
         ]}
-      ]
+      ],
+      formatMoney: function (value, view, model) {
+        var currency = model ? model.getValue('cashReceipt.currency') : false,
+          scale = XT.locale.moneyScale;
+        return currency ? currency.format(value, scale) : "";
+      }
+    });
+
+    /**
+     * @class XV.CashAllocationList
+     * @extends XV.ListRelations
+     * @see XV.CashAllocationList
+     */
+    enyo.kind({
+      name: 'XV.CashAllocationList',
+      kind: 'XV.ListRelations',
+      parentKey: 'targetDocument',
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "amount", formatter: 'formatMoney',
+                  classes: 'bold', fit: true}
+            ]},
+            {kind: "XV.ListColumn", classes: "short", components: [
+              {kind: "XV.ListAttr", attr: "documentDate"}
+            ]}
+          ]}
+        ]}
+      ],
+      formatMoney: function (value, view, model) {
+        var currency = model ? model.getValue('currency') : false,
+          scale = XT.locale.moneyScale;
+        return currency ? currency.format(value, scale) : "";
+      }
     });
   };
-
-  XV.registerModelList('XM.CashReceiptLineListItem', 'XV.CashReceiptLineList');
 }());

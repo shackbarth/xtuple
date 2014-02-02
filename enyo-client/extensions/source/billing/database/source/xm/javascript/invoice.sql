@@ -13,7 +13,7 @@ select xt.install_js('XM','Invoice','xtuple', $$
   };
 
   XM.Invoice.outstandingCredit = function(customerNumber, currencyAbbreviation, invoiceDate) {
-    var sql = "select xt.invc_outstanding_credit($1, $2, $3) AS result",
+    var sql = "select xt.cust_outstanding_credit($1, $2, $3) AS result",
       customerId = XT.Data.getId(XT.Orm.fetch('XM', 'Customer'), customerNumber),
       currencyId = XT.Data.getId(XT.Orm.fetch('XM', 'Currency'), currencyAbbreviation);
 

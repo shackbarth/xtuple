@@ -6,7 +6,6 @@ select xt.install_js('XM', 'SalesCategory', 'billing', $$
    * @augments XM.SalesCategory
    */
   XM.SalesCategory = XT.extend(XM.SalesCategory || { }, {
-
     isDispatchable: true,
 
     /**
