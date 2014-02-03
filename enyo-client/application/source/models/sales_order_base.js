@@ -1110,7 +1110,57 @@ white:true*/
       @type String
       @default X
     */
-    CANCELLED_STATUS: "X"
+    CANCELLED_STATUS: "X",
+
+    /**
+      Order is cancelled.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    CREDIT_HOLD_TYPE: "C",
+
+    /**
+      Order hold type is shipping.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    SHIPPING_HOLD_TYPE: "S",
+
+    /**
+      Order hold type is packing.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    PACKING_HOLD_TYPE: "P",
+
+    /**
+      Order hold type is return.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    RETURN_HOLD_TYPE: "R",
+
+    /**
+      Order hold type is none.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    NONE_HOLD_TYPE: "N"
 
   });
 
