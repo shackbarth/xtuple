@@ -150,6 +150,54 @@
       z-index: 999;
     }
   }
+  &.xv-grid-list {
+    background: @ghost;
+    .xv-list-column {
+      vertical-align: top !important;
+    }
+    .xv-list-item > * {
+      vertical-align: top;
+    }
+    .xv-list-item { 
+      padding-top: 7px !important;
+      padding-bottom: 9px !important;
+      border-bottom: 1px solid @silver !important;
+      background: @ghost !important;
+      .xv-list-column {
+        vertical-align: top;
+        &.last {
+          border-right: none;
+        }
+        &.name-column {
+          padding-left: 7px;
+        }
+        &.first {
+          padding-left: 7px;
+        }
+        &.second {
+          padding-left: 7px;
+        }
+        &.third {
+          padding-left: 7px;
+        }
+        &.short {
+          padding-left: 7px;
+        }
+        &.small {
+          padding-left: 7px;
+        }
+        &.medium {
+          padding-left: 7px;
+        }
+        &.descr {
+          padding-left: 7px;
+        }
+        .xv-list-attr {
+          padding: 0px;
+        }
+      }
+    }
+  }
 }
 
 .xv-list-attr {

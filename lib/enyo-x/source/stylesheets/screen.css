@@ -1695,49 +1695,6 @@ ul.icons-ul > li .icon-li {
   padding-bottom: 0;
   padding-top: 0;
 }
-.xv-grid-list .xv-list-column {
-  vertical-align: top !important;
-}
-.xv-grid-list .xv-list-item > * {
-  vertical-align: top;
-}
-.xv-grid-list .xv-list-item {
-  padding-top: 7px !important;
-  padding-bottom: 9px !important;
-}
-.xv-grid-list .xv-list-item .xv-list-column {
-  vertical-align: top;
-}
-.xv-grid-list .xv-list-item .xv-list-column.last {
-  border-right: none;
-}
-.xv-grid-list .xv-list-item .xv-list-column.name-column {
-  padding-left: 7px;
-}
-.xv-grid-list .xv-list-item .xv-list-column.first {
-  padding-left: 7px;
-}
-.xv-grid-list .xv-list-item .xv-list-column.second {
-  padding-left: 7px;
-}
-.xv-grid-list .xv-list-item .xv-list-column.third {
-  padding-left: 7px;
-}
-.xv-grid-list .xv-list-item .xv-list-column.short {
-  padding-left: 7px;
-}
-.xv-grid-list .xv-list-item .xv-list-column.small {
-  padding-left: 7px;
-}
-.xv-grid-list .xv-list-item .xv-list-column.medium {
-  padding-left: 7px;
-}
-.xv-grid-list .xv-list-item .xv-list-column.descr {
-  padding-left: 7px;
-}
-.xv-grid-list .xv-list-item .xv-list-column .xv-list-attr {
-  padding: 0px;
-}
 /**
   Styles relating to the dashboard
 */
@@ -1962,6 +1919,54 @@ ul.icons-ul > li .icon-li {
   position: absolute;
   right: 0px;
   z-index: 999;
+}
+.xv-list.xv-grid-list {
+  background: #f8f8f8;
+}
+.xv-list.xv-grid-list .xv-list-column {
+  vertical-align: top !important;
+}
+.xv-list.xv-grid-list .xv-list-item > * {
+  vertical-align: top;
+}
+.xv-list.xv-grid-list .xv-list-item {
+  padding-top: 7px !important;
+  padding-bottom: 9px !important;
+  border-bottom: 1px solid #aaaaaa !important;
+  background: #f8f8f8 !important;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column {
+  vertical-align: top;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.last {
+  border-right: none;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.name-column {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.first {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.second {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.third {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.short {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.small {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.medium {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.descr {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column .xv-list-attr {
+  padding: 0px;
 }
 .xv-list-attr {
   padding: 5px;
