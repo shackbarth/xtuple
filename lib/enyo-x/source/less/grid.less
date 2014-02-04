@@ -274,10 +274,17 @@
 }
 
 .xv-grid-list {
+  .xv-list-column {
+    vertical-align: top !important;
+  }
+  .xv-list-item > * {
+    vertical-align: top;
+  }
   .xv-list-item { 
     padding-top: 7px !important;
     padding-bottom: 9px !important;
     .xv-list-column {
+      vertical-align: top;
       &.last {
         border-right: none;
       }

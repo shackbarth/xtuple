@@ -1695,9 +1695,18 @@ ul.icons-ul > li .icon-li {
   padding-bottom: 0;
   padding-top: 0;
 }
+.xv-grid-list .xv-list-column {
+  vertical-align: top !important;
+}
+.xv-grid-list .xv-list-item > * {
+  vertical-align: top;
+}
 .xv-grid-list .xv-list-item {
   padding-top: 7px !important;
   padding-bottom: 9px !important;
+}
+.xv-grid-list .xv-list-item .xv-list-column {
+  vertical-align: top;
 }
 .xv-grid-list .xv-list-item .xv-list-column.last {
   border-right: none;
@@ -1847,7 +1856,6 @@ ul.icons-ul > li .icon-li {
 }
 /* List */
 .xv-list-column.line-number {
-  vertical-align: top !important;
   width: 30px;
   text-align: right;
 }

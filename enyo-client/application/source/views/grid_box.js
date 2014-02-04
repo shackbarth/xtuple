@@ -149,7 +149,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         {readOnlyAttr: "lineNumber",
           editor: {kind: "XV.NumberWidget", attr: "lineNumber"}}
       ]},
-      {classes: "grid-item", header: "_item".loc(), rows: [
+      {classes: "grid-item",
+        header: ["_item".loc(), "_description".loc(), "_site".loc()],
+        rows: [
         {readOnlyAttr: "item.number",
           editor: {kind: "XV.ItemSiteWidget", attr:
           {item: "item", site: "site"},
@@ -163,7 +165,7 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         {readOnlyAttr: "item.description1"},
         {readOnlyAttr: "site.code"}
       ]},
-      {classes: "quantity", header: "_quantity".loc(), rows: [
+      {classes: "quantity", header: ["_quantity".loc(), "_unit".loc()], rows: [
         {readOnlyAttr: "quantity",
           editor: {kind: "XV.QuantityWidget", attr: "quantity",
             name: "quantityWidget"}},
@@ -176,7 +178,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
           editor: {kind: "XV.PercentWidget", name: "discount",
             attr: "discount" }}
       ]},
-      {classes: "price", header: "_price".loc(), rows: [
+      {classes: "price", header: ["_price".loc(), "_unit".loc(), "_extended".loc()],
+        rows: [
         {readOnlyAttr: "price",
           editor: {kind: "XV.MoneyWidget",
             attr: {localValue: "price", currency: ""},
