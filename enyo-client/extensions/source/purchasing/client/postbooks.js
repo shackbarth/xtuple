@@ -56,6 +56,7 @@ trailing:true, white:true, strict:false*/
       "MaintainUOMs",
       "ViewClassCodes",
       "ViewItemMasters",
+      "ViewPurchaseOrders",
       "ViewUOMs",
       "ViewTitles",
     ];
