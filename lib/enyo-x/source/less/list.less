@@ -152,9 +152,6 @@
   }
   &.xv-grid-list {
     background: @ghost;
-    .xv-list-column {
-      vertical-align: top !important;
-    }
     .xv-list-item > * {
       vertical-align: top;
     }
@@ -162,7 +159,25 @@
       padding-top: 7px !important;
       padding-bottom: 9px !important;
       border-bottom: 1px solid @silver !important;
-      background: @ghost !important;
+      background: @ghost;
+      &.item-selected {
+        background: @item-hilite-background;
+        #gradient > .vertical(@item-hilite-background, @dark-slate-blue);
+
+        .xv-list-attr {
+          color: @white;
+          &.placeholder {
+            font-style: italic;
+            color: @sky-blue;
+          }
+          &.hyperlink {
+            color: @bright-orange;
+          }
+          &.header {
+            background: @sky-blue;
+          }
+        }
+      }
       .xv-list-column {
         vertical-align: top;
         &.last {

@@ -1695,6 +1695,9 @@ ul.icons-ul > li .icon-li {
   padding-bottom: 0;
   padding-top: 0;
 }
+.xv-grid-list .xv-list-column {
+  vertical-align: top !important;
+}
 /**
   Styles relating to the dashboard
 */
@@ -1923,9 +1926,6 @@ ul.icons-ul > li .icon-li {
 .xv-list.xv-grid-list {
   background: #f8f8f8;
 }
-.xv-list.xv-grid-list .xv-list-column {
-  vertical-align: top !important;
-}
 .xv-list.xv-grid-list .xv-list-item > * {
   vertical-align: top;
 }
@@ -1933,7 +1933,31 @@ ul.icons-ul > li .icon-li {
   padding-top: 7px !important;
   padding-bottom: 9px !important;
   border-bottom: 1px solid #aaaaaa !important;
-  background: #f8f8f8 !important;
+  background: #f8f8f8;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected {
+  background: #226b9a;
+  background-color: #1f608c;
+  background-image: -moz-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#226b9a), to(#1a4f77));
+  background-image: -webkit-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -o-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: linear-gradient(to bottom, #226b9a, #1a4f77);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr {
+  color: #ffffff;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.placeholder {
+  font-style: italic;
+  color: #99ccff;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
+  color: #f49200;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.header {
+  background: #99ccff;
 }
 .xv-list.xv-grid-list .xv-list-item .xv-list-column {
   vertical-align: top;
