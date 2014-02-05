@@ -414,6 +414,14 @@ white:true*/
     */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
+      var that = this;
+
+      // We'll be using this more in the future
+      _.once(function () {
+        that.meta = new Backbone.Model();
+      });
+
+      // These should be reworked to hang off meta
       this.freightDetail = [];
       this.freightTaxDetail = [];
     },
