@@ -23,6 +23,7 @@ enyo.depends(
   "prospect.js",
   "sales_order_base.js",
   "invoice.js",
+  "remit_to.js",
   "return.js",
   "quote.js",
   "reason_code.js",

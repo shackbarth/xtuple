@@ -84,6 +84,7 @@ trailing:true, white:true*/
     newItem: function (options) {
       options = options || {};
       var that = this,
+        // XXX #refactor 
         customer = that.parent.parent.getValue().getValue("customer"),
         creditCardCollection = customer.get("creditCards"),
         creditCardModel = new XM.CreditCard(),
@@ -197,6 +198,7 @@ trailing:true, white:true*/
           payload.action = action;
           payload.amount = amount;
           payload.ccv = ccv;
+          // XXX #refactor
           payload.orderNumber = that.parent.parent.getValue().id;
           payload.customerNumber = that.parent.parent.getValue().getValue("customer.id");
           that.$.authorizeButton.setShowing(false);

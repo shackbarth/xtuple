@@ -50,7 +50,12 @@ white:true*/
       taxDetails = taxDetails.concat(lineItem.taxDetail);
     };
 
-    _.each(model.get('lineItems').models, forEachCalcFunction);
+    // Line items should not include deleted.
+    var lineItems = _.filter(model.get("lineItems").models, function (item) {
+      return item.status !== XM.Model.DESTROYED_DIRTY;
+    });
+
+    _.each(lineItems, forEachCalcFunction);
 
     // Add freight taxes to the mix
     taxDetails = taxDetails.concat(model.freightTaxDetail);
@@ -1001,6 +1006,14 @@ white:true*/
     },
 
     shiptoAddressDidChange: function () {
+      // XXX #refactor
+      // what if relation widget just validated its fields against its backing
+      // entity and notified the user of mismatch? then there's no
+      // abraKadabra('shiptoAddress') if they hit a stray key while tabbing
+      // through the form and the on/off problem is solved as a byproduct.
+      // we could address later the problem that the View knows more about which 
+      // attributes are shared in relations than the ORM
+      //
       // If the address was manually changed, then clear shipto
       this.unset("shipto");
     },
@@ -1097,7 +1110,57 @@ white:true*/
       @type String
       @default X
     */
-    CANCELLED_STATUS: "X"
+    CANCELLED_STATUS: "X",
+
+    /**
+      Order is cancelled.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    CREDIT_HOLD_TYPE: "C",
+
+    /**
+      Order hold type is shipping.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    SHIPPING_HOLD_TYPE: "S",
+
+    /**
+      Order hold type is packing.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    PACKING_HOLD_TYPE: "P",
+
+    /**
+      Order hold type is return.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    RETURN_HOLD_TYPE: "R",
+
+    /**
+      Order hold type is none.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    NONE_HOLD_TYPE: "N"
 
   });
 
@@ -1338,7 +1401,6 @@ white:true*/
       this.on('change:taxType', this.calculateTax);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
-      this.on('statusChange', this.statusDidChange);
 
       // Only recalculate price on date changes if pricing is date driven
       if (settings.get("soPriceEffective") === "ScheduleDate") {
@@ -1889,10 +1951,13 @@ white:true*/
     },
 
     statusDidChange: function () {
-      var status = this.getStatus();
+      var status = this.getStatus(),
+        parent = this.getParent();
       if (status === XM.Model.READY_CLEAN) {
         this.setReadOnly("item");
         this.setReadOnly("site");
+      } else if (status === XM.Model.DESTROYED_DIRTY) {
+        parent.calculateTotals();
       }
     },
 

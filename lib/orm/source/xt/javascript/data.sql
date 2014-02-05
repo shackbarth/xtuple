@@ -586,12 +586,12 @@ select xt.install_js('XT','Data','xtuple', $$
 
         resolveKey = function (col) {
           var attr;
-          
+
           /* First search properties */
           var ary = orm.properties.filter(function (prop) {
             return prop.attr && prop.attr.column === col;
           });
-          
+
           if (ary.length) {
             attr =  ary[0].name;
 
@@ -604,7 +604,7 @@ select xt.install_js('XT','Data','xtuple', $$
                     return prop.column === col;
                   });
 
-                  if (ary.length) { 
+                  if (ary.length) {
                     attr = ary[0].inverse;
                   }
                 }
@@ -616,7 +616,7 @@ select xt.install_js('XT','Data','xtuple', $$
           /* If still not found, we have a structural problem */
           throw new Error("Can not resolve primary id on toMany relation");
         };
-        
+
       for (prop in record) {
         ormp = XT.Orm.getProperty(orm, prop);
 
@@ -636,7 +636,7 @@ select xt.install_js('XT','Data','xtuple', $$
                 /* If there's no data, we have a structural problem */
                 throw new Error("Can not resolve foreign key on toMany relation " + ormp.name);
               }
-              val[fkey] = record[propToKey]; 
+              val[fkey] = record[propToKey];
             }
 
             this.commitRecord({
@@ -749,8 +749,8 @@ select xt.install_js('XT','Data','xtuple', $$
       if (sql.statement) {
         rec = plv8.execute(sql.statement, sql.values);
         /* Make sure the primary key is populated */
-        if (!data[pkey]) { 
-          data[pkey] = rec[0].id; 
+        if (!data[pkey]) {
+          data[pkey] = rec[0].id;
         }
         /* Make sure the obj_uuid is populated, if applicable */
         if (!data.obj_uuid && rec[0] && rec[0].obj_uuid) {
@@ -856,8 +856,8 @@ select xt.install_js('XT','Data','xtuple', $$
         ormp = orm.properties[i];
         prop = ormp.name;
 
-        if (ormp.toMany && ormp.toMany.column === 'obj_uuid') { 
-          params.parentUuid = true; 
+        if (ormp.toMany && ormp.toMany.column === 'obj_uuid') {
+          params.parentUuid = true;
         }
 
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
@@ -1038,6 +1038,9 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
+      /* Okay, now lets handle arrays. */
+      this.commitArrays(orm, data, encryptionKey);
+
       /* Handle extensions on the same table. */
       for (var i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
@@ -1096,9 +1099,6 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         }
       }
-
-      /* Okay, now lets handle arrays. */
-      this.commitArrays(orm, data, encryptionKey);
 
       /* Release any lock. */
       if (orm.lockable) {
@@ -1815,11 +1815,11 @@ select xt.install_js('XT','Data','xtuple', $$
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.pertinentExtension = XT.Orm.getProperty(context.map, context.relation, true);
         context.underlyingTable = context.pertinentExtension.table,
-        context.underlyingNameSpace = context.underlyingTable.indexOf(".") > 0 ? 
-          context.underlyingTable.beforeDot() : 
+        context.underlyingNameSpace = context.underlyingTable.indexOf(".") > 0 ?
+          context.underlyingTable.beforeDot() :
           "public";
-        context.underlyingType = context.underlyingTable.indexOf(".") > 0 ? 
-          context.underlyingTable.afterDot() : 
+        context.underlyingType = context.underlyingTable.indexOf(".") > 0 ?
+          context.underlyingTable.afterDot() :
           context.underlyingTable;
         context.fkey = context.prop.toMany.inverse;
         context.fkeyColumn = context.prop.toMany.column;
@@ -1918,6 +1918,8 @@ select xt.install_js('XT','Data','xtuple', $$
         itemAttr,
         filteredProps,
         val,
+        preOffsetDate,
+        offsetDate,
         check = function (p) {
           return p.name === itemAttr;
         };
@@ -1960,45 +1962,47 @@ select xt.install_js('XT','Data','xtuple', $$
           /*  Format for printing if printFormat and not an object */
           if (printFormat && !prop.toOne && !prop.toMany) {
             switch(prop.attr.type) {
-                case "Date":
-                  item[itemAttr] = XT.formatDate(item[itemAttr]).formatdate;
-                break;
-                case "Cost":
-                  item[itemAttr] = XT.formatCost(item[itemAttr]).formatcost.toString();
-                break;
-                case "Number":
-                  item[itemAttr] = XT.formatNumeric(item[itemAttr], "").formatnumeric.toString();
-                break;
-                case "Currency":
-                  item[itemAttr] = XT.formatMoney(item[itemAttr]).formatmoney.toString();
-                break;
-                case "SalesPrice":
-                  item[itemAttr] = XT.formatSalesPrice(item[itemAttr]).formatsalesprice.toString();
-                break;
-                case "PurchasePrice":
-                  item[itemAttr] = XT.formatPurchPrice(item[itemAttr]).formatpurchprice.toString();
-                break;
-                case "ExtendedPrice":
-                  item[itemAttr] = XT.formatExtPrice(item[itemAttr]).formatextprice.toString();
-                break;
-                case "Quantity":
-                  item[itemAttr] = XT.formatQty(item[itemAttr]).formatqty.toString();
-                break;
-                case "QuantityPer":
-                  item[itemAttr] = XT.formatQtyPer(item[itemAttr]).formatqtyper.toString();
-                break;
-                case "UnitRatioScale":
-                  item[itemAttr] = XT.formatRatio(item[itemAttr]).formatratio.toString();
-                break;
-                case "Percent":
-                  item[itemAttr] = XT.formatPrcnt(item[itemAttr]).formatprcnt.toString();
-                break;
-                case "WeightScale":
-                  item[itemAttr] = XT.formatWeight(item[itemAttr]).formatweight.toString();
-                break;
-                default:
-                  item[itemAttr] = (item[itemAttr] || "").toString();
-              }
+              case "Date":
+                preOffsetDate = item[itemAttr];
+                offsetDate = new Date(preOffsetDate.valueOf() + 60000 * preOffsetDate.getTimezoneOffset());
+                item[itemAttr] = XT.formatDate(offsetDate).formatdate;
+              break;
+              case "Cost":
+                item[itemAttr] = XT.formatCost(item[itemAttr]).formatcost.toString();
+              break;
+              case "Number":
+                item[itemAttr] = XT.formatNumeric(item[itemAttr], "").formatnumeric.toString();
+              break;
+              case "Money":
+                item[itemAttr] = XT.formatMoney(item[itemAttr]).formatmoney.toString();
+              break;
+              case "SalesPrice":
+                item[itemAttr] = XT.formatSalesPrice(item[itemAttr]).formatsalesprice.toString();
+              break;
+              case "PurchasePrice":
+                item[itemAttr] = XT.formatPurchPrice(item[itemAttr]).formatpurchprice.toString();
+              break;
+              case "ExtendedPrice":
+                item[itemAttr] = XT.formatExtPrice(item[itemAttr]).formatextprice.toString();
+              break;
+              case "Quantity":
+                item[itemAttr] = XT.formatQty(item[itemAttr]).formatqty.toString();
+              break;
+              case "QuantityPer":
+                item[itemAttr] = XT.formatQtyPer(item[itemAttr]).formatqtyper.toString();
+              break;
+              case "UnitRatioScale":
+                item[itemAttr] = XT.formatRatio(item[itemAttr]).formatratio.toString();
+              break;
+              case "Percent":
+                item[itemAttr] = XT.formatPrcnt(item[itemAttr]).formatprcnt.toString();
+              break;
+              case "WeightScale":
+                item[itemAttr] = XT.formatWeight(item[itemAttr]).formatweight.toString();
+              break;
+              default:
+                item[itemAttr] = (item[itemAttr] || "").toString();
+            }
           }
 
           /* Handle composite types */

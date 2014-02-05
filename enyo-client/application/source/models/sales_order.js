@@ -45,8 +45,10 @@ white:true*/
 
     bindEvents: function () {
       XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
+      // XXX #refactor: what's the point of pricePolicy here?
       var pricePolicy = XT.session.settings.get("soPriceEffective");
       this.on('change:holdType', this.holdTypeDidChange);
+      this.on('change:total', this.calculateBalance);
     },
 
     /**
@@ -57,7 +59,19 @@ white:true*/
 
       defaults.wasQuote = false;
 
+      defaults.balance = 0;
+
       return defaults;
+    },
+
+    calculateBalance: function () {
+      var rawBalance = this.get("total") -
+          this.get("allocatedCredit") -
+          this.get("authorizedCredit") -
+          this.get("outstandingCredit"),
+        balance = Math.max(0, rawBalance);
+
+      this.set({balance: balance});
     },
 
     customerDidChange: function () {
@@ -72,6 +86,7 @@ white:true*/
     },
 
     getSalesOrderStatusString: function () {
+      // XXX #refactor
       return XM.SalesOrder.prototype.getOrderStatusString.call(this);
     },
 

@@ -1352,7 +1352,7 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_detail".loc()},
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
-            {kind: "XV.MoneyWidget", attr: {baseValue: "unitCost"},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "item.standardCost"},
               label: "_unitCost".loc(), isEditableProperty: "baseValue",
               currencyDisabled: true},
             {kind: "XV.MoneyWidget", attr: {localValue: "customerPrice"},
@@ -1360,7 +1360,8 @@ strict: false*/
               currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
-            {kind: "XV.NumberWidget", attr: "taxTotal"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "taxTotal"},
+              label: "_tax".loc(), currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
@@ -1650,11 +1651,10 @@ strict: false*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel",
-          components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", fit: true, components: [
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "name"}
           ]}
@@ -1891,15 +1891,13 @@ strict: false*/
           {kind: "onyx.GroupboxHeader", content: "_detail".loc()},
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
-            {kind: "XV.MoneyWidget", attr: {baseValue: "unitCost"},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "item.standardCost"},
               label: "_unitCost".loc(), isEditableProperty: "baseValue",
-              currencyDisabled: true},
-            {kind: "XV.MoneyWidget", attr: {localValue: "customerPrice"},
-              label: "_customerPrice".loc(), scale: XT.SALES_PRICE_SCALE,
               currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
-            {kind: "XV.NumberWidget", attr: "taxTotal"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "taxTotal"},
+              label: "_taxTotal".loc(), currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
@@ -1949,6 +1947,7 @@ strict: false*/
       this.build();
       this.getComponents().forEach(function (ctl) {
         if (ctl.kind === "XV.MoneyWidget") {
+          // XXX #refactor -- what does this do?
           ctl.getAttr().effective = effectiveKey; // append this property onto the object
         }
       });
@@ -2118,6 +2117,9 @@ strict: false*/
   var lineItem = {
     kind: "XV.Workspace",
     modelAmnesty: true,
+    handlers: {
+      onBarcodeCapture: "handleBarcodeCapture"
+    },
     components: [
       {kind: "Panels", name: "salesLinePanels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -2178,7 +2180,8 @@ strict: false*/
               currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
-            {kind: "XV.NumberWidget", attr: "tax"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "tax"},
+              label: "_tax".loc(), currencyDisabled: true},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
@@ -2204,6 +2207,10 @@ strict: false*/
 
       // Add the Comment Box to Panels
       this.$.salesLinePanels.createComponents([comments], {owner: this});
+    },
+    handleBarcodeCapture: function (inSender, inEvent) {
+      this.$.itemSiteWidget.$.privateItemSiteWidget.$.input.setValue(inEvent.data);
+      this.$.itemSiteWidget.$.privateItemSiteWidget.autocomplete();
     }
   };
   enyo.mixin(lineItem, XV.LineMixin);
@@ -2251,7 +2258,8 @@ strict: false*/
     kind: "XV.SalesOrderBase",
     title: "_salesOrder".loc(),
     handlers: {
-      onMagstripeCapture: "handleMagstripeCapture"
+      onMagstripeCapture: "handleMagstripeCapture",
+      onPaymentPosted: 'handlePaymentPosted',
     },
     model: "XM.SalesOrder",
     components: [
@@ -2327,29 +2335,57 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
+        {kind: "FittableRows", title: "_payment".loc(), name: "paymentPanel"},
         {kind: "FittableRows", title: "_workflow".loc(), name: "workflowPanel"},
         {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
           attr: "comments"},
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
     ],
+
+    /**
+     * @listens onPaymentPosted
+     */
+    handlePaymentPosted: function (inSender, inEvent) {
+      this.requery();
+    },
+
+    valueChanged: function () {
+      this.inherited(arguments);
+      if (this.$.salesOrderPaymentBox && this.value) {
+        this.$.salesOrderPaymentBox.setSalesOrder(this.value);
+      }
+    },
+
     /**
       Inserts additional components where they should be rendered.
     */
     build: function () {
+
+      if (XV.SalesOrderPaymentBox && XT.session.privileges.get('PostCashReceipts')) {
+        this.$.paymentPanel.createComponent({kind: "XV.SalesOrderPaymentBox"}, {owner: this});
+        if (this.value) {
+          this.$.salesOrderPaymentBox.setSalesOrder(this.value);
+        }
+      }
+
       if (XT.session.privileges.get("ProcessCreditCards") &&
           XT.session.settings.get("CCCompany") === "Authorize.Net") {
-        this.$.salesPanels.createComponent(
-          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards",
-            addBefore: this.$.salesOrderCommentBox},
+        this.$.paymentPanel.createComponent(
+          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards", fit: true},
           {owner: this}
         );
+
+        // XXX altering this line will break the New button. if I add this to
+        // paymentPanel, I get 'object has no method getValue' when I click
+        // 'New' -tjw
+        this.$.creditCardBox.parent.parent = this;
       }
 
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true},
+          {kind: "XV.SalesOrderLineItemBox", name: "salesOrderLineItemBox", attr: "lineItems", fit: true},
         ], {owner: this});
         this.$.workflowPanel.createComponents([
           {kind: "XV.SalesOrderWorkflowBox", attr: "workflow", fit: true}
@@ -2357,7 +2393,7 @@ strict: false*/
       } else {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.SalesOrderLineItemGridBox", attr: "lineItems", fit: true},
+          {kind: "XV.SalesOrderLineItemGridBox", name: "salesOrderLineItemBox", attr: "lineItems", fit: true},
         ], {owner: this});
         this.$.workflowPanel.createComponents([
           {kind: "XV.SalesOrderWorkflowGridBox", attr: "workflow", fit: true}

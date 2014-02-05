@@ -1150,7 +1150,7 @@ trailing:true, white:true, strict: false*/
         method: "doVoid" },
       {name: "post", privilege: "PostMiscInvoices", prerequisite: "canPost",
         method: "doPost" },
-      {name: "print", privilege: "PrintInvoices", method: "doPrint" },
+      {name: "print", privilege: "PrintInvoices", method: "doPrint", isViewMethod: true },
       {name: "download", privilege: "PrintInvoices", method: "doDownload",
         isViewMethod: true }
     ],
@@ -1926,7 +1926,7 @@ trailing:true, white:true, strict: false*/
         prerequisite: "canVoid", method: "doVoid" },
       {name: "post", privilege: "PostARDocuments",
         prerequisite: "canPost", method: "doPost" },
-      {name: "print", privileg: "PrintCreditMemos",
+      {name: "print", privilege: "PrintCreditMemos",
         method: "doPrint" }
     ],
     create: function () {

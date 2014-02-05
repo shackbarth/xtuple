@@ -5,12 +5,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  // https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
-  /*
-    TODO: get on fluentreports 0.0.2. Pity Nathanael hasn't published 0.0.2 to npm yet.
-  */
-
-
   //
   // DEPENDENCIES
   //
@@ -22,14 +16,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Report = require('fluentreports').Report,
     queryForData = require("./report").queryForData;
 
+  /**
+    Generates a report using fluentReports
 
+    @property req.query.nameSpace
+    @property req.query.type
+    @property req.query.id
+    @property req.query.action
+
+    Sample URL:
+    https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
+
+   */
   var generateReport = function (req, res) {
 
     //
     // VARIABLES THAT SPAN MULTIPLE STEPS
     //
     var reportDefinition,
-      reportData,
+      rawData = {}, // raw data object
+      reportData, // array with report data
       username = req.session.passport.user.id,
       databaseName = req.session.passport.user.organization,
       // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
@@ -38,7 +44,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       reportPath = path.join(workingDir, reportName),
       imageFilenameMap = {},
       translations;
-
 
     //
     // HELPER FUNCTIONS FOR DATA TRANSFORMATION
@@ -58,6 +63,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var transformDataStructure = function (data) {
       // TODO: detailAttribute could be inferred by looking at whatever comes before the *
       // in the detailElements definition.
+
       return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
         var pathedDetail = {};
         _.each(detail, function (detailValue, detailKey) {
@@ -86,6 +92,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       and crams the appropriate value into "data" for fluent (or just returns the string).
      */
     var marryData = function (detailDef, data, textOnly) {
+
       return _.map(detailDef, function (def) {
         var text = def.attr ? XT.String.traverseDots(data, def.attr) : loc(def.text);
         if (def.text && def.label === true) {
@@ -103,18 +110,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
 
         // TODO: maybe support any attributes? Right now we ignore all but these three
-        return {
+        var obj = {
           data: text,
           width: def.width,
           align: def.align || 2 // default to "center"
         };
+
+        return obj;
       });
     };
 
     /**
       Custom transformations depending on the element descriptions.
 
-      TODO: support custom transforms like def.transform === 'address' which would need
+      TODO: support more custom transforms like def.transform === 'address' which would need
       to do stuff like smash city state zip into one line. The function to do this can't live
       in the json definition, but we can support a set of custom transformations here
       that can be referred to in the json definition.
@@ -122,14 +131,51 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var transformElementData = function (def, data) {
       var textOnly;
 
+      if (def.transform === 'address') {
+        var params = marryData(def.definition, data, true);
+        return formatAddress.apply(this, params);
+      }
+
       if (def.element === 'image') {
+        // if the image is not found, we don't want to print it
+        if (!imageFilenameMap[def.definition]) {
+          return "";
+        }
+
         // we save the images under a different name then they're described in the definition
         return path.join(workingDir, imageFilenameMap[def.definition]);
       }
 
+      // these elements are expecting a parameter that is a number, not
+      if (def.element === 'bandLine' || def.element === 'fontSize' ||
+        def.element === 'margins') {
+        return def.size;
+      }
+
       // "print" elements (aka the default) only want strings as the definition
       textOnly = def.element === "print" || !def.element;
+
       return marryData(def.definition, data, textOnly);
+    };
+
+    var formatAddress = function (name, address1, address2, address3, city, state, code, country) {
+      if (!arguments[0]) { return; }
+      var address = [];
+
+      if (name) { address.push(name); }
+      if (address1) {address.push(address1); }
+      if (address2) {address.push(address2); }
+      if (address3) {address.push(address3); }
+      if (city || state || code) {
+        var cityStateZip = (city || '') +
+              (city && (state || code) ? ' '  : '') +
+              (state || '') +
+              (state && code ? ' '  : '') +
+              (code || '');
+        address.push(cityStateZip);
+      }
+      if (country) { address.push(country); }
+      return address;
     };
 
     /**
@@ -140,7 +186,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var printDefinition = function (report, data, definition) {
       _.each(definition, function (def) {
         var elementData = transformElementData(def, data);
-        report[def.element || "print"](elementData, def.options);
+        if (elementData) {
+          // debug
+          // console.log(elementData);
+          report[def.element || "print"](elementData, def.options);
+        }
       });
     };
 
@@ -330,7 +380,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     //
-    // Helper function for fetchImages
+    // Helper function for writing image
     //
     var writeImageToFilesystem = function (fileModel, done) {
       // XXX this might be an expensive synchronous operation
@@ -371,8 +421,42 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         //
         // Write the images to the filesystem
         //
+
         async.map(fileCollection.models, writeImageToFilesystem, done);
       });
+    };
+
+    /**
+      Fetch the remit to name and address information, but only if it
+      is needed.
+    */
+    var fetchRemitTo = function (done) {
+      var allElements = _.flatten(reportDefinition.headerElements),
+        definitions = _.flatten(_.compact(_.pluck(allElements, "definition"))),
+        remitToFields = _.findWhere(definitions, {attr: 'remitto.name'});
+
+      if (!remitToFields || remitToFields.length === 0) {
+        // no need to try to fetch
+        done();
+        return;
+      }
+
+      var requestDetails = {
+        nameSpace: "XM",
+        type: "RemitTo",
+        id: 1
+      };
+      var callback = function (result) {
+        if (!result || result.isError) {
+          done(result || "Invalid query");
+          return;
+        }
+        // Add the remit to data to the raw
+        // data object
+        rawData.remitto = result.data.data;
+        done();
+      };
+      queryForData(req.session, requestDetails, callback);
     };
 
     /**
@@ -430,7 +514,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           done(result || "Invalid query");
           return;
         }
-        reportData = transformDataStructure(result.data.data);
+        rawData = _.extend(rawData, result.data.data);
+        // take the raw data and added detail fields and put
+        // into array format for the report
+        reportData = transformDataStructure(rawData);
         done();
       };
 
@@ -454,19 +541,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         printDefinition(report, data, reportDefinition.footerElements);
       };
 
-      var rpt = new Report(reportPath)
-          .data(reportData)
-          .detail(printDetail)
-          .footer(printFooter)
-          .header(printHeader)
-          .fontSize(reportDefinition.settings.defaultFontSize);
+      var printPageFooter = function (report, data) {
+        printDefinition(report, data, reportDefinition.pageFooterElements);
+      };
 
-      // Debug output is always nice (Optional, to help you see the structure)
-      //rpt.printStructure();
+      var rpt = new Report(reportPath)
+        .data(reportData)
+        .detail(printDetail)
+        .pageFooter(printPageFooter)
+        .fontSize(reportDefinition.settings.defaultFontSize)
+        .margins(reportDefinition.settings.defaultMarginSize);
+
+      rpt.groupBy(req.query.id)
+        .header(printHeader)
+        .footer(printFooter);
 
       rpt.render(done);
     };
-
 
     /**
       Dispatch the report however the client wants it
@@ -507,16 +598,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       createTempDir,
       createTempOrgDir,
       fetchReportDefinition,
-      fetchImages,
+      fetchRemitTo,
       fetchBarcodes,
       fetchTranslations,
       fetchData,
+      fetchImages,
       printReport,
       sendReport,
       cleanUpFiles
     ], function (err, results) {
       if (err) {
-        console.log(err);
         res.send({isError: true, message: err.description});
       }
     });
