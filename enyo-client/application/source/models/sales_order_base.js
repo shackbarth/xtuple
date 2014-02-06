@@ -407,6 +407,9 @@ white:true*/
         // inherit sale type defaults up front
         this.saleTypeDidChange();
       }
+
+      // We'll be using this more in the future
+      this.meta = new Backbone.Model();
     },
 
     /**
@@ -414,11 +417,6 @@ white:true*/
     */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
-
-      // We'll be using this more in the future
-      if (!this.meta) {
-        this.meta = new Backbone.Model();
-      }
 
       // These should be reworked to hang off meta
       this.freightDetail = [];

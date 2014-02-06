@@ -1,5 +1,5 @@
 -- This thing would need to be re-written as a self generating
--- union query like 'xt.act' to be truely extensible.
+-- union query like 'xt.act' and 'xt.ordhead' to be truely extensible.
 
 select xt.create_view('xt.sochild', $$
 

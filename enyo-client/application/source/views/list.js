@@ -1254,7 +1254,7 @@ trailing:true, white:true, strict: false*/
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.ListAttr", attr: "getItemTypeString", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "formatItemType", classes: "italic"},
             {kind: "XV.ListAttr", attr: "classCode.code"}
           ]},
           {kind: "XV.ListColumn", classes: "third", components: [
