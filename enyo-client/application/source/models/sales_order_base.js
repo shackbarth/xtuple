@@ -1297,7 +1297,7 @@ white:true*/
       if (parent) { parent.calculateTotals(calcFreight); }
     },
 
-    recalculatePrice: function () {
+    quantityChanged: function () {
       this.calculatePrice();
       this.recalculateParent();
     },
@@ -1399,13 +1399,13 @@ white:true*/
       this.on("change:item", this.itemDidChange);
       this.on("change:site", this.siteDidChange);
       this.on("change:price", this.priceDidChange);
-      this.on('change:quantity', this.recalculatePrice);
+      this.on('change:quantity', this.quantityChanged);
       this.on('change:unitCost', this.calculateMarkupPrice);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
       this.on('change:taxType', this.calculateTax);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
-      this.on('change:scheduleDate', this.scheduleDateDidChange);
+      this.on('change:scheduleDate', this.scheduleDateChanged);
 
       // Only recalculate price on date changes if pricing is date driven
       if (settings.get("soPriceEffective") === "ScheduleDate") {
@@ -1926,7 +1926,7 @@ white:true*/
       this.calculatePercentages();
     },
 
-    scheduleDateDidChange: function () {
+    scheduleDateChanged: function () {
       var item = this.getValue("item"),
         parent = this.getParent(),
         customer = parent.get("customer"),

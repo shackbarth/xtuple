@@ -1273,6 +1273,14 @@
         }
       },
       {
+        "name": "subNumber",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_subnumber",
+          "required": true
+        }
+      },
+      {
         "name": "item",
         "toOne": {
           "required": true,
@@ -1450,14 +1458,6 @@
         "toOne": {
           "type": "Item",
           "column": "coitem_substitute_item_id"
-        }
-      },
-      {
-        "name": "subnumber",
-        "attr": {
-          "type": "Number",
-          "column": "coitem_subnumber",
-          "required": true
         }
       },
       {
