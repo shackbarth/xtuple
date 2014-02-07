@@ -13,8 +13,8 @@ return (function () {
  if (rows.length) {
    rows.forEach(function (row) {
      sql = "select " +
-       row.obj_type_tblname + " as tblname, " +
-       row.obj_type_col_obj_uuid + " as obj_uuid" +
+       "''" + row.obj_type_tblname + "''::text as tblname," +
+       row.obj_type_col_obj_uuid + " as obj_uuid " +
        "from " + row.obj_type_nsname + "." + row.obj_type_tblname + " ";
      ary.push(sql);
    });

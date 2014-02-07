@@ -5,7 +5,7 @@ drop view if exists xt.obj_uuid cascade;
 create view xt.obj_uuid as
 select
   null::text as tblname,
-  null::uuid as col_obj_uuid;
+  null::uuid as obj_uuid;
 
 select dropIfExists('TRIGGER', 'obj_type_did_change', 'xt');
 
@@ -24,3 +24,7 @@ comment on table xt.obj_type is 'Obj Uuid Table Map';
 -- create trigger
 
 create trigger obj_type_did_change after insert or update or delete on xt.obj_type for each row execute procedure xt.obj_type_did_change();
+
+delete from xt.obj_type;
+
+
