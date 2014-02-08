@@ -688,7 +688,7 @@ white:true*/
     bindEvents: function (attributes, options) {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on("change:item", this.itemDidChange);
-      this.on("change:" + this.altQuantityAttribute, this.recalculatePrice);
+      this.on("change:" + this.altQuantityAttribute, this.quantityChanged);
       this.on('change:price', this.priceDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
