@@ -185,7 +185,7 @@ white:true*/
 
       _.extend(defaults, {
         firm: false,
-        subnumber: 0,
+        subNumber: 0,
         status: XM.SalesOrder.OPEN_STATUS
       });
 
