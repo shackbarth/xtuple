@@ -1,3 +1,55 @@
+1.7.0 (2014/02/03)
+==================
+
+Features and bugfixes
+---------------------
+
+- Implemented
+  issue #[21229](http://www.xtuple.org/xtincident/view/bugs/21229)
+  _REST - Add support for a count query_
+- Implemented
+  issue #[22029](http://www.xtuple.org/xtincident/view/bugs/22029)
+  _Implement Cash Receipt on Sales Order_
+- Implemented
+  issue #[22059](http://www.xtuple.org/xtincident/view/bugs/22059)
+  _Implement Approve for Billing(select for billing)/Create Invoice at time of Shipping_
+- Implemented
+  issue #[22155](http://www.xtuple.org/xtincident/view/bugs/22155)
+  _Add support for Purchase Order_
+- Fixed
+  issue #[22181](http://www.xtuple.org/xtincident/view/bugs/22181)
+  _*Tax adjustment is not added to the Total Tax of an Invoice_
+- Implemented
+  issue #[22237](http://www.xtuple.org/xtincident/view/bugs/22237)
+  _Add support to print and email Invoices_
+- Implemented
+  issue #[22341](http://www.xtuple.org/xtincident/view/bugs/22341)
+  _Add support for Work Orders_
+- Fixed
+  issue #[22397](http://www.xtuple.org/xtincident/view/bugs/22397)
+  _*Unit Cost and Tax amount values are not displayed in the Invoice Line and Return Line screens_
+- Fixed
+  issue #[22398](http://www.xtuple.org/xtincident/view/bugs/22398)
+  _*Fractional Tax values are rounded in the Sales Order Line/Quote Line screen_
+- Fixed
+  issue #[22402](http://www.xtuple.org/xtincident/view/bugs/22402)
+  _itemIspPrice() requires site_id for markup pricing to to work_
+- Fixed
+  issue #[22436](http://www.xtuple.org/xtincident/view/bugs/22436)
+  _Faulty Transfer Order line item statuses_
+- Implemented
+  issue #[22498](http://www.xtuple.org/xtincident/view/bugs/22498)
+  _build 1.7.0 with 4.3 database_
+- Implemented
+  issue #[22500](http://www.xtuple.org/xtincident/view/bugs/22500)
+  _Barcode prefix/suffix should be configurable_
+- Fixed
+  issue #[22588](http://www.xtuple.org/xtincident/view/bugs/22588)
+  _Customers with Credit Warning gets Credit Hold error message_
+- Fixed
+  issue #[22622](http://www.xtuple.org/xtincident/view/bugs/22622)
+  _Workaround Pentaho roles problem_ 
+
 1.6.0 (2014/01/15)
 ==================
 

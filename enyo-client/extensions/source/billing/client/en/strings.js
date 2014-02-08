@@ -66,6 +66,7 @@
     "_recurringInvoiceBuffer": "Recurring Invoice Buffer Days",
     "_salesCategories": "Sales Categories",
     "_salesCategory": "Sales Category",
+    "_salesOrderPaymentOverapplicationWarn": "The payment amount entered is larger than the Sales Order balance. Are you sure you would like to overpay this Sales Order?",
     "_salesOrderPaymentFailure": "We encountered a problem posting payment to this Sales Order",
     "_salesOrderPaymentSuccess": "Payment Successfully posted to Sales Order",
     "_taxes": "Taxes",

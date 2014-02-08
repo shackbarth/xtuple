@@ -26,7 +26,7 @@ XT.extensions.billing.initListRelationsEditors = function () {
       {kind: "FittableColumns", components: [
         // XXX #refactor out style attr
         {kind: 'onyx.Button', name: 'postButton', content: '_postCashPayment'.loc(), classes: 'onyx-blue',
-          fit: true, ontap: 'handlePayment', disabled: true}
+          fit: true, ontap: 'validatePayment', disabled: true}
       ]}
     ],
     valueChanged: function () {
@@ -72,29 +72,46 @@ XT.extensions.billing.initListRelationsEditors = function () {
         currency: order.get('currency')
       }, { isNew: true }));
     },
-    handlePayment: function (inSender, inEvent) {
-      var editor = this,
-        payment = editor.value;
+    validatePayment: function (inSender, inEvent) {
+      var that = this,
+        payment = that.value;
+
+      if (payment.get('amount') > payment.get('balance')) {
+        that.doNotify({
+          type: XM.Model.YES_NO_CANCEL,
+          message: '_salesOrderPaymentOverapplicationWarn'.loc(),
+          // TODO #refactor define separate callbacks for each yes/no/cancel selection
+          callback: function (result) {
+            if (result.answer === true) {
+              that.addPayment();
+            }
+          }
+        });
+      }
+    },
+    addPayment: function (inSender, inEvent) {
+      var that = this,
+        payment = that.value;
 
       this.salesOrder.once('payment:success', function () {
         // TODO probably want to change this to a growl-type notification
-        editor.doNotify({
+        that.doNotify({
           type: XM.Model.NOTICE,
           message: '_salesOrderPaymentSuccess'.loc(),
           callback: function () {
-            editor.doPaymentPosted();
+            that.doPaymentPosted();
 
             // XXX 123 because there's no combination of backbone status handlers I've
             // tried that seems to listen for when the salesOrder is clean and
             // contains the updated values effected by cashreceipt posting
             setTimeout(function () {
-              editor.newItem();
+              that.newItem();
             }, 2000);
           }
         });
       });
       this.salesOrder.once('payment:error', function (error) {
-        editor.doNotify({
+        that.doNotify({
           type: XM.Model.WARNING,
           message: '_salesOrderPaymentFailure'.loc()
         });
@@ -103,12 +120,12 @@ XT.extensions.billing.initListRelationsEditors = function () {
         // it tries to validate against the old value, not the value that is currently
         // in the editor input field. workaround: clear editor on error
         // edit: maybe related to 123 above?
-        editor.newItem();
+        that.newItem();
       });
 
       if (!payment || !payment.isValid()) {
         // TODO piggyback off of the existing invalid handler, wherever it is
-        editor.doNotify({
+        that.doNotify({
           type: XM.Model.NOTICE,
           message: 'Please correct errors in the Payment editor'
         });
