@@ -73,6 +73,41 @@ trailing:true, white:true, strict: false*/
     });
 
     // ..........................................................
+    // ITEM
+    //
+
+    extensions = [
+      {kind: "onyx.GroupboxHeader", content: "_purchasing".loc(),
+        container: "settingsGroup"},
+      {kind: "XV.PurchasePriceWidget", attr: "maximumDesiredCost",
+        container: "settingsGroup"}
+    ];
+
+    XV.appendExtension("XV.ItemWorkspace", extensions);
+
+    // ..........................................................
+    // ITEM SITE
+    //
+
+    extensions = [
+      {kind: "XV.Groupbox", name: "supplyPanel", title: "_supply".loc(),
+        fit: true, components: [
+        {kind: "onyx.GroupboxHeader", content: "_supply".loc()},
+        {kind: "XV.CheckboxWidget", attr: "isPurchased", name: "isPurchased"},
+        {kind: "onyx.GroupboxHeader", name: "createSalesSupplyHeader",
+          content: "_createSupplyForSalesOrders".loc()},
+        {kind: "XV.CheckboxWidget", label: "_purchaseOrders".loc(),
+          name: "createPurchaseOrders",
+          attr: "isCreatePurchaseOrdersForSalesOrders"},
+        {kind: "XV.CheckboxWidget", name: "createPurchaseRequestsForSales",
+          label: "_purchaseRequests".loc(), fit: true,
+          attr: "isCreatePurchaseRequestsForSalesOrders"},
+      ], container: "panels"}
+    ];
+
+    XV.appendExtension("XV.ItemSiteWorkspace", extensions);
+
+    // ..........................................................
     // ITEM SOURCE
     //
 
