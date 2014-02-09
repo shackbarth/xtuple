@@ -107,7 +107,6 @@ where itemsite_item_id=new.coitem_item_id
 create or replace rule "_UPDATE" as on update to xt.coiteminfo do instead
 
 update coitem set
-  coitem_id=new.coitem_id,
   coitem_cohead_id=new.coitem_cohead_id,
   coitem_linenumber=new.coitem_linenumber,
   coitem_scheddate=new.coitem_scheddate,
