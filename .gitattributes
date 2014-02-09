@@ -1,21 +1,5 @@
-# Set default behavior
+# Set default behavior, change CRLF to LF
 * text eol=lf
-
-# Declare files that will always have LF line endings on checkout
-# *.php text eol=lf
-# *.css text eol=lf
-# *.js text eol=lf
-# *.less text eol=lf
-# *.html text eol=lf
-# *.sql text eol=lf
-# *.txt text eol=lf
-# *.js text eol=lf
-# *.c text eol=lf
-# *.sh text eol=lf
-# *.md text eol=lf
-# *.json text eol=lf
-# *.cpp text eol=lf
-# *.yml text eol=lf
 
 # Do not treat these as text
 *.jpg binary
