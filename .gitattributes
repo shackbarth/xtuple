@@ -15,6 +15,7 @@
 *.md text eol=lf
 *.json text eol=lf
 *.cpp text eol=lf
+*.yml text eol=lf
 
 # Do not treat these as text
 *.jpg binary
