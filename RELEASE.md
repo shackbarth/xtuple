@@ -1,9 +1,24 @@
+1.7.1 (2014/02/10)
+==================
+
+Features and bugfixes
+---------------------
+- Fixed
+  issue #[22659](http://www.xtuple.org/xtincident/view/bugs/22659)
+  _Remove xt.obj inheritance to avoid backup column reordering_
+
 1.7.0 (2014/02/03)
 ==================
 
 Features and bugfixes
 ---------------------
 
+- Implemented
+  issue #[22059](http://www.xtuple.org/xtincident/view/bugs/22059)
+  _Approve for billing and create invoice at time of shipping_
+- Implemented
+  issue #[22029](http://www.xtuple.org/xtincident/view/bugs/22029)
+  _Cash receipt on sales order_
 - Implemented
   issue #[21229](http://www.xtuple.org/xtincident/view/bugs/21229)
   _REST - Add support for a count query_
