@@ -147,7 +147,7 @@ white:true*/
   // Item type
   K = XM.Item;
   var itemTypeJson = [
-    { id: K.SalesD, name: "_Salesd".loc() },
+    { id: K.PURCHASED, name: "_purchased".loc() },
     { id: K.MANUFACTURED, name: "_manufactured".loc() },
     { id: K.PHANTOM, name: "_phantom".loc() },
     { id: K.REFERENCE, name: "_reference".loc() },
