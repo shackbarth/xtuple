@@ -374,6 +374,7 @@ trailing:true, white:true*/
     Mixin for Sales Order Specific Line functions
   */
   XV.SalesOrderLineMixin = {
+    bind: XV.RelationsEditorMixin.bind,
     create: function () {
       this.inherited(arguments);
       if (this.$.promiseDate) {
@@ -390,6 +391,10 @@ trailing:true, white:true*/
           }
         }
       });
+    },
+    destroy: function () {
+      this.bind("off");
+      this.inherited(arguments);
     },
     salesOrderDateChanged: function () {
       this.changeItemSiteParameter("orderDate", "effectiveDate");
