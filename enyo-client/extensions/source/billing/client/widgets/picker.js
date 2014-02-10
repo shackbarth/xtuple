@@ -41,8 +41,8 @@ trailing:true, white:true, strict: false*/
        * options
        */
       create: function () {
-        this.inherited(arguments);
         this.setAllowCreditCards(XT.session.privileges.get('ProcessCreditCards'));
+        this.inherited(arguments);
       },
 
       /**
@@ -50,8 +50,10 @@ trailing:true, white:true, strict: false*/
        * @see XV.PickerWidget#filter
        */
       filter: function (models, options) {
+        var that = this;
+
         return _.filter(models, function (model) {
-          return this.allowCreditCards || !model.isCreditCard();
+          return that.allowCreditCards || !model.isCreditCard();
         });
       }
     });

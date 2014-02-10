@@ -198,6 +198,17 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
   });
 
   // ..........................................................
+  // CUSTOMER EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerEmailProfilePicker",
+    kind: "XV.PickerWidget",
+    label: "_emailProfile".loc(),
+    collection: "XM.customerEmailProfiles"
+  });
+
+  // ..........................................................
   // CUSTOMER TYPE
   //
 
@@ -591,6 +602,17 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
     kind: "XV.PickerWidget",
     label: "_emailProfile".loc(),
     collection: "XM.salesEmailProfiles"
+  });
+
+  // ..........................................................
+  // SALES ORDER STATUS
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderStatusPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.salesOrderStatuses",
+    showNone: false
   });
 
   // ..........................................................

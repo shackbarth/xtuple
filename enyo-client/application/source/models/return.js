@@ -30,6 +30,8 @@ white:true*/
 
     numberPolicySetting: 'CMNumberGeneration',
 
+    extraSubtotalFields: [],
+
     defaults: function () {
       return {
         returnDate: new Date(),
@@ -37,7 +39,8 @@ white:true*/
         isVoid: false,
         commission: 0,
         taxTotal: 0,
-        miscCharge: 0
+        miscCharge: 0,
+        balance: 0
       };
     },
 
@@ -45,10 +48,15 @@ white:true*/
       "isPosted",
       "isVoid",
       "isPrinted",
-      "miscCharge",
       "lineItems",
       "allocatedCredit",
-      "authorizedCredit"
+      "authorizedCredit",
+      "balance",
+      "margin",
+      "status",
+      "subtotal",
+      "taxTotal",
+      "total"
     ],
 
     // like sales order, minus contact info
@@ -78,7 +86,19 @@ white:true*/
     idAttribute: 'uuid',
 
     // make up the the field that is "value"'ed in the ORM
-    taxType: "Adjustment"
+    taxType: "Adjustment",
+
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on("change:amount", this.calculateTotalTax);
+    },
+
+    calculateTotalTax: function () {
+      var parent = this.getParent();
+      if (parent) {
+        parent.calculateTotalTax();
+      }
+    }
 
   });
 
@@ -111,20 +131,16 @@ white:true*/
     documentDateKey: 'returnDate',
 
     couldDestroy: function (callback) {
-      callback(XT.session.privileges.get("MaintainCreditMemos") && !this.get("isPosted"));
+      callback(!this.get("isPosted"));
     },
 
     canPost: function (callback) {
-      callback(XT.session.privileges.get("PostARDocuments") && !this.get("isPosted"));
+      callback(!this.get("isPosted"));
     },
 
     canVoid: function (callback) {
-      var response = XT.session.privileges.get("VoidPostedARCreditMemos") && this.get("isPosted");
+      var response = this.get("isPosted");
       callback(response || false);
-    },
-
-    canPrint: function (callback) {
-      callback(XT.session.privileges.get("PrintCreditMemos") || false);
     },
 
     doPost: function (options) {

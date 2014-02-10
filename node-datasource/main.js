@@ -606,8 +606,9 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           data: session.passport.user,
           code: 1,
           debugging: X.options.datasource.debugging,
-          biServer: X.options.biServer,
-          printServer: X.options.printServer,
+          biAvailable: _.isObject(X.options.biServer) && !_.isEmpty(X.options.biServer),
+          emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
+          printAvailable: false,
           version: X.version
         });
       callback(callbackObj);

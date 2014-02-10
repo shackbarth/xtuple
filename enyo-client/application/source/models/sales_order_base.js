@@ -50,7 +50,12 @@ white:true*/
       taxDetails = taxDetails.concat(lineItem.taxDetail);
     };
 
-    _.each(model.get('lineItems').models, forEachCalcFunction);
+    // Line items should not include deleted.
+    var lineItems = _.filter(model.get("lineItems").models, function (item) {
+      return item.status !== XM.Model.DESTROYED_DIRTY;
+    });
+
+    _.each(lineItems, forEachCalcFunction);
 
     // Add freight taxes to the mix
     taxDetails = taxDetails.concat(model.freightTaxDetail);
@@ -102,6 +107,7 @@ white:true*/
   var _calculatePrice = function (model) {
     var K = model.getClass(),
       item = model.get("item"),
+      site = model.get("site"),
       characteristics = model.get("characteristics"),
       isConfigured = item ? item.get("isConfigured") : false,
       counter = isConfigured ? characteristics.length + 1 : 1,
@@ -162,6 +168,7 @@ white:true*/
     itemOptions.asOf = asOf;
     itemOptions.currency = currency;
     itemOptions.effective = parentDate;
+    itemOptions.site = site;
     itemOptions.error = function (err) {
       model.trigger("invalid", err);
     };
@@ -233,7 +240,7 @@ white:true*/
 
     @returns {String}
     */
-    getOrderStatusString: function () {
+    formatStatus: function () {
       var K = XM.SalesOrderBase,
         status = this.get('status');
 
@@ -246,6 +253,15 @@ white:true*/
       case K.CANCELLED_STATUS:
         return '_cancelled'.loc();
       }
+    },
+
+    /**
+    Deprecated. Use `formatStatus`.
+
+    @returns {String}
+    */
+    getOrderStatusString: function () {
+      return this.formatStatus();
     }
   };
 
@@ -400,6 +416,9 @@ white:true*/
         // inherit sale type defaults up front
         this.saleTypeDidChange();
       }
+
+      // We'll be using this more in the future
+      this.meta = new Backbone.Model();
     },
 
     /**
@@ -407,6 +426,8 @@ white:true*/
     */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
+
+      // These should be reworked to hang off meta
       this.freightDetail = [];
       this.freightTaxDetail = [];
     },
@@ -999,6 +1020,14 @@ white:true*/
     },
 
     shiptoAddressDidChange: function () {
+      // XXX #refactor
+      // what if relation widget just validated its fields against its backing
+      // entity and notified the user of mismatch? then there's no
+      // abraKadabra('shiptoAddress') if they hit a stray key while tabbing
+      // through the form and the on/off problem is solved as a byproduct.
+      // we could address later the problem that the View knows more about which 
+      // attributes are shared in relations than the ORM
+      //
       // If the address was manually changed, then clear shipto
       this.unset("shipto");
     },
@@ -1095,7 +1124,57 @@ white:true*/
       @type String
       @default X
     */
-    CANCELLED_STATUS: "X"
+    CANCELLED_STATUS: "X",
+
+    /**
+      Order is cancelled.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    CREDIT_HOLD_TYPE: "C",
+
+    /**
+      Order hold type is shipping.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    SHIPPING_HOLD_TYPE: "S",
+
+    /**
+      Order hold type is packing.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    PACKING_HOLD_TYPE: "P",
+
+    /**
+      Order hold type is return.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    RETURN_HOLD_TYPE: "R",
+
+    /**
+      Order hold type is none.
+
+      @static
+      @constant
+      @type String
+      @default N
+    */
+    NONE_HOLD_TYPE: "N"
 
   });
 
@@ -1227,7 +1306,7 @@ white:true*/
       if (parent) { parent.calculateTotals(calcFreight); }
     },
 
-    recalculatePrice: function () {
+    quantityChanged: function () {
       this.calculatePrice();
       this.recalculateParent();
     },
@@ -1329,14 +1408,13 @@ white:true*/
       this.on("change:item", this.itemDidChange);
       this.on("change:site", this.siteDidChange);
       this.on("change:price", this.priceDidChange);
-      this.on('change:quantity', this.recalculatePrice);
+      this.on('change:quantity', this.quantityChanged);
       this.on('change:unitCost', this.calculateMarkupPrice);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
       this.on('change:taxType', this.calculateTax);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
-      this.on('change:scheduleDate', this.scheduleDateDidChange);
-      this.on('statusChange', this.statusDidChange);
+      this.on('change:scheduleDate', this.scheduleDateChanged);
 
       // Only recalculate price on date changes if pricing is date driven
       if (settings.get("soPriceEffective") === "ScheduleDate") {
@@ -1857,7 +1935,7 @@ white:true*/
       this.calculatePercentages();
     },
 
-    scheduleDateDidChange: function () {
+    scheduleDateChanged: function () {
       var item = this.getValue("item"),
         parent = this.getParent(),
         customer = parent.get("customer"),
@@ -1887,10 +1965,13 @@ white:true*/
     },
 
     statusDidChange: function () {
-      var status = this.getStatus();
+      var status = this.getStatus(),
+        parent = this.getParent();
       if (status === XM.Model.READY_CLEAN) {
         this.setReadOnly("item");
         this.setReadOnly("site");
+      } else if (status === XM.Model.DESTROYED_DIRTY) {
+        parent.calculateTotals();
       }
     },
 

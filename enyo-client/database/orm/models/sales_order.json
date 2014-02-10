@@ -440,7 +440,8 @@
         "toOne": {
           "type": "Currency",
           "column": "cohead_curr_id",
-          "required": true
+          "required": true,
+          "isNested": true
         }
       },
       {
@@ -499,6 +500,20 @@
         "attr": {
           "type": "Number",
           "column": "allocated_credit"
+        }
+      },
+      {
+        "name": "authorizedCredit",
+        "attr": {
+          "type": "Number",
+          "column": "authorized_credit"
+        }
+      },
+      {
+        "name": "outstandingCredit",
+        "attr": {
+          "type": "Number",
+          "column": "outstanding_credit"
         }
       },
       {
@@ -1258,13 +1273,20 @@
         }
       },
       {
+        "name": "subNumber",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_subnumber",
+          "required": true
+        }
+      },
+      {
         "name": "item",
         "toOne": {
           "required": true,
           "isNested": true,
           "type": "ItemRelation",
-          "column": "coitem_item_id",
-          "required": true
+          "column": "coitem_item_id"
         }
       },
       {
@@ -1436,14 +1458,6 @@
         "toOne": {
           "type": "Item",
           "column": "coitem_substitute_item_id"
-        }
-      },
-      {
-        "name": "subnumber",
-        "attr": {
-          "type": "Number",
-          "column": "coitem_subnumber",
-          "required": true
         }
       },
       {

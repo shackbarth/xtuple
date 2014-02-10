@@ -1081,15 +1081,6 @@ TODO deferred to later sprint:
           done();
         });
       });
-      it("Cannot delete unposted invoices where the user has no MaintainMiscInvoices privilege",
-          function (done) {
-        var model = new XM.InvoiceListItem();
-        XT.session.privileges.attributes.MaintainMiscInvoices = false;
-        model.couldDestroy(function (response) {
-          assert.isFalse(response);
-          done();
-        });
-      });
       it("Cannot delete invoices that are already posted", function (done) {
         var model = new XM.InvoiceListItem();
         model.set({isPosted: true});
@@ -1104,14 +1095,6 @@ TODO deferred to later sprint:
         var model = new XM.InvoiceListItem();
         model.canPost(function (response) {
           assert.isTrue(response);
-          done();
-        });
-      });
-      it("Cannot post invoices where the user has no PostMiscInvoices privilege", function (done) {
-        var model = new XM.InvoiceListItem();
-        XT.session.privileges.attributes.PostMiscInvoices = false;
-        model.canPost(function (response) {
-          assert.isFalse(response);
           done();
         });
       });
@@ -1134,36 +1117,11 @@ TODO deferred to later sprint:
           done();
         });
       });
-      it("Cannot void invoices where the user has no VoidPostedInvoices privilege",
-          function (done) {
-        var model = new XM.InvoiceListItem();
-        model.set({isPosted: true});
-        XT.session.privileges.attributes.VoidPostedInvoices = false;
-        model.canVoid(function (response) {
-          assert.isFalse(response);
-          done();
-        });
-      });
       it("Cannot void invoices that are not already posted", function (done) {
         var model = new XM.InvoiceListItem();
         model.set({isPosted: false});
         XT.session.privileges.attributes.VoidPostedInvoices = true;
         model.canVoid(function (response) {
-          assert.isFalse(response);
-          done();
-        });
-      });
-      it("Print invoices where the user has the PrintInvoices privilege", function (done) {
-        var model = new XM.InvoiceListItem();
-        model.canPrint(function (response) {
-          assert.isTrue(response);
-          done();
-        });
-      });
-      it("Cannot print invoices where the user has no PrintInvoices privilege", function (done) {
-        var model = new XM.InvoiceListItem();
-        XT.session.privileges.attributes.PrintInvoices = false;
-        model.canPrint(function (response) {
           assert.isFalse(response);
           done();
         });

@@ -41,24 +41,6 @@ XT.extensions.billing.initLists = function () {
   });
   XV.registerModelList('XM.CashReceiptListItem', 'XV.CashReceiptList');
 
-  /**
-   * @class XV.CashReceiptLineList
-   * @see XM.CashReceiptLineCollection
-   */
-  enyo.kind({
-    name: 'XV.CashReceiptLineList',
-    kind: 'XV.List',
-    view: 'XM.CashReceiptView',
-    label: '_cashReceipts'.loc(),
-    collection: 'XM.CashReceiptLineListItemCollection',
-    components: [
-      {kind: 'XV.ListItemDecorator', components: [
-        {name: 'listItem', kind: 'XV.CashReceiptLineListItem'}
-      ]}
-    ]
-  });
-  XV.registerModelList('XM.CashReceiptLineListItem', 'XV.CashReceiptLineList');
-
   //
   // ..........................................................
   // RECEIVABLES
@@ -86,7 +68,7 @@ XT.extensions.billing.initLists = function () {
       }}
     ],
     actions: [
-      {name: "open", prerequisite: "canOpen",
+      {name: "open", privilege: "ViewAROpenItems", prerequisite: "canOpen",
         method: "openReceivable", notify: false, isViewMethod: true}
     ],
     components: [

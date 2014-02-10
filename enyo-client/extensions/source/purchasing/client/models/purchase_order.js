@@ -60,11 +60,11 @@ white:true*/
 
     XM.PurchaseOrderMixin = {
       /**
-        Returns Purchase order status as a localized string.
+        Deprecated. Use `formatStatus`.
 
         @returns {String}
       */
-      getPurchaseOrderStatusString: function () {
+      formatStatus: function () {
         var K = XM.PurchaseOrder,
           status = this.get("status");
 
@@ -77,6 +77,14 @@ white:true*/
         case K.CLOSED_STATUS:
           return "_closed".loc();
         }
+      },
+      /**
+        Returns Purchase order status as a localized string.
+
+        @returns {String}
+      */
+      getPurchaseOrderStatusString: function () {
+        return this.formatStatus();
       }
     };
 
@@ -1170,21 +1178,21 @@ white:true*/
       editableModel: "XM.PurchaseOrder",
 
       canRelease: function (callback) {
-        var status = this.get("status"),
-          ret = XT.session.privileges.get("ReleasePurchaseOrders") &&
-            status === XM.PurchaseOrder.UNRELEASED_STATUS;
+        var status = this.get("status");
+
         if (callback) {
-          callback(ret);
+          callback(status === XM.PurchaseOrder.UNRELEASED_STATUS);
         }
-        return ret;
+
+        return this;
       },
 
       canUnrelease: function (callback) {
         var status = this.get("status"),
-          ret = XT.session.privileges.get("ReleasePurchaseOrders") &&
-            status === XM.PurchaseOrder.OPEN_STATUS,
-            options = {},
-            params;
+          ret = status === XM.PurchaseOrder.OPEN_STATUS,
+          options = {},
+          params;
+
         if (ret) {
           params = [this.id, true];
           options.success = function (resp) {

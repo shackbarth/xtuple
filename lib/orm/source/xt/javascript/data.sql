@@ -1,5 +1,7 @@
 select xt.install_js('XT','Data','xtuple', $$
 
+(function () {
+
   /**
    * @class
    *
@@ -399,7 +401,7 @@ select xt.install_js('XT','Data','xtuple', $$
         for (var i = 1; i < privArray.length; i++) {
           sql = sql + ' or priv_name = $' + (i + 2);
         }
-        sql = sql + ";";
+        sql = sql + "order by granted desc limit 1;";
 
         /* Cleverness: the query parameters are just the priv array with the username tacked on front. */
         privArray.unshift(XT.username);
@@ -1036,6 +1038,9 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
+      /* Okay, now lets handle arrays. */
+      this.commitArrays(orm, data, encryptionKey);
+
       /* Handle extensions on the same table. */
       for (var i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
@@ -1094,9 +1099,6 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         }
       }
-
-      /* Okay, now lets handle arrays. */
-      this.commitArrays(orm, data, encryptionKey);
 
       /* Release any lock. */
       if (orm.lockable) {
@@ -1916,6 +1918,8 @@ select xt.install_js('XT','Data','xtuple', $$
         itemAttr,
         filteredProps,
         val,
+        preOffsetDate,
+        offsetDate,
         check = function (p) {
           return p.name === itemAttr;
         };
@@ -1958,45 +1962,47 @@ select xt.install_js('XT','Data','xtuple', $$
           /*  Format for printing if printFormat and not an object */
           if (printFormat && !prop.toOne && !prop.toMany) {
             switch(prop.attr.type) {
-                case "Date":
-                  item[itemAttr] = XT.formatDate(item[itemAttr]).formatdate;
-                break;
-                case "Cost":
-                  item[itemAttr] = XT.formatCost(item[itemAttr]).formatcost.toString();
-                break;
-                case "Number":
-                  item[itemAttr] = XT.formatNumeric(item[itemAttr], "").formatnumeric.toString();
-                break;
-                case "Currency":
-                  item[itemAttr] = XT.formatMoney(item[itemAttr]).formatmoney.toString();
-                break;
-                case "SalesPrice":
-                  item[itemAttr] = XT.formatSalesPrice(item[itemAttr]).formatsalesprice.toString();
-                break;
-                case "PurchasePrice":
-                  item[itemAttr] = XT.formatPurchPrice(item[itemAttr]).formatpurchprice.toString();
-                break;
-                case "ExtendedPrice":
-                  item[itemAttr] = XT.formatExtPrice(item[itemAttr]).formatextprice.toString();
-                break;
-                case "Quantity":
-                  item[itemAttr] = XT.formatQty(item[itemAttr]).formatqty.toString();
-                break;
-                case "QuantityPer":
-                  item[itemAttr] = XT.formatQtyPer(item[itemAttr]).formatqtyper.toString();
-                break;
-                case "UnitRatioScale":
-                  item[itemAttr] = XT.formatRatio(item[itemAttr]).formatratio.toString();
-                break;
-                case "Percent":
-                  item[itemAttr] = XT.formatPrcnt(item[itemAttr]).formatprcnt.toString();
-                break;
-                case "WeightScale":
-                  item[itemAttr] = XT.formatWeight(item[itemAttr]).formatweight.toString();
-                break;
-                default:
-                  item[itemAttr] = (item[itemAttr] || "").toString();
-              }
+              case "Date":
+                preOffsetDate = item[itemAttr];
+                offsetDate = new Date(preOffsetDate.valueOf() + 60000 * preOffsetDate.getTimezoneOffset());
+                item[itemAttr] = XT.formatDate(offsetDate).formatdate;
+              break;
+              case "Cost":
+                item[itemAttr] = XT.formatCost(item[itemAttr]).formatcost.toString();
+              break;
+              case "Number":
+                item[itemAttr] = XT.formatNumeric(item[itemAttr], "").formatnumeric.toString();
+              break;
+              case "Money":
+                item[itemAttr] = XT.formatMoney(item[itemAttr]).formatmoney.toString();
+              break;
+              case "SalesPrice":
+                item[itemAttr] = XT.formatSalesPrice(item[itemAttr]).formatsalesprice.toString();
+              break;
+              case "PurchasePrice":
+                item[itemAttr] = XT.formatPurchPrice(item[itemAttr]).formatpurchprice.toString();
+              break;
+              case "ExtendedPrice":
+                item[itemAttr] = XT.formatExtPrice(item[itemAttr]).formatextprice.toString();
+              break;
+              case "Quantity":
+                item[itemAttr] = XT.formatQty(item[itemAttr]).formatqty.toString();
+              break;
+              case "QuantityPer":
+                item[itemAttr] = XT.formatQtyPer(item[itemAttr]).formatqtyper.toString();
+              break;
+              case "UnitRatioScale":
+                item[itemAttr] = XT.formatRatio(item[itemAttr]).formatratio.toString();
+              break;
+              case "Percent":
+                item[itemAttr] = XT.formatPrcnt(item[itemAttr]).formatprcnt.toString();
+              break;
+              case "WeightScale":
+                item[itemAttr] = XT.formatWeight(item[itemAttr]).formatweight.toString();
+              break;
+              default:
+                item[itemAttr] = (item[itemAttr] || "").toString();
+            }
           }
 
           /* Handle composite types */
@@ -2244,5 +2250,7 @@ select xt.install_js('XT','Data','xtuple', $$
       return false;
     }
   }
+
+}());
 
 $$ );

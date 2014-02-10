@@ -1,8 +1,93 @@
 /**
   Styles relating to Lists
 */
+.xv-list-header {
+  background-color: @gray;
+  color: @white;
+  font-size: .6em;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid @silver;
+  .xv-list-column {
+    &.last {
+      border-right: none;
+    }
+    &.name-column {
+      padding-left: 7px;
+    }
+    &.first {
+      padding-left: 7px;
+    }
+    &.second {
+      padding-left: 7px;
+    }
+    &.third {
+      padding-left: 7px;
+    }
+    &.short {
+      padding-left: 7px;
+    }
+    &.small {
+      padding-left: 7px;
+    }
+    &.medium {
+      padding-left: 7px;
+    }
+    &.descr {
+      padding-left: 7px;
+    }
+  }
+}
 
 /* List */
+.xv-list-column {
+  &.line-number {
+    width: 30px;
+    text-align: right;
+  }
+  &.name-column {
+    width: 200px
+  }
+  &.right-column {
+    width: 100px;
+    text-align: right;
+  }
+  &.short {
+    width: 100px;
+  }
+  &.small {
+    width: 125px;
+  }
+  &.medium {
+    width: 150px;
+  }
+  &.first {
+    width: 300px;
+  }
+  &.second {
+    width: 200px;
+  }
+  &.third {
+    width: 100px;
+  }
+  &.money {
+    width: 75px;
+    text-align: right;
+  }
+  &.quantity {
+    width: 75px;
+    text-align: right;
+  }
+  &.descr {
+    width: 200px;
+  }
+  &.icon {
+    width: 10px;
+  }
+}
+
 .xv-list {
   background-color: @white;
 
@@ -33,34 +118,6 @@
       }
     }
     .xv-list-column {
-      &.name-column {
-        width: 12em;
-      }
-      &.right-column {
-        width: 8em;
-        text-align: right;
-      }
-      &.short {
-        width: 9em;
-      }
-      &.first {
-        width: 19em;
-      }
-      &.second {
-        width: 10em;
-      }
-      &.third {
-        width: 4.5em;
-      }
-      &.money {
-        width: 5em;
-      }
-      &.descr {
-        width: 15.56em;
-      }
-      &.icon {
-        width: 1.5em;
-      }
       .list-icon {
         padding: 2px;
         color: @charcoal;
@@ -91,6 +148,72 @@
       position: absolute;
       right: 0px;
       z-index: 999;
+    }
+  }
+  &.xv-grid-list {
+    background: @ghost;
+    .xv-list-item > * {
+      vertical-align: top;
+    }
+    .xv-list-item { 
+      padding-top: 7px !important;
+      padding-bottom: 9px !important;
+      border-bottom: 1px solid @silver !important;
+      background: @ghost;
+      &.item-selected {
+        background: @item-hilite-background;
+        #gradient > .vertical(@item-hilite-background, @dark-slate-blue);
+
+        .xv-list-attr {
+          color: @white;
+          &.placeholder {
+            font-style: italic;
+            color: @sky-blue;
+          }
+          &.hyperlink {
+            color: @bright-orange;
+          }
+          &.header {
+            background: @sky-blue;
+          }
+        }
+      }
+      .xv-list-column {
+        .xv-list-attr {
+          font-size: 12px;
+        }
+        vertical-align: top;
+        &.last {
+          border-right: none;
+        }
+        &.name-column {
+          padding-left: 7px;
+        }
+        &.first {
+          padding-left: 7px;
+        }
+        &.second {
+          padding-left: 7px;
+        }
+        &.third {
+          padding-left: 7px;
+        }
+        &.short {
+          padding-left: 7px;
+        }
+        &.small {
+          padding-left: 7px;
+        }
+        &.medium {
+          padding-left: 7px;
+        }
+        &.descr {
+          padding-left: 7px;
+        }
+        .xv-list-attr {
+          padding: 0px;
+        }
+      }
     }
   }
 }
@@ -143,10 +266,13 @@
   }
   &.placeholder {
     font-style: italic;
-    color: @blue-gray;
+    color: @dim-gray;
   }
   &.hyperlink {
     color: blue;
+  }
+  &.disabled {
+    color: @dim-gray;
   }
 }
 

@@ -45,8 +45,10 @@ white:true*/
 
     bindEvents: function () {
       XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
+      // XXX #refactor: what's the point of pricePolicy here?
       var pricePolicy = XT.session.settings.get("soPriceEffective");
       this.on('change:holdType', this.holdTypeDidChange);
+      this.on('change:total', this.calculateBalance);
     },
 
     /**
@@ -57,7 +59,19 @@ white:true*/
 
       defaults.wasQuote = false;
 
+      defaults.balance = 0;
+
       return defaults;
+    },
+
+    calculateBalance: function () {
+      var rawBalance = this.get("total") -
+          this.get("allocatedCredit") -
+          this.get("authorizedCredit") -
+          this.get("outstandingCredit"),
+        balance = Math.max(0, rawBalance);
+
+      this.set({balance: balance});
     },
 
     customerDidChange: function () {
@@ -72,6 +86,7 @@ white:true*/
     },
 
     getSalesOrderStatusString: function () {
+      // XXX #refactor
       return XM.SalesOrder.prototype.getOrderStatusString.call(this);
     },
 
@@ -168,12 +183,51 @@ white:true*/
     defaults: function () {
       var defaults = XM.SalesOrderLineMixin.defaults.apply(this, arguments);
 
-      defaults.firm = false;
-      defaults.subnumber = 0;
+      _.extend(defaults, {
+        firm: false,
+        subNumber: 0,
+        status: XM.SalesOrder.OPEN_STATUS
+      });
 
       return defaults;
+    },
+
+    destroy: function (options) {
+      var status = this.getParent().get("status"),
+        K = XM.SalesOrder,
+        that = this,
+        payload = {
+          type: K.QUESTION,
+        },
+        args = arguments,
+        message;
+
+      if (status !== K.CLOSED_STATUS &&
+        status !== K.CANCELLED_STATUS) {
+        message = "_deleteLine?".loc();
+        payload.callback = function (response) {
+          if (response.answer) {
+            XM.Model.prototype.destroy.apply(that, args);
+          }
+        };
+      } else {
+        // Must be closed, shouldn't have come here.
+        return;
+      }
+
+      this.notify(message, payload);
+    },
+
+    isActive: function () {
+      return this.get("status") === XM.SalesOrder.OPEN_STATUS;
     }
   }), XM.SalesOrderLineStaticMixin);
+
+  XM.SalesOrderLine.prototype.augment({
+    readOnlyAttributes: [
+      "status"
+    ]
+  });
 
 
   /**

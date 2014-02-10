@@ -1,6 +1,5 @@
 enyo.depends(
   "email.js",
-  "workflow.js",
   "account.js",
   "activity.js",
   "address.js",
@@ -24,6 +23,7 @@ enyo.depends(
   "prospect.js",
   "sales_order_base.js",
   "invoice.js",
+  "remit_to.js",
   "return.js",
   "quote.js",
   "reason_code.js",

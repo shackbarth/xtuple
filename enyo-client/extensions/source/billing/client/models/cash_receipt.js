@@ -3,13 +3,13 @@ XT.extensions.billing.initCashReceipt = function () {
   'use strict';
 
   /**
-   * @class XM.CashReceipt
-   * @extends XM.Document
-   * @mixes XM.FundsTypeEnum
+   * @mixin CashReceiptMixin
    */
   XM.CashReceipt = XM.Document.extend({
     recordType: 'XM.CashReceipt',
+    idAttribute: 'number',
     documentKey: 'number',
+    documentDateKey: 'documentDate',
     enforceUpperKey: false,
     numberPolicy: XM.Document.AUTO_NUMBER,
 
@@ -21,7 +21,7 @@ XT.extensions.billing.initCashReceipt = function () {
         useCustomerDeposit: false,
         currency: XM.baseCurrency,
         currencyRate: 1.0,
-        applicationDate: new Date(),
+        documentDate: new Date(),
         amount: 0,
         appliedAmount: 0,
         balance: 0,
@@ -43,8 +43,29 @@ XT.extensions.billing.initCashReceipt = function () {
       'change:currency': 'currencyChanged',
       'change:distributionDate': 'distributionDateChanged',
       'change:applicationDate': 'dateChanged',
+      'change:useCustomerDeposit': 'useCustomerDepositChanged',
       'add': 'lineItemAdded'
     },
+
+    useCustomerDepositChanged: function () {
+      // XXX our picker widget still doesn't work correctly with booleans. you
+      // can set this value, but it cannot render. fix later, need to submit
+      // pull nownownow. i thought i had fixed this awhile ago but it seems to
+      // not be as of now.
+      this.attributes.useCustomerDeposit = (this.get('useCustomerDeposit') === '1');
+    },
+
+    /**
+     * XXX error if i try to override this method
+     * Uncaught TypeError: Cannot read property 'patches' of null 
+     *
+    toJSON: function () {
+      console.log(this.attributes);
+      // cast useCustomerDeposit to boolean
+      this.attributes.useCustomerDeposit = (this.get('useCustomerDeposit') === '1');
+      XM.Document.prototype.toJSON.apply(this, arguments);
+    },
+    */
 
     /**
      * @listens change:distributionDate
@@ -52,7 +73,7 @@ XT.extensions.billing.initCashReceipt = function () {
     distributionDateChanged: function () {
       // TODO update currency rate
       this.dateChanged();
-      this.updateCurrencyRate();
+      this.checkCurrency();
     },
 
     /**
@@ -60,12 +81,10 @@ XT.extensions.billing.initCashReceipt = function () {
      * item applied amounts.
      */
     updateAppliedAmount: function () {
-      this.set(
-        'appliedAmount',
-        this.get('lineItems').reduce(function (memo, line) {
-          return memo + line.get('appliedAmount');
-        }, 0)
-      );
+      var appliedAmount = _.reduce(this.get('lineItems'), function (memo, line) {
+        return memo + line.get('appliedAmount');
+      }, 0);
+      this.set('appliedAmount', appliedAmount);
     },
 
     /**
@@ -188,10 +207,10 @@ XT.extensions.billing.initCashReceipt = function () {
       var minDate = this.getMinimumDate(),
         applicationDate = this.get("applicationDate"),
         distributionDate = this.get("distributionDate");
-      if (applicationDate < minDate) {
+      if (moment(applicationDate).isBefore(minDate)) {
         this.set("applicationDate", minDate);
       }
-      if (distributionDate > applicationDate) {
+      if (moment(distributionDate).isAfter(applicationDate)) {
         this.set("distributionDate", applicationDate);
       }
     },
@@ -291,8 +310,7 @@ XT.extensions.billing.initCashReceipt = function () {
               receivable: receivable
             }),
             line = new XM.CashReceiptLine(application),
-            pending = new XM.CashReceiptLinePending(application)
-          ;
+            pending = new XM.CashReceiptLinePending(application);
 
           receivable.get('pendingApplications').add(pending);
           this.get('lineItems').add(line);
@@ -380,10 +398,11 @@ XT.extensions.billing.initCashReceipt = function () {
    * @class XM.CashReceiptLine
    * @extends XM.Model
    */
-  XM.CashReceiptLine = XM.Model.extend({
+  XM.CashReceiptLine = XM.Document.extend({
     recordType: 'XM.CashReceiptLine',
-    readOnly: true,
-
+    //idAttribute: 'uuid',
+    enforceUpperKey: false,
+    numberPolicy: XM.Document.AUTO_NUMBER,
     defaults: {
       amount: 0,
       discountAmount: 0
@@ -396,7 +415,7 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceiptLinePending = XM.Model.extend({
     recordType: 'XM.CashReceiptLinePending',
-    idAttribute: 'uuid',
+    //idAttribute: 'uuid',
     readOnly: true
   });
 
@@ -443,19 +462,16 @@ XT.extensions.billing.initCashReceipt = function () {
    * @extends XM.Info
    * @see XM.CashReceipt
    */
-  XM.CashReceiptListItem = XM.Model.extend({
+  XM.CashReceiptListItem = XM.Info.extend({
     recordType: 'XM.CashReceiptListItem',
-    idAttribute: 'number',
     editableModel: 'XM.CashReceipt',
+    idAttribute: 'number',
 
     canPost: function (callback) {
-      callback(false);
+      callback(XT.session.privileges.get("MaintainCashReceipts"));
     },
     canVoid: function (callback) {
-      callback(false);
-    },
-    canDelete: function (callback) {
-      callback(false);
+      callback(!this.get('isPosted') || XT.session.privileges.get("VoidPostedCashReceipts"));
     }
   });
 
@@ -464,10 +480,13 @@ XT.extensions.billing.initCashReceipt = function () {
    * @extends XM.Info
    * @see XM.CashReceipt
    */
-  XM.CashReceiptLineListItem = XM.CashReceiptLine.extend({
-    //recordType: 'XM.CashReceiptLineListItem',
-    idAttribute: 'uuid',
-    editableModel: 'XM.CashReceiptReceivable'
+  XM.CashReceiptLineListItem = XM.Info.extend({
+    recordType: 'XM.CashReceiptLineListItem',
+    editableModel: 'XM.CashReceiptLine',
+    idAttribute: 'number',
+    canPost: function (callback) {
+      callback(XT.session.privileges.get("PostCashReceipts"));
+    }
   });
 
   /**
@@ -485,6 +504,14 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceiptCollection = XM.Collection.extend({
     model: XM.CashReceipt
+  });
+
+  /**
+   * @class XM.CashReceiptCollection
+   * @extends XM.Collection
+   */
+  XM.CashReceiptRelationCollection = XM.Collection.extend({
+    model: XM.CashReceiptRelation
   });
 
   /**

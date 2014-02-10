@@ -24,16 +24,17 @@ trailing:true, white:true, strict:false*/
       components: [
         {kind: "XV.ListItem", components: [
           {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "XV.ListColumn", classes: "name-column", components: [
               {kind: "FittableColumns", components: [
                 {kind: "XV.ListAttr", attr: "vendorItemNumber", isKey: true,
-                  placeholder: "_noVendorNumber".loc()},
-                {kind: "XV.ListAttr", attr: "vendorUnit", fit: true,
-                  classes: "right"}
+                  placeholder: "_noVendorNumber".loc()}
               ]},
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "vendor.name"}
-              ]},
+              {kind: "XV.ListAttr", attr: "vendor.name"}
+            ]},
+            {kind: "XV.ListColumn", classes: "right-column", components: [
+              {kind: "XV.ListAttr", attr: "vendorUnit"},
+              {kind: "XV.ListAttr", attr: "isDefault",
+                formatter: "formatDefault"}
             ]},
             {kind: "XV.ListColumn", classes: "first",
               components: [
@@ -51,6 +52,9 @@ trailing:true, white:true, strict:false*/
           ]}
         ]}
       ],
+      formatDefault: function (value) {
+        return value ? "_default".loc() : "";
+      },
       formatDescription: function (value, view, model) {
         var item = model.get("item"),
           descrip1 = item.get("description1") || "",
@@ -85,9 +89,11 @@ trailing:true, white:true, strict:false*/
       parameterWidget: "XV.PurchaseOrderListParameters",
       multiSelect: true,
       actions: [
-        {name: "release", prerequisite: "canRelease", method: "doRelease",
+        {name: "release", privilege: "ReleasePurchaseOrders",
+          prerequisite: "canRelease", method: "doRelease",
           notify: false},
-        {name: "unrelease", prerequisite: "canUnrelease",
+        {name: "unrelease", privilege: "ReleasePurchaseOrders",
+          prerequisite: "canUnrelease",
           method: "doUnrelease", notify: false}
       ],
       query: {orderBy: [

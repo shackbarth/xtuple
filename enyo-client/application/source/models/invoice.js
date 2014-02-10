@@ -14,6 +14,7 @@ white:true*/
   var _calculatePrice = function (model) {
     var K = model.getClass(),
       item = model.get("item"),
+      site = model.get("site"),
       priceUnit = model.get("priceUnit"),
       quantity = model.get(model.altQuantityAttribute),
       quantityUnit = model.get("quantityUnit"),
@@ -66,6 +67,7 @@ white:true*/
     itemOptions.asOf = asOf;
     itemOptions.currency = currency;
     itemOptions.effective = parentDate;
+    itemOptions.site = site;
     itemOptions.error = function (err) {
       model.trigger("invalid", err);
     };
@@ -134,7 +136,12 @@ white:true*/
       adjustmentTaxDetails = adjustmentTaxDetails.concat(taxAdjustment);
     };
 
-    _.each(model.get('lineItems').models, forEachLineItemFunction);
+    // Line items should not include deleted.
+    var lineItems = _.filter(model.get("lineItems").models, function (item) {
+      return item.status !== XM.Model.DESTROYED_DIRTY;
+    });
+
+    _.each(lineItems, forEachLineItemFunction);
     _.each(model.get('taxAdjustments').models, forEachTaxAdjustmentFunction);
 
     //
@@ -183,6 +190,14 @@ white:true*/
     });
 
     // Totaling calculations
+    // First get additional subtotal attributes (i.e. freight) that were added outside of core
+    if (model.extraSubtotalFields && model.extraSubtotalFields.length) {
+      _.each(model.extraSubtotalFields, function (attr) {
+        var attrVal = model.get(attr);
+        subtotals.push(attrVal);
+      });
+    }
+
     subtotal = add(subtotals, scale);
     subtotals = subtotals.concat([miscCharge, taxTotal]);
     total = add(subtotals, scale);
@@ -206,7 +221,8 @@ white:true*/
       this.on("change:" + this.documentDateKey + " change:currency", this.calculateAuthorizedCredit);
       this.on("change:" + this.documentDateKey + " add:allocations remove:allocations",
         this.calculateAllocatedCredit);
-      this.on("add:lineItems remove:lineItems change:subtotal change:taxTotal change:miscCharge", this.calculateTotals);
+      this.on("add:lineItems remove:lineItems change:lineItems change:subtotal" +
+        "change:taxTotal change:miscCharge", this.calculateTotals);
       this.on("change:taxZone add:taxAdjustments remove:taxAdjustments", this.calculateTotalTax);
       this.on("change:taxZone", this.recalculateTaxes);
       this.on("change:total change:allocatedCredit change:outstandingCredit",
@@ -292,6 +308,7 @@ white:true*/
     calculateBalance: function () {
       var rawBalance = this.get("total") -
           this.get("allocatedCredit") -
+          this.get("authorizedCredit") -
           this.get("outstandingCredit"),
         balance = Math.max(0, rawBalance);
 
@@ -490,6 +507,8 @@ white:true*/
 
     numberPolicySetting: 'InvcNumberGeneration',
 
+    extraSubtotalFields: [],
+
     defaults: function () {
       return {
         invoiceDate: new Date(),
@@ -498,7 +517,12 @@ white:true*/
         isPrinted: false,
         commission: 0,
         taxTotal: 0,
-        miscCharge: 0
+        miscCharge: 0,
+        subtotal: 0,
+        total: 0,
+        balance: 0,
+        authorizedCredit: 0
+      
       };
     },
 
@@ -506,10 +530,14 @@ white:true*/
       "isPosted",
       "isVoid",
       "isPrinted",
-      "miscCharge",
       "lineItems",
       "allocatedCredit",
-      "authorizedCredit"
+      "authorizedCredit",
+      "balance",
+      "status",
+      "subtotal",
+      "taxTotal",
+      "total"
     ],
 
     // like sales order, minus contact info
@@ -540,7 +568,19 @@ white:true*/
     idAttribute: 'uuid',
 
     // make up the the field that is "value"'ed in the ORM
-    taxType: "Adjustment"
+    taxType: "Adjustment",
+
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on("change:amount", this.calculateTotalTax);
+    },
+
+    calculateTotalTax: function () {
+      var parent = this.getParent();
+      if (parent) {
+        parent.calculateTotalTax();
+      }
+    }
 
   });
 
@@ -573,20 +613,16 @@ white:true*/
     documentDateKey: 'invoiceDate',
 
     couldDestroy: function (callback) {
-      callback(XT.session.privileges.get("MaintainMiscInvoices") && !this.get("isPosted"));
+      callback(!this.get("isPosted"));
     },
 
     canPost: function (callback) {
-      callback(XT.session.privileges.get("PostMiscInvoices") && !this.get("isPosted"));
+      callback(!this.get("isPosted"));
     },
 
     canVoid: function (callback) {
-      var response = XT.session.privileges.get("VoidPostedInvoices") && this.get("isPosted");
+      var response = this.get("isPosted");
       callback(response || false);
-    },
-
-    canPrint: function (callback) {
-      callback(XT.session.privileges.get("PrintInvoices") || false);
     },
 
     doPost: function (options) {
@@ -642,7 +678,8 @@ white:true*/
     readOnlyAttributes: [
       "lineNumber",
       "extendedPrice",
-      "taxTotal"
+      "taxTotal",
+      "customerPrice"
     ],
 
     //
@@ -651,11 +688,12 @@ white:true*/
     bindEvents: function (attributes, options) {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on("change:item", this.itemDidChange);
-      this.on("change:" + this.altQuantityAttribute, this.recalculatePrice);
+      this.on("change:" + this.altQuantityAttribute, this.quantityChanged);
       this.on('change:price', this.priceDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:' + this.parentKey, this.parentDidChange);
+      this.on('change:taxType', this.calculateTax);
       this.on('change:isMiscellaneous', this.isMiscellaneousDidChange);
 
       this.isMiscellaneousDidChange();
@@ -736,7 +774,9 @@ white:true*/
         processTaxResponses,
         that = this,
         options = {},
-        params;
+        params,
+        taxTotal = 0.00,
+        taxesTotal = [];
 
       // If no parent, don't bother
       if (!parent) { return; }
@@ -758,6 +798,7 @@ white:true*/
                 amount: resp.tax
               });
               that.get("taxes").add(taxModel);
+              taxesTotal.push(resp.tax);
               callback();
             };
             var taxModel = new XM.InvoiceLineTax();
@@ -767,10 +808,11 @@ white:true*/
           var finish = function () {
             that.recalculateParent(false);
           };
-
           that.get("taxes").reset(); // empty it out so we can populate it
 
           async.map(responses, processTaxResponse, finish);
+          taxTotal = XT.math.add(taxesTotal, XT.COST_SCALE);
+          that.set("taxTotal", taxTotal);
         };
         options.success = processTaxResponses;
         this.dispatch("XM.Tax", "taxDetail", params, options);

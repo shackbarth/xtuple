@@ -376,7 +376,25 @@
         }
       }
     ],
-    "extensions": [],
+    "extensions": [{
+      "table": "xt.custcustemlprofile",
+      "isExtension": true,
+      "relations": [
+        {
+          "column": "custcustemlprofile_cust_id",
+          "inverse": "id"
+        }
+      ],
+      "properties": [
+        {
+          "name": "emailProfile",
+          "toOne": {
+            "type": "CustomerEmailProfile",
+            "column": "custcustemlprofile_custemlprofile_id"
+          }
+        }
+      ]
+    }],
     "isSystem": true
   },
   {
@@ -806,7 +824,208 @@
         }
       }
     ],
-    "extensions": [],
+    "extensions": [{
+      "table": "xt.custcustemlprofile",
+      "isExtension": true,
+      "relations": [
+        {
+          "column": "custcustemlprofile_cust_id",
+          "inverse": "id"
+        }
+      ],
+      "properties": [
+        {
+          "name": "emailProfile",
+          "toOne": {
+            "type": "CustomerEmailProfile",
+            "column": "custcustemlprofile_custemlprofile_id"
+          }
+        }
+      ]
+    }],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerEmailProfile",
+    "table": "xt.custemlprofile",
+    "isRest": true,
+    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "comment": "Customer Email Profile Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCustomerEmailProfiles",
+        "read": true,
+        "update": "MaintainCustomerEmailProfiles",
+        "delete": "MaintainCustomerEmailProfiles"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emlprofile_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_descrip"
+        }
+      },
+      {
+        "name": "from",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_from"
+        }
+      },
+      {
+        "name": "replyTo",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_replyto"
+        }
+      },
+      {
+        "name": "to",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_to"
+        }
+      },
+      {
+        "name": "cc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_cc"
+        }
+      },
+      {
+        "name": "bcc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_bcc"
+        }
+      },
+      {
+        "name": "subject",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_subject"
+        }
+      },
+      {
+        "name": "body",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_body"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "CustomerEmailProfile",
+    "table": "xt.custemlprofile",
+    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "comment": "Customer Email Profile Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCustomerEmailProfiles",
+        "read": true,
+        "update": "MaintainCustomerEmailProfiles",
+        "delete": "MaintainCustomerEmailProfiles"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emlprofile_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_descrip"
+        }
+      },
+      {
+        "name": "from",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_from"
+        }
+      },
+      {
+        "name": "replyTo",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_replyto"
+        }
+      },
+      {
+        "name": "to",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_to"
+        }
+      },
+      {
+        "name": "cc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_cc"
+        }
+      },
+      {
+        "name": "bcc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_bcc"
+        }
+      },
+      {
+        "name": "subject",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_subject"
+        }
+      },
+      {
+        "name": "body",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_body"
+        }
+      }
+    ],
     "isSystem": true
   },
   {

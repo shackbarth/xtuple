@@ -253,6 +253,14 @@
         }
       },
       {
+        "name": "isExclusive",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_exclusive",
+          "required": true
+        }
+      },
+      {
         "name": "productWeight",
         "attr": {
           "type": "Weight",
@@ -339,7 +347,7 @@
         }
       },
       {
-        "name": "itemSiteRelations",
+        "name": "itemSites",
         "toMany": {
           "type": "ItemItemSiteRelation",
           "column": "item_id",
@@ -495,18 +503,68 @@
         }
       },
       {
+        "name": "description2",
+        "attr": {
+          "type": "String",
+          "column": "itemalias_descrip2"
+        }
+      },
+      {
         "name": "account",
         "toOne": {
           "isNested": true,
           "type": "AccountRelation",
           "column": "itemalias_crmacct_id"
         }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemRelationAlias",
+    "table": "itemalias",
+    "comment": "Item Alias Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemalias_id",
+          "isPrimaryKey": true
+        }
       },
       {
-        "name": "description2",
+        "name": "uuid",
         "attr": {
           "type": "String",
-          "column": "itemalias_descrip2"
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "itemalias_item_id"
+        }
+      },
+      {
+        "name": "aliasNumber",
+        "attr": {
+          "type": "String",
+          "column": "itemalias_number",
+          "required": true
         }
       }
     ],
@@ -685,6 +743,75 @@
       }
     ],
     "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemItemSiteRelation",
+    "table": "xt.itemsiteinfo",
+    "isRest": true,
+    "comment": "Itemsite Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      },
+      "attribute": {
+        "unitCost": {
+          "view": "ViewCosts MaintainCosts"
+        }
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_item_id"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "itemsite_warehous_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_active"
+        }
+      },
+      {
+        "name": "controlMethod",
+        "attr": {
+          "type": "String",
+          "column": "itemsite_controlmethod"
+        }
+      }
+    ],
     "isSystem": true
   },
   {
@@ -1157,7 +1284,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemRelation",
-    "table": "xt.iteminfo",
+    "table": "item",
     "isRest": true,
     "comment": "Item Relation Map",
     "privileges": {
@@ -1277,8 +1404,9 @@
       {
         "name": "standardCost",
         "attr": {
+          "derived": true,
           "type": "Cost",
-          "column": "std_cost"
+          "method": "stdcost(item_id)"
         }
       },
       {
@@ -1298,8 +1426,9 @@
       {
         "name": "priceUnitRatio",
         "attr": {
+          "derived": true,
           "type": "UnitRatio",
-          "column": "inv_price_ratio"
+          "method": "iteminvpricerat(item_id)"
         }
       },
       {
@@ -1320,7 +1449,7 @@
         "name": "aliases",
         "toMany": {
           "isNested": true,
-          "type": "ItemAlias",
+          "type": "ItemRelationAlias",
           "column": "item_id",
           "inverse": "item"
         }

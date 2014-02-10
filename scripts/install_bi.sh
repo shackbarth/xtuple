@@ -98,7 +98,7 @@ then
     exit 1
 fi
 
-if  ! test -d $PRIVATE_DIR ;
+if  [ ! test -d $PRIVATE_DIR && $RUNALL ]  
 then
 	log ""
 	log "####################################################################################"
@@ -179,7 +179,7 @@ run_scripts() {
 	log ""
 	cdir $BI_DIR/olap-schema
 	mvn install 2>&1 | tee -a $LOG_FILE
-	java -jar Saxon-HE-9.4.jar -s:src/erpi-sogl-tenant-xtuple.xml -xsl:style.xsl -o:target/erpi-schema.xml
+	java -jar Saxon-HE-9.4.jar -s:src/erpi-tenant-xtuple.xml -xsl:style.xsl -o:target/erpi-schema.xml
 	mvn process-resources 2>&1 | tee -a $LOG_FILE
 
 	cdir ../pentaho-extensions/oauthsso

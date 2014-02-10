@@ -422,11 +422,9 @@ XT.extensions.billing.initReceivableModel = function () {
     editableModel: 'XM.Receivable',
 
     canOpen: function (callback) {
-      var canView = XT.session.privileges.get("ViewAROpenItems") && this.get("isPosted");
-      if (callback) {
-        callback(canView);
-      }
-      return canView;
+      if (callback) { callback(this.get("isPosted")); }
+
+      return this;
     },
   });
 

@@ -36,6 +36,7 @@ XT.extensions.billing.initSalesCategoryView = function () {
       actions: [
         {
           name: 'deactivate',
+          privilege: "MaintainSalesCategories",
           prerequisite: 'canDeactivate',
           method: 'deactivate'
         }

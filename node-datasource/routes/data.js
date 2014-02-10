@@ -43,7 +43,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // If unhandledError but the debug has an error message, send it back to client.
           if (err.message === "unhandledError" && err.debug[0] &&
             err.debug[0].indexOf("Error") === 0) {
-            // Error message is everything before new line in debug. 
+            // Error message is everything before new line in debug.
             // Can be refined with subsequent use cases.
             callbackObj.description = err.debug[0].substring(0, err.debug[0].indexOf('\n'));
             callbackObj.status = {code: 500, message: callbackObj.description };
@@ -51,7 +51,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             callbackObj.description = err.message;
             callbackObj.status = err.status || {code: 500, message: "Internal Server Error" };
           }
-          
+
           if (X.options.datasource.debug) {
             callbackObj.debug = err.debug || null;
           }
