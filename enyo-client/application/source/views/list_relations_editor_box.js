@@ -392,10 +392,6 @@ trailing:true, white:true*/
         }
       });
     },
-    destroy: function () {
-      this.bind("off");
-      this.inherited(arguments);
-    },
     salesOrderDateChanged: function () {
       this.changeItemSiteParameter("orderDate", "effectiveDate");
     },
