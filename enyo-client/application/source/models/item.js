@@ -250,7 +250,8 @@ white:true*/
         isFractional: false,
         isSold: true,
         itemType: XM.Item.PURCHASED,
-        listPrice: 0
+        listPrice: 0,
+        isExclusive: false
       };
     },
 

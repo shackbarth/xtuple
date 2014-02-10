@@ -1452,7 +1452,8 @@ strict: false*/
               label: "_category".loc()},
             {kind: "XV.SalesPriceWidget", attr: "listPrice"},
             {kind: "XV.SalesPriceWidget", attr: "wholesalePrice"},
-            {kind: "XV.UnitPicker", attr: "priceUnit"}
+            {kind: "XV.UnitPicker", attr: "priceUnit"},
+            {kind: "XV.CheckboxWidget", attr: "isExclusive"}
           ]}
         ]},
         {kind: "XV.ItemCommentBox", attr: "comments"},
