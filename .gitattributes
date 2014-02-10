@@ -1,0 +1,14 @@
+# Set default behavior, change CRLF to LF
+* text eol=lf
+
+# Do not treat these as text
+*.jpg binary
+*.data binary
+*.png binary
+*.ttf binary
+*.otf binary
+*.eot binary
+*.gif binary
+*.gz binary
+*.ico binary
+*.phar binary

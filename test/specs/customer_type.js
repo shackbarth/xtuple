@@ -34,7 +34,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     /**
       @member -
       @memberof CustomerType.prototype
-      @description The ID attribute is "code", which will be automatically uppercased.
+      @description The ID attribute is "code", which will not be automatically uppercased.
     */
     idAttribute: "code",
     enforceUpperKey: false,
@@ -49,8 +49,8 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     /**
       @member -
       @memberof CustomerType.prototype
-      @description CustomerTypes can be read by users with "ViewCustomerTypes" privilege and can be created, updated,
-        or deleted by users with the "MaintainCustomerTypes" privilege.
+      @description CustomerTypes can be read by users with "ViewCustomerTypes" privilege
+      and can be created, updated,or deleted by users with the "MaintainCustomerTypes" privilege
     */
     privileges: {
       createUpdateDelete: "MaintainCustomerTypes",

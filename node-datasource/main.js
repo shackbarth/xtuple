@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+regexp:true, undef:true, strict:true, trailing:true, white:true, es5:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
 
 Backbone = require("backbone");
@@ -70,6 +70,7 @@ XT = { };
   var datasource = require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
+
   datasource.setupPgListeners(X.options.datasource.databases, {
     email: X.smtpTransport.sendMail
   });
