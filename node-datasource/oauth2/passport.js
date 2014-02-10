@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, XM:true, SYS:true, XT:true, _:true, console:true*/
@@ -69,7 +68,7 @@ passport.use(new LocalStrategy(
           password: password
         };
 
-				// note this function must be owned by a superuser or it will fail
+        // note this function must be owned by a superuser or it will fail
         query = "select xt.check_password($$%@$$);".f(JSON.stringify(queryArg));
 
         XT.dataSource.query(query, options, function (error, res) {
