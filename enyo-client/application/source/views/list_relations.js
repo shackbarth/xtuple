@@ -409,11 +409,16 @@ trailing:true, white:true, strict:false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "aliasNumber", classes: "bold"}
-          ]},
-          {kind: "XV.ListColumn", components: [
-            {kind: "XV.ListAttr", attr: "description1"}
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "aliasNumber", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "account.number",
+                classes: "right", placeholder: "_allAccounts".loc()}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "description1",
+                placeholder: "_noDescription".loc()}
+            ]}
           ]}
         ]}
       ]}
