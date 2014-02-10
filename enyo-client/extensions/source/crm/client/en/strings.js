@@ -14,6 +14,7 @@ strict:true, trailing:true, white:true */
     "_incidentStatusColors": "Incident Status Colors",
     "_openIncidents": "Open Incidents",
     "_maintainEmailProfiles": "Maintain Email Profiles",
+    "_staleAnalysisWarning": "Free trial demo analysis data will not be updated from your live changes.",
     "_viewEmailProfiles": "View Email Profiles"
   });
 
