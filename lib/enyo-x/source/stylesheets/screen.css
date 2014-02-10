@@ -1962,6 +1962,9 @@ ul.icons-ul > li .icon-li {
 .xv-list.xv-grid-list .xv-list-item .xv-list-column {
   vertical-align: top;
 }
+.xv-list.xv-grid-list .xv-list-item .xv-list-column .xv-list-attr {
+  font-size: 12px;
+}
 .xv-list.xv-grid-list .xv-list-item .xv-list-column.last {
   border-right: none;
 }

@@ -359,6 +359,7 @@
     "_isDeleted": "Deleted",
     "_isEmployees": "Employees",
     "_isEvent": "Event",
+    "_isExclusive": "Exclusive",
     "_isFractional": "Fractional",
     "_isIncidents": "Incidents",
     "_isInvoices": "Invoices",

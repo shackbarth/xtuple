@@ -93,15 +93,7 @@ trailing:true, white:true, strict: false*/
       {kind: "XV.Groupbox", name: "supplyPanel", title: "_supply".loc(),
         fit: true, components: [
         {kind: "onyx.GroupboxHeader", content: "_supply".loc()},
-        {kind: "XV.CheckboxWidget", attr: "isPurchased", name: "isPurchased"},
-        {kind: "onyx.GroupboxHeader", name: "createSalesSupplyHeader",
-          content: "_createSupplyForSalesOrders".loc()},
-        {kind: "XV.CheckboxWidget", label: "_purchaseOrders".loc(),
-          name: "createPurchaseOrders",
-          attr: "isCreatePurchaseOrdersForSalesOrders"},
-        {kind: "XV.CheckboxWidget", name: "createPurchaseRequestsForSales",
-          label: "_purchaseRequests".loc(), fit: true,
-          attr: "isCreatePurchaseRequestsForSalesOrders"},
+        {kind: "XV.CheckboxWidget", attr: "isPurchased", name: "isPurchased"}
       ], container: "panels"}
     ];
 

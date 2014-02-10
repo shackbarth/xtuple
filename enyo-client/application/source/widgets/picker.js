@@ -605,6 +605,17 @@ regexp:true, undef:true, trailing:true, white:true, strict:false */
   });
 
   // ..........................................................
+  // SALES ORDER STATUS
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderStatusPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.salesOrderStatuses",
+    showNone: false
+  });
+
+  // ..........................................................
   // SALES REP
   //
 

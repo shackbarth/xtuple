@@ -60,11 +60,11 @@ white:true*/
 
     XM.PurchaseOrderMixin = {
       /**
-        Returns Purchase order status as a localized string.
+        Deprecated. Use `formatStatus`.
 
         @returns {String}
       */
-      getPurchaseOrderStatusString: function () {
+      formatStatus: function () {
         var K = XM.PurchaseOrder,
           status = this.get("status");
 
@@ -77,6 +77,14 @@ white:true*/
         case K.CLOSED_STATUS:
           return "_closed".loc();
         }
+      },
+      /**
+        Returns Purchase order status as a localized string.
+
+        @returns {String}
+      */
+      getPurchaseOrderStatusString: function () {
+        return this.formatStatus();
       }
     };
 

@@ -253,6 +253,14 @@
         }
       },
       {
+        "name": "isExclusive",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_exclusive",
+          "required": true
+        }
+      },
+      {
         "name": "productWeight",
         "attr": {
           "type": "Weight",

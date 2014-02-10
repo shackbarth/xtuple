@@ -12,11 +12,18 @@ white:true*/
   XM.ItemMixin = {
 
     /**
+      Deprecated. Use `formatItemType`.
+    */
+    getItemTypeString: function () {
+      return this.formatItemType();
+    },
+
+    /**
     Returns item type as a localized string.
 
     @returns {String}
     */
-    getItemTypeString: function () {
+    formatItemType: function () {
       var K = XM.Item,
         itemType = this.get('itemType');
       switch (itemType)
@@ -243,7 +250,8 @@ white:true*/
         isFractional: false,
         isSold: true,
         itemType: XM.Item.PURCHASED,
-        listPrice: 0
+        listPrice: 0,
+        isExclusive: false
       };
     },
 

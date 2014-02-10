@@ -165,13 +165,18 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
         {readOnlyAttr: "item.description1"},
         {readOnlyAttr: "site.code"}
       ]},
-      {classes: "quantity", header: ["_quantity".loc(), "_unit".loc()], rows: [
+      {classes: "quantity",
+        header: ["_quantity".loc(), "_unit".loc(), "_status".loc()],
+        rows: [
         {readOnlyAttr: "quantity",
           editor: {kind: "XV.QuantityWidget", attr: "quantity",
             name: "quantityWidget"}},
         {readOnlyAttr: "quantityUnit.name",
           editor: {kind: "XV.UnitCombobox", attr: "quantityUnit",
-            name: "quantityUnitPicker", tabStop: false }}
+            name: "quantityUnitPicker", tabStop: false }},
+        {readOnlyAttr: "formatStatus",
+          editor: {kind: "XV.SalesOrderStatusPicker", attr: "status",
+            name: "salesOrderStatusPicker"}}
       ]},
       {classes: "percent", header: "_discount".loc(), rows: [
         {readOnlyAttr: "discount",
