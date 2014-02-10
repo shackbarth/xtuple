@@ -74,8 +74,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     "classCode", "inventoryUnit", "isFractional", "isConfigured", "notes", "extendedDescription",
     "isSold", "productCategory", "freightClass", "barcode", "listPrice", "wholesalePrice",
     "priceUnit", "productWeight", "packageWeight", "aliases", "comments", "characteristics",
-    "accounts", "contacts", "items", "files", "urls", "itemSiteRelations", "maximumDesiredCost",
-    "customers"],
+    "accounts", "contacts", "items", "files", "urls", "maximumDesiredCost", "customers"],
     /**
       @member -
       @memberof Item.prototype
