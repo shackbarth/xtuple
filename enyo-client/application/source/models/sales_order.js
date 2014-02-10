@@ -183,10 +183,17 @@ white:true*/
     defaults: function () {
       var defaults = XM.SalesOrderLineMixin.defaults.apply(this, arguments);
 
-      defaults.firm = false;
-      defaults.subnumber = 0;
+      _.extend(defaults, {
+        firm: false,
+        subnumber: 0,
+        status: XM.SalesOrder.OPEN_STATUS
+      });
 
       return defaults;
+    },
+
+    isActive: function () {
+      return this.get("status") === XM.SalesOrder.OPEN_STATUS;
     }
   }), XM.SalesOrderLineStaticMixin);
 
