@@ -147,4 +147,4 @@ where coitem_id = old.coitem_id;
 
 create or replace rule "_DELETE" as on delete to xt.coiteminfo do instead
 
-delete from coitem where coitem_id = old.coitem_id;
+select deletesoitem(old.coitem_id);
