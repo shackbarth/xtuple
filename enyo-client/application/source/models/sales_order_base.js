@@ -240,7 +240,7 @@ white:true*/
 
     @returns {String}
     */
-    getOrderStatusString: function () {
+    formatStatus: function () {
       var K = XM.SalesOrderBase,
         status = this.get('status');
 
@@ -253,6 +253,15 @@ white:true*/
       case K.CANCELLED_STATUS:
         return '_cancelled'.loc();
       }
+    },
+
+    /**
+    Deprecated. Use `formatStatus`.
+
+    @returns {String}
+    */
+    getOrderStatusString: function () {
+      return this.formatStatus();
     }
   };
 
