@@ -295,17 +295,35 @@ trailing:true, white:true, strict: false*/
         obj = XT.getObjectByName(collection);
       this.setValue(obj);
     },
-    getModel: function (index) {
-      var model = this.getValue().at(index);
-      return XT.getObjectByName(model.get('model'));
-    },
     getWorkspace: function () {
       return this._workspace;
     },
+    /**
+      Configuration is a special list because it's backed by a backbone
+      model which points to an empty XM.Model in its model attribute. Don't
+      let this go up through the normal channels; handle the opening of
+      the workspace here.
+     */
     itemTap: function (inSender, inEvent) {
-      var model = this.getValue().at(inEvent.index);
+      var model = this.getValue().at(inEvent.index),
+        workspace = model.get("workspace"),
+        xmModel = XT.getObjectByName(model.get('model')),
+        canNotRead = !xmModel.getClass().canRead(),
+        id = false;
+
       this._workspace = model.get('workspace');
-      return this.inherited(arguments);
+
+      // Check privileges first
+      if (canNotRead) {
+        this.showError("_insufficientViewPrivileges".loc());
+        return true;
+      }
+
+      // Bubble requset for workspace view, including the model id payload
+      if (workspace) {
+        this.doWorkspace({workspace: workspace, id: id});
+      }
+      return true;
     },
     fetch: function () {
       this.fetched();
