@@ -462,7 +462,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       if (thisOrm.privileges.all.delete) {
         resources[ormType].methods.delete = {
           "id": ormType + ".delete",
-          "path": ormTypeHyphen + "/{",
+          "path": "resources/" + ormTypeHyphen + "/{",
           "httpMethod": "DELETE",
           "description": "Deletes a single " + ormType + " record."
         };
@@ -479,7 +479,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       if (thisOrm.privileges.all.read) {
         resources[ormType].methods.get = {
           "id": ormType + ".get",
-          "path": ormTypeHyphen + "/{",
+          "path": "resources/" + ormTypeHyphen + "/{",
           "httpMethod": "GET",
           "description": "Gets a single " + ormType + " record."
         };
@@ -501,7 +501,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       if (thisOrm.privileges.all.read) {
         resources[ormType].methods.head = {
           "id": ormType + ".head",
-          "path": ormTypeHyphen + "/{",
+          "path": "resources/" + ormTypeHyphen + "/{",
           "httpMethod": "HEAD",
           "description": "Returns the HTTP Header as if you made a GET request for a single " + ormType + " record, but will not return any response body."
         };
@@ -519,7 +519,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       if (thisOrm.privileges.all.create) {
         resources[ormType].methods.insert = {
           "id": ormType + ".insert",
-          "path": ormTypeHyphen,
+          "path": "resources/" + ormTypeHyphen,
           "httpMethod": "POST",
           "description": "Add a single " + ormType + " record."
         };
@@ -544,7 +544,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       if (thisOrm.privileges.all.read) {
         resources[ormType].methods.list = {
           "id": ormType + ".list",
-          "path": ormTypeHyphen,
+          "path": "resources/" + ormTypeHyphen,
           "httpMethod": "GET",
           "description": "Returns a list of " + ormType + " records."
         };
@@ -602,7 +602,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       if (thisOrm.privileges.all.read) {
         resources[ormType].methods.listhead = {
           "id": ormType + ".listhead",
-          "path": ormTypeHyphen,
+          "path": "resources/" + ormTypeHyphen,
           "httpMethod": "HEAD",
           "description": "Returns the HTTP Header as if you made a GET request for a list of " + ormType + " records, but will not return any response body."
         };
@@ -656,7 +656,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       if (thisOrm.privileges.all.update) {
         resources[ormType].methods.patch = {
           "id": ormType + ".patch",
-          "path": ormTypeHyphen + "/{",
+          "path": "resources/" + ormTypeHyphen + "/{",
           "httpMethod": "PATCH",
           "description": "Modifies a single " + ormType + " record. This method supports JSON-Patch semantics."
         };
@@ -809,7 +809,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
           objectServices[methodName] = {
             id: businessObjectName + "." + methodName,
             /* TODO: decide the path we want to put these under in restRouter, and reflect that here */
-            path: /* "services/" + */ businessObjectNameHyphen + "/" + methodName.camelToHyphen(),
+            path:  "services/" +  businessObjectNameHyphen + "/" + methodName.camelToHyphen(),
             httpMethod: "POST",
             scopes: scopes,
             description: method.description,
