@@ -387,7 +387,7 @@ white:true*/
           validItems;
 
         // Check that we have line items
-        if (!err) {
+        if (!err && this.previousStatus() !== XM.Model.DESTROYED_DIRTY) {
           validItems = _.filter(lineItems.models, function (item) {
             return item.previousStatus() !== K.DESTROYED_DIRTY;
           });
@@ -758,18 +758,22 @@ white:true*/
             type: K.QUESTION,
           },
           args = arguments,
-          message;
+          message,
+          callback;
 
         if (status === K.UNRELEASED_STATUS) {
-          message = "_deleteLine?".loc();
-          payload.callback = function (response) {
+          callback = function (response) {
             if (response.answer) {
               XM.Model.prototype.destroy.apply(that, args);
             }
           };
+          if (options.validate === false) {
+            callback({answer: true});
+            return;
+          }
+          message = "_deleteLine?".loc();
         } else if (status === K.OPEN_STATUS) {
-          message = "_closeLine?".loc();
-          payload.callback = function (response) {
+          callback = function (response) {
             if (response.answer) {
               that.set("status", K.CLOSED_STATUS);
               if (options && options.success) {
@@ -777,11 +781,17 @@ white:true*/
               }
             }
           };
+          if (options.validate === false) {
+            callback({answer: true});
+            return;
+          }
+          message = "_closeLine?".loc();
         } else {
           // Must be closed, shouldn't have come here.
           return;
         }
 
+        payload.callback = callback;
         this.notify(message, payload);
       },
 

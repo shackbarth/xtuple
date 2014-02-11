@@ -2251,8 +2251,13 @@ strict: false*/
       commentBox: {kind: "XV.SalesOrderLineCommentBox", attr: "comments"}
     }
   };
-  enyo.mixin(salesOrderLineItem, XV.SalesOrderLineMixin);
-  enyo.mixin(salesOrderLineItem, lineItem);
+  _.extend(salesOrderLineItem, XV.SalesOrderLineMixin, lineItem, {
+    destroy: function () {
+      this.bind("off");
+      this.inherited(arguments);
+    }
+  });
+
   enyo.kind(salesOrderLineItem);
 
   // ..........................................................
