@@ -16,8 +16,8 @@ latest tag with the following:
 
     git clone --recursive git://github.com/<username>/xtuple.git
     cd xtuple
-    git remote add xtuple git://github.com/xtuple/xtuple.git
-    git fetch xtuple
+    git remote add XTUPLE git://github.com/xtuple/xtuple.git
+    git fetch XTUPLE
     git checkout `git describe --abbrev=0`
 
 #### 2. Run the install script
