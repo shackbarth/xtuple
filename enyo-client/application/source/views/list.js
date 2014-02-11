@@ -1566,23 +1566,16 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
-                classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "priority.name",
-                fit: true, classes: "right",
-                placeholder: "_noPriority".loc()}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "account.name"},
-              {kind: "XV.ListAttr", attr: "percentComplete", fit: true,
-                classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "name-column", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true},
+            {kind: "XV.ListAttr", attr: "name"},
+            {kind: "XV.ListAttr", attr: "account.name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "right-column", components: [
+            {kind: "XV.ListAttr", attr: "dueDate"},
+            {kind: "XV.ListAttr", attr: "priority.name",
+                placeholder: "_noPriority".loc()},
+            {kind: "XV.ListAttr", attr: "percentComplete"}
           ]},
           {kind: "XV.ListColumn", style: "width: 100px;",
             components: [
