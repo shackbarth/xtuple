@@ -9,15 +9,14 @@
   var zombieAuth = require('../lib/zombie_auth'),
     prepDatabase = require('../lib/prep_database');
 
-  describe('The zombie login process', function () {
-    it('should work if we give it enough time', function (done) {
-      this.timeout(10 * 60 * 1000);
-      zombieAuth.loadApp({refreshLogin: true, callback: done});
-    });
-    it('will need some database prep', function (done) {
-      this.timeout(10 * 1000);
-      prepDatabase.prepDatabase(done);
+  before(function (done) {
+    this.timeout(10 * 120 * 1000);
+
+    zombieAuth.loadApp({
+      refreshLogin: true,
+      callback: function () {
+        prepDatabase.prepDatabase(done);
+      }
     });
   });
-
 }());
