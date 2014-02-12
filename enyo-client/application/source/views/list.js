@@ -1564,8 +1564,8 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "getProjectStatusString"},
             {kind: "XV.ListAttr", attr: "assignedTo.username",
               placeholder: "_noAssignedTo".loc()},
-            {kind: "XV.ListAttr", attr: "department.number",
-              placeholder: "_noDepartment".loc()},
+            {kind: "XV.ListAttr", attr: "projectType.code",
+              placeholder: "_noProjectType".loc()},
           ]},
           {kind: "XV.ListColumn", style: "width: 80px;",
             components: [
