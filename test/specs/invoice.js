@@ -55,15 +55,15 @@ TODO deferred to later sprint:
     Here is some high-level description of what an invoice is supposed to do.
     @class
     @alias Invoice
-    @property {String} number that is the documentKey and idAttribute
-    @property {Date} invoiceDate required default today
-    @property {Boolean} isPosted required, defaulting to false, read only
-    @property {Boolean} isVoid required, defaulting to false, read only
-    @property {BillingCustomer} customer required
+    @property {String} number [that is the documentKey and idAttribute.] (This is identifying number of the invoice.)
+    @property {Date} invoiceDate [required default today]
+    @property {Boolean} isPosted [required, defaulting to false, read only]
+    @property {Boolean} isVoid [required, defaulting to false, read only]
+    @property {BillingCustomer} customer [required]
     @property {String} billtoName
     @property {String} billtoAddress1
     @property {String} billtoAddress2
-    @property {String} billtoAddress3
+    @property {String} billtoAddress3 ()
     @property {String} billtoCity
     @property {String} billtoState
     @property {String} billtoPostalCode
@@ -110,7 +110,7 @@ TODO deferred to later sprint:
     collectionType: "XM.InvoiceListItemCollection",
     /**
       @member -
-      @memberof Invoice.prototype
+      @memberof Invoice
       @description The invoice collection is not cached.
     */
     cacheName: null,
@@ -118,13 +118,13 @@ TODO deferred to later sprint:
     instanceOf: "XM.Document",
     /**
       @member -
-      @memberof Invoice.prototype
+      @memberof Invoice
       @description Invoice is lockable.
     */
     isLockable: true,
     /**
       @member -
-      @memberof Invoice.prototype
+      @memberof Invoice
       @description The ID attribute is "number", which will be automatically uppercased.
     */
     idAttribute: "number",
@@ -150,17 +150,21 @@ TODO deferred to later sprint:
       commission: 0
     },
     /**
-      @member -
-      @memberof Invoice.prototype
+      @member Setup
+      @memberof Invoice
       @description Used in the billing module
     */
     extensions: ["billing"],
     /**
-      @member -
-      @memberof Invoice.prototype
+      @member Privileges
+      @memberof Invoice
       @description Users can create, update, and delete invoices if they have the
-        MaintainMiscInvoices privilege, and they can read invoices if they have
-        the ViewMiscInvoices privilege.
+        MaintainMiscInvoices privilege.
+    */
+    /**
+      @member Privileges
+      @memberof Invoice
+      @description Users can read invoices if they have the ViewMiscInvoices privilege.
     */
     privileges: {
       createUpdateDelete: "MaintainMiscInvoices",
@@ -193,7 +197,7 @@ TODO deferred to later sprint:
   var additionalTests = function () {
     /**
       @member -
-      @memberof Invoice.prototype
+      @memberof Invoice
       @description There is a setting "Valid Credit Card Days"
       @default 7
     */
@@ -204,7 +208,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Characteristics can be assigned as being for invoices
       */
       it("XM.Characteristic includes isInvoices as a context attribute", function () {
@@ -213,7 +217,7 @@ TODO deferred to later sprint:
       });
       /**
         @member InvoiceCharacteristic
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Follows the convention for characteristics
         @see Characteristic
       */
@@ -233,7 +237,7 @@ TODO deferred to later sprint:
     });
     /**
       @member -
-      @memberof Invoice.prototype
+      @memberof Invoice
       @description Documents should exist to connect an invoice to:
         Contact, Account, Customer, File, Url, Item
     */
@@ -303,7 +307,7 @@ TODO deferred to later sprint:
       });
       /**
         @member InvoiceLineTax
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description Contains the tax of an invoice line.
         @property {String} uuid The ID attribute
         @property {TaxType} taxType
@@ -371,7 +375,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description InvoiceLine keeps track of the available selling units of measure
         based on the selected item, in the "sellingUnits" property
       */
@@ -382,7 +386,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description When the item is changed the following should be updated from item information:
           sellingUnits, quantityUnit, quantityUnitRatio, priceUnit, priceUnitRatio, unitCost
           and taxType. Then, the price should be recalculated.
@@ -415,7 +419,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description Quantity and billed values can be fractional only if the item allows it
       */
       it("When the item isFractional attribute === false, decimal numbers should not be allowed " +
@@ -444,7 +448,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description The "ordered" and "billed" amounts must be positive
       */
       it("Ordered should only allow positive values", function () {
@@ -465,7 +469,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description When item is unset, all item-related values should be cleared.
       */
       it("If item is unset, the above values should be cleared.", function (done) {
@@ -483,7 +487,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description User requires the "OverrideTax" privilege to edit the tax type.
       */
       it.skip("User requires the OverrideTax privilege to edit the tax type", function () {
@@ -502,7 +506,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Currency field should be read only after a line item is added to the invoice
       */
       it("Currency field should be read-only after a line item is added to the invoice",
@@ -511,7 +515,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description The user can define a line item as being miscellaneous or not.
           Miscellaneous means that they can enter a free-form itemNumber, itemDescription,
           and salesCategory. If the item is not miscellaneous then they must choose
@@ -634,7 +638,7 @@ TODO deferred to later sprint:
       //
       /**
         @member InvoiceTax
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Invoice tax adjustments
         @property {String} uuid
         @property {TaxCode} taxCode
@@ -651,7 +655,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description The invoice numbering policy can be determined by the user.
       */
       it("XM.Invoice should check the setting for InvcNumberGeneration to determine " +
@@ -666,7 +670,7 @@ TODO deferred to later sprint:
       });
       /**
         @member InvoiceAllocation
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Invoice-level allocation information
         @property {String} uuid
         @property {String} invoice // XXX String or Number?
@@ -698,7 +702,7 @@ TODO deferred to later sprint:
       });
       /**
         @member InvoiceListItem
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description List-view summary information for an invoice
         @property {String} number
         @property {Boolean} isPrinted XXX changed from printed
@@ -742,7 +746,7 @@ TODO deferred to later sprint:
       });
       /**
         @member InvoiceRelation
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Summary information for an invoice
         @property {String} number
         @property {CustomerRelation} customer
@@ -772,7 +776,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description When the customer changes, the billto information should be populated from
           the customer, along with the salesRep, commission, terms, taxZone, and currency.
           The billto fields will be read-only if the customer does not allow free-form billto.
@@ -819,7 +823,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description The price will be recalculated when the units change.
       */
       it("If the quantityUnit or priceUnit are changed, \"calculatePrice\" should be " +
@@ -835,7 +839,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description If price or billing change, extendedPrice should be recalculated.
       */
       it("If price or billing change, extendedPrice should be recalculated.", function () {
@@ -843,7 +847,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof InvoiceLine.prototype
+        @memberof InvoiceLine
         @description When billed is changed extendedPrice should be recalculated.
       */
       it("When billed is changed extendedPrice should be recalculated", function (done) {
@@ -855,7 +859,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description When currency or invoice date is changed outstanding credit should be
           recalculated.
       */
@@ -880,7 +884,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description AllocatedCredit should be recalculated when XM.InvoiceAllocation records
           are added or removed.
       */
@@ -893,7 +897,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description When invoice date is changed allocated credit should be recalculated.
       */
       it("When the invoice date is changed allocated credit should be recalculated", function () {
@@ -907,7 +911,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description When subtotal, totalTax or miscCharge are changed, the total
           should be recalculated.
       */
@@ -919,7 +923,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description TotalTax should be recalculated when taxZone changes or
           taxAdjustments are added or removed.
       */
@@ -954,7 +958,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description When an invoice is loaded where "isPosted" is true, then the following
           attributes will be made read only:
           lineItems, number, invoiceDate, terms, salesrep, commission, taxZone, saleType
@@ -983,7 +987,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Balance should be recalculated when total, allocatedCredit, or
           outstandingCredit are changed.
       */
@@ -993,7 +997,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description When allocatedCredit or lineItems exist, currency should become read only.
       */
       it("When allocatedCredit or lineItems exist, currency should become read only.", function () {
@@ -1001,7 +1005,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description To save, the invoice total must not be less than zero and there must be
           at least one line item.
       */
@@ -1042,7 +1046,7 @@ TODO deferred to later sprint:
 
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Invoice includes a function "calculateTax" that
           Gathers line item, freight and adjustments
           Groups by and sums and rounds to XT.MONEY_SCALE for each tax code
@@ -1066,7 +1070,7 @@ TODO deferred to later sprint:
     describe("Invoice List View", function () {
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Users can perform the following actions from the list: Delete unposted
           invoices where the user has the MaintainMiscInvoices privilege, Post unposted
           invoices where the user has the "PostMiscInvoices" privilege, Void posted invoices
@@ -1128,7 +1132,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description The invoice list should support multiple selections
       */
       it("The invoice list should support multiple selections", function () {
@@ -1159,7 +1163,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description The InvoiceList should be printable
       */
       it("XV.InvoiceList should be printable", function () {
@@ -1184,7 +1188,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Supports grid-entry of line items on desktop browsers.
       */
       it("Should include line items views where a grid box is used for non-touch devices " +
@@ -1200,7 +1204,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description The bill to addresses available when searching addresses should filter
           on the addresses associated with the customer's account record by default.
       */
@@ -1212,7 +1216,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description The customer search list should search only on active customers.
       */
       it.skip("The customer search list should search only on active customers", function () {
@@ -1221,7 +1225,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description A child workspace view should exist called XV.InvoiceLineWorkspace
           should include: all the attributes on XM.InvoiceLine, item cost and item list
           price values, and a read only panel that displays a group box of lists of taxes.
@@ -1234,7 +1238,7 @@ TODO deferred to later sprint:
     describe("Sales Extension", function () {
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description If the sales extension is installed you can link invoices to sales orders
       */
       it("XM.InvoiceSalesOrder", function () {
@@ -1243,7 +1247,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description Invoice will include authorizedCredit, the sum of credit card authorizations
           in the order currency where:
             - The current_timestamp - authorization date is less than CCValidDays || 7
@@ -1258,7 +1262,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description sales extension order date defaults to today
       */
       it("Sales extension order date default today", function () {
@@ -1268,7 +1272,7 @@ TODO deferred to later sprint:
     describe("Project extension", function () {
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description If the project extension is installed you can link invoices to projects
       */
       it("XM.InvoiceProject", function () {
@@ -1277,7 +1281,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description The project attribute will be read-only for posted invoices
       */
       it.skip("project is read-only for posted invoices", function () {
@@ -1286,7 +1290,7 @@ TODO deferred to later sprint:
       });
       /**
         @member -
-        @memberof Invoice.prototype
+        @memberof Invoice
         @description The project widget will be added to the invoice workspace if the
           UseProjects setting is true.
       */

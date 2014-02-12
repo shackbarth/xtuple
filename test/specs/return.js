@@ -66,7 +66,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     collectionType: "XM.ReturnListItemCollection",
     /**
       @member -
-      @memberof Return.prototype
+      @memberof Return
       @description The Return collection is not cached.
     */
     cacheName: null,
@@ -74,13 +74,13 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     instanceOf: "XM.Document",
     /**
       @member -
-      @memberof Return.prototype
+      @memberof Return
       @description Return is lockable.
     */
     isLockable: true,
     /**
       @member -
-      @memberof Return.prototype
+      @memberof Return
       @description The ID attribute is "number", which will be automatically uppercased.
     */
     idAttribute: "number",
@@ -102,15 +102,20 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     },
     /**
       @member -
-      @memberof Return.prototype
+      @memberof Return
       @description Used in the billing module
     */
     extensions: ["billing"],
     /**
-      @member -
-      @memberof Return.prototype
+      @member Privileges
+      @memberof Return
       @description Users can create, update, and delete Returns if they have the
-        MaintainCreditMemos privilege, and they can read Returns if they have
+        MaintainCreditMemos privilege.
+    */
+    /**
+      @member Privileges
+      @memberof Return
+      @description Users can read Returns if they have
         the ViewCreditMemos privilege.
     */
     privileges: {
@@ -187,7 +192,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member ReturnLineTax
-        @memberof ReturnLine.prototype
+        @memberof ReturnLine
         @description Contains the tax of an Return line.
         @property {String} uuid The ID attribute
         @property {TaxType} taxType
@@ -252,7 +257,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof ReturnLine.prototype
+        @memberof ReturnLine
         @description ReturnLine keeps track of the available selling units of measure
         based on the selected item, in the "sellingUnits" property
       */
@@ -263,7 +268,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof ReturnLine.prototype
+        @memberof ReturnLine
         @description When the item is changed the following should be updated from item information:
           sellingUnits, quantityUnit, quantityUnitRatio, priceUnit, priceUnitRatio, unitCost
           and taxType. Then, the price should be recalculated.
@@ -296,7 +301,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof ReturnLine.prototype
+        @memberof ReturnLine
         @description quantity and credited values can be fractional only if the item allows it
       */
       it("When the item isFractional attribute === false, decimal numbers should not be allowed " +
@@ -325,7 +330,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof ReturnLine.prototype
+        @memberof ReturnLine
         @description Returned and credited should only allow positive values.
       */
       it("Returned should only allow positive values", function () {
@@ -346,7 +351,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof ReturnLine.prototype
+        @memberof ReturnLine
         @description When item is unset, all item-related values should be cleared.
       */
       it("If item is unset, the above values should be cleared.", function (done) {
@@ -364,7 +369,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof ReturnLine.prototype
+        @memberof ReturnLine
         @description User requires the "OverrideTax" privilege to edit the tax type.
       */
       it.skip("User requires the OverrideTax privilege to edit the tax type", function () {
@@ -383,7 +388,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description Currency field should be read only after a line item is added to the Return
       */
       it("Currency field should be read-only after a line item is added to the Return",
@@ -474,7 +479,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       //
       /**
         @member ReturnTax
-        @memberof Return.prototype
+        @memberof Return
         @description Return tax adjustments
         @property {String} uuid
         @property {TaxCode} taxCode
@@ -491,7 +496,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description The Return numbering policy can be determined by the user.
       */
       it("XM.Return should check the setting for CMNumberGeneration to determine " + //Please change the variable InvcNumberGeneration accordingly
@@ -506,7 +511,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member ReturnAllocation
-        @memberof Return.prototype
+        @memberof Return
         @description Return-level allocation information
         @property {String} uuid
         @property {String} return // XXX String or Number?
@@ -538,7 +543,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member ReturnListItem
-        @memberof Return.prototype
+        @memberof Return
         @description List-view summary information for an Return
         @property {String} number
         @property {Boolean} isPrinted
@@ -587,7 +592,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 
       /**
         @member ReturnRelation
-        @memberof Return.prototype
+        @memberof Return
         @description Summary information for an Return
         @property {String} number
         @property {CustomerRelation} customer
@@ -618,7 +623,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description When the customer changes, the billto information should be populated from
           the customer, along with the salesRep, commission, terms, taxZone, and currency.
           The billto fields will be read-only if the customer does not allow free-form billto.
@@ -657,7 +662,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof ReturnLine.prototype
+        @memberof ReturnLine
         @description The price will be recalculated when the units change.
       */
       it("If the quantityUnit or sellingUnit are changed, \"calculatePrice\" should be " +
@@ -673,7 +678,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof ReturnLine.prototype
+        @memberof ReturnLine
         @description If price or credited change, extendedPrice should be recalculated.
       */
       it("If price or credited change, extendedPrice should be recalculated.", function () {
@@ -681,7 +686,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof ReturnLine.prototype
+        @memberof ReturnLine
         @description When credited is changed extendedPrice should be recalculated.
       */
       it("When credited is changed extendedPrice should be recalculated", function (done) {
@@ -693,7 +698,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description When currency or Return date is changed outstanding credit should be
           recalculated.
       */
@@ -718,7 +723,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description AllocatedCredit should be recalculated when XM.ReturnAllocation records
           are added or removed.
       */
@@ -731,7 +736,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description When Return date is changed allocated credit should be recalculated.
       */
       it("When the Return date is changed allocated credit should be recalculated", function () {
@@ -741,7 +746,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description When subtotal, totalTax or miscCharge are changed, the total
           should be recalculated.
       */
@@ -753,7 +758,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description TotalTax should be recalculated when taxZone changes or
           taxAdjustments are added or removed.
       */
@@ -788,7 +793,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description When an Return is loaded where "isPosted" is true, then the following
           attributes will be made read only:
           lineItems, number, returnDate, terms, salesrep, commission, taxZone, saleType
@@ -816,7 +821,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description Balance should be recalculated when total, allocatedCredit, or
           outstandingCredit are changed.
       */
@@ -826,7 +831,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description When allocatedCredit or lineItems exist, currency should become read only.
       */
       it("When allocatedCredit or lineItems exist, currency should become read only.", function () {
@@ -834,7 +839,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description To save, the Return total must not be less than zero and there must be
           at least one line item.
       */
@@ -875,7 +880,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description Return includes a function "calculateTax" that
           Gathers line item, freight and adjustments
           Groups by and sums and rounds to XT.MONEY_SCALE for each tax code
@@ -886,7 +891,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description When a customer with non-base currency is selected the following values
           should be displayed in the foreign currency along with the values in base currency
           - Unit price, Extended price, Allocated Credit, Authorized Credit, Margin,
@@ -906,7 +911,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     describe("Return List View", function () {
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description A list view should exist called XV.ReturnList. Users can perform the following actions from the list: Delete unposted
           Returns where the user has the MaintainCreditMemos  privilege, Post unposted
           Returns where the user has the "PostARDocuments" privilege, Void posted Returns
@@ -968,7 +973,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description The Return list should not support multiple selections
       */
       it("The Return list should not support multiple selections", function () {
@@ -998,7 +1003,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description The ReturnList should be printable
       */
       it("XV.ReturnList should be printable", function () {
@@ -1023,7 +1028,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description Supports grid-entry of line items on desktop browsers.
       */
       it("Should include line items views where a grid box is used for non-touch devices " +
@@ -1039,7 +1044,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description A Tax adjustments panel should be available. User shold be able to
         add new tax adjustments and remove tax adjustments for unposted Returns
       */
@@ -1050,7 +1055,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description A Credit Allocation panel should be available. When 'New'  button is
          selected, user should be allowed to create a minimalized version of cash receipt
          on the fly
@@ -1063,7 +1068,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description The cash receipt need only record the amount, currency, document number,
         document date, distribution date and whether the balance should generate a
         credit memo or a customer deposit, depending on global customer deposit metrics
@@ -1075,7 +1080,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description When clicked, an "allocate" button should present a list of open receivables
          that are credits that can be associated with the Return
       */
@@ -1084,7 +1089,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
         });
        /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description The 2 buttons above should only be enabled if the user has
         the "ApplyARMemos" privilege"
       */
@@ -1094,7 +1099,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description The bill to addresses available when searching addresses should filter
           on the addresses associated with the customer's account record by default.
       */
@@ -1106,7 +1111,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description The customer search list should search only on active customers.
       */
       it.skip("The customer search list should search only on active customers", function () {
@@ -1115,7 +1120,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description A child workspace view should exist called XV.ReturnLineWorkspace
           should include: all the attributes on XM.ReturnLine, item cost and item list
           price values, and a read only panel that displays a group box of lists of taxes.
@@ -1128,7 +1133,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     describe("Sales Extension", function () {
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description Return will include authorizedCredit, the sum of credit card authorizations
           in the order currency where:
             - The current_timestamp - authorization date is less than CCValidDays || 7
@@ -1150,7 +1155,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
     describe("Project extension", function () {
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description The project attribute will be read-only for posted Returns
       */
       it.skip("project is read-only for posted Returns", function () {
@@ -1159,7 +1164,7 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
       });
       /**
         @member -
-        @memberof Return.prototype
+        @memberof Return
         @description The project widget will be added to the Return workspace if the
           UseProjects setting is true.
       */
