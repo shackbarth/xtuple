@@ -1,5 +1,6 @@
 <?js
     var props = obj;
+    var endUser = env.conf.templates.endUser;
     
     /* sort subprops under their parent props (like opts.classname) */
     var parentProp = null;
@@ -45,7 +46,9 @@
 		<th>Name</th>
 		<?js } ?>
 		
+		<?js if (!endUser) {?>
 		<th>Type</th>
+		<?js } ?>
 		
 		<?js if (props.hasAttributes) {?>
 		<th>Argument</th>
@@ -71,11 +74,13 @@
                 <td class="name"><code><?js= prop.name ?></code></td>
             <?js } ?>
             
-            <td class="type">
-            <?js if (prop.type && prop.type.names) {?>
-                <?js= self.partial('type.tmpl', prop.type.names) ?>
+            <?js if (!endUser) {?>
+                <td class="type">
+                <?js if (prop.type && prop.type.names) {?>
+                    <?js= self.partial('type.tmpl', prop.type.names) ?>
+                <?js } ?>
+                </td>
             <?js } ?>
-            </td>
             
             <?js if (props.hasAttributes) {?>
                 <td class="attributes">
