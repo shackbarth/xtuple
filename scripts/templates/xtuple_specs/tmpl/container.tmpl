@@ -1,5 +1,13 @@
 <?js
     var self = this;
+    var subgroupOrder = [
+      "Setup", 
+      "Privileges", 
+      "Settings", 
+      "Buttons", 
+      "Navigation", 
+      "Other"
+    ];
     docs.forEach(function(doc, i) {
 ?>
 
@@ -103,7 +111,6 @@
               member.name = 'Other';
             }
           });
-          var subgroupOrder = ["Setup", "Privileges", "Settings", "Buttons", "Navigation", "Other"];
           members.sort(function (a, b) {
             var subgroupA = subgroupOrder.indexOf(a.name),
               subgroupB = subgroupOrder.indexOf(b.name);

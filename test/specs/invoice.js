@@ -55,15 +55,15 @@ TODO deferred to later sprint:
     Here is some high-level description of what an invoice is supposed to do.
     @class
     @alias Invoice
-    @property {String} number that is the documentKey and idAttribute
-    @property {Date} invoiceDate required default today
-    @property {Boolean} isPosted required, defaulting to false, read only
-    @property {Boolean} isVoid required, defaulting to false, read only
-    @property {BillingCustomer} customer required
+    @property {String} number [that is the documentKey and idAttribute.] (This is identifying number of the invoice.)
+    @property {Date} invoiceDate [required default today]
+    @property {Boolean} isPosted [required, defaulting to false, read only]
+    @property {Boolean} isVoid [required, defaulting to false, read only]
+    @property {BillingCustomer} customer [required]
     @property {String} billtoName
     @property {String} billtoAddress1
     @property {String} billtoAddress2
-    @property {String} billtoAddress3
+    @property {String} billtoAddress3 ()
     @property {String} billtoCity
     @property {String} billtoState
     @property {String} billtoPostalCode
