@@ -110,6 +110,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
         ormAuth = {},
         orms = [],
         schemas = {},
+        services,
         version = "v1alpha1";
 
     rootUrl = rootUrl || "{rootUrl}";
@@ -311,7 +312,20 @@ select xt.install_js('XT','Discovery','xtuple', $$
     /*
      * Services section.
      */
-    discovery.services = XT.Discovery.getServices(orm, rootUrl);
+    /* TODO - Old way. Remove if we don't need this anymore. */
+    /*discovery.services = XT.Discovery.getServices(orm, rootUrl); */
+
+    /* Merge our services into the discovery.resources object. */
+    services = XT.Discovery.getServices(orm, rootUrl);
+    for (var service in services) {
+      if (discovery.resources[service] && discovery.resources[service].methods) {
+        /* Resource exists, so merge with existing methods. */
+        discovery.resources[service].methods = XT.extend(discovery.resources[service].methods, services[service].methods);
+      } else {
+        /* There is no resource yet, so merge this service into the parent 'resources'. */
+        discovery.resources[service] = services[service];
+      }
+    }
 
     /* return the results */
     return discovery;
