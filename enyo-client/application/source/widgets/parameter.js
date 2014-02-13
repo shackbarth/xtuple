@@ -844,6 +844,7 @@ trailing:true, white:true, strict:false*/
       },
       {name: "number", label: "_number".loc(), attr: "number"},
       {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "projectType", label: "_projectType".loc(), attr: "projectType", defaultKind: "XV.ProjectTypePicker"},
       {name: "department", label: "_department".loc(), attr: "department", defaultKind: "XV.DepartmentWidget"},
       {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
       {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},

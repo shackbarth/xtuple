@@ -331,7 +331,7 @@
         "name": "projectType",
         "toOne": {
           "type": "ProjectType",
-          "column": "prj_id"
+          "column": "prj_prjtype_id"
         }
       },
       {
