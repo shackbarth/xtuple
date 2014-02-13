@@ -42,7 +42,6 @@
     assert.equal(workspaceContainer.kind, "XV.WorkspaceContainer");
     model = workspaceContainer.$.workspace.value;
 
-
     autoRegex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER;
     if (model instanceof XM.Document && model.numberPolicy.match(autoRegex)) {
       // wait for the model to fetch its id if appropriate
