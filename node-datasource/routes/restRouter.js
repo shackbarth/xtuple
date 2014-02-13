@@ -76,23 +76,34 @@ module.exports = (function () {
        * POST method can also call dispatch functions for "Service" endpoints.
        */
       POST: function (req, res, session, options) {
-        var serviceModel = options.serviceModel,
+        var body = _.clone(req.body),
+          serviceModel = options.serviceModel,
           services = options.services,
           id = _.camelize(options.id),
           ormType = options.ormType,
           callback = options.callback,
+          payload = {};
+
+        if (serviceModel) {
           payload = {
             nameSpace: "XM",
             type: ormType,
             dispatch: serviceModel && {
               functionName: id,
               parameters: req.body.attributes
-            },
+            }
+          };
+        } else {
+
+          if (!req.body) {
+            return res.send(400, "Bad Request");
+          }
+
+          payload = {
+            nameSpace: "XM",
+            type: ormType,
             data: req.body
           };
-
-        if (!req.body) {
-          return res.send(400, "Bad Request");
         }
 
         routes.queryDatabase("post", payload, session, callback);
@@ -235,7 +246,7 @@ module.exports = (function () {
      * @private
      */
     routeCall = function (req, res, next, orms, resources, services) {
-      var ormType = _.capitalize(_.camelize(req.params.model)),
+      var ormType,
         resourceModel,
         serviceModel,
         session = getSession(req, next),
@@ -254,17 +265,16 @@ module.exports = (function () {
           }
         };
 
-      if (!req.params.model) {
+      if (!req.params.model && !req.params.service) {
         return res.send(404, "Not Found");
       }
 
-      resourceModel = _.findWhere(orms, { orm_type: ormType });
-      serviceModel  = _.contains(_.keys(services), ormType);
-
-      if (resourceModel && serviceModel) {
-        X.err("Found both a matching ORM type and a Service for '" + ormType + "'. REST Router does not know what to do with this request.");
-        X.err("On path: ", req.path);
-        return res.send(500, "Not Implemented");
+      if (req.params.model) {
+        ormType = _.capitalize(_.camelize(req.params.model));
+        resourceModel = _.findWhere(orms, { orm_type: ormType });
+      } else if (req.params.service) {
+        ormType = _.capitalize(_.camelize(req.params.service));
+        serviceModel  = _.contains(_.keys(services), ormType);
       }
 
       if (!(resourceModel || serviceModel)) {
@@ -281,7 +291,7 @@ module.exports = (function () {
         handler(req, res, session, {
           ormType: ormType,
           id: req.params.id,
-          serviceModel: serviceModel,
+          serviceModel: serviceModel || null,
           services: services,
           callback: callback
         });

@@ -351,9 +351,10 @@ app.get('/:org/discovery/v1alpha1/apis', routes.restDiscoveryList);
 
 app.get('/:org/api/userinfo', user.info);
 
-app.all('/:org/api/v1alpha1/:model/:id', routes.restRouter);
-app.all('/:org/api/v1alpha1/:model', routes.restRouter);
-app.all('/:org/api/v1alpha1/*', routes.restRouter);
+app.post('/:org/api/v1alpha1/services/:service/:id', routes.restRouter);
+app.all('/:org/api/v1alpha1/resources/:model/:id', routes.restRouter);
+app.all('/:org/api/v1alpha1/resources/:model', routes.restRouter);
+app.all('/:org/api/v1alpha1/resources/*', routes.restRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
