@@ -1568,8 +1568,9 @@ select xt.install_js('XT','Data','xtuple', $$
      *
      * @param {Object} Orm
      * @param {Number|String} Primary key value
+     * @param {Boolean} safe Return the original value instead of erroring if no match is found
      */
-    getNaturalId: function (orm, value) {
+    getNaturalId: function (orm, value, safe) {
       var ncol = XT.Orm.naturalKey(orm, true),
         pcol = XT.Orm.primaryKey(orm, true),
         query,
@@ -1595,6 +1596,8 @@ select xt.install_js('XT','Data','xtuple', $$
 
       if (ret.length) {
         return ret[0].id;
+      } else if (safe) {
+        return value;
       } else {
         throw new handleError("Natural Key Not Found", 400);
       }
