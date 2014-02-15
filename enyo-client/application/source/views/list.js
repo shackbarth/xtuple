@@ -1563,6 +1563,32 @@ trailing:true, white:true, strict: false*/
       {attribute: "number" }
     ]},
     parameterWidget: "XV.ProjectListParameters",
+    headerComponents: [
+      {kind: "FittableColumns", classes: "xv-list-header",
+        components: [
+        {kind: "XV.ListColumn", classes: "name-column", components: [
+          {content: "_name".loc()},
+          {content: "_description".loc()},
+          {content: "_account".loc()}
+        ]},
+        {kind: "XV.ListColumn", classes: "right-column", components: [
+          {content: "_dueDate".loc()},
+          {content: "_priority".loc()},
+          {content: "_complete".loc()}
+        ]},
+        {kind: "XV.ListColumn", classes: "short", components: [
+          {content: "_status".loc()},
+          {content: "_assignedTo".loc()},
+          {content: "_type".loc()}
+        ]},
+        {kind: "XV.ListColumn", classes: "right-column"},
+        {kind: "XV.ListColumn", classes: "right-column", components: [
+          {content: "_budgeted".loc()},
+          {content: "_actual".loc()},
+          {content: "_balance".loc()}
+        ]}
+      ]}
+    ],
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -1577,7 +1603,7 @@ trailing:true, white:true, strict: false*/
                 placeholder: "_noPriority".loc()},
             {kind: "XV.ListAttr", attr: "percentComplete"}
           ]},
-          {kind: "XV.ListColumn", style: "width: 100px;",
+          {kind: "XV.ListColumn", classes: "short",
             components: [
             {kind: "XV.ListAttr", attr: "getProjectStatusString"},
             {kind: "XV.ListAttr", attr: "assignedTo.username",
@@ -1585,16 +1611,7 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "projectType.code",
               placeholder: "_noProjectType".loc()},
           ]},
-          {kind: "XV.ListColumn", style: "width: 80px;",
-            components: [
-            {content: "_budgeted".loc() + ":", classes: "xv-list-attr",
-              style: "text-align: right;"},
-            {content: "_actual".loc() + ":", classes: "xv-list-attr",
-              style: "text-align: right;"},
-            {content: "_balance".loc() + ":", classes: "xv-list-attr",
-              style: "text-align: right;"}
-          ]},
-          {kind: "XV.ListColumn", classes: "money", components: [
+          {kind: "XV.ListColumn", classes: "right-column", components: [
             {kind: "XV.ListAttr", attr: "budgetedExpenses",
               classes: "text-align-right", formatter: "formatExpenses"},
             {kind: "XV.ListAttr", attr: "actualExpenses",
@@ -1602,7 +1619,8 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "balanceExpenses",
               classes: "text-align-right", formatter: "formatExpenses"}
           ]},
-          {kind: "XV.ListColumn", classes: "money", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "right-column", fit: true,
+            components: [
             {kind: "XV.ListAttr", attr: "budgetedHours",
               classes: "text-align-right", formatter: "formatHours"},
             {kind: "XV.ListAttr", attr: "actualHours",

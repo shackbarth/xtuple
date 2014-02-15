@@ -159,6 +159,7 @@
     "_commentsEditable": "Comments Editable",
     "_company": "Company",
     "_competitor": "Competitor",
+    "_complete": "Complete",
     "_completeDate": "Complete Date",
     "_completionActions": "Completion Actions",
     "_configureSO": "Configure Sales Orders",
