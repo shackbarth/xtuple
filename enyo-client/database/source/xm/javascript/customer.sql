@@ -230,6 +230,57 @@ select xt.install_js('XM','Customer','xtuple', $$
     return XM.PrivateModel.used("XM.Customer", id, exceptions);
   };
 
+  /**
+   * Return a pseudo customer object with all default parameters set.
+   */
+  XM.Customer.defaults = function () {
+    var settings = XT.Session.settings(),
+      salesRep = plv8.execute("select * from salesrep where salesrep_number = $1;", [settings.DefaultSalesRep])[0],
+      /* TODO: This is a hack until #22800 is finished. */
+      shipCharge = plv8.execute("select shipchrg_name from shipchrg where shipchrg_custfreight limit 1;")[0].shipchrg_name,
+      cust = {
+        "customerType": settings.DefaultCustType,
+        "isActive": true,
+        "salesRep": salesRep.salesrep_number,
+        "commission": salesRep.salesrep_commission,
+        "shipCharge": shipCharge,
+        "shipVia": XM.Customer.defaultShipViaValue(),
+        "isFreeFormShipto": settings.DefaultFreeFormShiptos,
+        "isFreeFormBillto": false,
+        "terms": settings.DefaultTerms,
+        "discount": 0,
+        "creditStatus": "G",
+        "balanceMethod": settings.DefaultBalanceMethod,
+        "backorder": settings.DefaultBackOrders,
+        "partialShip": settings.DefaultPartialShipments,
+        "blanketPurchaseOrders": false,
+        "usesPurchaseOrders": false,
+        "autoUpdateStatus": false,
+        "autoHoldOrders": false,
+        "preferredSite": settings.preferredSite
+      };
+
+    return cust;
+  };
+
+  /**
+   * Return default ShipVia value.
+   */
+  XM.Customer.defaultShipViaValue = function () {
+    var ret,
+      settings = XT.Session.settings(),
+      shipVia = plv8.execute("select * from shipvia where shipvia_code = $1;", [settings.DefaultShipViaId])[0];
+
+    if (shipVia) {
+      ret = shipVia.shipvia_code + "-" + shipVia.shipvia_descrip;
+    }
+    else {
+      ret = "";
+    }
+
+    return ret;
+  };
+
 }());
 
 $$ );
