@@ -238,6 +238,7 @@ select xt.install_js('XM','Customer','xtuple', $$
       salesRep = plv8.execute("select * from salesrep where salesrep_number = $1;", [settings.DefaultSalesRep])[0],
       /* TODO: This is a hack until #22800 is finished. */
       shipCharge = plv8.execute("select shipchrg_name from shipchrg where shipchrg_custfreight limit 1;")[0].shipchrg_name,
+      preferredSite = plv8.execute("select warehous_code from whsinfo where warehous_code LIKE 'WH1' OR warehous_active and warehous_shipping order by warehous_id limit 1;")[0].warehous_code,
       cust = {
         "customerType": settings.DefaultCustType,
         "isActive": true,
@@ -257,7 +258,7 @@ select xt.install_js('XM','Customer','xtuple', $$
         "usesPurchaseOrders": false,
         "autoUpdateStatus": false,
         "autoHoldOrders": false,
-        "preferredSite": settings.preferredSite
+        "preferredSite": preferredSite
       };
 
     return cust;
