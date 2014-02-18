@@ -665,7 +665,7 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_correspondenceContact".loc()},
             {kind: "XV.ContactWidget", attr: "correspondenceContact",
               showAddress: true, label: "_name".loc()},
-            {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
+            {kind: "XV.CustomerCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"}
           ]}
