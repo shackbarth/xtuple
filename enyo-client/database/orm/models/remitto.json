@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "RemitTo",
-    "table": "xt.remitto",
+    "table": "xt.remittoinfo",
     "comment": "Remit To Map",
     "privileges": {
       "all": {
