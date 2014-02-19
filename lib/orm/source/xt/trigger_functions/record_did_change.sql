@@ -54,7 +54,7 @@ return (function () {
    }
 
    /* create a new version record if applicable */
-   if (insert) {
+   if (insert && XT.username) {
      sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);'
      plv8.execute(sql, [oid, NEW[pkey], XT.generateUUID()]);
 
