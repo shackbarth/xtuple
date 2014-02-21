@@ -267,6 +267,9 @@
       this.timeout(20 * 1000);
       saveWorkspace(workspace, done);
     });
+    if (spec.skipSmokeDelete) {
+      return;
+    }
     it('can delete the item from the list', function (done) {
       this.timeout(20 * 1000);
       deleteFromList(XT.app, workspace.value, done);
