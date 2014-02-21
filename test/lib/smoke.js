@@ -265,9 +265,13 @@
     });
     it('can save the workspace', function (done) {
       this.timeout(20 * 1000);
+      if (spec.captureObject) {
+        XG = XG || {};
+        XG.capturedId = workspace.value.id;
+      }
       saveWorkspace(workspace, done);
     });
-    if (spec.skipSmokeDelete) {
+    if (spec.captureObject) {
       return;
     }
     it('can delete the item from the list', function (done) {
