@@ -26,7 +26,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     Sample URL:
     https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
-
+    https://localhost:8543/masterref/generate-report?nameSpace=XM&type=Location&id=544a5e69-0579-43fc-f3f8-4c2b1fb55f8b
    */
   var generateReport = function (req, res) {
 
@@ -63,6 +63,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var transformDataStructure = function (data) {
       // TODO: detailAttribute could be inferred by looking at whatever comes before the *
       // in the detailElements definition.
+
+      if (!reportDefinition.settings.detailAttribute) {
+        // no children, so no transformation is necessary
+        return [data];
+      }
 
       return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
         var pathedDetail = {};
@@ -460,16 +465,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     /**
-      TODO: develop a protocol for defining barcodes in the definition file. A simple
-      implementation would then involve creating an image file in the temp directory
-      using some npm package, and then including it as an image in the report.
-     */
-    var fetchBarcodes = function (done) {
-      // TODO
-      done();
-    };
-
-    /**
       Fetch all the translatable strings in the user's language for use
       when we render.
       XXX cribbed from locale route
@@ -602,7 +597,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       createTempOrgDir,
       fetchReportDefinition,
       fetchRemitTo,
-      fetchBarcodes,
       fetchTranslations,
       fetchData,
       fetchImages,
