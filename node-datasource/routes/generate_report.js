@@ -538,6 +538,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       var printFooter = function (report, data) {
+        //report.font("./fonts/f39.ttf");
+        //report.print("*foo*");
+        //report.font("Helvetica");
         printDefinition(report, data, reportDefinition.footerElements);
       };
 
