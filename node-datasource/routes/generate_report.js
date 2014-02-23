@@ -26,7 +26,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     Sample URL:
     https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
-    https://localhost:8543/masterref/generate-report?nameSpace=XM&type=Location&id=544a5e69-0579-43fc-f3f8-4c2b1fb55f8b
+
    */
   var generateReport = function (req, res) {
 
@@ -547,9 +547,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       var printFooter = function (report, data) {
-        //report.font("./fonts/f39.ttf");
-        //report.print("*foo*");
-        //report.font("Helvetica");
         printDefinition(report, data, reportDefinition.footerElements);
       };
 
