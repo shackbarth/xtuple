@@ -575,6 +575,10 @@ white:true*/
 
     _.extend(XM.PurchaseOrderWorkflow, /** @lends XM.PurchaseOrderWorkflow# */{
 
+      TYPE_POST_RECEIPTS: "T",
+
+      TYPE_RECEIVE: "R",
+
       TYPE_OTHER: "O"
 
     });
