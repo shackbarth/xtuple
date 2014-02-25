@@ -53,8 +53,14 @@
 
             it('should have its attrs set up right', function () {
               var master = new enyo.Control(),
-                workspace = master.createComponent({kind: "XV." + key});
+                workspace = master.createComponent({kind: "XV." + key}),
+                Klass = XT.getObjectByName(workspace.getModel()),
+                model = new Klass();
 
+              if (model.meta) {
+                // workspaces with models with meta might mislead us
+                return;
+              }
               var attrs = _.compact(_.map(workspace.$, function (component) {
                 return component.attr;
               }));
