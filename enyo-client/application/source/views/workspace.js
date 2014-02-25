@@ -336,6 +336,7 @@ strict: false*/
             {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_accounts".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_addresses".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contacts".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isCustomers", label: "_customers".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employees".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incidents".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isInvoices", label: "_invoices".loc()},
@@ -665,7 +666,7 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_correspondenceContact".loc()},
             {kind: "XV.ContactWidget", attr: "correspondenceContact",
               showAddress: true, label: "_name".loc()},
-            {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
+            {kind: "XV.CustomerCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"}
           ]}

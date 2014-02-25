@@ -42,6 +42,8 @@
                 assert.isNotNull(Klass);
                 if (Klass.prototype.getAttributeNames().indexOf(Klass.prototype.nameAttribute) < 0 &&
                     typeof Klass.prototype[Klass.prototype.nameAttribute] !== 'function' &&
+                    Klass.prototype.nameAttribute.indexOf(".") < 0 && // don't bother with dotted nameAttributes
+                    Klass.prototype.keepInHistory &&
                     Klass.prototype.idAttribute === 'uuid') {
                   assert.fail(0, 1, workspace.model + " does not contain its nameAttribute, which will reflect " +
                     "poorly in the history panel");
