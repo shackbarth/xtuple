@@ -1,3 +1,4 @@
+delete from xt.acttype where acttype_code = 'PurchaseOrder';
 insert into xt.acttype (
   acttype_nsname,
   acttype_tblname,
@@ -40,6 +41,7 @@ insert into xt.acttype (
   'join vendinfo on pohead_vend_id=vend_id'
 );
 
+delete from xt.acttype where acttype_code = 'PurchaseOrderWorkflow';
 insert into xt.acttype (
   acttype_nsname,
   acttype_tblname,

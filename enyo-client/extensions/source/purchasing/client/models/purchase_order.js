@@ -77,14 +77,6 @@ white:true*/
         case K.CLOSED_STATUS:
           return "_closed".loc();
         }
-      },
-      /**
-        Returns Purchase order status as a localized string.
-
-        @returns {String}
-      */
-      getPurchaseOrderStatusString: function () {
-        return this.formatStatus();
       }
     };
 
@@ -496,7 +488,7 @@ white:true*/
     XM.PurchaseOrder = XM.PurchaseOrder.extend({
       emailDocumentName: "_purchaseOrder".loc(),
       emailProfileAttribute: "purchaseType.emailProfile",
-      emailStatusMethod: "getPurchaseOrderStatusString"
+      emailStatusMethod: "formatStatus"
     });
 
     // ..........................................................
@@ -582,6 +574,10 @@ white:true*/
     });
 
     _.extend(XM.PurchaseOrderWorkflow, /** @lends XM.PurchaseOrderWorkflow# */{
+
+      TYPE_POST_RECEIPTS: "T",
+
+      TYPE_RECEIVE: "R",
 
       TYPE_OTHER: "O"
 

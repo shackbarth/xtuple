@@ -42,7 +42,6 @@
     assert.equal(workspaceContainer.kind, "XV.WorkspaceContainer");
     model = workspaceContainer.$.workspace.value;
 
-
     autoRegex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER;
     if (model instanceof XM.Document && model.numberPolicy.match(autoRegex)) {
       // wait for the model to fetch its id if appropriate
@@ -266,8 +265,15 @@
     });
     it('can save the workspace', function (done) {
       this.timeout(20 * 1000);
+      if (spec.captureObject) {
+        XG = XG || {};
+        XG.capturedId = workspace.value.id;
+      }
       saveWorkspace(workspace, done);
     });
+    if (spec.captureObject) {
+      return;
+    }
     it('can delete the item from the list', function (done) {
       this.timeout(20 * 1000);
       deleteFromList(XT.app, workspace.value, done);

@@ -105,7 +105,7 @@ trailing:true, white:true, strict:false*/
             {kind: "XV.ListColumn", classes: "first", components: [
               {kind: "FittableColumns", components: [
                 {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
-                {kind: "XV.ListAttr", attr: "getPurchaseOrderStatusString",
+                {kind: "XV.ListAttr", attr: "formatStatus",
                   style: "padding-left: 24px"},
                 {kind: "XV.ListAttr", attr: "orderDate",
                   classes: "right"}

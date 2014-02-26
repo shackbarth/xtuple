@@ -116,7 +116,7 @@ trailing:true, white:true, strict:false*/
           {readOnlyAttr: "vouchered",
             editor: {kind: "XV.QuantityWidget", attr: "vouchered",
               name: "voucheredWidget"}},
-          {readOnlyAttr: "getPurchaseOrderStatusString",
+          {readOnlyAttr: "formatStatus",
             editor: {kind: "XV.PurchaseOrderStatusPicker", attr: "status"}}
         ]},
       ]

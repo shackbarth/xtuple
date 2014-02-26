@@ -6,8 +6,7 @@ return (function () {
 
  var sql,
    rows,
-   ary = [],
-   view;
+   ary = [];
 
  rows = plv8.execute("select * from xt.acttype");
 

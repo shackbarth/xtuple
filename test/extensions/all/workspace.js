@@ -42,6 +42,8 @@
                 assert.isNotNull(Klass);
                 if (Klass.prototype.getAttributeNames().indexOf(Klass.prototype.nameAttribute) < 0 &&
                     typeof Klass.prototype[Klass.prototype.nameAttribute] !== 'function' &&
+                    Klass.prototype.nameAttribute.indexOf(".") < 0 && // don't bother with dotted nameAttributes
+                    Klass.prototype.keepInHistory &&
                     Klass.prototype.idAttribute === 'uuid') {
                   assert.fail(0, 1, workspace.model + " does not contain its nameAttribute, which will reflect " +
                     "poorly in the history panel");
@@ -51,8 +53,14 @@
 
             it('should have its attrs set up right', function () {
               var master = new enyo.Control(),
-                workspace = master.createComponent({kind: "XV." + key});
+                workspace = master.createComponent({kind: "XV." + key}),
+                Klass = XT.getObjectByName(workspace.getModel()),
+                model = new Klass();
 
+              if (model.meta) {
+                // workspaces with models with meta might mislead us
+                return;
+              }
               var attrs = _.compact(_.map(workspace.$, function (component) {
                 return component.attr;
               }));

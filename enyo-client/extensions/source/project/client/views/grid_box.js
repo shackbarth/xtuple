@@ -12,6 +12,44 @@ trailing:true, white:true, strict:false*/
     //
 
     enyo.kind({
+      name: "XV.ProjectSummaryPanel",
+      classes: "xv-sales-summary-panel",
+      kind: "XV.RelationsEditor",
+      style: "margin-top: 10px;",
+      components: [
+        {kind: "XV.Groupbox", name: "totalGroup", classes: "xv-sales-summary-total-group",
+            components: [
+          {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+          {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+            {kind: "FittableRows", name: "summaryColumnOne", components: [
+              {content: "_hours".loc(),
+                style: "text-align: right; padding-right: 10px;"},
+              {kind: "XV.NumberWidget", attr: "budgetedHoursTotal",
+                label: "_budgeted".loc(), scale: XT.HOURS_SCALE},
+              {kind: "XV.NumberWidget", attr: "actualHoursTotal",
+                label: "_actual".loc(), scale: XT.HOURS_SCALE},
+              {kind: "XV.NumberWidget", attr: "balanceHoursTotal",
+                label: "_balance".loc(), scale: XT.HOURS_SCALE}
+            ]},
+            {kind: "FittableRows", name: "summaryColumnTwo", components: [
+              {content: "_expenses".loc(),
+                style: "text-align: right; padding-right: 10px;"},
+              {kind: "XV.NumberWidget", attr: "budgetedExpensesTotal",
+                label: "_budgeted".loc(), scale: XT.MONEY_SCALE,
+                showLabel: true},
+              {kind: "XV.NumberWidget", attr: "actualExpensesTotal",
+                label: "_actual".loc(), scale: XT.MONEY_SCALE,
+                showLabel: true},
+              {kind: "XV.NumberWidget", attr: "balanceExpensesTotal",
+                label: "_balance".loc(), scale: XT.MONEY_SCALE,
+                showLabel: true}
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
+    enyo.kind({
       name: "XV.ProjectTasksGridBox",
       kind: "XV.GridBox",
       classes: "large-panel",
@@ -19,6 +57,7 @@ trailing:true, white:true, strict:false*/
       parentKey: "project",
       orderBy: [{attribute: 'number'}],
       title: "_tasks".loc(),
+      summary: "XV.ProjectSummaryPanel",
       columns: [
         {classes: "grid-item", header: ["_number".loc(), "_description".loc()],
           rows: [
