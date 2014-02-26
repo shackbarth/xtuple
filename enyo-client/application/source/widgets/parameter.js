@@ -844,12 +844,31 @@ trailing:true, white:true, strict:false*/
       },
       {name: "number", label: "_number".loc(), attr: "number"},
       {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "projectType", label: "_projectType".loc(), attr: "projectType", defaultKind: "XV.ProjectTypePicker"},
       {name: "department", label: "_department".loc(), attr: "department", defaultKind: "XV.DepartmentWidget"},
       {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
       {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {name: "statusHeader", kind: "onyx.GroupboxHeader", content: "_status".loc()},
       {name: "status", label: "_status".loc(), attr: "status",
         defaultKind: "XV.ProjectStatusPicker"},
+      {kind: "onyx.GroupboxHeader", content: "_priority".loc()},
+      {name: "priorityEquals", label: "_equals".loc(), attr: "priority",
+        defaultKind: "XV.PriorityPicker"},
+      {name: "priorityAbove", label: "_above".loc(), attr: "priority",
+          filterLabel: "_priority".loc() + " " + "_above".loc(),
+          defaultKind: "XV.PriorityPicker",
+          getParameter: function () {
+            var value = this.getValue(),
+              param;
+            if (value) {
+              param = {
+                attribute: "priority.order",
+                operator: "<",
+                value: value.get("order")
+              };
+            }
+            return param;
+          }},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},

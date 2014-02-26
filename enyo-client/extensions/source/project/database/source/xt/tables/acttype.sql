@@ -1,3 +1,4 @@
+delete from xt.acttype where acttype_code = 'Project';
 insert into xt.acttype (
   acttype_nsname,
   acttype_tblname,
@@ -40,6 +41,7 @@ insert into xt.acttype (
   'join xt.prjext on prj_id=prjext_id'
 );
 
+delete from xt.acttype where acttype_code = 'ProjectTask';
 insert into xt.acttype (
   acttype_nsname,
   acttype_tblname,
@@ -82,6 +84,7 @@ insert into xt.acttype (
   'join xt.prjtaskext on prjtaskext_id=prjtask_id join prj on prj_id=prjtask_prj_id'
 );
 
+delete from xt.acttype where acttype_code = 'ProjectWorkflow';
 insert into xt.acttype (
   acttype_nsname,
   acttype_tblname,

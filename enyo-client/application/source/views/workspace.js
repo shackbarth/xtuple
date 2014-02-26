@@ -336,6 +336,7 @@ strict: false*/
             {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_accounts".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_addresses".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contacts".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isCustomers", label: "_customers".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employees".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incidents".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isInvoices", label: "_invoices".loc()},
@@ -665,7 +666,7 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_correspondenceContact".loc()},
             {kind: "XV.ContactWidget", attr: "correspondenceContact",
               showAddress: true, label: "_name".loc()},
-            {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
+            {kind: "XV.CustomerCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"}
           ]}
@@ -1432,23 +1433,28 @@ strict: false*/
             {kind: "XV.InputWidget", attr: "description2"},
             {kind: "XV.ItemTypePicker", attr: "itemType", showNone: false},
             {kind: "XV.ClassCodePicker", attr: "classCode"},
-            {kind: "XV.FreightClassPicker", attr: "freightClass"},
             {kind: "XV.UnitPicker", attr: "inventoryUnit"},
-            {kind: "XV.InputWidget", attr: "barcode", label: "_upcCode".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
-            {kind: "onyx.GroupboxHeader", content: "_product".loc()},
-            {kind: "XV.CheckboxWidget", attr: "isSold"},
-            {kind: "XV.ProductCategoryPicker", attr: "productCategory",
-              label: "_category".loc()},
-            {kind: "XV.SalesPriceWidget", attr: "listPrice"},
-            {kind: "XV.SalesPriceWidget", attr: "wholesalePrice"},
-            {kind: "XV.UnitPicker", attr: "priceUnit"},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader",
               content: "_extendedDescription".loc()},
             {kind: "XV.TextArea", attr: "extendedDescription"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
+          components: [
+          {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+            {kind: "XV.CheckboxWidget", attr: "isSold"},
+            {kind: "XV.ProductCategoryPicker", attr: "productCategory",
+              label: "_category".loc()},
+            {kind: "XV.SalesPriceWidget", attr: "listPrice"},
+            {kind: "XV.SalesPriceWidget", attr: "wholesalePrice"},
+            {kind: "XV.UnitPicker", attr: "priceUnit"},
+            {kind: "XV.CheckboxWidget", attr: "isExclusive"}
           ]}
         ]},
         {kind: "XV.ItemCommentBox", attr: "comments"},
@@ -1512,7 +1518,7 @@ strict: false*/
             {kind: "XV.PlannerCodePicker", attr: "plannerCode"},
             {kind: "XV.CostCategoryPicker", attr: "costCategory"},
             {kind: "XV.CheckboxWidget", attr: "isSold"},
-            {kind: "XV.NumberWidget", attr: "soldRanking"},
+            {kind: "XV.NumberSpinnerWidget", attr: "soldRanking"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
@@ -1523,6 +1529,7 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.ItemSiteRelation", "XV.ItemSiteWorkspace");
+  XV.registerModelWorkspace("XM.ItemItemSiteRelation", "XV.ItemSiteWorkspace");
   XV.registerModelWorkspace("XM.ItemSiteListItem", "XV.ItemSiteWorkspace");
 
   // ..........................................................
@@ -2028,7 +2035,7 @@ strict: false*/
               label: "_quoteDate".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "expireDate"},
-            {kind: "XV.InputWidget", attr: "getOrderStatusString",
+            {kind: "XV.InputWidget", attr: "formatStatus",
               label: "_status".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer",
@@ -2245,8 +2252,13 @@ strict: false*/
       commentBox: {kind: "XV.SalesOrderLineCommentBox", attr: "comments"}
     }
   };
-  enyo.mixin(salesOrderLineItem, XV.SalesOrderLineMixin);
-  enyo.mixin(salesOrderLineItem, lineItem);
+  _.extend(salesOrderLineItem, XV.SalesOrderLineMixin, lineItem, {
+    destroy: function () {
+      this.bind("off");
+      this.inherited(arguments);
+    }
+  });
+
   enyo.kind(salesOrderLineItem);
 
   // ..........................................................
@@ -2273,7 +2285,7 @@ strict: false*/
             {kind: "XV.DateWidget", name: "dateField", attr: "orderDate",
               label: "_orderDate".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "XV.InputWidget", attr: "getOrderStatusString",
+            {kind: "XV.InputWidget", attr: "formatStatus",
               label: "_status".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.SalesCustomerWidget", attr: "customer",

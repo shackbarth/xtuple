@@ -16,8 +16,8 @@ latest tag with the following:
 
     git clone --recursive git://github.com/<username>/xtuple.git
     cd xtuple
-    git remote add xtuple git://github.com/xtuple/xtuple.git
-    git fetch xtuple
+    git remote add XTUPLE git://github.com/xtuple/xtuple.git
+    git fetch XTUPLE
     git checkout `git describe --abbrev=0`
 
 #### 2. Run the install script
@@ -40,7 +40,6 @@ View the [Release Notes](RELEASE.md) to see a change log.
 
 ### Additional Resources
 
-  * [Setting up an Ubuntu Virtual Machine](https://github.com/xtuple/xtuple/wiki/Setting-up-an-Ubuntu-Virtual-Machine)
   * [Creating a Virtual Development Environment using Vagrant](https://github.com/xtuple/xtuple-vagrant/blob/master/README.md)
   * [Architectural Overview](https://github.com/xtuple/xtuple/wiki/Overview)
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)

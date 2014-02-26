@@ -85,11 +85,6 @@ white:true*/
       }
     },
 
-    getSalesOrderStatusString: function () {
-      // XXX #refactor
-      return XM.SalesOrder.prototype.getOrderStatusString.call(this);
-    },
-
     holdTypeDidChange: function () {
       if (!this.get("holdType")) {
         _.each(this.get("workflow").where(
@@ -183,12 +178,51 @@ white:true*/
     defaults: function () {
       var defaults = XM.SalesOrderLineMixin.defaults.apply(this, arguments);
 
-      defaults.firm = false;
-      defaults.subnumber = 0;
+      _.extend(defaults, {
+        firm: false,
+        subNumber: 0,
+        status: XM.SalesOrder.OPEN_STATUS
+      });
 
       return defaults;
+    },
+
+    destroy: function (options) {
+      var status = this.getParent().get("status"),
+        K = XM.SalesOrder,
+        that = this,
+        payload = {
+          type: K.QUESTION,
+        },
+        args = arguments,
+        message;
+
+      if (status !== K.CLOSED_STATUS &&
+        status !== K.CANCELLED_STATUS) {
+        message = "_deleteLine?".loc();
+        payload.callback = function (response) {
+          if (response.answer) {
+            XM.Model.prototype.destroy.apply(that, args);
+          }
+        };
+      } else {
+        // Must be closed, shouldn't have come here.
+        return;
+      }
+
+      this.notify(message, payload);
+    },
+
+    isActive: function () {
+      return this.get("status") === XM.SalesOrder.OPEN_STATUS;
     }
   }), XM.SalesOrderLineStaticMixin);
+
+  XM.SalesOrderLine.prototype.augment({
+    readOnlyAttributes: [
+      "status"
+    ]
+  });
 
 
   /**

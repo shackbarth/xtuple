@@ -30,7 +30,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     /**
       @member -
       @memberof ShipVia
-      @description The ID attribute is "name, which will not be automatically uppercased.
+      @description The ID attribute is "name", which will not be automatically uppercased.
     */
     idAttribute: "code",
     enforceUpperKey: false,

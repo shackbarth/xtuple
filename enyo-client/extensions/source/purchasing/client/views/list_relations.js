@@ -120,7 +120,7 @@ trailing:true, white:true*/
             {kind: "XV.ListColumn", classes: "money", components: [
               {kind: "XV.ListAttr", attr: "received"},
               {kind: "XV.ListAttr", attr: "vouchered"},
-              {kind: "XV.ListAttr", attr: "getPurchaseOrderStatusString"}
+              {kind: "XV.ListAttr", attr: "formatStatus"}
             ]},
           ]}
         ]}

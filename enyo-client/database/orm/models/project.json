@@ -331,7 +331,7 @@
         "name": "projectType",
         "toOne": {
           "type": "ProjectType",
-          "column": "prj_id"
+          "column": "prj_prjtype_id"
         }
       },
       {
@@ -475,6 +475,7 @@
           {
             "name": "priority",
             "toOne": {
+              "isNested": true,
               "type": "Priority",
               "column": "prjext_priority_id"
             }

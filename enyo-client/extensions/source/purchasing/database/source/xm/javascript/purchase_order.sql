@@ -9,6 +9,25 @@ select xt.install_js('XM','PurchaseOrder','purchasing', $$
   XM.PurchaseOrder.isDispatchable = true;
 
   /**
+    Find an Unreleased Purchase Order number by Item Source.
+    
+    @param {String} Item Source uuid.
+    @returns {String}
+  */
+  XM.PurchaseOrder.findUnreleased = function(itemSourceId) {
+    var sql = "select pohead_number " +
+              "from pohead " +
+              " join itemsrc on itemsrc_vend_id=pohead_vend_id " +
+              "where pohead_status='U'" +
+              " and itemsrc.obj_uuid=$1 " +
+              "order by pohead_number " +
+              "limit 1;";
+      rows = plv8.execute(sql, [itemSourceId]);
+
+    return rows.length ? rows[0].pohead_number : false;
+  };
+
+  /**
     Release a Purchase Order.
     
     @param {String} Purchase Order Number

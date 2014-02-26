@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+regexp:true, undef:true, strict:true, trailing:true, white:true, es5:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
 
 Backbone = require("backbone");
@@ -70,6 +70,7 @@ XT = { };
   var datasource = require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
+
   datasource.setupPgListeners(X.options.datasource.databases, {
     email: X.smtpTransport.sendMail
   });
@@ -350,9 +351,10 @@ app.get('/:org/discovery/v1alpha1/apis', routes.restDiscoveryList);
 
 app.get('/:org/api/userinfo', user.info);
 
-app.all('/:org/api/v1alpha1/:model/:id', routes.restRouter);
-app.all('/:org/api/v1alpha1/:model', routes.restRouter);
-app.all('/:org/api/v1alpha1/*', routes.restRouter);
+app.post('/:org/api/v1alpha1/services/:service/:id', routes.restRouter);
+app.all('/:org/api/v1alpha1/resources/:model/:id', routes.restRouter);
+app.all('/:org/api/v1alpha1/resources/:model', routes.restRouter);
+app.all('/:org/api/v1alpha1/resources/*', routes.restRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
@@ -606,7 +608,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           code: 1,
           debugging: X.options.datasource.debugging,
           biAvailable: _.isObject(X.options.biServer) && !_.isEmpty(X.options.biServer),
-          emailAvailable: _.isString(X.options.datasource.smtpUser) && X.options.datasource.smtpUser !== "",
+          emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
           printAvailable: false,
           version: X.version
         });

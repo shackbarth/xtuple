@@ -55,7 +55,8 @@ white:true*/
     defaults: function () {
       return {
         isActive: true,
-        site: XT.defaultSite()
+        site: XT.defaultSite(),
+        soldRanking: 1
       };
     },
 

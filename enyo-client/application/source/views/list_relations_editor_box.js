@@ -223,7 +223,10 @@ trailing:true, white:true*/
         {kind: "XV.InputWidget", attr: "aliasNumber", label: "_alias".loc()},
         {kind: "XV.AccountWidget", attr: "account" },
         {kind: "XV.CheckboxWidget", attr: "useDescription"},
-        {kind: "XV.InputWidget", attr: "description1", label: "_description".loc()}
+        {kind: "XV.InputWidget", attr: "description1"},
+        {kind: "XV.InputWidget", attr: "description2"},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes"}
       ]}
     ]
   });
@@ -371,6 +374,7 @@ trailing:true, white:true*/
     Mixin for Sales Order Specific Line functions
   */
   XV.SalesOrderLineMixin = {
+    bind: XV.RelationsEditorMixin.bind,
     create: function () {
       this.inherited(arguments);
       if (this.$.promiseDate) {

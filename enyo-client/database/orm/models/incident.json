@@ -24,7 +24,8 @@
         "delete": "MaintainPersonalIncidents",
         "properties": [
           "owner.username",
-          "assignedTo.username"
+          "assignedTo.username",
+          "account.number"
         ]
       },
       "attribute": {
@@ -1053,7 +1054,8 @@
         "delete": false,
         "properties": [
           "owner.username",
-          "assignedTo.username"
+          "assignedTo.username",
+          "account.number"
         ]
       }
     },
@@ -1151,7 +1153,8 @@
         "delete": false,
         "properties": [
           "owner.username",
-          "assignedTo.username"
+          "assignedTo.username",
+          "account.number"
         ]
       }
     },

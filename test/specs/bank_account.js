@@ -11,19 +11,58 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     _ = require("underscore"),
     smoke = require("../lib/smoke"),
     assert = require("chai").assert;
-
+ /**
+  Bank Accounts are established to define the Asset Account to be used when receiving or making payments
+  @class
+  @alias BankAccount
+  @property {String} name
+  @property {String} description
+  @property {String} bankName
+  @property {String} accountNumber
+  @property {String} bankAccountType
+  @property {Boolean} isUsedByBilling
+  @property {Boolean} isUsedByPayments
+  @property {String} notes
+  @property {Currency} currency
+  **/
   var spec = {
     recordType: "XM.BankAccount",
     collectionType: "XM.BankAccountCollection",
+    /**
+    @member -
+    @memberof BankAccount.prototype
+    @description BankAccount has no cached defined
+    */
     cacheName: null, // there is no cache for BankAccount
     listKind: "XV.BankAccountList",
     instanceOf: "XM.Document",
+    /**
+      @member -
+      @memberof BankAccount.prototype
+      @description BankAccounts are lockable.
+    */
     isLockable: true,
+    /**
+      @member -
+      @memberof BankAccount.prototype
+      @description The ID attribute is "name", which will not be automatically uppercased.
+    */
     idAttribute: "name",
     enforceUpperKey: false,
     attributes: ["name", "description", "bankName", "accountNumber", "bankAccountType",
       "isUsedByBilling", "isUsedByPayments", "notes", "currency"],
+     /**
+      @member -
+      @memberof BankAccount.prototype
+      @description Used in the Sales and Billing modules
+    */
     extensions: ["sales", "billing"],
+    /**
+      @member -
+      @memberof BankAccount.prototype
+      @description BankAccounts can be read by users with "ViewBankAccounts" privilege and can be created, updated,
+        or deleted by users with the "MaintainBankAccounts" privilege.
+    */
     privileges: {
       createUpdateDelete: "MaintainBankAccounts",
       read: "MaintainBankAccounts"
@@ -65,7 +104,11 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       assert.include(ids, XM.BankAccount.CHECKING);
       assert.include(ids, XM.BankAccount.CREDIT_CARD);
     });
-
+    /**
+      @member -
+      @memberof BankAccount.prototype
+      @description Bank Account Picker in billing only lists bank accounts where isUsedByBilling is true
+    */
     it('verify that Billing Bank Account Picker only lists bank accounts where isUsedByBilling is true',
       function () {
 

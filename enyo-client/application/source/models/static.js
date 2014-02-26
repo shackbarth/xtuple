@@ -256,11 +256,12 @@ white:true*/
   }
 
   // Hold Type
+  K = XM.SalesOrder;
   var holdTypeJson = [
-    { id: "C", name: "_credit".loc() },
-    { id: "S", name: "_shipping".loc() },
-    { id: "P", name: "_packing".loc() },
-    { id: "R", name: "_return".loc() }
+    { id: K.CREDIT_HOLD_TYPE, name: "_credit".loc() },
+    { id: K.SHIPPING_HOLD_TYPE, name: "_shipping".loc() },
+    { id: K.PACKING_HOLD_TYPE, name: "_packing".loc() },
+    { id: K.RETURN_HOLD_TYPE, name: "_return".loc() }
   ];
   XM.HoldTypeModel = Backbone.Model.extend({
   });
@@ -446,6 +447,24 @@ white:true*/
   for (i = 0; i < projectStatusJson.length; i++) {
     var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
     XM.projectStatuses.add(projectStatus);
+  }
+
+  // Sales Order
+  K = XM.SalesOrder;
+  var salesOrderStatusesJson = [
+    { id: K.OPEN_STATUS, name: "_open".loc() },
+    { id: K.CLOSED_STATUS, name: "_closed".loc() },
+    { id: K.CANCELLED_STATUS, name: "_cancelled".loc() }
+  ];
+  XM.SalesOrderStatusModel = Backbone.Model.extend({
+  });
+  XM.SalesOrderStatusCollection = Backbone.Collection.extend({
+    model: XM.SalesOrderStatusModel
+  });
+  XM.salesOrderStatuses = new XM.SalesOrderStatusCollection();
+  for (i = 0; i < salesOrderStatusesJson.length; i++) {
+    var SalesOrderStatus = new XM.SalesOrderStatusModel(salesOrderStatusesJson[i]);
+    XM.salesOrderStatuses.add(SalesOrderStatus);
   }
 
 }());

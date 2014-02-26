@@ -1,3 +1,4 @@
+delete from xt.acttype where acttype_code = 'ToDo';
 insert into xt.acttype (
   acttype_nsname,
   acttype_tblname,
@@ -78,6 +79,7 @@ insert into xt.acttype (
   'null::uuid'
 );
 
+delete from xt.acttype where acttype_code = 'Opportunity';
 insert into xt.acttype (
   acttype_nsname,
   acttype_tblname,

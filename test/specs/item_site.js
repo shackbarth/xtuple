@@ -13,8 +13,20 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     common = require("../lib/common");
 
   /**
+    Item Sites identify and define the methods and controls used when maintaining a given Item within a given Site.
     @class
-    @alias Item
+    @alias ItemSite
+    @property {Item} item
+    @property {Site} site
+    @property {Boolean} isActive
+    @property {Boolean} isSold
+    @property {PlannerCode} plannerCode
+    @property {CostCategory} costCategory
+    @property {String} notes
+    @property {ItemSiteComment} comments
+    @property {Number} quantityOnHand
+    @property {Boolean} isPurchased
+    @property {Number} soldRanking
   */
   var spec = {
     recordType: "XM.ItemSite",
@@ -22,14 +34,42 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     // have a WH1 itemsite
     skipSmoke: true,
     collectionType: "XM.ItemSiteListItemCollection",
+    /**
+      @member -
+      @memberof ItemSite.prototype
+      @description The Item Sites collection is not cached.
+    */
     cacheName: null,
     listKind: "XV.ItemSiteList",
     instanceOf: "XM.Model",
+    /**
+      @member -
+      @memberof ItemSite.prototype
+      @description Item Sites are lockable.
+    */
     isLockable: true,
+    /**
+      @member -
+      @memberof ItemSite.prototype
+      @description The ID attribute is "uuid", which will not be automatically uppercased.
+    */
     idAttribute: "uuid",
     enforceUpperKey: false,
-    attributes: ["uuid"],
+    attributes: ["id", "uuid", "item", "site", "isActive", "isSold", "plannerCode", "costCategory",
+    "notes", "comments", "quantityOnHand", "isPurchased", "soldRanking"],
+    /**
+      @member -
+      @memberof ItemSite.prototype
+      @description Used in the sales module
+    */
     extensions: ["sales"],
+    /**
+      @member -
+      @memberof ItemSite.prototype
+      @description Item Sites can be read by users with "ViewItemSites" privilege
+      , can be created or updated by users with the "MaintainItemSites" privilege
+      and can be deleted by users with "DeleteItemSites" privilege
+    */
     privileges: {
       createUpdate: "MaintainItemSites",
       read: "ViewItemSites",
@@ -91,6 +131,12 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           }
         ], done);
       });
+      /**
+      @member -
+      @memberof ItemAlias.prototype
+      @description Selecting to enter the item alias manually in the Item relation widget
+          should display the related item for selection
+      */
       it("Selecting to enter the item alias manually in the Item relation widget" +
           "should display the related item for selection", function (done) {
         var widget = new XV.ItemSiteWidget(),
@@ -102,6 +148,12 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         widget.$.privateItemSiteWidget.mockReturn = mockReturn;
         widget.$.privateItemSiteWidget.fetchCollection("BTR", 10, "mockReturn");
       });
+      /**
+      @member -
+      @memberof ItemAlias.prototype
+      @description Aliases option should be available on the Item widget which displays
+          Active Alias Items on selection
+      */
       it("Aliases option should be available on the Item widget which displays " +
           "Active Alias Items on selection", function (done) {
         var widget = new XV.ItemSiteWidget(),
@@ -113,10 +165,20 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         widget.$.privateItemSiteWidget.mockReturn = mockReturn;
         widget.$.privateItemSiteWidget.fetchCollection("ABC123", 10, "mockReturn");
       });
+      /**
+      @member -
+      @memberof ItemAlias.prototype
+      @description Search should filter by customer-specific aliases where appropriate
+      */
       it.skip("Search should filter by customer-specific aliases where appropriate",
           function () {
         // TODO
       });
+      /**
+      @member -
+      @memberof ItemAlias.prototype
+      @description Should be able to search the Item through Bar Code
+      */
       it("Should be able to search the Item through Bar Code", function (done) {
         var widget = new XV.ItemSiteWidget(),
           mockReturn = function (results) {

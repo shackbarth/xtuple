@@ -1,3 +1,4 @@
+delete from xt.acttype where acttype_code = 'SalesOrder';
 insert into xt.acttype (
   acttype_nsname,
   acttype_tblname,
@@ -40,6 +41,7 @@ insert into xt.acttype (
   'join custinfo on cohead_cust_id=cust_id join salesrep on cohead_salesrep_id=salesrep_id'
 );
 
+delete from xt.acttype where acttype_code = 'SalesOrderWorkflow';
 insert into xt.acttype (
   acttype_nsname,
   acttype_tblname,
