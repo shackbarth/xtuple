@@ -525,6 +525,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         rawData = _.extend(rawData, result.data.data);
         // take the raw data and added detail fields and put
         // into array format for the report
+        // XXX temporary hack
+        //rawData.detail = [
+        //  {trace: "12345"},
+        //  {trace: "56789"}
+        //];
+        //
         reportData = transformDataStructure(rawData);
         //console.log(reportData);
         done();
@@ -543,6 +549,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       var printDetail = function (report, data) {
+        if (reportDefinition.settings.pageBreakDetail) {
+          // TODO: don't want to break after the last page
+          reportDefinition.detailElements.push({element: "newPage"});
+        }
         printDefinition(report, data, reportDefinition.detailElements);
       };
 
