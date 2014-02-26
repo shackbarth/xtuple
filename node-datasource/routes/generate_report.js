@@ -64,6 +64,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // TODO: detailAttribute could be inferred by looking at whatever comes before the *
       // in the detailElements definition.
 
+      if (!reportDefinition.settings.detailAttribute) {
+        // no children, so no transformation is necessary
+        return [data];
+      }
+
       return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
         var pathedDetail = {};
         _.each(detail, function (detailValue, detailKey) {
@@ -129,11 +134,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       that can be referred to in the json definition.
      */
     var transformElementData = function (def, data) {
-      var textOnly;
+      var textOnly,
+        params;
 
-      if (def.transform === 'address') {
-        var params = marryData(def.definition, data, true);
-        return formatAddress.apply(this, params);
+      if (def.transform) {
+        params = marryData(def.definition, data, true);
+        return transformFunctions[def.transform].apply(this, params);
       }
 
       if (def.element === 'image') {
@@ -176,6 +182,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       if (country) { address.push(country); }
       return address;
+    };
+
+    // this is very similar to a function on the XM.Location model
+    var formatArbl = function (aisle, rack, bin, location) {
+      return [_.filter(arguments, function (item) {
+        return !_.isEmpty(item);
+      }).join("-")];
+    };
+
+    var transformFunctions = {
+      address: formatAddress,
+      arbl: formatArbl
     };
 
     /**
@@ -460,16 +478,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     /**
-      TODO: develop a protocol for defining barcodes in the definition file. A simple
-      implementation would then involve creating an image file in the temp directory
-      using some npm package, and then including it as an image in the report.
-     */
-    var fetchBarcodes = function (done) {
-      // TODO
-      done();
-    };
-
-    /**
       Fetch all the translatable strings in the user's language for use
       when we render.
       XXX cribbed from locale route
@@ -518,6 +526,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // take the raw data and added detail fields and put
         // into array format for the report
         reportData = transformDataStructure(rawData);
+        //console.log(reportData);
         done();
       };
 
@@ -599,7 +608,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       createTempOrgDir,
       fetchReportDefinition,
       fetchRemitTo,
-      fetchBarcodes,
       fetchTranslations,
       fetchData,
       fetchImages,
