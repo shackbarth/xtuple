@@ -1967,7 +1967,8 @@ select xt.install_js('XT','Data','xtuple', $$
             switch(prop.attr.type) {
               case "Date":
                 preOffsetDate = item[itemAttr];
-                offsetDate = new Date(preOffsetDate.valueOf() + 60000 * preOffsetDate.getTimezoneOffset());
+                offsetDate = preOffsetDate && 
+                  new Date(preOffsetDate.valueOf() + 60000 * preOffsetDate.getTimezoneOffset());
                 item[itemAttr] = XT.formatDate(offsetDate).formatdate;
               break;
               case "Cost":
