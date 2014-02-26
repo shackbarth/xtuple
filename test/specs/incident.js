@@ -14,31 +14,36 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   /**
   The Incident Management system enables you to monitor and record Incidents that are linked to
   Accounts, Contacts, Users, and To-Do"s.
+   ["id", "number", "description", "category", "isPublic", "account", "contact",
+    "priority", "status", "resolution", "severity", "owner", "assignedTo", "notes", "item",
+    "recurrences", "created", "updated", "alarms", "history", "comments", "characteristics",
+    "contacts", "items", "files", "urls", "accounts", "incidents", "uuid", "opportunities",
+    "toDos", "toDoRelations", "project", "projects", "customers"]
     @class
     @alias Incident
     @property {String} Number
-    @property {String} Name
-    @property {Boolean} isActive
-    @property {Account} Account 
+    @property {String} Description
+    @property {IncidentCategory} Category
+    @property {Boolean} isPublic
+    @property {Account} Account
     @property {Contact} Contact
-    @property {OpportunityStage} OpportunityStage
     @property {Priority} Priority
-    @property {OpportunityType} OpportunityType
-    @property {OpportunitySource} OpportunitySource
-    @property {Number} Amount
-    @property {Currency} Currency
-    @property {Number} Probability
-    @property {Date} StartDate
-    @property {Date} AssignDate
-    @property {Date} TargetClose
-    @property {Date} ActualClose
-    @property {String} notes
-    @property {UserAccount} owner
-    @property {Employee} assignedTo
+    @property {String} Status
+    @property {IncidentResolution} Resolution
+    @property {IncidentSeverity} Severity
+    @property {UserAccount} Owner
+    @property {Employee}  AssignedTo
+    @property {String} Notes
+    @property {Item} Item
+    @property {Date} Created
+    @property {Date} Updated
+    @property {IncidentHistory} History
+    @property {IncidentAlarm} Alarms
     @property {IncidentAccount} Accounts
     @property {IncidentComment} Comments
     @property {IncidentCharacterisitic} Characterisitcs
-    @property {IncidentIncident} Incidents
+    @property {IncidentContacts} Contacts
+    @property {IncidentIncidents} Incidents
     @property {IncidentItem} Items
     @property {IncidentFile} File
     @property {IncidentContact} Contact

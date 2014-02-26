@@ -15,7 +15,7 @@
   exports.spec = {
     skipAll: true,
     // XXX very awkward
-    recordType: "Site"
+    recordType: "XM.Site"
   };
   var additionalTests = function () {
     /**
