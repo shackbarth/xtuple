@@ -253,15 +253,6 @@ white:true*/
       case K.CANCELLED_STATUS:
         return '_cancelled'.loc();
       }
-    },
-
-    /**
-    Deprecated. Use `formatStatus`.
-
-    @returns {String}
-    */
-    getOrderStatusString: function () {
-      return this.formatStatus();
     }
   };
 
@@ -302,7 +293,7 @@ white:true*/
 
     readOnlyAttributes: [
       "freightWeight",
-      "getOrderStatusString",
+      "formatStatus",
       "lineItems",
       "allocatedCredit",
       "balance",

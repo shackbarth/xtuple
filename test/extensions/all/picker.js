@@ -31,7 +31,7 @@
 
     describe('XV Pickers', function () {
       it('should be set up correctly', function () {
-        // look at all the lists in XV
+        // look at all the pickers in XV
         _.each(XV, function (value, key) {
           var child,
             collName,
@@ -52,7 +52,11 @@
                 assert.equal(master.$[key].kind, 'XV.' + key, "Error instantiating XV." + key);
               });
 
-              it('verify that there is a backing model for the picker', function () {
+              // TODO: pickers can have the collection passed into them as an attribute
+              // really we should look at these pickers in the context of the workspace
+              // in which we're being used, so that we can see if the collection value
+              // is being passed in. This would involve iterating over the workspaces.
+              it.skip('verify that there is a backing model for the picker', function () {
                 collName = child.getCollection();
                 assert.isNotNull(collName, 'XV.' + key + ' has no collection behind it');
 
