@@ -108,7 +108,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @member -
     @memberof Opportunity
     @description Users with "ViewPersonalOpportunities" privilege can read their personal Opportunities
-    but cannot read the contact's owned by other users. Users with "MaintainPersonalOpportunities" 
+    but cannot read the Opportunities owned by other users. Users with "MaintainPersonalOpportunities" 
     privilege can create, update or delete their personal Opportunities but not the Opportunities owned
     by other users 
     */
