@@ -119,6 +119,11 @@ install_packages() {
   sudo nvm use $NODE_VERSION
   sudo nvm alias default $NODE_VERSION
   sudo nvm alias xtuple $NODE_VERSION
+
+	// npm no longer supports its self-signed certificates
+	log "telling npm to use known registrars..."
+	npm config set ca ""
+
   log "installing npm modules..."
   npm install --unsafe-perm 2>&1 | tee -a $LOG_FILE
 }
