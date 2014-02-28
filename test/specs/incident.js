@@ -87,6 +87,11 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       @description Incidents can be read by users with "ViewAllIncidents" privilege and can be
       created and updated by users with the "MaintainAllIncidents" privilege.
     */
+    /**
+      @member Privileges
+      @memberof Incident
+      @description Incidents cannot be deleted by the users
+    */
     privileges: {
       createUpdateDelete: "MaintainAllIncidents",
       read: "ViewAllIncidents"
@@ -174,6 +179,22 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     @member Other
     @memberof Incident
     @description History panel should be available which displays the Incident history
+    */
+    it.skip("History panel should be available which displays the Incident history", function () {
+    });
+    /**
+    @member Navigation
+    @memberof Incident
+    @description Contacts search should display only contacts related to the specific account, if
+    account is already selected
+    */
+    it.skip("History panel should be available which displays the Incident history", function () {
+    });
+    /**
+    @member Other
+    @memberof Incident
+    @description Characteristics Drop down list should display the characteristics assigned to the
+     Incidents
     */
     it.skip("History panel should be available which displays the Incident history", function () {
     });
