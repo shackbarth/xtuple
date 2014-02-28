@@ -3,8 +3,16 @@ var data = obj;
 var self = this;
 ?>
 <dt>
-    <?js if (id !== '-') { ?>
-      <h4 class="name" id="<?js= id ?>"><?js= data.attribs + name + (data.signature ? data.signature : '') ?></h4>
+    <?js
+      var suppressHeader = false;
+      if(global.headersSeen.indexOf(name) >= 0) {
+        suppressHeader = true;
+      } else {
+        global.headersSeen.push(name);  
+      }
+    ?>
+    <?js if (!suppressHeader) { ?>
+      <h4 class="name" id="<?js= id ?>"><?js= name + (data.signature ? data.signature : '') ?></h4>
     <?js } ?>
     
     <?js if (data.summary) { ?>

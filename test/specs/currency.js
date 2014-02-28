@@ -9,14 +9,30 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
 
   var _ = require("underscore"),
     assert = require("chai").assert;
-
+  /**
+  @class
+  @alias Currency
+  @property {String} abbreviation
+  @property {String} name
+  @property {String} symbol
+  **/
   var spec = {
     name: 'currency',
     recordType: 'XM.Currency',
     collectionType: 'XM.CurrencyCollection',
     cacheName: 'XM.currencies',
     instanceOf: 'XM.Document',
+    /**
+      @member -
+      @memberof Currency.prototype
+      @description Currencies are lockable
+    */
     isLockable: true,
+    /**
+      @member -
+      @memberof Currency.prototype
+      @description The ID attribute is "abbreviation", which will not be automatically uppercased
+    */
     idAttribute: 'abbreviation',
     enforceUpperKey: false,
     attributes: [
@@ -25,12 +41,24 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     defaults: {
       isBase: false
     },
+    /**
+      @member -
+      @memberof Currency.prototype
+      @description Currencies can be read by all users and can only be created by users with
+      "CreateNewCurrency" privilege and can be updated and deleted by users with the
+      "MaintainCurrencies" privilege.
+      */
     privileges: {
       create: 'CreateNewCurrency',
       read: true,
       update: 'MaintainCurrencies',
       delete: 'MaintainCurrencies'
     },
+    /**
+      @member -
+      @memberof Currency.prototype
+      @description Used in the Billing module
+    */
     extensions: ["billing"],
     createHash: {
       name: 'name' + Math.random().toString(36).slice(0, 3),

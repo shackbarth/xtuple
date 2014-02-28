@@ -374,6 +374,7 @@ trailing:true, white:true*/
     Mixin for Sales Order Specific Line functions
   */
   XV.SalesOrderLineMixin = {
+    bind: XV.RelationsEditorMixin.bind,
     create: function () {
       this.inherited(arguments);
       if (this.$.promiseDate) {

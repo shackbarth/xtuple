@@ -108,16 +108,28 @@ white:true*/
 
       defaults: function () {
         var result = XM.ProjectBase.prototype.defaults.call(this);
+
         result.owner = result.assignedTo = XM.currentUser;
-        return result;
+        return _.extend(result, {
+          assignedTo: XM.currentUser,
+          owner: XM.currentUser,
+          budgetedHoursTotal: 0.0,
+          actualHoursTotal: 0.0,
+          balanceHoursTotal: 0.0,
+          budgetedExpensesTotal: 0.0,
+          actualExpensesTotal: 0.0,
+          balanceExpensesTotal: 0.0
+        });
       },
 
-      budgetedHoursTotal: 0.0,
-      actualHoursTotal: 0.0,
-      balanceHoursTotal: 0.0,
-      budgetedExpensesTotal: 0.0,
-      actualExpensesTotal: 0.0,
-      balanceExpensesTotal: 0.0,
+      readOnlyAttributes: [
+        "actualExpensesTotal",
+        "actualHoursTotal",
+        "balanceExpensesTotal",
+        "balanceHoursTotal",
+        "budgetedExpensesTotal",
+        "budgetedHoursTotal"
+      ],
 
       // ..........................................................
       // METHODS
@@ -152,38 +164,38 @@ white:true*/
       */
       tasksDidChange: function () {
         var that = this,
-          changed;
-        this.budgetedHoursTotal = 0.0;
-        this.actualHoursTotal = 0.0;
-        this.budgetedExpensesTotal = 0.0;
-        this.actualExpensesTotal = 0.0;
+          changed,
+          budgetedHoursTotal = 0.0,
+          actualHoursTotal = 0.0,
+          budgetedExpensesTotal = 0.0,
+          actualExpensesTotal = 0.0,
+          balanceHoursTotal,
+          balanceExpensesTotal;
 
         // Total up task data
         _.each(this.get("tasks").models, function (task) {
-          that.budgetedHoursTotal = XT.math.add(that.budgetedHoursTotal,
+          budgetedHoursTotal = XT.math.add(budgetedHoursTotal,
             task.get("budgetedHours"), XT.QTY_SCALE);
-          that.actualHoursTotal = XT.math.add(that.actualHoursTotal,
+          actualHoursTotal = XT.math.add(actualHoursTotal,
             task.get("actualHours"), XT.QTY_SCALE);
-          that.budgetedExpensesTotal = XT.math.add(that.budgetedExpensesTotal,
+          budgetedExpensesTotal = XT.math.add(budgetedExpensesTotal,
             task.get("budgetedExpenses"), XT.MONEY_SCALE);
-          that.actualExpensesTotal = XT.math.add(that.actualExpensesTotal,
+          actualExpensesTotal = XT.math.add(actualExpensesTotal,
             task.get("actualExpenses"), XT.MONEY_SCALE);
         });
-        this.balanceHoursTotal = XT.math.subtract(this.budgetedHoursTotal,
-          this.actualHoursTotal, XT.QTY_SCALE);
-        this.balanceExpensesTotal = XT.math.subtract(this.budgetedExpensesTotal,
-          this.actualExpensesTotal, XT.QTY_SCALE);
+        balanceHoursTotal = XT.math.subtract(budgetedHoursTotal,
+          actualHoursTotal, XT.QTY_SCALE);
+        balanceExpensesTotal = XT.math.subtract(budgetedExpensesTotal,
+          actualExpensesTotal, XT.QTY_SCALE);
 
-        // Notify change
-        changed = {
-          budgetedHoursTotal: this.budgetedHoursTotal,
-          actualHoursTotal: this.actualHoursTotal,
-          budgetedExpensesTotal: this.budgetedExpensesTotal,
-          actualExpensesTotal: this.actualExpensesTotal,
-          balanceHoursTotal: this.balanceHoursTotal,
-          balanceExpensesTotal: this.balanceExpensesTotal
-        };
-        this.trigger("change", this, changed);
+        this.set({
+          budgetedHoursTotal: budgetedHoursTotal,
+          actualHoursTotal: actualHoursTotal,
+          budgetedExpensesTotal: budgetedExpensesTotal,
+          actualExpensesTotal: actualExpensesTotal,
+          balanceHoursTotal: balanceHoursTotal,
+          balanceExpensesTotal: balanceExpensesTotal
+        });
       }
 
     });

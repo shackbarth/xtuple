@@ -1,5 +1,6 @@
 <?js
     var props = obj;
+    var endUser = env.conf.templates.endUser;
     
     /* sort subprops under their parent props (like opts.classname) */
     var parentProp = null;
@@ -45,7 +46,9 @@
 		<th>Name</th>
 		<?js } ?>
 		
+		<?js if (!endUser) {?>
 		<th>Type</th>
+		<?js } ?>
 		
 		<?js if (props.hasAttributes) {?>
 		<th>Argument</th>
@@ -55,7 +58,7 @@
 		<th>Default</th>
 		<?js } ?>
 		
-		<th class="last">Description</th>
+		<th class="last">Reference</th>
 	</tr>
 	</thead>
 	
@@ -64,6 +67,19 @@
         var self = this;
 	    props.forEach(function(prop) {
 	        if (!prop) { return; }
+            if (!prop.description) {
+              // don't futz with a falsy description
+            } else if(endUser && prop.description.indexOf("()") >= 0) {
+              // () means: don't display this prop at all to the end user
+              return;
+            } else if(endUser) {
+              // don't show square-bracketed text to end users.
+              prop.description = prop.description.replace(/\[.*?\]/, "");
+              prop.description = prop.description.replace("(", "").replace(")", "");
+            } else {
+              prop.description = prop.description.replace(/\(.*?\)/, "");
+              prop.description = prop.description.replace("[", "").replace("]", "");
+            }
 	?>
 	
         <tr>
@@ -71,11 +87,13 @@
                 <td class="name"><code><?js= prop.name ?></code></td>
             <?js } ?>
             
-            <td class="type">
-            <?js if (prop.type && prop.type.names) {?>
-                <?js= self.partial('type.tmpl', prop.type.names) ?>
+            <?js if (!endUser) {?>
+                <td class="type">
+                <?js if (prop.type && prop.type.names) {?>
+                    <?js= self.partial('type.tmpl', prop.type.names) ?>
+                <?js } ?>
+                </td>
             <?js } ?>
-            </td>
             
             <?js if (props.hasAttributes) {?>
                 <td class="attributes">

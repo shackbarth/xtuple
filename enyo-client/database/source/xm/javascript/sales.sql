@@ -187,16 +187,16 @@ select xt.install_js('XM','Sales','xtuple', $$
 
     /* Special processing for primary key based values */
     orm = XT.Orm.fetch("XM", "CustomerType");
-    ret.DefaultCustType = data.getNaturalId(orm, ret.DefaultCustType);
+    ret.DefaultCustType = data.getNaturalId(orm, ret.DefaultCustType, true);
 
     orm = XT.Orm.fetch("XM", "SalesRep");
-    ret.DefaultSalesRep = data.getNaturalId(orm, ret.DefaultSalesRep);
+    ret.DefaultSalesRep = data.getNaturalId(orm, ret.DefaultSalesRep, true);
 
     orm = XT.Orm.fetch("XM", "ShipVia");
-    ret.DefaultShipViaId = data.getNaturalId(orm, ret.DefaultShipViaId);
+    ret.DefaultShipViaId = data.getNaturalId(orm, ret.DefaultShipViaId, true);
 
     orm = XT.Orm.fetch("XM", "Terms");
-    ret.DefaultTerms = data.getNaturalId(orm, ret.DefaultTerms);
+    ret.DefaultTerms = data.getNaturalId(orm, ret.DefaultTerms, true);
 
     return ret;
   }

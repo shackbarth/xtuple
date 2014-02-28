@@ -1,9 +1,45 @@
+1.7.2 (2014/02/24)
+==================
+
+Features and bugfixes
+---------------------
+- Fixed
+  issue #[22754](http://www.xtuple.org/xtincident/view/bugs/22754)
+  _*DB log error is displayed on selecting to add a Bill of Operation Item for a new item_
+- Fixed
+  issue #[22755](http://www.xtuple.org/xtincident/view/bugs/22755) 
+  _* It is not possible to add a Bill of Material Item to a new item_ 
+- Fixed 
+  issue #[22793](http://www.xtuple.org/xtincident/view/bugs/22793) 
+  _Characteristics not showing up on Customer Workspace_ 
+- Implemented 
+  issue #[22829](http://www.xtuple.org/xtincident/view/bugs/22829) 
+  _Registration via Website appears broken_ 
+- Fixed 
+  issue #[22839](http://www.xtuple.org/xtincident/view/bugs/22839) 
+  _Mobile installation disrupts invoices out of qt_ 
+
+1.7.1 (2014/02/10)
+==================
+
+Features and bugfixes
+---------------------
+- Fixed
+  issue #[22659](http://www.xtuple.org/xtincident/view/bugs/22659)
+  _Remove xt.obj inheritance to avoid backup column reordering_
+
 1.7.0 (2014/02/03)
 ==================
 
 Features and bugfixes
 ---------------------
 
+- Implemented
+  issue #[22059](http://www.xtuple.org/xtincident/view/bugs/22059)
+  _Approve for billing and create invoice at time of shipping_
+- Implemented
+  issue #[22029](http://www.xtuple.org/xtincident/view/bugs/22029)
+  _Cash receipt on sales order_
 - Implemented
   issue #[21229](http://www.xtuple.org/xtincident/view/bugs/21229)
   _REST - Add support for a count query_
@@ -52,6 +88,13 @@ Features and bugfixes
 
 1.6.0 (2014/01/15)
 ==================
+
+Critical deployment changes
+---------------------------
+Mobile Client connections to Pentaho are no longer defined by biUrl and biServerUrl in config.js.  They are now defined
+by biServer and printServer.  See the details in:
+
+https://github.com/xtuple/xtuple/wiki/xTuple-Business-Intelligence
 
 Features and bugfixes
 ---------------------
@@ -191,13 +234,6 @@ classes: "right"  _iPad does not scroll smoothly_
 - Fixed
   issue #[22408](http://www.xtuple.org/xtincident/view/bugs/22408)
   _*Selecting Express Checkout without saving the Sales order and then selecting 'No' in the confirmation dialog displays a console_
-
-Critical deployment changes
----------------------------
-Mobile Client connections to Pentaho are no longer defined by biUrl and biServerUrl in config.js.  They are now defined
-by biServer and printServer.  See the details in:
-
-https://github.com/xtuple/xtuple/wiki/xTuple-Business-Intelligence
 
 1.5.2 (2014/01/13)
 ===============

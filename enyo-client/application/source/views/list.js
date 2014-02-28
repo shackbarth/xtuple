@@ -295,17 +295,35 @@ trailing:true, white:true, strict: false*/
         obj = XT.getObjectByName(collection);
       this.setValue(obj);
     },
-    getModel: function (index) {
-      var model = this.getValue().at(index);
-      return XT.getObjectByName(model.get('model'));
-    },
     getWorkspace: function () {
       return this._workspace;
     },
+    /**
+      Configuration is a special list because it's backed by a backbone
+      model which points to an empty XM.Model in its model attribute. Don't
+      let this go up through the normal channels; handle the opening of
+      the workspace here.
+     */
     itemTap: function (inSender, inEvent) {
-      var model = this.getValue().at(inEvent.index);
+      var model = this.getValue().at(inEvent.index),
+        workspace = model.get("workspace"),
+        xmModel = XT.getObjectByName(model.get('model')),
+        canNotRead = !xmModel.getClass().canRead(),
+        id = false;
+
       this._workspace = model.get('workspace');
-      return this.inherited(arguments);
+
+      // Check privileges first
+      if (canNotRead) {
+        this.showError("_insufficientViewPrivileges".loc());
+        return true;
+      }
+
+      // Bubble requset for workspace view, including the model id payload
+      if (workspace) {
+        this.doWorkspace({workspace: workspace, id: id});
+      }
+      return true;
     },
     fetch: function () {
       this.fetched();
@@ -1545,45 +1563,55 @@ trailing:true, white:true, strict: false*/
       {attribute: "number" }
     ]},
     parameterWidget: "XV.ProjectListParameters",
+    headerComponents: [
+      {kind: "FittableColumns", classes: "xv-list-header",
+        components: [
+        {kind: "XV.ListColumn", classes: "name-column", components: [
+          {content: "_name".loc()},
+          {content: "_description".loc()},
+          {content: "_account".loc()}
+        ]},
+        {kind: "XV.ListColumn", classes: "right-column", components: [
+          {content: "_dueDate".loc()},
+          {content: "_priority".loc()},
+          {content: "_complete".loc()}
+        ]},
+        {kind: "XV.ListColumn", classes: "short", components: [
+          {content: "_status".loc()},
+          {content: "_assignedTo".loc()},
+          {content: "_type".loc()}
+        ]},
+        {kind: "XV.ListColumn", classes: "right-column"},
+        {kind: "XV.ListColumn", classes: "right-column", components: [
+          {content: "_budgeted".loc()},
+          {content: "_actual".loc()},
+          {content: "_balance".loc()}
+        ]}
+      ]}
+    ],
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
-                classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "priority.name",
-                fit: true, classes: "right",
-                placeholder: "_noPriority".loc()}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "account.name"},
-              {kind: "XV.ListAttr", attr: "percentComplete", fit: true,
-                classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "name-column", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true},
+            {kind: "XV.ListAttr", attr: "name"},
+            {kind: "XV.ListAttr", attr: "account.name"}
           ]},
-          {kind: "XV.ListColumn", style: "width: 100px;",
+          {kind: "XV.ListColumn", classes: "right-column", components: [
+            {kind: "XV.ListAttr", attr: "dueDate"},
+            {kind: "XV.ListAttr", attr: "priority.name",
+                placeholder: "_noPriority".loc()},
+            {kind: "XV.ListAttr", attr: "percentComplete"}
+          ]},
+          {kind: "XV.ListColumn", classes: "short",
             components: [
             {kind: "XV.ListAttr", attr: "getProjectStatusString"},
             {kind: "XV.ListAttr", attr: "assignedTo.username",
               placeholder: "_noAssignedTo".loc()},
-            {kind: "XV.ListAttr", attr: "department.number",
-              placeholder: "_noDepartment".loc()},
+            {kind: "XV.ListAttr", attr: "projectType.code",
+              placeholder: "_noProjectType".loc()},
           ]},
-          {kind: "XV.ListColumn", style: "width: 80px;",
-            components: [
-            {content: "_budgeted".loc() + ":", classes: "xv-list-attr",
-              style: "text-align: right;"},
-            {content: "_actual".loc() + ":", classes: "xv-list-attr",
-              style: "text-align: right;"},
-            {content: "_balance".loc() + ":", classes: "xv-list-attr",
-              style: "text-align: right;"}
-          ]},
-          {kind: "XV.ListColumn", classes: "money", components: [
+          {kind: "XV.ListColumn", classes: "right-column", components: [
             {kind: "XV.ListAttr", attr: "budgetedExpenses",
               classes: "text-align-right", formatter: "formatExpenses"},
             {kind: "XV.ListAttr", attr: "actualExpenses",
@@ -1591,7 +1619,8 @@ trailing:true, white:true, strict: false*/
             {kind: "XV.ListAttr", attr: "balanceExpenses",
               classes: "text-align-right", formatter: "formatExpenses"}
           ]},
-          {kind: "XV.ListColumn", classes: "money", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "right-column", fit: true,
+            components: [
             {kind: "XV.ListAttr", attr: "budgetedHours",
               classes: "text-align-right", formatter: "formatHours"},
             {kind: "XV.ListAttr", attr: "actualHours",
@@ -1723,7 +1752,7 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
-              {kind: "XV.ListAttr", attr: "getOrderStatusString",
+              {kind: "XV.ListAttr", attr: "formatStatus",
                 style: "padding-left: 24px"},
               {kind: "XV.ListAttr", attr: "scheduleDate",
                 classes: "right", placeholder: "_noSchedule".loc()}

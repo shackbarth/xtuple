@@ -11,7 +11,8 @@
 
   /**
   Customer Group is used to categorize customers.
-  TIP: Create your customer groups using a logical, hierarchical structure. This will make it easier to retrieve customer group information in the future.
+  TIP: Create your customer groups using a logical, hierarchical structure.
+  This will make it easier to retrieve customer group information in the future.
   @class
   @alias CustomerGroup
   @property {String} Name
@@ -26,10 +27,31 @@
       listKind: "XV.CustomerGroupList",
       instanceOf: "XM.Document",
       attributes: ["name", "description", "customers"],
+      /**
+      @member -
+      @memberof CustomerGroup.prototype
+      @description The ID attribute is "name", which will be automatically uppercased
+    */
       idAttribute: "name",
+      /**
+      @member -
+      @memberof CustomerGroup.prototype
+      @description Used in the Billing and Sales modules
+    */
       extensions: ["billing", "sales"],
+      /**
+      @member -
+      @memberof CustomerGroup.prototype
+      @description Customer Groups are lockable
+    */
       isLockable: true,
       cacheName: null,
+      /**
+      @member -
+      @memberof CustomerGroup.prototype
+      @description Customer Groups can be read by users with the "ViewCustomerGroups" privilege
+      and can be created, updated and deleted by users with the "MaintainCustomerGroups" privilege.
+      */
       privileges: {
         createUpdateDelete: "MaintainCustomerGroups",
         read: "ViewCustomerGroups"

@@ -1685,6 +1685,13 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
+        }
+      },
+      {
         "name": "vendor",
         "toOne": {
           "type": "VendorRelation",

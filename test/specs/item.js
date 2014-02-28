@@ -14,18 +14,80 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   /**
     @class
     @alias Item
+    @property {String} id
+    @property {String} number
+    @property {Boolean} isActive
+    @property {String} description1 
+    @property {String} description2
+    @property {String} itemType
+    @property {ClassCode} classCode
+    @property {Unit} inventoryUnit
+    @property {Boolean} isFractional
+    @property {Boolean} isConfigured
+    @property {String} notes
+    @property {String} extendedDescription
+    @property {Boolean} isSold
+    @property {ProductCategory} productCategory
+    @property {FreightClass} freightClass
+    @property {String} barcode
+    @property {Number} listPrice
+    @property {Number} wholesalePrice
+    @property {Unit} priceUnit
+    @property {Number} productWeight
+    @property {Number} packageWeight
+    @property {String} aliases
+    @property {ItemComment} comments
+    @property {ItemCharacteristic} characteristics
+    @property {ItemAccount} accounts
+    @property {ItemContact} contacts
+    @property {ItemItem} items
+    @property {ItemFile} files
+    @property {ItemUrl} urls
+    @property {Number} maximumDesiredcost
+    @property {ItemCustomer} customers
   */
   var spec = {
     recordType: "XM.Item",
     collectionType: "XM.ItemListItemCollection",
+    /**
+      @member -
+      @memberof Item.prototype
+      @description The Items collection is not cached.
+    */
     cacheName: null,
     listKind: "XV.ItemList",
     instanceOf: "XM.Document",
+    /**
+      @member -
+      @memberof Item.prototype
+      @description Items are lockable.
+    */
     isLockable: true,
+    /**
+      @member -
+      @memberof Item.prototype
+      @description The ID attribute is "number", which will be automatically uppercased.
+    */
     idAttribute: "number",
     enforceUpperKey: true,
-    attributes: ["number", "description1", "barcode", "aliases"],
+    attributes: ["id", "number", "isActive", "description1", "description2", "itemType",
+    "classCode", "inventoryUnit", "isFractional", "isConfigured", "notes", "extendedDescription",
+    "isSold", "productCategory", "freightClass", "barcode", "listPrice", "wholesalePrice",
+    "priceUnit", "productWeight", "packageWeight", "aliases", "comments", "characteristics",
+    "accounts", "contacts", "items", "files", "urls", "maximumDesiredCost", "customers"],
+    /**
+      @member -
+      @memberof Item.prototype
+      @description Used in the Billing, crm, sales and project modules
+    */
     extensions: ["billing", "crm", "sales", "project"],
+    /**
+      @member -
+      @memberof Item.prototype
+      @description Items can be read by users with "ViewItemMasters" privilege
+      , can be created or updated by users with the "MaintainItemMasters" privilege
+      and can be deleted by users with "DeleteItemMasters" privilege
+    */
     privileges: {
       createUpdate: "MaintainItemMasters",
       read: "ViewItemMasters",
@@ -65,6 +127,10 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     }}]
   };
   var additionalTests = function () {
+    /**
+      @class ItemAlias
+      @memberof Item
+    */
     describe("Item Alias", function () {
       var itemAlias;
       before(function (done) {
@@ -73,6 +139,13 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           done();
         });
       });
+      /**
+      @member -
+      @memberof ItemAlias.prototype
+      @description Item Alias should contain the following fields - Item Number,Alias Number,
+          Associated CRMAccount, 'Use Description' checkbox, Description,
+          Comments
+      */
       it("Item Alias should contain the following fields - Item Number,Alias Number," +
           "Associated CRMAccount, 'Use Description' checkbox, Description, " +
           "Comments", function () {
@@ -80,16 +153,34 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
           "account"];//, "comments"]; TODO
         assert.equal(_.difference(aliasFields, itemAlias.getAttributeNames()).length, 0);
       });
+      /**
+      @member -
+      @memberof ItemAlias.prototype
+      @description Use a description option should be unchecked and Description field
+          should be inactive by default
+      */
       it("Use a description option should be unchecked and Description field " +
           "should be inactive by default", function () {
         assert.isFalse(itemAlias.get("useDescription"));
         assert.isTrue(itemAlias.isReadOnly("description1"));
       });
+      /**
+      @member -
+      @memberof ItemAlias.prototype
+      @description Description field should be enabled when 'Use Description' 
+          option is selected
+      */
       it("Description field should be enabled when 'Use Description' " +
           "option is selected", function () {
         itemAlias.set({useDescription: true});
         assert.isFalse(itemAlias.isReadOnly("description1"));
       });
+      /**
+      @member -
+      @memberof ItemAlias.prototype
+      @description Description field should be disabled and content wiped when 'Use Description'
+          option is unselected
+      */
       it("Description field should be disabled and content wiped when 'Use Description' " +
           "option is unselected", function () {
         itemAlias.set({description1: "should get wiped"});
