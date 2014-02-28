@@ -40,6 +40,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       databaseName = req.session.passport.user.organization,
       // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
       reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
+      auxilliaryInfo = req.query.options,
       workingDir = path.join(__dirname, "../temp", databaseName),
       reportPath = path.join(workingDir, reportName),
       imageFilenameMap = {},
@@ -523,6 +524,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           return;
         }
         rawData = _.extend(rawData, result.data.data);
+        rawData = _.extend(rawData, auxilliaryInfo);
         // take the raw data and added detail fields and put
         // into array format for the report
         // XXX temporary hack
