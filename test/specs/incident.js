@@ -118,21 +118,21 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     "their personal Incidents but not the Incidents owned by other users", function () {
     });
      /**
-    @member Comments
+    @member Other
     @memberof Incident
     @description Comments panel should exist to add new comments to the Incident
     */
     it.skip("Comments panel should exist to add new comments to the Incident", function () {
     });
      /**
-    @member Comments
+    @member Other
     @memberof Incident
     @description All Comment Types assigned to Incident should be available for selection
     */
     it.skip("All Comment Types assigned to Incident should be available for selection", function () {
     });
     /**
-    @member Documents
+    @member Other
     @memberof Incident
     @description Documents panel should exist to connect the Incidents to : Account, contact,
       Customer, File, Incident, Item, Link, Incident, Project, To do
@@ -143,35 +143,35 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     it.skip("User should be able to detach an attached document from the Incident", function (){
     });
     /**
-    @member Todo
+    @member Other
     @memberof Incident
     @description TO DO panel should exist to attach existing/new To Dos to the Incident
     */
     it.skip("TO DO panel should exist to attach existing/new To Dos to the Incident", function () {
     });
     /**
-    @member Todo
+    @member Other
     @memberof Incident
     @description User should be able to detach an attached To do from the Incident screen
     */
     it.skip("User should be able to detach an attached To do from the Incident screen", function (){
     });
     /**
-    @member Todo
+    @member Other
     @memberof Incident
     @description User should be able to open an attached To Do from the Incident screen
     */
     it.skip("User should be able to open an attached To Do from the Incident screen", function (){
     });
     /**
-    @member Todo
+    @member Other
     @memberof Incident
     @description New/Attach buttons in the 'TO DO' panel should be disabled for a new Incident
     */
     it.skip("New/Attach buttons in the 'TO DO' panel should be disabled for a new Incident", function () {
     });
     /**
-    @member History
+    @member Other
     @memberof Incident
     @description History panel should be available which displays the Incident history
     */
