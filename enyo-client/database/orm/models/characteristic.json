@@ -120,6 +120,14 @@
         }
       },
       {
+        "name": "isCustomers",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_customers",
+          "required": true
+        }
+      },
+      {
         "name": "isInvoices",
         "attr": {
           "type": "Boolean",

@@ -475,6 +475,7 @@
           {
             "name": "priority",
             "toOne": {
+              "isNested": true,
               "type": "Priority",
               "column": "prjext_priority_id"
             }

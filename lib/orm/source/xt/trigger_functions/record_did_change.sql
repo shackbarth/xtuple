@@ -59,7 +59,7 @@ return (function () {
      plv8.execute(sql, [oid, NEW[pkey], XT.generateUUID()]);
 
      /* Add the user that's creating this record to the xt.obj_share. */
-     if (NEW.obj_uuid) {
+     if (NEW.obj_uuid && XT.username) {
        /* TODO: Should they get update and delete access? */
        shareSql = 'insert into xt.obj_share (obj_share_target_uuid, obj_share_username, obj_share_read) values ($1, $2, $3);'
        shareParams = [

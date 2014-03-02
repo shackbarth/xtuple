@@ -12,12 +12,12 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     common = require("../lib/common");
 
   /**
-  Contacts are people who may be associated directly with CRM Accounts, Customers,
-  Ship-To Addresses, Vendors, Vendor Addresses, and Sites
+  Contacts are people who may be associated directly with CRM accounts, customers,
+  ship-to addresses, vendors, vendor addresses, and sites.
     @class
     @alias Contact
-    @property {String} Number
-    @property {Boolean} isActive
+    @property {String} Number [Required] Displays the system-defined number used to identify the contact.
+    @property {Boolean} isActive Select if you are actively doing business with this contact. Not selecting makes the contact inactive.
     @property {String} Honorific
     @property {String} FirstName
     @property {String} MiddleName

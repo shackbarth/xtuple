@@ -243,6 +243,54 @@
         }
       },
       {
+        "name": "budgetedHoursTotal",
+        "attr": {
+          "type": "Hours",
+          "derived": true,
+          "method": "xt.prj_budget_hrs(prj_id)"
+        }
+      },
+      {
+        "name": "actualHoursTotal",
+        "attr": {
+          "type": "Hours",
+          "derived": true,
+          "method": "xt.prj_actual_hrs(prj_id)"
+        }
+      },
+      {
+        "name": "balanceHoursTotal",
+        "attr": {
+          "type": "Hours",
+          "derived": true,
+          "method": "xt.prj_balance_hrs(prj_id)"
+        }
+      },
+      {
+        "name": "budgetedExpensesTotal",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.prj_budget_exp(prj_id)"
+        }
+      },
+      {
+        "name": "actualExpensesTotal",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.prj_actual_exp(prj_id)"
+        }
+      },
+      {
+        "name": "balanceExpensesTotal",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.prj_balance_exp(prj_id)"
+        }
+      },
+      {
         "name": "recurrences",
         "toMany": {
           "isNested": true,
