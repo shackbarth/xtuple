@@ -1092,7 +1092,9 @@ white:true*/
       },
 
       statusDestroyedDirty: function () {
-        this.get("purchaseOrder").calculateTotals();
+        if (!this.get("purchaseOrder").isDestroyed()) {
+          this.get("purchaseOrder").calculateTotals();
+        }
       },
 
       validate: function () {

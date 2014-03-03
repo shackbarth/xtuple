@@ -50,7 +50,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         itemInitialized = function (submodels) {
           var unitUpdated = function () {
             // make sure all the fields we need to save successfully have been calculated
-            if (lineItem.get("price") &&
+            if ((lineRecordType === "XM.PurchaseOrderLine" || lineItem.get("price")) &&
                 (!_.contains(lineItem.getAttributeNames(), "customerPrice") || lineItem.get("customerPrice"))) {
 
               //lineItem.off("all", unitUpdated);
@@ -70,6 +70,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
             return curr.get("isBase");
           });
           data.model.set({currency: currency});
+          lineItem.setIfExists({dueDate: new Date()});
           lineItem.setIfExists({quantity: 7});
           lineItem.setIfExists({billed: 7});
           lineItem.setIfExists({credited: 7});
