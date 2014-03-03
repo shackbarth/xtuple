@@ -41,7 +41,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       databaseName = req.session.passport.user.organization,
       // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
       reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
-      auxilliaryInfo = req.query.options,
+      auxilliaryInfo = req.query.auxilliaryInfo,
       workingDir = path.join(__dirname, "../temp", databaseName),
       reportPath = path.join(workingDir, reportName),
       imageFilenameMap = {},
@@ -299,28 +299,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Silent-print to a printer registered in the node-datasource.
      */
     var responsePrint = function (res, data, done) {
+      var printer = ipp.Printer(X.options.datasource.printer),
+        msg = {
+          "operation-attributes-tag": {
+            "job-name": "Silent Print",
+            "document-format": "application/pdf"
+          },
+          data: data
+        };
 
-    var printer = ipp.Printer(X.options.datasource.printer);
-    var msg = {
-      "operation-attributes-tag": {
-      "job-name": "Silent Print",
-      "document-format": "application/pdf"
-    },
-    data: data
-    };
-    printer.execute("Print-Job", msg, function(error, result){
-     if (error) {
-      X.log("Print error", error);
-      res.send({isError: true, message: "Error printing"});
-      done();
-      } else {
-      res.send({message: "Print Success"});
-      done();
-      }
-      }); 
+      printer.execute("Print-Job", msg, function (error, result) {
+        if (error) {
+          X.log("Print error", error);
+          res.send({isError: true, message: "Error printing"});
+          done();
+        } else {
+          res.send({message: "Print Success"});
+          done();
+        }
+      });
     };
 
-    // Convenience hash to avoid log if-else
+    // Convenience hash to avoid if-else
     var responseFunctions = {
       display: responseDisplay,
       download: responseDownload,
@@ -542,15 +542,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           return;
         }
         rawData = _.extend(rawData, result.data.data);
-        rawData = _.extend(rawData, auxilliaryInfo);
-        // take the raw data and added detail fields and put
-        // into array format for the report
-        // XXX temporary hack
-        //rawData.detail = [
-        //  {trace: "12345"},
-        //  {trace: "56789"}
-        //];
-        //
+        if (auxilliaryInfo) {
+          rawData = _.extend(rawData, JSON.parse(auxilliaryInfo));
+        }
         reportData = transformDataStructure(rawData);
         //console.log(reportData);
         done();
@@ -600,13 +594,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     /**
       Dispatch the report however the client wants it
-        -Email (TODO: implement for real)
-        -Silent Print (TODO)
+        -Email
+        -Silent Print
         -Stream download
         -Display to browser
-
-      TODO: each of these options could be its own function, and this function
-      can just call the appropriate one.
     */
     var sendReport = function (done) {
       fs.readFile(reportPath, function (err, data) {
