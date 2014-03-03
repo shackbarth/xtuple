@@ -41,7 +41,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     locale = require('./locale'),
     passport = require('passport'),
     redirector = require('./redirector'),
-    report = require('./report'),
     recover = require('./recover'),
     restDiscovery = require('./restDiscovery'),
     restRouter = require('./restRouter'),
@@ -102,7 +101,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.generateReport = [ensureLogin, generateReport.generateReport];
   exports.locale = [ensureLogin, locale.locale];
   exports.redirect = redirector.redirect;
-  exports.report = [ensureLogin, report.report];
   exports.analysis = [ensureLogin, analysis.analysis];
   exports.resetPassword = [ensureLogin, changePassword.resetPassword];
   exports.vcfExport = [ensureLogin, vcfExport.vcfExport];

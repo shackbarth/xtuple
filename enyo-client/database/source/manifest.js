@@ -152,7 +152,6 @@
     "xt/tables/oa2client.sql",
     "xt/tables/oa2clientredirs.sql",
     "xt/tables/oa2token.sql",
-    "xt/tables/bicache.sql",
     "xt/tables/clientcode.sql",
     "xt/tables/coheadwf.sql",
     "xt/tables/saletypewf.sql",
