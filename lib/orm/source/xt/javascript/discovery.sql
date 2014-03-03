@@ -575,6 +575,13 @@ select xt.install_js('XT','Discovery','xtuple', $$
             "description": "Specify the order of results for a filtered list request.",
             "location": "query"
           },
+          "rowLimit": {
+            "type": "integer",
+            "description": "Maximum number of entries to return. Optional.",
+            "format": "int32",
+            "minimum": "1",
+            "location": "query"
+          },
           "maxResults": {
             "type": "integer",
             "description": "Maximum number of entries returned on one result page. Optional.",
@@ -631,6 +638,13 @@ select xt.install_js('XT','Discovery','xtuple', $$
           "orderby": {
             "type": "object",
             "description": "Specify the order of results for a filtered list request.",
+            "location": "query"
+          },
+          "rowLimit": {
+            "type": "integer",
+            "description": "Maximum number of entries to return. Optional.",
+            "format": "int32",
+            "minimum": "1",
             "location": "query"
           },
           "maxResults": {

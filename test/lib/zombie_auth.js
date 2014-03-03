@@ -111,6 +111,7 @@ Simplest possible usage:
     };
 
     zombie.visit(host, {debug: verboseMode}, function (e, browser) {
+      console.log(e);
       //
       // This is the login screen
       //
