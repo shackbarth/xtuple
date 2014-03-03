@@ -14,7 +14,7 @@
     "bcrypt": "0.7.x",
     "colors": "0.6.x",
     "commander": "1.2.x",
-    "congruence": "1.2.4",
+    "congruence": "~1.2.4",
     "connect-ensure-login": "0.1.x",
     "ejs": "0.8.x",
     "express": "3.1.x",
@@ -41,11 +41,11 @@
     "underscore": "1.4.x",
     "winston": "0.7.x",
     "xmla4js": "git://github.com/rpbouman/xmla4js.git",
-    "underscore.string": "~2.3.3",
-    "congruence": "~1.2.4"
+    "underscore.string": "~2.3.3"
   },
   "devDependencies": {
     "chai": "1.5.x",
+    "jshint": "2.4.x",
     "mocha": "1.9.x",
     "require-uncache": "0.0.x",
     "html5": "0.3.13",
