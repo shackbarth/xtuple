@@ -1,3 +1,13 @@
+1.8.0 (2014/03/??)
+==================
+
+Features and bugfixes
+---------------------
+- Implemented 
+  issue #[22461](http://www.xtuple.org/xtincident/view/bugs/22461) 
+  _Silent print from nodejs_
+
+
 1.7.2 (2014/02/24)
 ==================
 

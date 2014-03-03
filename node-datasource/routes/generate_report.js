@@ -13,6 +13,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     async = require("async"),
     fs = require("fs"),
     path = require("path"),
+    ipp = require("ipp"),
     Report = require('fluentreports').Report,
     queryForData = require("./report").queryForData;
 
@@ -25,7 +26,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     @property req.query.action
 
     Sample URL:
-    https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
+    https://localhost:8443/dev/generate-report?nameSpace=XM&type=Invoice&id=60000&action=print
 
    */
   var generateReport = function (req, res) {
@@ -298,8 +299,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Silent-print to a printer registered in the node-datasource.
      */
     var responsePrint = function (res, data, done) {
-      // TODO
+
+    var printer = ipp.Printer(X.options.datasource.printer);
+    var msg = {
+      "operation-attributes-tag": {
+      "job-name": "Silent Print",
+      "document-format": "application/pdf"
+    },
+    data: data
+    };
+    printer.execute("Print-Job", msg, function(error, result){
+     if (error) {
+      X.log("Print error", error);
+      res.send({isError: true, message: "Error printing"});
       done();
+      } else {
+      res.send({message: "Print Success"});
+      done();
+      }
+      }); 
     };
 
     // Convenience hash to avoid log if-else
