@@ -21,6 +21,7 @@ cdir() {
 	log "Changing directory to $1"
 }
 
+PG_VERSION=9.1
 DATABASE=dev
 RUNALL=true
 XT_VERSION=
@@ -29,8 +30,12 @@ LIBS_ONLY=
 XT_DIR=$RUN_DIR
 XTUPLE_REPO='http://sourceforge.net/projects/postbooks/files/mobile-debian'
 
-while getopts ":ipnhmx-:" opt; do
+while getopts ":d:ipnhmx-:" opt; do
   case $opt in
+    d)
+      PG_VERSION=$OPTARG
+      echo $PG_VERSION
+      ;;
     i)
       # Install packages
       RUNALL=
