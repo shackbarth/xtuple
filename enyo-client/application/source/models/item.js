@@ -179,6 +179,18 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.ItemGroupRelation = XM.Model.extend({
+    /** @scope XM.ItemGroupRelation.prototype */
+
+    recordType: 'XM.ItemGroupRelation'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.ItemGroupItem = XM.Model.extend({
     /** @scope XM.ItemGroupItem.prototype */
 
@@ -773,10 +785,10 @@ white:true*/
 
    @extends XM.Collection
   */
-  XM.ItemGroupCollection = XM.Collection.extend({
-   /** @scope XM.ItemGroupCollection.prototype */
+  XM.ItemGroupRelationCollection = XM.Collection.extend({
+   /** @scope XM.ItemGroupRelationCollection.prototype */
 
-    model: XM.ItemGroup
+    model: XM.ItemGroupRelation
 
   });
 
