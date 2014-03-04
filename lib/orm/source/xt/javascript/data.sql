@@ -64,13 +64,17 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* Handle privileges. */
       if (orm.isNestedOnly) { plv8.elog(ERROR, 'Access Denied'); }
-      if ((privileges &&
-         (!privileges.all || (privileges.all &&
-         (!this.checkPrivilege(privileges.all.read) &&
-          !this.checkPrivilege(privileges.all.update)))) &&
-           privileges.personal &&
+      if (privileges &&
+          (!privileges.all ||
+            (privileges.all &&
+              (!this.checkPrivilege(privileges.all.read) &&
+              !this.checkPrivilege(privileges.all.update)))
+          ) &&
+          privileges.personal &&
           (this.checkPrivilege(privileges.personal.read) ||
-           this.checkPrivilege(privileges.personal.update)))) {
+            this.checkPrivilege(privileges.personal.update))
+        ) {
+
         parameters.push({
           attribute: privileges.personal.properties,
           isLower: true,
@@ -383,7 +387,8 @@ select xt.install_js('XT','Data','xtuple', $$
 
       if (typeof privilege === 'string') {
         if (!this._granted) { this._granted = {}; }
-        if (this._granted[privilege] !== undefined) { return this._granted[privilege]; }
+        if (!this._granted[XT.username]) { this._granted[XT.username] = {}; }
+        if (this._granted[XT.username][privilege] !== undefined) { return this._granted[XT.username][privilege]; }
 
         /* The privilege name is allowed to be a set of space-delimited privileges */
         /* If a user has any of the applicable privileges then they get access */
@@ -414,7 +419,7 @@ select xt.install_js('XT','Data','xtuple', $$
         ret = res.length ? res[0].granted : false;
 
         /* Memoize. */
-        this._granted[privilege] = ret;
+        this._granted[XT.username][privilege] = ret;
       }
 
       if (DEBUG) {
