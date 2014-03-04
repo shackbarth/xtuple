@@ -35,7 +35,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     exxport = require('./export'),
     data = require('./data'),
     olapData = require('./olapdata'),
-    dataFromKey = require('./data_from_key'),
     file = require('./file'),
     generateReport = require('./generate_report'),
     locale = require('./locale'),
@@ -94,7 +93,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.creditCard = [ensureLogin, authorizeNet.transact];
   exports.changePassword = [ensureLogin, changePassword.changePassword];
   exports.clientCode = [ensureLogin, clientCode.clientCode];
-  exports.dataFromKey = dataFromKey.dataFromKey; // don't authenticate
   exports.email = [ensureLogin, email.email];
   exports.exxport = [ensureLogin, exxport.exxport];
   exports.file = [ensureLogin, file.file];
