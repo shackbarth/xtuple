@@ -14,5 +14,4 @@ before_script:
 script:
   - "npm run-script test"
   - "npm run-script test-datasource"
-  - "npm run-script test-datasource"
-  - "./node_modules/.bin/jshint lib/backbone-x/source lib/enyo-x/source lib/tools/source enyo-client/application/source/ node-datasource/routes"
+  - "npm run-script jshint"

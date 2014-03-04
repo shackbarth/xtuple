@@ -13,7 +13,7 @@ trailing:true, white:true, strict:false*/
     //
     panels = [
       {name: "honorificList", kind: "XV.HonorificList"},
-      {name: "expenseCategoryList", kind: "XV.ExpenseCategoryList"},  
+      {name: "expenseCategoryList", kind: "XV.ExpenseCategoryList"},
       {name: "itemList", kind: "XV.ItemList"},
       {name: "itemGroupList", kind: "XV.ItemGroupList"},
       {name: "classCodeList", kind: "XV.ClassCodeList"},
