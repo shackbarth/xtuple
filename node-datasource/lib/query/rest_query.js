@@ -145,7 +145,7 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
         };
       }),
       rowOffset: (+source.pagetoken || 0) * (+source.maxresults || 100),
-      rowLimit: (+source.rowlimit || 100),
+      rowLimit: ((+source.maxresults || +source.rowlimit) || 100),
     };
     return _.compactObject(target);
   }
