@@ -231,6 +231,17 @@ white:true, strict:false*/
     };
 
     // ..........................................................
+    // ITEM SOURCE MANUFACTURER
+    //
+    enyo.kind({
+      name: "XV.ItemSourceManufacturerWidget",
+      kind: "XV.RelationWidget",
+      collection: "XM.ItemSourceManufacturerCollection",
+      keyAttribute: "manufacturerName",
+      label: "_manufacturer".loc(),
+    });
+
+    // ..........................................................
     // PURCHASE VENDOR
     //
 
