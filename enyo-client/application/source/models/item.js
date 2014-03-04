@@ -177,12 +177,14 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.ItemGroupRelation = XM.Model.extend({
+  XM.ItemGroupRelation = XM.Info.extend({
     /** @scope XM.ItemGroupRelation.prototype */
 
-    recordType: 'XM.ItemGroupRelation'
+    recordType: 'XM.ItemGroupRelation',
+
+    editableModel: "XM.ItemGroup"
 
   });
 
