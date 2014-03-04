@@ -9,6 +9,8 @@ where itemsrc_default is null;
 
 alter table itemsrc alter column itemsrc_default set not null;
 
--- create trigger
+-- add index
+select xt.add_index('itemsrc', 'itemsrc_manuf_name', 'itemsrc_manuf_name_index', 'btree', 'public');
 
+-- create trigger
 create trigger itemsrc_vendor_item_number_did_change before insert or update on itemsrc for each row execute procedure xt.itemsrc_did_change();
