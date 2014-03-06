@@ -325,6 +325,9 @@ return (function () {
    * @param {Boolean|String} Set flag to indicate the error was handled.
    */
   XT.error = function (error) {
+    /* Make sure XT.username gets unset on errors. */
+    XT.username = undefined;
+
     var message = error.stack + "\n";
 
     if (error.name === "handleError") {

@@ -119,7 +119,7 @@ var _ = require("underscore"),
   var setModel = function (data, done) {
     var timeoutId,
       invalid = function (model, error) {
-        assert.fail(JSON.stringify(error) || "Unspecified invalidity in " + data.recordType);
+        assert.fail(0, 1, error.message() || JSON.stringify(error) || "Unspecified invalidity in " + data.recordType);
       },
       setAttribute = function (attribute, asyncCallback) {
         var value = attribute.value,

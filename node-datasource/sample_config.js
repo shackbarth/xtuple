@@ -41,6 +41,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       smtpPort: 587,
       smtpUser: "",
       smtpPassword: "",
+      printer: "",
 
       // these properties are dynamically registered with the
       // node discovery service

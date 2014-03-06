@@ -25,7 +25,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
   var spec = {
     skipSmoke: true,
     recordType: "XM.ItemGroup",
-    collectionType: "XM.ItemGroupCollection",
+    collectionType: "XM.ItemGroupRelationCollection",
     /**
     @member -
     @memberof ItemGroup.prototype

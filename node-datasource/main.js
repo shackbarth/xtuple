@@ -609,7 +609,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           debugging: X.options.datasource.debugging,
           biAvailable: _.isObject(X.options.biServer) && !_.isEmpty(X.options.biServer),
           emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
-          printAvailable: false,
+          printAvailable: _.isString(X.options.datasource.printer) && X.options.datasource.printer !== "",
           version: X.version
         });
       callback(callbackObj);

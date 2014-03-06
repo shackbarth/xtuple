@@ -689,7 +689,7 @@
     "_total": "Total",
     "_totals": "Totals",
     "_toUnit": "To Unit",
-    "_trace": "Lot/Serial",
+    "_trace": "Trace",
     "_transactionDate": "Transaction Date",
     "_transactionType": "Transaction Type",
     "_transactionSuccessful": "Transaction Successful",
