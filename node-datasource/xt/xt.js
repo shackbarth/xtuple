@@ -59,7 +59,7 @@ XT = { };
     // special case where the desired output requires calling console directly
     X.io.console(X.StringBuffer.create({ color: 'blue', prefix: null }),
       "\n================================================" +
-      "\nXUPLE NODE.JS FRAMEWORK ({version})".f({ version: X.version || "N/A" }) +
+      "\nXTUPLE NODE.JS SERVER" +
       "\n================================================\n"
     );
 
