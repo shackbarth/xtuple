@@ -27,6 +27,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       // on a different port
       proxyPort: null,
       port: 8443,
+      encryptionKeyFile: "./lib/private/encryption_key.txt",
       keyFile: "./lib/private/key.pem",
       certFile: "./lib/private/server.crt",
       caFile: null, // needs to be an array of strings
