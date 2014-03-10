@@ -1024,6 +1024,56 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "ItemGroupRelation",
+    "table": "itemgrp",
+    "idSequenceName": "itemgrp_itemgrp_id_seq",
+    "comment": "Item Group Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemgrp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey":true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "itemgrp_name",
+          "required": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "itemgrp_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "ItemGroupItem",
     "table": "itemgrpitem",
     "idSequenceName": "itemgrpitem_itemgrpitem_id_seq",

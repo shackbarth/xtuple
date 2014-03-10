@@ -177,6 +177,20 @@ white:true*/
   /**
     @class
 
+    @extends XM.Info
+  */
+  XM.ItemGroupRelation = XM.Info.extend({
+    /** @scope XM.ItemGroupRelation.prototype */
+
+    recordType: 'XM.ItemGroupRelation',
+
+    editableModel: "XM.ItemGroup"
+
+  });
+
+  /**
+    @class
+
     @extends XM.Model
   */
   XM.ItemGroupItem = XM.Model.extend({
@@ -773,10 +787,10 @@ white:true*/
 
    @extends XM.Collection
   */
-  XM.ItemGroupCollection = XM.Collection.extend({
-   /** @scope XM.ItemGroupCollection.prototype */
+  XM.ItemGroupRelationCollection = XM.Collection.extend({
+   /** @scope XM.ItemGroupRelationCollection.prototype */
 
-    model: XM.ItemGroup
+    model: XM.ItemGroupRelation
 
   });
 

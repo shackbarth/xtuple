@@ -1494,6 +1494,7 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.ItemGroup", "XV.ItemGroupWorkspace");
+  XV.registerModelWorkspace("XM.ItemGroupRelation", "XV.ItemGroupWorkspace");
   XV.registerModelWorkspace("XM.ItemGroupItem", "XV.ItemGroupWorkspace");
 
   // ..........................................................

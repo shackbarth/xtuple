@@ -3,6 +3,7 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
+process.chdir(__dirname);
 
 Backbone = require("backbone");
 _ = require("underscore");
@@ -82,7 +83,7 @@ XT = { };
 
   // load the encryption key, or create it if it doesn't exist
   // it should created just once, the very first time the datasoruce starts
-  var encryptionKeyFilename = './lib/private/encryption_key.txt';
+  var encryptionKeyFilename = X.options.datasource.encryptionKeyFile || './lib/private/encryption_key.txt';
   X.fs.exists(encryptionKeyFilename, function (exists) {
     if (exists) {
       X.options.encryptionKey = X.fs.readFileSync(encryptionKeyFilename, "utf8");
