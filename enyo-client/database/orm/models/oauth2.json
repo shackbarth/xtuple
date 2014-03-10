@@ -4,7 +4,7 @@
     "nameSpace": "SYS",
     "type": "Oauth2client",
     "table": "xt.oa2client",
-    "idSequenceName": "oa2client_oa2client_id_seq",
+    "idSequenceName": "xt.oa2client_oa2client_id_seq",
     "comment": "Defines global OAuth 2.0 server registered client storage.",
     "properties": [
      {
@@ -130,7 +130,7 @@
     "nameSpace": "SYS",
     "type": "Oauth2clientRedirs",
     "table": "xt.oa2clientredirs",
-    "idSequenceName": "oa2clientredirs_oa2clientredirs_id_seq",
+    "idSequenceName": "xt.oa2clientredirs_oa2clientredirs_id_seq",
     "comment": "Maps redirect URIs to OAuth 2.0 clients.",
     "properties": [
      {
@@ -163,7 +163,7 @@
     "nameSpace": "SYS",
     "type": "Oauth2token",
     "table": "xt.oa2token",
-    "idSequenceName": "oa2token_oa2token_id_seq",
+    "idSequenceName": "xt.oa2token_oa2token_id_seq",
     "comment": "Defines global OAuth 2.0 server token storage.",
     "properties": [
      {

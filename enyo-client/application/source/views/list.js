@@ -1325,7 +1325,7 @@ trailing:true, white:true, strict: false*/
     name: "XV.ItemGroupList",
     kind: "XV.List",
     label: "_itemGroups".loc(),
-    collection: "XM.ItemGroupCollection",
+    collection: "XM.ItemGroupRelationCollection",
     query: {orderBy: [
       {attribute: 'name'}
     ]},

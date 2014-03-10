@@ -118,7 +118,7 @@ white:true*/
   XT.cacheCollection("XM.currencyRates", "XM.CurrencyRateCollection");
   XT.cacheCollection("XM.departments", "XM.DepartmentCollection", "number");
   XT.cacheCollection("XM.honorifics", "XM.HonorificCollection", "code");
-  XT.cacheCollection("XM.itemGroups", "XM.ItemGroupCollection", "name");
+  XT.cacheCollection("XM.itemGroups", "XM.ItemGroupRelationCollection", "name");
   XT.cacheCollection("XM.languages", "XM.LanguageCollection");
   XT.cacheCollection("XM.locales", "XM.LocaleCollection");
   XT.cacheCollection("XM.priorities", "XM.PriorityCollection");

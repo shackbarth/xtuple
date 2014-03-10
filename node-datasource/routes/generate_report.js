@@ -13,8 +13,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     async = require("async"),
     fs = require("fs"),
     path = require("path"),
+    ipp = require("ipp"),
     Report = require('fluentreports').Report,
-    queryForData = require("./report").queryForData;
+    queryForData = require("./export").queryForData;
 
   /**
     Generates a report using fluentReports
@@ -25,7 +26,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     @property req.query.action
 
     Sample URL:
-    https://localhost:8543/qatest/generate-report?nameSpace=XM&type=Invoice&id=60000
+    https://localhost:8443/dev/generate-report?nameSpace=XM&type=Invoice&id=60000&action=print
 
    */
   var generateReport = function (req, res) {
@@ -40,6 +41,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       databaseName = req.session.passport.user.organization,
       // TODO: introduce pseudorandomness (maybe a timestamp) to avoid collisions
       reportName = req.query.type.toLowerCase() + req.query.id + ".pdf",
+      auxilliaryInfo = req.query.auxilliaryInfo,
       workingDir = path.join(__dirname, "../temp", databaseName),
       reportPath = path.join(workingDir, reportName),
       imageFilenameMap = {},
@@ -63,6 +65,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var transformDataStructure = function (data) {
       // TODO: detailAttribute could be inferred by looking at whatever comes before the *
       // in the detailElements definition.
+
+      if (!reportDefinition.settings.detailAttribute) {
+        // no children, so no transformation is necessary
+        return [data];
+      }
 
       return _.map(data[reportDefinition.settings.detailAttribute], function (detail) {
         var pathedDetail = {};
@@ -129,11 +136,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       that can be referred to in the json definition.
      */
     var transformElementData = function (def, data) {
-      var textOnly;
+      var textOnly,
+        params;
 
-      if (def.transform === 'address') {
-        var params = marryData(def.definition, data, true);
-        return formatAddress.apply(this, params);
+      if (def.transform) {
+        params = marryData(def.definition, data, true);
+        return transformFunctions[def.transform].apply(this, params);
       }
 
       if (def.element === 'image') {
@@ -176,6 +184,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       if (country) { address.push(country); }
       return address;
+    };
+
+    // this is very similar to a function on the XM.Location model
+    var formatArbl = function (aisle, rack, bin, location) {
+      return [_.filter(arguments, function (item) {
+        return !_.isEmpty(item);
+      }).join("-")];
+    };
+
+    var transformFunctions = {
+      address: formatAddress,
+      arbl: formatArbl
     };
 
     /**
@@ -279,11 +299,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       Silent-print to a printer registered in the node-datasource.
      */
     var responsePrint = function (res, data, done) {
-      // TODO
-      done();
+      var printer = ipp.Printer(X.options.datasource.printer),
+        msg = {
+          "operation-attributes-tag": {
+            "job-name": "Silent Print",
+            "document-format": "application/pdf"
+          },
+          data: data
+        };
+
+      printer.execute("Print-Job", msg, function (error, result) {
+        if (error) {
+          X.log("Print error", error);
+          res.send({isError: true, message: "Error printing"});
+          done();
+        } else {
+          res.send({message: "Print Success"});
+          done();
+        }
+      });
     };
 
-    // Convenience hash to avoid log if-else
+    // Convenience hash to avoid if-else
     var responseFunctions = {
       display: responseDisplay,
       download: responseDownload,
@@ -330,7 +367,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         afterFetch = function () {
           if (reportDefinitionColl.getStatus() === XM.Model.READY_CLEAN) {
             reportDefinitionColl.off("statusChange", afterFetch);
-            reportDefinition = JSON.parse(reportDefinitionColl.models[0].get("definition"));
+            if (reportDefinitionColl.models[0]) {
+              reportDefinition = JSON.parse(reportDefinitionColl.models[0].get("definition"));
+            } else {
+              X.log("Report Definition not found.");
+            }
             done();
           }
         };
@@ -460,16 +501,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
 
     /**
-      TODO: develop a protocol for defining barcodes in the definition file. A simple
-      implementation would then involve creating an image file in the temp directory
-      using some npm package, and then including it as an image in the report.
-     */
-    var fetchBarcodes = function (done) {
-      // TODO
-      done();
-    };
-
-    /**
       Fetch all the translatable strings in the user's language for use
       when we render.
       XXX cribbed from locale route
@@ -515,9 +546,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           return;
         }
         rawData = _.extend(rawData, result.data.data);
-        // take the raw data and added detail fields and put
-        // into array format for the report
+        if (auxilliaryInfo) {
+          rawData = _.extend(rawData, JSON.parse(auxilliaryInfo));
+        }
         reportData = transformDataStructure(rawData);
+        //console.log(reportData);
         done();
       };
 
@@ -534,6 +567,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       var printDetail = function (report, data) {
+        if (reportDefinition.settings.pageBreakDetail) {
+          // TODO: don't want to break after the last page
+          reportDefinition.detailElements.push({element: "newPage"});
+        }
         printDefinition(report, data, reportDefinition.detailElements);
       };
 
@@ -561,13 +598,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     /**
       Dispatch the report however the client wants it
-        -Email (TODO: implement for real)
-        -Silent Print (TODO)
+        -Email
+        -Silent Print
         -Stream download
         -Display to browser
-
-      TODO: each of these options could be its own function, and this function
-      can just call the appropriate one.
     */
     var sendReport = function (done) {
       fs.readFile(reportPath, function (err, data) {
@@ -599,7 +633,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       createTempOrgDir,
       fetchReportDefinition,
       fetchRemitTo,
-      fetchBarcodes,
       fetchTranslations,
       fetchData,
       fetchImages,
@@ -616,4 +649,3 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.generateReport = generateReport;
 
 }());
-

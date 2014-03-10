@@ -171,7 +171,6 @@ strict: false*/
     title: "_account".loc(),
     headerAttrs: ["number", "-", "name"],
     model: "XM.Account",
-    allowPrint: true,
     handlers: {
       onSavePrompt: "savePrompt"
     },
@@ -497,7 +496,6 @@ strict: false*/
     kind: "XV.Workspace",
     title: "_contact".loc(),
     model: "XM.Contact",
-    allowPrint: true,
     headerAttrs: ["firstName", "lastName"],
     handlers: {
       onError: "errorNotify"
@@ -640,7 +638,6 @@ strict: false*/
     kind: "XV.Workspace",
     title: "_customer".loc(),
     model: "XM.Customer",
-    allowPrint: true,
     headerAttrs: ["number", "-", "name"],
     handlers: {
       onError: "errorNotify"
@@ -894,7 +891,6 @@ strict: false*/
     kind: "XV.AccountDocumentWorkspace",
     title: "_employee".loc(),
     model: "XM.Employee",
-    allowPrint: false,
     headerAttrs: ["number", "-", "name"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -1095,7 +1091,6 @@ strict: false*/
     title: "_incident".loc(),
     headerAttrs: ["number", "-", "description"],
     model: "XM.Incident",
-    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1218,7 +1213,13 @@ strict: false*/
     kind: "XV.Workspace",
     title: "_invoice".loc(),
     model: "XM.Invoice",
-    allowPrint: true,
+    actions: [{
+      name: "print",
+      isViewMethod: true,
+      label: "_print".loc(),
+      privilege: "PrintInvoices",
+      prerequisite: "isReadyClean"
+    }],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1493,6 +1494,7 @@ strict: false*/
   });
 
   XV.registerModelWorkspace("XM.ItemGroup", "XV.ItemGroupWorkspace");
+  XV.registerModelWorkspace("XM.ItemGroupRelation", "XV.ItemGroupWorkspace");
   XV.registerModelWorkspace("XM.ItemGroupItem", "XV.ItemGroupWorkspace");
 
   // ..........................................................
@@ -1542,7 +1544,6 @@ strict: false*/
     title: "_opportunity".loc(),
     headerAttrs: ["number", "-", "name"],
     model: "XM.Opportunity",
-    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1720,7 +1721,6 @@ strict: false*/
     kind: "XV.AccountDocumentWorkspace",
     title: "_prospect".loc(),
     model: "XM.Prospect",
-    allowPrint: true,
     headerAttrs: ["number", "-", "name"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -1769,7 +1769,6 @@ strict: false*/
     kind: "XV.Workspace",
     title: "_return".loc(),
     model: "XM.Return",
-    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1937,7 +1936,6 @@ strict: false*/
   enyo.kind({
     name: "XV.SalesOrderBase",
     kind: "XV.Workspace",
-    allowPrint: true,
     printOnSaveSetting: "DefaultPrintSOOnSave",
     headerAttrs: ["number", "-", "billtoName"],
     published: {
@@ -3042,7 +3040,6 @@ strict: false*/
     title: "_toDo".loc(),
     headerAttrs: ["name"],
     model: "XM.ToDo",
-    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [

@@ -171,6 +171,11 @@
         }
       }
     },
+    "ipp": {
+      "version": "0.0.5",
+      "from": "https://registry.npmjs.org/ipp/-/ipp-0.0.5.tgz",
+      "resolved": "https://registry.npmjs.org/ipp/-/ipp-0.0.5.tgz"
+    },
     "json-patch": {
       "version": "0.0.1",
       "from": "json-patch@git://github.com/xtuple/JSON-Patch.git",
@@ -1114,6 +1119,87 @@
               "from": "options@>=0.0.5"
             }
           }
+        }
+      }
+    },
+    "jshint": {
+      "version": "2.4.4",
+      "from": "jshint@2.4.x",
+      "resolved": "https://registry.npmjs.org/jshint/-/jshint-2.4.4.tgz",
+      "dependencies": {
+        "shelljs": {
+          "version": "0.1.4",
+          "from": "shelljs@0.1.x"
+        },
+        "cli": {
+          "version": "0.4.5",
+          "from": "cli@0.4.x",
+          "resolved": "https://registry.npmjs.org/cli/-/cli-0.4.5.tgz",
+          "dependencies": {
+            "glob": {
+              "version": "3.2.9",
+              "from": "glob@>= 3.1.4",
+              "resolved": "https://registry.npmjs.org/glob/-/glob-3.2.9.tgz",
+              "dependencies": {
+                "inherits": {
+                  "version": "2.0.1",
+                  "from": "inherits@2"
+                }
+              }
+            }
+          }
+        },
+        "minimatch": {
+          "version": "0.2.14",
+          "from": "minimatch@0.x.x",
+          "dependencies": {
+            "lru-cache": {
+              "version": "2.5.0",
+              "from": "lru-cache@2"
+            },
+            "sigmund": {
+              "version": "1.0.0",
+              "from": "sigmund@~1.0.0"
+            }
+          }
+        },
+        "htmlparser2": {
+          "version": "3.3.0",
+          "from": "htmlparser2@3.3.x",
+          "dependencies": {
+            "domhandler": {
+              "version": "2.1.0",
+              "from": "domhandler@2.1"
+            },
+            "domutils": {
+              "version": "1.1.6",
+              "from": "domutils@1.1"
+            },
+            "domelementtype": {
+              "version": "1.1.1",
+              "from": "domelementtype@1"
+            },
+            "readable-stream": {
+              "version": "1.0.26-2",
+              "from": "readable-stream@1.0",
+              "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.26-2.tgz",
+              "dependencies": {
+                "string_decoder": {
+                  "version": "0.10.25-1",
+                  "from": "string_decoder@~0.10.x"
+                }
+              }
+            }
+          }
+        },
+        "console-browserify": {
+          "version": "0.1.6",
+          "from": "console-browserify@0.1.x"
+        },
+        "exit": {
+          "version": "0.1.2",
+          "from": "exit@0.1.x",
+          "resolved": "https://registry.npmjs.org/exit/-/exit-0.1.2.tgz"
         }
       }
     },

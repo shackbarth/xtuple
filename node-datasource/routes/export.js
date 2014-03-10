@@ -1,12 +1,41 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true */
+/*global X:true, XT:true */
 
 
 (function () {
   "use strict";
 
-  var queryForData = require('./report').queryForData;
+  var data = require("./data");
+  var queryForData = function (session, query, callback) {
+
+    var userId = session.passport.user.username,
+      adminUser = X.options.databaseServer.user, // execute this query as admin
+      userQueryPayload = '{"nameSpace":"SYS","type":"User","id":"%@","username":"%@"}'
+        .f(userId, adminUser),
+      userQuery = "select xt.get('%@')".f(userQueryPayload),
+      queryOptions = XT.dataSource.getAdminCredentials(session.passport.user.organization);
+
+    // first make sure that the user has permissions to export to CSV
+    // (can't trust the client)
+    XT.dataSource.query(userQuery, queryOptions, function (err, res) {
+      var retrievedRecord;
+      if (err || !res || res.rowCount < 1) {
+        callback({isError: true, message: "Error verifying user permissions"});
+        return;
+      }
+
+      retrievedRecord = JSON.parse(res.rows[0].get);
+      if (retrievedRecord.data.disableExport) {
+        // nice try, asshole.
+        callback({isError: true, message: "Stop trying to hack into our database"});
+        return;
+      }
+
+      query.printFormat = true;
+      data.queryDatabase("get", query, session, callback);
+    });
+  };
 
   // https://localtest.com/export?details={"requestType":"fetch","query":{"recordType":"XM.Locale"}}
 
@@ -139,5 +168,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
+  exports.queryForData = queryForData;
 
 }());

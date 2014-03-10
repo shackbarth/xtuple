@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true, es5:true */
+regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
+process.chdir(__dirname);
 
 Backbone = require("backbone");
 _ = require("underscore");
@@ -82,7 +83,7 @@ XT = { };
 
   // load the encryption key, or create it if it doesn't exist
   // it should created just once, the very first time the datasoruce starts
-  var encryptionKeyFilename = './lib/private/encryption_key.txt';
+  var encryptionKeyFilename = X.options.datasource.encryptionKeyFile || './lib/private/encryption_key.txt';
   X.fs.exists(encryptionKeyFilename, function (exists) {
     if (exists) {
       X.options.encryptionKey = X.fs.readFileSync(encryptionKeyFilename, "utf8");
@@ -373,13 +374,11 @@ app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
-app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
 app.get('/:org/file', routes.file);
 app.get('/:org/generate-report', routes.generateReport);
 app.get('/:org/locale', routes.locale);
-app.get('/:org/report', routes.report);
 app.get('/:org/reset-password', routes.resetPassword);
 app.get('/:org/queryOlap', routes.queryOlapCatalog);
 app.all('/:org/vcfExport', routes.vcfExport);
@@ -609,7 +608,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           debugging: X.options.datasource.debugging,
           biAvailable: _.isObject(X.options.biServer) && !_.isEmpty(X.options.biServer),
           emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
-          printAvailable: false,
+          printAvailable: _.isString(X.options.datasource.printer) && X.options.datasource.printer !== "",
           version: X.version
         });
       callback(callbackObj);

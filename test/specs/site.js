@@ -15,11 +15,11 @@
   exports.spec = {
     skipAll: true,
     // XXX very awkward
-    recordType: "Site"
+    recordType: "XM.Site"
   };
   var additionalTests = function () {
     /**
-      @member -
+      @member Setup
       @memberof Site.prototype
       @description Multiple Item Sites should not be allowed on Postbooks
     */

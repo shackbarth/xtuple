@@ -2,7 +2,7 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "xtuple",
   "description": "xTuple Enterprise Resource Planning Mobile-Web client",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
@@ -14,11 +14,12 @@
     "bcrypt": "0.7.x",
     "colors": "0.6.x",
     "commander": "1.2.x",
-    "congruence": "1.2.4",
+    "congruence": "~1.2.4",
     "connect-ensure-login": "0.1.x",
     "ejs": "0.8.x",
     "express": "3.1.x",
     "fluentreports": "git://github.com/xtuple/fluentreports.git",
+    "ipp": "0.0.5",
     "json-patch": "git://github.com/xtuple/JSON-Patch.git",
     "less": "1.5.0",
     "moment": "2.4.x",
@@ -40,11 +41,11 @@
     "underscore": "1.4.x",
     "winston": "0.7.x",
     "xmla4js": "git://github.com/rpbouman/xmla4js.git",
-    "underscore.string": "~2.3.3",
-    "congruence": "~1.2.4"
+    "underscore.string": "~2.3.3"
   },
   "devDependencies": {
     "chai": "1.5.x",
+    "jshint": "2.4.x",
     "mocha": "1.9.x",
     "require-uncache": "0.0.x",
     "html5": "0.3.13",
@@ -62,6 +63,7 @@
     "preinstall": "cd node-datasource/lib/query ; npm install",
     "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
     "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
-    "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*"
+    "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*",
+    "jshint": "./node_modules/.bin/jshint --exclude node-datasource/lib/query/node_modules lib/backbone-x/source lib/enyo-x/source lib/tools/source enyo-client/application/source/ enyo-client/extensions node-datasource"
   }
 }

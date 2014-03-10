@@ -22,6 +22,7 @@
         // filter out .swp files, etc.
         return path.extname(fileName) === '.js';
       }),
+      // TODO: consider tests in xtuple-extensions and private-extensions
       coverageArray = _.compact(_.map(specFiles, function (specFile) {
         return require(path.join(__dirname, "../specs", specFile)).spec.recordType;
       }));
