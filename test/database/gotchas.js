@@ -25,7 +25,7 @@ var _ = require("underscore"),
         "inner join pg_namespace pubns on pub.relnamespace = pubns.oid and pubns.nspname = 'public' " +
         "inner join pg_class xt on pub.relname = xt.relname " +
         "inner join pg_namespace xtns on xt.relnamespace = xtns.oid and xtns.nspname = 'xt' " +
-        "where pub.relkind NOT IN ('i'); ";
+        "where pub.relkind NOT IN ('i', 'c'); ";
 
       creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
