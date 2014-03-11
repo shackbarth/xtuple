@@ -122,20 +122,6 @@ white:true*/
 
   });
 
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  SYS.BiCache = XM.SimpleModel.extend(/** @lends SYS.BiCache.prototype */{
-
-    recordType: 'SYS.BiCache',
-
-    idAttribute: 'key'
-
-  });
-
   /**
     @class
 
@@ -275,18 +261,6 @@ white:true*/
     /** @scope SYS.UserCollection.prototype */
 
     model: SYS.User
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  SYS.BiCacheCollection = XM.Collection.extend({
-    /** @scope SYS.BiCacheCollection.prototype */
-
-    model: SYS.BiCache
 
   });
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true, es5:true */
+regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
 process.chdir(__dirname);
 
@@ -374,13 +374,11 @@ app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
-app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
 app.get('/:org/file', routes.file);
 app.get('/:org/generate-report', routes.generateReport);
 app.get('/:org/locale', routes.locale);
-app.get('/:org/report', routes.report);
 app.get('/:org/reset-password', routes.resetPassword);
 app.get('/:org/queryOlap', routes.queryOlapCatalog);
 app.all('/:org/vcfExport', routes.vcfExport);
