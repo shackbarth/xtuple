@@ -3,14 +3,15 @@
   newcap:true, noarg:true, undef:true */
 /*global XT:true, describe:true, it:true, require:true, __dirname:true, after:true */
 
-var assert = require('chai').assert,
+var _ = require("underscore"),
+  assert = require('chai').assert,
   datasource = require('../../node-datasource/lib/ext/datasource').dataSource,
   path = require('path');
 
 (function () {
   "use strict";
   describe('The database', function () {
-    this.timeout(100 * 60 * 1000);
+    this.timeout(10 * 1000);
 
     var loginData = require(path.join(__dirname, "../lib/login_data.js")).data,
       datasource = require('../../../xtuple/node-datasource/lib/ext/datasource').dataSource,
@@ -30,10 +31,33 @@ var assert = require('chai').assert,
       creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
-        assert.equal(0, res.rowCount, JSON.stringify(res.rows));
+        assert.equal(2, res.rowCount, JSON.stringify(res.rows));
         done();
       });
     });
+
+    it('must only override a few known functions', function (done) {
+      var sql = "select pub.proname " +
+        "from pg_proc pub " +
+        "inner join pg_namespace pubns on pub.pronamespace = pubns.oid and pubns.nspname = 'public' " +
+        "inner join pg_proc xt on pub.proname = xt.proname " +
+        "inner join pg_namespace xtns on xt.pronamespace = xtns.oid and xtns.nspname = 'xt' ";
+
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        var overriddenFunctions = _.map(res.rows, function (row) {
+            return row.proname;
+          }),
+          allowableFunctions = ["cntctmerge", "cntctrestore", "createuser",
+            "mergecrmaccts", "trylock", "undomerge"],
+          illegalFunctions = _.difference(overriddenFunctions, allowableFunctions);
+
+        assert.isNull(err);
+        assert.equal(illegalFunctions.length, 0, JSON.stringify(illegalFunctions));
+        done();
+      });
+    });
+
   });
 }());
 
