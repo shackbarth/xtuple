@@ -1679,11 +1679,11 @@ select xt.install_js('XT','Data','xtuple', $$
         idParams = [],
         counter = 1,
         sqlCount,
-        join,
+        sql_etags,
         etag_namespace,
         etag_table,
         sql1 = 'select %3$I as id from %1$I.%2$I where {conditions} {orderBy} {limit} {offset};',
-        sql2 = 'select * from %1$I.%2$I {join} where %3$I in ({ids}) {orderBy}';
+        sql2 = 'select * from %1$I.%2$I where %3$I in ({ids}) {orderBy}';
 
       /* Validate - don't bother running the query if the user has no privileges. */
       if (!this.checkPrivileges(nameSpace, type)) { return []; }
@@ -1726,32 +1726,8 @@ select xt.install_js('XT','Data','xtuple', $$
         counter++;
       });
 
-      if (orm.lockable) {
-        if (orm.table.indexOf(".") > 0) {
-          etag_namespace = orm.table.beforeDot();
-          etag_table = orm.table.afterDot();
-        } else {
-          etag_namespace = 'public';
-          etag_table = orm.table;
-        }
-        join = "left join ( " +
-                        "select ver_etag as etag, ver_record_id as id " +
-                        "from xt.ver " +
-                        "where ver_table_oid = ( " +
-                          "select pg_class.oid::integer as oid " +
-                          "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " +
-                          /* Note: using $L for quoted literal e.g. 'contact', not an identifier. */
-                          "where nspname = %1$L and relname = %2$L " +
-                        ") " +
-                      ") ver USING (id)";
-        join = XT.format(join, [etag_namespace, etag_table]);
-      } else {
-        join = "";
-      }
-
       sql2 = XT.format(sql2, [nameSpace.decamelize(), type.decamelize(), key]);
-      sql2 = sql2.replace(/{join}/g, join)
-                 .replace(/{orderBy}/g, clause.orderBy)
+      sql2 = sql2.replace(/{orderBy}/g, clause.orderBy)
                  .replace('{ids}', idParams.join());
 
       if (DEBUG) {
@@ -1765,6 +1741,37 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       this.sanitize(nameSpace, type, ret.data, options);
+
+      if (orm.lockable) {
+        if (orm.table.indexOf(".") > 0) {
+          etag_namespace = orm.table.beforeDot();
+          etag_table = orm.table.afterDot();
+        } else {
+          etag_namespace = 'public';
+          etag_table = orm.table;
+        }
+
+        sql_etags = "select ver_etag as etag, ver_record_id as id " +
+                    "from xt.ver " +
+                    "where ver_table_oid = ( " +
+                      "select pg_class.oid::integer as oid " +
+                      "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " +
+                      /* Note: using $L for quoted literal e.g. 'contact', not an identifier. */
+                      "where nspname = %1$L and relname = %2$L " +
+                    ") " +
+                    "and ver_record_id in ({ids})";
+        sql_etags = XT.format(sql_etags, [etag_namespace, etag_table]);
+        sql_etags = sql_etags.replace('{ids}', idParams.join());
+
+        var etags = plv8.execute(sql_etags, ids) || {};
+        if (etags) {
+          /* Add etags to result in nkey->etag format. */
+          ret.etags = {};
+          for (var i = 0; i < etags.length; i++) {
+            ret.etags[etags[i].id] = etags[i].etag;
+          }
+        }
+      }
 
       return ret;
     },
@@ -1956,11 +1963,6 @@ select xt.install_js('XT','Data','xtuple', $$
         preOffsetDate,
         offsetDate,
         check = function (p) {
-          /* etag is just a decoration on fetch requests. It's not included in the ORM. */
-          if (itemAttr === 'etag') {
-            return true;
-          }
-
           return p.name === itemAttr;
         };
 
