@@ -1666,7 +1666,8 @@ select xt.install_js('XT','Data','xtuple', $$
         parameters = query.parameters,
         clause = this.buildClause(nameSpace, type, parameters, orderBy),
         i,
-        key = XT.Orm.primaryKey(orm),
+        pkey = XT.Orm.primaryKey(orm),
+        nkey = XT.Orm.naturalKey(orm),
         limit = query.rowLimit ? XT.format('limit %1$L', [query.rowLimit]) : '',
         offset = query.rowOffset ? XT.format('offset %1$L', [query.rowOffset]) : '',
         parts,
@@ -1679,6 +1680,7 @@ select xt.install_js('XT','Data','xtuple', $$
         idParams = [],
         counter = 1,
         sqlCount,
+        etags,
         sql_etags,
         etag_namespace,
         etag_table,
@@ -1704,7 +1706,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* Query the model. */
-      sql1 = XT.format(sql1, [nameSpace.decamelize(), type.decamelize(), key]);
+      sql1 = XT.format(sql1, [nameSpace.decamelize(), type.decamelize(), pkey]);
       sql1 = sql1.replace('{conditions}', clause.conditions)
                  .replace(/{orderBy}/g, clause.orderBy)
                  .replace('{limit}', limit)
@@ -1726,7 +1728,7 @@ select xt.install_js('XT','Data','xtuple', $$
         counter++;
       });
 
-      sql2 = XT.format(sql2, [nameSpace.decamelize(), type.decamelize(), key]);
+      sql2 = XT.format(sql2, [nameSpace.decamelize(), type.decamelize(), pkey]);
       sql2 = sql2.replace(/{orderBy}/g, clause.orderBy)
                  .replace('{ids}', idParams.join());
 
@@ -1735,12 +1737,6 @@ select xt.install_js('XT','Data','xtuple', $$
         XT.debug('fetch values = ', JSON.stringify(ids));
       }
       ret.data = plv8.execute(sql2, ids) || [];
-
-      for (var i = 0; i < ret.data.length; i++) {
-        ret.data[i] = this.decrypt(nameSpace, type, ret.data[i], encryptionKey);
-      }
-
-      this.sanitize(nameSpace, type, ret.data, options);
 
       if (orm.lockable) {
         if (orm.table.indexOf(".") > 0) {
@@ -1763,15 +1759,24 @@ select xt.install_js('XT','Data','xtuple', $$
         sql_etags = XT.format(sql_etags, [etag_namespace, etag_table]);
         sql_etags = sql_etags.replace('{ids}', idParams.join());
 
-        var etags = plv8.execute(sql_etags, ids) || {};
+        etags = plv8.execute(sql_etags, ids) || {};
+        ret.etags = {};
+      }
+
+      for (var i = 0; i < ret.data.length; i++) {
+        ret.data[i] = this.decrypt(nameSpace, type, ret.data[i], encryptionKey);
+
         if (etags) {
           /* Add etags to result in nkey->etag format. */
-          ret.etags = {};
-          for (var i = 0; i < etags.length; i++) {
-            ret.etags[etags[i].id] = etags[i].etag;
+          for (var j = 0; j < etags.length; j++) {
+            if (etags[j].id === ret.data[i][pkey]) {
+              ret.etags[ret.data[i][nkey]] = etags[j].etag;
+            }
           }
         }
       }
+
+      this.sanitize(nameSpace, type, ret.data, options);
 
       return ret;
     },
