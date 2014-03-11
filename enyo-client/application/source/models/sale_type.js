@@ -58,9 +58,9 @@ white:true*/
     recordType: 'XM.SaleTypeWorkflow',
 
     defaults: function () {
-      return {
-        workflowType: XM.SalesOrderWorkflow.TYPE_OTHER
-      };
+      var ret = XM.WorkflowSource.prototype.defaults.apply(this, arguments);
+      ret.workflowType = XM.SalesOrderWorkflow.TYPE_OTHER;
+      return ret;
     }
 
   });

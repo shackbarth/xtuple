@@ -370,7 +370,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             if (reportDefinitionColl.models[0]) {
               reportDefinition = JSON.parse(reportDefinitionColl.models[0].get("definition"));
             } else {
-              X.log("Report Definition not found.");
+              done({description: "Report Definition not found."});
+              return;
             }
             done();
           }

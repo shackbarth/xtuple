@@ -43,12 +43,10 @@ white:true*/
 
     documentDateKey: "orderDate",
 
-    bindEvents: function () {
-      XM.SalesOrderBase.prototype.bindEvents.apply(this, arguments);
-      // XXX #refactor: what's the point of pricePolicy here?
-      var pricePolicy = XT.session.settings.get("soPriceEffective");
-      this.on('change:holdType', this.holdTypeDidChange);
-      this.on('change:total', this.calculateBalance);
+    handlers: {
+      "change:holdType": "holdTypeDidChange",
+      "change:scheduleDate": "scheduleDateChanged",
+      "change:total": "calculateBalance"
     },
 
     /**
@@ -119,6 +117,15 @@ white:true*/
             }
           }
         });
+      }
+    },
+
+    scheduleDateChanged: function () {
+      var scheduleDate = this.get("scheduleDate"),
+        packDate = this.get("packDate");
+
+      if (!packDate) {
+        this.set("packDate", scheduleDate);
       }
     },
 
