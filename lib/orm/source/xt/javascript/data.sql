@@ -1767,7 +1767,7 @@ select xt.install_js('XT','Data','xtuple', $$
         ret.data[i] = this.decrypt(nameSpace, type, ret.data[i], encryptionKey);
 
         if (etags) {
-          /* Add etags to result in nkey->etag format. */
+          /* Add etags to result in pkey->etag format. */
           for (var j = 0; j < etags.length; j++) {
             if (etags[j].id === ret.data[i][pkey]) {
               ret.etags[ret.data[i][nkey]] = etags[j].etag;
