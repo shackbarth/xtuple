@@ -1728,16 +1728,6 @@ select xt.install_js('XT','Data','xtuple', $$
         counter++;
       });
 
-      sql2 = XT.format(sql2, [nameSpace.decamelize(), type.decamelize(), pkey]);
-      sql2 = sql2.replace(/{orderBy}/g, clause.orderBy)
-                 .replace('{ids}', idParams.join());
-
-      if (DEBUG) {
-        XT.debug('fetch sql2 = ', sql2);
-        XT.debug('fetch values = ', JSON.stringify(ids));
-      }
-      ret.data = plv8.execute(sql2, ids) || [];
-
       if (orm.lockable) {
         if (orm.table.indexOf(".") > 0) {
           etag_namespace = orm.table.beforeDot();
@@ -1766,6 +1756,16 @@ select xt.install_js('XT','Data','xtuple', $$
         etags = plv8.execute(sql_etags, ids) || {};
         ret.etags = {};
       }
+
+      sql2 = XT.format(sql2, [nameSpace.decamelize(), type.decamelize(), pkey]);
+      sql2 = sql2.replace(/{orderBy}/g, clause.orderBy)
+                 .replace('{ids}', idParams.join());
+
+      if (DEBUG) {
+        XT.debug('fetch sql2 = ', sql2);
+        XT.debug('fetch values = ', JSON.stringify(ids));
+      }
+      ret.data = plv8.execute(sql2, ids) || [];
 
       for (var i = 0; i < ret.data.length; i++) {
         ret.data[i] = this.decrypt(nameSpace, type, ret.data[i], encryptionKey);
