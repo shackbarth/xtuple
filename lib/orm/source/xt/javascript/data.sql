@@ -1759,6 +1759,10 @@ select xt.install_js('XT','Data','xtuple', $$
         sql_etags = XT.format(sql_etags, [etag_namespace, etag_table]);
         sql_etags = sql_etags.replace('{ids}', idParams.join());
 
+        if (DEBUG) {
+          XT.debug('fetch sql_etags = ', sql_etags);
+          XT.debug('fetch etags_values = ', JSON.stringify(ids));
+        }
         etags = plv8.execute(sql_etags, ids) || {};
         ret.etags = {};
       }
