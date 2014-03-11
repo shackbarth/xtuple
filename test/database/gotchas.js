@@ -31,25 +31,28 @@ var _ = require("underscore"),
       datasource.query(sql, creds, function (err, res) {
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        // TODO: we should eliminate this override as well, either by renaming and migrating
+        // the xt table, or by removing the public table if (as we suspect) it is not used.
+        assert.equal(res.rows[0].relname, "potype");
         done();
       });
     });
 
-    it('must only override a few known functions', function (done) {
+    it('must only override a few whitelisted functions', function (done) {
       var sql = "select pub.proname " +
         "from pg_proc pub " +
         "inner join pg_namespace pubns on pub.pronamespace = pubns.oid and pubns.nspname = 'public' " +
         "inner join pg_proc xt on pub.proname = xt.proname " +
-        "inner join pg_namespace xtns on xt.pronamespace = xtns.oid and xtns.nspname = 'xt' ";
+        "inner join pg_namespace xtns on xt.pronamespace = xtns.oid and xtns.nspname = 'xt'; ";
 
       creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var overriddenFunctions = _.map(res.rows, function (row) {
             return row.proname;
           }),
-          allowableFunctions = ["cntctmerge", "cntctrestore", "createuser",
+          whitelist = ["cntctmerge", "cntctrestore", "createuser",
             "mergecrmaccts", "trylock", "undomerge"],
-          illegalFunctions = _.difference(overriddenFunctions, allowableFunctions);
+          illegalFunctions = _.difference(overriddenFunctions, whitelist);
 
         assert.isNull(err);
         assert.equal(illegalFunctions.length, 0, JSON.stringify(illegalFunctions));
