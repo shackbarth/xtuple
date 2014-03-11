@@ -190,7 +190,7 @@
     "xt/views/shiptoitem.sql",
     "xt/views/todoiteminfo.sql",
     "xt/views/usrinfo.sql",
-    "xt/views/vendaddr.sql",
+    "xt/views/vendaddrxt.sql",
     "xt/tables/usrlite.sql",
     "xm/javascript/account.sql",
     "xm/javascript/address.sql",
