@@ -364,7 +364,6 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
     };
     _.each(databases, function (database) {
       var creds = DataSource.getAdminCredentials(database);
-      console.log(creds);
       X.pg.connect(creds, function (err, client, done) {
         if (err) {
           return console.error('error fetching client from pool', err);
