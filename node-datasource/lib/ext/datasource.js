@@ -92,7 +92,7 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
         var creds = {
           "user": options.user,
           "port": options.port,
-          "host": options.hostname,
+          "host": options.host || options.hostname,
           "database": options.database,
           "password": options.password
         };
@@ -140,7 +140,7 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
 
         if (err) {
           issue(X.warning("Failed to connect to database: " +
-            "{hostname}:{port}/{database} => %@".f(options, err.message)));
+            "{host}:{port}/{database} => %@".f(options, err.message)));
           done();
           return callback(err);
         }
