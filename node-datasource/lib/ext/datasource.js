@@ -20,7 +20,7 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
       getAdminCredentials: function (organization) {
         return {
           user: X.options.databaseServer.user,
-          hostname: X.options.databaseServer.hostname,
+          host: X.options.databaseServer.hostname,
           port: X.options.databaseServer.port,
           database: organization,
           password: X.options.databaseServer.password
@@ -364,6 +364,7 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
     };
     _.each(databases, function (database) {
       var creds = DataSource.getAdminCredentials(database);
+      console.log(creds);
       X.pg.connect(creds, function (err, client, done) {
         if (err) {
           return console.error('error fetching client from pool', err);
