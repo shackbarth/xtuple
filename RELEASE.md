@@ -1,3 +1,37 @@
+1.8.1 (2014/03/12)
+==================
+
+Features and bugfixes
+---------------------
+- Fixed 
+  issue #[22518](http://www.xtuple.org/xtincident/view/bugs/22518) 
+  _Post Production, Issue Materials, Enter Receipt, Post Receipt should update workflows_ 
+- Fixed 
+  issue #[22526](http://www.xtuple.org/xtincident/view/bugs/22526) 
+  _Add support to return materials from a Work Order_ 
+- Fixed 
+  issue #[22668](http://www.xtuple.org/xtincident/view/bugs/22668) 
+  _Can not save filters in mobile_ 
+- Fixed 
+  issue #[22746](http://www.xtuple.org/xtincident/view/bugs/22746) 
+  _Long project descriptions bleed into adjacent columns_ 
+- Implemented 
+  issue #[22782](http://www.xtuple.org/xtincident/view/bugs/22782) 
+  _Print pack list_ 
+- Fixed 
+  issue #[22901](http://www.xtuple.org/xtincident/view/bugs/22901) 
+  _Incident plus versions are not showing up_ 
+- Fixed 
+  issue #[23010](http://www.xtuple.org/xtincident/view/bugs/23010) 
+  _Sales Type workflow missing defaults_ 
+- Fixed 
+  issue #[23013](http://www.xtuple.org/xtincident/view/bugs/23013) 
+  _Due date does not calculate on Sales Order Worflow_ 
+- Fixed 
+  issue #[23018](http://www.xtuple.org/xtincident/view/bugs/23018) 
+  _Opportunities do not have default Currency_ 
+
+
 1.8.0 (2014/03/07)
 ==================
 
