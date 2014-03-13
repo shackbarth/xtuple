@@ -49,7 +49,7 @@ trailing:true, white:true*/
       ],
       totalField: "amount"
     });
-    
-  }
+
+  };
 
 }());

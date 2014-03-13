@@ -4,7 +4,7 @@
     "nameSpace": "XM",
     "type": "Filter",
     "table": "xt.fltr",
-    "idSequenceName": "fltr_fltr_id_seq",
+    "idSequenceName": "xt.fltr_fltr_id_seq",
     "comment": "User Chart Map",
     "privileges": {
       "all": {

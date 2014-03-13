@@ -118,7 +118,7 @@
     "context": "purchasing",
     "nameSpace": "XM",
     "type": "PurchaseVendorAddress",
-    "table": "xt.vendaddr",
+    "table": "xt.vendaddrxt",
     "comment": "Purchase Vendor Address Map",
     "properties": [
       {
