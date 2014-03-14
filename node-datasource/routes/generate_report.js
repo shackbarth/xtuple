@@ -15,7 +15,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     path = require("path"),
     ipp = require("ipp"),
     Report = require('fluentreports').Report,
-    queryForData = require("./report").queryForData;
+    queryForData = require("./export").queryForData;
 
   /**
     Generates a report using fluentReports
@@ -367,7 +367,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         afterFetch = function () {
           if (reportDefinitionColl.getStatus() === XM.Model.READY_CLEAN) {
             reportDefinitionColl.off("statusChange", afterFetch);
-            reportDefinition = JSON.parse(reportDefinitionColl.models[0].get("definition"));
+            if (reportDefinitionColl.models[0]) {
+              reportDefinition = JSON.parse(reportDefinitionColl.models[0].get("definition"));
+            } else {
+              done({description: "Report Definition not found."});
+              return;
+            }
             done();
           }
         };
@@ -645,4 +650,3 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.generateReport = generateReport;
 
 }());
-

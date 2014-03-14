@@ -425,7 +425,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "VendorAddressRelation",
-    "table": "xt.vendaddr",
+    "table": "xt.vendaddrxt",
     "comment": "Vendor Address Relation Map",
     "privileges": {
       "all": {

@@ -1,4 +1,4 @@
-select xt.create_view('xt.vendaddr', $$
+select xt.create_view('xt.vendaddrxt', $$
 
 select
   vend_id as id,

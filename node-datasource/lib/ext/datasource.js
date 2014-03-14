@@ -20,7 +20,7 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
       getAdminCredentials: function (organization) {
         return {
           user: X.options.databaseServer.user,
-          hostname: X.options.databaseServer.hostname,
+          host: X.options.databaseServer.hostname,
           port: X.options.databaseServer.port,
           database: organization,
           password: X.options.databaseServer.password
@@ -92,7 +92,7 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
         var creds = {
           "user": options.user,
           "port": options.port,
-          "host": options.hostname,
+          "host": options.host || options.hostname,
           "database": options.database,
           "password": options.password
         };
@@ -140,7 +140,7 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
 
         if (err) {
           issue(X.warning("Failed to connect to database: " +
-            "{hostname}:{port}/{database} => %@".f(options, err.message)));
+            "{host}:{port}/{database} => %@".f(options, err.message)));
           done();
           return callback(err);
         }

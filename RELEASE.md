@@ -1,12 +1,108 @@
-1.8.0 (2014/03/??)
+1.8.1 (2014/03/12)
 ==================
 
 Features and bugfixes
 ---------------------
+- Fixed 
+  issue #[22518](http://www.xtuple.org/xtincident/view/bugs/22518) 
+  _Post Production, Issue Materials, Enter Receipt, Post Receipt should update workflows_ 
+- Fixed 
+  issue #[22526](http://www.xtuple.org/xtincident/view/bugs/22526) 
+  _Add support to return materials from a Work Order_ 
+- Fixed 
+  issue #[22668](http://www.xtuple.org/xtincident/view/bugs/22668) 
+  _Can not save filters in mobile_ 
+- Fixed 
+  issue #[22746](http://www.xtuple.org/xtincident/view/bugs/22746) 
+  _Long project descriptions bleed into adjacent columns_ 
+- Implemented 
+  issue #[22782](http://www.xtuple.org/xtincident/view/bugs/22782) 
+  _Print pack list_ 
+- Fixed 
+  issue #[22901](http://www.xtuple.org/xtincident/view/bugs/22901) 
+  _Incident plus versions are not showing up_ 
+- Fixed 
+  issue #[23010](http://www.xtuple.org/xtincident/view/bugs/23010) 
+  _Sales Type workflow missing defaults_ 
+- Fixed 
+  issue #[23013](http://www.xtuple.org/xtincident/view/bugs/23013) 
+  _Due date does not calculate on Sales Order Worflow_ 
+- Fixed 
+  issue #[23018](http://www.xtuple.org/xtincident/view/bugs/23018) 
+  _Opportunities do not have default Currency_ 
+
+
+1.8.0 (2014/03/07)
+==================
+
+Features and bugfixes
+---------------------
+ Implemented 
+  issue #[19037](http://www.xtuple.org/xtincident/view/bugs/19037) 
+  _Summary on project_ 
+- Implemented 
+  issue #[21508](http://www.xtuple.org/xtincident/view/bugs/21508) 
+  _Add support for basic Work Order transactions_ 
+- Implemented 
+  issue #[22078](http://www.xtuple.org/xtincident/view/bugs/22078) 
+  _Add support for Backflush on Post Production_ 
+- Implemented 
+  issue #[22079](http://www.xtuple.org/xtincident/view/bugs/22079) 
+  _Add support for Close Work Order on Post Production_ 
+- Implemented 
+  issue #[22237](http://www.xtuple.org/xtincident/view/bugs/22237) 
+  _Add support to print and email Invoices_ 
+- Implemented 
+  issue #[22241](http://www.xtuple.org/xtincident/view/bugs/22241) 
+  _Add support to print barcode Location labels_ 
+- Implemented 
+  issue #[22243](http://www.xtuple.org/xtincident/view/bugs/22243) 
+  _Add support to print Item barcode labels_ 
+- Implemented 
+  issue #[22442](http://www.xtuple.org/xtincident/view/bugs/22442) 
+  _CRM sales pipeline charts for dashboard_ 
+- Implemented 
+  issue #[22459](http://www.xtuple.org/xtincident/view/bugs/22459) 
+  _Barcode capture use-cases_ 
 - Implemented 
   issue #[22461](http://www.xtuple.org/xtincident/view/bugs/22461) 
-  _Silent print from nodejs_
-
+  _Silent print from nodejs_ 
+- Implemented 
+  issue #[22534](http://www.xtuple.org/xtincident/view/bugs/22534) 
+  _Add support Inventory Availability to web client_ 
+- Implemented 
+  issue #[22577](http://www.xtuple.org/xtincident/view/bugs/22577) 
+  _Private extensions under test_ 
+- Implemented 
+  issue #[22638](http://www.xtuple.org/xtincident/view/bugs/22638) 
+  _Add inventory availability information to Sales Order_ 
+- Fixed 
+  issue #[22645](http://www.xtuple.org/xtincident/view/bugs/22645) 
+  _Internal server error on dogfood_ 
+- Fixed 
+  issue #[22651](http://www.xtuple.org/xtincident/view/bugs/22651) 
+  _Natural Key Not Found Error on Empty DB_ 
+- Implemented 
+  issue #[22669](http://www.xtuple.org/xtincident/view/bugs/22669) 
+  _Add support for automatic supply order creation on Sales Orders_ 
+- Implemented 
+  issue #[22689](http://www.xtuple.org/xtincident/view/bugs/22689) 
+  _Support for a second jsdoc template_ 
+- Fixed 
+  issue #[22728](http://www.xtuple.org/xtincident/view/bugs/22728) 
+  _*Configure list is blank_ 
+- Implemented 
+  issue #[22750](http://www.xtuple.org/xtincident/view/bugs/22750) 
+  _Add project type to project list_ 
+- Implemented 
+  issue #[22822](http://www.xtuple.org/xtincident/view/bugs/22822) 
+  _Add support to for planned order list_ 
+- Implemented 
+  issue #[22971](http://www.xtuple.org/xtincident/view/bugs/22971) 
+  _Get tutorial up to date_ 
+- Fixed 
+  issue #[22980](http://www.xtuple.org/xtincident/view/bugs/22980) 
+  _Optimizations for K+H database_ 
 
 1.7.2 (2014/02/24)
 ==================
