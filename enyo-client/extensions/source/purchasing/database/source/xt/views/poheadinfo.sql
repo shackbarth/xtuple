@@ -8,7 +8,7 @@ select pohead.*,
   xt.po_tax_total(pohead) as tax_total,
   xt.po_total(pohead) as total
 from pohead
-  join xt.vendaddr on id=pohead_vend_id and vend_id=pohead_vend_id
+  join xt.vendaddrxt on id=pohead_vend_id and vend_id=pohead_vend_id
 where pohead_vendaddr_id is null
 
 union all

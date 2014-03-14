@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
-/*global XT:true, XV:true, XM:true, enyo:true*/
+/*global XT:true, XV:true, XM:true, enyo:true, console:true */
 
 (function () {
 
@@ -61,12 +61,12 @@ trailing:true, white:true*/
         {name: "incidentList", kind: "XV.IncidentList", toggleSelected: false}
       ]
     };
-    
+
     isBiAvailable = XT.session.config.biAvailable && XT.session.privileges.get("ViewSalesHistory");
     if (isBiAvailable) {
       module.panels.push({name: "analysisPage", kind: "analysisFrame"});
     }
-    
+
     XT.app.$.postbooks.insertModule(module, 0);
 
     relevantPrivileges = [
@@ -132,7 +132,7 @@ trailing:true, white:true*/
       "MaintainEmailProfiles"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
-    
+
     /**
       This iFrame is to show the Analysis tool.
       On creation, it uses the analysis route to generate a signed,
@@ -181,6 +181,6 @@ trailing:true, white:true*/
         this.inherited(arguments);
         this.setAttributes({src: this.getSource()});
       }
-    });   
+    });
   };
 }());

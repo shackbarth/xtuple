@@ -13,6 +13,7 @@ var  async = require('async'),
   clientBuilder = require('./build_client'),
   path = require('path'),
   pg = require('pg'),
+  os = require('os'),
   winston = require('winston');
 
 (function () {
@@ -40,6 +41,13 @@ var  async = require('async'),
         ' -p ' + credsClone.port +
         ' -f ' + filename +
         ' --single-transaction';
+
+
+      /**
+       * http://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
+       * "maxBuffer specifies the largest amount of data allowed on stdout or
+       * stderr - if this value is exceeded then the child process is killed."
+       */
       exec(psqlCommand, {maxBuffer: 40000 * 1024 /* 20x default */}, function (err, stdout, stderr) {
         if (err) {
           winston.error("Cannot install file ", filename);
@@ -89,7 +97,7 @@ var  async = require('async'),
         // use exec to restore the backup. The alternative, reading the backup file into a string to query
         // doesn't work because the backup file is binary.
         exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
-            creds.port + " -d " + databaseName + " " + spec.backup, function (err, res) {
+            creds.port + " -d " + databaseName + " -j " + os.cpus().length + " " + spec.backup, function (err, res) {
           if (err) {
             console.log("ignoring restore db error", err);
           }
