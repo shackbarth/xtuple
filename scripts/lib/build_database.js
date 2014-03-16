@@ -20,13 +20,6 @@ var  async = require('async'),
   "use strict";
 
   var jsInit = "select xt.js_init();";
-  //
-  // There are a few ways we could actually send our query to the database
-  //
-  var sendToDatabaseDatasource = function (query, credsClone, options, callback) {
-    dataSource.query(query, credsClone, callback);
-  };
-
   var sendToDatabasePsql = function (query, credsClone, options, callback) {
     var filename = path.join(__dirname, "temp_query_" + credsClone.database + ".sql");
     fs.writeFile(filename, query, function (err) {
@@ -48,7 +41,7 @@ var  async = require('async'),
        * "maxBuffer specifies the largest amount of data allowed on stdout or
        * stderr - if this value is exceeded then the child process is killed."
        */
-      exec(psqlCommand, {maxBuffer: 40000 * 1024 /* 20x default */}, function (err, stdout, stderr) {
+      exec(psqlCommand, {maxBuffer: 40000 * 1024 /* 200x default */}, function (err, stdout, stderr) {
         if (err) {
           winston.error("Cannot install file ", filename);
           callback(err);
@@ -73,7 +66,8 @@ var  async = require('async'),
 
   //
   // Step 0 (optional, triggered by flags), wipe out the database
-  // and load it from scratch using pg_restore something.backup
+  // and load it from scratch using pg_restore something.backup unless
+  // we're building from source.
   //
   var initDatabase = function (spec, creds, callback) {
     var databaseName = spec.database,
@@ -87,15 +81,49 @@ var  async = require('async'),
         callback(err);
         return;
       }
-      winston.info("Creating and restoring database " + databaseName);
-      dataSource.query("create database " + databaseName + " template template1", credsClone, function (err, res) {
+      winston.info("Creating database " + databaseName);
+      dataSource.query("create database " + databaseName + " template template1;", credsClone, function (err, res) {
         if (err) {
           winston.error("create db error", err.message, err.stack, err);
           callback(err);
           return;
         }
+        if (spec.source) {
+          // build from source.
+          // XXX first draft
+          var schemaPath = path.join(path.dirname(spec.source), "440_schema.sql");
+          winston.info("Building schema for database " + databaseName);
+
+          exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
+              creds.port + " -d " + databaseName + " -f " + schemaPath,
+              {maxBuffer: 40000 * 1024 /* 200x default */},
+              function (err, res) {
+            if (err) {
+              winston.info("Foundation schema error", err);
+              callback("Foundation schema error");
+              return;
+            }
+            winston.info("Populating data for database " + databaseName + " from " + spec.source);
+            exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
+                creds.port + " -d " + databaseName + " -f " + spec.source,
+                {maxBuffer: 40000 * 1024 /* 200x default */},
+                function (err, stdout, stderr) {
+              if (err) {
+                winston.info("Foundation data error");
+                callback("Foundation data error");
+                return;
+              }
+              winston.info("Foundation database has been built");
+              callback(null, res);
+            });
+          });
+
+          return;
+        }
+
         // use exec to restore the backup. The alternative, reading the backup file into a string to query
         // doesn't work because the backup file is binary.
+        winston.info("Restoring database " + databaseName);
         exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
             creds.port + " -d " + databaseName + " -j " + os.cpus().length + " " + spec.backup, function (err, res) {
           if (err) {
@@ -134,13 +162,13 @@ var  async = require('async'),
   var buildDatabase = exports.buildDatabase = function (specs, creds, masterCallback) {
     if (specs.length === 1 &&
         specs[0].initialize &&
-        specs[0].backup) {
+        (specs[0].backup || specs[0].source)) {
 
       // The user wants to initialize the database first (i.e. Step 0)
       // Do that, then call this function again
       initDatabase(specs[0], creds, function (err, res) {
         if (err) {
-          winston.error("init database error", err);
+          winston.error("Init database error: ", err);
           masterCallback(err);
           return;
         }
@@ -149,11 +177,11 @@ var  async = require('async'),
         specs[0].initialize = false;
         specs[0].wasInitialized = true;
         specs[0].backup = undefined;
+        specs[0].source = undefined;
         buildDatabase(specs, creds, masterCallback);
       });
       return;
     }
-
 
     //
     // The function to generate all the scripts for a database
@@ -172,15 +200,16 @@ var  async = require('async'),
         }
         //winston.info("Installing extension", databaseName, extension);
         // deal with directory structure quirks
-        var isLibOrm = extension.indexOf("lib/orm") >= 0,
+        var isFoundation = extension.indexOf("foundation-database") >= 0,
+          isLibOrm = extension.indexOf("lib/orm") >= 0,
           isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
             extension.indexOf("extension") < 0,
           isCoreExtension = extension.indexOf("enyo-client") >= 0 &&
             extension.indexOf("extension") >= 0,
           isPublicExtension = extension.indexOf("xtuple-extensions") >= 0,
           isPrivateExtension = extension.indexOf("private-extensions") >= 0,
-          dbSourceRoot = isLibOrm ?
-            path.join(extension, "source") :
+          dbSourceRoot = isFoundation ? extension :
+            isLibOrm ? path.join(extension, "source") :
             path.join(extension, "database/source"),
           manifestFilename = path.join(dbSourceRoot, "manifest.js");
 
@@ -196,15 +225,19 @@ var  async = require('async'),
         }
         fs.readFile(manifestFilename, "utf8", function (err, manifestString) {
           var manifest,
+            databaseScripts,
+            safeToolkit,
             extensionName,
             loadOrder,
             extensionComment,
             extensionLocation,
             isFirstScript = true;
+
           try {
             manifest = JSON.parse(manifestString);
             extensionName = manifest.name;
             extensionComment = manifest.comment;
+            databaseScripts = manifest.databaseScripts;
             loadOrder = manifest.loadOrder || 999;
             if (isCoreExtension) {
               extensionLocation = "/core-extensions";
@@ -219,6 +252,18 @@ var  async = require('async'),
             winston.log("Manifest is not valid JSON" + manifestFilename);
             extensionCallback("Manifest is not valid JSON" + manifestFilename);
             return;
+          }
+
+          //
+          // Step 2b:
+          //
+          // Legacy build methodology: if we're making the Qt database build, add the safe
+          // toolkit. I can live with the sync in here because it's not a process that's
+          // run in production.
+          if (isFoundation && extensions.length === 1) {
+            safeToolkit = fs.readFileSync(path.join(dbSourceRoot, "safe_toolkit_manifest.js"));
+            databaseScripts.unshift(JSON.parse(safeToolkit).databaseScripts);
+            databaseScripts = _.flatten(databaseScripts);
           }
 
           //
@@ -267,7 +312,7 @@ var  async = require('async'),
                 scriptCallback(formattingError);
               }
 
-              if (!isLibOrm || !isFirstScript) {
+              if (!isFoundation && (!isLibOrm || !isFirstScript)) {
                 // to put a noticeSql *before* scriptContents we have to account for the very first
                 // script, which is create_plv8, and which must not have any plv8 functions before it,
                 // such as a noticeSql.
@@ -276,10 +321,14 @@ var  async = require('async'),
 
               isFirstScript = false;
 
-              scriptCallback(null, scriptContents += afterNoticeSql);
+              if (!isFoundation) {
+                scriptContents = scriptContents + afterNoticeSql;
+              }
+
+              scriptCallback(null, scriptContents);
             });
           };
-          async.mapSeries(manifest.databaseScripts || [], getScriptSql, function (err, scriptSql) {
+          async.mapSeries(databaseScripts || [], getScriptSql, function (err, scriptSql) {
             var registerSql,
               dependencies;
 
@@ -293,7 +342,7 @@ var  async = require('async'),
               return memo + script;
             }, "");
 
-            if (!isLibOrm && !isApplicationCore) {
+            if (!isFoundation && !isLibOrm && !isApplicationCore) {
               // register extension and dependencies
               extensionSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
                 extensionName + '"); $$ language plv8;\n' + extensionSql;
@@ -308,7 +357,7 @@ var  async = require('async'),
               });
               extensionSql = registerSql + extensionSql;
             }
-            if (!isLibOrm) {
+            if (!isFoundation && !isLibOrm) {
               // unless it it hasn't yet been defined (ie. lib/orm),
               // running xt.js_init() is probably a good idea.
               extensionSql = jsInit + extensionSql;
@@ -400,10 +449,6 @@ var  async = require('async'),
             getOrmSql(extension, callback);
           },
           function (callback) {
-            // the client needs jsInit and might not have it by now
-            callback(null, jsInit);
-          },
-          function (callback) {
             getClientSql(extension, callback);
           }
         ], function (err, results) {
@@ -433,17 +478,12 @@ var  async = require('async'),
           return memo + script;
         }, "");
 
-        if (spec.queryDirect) {
-          // but we can query the database directly if we want
-          sendToDatabase = sendToDatabaseDatasource;
-        } else {
-          // by default we delegate to psql
-          sendToDatabase = sendToDatabasePsql;
+        // we delegate to psql
+        sendToDatabase = sendToDatabasePsql;
 
-          // Without this, when we delegate to exec psql the err var will not be set even
-          // on the case of error.
-          allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
-        }
+        // Without this, when we delegate to exec psql the err var will not be set even
+        // on the case of error.
+        allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
 
         if (spec.wasInitialized) {
           // give the admin user every extension by default
