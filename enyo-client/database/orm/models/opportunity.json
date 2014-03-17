@@ -888,6 +888,13 @@
         }
       },
       {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_start_date"
+        }
+      },
+      {
         "name": "opportunityStage",
         "toOne": {
           "type": "OpportunityStage",

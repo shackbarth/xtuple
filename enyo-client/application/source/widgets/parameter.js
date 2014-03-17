@@ -797,6 +797,13 @@ trailing:true, white:true, strict:false*/
         defaultKind: "XV.DateWidget"},
       {name: "toTargetDate", label: "_toDate".loc(), attr: "targetClose", operator: "<=",
         filterLabel: "_to".loc() + " " + "_targetClose".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_startDate".loc()},
+      {name: "fromStartDate", label: "_fromDate".loc(), attr: "startDate", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_startDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"},
+      {name: "toStartDate", label: "_toDate".loc(), attr: "startDate", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_startDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
   });
