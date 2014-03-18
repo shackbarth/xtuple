@@ -895,6 +895,20 @@
         }
       },
       {
+        "name": "actualDate",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_actual_date"
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_assigned_date"
+        }
+      },
+      {
         "name": "opportunityStage",
         "toOne": {
           "type": "OpportunityStage",
