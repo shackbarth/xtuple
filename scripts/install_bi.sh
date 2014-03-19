@@ -33,7 +33,7 @@ while getopts ":iebcpd:t:n:j:" opt; do
       DOWNLOAD=true
       ;;
     b)
-      # Build BI solution and Reports and install
+      # Build BI solution and install
       RUNALL=
       RUN=true
       ;;
@@ -172,7 +172,7 @@ run_scripts() {
 	log ""
 	log "######################################################"
 	log "######################################################"
-	log "Build BI solution and reports and move to ErpBI at:   "
+	log "Build BI solution and move to ErpBI at:               "
 	log $BISERVER_HOME
 	log "######################################################"
 	log "######################################################"
@@ -198,9 +198,6 @@ run_scripts() {
 	cdir ../../etl
 	mvn install 2>&1 | tee -a $LOG_FILE
 	mvn process-resources 2>&1 | tee -a $LOG_FILE
-	
-	cdir $XT_DIR/pentaho/report-datasource
-	sh build.sh  2>&1 | tee -a $LOG_FILE
 }
 
 configure_pentaho() {
@@ -294,16 +291,7 @@ log "######################################################"
 log "                FINISED! READ ME                      "
 log "If you use the self signed certificate created by this"
 log "script you will need to accept the certificate in your"
-log "browser.  Use one of the Print buttons in the Mobile  "
-log "Web Client to accept the certificate."
-log ""
-log "If reports were installed or updated you will need to "
-log "refresh the BI Server repository cache:               "
-log "  Connect to https://"$COMMONNAME":8443"
-log "  login as user:admin, password:Car54WhereRU"
-log "  tools > Refresh > Repository Cache"
-log "  tools > Refresh > Reporting Metadata"
-log "  tools > Refresh > Reporting Data Cache"
+log "browser.  Connect to https://"$COMMONNAME":8443"
 log "######################################################"
 log "######################################################"
 log ""
