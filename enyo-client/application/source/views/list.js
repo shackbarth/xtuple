@@ -1749,23 +1749,23 @@ trailing:true, white:true, strict: false*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
-              {kind: "XV.ListAttr", attr: "formatStatus",
-                style: "padding-left: 24px"},
-              {kind: "XV.ListAttr", attr: "scheduleDate",
-                classes: "right", placeholder: "_noSchedule".loc()}
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "name-column", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "customer.name"}
             ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.name"},
-              {kind: "XV.ListAttr", attr: "total", formatter: "formatTotal",
-                classes: "right"}
+            {kind: "XV.ListColumn", components: [
+              {kind: "XV.ListAttr", attr: "formatStatus"}
+            ]},
+            {kind: "XV.ListColumn", classes: "right-column", components: [
+              {kind: "XV.ListAttr", attr: "scheduleDate",
+                placeholder: "_noSchedule".loc()},
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatTotal"}
+            ]},
+            {kind: "XV.ListColumn", fit: true, components: [
+              {kind: "XV.ListAttr", formatter: "formatName"},
+              {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
             ]}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", components: [
-            {kind: "XV.ListAttr", formatter: "formatName"},
-            {kind: "XV.ListAttr", formatter: "formatShiptoOrBillto"}
           ]}
         ]}
       ]}
