@@ -273,8 +273,9 @@ select xt.install_js('XT','Data','xtuple', $$
                     } else {
                       childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                       /* TODO: use XT.format */
-                      /* TODO: need to specify the table we're joining from as well */
+                      var sourceTableAlias = n === 0 ? orm.table : "jt" + joins.length - 1;
                       joins.push("left join " + childOrm.table + " jt" + joins.length + " on " 
+                        + sourceTableAlias + "."
                         + prop.toOne.column + " = jt" + joins.length + "." + XT.Orm.primaryKey(childOrm, true));
                     } 
                     plv8.elog(NOTICE, "params", JSON.stringify(params));
@@ -287,6 +288,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
 
+                identifiers.push(orm.table);
                 identifiers.push(prop.attr.column);
 
                 /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
@@ -297,7 +299,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   pcount = params.length - 1;
                   arrayIdentifiers.push(identifiers.length);
                 } else {
-                  params.push("%" + identifiers.length + "$I");
+                  params.push("%" + (identifiers.length - 1) + "$s.%" + identifiers.length + "$I");
                   pcount = params.length - 1;
                 }
               }
@@ -343,6 +345,7 @@ select xt.install_js('XT','Data','xtuple', $$
       ret.joins = joins.length ? joins.join(' ') : '';
 
       /* Massage orderBy with quoted identifiers. */
+      /* TODO: aliases for orderBy */
       if (orderBy) {
         for (var i = 0; i < orderBy.length; i++) {
           /* Handle path case. */
