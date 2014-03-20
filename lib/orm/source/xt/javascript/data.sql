@@ -259,12 +259,9 @@ select xt.install_js('XT','Data','xtuple', $$
                     }
                   } else {
                     /* Build path, e.g. table_name.column_name */
-                    plv8.elog(NOTICE, n, parts[n]);
-                    plv8.elog(NOTICE, n, pcount, JSON.stringify(prop));
                     if (n === parts.length - 1) {
                       identifiers.push("jt" + (joins.length - 1));
                       identifiers.push(prop.attr.column);
-                      plv8.elog(NOTICE, n, pcount, JSON.stringify(identifiers));
                       /* TODO: is %1$s the appropriate format here? */
                       params[pcount] += "%" + (identifiers.length - 1) + "$s.%" + identifiers.length + "$I";
                       if (param.isLower) {
@@ -278,17 +275,27 @@ select xt.install_js('XT','Data','xtuple', $$
                         + sourceTableAlias + "."
                         + prop.toOne.column + " = jt" + joins.length + "." + XT.Orm.primaryKey(childOrm, true));
                     } 
-                    plv8.elog(NOTICE, "params", JSON.stringify(params));
                   }
                 }
               } else {
                 /* Validate attribute. */
                 prop = XT.Orm.getProperty(orm, param.attribute[c]);
+                var pertinentExtension = XT.Orm.getProperty(orm, param.attribute[c], true);
+                if(pertinentExtension.isChild) {
+                  /* We'll need to join this orm extension */
+                  /* TODO: the inverse may not be the pkeyColumn */
+                  var pkeyColumn = XT.Orm.primaryKey(orm, true);
+                  plv8.elog(NOTICE, "prop", pertinentExtension.table, pertinentExtension.relations[0].column,
+                    pertinentExtension.relations[0].inverse, pkeyColumn);
+                  joins.push("left join " + pertinentExtension.table + " jt" + joins.length + " on " 
+                    /*+ sourceTableAlias + "." TODO */
+                    + pkeyColumn + " = jt" + joins.length + "." + pertinentExtension.relations[0].column);
+                }
                 if (!prop) {
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
 
-                identifiers.push(orm.table);
+                identifiers.push(pertinentExtension.isChild ? "jt" + (joins.length - 1) : orm.table);
                 identifiers.push(prop.attr.column);
 
                 /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
