@@ -33,6 +33,20 @@ var _ = require("underscore"),
       });
     });
 
+    it.skip('should execute a query with an array', function (done) {
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"ANY","value":[true,false]}]},"username":"admin","encryptionKey":"foo"}$$);';
+
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.length, 29);
+        done();
+      });
+    });
+
     it('should execute a query with a simple filter', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true}]},"username":"admin","encryptionKey":"foo"}$$);';
 
@@ -60,6 +74,50 @@ var _ = require("underscore"),
         done();
       });
     });
+
+    it('should execute a query with a simple filter and two join filters', function (done) {
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"account.number","operator":"","isCharacteristic":false,"value":"admin"},{"attribute":"owner.username","operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"foo"}$$);';
+
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.length, 0);
+        done();
+      });
+    });
+
+    it('should execute a query with an array of attributes', function (done) {
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"},{"attribute":"firstName"},{"attribute":"primaryEmail"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":["number","name","firstName","lastName","jobTitle","phone","alternate","fax","primaryEmail","webAddress","accountParent"],"operator":"MATCHES","value":"coltraine"},{"attribute":"isActive","operator":"=","value":true}]},"username":"admin","encryptionKey":"this is any content"}$$);';
+
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.length, 1);
+        done();
+      });
+    });
+
+    it('should execute a query with two join filters on the same table', function (done) {
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"IncidentListItem","query":{"orderBy":[{"attribute":"priorityOrder"},{"attribute":"updated","descending":true},{"attribute":"number","descending":true,"numeric":true}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"this is any content"}$$);';
+
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.length, 2);
+        done();
+      });
+    });
+
+
 
   });
 }());

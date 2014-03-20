@@ -194,7 +194,13 @@ select xt.install_js('XT','Data','xtuple', $$
                 }
               }
             } else {
-              identifiers.push(param.attribute);
+              plv8.elog(NOTICE, "test1", param.attribute);
+              prop = XT.Orm.getProperty(orm, param.attribute);
+              if (!prop) {
+                plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
+              }
+              plv8.elog(NOTICE, "test2", JSON.stringify(prop));
+              identifiers.push(prop.attr.column);
               params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
               pcount = params.length - 1;
             }
@@ -256,7 +262,7 @@ select xt.install_js('XT','Data','xtuple', $$
                     plv8.elog(NOTICE, n, parts[n]);
                     plv8.elog(NOTICE, n, pcount, JSON.stringify(prop));
                     if (n === parts.length - 1) {
-                      identifiers.push(childOrm.table);
+                      identifiers.push("jt" + (joins.length - 1));
                       identifiers.push(prop.attr.column);
                       plv8.elog(NOTICE, n, pcount, JSON.stringify(identifiers));
                       /* TODO: is %1$s the appropriate format here? */
@@ -267,7 +273,9 @@ select xt.install_js('XT','Data','xtuple', $$
                     } else {
                       childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                       /* TODO: use XT.format */
-                      joins.push("inner join " + childOrm.table + " on " + prop.toOne.column + " = " + XT.Orm.primaryKey(childOrm, true));
+                      /* TODO: need to specify the table we're joining from as well */
+                      joins.push("inner join " + childOrm.table + " jt" + joins.length + " on " 
+                        + prop.toOne.column + " = jt" + joins.length + "." + XT.Orm.primaryKey(childOrm, true));
                     } 
                     plv8.elog(NOTICE, "params", JSON.stringify(params));
                   }
