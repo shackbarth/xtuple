@@ -274,7 +274,7 @@ select xt.install_js('XT','Data','xtuple', $$
                       childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                       /* TODO: use XT.format */
                       /* TODO: need to specify the table we're joining from as well */
-                      joins.push("inner join " + childOrm.table + " jt" + joins.length + " on " 
+                      joins.push("left join " + childOrm.table + " jt" + joins.length + " on " 
                         + prop.toOne.column + " = jt" + joins.length + "." + XT.Orm.primaryKey(childOrm, true));
                     } 
                     plv8.elog(NOTICE, "params", JSON.stringify(params));
