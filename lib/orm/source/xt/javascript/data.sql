@@ -253,11 +253,14 @@ select xt.install_js('XT','Data','xtuple', $$
                     }
                   } else {
                     /* Build path, e.g. table_name.column_name */
+                    plv8.elog(NOTICE, n, parts[n]);
+                    plv8.elog(NOTICE, n, pcount, JSON.stringify(prop));
                     if (n === parts.length - 1) {
                       identifiers.push(childOrm.table);
                       identifiers.push(prop.attr.column);
+                      plv8.elog(NOTICE, n, pcount, JSON.stringify(identifiers));
                       /* TODO: is %1$s the appropriate format here? */
-                      params[pcount] += "%1$s.%2$I";
+                      params[pcount] += "%" + (identifiers.length - 1) + "$s.%" + identifiers.length + "$I";
                       if (param.isLower) {
                         params[pcount] = "lower(" + params[pcount] + ")";
                       }
@@ -266,6 +269,7 @@ select xt.install_js('XT','Data','xtuple', $$
                       /* TODO: use XT.format */
                       joins.push("inner join " + childOrm.table + " on " + prop.toOne.column + " = " + XT.Orm.primaryKey(childOrm, true));
                     } 
+                    plv8.elog(NOTICE, "params", JSON.stringify(params));
                   }
                 }
               } else {
