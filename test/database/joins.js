@@ -33,8 +33,8 @@ var _ = require("underscore"),
       });
     });
 
-    it.skip('should execute a query with an array', function (done) {
-      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"ANY","value":[true,false]}]},"username":"admin","encryptionKey":"foo"}$$);';
+    it('should execute a query with an array', function (done) {
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ActivityListItem","query":{"orderBy":[{"attribute":"dueDate"},{"attribute":"name"},{"attribute":"uuid"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"},{"attribute":"activityType","operator":"ANY","value":["Incident","Opportunity","ToDo","SalesOrder","SalesOrderWorkflow","PurchaseOrder","PurchaseOrderWorkflow","Project","ProjectTask","ProjectWorkflow"]}]},"username":"admin","encryptionKey":"this is any content"}$$)';
 
       creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
@@ -42,7 +42,7 @@ var _ = require("underscore"),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 29);
+        assert.equal(results.data.length, 20);
         done();
       });
     });
@@ -126,7 +126,6 @@ var _ = require("underscore"),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 1);
         done();
       });
     });
