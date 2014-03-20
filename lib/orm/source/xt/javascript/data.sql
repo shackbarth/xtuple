@@ -48,6 +48,7 @@ select xt.install_js('XT','Data','xtuple', $$
         op,
         orClause,
         orderByIdentifiers = [],
+        orderByColumnIdentifiers = [],
         orderByParams = [],
         orm = this.fetchOrm(nameSpace, type),
         param,
@@ -241,7 +242,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
                   /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
                   if (param.isUsernamePrivFilter && isArray) {
-                    identifiers.push(parts[n]);
+                    identifiers.push(prop.attr.column);
                     arrayIdentifiers.push(identifiers.length);
 
                     if (n < parts.length - 1) {
@@ -249,7 +250,7 @@ select xt.install_js('XT','Data','xtuple', $$
                     }
                   } else {
                     /* Build path. e.g. ((%1$I).%2$I).%3$I */
-                    identifiers.push(parts[n]);
+                    identifiers.push(prop.attr.column);
                     params[pcount] += "%" + identifiers.length + "$I";
 
                     if (n < parts.length - 1) {
@@ -267,7 +268,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
 
-                identifiers.push(param.attribute[c]);
+                identifiers.push(prop.attr.column);
 
                 /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
                 if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested) ||
@@ -321,7 +322,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       ret.conditions = (clauses.length ? '(' + XT.format(clauses.join(' and '), identifiers) + ')' : ret.conditions) || true;
 
-      /* Massage ordeBy with quoted identifiers. */
+      /* Massage orderBy with quoted identifiers. */
       if (orderBy) {
         for (var i = 0; i < orderBy.length; i++) {
           /* Handle path case. */
@@ -337,6 +338,7 @@ select xt.install_js('XT','Data','xtuple', $$
                 plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
               }
               orderByIdentifiers.push(parts[n]);
+              orderByColumnIdentifiers.push(prop.attr.column);
               orderByParams[pcount] += "%" + orderByIdentifiers.length + "$I";
 
               if (n < parts.length - 1) {
@@ -352,6 +354,7 @@ select xt.install_js('XT','Data','xtuple', $$
               plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
             }
             orderByIdentifiers.push(orderBy[i].attribute);
+            orderByColumnIdentifiers.push(prop.attr.column);
             orderByParams.push("%" + orderByIdentifiers.length + "$I");
             pcount = orderByParams.length - 1;
           }
@@ -368,6 +371,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       ret.orderBy = list.length ? XT.format('order by ' + list.join(','), orderByIdentifiers) : '';
+      ret.orderByColumns = list.length ? XT.format('order by ' + list.join(','), orderByColumnIdentifiers) : '';
 
       return ret;
     },
@@ -1663,10 +1667,13 @@ select xt.install_js('XT','Data','xtuple', $$
         encryptionKey = options.encryptionKey,
         orderBy = query.orderBy,
         orm = this.fetchOrm(nameSpace, type),
+        table,
+        tableNamespace,
         parameters = query.parameters,
         clause = this.buildClause(nameSpace, type, parameters, orderBy),
         i,
         pkey = XT.Orm.primaryKey(orm),
+        pkeyColumn = XT.Orm.primaryKey(orm, true),
         nkey = XT.Orm.naturalKey(orm),
         limit = query.rowLimit ? XT.format('limit %1$L', [query.rowLimit]) : '',
         offset = query.rowOffset ? XT.format('offset %1$L', [query.rowOffset]) : '',
@@ -1682,8 +1689,6 @@ select xt.install_js('XT','Data','xtuple', $$
         sqlCount,
         etags,
         sql_etags,
-        etag_namespace,
-        etag_table,
         sql1 = 'select %3$I as id from %1$I.%2$I where {conditions} {orderBy} {limit} {offset};',
         sql2 = 'select * from %1$I.%2$I where %3$I in ({ids}) {orderBy}';
 
@@ -1705,10 +1710,18 @@ select xt.install_js('XT','Data','xtuple', $$
         return ret;
       }
 
+      if (orm.table.indexOf(".") > 0) {
+        tableNamespace = orm.table.beforeDot();
+        table = orm.table.afterDot();
+      } else {
+        tableNamespace = 'public';
+        table = orm.table;
+      }
+
       /* Query the model. */
-      sql1 = XT.format(sql1, [nameSpace.decamelize(), type.decamelize(), pkey]);
+      sql1 = XT.format(sql1, [tableNamespace.decamelize(), table.decamelize(), pkeyColumn]);
       sql1 = sql1.replace('{conditions}', clause.conditions)
-                 .replace(/{orderBy}/g, clause.orderBy)
+                 .replace(/{orderBy}/g, clause.orderByColumns)
                  .replace('{limit}', limit)
                  .replace('{offset}', offset);
 
@@ -1729,14 +1742,6 @@ select xt.install_js('XT','Data','xtuple', $$
       });
 
       if (orm.lockable) {
-        if (orm.table.indexOf(".") > 0) {
-          etag_namespace = orm.table.beforeDot();
-          etag_table = orm.table.afterDot();
-        } else {
-          etag_namespace = 'public';
-          etag_table = orm.table;
-        }
-
         sql_etags = "select ver_etag as etag, ver_record_id as id " +
                     "from xt.ver " +
                     "where ver_table_oid = ( " +
@@ -1746,7 +1751,7 @@ select xt.install_js('XT','Data','xtuple', $$
                       "where nspname = %1$L and relname = %2$L " +
                     ") " +
                     "and ver_record_id in ({ids})";
-        sql_etags = XT.format(sql_etags, [etag_namespace, etag_table]);
+        sql_etags = XT.format(sql_etags, [tableNamespace, table]);
         sql_etags = sql_etags.replace('{ids}', idParams.join());
 
         if (DEBUG) {
