@@ -19,6 +19,8 @@ var _ = require("underscore"),
       creds = config.databaseServer,
       databaseName = loginData.org;
 
+    // these tests are pretty fragile to the exact numbers in the database, but have been invaluable to
+    // make sure I'm not breaking anything in the fetch refactor
     it('should execute a query with a join filter', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"owner.username","operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"foo"}$$);';
 
@@ -144,7 +146,25 @@ var _ = require("underscore"),
       });
     });
 
+    it('should execute an item-site fetch', function (done) {
+      var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteRelation","dispatch":{"functionName":"fetch","parameters":{"parameters":[{"attribute":"item.number","value":"BTRUCK1"},{"attribute":"site.code","value":"WH1"}]}},"username":"admin","encryptionKey":"this is any content"}$$);';
+
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].post);
+        assert.equal(results.length, 1);
+        done();
+      });
+    });
+
   });
+
+//select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteRelation","dispatch":{"functionName":"fetch","parameters":{"parameters":[{"attribute":"item.isSold","value":true},{"attribute":"item.isActive","value":true},{"attribute":"isSold","value":true},{"attribute":"isActive","value":true},{"attribute":"site.code","value":"WH1"},{"attribute":"customer","value":"TTOYS"},{"attribute":"shipto","value":"6ad47b52-3ee1-43d1-d48d-c3ddfd93b6d3"},{"attribute":["number","barcode"],"operator":"BEGINS_WITH","value":"bt","keySearch":true}],"orderBy":[{"attribute":"number"},{"attribute":"barcode"}],"rowLimit":1}},"username":"admin","encryptionKey":"this is any content"}$$)
+
+
 }());
 
 
