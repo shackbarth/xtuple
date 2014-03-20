@@ -50,6 +50,7 @@ select xt.install_js('XT','Data','xtuple', $$
         orderByIdentifiers = [],
         orderByColumnIdentifiers = [],
         orderByParams = [],
+        joins = [],
         orm = this.fetchOrm(nameSpace, type),
         param,
         params = [],
@@ -182,6 +183,7 @@ select xt.install_js('XT','Data','xtuple', $$
                 }
 
                 /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                /* TODO */
                 identifiers.push(parts[n]);
                 params[pcount] += "%" + identifiers.length + "$I";
                 if (n < parts.length - 1) {
@@ -216,6 +218,7 @@ select xt.install_js('XT','Data','xtuple', $$
                 /* Check if last part is an Array. */
                 for (var m = 0; m < parts.length; m++) {
                   /* Validate attribute. */
+                  /* TODO ? */
                   prop = XT.Orm.getProperty(childOrm, parts[m]);
                   if (!prop) {
                     plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[m]);
@@ -249,16 +252,20 @@ select xt.install_js('XT','Data','xtuple', $$
                       childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                     }
                   } else {
-                    /* Build path. e.g. ((%1$I).%2$I).%3$I */
-                    identifiers.push(prop.attr.column);
-                    params[pcount] += "%" + identifiers.length + "$I";
-
-                    if (n < parts.length - 1) {
-                      params[pcount] = "(" + params[pcount] + ").";
+                    /* Build path, e.g. table_name.column_name */
+                    if (n === parts.length - 1) {
+                      identifiers.push(childOrm.table);
+                      identifiers.push(prop.attr.column);
+                      /* TODO: is %1$s the appropriate format here? */
+                      params[pcount] += "%1$s.%2$I";
+                      if (param.isLower) {
+                        params[pcount] = "lower(" + params[pcount] + ")";
+                      }
+                    } else {
                       childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
-                    } else if (param.isLower) {
-                      params[pcount] = "lower(" + params[pcount] + ")";
-                    }
+                      /* TODO: use XT.format */
+                      joins.push("inner join " + childOrm.table + " on " + prop.toOne.column + " = " + XT.Orm.primaryKey(childOrm, true));
+                    } 
                   }
                 }
               } else {
@@ -321,6 +328,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       ret.conditions = (clauses.length ? '(' + XT.format(clauses.join(' and '), identifiers) + ')' : ret.conditions) || true;
+      ret.joins = joins.length ? joins.join(' ') : '';
 
       /* Massage orderBy with quoted identifiers. */
       if (orderBy) {
@@ -1689,7 +1697,7 @@ select xt.install_js('XT','Data','xtuple', $$
         sqlCount,
         etags,
         sql_etags,
-        sql1 = 'select %3$I as id from %1$I.%2$I where {conditions} {orderBy} {limit} {offset};',
+        sql1 = 'select %3$I as id from %1$I.%2$I {joins} where {conditions} {orderBy} {limit} {offset};',
         sql2 = 'select * from %1$I.%2$I where %3$I in ({ids}) {orderBy}';
 
       /* Validate - don't bother running the query if the user has no privileges. */
@@ -1720,7 +1728,8 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* Query the model. */
       sql1 = XT.format(sql1, [tableNamespace.decamelize(), table.decamelize(), pkeyColumn]);
-      sql1 = sql1.replace('{conditions}', clause.conditions)
+      sql1 = sql1.replace('{joins}', clause.joins)
+                 .replace('{conditions}', clause.conditions)
                  .replace(/{orderBy}/g, clause.orderByColumns)
                  .replace('{limit}', limit)
                  .replace('{offset}', offset);
