@@ -25,6 +25,9 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     var data = Object.create(XT.Data),
       namespace = recordType.beforeDot(),
       type = recordType.afterDot(),
+      orm = XT.Orm.fetch(namespace, type),
+      table,
+      tableNamespace,
       customerId = null,
       accountId = -1,
       shiptoId,
@@ -36,8 +39,16 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       keySearch = false,
       extra = "",
       sql = 'select * ' +
-            'from %1$I.%2$I  ' +
+            'from %1$I.%2$I {joins} ' +
             'where {conditions} {extra}';
+
+    if (orm.table.indexOf(".") > 0) {
+      tableNamespace = orm.table.beforeDot();
+      table = orm.table.afterDot();
+    } else {
+      tableNamespace = 'public';
+      table = orm.table;
+    }
 
     /* Handle special parameters */
     if (query.parameters) {
@@ -120,11 +131,12 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
     sql = XT.format(
       sql += '{orderBy} %3$s %4$s;',
-      [namespace.decamelize(), type.decamelize(), limit, offset]
+      [tableNamespace, table, limit, offset]
     );
 
     /* Query the model */
-    sql = sql.replace(/{conditions}/g, clause.conditions)
+    sql = sql.replace('{joins}', clause.joins)
+             .replace(/{conditions}/g, clause.conditions)
              .replace(/{extra}/g, extra)
              .replace('{orderBy}', clause.orderBy)
              .replace('{limit}', limit)
