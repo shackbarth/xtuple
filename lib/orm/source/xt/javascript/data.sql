@@ -285,8 +285,6 @@ select xt.install_js('XT','Data','xtuple', $$
                   /* We'll need to join this orm extension */
                   /* TODO: the inverse may not be the pkeyColumn */
                   var pkeyColumn = XT.Orm.primaryKey(orm, true);
-                  plv8.elog(NOTICE, "prop", pertinentExtension.table, pertinentExtension.relations[0].column,
-                    pertinentExtension.relations[0].inverse, pkeyColumn);
                   joins.push("left join " + pertinentExtension.table + " jt" + joins.length + " on " 
                     /*+ sourceTableAlias + "." TODO */
                     + pkeyColumn + " = jt" + joins.length + "." + pertinentExtension.relations[0].column);
