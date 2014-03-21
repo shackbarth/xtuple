@@ -25,9 +25,6 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     var data = Object.create(XT.Data),
       namespace = recordType.beforeDot(),
       type = recordType.afterDot(),
-      orm = XT.Orm.fetch(namespace, type),
-      table,
-      tableNamespace,
       customerId = null,
       accountId = -1,
       shiptoId,
@@ -39,19 +36,8 @@ select xt.install_js('XM','ItemSite','xtuple', $$
       keySearch = false,
       extra = "",
       sql = 'select * ' +
-            'from %1$I.%2$I ' +
-            'left join item jt0 on xt.itemsiteinfo.itemsite_item_id = jt0.item_id ' +
-            'left join item jt1 on xt.itemsiteinfo.itemsite_item_id = jt1.item_id ' +
-            'left join xt.site jt2 on xt.itemsiteinfo.itemsite_warehous_id = jt2.warehous_id ' +
+            'from %1$I.%2$I  ' +
             'where {conditions} {extra}';
-
-    if (orm.table.indexOf(".") > 0) {
-      tableNamespace = orm.table.beforeDot();
-      table = orm.table.afterDot();
-    } else {
-      tableNamespace = 'public';
-      table = orm.table;
-    }
 
     /* Handle special parameters */
     if (query.parameters) {
@@ -61,11 +47,11 @@ select xt.install_js('XM','ItemSite','xtuple', $$
         /* Over-ride usual search behavior */
         if (param.keySearch) {
           keySearch = param.value;
-          sql += ' and (xt.shiptoitem.item_number ~^ ${p1} or xt.shiptoitem.item_upccode ~^ ${p1}) ' +
+          sql += ' and (number ~^ ${p1} or barcode ~^ ${p1}) ' +
             'union ' +
 	    'select %2$I.* ' +
 	    'from %1$I.%2$I  ' +
-	    ' join itemsite on jt0.itemsite_id=id ' +
+	    ' join itemsite on itemsite_id=id ' +
             ' join itemalias on itemsite_item_id=itemalias_item_id ' +
             '   and itemalias_crmacct_id is null ' +
             'where {conditions} {extra} ' +
@@ -73,7 +59,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
             'union ' +
 	    'select %2$I.* ' +
 	    'from %1$I.%2$I  ' +
-	    ' join itemsite on jt0.itemsite_id=id ' +
+	    ' join itemsite on itemsite_id=id ' +
             ' join itemalias on itemsite_item_id=itemalias_item_id ' +
             '   and itemalias_crmacct_id={accountId} ' +
             'where {conditions} {extra} ' +
@@ -108,7 +94,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
     /* If customer passed, restrict results to item sites allowed to be sold to that customer */
     if (customerId) {
-      extra += ' and itemsite_item_id in (' +
+      extra += ' and (item).id in (' +
              'select item_id from item where item_sold and not item_exclusive ' +
              'union ' +
              'select item_id from xt.custitem where cust_id=${p2} ' +
@@ -125,7 +111,7 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
     /* If vendor passed, and vendor can only supply against defined item sources, then restrict results */
     if (vendorId) {
-      extra +=  ' and itemsite_item_id in (' +
+      extra +=  ' and (item).id in (' +
               '  select itemsrc_item_id ' +
               '  from itemsrc ' +
               '  where itemsrc_active ' +
@@ -134,12 +120,11 @@ select xt.install_js('XM','ItemSite','xtuple', $$
 
     sql = XT.format(
       sql += '{orderBy} %3$s %4$s;',
-      [tableNamespace, table, limit, offset]
+      [namespace.decamelize(), type.decamelize(), limit, offset]
     );
 
     /* Query the model */
-    sql = sql.replace('{joins}', clause.joins)
-             .replace(/{conditions}/g, clause.conditions)
+    sql = sql.replace(/{conditions}/g, clause.conditions)
              .replace(/{extra}/g, extra)
              .replace('{orderBy}', clause.orderBy)
              .replace('{limit}', limit)
@@ -158,10 +143,9 @@ select xt.install_js('XM','ItemSite','xtuple', $$
     }
     if (DEBUG) {
       plv8.elog(NOTICE, 'sql = ', sql.slice(0,500));
-      plv8.elog(NOTICE, sql.slice(500, 1000));
-      plv8.elog(NOTICE, sql.slice(1000, 1500));
-      plv8.elog(NOTICE, sql.slice(1500, 2000));
-      plv8.elog(NOTICE, sql.slice(2000, 2500));
+      plv8.elog(NOTICE, 'sql = ', sql.slice(500, 1000));
+      plv8.elog(NOTICE, 'sql = ', sql.slice(1000, 1500));
+      plv8.elog(NOTICE, 'sql = ', sql.slice(1500, 2000));
       plv8.elog(NOTICE, 'parameters = ', clause.parameters);
     }
     return plv8.execute(sql, clause.parameters);
