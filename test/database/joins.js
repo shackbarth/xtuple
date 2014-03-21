@@ -189,6 +189,10 @@ var _ = require("underscore"),
     });
 
 
+// on commercial code:
+//select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"IssueToShipping","query":{"orderBy":[{"attribute":"lineNumber"},{"attribute":"subNumber"}],"parameters":[{"attribute":"order.uuid","operator":"=","value":"d3538bbd-826a-4351-b35c-795d7db99ba0"}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$)
+
+
   });
 }());
 

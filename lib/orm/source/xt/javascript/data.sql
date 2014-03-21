@@ -1733,7 +1733,7 @@ select xt.install_js('XT','Data','xtuple', $$
         sqlCount,
         etags,
         sql_etags,
-        sql1 = 'select %3$I as id from %1$I.%2$I {joins} where {conditions} {orderBy} {limit} {offset};',
+        sql1 = 'select %2$I.%3$I as id from %1$I.%2$I {joins} where {conditions} {orderBy} {limit} {offset};',
         sql2 = 'select * from %1$I.%2$I where %3$I in ({ids}) {orderBy}';
 
       /* Validate - don't bother running the query if the user has no privileges. */
