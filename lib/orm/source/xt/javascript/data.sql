@@ -367,12 +367,12 @@ select xt.install_js('XT','Data','xtuple', $$
               if (!prop) {
                 plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
               }
-              plv8.elog(NOTICE, 'Foo' + parts[n], JSON.stringify(prop));
               orderByIdentifiers.push(parts[n]);
+              orderByParams[pcount] += "%" + orderByIdentifiers.length + "$I";
+
               if (n === parts.length - 1) {
                 orderByColumnIdentifiers.push("jt" + (joins.length - 1));
                 orderByColumnIdentifiers.push(prop.attr.column);
-                plv8.elog(NOTICE, "bar", JSON.stringify(orderByColumnIdentifiers));
                 /* TODO: is %1$s the appropriate format here? */
                 orderByColumnParams[pcount] += "%" + (orderByColumnIdentifiers.length - 1) + "$s.%" + orderByColumnIdentifiers.length + "$I";
               } else {
@@ -415,7 +415,6 @@ select xt.install_js('XT','Data','xtuple', $$
 
       ret.orderBy = orderByList.length ? XT.format('order by ' + orderByList.join(','), orderByIdentifiers) : '';
       ret.orderByColumns = orderByColumnList.length ? XT.format('order by ' + orderByColumnList.join(','), orderByColumnIdentifiers) : '';
-      plv8.elog(NOTICE, "ggg", JSON.stringify(joins));
       ret.joins = joins.length ? joins.join(' ') : '';
 
       return ret;

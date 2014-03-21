@@ -182,8 +182,8 @@ var _ = require("underscore"),
         var results;
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
-        results = JSON.parse(res.rows[1].post);
-        assert.equal(results.length, 1);
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.length, 20);
         done();
       });
     });
