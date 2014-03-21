@@ -43,13 +43,15 @@ select xt.install_js('XT','Data','xtuple', $$
         clauses = [],
         count = 1,
         identifiers = [],
-        list = [],
+        orderByList = [],
+        orderByColumnList = [],
         isArray = false,
         op,
         orClause,
         orderByIdentifiers = [],
         orderByColumnIdentifiers = [],
         orderByParams = [],
+        orderByColumnParams = [],
         joins = [],
         orm = this.fetchOrm(nameSpace, type),
         param,
@@ -194,12 +196,10 @@ select xt.install_js('XT','Data','xtuple', $$
                 }
               }
             } else {
-              plv8.elog(NOTICE, "test1", param.attribute);
               prop = XT.Orm.getProperty(orm, param.attribute);
               if (!prop) {
                 plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
               }
-              plv8.elog(NOTICE, "test2", JSON.stringify(prop));
               identifiers.push(prop.attr.column);
               params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
               pcount = params.length - 1;
@@ -347,9 +347,10 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       ret.conditions = (clauses.length ? '(' + XT.format(clauses.join(' and '), identifiers) + ')' : ret.conditions) || true;
-      ret.joins = joins.length ? joins.join(' ') : '';
 
       /* Massage orderBy with quoted identifiers. */
+      /* We need to support the xm case for sql2 and the xt/public (column) optimized case for sql1 */
+      /* In practice we build the two lists independently of one another */
       /* TODO: aliases for orderBy */
       if (orderBy) {
         for (var i = 0; i < orderBy.length; i++) {
@@ -358,6 +359,7 @@ select xt.install_js('XT','Data','xtuple', $$
             parts = orderBy[i].attribute.split('.');
             prevOrm = orm;
             orderByParams.push("");
+            orderByColumnParams.push("");
             pcount = orderByParams.length - 1;
 
             for (var n = 0; n < parts.length; n++) {
@@ -365,14 +367,23 @@ select xt.install_js('XT','Data','xtuple', $$
               if (!prop) {
                 plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
               }
+              plv8.elog(NOTICE, 'Foo' + parts[n], JSON.stringify(prop));
               orderByIdentifiers.push(parts[n]);
-              orderByColumnIdentifiers.push(prop.attr.column);
-              orderByParams[pcount] += "%" + orderByIdentifiers.length + "$I";
-
-              if (n < parts.length - 1) {
+              if (n === parts.length - 1) {
+                orderByColumnIdentifiers.push("jt" + (joins.length - 1));
+                orderByColumnIdentifiers.push(prop.attr.column);
+                plv8.elog(NOTICE, "bar", JSON.stringify(orderByColumnIdentifiers));
+                /* TODO: is %1$s the appropriate format here? */
+                orderByColumnParams[pcount] += "%" + (orderByColumnIdentifiers.length - 1) + "$s.%" + orderByColumnIdentifiers.length + "$I";
+              } else {
                 orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
                 orm = this.fetchOrm(nameSpace, prop.toOne.type);
-              }
+                /* TODO: use XT.format */
+                var sourceTableAlias = n === 0 ? prevOrm.table : "jt" + joins.length - 1;
+                joins.push("left join " + orm.table + " jt" + joins.length + " on " 
+                  + sourceTableAlias + "."
+                  + prop.toOne.column + " = jt" + joins.length + "." + XT.Orm.primaryKey(orm, true));
+              } 
             }
             orm = prevOrm;
           /* Normal case. */
@@ -384,22 +395,28 @@ select xt.install_js('XT','Data','xtuple', $$
             orderByIdentifiers.push(orderBy[i].attribute);
             orderByColumnIdentifiers.push(prop.attr.column);
             orderByParams.push("%" + orderByIdentifiers.length + "$I");
+            orderByColumnParams.push("%" + orderByColumnIdentifiers.length + "$I");
             pcount = orderByParams.length - 1;
           }
 
           if (orderBy[i].isEmpty) {
             orderByParams[pcount] = "length(" + orderByParams[pcount] + ")=0";
+            orderByColumnParams[pcount] = "length(" + orderByColumnParams[pcount] + ")=0";
           }
           if (orderBy[i].descending) {
             orderByParams[pcount] += " desc";
+            orderByColumnParams[pcount] += " desc";
           }
 
-          list.push(orderByParams[pcount])
+          orderByList.push(orderByParams[pcount])
+          orderByColumnList.push(orderByColumnParams[pcount])
         }
       }
 
-      ret.orderBy = list.length ? XT.format('order by ' + list.join(','), orderByIdentifiers) : '';
-      ret.orderByColumns = list.length ? XT.format('order by ' + list.join(','), orderByColumnIdentifiers) : '';
+      ret.orderBy = orderByList.length ? XT.format('order by ' + orderByList.join(','), orderByIdentifiers) : '';
+      ret.orderByColumns = orderByColumnList.length ? XT.format('order by ' + orderByColumnList.join(','), orderByColumnIdentifiers) : '';
+      plv8.elog(NOTICE, "ggg", JSON.stringify(joins));
+      ret.joins = joins.length ? joins.join(' ') : '';
 
       return ret;
     },

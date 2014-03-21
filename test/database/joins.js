@@ -160,11 +160,36 @@ var _ = require("underscore"),
       });
     });
 
+    it('should execute a complicated item-site fetch', function (done) {
+      var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteRelation","dispatch":{"functionName":"fetch","parameters":{"parameters":[{"attribute":"item.isSold","value":true},{"attribute":"item.isActive","value":true},{"attribute":"isSold","value":true},{"attribute":"isActive","value":true},{"attribute":"site.code","value":"WH1"},{"attribute":"customer","value":"TTOYS"},{"attribute":["number","barcode"],"operator":"BEGINS_WITH","value":"bt","keySearch":true}],"orderBy":[{"attribute":"number"},{"attribute":"barcode"}],"rowLimit":1}},"username":"admin","encryptionKey":"this is any content"}$$)';
+
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].post);
+        assert.equal(results.length, 1);
+        done();
+      });
+    });
+
+    it('should supported a nested order-by', function (done) {
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ItemSource","query":{"orderBy":[{"attribute":"vendorItemNumber"},{"attribute":"vendor.name"}],"parameters":[{"attribute":"isActive","value":true},{"attribute":"effective","operator":"<=","value":"2014-03-20T04:00:00.000Z"},{"attribute":"expires","operator":">=","value":"2014-03-22T01:18:09.202Z"}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$);';
+
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].post);
+        assert.equal(results.length, 1);
+        done();
+      });
+    });
+
+
   });
-
-//select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteRelation","dispatch":{"functionName":"fetch","parameters":{"parameters":[{"attribute":"item.isSold","value":true},{"attribute":"item.isActive","value":true},{"attribute":"isSold","value":true},{"attribute":"isActive","value":true},{"attribute":"site.code","value":"WH1"},{"attribute":"customer","value":"TTOYS"},{"attribute":"shipto","value":"6ad47b52-3ee1-43d1-d48d-c3ddfd93b6d3"},{"attribute":["number","barcode"],"operator":"BEGINS_WITH","value":"bt","keySearch":true}],"orderBy":[{"attribute":"number"},{"attribute":"barcode"}],"rowLimit":1}},"username":"admin","encryptionKey":"this is any content"}$$)
-
-
 }());
 
 
