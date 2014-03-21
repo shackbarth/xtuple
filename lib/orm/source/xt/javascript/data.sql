@@ -33,7 +33,7 @@ select xt.install_js('XT','Data','xtuple', $$
      * @param {Array} Parameters - optional
      * @returns {Object}
      */
-    buildClause: function (nameSpace, type, parameters, orderBy) {
+    buildClauseOptimized: function (nameSpace, type, parameters, orderBy) {
       parameters = parameters || [];
 
       var arrayIdentifiers = [],
@@ -1698,7 +1698,7 @@ select xt.install_js('XT','Data','xtuple', $$
         table,
         tableNamespace,
         parameters = query.parameters,
-        clause = this.buildClause(nameSpace, type, parameters, orderBy),
+        clause = this.buildClauseOptimized(nameSpace, type, parameters, orderBy),
         i,
         pkey = XT.Orm.primaryKey(orm),
         pkeyColumn = XT.Orm.primaryKey(orm, true),
@@ -2300,6 +2300,346 @@ select xt.install_js('XT','Data','xtuple', $$
       return true;
     },
 
+    /* This deprecated function is still used by three dispatch functions. We should delete
+    this as soon as we refactor those, and then rename buildClauseOptimized to buildClause */
+    buildClause: function (nameSpace, type, parameters, orderBy) {
+      parameters = parameters || [];
+
+      var arrayIdentifiers = [],
+        arrayParams,
+        charSql,
+        childOrm,
+        clauses = [],
+        count = 1,
+        identifiers = [],
+        list = [],
+        isArray = false,
+        op,
+        orClause,
+        orderByIdentifiers = [],
+        orderByParams = [],
+        orm = this.fetchOrm(nameSpace, type),
+        param,
+        params = [],
+        parts,
+        pcount,
+        prevOrm,
+        privileges = orm.privileges,
+        prop,
+        ret = {};
+
+      ret.conditions = "";
+      ret.parameters = [];
+
+      /* Handle privileges. */
+      if (orm.isNestedOnly) { plv8.elog(ERROR, 'Access Denied'); }
+      if (privileges &&
+          (!privileges.all ||
+            (privileges.all &&
+              (!this.checkPrivilege(privileges.all.read) &&
+              !this.checkPrivilege(privileges.all.update)))
+          ) &&
+          privileges.personal &&
+          (this.checkPrivilege(privileges.personal.read) ||
+            this.checkPrivilege(privileges.personal.update))
+        ) {
+
+        parameters.push({
+          attribute: privileges.personal.properties,
+          isLower: true,
+          isUsernamePrivFilter: true,
+          value: XT.username
+        });
+      }
+
+      /* Handle parameters. */
+      if (parameters.length) {
+        for (var i = 0; i < parameters.length; i++) {
+          orClause = [];
+          param = parameters[i];
+          op = param.operator || '=';
+          switch (op) {
+          case '=':
+          case '>':
+          case '<':
+          case '>=':
+          case '<=':
+          case '!=':
+            break;
+          case 'BEGINS_WITH':
+            op = '~^';
+            break;
+          case 'ENDS_WITH':
+            op = '~?';
+            break;
+          case 'MATCHES':
+            op = '~*';
+            break;
+          case 'ANY':
+            op = '<@';
+            for (var c = 0; c < param.value.length; c++) {
+              ret.parameters.push(param.value[c]);
+              param.value[c] = '$' + count;
+              count++;
+            }
+            break;
+          case 'NOT ANY':
+            op = '!<@';
+            for (var c = 0; c < param.value.length; c++) {
+              ret.parameters.push(param.value[c]);
+              param.value[c] = '$' + count;
+              count++;
+            }
+            break;
+          default:
+            plv8.elog(ERROR, 'Invalid operator: ' + op);
+          }
+
+          /* Handle characteristics. This is very specific to xTuple,
+             and highly dependant on certain table structures and naming conventions,
+             but otherwise way too much work to refactor in an abstract manner right now. */
+          if (param.isCharacteristic) {
+            /* Handle array. */
+            if (op === '<@') {
+              param.value = ' ARRAY[' + param.value.join(',') + ']';
+            }
+
+            /* Booleans are stored as strings. */
+            if (param.value === true) {
+              param.value = 't';
+            } else if (param.value === false) {
+              param.value = 'f';
+            }
+
+            /* Yeah, it depends on a property called 'characteristics'... */
+            prop = XT.Orm.getProperty(orm, 'characteristics');
+
+            /* Build the characteristics query clause. */
+            identifiers.push(prop.toMany.inverse);
+            identifiers.push(orm.nameSpace.toLowerCase());
+            identifiers.push(prop.toMany.type.decamelize());
+            identifiers.push(param.attribute);
+            identifiers.push(param.value);
+
+            charSql = 'id in (' +
+                      '  select %' + (identifiers.length - 4) + '$I '+
+                      '  from %' + (identifiers.length - 3) + '$I.%' + (identifiers.length - 2) + '$I ' +
+                      '    join char on (char_name = characteristic)' +
+                      '  where 1=1 ' +
+                      /* Note: Not using $i for these. L = literal here. These is not identifiers. */
+                      '    and char_name = %' + (identifiers.length - 1) + '$L ' +
+                      '    and value ' + op + ' %' + (identifiers.length) + '$L ' +
+                      ')';
+
+            clauses.push(charSql);
+
+          /* Array comparisons handle another way. e.g. %1$I !<@ ARRAY[$1,$2] */
+          } else if (op === '<@' || op === '!<@') {
+            /* Handle paths if applicable. */
+            if (param.attribute.indexOf('.') > -1) {
+              parts = param.attribute.split('.');
+              childOrm = this.fetchOrm(nameSpace, type);
+              params.push("");
+              pcount = params.length - 1;
+
+              for (var n = 0; n < parts.length; n++) {
+                /* Validate attribute. */
+                prop = XT.Orm.getProperty(childOrm, parts[n]);
+                if (!prop) {
+                  plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                }
+
+                /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                identifiers.push(parts[n]);
+                params[pcount] += "%" + identifiers.length + "$I";
+                if (n < parts.length - 1) {
+                  params[pcount] = "(" + params[pcount] + ").";
+                  childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                } else {
+                  params[pcount] += op + ' ARRAY[' + param.value.join(',') + ']';
+                }
+              }
+            } else {
+              identifiers.push(param.attribute);
+              params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
+              pcount = params.length - 1;
+            }
+            clauses.push(params[pcount]);
+
+          /* Everything else handle another. */
+          } else {
+            if (XT.typeOf(param.attribute) !== 'array') {
+              param.attribute = [param.attribute];
+            }
+
+            for (var c = 0; c < param.attribute.length; c++) {
+              /* Handle paths if applicable. */
+              if (param.attribute[c].indexOf('.') > -1) {
+                parts = param.attribute[c].split('.');
+                childOrm = this.fetchOrm(nameSpace, type);
+                params.push("");
+                pcount = params.length - 1;
+                isArray = false;
+
+                /* Check if last part is an Array. */
+                for (var m = 0; m < parts.length; m++) {
+                  /* Validate attribute. */
+                  prop = XT.Orm.getProperty(childOrm, parts[m]);
+                  if (!prop) {
+                    plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[m]);
+                  }
+
+                  if (m < parts.length - 1) {
+                    childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                  } else if (prop.attr && prop.attr.type === 'Array') {
+                    /* The last property in the path is an array. */
+                    isArray = true;
+                    params[pcount] = '$' + count;
+                  }
+                }
+
+                /* Reset the childOrm to parent. */
+                childOrm = this.fetchOrm(nameSpace, type);
+
+                for (var n = 0; n < parts.length; n++) {
+                  /* Validate attribute. */
+                  prop = XT.Orm.getProperty(childOrm, parts[n]);
+                  if (!prop) {
+                    plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                  }
+
+                  /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
+                  if (param.isUsernamePrivFilter && isArray) {
+                    identifiers.push(parts[n]);
+                    arrayIdentifiers.push(identifiers.length);
+
+                    if (n < parts.length - 1) {
+                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    }
+                  } else {
+                    /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                    identifiers.push(parts[n]);
+                    params[pcount] += "%" + identifiers.length + "$I";
+
+                    if (n < parts.length - 1) {
+                      params[pcount] = "(" + params[pcount] + ").";
+                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    } else if (param.isLower) {
+                      params[pcount] = "lower(" + params[pcount] + ")";
+                    }
+                  }
+                }
+              } else {
+                /* Validate attribute. */
+                prop = XT.Orm.getProperty(orm, param.attribute[c]);
+                if (!prop) {
+                  plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
+                }
+
+                identifiers.push(param.attribute[c]);
+
+                /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
+                if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested) ||
+                  (prop.attr && prop.attr.type === 'Array'))) {
+
+                  params.push('$' + count);
+                  pcount = params.length - 1;
+                  arrayIdentifiers.push(identifiers.length);
+                } else {
+                  params.push("%" + identifiers.length + "$I");
+                  pcount = params.length - 1;
+                }
+              }
+
+              /* Add persional privs array search. */
+              if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested)
+                || (prop.attr && prop.attr.type === 'Array') || isArray)) {
+
+                /* e.g. 'admin' = ANY (usernames_array) */
+                arrayParams = "";
+                params[pcount] += ' ' + op + ' ANY (';
+
+                /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                for (var f =0; f < arrayIdentifiers.length; f++) {
+                  arrayParams += '%' + arrayIdentifiers[f] + '$I';
+                  if (f < arrayIdentifiers.length - 1) {
+                    arrayParams = "(" + arrayParams + ").";
+                  }
+                }
+                params[pcount] += arrayParams + ')';
+
+              /* Add optional is null clause. */
+              } else if (parameters[i].includeNull) {
+                /* e.g. %1$I = $1 or %1$I is null */
+                params[pcount] = params[pcount] + " " + op + ' $' + count + ' or ' + params[pcount] + ' is null';
+              } else {
+                /* e.g. %1$I = $1 */
+                params[pcount] += " " + op + ' $' + count;
+              }
+
+              orClause.push(params[pcount]);
+            }
+
+            /* If more than one clause we'll get: (%1$I = $1 or %1$I = $2 or %1$I = $3) */
+            clauses.push('(' + orClause.join(' or ') + ')');
+            count++;
+            ret.parameters.push(param.value);
+          }
+        }
+      }
+
+      ret.conditions = (clauses.length ? '(' + XT.format(clauses.join(' and '), identifiers) + ')' : ret.conditions) || true;
+
+      /* Massage ordeBy with quoted identifiers. */
+      if (orderBy) {
+        for (var i = 0; i < orderBy.length; i++) {
+          /* Handle path case. */
+          if (orderBy[i].attribute.indexOf('.') > -1) {
+            parts = orderBy[i].attribute.split('.');
+            prevOrm = orm;
+            orderByParams.push("");
+            pcount = orderByParams.length - 1;
+
+            for (var n = 0; n < parts.length; n++) {
+              prop = XT.Orm.getProperty(orm, parts[n]);
+              if (!prop) {
+                plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
+              }
+              orderByIdentifiers.push(parts[n]);
+              orderByParams[pcount] += "%" + orderByIdentifiers.length + "$I";
+
+              if (n < parts.length - 1) {
+                orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
+                orm = this.fetchOrm(nameSpace, prop.toOne.type);
+              }
+            }
+            orm = prevOrm;
+          /* Normal case. */
+          } else {
+            prop = XT.Orm.getProperty(orm, orderBy[i].attribute);
+            if (!prop) {
+              plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
+            }
+            orderByIdentifiers.push(orderBy[i].attribute);
+            orderByParams.push("%" + orderByIdentifiers.length + "$I");
+            pcount = orderByParams.length - 1;
+          }
+
+          if (orderBy[i].isEmpty) {
+            orderByParams[pcount] = "length(" + orderByParams[pcount] + ")=0";
+          }
+          if (orderBy[i].descending) {
+            orderByParams[pcount] += " desc";
+          }
+
+          list.push(orderByParams[pcount])
+        }
+      }
+
+      ret.orderBy = list.length ? XT.format('order by ' + list.join(','), orderByIdentifiers) : '';
+
+      return ret;
+    },
     /**
      * Renew a lock. Defaults to rewing the lock for 30 seconds.
      *
