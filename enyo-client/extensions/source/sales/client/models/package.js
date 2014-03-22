@@ -4,8 +4,8 @@ enyo.depends(
   "contact.js",
   "incident.js",
   "item.js",
+  "invoice.js",
   "opportunity.js",
-  "project.js",
   "to_do.js",
   "startup.js",
   "static.js"

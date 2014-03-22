@@ -1,0 +1,50 @@
+[
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "Item",
+    "table": "item",
+    "isExtension": true,
+    "comment": "Extended by Purchasing",
+    "relations": [
+      {
+        "column": "item_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "maximumDesiredCost",
+        "attr": {
+          "type": "Cost",
+          "column": "item_maxcost"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "ItemRelation",
+    "table": "item",
+    "isExtension": true,
+    "comment": "Extended by Purchasing",
+    "relations": [
+      {
+        "column": "item_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "maximumDesiredCost",
+        "attr": {
+          "type": "Cost",
+          "column": "item_maxcost"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

@@ -28,15 +28,21 @@ white:true*/
 
   });
 
+  SYS.CustomerEmailProfile = XM.SimpleModel.extend({
+    recordType: 'SYS.CustomerEmailProfile'
+  });
+
   /**
     @class
 
     @extends XM.SimpleModel
   */
   SYS.Extension = XM.SimpleModel.extend({
-
     recordType: 'SYS.Extension'
+  });
 
+  SYS.File = XM.SimpleModel.extend({
+    recordType: 'SYS.File'
   });
 
   /**
@@ -70,6 +76,10 @@ white:true*/
 
     recordType: 'SYS.Oauth2token'
 
+  });
+
+  SYS.ReportDefinition = XM.SimpleModel.extend({
+    recordType: 'SYS.ReportDefinition'
   });
 
   /**
@@ -109,20 +119,6 @@ white:true*/
     /** @scope SYS.UserAccountRole.prototype */
 
     recordType: 'SYS.UserAccountRole'
-
-  });
-
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  SYS.BiCache = XM.SimpleModel.extend(/** @lends SYS.BiCache.prototype */{
-
-    recordType: 'SYS.BiCache',
-
-    idAttribute: 'key'
 
   });
 
@@ -248,15 +244,12 @@ white:true*/
 
   });
 
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  SYS.ExtensionCollection = XM.Collection.extend(/** @lends SYS.ExtensionCollection.prototype */{
-
+  SYS.ExtensionCollection = XM.Collection.extend({
     model: SYS.Extension
+  });
 
+  SYS.FileCollection = XM.Collection.extend({
+    model: SYS.File
   });
 
   /**
@@ -276,22 +269,16 @@ white:true*/
 
     @extends XM.Collection
   */
-  SYS.BiCacheCollection = XM.Collection.extend({
-    /** @scope SYS.BiCacheCollection.prototype */
-
-    model: SYS.BiCache
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Collection
-  */
   SYS.RecoverCollection = XM.Collection.extend({
     /** @scope SYS.RecoverCollection.prototype */
 
     model: SYS.Recover
+
+  });
+
+  SYS.ReportDefinitionCollection = XM.Collection.extend({
+
+    model: SYS.ReportDefinition
 
   });
 }());

@@ -1,0 +1,38 @@
+[
+  {
+    "context": "crm",
+    "nameSpace": "XM",
+    "type": "Invoice",
+    "table": "xt.invcheadinfo",
+    "isExtension": true,
+    "comment": "Extended by CRM",
+    "relations": [
+      {
+        "column": "invchead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "incidents",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceIncident",
+          "column": "invchead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "opportunities",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceOpportunity",
+          "column": "invchead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }
+]

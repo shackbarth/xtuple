@@ -68,7 +68,7 @@ passport.use(new LocalStrategy(
           password: password
         };
 
-				// note this function must be owned by a superuser or it will fail
+        // note this function must be owned by a superuser or it will fail
         query = "select xt.check_password($$%@$$);".f(JSON.stringify(queryArg));
 
         XT.dataSource.query(query, options, function (error, res) {
@@ -237,7 +237,7 @@ passport.use(new BearerStrategy(
 
       // The accessToken is only valid for 1 hour. Has it expired yet?
       if ((new Date(token.get("accessExpires")) - new Date()) < 0) {
-        return done(new Error("Access token has expired."));
+        return done(null, false, { message : 'Access token has expired' });
       }
 
       var tokenUser = token.get("user"),
@@ -267,12 +267,12 @@ passport.use(new BearerStrategy(
         } else if ((scopeParts[0] !== 'userinfo') && (scopeOrg !== scopeParts[0])) {
           // After the first loop, make sure all the other scopes have the same org.
           // One of the scopes does not match.
-          scopeErr = new Error("Invalide Request");
+          scopeErr = true;
         }
       });
 
       if (scopeErr) {
-        return done(scopeErr);
+        return done(null, false, { message : 'Invalid Request' });
       }
 
       if (tokenUser) {

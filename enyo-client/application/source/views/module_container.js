@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
-/*global XT:true, XV:true, XM:true, _:true, enyo:true*/
+/*global XT:true, XV:true, XM:true, _:true, enyo:true, window:true */
 
 (function () {
 
@@ -25,9 +25,15 @@ trailing:true, white:true*/
       // Look for welcome page and set to what settings say to
       var children = this.$.navigator.$.contentPanels.children,
         welcome = _.findWhere(children, {name: "welcomePage"}),
-        url = XT.session.settings.get("WelcomePage");
+        url = XT.session.settings.get("MobileWelcomePage"),
+        params = "?client=mobileweb" +
+          //"&username=" + XT.session.details.id +
+          "&hostname=" + window.location.hostname +
+          "&organization=" + XT.session.details.organization +
+          "&version=" + XT.session.config.version;
+
       if (welcome && url) {
-        welcome.setAttributes({src: url});
+        welcome.setAttributes({src: url + params});
       }
       this.inherited(arguments);
     }

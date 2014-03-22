@@ -25,26 +25,24 @@ white:true*/
         callback = function () {};
       } else {
         callback = function (response) {
-          if (response && response.isError) {
-            // handle error status centrally here before we return to the caller
+          notify(response);
 
+          if (response && response.isError) {
+            // notify the user in the case of error.
+            // Wait a second to make sure that whatever the expected callback
+            // function has time to do whatever it has to do. Not pretty,
+            // but works across a broad range of callback errors.
             errorMessage = response.status ? response.status.message : response.message;
             if (errorMessage) {
-              XT.app.$.postbooks.notify(null, {
-                type: XM.Model.CRITICAL,
-                message: errorMessage
-              });
+              XT.log("Error:", errorMessage);
+              setTimeout(function () {
+                XT.app.$.postbooks.notify(null, {
+                  type: XM.Model.CRITICAL,
+                  message: errorMessage
+                });
+              }, 1000);
             }
-
-            if (response.code === "SESSION_NOT_FOUND") {
-              // The session couldn't be validated by the datasource.
-              // XXX might be dead code
-              XT.logout();
-            }
-
           }
-
-          notify(response);
         };
       }
 
@@ -186,7 +184,46 @@ white:true*/
               options.success(dataHash, options);
               return;
             }
-            if (dataHash.patches) {
+
+            // Handle case where an entire collection was saved
+            if (options.collection) {
+              // Destroyed models won't have a response unless they made the whole
+              // request fail. Assume successful destruction.
+              options.collection.each(function (model) {
+                if (model.getStatus() === XM.Model.DESTROYED_DIRTY) {
+                  model.trigger("destroy", model, model.collection, options);
+                }
+              });
+
+              if (dataHash[0].patches) {
+                _.each(dataHash, function (data) {
+                  var cModel;
+
+                  cModel = _.find(options.collection.models, function (model) {
+                    return data.id === model.id;
+                  });
+                  attrs = cModel.toJSON({includeNested: true});
+                  XM.jsonpatch.apply(attrs, data.patches);
+                  cModel.etag = data.etag;
+
+                  // This is a hack to work around Backbone messing with 
+                  // attributes when we don't want it to. Parse function
+                  // on model handles the other side of this
+                  options.fixAttributes = cModel.attributes;
+
+                  options.success.call(that, cModel, attrs, options);
+
+                  options.collection.remove(cModel);
+                });
+              } else {
+                // This typically happens when requery option === false
+                // and no patches were found
+                options.success.call(that, options.collection.at(0), true, options);
+              }
+              return;
+
+            // Handle normal single model case
+            } else if (dataHash.patches) {
               if (obj) {
                 attrs = obj.toJSON({includeNested: true});
                 XM.jsonpatch.apply(attrs, dataHash.patches);

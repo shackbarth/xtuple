@@ -1,7 +1,7 @@
 select xt.create_table('fltr');
 
 select xt.add_column('fltr','fltr_id', 'serial', 'primary key');
-select xt.add_column('fltr','obj_uuid', 'text', 'default xt.generate_uuid()', 'xt');
+select xt.add_column('fltr','obj_uuid', 'uuid', 'default xt.uuid_generate_v4()', 'xt');
 select xt.add_column('fltr','fltr_createdby', 'text');
 select xt.add_column('fltr','fltr_name', 'text');
 select xt.add_column('fltr','fltr_type', 'text');

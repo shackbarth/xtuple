@@ -74,6 +74,20 @@
           "type": "Number",
           "column": "terms_cutoffday"
         }
+      },
+      {
+        "name": "isUsedByBilling",
+        "attr": {
+          "type": "Boolean",
+          "column": "terms_ar"
+        }
+      },
+      {
+        "name": "isUsedByPayments",
+        "attr": {
+          "type": "Boolean",
+          "column": "terms_ap"
+        }
       }
     ],
     "isSystem": true

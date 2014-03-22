@@ -2,23 +2,28 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "xtuple",
   "description": "xTuple Enterprise Resource Planning Mobile-Web client",
-  "version": "1.4.6",
+  "version": "1.8.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
   },
   "dependencies": {
-    "async":"0.2.x",
-    "backbone":"0.9.10",
+    "async": "0.2.x",
+    "backbone": "0.9.10",
     "backbone-relational": "0.8.0",
     "bcrypt": "0.7.x",
-    "colors":"0.6.x",
+    "colors": "0.6.x",
     "commander": "1.2.x",
+    "congruence": "~1.2.4",
     "connect-ensure-login": "0.1.x",
     "ejs": "0.8.x",
     "express": "3.1.x",
+    "fluentreports": "git://github.com/xtuple/fluentreports.git",
+    "ipp": "0.0.5",
     "json-patch": "git://github.com/xtuple/JSON-Patch.git",
-    "nodemailer":"0.3.x",
+    "less": "1.5.0",
+    "moment": "2.4.x",
+    "nodemailer": "0.3.x",
     "oauth2orize": "0.1.x",
     "oauth2orize-jwt-bearer": "0.1.x",
     "passport": "0.1.x",
@@ -27,33 +32,41 @@
     "passport-local": "0.1.x",
     "passport-oauth2-client-password": "0.1.x",
     "passport-oauth2-jwt-bearer": "0.1.x",
-    "paynode":"0.3.6",
-    "pg":"0.14.x",
-    "request":"2.14.x",
-    "rimraf":"2.2.x",
+    "paynode": "0.3.6",
+    "pg": "0.14.x",
+    "request": "2.14.x",
+    "rimraf": "2.2.x",
     "rjson": "~0.2.4",
-    "socket.io":"0.9.x",
-    "underscore":"1.4.x",
-    "winston":"0.7.x",
-    "xml4js": "git://github.com/rpbouman/xmla4js.git"
+    "socket.io": "0.9.x",
+    "underscore": "1.4.x",
+    "winston": "0.7.x",
+    "xmla4js": "git://github.com/rpbouman/xmla4js.git",
+    "underscore.string": "~2.3.3"
   },
   "devDependencies": {
-    "chai":"1.5.x",
-    "mocha":"1.9.x",
-    "require-uncache":"0.0.x",
+    "chai": "1.5.x",
+    "jshint": "2.4.x",
+    "mocha": "1.9.x",
+    "require-uncache": "0.0.x",
     "html5": "0.3.13",
-    "zombie":"1.4.x",
-    "vows":"0.7.x",
-    "less":"1.4.2"
+    "zombie": "1.4.x",
+    "csslint": "~0.10.0",
+    "nodemon": "~1.0.15"
   },
-  "optionalDependencies": {},
+  "optionalDependencies": {
+    "xtuple-query": "~1.0.0",
+    "googleapis": "~0.4.6"
+  },
   "engines": {
     "node": "0.8.x"
   },
   "main": "node-datasource/main.js",
   "scripts": {
-    "test-build": "./node_modules/.bin/mocha -R spec test/mocha/build/build_app.js",
-    "test": "./node_modules/.bin/mocha -R spec test/mocha/lib/login.js test/mocha/models/* test/mocha/database/* test/mocha/extensions/*",
-    "test-datasource": "./node_modules/.bin/mocha -R spec test/mocha/routes/*"
+    "start": "node_modules/.bin/nodemon node-datasource/main.js --debug --watch node-datasource",
+    "preinstall": "cd node-datasource/lib/query ; npm install",
+    "test-build": "./node_modules/.bin/mocha -R spec test/build/build_app.js",
+    "test": "./node_modules/.bin/mocha -R spec test/lib/login.js test/models/* test/database/* test/extensions/* test/lib/test_runner.js",
+    "test-datasource": "./node_modules/.bin/mocha -R spec test/routes/*",
+    "jshint": "./node_modules/.bin/jshint --exclude node-datasource/lib/query/node_modules lib/backbone-x/source lib/enyo-x/source lib/tools/source enyo-client/application/source/ enyo-client/extensions node-datasource"
   }
 }

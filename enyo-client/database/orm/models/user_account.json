@@ -283,6 +283,27 @@
         }
       }
     ],
+    "extensions": [
+      {
+        "table": "xt.localeext",
+        "relations": [
+          {
+            "column": "localeext_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "hoursScale",
+            "attr": {
+              "type": "Number",
+              "column": "localeext_hours_scale"
+            }
+          }
+        ],
+        "isSystem": true
+      }
+    ],
     "isSystem": true
   },
   {
@@ -371,6 +392,14 @@
         "toOne": {
           "type": "Locale",
           "column": "usr_locale_id",
+          "required": true
+        }
+      },
+      {
+        "name": "isAgent",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_agent",
           "required": true
         }
       },
@@ -584,6 +613,47 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "UserAccountRoleListItem",
+    "table": "grp",
+    "comment": "User Account Role List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "grp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "grp_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "grp_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "UserAccountRoleRelation",
     "table": "grp",
     "comment": "User Account Role Relation Map",
@@ -730,6 +800,93 @@
       }
     ],
     "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Agent",
+    "table": "xt.usrlite",
+    "isRest": true,
+    "comment": "Agent Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "usr_username",
+          "isPrimaryKey": true,
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_active",
+          "value": true
+        }
+      },
+      {
+        "name": "isAgent",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_agent",
+          "value": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ShareUsers",
+    "table": "xt.share_users",
+    "comment": "List which users have personal privilege access to a resource based on what CRM Account it belongs to or share access grants.",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "MaintainUsers",
+        "update": false,
+        "delete": false
+      },
+      "personal":{
+        "create": false,
+        "read":"ViewPersonalCRMAccounts",
+        "update": false,
+        "delete": false,
+        "properties":[
+          "username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "username",
+          "isNaturalKey": true
+        }
+      }
+    ],
     "isSystem": true
   }
 ]

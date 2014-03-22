@@ -24,7 +24,8 @@
         "delete": "MaintainPersonalIncidents",
         "properties": [
           "owner.username",
-          "assignedTo.username"
+          "assignedTo.username",
+          "account.number"
         ]
       },
       "attribute": {
@@ -266,6 +267,13 @@
           "type": "IncidentIncident",
           "column": "incdt_id",
           "inverse": "source"
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
         }
       }
     ],
@@ -1046,7 +1054,8 @@
         "delete": false,
         "properties": [
           "owner.username",
-          "assignedTo.username"
+          "assignedTo.username",
+          "account.number"
         ]
       }
     },
@@ -1144,7 +1153,8 @@
         "delete": false,
         "properties": [
           "owner.username",
-          "assignedTo.username"
+          "assignedTo.username",
+          "account.number"
         ]
       }
     },

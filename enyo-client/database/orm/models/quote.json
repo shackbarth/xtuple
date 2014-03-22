@@ -81,7 +81,7 @@
       {
         "name": "scheduleDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "schedule_date"
         }
       },
@@ -1032,8 +1032,7 @@
         "toOne": {
           "type": "SiteRelation",
           "column": "quitem_order_warehous_id",
-          "isNested": true,
-          "required": true
+          "isNested": true
         }
       },
       {
@@ -1100,7 +1099,7 @@
       {
         "name": "scheduleDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "quitem_scheddate",
           "required": true
         }

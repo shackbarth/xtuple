@@ -29,6 +29,15 @@
           "create": "AlterPackDate",
           "update": "AlterPackDate"
         }
+      },
+      "personal": {
+        "create": false,
+        "read": "ViewPersonalCRMAccounts",
+        "update": false,
+        "delete": false,
+        "properties": [
+          "crmaccountUsers"
+        ]
       }
     },
     "properties": [
@@ -47,6 +56,13 @@
           "column": "cohead_number",
           "isNaturalKey":true,
           "required": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
         }
       },
       {
@@ -83,7 +99,7 @@
       {
         "name": "scheduleDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "schedule_date"
         }
       },
@@ -433,7 +449,8 @@
         "toOne": {
           "type": "Currency",
           "column": "cohead_curr_id",
-          "required": true
+          "required": true,
+          "isNested": true
         }
       },
       {
@@ -492,6 +509,20 @@
         "attr": {
           "type": "Number",
           "column": "allocated_credit"
+        }
+      },
+      {
+        "name": "authorizedCredit",
+        "attr": {
+          "type": "Number",
+          "column": "authorized_credit"
+        }
+      },
+      {
+        "name": "outstandingCredit",
+        "attr": {
+          "type": "Number",
+          "column": "outstanding_credit"
         }
       },
       {
@@ -612,8 +643,193 @@
           "column": "cohead_id",
           "inverse": "source"
         }
+      },
+      {
+        "name": "workflow",
+        "toMany": {
+          "isNested": true,
+          "type": "SalesOrderWorkflow",
+          "column": "obj_uuid",
+          "inverse": "parent"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "SalesOrderCharacteristic",
+          "column": "cohead_id",
+          "inverse": "salesOrder",
+          "isNested": true
+        }
+      },
+      {
+        "name": "crmaccountUsers",
+        "toMany": {
+          "type": "ShareUsers",
+          "column": "obj_uuid",
+          "inverse": "uuid"
+        }
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SalesOrderWorkflow",
+    "table": "xt.coheadwf",
+    "comment": "Sales Order Workflow Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "wf_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "String",
+          "column": "wf_parent_uuid"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "wf_name",
+          "required": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "wf_description"
+        }
+      },
+      {
+        "name": "workflowType",
+        "attr": {
+          "type": "String",
+          "column": "wf_type"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "wf_status"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "wf_start_date"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "DueDate",
+          "column": "wf_due_date"
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "wf_assigned_date"
+        }
+      },
+      {
+        "name": "completeDate",
+        "attr": {
+          "type": "Date",
+          "column": "wf_completed_date"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "wf_notes"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "wf_priority_id",
+          "required": true
+        }
+      },
+      {
+        "name": "sequence",
+        "attr": {
+          "type": "Number",
+          "column": "wf_sequence"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wf_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wf_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "completedParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wf_completed_parent_status"
+        }
+      },
+      {
+        "name": "deferredParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wf_deferred_parent_status"
+        }
+      },
+      {
+        "name": "completedSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wf_completed_successors"
+        }
+      },
+      {
+        "name": "deferredSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wf_deferred_successors"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {
@@ -1074,12 +1290,20 @@
         }
       },
       {
+        "name": "subNumber",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_subnumber",
+          "required": true
+        }
+      },
+      {
         "name": "item",
         "toOne": {
+          "required": true,
           "isNested": true,
           "type": "ItemRelation",
-          "column": "coitem_item_id",
-          "required": true
+          "column": "coitem_item_id"
         }
       },
       {
@@ -1155,7 +1379,7 @@
       {
         "name": "scheduleDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "coitem_scheddate",
           "required": true
         }
@@ -1254,14 +1478,6 @@
         }
       },
       {
-        "name": "subnumber",
-        "attr": {
-          "type": "Number",
-          "column": "coitem_subnumber",
-          "required": true
-        }
-      },
-      {
         "name": "firm",
         "attr": {
           "type": "Boolean",
@@ -1297,6 +1513,72 @@
     ],
     "isSystem": true,
     "isNestedOnly": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SalesOrderCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Sales Order Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "S"
+        }
+      },
+      {
+        "name": "salesOrder",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
   },
   {
     "context": "xtuple",
@@ -1503,6 +1785,13 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
+        }
+      },
+      {
         "name": "customer",
         "toOne": {
           "isNested": true,
@@ -1527,7 +1816,7 @@
       {
         "name": "scheduleDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "schedule_date"
         }
       },
@@ -1708,7 +1997,6 @@
     "nameSpace": "SYS",
     "type": "SalesOrderRelation",
     "table": "xt.coheadinfo",
-    "isRest": true,
     "comment": "Sales Order Relation Map",
     "privileges": {
       "all": {

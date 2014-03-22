@@ -1,7 +1,7 @@
 /**
     Procedure for creating a new record or dispatching a JavaScript function in the database.
 
-    @param {Text} Data hash that can parsed into a JavaScript object.
+    @param {Text} Data hash that can parsed into a JavaScript object or array.
     @param {String} [dataHash.username] Username. Required.
     @param {String} [dataHash.nameSpace] Namespace. Required.
     @param {String} [dataHash.type] Type. Required.
@@ -13,14 +13,14 @@
     @param {Any} [dataHash.dispatch.parameters] One or many parameters to pass to the function call.
 
     Sample usage:
-    select xt.js_init();
+    select xt.js_init(true);
     select xt.post('{
       "username": "admin",
       "nameSpace":"XM",
       "type": "Contact",
-      "id": "99999",
+      "id": "10009",
       "data" : {
-        "number": "99999",
+        "number": "10009",
         "firstName": "Bob",
         "lastName": "Marley",
         "email":[
@@ -55,7 +55,7 @@
       "username": "admin",
       "nameSpace":"XM",
       "type": "Contact",
-      "id": 10,
+      "id": "10009",
       "data" : {
         "number": "10009",
         "firstName": "Bob",
@@ -63,6 +63,35 @@
       },
       "prettyPrint": true
     }');
+
+    select xt.post('[
+      {
+      "username": "admin",
+      "nameSpace":"XM",
+      "type": "Contact",
+      "id": "10009",
+      "method": "post",
+      "data" : {
+        "number": "10009",
+        "firstName": "Bob",
+        "lastName": "Marley"
+      },
+      "prettyPrint": true
+      },
+      {
+      "username": "admin",
+      "nameSpace":"XM",
+      "type": "Contact",
+      "id": "10010",
+      "method": "post",
+      "data" : {
+        "number": "10010",
+        "firstName": "Ziggy",
+        "lastName": "Marley"
+      },
+      "prettyPrint": true
+      }
+    ]');
 
     select xt.post($${
       "username": "admin",
@@ -91,16 +120,6 @@
       "dispatch":{
         "functionName":"useCount",
         "parameters": 41
-      }
-    }$$);
-
-    select xt.post($${
-      "username": "admin",
-      "nameSpace": "XM",
-      "type": "Model",
-      "dispatch":{
-        "functionName":"fetchId",
-        "parameters":"XM.Address"
       }
     }$$);
 
@@ -169,101 +188,52 @@
     }$$);
 */
 create or replace function xt.post(data_hash text) returns text as $$
+
+return (function () {
+
+  var dataHash = JSON.parse(data_hash),
+    isNotDispatch = (typeof dataHash.data == "object"),
+    prettyPrint,
+    ret = [];
+
   try {
-    var dataHash = JSON.parse(data_hash),
-      prettyPrint = dataHash.prettyPrint ? 2 : null,
-      dispatch = dataHash.dispatch,
-      data,
-      orm,
-      pkey,
-      prv,
-      sql,
-      observer,
-      ret,
-      obj,
-      f,
-      params,
-      args,
-      method;
-
-    dataHash.superUser = false;
-    if (dataHash.username) { XT.username = dataHash.username; }
-
-    /* if there's data then commit it */
-    if (dataHash.data) {
-      data = Object.create(XT.Data)
-      orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type);
-      pkey = XT.Orm.primaryKey(orm);
-      nkey = XT.Orm.naturalKey(orm);
-      prv = JSON.parse(JSON.stringify(dataHash.data));
-
-      /* set status */
-      XT.jsonpatch.updateState(dataHash.data, "create");
-
-      /* set id if not provided */
-      if (!dataHash.id) {
-        if (nkey) {
-          if (dataHash.data[nkey] || nkey === 'uuid') {
-            dataHash.id = dataHash.data[nkey] || XT.generateUUID();
-          } else {
-            plv8.elog(ERROR, "A unique id must be provided");
-          }
-        } else {
-          dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
+    /* If the request is an array of objects loop through them */
+    if (dataHash.length) {
+      dataHash.forEach(function (obj) {
+        switch (obj.method)
+        {
+        case "post":
+          ret.push(XT.Rest.post(obj));
+          break;
+        case "patch":
+          ret.push(XT.Rest.patch(obj));
+          break;
+        case "delete":
+          XT.Rest.delete(obj);
+          break;
+        default:
+          plv8.elog(ERROR, "Unknown or unsupported method");
         }
-      }
+      });
 
-      /* commit the record */
-      data.commitRecord(dataHash);
-
-      XT.debug("HERE" + JSON.stringify(dataHash));
-      if (dataHash.requery === false) {
-        /* The requestor doesn't care to know what the record looks like now */
-        ret = true;
-      } else {
-        /* calculate a patch of the modifed version */
-        observer = XT.jsonpatch.observe(prv);
-        dataHash.superUser = true;
-        ret = data.retrieveRecord(dataHash);
-        observer.object = ret.data;
-        delete ret.data;
-        ret.patches = XT.jsonpatch.generate(observer);
-        ret = JSON.stringify(ret, null, prettyPrint);
-      }
-
-    /* if it's a function dispatch call then execute it */
-    } else if (dispatch) {
-      obj = plv8[dataHash.nameSpace][dataHash.type];
-      f = dispatch.functionName;
-      params = dispatch.parameters;
-      args = params instanceof Array ? params : [params];
-
-      if (obj[f]) {
-        method = obj[f].curry(args);
-      } else {
-        XT.username = undefined;
-        throw new Error('Function ' + dataHash.nameSpace +
-           '.' + dataHash.type + '.' + f + ' not found.');
-      }
-
-      ret = obj.isDispatchable ? method() : false;
-
-      /**
-       * Remove the requirement of passing 'isJSON' around.
-       * Based on underscore: http://underscorejs.org/docs/underscore.html#section-88
-       */
-      if (ret && ret.toString() === "[object Object]") {
-        ret = JSON.stringify(ret, null, prettyPrint);
-      }
+      return JSON.stringify(ret, null, dataHash[0].prettyPrint);
     }
 
-    /* Unset XT.username so it isn't cached for future queries. */
-    XT.username = undefined;
+    /* If just one object, deal with it normally */
+    ret = XT.Rest.post(dataHash);
 
-    XT.message(201, "Created");
+    /* Dispatches handle stringify internally.
+       We'll stringify any commit results here */
+    if (isNotDispatch) {
+      ret = JSON.stringify(ret, null, dataHash.prettyPrint);
+    }
+
     return ret;
+
   } catch (err) {
     XT.error(err);
   }
+
+}());
 
 $$ language plv8;

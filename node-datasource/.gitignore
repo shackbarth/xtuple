@@ -7,3 +7,4 @@ datasource-err.log
 www
 lib/private/*
 pid/*
+temp/*

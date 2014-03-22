@@ -33,15 +33,30 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       result,
       adaptorCallback = function (err, res) {
         var data,
-            status;
+            status,
+            callbackObj = {};
 
         if (err) {
-          callback({
-            isError: true,
-            description: err.message,
-            debug: err.debug || null,
-            status: err.status || {code: 500, message: "Internal Server Error" }
-          });
+          callbackObj.isError = true;
+
+          // Special handling for description and status.
+          // If unhandledError but the debug has an error message, send it back to client.
+          if (err.message === "unhandledError" && err.debug[0] &&
+            err.debug[0].indexOf("Error") === 0) {
+            // Error message is everything before new line in debug.
+            // Can be refined with subsequent use cases.
+            callbackObj.description = err.debug[0].substring(0, err.debug[0].indexOf('\n'));
+            callbackObj.status = {code: 500, message: callbackObj.description };
+          } else {
+            callbackObj.description = err.message;
+            callbackObj.status = err.status || {code: 500, message: "Internal Server Error" };
+          }
+
+          if (X.options.datasource.debug) {
+            callbackObj.debug = err.debug || null;
+          }
+
+          callback(callbackObj);
         } else if (res && res.rows && res.rows.length > 0) {
           // the data comes back in an awkward res.rows[0].request form,
           // and we want to normalize that here so that the data is in response.data
@@ -66,8 +81,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       };
 
-    payload.username = session.passport.user.username;
-    payload.encryptionKey = X.options.encryptionKey;
+    // If the payload is an array, then append internal processing info to each object
+    if (payload.length) {
+      payload.forEach(function (obj) {
+        obj.username = session.passport.user.username;
+        obj.encryptionKey = X.options.encryptionKey;
+      });
+    } else {
+      payload.username = session.passport.user.username;
+      payload.encryptionKey = X.options.encryptionKey;
+    }
     org = session.passport.user.organization;
 
     // Make sure the user isn't asking for node-internal data

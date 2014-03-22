@@ -4,5 +4,5 @@ create or replace function xt.co_line_at_shipping(coitem) returns numeric stable
     join shiphead on shiphead_id=shipitem_shiphead_id
   where shipitem_orderitem_id=$1.coitem_id
     and shiphead_order_type='SO'
-    and not shipitem_shipped;
+    and not shiphead_shipped;
 $$ language sql;

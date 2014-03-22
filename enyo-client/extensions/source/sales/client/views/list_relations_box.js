@@ -34,7 +34,7 @@ trailing:true, white:true*/
       }
     };
 
-    /** @private 
+    /** @private
       Check to see if account is customer or prospect to determine whether `new` works.
     */
     var _updateButtons = function (isCustomerOnly) {

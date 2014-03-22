@@ -1,16 +1,107 @@
 /**
   Styles relating to Lists
 */
+.xv-list-header {
+  background-color: @gray;
+  color: @white;
+  font-size: .6em;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid @silver;
+  .xv-list-column {
+    &.last {
+      border-right: none;
+    }
+    &.name-column {
+      padding-left: 7px;
+    }
+    &.first {
+      padding-left: 7px;
+    }
+    &.second {
+      padding-left: 7px;
+    }
+    &.third {
+      padding-left: 7px;
+    }
+    &.short {
+      padding-left: 7px;
+    }
+    &.small {
+      padding-left: 7px;
+    }
+    &.medium {
+      padding-left: 7px;
+    }
+    &.descr {
+      padding-left: 7px;
+    }
+  }
+}
 
 /* List */
+.xv-list-column {
+  &.line-number {
+    width: 30px;
+    text-align: right;
+  }
+  &.name-column {
+    width: 200px
+  }
+  &.right-column {
+    width: 100px;
+    text-align: right;
+  }
+  &.short {
+    width: 100px;
+  }
+  &.small {
+    width: 125px;
+  }
+  &.medium {
+    width: 150px;
+  }
+  &.first {
+    width: 300px;
+  }
+  &.second {
+    width: 200px;
+  }
+  &.third {
+    width: 100px;
+  }
+  &.money {
+    width: 75px;
+    text-align: right;
+  }
+  &.quantity {
+    width: 75px;
+    text-align: right;
+  }
+  &.descr {
+    width: 200px;
+  }
+  &.icon {
+    width: 10px;
+  }
+}
+
 .xv-list {
   background-color: @white;
+
+  .xv-list-item > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   .xv-list-item {
-    @include box-sizing(border-box);
     background-color: @white;
-    padding-top: 3px;
-    padding-bottom: 3px;
     border-bottom: 1px solid @smoke;
+    min-height: 32px;
+    padding: 2px;
+    padding-right: 36px;
     &.header {
       padding-top: 0;
     }
@@ -19,7 +110,7 @@
       color: @black;
       .xv-list-column {
         .xv-list-attr {
-          background-color: @gray;
+          background: transparent;
           &.placeholder {
             color: @gray;
           }
@@ -27,27 +118,6 @@
       }
     }
     .xv-list-column {
-      &.short {
-        width: 9em;
-      }
-      &.first {
-        width: 19em;
-      }
-      &.second {
-        width: 10em;
-      }
-      &.third {
-        width: 4.5em;
-      }
-      &.money {
-        width: 5em;
-      }
-      &.descr {
-        width: 15.56em;
-      }
-      &.icon {
-        width: 1.5em;
-      }
       .list-icon {
         padding: 2px;
         color: @charcoal;
@@ -57,51 +127,95 @@
       }
     }
     &.item-selected {
-      background: @slate-blue url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
+      background: @item-hilite-background;
+      #gradient > .vertical(@item-hilite-background, @dark-slate-blue);
+
       .xv-list-attr {
         color: @white;
-        background: none;
         &.placeholder {
           font-style: italic;
           color: @sky-blue;
         }
         &.hyperlink {
           color: @bright-orange;
-          background: transparent;
         }
-      }
-      .xv-list-attr {
         &.header {
           background: @sky-blue;
         }
       }
-      .xv-list-column {
+    }
+    .xv-list-item-gear {
+      position: absolute;
+      right: 0px;
+      z-index: 999;
+    }
+  }
+  &.xv-grid-list {
+    background: @ghost;
+    .xv-list-item > * {
+      vertical-align: top;
+    }
+    .xv-list-item { 
+      padding-top: 7px !important;
+      padding-bottom: 9px !important;
+      border-bottom: 1px solid @silver !important;
+      background: @ghost;
+      &.item-selected {
+        background: @item-hilite-background;
+        #gradient > .vertical(@item-hilite-background, @dark-slate-blue);
+
         .xv-list-attr {
           color: @white;
-          background: none;
           &.placeholder {
             font-style: italic;
-            color: SkyBlue;
+            color: @sky-blue;
           }
           &.hyperlink {
             color: @bright-orange;
-            background: transparent;
           }
+          &.header {
+            background: @sky-blue;
+          }
+        }
+      }
+      .xv-list-column {
+        .xv-list-attr {
+          font-size: 12px;
+        }
+        vertical-align: top;
+        &.last {
+          border-right: none;
+        }
+        &.name-column {
+          padding-left: 7px;
+        }
+        &.first {
+          padding-left: 7px;
+        }
+        &.second {
+          padding-left: 7px;
+        }
+        &.third {
+          padding-left: 7px;
+        }
+        &.short {
+          padding-left: 7px;
+        }
+        &.small {
+          padding-left: 7px;
+        }
+        &.medium {
+          padding-left: 7px;
+        }
+        &.descr {
+          padding-left: 7px;
+        }
+        .xv-list-attr {
+          padding: 0px;
         }
       }
     }
   }
-}
-
-.xv-list-item > * {
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.xv-list-gear-icon-button {
-  float: right;
-  display: none;
-  margin-top: -4px;
 }
 
 .xv-list-attr {
@@ -111,7 +225,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: @black;
-  background-color: @white;
   &.header {
     padding: 4px;
     background: @gray;
@@ -129,9 +242,9 @@
     color: @black;
   }
   &.right {
+    // TODO: get rid of this absolute positioning
     position: absolute;
     right: 10px;
-    height: 20px;
   }
   &.text-align-right {
     text-align: right;
@@ -153,10 +266,13 @@
   }
   &.placeholder {
     font-style: italic;
-    color: @blue-gray;
+    color: @dim-gray;
   }
   &.hyperlink {
     color: blue;
+  }
+  &.disabled {
+    color: @dim-gray;
   }
 }
 

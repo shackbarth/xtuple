@@ -1,0 +1,54 @@
+[
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "Vendor",
+    "table": "vendinfo",
+    "isExtension": true,
+    "comment": "Extended by Purchasing",
+    "relations": [
+      {
+        "column": "vend_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "incotermsSource",
+        "attr": {
+          "type": "String",
+          "column": "vend_fobsource"
+        }
+      },
+      {
+        "name": "incoterms",
+        "attr": {
+          "type": "String",
+          "column": "vend_fob"
+        }
+      },
+      {
+        "name": "isQualified",
+        "attr": {
+          "type": "Boolean",
+          "column": "vend_qualified"
+        }
+      },
+      {
+        "name": "isItemSourceRequired",
+        "attr": {
+          "type": "Boolean",
+          "column": "vend_restrictpurch"
+        }
+      },
+      {
+        "name": "orderNotes",
+        "attr": {
+          "type": "String",
+          "column": "vend_pocomments"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

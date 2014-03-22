@@ -1,0 +1,25 @@
+{
+  "name": "xtuple-query",
+  "version": "1.0.0",
+  "description": "Create, validate, and translate various forms of XT datasource query object.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xtuple/xtuple"
+  },
+  "author": "Travis Webb",
+  "license": "BSD",
+  "dependencies": {
+    "congruence": "1.2.4",
+    "moment": "~2.4.0",
+    "underscore": "~1.5.2"
+  },
+  "devDependencies": {},
+  "readmeFilename": "README.md",
+  "keywords": [
+    "xtuple"
+  ],
+  "bugs": {
+    "url": "https://github.com/xtuple/xtuple/issues"
+  }
+}

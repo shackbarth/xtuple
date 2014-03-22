@@ -1,5 +1,5 @@
 select xt.install_js('XM','Model','xtuple', $$
-  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple.
+  /* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   if (!XM.Model) { XM.Model = {}; }
@@ -210,12 +210,14 @@ select xt.install_js('XM','Model','xtuple', $$
     }).map(function (prop) {
       var toManyType = prop.toMany.type,
         toManyMap = XT.Orm.fetch(nameSpace, toManyType)
-        toManyTable = toManyMap.table,
+        toManyTable = toManyMap.lockTable || toManyMap.table,
         toManyPrefix = toManyTable.indexOf('.') < 0 ? "public" : toManyTable.beforeDot(),
         toManySuffix = toManyTable.afterDot();
 
       return {nameSpace: toManyPrefix, tableName: toManySuffix};
     });
+
+    if (DEBUG) { XT.debug('XM.Model.used toMany relations are:', JSON.stringify(toMany)); }
 
     for (fkIndex = fkeys.length - 1; fkIndex >= 0; fkIndex-=1) {
       /* loop backwards because we might be deleting elements of the array */
@@ -268,4 +270,3 @@ select xt.install_js('XM','Model','xtuple', $$
   };
   
 $$ );
-

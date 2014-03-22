@@ -1,0 +1,56 @@
+[
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "SalesCategory",
+    "table": "salescat",
+    "idSequenceName": "salescat_salescat_id_seq",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Sales Category Information",
+    "privileges": {
+      "all": {
+        "create": "MaintainSalesCategories",
+        "read": "ViewSalesCategories",
+        "update": "MaintainSalesCategories",
+        "delete": "MaintainSalesCategories"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "salescat_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "salescat_active",
+          "required": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "salescat_name",
+          "required": true,
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "salescat_descrip",
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

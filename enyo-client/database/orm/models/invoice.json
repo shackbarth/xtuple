@@ -1,0 +1,1500 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Invoice",
+    "table": "xt.invcheadinfo",
+    "isRest": true,
+    "idSequenceName": "invchead_invchead_id_seq",
+    "orderSequence":"InvcNumber",
+    "lockable": true,
+    "comment": "Invoice Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainMiscInvoices",
+        "read": "ViewMiscInvoices",
+        "update": "MaintainMiscInvoices",
+        "delete": "MaintainMiscInvoices"
+      },
+      "attribute": {
+        "isPosted": {
+          "update": false
+        },
+        "isPrinted": {
+          "update": false
+        },
+        "isVoid": {
+          "update": false
+        }
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invchead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "invchead_invcnumber",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "invoiceDate",
+        "attr": {
+          "type": "Date",
+          "column": "invchead_invcdate",
+          "required": true
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "due_date"
+        }
+      },
+      {
+        "name": "discountDate",
+        "attr": {
+          "type": "Date",
+          "column": "dis_date"
+        }
+      },
+      {
+        "name": "isPrinted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_printed",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_posted",
+          "required": true
+        }
+      },
+      {
+        "name": "isVoid",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_void",
+          "required": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "BillingCustomer",
+          "column": "invchead_cust_id",
+          "isNested": true,
+          "required": true
+        }
+      },
+      {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_name"
+        }
+      },
+      {
+        "name": "billtoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_address1"
+        }
+      },
+      {
+        "name": "billtoAddress2",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_address2"
+        }
+      },
+      {
+        "name": "billtoAddress3",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_address3"
+        }
+      },
+      {
+        "name": "billtoCity",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_city"
+        }
+      },
+      {
+        "name": "billtoState",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_state"
+        }
+      },
+      {
+        "name": "billtoPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_zipcode"
+        }
+      },
+      {
+        "name": "billtoCountry",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_country"
+        }
+      },
+      {
+        "name": "billtoPhone",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_phone"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "invchead_curr_id"
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "invchead_terms_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "invchead_salesrep_id"
+        }
+      },
+      {
+        "name": "commission",
+        "attr": {
+          "type": "Percent",
+          "column": "invchead_commission",
+          "required": true
+        }
+      },
+      {
+        "name": "saleType",
+        "toOne": {
+          "type": "SaleType",
+          "column": "invchead_saletype_id"
+        }
+      },
+      {
+        "name": "customerPurchaseOrderNumber",
+        "attr": {
+          "type": "String",
+          "column": "invchead_ponumber"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "invchead_taxzone_id"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "invchead_notes"
+        }
+      },
+      {
+        "name": "miscCharge",
+        "attr": {
+          "type": "Money",
+          "column": "invchead_misc_amount"
+        }
+      },
+      {
+        "name": "recurringInvoice",
+        "toOne": {
+          "type": "InvoiceRelation",
+          "column": "invchead_recurring_invchead_id"
+        }
+      },
+      {
+        "name": "allocatedCredit",
+        "attr": {
+          "type": "Money",
+          "column": "allocated_credit"
+        }
+      },
+      {
+        "name": "outstandingCredit",
+        "attr": {
+          "type": "Money",
+          "column": "outstanding_credit"
+        }
+      },
+      {
+        "name": "subtotal",
+        "attr": {
+          "type": "Money",
+          "column": "subtotal"
+        }
+      },
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Money",
+          "column": "tax_total"
+        }
+      },
+      {
+        "name": "total",
+        "attr": {
+          "type": "Money",
+          "column": "total"
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Money",
+          "column": "balance"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "InvoiceCharacteristic",
+          "column": "invchead_id",
+          "inverse": "invoice",
+          "isNested": true
+        }
+      },
+      {
+        "name": "lineItems",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceLine",
+          "column": "invchead_id",
+          "inverse": "invoice"
+        }
+      },
+      {
+        "name": "taxAdjustments",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceTax",
+          "column": "invchead_id",
+          "inverse": "invoice"
+        }
+      },
+      {
+        "name": "allocations",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceAllocation",
+          "column": "invchead_id",
+          "inverse": "invoice"
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceContact",
+          "column": "invchead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "accounts",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceAccount",
+          "column": "invchead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "customers",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceCustomer",
+          "column": "invchead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "files",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceFile",
+          "column": "invchead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceUrl",
+          "column": "invchead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceItem",
+          "column": "invchead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceListItem",
+    "table": "xt.invcheadinfo",
+    "isRest": true,
+    "idSequenceName": "invchead_invchead_id_seq",
+    "lockable": true,
+    "comment": "Invoice List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "MaintainMiscInvoices ViewMiscInvoices",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invchead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "invchead_invcnumber",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "invoiceDate",
+        "attr": {
+          "type": "Date",
+          "column": "invchead_invcdate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPrinted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_printed",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_posted",
+          "required": true
+        }
+      },
+      {
+        "name": "isVoid",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_void",
+          "required": true
+        }
+      },
+      {
+        "name": "total",
+        "attr": {
+          "type": "Money",
+          "column": "total"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "invchead_curr_id"
+        }
+      },
+      {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_name"
+        }
+      },
+      {
+        "name": "billtoCity",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_city"
+        }
+      },
+      {
+        "name": "billtoState",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_state"
+        }
+      },
+      {
+        "name": "billtoCountry",
+        "attr": {
+          "type": "String",
+          "column": "invchead_billto_country"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "BillingCustomer",
+          "column": "invchead_cust_id",
+          "isNested": true,
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceRelation",
+    "table": "xt.invcheadinfo",
+    "isRest": true,
+    "idSequenceName": "invchead_invchead_id_seq",
+    "lockable": true,
+    "comment": "Invoice Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invchead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "invchead_invcnumber",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "invoiceDate",
+        "attr": {
+          "type": "Date",
+          "column": "invchead_invcdate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_posted",
+          "required": true
+        }
+      },
+      {
+        "name": "isVoid",
+        "attr": {
+          "type": "Boolean",
+          "column": "invchead_void",
+          "required": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "invchead_cust_id",
+          "isNested": true,
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Invoice Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "invoice",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceTax",
+    "table": "invcheadtax",
+    "isRest": true,
+    "idSequenceName": "taxhist_taxhist_id_seq",
+    "comment": "Invoice Tax Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "invoice",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_parent_id"
+        }
+      },
+      {
+        "name": "taxCode",
+        "toOne": {
+          "type": "TaxCode",
+          "column": "taxhist_tax_id",
+          "required": true
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_tax"
+        }
+      },
+      {
+        "name": "basis",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_basis",
+          "value": 0
+        }
+      },
+      {
+        "name": "percent",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_percent",
+          "value": 0
+        }
+      },
+      {
+        "name": "taxRateAmount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_amount",
+          "value": 0
+        }
+      },
+      {
+        "name": "taxType",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_taxtype_id",
+          "value": 3
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "taxhist_docdate"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceAllocation",
+    "table": "aropenalloc",
+    "isRest": true,
+    "idSequenceName": "aropenalloc_aropenalloc_id_seq",
+    "comment": "Invoice Allocation Map",
+    "privileges": {
+      "all": {
+        "create": "ApplyARMemos",
+        "read": true,
+        "update": "ApplyARMemos",
+        "delete": "ApplyARMemos"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "aropenalloc_aropen_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "docType",
+        "attr": {
+          "type": "String",
+          "column": "aropenalloc_doctype",
+          "value": "I"
+        }
+      },
+      {
+        "name": "invoice",
+        "attr": {
+          "type": "Number",
+          "column": "aropenalloc_doc_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "aropenalloc_amount"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "aropenalloc_curr_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceContact",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Invoice Contact Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INV"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceAccount",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Invoice Account Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INV"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "CRMA"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceCustomer",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Invoice Customer Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INV"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "C"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceFile",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Invoice File Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INV"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "FILE"
+        }
+      },
+      {
+        "name": "file",
+        "toOne": {
+          "isNested": true,
+          "type": "FileRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceUrl",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Invoice Url Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INV"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "URL"
+        }
+      },
+      {
+        "name": "url",
+        "toOne": {
+          "isNested": true,
+          "type": "Url",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceItem",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Invoice Item Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INV"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceLine",
+    "table": "xt.invciteminfo",
+    "isRest": true,
+    "idSequenceName": "invcitem_invcitem_id_seq",
+    "comment": "Invoice Line Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainMiscInvoices",
+        "read": "ViewMiscInvoices",
+        "update": "MaintainMiscInvoices",
+        "delete": "MaintainMiscInvoices"
+      },
+      "attribute": {
+        "taxType": {
+          "create": "OverrideTax",
+          "read": true,
+          "update": "OverrideTax"
+        }
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "invcitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "invoice",
+        "attr": {
+          "type": "Number",
+          "column": "invcitem_invchead_id"
+        }
+      },
+      {
+        "name": "lineNumber",
+        "attr": {
+          "type": "Number",
+          "column": "invcitem_linenumber"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "invcitem_item_id",
+          "required": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "invcitem_warehous_id",
+          "required": true
+        }
+      },
+      {
+        "name": "customerPartNumber",
+        "attr": {
+          "type": "String",
+          "column": "invcitem_custpn"
+        }
+      },
+      {
+        "name": "isMiscellaneous",
+        "attr": {
+          "type": "Boolean",
+          "column": "invcitem_is_misc"
+        }
+      },
+      {
+        "name": "itemNumber",
+        "attr": {
+          "type": "String",
+          "column": "invcitem_number"
+        }
+      },
+      {
+        "name": "itemDescription",
+        "attr": {
+          "type": "String",
+          "column": "invcitem_descrip"
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "invcitem_ordered"
+        }
+      },
+      {
+        "name": "quantityUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "invcitem_qty_uom_id"
+        }
+      },
+      {
+        "name": "quantityUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "invcitem_qty_invuomratio"
+        }
+      },
+      {
+        "name": "billed",
+        "attr": {
+          "type": "Quantity",
+          "column": "invcitem_billed"
+        }
+      },
+      {
+        "name": "customerPrice",
+        "attr": {
+          "type": "Number",
+          "column": "invcitem_custprice"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "SalesPrice",
+          "column": "invcitem_price"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "invcitem_price_uom_id"
+        }
+      },
+      {
+        "name": "priceUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "invcitem_price_invuomratio"
+        }
+      },
+      {
+        "name": "extendedPrice",
+        "attr": {
+          "type": "ExtendedPrice",
+          "column": "invcitem_ext_price"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "invcitem_notes"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "invcitem_taxtype_id"
+        }
+      },
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Money",
+          "column": "invcitem_tax_total"
+        }
+      },
+      {
+        "name": "taxes",
+        "toMany": {
+          "isNested": true,
+          "type": "InvoiceLineTax",
+          "column": "invcitem_id",
+          "inverse": "parent"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "InvoiceLineTax",
+    "table": "xt.invcitemtaxinfo",
+    "isRest": true,
+    "idSequenceName": "taxhist_taxhist_id_seq",
+    "comment": "Invoice Line Tax Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "taxhist_taxtype_id"
+        }
+      },
+      {
+        "name": "taxCode",
+        "toOne": {
+          "type": "TaxCode",
+          "column": "taxhist_tax_id",
+          "required": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_parent_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_tax"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

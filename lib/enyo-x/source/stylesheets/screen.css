@@ -1,6 +1,5 @@
 /*
-
-  To compile to .css:
+  To compile this .less file to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 
@@ -8,933 +7,6 @@
 /*
   These variables will show in css as their hex values
 */
-/* Helper classes for css3 */
-.clearfix {
-  *zoom: 1;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.clearfix:after {
-  clear: both;
-}
-.hide-text {
-  font: 0/0 a;
-  color: transparent;
-  text-shadow: none;
-  background-color: transparent;
-  border: 0;
-}
-.input-block-level {
-  display: block;
-  width: 100%;
-  min-height: 30px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-/**
-  Less styles for the
-*/
-/**
-  Styles related to pickers, combo boxes, and relation widgets
-*/
-/* Picker */
-.onyx-picker-decorator .onyx-button {
-  padding: 12px 8px 12px 8px;
-}
-.onyx-picker .onyx-menu-item {
-  text-align: left;
-  text-overflow: ellipsis;
-}
-.xv-pickerwidget {
-  background-color: #ffffff;
-}
-.picker-icon {
-  position: absolute;
-  right: 0;
-  margin: 0 10px 0 2px;
-  color: #000000;
-}
-.xv-picker-button {
-  text-align: left;
-}
-.xv-picker-button .picker-content {
-  max-width: 100px;
-  overflow: hidden;
-}
-.xv-picker-button.disabled {
-  color: #696969;
-}
-.xv-picker-label {
-  color: #000000;
-  padding: 18px 8px 8px 8px;
-  text-align: right;
-  width: 130px;
-}
-.xv-picker-label.disabled {
-  color: #696969;
-}
-/* Combo Box */
-.xv-combobox-input {
-  font-size: medium;
-  border: 0;
-  display: inline-block;
-  outline: none;
-  width: 125px;
-}
-.xv-combobox-input-with-label {
-  padding-top: 11px;
-  padding-left: 8px;
-}
-.xv-combobox-icon {
-  margin-left: 4px;
-  height: 20px !important;
-}
-.xv-combobox-note {
-  padding: 14px 3px 8px 3px;
-  text-align: left;
-}
-/**
-  Styles relating to the groupbox and widgets contained
-    by a groupbox
-*/
-/*
-  Styles relating to the groupbox
-*/
-.xv-groupbox {
-  min-width: 320px;
-  padding: 8px;
-  margin-right: 5px;
-  /**
-    Top level input-decorator class.
-    All below this are overrides.
-  */
-
-}
-.xv-groupbox.editor {
-  min-width: 250px;
-  padding: 0;
-  margin: 0;
-}
-.xv-groupbox.in-panel {
-  padding: 0;
-  margin: 0;
-}
-.xv-groupbox .in-panel > *:first-child {
-  border-top-color: #aaaaaa;
-  border-top: none;
-  border-width: 1px;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-.xv-groupbox .in-panel > *:last-child {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  border-bottom: none;
-}
-.xv-groupbox > .in-panel .editor {
-  border-right: none;
-}
-.xv-groupbox.panel {
-  min-width: 330px;
-}
-.xv-groupbox .xv-inputwidget {
-  background-color: #ffffff;
-}
-.xv-groupbox .onyx-input-decorator {
-  border: 0;
-}
-.xv-groupbox .onyx-input-decorator input {
-  width: 150px;
-}
-.xv-groupbox .onyx-picker-decorator .onyx-button {
-  width: 150px;
-}
-.xv-groupbox .xv-relationwidget .onyx-input-decorator,
-.xv-groupbox .xv-datewidget .onyx-input-decorator,
-.xv-groupbox .xv-numberwidget .onyx-input-decorator {
-  width: 170px;
-}
-.xv-groupbox .xv-relationwidget input,
-.xv-groupbox .xv-datewidget input,
-.xv-groupbox .xv-numberwidget input {
-  width: 120px;
-}
-.xv-groupbox .xv-numberwidget input {
-  width: 150px;
-}
-.xv-groupbox .xv-moneywidget {
-  background-color: #ffffff;
-  padding-top: 6px;
-  padding-bottom: 2px;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator {
-  border: 0;
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-  width: 110px;
-  padding: 6px 10px 8px 6px;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator input,
-.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-money-label {
-  width: 100%;
-  text-align: right;
-}
-.xv-groupbox .xv-moneywidget .onyx-input-decorator.xv-currency-label {
-  width: 65px;
-}
-.xv-groupbox .xv-moneywidget .xv-picker-button {
-  width: 65px;
-  padding: 10px 4px;
-}
-.xv-groupbox > .onyx-input-decorator {
-  border-color: #aaaaaa;
-  border-width: 0 1px 1px 1px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child {
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > .onyx-input-decorator:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox > * {
-  display: block;
-  border: 1px #aaaaaa solid;
-  border-top-width: 0;
-  /* reset styles that make 'item' look bad if they happen to be there */
-
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  margin: 0;
-}
-.xv-groupbox > *:first-child {
-  border-top-color: #aaaaaa;
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > *:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > *:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox-header {
-  padding: 5px 10px;
-  color: #ffffff;
-  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: uppercase;
-  background-color: #333333;
-  border: none;
-  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
-}
-.xv-groupbox-buttons {
-  border: none;
-}
-.xv-groupbox-buttons .xv-groupbox-button-single {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox-buttons .xv-groupbox-button-center {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-.xv-groupbox-buttons .xv-groupbox-button-left {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox-buttons .xv-groupbox-button-right {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-/**
-  Styles relating to grid-entry
-*/
-/*
-  Styles relating to the grid box
-*/
-/* Entire box including the grid and the summary panel */
-.xv-grid-box {
-  /**
-    This is the most general grid row that
-    is not specific to read-only or selected
-  */
-
-}
-.xv-grid-box.panel {
-  width: 765px;
-}
-.xv-grid-box .enyo-list-page > *:first-child .xv-grid-row {
-  border-top: 0px;
-}
-.xv-grid-box .xv-above-grid-list {
-  border: 0px;
-}
-.xv-grid-box .xv-grid-row {
-  font-size: 12px;
-  border-top: 1px solid #aaaaaa;
-  vertical-align: top;
-  /**
-      This is the grid header row
-    */
-
-}
-.xv-grid-box .xv-grid-row > * {
-  display: inline-block;
-}
-.xv-grid-box .xv-grid-row .xv-grid-header {
-  background-color: #555555;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-top: none;
-  border-right: 1px solid #4c4c4c;
-  border-bottom: 1px solid #4c4c4c;
-}
-.xv-grid-box .xv-grid-row .xv-grid-header.last {
-  border-right: none;
-}
-.xv-grid-box .xv-grid-row > * {
-  padding: 7px 10px;
-}
-.xv-grid-box .xv-grid-row .line-number {
-  vertical-align: top;
-  width: 30px;
-}
-.xv-grid-box .xv-grid-row .grid-actions {
-  display: block;
-  padding-left: 30px;
-  width: 276px !important;
-}
-.xv-grid-box .xv-grid-row .grid-actions > * {
-  display: inline-block;
-  width: 100%;
-}
-.xv-grid-box .xv-grid-row .grid-item {
-  vertical-align: top;
-  width: 175px;
-}
-.xv-grid-box .xv-grid-row .quantity {
-  vertical-align: top;
-  width: 100px;
-}
-.xv-grid-box .xv-grid-row .discount {
-  vertical-align: top;
-  width: 90px;
-}
-.xv-grid-box .xv-grid-row .price {
-  vertical-align: top;
-  width: 90px;
-}
-.xv-grid-box .xv-grid-row .schedule {
-  vertical-align: top;
-  width: 110px;
-}
-.xv-grid-box .xv-grid-row.readonly {
-  background: #f8f8ff;
-  min-height: 56px;
-}
-.xv-grid-box .xv-grid-row.selected {
-  background-color: #ffffff;
-  border: 1px solid #f49200;
-  border-top: 1px solid #f49200;
-  border-bottom: 1px solid #f49200;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
-  padding: 0;
-  width: 90px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator input {
-  text-align: left;
-  width: 80px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
-  height: 20px;
-  padding-top: 3px;
-  width: 80px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget {
-  margin-right: 10px;
-  padding-top: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
-  padding: 0;
-  width: 105px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
-  width: 65px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
-  padding-top: 6px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator {
-  padding: 0;
-  width: 90px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
-  text-align: left;
-  width: 80px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column.line-number .xv-numberwidget .onyx-input-decorator {
-  padding: 0;
-  width: 30px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column.line-number .xv-numberwidget .onyx-input-decorator input {
-  text-align: left;
-  width: 20px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox {
-  padding-left: 0px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .xv-combobox-input {
-  font-size: 13px;
-  width: 50px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox .xv-combobox-icon {
-  width: 20px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator {
-  padding: 0;
-  width: 90px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
-  text-align: left;
-  width: 80px;
-  font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
-  width: 150px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input {
-  width: 100px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-subinput {
-  width: 80px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
-  padding-top: 6px;
-  width: 80px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-decorated-label {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
-  text-indent: 0;
-  padding-bottom: 0;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
-  display: none;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
-  border-bottom: 0;
-  padding: 0;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel {
-  border: none;
-  margin-top: 0;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group {
-  padding: 0;
-  border: none;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget {
-  padding-bottom: 0px;
-  padding-top: 0px;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget .xv-input-decorator {
-  padding-bottom: 0px;
-  padding-top: 0px;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget {
-  padding-bottom: 0px;
-  padding-top: 0px;
-}
-.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
-  width: 163px;
-  padding-bottom: 0px;
-  padding-top: 0px;
-}
-/**
-  Styles relating to the dashboard
-*/
-/*
-  Styles relating to the dashboard
-*/
-/*
-  Variables for widths/colors
-*/
-.dashboard {
-  background-color: #8d8d8d;
-  /*
-    These styles will only be used
-    if the chart is in a dashboard
-  */
-
-}
-.dashboard .charts-panels {
-  overflow-y: auto;
-}
-.dashboard .selectable-chart {
-  width: 500px;
-  height: 230px;
-}
-.dashboard .selectable-chart .chart-title-bar {
-  width: 500px;
-}
-.dashboard .nvtooltip {
-  color: black;
-}
-.selectable-chart {
-  margin: 10px;
-  color: #ffffff;
-  overflow: hidden;
-}
-.selectable-chart .chart-title-bar {
-  height: 32px;
-  background-color: #333333;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-top-left-radius: 10px;
-  -moz-border-radius-topleft: 10px;
-  border-top-left-radius: 10px;
-}
-.selectable-chart .chart-title-bar .chart-title {
-  padding-top: 8px;
-  text-align: center;
-}
-.selectable-chart .chart-title-bar .remove-icon {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-.selectable-chart .chart-bottom {
-  background-color: #555555;
-  border: 1px solid #444444;
-  border-top: none;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-right-radius: 10px;
-  -webkit-border-bottom-left-radius: 10px;
-  -moz-border-radius-bottomleft: 10px;
-  border-bottom-left-radius: 10px;
-}
-.selectable-chart .chart-bottom .xv-picker-label {
-  width: 100px;
-  color: #ffffff;
-}
-.selectable-chart .chart-bottom .onyx-button {
-  width: 130px;
-  padding: 10px 10px;
-}
-/**
-  Styles relating to Lists
-*/
-/**
-  Styles relating to Lists
-*/
-/* List */
-.xv-list {
-  background-color: #ffffff;
-}
-.xv-list .xv-list-item {
-  background-color: #ffffff;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid #dddddd;
-}
-@include box-sizing(border-box);
-.xv-list .xv-list-item.header {
-  padding-top: 0;
-}
-.xv-list .xv-list-item.inactive {
-  background-color: #8d8d8d;
-  color: #000000;
-}
-.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
-  background-color: #8d8d8d;
-}
-.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
-  color: #8d8d8d;
-}
-.xv-list .xv-list-item .xv-list-column.short {
-  width: 9em;
-}
-.xv-list .xv-list-item .xv-list-column.first {
-  width: 19em;
-}
-.xv-list .xv-list-item .xv-list-column.second {
-  width: 10em;
-}
-.xv-list .xv-list-item .xv-list-column.third {
-  width: 4.5em;
-}
-.xv-list .xv-list-item .xv-list-column.money {
-  width: 5em;
-}
-.xv-list .xv-list-item .xv-list-column.descr {
-  width: 15.56em;
-}
-.xv-list .xv-list-item .xv-list-column.icon {
-  width: 1.5em;
-}
-.xv-list .xv-list-item .xv-list-column .list-icon {
-  padding: 2px;
-  color: #555555;
-  vertical-align: sub;
-  border: 1px solid #eeeeee;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-}
-.xv-list .xv-list-item.item-selected {
-  background: #357ec7 url(../../../../../../assets/item-hilite.png/) repeat-x bottom;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr {
-  color: #ffffff;
-  background: none;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
-  font-style: italic;
-  color: #99ccff;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
-  color: #f49200;
-  background: transparent;
-}
-.xv-list .xv-list-item.item-selected .xv-list-attr.header {
-  background: #99ccff;
-}
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr {
-  color: #ffffff;
-  background: none;
-}
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.placeholder {
-  font-style: italic;
-  color: SkyBlue;
-}
-.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.hyperlink {
-  color: #f49200;
-  background: transparent;
-}
-.xv-list-item > * {
-  display: inline-block;
-  vertical-align: middle;
-}
-.xv-list-gear-icon-button {
-  float: right;
-  display: none;
-  margin-top: -4px;
-}
-.xv-list-attr {
-  padding: 5px;
-  font-size: .8em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #000000;
-  background-color: #ffffff;
-}
-.xv-list-attr.header {
-  padding: 4px;
-  background: #8d8d8d;
-  font-size: .7em;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-.xv-list-attr.footer {
-  padding: 4px;
-  background: #8d8d8d;
-  font-size: .7em;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #000000;
-}
-.xv-list-attr.right {
-  position: absolute;
-  right: 10px;
-  height: 20px;
-}
-.xv-list-attr.text-align-right {
-  text-align: right;
-}
-.xv-list-attr.bold {
-  font-weight: bold;
-}
-.xv-list-attr.error {
-  color: #ff0000;
-}
-.xv-list-attr.emphasis {
-  color: #009000;
-}
-.xv-list-attr.warn {
-  color: #ff9c00;
-}
-.xv-list-attr.italic {
-  font-style: italic;
-}
-.xv-list-attr.placeholder {
-  font-style: italic;
-  color: #93a1a1;
-}
-.xv-list-attr.hyperlink {
-  color: blue;
-}
-/* Navigator */
-.xv-navigator-header {
-  font-size: small;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #ff6600;
-  padding-left: 20px;
-  border-bottom: 1px solid #0e0e0e;
-}
-.xv-workspace-header {
-  color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 8px 0 0 8px;
-}
-/**
-  Styles relating to the parameter widget
-*/
-/**
-  Styles relating to widgets in the pullout
-*/
-/* Pullout */
-.xv-pullout-header {
-  text-align: center;
-  padding: 10px 0;
-}
-.pullout {
-  position: absolute;
-  top: 57px;
-  left: 0;
-  bottom: 0;
-  width: 320px;
-  background: #dddddd;
-}
-.pullout .pullout-scroller {
-  position: relative;
-  margin-right: 4px;
-}
-.pullout .pullout-shadow {
-  position: absolute;
-  height: 100%;
-  width: 20px;
-  right: -20px;
-  /**
-      TODO: this is weird and indicates the REAL need to change the
-      whatever the css system is...this relative path is different...
-    **/
-
-  background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
-  background-size: 20px 2px;
-}
-.pullout .pullout-grabbutton {
-  position: absolute;
-  height: 54px;
-  width: 50px;
-  bottom: 20px;
-  right: -46px;
-  background-color: #dddddd;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-right-radius: 10px;
-}
-.pullout .pullout-toolbar {
-  padding-top: 4px;
-  text-align: center;
-}
-.xv-groupbox.xv-parameter {
-  min-width: 280px;
-  margin: 4px 0 8px 4px;
-  padding: 0;
-}
-.xv-groupbox.xv-parameter .top-drawer {
-  border-top: #aaaaaa 1px solid;
-  background-color: #dddddd;
-  color: #4c4c4c;
-  padding: 7px 0 7px 5px;
-}
-.xv-groupbox.xv-parameter .top-drawer > * {
-  margin-right: 10px;
-}
-.xv-groupbox.xv-parameter .xv-filter-form .button-row {
-  background-color: #ffffff;
-  padding: 7px;
-  text-align: center;
-}
-.xv-groupbox.xv-parameter .xv-filter-form .button-row .onyx-button {
-  margin-right: 3px;
-}
-.xv-groupbox.xv-parameter .xv-filter-form .xv-list {
-  height: 150px;
-}
-#app_pullout_container,
-#app_pullout_help,
-#app_pullout_help_helpPage {
-  height: 100%;
-}
-#app_pullout_help_helpPage {
-  border: none;
-  height: 100%;
-  width: 100%;
-}
-/* Parameter Widget */
-.xv-parameter-item {
-  background-color: #ffffff;
-}
-.xv-parameter-item .xv-label {
-  color: #000;
-}
-.xv-parameter-item .xv-decorated-label {
-  color: #000;
-}
-.xv-parameter-item .xv-picker {
-  width: 150px;
-}
-.xv-parameter-item .xv-radiogroup {
-  padding: 6px;
-  margin-left: 130px;
-}
-/* Layout Widget */
-.xv-tree {
-  background-color: #ffffff;
-}
-.xv-tree .xv-tree-node {
-  /* These picker styles are for the ListAttr node */
-
-}
-.xv-tree .xv-tree-node .xv-pickerwidget {
-  display: inline-block;
-  padding: 4px;
-}
-.xv-tree .xv-tree-node .xv-pickerwidget .xv-picker-label {
-  width: 50px;
-}
 /**
   Import for Font-Awesome icons
 */
@@ -2206,239 +1278,779 @@ ul.icons-ul > li .icon-li {
 .icon-share-sign:before {
   content: "\f14d";
 }
-body {
-  font-family: "arial", "arial black";
-  font-size: 100%;
-}
-.bggrad {
-  /* Radial Gradient */
+* .font-onyx {
+  /**
+     * Icon size set per Onyx standard:
+     * https://github.com/enyojs/onyx/blob/master/source/Icon.js#L5
+     */
 
-  background-color: #333333;
-  background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(#696969), to(#333333));
-  background-image: -webkit-radial-gradient(circle, #696969, #333333);
-  background-image: -moz-radial-gradient(circle, #696969, #333333);
-  background-image: -o-radial-gradient(circle, #696969, #333333);
-  background-repeat: no-repeat;
-  background-color: #999999;
+  width: 32px;
+  height: 32px;
+  padding: 3px;
 }
-.app > * {
-  width: 320px;
-  -webkit-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
-  box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
-  background: #555555;
-}
-.panels > * {
-  border: 2px solid #333333;
-  font-size: 5em;
-}
-.wide > * {
-  min-width: 50%;
-}
-.scroll-ios {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.developer-ui-container {
-  -webkit-box-shadow: #333333 4px 4px 10px -4px;
-  -moz-box-shadow: #333333 4px 4px 10px -4px;
-  box-shadow: #333333 4px 4px 10px -4px;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  top: 100px;
-  left: 0;
-  position: absolute;
-  background-color: #dddddd;
-  z-index: 10;
-}
-.developer-ui-container .developer-rows .row {
-  display: block;
-  margin: 10px;
-}
-.developer-ui-container .onyx-grabber.developer-grabber {
-  -webkit-box-shadow: #333333 4px 4px 10px -4px;
-  -moz-box-shadow: #333333 4px 4px 10px -4px;
-  box-shadow: #333333 4px 4px 10px -4px;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-right-radius: 10px;
-  background-color: #dddddd;
-  position: absolute;
-  right: -47px;
-  top: 0;
-  height: 54px;
-  width: 50px;
-}
-.item {
-  background-color: #333333;
-  border-bottom: 1px solid #0e0e0e;
-  position: relative;
-  padding: 16px 12px;
-}
-.item.onyx-selected {
-  background-color: #357ec7;
-}
-.onyx-button.save {
-  background-color: #35a8ee;
-}
-.left {
-  color: #ffffff;
-}
-.right-float {
-  float: right;
-  display: block;
-}
-.left-float {
-  float: left;
-  display: block;
-  margin-right: 3px;
-}
-.text-shadow-none {
-  text-shadow: none;
-}
-.text-shadow-0 {
-  text-shadow: 0px 0px #000000;
-}
-.xt-app {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-.xt-app .xv-postbooks {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-.xv-login .xv-login-form {
-  position: absolute;
-  height: 250px;
-  width: 300px;
-  top: 50%;
-  left: 50%;
-  margin-top: -125px;
-  margin-left: -150px;
-}
-.xv-login .xv-login-form .xv-message-box {
-  font-size: 12px;
+* .font-onyx i {
   text-align: center;
-  padding: 10px;
+  font-size: 26px;
+  color: #dddddd;
+  text-shadow: 3px 3px 5px rgba(34, 34, 34, 0.97), 0px 0px 3px rgba(34, 34, 34, 0.97);
 }
-.xv-login .xv-login-form .xv-message-box.error {
-  color: #ff0000;
-}
-.xv-login .xv-organizations-selection {
-  position: absolute;
-  height: 300px;
-  width: 400px;
-  top: 50%;
-  left: 50%;
-  margin-top: -150px;
-  margin-left: -200px;
-}
-.xv-login .xv-organizations-selection .xv-organization-row {
-  padding: 5px;
+.font-onyx.icon.button:not(.disabled) {
   cursor: pointer;
 }
-.xv-login .xv-organizations-selection .xv-organization-row:hover {
-  background-color: #dddddd;
+.font-onyx.icon.button:not(.disabled):active i {
+  color: white;
+  text-shadow: 2px 2px 5px #0099ff, -2px -2px 5px #0099ff, 2px -2px 5px #0099ff, -2px 2px 5px #0099ff;
 }
-.xv-startup-panel {
-  background: #333333;
+/**
+  Helper classes for css3
+*/
+.clearfix {
+  *zoom: 1;
 }
-.xv-startup-panel .xv-startup-divider {
-  width: 70%;
-  margin: 0 auto 8px auto;
-  top: 200px;
-  position: relative;
-  color: #f49200;
-  text-transform: uppercase;
-  font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
-  font-size: 14px;
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/**
+  Model decorator
+*/
+/**
+ * Default ListItem styles when using a ModelDecorator.
+ */
+.xv-list .xv-model-decorator > .xv-list-item .xv-table {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-table .xv-cell {
+  display: table-cell;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr {
+  /**
+        * Default styling for a model's id (as designated by 'idAttribute')
+        */
+
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-id {
+  color: blue;
   font-weight: bold;
-  border: none;
+  cursor: pointer;
 }
-.xv-startup-panel .xv-startup-progress {
-  width: 70%;
-  margin: 0 auto 0 auto;
-  top: 200px;
-  position: relative;
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-name {
+  font-weight: bold;
 }
-.xv-my-account-popup {
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-number {
+  text-align: right;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-money {
+  text-align: right;
+}
+.xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attributetype-date {
+  text-align: right;
+}
+.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr {
+  color: white;
+}
+.xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr.xm-attribute-id {
+  color: #f49200;
+}
+/**
+  Less styles for the picker widget
+*/
+/**
+  Styles related to pickers, combo boxes, and relation widgets
+*/
+.xv-pickerwidget {
   background-color: #ffffff;
-  color: #000;
 }
-.xv-my-account-popup .xv-message {
-  color: red;
-  padding: 5px;
+.onyx-picker-decorator .onyx-button {
+  padding: 12px 8px 12px 8px;
+  width: 150px;
 }
-.xv-my-account-popup .onyx-button {
-  margin: 0 auto 0 auto;
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  text-overflow: ellipsis;
 }
-.xv-my-account-popup .onyx-input {
-  padding-left: 10px;
-  float: right;
+.picker-icon {
+  position: absolute;
+  right: 0;
+  margin: 0 10px 0 2px;
+  color: #070707;
 }
-.xv-gridbox-button {
+.xv-picker-button {
+  text-align: left;
+}
+.xv-picker-button .picker-content {
+  max-width: 100px;
+  overflow: hidden;
+}
+.xv-picker-button.disabled {
+  color: #696969;
+}
+.xv-picker-label {
+  color: #070707;
+  padding: 20px 8px 8px 8px;
+  text-align: right;
+  width: 130px;
+}
+.xv-picker-label.disabled {
+  color: #696969;
+}
+.xv-combobox .onyx-input-decorator input {
+  width: 145px;
+}
+.xv-combobox .icon-sort {
+  color: #357ec7;
+  vertical-align: middle;
+}
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
+}
+/**
+  Styles relating to grid-entry
+*/
+/*
+  Styles relating to the grid box
+*/
+/* Entire box including the grid and the summary panel */
+.xv-grid-box {
+  /**
+    This is the most general grid row that
+    is not specific to read-only or selected
+  */
+
+}
+.xv-grid-box.small-panel {
+  width: 600px;
+}
+.xv-grid-box.medium-panel {
+  width: 700px;
+}
+.xv-grid-box.large-panel {
+  width: 800px;
+}
+.xv-grid-box .enyo-list-page > *:first-child .xv-grid-row {
+  border-top: 0;
+}
+.xv-grid-box .xv-above-grid-list {
+  border: 0;
+}
+.xv-grid-box .xv-scroller {
+  background: #f8f8f8;
+}
+.xv-grid-box .xv-grid-attr.bold {
+  font-weight: bold;
+}
+.xv-grid-box .xv-grid-attr.error {
+  color: #ff0000;
+}
+.xv-grid-box .xv-grid-attr.emphasis {
+  color: #009000;
+}
+.xv-grid-box .xv-grid-attr.warn {
+  color: #ff9c00;
+}
+.xv-grid-box .xv-grid-attr.italic {
+  font-style: italic;
+}
+.xv-grid-box .xv-grid-attr.placeholder {
+  font-style: italic;
+  color: #93a1a1;
+}
+.xv-grid-box .xv-grid-attr.hyperlink {
+  color: blue;
+}
+.xv-grid-box .xv-gridbox-button {
   color: #357ec7;
   font-size: 18px;
   border: none;
-  background: white;
+  background: transparent;
 }
-.xv-date-icon {
-  opacity: .8;
+.xv-grid-box .xv-grid-row {
+  font-size: 12px;
+  background-color: #8d8d8d;
+  border-bottom: 1px solid #aaaaaa;
+  vertical-align: top;
+  /**
+      This is the grid header row
+    */
+
 }
-.xv-action-icon .onyx-icon-button {
-  margin-top: 0px;
+.xv-grid-box .xv-grid-row > * {
+  display: inline-block;
 }
-.xv-sort-icon .onyx-icon-button {
-  margin-top: 7px;
-  margin-bottom: -3px;
+.xv-grid-box .xv-grid-row .xv-grid-header {
+  background-color: #8d8d8d;
+  color: #ffffff;
+  font-size: .8em;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 4px;
 }
-.xv-sort-popup {
+.xv-grid-box .xv-grid-row .xv-grid-header.last {
+  border-right: none;
+}
+.xv-grid-box .xv-grid-row > * {
+  padding: 6px 4px;
+  border: none;
+}
+.xv-grid-box .xv-grid-row .line-number {
+  vertical-align: top;
+  width: 30px;
+  text-align: right;
+}
+.xv-grid-box .xv-grid-row .grid-actions {
+  display: block;
+  padding-left: 30px;
+  border-radius: 4px;
+  border-width: 0;
+  background: #f3f3f3;
+  margin: 6px;
+}
+.xv-grid-box .xv-grid-row .grid-actions > * {
+  display: inline-block;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row .grid-item {
+  vertical-align: top;
+  width: 175px;
+}
+.xv-grid-box .xv-grid-row .quantity {
+  vertical-align: top;
+  text-align: right;
+  width: 100px;
+}
+.xv-grid-box .xv-grid-row .percent {
+  vertical-align: top;
+  text-align: right;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row .price {
+  vertical-align: top;
+  text-align: right;
+  width: 90px;
+}
+.xv-grid-box .xv-grid-row .date {
+  vertical-align: top;
+  width: 105px;
+}
+.xv-grid-box .xv-grid-row .user {
+  vertical-align: top;
+  width: 100px;
+}
+.xv-grid-box .xv-grid-row.readonly {
+  background: #f8f8f8;
+  min-height: 56px;
+}
+.xv-grid-box .xv-grid-row.selected {
   background-color: #ffffff;
-  color: #000000;
+  border: 1px solid #f49200;
 }
-.xv-sort-popup .xv-groupbox > *:last-child {
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator input {
+  width: 100%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator {
+  padding-top: 6px;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-picker-decorator .onyx-button {
+  height: 26px;
+  padding-top: 3px;
+  width: 100%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget {
+  margin-right: 10px;
+  padding-top: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
+  width: 85%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .xv-input {
+  padding-top: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget .onyx-input-decorator input {
+  width: 100%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox {
+  padding-left: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-combobox input {
+  padding-top: 3px;
+  width: 80px;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget {
+  padding-bottom: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-moneywidget .onyx-input-decorator input {
+  width: 100%;
+  font-size: 13px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input-decorator {
+  width: 100%;
+  padding-top: 6px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget .onyx-input {
+  width: 85%;
+  padding-right: 4px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-useraccount-widget .xv-subinput {
+  width: 80px;
+  height: 16px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-subinput {
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
+  padding-top: 6px;
+  width: 100%;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label,
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-flexible-label,
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-secondarydescription {
+  display: none;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-relationwidget-description {
+  text-indent: 0;
+  padding-bottom: 0;
+  padding-top: 8px;
+}
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-private-item-site-widget {
+  border-bottom: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel {
+  border: none;
+  margin-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group {
+  padding: 0;
+  border: none;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-moneywidget .xv-input-decorator {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-box.xv-groupbox .xv-sales-summary-panel .xv-sales-summary-total-group .xv-numberwidget .xv-input-decorator {
+  width: 163px;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.xv-grid-list .xv-list-column {
+  vertical-align: top !important;
+}
+/**
+  Styles relating to the dashboard
+*/
+/*
+  Styles relating to the dashboard
+*/
+/*
+  Variables for widths/colors
+*/
+.dashboard {
+  background-color: #8d8d8d;
+  /*
+    These styles will only be used
+    if the chart is in a dashboard
+  */
+
+}
+.dashboard .charts-panels {
+  overflow-y: auto;
+}
+.dashboard .selectable-chart {
+  width: 500px;
+  height: 230px;
+}
+.dashboard .selectable-chart .chart-title-bar {
+  width: 500px;
+}
+.dashboard .nvtooltip {
+  color: black;
+}
+.selectable-chart {
+  margin: 10px;
+  color: #ffffff;
+  overflow: hidden;
+}
+.selectable-chart .chart-title-bar {
+  height: 32px;
+  background-color: #333333;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  border-top-left-radius: 10px;
+}
+.selectable-chart .chart-title-bar .chart-title {
+  padding-top: 8px;
   text-align: center;
+}
+.selectable-chart .chart-title-bar .remove-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.selectable-chart .chart-bottom {
+  background-color: #555555;
+  border: 1px solid #444444;
+  border-top: none;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  border-bottom-left-radius: 10px;
+}
+.selectable-chart .chart-bottom .xv-picker-label {
+  width: 100px;
+  color: #ffffff;
+}
+.selectable-chart .chart-bottom .onyx-button {
+  width: 130px;
+  padding: 10px 10px;
+}
+/**
+  Styles relating to Lists
+*/
+/**
+  Styles relating to Lists
+*/
+.xv-list-header {
+  background-color: #8d8d8d;
+  color: #ffffff;
+  font-size: .6em;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #aaaaaa;
+}
+.xv-list-header .xv-list-column.last {
+  border-right: none;
+}
+.xv-list-header .xv-list-column.name-column {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.first {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.second {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.third {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.short {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.small {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.medium {
+  padding-left: 7px;
+}
+.xv-list-header .xv-list-column.descr {
+  padding-left: 7px;
+}
+/* List */
+.xv-list-column.line-number {
+  width: 30px;
+  text-align: right;
+}
+.xv-list-column.name-column {
+  width: 200px;
+}
+.xv-list-column.right-column {
+  width: 100px;
+  text-align: right;
+}
+.xv-list-column.short {
+  width: 100px;
+}
+.xv-list-column.small {
+  width: 125px;
+}
+.xv-list-column.medium {
+  width: 150px;
+}
+.xv-list-column.first {
+  width: 300px;
+}
+.xv-list-column.second {
+  width: 200px;
+}
+.xv-list-column.third {
+  width: 100px;
+}
+.xv-list-column.money {
+  width: 75px;
+  text-align: right;
+}
+.xv-list-column.quantity {
+  width: 75px;
+  text-align: right;
+}
+.xv-list-column.descr {
+  width: 200px;
+}
+.xv-list-column.icon {
+  width: 10px;
+}
+.xv-list {
+  background-color: #ffffff;
+}
+.xv-list .xv-list-item > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+.xv-list .xv-list-item {
+  background-color: #ffffff;
+  border-bottom: 1px solid #dddddd;
+  min-height: 32px;
+  padding: 2px;
+  padding-right: 36px;
+}
+.xv-list .xv-list-item.header {
+  padding-top: 0;
+}
+.xv-list .xv-list-item.inactive {
+  background-color: #8d8d8d;
+  color: #070707;
+}
+.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
+  background: transparent;
+}
+.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
+  color: #8d8d8d;
+}
+.xv-list .xv-list-item .xv-list-column .list-icon {
+  padding: 2px;
+  color: #555555;
+  vertical-align: sub;
+  border: 1px solid #eeeeee;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+.xv-list .xv-list-item.item-selected {
+  background: #226b9a;
+  background-color: #1f608c;
+  background-image: -moz-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#226b9a), to(#1a4f77));
+  background-image: -webkit-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -o-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: linear-gradient(to bottom, #226b9a, #1a4f77);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr {
+  color: #ffffff;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
+  font-style: italic;
+  color: #99ccff;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
+  color: #f49200;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.header {
+  background: #99ccff;
+}
+.xv-list .xv-list-item .xv-list-item-gear {
+  position: absolute;
+  right: 0px;
+  z-index: 999;
+}
+.xv-list.xv-grid-list {
+  background: #f8f8f8;
+}
+.xv-list.xv-grid-list .xv-list-item > * {
+  vertical-align: top;
+}
+.xv-list.xv-grid-list .xv-list-item {
+  padding-top: 7px !important;
+  padding-bottom: 9px !important;
+  border-bottom: 1px solid #aaaaaa !important;
+  background: #f8f8f8;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected {
+  background: #226b9a;
+  background-color: #1f608c;
+  background-image: -moz-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#226b9a), to(#1a4f77));
+  background-image: -webkit-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: -o-linear-gradient(top, #226b9a, #1a4f77);
+  background-image: linear-gradient(to bottom, #226b9a, #1a4f77);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr {
+  color: #ffffff;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.placeholder {
+  font-style: italic;
+  color: #99ccff;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
+  color: #f49200;
+}
+.xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.header {
+  background: #99ccff;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column {
+  vertical-align: top;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column .xv-list-attr {
+  font-size: 12px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.last {
+  border-right: none;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.name-column {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.first {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.second {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.third {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.short {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.small {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.medium {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column.descr {
+  padding-left: 7px;
+}
+.xv-list.xv-grid-list .xv-list-item .xv-list-column .xv-list-attr {
+  padding: 0px;
+}
+.xv-list-attr {
   padding: 5px;
+  font-size: .8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #070707;
 }
-.xv-sort-popup .xv-groupbox > *:last-child .onyx-button {
-  margin: 3px;
+.xv-list-attr.header {
+  padding: 4px;
+  background: #8d8d8d;
+  font-size: .7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
 }
-.xv-button-bar {
-  text-align: center;
+.xv-list-attr.footer {
+  padding: 4px;
+  background: #8d8d8d;
+  font-size: .7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #070707;
 }
-.xv-button-bar .onyx-button {
-  margin: 5px 5px 0 0;
+.xv-list-attr.right {
+  position: absolute;
+  right: 10px;
 }
-.xv-version-label {
-  padding: 10px;
+.xv-list-attr.text-align-right {
+  text-align: right;
 }
-/*
-  Media query for responsive design. This adapts to smaller
-  displays.
-*/
-@media (max-width: 480px) {
-  .pullout-menu {
-    display: block;
-    margin: 0;
-  }
-  .app-panels > * {
-    min-width: 100%;
-    max-width: 100%;
-  }
+.xv-list-attr.bold {
+  font-weight: bold;
 }
-/*
-  XV Views
-*/
+.xv-list-attr.error {
+  color: #ff0000;
+}
+.xv-list-attr.emphasis {
+  color: #009000;
+}
+.xv-list-attr.warn {
+  color: #ff9c00;
+}
+.xv-list-attr.italic {
+  font-style: italic;
+}
+.xv-list-attr.placeholder {
+  font-style: italic;
+  color: #696969;
+}
+.xv-list-attr.hyperlink {
+  color: blue;
+}
+.xv-list-attr.disabled {
+  color: #696969;
+}
 /* Navigator */
 .xv-navigator-header {
   font-size: small;
@@ -2455,7 +2067,215 @@ body {
   text-overflow: ellipsis;
   padding: 8px 0 0 8px;
 }
-/* Characteristics */
+/**
+  Styles relating to the parameter widget
+*/
+/**
+  Styles relating to widgets in the pullout
+*/
+/* Pullout */
+.xv-pullout-header {
+  text-align: center;
+  padding: 10px 0;
+}
+.pullout {
+  position: absolute;
+  top: 57px;
+  left: 0px;
+  bottom: 0;
+  width: 320px;
+  background: #dddddd;
+}
+.pullout .pullout-scroller {
+  position: relative;
+  margin-right: 4px;
+}
+.pullout .pullout-shadow {
+  position: absolute;
+  height: 100%;
+  width: 2px;
+  right: -2px;
+  /**
+      TODO: this is weird and indicates the REAL need to change the
+      whatever the css system is...this relative path is different...
+    **/
+
+  background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
+  background-size: 20px 2px;
+}
+.pullout .pullout-grabbutton {
+  position: absolute;
+  height: 54px;
+  width: 50px;
+  bottom: 20px;
+  right: -46px;
+  background-color: #dddddd;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+}
+.pullout .pullout-toolbar {
+  padding-top: 4px;
+  text-align: center;
+}
+.xv-groupbox.xv-parameter {
+  min-width: 280px;
+  max-width: 320px;
+  margin: 4px 0 8px 4px;
+  padding: 0;
+}
+.xv-groupbox.xv-parameter .top-drawer {
+  border-top: #aaaaaa 1px solid;
+  background-color: #dddddd;
+  color: #4c4c4c;
+  padding: 7px 0 7px 5px;
+}
+.xv-groupbox.xv-parameter .top-drawer > * {
+  margin-right: 10px;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .button-row {
+  background-color: #ffffff;
+  padding: 7px;
+  text-align: center;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .button-row .onyx-button {
+  margin-right: 3px;
+}
+.xv-groupbox.xv-parameter .xv-filter-form .xv-list {
+  height: 150px;
+}
+#app_pullout_container,
+#app_pullout_help,
+#app_pullout_help_helpPage {
+  height: 100%;
+}
+#app_pullout_help_helpPage {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+/* Parameter Widget */
+.xv-parameter-item {
+  background-color: #ffffff;
+}
+.xv-parameter-item .xv-label {
+  color: #070707;
+}
+.xv-parameter-item .xv-flexible-label {
+  color: #070707;
+}
+.xv-parameter-item .xv-picker {
+  width: 150px;
+}
+.xv-parameter-item .xv-radiogroup {
+  padding: 6px;
+  margin-left: 130px;
+}
+/* Layout Widget */
+.xv-tree {
+  background-color: #ffffff;
+}
+.xv-tree .xv-tree-node {
+  /* These picker styles are for the ListAttr node */
+
+}
+.xv-tree .xv-tree-node .xv-pickerwidget {
+  display: inline-block;
+  padding: 4px;
+}
+.xv-tree .xv-tree-node .xv-pickerwidget .xv-picker-label {
+  width: 50px;
+}
+/**
+  Misc styles for widgets
+*/
+/**
+  Styles relating to misc widgets
+*/
+.onyx-input-decorator {
+  border: 0;
+}
+.onyx-input-decorator input {
+  width: 150px;
+}
+.xv-inputwidget {
+  background-color: #ffffff;
+}
+.xv-relationwidget input,
+.xv-datewidget input {
+  width: 135px;
+}
+.xv-numberwidget input {
+  text-align: right;
+  width: 150px;
+}
+.xv-moneywidget {
+  background-color: #ffffff;
+  padding-top: 6px;
+  padding-bottom: 2px;
+}
+.xv-moneywidget .onyx-input-decorator {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+  margin-right: 5px;
+}
+.xv-moneywidget .onyx-input-decorator input,
+.xv-moneywidget .onyx-input-decorator .xv-money-label {
+  width: 85px;
+  text-align: right;
+}
+.xv-moneywidget .onyx-input-decorator.xv-currency-label {
+  width: 65px;
+}
+.xv-moneywidget .xv-picker-button {
+  width: 65px;
+  padding: 10px 4px;
+}
+.spinner .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
+.spinner .buttons {
+  display: block;
+  padding: 0;
+  margin: 1px 0 1px 10px;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  color: #357ec7;
+  font-size: 20px;
+  border: none;
+}
+.spinner .slider {
+  margin: 15px 10px;
+}
+.spinner.xv-numberwidget input {
+  width: 120px;
+}
+.xv-dependency-picker .onyx-picker-decorator .onyx-button {
+  width: 280px;
+  margin-left: 6px;
+}
+.xv-dependency-button {
+  color: #357ec7;
+  font-size: 24px;
+  border: none;
+  background: transparent;
+}
+/**
+  Styles for characteristic pickers and buttons
+*/
+/**
+  Characteristics
+*/
 .xv-characteristic-picker .onyx-picker-decorator .onyx-button {
   width: 130px;
 }
@@ -2467,145 +2287,20 @@ body {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.xv-characteristic-button {
-  margin-right: 4px;
-}
 .xv-characteristic-buttons {
   margin: 8px;
 }
-.xv-popup-button {
-  margin: 4px;
+.xv-characteristic-button {
+  margin-left: 4px;
+  color: #357ec7;
+  font-size: 24px;
 }
-.xv-scroller {
-  background: #ffffff;
-}
-.xv-error {
-  color: #ff0000;
-}
-.xv-negative {
-  color: #c51616;
-}
-.xv-assignment-box .xv-decorated-label {
-  width: 85%;
-}
-.xv-assignment-box .xv-label {
-  width: 250px;
-}
-.xv-parameter-title {
-  padding-top: 8px;
-  font-size: large;
-  text-align: center;
-}
-/* CommentBox */
-.xv-comment-box {
-  /* Resets the margin/padding value for blockquote tag in comments */
-
-}
-.xv-comment-box .onxy-groupbox-header {
-  max-width: 320px;
-}
-.xv-comment-box .xv-comment-box-repeater {
-  background: #ffffff;
-  width: 320px;
-}
-.xv-comment-box .xv-comment-box-label {
-  padding: 5px;
-  font-size: small;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.xv-comment-box .xv-comment-box-textblock {
-  padding: 5px;
-  font-size: small;
-  overflow: hidden;
-}
-.xv-comment-box .xv-comment-box-textblock.disabled {
-  color: #696969;
-}
-.xv-comment-box blockquote {
-  margin: 0 15px 10px 15px;
-  padding: 0;
-}
-/*
-  XV Widgets
+/**
+  Styles relations to relation widgets
 */
-.xv-numberwidget input {
-  text-align: right;
-}
-.xv-addresswidget {
-  background-color: #ffffff;
-  padding: 4px;
-}
-.xv-addresswidget .xv-addresswidget-viewer {
-  border: 0;
-  font-size: medium;
-  display: inline;
-}
-.xv-addresswidget .xv-addresswidget-viewer.placeholder {
-  font-style: italic;
-  color: #93a1a1;
-}
-.xv-addresswidget .xv-addresswidget-viewer.hyperlink {
-  color: #0000ff;
-}
-.xv-addresswidget .xv-addresswidget-viewer.disabled {
-  color: #696969;
-}
-.xv-addresswidget-input-decorator {
-  background: #ffffff;
-  display: block;
-  margin: 4px;
-}
-.xv-addresswidget-input-decorator.short {
-  width: 40%;
-}
-.xv-addresswidget-combobox-decorator {
-  background: #ffffff;
-  display: block;
-  margin: 4px;
-  width: 80%;
-  padding-right: 0;
-}
-.xv-addresswidget-combobox-decorator .xv-combobox-input {
-  width: 80%;
-}
-.xv-addresswidget-combobox-decorator .xv-combobox {
-  padding: 0;
-  width: 100%;
-}
-.xv-addresswidget-input {
-  width: 100%;
-}
-.xv-addresswidget-button {
-  margin-right: 4px;
-}
-.xv-addresswidget-buttons {
-  margin-top: 4px;
-}
-.xv-button-section {
-  margin-top: 4px;
-  margin: 0;
-  background-color: #555555;
-}
-.xv-addresswidget-editor-header {
-  padding: 4px;
-}
-.xv-addresswidget-editor {
-  width: 320px;
-  padding: 8px;
-  padding-right: 16px;
-}
-.xv-addresslist-attr {
-  padding: 5px;
-  font-size: 13px;
-  white-space: normal;
-  overflow: auto;
-  color: #000;
-  background-color: #ffffff;
-}
-/* RelationWidget */
+/**
+  Styles relating to RelationWidgets
+*/
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
@@ -2615,12 +2310,13 @@ body {
 }
 .xv-relationwidget-column.left {
   padding-right: 18px;
-  color: #000;
+  color: #070707;
   width: 140px;
 }
 .xv-relationwidget-icon {
-  top: 2px;
+  top: 1px;
   left: 8px;
+  height: 30px;
   position: relative;
 }
 .xv-relationwidget-description {
@@ -2631,6 +2327,7 @@ body {
   font-size: small;
   padding-bottom: 4px;
   max-width: 325px;
+  color: black;
 }
 .xv-relationwidget-description.disabled {
   color: #696969;
@@ -2666,24 +2363,510 @@ body {
 .xv-short-relations-box.panel {
   width: 500px;
 }
-.xv-label {
-  width: 130px;
+/**
+  Styles for startup panel
+*/
+/**
+  Styles for the application startup
+*/
+.xv-startup-panel {
+  background: #333333;
+}
+.xv-startup-panel .xv-startup-divider {
+  width: 70%;
+  margin: 0 auto 8px auto;
+  top: 200px;
+  position: relative;
+  color: #f49200;
+  text-transform: uppercase;
+  font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+}
+.xv-startup-panel .xv-startup-progress {
+  width: 70%;
+  margin: 0 auto 0 auto;
+  top: 200px;
+  position: relative;
+}
+.xv-addresswidget {
+  background-color: #ffffff;
+  padding: 4px;
+}
+.xv-addresswidget .xv-addresswidget-viewer {
+  border: 0;
+  font-size: medium;
+  display: inline;
+}
+.xv-addresswidget .xv-addresswidget-viewer.placeholder {
+  font-style: italic;
+  color: #93a1a1;
+}
+.xv-addresswidget .xv-addresswidget-viewer.hyperlink {
+  color: #0000ff;
+}
+.xv-addresswidget .xv-addresswidget-viewer.disabled {
+  color: #696969;
+}
+.xv-addresswidget .xv-addresswidget-buttons {
+  margin-top: 4px;
+}
+.xv-addresswidget .xv-addresswidget-buttons .xv-addresswidget-button {
+  margin-right: 4px;
+}
+.xv-addresswidget-input-decorator,
+.xv-addresswidget-combobox-decorator {
+  background: #ffffff;
+  display: block;
+  margin: 4px;
+}
+.xv-addresswidget-input-decorator input,
+.xv-addresswidget-combobox-decorator input {
+  width: 100%;
+}
+.xv-addresswidget-input-decorator .enyo-fittable-columns-layout > *,
+.xv-addresswidget-combobox-decorator .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
+.xv-addresswidget-input-decorator.short,
+.xv-addresswidget-combobox-decorator.short {
+  width: 40%;
+}
+.xv-addresswidget-combobox-decorator {
+  width: 60%;
+}
+.xv-button-section .xv-addresswidget-buttons {
+  margin: 0;
+  background-color: #555555;
+}
+.xv-addresswidget-editor-header {
+  padding: 4px;
+}
+.xv-addresswidget-editor {
+  width: 320px;
+  padding: 8px;
+  padding-right: 16px;
+}
+.xv-addresslist-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: normal;
+  overflow: auto;
+  color: #070707;
+  background-color: #ffffff;
+}
+/**
+  Styles relating to the groupbox and widgets contained
+    by a groupbox
+*/
+/*
+  Styles relating to the groupbox
+*/
+.xv-groupbox {
+  min-width: 320px;
+  padding: 8px;
+  margin-right: 5px;
+}
+.xv-groupbox .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
+.xv-groupbox.editor {
+  min-width: 250px;
+  padding: 0;
+  margin: 0;
+}
+.xv-groupbox.in-panel {
+  padding: 0;
+  margin: 0;
+}
+.xv-groupbox .in-panel > *:first-child {
+  border-top-color: #aaaaaa;
+  border-top: none;
+  border-width: 1px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.xv-groupbox .in-panel > *:last-child {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  border-bottom: none;
+}
+.xv-groupbox > .in-panel .editor {
+  border-right: none;
+}
+.xv-groupbox.panel {
+  min-width: 330px;
+}
+.xv-groupbox.small-panel {
+  width: 600px;
+}
+.xv-groupbox.medium-panel {
+  width: 700px;
+}
+.xv-groupbox.large-panel {
+  width: 800px;
+}
+.xv-groupbox > .onyx-input-decorator {
+  border-color: #aaaaaa;
+  border-width: 0 1px 1px 1px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child {
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > .onyx-input-decorator:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox > * {
+  display: block;
+  border: 1px #aaaaaa solid;
+  border-top-width: 0;
+  /* reset styles that make 'item' look bad if they happen to be there */
+
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  margin: 0;
+}
+.xv-groupbox > *:first-child {
+  border-top-color: #aaaaaa;
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > *:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > *:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox-header {
+  padding: 5px 10px;
+  color: #ffffff;
+  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #333333;
+  border: none;
+  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
+}
+.xv-groupbox-buttons {
+  border: none;
+}
+.xv-groupbox-buttons .xv-groupbox-button-single {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox-buttons .xv-groupbox-button-center {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.xv-groupbox-buttons .xv-groupbox-button-left {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox-buttons .xv-groupbox-button-right {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+body {
+  font-family: "arial", "arial black";
+  font-size: 100%;
+}
+.bggrad {
+  /* Radial Gradient */
+
+  background-color: #333333;
+  background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(#696969), to(#333333));
+  background-image: -webkit-radial-gradient(circle, #696969, #333333);
+  background-image: -moz-radial-gradient(circle, #696969, #333333);
+  background-image: -o-radial-gradient(circle, #696969, #333333);
+  background-repeat: no-repeat;
+  background-color: #999999;
+}
+.app > * {
+  width: 320px;
+  height: 100%;
+  -webkit-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
+  background: #696969;
+}
+/*
+  Media query for responsive design. This adapts to smaller
+  displays.
+*/
+@media (max-width: 480px) {
+  .pullout-menu {
+    display: block;
+    margin: 0;
+  }
+  .app > * {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+.panels > * {
+  border: 2px solid #333333;
+  font-size: 5em;
+}
+.wide > * {
+  min-width: 50%;
+}
+.scroll-ios {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+/**
+  Sets a fixed height on all of the toolbars
+  so that they're not dependent on the icon height
+*/
+.onyx-menu-toolbar {
+  height: 57px;
+}
+.item {
+  position: relative;
+  padding: 16px 12px;
+  background-color: #333333;
+  border-bottom: 1px solid #0e0e0e;
+}
+.item.onyx-selected {
+  background-color: #357ec7;
+}
+.onyx-button.save {
+  background-color: #35a8ee;
+}
+.left {
+  color: #ffffff;
+}
+.text-shadow-none {
+  text-shadow: none;
+}
+.text-shadow-0 {
+  text-shadow: 0 0 #070707;
+}
+.xv-my-account-popup {
+  background-color: #ffffff;
+  color: #000;
+}
+.xv-my-account-popup .xv-message {
+  color: red;
+  padding: 5px;
+}
+.xv-my-account-popup .onyx-button {
+  margin: 0 auto 0 auto;
+}
+.xv-my-account-popup .onyx-input {
+  padding-left: 10px;
+  float: right;
+}
+.xv-action-icon .onyx-icon-button {
+  margin-top: 0;
+}
+.xv-sort-icon .onyx-icon-button {
+  margin-top: 7px;
+  margin-bottom: -3px;
+}
+.xv-sort-popup {
+  background-color: #ffffff;
+  color: #070707;
+}
+.xv-sort-popup .xv-groupbox > *:last-child {
+  text-align: center;
+  padding: 5px;
+}
+.xv-sort-popup .xv-groupbox > *:last-child .onyx-button {
+  margin: 3px;
+}
+.xv-button-bar {
+  text-align: center;
+}
+.xv-button-bar .onyx-button {
+  margin: 5px 5px 0 0;
+}
+.xv-version-label {
+  padding: 10px;
+}
+.xv-navigator-header {
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ff6600;
+  padding-left: 20px;
+  border-bottom: 1px solid #0e0e0e;
+}
+.xv-workspace-header {
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 0 0 8px;
+}
+.xv-popup-button {
+  margin: 4px;
+}
+.xv-scroller {
+  background: #ffffff;
+}
+.xv-error {
+  color: #ff0000;
+}
+.xv-negative {
+  color: #c51616;
+}
+.xv-assignment-box .xv-flexible-label {
+  width: 85%;
+}
+.xv-assignment-box .xv-label {
+  width: 250px;
+}
+.xv-parameter-title {
+  padding-top: 8px;
+  font-size: large;
+  text-align: center;
+}
+.xv-comment-box {
+  /* Resets the margin/padding value for blockquote tag in comments */
+
+}
+.xv-comment-box .onxy-groupbox-header {
+  max-width: 320px;
+}
+.xv-comment-box .xv-comment-box-repeater {
+  background: #ffffff;
+  width: 320px;
+}
+.xv-comment-box .xv-comment-box-label {
+  padding: 5px;
+  font-size: small;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-comment-box .xv-comment-box-textblock {
+  font-size: small;
+  overflow: hidden;
+}
+.xv-comment-box .xv-comment-box-textblock.disabled {
+  color: #696969;
+}
+.xv-comment-box blockquote {
+  margin: 0 15px 10px 15px;
+  padding: 0;
+}
+.icon-folder-open-alt,
+.icon-calendar,
+.icon-sort {
+  color: #357ec7;
+  vertical-align: middle;
+}
+.xv-label,
+.xv-flexible-label {
   padding: 8px;
   text-align: right;
 }
-.xv-label.disabled {
+.xv-label.disabled,
+.xv-flexible-label.disabled {
   color: #696969;
 }
-.xv-decorated-label {
+/**
+  This label style has a fixed width, while
+  the flexible label depends on a fit: true
+*/
+.xv-label {
   width: 130px;
-  padding: 14px 8px 8px 8px;
-  text-align: right;
-}
-.xv-decorated-label.disabled {
-  color: #696969;
 }
 .xv-short-textarea .xv-textarea-input {
-  min-height: 0px;
+  min-height: 0;
 }
 .xv-textarea-input {
   width: 90%;
@@ -2691,7 +2874,7 @@ body {
   min-height: 100px;
   margin: 6px;
   border: #ddd 2px solid;
-  color: #000000;
+  color: #070707;
 }
 .xv-documents-picker-label {
   width: 85px;
@@ -2714,9 +2897,12 @@ body {
 .xv-menuitem.disabled {
   color: #696969;
 }
-/* This is for styling the moved items in the more toolbar*/
+/* This is for styling the moved items in the more toolbar */
 .xv-toolbar-moved {
   width: 220px;
+}
+.xv-toolbar-label {
+  width: 180px;
 }
 .xv-totals-panel {
   padding: 0;

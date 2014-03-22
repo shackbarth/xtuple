@@ -5,21 +5,67 @@
 
 /* Entire box including the grid and the summary panel */
 .xv-grid-box {
-  &.panel {
-    width: 765px;
+
+  &.small-panel {
+    width: 600px;
+  }
+
+  &.medium-panel {
+    width: 700px;
+  }
+
+  &.large-panel {
+    width: 800px;
   }
 
   .enyo-list-page {
     > *:first-child {
       .xv-grid-row {
-        border-top: 0px;  
+        border-top: 0;
       }
     }
   }
 
   .xv-above-grid-list {
-    border: 0px;
+    border: 0;
   }
+
+  .xv-scroller {
+    background: @ghost;
+  }
+
+  .xv-grid-attr {
+    &.bold {
+    font-weight: bold;
+    }
+    &.error {
+      color: @bright-red;
+    }
+    &.emphasis {
+      color: @green;
+    }
+    &.warn {
+      color: @light-orange;
+    }
+    &.italic {
+      font-style: italic;
+    }
+    &.placeholder {
+      font-style: italic;
+      color: @blue-gray;
+    }
+    &.hyperlink {
+      color: blue;
+    }
+  }
+
+  .xv-gridbox-button {
+    color: @slate-blue;
+    font-size: 18px;
+    border: none;
+    background: transparent;
+  }
+
 
   /**
     This is the most general grid row that
@@ -27,7 +73,8 @@
   */
   .xv-grid-row {
     font-size: 12px;
-    border-top: 1px solid @silver;
+    background-color: @gray;
+    border-bottom: 1px solid @silver;
     > * {
       display: inline-block;
     }
@@ -37,30 +84,33 @@
       This is the grid header row
     */
     .xv-grid-header {
-      background-color: @charcoal;
+      background-color: @gray;
       color: @white;
-      font-size: 12px;
+      font-size: .8em;
       font-weight: bold;
       text-transform: uppercase;
-      border-top: none;
-      border-right: 1px solid @header-gray;
-      border-bottom: 1px solid @header-gray;
+      padding-top: 4px;
       &.last {
         border-right: none;
       }
     }
     > * {
-      padding: 7px 10px;
+      padding: 6px 4px;
+      border: none;
     }
 
     .line-number {
       vertical-align: top;
       width: 30px;
+      text-align: right;
     }
     .grid-actions {
       display: block;
       padding-left: 30px;
-      width: 276px !important;
+      border-radius: 4px;
+      border-width: 0;
+      background: @earl-grey;
+      margin: 6px;
       > * {
         display: inline-block;
         width: 100%;
@@ -72,19 +122,26 @@
     }
     .quantity {
       vertical-align: top;
+      text-align: right;
       width: 100px;
     }
-    .discount {
+    .percent {
       vertical-align: top;
+      text-align: right;
       width: 90px;
     }
     .price {
       vertical-align: top;
+      text-align: right;
       width: 90px;
     }
-    .schedule {
+    .date {
       vertical-align: top;
-      width: 110px;
+      width: 105px;
+    }
+    .user {
+      vertical-align: top;
+      width: 100px;
     }
 
     &.readonly {
@@ -95,18 +152,17 @@
     &.selected {
       background-color: @white;
       border: 1px solid @bright-orange;
-      border-top: 1px solid @bright-orange;
-      border-bottom: 1px solid @bright-orange;
       .xv-grid-column {
         .onyx-input-decorator {
           .tightened-input-decorator;
         }
         .onyx-picker-decorator {
           padding-top: 6px;
+          width: 100%;
           .onyx-button {
-            height: 20px;
+            height: 26px;
             padding-top: 3px;
-            width: 80px;
+            width: 100%;
             font-size: 13px;
           }
         }
@@ -118,11 +174,14 @@
           padding-top: 0;
           .onyx-input-decorator {
             padding: 0;
-            width: 105px;
+            width: 100%;
             input {
-              width: 65px;
+              width: 85%;
               font-size: 13px;
             }
+          }
+          .xv-input {
+            padding-top: 0;
           }
         }
         .xv-numberwidget {
@@ -131,59 +190,54 @@
             .tightened-input-decorator;
           }
         }
-        &.line-number {
-          .xv-numberwidget {
-            .onyx-input-decorator {
-              .tightened-input-decorator(30px);
-            }
-          }
-        }
         .xv-combobox {
-          padding-left: 0px;
-          .xv-combobox-input {
+          padding-left: 0;
+          input {
+            padding-top: 3px;
+            width: 80px;
             font-size: 13px;
-            width: 50px;
-          }
-          .xv-combobox-icon {
-            width: 20px;
           }
         }
         .xv-moneywidget {
+          padding-bottom: 0;
           .onyx-input-decorator {
             .tightened-input-decorator;
           }
         }
         .xv-relationwidget {
           .onyx-input-decorator {
-            width: 150px;
+            width: 100%;
+            padding-top: 6px;
           }
           .onyx-input {
-            width: 100px;
+            width: 85%;
+            padding-right: 4px;
+          }
+        }
+        .xv-useraccount-widget {
+          // Hack: we shouldn't have to force this.
+          .xv-subinput {
+            width: 80px;
+            height: 16px;
           }
         }
         .xv-subinput {
-          width: 80px;
+          width: 100%;
         }
         .xv-input {
           padding-top: 6px;
-          width: 80px;
+          width: 100%;
         }
-        .xv-label {
-          display: none;
-        }
-        .xv-decorated-label {
+        .xv-label, .xv-flexible-label, .xv-relationwidget-secondarydescription {
           display: none;
         }
         .xv-relationwidget-description {
           text-indent: 0;
           padding-bottom: 0;
-        }
-        .xv-relationwidget-secondarydescription {
-          display: none;
+          padding-top: 8px;
         }
         .xv-private-item-site-widget {
           border-bottom: 0;
-          padding: 0;
         }
       }
     }
@@ -192,26 +246,26 @@
     .xv-sales-summary-panel {
       border: none;
       margin-top: 0;
-      padding-left: 0px;
-      padding-right: 0px;
+      padding-left: 0;
+      padding-right: 0;
       .xv-sales-summary-total-group {
         padding: 0;
         border: none;
         .xv-moneywidget {
-          padding-bottom: 0px;
-          padding-top: 0px;
+          padding-bottom: 0;
+          padding-top: 0;
           .xv-input-decorator {
-            padding-bottom: 0px;
-            padding-top: 0px;
+            padding-bottom: 0;
+            padding-top: 0;
           }
         }
         .xv-numberwidget {
-          padding-bottom: 0px;
-          padding-top: 0px;
+          padding-bottom: 0;
+          padding-top: 0;
           .xv-input-decorator {
             width: 163px;
-            padding-bottom: 0px;
-            padding-top: 0px;
+            padding-bottom: 0;
+            padding-top: 0;
           }
         }
       }
@@ -219,12 +273,18 @@
   }
 }
 
-.tightened-input-decorator (@width: 90px) {
+.xv-grid-list {
+  .xv-list-column {
+    vertical-align: top !important;
+  }
+}
+
+.tightened-input-decorator (@width: 100%) {
   padding: 0;
   width: @width;
+  margin: 0;
   input {
-    text-align: left;
-    width: (@width - 10px);
+    width: (@width);
     font-size: 13px;
   }
 }

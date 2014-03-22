@@ -1,4 +1,7 @@
 create or replace function xt.orm_did_change() returns trigger as $$
+
+return (function () {
+
   var view,
     views = [],
     lockTable,
@@ -96,4 +99,7 @@ create or replace function xt.orm_did_change() returns trigger as $$
   }
 
   return NEW;
+
+}());
+
 $$ language plv8;

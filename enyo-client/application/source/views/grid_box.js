@@ -4,99 +4,24 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
 
 (function () {
 
-  enyo.kind({
-    name: "XV.SalesOrderLineItemHeaders",
-    classes: "xv-grid-row",
-    components: [
-      {classes: "xv-grid-header line-number", content: "#" },
-      {classes: "xv-grid-header grid-item", content: "_item".loc()},
-      {classes: "xv-grid-header quantity", content: "_quantity".loc()},
-      {classes: "xv-grid-header discount", content: "_discount".loc()},
-      {classes: "xv-grid-header price", content: "_price".loc()},
-      {classes: "xv-grid-header schedule", content: "_schedDate".loc()}
-    ]
-  });
+  // ..........................................................
+  // INVOICE
+  //
 
   enyo.kind({
-    name: "XV.SalesOrderLineItemReadOnlyGridRow",
-    kind: "XV.ReadOnlyGridRow",
-    components: [
-      {classes: "xv-grid-column line-number", components: [
-        {name: "lineNumber"}
+    name: "XV.InvoiceLineItemGridBox",
+    kind: "XV.GridBox",
+    classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
+    title: "_lineItems".loc(),
+    columns: [
+      {classes: "line-number", header: "#", rows: [
+        {readOnlyAttr: "lineNumber",
+          editor: {kind: "XV.NumberWidget", attr: "lineNumber"}}
       ]},
-      {classes: "xv-grid-column grid-item", components: [
-        {name: "itemNumber"},
-        {name: "itemDescription"},
-        {name: "siteCode"},
-      ]},
-      {classes: "xv-grid-column quantity", components: [
-        {name: "quantity"},
-        {name: "quantityUnit"}
-      ]},
-      {classes: "xv-grid-column discount", components: [
-        {name: "discount"}
-      ]},
-      {classes: "xv-grid-column price", components: [
-        {name: "price"},
-        {name: "priceUnit"},
-        {name: "extendedPrice"}
-      ]},
-      {classes: "xv-grid-column schedule", components: [
-        {name: "scheduleDate"}
-      ]}
-    ],
-    valueChanged: function () {
-      var model = this.getValue(),
-        quantity = model.get("quantity"),
-        discount = model.get("discount"),
-        price = model.get("price"),
-        locale = XT.locale;
-
-      if (!model) {
-        return;
-      }
-      this.$.lineNumber.setContent(model.get("lineNumber"));
-      this.$.itemNumber.setContent(model.getValue("item.number") || "_required".loc());
-      this.$.itemNumber.addRemoveClass("xv-error", !model.getValue("item.number"));
-      this.$.itemDescription.setContent(model.getValue("item.description1"));
-      this.$.siteCode.setContent(model.getValue("site.code"));
-
-      this.$.quantity.addRemoveClass("xv-error", !quantity);
-      quantity = _.isNumber(quantity) ? Globalize.format(quantity, "n" + locale.quantityScale) : "_required".loc();
-      this.$.quantity.setContent(quantity);
-
-      this.$.quantityUnit.setContent(model.getValue("quantityUnit.name"));
-      discount = _.isNumber(discount) ? Globalize.format(discount, "p" + XT.PERCENT_SCALE) : "";
-      this.$.discount.setContent(discount);
-
-      this.$.price.addRemoveClass("xv-error", !_.isNumber(price));
-      this.$.price.setContent(Globalize.format(price, "n" + locale.salesPriceScale) || "_required".loc());
-      this.$.priceUnit.setContent(model.getValue("priceUnit.name"));
-      this.$.extendedPrice.setContent(Globalize.format(model.get("extendedPrice"), "n" + locale.extendedPriceScale));
-
-      this.$.scheduleDate.setContent(Globalize.format(XT.date.applyTimezoneOffset(model.get("scheduleDate"), true), "d"));
-    }
-  });
-
-  //
-  // The implementation of GridRow and GridBox is here in the workspace kind.
-  // We could move them to a grid_box.js if we want. It is currently the only
-  // implementation of GridRow and GridBox. Once we have a second, we'll probably
-  // want to generalize this code and move it to enyo-x.
-  //
-  var salesOrderGridRow = {
-    name: "XV.SalesOrderLineItemGridRow",
-    kind: "XV.GridRow",
-    components: [
-      // each field is grouped with its column header so that the alignment always
-      // works out. All but the first column header will be invisible.
-      {classes: "xv-grid-column line-number", components: [
-        // Using XV.NumberWidget instead of XV.Number here (and elsewhere) because
-        // of the pretty rounded corners, even though we have to hide the label with css
-        {kind: "XV.NumberWidget", attr: "lineNumber"}
-      ]},
-      {classes: "xv-grid-column grid-item", components: [
-        {kind: "XV.ItemSiteWidget", attr:
+      {classes: "grid-item", header: ["_item".loc(), "_site".loc()], rows: [
+        {readOnlyAttr: "item.number",
+          editor: {kind: "XV.ItemSiteWidget", attr:
           {item: "item", site: "site"},
           name: "itemSiteWidget",
           query: {parameters: [
@@ -104,94 +29,256 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true, str
           {attribute: "item.isActive", value: true},
           {attribute: "isSold", value: true},
           {attribute: "isActive", value: true}
-        ]}},
+        ]}}},
+        {readOnlyAttr: "item.description1"},
+        {readOnlyAttr: "site.code"}
       ]},
-      {classes: "xv-grid-column quantity", components: [
-        {kind: "XV.QuantityWidget", attr: "quantity", name: "quantityWidget"},
-        {kind: "XV.UnitCombobox", attr: "quantityUnit", name: "quantityUnitPicker",
-          tabStop: false }
+      {classes: "quantity", header: ["_ordered".loc(), "_billed".loc()], rows: [
+        {readOnlyAttr: "quantity",
+          editor: {kind: "XV.QuantityWidget", attr: "quantity",
+            name: "quantityWidget"}},
+        {readOnlyAttr: "billed",
+          editor: {kind: "XV.QuantityWidget", attr: "billed", placeholder: "_billed".loc(),
+            name: "billedWidget"}},
+        {readOnlyAttr: "quantityUnit.name",
+          editor: {kind: "XV.UnitCombobox", attr: "quantityUnit",
+            name: "quantityUnitPicker", tabStop: false }}
       ]},
-      {classes: "xv-grid-column discount", components: [
-        {kind: "XV.PercentWidget", name: "discount", attr: "discount" }
-      ]},
-      {classes: "xv-grid-column price", components: [
-        {kind: "XV.MoneyWidget", attr:
-          {localValue: "price", currency: ""},
-          currencyDisabled: true, currencyShowing: false, scale: XT.SALES_PRICE_SCALE},
-        {kind: "XV.UnitCombobox", attr: "priceUnit", name: "priceUnitPicker",
-          tabStop: false},
-        {kind: "XV.MoneyWidget", attr:
-          {localValue: "extendedPrice", currency: ""},
-          currencyDisabled: true, currencyShowing: false, scale: XT.EXTENDED_PRICE_SCALE}
-      ]},
-      {classes: "xv-grid-column schedule", components: [
-        {kind: "XV.DateWidget", attr: "scheduleDate"}
-      ]},
-      {classes: "xv-grid-column grid-actions", components: [
-        {components: [
-          {kind: "enyo.Button",
-            classes: "icon-plus xv-gridbox-button",
-            name: "addGridRowButton",
-            onkeyup: "addButtonKeyup" },
-          {kind: "enyo.Button", attributes: {tabIndex: "-1"},
-            classes: "icon-search xv-gridbox-button",
-            name: "expandGridRowButton" },
-          {kind: "enyo.Button", attributes: {tabIndex: "-1"},
-            classes: "icon-remove-sign xv-gridbox-button",
-            name: "deleteGridRowButton" }
-        ]}
+      {classes: "price", header: ["_price".loc(), "_extendedPrice".loc()], rows: [
+        {readOnlyAttr: "price",
+          editor: {kind: "XV.MoneyWidget",
+            attr: {localValue: "price", currency: ""},
+            currencyDisabled: true, currencyShowing: false,
+            scale: XT.SALES_PRICE_SCALE}},
+        {readOnlyAttr: "priceUnit.name",
+          editor: {kind: "XV.UnitCombobox", attr: "priceUnit",
+            name: "priceUnitPicker",
+            tabStop: false}},
+        {readOnlyAttr: "extendedPrice",
+          editor: {kind: "XV.MoneyWidget",
+            attr: {localValue: "extendedPrice", currency: ""},
+            currencyDisabled: true, currencyShowing: false,
+            scale: XT.EXTENDED_PRICE_SCALE}}
       ]}
-    ]
-  };
+    ],
+    //editorMixin: salesOrderGridRow,
+    summary: "XV.SalesSummaryPanel",
+    workspace: "XV.InvoiceLineWorkspace",
+    parentKey: "invoice"
+  });
 
+  // ..........................................................
+  // RETURN (only change from invoice is billed->credited
+  //
+
+  enyo.kind({
+    name: "XV.ReturnLineItemGridBox",
+    kind: "XV.GridBox",
+    classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
+    title: "_lineItems".loc(),
+    columns: [
+      {classes: "line-number", header: "#", rows: [
+        {readOnlyAttr: "lineNumber",
+          editor: {kind: "XV.NumberWidget", attr: "lineNumber"}}
+      ]},
+      {classes: "grid-item", header: ["_item".loc(), "_site".loc()], rows: [
+        {readOnlyAttr: "item.number",
+          editor: {kind: "XV.ItemSiteWidget", attr:
+          {item: "item", site: "site"},
+          name: "itemSiteWidget",
+          query: {parameters: [
+          {attribute: "item.isSold", value: true},
+          {attribute: "item.isActive", value: true},
+          {attribute: "isSold", value: true},
+          {attribute: "isActive", value: true}
+        ]}}},
+        {readOnlyAttr: "item.description1"},
+        {readOnlyAttr: "site.code"}
+      ]},
+      {classes: "quantity", header: ["_ordered".loc(), "_credited".loc()], rows: [
+        {readOnlyAttr: "quantity",
+          editor: {kind: "XV.QuantityWidget", attr: "quantity",
+            name: "quantityWidget"}},
+        {readOnlyAttr: "billed",
+          editor: {kind: "XV.QuantityWidget", attr: "credited", placeholder: "_credited".loc(),
+            name: "creditedWidget"}},
+        {readOnlyAttr: "quantityUnit.name",
+          editor: {kind: "XV.UnitCombobox", attr: "quantityUnit",
+            name: "quantityUnitPicker", tabStop: false }}
+      ]},
+      {classes: "price", header: ["_price".loc(), "_extendedPrice".loc()], rows: [
+        {readOnlyAttr: "price",
+          editor: {kind: "XV.MoneyWidget",
+            attr: {localValue: "price", currency: ""},
+            currencyDisabled: true, currencyShowing: false,
+            scale: XT.SALES_PRICE_SCALE}},
+        {readOnlyAttr: "priceUnit.name",
+          editor: {kind: "XV.UnitCombobox", attr: "priceUnit",
+            name: "priceUnitPicker",
+            tabStop: false}},
+        {readOnlyAttr: "extendedPrice",
+          editor: {kind: "XV.MoneyWidget",
+            attr: {localValue: "extendedPrice", currency: ""},
+            currencyDisabled: true, currencyShowing: false,
+            scale: XT.EXTENDED_PRICE_SCALE}}
+      ]}
+    ],
+    //editorMixin: salesOrderGridRow,
+    summary: "XV.SalesSummaryPanel",
+    workspace: "XV.ReturnLineWorkspace",
+    parentKey: "return"
+  });
+
+  // ..........................................................
+  // SALES ORDER / QUOTE
+  //
+
+  var salesOrderGridRow = {};
   enyo.mixin(salesOrderGridRow, XV.LineMixin);
   enyo.mixin(salesOrderGridRow, XV.SalesOrderLineMixin);
-  enyo.kind(salesOrderGridRow);
 
   enyo.kind({
     name: "XV.SalesOrderLineItemGridBox",
     kind: "XV.GridBox",
-    associatedWorkspace: "XV.SalesOrderLineWorkspace",
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_lineItems".loc()},
-      {kind: "XV.SalesOrderLineItemHeaders"},
-      {kind: "XV.Scroller", name: "mainGroup", horizontal: "hidden", fit: true, components: [
-        {kind: "List", name: "aboveGridList", classes: "xv-above-grid-list",
-            onSetupItem: "setupRowAbove", ontap: "gridRowTapAbove", components: [
-          { kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "aboveGridRow"}
-        ]},
-        {kind: "XV.SalesOrderLineItemGridRow", name: "editableGridRow", showing: false},
-        {kind: "List", name: "belowGridList", classes: "xv-below-grid-list",
-            onSetupItem: "setupRowBelow", ontap: "gridRowTapBelow", components: [
-          {kind: "XV.SalesOrderLineItemReadOnlyGridRow", name: "belowGridRow"}
-        ]},
+    classes: "medium-panel",
+    orderBy: [{attribute: 'lineNumber'}],
+    title: "_lineItems".loc(),
+    columns: [
+      {classes: "line-number", header: "#", rows: [
+        {readOnlyAttr: "lineNumber",
+          editor: {kind: "XV.NumberWidget", attr: "lineNumber"}}
       ]},
-      {
-        kind: "FittableColumns",
-        name: "navigationButtonPanel",
-        classes: "xv-groupbox-buttons",
-        components: [
-          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
-            content: "_new".loc(), classes: "xv-groupbox-button-single"}
-        ]
-      },
-      {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
+      {classes: "grid-item",
+        header: ["_item".loc(), "_description".loc(), "_site".loc()],
+        rows: [
+        {readOnlyAttr: "item.number",
+          editor: {kind: "XV.ItemSiteWidget", attr:
+          {item: "item", site: "site"},
+          name: "itemSiteWidget",
+          query: {parameters: [
+          {attribute: "item.isSold", value: true},
+          {attribute: "item.isActive", value: true},
+          {attribute: "isSold", value: true},
+          {attribute: "isActive", value: true}
+        ]}}},
+        {readOnlyAttr: "item.description1"},
+        {readOnlyAttr: "site.code"}
+      ]},
+      {classes: "quantity",
+        header: ["_quantity".loc(), "_unit".loc(), "_status".loc()],
+        rows: [
+        {readOnlyAttr: "quantity",
+          editor: {kind: "XV.QuantityWidget", attr: "quantity",
+            name: "quantityWidget"}},
+        {readOnlyAttr: "quantityUnit.name",
+          editor: {kind: "XV.UnitCombobox", attr: "quantityUnit",
+            name: "quantityUnitPicker", tabStop: false }},
+        {readOnlyAttr: "formatStatus",
+          editor: {kind: "XV.SalesOrderStatusPicker", attr: "status",
+            name: "salesOrderStatusPicker"}}
+      ]},
+      {classes: "percent", header: "_discount".loc(), rows: [
+        {readOnlyAttr: "discount",
+          editor: {kind: "XV.PercentWidget", name: "discount",
+            attr: "discount" }}
+      ]},
+      {classes: "price", header: ["_price".loc(), "_unit".loc(), "_extended".loc()],
+        rows: [
+        {readOnlyAttr: "price",
+          editor: {kind: "XV.MoneyWidget",
+            attr: {localValue: "price", currency: ""},
+            currencyDisabled: true, currencyShowing: false,
+            scale: XT.SALES_PRICE_SCALE}},
+        {readOnlyAttr: "priceUnit.name",
+          editor: {kind: "XV.UnitCombobox", attr: "priceUnit",
+            name: "priceUnitPicker",
+            tabStop: false}},
+        {readOnlyAttr: "extendedPrice",
+          editor: {kind: "XV.MoneyWidget",
+            attr: {localValue: "extendedPrice", currency: ""},
+            currencyDisabled: true, currencyShowing: false,
+            scale: XT.EXTENDED_PRICE_SCALE}}
+      ]},
+      {classes: "date", header: "_scheduled".loc(), rows: [
+        {readOnlyAttr: "scheduleDate",
+          editor: {kind: "XV.DateWidget", attr: "scheduleDate"}}
+      ]}
     ],
-
-    /**
-      Set the current model into Summary Panel.
-    */
-    valueChanged: function () {
-      this.inherited(arguments);
-      var model = this.value.salesOrder || this.value.quote;
-      this.$.summaryPanel.setValue(model);
-    }
+    editorMixin: salesOrderGridRow,
+    summary: "XV.SalesSummaryPanel",
+    workspace: "XV.SalesOrderLineWorkspace",
+    parentKey: "salesOrder"
   });
+
+  var quoteGridRow = {};
+  enyo.mixin(quoteGridRow, XV.LineMixin);
+  enyo.mixin(quoteGridRow, XV.QuoteLineMixin);
 
   enyo.kind({
     name: "XV.QuoteLineItemGridBox",
     kind: "XV.SalesOrderLineItemGridBox",
-    associatedWorkspace: "XV.QuoteLineWorkspace"
+    workspace: "XV.QuoteLineWorkspace",
+    editorMixin: quoteGridRow,
+    parentKey: "quote"
   });
 
+  // ..........................................................
+  // WORKFLOW GRID BOX
+  //
+
+  enyo.kind({
+    name: "XV.WorkflowGridBox",
+    kind: "XV.GridBox",
+    classes: "small-panel",
+    title: "_workflow".loc(),
+    parentKey: "parent",
+    columns: [
+      {classes: "grid-item", header: ["_name".loc(), "_description".loc()],
+        rows: [
+        {readOnlyAttr: "name",
+          placeholder: "_name".loc(),
+          editor: {kind: "XV.InputWidget", attr: "name"}},
+        {readOnlyAttr: "description",
+          placeholder: "_description".loc(),
+          editor: {kind: "XV.InputWidget", attr: "description"}},
+        {readOnlyAttr: "getWorkflowStatusString",
+          editor: {kind: "XV.WorkflowStatusPicker", attr: "status"}}
+      ]},
+      {classes: "user", header: ["_owner".loc(), "_assignedTo".loc()],
+        rows: [
+        {readOnlyAttr: "owner.username",
+          placeholder: "_noOwner".loc(),
+          editor: {kind: "XV.UserAccountWidget", attr: "owner"}},
+        {readOnlyAttr: "assignedTo.username",
+          placeholder: "_noAssignedTo".loc(),
+          editor: {kind: "XV.UserAccountWidget", attr: "assignedTo"}},
+        {readOnlyAttr: "priority.name",
+          editor: {kind: "XV.PriorityPicker", attr: "priority"}}
+      ]},
+      {classes: "date", header: ["_start".loc(), "_due".loc()],
+        rows: [
+        {readOnlyAttr: "startDate",
+          placeholder: "_noStartDate".loc(),
+          editor: {kind: "XV.DateWidget", attr: "startDate"}},
+        {readOnlyAttr: "dueDate",
+          editor: {kind: "XV.DateWidget", attr: "dueDate"}}
+      ]},
+      {classes: "date", header: ["_assigned".loc(), "_completed".loc()],
+        rows: [
+        {readOnlyAttr: "assignDate",
+          placeholder: "_noAssignDate".loc(),
+          editor: {kind: "XV.DateWidget", attr: "assignDate"}},
+        {readOnlyAttr: "completeDate",
+          placeholder: "_noCompleteDate".loc(),
+          editor: {kind: "XV.DateWidget", attr: "completeDate"}}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkflowGridBox",
+    kind: "XV.WorkflowGridBox",
+    workspace: "XV.SalesOrderWorkflowWorkspace"
+  });
 }());

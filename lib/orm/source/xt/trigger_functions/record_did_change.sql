@@ -1,12 +1,21 @@
 create or replace function xt.record_did_change() returns trigger as $$
-/* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
-   See www.xm.ple.com/CPAL for the full text of the software license. */
+/* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+   See www.xtuple.com/CPAL for the full text of the software license. */
+
+return (function () {
+
+  if (typeof XT === 'undefined') {
+    plv8.execute("select xt.js_init();");
+  }
 
  var data = Object.create(XT.Data),
    table = TG_TABLE_SCHEMA + "." + TG_TABLE_NAME,
    oid = data.getTableOid(table),
    insert = TG_OP === 'INSERT',
    qry,
+   shareParams,
+   shareSql,
+   sourceCode,
    sql,
    pkey;
 
@@ -23,7 +32,7 @@ create or replace function xt.record_did_change() returns trigger as $$
          '    where indisprimary = true ' +
          '      and indrelid in ( ' +
          '        select oid ' +
-         '        from pg_class ' + 
+         '        from pg_class ' +
          '        where lower(relname) = $2)) ' +
          ' and pg_attribute.attrelid = pg_class.oid ' +
          ' and pg_attribute.attisdropped = false ';
@@ -49,13 +58,33 @@ create or replace function xt.record_did_change() returns trigger as $$
      sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);'
      plv8.execute(sql, [oid, NEW[pkey], XT.generateUUID()]);
 
+     /* Add the user that's creating this record to the xt.obj_share. */
+     if (NEW.obj_uuid && XT.username) {
+       /* TODO: Should they get update and delete access? */
+       shareSql = 'insert into xt.obj_share (obj_share_target_uuid, obj_share_username, obj_share_read) values ($1, $2, $3);'
+       shareParams = [
+         NEW.obj_uuid,
+         XT.username,
+         true
+       ];
+
+       if (DEBUG) {
+         XT.debug('Record Insert user share sql =', shareSql);
+         XT.debug('Record Insert user share values =', shareParams);
+       }
+
+       plv8.execute(shareSql, shareParams);
+     }
+
    /* delete version record if applicable */
    } else if (TG_OP === 'DELETE') {
      sql =  'delete from xt.ver where ver_table_oid = $1 and ver_record_id = $2';
      plv8.execute(sql, [oid, OLD[pkey]]);
      return OLD
    }
-   
+
    return NEW;
+
+}());
 
 $$ language plv8;

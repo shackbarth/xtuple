@@ -1,5 +1,5 @@
 select xt.create_view('xt.site', $$
-  select * from site();
+  select * from whsinfo;
 $$, false);
 
 create or replace rule "_INSERT" as on insert to xt.site do instead

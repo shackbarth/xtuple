@@ -1,0 +1,596 @@
+[
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "CashReceipt",
+    "table": "cashrcpt",
+    "idSequenceName": "cashrcpt_cashrcpt_id_seq",
+    "orderSequence": "CashRcptNumber",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Cash Receipt",
+    "privileges": {
+      "all": {
+        "create": "MaintainCashReceipts",
+        "read": true,
+        "update": "MaintainCashReceipts",
+        "delete": "MaintainCashReceipts"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcpt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cashrcpt_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "cashrcpt_docnumber"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "SalesCustomer",
+          "column": "cashrcpt_cust_id",
+          "required": true
+        }
+      },
+      {
+        "name": "useCustomerDeposit",
+        "attr": {
+          "type": "Boolean",
+          "column": "cashrcpt_usecustdeposit",
+          "required": true
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "cashrcpt_amount",
+          "required": true
+        }
+      },
+      {
+        "name": "appliedAmount",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cashrcpt_applied_amount(cashrcpt_id, true)"
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cashrcpt_balance(cashrcpt_id, cashrcpt_amount)"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "cashrcpt_curr_id",
+          "required": true
+        }
+      },
+      {
+        "name": "currencyRate",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcpt_curr_rate",
+          "required": true
+        }
+      },
+      {
+        "name": "fundsType",
+        "attr": {
+          "type": "String",
+          "column": "cashrcpt_fundstype",
+          "required": true
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "cashrcpt_docdate"
+        }
+      },
+      {
+        "name": "bankAccount",
+        "toOne": {
+          "type": "BankAccountRelation",
+          "column": "cashrcpt_bankaccnt_id",
+          "isNested": true,
+          "required": true
+        }
+      },
+      {
+        "name": "distributionDate",
+        "attr": {
+          "type": "Date",
+          "column": "cashrcpt_distdate"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "cashrcpt_notes"
+        }
+      },
+      {
+        "name": "applicationDate",
+        "attr": {
+          "type": "Date",
+          "column": "cashrcpt_applydate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "cashrcpt_posted",
+          "required": true
+        }
+      },
+      {
+        "name": "lineItems",
+        "toMany": {
+          "column": "cashrcpt_id",
+          "type": "CashReceiptLineListItem",
+          "inverse": "cashReceipt",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "CashReceiptLineListItem",
+    "table": "cashrcptitem",
+    "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
+    "isRest": true,
+    "comment": "Cash Receipt Line List Item",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "cashrcptitem_amount",
+          "required": true
+        }
+      },
+      {
+        "name": "discountAmount",
+        "attr": {
+          "type": "Money",
+          "column": "cashrcptitem_discount",
+          "required": true
+        }
+      },
+      {
+        "name": "cashReceipt",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_cashrcpt_id"
+        }
+      },
+      {
+        "name": "cashReceiptReceivable",
+        "toOne": {
+          "type": "CashReceiptReceivable",
+          "column": "cashrcptitem_aropen_id",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "CashReceiptLine",
+    "table": "cashrcptitem",
+    "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
+    "isRest": true,
+    "comment": "Cash Receipt Line Item",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "cashrcptitem_amount",
+          "required": true
+        }
+      },
+      {
+        "name": "discountAmount",
+        "attr": {
+          "type": "Money",
+          "column": "cashrcptitem_discount",
+          "required": true
+        }
+      },
+      {
+        "name": "cashReceipt",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_cashrcpt_id"
+        }
+      },
+      {
+        "name": "cashReceiptReceivable",
+        "toOne": {
+          "type": "CashReceiptReceivable",
+          "column": "cashrcptitem_aropen_id",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "CashReceiptLinePending",
+    "table": "xt.cashrcptitem_pending",
+    "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Pending Cash Receipt Line Item",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewCashReceipts",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "isApplied",
+        "attr": {
+          "type": "Boolean",
+          "column": "cashrcptitem_applied"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "cashrcptitem_amount",
+          "required": true
+        }
+      },
+      {
+        "name": "discountAmount",
+        "attr": {
+          "type": "Money",
+          "column": "cashrcptitem_discount",
+          "required": true
+        }
+      },
+      {
+        "name": "cashReceiptReceivable",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcptitem_aropen_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "CashReceiptRelation",
+    "table": "cashrcpt",
+    "idSequenceName": "cashrcpt_cashrcpt_id_seq",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Cash Receipt Relation",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewCashReceipts",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcpt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cashrcpt_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "cashrcpt_curr_id",
+          "required": true
+        }
+      },
+      {
+        "name": "currencyRate",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcpt_curr_rate",
+          "required": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "cashrcpt_cust_id",
+          "isNested": true,
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "CashReceiptReceivable",
+    "table": "aropen",
+    "idSequenceName": "aropen_aropen_id_seq",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Cash Receipt Receivable",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "aropen_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cashrcpt_receivable_balance(aropen_id)"
+        }
+      },
+      {
+        "name": "allPending",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cashrcpt_receivable_sum_amount(aropen_id, false)"
+        }
+      },
+      {
+        "name": "pendingApplications",
+        "toMany": {
+          "type": "CashReceiptLinePending",
+          "column": "aropen_id",
+          "inverse": "cashReceiptReceivable",
+          "isNested": true
+        }
+      },
+      {
+        "name": "receivable",
+        "toOne": {
+          "type": "ReceivableRelation",
+          "column": "aropen_id",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "billing",
+    "nameSpace": "XM",
+    "type": "CashReceiptListItem",
+    "table": "cashrcpt",
+    "isRest": true,
+    "comment": "Cash Receipt List Item",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewCashReceipts",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cashrcpt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cashrcpt_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "documentNumber",
+        "attr": {
+          "type": "String",
+          "column": "cashrcpt_docnumber",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "cashrcpt_amount"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerRelation",
+          "column": "cashrcpt_cust_id"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "isNested": true,
+          "type": "Currency",
+          "column": "cashrcpt_curr_id"
+        }
+      },
+      {
+        "name": "fundsType",
+        "attr": {
+          "type": "String",
+          "column": "cashrcpt_fundstype"
+        }
+      },
+      {
+        "name": "bankAccount",
+        "toOne": {
+          "isNested": true,
+          "type": "BankAccountRelation",
+          "column": "cashrcpt_bankaccnt_id"
+        }
+      },
+      {
+        "name": "distributionDate",
+        "attr": {
+          "type": "Date",
+          "column": "cashrcpt_distdate"
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "cashrcpt_posted"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

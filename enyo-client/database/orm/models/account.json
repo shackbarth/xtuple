@@ -22,7 +22,8 @@
         "update":"MaintainPersonalCRMAccounts",
         "delete":"MaintainPersonalCRMAccounts",
         "properties":[
-          "owner.username"
+          "owner.username",
+          "number"
         ]
       },
       "attribute": {
@@ -804,7 +805,8 @@
         "update":false,
         "delete":false,
         "properties":[
-          "owner.username"
+          "owner.username",
+          "number"
         ]
       }
     },
@@ -871,7 +873,8 @@
         "update":false,
         "delete":true,
         "properties":[
-          "owner.username"
+          "owner.username",
+          "number"
         ]
       }
     },

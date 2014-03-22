@@ -44,7 +44,8 @@ trailing:true, white:true*/
         {kind: "XV.InputWidget", attr: "address1"},
         {kind: "XV.InputWidget", attr: "address2"},
         {kind: "XV.InputWidget", attr: "city"},
-        {kind: "XV.CountryCombobox", attr: "country", name: "country", onValueChange: "countryChanged" },
+        {kind: "XV.CountryCombobox", attr: "country", name: "country",
+          onValueChange: "countryChanged" },
         {kind: "XV.StateCombobox", attr: "state", name: "state"},
         {kind: "XV.InputWidget", attr: "zip", label: "_postalCode".loc()},
         {kind: "XV.CreditCardTypePicker", attr: "creditCardType", label: "_type".loc()},
@@ -141,6 +142,105 @@ trailing:true, white:true*/
   });
 
   // ..........................................................
+  // INVOICE LINE
+  //
+  enyo.kind({
+    name: "XV.InvoiceLineItemEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.NumberWidget", attr: "lineNumber"},
+        {kind: "XV.ItemSiteWidget",
+          attr: {item: "item", site: "site"},
+          name: "itemSiteWidget"},
+        {kind: "XV.QuantityWidget", attr: "quantity", name: "quantityWidget"},
+        {kind: "XV.QuantityWidget", attr: "billed", name: "billedWidget"},
+        {kind: "XV.UnitCombobox", attr: "quantityUnit", showLabel: true,
+          name: "quantityUnitPicker"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "price", currency: ""},
+          label: "_price".loc(), currencyDisabled: true,
+          scale: XT.SALES_PRICE_SCALE},
+        {kind: "XV.UnitPicker", attr: "priceUnit",
+          name: "priceUnitPicker"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "extendedPrice", currency: ""},
+          label: "_extendedPrice".loc(), currencyDisabled: true,
+          scale: XT.EXTENDED_PRICE_SCALE},
+      ]}
+    ]
+  });
+  enyo.kind({
+    name: "XV.InvoiceLineItemBox",
+    kind: "XV.ListRelationsEditorBox",
+    childWorkspace: "XV.InvoiceLineWorkspace",
+    classes: "xv-short-relations-box",
+    title: "_lineItems".loc(),
+    editor: "XV.InvoiceLineItemEditor",
+    parentKey: "invoice",
+    listRelations: "XV.InvoiceLineItemListRelations",
+    fitButtons: false
+  });
+
+  // ..........................................................
+  // INVOICE TAX ADJUSTMENT
+  //
+  enyo.kind({
+    name: "XV.InvoiceTaxAdjustmentEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.TaxCodePicker", attr: "taxCode"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "amount", currency: ""},
+          label: "_amount".loc(), currencyDisabled: true,
+          scale: XT.SALES_PRICE_SCALE}
+      ]}
+    ]
+  });
+  enyo.kind({
+    name: "XV.InvoiceTaxAdjustmentBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_taxAdjustments".loc(),
+    editor: "XV.InvoiceTaxAdjustmentEditor",
+    parentKey: "invoice",
+    listRelations: "XV.InvoiceTaxAdjustmentListRelations",
+    fitButtons: false
+  });
+
+
+  // ..........................................................
+  // ITEM ALIASES
+  //
+  enyo.kind({
+    name: "XV.ItemAliasEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "aliasNumber", label: "_alias".loc()},
+        {kind: "XV.AccountWidget", attr: "account" },
+        {kind: "XV.CheckboxWidget", attr: "useDescription"},
+        {kind: "XV.InputWidget", attr: "description1"},
+        {kind: "XV.InputWidget", attr: "description2"},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes"}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.ItemAliasBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_aliases".loc(),
+    editor: "XV.ItemAliasEditor",
+    parentKey: "item",
+    listRelations: "XV.ItemAliasListRelations"
+  });
+
+  // ..........................................................
   // TAX REGISTRATIONS
   //
   enyo.kind({
@@ -167,53 +267,6 @@ trailing:true, white:true*/
     editor: "XV.TaxRegistrationEditor",
     parentKey: "customer",
     listRelations: "XV.TaxRegistrationListRelations"
-  });
-
-  // ..........................................................
-  // PROJECT
-  //
-  enyo.kind({
-    name: "XV.ProjectTaskEditor",
-    kind: "XV.RelationsEditor",
-    components: [
-      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-        classes: "in-panel", components: [
-        {kind: "XV.InputWidget", attr: "number"},
-        {kind: "XV.InputWidget", attr: "name"},
-        {kind: "XV.ProjectStatusPicker", attr: "status"},
-        {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-        {kind: "XV.DateWidget", attr: "dueDate"},
-        {kind: "XV.DateWidget", attr: "startDate"},
-        {kind: "XV.DateWidget", attr: "assignDate"},
-        {kind: "XV.DateWidget", attr: "completeDate"},
-        {kind: "onyx.GroupboxHeader", content: "_hours".loc()},
-        {kind: "XV.QuantityWidget", attr: "budgetedHours",
-         label: "_budgeted".loc()},
-        {kind: "XV.QuantityWidget", attr: "actualHours",
-         label: "_actual".loc()},
-        {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
-        {kind: "XV.MoneyWidget", attr: {localValue: "budgetedExpenses"},
-         label: "_budgeted".loc(), currencyShowing: false},
-        {kind: "XV.MoneyWidget", attr: {localValue: "actualExpenses"},
-         label: "_actual".loc(), currencyShowing: false},
-        {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-        {kind: "XV.UserAccountWidget", attr: "owner"},
-        {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-        {kind: "XV.TextArea", attr: "notes", fit: true}
-      ]}
-    ]
-  });
-
-  enyo.kind({
-    name: "XV.ProjectTasksBox",
-    kind: "XV.ListRelationsEditorBox",
-    classes: "xv-list-relations-box",
-    title: "_projectTasks".loc(),
-    editor: "XV.ProjectTaskEditor",
-    parentKey: "project",
-    listRelations: "XV.ProjectTaskListRelations",
-    fitButtons: false
   });
 
   // ..........................................................
@@ -263,9 +316,12 @@ trailing:true, white:true*/
   XV.QuoteLineMixin = {
     create: function () {
       this.inherited(arguments);
-      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+      if (this.$.promiseDate) {
+        this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+      }
 
-      // Loop through the components and set the specific attribute information for the Money widgets
+      // Loop through the components and set the specific attribute
+      // information for the Money widgets
       this.getComponents().forEach(function (e) {
         if (e.kind === "XV.MoneyWidget") {
           e.attr.currency = "quote.currency";
@@ -290,7 +346,8 @@ trailing:true, white:true*/
         parent.off("change:quoteDate", this.quoteDateChanged, this);
         this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
       }
-      XV.EditorMixin.setValue.apply(this, arguments);
+      // Add default bindings
+      XV.RelationsEditor.prototype.setValue.apply(this, arguments);
       // Add new bindings
       if (this.value) {
         parent = value.getParent();
@@ -317,13 +374,15 @@ trailing:true, white:true*/
     Mixin for Sales Order Specific Line functions
   */
   XV.SalesOrderLineMixin = {
+    bind: XV.RelationsEditorMixin.bind,
     create: function () {
       this.inherited(arguments);
       if (this.$.promiseDate) {
         this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
       }
 
-      // Loop through the components and set the specific attribute information for the Money widgets
+      // Loop through the components and set the specific attribute information
+      // for the Money widgets
       this.getComponents().forEach(function (e) {
         if (e.kind === "XV.MoneyWidget") {
           e.attr.currency = "order.currency";
@@ -347,7 +406,8 @@ trailing:true, white:true*/
         parent.off("change:orderDate", this.salesOrderDateChanged, this);
         this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
       }
-      XV.EditorMixin.setValue.apply(this, arguments);
+      // this is what clears the itemsite widget name/description
+      XV.RelationsEditor.prototype.setValue.apply(this, arguments);
       // Add new bindings
       if (this.value) {
         parent = value.getParent();
@@ -429,36 +489,21 @@ trailing:true, white:true*/
     name: "XV.QuoteLineItemBox",
     kind: "XV.ListRelationsEditorBox",
     classes: "xv-list-relations-box",
-    events: {
-      onChildWorkspace: ""
-    },
     title: "_lineItems".loc(),
     editor: "XV.QuoteLineItemEditor",
     parentKey: "quote",
     listRelations: "XV.QuoteLineItemListRelations",
+    childWorkspace: "XV.QuoteLineWorkspace",
     fitButtons: false,
 
     create: function () {
       this.inherited(arguments);
-      // create extra "expand" button for sales line items
-      this.$.navigationButtonPanel.createComponents([
-        {kind: "onyx.Button", content: "_expand".loc(),
-            name: "expandButton", ontap: "launchWorkspace",
-            classes: "xv-groupbox-button-right",
-            container: this.$.navigationButtonPanel
-        }
-      ], {owner: this});
-
       // create summary panel with totals
       this.createComponents([
         {kind: "XV.SalesSummaryPanel", name: "summaryPanel"}
       ], {owner: this});
     },
 
-    disabledChanged: function () {
-      this.inherited(arguments);
-      this.$.expandButton.setDisabled(this.getDisabled());
-    },
     /**
       Set the current model into Summary Panel and set styling for done button
     */
@@ -468,17 +513,6 @@ trailing:true, white:true*/
       this.$.summaryPanel.setValue(model);
       // change the styling of the last button to make room for the new button
       this.$.doneButton.setClasses("xv-groupbox-button-center");
-    },
-
-    launchWorkspace: function (inSender, inEvent) {
-      var index = Number(this.$.list.getFirstSelected());
-      this.doChildWorkspace({
-        workspace: "XV.QuoteLineWorkspace",
-        collection: this.getValue(),
-        index: index,
-        listRelations: this.$.list
-      });
-      return true;
     }
   });
 
@@ -488,17 +522,7 @@ trailing:true, white:true*/
     editor: "XV.SalesOrderLineItemEditor",
     parentKey: "salesOrder",
     listRelations: "XV.SalesOrderLineItemListRelations",
-
-    launchWorkspace: function (inSender, inEvent) {
-      var index = Number(this.$.list.getFirstSelected());
-      this.doChildWorkspace({
-        workspace: "XV.SalesOrderLineWorkspace",
-        collection: this.getValue(),
-        index: index,
-        listRelations: this.$.list
-      });
-      return true;
-    }
+    childWorkspace: "XV.SalesOrderLineWorkspace",
   });
 
   enyo.kind({
@@ -507,7 +531,8 @@ trailing:true, white:true*/
     kind: "XV.RelationsEditor",
     style: "margin-top: 10px;",
     components: [
-      {kind: "XV.Groupbox", name: "totalGroup", classes: "xv-sales-summary-total-group", components: [
+      {kind: "XV.Groupbox", name: "totalGroup", classes: "xv-sales-summary-total-group",
+          components: [
         {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
         {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
           {kind: "FittableRows", name: "summaryColumnOne", components: [
@@ -525,10 +550,7 @@ trailing:true, white:true*/
             {kind: "XV.MoneyWidget",
               attr: {localValue: "miscCharge", currency: "currency"},
              label: "_miscCharge".loc(), currencyShowing: false},
-            {kind: "XV.MoneyWidget",
-              attr: {localValue: "freight", currency: "currency"},
-             label: "_freight".loc(), currencyShowing: false},
-            {kind: "XV.MoneyWidget",
+            {kind: "XV.MoneyWidget", name: "taxTotal",
              attr: {localValue: "taxTotal", currency: "currency"},
              label: "_tax".loc(), currencyShowing: false},
             {kind: "XV.MoneyWidget",
@@ -542,4 +564,157 @@ trailing:true, white:true*/
     ]
   });
 
+  // ..........................................................
+  // RETURN LINE
+  //
+  enyo.kind({
+    name: "XV.ReturnLineItemEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.NumberWidget", attr: "lineNumber"},
+        {kind: "XV.ItemSiteWidget",
+          attr: {item: "item", site: "site"},
+          name: "itemSiteWidget"},
+        {kind: "XV.QuantityWidget", attr: "quantity", name: "quantityWidget"},
+        {kind: "XV.QuantityWidget", attr: "credited", name: "creditedWidget"},
+        {kind: "XV.UnitCombobox", attr: "quantityUnit", showLabel: true,
+          name: "quantityUnitPicker"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "price", currency: ""},
+          label: "_price".loc(), currencyDisabled: true,
+          scale: XT.SALES_PRICE_SCALE},
+        {kind: "XV.UnitPicker", attr: "priceUnit",
+          name: "priceUnitPicker"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "extendedPrice", currency: ""},
+          label: "_extendedPrice".loc(), currencyDisabled: true,
+          scale: XT.EXTENDED_PRICE_SCALE},
+      ]}
+    ]
+  });
+  enyo.kind({
+    name: "XV.ReturnLineItemBox",
+    kind: "XV.ListRelationsEditorBox",
+    childWorkspace: "XV.ReturnLineWorkspace",
+    classes: "xv-short-relations-box",
+    title: "_lineItems".loc(),
+    editor: "XV.ReturnLineItemEditor",
+    parentKey: "return",
+    listRelations: "XV.ReturnLineItemListRelations",
+    fitButtons: false
+  });
+
+  // ..........................................................
+  // RETURN TAX ADJUSTMENT
+  //
+  enyo.kind({
+    name: "XV.ReturnTaxAdjustmentEditor",
+    kind: "XV.InvoiceTaxAdjustmentEditor"
+  });
+  enyo.kind({
+    name: "XV.ReturnTaxAdjustmentBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_taxAdjustments".loc(),
+    editor: "XV.ReturnTaxAdjustmentEditor",
+    parentKey: "return",
+    listRelations: "XV.ReturnTaxAdjustmentListRelations",
+    fitButtons: false
+  });
+
+  // ..........................................................
+  // SALE TYPE AND SALES ORDER WORKFLOW
+  //
+  enyo.kind({
+    name: "XV.SaleTypeWorkflowEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "name"},
+        {kind: "XV.InputWidget", attr: "description"},
+        {kind: "XV.WorkflowStatusPicker", attr: "status"},
+        {kind: "XV.SalesOrderWorkflowTypePicker", attr: "workflowType" },
+        {kind: "XV.PriorityPicker", attr: "priority", showNone: false},
+        {kind: "XV.NumberSpinnerWidget", attr: "sequence"},
+        {kind: "onyx.GroupboxHeader", content: "_startDate".loc()},
+        {kind: "XV.ToggleButtonWidget", attr: "startSet"},
+        {kind: "XV.NumberSpinnerWidget", attr: "startOffset"},
+        {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
+        {kind: "XV.ToggleButtonWidget", attr: "dueSet"},
+        {kind: "XV.NumberSpinnerWidget", attr: "dueOffset"},
+        {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+        {kind: "XV.UserAccountWidget", attr: "owner"},
+        {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+        {kind: "onyx.GroupboxHeader", content: "_onCompletion".loc()},
+        {kind: "XV.HoldTypePicker", attr: "completedParentStatus",
+          label: "_nextHoldType".loc()},
+        {kind: "XV.DependenciesWidget",
+          attr: {workflow: "parent.workflow", successors: "completedSuccessors", parentId: "id"}},
+        {kind: "onyx.GroupboxHeader", content: "_onDeferred".loc()},
+        {kind: "XV.HoldTypePicker", attr: "deferredParentStatus",
+          label: "_nextHoldType".loc()},
+        {kind: "XV.DependenciesWidget",
+          attr: {workflow: "parent.workflow", successors: "deferredSuccessors", parentId: "id"}},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes", fit: true}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkflowEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "name"},
+        {kind: "XV.InputWidget", attr: "description"},
+        {kind: "XV.WorkflowStatusPicker", attr: "status"},
+        {kind: "XV.PriorityPicker", attr: "priority", showNone: false},
+        {kind: "XV.NumberSpinnerWidget", attr: "sequence"},
+        {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+        {kind: "XV.DateWidget", attr: "dueDate"},
+        {kind: "XV.DateWidget", attr: "startDate"},
+        {kind: "XV.DateWidget", attr: "assignDate"},
+        {kind: "XV.DateWidget", attr: "completeDate"},
+        {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+        {kind: "XV.UserAccountWidget", attr: "owner"},
+        {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+        {kind: "onyx.GroupboxHeader", content: "_onCompletion".loc()},
+        {kind: "XV.SalesOrderStatusPicker", attr: "completedParentStatus",
+          noneText: "_noChange".loc(), label: "_nextStatus".loc()},
+        {kind: "XV.DependenciesWidget",
+          attr: {workflow: "parent.workflow", successors: "completedSuccessors"}},
+        {kind: "onyx.GroupboxHeader", content: "_onDeferred".loc()},
+        {kind: "XV.SalesOrderStatusPicker", attr: "deferredParentStatus",
+          noneText: "_noChange".loc(), label: "_nextStatus".loc()},
+        {kind: "XV.DependenciesWidget",
+          attr: {workflow: "parent.workflow", successors: "deferredSuccessors"}},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes", fit: true}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.SaleTypeWorkflowBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_workflow".loc(),
+    editor: "XV.SaleTypeWorkflowEditor",
+    parentKey: "saleType",
+    listRelations: "XV.SaleTypeWorkflowListRelations",
+    fitButtons: false
+  });
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkflowBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_workflow".loc(),
+    editor: "XV.SalesOrderWorkflowEditor",
+    parentKey: "salesOrder",
+    listRelations: "XV.SalesOrderWorkflowListRelations",
+    fitButtons: false
+  });
 }());

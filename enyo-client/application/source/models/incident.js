@@ -170,83 +170,16 @@ white:true*/
         return XT.Error.clone('xt2001');
       }
       return XM.Document.prototype.validate.apply(this, arguments);
-    },
-
-    save: function (key, value, options) {
-      // Handle both `"key", value` and `{key: value}` -style arguments.
-      if (_.isObject(key) || _.isEmpty(key)) {
-        options = value;
-      }
-      options = options ? _.clone(options) : {};
-
-      var success = options.success,
-        status = this.getStatus(),
-        statusString = this.getIncidentStatusString() ? this.getIncidentStatusString().toUpperCase() : undefined,
-        isNotUpdated = _.size(this.prime) === 0,
-        newComment = _.find(this.get('comments').models, function (comment) {
-          return comment.getStatus() === XM.Model.READY_NEW;
-        });
-
-      options.success = function (model, resp, options) {
-        var profile = model.getValue("category.emailProfile"),
-          formattedContent = {},
-          emailOptions = {error: function () {
-            XT.log("Error sending email with incident details");
-          }},
-          format = function (str) {
-            str = str || "";
-            var parser = /\{([^}]+)\}/g, // Finds curly braces
-              tokens,
-              attr;
-            tokens = str.match(parser);
-            _.each(tokens, function (token) {
-              attr = token.slice(1, token.indexOf('}'));
-              str = str.replace(token, model.getValue(attr));
-            });
-            return str;
-          };
-
-        if (profile && profile.attributes) {
-          // this profile model has pretty much exactly the right key/value pairs so
-          // we can pass it straight to node. We do want to perform the "format" transform
-          // on all of the values on the object.
-          _.each(profile.attributes, function (value, key, list) {
-            if (typeof value === 'string') {
-              formattedContent[key] = format(value);
-            }
-          });
-
-          XT.dataSource.sendEmail(formattedContent, emailOptions);
-        } // else there's no email profile profiled
-
-        if (success) { success(model, resp, options); }
-      };
-
-      // Set change text
-      if (status === XM.Model.READY_NEW && this.get('status') !== 'N') {
-        this._lastChange = "_incidentCreatedStatus".loc()
-                                                   .replace("{status}", statusString);
-      } else if (status === XM.Model.READY_NEW) {
-        this._lastChange = "_incidentCreated".loc();
-      } else if (this.original('status') !== this.get('status')) {
-        this._lastChange = "_incidentChangedStatus".loc()
-                                                   .replace("{status}", statusString);
-      } else if (newComment && isNotUpdated) {
-        this._lastChange = "_incidentNewComment".loc();
-      } else {
-        this._lastChange = "_incidentUpdated".loc();
-      }
-      this._lastChange += ":";
-
-      // Handle both `"key", value` and `{key: value}` -style arguments.
-      if (_.isObject(key) || _.isEmpty(key)) {
-        value = options;
-      }
-
-      XM.Document.prototype.save.call(this, key, value, options);
     }
 
+  });
 
+  // Add support for sending email
+  XM.Incident = XM.Incident.extend(XM.EmailSendMixin);
+  XM.Incident = XM.Incident.extend({
+    emailDocumentName: "_incident".loc(),
+    emailProfileAttribute: "category.emailProfile",
+    emailStatusMethod: "getIncidentStatusString"
   });
 
   _.extend(XM.Incident, {
@@ -320,33 +253,6 @@ white:true*/
   // email-relevant mixin
   XM.Incident = XM.Incident.extend({
 
-    getChangeString: function () {
-      return this._lastChange;
-    },
-
-    getLastCommentString: function () {
-      var comments = this.get('comments'),
-        // public comments is an array even though comments is a collection
-        publicComments = comments.filter(function (comment) {
-          return comment.get("isPublic");
-        }),
-        comment,
-        ret = "";
-
-      if (publicComments.length) {
-        // Sort by date descending and take first
-        publicComments = _.sortBy(publicComments, function (comment) {
-          return -1 * comment.get('created').getTime();
-        });
-        comment = publicComments[0];
-        ret = "_latestComment".loc() +
-              " (" + comment.get('createdBy') + ")" +
-              "\n\n" +
-              comment.get('text');
-      }
-      return ret;
-    },
-
     getHistoryString: function () {
       var history = this.get('history'),
         ret = "",
@@ -405,7 +311,9 @@ white:true*/
   XM.IncidentCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.IncidentCharacteristic.prototype */
 
-    recordType: 'XM.IncidentCharacteristic'
+    recordType: 'XM.IncidentCharacteristic',
+
+    which: 'isIncidents'
 
   });
 
@@ -578,7 +486,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Document
   */
   XM.IncidentEmailProfile = XM.Document.extend(
     /** @scope XM.IncidentEmailProfile.prototype */ {

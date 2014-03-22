@@ -67,7 +67,8 @@ white:true*/
     defaults: function () {
       return {
         owner: XM.currentUser,
-        isActive: true
+        isActive: true,
+        currency: XT.baseCurrency()
       };
     },
 
@@ -112,12 +113,14 @@ white:true*/
   /**
     @class
 
-    @extends XM.Characteristic
+    @extends XM.CharacteristicAssignment
   */
   XM.OpportunityCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.OpportunityCharacteristic.prototype */
 
-    recordType: 'XM.OpportunityCharacteristic'
+    recordType: 'XM.OpportunityCharacteristic',
+
+    which: 'isOpportunities'
 
   });
 

@@ -12,9 +12,11 @@ select coitem.*,
   xt.co_line_ship_balance(coitem) as ship_balance,
   xt.co_line_at_shipping(coitem) as at_shipping,
   xt.co_line_margin(coitem) as margin,
-  xt.co_line_tax(coitem) as tax
+  xt.co_line_tax(coitem) as tax,
+  sochild_uuid as child_uuid
 from coitem
-  join itemsite on coitem_itemsite_id=itemsite_id;
+  join itemsite on coitem_itemsite_id=itemsite_id
+  left join xt.sochild on coitem_order_id = sochild_id and sochild_type = coitem_order_type;
 
 $$, false);
 
@@ -81,10 +83,10 @@ insert into coitem (
   new.coitem_taxtype_id,
   new.coitem_status,
   coalesce(new.coitem_qtyshipped, 0),
-  new.coitem_order_id,
+  coalesce((select sochild_id from xt.sochild where sochild_uuid=new.child_uuid),-1),
   coalesce(new.coitem_qtyreturned, 0),
   new.coitem_closedate,
-  new.coitem_order_type,
+  (select sochild_type from xt.sochild where sochild_uuid=new.child_uuid),
   new.coitem_close_username,
   coalesce(new.coitem_lastupdated, now()),
   new.coitem_substitute_item_id,
@@ -97,7 +99,7 @@ insert into coitem (
   coalesce(new.coitem_firm, false),
   new.coitem_rev_accnt_id,
   coalesce(new.coitem_pricemode, 'D'),
-  coalesce(new.obj_uuid, xt.generate_uuid())
+  coalesce(new.obj_uuid, xt.uuid_generate_v4())
 from itemsite
 where itemsite_item_id=new.coitem_item_id
   and itemsite_warehous_id=new.coitem_warehous_id;
@@ -105,7 +107,6 @@ where itemsite_item_id=new.coitem_item_id
 create or replace rule "_UPDATE" as on update to xt.coiteminfo do instead
 
 update coitem set
-  coitem_id=new.coitem_id,
   coitem_cohead_id=new.coitem_cohead_id,
   coitem_linenumber=new.coitem_linenumber,
   coitem_scheddate=new.coitem_scheddate,
@@ -125,10 +126,10 @@ update coitem set
   coitem_taxtype_id=new.coitem_taxtype_id,
   coitem_status = new.coitem_status,
   coitem_qtyshipped = COALESCE(new.coitem_qtyshipped, 0),
-  coitem_order_id = new.coitem_order_id,
+  coitem_order_id = coalesce((select sochild_id from xt.sochild where sochild_uuid=new.child_uuid),-1),
   coitem_qtyreturned = new.coitem_qtyreturned,
   coitem_closedate = new.coitem_closedate,
-  coitem_order_type = new.coitem_order_type,
+  coitem_order_type = (select sochild_type from xt.sochild where sochild_uuid=new.child_uuid),
   coitem_close_username = new.coitem_close_username,
   coitem_lastupdated = COALESCE(new.coitem_lastupdated, now()),
   coitem_substitute_item_id = new.coitem_substitute_item_id,
@@ -146,4 +147,4 @@ where coitem_id = old.coitem_id;
 
 create or replace rule "_DELETE" as on delete to xt.coiteminfo do instead
 
-delete from coitem where coitem_id = old.coitem_id;
+select deletesoitem(old.coitem_id);

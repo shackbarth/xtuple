@@ -15,6 +15,22 @@
         "read": "ViewAddresses",
         "update": "MaintainAddresses",
         "delete": "MaintainAddresses"
+      },
+      "personal":{
+        "create":"MaintainPersonalCRMAccounts",
+        "read":"ViewPersonalCRMAccounts",
+        "update":"MaintainPersonalCRMAccounts",
+        "delete":"MaintainPersonalCRMAccounts",
+        "properties":[
+          "crmaccountUsers"
+        ]
+      },
+      "attribute": {
+        "crmaccountUsers": {
+          "view": false,
+          "create": false,
+          "update": false
+        }
       }
     },
     "properties": [
@@ -113,6 +129,14 @@
           "type": "AddressCharacteristic",
           "column": "addr_id",
           "inverse": "address"
+        }
+      },
+      {
+        "name": "crmaccountUsers",
+        "toMany": {
+          "type": "ShareUsers",
+          "column": "obj_uuid",
+          "inverse": "uuid"
         }
       }
     ],

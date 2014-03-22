@@ -20,6 +20,51 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.SalesEmailProfile = XM.Document.extend({
+    /** @scope XM.SalesEmailProfile.prototype */
+
+    recordType: 'XM.SalesEmailProfile',
+
+    documentKey: 'name'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.CharacteristicAssignment
+  */
+  XM.SaleTypeCharacteristic = XM.CharacteristicAssignment.extend(/** @lends XM.SaleTypeCharacteristic.prototype */{
+
+    recordType: 'XM.SaleTypeCharacteristic',
+
+    which: "isSalesOrders"
+
+  });
+
+  /**
+    @class
+
+    @extends XM.WorkflowSource
+  */
+  XM.SaleTypeWorkflow = XM.WorkflowSource.extend(
+    /** @scope XM.SaleTypeWorkflow.prototype */ {
+
+    recordType: 'XM.SaleTypeWorkflow',
+
+    defaults: function () {
+      var ret = XM.WorkflowSource.prototype.defaults.apply(this, arguments);
+      ret.workflowType = XM.SalesOrderWorkflow.TYPE_OTHER;
+      return ret;
+    }
+
+  });
+
   // ..........................................................
   // COLLECTIONS
   //
@@ -33,6 +78,18 @@ white:true*/
     /** @scope XM.SaleTypeCollection.prototype */
 
     model: XM.SaleType
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SalesEmailProfileCollection = XM.Collection.extend({
+    /** @scope XM.SalesEmailProfileCollection.prototype */
+
+    model: XM.SalesEmailProfile
 
   });
 

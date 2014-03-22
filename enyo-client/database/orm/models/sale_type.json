@@ -2,6 +2,325 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "SaleTypeWorkflow",
+    "table": "xt.saletypewf",
+    "comment": "Sale Type Workflow Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_parent_id",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_name",
+          "required": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_description"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_status"
+        }
+      },
+      {
+        "name": "startSet",
+        "attr": {
+          "type": "Boolean",
+          "column": "wfsrc_start_set"
+        }
+      },
+      {
+        "name": "startOffset",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_start_offset"
+        }
+      },
+      {
+        "name": "dueSet",
+        "attr": {
+          "type": "Boolean",
+          "column": "wfsrc_due_set"
+        }
+      },
+      {
+        "name": "dueOffset",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_due_offset"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_notes"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "wfsrc_priority_id",
+          "required": true
+        }
+      },
+      {
+        "name": "sequence",
+        "attr": {
+          "type": "Number",
+          "column": "wfsrc_sequence"
+        }
+      },
+      {
+        "name": "workflowType",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_type"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wfsrc_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "wfsrc_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "completedParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_completed_parent_status"
+        }
+      },
+      {
+        "name": "deferredParentStatus",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_deferred_parent_status"
+        }
+      },
+      {
+        "name": "completedSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_completed_successors"
+        }
+      },
+      {
+        "name": "deferredSuccessors",
+        "attr": {
+          "type": "String",
+          "column": "wfsrc_deferred_successors"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SaleTypeCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Sale Type Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "ST"
+        }
+      },
+      {
+        "name": "saleType",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SalesEmailProfile",
+    "table": "xt.salesemlprofile",
+    "lockable": true,
+    "isRest": true,
+    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "comment": "Sales Email Profile Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainSalesEmailProfiles",
+        "read": true,
+        "update": "MaintainSalesEmailProfiles",
+        "delete": "MaintainSalesEmailProfiles"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emlprofile_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_descrip"
+        }
+      },
+      {
+        "name": "from",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_from"
+        }
+      },
+      {
+        "name": "replyTo",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_replyto"
+        }
+      },
+      {
+        "name": "to",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_to"
+        }
+      },
+      {
+        "name": "cc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_cc"
+        }
+      },
+      {
+        "name": "bcc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_bcc"
+        }
+      },
+      {
+        "name": "subject",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_subject"
+        }
+      },
+      {
+        "name": "body",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_body"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "SaleType",
     "table": "saletype",
     "isRest": true,
@@ -41,11 +360,56 @@
         }
       },
       {
+        "name": "workflow",
+        "toMany": {
+          "isNested": true,
+          "type": "SaleTypeWorkflow",
+          "column": "saletype_id",
+          "inverse": "parent"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "SaleTypeCharacteristic",
+          "column": "saletype_id",
+          "inverse": "saleType",
+          "isNested": true
+        }
+      },
+      {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
           "column": "saletype_active"
         }
+      }
+    ],
+    "extensions": [
+      {
+        "table": "xt.saletypeext",
+        "relations": [
+          {
+            "column": "saletypeext_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "emailProfile",
+            "toOne": {
+              "type": "SalesEmailProfile",
+              "column": "saletypeext_emlprofile_id"
+            }
+          },
+          {
+            "name": "defaultHoldType",
+            "attr": {
+              "type": "String",
+              "column": "saletypeext_default_hold_type"
+            }
+          }
+        ]
       }
     ],
     "isSystem": true

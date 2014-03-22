@@ -1,5 +1,7 @@
 select xt.install_js('XT','Schema','xtuple', $$
 
+(function () {
+
   /**
    * @class
    *
@@ -27,6 +29,8 @@ select xt.install_js('XT','Schema','xtuple', $$
         func,
         schemaTable,
         sql,
+        fetchRes,
+        fetchSql,
         funcSql,
         res,
         funcRes,
@@ -121,7 +125,14 @@ select xt.install_js('XT','Schema','xtuple', $$
 
       /* Set "required" if column is not "is_nullable". */
       if (res[i].is_nullable === "NO") {
-        ret[res[i].column_name].required = true;
+        /* Check if this is a fetchable number. */
+        fetchSql = 'select orderseq_id from orderseq where orderseq_table = $1 and orderseq_numcol = $2;';
+        fetchRes = plv8.execute(fetchSql, [table, res[i].column_name]);
+
+        /* Set to required when this is not a fetchable number. If it is fetchable, see xt.post(). */
+        if (!fetchRes.length) {
+          ret[res[i].column_name].required = true;
+        }
       }
 
       /* Map PostgreSQL datatype to JSON-Schema type and format. */
@@ -244,6 +255,10 @@ select xt.install_js('XT','Schema','xtuple', $$
         case "USER-DEFINED":
           ret[res[i].column_name].type = "string";
           break;
+        case "uuid":
+          ret[res[i].column_name].type = "string";
+          ret[res[i].column_name].format = "uuid";
+          break;
         default:
           throw new Error("Unsupported datatype format. No known conversion from PostgreSQL to JSON-Schema.");
       }
@@ -267,10 +282,13 @@ select xt.install_js('XT','Schema','xtuple', $$
       return false;
     }
 
-    var columns = [],
+    var attrPriv = orm.privileges && orm.privileges.attribute ? orm.privileges.attribute : false,
+        attr,
+        columns = [],
         ext = {},
         nkey = XT.Orm.naturalKey(orm),
         pkey = XT.Orm.primaryKey(orm),
+        prop,
         ret = {},
         relatedORM = {},
         relatedKey,
@@ -296,6 +314,9 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     /* Loop through the ORM properties and get the columns. */
     for (var i = 0; i < orm.properties.length; i++) {
+      prop = orm.properties[i];
+      attr = prop.attr;
+
       /* Skip primaryKey if there is a natualKey that's a different property. */
       if (nkey && orm.properties[i].name === pkey && orm.properties[i].name !== nkey) {
         continue;
@@ -303,6 +324,14 @@ select xt.install_js('XT','Schema','xtuple', $$
 
       /* Skip this property if it has a attr.value. Those are just used for relation associaiton queries. */
       if (orm.properties[i].attr && orm.properties[i].attr.value) {
+        continue;
+      }
+
+      /* Skip this property if its ORM column priv is set to false. */
+      /* TODO: Not checking for superuser here. This is more to just check if the column is set to false. */
+      if (attrPriv && attrPriv[orm.properties[i].name] &&
+        (attrPriv[orm.properties[i].name].view !== undefined) &&
+        !XT.Data.checkPrivilege(attrPriv[orm.properties[i].name].view)) {
         continue;
       }
 
@@ -322,6 +351,15 @@ select xt.install_js('XT','Schema','xtuple', $$
         ret.properties[orm.properties[i].name].title = orm.properties[i].name.humanize();
       }
 
+      /**
+       * Derived property
+       * By definition a derived property is not backed by a column, so use the
+       * 'name' property to stand in for the column.
+       */
+      if (attr && attr.derived) {
+        attr.column = prop.name;
+      }
+
       /* Basic property */
       if (orm.properties[i].attr && orm.properties[i].attr.column) {
         if (orm.properties[i].extTable) {
@@ -336,7 +374,13 @@ select xt.install_js('XT','Schema','xtuple', $$
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].attr.required) {
-          ret.properties[orm.properties[i].name].required = true;
+          /* Check if this is a fetchable number. */
+          if (orm.orderSequence && orm.properties[i].name === nkey && nkey !== pkey) {
+            /* Do not set this property to required. See xt.post() which will */
+            /* use XM.Model.fetchNumber() for it. */
+          } else {
+            ret.properties[orm.properties[i].name].required = true;
+          }
         }
 
         /* Add key flag. This isn't part of JSON-Schema, but very useful for URIs. */
@@ -355,8 +399,7 @@ select xt.install_js('XT','Schema','xtuple', $$
           ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
         } else {
 
-          /* TODO: Assuming "XM" here... */
-          relatedORM = XT.Orm.fetch("XM", orm.properties[i].toOne.type, {"silentError": true});
+          relatedORM = XT.Orm.fetch(orm.nameSpace, orm.properties[i].toOne.type, {"silentError": true});
           relatedKey = XT.Orm.naturalKey(relatedORM) || XT.Orm.primaryKey(relatedORM);
           relatedKeyProp = XT.Orm.getProperty(relatedORM, relatedKey);
 
@@ -426,6 +469,10 @@ select xt.install_js('XT','Schema','xtuple', $$
       if (orm.properties[i].attr && orm.properties[i].attr.column) {
         /* Loop through the returned schemaColumnInfo attributes and add them. */
         for (var attrname in schemaColumnInfo[orm.properties[i].attr.column]) {
+          if (!ret.properties[orm.properties[i].name]) {
+            /* This can happen if the same column name is errantly referenced in different properties */
+            throw new Error("Cannot get property " + orm.properties[i].name + " on ORM " + orm.nameSpace + "." + orm.type);
+          }
           ret.properties[orm.properties[i].name][attrname] = schemaColumnInfo[orm.properties[i].attr.column][attrname];
         }
       }
@@ -513,5 +560,7 @@ select xt.install_js('XT','Schema','xtuple', $$
     /* return the results */
     return ret;
   };
+
+}());
 
 $$ );

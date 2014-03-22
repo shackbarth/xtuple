@@ -7,8 +7,15 @@ select cohead.*,
   xt.co_tax_total(cohead) as tax_total,
   xt.co_total(cohead) as total,
   xt.co_margin(cohead) as margin,
-  xt.co_allocated_credit(cohead) as allocated_credit,
-  COALESCE(xt.co_total(cohead), 0) - COALESCE(xt.co_allocated_credit(cohead), 0) as balance,
+  xt.co_allocated_credit(cohead)::numeric as allocated_credit,
+  xt.co_authorized_credit(cohead_number) as authorized_credit,
+  xt.cust_outstanding_credit(cohead_cust_id, cohead_curr_id, cohead_orderdate) as outstanding_credit,
+  greatest(0.0, (
+    xt.co_total(cohead)
+    - COALESCE(xt.co_allocated_credit(cohead), 0)
+    - COALESCE(xt.co_authorized_credit(cohead_number), 0)
+    - COALESCE(xt.cust_outstanding_credit(cohead_cust_id, cohead_curr_id, cohead_orderdate), 0))
+  ) as balance,
   ophead_number,
   cust_number 
   from cohead
@@ -179,7 +186,11 @@ insert into cohead (
   new.cohead_status,
   new.cohead_saletype_id,
   new.cohead_shipzone_id
-);
+)
+
+returning cohead.*, null::date, null::numeric, null::numeric, null::numeric, 
+null::numeric, null::numeric, null::numeric, null::numeric, null::numeric, null::numeric, 
+null::text, null::text;
 
 create or replace rule "_UPDATE" as on update to xt.coheadinfo do instead
 

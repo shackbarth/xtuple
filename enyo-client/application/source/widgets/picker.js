@@ -1,8 +1,18 @@
 /*jshint node:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, trailing:true, white:true */
+regexp:true, undef:true, trailing:true, white:true, strict:false */
 /*global XT:true, XM:true, enyo:true, _:true */
 
 (function () {
+
+  // ..........................................................
+  // AGENT
+
+  enyo.kind({
+    name: "XV.AgentPicker",
+    kind: "XV.PickerWidget",
+    nameAttribute: "username",
+    collection: "XM.agents"
+  });
 
   // ..........................................................
   // ACCOUNT TYPE
@@ -61,6 +71,52 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.BalanceMethodPicker",
     kind: "XV.PickerWidget",
     collection: "XM.balanceMethods"
+  });
+
+  // ..........................................................
+  // BILLING TERMS
+  //
+
+  enyo.kind({
+    name: "XV.BillingTermsPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.terms",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ],
+    filter: function (models) {
+      return _.filter(models, function (m) {
+        return m.getValue("isUsedByBilling");
+      });
+    }
+  });
+
+  // ..........................................................
+  // BANK ACCOUNT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.BankAccountTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.bankAccountTypes",
+    showNone: false
+  });
+
+  // ..........................................................
+  // BILLING BANK ACCOUNT PICKER
+  //
+
+  enyo.kind({
+    name: "XV.BillingBankAccountPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.bankAccountRelations",
+    filter: function (models) {
+      var ret = _.filter(models, function (m) {
+        return m.get("isUsedByBilling");
+      });
+      return ret;
+    }
   });
 
   // ..........................................................
@@ -139,6 +195,17 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'abbreviation'}
     ]
+  });
+
+  // ..........................................................
+  // CUSTOMER EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerEmailProfilePicker",
+    kind: "XV.PickerWidget",
+    label: "_emailProfile".loc(),
+    collection: "XM.customerEmailProfiles"
   });
 
   // ..........................................................
@@ -328,22 +395,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // LOCATION
-  //
-
-  enyo.kind({
-    name: "XV.LocationPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.location",
-    nameAttribute: "format",
-    orderBy: [
-      {attribute: 'format'}
-    ],
-    valueAttribute: "id"
-  });
-
-
-  // ..........................................................
   // MONTH
   //
 
@@ -452,7 +503,71 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ProjectStatusPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.projectStatuses"
+    collection: "XM.projectStatuses",
+    showNone: false
+  });
+
+
+  // ..........................................................
+  // PROJECT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.ProjectTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.projectTypes",
+    nameAttribute: "code"
+  });
+
+  // ..........................................................
+  // REASON CODES
+  //
+
+  enyo.kind({
+    name: "XV.ReasonCodePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.reasonCodes",
+    showNone: false,
+    nameAttribute: "code",
+    published: {
+      documentType: null
+    },
+    create: function () {
+      this.inherited(arguments);
+      this.documentTypeChanged();
+    },
+    /**
+      If documentType is set to XM.ReasonCode.CREDIT_MEMO, then only reason codes
+      with null or CREDIT_MEMO values on the document type attribute should be shown
+      on the picker list.
+
+      If documentType is set to XM.ReasonCode.DEBIT_MEMO, then only reason codes with
+      null or DEBIT_MEMO values on the document type attribute should be shown on the
+      picker list.
+    */
+    documentTypeChanged: function () {
+      var docType = this.getDocumentType();
+      if (docType) {
+        this.filter = function (models) {
+          var ret = _.filter(models, function (m) {
+            return m.getValue("documentType") === docType || !m.getValue("documentType");
+          });
+          return ret;
+        };
+        this.buildList();
+      }
+    },
+  });
+
+  // ..........................................................
+  // REASON CODE DOCUMENT TYPE
+  //
+  enyo.kind({
+    name: "XV.ReasonCodeDocumentTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.reasonCodeDocumentTypes",
+    noneText: "Any"
+
   });
 
   // ..........................................................
@@ -463,6 +578,41 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ToDoStatusPicker",
     kind: "XV.PickerWidget",
     collection: "XM.toDoStatuses"
+  });
+
+  // ..........................................................
+  // SALES CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.SalesCategoryPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.salesCategories",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+
+  // ..........................................................
+  // SALES EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.SalesEmailProfilePicker",
+    kind: "XV.PickerWidget",
+    label: "_emailProfile".loc(),
+    collection: "XM.salesEmailProfiles"
+  });
+
+  // ..........................................................
+  // SALES ORDER STATUS
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderStatusPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.salesOrderStatuses",
+    showNone: false
   });
 
   // ..........................................................
@@ -515,19 +665,6 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.shipZones",
     orderBy: [
       {attribute: 'name'}
-    ]
-  });
-
-  // ..........................................................
-  // SITE ZONE
-  //
-
-  enyo.kind({
-    name: "XV.SiteZonePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.siteZoneRelations",
-    orderBy: [
-      {attribute: 'code'}
     ]
   });
 
@@ -634,6 +771,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.TermsTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.termsTypes",
+    showNone: false,
     nameAttribute: "name"
   });
 
@@ -660,7 +798,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.VendorTypePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.vendorType",
+    collection: "XM.vendorTypes",
     nameAttribute: "code"
   });
 
@@ -765,6 +903,28 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.wagePeriods",
     showNone: false,
     valueAttribute: "id"
+  });
+
+  // ..........................................................
+  // WORKFLOW STATUS
+  //
+
+  enyo.kind({
+    name: "XV.WorkflowStatusPicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.workflowStatuses"
+  });
+
+  // ..........................................................
+  // WORKFLOW TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkflowTypePicker",
+    kind: "XV.PickerWidget",
+    showNone: false,
+    collection: "XM.salesOrderWorkflowTypes"
   });
 
   // ..........................................................

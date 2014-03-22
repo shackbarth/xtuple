@@ -1,7 +1,7 @@
 select xt.install_js('XM','DatabaseInformation','xtuple', $$
-  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
+  /* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
      See www.xm.ple.com/CPAL for the full text of the software license. */
-  
+
   XM.DatabaseInformation = {};
 
   XM.DatabaseInformation.isDispatchable = true,
@@ -10,10 +10,10 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
     "DatabaseName",
     "DatabaseComments",
     "ServerVersion",
-    "WelcomePage"
+    "MobileWelcomePage"
   ]
 
-  /* 
+  /*
   Return DatabaseInfo configuration settings.
 
   @returns {Object}
@@ -21,11 +21,11 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
   XM.DatabaseInformation.settings = function() {
     var keys = XM.DatabaseInformation.options.slice(0),
       data = Object.create(XT.Data);
-    
-    return JSON.stringify(data.retrieveMetrics(keys));
+
+    return data.retrieveMetrics(keys);
   }
 
-  /* 
+  /*
   Update DatabaseInfo configuration settings. Only valid options as defined in the array
   XM.DatabaseInfo.options will be processed.
 
@@ -40,7 +40,7 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
     if(!data.checkPrivilege('ConfigDatabaseInfo')) throw new Error('Access Denied');
 
     /* Compose our commit settings by applying the patch to what we already have */
-    settings = JSON.parse(XM.DatabaseInformation.settings());
+    settings = XM.DatabaseInformation.settings();
     if (!XT.jsonpatch.apply(settings, patches)) {
       plv8.elog(NOTICE, 'Malformed patch document');
     }
@@ -56,9 +56,9 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
       var prop = options[i];
       if(settings[prop] !== undefined) metrics[prop] = settings[prop];
     }
- 
+
     return data.commitMetrics(metrics);
   }
-  
+
 $$ );
 

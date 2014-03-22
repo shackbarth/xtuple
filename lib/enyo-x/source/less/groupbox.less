@@ -7,6 +7,10 @@
   padding: 8px;
   margin-right: 5px;
 
+  .enyo-fittable-columns-layout > * {
+    vertical-align: middle;
+  }
+
   &.editor {
     min-width: 250px;
     padding: 0;
@@ -41,68 +45,16 @@
   &.panel {
     min-width: 330px;
   }
-
-  .xv-inputwidget {
-    background-color: @white;
+  &.small-panel {
+    width: 600px;
   }
 
-  /**
-    Top level input-decorator class.
-    All below this are overrides.
-  */
-  .onyx-input-decorator {
-    border: 0;
-    input {
-      width: 150px;
-    }
+  &.medium-panel {
+    width: 700px;
   }
 
-  .onyx-picker-decorator {
-    .onyx-button {
-      width: 150px;
-    }
-  }
-
-  .xv-relationwidget, .xv-datewidget, .xv-numberwidget {
-    .onyx-input-decorator {
-      width: 170px;
-    }
-    input {
-      width: 120px;
-    }
-  }
-
-  .xv-numberwidget {
-    input {
-      width: 150px;
-    }
-  }
-
-  .xv-moneywidget {
-    background-color: @white;
-    padding-top: 6px;
-    padding-bottom: 2px;
-
-    .onyx-input-decorator {
-      border: 0;
-      font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-      width: 110px;
-      padding: 6px 10px 8px 6px;
-
-      input, .xv-money-label {
-        width: 100%;
-        text-align: right;
-      }
-
-      &.xv-currency-label {
-        width: 65px;
-      }
-    }
-
-    .xv-picker-button {
-      width: 65px;
-      padding: 10px 4px;
-    }
+  &.large-panel {
+    width: 800px;
   }
 
   > .onyx-input-decorator {
@@ -146,6 +98,7 @@
   > *:first-child:last-child {
     .border-radius(4px);
   }
+
 }
 
 .xv-groupbox-header {

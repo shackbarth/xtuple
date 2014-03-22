@@ -8,11 +8,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   exports.queryOlapCatalog = function (req, res) {
 
+    X.debug("olapdata query: " + JSON.stringify(req.query.mdx));
     var query = req.query.mdx,
       // Format xmla response as json and return
       queryCallback = function (xmlaResponse) {
-		var obj = xmlaResponse.fetchAllAsObject();
-		res.writeHead(200, { 'Content-Type': 'application/json' });
+        var obj = xmlaResponse.fetchAllAsObject();
+        obj = {data :  obj};
+        X.debug("olapdata query result: " + JSON.stringify(obj));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
         res.write(JSON.stringify(obj));
         res.end();
       },
@@ -22,7 +25,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       claimSet = {},
       header = {},
       username = req.session.passport.user.username,
-      biServerUrl = X.options.datasource.biServerUrl,
       today = new Date(),
       expires = new Date(today.getTime() + (10 * 60 * 1000)), // 10 minutes from now
       datasource = "https://" + req.headers.host + "/",
@@ -30,10 +32,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       scope = datasource + database + "/auth/" + database,
       audience = datasource + database + "/oauth/token",
       superuser = X.options.databaseServer.user,
-      tenant = X.options.datasource.uniqueTenantId;
+      tenant = X.options.biServer.tenantname || "default",
+      biKeyFile = X.options.biServer.restkeyfile || "";
 
     // get private key from path in config
-    privKey = X.fs.readFileSync(X.options.datasource.biKeyFile);
+    privKey = X.fs.readFileSync(biKeyFile);
 
     // create header for JWT
     header = {

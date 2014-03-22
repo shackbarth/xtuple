@@ -142,7 +142,7 @@ trailing:true, white:true*/
     // ..........................................................
     // QUOTE
     //
-  
+
     extensions = [
       {kind: "XV.OpportunityWidget", container: "settingsGroup", attr: "opportunity"}
     ];
@@ -152,7 +152,7 @@ trailing:true, white:true*/
     // ..........................................................
     // SALES ORDER
     //
-  
+
     extensions = [
       {kind: "XV.OpportunityWidget", container: "settingsGroup", attr: "opportunity"}
     ];

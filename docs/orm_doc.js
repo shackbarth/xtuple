@@ -293,7 +293,9 @@
         The expected type of the property. Should be any of the following:
           * String
           * Date
+          * DueDate
           * Boolean
+          * Hours
           * Number
           * Money
           * Cost
@@ -319,6 +321,25 @@
         @type {String}
         */
         "column": "prjtask_id",
+
+        /**
+         * Parity bit that is set when we intend for this field to be derived
+         * from a method invocation or some other source. If `method` is to be
+         * used, `derived` must equal `true`. `dervied` and `column` are
+         * mutually exclusive.
+         *
+         * @type {Boolean}
+         */
+        "derived": true,
+
+        /**
+         * Method which determines the value of this derived field. The result
+         * is used in SELECT queries, and is not required for INSERT or UPDATE
+         * since it is a vitual column.
+         *
+         * @type {String}
+         */
+        "method": "xt.count_project_tasks(prjtask_id)",
 
         /**
         Indicates this column is the relation to be used qualifying updates and deletions
@@ -380,7 +401,6 @@
         @default {true}
         */
         "isEncrypted": false
-
       },
 
       /**

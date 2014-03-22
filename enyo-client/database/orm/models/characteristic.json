@@ -11,7 +11,7 @@
     "privileges": {
       "all": {
         "create": "MaintainCharacteristics",
-        "read": true,
+        "read": "ViewCharacteristics",
         "update": "MaintainCharacteristics",
         "delete": "MaintainCharacteristics"
       }
@@ -116,6 +116,22 @@
         "attr": {
           "type": "Boolean",
           "column": "char_items",
+          "required": true
+        }
+      },
+      {
+        "name": "isCustomers",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_customers",
+          "required": true
+        }
+      },
+      {
+        "name": "isInvoices",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_invoices",
           "required": true
         }
       },

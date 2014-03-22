@@ -1,8 +1,3 @@
-/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
-white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true, Globalize:true */
-
 (function () {
   "use strict";
 
@@ -19,6 +14,7 @@ white:true*/
 
     recordType: 'XM.Currency',
 
+    idAttribute: 'abbreviation',
     documentKey: 'abbreviation',
 
     enforceUpperKey: false,
@@ -110,6 +106,108 @@ white:true*/
     },
 
     /**
+     * Converts this currency to another via the base currency. The
+     * options.success callback is NOT optional.
+     *
+     * @param {XM.Currency} target currency
+     * @param {Number} value of the currency
+     * @param {Date} asof
+     * @param {Object} Options
+     * @param {Function} [options.success] callback on successful response
+     * @returns {Object} Receiver
+     *
+     * @see XM.Currency#toBase
+     * @see XM.Currency#fromBase
+     * @callback options.success
+     */
+    toCurrency: function (targetCurrency, value, asof, options) {
+      /**
+       * If we're supposed to 'convert' to the same currency or using a money
+       * value of zero, just pass back the given value.
+       */
+      if (this.id === targetCurrency.id || value === 0) {
+        options.success(value);
+        return this;
+      }
+
+      var that = this,
+        onRatesSuccess,
+        plan = [
+          {
+            currency: this,
+            rate: XM.currencyRates.getScalarRate('to base from', this, asof)
+          },
+          {
+            currency: targetCurrency,
+            rate: XM.currencyRates.getScalarRate('from base to', targetCurrency, asof)
+          }
+        ],
+
+        /**
+         * Compute the value of the target currency.
+         */
+        targetValue = _.reduce(plan, function (value, step) {
+          return value * step.rate;
+        }, value),
+
+        /**
+         * Invoked if valid currency rates cannot be found.
+         */
+        onRatesError = function () {
+          if (_.isFunction(options.error)) {
+            options.error();
+          }
+        };
+
+      /**
+       * If targetValue is a valid number, then pass it to the callback and
+       * return.
+       */
+      if (!_.isNaN(targetValue)) {
+        options.success(targetValue);
+        return this;
+      }
+      else if (options.cacheOnly) {
+        onRatesError();
+        return this;
+      }
+
+      /**
+       * At this point, we could not find one or both of the currency
+       * conversion rates in the cache, so we have to query the server.
+       *
+       * @callback
+       * When both rates are fetched into the global rate cache, make another
+       * call to toCurrency.
+       */
+      onRatesSuccess = function () {
+        that.toCurrency(
+          targetCurrency,
+          value,
+          asof,
+          _.extend(options, { cacheOnly: true })
+        );
+      };
+
+      /**
+       * Query for the absent rates and store the result in the rate cache.
+       */
+      XM.currencyRates.add(_.pluck(plan, 'currency'));
+      XM.currencyRates.fetch({
+        query: _.clone(XM.CurrencyRate.buildQuery(asof)), // XXX forgot why I cloned this...
+        success: function (collection) {
+          if (collection.length > 0) {
+            return onRatesSuccess();
+          }
+          onRatesError();
+        },
+        error: onRatesError
+      });
+
+      return this;
+    },
+
+    /**
       Converts a value in the currency instance to base value via the success
       callback in options.
 
@@ -120,7 +218,7 @@ white:true*/
       @returns {Object} Receiver
     */
     toBase: function (localValue, asOf, options) {
-      options = options ? _.clone(options) : {};
+      options = _.extend({ }, options);
       var that = this,
         rates = new XM.CurrencyRateCollection(),
         fetchOptions = {},
@@ -147,7 +245,8 @@ white:true*/
         // given that we're in a model that only knows the currency id as its id, we
         // have to compare the CURRENCY of the rate against that.id, and then
         // perform the effective date filter as well.
-        return rate.get("currency") === that.id && XT.date.inRange(asOf, effective, expires);
+        return rate.get("currency") === that.id &&
+          XT.date.inRange(asOf, effective, expires);
       });
 
       // If we have conversion data already, use it
@@ -391,6 +490,20 @@ white:true*/
       }
       return XM.Document.prototype.validate.apply(this, arguments);
     }
+  }, {
+
+    /**
+     * Perform currency conversion and return the scalar value of the new
+     * currency. Conversion is done by first converting the value to the
+     * base currency, and then converting it to the target currency.
+     *
+     * @param {Number}  rVia      rate from value to 'via' currency
+     * @param {Number}  rTarget   rate from 'via' currency to target
+     * @return {Number} value of converted currency
+     */
+    convertVia: function (rVia, rTarget, val) {
+      return (val * rVia) * rTarget;
+    },
   });
 
   /**
@@ -401,6 +514,35 @@ white:true*/
   XM.CurrencyRate = XM.Model.extend(/** @lends XM.CurrencyRate.prototype */{
 
     recordType: 'XM.CurrencyRate'
+
+  }, {
+
+    /**
+     * Build a query to get the conversion rate for a currency with
+     * respect to the base rate.
+     */
+    buildQuery: function (asof) {
+      return {
+        parameters: [
+          {
+            attribute: "effective",
+            operator: "<=",
+            value: asof
+          },
+          {
+            attribute: "expires",
+            operator: ">=",
+            value: asof
+          }/*,
+          {
+            attribute: "currency",
+            operator: "=",
+            value: currency.id
+          }
+          */
+        ]
+      };
+    }
 
   });
 
@@ -429,8 +571,37 @@ white:true*/
   XM.CurrencyRateCollection = XM.Collection.extend({
     /** @scope XM.CurrencyRateCollection.prototype */
 
-    model: XM.CurrencyRate
+    model: XM.CurrencyRate,
 
+    /**
+     * Gets the rate used to convert to or from the base currency. You will
+     * always multiply the returned rate with the value of your currency
+     * in order to convert.
+     *
+     * @param {String} indicate directionality with 'to' or 'from'
+     * @param {XM.Currency} the currency to convert to/from the base
+     * @param {Date} the effective date
+     *
+     * @returns {Number} rate with respect to the base currency.
+     */
+    getScalarRate: function (direction, currency, asof) {
+      var rate = _.find(
+        this.where({ currency: currency }),
+        function (_rate) {
+          return moment(_rate.get('effective')).isBefore(asof) &&
+            moment(_rate.get('expires')).isAfter(asof);
+        });
+
+      if (!rate || !rate.get('rate')) {
+        return NaN;
+      }
+      if (direction === 'from base to') {
+        return rate.get('rate');
+      }
+      if (direction === 'to base from') {
+        return 1.0 / rate.get('rate');
+      }
+    }
   });
 
   _rateCache = new XM.CurrencyRateCollection();

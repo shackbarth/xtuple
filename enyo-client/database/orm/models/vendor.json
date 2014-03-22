@@ -5,13 +5,14 @@
     "type": "Vendor",
     "table": "vendinfo",
     "isRest": true,
-    "comment": "Vendor Relation Map",
+    "idSequenceName": "vend_vend_id_seq",
+    "comment": "Vendor Map",
     "privileges": {
       "all": {
-        "create": false,
-        "read": true,
-        "update": false,
-        "delete": false
+        "create": "MaintainVendors",
+        "read": "ViewVendors",
+        "update": "MaintainVendors",
+        "delete": "MaintainVendors"
       }
     },
     "properties": [
@@ -46,7 +47,7 @@
         }
       },
       {
-        "name": "contact1",
+        "name": "primaryContact",
         "toOne": {
           "type": "ContactRelation",
           "column": "vend_cntct1_id",
@@ -54,7 +55,7 @@
         }
       },
       {
-        "name": "contact2",
+        "name": "secondaryContact",
         "toOne": {
           "type": "ContactRelation",
           "column": "vend_cntct2_id",
@@ -116,6 +117,136 @@
         "attr": {
           "type": "String",
           "column": "vend_shipvia"
+        }
+      },
+      {
+        "name": "alternateAddresses",
+        "toMany": {
+          "isNested": true,
+          "type": "VendorAddress",
+          "column": "vend_id",
+          "inverse": "vendor"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "VendorCharacteristic",
+          "column": "vend_id",
+          "inverse": "vendor"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "VendorComment",
+          "column": "vend_id",
+          "inverse": "vendor"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "VendorListItem",
+    "table": "vendinfo",
+    "isRest": true,
+    "comment": "Vendor List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewVendors MaintainVendors",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "vend_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "vend_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "vend_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "vend_active"
+        }
+      },
+      {
+        "name": "primaryContact",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "vend_cntct1_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "secondaryContact",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "vend_cntct2_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "type": "Address",
+          "column": "vend_addr_id"
+        }
+      },
+      {
+        "name": "vendorType",
+        "toOne": {
+          "type": "VendorType",
+          "column": "vend_vendtype_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "vend_curr_id"
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "vend_terms_id"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "VendorListItemCharacteristic",
+          "column": "vend_id",
+          "inverse": "vendor"
         }
       }
     ],
@@ -168,76 +299,10 @@
         }
       },
       {
-        "name": "contact1",
-        "toOne": {
-          "type": "ContactRelation",
-          "column": "vend_cntct1_id",
-          "isNested": true
-        }
-      },
-      {
-        "name": "contact2",
-        "toOne": {
-          "type": "ContactRelation",
-          "column": "vend_cntct2_id",
-          "isNested": true
-        }
-      },
-      {
-        "name": "address",
-        "toOne": {
-          "type": "Address",
-          "column": "vend_addr_id"
-        }
-      },
-      {
-        "name": "vendorType",
-        "toOne": {
-          "type": "VendorType",
-          "column": "vend_vendtype_id",
-          "isNested": true
-        }
-      },
-      {
         "name": "currency",
         "toOne": {
           "type": "Currency",
           "column": "vend_curr_id"
-        }
-      },
-      {
-        "name": "terms",
-        "toOne": {
-          "type": "Terms",
-          "column": "vend_terms_id"
-        }
-      },
-      {
-        "name": "taxZone",
-        "toOne": {
-          "type": "TaxZone",
-          "column": "vend_taxzone_id"
-        }
-      },
-      {
-        "name": "account",
-        "toOne": {
-          "type": "AccountRelation",
-          "column": "vend_accnt_id"
-        }
-      },
-      {
-        "name": "expenseCategory",
-        "toOne": {
-          "type": "ExpenseCategory",
-          "column": "vend_expcat_id"
-        }
-      },
-      {
-        "name": "shipVia",
-        "attr": {
-          "type": "String",
-          "column": "vend_shipvia"
         }
       }
     ],
@@ -283,6 +348,350 @@
         }
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "VendorAddress",
+    "table": "vendaddrinfo",
+    "comment": "Vendor Address Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "vendaddr_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "vendaddr_code"
+        }
+      },
+      {
+        "name": "vendor",
+        "attr": {
+          "type": "Number",
+          "column": "vendaddr_vend_id"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "vendaddr_name"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "vendaddr_addr_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "vendaddr_cntct_id"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "vendaddr_comments"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "VendorAddressRelation",
+    "table": "xt.vendaddrxt",
+    "comment": "Vendor Address Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "vendor",
+        "toOne": {
+          "isNested": true,
+          "type": "VendorRelation",
+          "column": "vend_id"
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "code"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "name"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "addr_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "cntct_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "VendorComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Vendor Comment Map",
+    "canDelete": false,
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "V"
+        }
+      },
+      {
+        "name": "vendor",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public",
+          "value": true
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "VendorCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Vendor Characteristic Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "V"
+        }
+      },
+      {
+        "name": "vendor",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "VendorListItemCharacteristic",
+    "table": "charass",
+    "comment": "Vendor List Item Characteristic Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "V"
+        }
+      },
+      {
+        "name": "vendor",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id"
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   }
 ]

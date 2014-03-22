@@ -80,9 +80,13 @@ white:true*/
   });
   XM.creditCardGateways = new XM.CreditCardGatewayCollection();
   // new and better way
-  _.each([{ id: "Authorize.Net", name: "Authorize.Net" }], function (attrs) {
-    XM.creditCardGateways.add(new XM.CreditCardGatewayModel(attrs));
-  });
+  _.each([
+      { id: "Authorize.Net", name: "Authorize.Net" },
+      { id: "External", name: "External" }
+    ], function (attrs) {
+      XM.creditCardGateways.add(new XM.CreditCardGatewayModel(attrs));
+    }
+  );
 
   // Credit Card Type
   var creditCardTypeJson = [
@@ -217,24 +221,6 @@ white:true*/
     XM.numberPolicies.add(numberPolicy);
   }
 
-  // Project Status
-  K = XM.Project;
-  var projectStatusJson = [
-    { id: K.CONCEPT, name: "_concept".loc() },
-    { id: K.IN_PROCESS, name: "_inProcess".loc() },
-    { id: K.COMPLETED, name: "_completed".loc() }
-  ];
-  XM.ProjectStatusModel = Backbone.Model.extend({
-  });
-  XM.ProjectStatusCollection = Backbone.Collection.extend({
-    model: XM.ProjectStatusModel
-  });
-  XM.projectStatuses = new XM.ProjectStatusCollection();
-  for (i = 0; i < projectStatusJson.length; i++) {
-    var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
-    XM.projectStatuses.add(projectStatus);
-  }
-
   // Characteristic Type
   K = XM.Characteristic;
   var characteristicTypeJson = [
@@ -270,11 +256,12 @@ white:true*/
   }
 
   // Hold Type
+  K = XM.SalesOrder;
   var holdTypeJson = [
-    { id: "C", name: "_credit".loc() },
-    { id: "S", name: "_shipping".loc() },
-    { id: "P", name: "_packing".loc() },
-    { id: "R", name: "_return".loc() }
+    { id: K.CREDIT_HOLD_TYPE, name: "_credit".loc() },
+    { id: K.SHIPPING_HOLD_TYPE, name: "_shipping".loc() },
+    { id: K.PACKING_HOLD_TYPE, name: "_packing".loc() },
+    { id: K.RETURN_HOLD_TYPE, name: "_return".loc() }
   ];
   XM.HoldTypeModel = Backbone.Model.extend({
   });
@@ -374,5 +361,110 @@ white:true*/
   XM.AttributeCollection = Backbone.Collection.extend({
     model: XM.Attribute
   });
+
+  // Reason Code Document Types
+  K = XM.ReasonCode;
+  var reasonDocTypeJson = [
+    { id: K.DEBIT_MEMO, name: "_debitMemo".loc() },
+    { id: K.CREDIT_MEMO, name: "_creditMemo".loc() }
+  ];
+  XM.ReasonDocTypeModel = Backbone.Model.extend({});
+  XM.ReasonDocTypeCollection = Backbone.Collection.extend({
+    model: XM.ReasonDocTypeModel
+  });
+  XM.reasonCodeDocumentTypes = new XM.ReasonDocTypeCollection();
+  for (i = 0; i < reasonDocTypeJson.length; i++) {
+    var reasonDocType = new XM.ReasonDocTypeModel(reasonDocTypeJson[i]);
+    XM.reasonCodeDocumentTypes.add(reasonDocType);
+  }
+
+  // Bank Account Types
+  K = XM.BankAccount;
+  var bankAccountTypeJson = [
+    { id: K.CASH, name: "_cash".loc() },
+    { id: K.CHECKING, name: "_checking".loc() },
+    { id: K.CREDIT_CARD, name: "_creditCard".loc() }
+  ];
+  XM.BankAccountTypeModel = Backbone.Model.extend({});
+  XM.BankAccountTypeCollection = Backbone.Collection.extend({
+    model: XM.BankAccountTypeModel
+  });
+  XM.bankAccountTypes = new XM.BankAccountTypeCollection();
+  for (i = 0; i < bankAccountTypeJson.length; i++) {
+    var bankAccountType = new XM.BankAccountTypeModel(bankAccountTypeJson[i]);
+    XM.bankAccountTypes.add(bankAccountType);
+  }
+
+  // Workflow Status
+  K = XM.Workflow;
+  var workflowStatusJson = [
+    { id: K.PENDING, name: "_pending".loc() },
+    { id: K.IN_PROCESS, name: "_inProcess".loc() },
+    { id: K.COMPLETED, name: "_completed".loc() },
+    { id: K.DEFERRED, name: "_deferred".loc() },
+  ];
+  XM.WorkflowStatusModel = Backbone.Model.extend({});
+  XM.WorkflowStatusCollection = Backbone.Collection.extend({
+    model: XM.WorkflowStatusModel
+  });
+  XM.workflowStatuses = new XM.WorkflowStatusCollection();
+  for (i = 0; i < workflowStatusJson.length; i++) {
+    var workflowStatus = new XM.WorkflowStatusModel(workflowStatusJson[i]);
+    XM.workflowStatuses.add(workflowStatus);
+  }
+
+  // Workflow Type
+  var salesOrderWorkflowTypeJson = [
+    { id: XM.SalesOrderWorkflow.TYPE_OTHER, name: "_other".loc() },
+    { id: XM.SalesOrderWorkflow.TYPE_CREDIT_CHECK, name: "_creditCheck".loc() }//,
+  ];
+  XM.SalesOrderWorkflowTypeModel = Backbone.Model.extend({});
+  XM.SalesOrderWorkflowTypeCollection = Backbone.Collection.extend({
+    model: XM.SalesOrderWorkflowTypeModel
+  });
+  XM.salesOrderWorkflowTypes = new XM.SalesOrderWorkflowTypeCollection();
+  _.each(salesOrderWorkflowTypeJson, function (obj) {
+    XM.salesOrderWorkflowTypes.add(new XM.SalesOrderWorkflowTypeModel(obj));
+  });
+
+  // Project Status
+  K = XM.ProjectStatusMixin;
+  var projectStatusJson = [
+    { id: K.CONCEPT, name: "_concept".loc() },
+    { id: K.REVIEW, name: "_review".loc() },
+    { id: K.REVISION, name: "_revision".loc() },
+    { id: K.APPROVED, name: "_approved".loc() },
+    { id: K.IN_PROCESS, name: "_inProcess".loc() },
+    { id: K.COMPLETED, name: "_completed".loc() },
+    { id: K.REJECTED, name: "_rejected".loc() }
+  ];
+  XM.ProjectStatusModel = Backbone.Model.extend({
+  });
+  XM.ProjectStatusCollection = Backbone.Collection.extend({
+    model: XM.ProjectStatusModel
+  });
+  XM.projectStatuses = new XM.ProjectStatusCollection();
+  for (i = 0; i < projectStatusJson.length; i++) {
+    var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
+    XM.projectStatuses.add(projectStatus);
+  }
+
+  // Sales Order
+  K = XM.SalesOrder;
+  var salesOrderStatusesJson = [
+    { id: K.OPEN_STATUS, name: "_open".loc() },
+    { id: K.CLOSED_STATUS, name: "_closed".loc() },
+    { id: K.CANCELLED_STATUS, name: "_cancelled".loc() }
+  ];
+  XM.SalesOrderStatusModel = Backbone.Model.extend({
+  });
+  XM.SalesOrderStatusCollection = Backbone.Collection.extend({
+    model: XM.SalesOrderStatusModel
+  });
+  XM.salesOrderStatuses = new XM.SalesOrderStatusCollection();
+  for (i = 0; i < salesOrderStatusesJson.length; i++) {
+    var SalesOrderStatus = new XM.SalesOrderStatusModel(salesOrderStatusesJson[i]);
+    XM.salesOrderStatuses.add(SalesOrderStatus);
+  }
 
 }());

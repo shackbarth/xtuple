@@ -155,7 +155,8 @@ var _ = require('underscore'),
       fs.readdir(path.join(__dirname, "../../enyo-client/application/build"), function (err, files) {
         var readFile;
         if (err) {
-          callback(err);
+          callback("Error: cannot find 'enyo-client/application/build'. Ensure that the " +
+            "git submodules are up to date." + err);
           return;
         } else if (files.length < 4) {
           callback("Error: was not able to build all core files. Built files are: " +

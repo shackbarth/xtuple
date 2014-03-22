@@ -115,7 +115,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "todoitem_due_date",
           "required": true
         }
@@ -731,7 +731,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "todoitem_due_date"
         }
       },
@@ -887,7 +887,7 @@
       {
         "name": "dueDate",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "todoitem_due_date"
         }
       },

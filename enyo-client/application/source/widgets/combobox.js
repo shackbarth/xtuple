@@ -18,8 +18,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     collection: "XM.creditCardGateways",
     controlValueChanged: function (inSender, inEvent) {
-      console.log(inEvent);
-      if (inEvent.value !== "Authorize.Net") {
+      if (!XM.creditCardGateways.find(function (model) { return model.id === inEvent.value; })) {
         this.doNotify({message: "_unsupportedGateway".loc()});
       }
       return this.inherited(arguments);

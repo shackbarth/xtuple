@@ -15,11 +15,12 @@
     ],
     "properties": [
      {
-        "name": "account",
-        "attr": {
-         "type": "String",
-         "column": "crmacct_number"
-        }
+       "name": "account",
+       "toOne": {
+         "isNested": true,
+         "type": "AccountRelation",
+         "column": "crmacct_id"
+      }
      },
      {
         "name": "contactRelations",

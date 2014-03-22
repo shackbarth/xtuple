@@ -2,6 +2,7 @@ enyo.depends(
   "characteristics.js",
   "checkbox.js",
   "combobox.js",
+  "item_site.js",
   "money.js",
   "number.js",
   "picker.js",

@@ -1,0 +1,859 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Return",
+    "table": "cmhead",
+    "isRest": true,
+    "idSequenceName": "cmhead_cmhead_id_seq",
+    "orderSequence":"CmNumber",
+    "lockable": true,
+    "comment": "Return Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCreditMemos",
+        "read": "ViewCreditMemos",
+        "update": "MaintainCreditMemos",
+        "delete": "MaintainCreditMemos"
+      },
+      "attribute": {
+        "isPosted": {
+          "update": false
+        },
+        "isPrinted": {
+          "update": false
+        },
+        "isVoid": {
+          "update": false
+        }
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cmhead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "returnDate",
+        "attr": {
+          "type": "Date",
+          "column": "cmhead_docdate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "cmhead_posted",
+          "required": true
+        }
+      },
+      {
+        "name": "isVoid",
+        "attr": {
+          "type": "Boolean",
+          "column": "cmhead_void",
+          "required": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "BillingCustomer",
+          "column": "cmhead_cust_id",
+          "isNested": true,
+          "required": true
+        }
+      },
+      {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtoname"
+        }
+      },
+      {
+        "name": "billtoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtoaddress1"
+        }
+      },
+      {
+        "name": "billtoAddress2",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtoaddress2"
+        }
+      },
+      {
+        "name": "billtoAddress3",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtoaddress3"
+        }
+      },
+      {
+        "name": "billtoCity",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtocity"
+        }
+      },
+      {
+        "name": "billtoState",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtostate"
+        }
+      },
+      {
+        "name": "billtoPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtozip"
+        }
+      },
+      {
+        "name": "billtoCountry",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtocountry"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "cmhead_curr_id"
+        }
+      },
+      {
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "cmhead_salesrep_id"
+        }
+      },
+      {
+        "name": "commission",
+        "attr": {
+          "type": "Percent",
+          "column": "cmhead_commission",
+          "required": true
+        }
+      },
+      {
+        "name": "saleType",
+        "toOne": {
+          "type": "SaleType",
+          "column": "cmhead_saletype_id"
+        }
+      },
+      {
+        "name": "customerPurchaseOrderNumber",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_custponumber"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "cmhead_taxzone_id"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_comments"
+        }
+      },
+      {
+        "name": "miscCharge",
+        "attr": {
+          "type": "Money",
+          "column": "cmhead_misc"
+        }
+      },
+      {
+        "name": "allocatedCredit",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.invc_allocated_credit(cmhead_id, cmhead_curr_id, cmhead_docdate)"
+        }
+      },
+      {
+        "name": "authorizedCredit",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.invc_authorized_credit(cmhead_invcnumber)"
+        }
+      },
+      {
+        "name": "outstandingCredit",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cust_outstanding_credit(cmhead_cust_id, cmhead_curr_id, cmhead_docdate)"
+        }
+      },
+      {
+        "name": "subtotal",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cm_subtotal(cmhead_id)"
+        }
+      },
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cm_tax_total(cmhead_id)"
+        }
+      },
+      {
+        "name": "total",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cm_total(cmhead_id, cmhead_freight, cmhead_misc)"
+        }
+      },
+      {
+        "name": "balance",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cm_balance(cmhead_id, cmhead_freight, cmhead_misc, cmhead_curr_id, cmhead_docdate, cmhead_cust_id, cmhead_invcnumber)"
+        }
+      },
+      {
+        "name": "lineItems",
+        "toMany": {
+          "isNested": true,
+          "type": "ReturnLine",
+          "column": "cmhead_id",
+          "inverse": "return"
+        }
+      },
+      {
+        "name": "taxAdjustments",
+        "toMany": {
+          "isNested": true,
+          "type": "ReturnTax",
+          "column": "cmhead_id",
+          "inverse": "return"
+        }
+      },
+      {
+        "name": "allocations",
+        "toMany": {
+          "isNested": true,
+          "type": "ReturnAllocation",
+          "column": "cmhead_id",
+          "inverse": "return"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ReturnListItem",
+    "table": "cmhead",
+    "isRest": true,
+    "idSequenceName": "cmhead_cmhead_id_seq",
+    "lockable": true,
+    "comment": "Return List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "MaintainCreditMemos ViewCreditMemos",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cmhead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "returnDate",
+        "attr": {
+          "type": "Date",
+          "column": "cmhead_docdate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "cmhead_posted",
+          "required": true
+        }
+      },
+      {
+        "name": "isVoid",
+        "attr": {
+          "type": "Boolean",
+          "column": "cmhead_void",
+          "required": true
+        }
+      },
+      {
+        "name": "total",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cm_total(cmhead_id, cmhead_freight, cmhead_misc)"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "cmhead_curr_id"
+        }
+      },
+      {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtoname"
+        }
+      },
+      {
+        "name": "billtoCity",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtocity"
+        }
+      },
+      {
+        "name": "billtoState",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtostate"
+        }
+      },
+      {
+        "name": "billtoCountry",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_billtocountry"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "BillingCustomer",
+          "column": "cmhead_cust_id",
+          "isNested": true,
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ReturnRelation",
+    "table": "cmhead",
+    "isRest": true,
+    "idSequenceName": "cmhead_cmhead_id_seq",
+    "lockable": true,
+    "comment": "Return Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cmhead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cmhead_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "returnDate",
+        "attr": {
+          "type": "Date",
+          "column": "cmhead_docdate",
+          "required": true
+        }
+      },
+      {
+        "name": "isPosted",
+        "attr": {
+          "type": "Boolean",
+          "column": "cmhead_posted",
+          "required": true
+        }
+      },
+      {
+        "name": "isVoid",
+        "attr": {
+          "type": "Boolean",
+          "column": "cmhead_void",
+          "required": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "CustomerRelation",
+          "column": "cmhead_cust_id",
+          "isNested": true,
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ReturnTax",
+    "table": "xt.cmheadtaxinfo",
+    "isRest": true,
+    "idSequenceName": "taxhist_taxhist_id_seq",
+    "comment": "Return Tax Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "return",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_parent_id"
+        }
+      },
+      {
+        "name": "taxCode",
+        "toOne": {
+          "type": "TaxCode",
+          "column": "taxhist_tax_id",
+          "required": true
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_tax"
+        }
+      },
+      {
+        "name": "basis",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_basis",
+          "value": 0
+        }
+      },
+      {
+        "name": "percent",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_percent",
+          "value": 0
+        }
+      },
+      {
+        "name": "taxRateAmount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_amount",
+          "value": 0
+        }
+      },
+      {
+        "name": "taxType",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_taxtype_id",
+          "value": 3
+        }
+      },
+      {
+        "name": "documentDate",
+        "attr": {
+          "type": "Date",
+          "column": "taxhist_docdate"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ReturnAllocation",
+    "table": "aropenalloc",
+    "isRest": true,
+    "idSequenceName": "aropenalloc_aropenalloc_id_seq",
+    "comment": "Return Allocation Map",
+    "privileges": {
+      "all": {
+        "create": "ApplyARMemos",
+        "read": true,
+        "update": "ApplyARMemos",
+        "delete": "ApplyARMemos"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "aropenalloc_aropen_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "docType",
+        "attr": {
+          "type": "String",
+          "column": "aropenalloc_doctype",
+          "value": "I"
+        }
+      },
+      {
+        "name": "return",
+        "attr": {
+          "type": "Number",
+          "column": "aropenalloc_doc_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "aropenalloc_amount"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "aropenalloc_curr_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ReturnLine",
+    "table": "xt.cmiteminfo",
+    "lockTable": "cmitem",
+    "isRest": true,
+    "idSequenceName": "cmitem_cmitem_id_seq",
+    "comment": "Return Line Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCreditMemos",
+        "read": "ViewCreditMemos",
+        "update": "MaintainCreditMemos",
+        "delete": "MaintainCreditMemos"
+      },
+      "attribute": {
+        "taxType": {
+          "create": "OverrideTax",
+          "read": true,
+          "update": "OverrideTax"
+        }
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cmitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "return",
+        "attr": {
+          "type": "Number",
+          "column": "cmitem_cmhead_id"
+        }
+      },
+      {
+        "name": "lineNumber",
+        "attr": {
+          "type": "Number",
+          "column": "cmitem_linenumber"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "cmitem_item_id",
+          "required": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "cmitem_warehous_id",
+          "required": true
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Quantity",
+          "column": "cmitem_qtyreturned",
+          "required": true
+        }
+      },
+      {
+        "name": "credited",
+        "attr": {
+          "type": "Quantity",
+          "column": "cmitem_qtycredit"
+        }
+      },
+      {
+        "name": "quantityUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "cmitem_qty_uom_id"
+        }
+      },
+      {
+        "name": "quantityUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "cmitem_qty_invuomratio"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "SalesPrice",
+          "column": "cmitem_unitprice"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "cmitem_price_uom_id"
+        }
+      },
+      {
+        "name": "priceUnitRatio",
+        "attr": {
+          "type": "UnitRatio",
+          "column": "cmitem_price_invuomratio"
+        }
+      },
+      {
+        "name": "extendedPrice",
+        "attr": {
+          "type": "ExtendedPrice",
+          "derived": true,
+          "method": "xt.invc_line_extended_price(cmitem_qtycredit, cmitem_qty_invuomratio, cmitem_unitprice, cmitem_price_invuomratio)"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "cmitem_comments"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "cmitem_taxtype_id"
+        }
+      },
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Money",
+          "derived": true,
+          "method": "xt.cm_line_tax_total(cmitem_id)"
+        }
+      },
+      {
+        "name": "taxes",
+        "toMany": {
+          "isNested": true,
+          "type": "ReturnLineTax",
+          "column": "cmitem_id",
+          "inverse": "parent"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ReturnLineTax",
+    "table": "xt.cmitemtaxinfo",
+    "isRest": true,
+    "idSequenceName": "taxhist_taxhist_id_seq",
+    "comment": "Return Line Tax Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "taxhist_taxtype_id"
+        }
+      },
+      {
+        "name": "taxCode",
+        "toOne": {
+          "type": "TaxCode",
+          "column": "taxhist_tax_id",
+          "required": true
+        }
+      },
+      {
+        "name": "parent",
+        "attr": {
+          "type": "Number",
+          "column": "taxhist_parent_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "taxhist_tax"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

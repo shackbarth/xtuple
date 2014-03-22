@@ -165,7 +165,9 @@ white:true*/
   XM.EmployeeCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.EmployeeCharacteristic.prototype */
 
-    recordType: 'XM.EmployeeCharacteristic'
+    recordType: 'XM.EmployeeCharacteristic',
+
+    which: 'isEmployees'
 
   });
 

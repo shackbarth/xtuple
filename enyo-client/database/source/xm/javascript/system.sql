@@ -1,5 +1,5 @@
 select xt.install_js('XM','System','xtuple', $$
-/* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
+/* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
    See www.xtuple.com/CPAL for the full text of the software license. */
 
 (function () {
@@ -8,11 +8,14 @@ select xt.install_js('XM','System','xtuple', $$
     "CCPassword",
     "CCCompany",
     "CCTest",
-    "CCRequireCCV"
+    "CCRequireCCV",
+    "DefaultPriority",
+    "RequireProjectAssignment",
+    "UseProjects"
   ],
     i, option;
 
-  if (XM.System) { 
+  if (XM.System) {
     for(i = 0; i < systemOptions.length; i++) {
       option = systemOptions[i];
       if(!XM.System.options.contains(option)) {
@@ -21,13 +24,13 @@ select xt.install_js('XM','System','xtuple', $$
     }
 
   } else {
-    XM.System = {}; 
+    XM.System = {};
     XM.System.options = systemOptions;
   }
 
   XM.System.isDispatchable = true;
 
-  /* 
+  /*
   Return System configuration settings.
 
   @returns {Object}
@@ -36,14 +39,14 @@ select xt.install_js('XM','System','xtuple', $$
     var keys = XM.System.options.slice(0),
         data = Object.create(XT.Data),
         ret;
-    
-    
+
+
     ret = data.retrieveMetrics(keys);
 
-    return JSON.stringify(ret);
+    return ret;
   }
-  
-  /* 
+
+  /*
   Update System configuration settings. Only valid options as defined in the array
   XM.System.options will be processed.
 
@@ -53,14 +56,14 @@ select xt.install_js('XM','System','xtuple', $$
   XM.System.commitSettings = function(patches) {
     var sql, settings, options = XM.System.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
-        
+
     /* check privileges */
     /* TODO: we can get away with just checking credit card config privs
       because that's the only thing you can do so far */
     if(!data.checkPrivilege('ConfigureCC')) throw new Error('Access Denied');
 
     /* Compose our commit settings by applying the patch to what we already have */
-    settings = JSON.parse(XM.System.settings());
+    settings = XM.System.settings();
     if (!XT.jsonpatch.apply(settings, patches)) {
       plv8.elog(NOTICE, 'Malformed patch document');
     }
@@ -71,10 +74,10 @@ select xt.install_js('XM','System','xtuple', $$
       var prop = options[i];
       if(settings[prop] !== undefined) metrics[prop] = settings[prop];
     }
- 
+
     return data.commitMetrics(metrics);
   }
 
 }());
-  
+
 $$ );

@@ -3,11 +3,13 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
+process.chdir(__dirname);
 
 Backbone = require("backbone");
 _ = require("underscore");
 jsonpatch = require("json-patch");
 SYS = {};
+XT = { };
 
 (function () {
   "use strict";
@@ -66,10 +68,14 @@ SYS = {};
   X.setup(options);
 
   // load some more required files
-  require("./lib/ext/datasource");
+  var datasource = require("./lib/ext/datasource");
   require("./lib/ext/models");
   require("./lib/ext/smtp_transport");
-  
+
+  datasource.setupPgListeners(X.options.datasource.databases, {
+    email: X.smtpTransport.sendMail
+  });
+
   if (typeof X.options.biServer !== 'undefined') {
     require("./olapcatalog");
     require("./lib/ext/olapsource");
@@ -77,7 +83,7 @@ SYS = {};
 
   // load the encryption key, or create it if it doesn't exist
   // it should created just once, the very first time the datasoruce starts
-  var encryptionKeyFilename = './lib/private/encryption_key.txt';
+  var encryptionKeyFilename = X.options.datasource.encryptionKeyFile || './lib/private/encryption_key.txt';
   X.fs.exists(encryptionKeyFilename, function (exists) {
     if (exists) {
       X.options.encryptionKey = X.fs.readFileSync(encryptionKeyFilename, "utf8");
@@ -346,9 +352,10 @@ app.get('/:org/discovery/v1alpha1/apis', routes.restDiscoveryList);
 
 app.get('/:org/api/userinfo', user.info);
 
-app.all('/:org/api/v1alpha1/:model/:id', routes.restRouter);
-app.all('/:org/api/v1alpha1/:model', routes.restRouter);
-app.all('/:org/api/v1alpha1/*', routes.restRouter);
+app.post('/:org/api/v1alpha1/services/:service/:id', routes.restRouter);
+app.all('/:org/api/v1alpha1/resources/:model/:id', routes.restRouter);
+app.all('/:org/api/v1alpha1/resources/:model', routes.restRouter);
+app.all('/:org/api/v1alpha1/resources/*', routes.restRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
@@ -367,12 +374,11 @@ app.get('/:org/analysis', routes.analysis);
 app.all('/:org/credit-card', routes.creditCard);
 app.all('/:org/change-password', routes.changePassword);
 app.all('/:org/client/build/client-code', routes.clientCode);
-app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
 app.get('/:org/file', routes.file);
+app.get('/:org/generate-report', routes.generateReport);
 app.get('/:org/locale', routes.locale);
-app.get('/:org/report', routes.report);
 app.get('/:org/reset-password', routes.resetPassword);
 app.get('/:org/queryOlap', routes.queryOlapCatalog);
 app.all('/:org/vcfExport', routes.vcfExport);
@@ -399,15 +405,11 @@ if (X.options.extensionRoutes && X.options.extensionRoutes.length > 0) {
   });
 }
 
-
-
 // Set up the other servers we run on different ports.
-//var unexposedServer = express();
-//unexposedServer.listen(X.options.datasource.maintenancePort);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
-redirectServer.listen(X.options.datasource.redirectPort);
+redirectServer.listen(X.options.datasource.redirectPort, X.options.datasource.bindAddress);
 
 /**
  * Start the express server. This is the NEW way.
@@ -415,8 +417,9 @@ redirectServer.listen(X.options.datasource.redirectPort);
 // TODO - Active browser sessions can make calls to this server when it hasn't fully started.
 // That can cause it to crash at startup.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
-io = socketio.listen(server.listen(X.options.datasource.port));
+io = socketio.listen(server.listen(X.options.datasource.port, X.options.datasource.bindAddress));
 
+X.log("Server listening at: ", X.options.datasource.bindAddress);
 X.log("node-datasource started on port: ", X.options.datasource.port);
 X.log("redirectServer started on port: ", X.options.datasource.redirectPort);
 X.log("Databases accessible from this server: \n", JSON.stringify(X.options.datasource.databases, null, 2));
@@ -504,6 +507,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
       key = url.parse(handshakeData.headers.referer).path.split("/")[1];
     } else if (X.options.datasource.testDatabase) {
       // for some reason zombie doesn't send the referrer in the socketio call
+      // https://groups.google.com/forum/#!msg/socket_io/MPpXrP5N9k8/xAyk1l8Iw8YJ
       key = X.options.datasource.testDatabase;
     } else {
       return callback(null, false);
@@ -602,7 +606,9 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           data: session.passport.user,
           code: 1,
           debugging: X.options.datasource.debugging,
-          biUrl: X.options.datasource.biUrl,
+          biAvailable: _.isObject(X.options.biServer) && !_.isEmpty(X.options.biServer),
+          emailAvailable: _.isString(X.options.datasource.smtpHost) && X.options.datasource.smtpHost !== "",
+          printAvailable: _.isString(X.options.datasource.printer) && X.options.datasource.printer !== "",
           version: X.version
         });
       callback(callbackObj);

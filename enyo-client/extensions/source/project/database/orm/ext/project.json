@@ -2,6 +2,31 @@
   {
     "context": "project",
     "nameSpace": "XM",
+    "type": "ProjectType",
+    "table": "xt.prjtypeext",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "prjtypeext_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "emailProfile",
+        "toOne": {
+          "type": "ProjectEmailProfile",
+          "column": "prjtypeext_emlprofile_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
     "type": "IncidentRelation",
     "table": "incdt",
     "isExtension": true,
@@ -179,177 +204,6 @@
       }
     ],
     "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "project",
-    "nameSpace": "XM",
-    "type": "Project",
-    "table": "prj",
-    "isExtension": true,
-    "comment": "Extended by Project",
-    "relations": [
-      {
-        "column": "prj_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "projectType",
-        "toOne": {
-          "type": "ProjectType",
-          "column": "prj_prjtype_id"
-        }
-      },
-      {
-        "name": "opportunities",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectOpportunity",
-          "column": "prj_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "incidents",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectIncident",
-          "column": "prj_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "toDos",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectToDo",
-          "column": "prj_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "characteristics",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectCharacteristic",
-          "column": "prj_id",
-          "inverse": "project"
-        }
-      }     
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "project",
-    "nameSpace": "XM",
-    "type": "ProjectListItem",
-    "table": "prj",
-    "isExtension": true,
-    "comment": "Extended by Project",
-    "relations": [
-      {
-        "column": "prj_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "projectType",
-        "toOne": {
-          "type": "ProjectType",
-          "column": "prj_id"
-        }
-      },
-      {
-        "name": "characteristics",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectListItemCharacteristic",
-          "column": "prj_id",
-          "inverse": "project"
-        }
-      }     
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "project",
-    "nameSpace": "XM",
-    "type": "ProjectTask",
-    "table": "prjtask",
-    "isExtension": true,
-    "comment": "Extended by Project",
-    "relations": [
-      {
-        "column": "prjtask_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "characteristics",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectTaskCharacteristic",
-          "column": "prjtask_id",
-          "inverse": "projectTask"
-        }
-      }     
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "project",
-    "nameSpace": "XM",
-    "type": "Task",
-    "table": "prjtask",
-    "isExtension": true,
-    "comment": "Extended by Project",
-    "relations": [
-      {
-        "column": "prjtask_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "characteristics",
-        "toMany": {
-          "isNested": true,
-          "type": "TaskCharacteristic",
-          "column": "prjtask_id",
-          "inverse": "task"
-        }
-      }     
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "project",
-    "nameSpace": "XM",
-    "type": "TaskListItem",
-    "table": "prjtask",
-    "isExtension": true,
-    "comment": "Extended by Project",
-    "relations": [
-      {
-        "column": "prjtask_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "characteristics",
-        "toMany": {
-          "isNested": true,
-          "type": "TaskListItemCharacteristic",
-          "column": "prjtask_id",
-          "inverse": "task"
-        }
-      }     
-    ],
     "isSystem": true
   },
   {

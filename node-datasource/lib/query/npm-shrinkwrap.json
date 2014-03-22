@@ -1,0 +1,18 @@
+{
+  "name": "xtuple-query",
+  "version": "1.0.0",
+  "dependencies": {
+    "congruence": {
+      "version": "1.2.3",
+      "from": "congruence@1.2.3"
+    },
+    "moment": {
+      "version": "2.4.0",
+      "from": "moment@~2.4.0"
+    },
+    "underscore": {
+      "version": "1.5.2",
+      "from": "underscore@~1.5.2"
+    }
+  }
+}

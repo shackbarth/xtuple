@@ -47,6 +47,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       expiredColor: "",
       extendedPriceScale: 2,
       futureColor: "",
+      hoursScale: 2,
       percentScale: 2,
       purchasePriceScale: 4,
       quantityPerScale: 6,
@@ -213,6 +214,20 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
     @extends XM.Info
   */
+  XM.UserAccountRoleListItem = XM.Info.extend({
+    /** @scope XM.UserAccountRoleListItem.prototype */
+
+    recordType: 'XM.UserAccountRoleListItem',
+
+    editableModel: 'XM.UserAccountRole'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
   XM.UserAccountRoleRelation = XM.Info.extend({
     /** @scope XM.UserAccountRoleRelation.prototype */
 
@@ -267,7 +282,12 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
     defaults: {
       disableExport: false,
-      isActive: true
+      isActive: true,
+      isAgent: false
+    },
+
+    conversionMap: {
+      name: "properName"
     },
 
     bindEvents: function () {
@@ -435,6 +455,31 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
   });
 
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.Agent = XM.Model.extend({
+    /** @scope XM.Agent.prototype */
+
+    recordType: 'XM.Agent'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.ShareUsers = XM.Model.extend({
+    /** @scope XM.Agent.prototype */
+
+    recordType: 'XM.ShareUsers'
+
+  });
+
+
   // ..........................................................
   // COLLECTIONS
   //
@@ -525,6 +570,18 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
    @extends XM.Collection
   */
+  XM.UserAccountRoleListItemCollection = XM.Collection.extend({
+   /** @scope XM.UserAccountRoleListItemCollection.prototype */
+
+    model: XM.UserAccountRoleListItem
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
   XM.UserAccountRoleRelationCollection = XM.Collection.extend({
    /** @scope XM.UserAccountRoleRelationCollection.prototype */
 
@@ -552,6 +609,30 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
    /** @scope XM.UserAccountRelationCollection.prototype */
 
     model: XM.UserAccountRelation
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.AgentCollection = XM.Collection.extend({
+   /** @scope XM.AgentCollection.prototype */
+
+    model: XM.Agent
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.ShareUsersCollection = XM.Collection.extend({
+   /** @scope XM.ShareUsersCollection.prototype */
+
+    model: XM.ShareUsers
 
   });
 

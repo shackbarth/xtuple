@@ -153,7 +153,7 @@
       {
         "name": "targetClose",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "ophead_target_date"
         }
       },
@@ -769,7 +769,7 @@
       {
         "name": "targetClose",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "ophead_target_date"
         }
       },
@@ -883,8 +883,29 @@
       {
         "name": "targetClose",
         "attr": {
-          "type": "Date",
+          "type": "DueDate",
           "column": "ophead_target_date"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_start_date"
+        }
+      },
+      {
+        "name": "actualDate",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_actual_date"
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_assigned_date"
         }
       },
       {

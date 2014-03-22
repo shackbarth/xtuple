@@ -67,7 +67,7 @@
 
 <p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"name": "task",</pre></div></td></tr><tr id="section-26"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-26">&#182;</a></div><p>Indicates this property is an attribute that maps directly to table column.</p>
 
-<p>@type {Hash}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"attr": {</pre></div></td></tr><tr id="section-27"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-27">&#182;</a></div><p>The expected type of the property. Should be any of the following:<br />String<br />Date<br />Boolean<br />Number<br />Money<br />Cost<br />SalesPrice<br />PurchasePrice<br />ExtendedPrice<br />Weight<br />Percent</p>
+<p>@type {Hash}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"attr": {</pre></div></td></tr><tr id="section-27"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-27">&#182;</a></div><p>The expected type of the property. Should be any of the following:<br />String<br />Date<br />DueDate<br />EffectiveDate<br />ExpireDate<br />Boolean<br />Hours<br />Number<br />Money<br />Cost<br />SalesPrice<br />PurchasePrice<br />ExtendedPrice<br />Weight<br />Percent<br />Phone<br />Email<br />Url</p>
 
 <p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"type": "Number",</pre></div></td></tr><tr id="section-28"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-28">&#182;</a></div><p>The mapped database column associated with this property.</p>
 
@@ -118,18 +118,20 @@
 
 <p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"column": "prjtask_id",</pre></div></td></tr><tr id="section-45"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-45">&#182;</a></div><p>The key that is the relation to the column. Ignored if no column specified.</p>
 
-<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"inverse": "project_task",</pre></div></td></tr><tr id="section-46"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-46">&#182;</a></div><p>If true the returned array will contain the complete row for each matching record, otherwise<br />  the array will contain only primary keys for matching records.</p>
+<p>@type {String}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"inverse": "project_task",</pre></div></td></tr><tr id="section-46"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-46">&#182;</a></div><p>Indicate column is on the base table. Useful for extensions where a toMany relationship is keyed off the base table but the extension refers to another extending table.</p>
+
+<p>@type {Boolean}</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isBase": false,</pre></div></td></tr><tr id="section-47"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-47">&#182;</a></div><p>If true the returned array will contain the complete row for each matching record, otherwise<br />  the array will contain only primary keys for matching records.</p>
 
 <p>Nested records will be automatically deleted when the parent is deleted so long as their edit<br />  rules allow it. See deleteDelegate for situations where the rules are in conflict.</p>
 
 <p>@see deletDelegate<br />  @type {Boolean}<br />  @default false</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isNested": true
 }
 }
-],</pre></div></td></tr><tr id="section-47"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-47">&#182;</a></div><p>The extensions array allows you to define addtional tables on which to join to the table<br />of this ORM. The following keys apply to extensions in the exact same manner as the root<br />definition:</p>
+],</pre></div></td></tr><tr id="section-48"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-48">&#182;</a></div><p>The extensions array allows you to define addtional tables on which to join to the table<br />of this ORM. The following keys apply to extensions in the exact same manner as the root<br />definition:</p>
 
 <p>table<br />isChild<br />properties<br />order</p>
 
-<p>Note that the name space should not be included in extension arrays. It will be assumed<br />to be the root name space. The isExension property will automatically be true on values<br />listed in the extensions array.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"extensions": [],</pre></div></td></tr><tr id="section-48"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-48">&#182;</a></div><p>Indicates the ORM has been created as part of an extension package. Helps to differentiate<br />standard from custom ORMs created by users for local implementations.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isSystem": false,</pre></div></td></tr><tr id="section-49"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-49">&#182;</a></div><p>Dictates the sequence that extensions are processed in. Higher sequences will add columns to the<br />furthermost right of the ORM views.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"sequence": 0
+<p>Note that the name space should not be included in extension arrays. It will be assumed<br />to be the root name space. The isExension property will automatically be true on values<br />listed in the extensions array.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"extensions": [],</pre></div></td></tr><tr id="section-49"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-49">&#182;</a></div><p>Indicates the ORM has been created as part of an extension package. Helps to differentiate<br />standard from custom ORMs created by users for local implementations.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"isSystem": false,</pre></div></td></tr><tr id="section-50"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-50">&#182;</a></div><p>Dictates the sequence that extensions are processed in. Higher sequences will add columns to the<br />furthermost right of the ORM views.</p></td><td class="code"><div class="highlight"><pre lang="javascript">"sequence": 0
 
 }</pre></div></td></tr></tbody></table></div>
 Generated with dox-docco

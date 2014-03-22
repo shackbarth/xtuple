@@ -27,20 +27,20 @@ white:true*/
 
   });
 
-  /**
-    @class
-
-    @extends XM.SalesOrderLineBase
-  */
-  XM.QuoteLine = XM.SalesOrderLineBase.extend(/** @lends XM.QuoteLine.prototype */{
+  XM.QuoteLine = XM.Model.extend(_.extend({}, XM.OrderLineMixin,
+      XM.SalesOrderBaseMixin, XM.SalesOrderLineMixin, {
 
     recordType: 'XM.QuoteLine',
 
     parentKey: "quote",
 
-    lineCharacteristicRecordType: "XM.QuoteLineCharacteristic"
+    lineCharacteristicRecordType: "XM.QuoteLineCharacteristic",
 
-  });
+    isActive: function () {
+      this.getValue("quote.isActive");
+    }
+
+  }), XM.SalesOrderLineStaticMixin);
 
   /**
     @class

@@ -219,7 +219,7 @@ var jsonpatch;
       if (state !== "update") {
         for (prop in obj) {
           if (obj.hasOwnProperty(prop) && Array.isArray(obj[prop])) {
-            for (i = 0; i < obj[prop].length; i++) { 
+            for (i = 0; i < obj[prop].length; i++) {
               updateState(obj[prop][i], state);
             }
           }

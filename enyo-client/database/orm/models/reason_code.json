@@ -1,0 +1,53 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ReasonCode",
+    "table": "rsncode",
+    "isRest": true,
+    "idSequenceName": "rsncode_rsncode_id_seq",
+    "lockable": true,
+    "comment": "Reason Code Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainReasonCodes",
+        "read": true,
+        "update": "MaintainReasonCodes",
+        "delete": "MaintainReasonCodes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "rsncode_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "rsncode_code",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "rsncode_descrip"
+        }
+      },
+      {
+        "name": "documentType",
+        "attr": {
+          "type": "String",
+          "column": "rsncode_doctype"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

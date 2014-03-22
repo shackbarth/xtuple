@@ -11,7 +11,7 @@
 .pullout {
   position: absolute;
   top: 57px;
-  left: 0;
+  left: 0px;
   bottom: 0;
   width: 320px;
   background: @smoke;
@@ -24,8 +24,8 @@
   .pullout-shadow {
     position: absolute;
     height: 100%;
-    width: 20px;
-    right: -20px;
+    width: 2px;
+    right: -2px;
     /**
       TODO: this is weird and indicates the REAL need to change the
       whatever the css system is...this relative path is different...
@@ -54,6 +54,7 @@
 .xv-groupbox {
   &.xv-parameter {
     min-width: 280px;
+    max-width: 320px;
     margin: 4px 0 8px 4px;
     padding: 0;
 
@@ -97,10 +98,10 @@
 .xv-parameter-item {
   background-color: @white;
   .xv-label {
-    color: #000;
+    color: @black;
   }
-  .xv-decorated-label {
-    color: #000;
+  .xv-flexible-label {
+    color: @black;
   }
 
   .xv-picker {

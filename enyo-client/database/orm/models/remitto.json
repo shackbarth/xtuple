@@ -1,0 +1,50 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "RemitTo",
+    "table": "xt.remittoinfo",
+    "comment": "Remit To Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "remitto_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "key",
+        "attr": {
+          "type": "Number",
+          "column": "remitto_key",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "remitto_name"
+        }
+      },
+      {
+        "name": "address",
+        "attr": {
+          "type": "String",
+          "column": "remitto_adr"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

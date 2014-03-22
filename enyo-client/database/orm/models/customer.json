@@ -15,6 +15,16 @@
         "update": "MaintainCustomerMasters",
         "delete": "MaintainCustomerMasters"
       },
+      "personal":{
+        "create":"MaintainPersonalCRMAccounts",
+        "read":"ViewPersonalCRMAccounts",
+        "update":"MaintainPersonalCRMAccounts",
+        "delete":"MaintainPersonalCRMAccounts",
+        "properties":[
+          "account.owner.username",
+          "account.number"
+        ]
+      },
       "attribute": {
         "creditStatus": {
           "create": "UpdateCustomerCreditStatus",
@@ -366,7 +376,25 @@
         }
       }
     ],
-    "extensions": [],
+    "extensions": [{
+      "table": "xt.custcustemlprofile",
+      "isExtension": true,
+      "relations": [
+        {
+          "column": "custcustemlprofile_cust_id",
+          "inverse": "id"
+        }
+      ],
+      "properties": [
+        {
+          "name": "emailProfile",
+          "toOne": {
+            "type": "CustomerEmailProfile",
+            "column": "custcustemlprofile_custemlprofile_id"
+          }
+        }
+      ]
+    }],
     "isSystem": true
   },
   {
@@ -380,7 +408,7 @@
     "privileges": {
       "all": {
         "create": "MaintainSalesOrders",
-        "read": "ViewSalesOrders",
+        "read": "ViewSalesOrders ViewAROpenItems EditAROpenItem",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
       },
@@ -655,6 +683,349 @@
       }
     ],
     "extensions": [],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "BillingCustomer",
+    "table": "custinfo",
+    "idSequenceName": "cust_cust_id_seq",
+    "orderSequence": "CRMAccountNumber",
+    "comment": "Customer Map for Billing",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewMiscInvoices ViewCreditMemos",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cust_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cust_number",
+          "isNaturalKey": true,
+          "required": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "cust_name",
+          "required": true
+        }
+      },
+      {
+        "name": "customerType",
+        "toOne": {
+          "type": "CustomerType",
+          "column": "cust_custtype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "customerGroups",
+        "toMany": {
+          "isNested": true,
+          "type": "CustomerCustomerGroup",
+          "column": "cust_id",
+          "inverse": "customer"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "cust_active",
+          "required": true
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "cust_comments"
+        }
+      },
+      {
+        "name": "billingContact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "cust_cntct_id",
+          "inverse": "id"
+        }
+      },
+      {
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "cust_salesrep_id",
+          "required": true
+        }
+      },
+      {
+        "name": "commission",
+        "attr": {
+          "type": "Percent",
+          "column": "cust_commprcnt"
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "cust_terms_id",
+          "required": true
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "cust_taxzone_id"
+        }
+      },
+      {
+        "name": "isFreeFormBillto",
+        "attr": {
+          "type": "Boolean",
+          "column": "cust_ffbillto",
+          "required": true
+        }
+      },
+      {
+        "name": "shiptos",
+        "toMany": {
+          "isNested": true,
+          "type": "CustomerShipto",
+          "column": "cust_id",
+          "inverse": "customer"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "cust_curr_id",
+          "defalutValue": "baseCurrency"
+        }
+      }
+    ],
+    "extensions": [{
+      "table": "xt.custcustemlprofile",
+      "isExtension": true,
+      "relations": [
+        {
+          "column": "custcustemlprofile_cust_id",
+          "inverse": "id"
+        }
+      ],
+      "properties": [
+        {
+          "name": "emailProfile",
+          "toOne": {
+            "type": "CustomerEmailProfile",
+            "column": "custcustemlprofile_custemlprofile_id"
+          }
+        }
+      ]
+    }],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerEmailProfile",
+    "table": "xt.custemlprofile",
+    "isRest": true,
+    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "comment": "Customer Email Profile Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCustomerEmailProfiles",
+        "read": true,
+        "update": "MaintainCustomerEmailProfiles",
+        "delete": "MaintainCustomerEmailProfiles"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emlprofile_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_descrip"
+        }
+      },
+      {
+        "name": "from",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_from"
+        }
+      },
+      {
+        "name": "replyTo",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_replyto"
+        }
+      },
+      {
+        "name": "to",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_to"
+        }
+      },
+      {
+        "name": "cc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_cc"
+        }
+      },
+      {
+        "name": "bcc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_bcc"
+        }
+      },
+      {
+        "name": "subject",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_subject"
+        }
+      },
+      {
+        "name": "body",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_body"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "CustomerEmailProfile",
+    "table": "xt.custemlprofile",
+    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "comment": "Customer Email Profile Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCustomerEmailProfiles",
+        "read": true,
+        "update": "MaintainCustomerEmailProfiles",
+        "delete": "MaintainCustomerEmailProfiles"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emlprofile_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_descrip"
+        }
+      },
+      {
+        "name": "from",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_from"
+        }
+      },
+      {
+        "name": "replyTo",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_replyto"
+        }
+      },
+      {
+        "name": "to",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_to"
+        }
+      },
+      {
+        "name": "cc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_cc"
+        }
+      },
+      {
+        "name": "bcc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_bcc"
+        }
+      },
+      {
+        "name": "subject",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_subject"
+        }
+      },
+      {
+        "name": "body",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_body"
+        }
+      }
+    ],
     "isSystem": true
   },
   {
@@ -1737,7 +2108,7 @@
     "privileges": {
       "all": {
         "create": "MaintainCustomerTypes",
-        "read": true,
+        "read": "ViewCustomerTypes",
         "update": "MaintainCustomerTypes",
         "delete": "MaintainCustomerTypes"
       }
@@ -1862,7 +2233,6 @@
     "nameSpace": "SYS",
     "type": "CustomerRelation",
     "table": "custinfo",
-    "isRest": true,
     "comment": "Customer Relation Map",
     "privileges": {
       "all": {
@@ -2065,7 +2435,7 @@
     "privileges": {
       "all": {
         "create": "MaintainShipVias",
-        "read": true,
+        "read": "ViewShipVias",
         "update": "MaintainShipVias",
         "delete": "MaintainShipVias"
       }
@@ -2109,7 +2479,7 @@
     "privileges": {
       "all": {
         "create": "MaintainShippingZones",
-        "read": true,
+        "read": "ViewShippingZones",
         "update": "MaintainShippingZones",
         "delete": "MaintainShippingZones"
       }
@@ -2230,6 +2600,49 @@
         "toOne":	{
           "isNested": true,
           "type": "CustomerRelation",
+          "column": "custgrpitem_cust_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerCustomerGroup",
+    "table": "custgrpitem",
+    "idSequenceName": "custgrpitem_custgrpitem_id_seq",
+    "comment": "Customer Group Customer Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr":	{
+          "type": "Number",
+          "column": "custgrpitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "customerGroup",
+        "toOne": {
+          "type": "CustomerGroup",
+          "isNested": true,
+          "column": "custgrpitem_custgrp_id"
+        }
+      },
+      {
+        "name": "customer",
+        "attr": {
+          "type": "Number",
           "column": "custgrpitem_cust_id"
         }
       }

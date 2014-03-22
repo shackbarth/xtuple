@@ -1,5 +1,5 @@
 select xt.install_js('XM','Tax','xtuple', $$
-/* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
+/* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
    See www.xtuple.com/CPAL for the full text of the software license. */
 
 (function () {
@@ -34,7 +34,7 @@ select xt.install_js('XM','Tax','xtuple', $$
     
     ret = plv8.execute(sql, [taxZoneId || -1, taxTypeId || -1, effective, currencyId, amount]);
     for (var i = 0; i < ret.length; i++) ret[i].taxCode = XT.camelize(ret[i].taxCode);
-    return JSON.stringify(ret);
+    return ret;
   };
   XM.Tax.taxDetail.description = "Returns the calculated tax detail for a given amount, currency, and date";
   XM.Tax.taxDetail.params = {

@@ -46,9 +46,10 @@ var _ = require('underscore'),
           extSql = "SELECT * FROM xt.ext ORDER BY ext_load_order",
           defaultExtensions = [
             { ext_location: '/core-extensions', ext_name: 'crm' },
-            { ext_location: '/core-extensions', ext_name: 'inventory' },
             { ext_location: '/core-extensions', ext_name: 'project' },
-            { ext_location: '/core-extensions', ext_name: 'sales' }
+            { ext_location: '/core-extensions', ext_name: 'sales' },
+            { ext_location: '/core-extensions', ext_name: 'billing' },
+            { ext_location: '/core-extensions', ext_name: 'purchasing' }
           ],
           adaptExtensions = function (err, res) {
             if (err) {
@@ -175,9 +176,10 @@ var _ = require('underscore'),
         path.join(__dirname, '../../lib/orm'),
         path.join(__dirname, '../../enyo-client'),
         path.join(__dirname, '../../enyo-client/extensions/source/crm'),
-        path.join(__dirname, '../../enyo-client/extensions/source/inventory'),
         path.join(__dirname, '../../enyo-client/extensions/source/project'),
-        path.join(__dirname, '../../enyo-client/extensions/source/sales')
+        path.join(__dirname, '../../enyo-client/extensions/source/sales'),
+        path.join(__dirname, '../../enyo-client/extensions/source/billing'),
+        path.join(__dirname, '../../enyo-client/extensions/source/purchasing'),
       ];
       buildAll([buildSpecs], creds, callback);
 

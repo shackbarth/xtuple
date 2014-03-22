@@ -1,11 +1,21 @@
 /*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true, white:true*/
-/*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
+/*global XT:true, XV:true, _:true, enyo:true, Globalize:true*/
 
 (function () {
 
   XT.extensions.sales.initParameters = function () {
+
+    // ..........................................................
+    // ACTIVITY
+    //
+
+    XV.ActivityListParameters.prototype.activityTypes.sales = [
+      {type: "SalesOrder", label: "_salesOrders".loc()},
+      {type: "SalesOrderWorkflow", label: "_orderWorkflow".loc()}
+    ];
+
     // ..........................................................
     // SALES HISTORY
     //

@@ -111,17 +111,20 @@ white:true*/
     });
   };
 
+  XT.cacheCollection("XM.agents", "XM.AgentCollection", "username");
   XT.cacheCollection("XM.characteristics", "XM.CharacteristicCollection", "order name");
   XT.cacheCollection("XM.commentTypes", "XM.CommentTypeCollection");
   XT.cacheCollection("XM.countries", "XM.CountryCollection", "name");
   XT.cacheCollection("XM.currencyRates", "XM.CurrencyRateCollection");
   XT.cacheCollection("XM.departments", "XM.DepartmentCollection", "number");
   XT.cacheCollection("XM.honorifics", "XM.HonorificCollection", "code");
-  XT.cacheCollection("XM.itemGroups", "XM.ItemGroupCollection", "name");
+  XT.cacheCollection("XM.itemGroups", "XM.ItemGroupRelationCollection", "name");
   XT.cacheCollection("XM.languages", "XM.LanguageCollection");
   XT.cacheCollection("XM.locales", "XM.LocaleCollection");
   XT.cacheCollection("XM.priorities", "XM.PriorityCollection");
   XT.cacheCollection("XM.privileges", "XM.PrivilegeCollection");
+  XT.cacheCollection("XM.projectTypes", "XM.ProjectTypeCollection", "code");
+  XT.cacheCollection("XM.siteRelations", "XM.SiteRelationCollection", "code");
   XT.cacheCollection("XM.shifts", "XM.ShiftCollection", "number");
   XT.cacheCollection("XM.sources", "XM.SourceCollection");
   XT.cacheCollection("XM.states", "XM.StateCollection", "abbreviation");
@@ -132,6 +135,8 @@ white:true*/
   XT.cacheCollection("XM.taxCodes", "XM.TaxCodeCollection");
   XT.cacheCollection("XM.units", "XM.UnitCollection");
   XT.cacheCollection("XM.filters", "XM.FilterCollection");
+  XT.cacheCollection("XM.reasonCodes", "XM.ReasonCodeCollection");
+  XT.cacheCollection("XM.vendorTypes", "XM.VendorTypeCollection");
 
   /**
     These ones are a little custom and need to be done longhand.

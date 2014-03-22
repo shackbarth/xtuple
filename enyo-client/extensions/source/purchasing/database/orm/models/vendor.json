@@ -1,0 +1,166 @@
+[
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseVendorRelation",
+    "table": "vendinfo",
+    "isRest": true,
+    "comment": "Purchase Vendor Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewPurchaseOrders MaintainPurchaseOrders",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "vend_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "vend_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "vend_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "vend_active"
+        }
+      },
+      {
+        "name": "vendorAddress",
+        "toOne": {
+          "isNested": true,
+          "type": "VendorAddressRelation",
+          "column": "obj_uuid",
+          "inverse": "uuid"
+        }
+      },
+      {
+        "name": "primaryContact",
+        "toOne": {
+          "type": "ContactRelation",
+          "column": "vend_cntct1_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "vend_curr_id"
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "vend_terms_id"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "vend_taxzone_id"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "vend_shipvia"
+        }
+      },
+      {
+        "name": "incotermsSource",
+        "attr": {
+          "type": "String",
+          "column": "vend_fobsource"
+        }
+      },
+      {
+        "name": "incoterms",
+        "attr": {
+          "type": "String",
+          "column": "vend_fob"
+        }
+      },
+      {
+        "name": "itemSourceRequired",
+        "attr": {
+          "type": "Boolean",
+          "column": "vend_restrictpurch"
+        }
+      }      
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "purchasing",
+    "nameSpace": "XM",
+    "type": "PurchaseVendorAddress",
+    "table": "xt.vendaddrxt",
+    "comment": "Purchase Vendor Address Map",
+    "properties": [
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "uuid",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "code"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "name"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "addr_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "cntct_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

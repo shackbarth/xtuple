@@ -208,7 +208,7 @@
     "privileges": {
       "all": {
         "create": "MaintainTaxClasses",
-        "read": true,
+        "read": "ViewTaxClasses",
         "update": "MaintainTaxClasses",
         "delete": "MaintainTaxClasses"
       }
@@ -258,7 +258,7 @@
     "privileges": {
       "all": {
         "create": "MaintainTaxCodes",
-        "read": true,
+        "read": "ViewTaxCodes",
         "update": "MaintainTaxCodes",
         "delete": "MaintainTaxCodes"
       }
@@ -322,7 +322,7 @@
     "privileges": {
       "all": {
         "create": "MaintainTaxCodes",
-        "read": true,
+        "read": "ViewTaxCodes",
         "update": "MaintainTaxCodes",
         "delete": "MaintainTaxCodes"
       }
@@ -379,7 +379,7 @@
       {
         "name": "effectiveDate",
         "attr": {
-          "type": "Date",
+          "type": "EffectiveDate",
           "column": "taxrate_effective",
           "required": true
         }
@@ -387,7 +387,7 @@
       {
         "name": "expirationDate",
         "attr": {
-          "type": "Date",
+          "type": "ExpireDate",
           "column": "taxrate_expires",
           "required": true
         }
@@ -406,7 +406,7 @@
     "privileges": {
       "all": {
         "create": "MaintainTaxTypes",
-        "read": true,
+        "read": "ViewTaxTypes",
         "update": "MaintainTaxTypes",
         "delete": "MaintainTaxTypes"
       }
@@ -456,7 +456,7 @@
     "privileges": {
       "all": {
         "create": "MaintainTaxZones",
-        "read": true,
+        "read": "ViewTaxZones",
         "update": "MaintainTaxZones",
         "delete": "MaintainTaxZones"
       }

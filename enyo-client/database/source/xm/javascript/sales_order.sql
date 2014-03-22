@@ -1,16 +1,22 @@
 select xt.install_js('XM','SalesOrder','xtuple', $$
-/* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
+/* Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
    See www.xtuple.com/CPAL for the full text of the software license. */
 
 (function () {
 
   if (!XM.SalesOrder) { XM.SalesOrder = {}; }
 
+  XM.SalesOrder.idAttribute = 'cohead_id';
   XM.SalesOrder.isDispatchable = true;
+
+  XM.SalesOrder.findByNumber = function (number) {
+    return plv8.execute('select * from cohead where cohead_number = $1', [number])[0];
+  };
+
 
   /**
     Return whether a Sales Order is referenced by another table.
-    
+
     @param {String} SalesOrder Number
   */
   XM.SalesOrder.used = function(id) {
@@ -46,9 +52,60 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
   };
 
   /**
+   * Post a Payment to this Sales Order
+   *
+   * @see https://github.com/xtuple/qt-client/blob/master/guiclient/salesOrder.cpp#L4512
+   */
+  XM.SalesOrder.addPayment = function (cashReceiptNumber, salesOrderNumber) {
+    var cashReceipt = XM.CashReceipt.findByNumber(cashReceiptNumber),
+      isPosted = cashReceipt.cashrcpt_posted;
+
+    if (!cashReceipt) {
+      /**
+       * XXX maybe standardize 404-type error messages? or maybe it already is?
+       */
+      throw new handleError('Could not find CashReceipt [number=' + cashReceiptNumber + ']', 404);
+    }
+
+    var salesOrder = XM.SalesOrder.findByNumber(salesOrderNumber);
+
+    if (!salesOrder) {
+      throw new handleError('Could not find SalesOrder [number=' + salesOrderNumber + ']', 404);
+    }
+
+    var journalNumber = XM.CashReceipt.fetchJournalNumber();
+      post = !isPosted && XT.executeFunction('postCashReceipt', [cashReceipt.cashrcpt_id, journalNumber ]),
+      cashReceiptLine = plv8.execute(
+        "select cashrcptitem_aropen_id FROM cashrcptitem "+
+        "WHERE cashrcptitem_cashrcpt_id=$1",
+        [cashReceipt.cashrcpt_id]
+      )[0],
+      receivableId = cashReceiptLine && cashReceiptLine.cashrcptitem_aropen_id,
+      payment = plv8.execute([
+        'insert into aropenalloc (',
+          'aropenalloc_aropen_id,',
+          'aropenalloc_doctype,',
+          'aropenalloc_doc_id,',
+          'aropenalloc_amount,',
+          'aropenalloc_curr_id',
+        ') values ($1, $2, $3, $4, $5)'
+        ].join(' '), [
+          receivableId,
+          'S',
+          salesOrder[XM.SalesOrder.idAttribute],
+          cashReceipt.cashrcpt_amount,
+          cashReceipt.cashrcpt_curr_id
+        ]);
+
+    return {
+      paid: !!payment
+    };
+  };
+
+  /**
     Return a sales order object from a quote. Does not
     take any action on the original quote
-    
+
     @param {String} Quote Number
     @returns {Object}
   */
@@ -95,7 +152,7 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
         id: id,
         superUser: true
       });
-    
+
       /* Need to convert from customer/prospect to customer */
       customer = data.retrieveRecord({
         nameSpace: "XM",
@@ -116,15 +173,15 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
     /* Check for errors */
     if (result < 0) {
       errorString = XT.errorToString("convertQuote", result, [id]);
-      throw new handleError(errorString, 424); 
+      throw new handleError(errorString, 424);
     }
 
     /* If number is already used, get another */
     if (plv8.execute(sql3, [id]).length) {
       id = plv8.execute("select fetchsonumber() as num;")[0].num;
     }
-    
-    /* Effetively copy the quote, but manipulate a few 
+
+    /* Effetively copy the quote, but manipulate a few
        data points along the way */
     salesOrder = XT.extend(quote.data, {
       number: id,
@@ -143,6 +200,6 @@ select xt.install_js('XM','SalesOrder','xtuple', $$
   };
 
 }());
-  
+
 $$ );
 

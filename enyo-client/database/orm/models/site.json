@@ -80,7 +80,7 @@
         }
       },
       {
-        "name": "fob",
+        "name": "incoterms",
         "attr": {
           "type": "String",
           "column": "warehous_fob"
@@ -394,7 +394,30 @@
         }
       },
       {
-        "name": "fob",
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "warehous_addr_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "warehous_cntct_id"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "warehous_taxzone_id"
+        }
+      },
+      {
+        "name": "incoterms",
         "attr": {
           "type": "String",
           "column": "warehous_fob"

@@ -11,7 +11,7 @@
     "privileges": {
       "all": {
         "create": "MaintainCostCategories",
-        "read": true,
+        "read": "ViewCostCategories",
         "update": "MaintainCostCategories",
         "delete": "MaintainCostCategories"
       }
@@ -113,6 +113,14 @@
         "attr": {
           "type": "Boolean",
           "column": "itemsite_sold"
+        }
+      },
+      {
+        "name": "soldRanking",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_soldranking",
+          "required": true
         }
       },
       {
@@ -382,101 +390,25 @@
         }
       },
       {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "item_number"
+        }
+      },
+      {
+        "name": "barcode",
+        "attr": {
+          "type": "String",
+          "column": "item_upccode"
+        }
+      },
+      {
         "name": "item",
         "toOne": {
           "type": "ItemRelation",
           "column": "itemsite_item_id",
           "isNested": true
-        }
-      },
-      {
-        "name": "site",
-        "toOne": {
-          "type": "SiteRelation",
-          "column": "itemsite_warehous_id",
-          "isNested": true
-        }
-      },
-      {
-        "name": "costCategory",
-        "toOne": {
-          "type": "CostCategory",
-          "column": "itemsite_costcat_id"
-        }
-      },
-      {
-        "name": "plannerCode",
-        "toOne": {
-          "type": "PlannerCode",
-          "column": "itemsite_plancode_id"
-        }
-      },
-      {
-        "name": "unitCost",
-        "attr": {
-          "type": "Number",
-          "column": "unit_cost"
-        }
-      }
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "ItemItemSiteRelation",
-    "table": "xt.itemsiteinfo",
-    "isRest": true,
-    "comment": "Itemsite Relation Map",
-    "privileges": {
-      "all": {
-        "create": false,
-        "read": true,
-        "update": false,
-        "delete": false
-      },
-      "attribute": {
-        "unitCost": {
-          "view": "ViewCosts MaintainCosts"
-        }
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "uuid",
-        "attr": {
-          "type": "String",
-          "column": "obj_uuid",
-          "isNaturalKey": true
-        }
-      },
-      {
-        "name": "isActive",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_active"
-        }
-      },
-      {
-        "name": "isSold",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_sold"
-        }
-      },
-      {
-        "name": "item",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_item_id"
         }
       },
       {

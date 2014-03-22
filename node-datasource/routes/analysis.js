@@ -18,7 +18,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       header = {},
       reportUrl = req.query.reportUrl,
       username = req.session.passport.user.username,
-      biServerUrl = X.options.datasource.biServerUrl,
+      biServerHost = X.options.biServer.bihost || "localhost",
+      biServerPortHttps = X.options.biServer.httpsport || "8443",
+      biServerUrl = "https://" + biServerHost + ":" + biServerPortHttps + "/pentaho/",
       today = new Date(),
       expires = new Date(today.getTime() + (10 * 60 * 1000)), // 10 minutes from now
       datasource = "https://" + req.headers.host + "/",
@@ -26,10 +28,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       scope = datasource + database + "/auth/" + database,
       audience = datasource + database + "/oauth/token",
       superuser = X.options.databaseServer.user,
-      tenant = X.options.datasource.uniqueTenantId;
+      tenant = X.options.biServer.tenantname || "default",
+      biKeyFile = X.options.biServer.restkeyfile || "";
 
     // get private key from path in config
-    privKey = X.fs.readFileSync(X.options.datasource.biKeyFile);
+    privKey = X.fs.readFileSync(biKeyFile);
 
     // create header for JWT
     header = {

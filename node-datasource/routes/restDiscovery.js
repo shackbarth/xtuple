@@ -5,7 +5,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  var routes = require('./routes');
+  var routes = require('./routes'),
+      getRestStore = {},
+      listStore;
 
   exports.list = function (req, res, next) {
     var callback = {},
@@ -17,6 +19,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (result.isError) {
         return next(new Error("Invalid Request."));
       }
+
+      listStore = result.data;
 
       res.json(result.data);
     };
@@ -33,7 +37,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.type = "Discovery";
     payload.dispatch = {
       functionName: "getList",
-      isJSON: true,
       parameters: [model, "https://" + req.headers.host + "/"] // TODO get rootURL
     };
 
@@ -46,7 +49,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.queryDatabase("post", payload, session, callback);
+    if (listStore) {
+      res.json(listStore);
+    } else {
+      routes.queryDatabase("post", payload, session, callback);
+    }
   };
 
   exports.getRest = function (req, res, next) {
@@ -59,6 +66,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (result.isError) {
         return next(new Error("Invalid Request."));
       }
+
+      getRestStore[req.url] = result.data;
 
       // The discovery doc should be cacheable. A "Vary: " header will break that.
       // See: http://code.google.com/p/google-api-php-client/source/browse/tags/0.6.2/src/io/Google_CacheParser.php#100
@@ -74,11 +83,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       model = req.params.model.camelize().capitalize();
     }
 
+    if (!req.params.model && req.query && req.query.resources && req.query.resources.length) {
+      model = req.query.resources;
+    }
+
     payload.nameSpace = "XT";
     payload.type = "Discovery";
     payload.dispatch = {
       functionName: "getDiscovery",
-      isJSON: true,
       parameters: [model, "https://" + req.headers.host + "/"] // TODO get rootURL
     };
 
@@ -91,7 +103,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.queryDatabase("post", payload, session, callback);
+    if (getRestStore && getRestStore[req.url]) {
+      // The discovery doc should be cacheable. A "Vary: " header will break that.
+      // See: http://code.google.com/p/google-api-php-client/source/browse/tags/0.6.2/src/io/Google_CacheParser.php#100
+      delete res._headers.vary;
+      res.json(getRestStore[req.url]);
+    } else {
+      routes.queryDatabase("post", payload, session, callback);
+    }
   };
 
 }());
