@@ -43,6 +43,7 @@ select xt.install_js('XT','Data','xtuple', $$
         clauses = [],
         count = 1,
         identifiers = [],
+        joinIdentifiers = [],
         orderByList = [],
         orderByColumnList = [],
         isArray = false,
@@ -268,11 +269,16 @@ select xt.install_js('XT','Data','xtuple', $$
                       }
                     } else {
                       childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
-                      /* TODO: use XT.format */
                       var sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
-                      joins.push("left join " + childOrm.table + " jt" + joins.length + " on " 
-                        + sourceTableAlias + "."
-                        + prop.toOne.column + " = jt" + joins.length + "." + XT.Orm.primaryKey(childOrm, true));
+                      joinIdentifiers.push(
+                        this.getNamespaceFromNamespacedTable(childOrm.table), 
+                        this.getTableFromNamespacedTable(childOrm.table), 
+                        sourceTableAlias, prop.toOne.column, 
+                        XT.Orm.primaryKey(childOrm, true));
+                      joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3) 
+                        + "$I jt" + joins.length + " on %" 
+                        + (joinIdentifiers.length - 2) + "$I.%"
+                        + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
                     } 
                   }
                 }
@@ -284,9 +290,20 @@ select xt.install_js('XT','Data','xtuple', $$
                   /* We'll need to join this orm extension */
                   /* TODO: the inverse may not be the pkeyColumn */
                   var pkeyColumn = XT.Orm.primaryKey(orm, true);
-                  joins.push("left join " + pertinentExtension.table + " jt" + joins.length + " on " 
-                    /*+ sourceTableAlias + "." TODO */
-                    + pkeyColumn + " = jt" + joins.length + "." + pertinentExtension.relations[0].column);
+                      
+                  plv8.elog(NOTICE, "a1", joinIdentifiers);
+                  joinIdentifiers.push(
+                    this.getNamespaceFromNamespacedTable(pertinentExtension.table), 
+                    this.getTableFromNamespacedTable(pertinentExtension.table), 
+                    /*sourceTableAlias,  TODO */
+                    pkeyColumn, 
+                    pertinentExtension.relations[0].column);
+                  plv8.elog(NOTICE, "a2", joinIdentifiers);
+                  /* TODO: 3 and 2 will be 4 and 3 */
+                  joins.push("left join %" + (joinIdentifiers.length - 3) + "$I.%" + (joinIdentifiers.length - 2) 
+                    + "$I jt" + joins.length + " on %" 
+                    /*+ (joinIdentifiers.length - 2) + "$I.%"*/
+                    + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
                 }
                 if (!prop) {
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
@@ -376,11 +393,16 @@ select xt.install_js('XT','Data','xtuple', $$
               } else {
                 orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
                 orm = this.fetchOrm(nameSpace, prop.toOne.type);
-                /* TODO: use XT.format */
                 var sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
-                joins.push("left join " + orm.table + " jt" + joins.length + " on " 
-                  + sourceTableAlias + "."
-                  + prop.toOne.column + " = jt" + joins.length + "." + XT.Orm.primaryKey(orm, true));
+                joinIdentifiers.push(
+                  this.getNamespaceFromNamespacedTable(orm.table), 
+                  this.getTableFromNamespacedTable(orm.table), 
+                  sourceTableAlias, prop.toOne.column, 
+                  XT.Orm.primaryKey(orm, true));
+                joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3) 
+                  + "$I jt" + joins.length + " on %" 
+                  + (joinIdentifiers.length - 2) + "$I.%"
+                  + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
               } 
             }
             orm = prevOrm;
@@ -414,7 +436,9 @@ select xt.install_js('XT','Data','xtuple', $$
 
       ret.orderBy = orderByList.length ? XT.format('order by ' + orderByList.join(','), orderByIdentifiers) : '';
       ret.orderByColumns = orderByColumnList.length ? XT.format('order by ' + orderByColumnList.join(','), orderByColumnIdentifiers) : '';
-      ret.joins = joins.length ? joins.join(' ') : '';
+      plv8.elog(NOTICE, "bar", joins, "-", joinIdentifiers, "-");
+      ret.joins = joins.length ? XT.format(joins.join(' '), joinIdentifiers) : '';
+      plv8.elog(NOTICE, "qux", ret.joins);
 
       return ret;
     },
@@ -1554,17 +1578,12 @@ select xt.install_js('XT','Data','xtuple', $$
      * @returns {Number}
      */
     getTableOid: function (table) {
-      var name = table.toLowerCase(), /* be generous */
-        namespace = "public", /* default assumed if no dot in name */
+      var name = this.getTableFromNamespacedTable(table).toLowerCase(), /* be generous */
+        namespace = this.getNamespaceFromNamespacedTable(table),
         ret,
         sql = "select pg_class.oid::integer as oid " +
              "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " +
              "where relname = $1 and nspname = $2";
-
-      if (table.indexOf(".") > 0) {
-        namespace = table.beforeDot();
-        table = table.afterDot();
-      }
 
       if (DEBUG) {
         XT.debug('getTableOid sql =', sql);
@@ -1613,6 +1632,14 @@ select xt.install_js('XT','Data','xtuple', $$
         throw new handleError("Primary Key not found on " + orm.table +
           " where " + ncol + " = " + value, 400);
       }
+    },
+
+    getNamespaceFromNamespacedTable: function (fullName) {
+      return fullName.indexOf(".") > 0 ? fullName.beforeDot() : "public";
+    },
+
+    getTableFromNamespacedTable: function (fullName) {
+      return fullName.indexOf(".") > 0 ? fullName.afterDot() : fullName;
     },
 
     /**
@@ -1753,13 +1780,8 @@ select xt.install_js('XT','Data','xtuple', $$
         return ret;
       }
 
-      if (orm.table.indexOf(".") > 0) {
-        tableNamespace = orm.table.beforeDot();
-        table = orm.table.afterDot();
-      } else {
-        tableNamespace = 'public';
-        table = orm.table;
-      }
+      tableNamespace = this.getNamespaceFromNamespacedTable(orm.table);
+      table = this.getTableFromNamespacedTable(orm.table);
 
       /* Query the model. */
       sql1 = XT.format(sql1, [tableNamespace.decamelize(), table.decamelize(), pkeyColumn]);
@@ -1915,12 +1937,8 @@ select xt.install_js('XT','Data','xtuple', $$
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.pertinentExtension = XT.Orm.getProperty(context.map, context.relation, true);
         context.underlyingTable = context.pertinentExtension.table,
-        context.underlyingNameSpace = context.underlyingTable.indexOf(".") > 0 ?
-          context.underlyingTable.beforeDot() :
-          "public";
-        context.underlyingType = context.underlyingTable.indexOf(".") > 0 ?
-          context.underlyingTable.afterDot() :
-          context.underlyingTable;
+        context.underlyingNameSpace = this.getNamespaceFromNamespacedTable(context.underlyingTable);
+        context.underlyingType = this.getTableFromNamespacedTable(context.underlyingTable);
         context.fkey = context.prop.toMany.inverse;
         context.fkeyColumn = context.prop.toMany.column;
         context.pkey = XT.Orm.naturalKey(context.map) || XT.Orm.primaryKey(context.map);
