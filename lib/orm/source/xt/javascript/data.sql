@@ -200,8 +200,9 @@ select xt.install_js('XT','Data','xtuple', $$
               if (!prop) {
                 plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
               }
+              identifiers.push("t1");
               identifiers.push(prop.attr.column);
-              params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
+              params.push("%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
               pcount = params.length - 1;
             }
             clauses.push(params[pcount]);
@@ -261,15 +262,14 @@ select xt.install_js('XT','Data','xtuple', $$
                     if (n === parts.length - 1) {
                       identifiers.push("jt" + (joins.length - 1));
                       identifiers.push(prop.attr.column);
-                      /* TODO: is %1$s the appropriate format here? */
-                      params[pcount] += "%" + (identifiers.length - 1) + "$s.%" + identifiers.length + "$I";
+                      params[pcount] += "%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I";
                       if (param.isLower) {
                         params[pcount] = "lower(" + params[pcount] + ")";
                       }
                     } else {
                       childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                       /* TODO: use XT.format */
-                      var sourceTableAlias = n === 0 ? orm.table : "jt" + joins.length - 1;
+                      var sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
                       joins.push("left join " + childOrm.table + " jt" + joins.length + " on " 
                         + sourceTableAlias + "."
                         + prop.toOne.column + " = jt" + joins.length + "." + XT.Orm.primaryKey(childOrm, true));
@@ -292,7 +292,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
 
-                identifiers.push(pertinentExtension.isChild ? "jt" + (joins.length - 1) : orm.table);
+                identifiers.push(pertinentExtension.isChild ? "jt" + (joins.length - 1) : "t1");
                 identifiers.push(prop.attr.column);
 
                 /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
@@ -303,7 +303,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   pcount = params.length - 1;
                   arrayIdentifiers.push(identifiers.length);
                 } else {
-                  params.push("%" + (identifiers.length - 1) + "$s.%" + identifiers.length + "$I");
+                  params.push("%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I");
                   pcount = params.length - 1;
                 }
               }
@@ -351,7 +351,6 @@ select xt.install_js('XT','Data','xtuple', $$
       /* Massage orderBy with quoted identifiers. */
       /* We need to support the xm case for sql2 and the xt/public (column) optimized case for sql1 */
       /* In practice we build the two lists independently of one another */
-      /* TODO: aliases for orderBy */
       if (orderBy) {
         for (var i = 0; i < orderBy.length; i++) {
           /* Handle path case. */
@@ -373,13 +372,12 @@ select xt.install_js('XT','Data','xtuple', $$
               if (n === parts.length - 1) {
                 orderByColumnIdentifiers.push("jt" + (joins.length - 1));
                 orderByColumnIdentifiers.push(prop.attr.column);
-                /* TODO: is %1$s the appropriate format here? */
-                orderByColumnParams[pcount] += "%" + (orderByColumnIdentifiers.length - 1) + "$s.%" + orderByColumnIdentifiers.length + "$I";
+                orderByColumnParams[pcount] += "%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I"
               } else {
                 orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
                 orm = this.fetchOrm(nameSpace, prop.toOne.type);
                 /* TODO: use XT.format */
-                var sourceTableAlias = n === 0 ? prevOrm.table : "jt" + joins.length - 1;
+                var sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
                 joins.push("left join " + orm.table + " jt" + joins.length + " on " 
                   + sourceTableAlias + "."
                   + prop.toOne.column + " = jt" + joins.length + "." + XT.Orm.primaryKey(orm, true));
@@ -393,9 +391,10 @@ select xt.install_js('XT','Data','xtuple', $$
               plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
             }
             orderByIdentifiers.push(orderBy[i].attribute);
+            orderByColumnIdentifiers.push("t1");
             orderByColumnIdentifiers.push(prop.attr.column);
             orderByParams.push("%" + orderByIdentifiers.length + "$I");
-            orderByColumnParams.push("%" + orderByColumnIdentifiers.length + "$I");
+            orderByColumnParams.push("%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I");
             pcount = orderByParams.length - 1;
           }
 
@@ -1733,7 +1732,7 @@ select xt.install_js('XT','Data','xtuple', $$
         sqlCount,
         etags,
         sql_etags,
-        sql1 = 'select %2$I.%3$I as id from %1$I.%2$I {joins} where {conditions} {orderBy} {limit} {offset};',
+        sql1 = 'select t1.%3$I as id from %1$I.%2$I t1 {joins} where {conditions} {orderBy} {limit} {offset};',
         sql2 = 'select * from %1$I.%2$I where %3$I in ({ids}) {orderBy}';
 
       /* Validate - don't bother running the query if the user has no privileges. */
