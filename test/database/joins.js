@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, describe:true, it:true, require:true, __dirname:true, after:true */
+/*global XT:true, describe:true, it:true, require:true, __dirname:true, before:true */
 
 var _ = require("underscore"),
   assert = require('chai').assert,
@@ -17,14 +17,25 @@ var _ = require("underscore"),
       datasource = require('../../../xtuple/node-datasource/lib/ext/datasource').dataSource,
       config = require(path.join(__dirname, "../../node-datasource/config.js")),
       creds = config.databaseServer,
-      databaseName = loginData.org;
+      databaseName = loginData.org,
+      isCommercial = false; // this is awkward #refactor
+
+
+    before(function (done) {
+      var sql = "select metric_value from public.metric where metric_name = 'MultiWhs';";
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        isCommercial = res.rows[0].metric_value === 't';
+        done();
+      });
+
+    });
 
     // these tests are pretty fragile to the exact numbers in the database, but have been invaluable to
     // make sure I'm not breaking anything in the fetch refactor
     it('should execute a query with a join filter', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"owner.username","operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"foo"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
@@ -38,13 +49,12 @@ var _ = require("underscore"),
     it('should execute a query with an array', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ActivityListItem","query":{"orderBy":[{"attribute":"dueDate"},{"attribute":"name"},{"attribute":"uuid"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"},{"attribute":"activityType","operator":"ANY","value":["Incident","Opportunity","ToDo","SalesOrder","SalesOrderWorkflow","PurchaseOrder","PurchaseOrderWorkflow","Project","ProjectTask","ProjectWorkflow"]}]},"username":"admin","encryptionKey":"this is any content"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 20);
+        assert.equal(results.data.length, isCommercial ? 25 : 20);
         done();
       });
     });
@@ -52,13 +62,12 @@ var _ = require("underscore"),
     it('should execute a query with a simple filter', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true}]},"username":"admin","encryptionKey":"foo"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 29);
+        assert.equal(results.data.length, isCommercial ? 30 : 29);
         done();
       });
     });
@@ -66,7 +75,6 @@ var _ = require("underscore"),
     it('should execute a query with a simple filter and a join filter', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"owner.username","operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"foo"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
@@ -80,7 +88,6 @@ var _ = require("underscore"),
     it('should execute a query with a simple filter and two join filters', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"account.number","operator":"","isCharacteristic":false,"value":"admin"},{"attribute":"owner.username","operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"foo"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
@@ -94,7 +101,6 @@ var _ = require("underscore"),
     it('should execute a query with an array of attributes', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"},{"attribute":"firstName"},{"attribute":"primaryEmail"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":["number","name","firstName","lastName","jobTitle","phone","alternate","fax","primaryEmail","webAddress","accountParent"],"operator":"MATCHES","value":"coltraine"},{"attribute":"isActive","operator":"=","value":true}]},"username":"admin","encryptionKey":"this is any content"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
@@ -108,13 +114,12 @@ var _ = require("underscore"),
     it('should execute a query with two join filters on the same table', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"IncidentListItem","query":{"orderBy":[{"attribute":"priorityOrder"},{"attribute":"updated","descending":true},{"attribute":"number","descending":true,"numeric":true}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"this is any content"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 4);
+        assert.equal(results.data.length, isCommercial ? 7 : 4);
         done();
       });
     });
@@ -122,7 +127,6 @@ var _ = require("underscore"),
     it('should execute a query with ambiguous column filters', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ToDoListItem","query":{"orderBy":[{"attribute":"priorityOrder"},{"attribute":"dueDate"},{"attribute":"name"}],"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"},{"attribute":"uuid","operator":"=","value":"23eef809-2f7c-4289-9eab-a72d621a6adb"}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
@@ -135,7 +139,6 @@ var _ = require("underscore"),
     it('should execute a query filtering on an orm-extended field', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ProspectRelation","query":{"orderBy":[{"attribute":"number"}],"parameters":[{"attribute":"isActive","operator":"=","value":true}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
@@ -149,7 +152,6 @@ var _ = require("underscore"),
     it('should execute an item-site fetch', function (done) {
       var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteRelation","dispatch":{"functionName":"fetch","parameters":{"parameters":[{"attribute":"item.number","value":"BTRUCK1"},{"attribute":"site.code","value":"WH1"}]}},"username":"admin","encryptionKey":"this is any content"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
@@ -163,7 +165,6 @@ var _ = require("underscore"),
     it('should execute a complicated item-site fetch', function (done) {
       var sql = 'select xt.js_init(true);select xt.post($${"nameSpace":"XM","type":"ItemSiteRelation","dispatch":{"functionName":"fetch","parameters":{"parameters":[{"attribute":"item.isSold","value":true},{"attribute":"item.isActive","value":true},{"attribute":"isSold","value":true},{"attribute":"isActive","value":true},{"attribute":"site.code","value":"WH1"},{"attribute":"customer","value":"TTOYS"},{"attribute":["number","barcode"],"operator":"BEGINS_WITH","value":"bt","keySearch":true}],"orderBy":[{"attribute":"number"},{"attribute":"barcode"}],"rowLimit":1}},"username":"admin","encryptionKey":"this is any content"}$$)';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
@@ -177,21 +178,33 @@ var _ = require("underscore"),
     it('should supported a nested order-by', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ItemSource","query":{"orderBy":[{"attribute":"vendorItemNumber"},{"attribute":"vendor.name"}],"parameters":[{"attribute":"isActive","value":true},{"attribute":"effective","operator":"<=","value":"2014-03-20T04:00:00.000Z"},{"attribute":"expires","operator":">=","value":"2014-03-22T01:18:09.202Z"}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$);';
 
-      creds.database = databaseName;
       datasource.query(sql, creds, function (err, res) {
         var results;
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 20);
+        assert.equal(results.data.length, isCommercial ? 21 : 20);
         done();
       });
     });
 
+    it('should supported a nested order-by', function (done) {
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"IssueToShipping","query":{"orderBy":[{"attribute":"lineNumber"},{"attribute":"subNumber"}],"parameters":[{"attribute":"order.uuid","operator":"=","value":"d3538bbd-826a-4351-b35c-795d7db99ba0"}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$);';
 
-// on commercial code:
-//select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"IssueToShipping","query":{"orderBy":[{"attribute":"lineNumber"},{"attribute":"subNumber"}],"parameters":[{"attribute":"order.uuid","operator":"=","value":"d3538bbd-826a-4351-b35c-795d7db99ba0"}],"rowOffset":0,"rowLimit":50},"username":"admin","encryptionKey":"this is any content"}$$)
+      if (!isCommercial) {
+        // forget about it
+        done();
+      }
 
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.length, 1);
+        done();
+      });
+    });
 
   });
 }());

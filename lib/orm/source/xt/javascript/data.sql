@@ -224,7 +224,6 @@ select xt.install_js('XT','Data','xtuple', $$
                 /* Check if last part is an Array. */
                 for (var m = 0; m < parts.length; m++) {
                   /* Validate attribute. */
-                  /* TODO ? */
                   prop = XT.Orm.getProperty(childOrm, parts[m]);
                   if (!prop) {
                     plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[m]);
@@ -310,6 +309,7 @@ select xt.install_js('XT','Data','xtuple', $$
               }
 
               /* Add persional privs array search. */
+              /* TODO: personal privs? */
               if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested)
                 || (prop.attr && prop.attr.type === 'Array') || isArray)) {
 
