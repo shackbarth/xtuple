@@ -2082,8 +2082,6 @@ a .icon-flip-vertical:before {
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
   min-height: 32px;
-  padding: 2px;
-  padding-right: 36px;
 }
 .xv-list .xv-list-item.header {
   padding-top: 0;
