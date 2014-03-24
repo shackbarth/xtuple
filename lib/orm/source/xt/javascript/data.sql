@@ -319,10 +319,10 @@ select xt.install_js('XT','Data','xtuple', $$
               }
 
               /* Add persional privs array search. */
-              /* TODO: personal privs? */
               if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested)
                 || (prop.attr && prop.attr.type === 'Array') || isArray)) {
 
+                /* XXX: this bit of code has not been touched by the optimization refactor */
                 /* e.g. 'admin' = ANY (usernames_array) */
                 arrayParams = "";
                 params[pcount] += ' ' + op + ' ANY (';
@@ -429,9 +429,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       ret.orderBy = orderByList.length ? XT.format('order by ' + orderByList.join(','), orderByIdentifiers) : '';
       ret.orderByColumns = orderByColumnList.length ? XT.format('order by ' + orderByColumnList.join(','), orderByColumnIdentifiers) : '';
-      plv8.elog(NOTICE, "bar", joins, "-", joinIdentifiers, "-");
       ret.joins = joins.length ? XT.format(joins.join(' '), joinIdentifiers) : '';
-      plv8.elog(NOTICE, "qux", ret.joins);
 
       return ret;
     },

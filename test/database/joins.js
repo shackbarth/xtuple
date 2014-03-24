@@ -206,6 +206,22 @@ var _ = require("underscore"),
       });
     });
 
+    it('should allow the shortcut of querying a toOne directly by its natural key', function (done) {
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"IncidentListItem","query":{"orderBy":[{"attribute":"priorityOrder"},{"attribute":"updated","descending":true},{"attribute":"number","descending":true,"numeric":true}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"category.name","operator":"","isCharacteristic":false,"value":"Customer"},{"attribute":["owner.username","assignedTo.username"],"operator":"","isCharacteristic":false,"value":"admin"}]},"username":"admin","encryptionKey":"this is any content"}$$);';
+
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.length, 1);
+        done();
+      });
+    });
+
+
+
+
   });
 }());
 
