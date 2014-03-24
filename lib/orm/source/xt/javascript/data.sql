@@ -36,7 +36,8 @@ select xt.install_js('XT','Data','xtuple', $$
     buildClauseOptimized: function (nameSpace, type, parameters, orderBy) {
       parameters = parameters || [];
 
-      var arrayIdentifiers = [],
+      var that = this,
+        arrayIdentifiers = [],
         arrayParams,
         charSql,
         childOrm,
@@ -63,6 +64,37 @@ select xt.install_js('XT','Data','xtuple', $$
         privileges = orm.privileges,
         prop,
         ret = {};
+
+      /* Support the short cut wherein the client asks for a filter on a toOne with a 
+        string. Technically they should use "theAttr.theAttrNaturalKey", but if they
+        don't, massage the inputs as if they did */
+      parameters.map(function (parameter) {
+        var attributeIsString = typeof parameter.attribute === 'string';
+          attributes = attributeIsString ? [parameter.attribute] : parameter.attribute;
+        
+        attributes.map(function (attribute) {
+          var prop = XT.Orm.getProperty(orm, attribute),
+            propName = prop.name,
+            childOrm,
+            naturalKey,
+            index;
+
+          if (prop.toOne) {
+            childOrm = that.fetchOrm(nameSpace, prop.toOne.type);
+            naturalKey = XT.Orm.naturalKey(childOrm);
+            if (attributeIsString) {
+              /* add the natural key to the end of the requested attribute */
+              parameter.attribute = attribute + "." + naturalKey;
+            } else {
+              /* swap out the attribute in the array for the one with the prepended natural key */
+              index = parameter.attribute.indexOf(attribute);
+              parameter.attribute.splice(index, 1);
+              parameter.attribute.push(attribute + "." + naturalKey);
+            }
+          }
+        });
+      });
+
 
       ret.conditions = "";
       ret.parameters = [];
