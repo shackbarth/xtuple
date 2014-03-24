@@ -186,13 +186,14 @@ select xt.install_js('XT','Data','xtuple', $$
             prop = XT.Orm.getProperty(orm, 'characteristics');
 
             /* Build the characteristics query clause. */
+            identifiers.push(XT.Orm.primaryKey(orm, true));
             identifiers.push(prop.toMany.inverse);
             identifiers.push(orm.nameSpace.toLowerCase());
             identifiers.push(prop.toMany.type.decamelize());
             identifiers.push(param.attribute);
             identifiers.push(param.value);
 
-            charSql = 'id in (' +
+            charSql = '%' + (identifiers.length - 5) + '$I in (' +
                       '  select %' + (identifiers.length - 4) + '$I '+
                       '  from %' + (identifiers.length - 3) + '$I.%' + (identifiers.length - 2) + '$I ' +
                       '    join char on (char_name = characteristic)' +

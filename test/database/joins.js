@@ -233,6 +233,18 @@ var _ = require("underscore"),
       });
     });
 
+    it('should allow querying by characteristics', function (done) {
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"},{"attribute":"firstName"},{"attribute":"primaryEmail"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true},{"attribute":"CONTACT-BIRTHDAY","operator":"MATCHES","isCharacteristic":true,"value":"foo"}]},"username":"admin","encryptionKey":"this is any content"}$$);';
+
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.length, 0);
+        done();
+      });
+    });
 
 
 
