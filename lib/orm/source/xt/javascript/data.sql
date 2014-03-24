@@ -288,21 +288,14 @@ select xt.install_js('XT','Data','xtuple', $$
                 var pertinentExtension = XT.Orm.getProperty(orm, param.attribute[c], true);
                 if(pertinentExtension.isChild) {
                   /* We'll need to join this orm extension */
-                  /* TODO: the inverse may not be the pkeyColumn */
-                  var pkeyColumn = XT.Orm.primaryKey(orm, true);
-                      
-                  plv8.elog(NOTICE, "a1", joinIdentifiers);
+                  var fromKeyProp = XT.Orm.getProperty(orm, pertinentExtension.relations[0].inverse);
                   joinIdentifiers.push(
                     this.getNamespaceFromNamespacedTable(pertinentExtension.table), 
                     this.getTableFromNamespacedTable(pertinentExtension.table), 
-                    /*sourceTableAlias,  TODO */
-                    pkeyColumn, 
+                    fromKeyProp.attr.column, 
                     pertinentExtension.relations[0].column);
-                  plv8.elog(NOTICE, "a2", joinIdentifiers);
-                  /* TODO: 3 and 2 will be 4 and 3 */
                   joins.push("left join %" + (joinIdentifiers.length - 3) + "$I.%" + (joinIdentifiers.length - 2) 
-                    + "$I jt" + joins.length + " on %" 
-                    /*+ (joinIdentifiers.length - 2) + "$I.%"*/
+                    + "$I jt" + joins.length + " on t1.%" 
                     + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
                 }
                 if (!prop) {
