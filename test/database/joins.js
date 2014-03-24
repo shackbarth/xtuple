@@ -59,6 +59,19 @@ var _ = require("underscore"),
       });
     });
 
+    it('should execute a query with an array with a path', function (done) {
+      var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"owner.username","operator":"ANY","isCharacteristic":false,"value":["admin","foo"]}]},"username":"admin","encryptionKey":"foo"}$$);';
+
+      datasource.query(sql, creds, function (err, res) {
+        var results;
+        assert.isNull(err);
+        assert.equal(1, res.rowCount, JSON.stringify(res.rows));
+        results = JSON.parse(res.rows[1].get);
+        assert.equal(results.data.length, 5);
+        done();
+      });
+    });
+
     it('should execute a query with a simple filter', function (done) {
       var sql = 'select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ContactListItem","query":{"orderBy":[{"attribute":"lastName"}],"rowOffset":0,"rowLimit":50,"parameters":[{"attribute":"isActive","operator":"=","value":true}]},"username":"admin","encryptionKey":"foo"}$$);';
 

@@ -221,16 +221,25 @@ select xt.install_js('XT','Data','xtuple', $$
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
                 }
 
-                /* Build path. e.g. ((%1$I).%2$I).%3$I */
-                /* TODO */
-                identifiers.push(parts[n]);
-                params[pcount] += "%" + identifiers.length + "$I";
-                if (n < parts.length - 1) {
-                  params[pcount] = "(" + params[pcount] + ").";
-                  childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                /* Build path. */
+                if (n === parts.length - 1) {
+                  identifiers.push("jt" + (joins.length - 1));
+                  identifiers.push(prop.attr.column);
+                  params[pcount] += "%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I";
+                  params[pcount] += ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
                 } else {
-                  params[pcount] += op + ' ARRAY[' + param.value.join(',') + ']';
-                }
+                  childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                  var sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                  joinIdentifiers.push(
+                    this.getNamespaceFromNamespacedTable(childOrm.table), 
+                    this.getTableFromNamespacedTable(childOrm.table), 
+                    sourceTableAlias, prop.toOne.column, 
+                    XT.Orm.primaryKey(childOrm, true));
+                  joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3) 
+                    + "$I jt" + joins.length + " on %" 
+                    + (joinIdentifiers.length - 2) + "$I.%"
+                    + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
+                } 
               }
             } else {
               prop = XT.Orm.getProperty(orm, param.attribute);
