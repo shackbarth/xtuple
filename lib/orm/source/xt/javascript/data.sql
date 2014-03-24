@@ -1569,7 +1569,7 @@ select xt.install_js('XT','Data','xtuple', $$
      * @returns {Number}
      */
     getTableOid: function (table) {
-      var name = this.getTableFromNamespacedTable(table).toLowerCase(), /* be generous */
+      var tableName = this.getTableFromNamespacedTable(table).toLowerCase(), /* be generous */
         namespace = this.getNamespaceFromNamespacedTable(table),
         ret,
         sql = "select pg_class.oid::integer as oid " +
@@ -1578,9 +1578,9 @@ select xt.install_js('XT','Data','xtuple', $$
 
       if (DEBUG) {
         XT.debug('getTableOid sql =', sql);
-        XT.debug('getTableOid values =', [table, namespace]);
+        XT.debug('getTableOid values =', [tableName, namespace]);
       }
-      ret = plv8.execute(sql, [table, namespace])[0].oid - 0;
+      ret = plv8.execute(sql, [tableName, namespace])[0].oid - 0;
 
       // TODO - Handle not found error.
 
