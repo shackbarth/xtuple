@@ -2662,13 +2662,6 @@ body {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
-/**
-  Sets a fixed height on all of the toolbars
-  so that they're not dependent on the icon height
-*/
-.onyx-menu-toolbar {
-  height: 57px;
-}
 .item {
   position: relative;
   padding: 16px 12px;
@@ -2857,8 +2850,43 @@ body {
 .xv-toolbar-moved {
   width: 220px;
 }
-.xv-toolbar-label {
-  width: 180px;
+.onyx-toolbar {
+  height: 55px;
+  padding: 4px;
+  background: #4c4c4c;
+  border: none;
+}
+.onyx-toolbar .onyx-icon-button,
+.onyx-toolbar .onyx-popup-decorator {
+  margin: 0 10px 0 10px;
+}
+.onyx-toolbar .onyx-icon-button div,
+.onyx-toolbar .onyx-popup-decorator div {
+  text-shadow: none;
+  color: #ffffff;
+}
+.onyx-toolbar .onyx-icon-button.lock div,
+.onyx-toolbar .onyx-popup-decorator.lock div {
+  color: #ff9c00;
+}
+.onyx-toolbar .onyx-popup-decorator {
+  height: 40px;
+  width: 40px;
+}
+.onyx-toolbar .onyx-popup-decorator .onyx-icon-button {
+  margin: 0;
+}
+.onyx-toolbar .onyx-menu {
+  margin-top: 10px;
+}
+.onyx-toolbar .spacer {
+  margin: 0;
+}
+.onyx-toolbar .xv-toolbar-label,
+.onyx-toolbar .xv-search {
+  width: 185px;
+  margin: 0;
+  margin-left: 6px;
 }
 .xv-totals-panel {
   padding: 0;
