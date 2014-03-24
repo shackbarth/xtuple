@@ -79,7 +79,10 @@ select xt.install_js('XT','Data','xtuple', $$
             naturalKey,
             index;
 
-          if (prop.toOne) {
+          if (prop.toOne && attribute.indexOf('.') < 0) {
+            /* Someone is querying on a toOne without using a path */
+            /* TODO: even if there's a path x.y, it's possible that it's still not
+              correct because the correct path maybe is x.y.naturalKeyOfY */
             childOrm = that.fetchOrm(nameSpace, prop.toOne.type);
             naturalKey = XT.Orm.naturalKey(childOrm);
             if (attributeIsString) {
