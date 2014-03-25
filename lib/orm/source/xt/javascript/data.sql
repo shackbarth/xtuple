@@ -1801,11 +1801,15 @@ select xt.install_js('XT','Data','xtuple', $$
       /* Validate - don't bother running the query if the user has no privileges. */
       if (!this.checkPrivileges(nameSpace, type)) { return []; }
 
+      tableNamespace = this.getNamespaceFromNamespacedTable(orm.table);
+      table = this.getTableFromNamespacedTable(orm.table);
+
       if (query.count) {
         /* Just get the count of rows that match the conditions */
-        sqlCount = 'select count(*) as count from %1$I.%2$I where {conditions};';
-        sqlCount = XT.format(sqlCount, [nameSpace.decamelize(), type.decamelize()]);
-        sqlCount = sqlCount.replace('{conditions}', clause.conditions);
+        sqlCount = 'select count(*) as count from %1$I.%2$I t1 {joins} where {conditions};';
+        sqlCount = XT.format(sqlCount, [tableNamespace.decamelize(), table.decamelize()]);
+        sqlCount = sqlCount.replace('{joins}', clause.joins)
+                           .replace('{conditions}', clause.conditions);
 
         if (DEBUG) {
           XT.debug('fetch sqlCount = ', sqlCount);
@@ -1815,9 +1819,6 @@ select xt.install_js('XT','Data','xtuple', $$
         ret.data = plv8.execute(sqlCount, clause.parameters);
         return ret;
       }
-
-      tableNamespace = this.getNamespaceFromNamespacedTable(orm.table);
-      table = this.getTableFromNamespacedTable(orm.table);
 
       /* Query the model. */
       sql1 = XT.format(sql1, [tableNamespace.decamelize(), table.decamelize(), pkeyColumn]);
