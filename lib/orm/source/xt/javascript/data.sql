@@ -112,9 +112,9 @@ select xt.install_js('XT','Data','xtuple', $$
             /* TODO: even if there's a path x.y, it's possible that it's still not
               correct because the correct path maybe is x.y.naturalKeyOfY */
             if (prop.toOne && prop.toOne.type) {
-              childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+              childOrm = that.fetchOrm(nameSpace, prop.toOne.type);
             } else if (prop.toMany && prop.toMany.type) {
-              childOrm = this.fetchOrm(nameSpace, prop.toMany.type);
+              childOrm = that.fetchOrm(nameSpace, prop.toMany.type);
             } else {
               plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + prop.name);
             }
