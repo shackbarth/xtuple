@@ -22,10 +22,12 @@ PRIVATE_DIR=$RUN_DIR/../../private-extensions
 XT_DIR=$RUN_DIR/..
 export BISERVER_HOME=$RUN_DIR/../../ErpBI
 DATABASE=dev
+DATABASEHOST=localhost
+DATABASEPORT=5432
 TENANT=default
 COMMONNAME=$(hostname)
 
-while getopts ":iebcpd:t:n:j:" opt; do
+while getopts ":iebcpd:t:n:j:z:h:o:f:" opt; do
   case $opt in
     e)
       # Install ErpBI and configure
@@ -33,7 +35,7 @@ while getopts ":iebcpd:t:n:j:" opt; do
       DOWNLOAD=true
       ;;
     b)
-      # Build BI solution and Reports and install
+      # Build BI solution and install
       RUNALL=
       RUN=true
       ;;
@@ -50,23 +52,35 @@ while getopts ":iebcpd:t:n:j:" opt; do
     d)
       # Set database name to extract
       DATABASE=$OPTARG
-	  echo $DATABASE
       ;;
+    o)
+      # Set database port to extract
+      DATABASEPORT=$OPTARG
+      ;;
+    h)
+      # Set database host to extract
+      DATABASEHOST=$OPTARG
+      ;;	  
     t)
       # Set tenant name
       TENANT=$OPTARG
-	  echo $TENANT
       ;;
     n)
       # Common name for self signed SSL certificate
       COMMONNAME=$OPTARG
-	  echo $COMMONNAME
+      ;;
+    f)
+      # Path for config file
+      CONFIGPATH=$OPTARG
       ;;
     j)
       # Java home
       export JAVA_HOME=$OPTARG
-	  echo $JAVA_HOME
-      ;; 
+      ;;
+    z)
+      # ErpBI.zip path
+      export ERPBIPATH=$OPTARG
+      ;;  
     \?)
       log "Invalid option: -"$OPTARG
       exit 1
@@ -90,21 +104,45 @@ if  ! test -d $BI_DIR ;
 then
 	log ""
 	log "#############################################################"
-	log "#############################################################"
     log "Sorry bi folder not found.  You must clone xtuple/bi"
-	log "#############################################################"
 	log "#############################################################"
 	log ""
     exit 1
 fi
 
-if  [ ! test -d $PRIVATE_DIR && $RUNALL ]  
+if  [ $ERPBIPATH ]
+then
+	if   ! test -f $ERPBIPATH  
+	then
+		log ""
+		log "####################################################################################"
+		log "Sorry can't find ErpBI.zip at "$ERPBIPATH
+		log "####################################################################################"
+		log ""
+		exit 1
+	fi
+fi
+
+if  [ $CONFIGPATH ]
+then
+	if   ! test -f $CONFIGPATH  
+	then
+		log ""
+		log "####################################################################################"
+		log "Sorry can't find config file at "$CONFIGPATH
+		log "####################################################################################"
+		log ""
+		exit 1
+	fi
+else
+	CONFIGPATH=config.js
+fi
+
+if   ! test -d $PRIVATE_DIR && $RUNALL   
 then
 	log ""
 	log "####################################################################################"
-	log "####################################################################################"
     log "Sorry private-extensions folder not found.  You must clone xtuple/private-extensions"
-	log "####################################################################################"
 	log "####################################################################################"
 	log ""
     exit 1
@@ -113,9 +151,7 @@ fi
 install_packages () {
 	log ""
 	log "######################################################"
-	log "######################################################"
 	log "Install prereqs."
-	log "######################################################"
 	log "######################################################"
 	log ""
 	apt-get install -qy git openjdk-6-jdk maven2
@@ -124,9 +160,7 @@ install_packages () {
 	then
 		log ""
 		log "#############################################################"
-		log "#############################################################"
 		log "Sorry can not find javac.  Set Java Home with the -j argument"
-		log "#############################################################"
 		log "#############################################################"
 		log ""
 		exit 1
@@ -136,19 +170,33 @@ install_packages () {
 download_files () {
 	log ""
 	log "######################################################"
-	log "######################################################"
 	log "Download ErpBI, set permissions and generate keystore "
 	log "and truststore for SSL with self signed cert using    "
 	log "common name "$COMMONNAME
 	log "######################################################"
-	log "######################################################"
 	log ""
     cdir $RUN_DIR/../..
-	rm -R ErpBI
-	rm ErpBI.zip
-	wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
-	unzip ErpBI.zip
-	
+
+	rm -R ErpBI	
+	if  [ $ERPBIPATH ]
+	then
+		log ""
+		log "######################################################"
+		log "Unzipping "$ERPBIPATH
+		log "######################################################"
+		log ""
+		unzip -q $ERPBIPATH
+	else
+		rm ErpBI.zip
+		wget http://sourceforge.net/projects/erpbi/files/candidate-release/ErpBI.zip/download -O ErpBI.zip
+		log ""
+		log "######################################################"
+		log "Unzipping ErpBI.zip"
+		log "######################################################"
+		log ""
+		unzip -q ErpBI.zip
+	fi		
+
 	cdir $BISERVER_HOME/biserver-ce/
 	chmod 755 -R . 2>&1 | tee -a $LOG_FILE
 	
@@ -171,10 +219,8 @@ download_files () {
 run_scripts() {
 	log ""
 	log "######################################################"
-	log "######################################################"
-	log "Build BI solution and reports and move to ErpBI at:   "
+	log "Build BI solution and move to ErpBI at:               "
 	log $BISERVER_HOME
-	log "######################################################"
 	log "######################################################"
 	log ""
 	cdir $BI_DIR/olap-schema
@@ -198,18 +244,13 @@ run_scripts() {
 	cdir ../../etl
 	mvn install 2>&1 | tee -a $LOG_FILE
 	mvn process-resources 2>&1 | tee -a $LOG_FILE
-	
-	cdir $XT_DIR/pentaho/report-datasource
-	sh build.sh  2>&1 | tee -a $LOG_FILE
 }
 
 configure_pentaho() {
 	log ""
 	log "######################################################"
-	log "######################################################"
 	log "Create datamart database erpbi.  Extract data from dev"
 	log "and load data into tenant default.dev".
-	log "######################################################"
 	log "######################################################"
 	log ""
 	createdb -U postgres -O admin erpbi 2>&1 | tee -a $LOG_FILE
@@ -218,7 +259,7 @@ configure_pentaho() {
 	
 	mv $KETTLE_HOME/.kettle/kettle.properties $KETTLE_HOME/.kettle/kettle.properties.sample  2>&1 | tee -a $LOG_FILE
 	cat $KETTLE_HOME/.kettle/kettle.properties.sample | \
-	sed s'#erpi.source.url=.*#erpi.source.url=jdbc\:postgresql\://localhost\:5432/'$DATABASE'#' | \
+	sed s'#erpi.source.url=.*#erpi.source.url=jdbc\:postgresql\://'$DATABASEHOST'\:'$DATABASEPORT'/'$DATABASE'#' | \
 	sed s'#erpi.tenant.id=.*#erpi.tenant.id='$TENANT'.'$DATABASE'#' \
 	> $KETTLE_HOME/.kettle/kettle.properties  2>&1 | tee -a $LOG_FILE
 	
@@ -228,11 +269,9 @@ configure_pentaho() {
 prep_mobile() {
 	log ""
 	log "######################################################"
-	log "######################################################"
 	log "Prepare mobile app to use the BI Server. Create keys  "
     log "for REST api used by single sign on.  Update config.js"
     log "with BI Server URL https://"$COMMONNAME":8443"
-	log "######################################################"
 	log "######################################################"
 	log ""
 	if [ ! -d $XT_DIR/node-datasource/lib/rest-keys ]
@@ -252,13 +291,12 @@ prep_mobile() {
 	#	sed 'N;s#biServer: {\n        hostname:.*#biServer: {\n        hostname: \"'$COMMONNAME'\",#' \
 	
 	cdir $XT_DIR/node-datasource
-	mv config.js config.js.old 2>&1 | tee -a $LOG_FILE
-	cat config.js.old | \
+	mv $CONFIGPATH $CONFIGPATH'.old' 2>&1 | tee -a $LOG_FILE
+	cat $CONFIGPATH'.old' | \
 	sed 's#restkeyfile: .*#restkeyfile: \"./lib/rest-keys/server.key\",#' | \
 	sed 's#tenantname: .*#tenantname: \"'$TENANT'",#' | \
-	sed 's#bihost: .*#bihost: \"'$COMMONNAME'\",#'| \
-	sed 's#printhost: .*#printhost: \"'$COMMONNAME'\",#' \
-	> config.js
+	sed 's#bihost: .*#bihost: \"'$COMMONNAME'\",#' \
+	> $CONFIGPATH
 }
 
 install_packages
@@ -290,20 +328,9 @@ fi
 
 log ""
 log "######################################################"
-log "######################################################"
 log "                FINISED! READ ME                      "
 log "If you use the self signed certificate created by this"
 log "script you will need to accept the certificate in your"
-log "browser.  Use one of the Print buttons in the Mobile  "
-log "Web Client to accept the certificate."
-log ""
-log "If reports were installed or updated you will need to "
-log "refresh the BI Server repository cache:               "
-log "  Connect to https://"$COMMONNAME":8443"
-log "  login as user:admin, password:Car54WhereRU"
-log "  tools > Refresh > Repository Cache"
-log "  tools > Refresh > Reporting Metadata"
-log "  tools > Refresh > Reporting Data Cache"
-log "######################################################"
+log "browser.  Connect to https://"$COMMONNAME":8443"
 log "######################################################"
 log ""
