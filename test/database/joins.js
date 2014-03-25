@@ -215,7 +215,7 @@ var _ = require("underscore"),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 1);
+        assert.equal(results.length, 0);
         done();
       });
     });
@@ -228,7 +228,7 @@ var _ = require("underscore"),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 1);
+        assert.equal(results.data.length, isCommercial ? 2 : 1);
         done();
       });
     });
@@ -241,7 +241,11 @@ var _ = require("underscore"),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 1);
+        if (isCommercial) {
+          assert.equal(results.length, 0);
+        } else {
+          assert.equal(results.data.length, 1);
+        }
         done();
       });
     });
@@ -267,7 +271,7 @@ var _ = require("underscore"),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 4);
+        assert.equal(results.data.length, isCommercial ? 7 : 4);
         done();
       });
     });
