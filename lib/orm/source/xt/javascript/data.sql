@@ -69,40 +69,6 @@ select xt.install_js('XT','Data','xtuple', $$
         sourceTableAlias,
         ret = {};
 
-      /* Support the short cut wherein the client asks for a filter on a toOne with a
-        string. Technically they should use "theAttr.theAttrNaturalKey", but if they
-        don't, massage the inputs as if they did */
-      parameters.map(function (parameter) {
-        var attributeIsString = typeof parameter.attribute === 'string';
-          attributes = attributeIsString ? [parameter.attribute] : parameter.attribute;
-
-        attributes.map(function (attribute) {
-          var prop = XT.Orm.getProperty(orm, attribute),
-            propName = prop.name,
-            childOrm,
-            naturalKey,
-            index;
-
-          if (prop.toOne && attribute.indexOf('.') < 0) {
-            /* Someone is querying on a toOne without using a path */
-            /* TODO: even if there's a path x.y, it's possible that it's still not
-              correct because the correct path maybe is x.y.naturalKeyOfY */
-            childOrm = that.fetchOrm(nameSpace, prop.toOne.type);
-            naturalKey = XT.Orm.naturalKey(childOrm);
-            if (attributeIsString) {
-              /* add the natural key to the end of the requested attribute */
-              parameter.attribute = attribute + "." + naturalKey;
-            } else {
-              /* swap out the attribute in the array for the one with the prepended natural key */
-              index = parameter.attribute.indexOf(attribute);
-              parameter.attribute.splice(index, 1);
-              parameter.attribute.push(attribute + "." + naturalKey);
-            }
-          }
-        });
-      });
-
-
       ret.conditions = "";
       ret.parameters = [];
 
@@ -126,6 +92,45 @@ select xt.install_js('XT','Data','xtuple', $$
           value: XT.username
         });
       }
+
+      /* Support the short cut wherein the client asks for a filter on a toOne with a
+        string. Technically they should use "theAttr.theAttrNaturalKey", but if they
+        don't, massage the inputs as if they did */
+      parameters.map(function (parameter) {
+        var attributeIsString = typeof parameter.attribute === 'string';
+          attributes = attributeIsString ? [parameter.attribute] : parameter.attribute;
+
+        attributes.map(function (attribute) {
+          var prop = XT.Orm.getProperty(orm, attribute),
+            propName = prop.name,
+            childOrm,
+            naturalKey,
+            index;
+
+          if ((prop.toOne || prop.toMany) && attribute.indexOf('.') < 0) {
+            /* Someone is querying on a toOne without using a path */
+            /* TODO: even if there's a path x.y, it's possible that it's still not
+              correct because the correct path maybe is x.y.naturalKeyOfY */
+            if (prop.toOne && prop.toOne.type) {
+              childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+            } else if (prop.toMany && prop.toMany.type) {
+              childOrm = this.fetchOrm(nameSpace, prop.toMany.type);
+            } else {
+              plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + prop.name);
+            }
+            naturalKey = XT.Orm.naturalKey(childOrm);
+            if (attributeIsString) {
+              /* add the natural key to the end of the requested attribute */
+              parameter.attribute = attribute + "." + naturalKey;
+            } else {
+              /* swap out the attribute in the array for the one with the prepended natural key */
+              index = parameter.attribute.indexOf(attribute);
+              parameter.attribute.splice(index, 1);
+              parameter.attribute.push(attribute + "." + naturalKey);
+            }
+          }
+        });
+      });
 
       /* Handle parameters. */
       if (parameters.length) {
