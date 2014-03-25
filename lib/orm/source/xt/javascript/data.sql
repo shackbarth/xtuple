@@ -43,6 +43,8 @@ select xt.install_js('XT','Data','xtuple', $$
         childOrm,
         clauses = [],
         count = 1,
+        fromKeyProp,
+        groupByColumnParams = [],
         identifiers = [],
         joinIdentifiers = [],
         orderByList = [],
@@ -60,18 +62,20 @@ select xt.install_js('XT','Data','xtuple', $$
         params = [],
         parts,
         pcount,
+        pertinentExtension,
         prevOrm,
         privileges = orm.privileges,
         prop,
+        sourceTableAlias,
         ret = {};
 
-      /* Support the short cut wherein the client asks for a filter on a toOne with a 
+      /* Support the short cut wherein the client asks for a filter on a toOne with a
         string. Technically they should use "theAttr.theAttrNaturalKey", but if they
         don't, massage the inputs as if they did */
       parameters.map(function (parameter) {
         var attributeIsString = typeof parameter.attribute === 'string';
           attributes = attributeIsString ? [parameter.attribute] : parameter.attribute;
-        
+
         attributes.map(function (attribute) {
           var prop = XT.Orm.getProperty(orm, attribute),
             propName = prop.name,
@@ -229,17 +233,17 @@ select xt.install_js('XT','Data','xtuple', $$
                   params[pcount] += ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
                 } else {
                   childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
-                  var sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                  sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
                   joinIdentifiers.push(
-                    this.getNamespaceFromNamespacedTable(childOrm.table), 
-                    this.getTableFromNamespacedTable(childOrm.table), 
-                    sourceTableAlias, prop.toOne.column, 
+                    this.getNamespaceFromNamespacedTable(childOrm.table),
+                    this.getTableFromNamespacedTable(childOrm.table),
+                    sourceTableAlias, prop.toOne.column,
                     XT.Orm.primaryKey(childOrm, true));
-                  joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3) 
-                    + "$I jt" + joins.length + " on %" 
+                  joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3)
+                    + "$I jt" + joins.length + " on %"
                     + (joinIdentifiers.length - 2) + "$I.%"
                     + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
-                } 
+                }
               }
             } else {
               prop = XT.Orm.getProperty(orm, param.attribute);
@@ -277,7 +281,13 @@ select xt.install_js('XT','Data','xtuple', $$
                   }
 
                   if (m < parts.length - 1) {
-                    childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    if (prop.toOne && prop.toOne.type) {
+                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    } else if (prop.toMany && prop.toMany.type) {
+                      childOrm = this.fetchOrm(nameSpace, prop.toMany.type);
+                    } else {
+                      plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + prop.name);
+                    }
                   } else if (prop.attr && prop.attr.type === 'Array') {
                     /* The last property in the path is an array. */
                     isArray = true;
@@ -313,34 +323,45 @@ select xt.install_js('XT','Data','xtuple', $$
                         params[pcount] = "lower(" + params[pcount] + ")";
                       }
                     } else {
-                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
-                      var sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
-                      joinIdentifiers.push(
-                        this.getNamespaceFromNamespacedTable(childOrm.table), 
-                        this.getTableFromNamespacedTable(childOrm.table), 
-                        sourceTableAlias, prop.toOne.column, 
-                        XT.Orm.primaryKey(childOrm, true));
-                      joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3) 
-                        + "$I jt" + joins.length + " on %" 
+                      sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                      if (prop.toOne && prop.toOne.type) {
+                        childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                        joinIdentifiers.push(
+                          this.getNamespaceFromNamespacedTable(childOrm.table),
+                          this.getTableFromNamespacedTable(childOrm.table),
+                          sourceTableAlias, prop.toOne.column,
+                          XT.Orm.primaryKey(childOrm, true)
+                        );
+                      } else if (prop.toMany && prop.toMany.type) {
+                        childOrm = this.fetchOrm(nameSpace, prop.toMany.type);
+                        joinIdentifiers.push(
+                          this.getNamespaceFromNamespacedTable(childOrm.table),
+                          this.getTableFromNamespacedTable(childOrm.table),
+                          sourceTableAlias, prop.toMany.column,
+                          XT.Orm.primaryKey(childOrm, true)
+                        );
+                      }
+                      joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3)
+                        + "$I jt" + joins.length + " on %"
                         + (joinIdentifiers.length - 2) + "$I.%"
                         + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
-                    } 
+                    }
                   }
                 }
               } else {
                 /* Validate attribute. */
                 prop = XT.Orm.getProperty(orm, param.attribute[c]);
-                var pertinentExtension = XT.Orm.getProperty(orm, param.attribute[c], true);
+                pertinentExtension = XT.Orm.getProperty(orm, param.attribute[c], true);
                 if(pertinentExtension.isChild) {
                   /* We'll need to join this orm extension */
-                  var fromKeyProp = XT.Orm.getProperty(orm, pertinentExtension.relations[0].inverse);
+                  fromKeyProp = XT.Orm.getProperty(orm, pertinentExtension.relations[0].inverse);
                   joinIdentifiers.push(
-                    this.getNamespaceFromNamespacedTable(pertinentExtension.table), 
-                    this.getTableFromNamespacedTable(pertinentExtension.table), 
-                    fromKeyProp.attr.column, 
+                    this.getNamespaceFromNamespacedTable(pertinentExtension.table),
+                    this.getTableFromNamespacedTable(pertinentExtension.table),
+                    fromKeyProp.attr.column,
                     pertinentExtension.relations[0].column);
-                  joins.push("left join %" + (joinIdentifiers.length - 3) + "$I.%" + (joinIdentifiers.length - 2) 
-                    + "$I jt" + joins.length + " on t1.%" 
+                  joins.push("left join %" + (joinIdentifiers.length - 3) + "$I.%" + (joinIdentifiers.length - 2)
+                    + "$I jt" + joins.length + " on t1.%"
                     + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
                 }
                 if (!prop) {
@@ -414,6 +435,7 @@ select xt.install_js('XT','Data','xtuple', $$
             prevOrm = orm;
             orderByParams.push("");
             orderByColumnParams.push("");
+            groupByColumnParams.push("");
             pcount = orderByParams.length - 1;
 
             for (var n = 0; n < parts.length; n++) {
@@ -428,20 +450,21 @@ select xt.install_js('XT','Data','xtuple', $$
                 orderByColumnIdentifiers.push("jt" + (joins.length - 1));
                 orderByColumnIdentifiers.push(prop.attr.column);
                 orderByColumnParams[pcount] += "%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I"
+                groupByColumnParams[pcount] += "%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I"
               } else {
                 orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
                 orm = this.fetchOrm(nameSpace, prop.toOne.type);
-                var sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
                 joinIdentifiers.push(
-                  this.getNamespaceFromNamespacedTable(orm.table), 
-                  this.getTableFromNamespacedTable(orm.table), 
-                  sourceTableAlias, prop.toOne.column, 
+                  this.getNamespaceFromNamespacedTable(orm.table),
+                  this.getTableFromNamespacedTable(orm.table),
+                  sourceTableAlias, prop.toOne.column,
                   XT.Orm.primaryKey(orm, true));
-                joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3) 
-                  + "$I jt" + joins.length + " on %" 
+                joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3)
+                  + "$I jt" + joins.length + " on %"
                   + (joinIdentifiers.length - 2) + "$I.%"
                   + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
-              } 
+              }
             }
             orm = prevOrm;
           /* Normal case. */
@@ -455,6 +478,7 @@ select xt.install_js('XT','Data','xtuple', $$
             orderByColumnIdentifiers.push(prop.attr.column);
             orderByParams.push("%" + orderByIdentifiers.length + "$I");
             orderByColumnParams.push("%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I");
+            groupByColumnParams.push("%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I");
             pcount = orderByParams.length - 1;
           }
 
@@ -474,6 +498,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       ret.orderBy = orderByList.length ? XT.format('order by ' + orderByList.join(','), orderByIdentifiers) : '';
       ret.orderByColumns = orderByColumnList.length ? XT.format('order by ' + orderByColumnList.join(','), orderByColumnIdentifiers) : '';
+      ret.groupByColumns = groupByColumnParams.length ? XT.format(', ' + groupByColumnParams.join(','), orderByColumnIdentifiers) : '';
       ret.joins = joins.length ? XT.format(joins.join(' '), joinIdentifiers) : '';
 
       return ret;
@@ -1795,7 +1820,7 @@ select xt.install_js('XT','Data','xtuple', $$
         sqlCount,
         etags,
         sql_etags,
-        sql1 = 'select t1.%3$I as id from %1$I.%2$I t1 {joins} where {conditions} {orderBy} {limit} {offset};',
+        sql1 = 'select t1.%3$I as id from %1$I.%2$I t1 {joins} where {conditions} group by t1.%3$I{groupBy} {orderBy} {limit} {offset};',
         sql2 = 'select * from %1$I.%2$I where %3$I in ({ids}) {orderBy}';
 
       /* Validate - don't bother running the query if the user has no privileges. */
@@ -1806,8 +1831,8 @@ select xt.install_js('XT','Data','xtuple', $$
 
       if (query.count) {
         /* Just get the count of rows that match the conditions */
-        sqlCount = 'select count(*) as count from %1$I.%2$I t1 {joins} where {conditions};';
-        sqlCount = XT.format(sqlCount, [tableNamespace.decamelize(), table.decamelize()]);
+        sqlCount = 'select count(distinct t1.%3$I) as count from %1$I.%2$I t1 {joins} where {conditions};';
+        sqlCount = XT.format(sqlCount, [tableNamespace.decamelize(), table.decamelize(), pkeyColumn]);
         sqlCount = sqlCount.replace('{joins}', clause.joins)
                            .replace('{conditions}', clause.conditions);
 
@@ -1824,6 +1849,7 @@ select xt.install_js('XT','Data','xtuple', $$
       sql1 = XT.format(sql1, [tableNamespace.decamelize(), table.decamelize(), pkeyColumn]);
       sql1 = sql1.replace('{joins}', clause.joins)
                  .replace('{conditions}', clause.conditions)
+                 .replace(/{groupBy}/g, clause.groupByColumns)
                  .replace(/{orderBy}/g, clause.orderByColumns)
                  .replace('{limit}', limit)
                  .replace('{offset}', offset);
