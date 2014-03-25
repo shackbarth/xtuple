@@ -3067,7 +3067,7 @@ body {
 }
 .onyx-toolbar .onyx-icon-button,
 .onyx-toolbar .onyx-popup-decorator {
-  margin: 0 10px 0 10px;
+  margin: 0 6px 0 3px;
 }
 .onyx-toolbar .onyx-icon-button div,
 .onyx-toolbar .onyx-popup-decorator div {
