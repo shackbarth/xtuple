@@ -26,8 +26,10 @@ DATABASEHOST=localhost
 DATABASEPORT=5432
 TENANT=default
 COMMONNAME=$(hostname)
+CREATE=Y
+INCREMENTAL=N
 
-while getopts ":iebcpd:t:n:j:z:h:o:f:" opt; do
+while getopts ":ieblpuxd:t:n:j:z:h:o:f:" opt; do
   case $opt in
     e)
       # Install ErpBI and configure
@@ -39,10 +41,10 @@ while getopts ":iebcpd:t:n:j:z:h:o:f:" opt; do
       RUNALL=
       RUN=true
       ;;
-    c)
-      # Create erpbi database and load tenant data
+    l)
+      # Extract and load analytic data into erpbi database
       RUNALL=
-      CONFIGURE=true
+      LOAD=true
       ;;
     p)
       # Prep the Mobile Client to connect to BI Server
@@ -60,6 +62,10 @@ while getopts ":iebcpd:t:n:j:z:h:o:f:" opt; do
     h)
       # Set database host to extract
       DATABASEHOST=$OPTARG
+      ;;
+    i)
+      # Incemental update of erpbi database
+      DATABASEHOST=$OPTARG
       ;;	  
     t)
       # Set tenant name
@@ -73,9 +79,17 @@ while getopts ":iebcpd:t:n:j:z:h:o:f:" opt; do
       # Path for config file
       CONFIGPATH=$OPTARG
       ;;
+    u)
+      # Incremental updates
+      INCREMENTAL=Y
+      ;;
     j)
       # Java home
       export JAVA_HOME=$OPTARG
+      ;;
+    x)
+      # Do not create erpbi database schema
+      CREATE=N
       ;;
     z)
       # ErpBI.zip path
@@ -96,8 +110,13 @@ if [ $RUNALL ]
 then
 	DOWNLOAD=true
 	RUN=true
-	CONFIGURE=true
+	LOAD=true
 	PREP=true
+fi
+
+if  [ "$INCREMENTAL" = "Y" ]
+then
+	CREATE=N
 fi
 
 if  ! test -d $BI_DIR ;
@@ -246,7 +265,7 @@ run_scripts() {
 	mvn process-resources 2>&1 | tee -a $LOG_FILE
 }
 
-configure_pentaho() {
+load_pentaho() {
 	log ""
 	log "######################################################"
 	log "Create datamart database erpbi.  Extract data from dev"
@@ -260,7 +279,9 @@ configure_pentaho() {
 	mv $KETTLE_HOME/.kettle/kettle.properties $KETTLE_HOME/.kettle/kettle.properties.sample  2>&1 | tee -a $LOG_FILE
 	cat $KETTLE_HOME/.kettle/kettle.properties.sample | \
 	sed s'#erpi.source.url=.*#erpi.source.url=jdbc\:postgresql\://'$DATABASEHOST'\:'$DATABASEPORT'/'$DATABASE'#' | \
-	sed s'#erpi.tenant.id=.*#erpi.tenant.id='$TENANT'.'$DATABASE'#' \
+	sed s'#erpi.tenant.id=.*#erpi.tenant.id='$TENANT'.'$DATABASE'#' | \
+	sed s'#erpi.datamart.create=.*#erpi.datamart.create='$CREATE'#' | \
+	sed s'#erpi.incremental=.*#erpi.incremental='$INCREMENTAL'#' \
 	> $KETTLE_HOME/.kettle/kettle.properties  2>&1 | tee -a $LOG_FILE
 	
 	sh kitchenkh.sh -file=../ErpBI/ETL/JOBS/Load.kjb -level=Basic
@@ -316,9 +337,9 @@ then
 	run_scripts
 fi
 
-if [ $CONFIGURE ]
+if [ $LOAD ]
 then
-	configure_pentaho
+	load_pentaho
 fi
 
 if [ $PREP ]
