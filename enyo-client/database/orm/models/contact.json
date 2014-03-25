@@ -23,7 +23,7 @@
         "delete": "MaintainPersonalContacts",
         "properties": [
           "owner.username",
-          "crmaccountUsers"
+          "crmaccountUsers.username"
         ]
       },
       "attribute": {
