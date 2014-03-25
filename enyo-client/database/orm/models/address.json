@@ -22,7 +22,7 @@
         "update":"MaintainPersonalCRMAccounts",
         "delete":"MaintainPersonalCRMAccounts",
         "properties":[
-          "crmaccountUsers.username"
+          "crmaccountUsers"
         ]
       },
       "attribute": {
