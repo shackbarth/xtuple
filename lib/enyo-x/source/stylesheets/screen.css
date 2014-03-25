@@ -2313,27 +2313,6 @@ a .icon-flip-vertical:before {
   background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
   background-size: 20px 2px;
 }
-.pullout .pullout-grabbutton {
-  position: absolute;
-  height: 54px;
-  width: 50px;
-  bottom: 20px;
-  right: -46px;
-  background-color: #dddddd;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-right-radius: 10px;
-}
 .pullout .pullout-toolbar {
   padding-top: 4px;
   text-align: center;
