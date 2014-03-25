@@ -23,11 +23,16 @@ XT_DIR=$RUN_DIR/..
 export BISERVER_HOME=$RUN_DIR/../../ErpBI
 DATABASE=dev
 DATABASEHOST=localhost
+DATABASEUSER=admin
+DATABASEPASSWORD=admin
 DATABASEPORT=5432
 TENANT=default
+CITIES=democities.txt
 COMMONNAME=$(hostname)
+CREATE=Y
+INCREMENTAL=N
 
-while getopts ":iebcpd:t:n:j:z:h:o:f:" opt; do
+while getopts ":ieblpuxd:s:g:w:t:n:j:z:h:o:f:" opt; do
   case $opt in
     e)
       # Install ErpBI and configure
@@ -39,10 +44,10 @@ while getopts ":iebcpd:t:n:j:z:h:o:f:" opt; do
       RUNALL=
       RUN=true
       ;;
-    c)
-      # Create erpbi database and load tenant data
+    l)
+      # Extract and load analytic data into erpbi database
       RUNALL=
-      CONFIGURE=true
+      LOAD=true
       ;;
     p)
       # Prep the Mobile Client to connect to BI Server
@@ -50,21 +55,37 @@ while getopts ":iebcpd:t:n:j:z:h:o:f:" opt; do
       PREP=true
       ;;
     d)
-      # Set database name to extract
+      # Set database name (for extract)
       DATABASE=$OPTARG
       ;;
     o)
-      # Set database port to extract
+      # Set database port for extract)
       DATABASEPORT=$OPTARG
       ;;
     h)
-      # Set database host to extract
+      # Set database host name (for extract)
+      DATABASEHOST=$OPTARG
+      ;;
+    s)
+      # Set database user name (for extract)
+      DATABASEUSER=$OPTARG
+      ;;
+    w)
+      # Set database user password (for extract)
+      DATABASEPASSWORD=$OPTARG
+      ;;	  
+    i)
+      # Incemental update of erpbi database
       DATABASEHOST=$OPTARG
       ;;	  
     t)
       # Set tenant name
       TENANT=$OPTARG
       ;;
+    g)
+      # Geographic data file
+      CITIES=$OPTARG
+      ;;	  
     n)
       # Common name for self signed SSL certificate
       COMMONNAME=$OPTARG
@@ -73,9 +94,17 @@ while getopts ":iebcpd:t:n:j:z:h:o:f:" opt; do
       # Path for config file
       CONFIGPATH=$OPTARG
       ;;
+    u)
+      # Incremental updates
+      INCREMENTAL=Y
+      ;;
     j)
       # Java home
       export JAVA_HOME=$OPTARG
+      ;;
+    x)
+      # Do not create erpbi database schema
+      CREATE=N
       ;;
     z)
       # ErpBI.zip path
@@ -96,8 +125,13 @@ if [ $RUNALL ]
 then
 	DOWNLOAD=true
 	RUN=true
-	CONFIGURE=true
+	LOAD=true
 	PREP=true
+fi
+
+if  [ "$INCREMENTAL" = "Y" ]
+then
+	CREATE=N
 fi
 
 if  ! test -d $BI_DIR ;
@@ -246,11 +280,11 @@ run_scripts() {
 	mvn process-resources 2>&1 | tee -a $LOG_FILE
 }
 
-configure_pentaho() {
+load_pentaho() {
 	log ""
 	log "######################################################"
-	log "Create datamart database erpbi.  Extract data from dev"
-	log "and load data into tenant default.dev".
+	log "Extract data from "$DATABASE" on host "$DATABASEHOST 
+	log "and load data into erpbi with tenant name " $TENANT
 	log "######################################################"
 	log ""
 	createdb -U postgres -O admin erpbi 2>&1 | tee -a $LOG_FILE
@@ -260,7 +294,12 @@ configure_pentaho() {
 	mv $KETTLE_HOME/.kettle/kettle.properties $KETTLE_HOME/.kettle/kettle.properties.sample  2>&1 | tee -a $LOG_FILE
 	cat $KETTLE_HOME/.kettle/kettle.properties.sample | \
 	sed s'#erpi.source.url=.*#erpi.source.url=jdbc\:postgresql\://'$DATABASEHOST'\:'$DATABASEPORT'/'$DATABASE'#' | \
-	sed s'#erpi.tenant.id=.*#erpi.tenant.id='$TENANT'.'$DATABASE'#' \
+	sed s'#erpi.source.user=.*#erpi.source.user='$DATABASEUSER'#' | \
+	sed s'#erpi.source.password.*#erpi.source.password='$DATABASEPASSWORD'#' | \
+	sed s'#erpi.cities.file.*#erpi.cities.file='$CITIES'#' | \
+	sed s'#erpi.tenant.id=.*#erpi.tenant.id='$TENANT'.'$DATABASE'#' | \
+	sed s'#erpi.datamart.create=.*#erpi.datamart.create='$CREATE'#' | \
+	sed s'#erpi.incremental=.*#erpi.incremental='$INCREMENTAL'#' \
 	> $KETTLE_HOME/.kettle/kettle.properties  2>&1 | tee -a $LOG_FILE
 	
 	sh kitchenkh.sh -file=../ErpBI/ETL/JOBS/Load.kjb -level=Basic
@@ -316,9 +355,9 @@ then
 	run_scripts
 fi
 
-if [ $CONFIGURE ]
+if [ $LOAD ]
 then
-	configure_pentaho
+	load_pentaho
 fi
 
 if [ $PREP ]
