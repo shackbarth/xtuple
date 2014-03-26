@@ -62,3 +62,6 @@ DO $$
     plv8.execute("ALTER TABLE xt.obj ALTER COLUMN obj_uuid SET DEFAULT xt.uuid_generate_v4();");
   }
 $$ language plv8;
+
+
+update xt.ext set ext_location = '/core-extensions' where ext_name = 'oauth2' and ext_location = '/xtuple-extensions';
