@@ -59,7 +59,7 @@ var _ = require('underscore'),
               return;
             }
 
-            var paths = _.map(res.rows, function (row) {
+            var paths = _.map(_.compact(res.rows), function (row) {
               var location = row.ext_location,
                 name = row.ext_name,
                 extPath;
@@ -77,7 +77,7 @@ var _ = require('underscore'),
             paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
             paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
             callback(null, {
-              extensions: paths,
+              extensions: _.compact(paths),
               database: database,
               keepSql: options.keepSql,
               wipeViews: options.wipeViews,
