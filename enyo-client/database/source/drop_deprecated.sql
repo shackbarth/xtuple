@@ -64,4 +64,3 @@ DO $$
 $$ language plv8;
 
 
-update xt.ext set ext_location = '/core-extensions' where ext_name = 'oauth2' and ext_location = '/xtuple-extensions';
