@@ -31,10 +31,10 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
     isLockable: false,
     /**
       @member -
-      @memberof Honorific.prototype
-      @description The ID attribute is "code", which will not be automatically uppercased.
+      @memberof Oauth2client
+      @description The ID attribute is "id"
     */
-    idAttribute: "code",
+    idAttribute: "id",
     enforceUpperKey: false,
     attributes: ["clientID", "clientSecret", "clientName", "clientEmail", "clientType"],
     /**
@@ -50,9 +50,10 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
         or deleted by users with the "MaintainTitles" privilege.
     */
     privileges: {
-      createUpdateDelete: "MaintainTitles",
+      createReadUpdateDelete: "MaintainOauth2clients",
       read: true
     },
+    skipSmoke: true, // TODO
     createHash: {
       clientID: "my_id_" + Math.random(),
       clientSecret: "mostlysecret",
