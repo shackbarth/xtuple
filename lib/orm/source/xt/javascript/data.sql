@@ -1735,7 +1735,8 @@ select xt.install_js('XT','Data','xtuple', $$
         XT.debug('getPgTypeFromOrmType values =', values);
       }
 
-      pgType = plv8.execute(sql, values)[0].data_type;
+      pgType = plv8.execute(sql, values);
+      pgType = pgType ? pgType[0].data_type : false;
 
       return pgType;
     },
