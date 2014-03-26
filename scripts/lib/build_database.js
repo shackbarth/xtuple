@@ -449,7 +449,7 @@ var  async = require('async'),
           // give the admin user every extension by default
           allSql = allSql + "insert into xt.usrext (usrext_usr_username, usrext_ext_id) " +
             "select '" + creds.username +
-            "', ext_id from xt.ext where ext_location = '/core-extensions';";
+            "', ext_id from xt.ext where ext_location = '/core-extensions' and ext_name NOT LIKE 'oauth2';";
         }
 
         winston.info("Applying build to database " + spec.database);

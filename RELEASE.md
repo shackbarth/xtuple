@@ -5,6 +5,7 @@ Critical deployment changes
 ---------------------------
 - The `oauth2` extension is now part of core. If you had its routes referenced
   in your `config.js`'s `extensionRoutes` attribute, you should remove it.
+- Make sure you `git submodule update --init --recursive`
 
 
 
