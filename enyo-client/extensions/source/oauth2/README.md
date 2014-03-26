@@ -28,57 +28,6 @@ installed with this command:
 
     sudo apt-get install openssl
 
-Next, clone this repository in the same directory your "xtuple" Mobile-Web
-Client directory is located. The command is:
-
-    git clone git@github.com:xtuple/xtuple-extensions.git
-
-The directory tree structure should look like this:
-
-  * some-parent-directory
-    * xtuple
-      * enyo-client
-      * lib
-      * node-datasource
-      * scripts
-      * etc...
-    * xtuple-extensions
-      * docs
-      * samples
-      * source
-        * oauth2
-          * ...
-      * tools
-      * etc...
-
-Then enter the "xtuple-extensions" directory and run these commands to
-initialize it:
-
-    git submodule update --init --recursive
-    npm install
-
-Next, add the relative path to the OAuth 2.0 route to your config.js file
-located at "xtuple/node-datasource/config.js". The entry in you config.js
-file should look like this:
-
-  ``` javascript
-    extensionRoutes: [
-      "../../xtuple-extensions/source/oauth2/node-datasource/routes",
-      "../../path-to-some-other-extension-you-may-have/note-no-comma-on-last-array-value-here->"
-    ],
-  ```
-Finally, install the extension on your xTuple database. Assuming you already
-have the Mobile-Web client setup and working. To install JUST this extension
-stop the datasource, enter the main "xtuple" directory and run this command:
-
-    ./scripts/build_app.js -d your-xtuple-database-name-here -e ../xtuple-extensions/source/oauth2
-
-Make sure you have created a `private` folder at this location:
-
-    path-to-xtuple/node-datasource/lib/private
-
-You can now start the datasource.
-
 ### OAuth 2.0 Client Setup:
 
 After you have installed the OAuth 2.0 extension, refresh your broswer and/or
