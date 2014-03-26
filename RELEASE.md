@@ -1,3 +1,13 @@
+1.8.2 (2014/03)
+==================
+
+Critical deployment changes
+---------------------------
+- The `oauth2` extension is now part of core. If you had its routes referenced
+  in your `config.js`'s `extensionRoutes` attribute, you should remove it.
+
+
+
 1.8.1 (2014/03/12)
 ==================
 
