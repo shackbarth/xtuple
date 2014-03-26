@@ -235,7 +235,11 @@ select xt.install_js('XT','Data','xtuple', $$
                 if (n === parts.length - 1) {
                   identifiers.push("jt" + (joins.length - 1));
                   identifiers.push(prop.attr.column);
-                  pgType = this.getPgTypeFromOrmType(prop.attr.type);
+                  pgType = this.getPgTypeFromOrmType(
+                    this.getNamespaceFromNamespacedTable(childOrm.table),
+                    this.getTableFromNamespacedTable(childOrm.table),
+                    prop.attr.column
+                  );
                   pgType = pgType ? "::" + pgType + "[]" : '';
                   params[pcount] += "%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I";
                   params[pcount] += ' ' + op + ' ARRAY[' + param.value.join(',') + ']' + pgType;
@@ -260,7 +264,11 @@ select xt.install_js('XT','Data','xtuple', $$
               }
               identifiers.push("t1");
               identifiers.push(prop.attr.column);
-              pgType = this.getPgTypeFromOrmType(prop.attr.type);
+              pgType = this.getPgTypeFromOrmType(
+                this.getNamespaceFromNamespacedTable(orm.table),
+                this.getTableFromNamespacedTable(orm.table),
+                prop.attr.column
+              );
               pgType = pgType ? "::" + pgType + "[]" : '';
               params.push("%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']' + pgType);
               pcount = params.length - 1;
@@ -1713,17 +1721,23 @@ select xt.install_js('XT','Data','xtuple', $$
       return fullName.indexOf(".") > 0 ? fullName.afterDot() : fullName;
     },
 
-    getPgTypeFromOrmType: function (ormType) {
-      switch (ormType) {
-        case "String":
-          return "text";
-        case "Number":
-          return "numeric";
-        case "Date":
-          return "date";
-        default:
-          return false;
+    getPgTypeFromOrmType: function (schema, table, column) {
+      var sql = "select data_type from information_schema.columns " +
+                "where true " +
+                "and table_schema = $1 " +
+                "and table_name = $2 " +
+                "and column_name = $3;",
+          pgType,
+          values = [schema, table, column];
+
+      if (DEBUG) {
+        XT.debug('getPgTypeFromOrmType sql =', sql);
+        XT.debug('getPgTypeFromOrmType values =', values);
       }
+
+      pgType = plv8.execute(sql, values)[0].data_type;
+
+      return pgType;
     },
 
     /**
