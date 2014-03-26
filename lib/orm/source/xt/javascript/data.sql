@@ -63,6 +63,7 @@ select xt.install_js('XT','Data','xtuple', $$
         parts,
         pcount,
         pertinentExtension,
+        pgType,
         prevOrm,
         privileges = orm.privileges,
         prop,
@@ -234,8 +235,10 @@ select xt.install_js('XT','Data','xtuple', $$
                 if (n === parts.length - 1) {
                   identifiers.push("jt" + (joins.length - 1));
                   identifiers.push(prop.attr.column);
+                  pgType = this.getPgTypeFromOrmType(prop.attr.type);
+                  pgType = pgType ? "::" + pgType + "[]" : '';
                   params[pcount] += "%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I";
-                  params[pcount] += ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
+                  params[pcount] += ' ' + op + ' ARRAY[' + param.value.join(',') + ']' + pgType;
                 } else {
                   childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                   sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
@@ -257,7 +260,9 @@ select xt.install_js('XT','Data','xtuple', $$
               }
               identifiers.push("t1");
               identifiers.push(prop.attr.column);
-              params.push("%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
+              pgType = this.getPgTypeFromOrmType(prop.attr.type);
+              pgType = pgType ? "::" + pgType + "[]" : '';
+              params.push("%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']' + pgType);
               pcount = params.length - 1;
             }
             clauses.push(params[pcount]);
@@ -1706,6 +1711,19 @@ select xt.install_js('XT','Data','xtuple', $$
 
     getTableFromNamespacedTable: function (fullName) {
       return fullName.indexOf(".") > 0 ? fullName.afterDot() : fullName;
+    },
+
+    getPgTypeFromOrmType: function (ormType) {
+      switch (ormType) {
+        case "String":
+          return "text";
+        case "Number":
+          return "numeric";
+        case "Date":
+          return "date";
+        default:
+          return false;
+      }
     },
 
     /**
