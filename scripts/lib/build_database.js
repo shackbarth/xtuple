@@ -466,9 +466,7 @@ var  async = require('async'),
     // which is the pre-installed ORMs. Check that now.
     //
     var preInstallDatabase = function (spec, callback) {
-      var preInstallSql = "update xt.ext set ext_location = '/core-extensions' " +
-          "where ext_name = 'oauth2' and ext_location = '/xtuple-extensions';",
-        existsSql = preInstallSql + "select relname from pg_class where relname = 'orm'",
+      var existsSql = "select relname from pg_class where relname = 'orm'",
         credsClone = JSON.parse(JSON.stringify(creds)),
         ormTestSql = "select orm_namespace as namespace, " +
           " orm_type as type " +
