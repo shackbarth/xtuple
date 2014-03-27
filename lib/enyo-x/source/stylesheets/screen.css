@@ -1605,24 +1605,37 @@ body {
 .xv-sort-popup .xv-groupbox > *:last-child .onyx-button {
   margin: 3px;
 }
-.xv-button-bar {
-  text-align: center;
-}
-.xv-button-bar .onyx-button {
-  margin: 5px 5px 0 0;
-}
 .xv-version-label {
   padding: 10px;
 }
 .xv-popup-button {
   margin: 4px;
 }
-.xv-scroller {
-  background: #fdfdfd;
-}
 .xv-error,
 .xv-negative {
   color: #ff0000;
+}
+/**
+  Default button bar with margins and border-radius
+*/
+.xv-buttons {
+  margin: 5px;
+}
+.xv-buttons .onyx-button {
+  margin: 2px;
+  min-width: 60px;
+  color: #666666;
+  font-size: 20px;
+}
+.xv-buttons .onyx-button.save {
+  color: #357ec7;
+}
+.xv-buttons .onyx-button.text {
+  font-size: 18px;
+}
+.xv-buttons .onyx-button.selected {
+  background: #357ec7;
+  color: #fdfdfd;
 }
 .xv-assignment-box .xv-flexible-label {
   width: 85%;
@@ -1635,6 +1648,9 @@ body {
   font-size: large;
   text-align: center;
 }
+/**
+  Default popup style
+*/
 .xv-comment-box {
   /* Resets the margin/padding value for blockquote tag in comments */
 }
@@ -1722,6 +1738,15 @@ body {
 .xv-toolbar-moved {
   width: 220px;
 }
+.icon-folder-open-alt,
+.icon-calendar,
+.icon-sort,
+.icon-angle-up,
+.icon-angle-down,
+.icon-save {
+  color: #357ec7;
+  vertical-align: middle;
+}
 .onyx-toolbar {
   height: 55px;
   padding: 4px;
@@ -1780,33 +1805,6 @@ body {
 .xv-totals-panel .xv-picker-label {
   width: 110px;
 }
-.clearfix {
-  *zoom: 1;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.clearfix:after {
-  clear: both;
-}
-.hide-text {
-  font: 0/0 a;
-  color: transparent;
-  text-shadow: none;
-  background-color: transparent;
-  border: 0;
-}
-.input-block-level {
-  display: block;
-  width: 100%;
-  min-height: 30px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
 .xv-navigator .xv-header {
   background-color: #fdfdfd;
   padding: 6px 12px;
@@ -1845,17 +1843,18 @@ body {
   Styles for the application startup
 */
 .xv-startup-panel {
-  background: #373737;
+  background: #fdfdfd;
 }
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
-  margin: 0 auto 8px auto;
+  height: 30px;
+  line-height: 30px;
+  margin: 0 auto 10px auto;
   top: 200px;
   position: relative;
   color: #ff6529;
-  text-transform: uppercase;
   font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   border: none;
 }
@@ -1864,6 +1863,13 @@ body {
   margin: 0 auto 0 auto;
   top: 200px;
   position: relative;
+}
+.xv-startup-panel .xv-startup-progress.onyx-progress-button {
+  height: 18px;
+  line-height: 18px;
+}
+.xv-startup-panel .xv-startup-progress.onyx-progress-button-bar {
+  height: 18px;
 }
 .xv-workspace-container {
   background: #fdfdfd;
@@ -2690,104 +2696,110 @@ body {
   Styles relating to widgets in the pullout
 */
 /* Pullout */
-.xv-pullout-header {
-  text-align: center;
-  padding: 10px 0;
-}
-.pullout {
-  position: absolute;
-  top: 57px;
-  left: 0px;
-  bottom: 0;
+.xv-pullout {
+  /* Setting this as min-width overrides enyo-narrow 100% */
   width: 320px;
-  background: #d7d7d7;
-}
-.pullout .pullout-scroller {
-  position: relative;
-  margin-right: 4px;
-}
-.pullout .pullout-shadow {
+  -webkit-box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.2);
   position: absolute;
-  height: 100%;
-  width: 2px;
-  right: -2px;
-  /**
-      TODO: this is weird and indicates the REAL need to change the
-      whatever the css system is...this relative path is different...
-    **/
-  background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
-  background-size: 20px 2px;
+  top: 55px;
+  left: 0;
+  bottom: 0;
+  background-color: #fdfdfd;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
-.pullout .pullout-toolbar {
-  padding-top: 4px;
-  text-align: center;
+.xv-pullout .xv-header {
+  background-color: #fdfdfd;
+  padding: 6px 12px;
+  border-bottom: 1px solid #d7d7d7;
+  height: 28px;
+  color: #ff6529;
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 15px;
+  border: none;
 }
-.xv-groupbox.xv-parameter {
-  min-width: 280px;
-  max-width: 320px;
-  margin: 4px 0 8px 4px;
-  padding: 0;
-}
-.xv-groupbox.xv-parameter .top-drawer {
-  border-top: #aaaaaa 1px solid;
+.xv-pullout .pullout-grabbutton {
+  position: absolute;
+  height: 54px;
+  width: 50px;
+  bottom: 25px;
+  right: -50px;
   background-color: #d7d7d7;
-  color: #505050;
-  padding: 7px 0 7px 5px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
 }
-.xv-groupbox.xv-parameter .top-drawer > * {
+.xv-pullout .xv-parameter-panel {
+  width: 320px;
+  margin: 0 4px 0 2px;
+  padding: 0;
+  background: #f8f8f8;
+  text-overflow: ellipsis;
+  border: 1px solid #d7d7d7;
+  width: 100%;
+  margin: 0 4px 6px 0;
+}
+.xv-pullout .xv-parameter-panel .onyx-groupbox-header {
+  padding: 6px 10px;
+  border-bottom: 1px solid #d7d7d7;
+  background: #efefef;
+  color: #0e0e0e;
+}
+.xv-pullout .xv-parameter-panel .onyx-groupbox-header i {
   margin-right: 10px;
 }
-.xv-groupbox.xv-parameter .xv-filter-form .button-row {
-  background-color: #fdfdfd;
-  padding: 7px;
+.xv-pullout .xv-parameter-panel.small-panel {
+  width: 600px;
+}
+.xv-pullout .xv-parameter-panel.medium-panel {
+  width: 700px;
+}
+.xv-pullout .xv-parameter-panel.large-panel {
+  width: 800px;
+}
+.xv-pullout .xv-parameter-panel .xv-label,
+.xv-pullout .xv-parameter-panel .xv-decorated-label,
+.xv-pullout .xv-parameter-panel .xv-flexible-label {
+  width: 120px !important;
+  max-width: 100%;
+  padding: 0 8px 0 6px;
+  text-align: right;
+  vertical-align: middle;
+}
+.xv-pullout .xv-parameter-panel .xv-input {
+  border-bottom: 1px solid #d7d7d7;
+  padding: 2px 0;
+  margin: 0px;
+}
+.xv-pullout .xv-parameter-panel .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
+.xv-pullout .xv-parameter-panel .xv-buttons {
   text-align: center;
 }
-.xv-groupbox.xv-parameter .xv-filter-form .button-row .onyx-button {
-  margin-right: 3px;
-}
-.xv-groupbox.xv-parameter .xv-filter-form .xv-list {
+.xv-pullout .xv-parameter-panel .xv-filter-form .xv-list {
   height: 150px;
 }
-#app_pullout_container,
-#app_pullout_help,
-#app_pullout_help_helpPage {
-  height: 100%;
-}
-#app_pullout_help_helpPage {
+.xv-pullout .help-panel {
   border: none;
   height: 100%;
   width: 100%;
 }
-/* Parameter Widget */
-.xv-parameter-item {
-  background-color: #fdfdfd;
-}
-.xv-parameter-item .xv-label {
-  color: #070707;
-}
-.xv-parameter-item .xv-flexible-label {
-  color: #070707;
-}
-.xv-parameter-item .xv-picker {
-  width: 150px;
-}
-.xv-parameter-item .xv-radiogroup {
-  padding: 6px;
-  margin-left: 130px;
-}
-/* Layout Widget */
-.xv-tree {
-  background-color: #fdfdfd;
-}
-.xv-tree .xv-tree-node {
-  /* These picker styles are for the ListAttr node */
-}
-.xv-tree .xv-tree-node .xv-pickerwidget {
-  display: inline-block;
-  padding: 4px;
-}
-.xv-tree .xv-tree-node .xv-pickerwidget .xv-picker-label {
-  width: 50px;
+.xv-pullout .history-panel .history-item {
+  color: #0e0e0e;
+  margin: 8px;
 }
 /**
   Styles relating to misc widgets
@@ -3013,158 +3025,68 @@ body {
   color: #070707;
   background-color: #fdfdfd;
 }
-/*
-  Styles relating to the groupbox
-*/
-.xv-groupbox {
-  min-width: 320px;
-  padding: 8px;
-  margin-right: 5px;
-}
-.xv-groupbox .enyo-fittable-columns-layout > * {
-  vertical-align: middle;
-}
-.xv-groupbox.editor {
-  min-width: 250px;
-  padding: 0;
-  margin: 0;
-}
-.xv-groupbox.in-panel {
-  padding: 0;
-  margin: 0;
-}
-.xv-groupbox .in-panel > *:first-child {
-  border-top-color: #aaaaaa;
-  border-top: none;
-  border-width: 1px;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-.xv-groupbox .in-panel > *:last-child {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  border-bottom: none;
-}
-.xv-groupbox > .in-panel .editor {
-  border-right: none;
-}
-.xv-groupbox.panel {
-  min-width: 330px;
-}
-.xv-groupbox.small-panel {
-  width: 600px;
-}
-.xv-groupbox.medium-panel {
-  width: 700px;
-}
-.xv-groupbox.large-panel {
-  width: 800px;
-}
-.xv-groupbox > .onyx-input-decorator {
-  border-color: #aaaaaa;
-  border-width: 0 1px 1px 1px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.xv-groupbox > .onyx-input-decorator:first-child {
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > .onyx-input-decorator:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > * {
-  display: block;
-  border-top-width: 0;
-  /* reset styles that make 'item' look bad if they happen to be there */
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  margin: 0;
-}
-.xv-groupbox-header {
-  padding: 5px 10px;
-  color: #fdfdfd;
-  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
-  font-size: 14px;
+.xv-search .xv-header {
+  background-color: #fdfdfd;
+  padding: 6px 12px;
+  border-bottom: 1px solid #d7d7d7;
+  height: 28px;
+  color: #ff6529;
+  font-size: small;
   font-weight: bold;
   text-transform: uppercase;
-  background-color: #373737;
-  border: none;
-  background: #666666;
-}
-.xv-groupbox-buttons {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   border: none;
 }
-.xv-groupbox-buttons .xv-groupbox-button-single {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
+.xv-search .xv-search-container {
+  width: 320px;
+  margin: 0 4px 0 2px;
+  padding: 0;
+  background: #f8f8f8;
+  text-overflow: ellipsis;
+  border: 1px solid #d7d7d7;
+  width: 100%;
+  margin: 0 4px 6px 0;
 }
-.xv-groupbox-buttons .xv-groupbox-button-center {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
+.xv-search .xv-search-container .onyx-groupbox-header {
+  padding: 6px 10px;
+  border-bottom: 1px solid #d7d7d7;
+  background: #efefef;
+  color: #0e0e0e;
 }
-.xv-groupbox-buttons .xv-groupbox-button-left {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
+.xv-search .xv-search-container .onyx-groupbox-header i {
+  margin-right: 10px;
 }
-.xv-groupbox-buttons .xv-groupbox-button-right {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
+.xv-search .xv-search-container.small-panel {
+  width: 600px;
+}
+.xv-search .xv-search-container.medium-panel {
+  width: 700px;
+}
+.xv-search .xv-search-container.large-panel {
+  width: 800px;
+}
+.xv-search .xv-search-container .xv-label,
+.xv-search .xv-search-container .xv-decorated-label,
+.xv-search .xv-search-container .xv-flexible-label {
+  width: 120px !important;
+  max-width: 100%;
+  padding: 0 8px 0 6px;
+  text-align: right;
+  vertical-align: middle;
+}
+.xv-search .xv-search-container .xv-input {
+  border-bottom: 1px solid #d7d7d7;
+  padding: 2px 0;
+  margin: 0px;
+}
+.xv-search .xv-search-container .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
+.xv-search .xv-search-container .xv-buttons {
+  text-align: center;
+}
+.xv-search .xv-search-container .xv-filter-form .xv-list {
+  height: 150px;
 }

@@ -171,13 +171,6 @@ body {
   }
 }
 
-.xv-button-bar {
-  text-align: center;
-  .onyx-button {
-    margin: 5px 5px 0 0;
-  }
-}
-
 .xv-version-label {
   padding: 10px;
 }
@@ -186,12 +179,36 @@ body {
   margin: 4px;
 }
 
-.xv-scroller {
-  background: @white;
-}
+// .xv-scroller {
+//   background: @white;
+// }
 
 .xv-error, .xv-negative {
   color: @bright-red;
+}
+
+/**
+  Default button bar with margins and border-radius
+*/
+.xv-buttons {
+  margin: 5px;
+
+  .onyx-button {
+    margin: 2px;
+    min-width: 60px;
+    color: @charcoal;
+    font-size: 20px;
+    &.save {
+      color: @slate-blue;
+    }
+    &.text {
+      font-size: 18px;
+    }
+    &.selected {
+      background: @slate-blue;
+      color: @white;
+    }
+  }
 }
 
 .xv-assignment-box {
@@ -208,6 +225,30 @@ body {
   font-size: large;
   text-align: center;
 }
+
+/**
+  Default popup style
+*/
+// .xv-popup {
+//   background: @header-gray;
+//   margin: 0;
+//   max-height: 400px;
+//   width: 400px;
+//   min-width: @defaultPanelWidth;
+//   padding: 7px;
+//   text-align: center;
+//
+//   &.xv-groupbox-popup {
+//     .xv-workspace-container > .xv-workspace > .xv-workspace-panel;
+//     color: @black;
+//     padding: 7px;
+//
+//     .xv-message {
+//       color: @red;
+//       padding: 5px;
+//     }
+//   }
+// }
 
 .xv-comment-box {
   .onxy-groupbox-header {
@@ -313,6 +354,11 @@ body {
   width: 220px;
 }
 
+.icon-folder-open-alt, .icon-calendar, .icon-sort, .icon-angle-up, .icon-angle-down, .icon-save {
+  color: @slate-blue;
+  vertical-align: middle;
+}
+
 .onyx-toolbar {
   height: @toolbarHeight;
   padding: 4px;
@@ -383,7 +429,6 @@ body {
 @import "workspace.less";
 @import "model-decorator.less";
 @import "picker.less";
-
 @import "grid.less";
 @import "dashboard.less";
 @import "list.less";
@@ -392,7 +437,4 @@ body {
 @import "characteristics.less";
 @import "relations.less";
 @import "address.less";
-// @import "calendar.less";
-//@import "search.less";
-// TODO: get rid of!
-@import "groupbox.less";
+@import "search.less";
