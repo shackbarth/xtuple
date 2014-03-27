@@ -53,6 +53,7 @@ setTimeout:true, before:true, clearTimeout:true, exports:true, it:true, describe
       createReadUpdateDelete: "MaintainOauth2clients",
       read: true
     },
+    skipCrud: true, // TODO: need to grant the priv to admin
     skipSmoke: true, // TODO
     createHash: {
       clientID: "my_id_" + Math.random(),
