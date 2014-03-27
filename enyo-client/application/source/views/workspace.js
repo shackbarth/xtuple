@@ -1978,7 +1978,7 @@ strict: false*/
       if (customer) {
         this.$.customerShiptoWidget.setDisabled(false);
         this.$.customerShiptoWidget.addParameter({
-          attribute: "customer",
+          attribute: "customer.number",
           value: customer.id
         });
         if (this.$.creditCardWidget) {

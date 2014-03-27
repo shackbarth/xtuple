@@ -11,35 +11,36 @@
   Import for Font-Awesome icons
 */
 /*!
- *  Font Awesome 3.1.0
+ *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
- *  -------------------------------------------------------
- *  The full suite of pictographic icons, examples, and documentation
- *  can be found at: http://fontawesome.io
+ *  ------------------------------------------------------------------------------
+ *  The full suite of pictographic icons, examples, and documentation can be
+ *  found at http://fontawesome.io.  Stay up to date on Twitter at
+ *  http://twitter.com/fontawesome.
  *
  *  License
- *  -------------------------------------------------------
- *  - The Font Awesome font is licensed under the SIL Open Font License v1.1 -
+ *  ------------------------------------------------------------------------------
+ *  - The Font Awesome font is licensed under SIL OFL 1.1 -
  *    http://scripts.sil.org/OFL
- *  - Font Awesome CSS, LESS, and SASS files are licensed under the MIT License -
+ *  - Font Awesome CSS, LESS, and SASS files are licensed under MIT License -
  *    http://opensource.org/licenses/mit-license.html
- *  - Font Awesome documentation licensed under CC BY 3.0 License -
+ *  - Font Awesome documentation licensed under CC BY 3.0 -
  *    http://creativecommons.org/licenses/by/3.0/
  *  - Attribution is no longer required in Font Awesome 3.0, but much appreciated:
  *    "Font Awesome by Dave Gandy - http://fontawesome.io"
-
- *  Contact
- *  -------------------------------------------------------
+ *
+ *  Author - Dave Gandy
+ *  ------------------------------------------------------------------------------
  *  Email: dave@fontawesome.io
- *  Twitter: http://twitter.com/fortaweso_me
- *  Work: Lead Product Designer @ http://kyruus.com
+ *  Twitter: http://twitter.com/davegandy
+ *  Work: Lead Product Designer @ Kyruus - http://kyruus.com
  */
 /* FONT PATH
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url('../../lib/font-awesome/font/fontawesome-webfont.eot?v=3.1.0');
-  src: url('../../lib/font-awesome/font/fontawesome-webfont.eot?#iefix&v=3.1.0') format('embedded-opentype'), url('../../lib/font-awesome/font/fontawesome-webfont.woff?v=3.1.0') format('woff'), url('../../lib/font-awesome/font/fontawesome-webfont.ttf?v=3.1.0') format('truetype'), url('../../lib/font-awesome/font/fontawesome-webfont.svg#fontawesomeregular?v=3.1.0') format('svg');
+  src: url('../../lib/font-awesome/font/fontawesome-webfont.eot?v=3.2.1');
+  src: url('../../lib/font-awesome/font/fontawesome-webfont.eot?#iefix&v=3.2.1') format('embedded-opentype'), url('../../lib/font-awesome/font/fontawesome-webfont.woff?v=3.2.1') format('woff'), url('../../lib/font-awesome/font/fontawesome-webfont.ttf?v=3.2.1') format('truetype'), url('../../lib/font-awesome/font/fontawesome-webfont.svg#fontawesomeregular?v=3.2.1') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -63,35 +64,38 @@
 /* makes the font 33% larger relative to the icon container */
 .icon-large:before {
   vertical-align: -10%;
-  font-size: 1.3333333333333333em;
+  font-size: 1.33333333em;
 }
 /* makes sure icons active on rollover in links */
 a [class^="icon-"],
-a [class*=" icon-"],
-a [class^="icon-"]:before,
-a [class*=" icon-"]:before {
+a [class*=" icon-"] {
   display: inline;
 }
 /* increased font size for icon-large */
 [class^="icon-"].icon-fixed-width,
 [class*=" icon-"].icon-fixed-width {
   display: inline-block;
-  width: 1.2857142857142858em;
-  text-align: center;
+  width: 1.14285714em;
+  text-align: right;
+  padding-right: 0.28571429em;
 }
 [class^="icon-"].icon-fixed-width.icon-large,
 [class*=" icon-"].icon-fixed-width.icon-large {
-  width: 1.5714285714285714em;
+  width: 1.42857143em;
 }
-ul.icons-ul {
+.icons-ul {
+  margin-left: 2.14285714em;
   list-style-type: none;
-  text-indent: -0.7142857142857143em;
-  margin-left: 2.142857142857143em;
 }
-ul.icons-ul > li .icon-li {
-  width: 0.7142857142857143em;
-  display: inline-block;
+.icons-ul > li {
+  position: relative;
+}
+.icons-ul .icon-li {
+  position: absolute;
+  left: -2.14285714em;
+  width: 2.14285714em;
   text-align: center;
+  line-height: inherit;
 }
 [class^="icon-"].hide,
 [class*=" icon-"].hide {
@@ -251,6 +255,11 @@ ul.icons-ul > li .icon-li {
 .btn.btn-large [class*=" icon-"].pull-right.icon-2x {
   margin-left: .2em;
 }
+/* Fixes alignment in nav lists */
+.nav-list [class^="icon-"],
+.nav-list [class*=" icon-"] {
+  line-height: inherit;
+}
 /* EXTRAS
  * -------------------------- */
 /* Stacked and layered icon */
@@ -284,6 +293,12 @@ ul.icons-ul > li .icon-li {
   -o-animation: spin 2s infinite linear;
   -webkit-animation: spin 2s infinite linear;
   animation: spin 2s infinite linear;
+}
+/* Prevent stack and spinners from being taken inline when inside a link */
+a .icon-stack,
+a .icon-spin {
+  display: inline-block;
+  text-decoration: none;
 }
 @-moz-keyframes spin {
   0% {
@@ -364,6 +379,14 @@ ul.icons-ul > li .icon-li {
   -o-transform: scale(1, -1);
   transform: scale(1, -1);
 }
+/* ensure rotation occurs inside anchor tags */
+a .icon-rotate-90:before,
+a .icon-rotate-180:before,
+a .icon-rotate-270:before,
+a .icon-flip-horizontal:before,
+a .icon-flip-vertical:before {
+  display: inline-block;
+}
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */
 .icon-glass:before {
@@ -375,7 +398,7 @@ ul.icons-ul > li .icon-li {
 .icon-search:before {
   content: "\f002";
 }
-.icon-envelope:before {
+.icon-envelope-alt:before {
   content: "\f003";
 }
 .icon-heart:before {
@@ -414,12 +437,14 @@ ul.icons-ul > li .icon-li {
 .icon-zoom-out:before {
   content: "\f010";
 }
+.icon-power-off:before,
 .icon-off:before {
   content: "\f011";
 }
 .icon-signal:before {
   content: "\f012";
 }
+.icon-gear:before,
 .icon-cog:before {
   content: "\f013";
 }
@@ -429,7 +454,7 @@ ul.icons-ul > li .icon-li {
 .icon-home:before {
   content: "\f015";
 }
-.icon-file:before {
+.icon-file-alt:before {
   content: "\f016";
 }
 .icon-time:before {
@@ -453,11 +478,10 @@ ul.icons-ul > li .icon-li {
 .icon-play-circle:before {
   content: "\f01d";
 }
-.icon-repeat:before,
-.icon-rotate-right:before {
+.icon-rotate-right:before,
+.icon-repeat:before {
   content: "\f01e";
 }
-/* F020 doesn't work in Safari. all shifted one down */
 .icon-refresh:before {
   content: "\f021";
 }
@@ -650,8 +674,8 @@ ul.icons-ul > li .icon-li {
 .icon-arrow-down:before {
   content: "\f063";
 }
-.icon-share-alt:before,
-.icon-mail-forward:before {
+.icon-mail-forward:before,
+.icon-share-alt:before {
   content: "\f064";
 }
 .icon-resize-full:before {
@@ -744,16 +768,17 @@ ul.icons-ul > li .icon-li {
 .icon-key:before {
   content: "\f084";
 }
+.icon-gears:before,
 .icon-cogs:before {
   content: "\f085";
 }
 .icon-comments:before {
   content: "\f086";
 }
-.icon-thumbs-up:before {
+.icon-thumbs-up-alt:before {
   content: "\f087";
 }
-.icon-thumbs-down:before {
+.icon-thumbs-down-alt:before {
   content: "\f088";
 }
 .icon-star-half:before {
@@ -792,6 +817,7 @@ ul.icons-ul > li .icon-li {
 .icon-phone:before {
   content: "\f095";
 }
+.icon-unchecked:before,
 .icon-check-empty:before {
   content: "\f096";
 }
@@ -891,6 +917,7 @@ ul.icons-ul > li .icon-li {
 .icon-copy:before {
   content: "\f0c5";
 }
+.icon-paperclip:before,
 .icon-paper-clip:before {
   content: "\f0c6";
 }
@@ -963,14 +990,14 @@ ul.icons-ul > li .icon-li {
 .icon-sort-up:before {
   content: "\f0de";
 }
-.icon-envelope-alt:before {
+.icon-envelope:before {
   content: "\f0e0";
 }
 .icon-linkedin:before {
   content: "\f0e1";
 }
-.icon-undo:before,
-.icon-rotate-left:before {
+.icon-rotate-left:before,
+.icon-undo:before {
   content: "\f0e2";
 }
 .icon-legal:before {
@@ -1027,7 +1054,7 @@ ul.icons-ul > li .icon-li {
 .icon-food:before {
   content: "\f0f5";
 }
-.icon-file-alt:before {
+.icon-file-text-alt:before {
   content: "\f0f6";
 }
 .icon-building:before {
@@ -1105,9 +1132,12 @@ ul.icons-ul > li .icon-li {
 .icon-circle:before {
   content: "\f111";
 }
-.icon-reply:before,
-.icon-mail-reply:before {
+.icon-mail-reply:before,
+.icon-reply:before {
   content: "\f112";
+}
+.icon-github-alt:before {
+  content: "\f113";
 }
 .icon-folder-close-alt:before {
   content: "\f114";
@@ -1278,26 +1308,213 @@ ul.icons-ul > li .icon-li {
 .icon-share-sign:before {
   content: "\f14d";
 }
+.icon-compass:before {
+  content: "\f14e";
+}
+.icon-collapse:before {
+  content: "\f150";
+}
+.icon-collapse-top:before {
+  content: "\f151";
+}
+.icon-expand:before {
+  content: "\f152";
+}
+.icon-euro:before,
+.icon-eur:before {
+  content: "\f153";
+}
+.icon-gbp:before {
+  content: "\f154";
+}
+.icon-dollar:before,
+.icon-usd:before {
+  content: "\f155";
+}
+.icon-rupee:before,
+.icon-inr:before {
+  content: "\f156";
+}
+.icon-yen:before,
+.icon-jpy:before {
+  content: "\f157";
+}
+.icon-renminbi:before,
+.icon-cny:before {
+  content: "\f158";
+}
+.icon-won:before,
+.icon-krw:before {
+  content: "\f159";
+}
+.icon-bitcoin:before,
+.icon-btc:before {
+  content: "\f15a";
+}
+.icon-file:before {
+  content: "\f15b";
+}
+.icon-file-text:before {
+  content: "\f15c";
+}
+.icon-sort-by-alphabet:before {
+  content: "\f15d";
+}
+.icon-sort-by-alphabet-alt:before {
+  content: "\f15e";
+}
+.icon-sort-by-attributes:before {
+  content: "\f160";
+}
+.icon-sort-by-attributes-alt:before {
+  content: "\f161";
+}
+.icon-sort-by-order:before {
+  content: "\f162";
+}
+.icon-sort-by-order-alt:before {
+  content: "\f163";
+}
+.icon-thumbs-up:before {
+  content: "\f164";
+}
+.icon-thumbs-down:before {
+  content: "\f165";
+}
+.icon-youtube-sign:before {
+  content: "\f166";
+}
+.icon-youtube:before {
+  content: "\f167";
+}
+.icon-xing:before {
+  content: "\f168";
+}
+.icon-xing-sign:before {
+  content: "\f169";
+}
+.icon-youtube-play:before {
+  content: "\f16a";
+}
+.icon-dropbox:before {
+  content: "\f16b";
+}
+.icon-stackexchange:before {
+  content: "\f16c";
+}
+.icon-instagram:before {
+  content: "\f16d";
+}
+.icon-flickr:before {
+  content: "\f16e";
+}
+.icon-adn:before {
+  content: "\f170";
+}
+.icon-bitbucket:before {
+  content: "\f171";
+}
+.icon-bitbucket-sign:before {
+  content: "\f172";
+}
+.icon-tumblr:before {
+  content: "\f173";
+}
+.icon-tumblr-sign:before {
+  content: "\f174";
+}
+.icon-long-arrow-down:before {
+  content: "\f175";
+}
+.icon-long-arrow-up:before {
+  content: "\f176";
+}
+.icon-long-arrow-left:before {
+  content: "\f177";
+}
+.icon-long-arrow-right:before {
+  content: "\f178";
+}
+.icon-apple:before {
+  content: "\f179";
+}
+.icon-windows:before {
+  content: "\f17a";
+}
+.icon-android:before {
+  content: "\f17b";
+}
+.icon-linux:before {
+  content: "\f17c";
+}
+.icon-dribbble:before {
+  content: "\f17d";
+}
+.icon-skype:before {
+  content: "\f17e";
+}
+.icon-foursquare:before {
+  content: "\f180";
+}
+.icon-trello:before {
+  content: "\f181";
+}
+.icon-female:before {
+  content: "\f182";
+}
+.icon-male:before {
+  content: "\f183";
+}
+.icon-gittip:before {
+  content: "\f184";
+}
+.icon-sun:before {
+  content: "\f185";
+}
+.icon-moon:before {
+  content: "\f186";
+}
+.icon-archive:before {
+  content: "\f187";
+}
+.icon-bug:before {
+  content: "\f188";
+}
+.icon-vk:before {
+  content: "\f189";
+}
+.icon-weibo:before {
+  content: "\f18a";
+}
+.icon-renren:before {
+  content: "\f18b";
+}
 * .font-onyx {
   /**
      * Icon size set per Onyx standard:
      * https://github.com/enyojs/onyx/blob/master/source/Icon.js#L5
      */
-
   width: 32px;
   height: 32px;
   padding: 3px;
-}
-* .font-onyx i {
   text-align: center;
-  font-size: 26px;
+}
+* .font-onyx div {
+  font-size: 22px;
   color: #dddddd;
   text-shadow: 3px 3px 5px rgba(34, 34, 34, 0.97), 0px 0px 3px rgba(34, 34, 34, 0.97);
+}
+* .font-onyx .text {
+  font-size: 12px;
+}
+.font-onyx.text-icon {
+  width: 50px;
+  height: 40px;
 }
 .font-onyx.icon.button:not(.disabled) {
   cursor: pointer;
 }
-.font-onyx.icon.button:not(.disabled):active i {
+.font-onyx.icon.button:not(.disabled):active div {
   color: white;
   text-shadow: 2px 2px 5px #0099ff, -2px -2px 5px #0099ff, 2px -2px 5px #0099ff, -2px 2px 5px #0099ff;
 }
@@ -1349,7 +1566,6 @@ ul.icons-ul > li .icon-li {
   /**
         * Default styling for a model's id (as designated by 'idAttribute')
         */
-
 }
 .xv-list .xv-model-decorator > .xv-list-item .xv-list-column.xv-list-attr.xm-attribute-id {
   color: blue;
@@ -1439,7 +1655,6 @@ ul.icons-ul > li .icon-li {
     This is the most general grid row that
     is not specific to read-only or selected
   */
-
 }
 .xv-grid-box.small-panel {
   width: 600px;
@@ -1495,7 +1710,6 @@ ul.icons-ul > li .icon-li {
   /**
       This is the grid header row
     */
-
 }
 .xv-grid-box .xv-grid-row > * {
   display: inline-block;
@@ -1713,7 +1927,6 @@ ul.icons-ul > li .icon-li {
     These styles will only be used
     if the chart is in a dashboard
   */
-
 }
 .dashboard .charts-panels {
   overflow-y: auto;
@@ -1869,8 +2082,6 @@ ul.icons-ul > li .icon-li {
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
   min-height: 32px;
-  padding: 2px;
-  padding-right: 36px;
 }
 .xv-list .xv-list-item.header {
   padding-top: 0;
@@ -2099,30 +2310,8 @@ ul.icons-ul > li .icon-li {
       TODO: this is weird and indicates the REAL need to change the
       whatever the css system is...this relative path is different...
     **/
-
   background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
   background-size: 20px 2px;
-}
-.pullout .pullout-grabbutton {
-  position: absolute;
-  height: 54px;
-  width: 50px;
-  bottom: 20px;
-  right: -46px;
-  background-color: #dddddd;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-right-radius: 10px;
 }
 .pullout .pullout-toolbar {
   padding-top: 4px;
@@ -2187,7 +2376,6 @@ ul.icons-ul > li .icon-li {
 }
 .xv-tree .xv-tree-node {
   /* These picker styles are for the ListAttr node */
-
 }
 .xv-tree .xv-tree-node .xv-pickerwidget {
   display: inline-block;
@@ -2545,56 +2733,14 @@ ul.icons-ul > li .icon-li {
   -moz-border-radius-bottomright: 4px;
   border-bottom-right-radius: 4px;
 }
-.xv-groupbox > .onyx-input-decorator:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
 .xv-groupbox > * {
   display: block;
-  border: 1px #aaaaaa solid;
   border-top-width: 0;
   /* reset styles that make 'item' look bad if they happen to be there */
-
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
   margin: 0;
-}
-.xv-groupbox > *:first-child {
-  border-top-color: #aaaaaa;
-  border-width: 1px;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  border-top-right-radius: 4px;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-}
-.xv-groupbox > *:last-child {
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  border-top-left-radius: 0;
-  -webkit-border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
-  -webkit-border-top-right-radius: 0;
-  -moz-border-radius-topright: 0;
-  border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-right-radius: 4px;
-}
-.xv-groupbox > *:first-child:last-child {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
 }
 .xv-groupbox-header {
   padding: 5px 10px;
@@ -2605,7 +2751,7 @@ ul.icons-ul > li .icon-li {
   text-transform: uppercase;
   background-color: #333333;
   border: none;
-  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
+  background: #555555;
 }
 .xv-groupbox-buttons {
   border: none;
@@ -2663,7 +2809,6 @@ body {
 }
 .bggrad {
   /* Radial Gradient */
-
   background-color: #333333;
   background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(#696969), to(#333333));
   background-image: -webkit-radial-gradient(circle, #696969, #333333);
@@ -2675,9 +2820,9 @@ body {
 .app > * {
   width: 320px;
   height: 100%;
-  -webkit-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
-  box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: -1px 0 1px 0 rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: -1px 0 1px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: -1px 0 1px 0 rgba(0, 0, 0, 0.3);
   background: #696969;
 }
 /*
@@ -2704,13 +2849,6 @@ body {
 .scroll-ios {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-}
-/**
-  Sets a fixed height on all of the toolbars
-  so that they're not dependent on the icon height
-*/
-.onyx-menu-toolbar {
-  height: 57px;
 }
 .item {
   position: relative;
@@ -2815,7 +2953,6 @@ body {
 }
 .xv-comment-box {
   /* Resets the margin/padding value for blockquote tag in comments */
-
 }
 .xv-comment-box .onxy-groupbox-header {
   max-width: 320px;
@@ -2901,8 +3038,43 @@ body {
 .xv-toolbar-moved {
   width: 220px;
 }
-.xv-toolbar-label {
-  width: 180px;
+.onyx-toolbar {
+  height: 55px;
+  padding: 4px;
+  background: #4c4c4c;
+  border: none;
+}
+.onyx-toolbar .onyx-icon-button,
+.onyx-toolbar .onyx-popup-decorator {
+  margin: 0 6px 0 3px;
+}
+.onyx-toolbar .onyx-icon-button div,
+.onyx-toolbar .onyx-popup-decorator div {
+  text-shadow: none;
+  color: #ffffff;
+}
+.onyx-toolbar .onyx-icon-button.lock div,
+.onyx-toolbar .onyx-popup-decorator.lock div {
+  color: #ff9c00;
+}
+.onyx-toolbar .onyx-popup-decorator {
+  height: 40px;
+  width: 40px;
+}
+.onyx-toolbar .onyx-popup-decorator .onyx-icon-button {
+  margin: 0;
+}
+.onyx-toolbar .onyx-menu {
+  margin-top: 10px;
+}
+.onyx-toolbar .spacer {
+  margin: 0;
+}
+.onyx-toolbar .xv-toolbar-label,
+.onyx-toolbar .xv-search {
+  width: 185px;
+  margin: 0;
+  margin-left: 6px;
 }
 .xv-totals-panel {
   padding: 0;

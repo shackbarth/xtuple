@@ -33,30 +33,41 @@ select xt.install_js('XT','Data','xtuple', $$
      * @param {Array} Parameters - optional
      * @returns {Object}
      */
-    buildClause: function (nameSpace, type, parameters, orderBy) {
+    buildClauseOptimized: function (nameSpace, type, parameters, orderBy) {
       parameters = parameters || [];
 
-      var arrayIdentifiers = [],
+      var that = this,
+        arrayIdentifiers = [],
         arrayParams,
         charSql,
         childOrm,
         clauses = [],
         count = 1,
+        fromKeyProp,
+        groupByColumnParams = [],
         identifiers = [],
-        list = [],
+        joinIdentifiers = [],
+        orderByList = [],
+        orderByColumnList = [],
         isArray = false,
         op,
         orClause,
         orderByIdentifiers = [],
+        orderByColumnIdentifiers = [],
         orderByParams = [],
+        orderByColumnParams = [],
+        joins = [],
         orm = this.fetchOrm(nameSpace, type),
         param,
         params = [],
         parts,
         pcount,
+        pertinentExtension,
+        pgType,
         prevOrm,
         privileges = orm.privileges,
         prop,
+        sourceTableAlias,
         ret = {};
 
       ret.conditions = "";
@@ -82,6 +93,45 @@ select xt.install_js('XT','Data','xtuple', $$
           value: XT.username
         });
       }
+
+      /* Support the short cut wherein the client asks for a filter on a toOne with a
+        string. Technically they should use "theAttr.theAttrNaturalKey", but if they
+        don't, massage the inputs as if they did */
+      parameters.map(function (parameter) {
+        var attributeIsString = typeof parameter.attribute === 'string';
+          attributes = attributeIsString ? [parameter.attribute] : parameter.attribute;
+
+        attributes.map(function (attribute) {
+          var prop = XT.Orm.getProperty(orm, attribute),
+            propName = prop.name,
+            childOrm,
+            naturalKey,
+            index;
+
+          if ((prop.toOne || prop.toMany) && attribute.indexOf('.') < 0) {
+            /* Someone is querying on a toOne without using a path */
+            /* TODO: even if there's a path x.y, it's possible that it's still not
+              correct because the correct path maybe is x.y.naturalKeyOfY */
+            if (prop.toOne && prop.toOne.type) {
+              childOrm = that.fetchOrm(nameSpace, prop.toOne.type);
+            } else if (prop.toMany && prop.toMany.type) {
+              childOrm = that.fetchOrm(nameSpace, prop.toMany.type);
+            } else {
+              plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + prop.name);
+            }
+            naturalKey = XT.Orm.naturalKey(childOrm);
+            if (attributeIsString) {
+              /* add the natural key to the end of the requested attribute */
+              parameter.attribute = attribute + "." + naturalKey;
+            } else {
+              /* swap out the attribute in the array for the one with the prepended natural key */
+              index = parameter.attribute.indexOf(attribute);
+              parameter.attribute.splice(index, 1);
+              parameter.attribute.push(attribute + "." + naturalKey);
+            }
+          }
+        });
+      });
 
       /* Handle parameters. */
       if (parameters.length) {
@@ -146,13 +196,14 @@ select xt.install_js('XT','Data','xtuple', $$
             prop = XT.Orm.getProperty(orm, 'characteristics');
 
             /* Build the characteristics query clause. */
+            identifiers.push(XT.Orm.primaryKey(orm, true));
             identifiers.push(prop.toMany.inverse);
             identifiers.push(orm.nameSpace.toLowerCase());
             identifiers.push(prop.toMany.type.decamelize());
             identifiers.push(param.attribute);
             identifiers.push(param.value);
 
-            charSql = 'id in (' +
+            charSql = '%' + (identifiers.length - 5) + '$I in (' +
                       '  select %' + (identifiers.length - 4) + '$I '+
                       '  from %' + (identifiers.length - 3) + '$I.%' + (identifiers.length - 2) + '$I ' +
                       '    join char on (char_name = characteristic)' +
@@ -180,19 +231,38 @@ select xt.install_js('XT','Data','xtuple', $$
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
                 }
 
-                /* Build path. e.g. ((%1$I).%2$I).%3$I */
-                identifiers.push(parts[n]);
-                params[pcount] += "%" + identifiers.length + "$I";
-                if (n < parts.length - 1) {
-                  params[pcount] = "(" + params[pcount] + ").";
-                  childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                /* Build path. */
+                if (n === parts.length - 1) {
+                  identifiers.push("jt" + (joins.length - 1));
+                  identifiers.push(prop.attr.column);
+                  pgType = this.getPgTypeFromOrmType(prop.attr.type);
+                  pgType = pgType ? "::" + pgType + "[]" : '';
+                  params[pcount] += "%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I";
+                  params[pcount] += ' ' + op + ' ARRAY[' + param.value.join(',') + ']' + pgType;
                 } else {
-                  params[pcount] += op + ' ARRAY[' + param.value.join(',') + ']';
+                  childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                  sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                  joinIdentifiers.push(
+                    this.getNamespaceFromNamespacedTable(childOrm.table),
+                    this.getTableFromNamespacedTable(childOrm.table),
+                    sourceTableAlias, prop.toOne.column,
+                    XT.Orm.primaryKey(childOrm, true));
+                  joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3)
+                    + "$I jt" + joins.length + " on %"
+                    + (joinIdentifiers.length - 2) + "$I.%"
+                    + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
                 }
               }
             } else {
-              identifiers.push(param.attribute);
-              params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
+              prop = XT.Orm.getProperty(orm, param.attribute);
+              if (!prop) {
+                plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
+              }
+              identifiers.push("t1");
+              identifiers.push(prop.attr.column);
+              pgType = this.getPgTypeFromOrmType(prop.attr.type);
+              pgType = pgType ? "::" + pgType + "[]" : '';
+              params.push("%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']' + pgType);
               pcount = params.length - 1;
             }
             clauses.push(params[pcount]);
@@ -221,7 +291,13 @@ select xt.install_js('XT','Data','xtuple', $$
                   }
 
                   if (m < parts.length - 1) {
-                    childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    if (prop.toOne && prop.toOne.type) {
+                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    } else if (prop.toMany && prop.toMany.type) {
+                      childOrm = this.fetchOrm(nameSpace, prop.toMany.type);
+                    } else {
+                      plv8.elog(ERROR, "toOne or toMany property is missing it's 'type': " + prop.name);
+                    }
                   } else if (prop.attr && prop.attr.type === 'Array') {
                     /* The last property in the path is an array. */
                     isArray = true;
@@ -241,33 +317,69 @@ select xt.install_js('XT','Data','xtuple', $$
 
                   /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
                   if (param.isUsernamePrivFilter && isArray) {
-                    identifiers.push(parts[n]);
+                    identifiers.push(prop.attr.column);
                     arrayIdentifiers.push(identifiers.length);
 
                     if (n < parts.length - 1) {
                       childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                     }
                   } else {
-                    /* Build path. e.g. ((%1$I).%2$I).%3$I */
-                    identifiers.push(parts[n]);
-                    params[pcount] += "%" + identifiers.length + "$I";
-
-                    if (n < parts.length - 1) {
-                      params[pcount] = "(" + params[pcount] + ").";
-                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
-                    } else if (param.isLower) {
-                      params[pcount] = "lower(" + params[pcount] + ")";
+                    /* Build path, e.g. table_name.column_name */
+                    if (n === parts.length - 1) {
+                      identifiers.push("jt" + (joins.length - 1));
+                      identifiers.push(prop.attr.column);
+                      params[pcount] += "%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I";
+                      if (param.isLower) {
+                        params[pcount] = "lower(" + params[pcount] + ")";
+                      }
+                    } else {
+                      sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                      if (prop.toOne && prop.toOne.type) {
+                        childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                        joinIdentifiers.push(
+                          this.getNamespaceFromNamespacedTable(childOrm.table),
+                          this.getTableFromNamespacedTable(childOrm.table),
+                          sourceTableAlias, prop.toOne.column,
+                          XT.Orm.primaryKey(childOrm, true)
+                        );
+                      } else if (prop.toMany && prop.toMany.type) {
+                        childOrm = this.fetchOrm(nameSpace, prop.toMany.type);
+                        joinIdentifiers.push(
+                          this.getNamespaceFromNamespacedTable(childOrm.table),
+                          this.getTableFromNamespacedTable(childOrm.table),
+                          sourceTableAlias, prop.toMany.column,
+                          XT.Orm.primaryKey(childOrm, true)
+                        );
+                      }
+                      joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3)
+                        + "$I jt" + joins.length + " on %"
+                        + (joinIdentifiers.length - 2) + "$I.%"
+                        + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
                     }
                   }
                 }
               } else {
                 /* Validate attribute. */
                 prop = XT.Orm.getProperty(orm, param.attribute[c]);
+                pertinentExtension = XT.Orm.getProperty(orm, param.attribute[c], true);
+                if(pertinentExtension.isChild) {
+                  /* We'll need to join this orm extension */
+                  fromKeyProp = XT.Orm.getProperty(orm, pertinentExtension.relations[0].inverse);
+                  joinIdentifiers.push(
+                    this.getNamespaceFromNamespacedTable(pertinentExtension.table),
+                    this.getTableFromNamespacedTable(pertinentExtension.table),
+                    fromKeyProp.attr.column,
+                    pertinentExtension.relations[0].column);
+                  joins.push("left join %" + (joinIdentifiers.length - 3) + "$I.%" + (joinIdentifiers.length - 2)
+                    + "$I jt" + joins.length + " on t1.%"
+                    + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
+                }
                 if (!prop) {
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
 
-                identifiers.push(param.attribute[c]);
+                identifiers.push(pertinentExtension.isChild ? "jt" + (joins.length - 1) : "t1");
+                identifiers.push(prop.attr.column);
 
                 /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
                 if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested) ||
@@ -277,7 +389,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   pcount = params.length - 1;
                   arrayIdentifiers.push(identifiers.length);
                 } else {
-                  params.push("%" + identifiers.length + "$I");
+                  params.push("%" + (identifiers.length - 1) + "$I.%" + identifiers.length + "$I");
                   pcount = params.length - 1;
                 }
               }
@@ -286,6 +398,7 @@ select xt.install_js('XT','Data','xtuple', $$
               if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested)
                 || (prop.attr && prop.attr.type === 'Array') || isArray)) {
 
+                /* XXX: this bit of code has not been touched by the optimization refactor */
                 /* e.g. 'admin' = ANY (usernames_array) */
                 arrayParams = "";
                 params[pcount] += ' ' + op + ' ANY (';
@@ -321,7 +434,9 @@ select xt.install_js('XT','Data','xtuple', $$
 
       ret.conditions = (clauses.length ? '(' + XT.format(clauses.join(' and '), identifiers) + ')' : ret.conditions) || true;
 
-      /* Massage ordeBy with quoted identifiers. */
+      /* Massage orderBy with quoted identifiers. */
+      /* We need to support the xm case for sql2 and the xt/public (column) optimized case for sql1 */
+      /* In practice we build the two lists independently of one another */
       if (orderBy) {
         for (var i = 0; i < orderBy.length; i++) {
           /* Handle path case. */
@@ -329,6 +444,8 @@ select xt.install_js('XT','Data','xtuple', $$
             parts = orderBy[i].attribute.split('.');
             prevOrm = orm;
             orderByParams.push("");
+            orderByColumnParams.push("");
+            groupByColumnParams.push("");
             pcount = orderByParams.length - 1;
 
             for (var n = 0; n < parts.length; n++) {
@@ -339,9 +456,24 @@ select xt.install_js('XT','Data','xtuple', $$
               orderByIdentifiers.push(parts[n]);
               orderByParams[pcount] += "%" + orderByIdentifiers.length + "$I";
 
-              if (n < parts.length - 1) {
+              if (n === parts.length - 1) {
+                orderByColumnIdentifiers.push("jt" + (joins.length - 1));
+                orderByColumnIdentifiers.push(prop.attr.column);
+                orderByColumnParams[pcount] += "%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I"
+                groupByColumnParams[pcount] += "%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I"
+              } else {
                 orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
                 orm = this.fetchOrm(nameSpace, prop.toOne.type);
+                sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                joinIdentifiers.push(
+                  this.getNamespaceFromNamespacedTable(orm.table),
+                  this.getTableFromNamespacedTable(orm.table),
+                  sourceTableAlias, prop.toOne.column,
+                  XT.Orm.primaryKey(orm, true));
+                joins.push("left join %" + (joinIdentifiers.length - 4) + "$I.%" + (joinIdentifiers.length - 3)
+                  + "$I jt" + joins.length + " on %"
+                  + (joinIdentifiers.length - 2) + "$I.%"
+                  + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
               }
             }
             orm = prevOrm;
@@ -352,22 +484,32 @@ select xt.install_js('XT','Data','xtuple', $$
               plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
             }
             orderByIdentifiers.push(orderBy[i].attribute);
+            orderByColumnIdentifiers.push("t1");
+            orderByColumnIdentifiers.push(prop.attr.column);
             orderByParams.push("%" + orderByIdentifiers.length + "$I");
+            orderByColumnParams.push("%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I");
+            groupByColumnParams.push("%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I");
             pcount = orderByParams.length - 1;
           }
 
           if (orderBy[i].isEmpty) {
             orderByParams[pcount] = "length(" + orderByParams[pcount] + ")=0";
+            orderByColumnParams[pcount] = "length(" + orderByColumnParams[pcount] + ")=0";
           }
           if (orderBy[i].descending) {
             orderByParams[pcount] += " desc";
+            orderByColumnParams[pcount] += " desc";
           }
 
-          list.push(orderByParams[pcount])
+          orderByList.push(orderByParams[pcount])
+          orderByColumnList.push(orderByColumnParams[pcount])
         }
       }
 
-      ret.orderBy = list.length ? XT.format('order by ' + list.join(','), orderByIdentifiers) : '';
+      ret.orderBy = orderByList.length ? XT.format('order by ' + orderByList.join(','), orderByIdentifiers) : '';
+      ret.orderByColumns = orderByColumnList.length ? XT.format('order by ' + orderByColumnList.join(','), orderByColumnIdentifiers) : '';
+      ret.groupByColumns = groupByColumnParams.length ? XT.format(', ' + groupByColumnParams.join(','), orderByColumnIdentifiers) : '';
+      ret.joins = joins.length ? XT.format(joins.join(' '), joinIdentifiers) : '';
 
       return ret;
     },
@@ -1507,23 +1649,18 @@ select xt.install_js('XT','Data','xtuple', $$
      * @returns {Number}
      */
     getTableOid: function (table) {
-      var name = table.toLowerCase(), /* be generous */
-        namespace = "public", /* default assumed if no dot in name */
+      var tableName = this.getTableFromNamespacedTable(table).toLowerCase(), /* be generous */
+        namespace = this.getNamespaceFromNamespacedTable(table),
         ret,
         sql = "select pg_class.oid::integer as oid " +
              "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " +
              "where relname = $1 and nspname = $2";
 
-      if (table.indexOf(".") > 0) {
-        namespace = table.beforeDot();
-        table = table.afterDot();
-      }
-
       if (DEBUG) {
         XT.debug('getTableOid sql =', sql);
-        XT.debug('getTableOid values =', [table, namespace]);
+        XT.debug('getTableOid values =', [tableName, namespace]);
       }
-      ret = plv8.execute(sql, [table, namespace])[0].oid - 0;
+      ret = plv8.execute(sql, [tableName, namespace])[0].oid - 0;
 
       // TODO - Handle not found error.
 
@@ -1565,6 +1702,27 @@ select xt.install_js('XT','Data','xtuple', $$
       } else {
         throw new handleError("Primary Key not found on " + orm.table +
           " where " + ncol + " = " + value, 400);
+      }
+    },
+
+    getNamespaceFromNamespacedTable: function (fullName) {
+      return fullName.indexOf(".") > 0 ? fullName.beforeDot() : "public";
+    },
+
+    getTableFromNamespacedTable: function (fullName) {
+      return fullName.indexOf(".") > 0 ? fullName.afterDot() : fullName;
+    },
+
+    getPgTypeFromOrmType: function (ormType) {
+      switch (ormType) {
+        case "String":
+          return "text";
+        case "Number":
+          return "numeric";
+        case "Date":
+          return "date";
+        default:
+          return false;
       }
     },
 
@@ -1663,10 +1821,13 @@ select xt.install_js('XT','Data','xtuple', $$
         encryptionKey = options.encryptionKey,
         orderBy = query.orderBy,
         orm = this.fetchOrm(nameSpace, type),
+        table,
+        tableNamespace,
         parameters = query.parameters,
-        clause = this.buildClause(nameSpace, type, parameters, orderBy),
+        clause = this.buildClauseOptimized(nameSpace, type, parameters, orderBy),
         i,
         pkey = XT.Orm.primaryKey(orm),
+        pkeyColumn = XT.Orm.primaryKey(orm, true),
         nkey = XT.Orm.naturalKey(orm),
         limit = query.rowLimit ? XT.format('limit %1$L', [query.rowLimit]) : '',
         offset = query.rowOffset ? XT.format('offset %1$L', [query.rowOffset]) : '',
@@ -1682,19 +1843,21 @@ select xt.install_js('XT','Data','xtuple', $$
         sqlCount,
         etags,
         sql_etags,
-        etag_namespace,
-        etag_table,
-        sql1 = 'select %3$I as id from %1$I.%2$I where {conditions} {orderBy} {limit} {offset};',
+        sql1 = 'select t1.%3$I as id from %1$I.%2$I t1 {joins} where {conditions} group by t1.%3$I{groupBy} {orderBy} {limit} {offset};',
         sql2 = 'select * from %1$I.%2$I where %3$I in ({ids}) {orderBy}';
 
       /* Validate - don't bother running the query if the user has no privileges. */
       if (!this.checkPrivileges(nameSpace, type)) { return []; }
 
+      tableNamespace = this.getNamespaceFromNamespacedTable(orm.table);
+      table = this.getTableFromNamespacedTable(orm.table);
+
       if (query.count) {
         /* Just get the count of rows that match the conditions */
-        sqlCount = 'select count(*) as count from %1$I.%2$I where {conditions};';
-        sqlCount = XT.format(sqlCount, [nameSpace.decamelize(), type.decamelize()]);
-        sqlCount = sqlCount.replace('{conditions}', clause.conditions);
+        sqlCount = 'select count(distinct t1.%3$I) as count from %1$I.%2$I t1 {joins} where {conditions};';
+        sqlCount = XT.format(sqlCount, [tableNamespace.decamelize(), table.decamelize(), pkeyColumn]);
+        sqlCount = sqlCount.replace('{joins}', clause.joins)
+                           .replace('{conditions}', clause.conditions);
 
         if (DEBUG) {
           XT.debug('fetch sqlCount = ', sqlCount);
@@ -1706,9 +1869,11 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* Query the model. */
-      sql1 = XT.format(sql1, [nameSpace.decamelize(), type.decamelize(), pkey]);
-      sql1 = sql1.replace('{conditions}', clause.conditions)
-                 .replace(/{orderBy}/g, clause.orderBy)
+      sql1 = XT.format(sql1, [tableNamespace.decamelize(), table.decamelize(), pkeyColumn]);
+      sql1 = sql1.replace('{joins}', clause.joins)
+                 .replace('{conditions}', clause.conditions)
+                 .replace(/{groupBy}/g, clause.groupByColumns)
+                 .replace(/{orderBy}/g, clause.orderByColumns)
                  .replace('{limit}', limit)
                  .replace('{offset}', offset);
 
@@ -1729,14 +1894,6 @@ select xt.install_js('XT','Data','xtuple', $$
       });
 
       if (orm.lockable) {
-        if (orm.table.indexOf(".") > 0) {
-          etag_namespace = orm.table.beforeDot();
-          etag_table = orm.table.afterDot();
-        } else {
-          etag_namespace = 'public';
-          etag_table = orm.table;
-        }
-
         sql_etags = "select ver_etag as etag, ver_record_id as id " +
                     "from xt.ver " +
                     "where ver_table_oid = ( " +
@@ -1746,7 +1903,7 @@ select xt.install_js('XT','Data','xtuple', $$
                       "where nspname = %1$L and relname = %2$L " +
                     ") " +
                     "and ver_record_id in ({ids})";
-        sql_etags = XT.format(sql_etags, [etag_namespace, etag_table]);
+        sql_etags = XT.format(sql_etags, [tableNamespace, table]);
         sql_etags = sql_etags.replace('{ids}', idParams.join());
 
         if (DEBUG) {
@@ -1866,12 +2023,8 @@ select xt.install_js('XT','Data','xtuple', $$
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.pertinentExtension = XT.Orm.getProperty(context.map, context.relation, true);
         context.underlyingTable = context.pertinentExtension.table,
-        context.underlyingNameSpace = context.underlyingTable.indexOf(".") > 0 ?
-          context.underlyingTable.beforeDot() :
-          "public";
-        context.underlyingType = context.underlyingTable.indexOf(".") > 0 ?
-          context.underlyingTable.afterDot() :
-          context.underlyingTable;
+        context.underlyingNameSpace = this.getNamespaceFromNamespacedTable(context.underlyingTable);
+        context.underlyingType = this.getTableFromNamespacedTable(context.underlyingTable);
         context.fkey = context.prop.toMany.inverse;
         context.fkeyColumn = context.prop.toMany.column;
         context.pkey = XT.Orm.naturalKey(context.map) || XT.Orm.primaryKey(context.map);
@@ -2266,6 +2419,346 @@ select xt.install_js('XT','Data','xtuple', $$
       return true;
     },
 
+    /* This deprecated function is still used by three dispatch functions. We should delete
+    this as soon as we refactor those, and then rename buildClauseOptimized to buildClause */
+    buildClause: function (nameSpace, type, parameters, orderBy) {
+      parameters = parameters || [];
+
+      var arrayIdentifiers = [],
+        arrayParams,
+        charSql,
+        childOrm,
+        clauses = [],
+        count = 1,
+        identifiers = [],
+        list = [],
+        isArray = false,
+        op,
+        orClause,
+        orderByIdentifiers = [],
+        orderByParams = [],
+        orm = this.fetchOrm(nameSpace, type),
+        param,
+        params = [],
+        parts,
+        pcount,
+        prevOrm,
+        privileges = orm.privileges,
+        prop,
+        ret = {};
+
+      ret.conditions = "";
+      ret.parameters = [];
+
+      /* Handle privileges. */
+      if (orm.isNestedOnly) { plv8.elog(ERROR, 'Access Denied'); }
+      if (privileges &&
+          (!privileges.all ||
+            (privileges.all &&
+              (!this.checkPrivilege(privileges.all.read) &&
+              !this.checkPrivilege(privileges.all.update)))
+          ) &&
+          privileges.personal &&
+          (this.checkPrivilege(privileges.personal.read) ||
+            this.checkPrivilege(privileges.personal.update))
+        ) {
+
+        parameters.push({
+          attribute: privileges.personal.properties,
+          isLower: true,
+          isUsernamePrivFilter: true,
+          value: XT.username
+        });
+      }
+
+      /* Handle parameters. */
+      if (parameters.length) {
+        for (var i = 0; i < parameters.length; i++) {
+          orClause = [];
+          param = parameters[i];
+          op = param.operator || '=';
+          switch (op) {
+          case '=':
+          case '>':
+          case '<':
+          case '>=':
+          case '<=':
+          case '!=':
+            break;
+          case 'BEGINS_WITH':
+            op = '~^';
+            break;
+          case 'ENDS_WITH':
+            op = '~?';
+            break;
+          case 'MATCHES':
+            op = '~*';
+            break;
+          case 'ANY':
+            op = '<@';
+            for (var c = 0; c < param.value.length; c++) {
+              ret.parameters.push(param.value[c]);
+              param.value[c] = '$' + count;
+              count++;
+            }
+            break;
+          case 'NOT ANY':
+            op = '!<@';
+            for (var c = 0; c < param.value.length; c++) {
+              ret.parameters.push(param.value[c]);
+              param.value[c] = '$' + count;
+              count++;
+            }
+            break;
+          default:
+            plv8.elog(ERROR, 'Invalid operator: ' + op);
+          }
+
+          /* Handle characteristics. This is very specific to xTuple,
+             and highly dependant on certain table structures and naming conventions,
+             but otherwise way too much work to refactor in an abstract manner right now. */
+          if (param.isCharacteristic) {
+            /* Handle array. */
+            if (op === '<@') {
+              param.value = ' ARRAY[' + param.value.join(',') + ']';
+            }
+
+            /* Booleans are stored as strings. */
+            if (param.value === true) {
+              param.value = 't';
+            } else if (param.value === false) {
+              param.value = 'f';
+            }
+
+            /* Yeah, it depends on a property called 'characteristics'... */
+            prop = XT.Orm.getProperty(orm, 'characteristics');
+
+            /* Build the characteristics query clause. */
+            identifiers.push(prop.toMany.inverse);
+            identifiers.push(orm.nameSpace.toLowerCase());
+            identifiers.push(prop.toMany.type.decamelize());
+            identifiers.push(param.attribute);
+            identifiers.push(param.value);
+
+            charSql = 'id in (' +
+                      '  select %' + (identifiers.length - 4) + '$I '+
+                      '  from %' + (identifiers.length - 3) + '$I.%' + (identifiers.length - 2) + '$I ' +
+                      '    join char on (char_name = characteristic)' +
+                      '  where 1=1 ' +
+                      /* Note: Not using $i for these. L = literal here. These is not identifiers. */
+                      '    and char_name = %' + (identifiers.length - 1) + '$L ' +
+                      '    and value ' + op + ' %' + (identifiers.length) + '$L ' +
+                      ')';
+
+            clauses.push(charSql);
+
+          /* Array comparisons handle another way. e.g. %1$I !<@ ARRAY[$1,$2] */
+          } else if (op === '<@' || op === '!<@') {
+            /* Handle paths if applicable. */
+            if (param.attribute.indexOf('.') > -1) {
+              parts = param.attribute.split('.');
+              childOrm = this.fetchOrm(nameSpace, type);
+              params.push("");
+              pcount = params.length - 1;
+
+              for (var n = 0; n < parts.length; n++) {
+                /* Validate attribute. */
+                prop = XT.Orm.getProperty(childOrm, parts[n]);
+                if (!prop) {
+                  plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                }
+
+                /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                identifiers.push(parts[n]);
+                params[pcount] += "%" + identifiers.length + "$I";
+                if (n < parts.length - 1) {
+                  params[pcount] = "(" + params[pcount] + ").";
+                  childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                } else {
+                  params[pcount] += op + ' ARRAY[' + param.value.join(',') + ']';
+                }
+              }
+            } else {
+              identifiers.push(param.attribute);
+              params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
+              pcount = params.length - 1;
+            }
+            clauses.push(params[pcount]);
+
+          /* Everything else handle another. */
+          } else {
+            if (XT.typeOf(param.attribute) !== 'array') {
+              param.attribute = [param.attribute];
+            }
+
+            for (var c = 0; c < param.attribute.length; c++) {
+              /* Handle paths if applicable. */
+              if (param.attribute[c].indexOf('.') > -1) {
+                parts = param.attribute[c].split('.');
+                childOrm = this.fetchOrm(nameSpace, type);
+                params.push("");
+                pcount = params.length - 1;
+                isArray = false;
+
+                /* Check if last part is an Array. */
+                for (var m = 0; m < parts.length; m++) {
+                  /* Validate attribute. */
+                  prop = XT.Orm.getProperty(childOrm, parts[m]);
+                  if (!prop) {
+                    plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[m]);
+                  }
+
+                  if (m < parts.length - 1) {
+                    childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                  } else if (prop.attr && prop.attr.type === 'Array') {
+                    /* The last property in the path is an array. */
+                    isArray = true;
+                    params[pcount] = '$' + count;
+                  }
+                }
+
+                /* Reset the childOrm to parent. */
+                childOrm = this.fetchOrm(nameSpace, type);
+
+                for (var n = 0; n < parts.length; n++) {
+                  /* Validate attribute. */
+                  prop = XT.Orm.getProperty(childOrm, parts[n]);
+                  if (!prop) {
+                    plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                  }
+
+                  /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
+                  if (param.isUsernamePrivFilter && isArray) {
+                    identifiers.push(parts[n]);
+                    arrayIdentifiers.push(identifiers.length);
+
+                    if (n < parts.length - 1) {
+                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    }
+                  } else {
+                    /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                    identifiers.push(parts[n]);
+                    params[pcount] += "%" + identifiers.length + "$I";
+
+                    if (n < parts.length - 1) {
+                      params[pcount] = "(" + params[pcount] + ").";
+                      childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
+                    } else if (param.isLower) {
+                      params[pcount] = "lower(" + params[pcount] + ")";
+                    }
+                  }
+                }
+              } else {
+                /* Validate attribute. */
+                prop = XT.Orm.getProperty(orm, param.attribute[c]);
+                if (!prop) {
+                  plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
+                }
+
+                identifiers.push(param.attribute[c]);
+
+                /* Do a persional privs array search e.g. 'admin' = ANY (usernames_array). */
+                if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested) ||
+                  (prop.attr && prop.attr.type === 'Array'))) {
+
+                  params.push('$' + count);
+                  pcount = params.length - 1;
+                  arrayIdentifiers.push(identifiers.length);
+                } else {
+                  params.push("%" + identifiers.length + "$I");
+                  pcount = params.length - 1;
+                }
+              }
+
+              /* Add persional privs array search. */
+              if (param.isUsernamePrivFilter && ((prop.toMany && !prop.isNested)
+                || (prop.attr && prop.attr.type === 'Array') || isArray)) {
+
+                /* e.g. 'admin' = ANY (usernames_array) */
+                arrayParams = "";
+                params[pcount] += ' ' + op + ' ANY (';
+
+                /* Build path. e.g. ((%1$I).%2$I).%3$I */
+                for (var f =0; f < arrayIdentifiers.length; f++) {
+                  arrayParams += '%' + arrayIdentifiers[f] + '$I';
+                  if (f < arrayIdentifiers.length - 1) {
+                    arrayParams = "(" + arrayParams + ").";
+                  }
+                }
+                params[pcount] += arrayParams + ')';
+
+              /* Add optional is null clause. */
+              } else if (parameters[i].includeNull) {
+                /* e.g. %1$I = $1 or %1$I is null */
+                params[pcount] = params[pcount] + " " + op + ' $' + count + ' or ' + params[pcount] + ' is null';
+              } else {
+                /* e.g. %1$I = $1 */
+                params[pcount] += " " + op + ' $' + count;
+              }
+
+              orClause.push(params[pcount]);
+            }
+
+            /* If more than one clause we'll get: (%1$I = $1 or %1$I = $2 or %1$I = $3) */
+            clauses.push('(' + orClause.join(' or ') + ')');
+            count++;
+            ret.parameters.push(param.value);
+          }
+        }
+      }
+
+      ret.conditions = (clauses.length ? '(' + XT.format(clauses.join(' and '), identifiers) + ')' : ret.conditions) || true;
+
+      /* Massage ordeBy with quoted identifiers. */
+      if (orderBy) {
+        for (var i = 0; i < orderBy.length; i++) {
+          /* Handle path case. */
+          if (orderBy[i].attribute.indexOf('.') > -1) {
+            parts = orderBy[i].attribute.split('.');
+            prevOrm = orm;
+            orderByParams.push("");
+            pcount = orderByParams.length - 1;
+
+            for (var n = 0; n < parts.length; n++) {
+              prop = XT.Orm.getProperty(orm, parts[n]);
+              if (!prop) {
+                plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
+              }
+              orderByIdentifiers.push(parts[n]);
+              orderByParams[pcount] += "%" + orderByIdentifiers.length + "$I";
+
+              if (n < parts.length - 1) {
+                orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
+                orm = this.fetchOrm(nameSpace, prop.toOne.type);
+              }
+            }
+            orm = prevOrm;
+          /* Normal case. */
+          } else {
+            prop = XT.Orm.getProperty(orm, orderBy[i].attribute);
+            if (!prop) {
+              plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
+            }
+            orderByIdentifiers.push(orderBy[i].attribute);
+            orderByParams.push("%" + orderByIdentifiers.length + "$I");
+            pcount = orderByParams.length - 1;
+          }
+
+          if (orderBy[i].isEmpty) {
+            orderByParams[pcount] = "length(" + orderByParams[pcount] + ")=0";
+          }
+          if (orderBy[i].descending) {
+            orderByParams[pcount] += " desc";
+          }
+
+          list.push(orderByParams[pcount])
+        }
+      }
+
+      ret.orderBy = list.length ? XT.format('order by ' + list.join(','), orderByIdentifiers) : '';
+
+      return ret;
+    },
     /**
      * Renew a lock. Defaults to rewing the lock for 30 seconds.
      *

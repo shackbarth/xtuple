@@ -57,6 +57,8 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
       value: {
         '(?)attributes': {
           '(+)': _.or(
+            { ANY:           _.isDefined },
+            { NOT_ANY:       _.isDefined },
             { EQUALS:        _.isDefined },
             { NOT_EQUALS:    _.isDefined },
             { MATCHES:       _.isString },
@@ -85,6 +87,8 @@ noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     operators: {
       value: {
+        ANY:          'ANY',
+        NOT_ANY:      'NOT ANY',
         EQUALS:       '=',
         NOT_EQUALS:   '!=',
         LESS_THAN:    '<',
