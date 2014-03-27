@@ -90,20 +90,7 @@ var  async = require('async'),
           creds.port + " -d " + databaseName + " -f " + schemaPath,
           {maxBuffer: 40000 * 1024 /* 200x default */}, done);
       },
-      populateEmpty = function (done) {
-        var emptyDataPath = path.join(path.dirname(spec.source), "empty_data.sql");
-        winston.info("Populating starter data for database " + databaseName);
-        exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
-          creds.port + " -d " + databaseName + " -f " + emptyDataPath,
-          {maxBuffer: 40000 * 1024 /* 200x default */}, done);
-      },
       populateData = function (done) {
-        console.log(path.basename(spec.source));
-        if (path.basename(spec.source) === 'empty_data.sql') {
-          // data has already been populated
-          done();
-          return;
-        }
         winston.info("Populating data for database " + databaseName + " from " + spec.source);
         exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
           creds.port + " -d " + databaseName + " -f " + spec.source,
@@ -112,7 +99,6 @@ var  async = require('async'),
       // use exec to restore the backup. The alternative, reading the backup file into a string to query
       // doesn't work because the backup file is binary.
       restoreBackup = function (done) {
-        winston.info("Restoring database " + databaseName);
         exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
           creds.port + " -d " + databaseName + " -j " + os.cpus().length + " " + spec.backup, function (err, res) {
           if (err) {
@@ -133,7 +119,6 @@ var  async = require('async'),
         dropDatabase,
         createDatabase,
         buildSchema,
-        populateEmpty,
         populateData
       ], finish);
     } else {
