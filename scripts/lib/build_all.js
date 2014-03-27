@@ -159,7 +159,7 @@ var _ = require('underscore'),
     } else if (options.initialize &&
         (options.backup || options.source) &&
         options.database &&
-        !options.extension) {
+        (!options.extension || options.extension === 'foundation-database')) {
       // Initialize the database. This is serious business, and we only do it if
       // the user does all the arguments correctly. It must be on one database only,
       // with no extensions, with the initialize flag, and with a backup file.
@@ -182,7 +182,9 @@ var _ = require('underscore'),
       buildSpecs.wipeViews = options.wipeViews;
       buildSpecs.clientOnly = options.clientOnly;
       buildSpecs.databaseOnly = options.databaseOnly;
-      buildSpecs.extensions = [
+      // if we initialize with the foundation, that means we want
+      // an unmobilized build
+      buildSpecs.extensions = options.extension ? [options.extension] : [
         path.join(__dirname, '../../foundation-database'),
         path.join(__dirname, '../../lib/orm'),
         path.join(__dirname, '../../enyo-client'),

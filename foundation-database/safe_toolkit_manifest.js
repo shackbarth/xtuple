@@ -6,7 +6,6 @@
     "../lib/orm/source/xt/functions/add_constraint.sql",
     "../lib/orm/source/xt/functions/add_index.sql",
     "../lib/orm/source/xt/functions/add_primary_key.sql",
-    "../lib/orm/source/xt/functions/create_table.sql",
-    "../lib/orm/source/xt/functions/create_view.sql"
+    "../lib/orm/source/xt/functions/create_table.sql"
   ]
 }
