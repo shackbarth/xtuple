@@ -71,68 +71,78 @@ var  async = require('async'),
   //
   var initDatabase = function (spec, creds, callback) {
     var databaseName = spec.database,
-      credsClone = JSON.parse(JSON.stringify(creds));
-    // the calls to drop and create the database need to be run against the database "postgres"
-    credsClone.database = "postgres";
-    winston.info("Dropping database " + databaseName);
-    dataSource.query("drop database if exists " + databaseName + ";", credsClone, function (err, res) {
-      if (err) {
-        winston.error("drop db error", err.message, err.stack, err);
-        callback(err);
-        return;
-      }
-      winston.info("Creating database " + databaseName);
-      dataSource.query("create database " + databaseName + " template template1;", credsClone, function (err, res) {
-        if (err) {
-          winston.error("create db error", err.message, err.stack, err);
-          callback(err);
+      credsClone = JSON.parse(JSON.stringify(creds)),
+      dropDatabase = function (done) {
+        winston.info("Dropping database " + databaseName);
+        // the calls to drop and create the database need to be run against the database "postgres"
+        credsClone.database = "postgres";
+        dataSource.query("drop database if exists " + databaseName + ";", credsClone, done);
+      },
+      createDatabase = function (done) {
+        winston.info("Creating database " + databaseName);
+        dataSource.query("create database " + databaseName + " template template1;", credsClone, done);
+      },
+      buildSchema = function (done) {
+        var schemaPath = path.join(path.dirname(spec.source), "440_schema.sql");
+        winston.info("Building schema for database " + databaseName);
+
+        exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
+          creds.port + " -d " + databaseName + " -f " + schemaPath,
+          {maxBuffer: 40000 * 1024 /* 200x default */}, done);
+      },
+      populateEmpty = function (done) {
+        var emptyDataPath = path.join(path.dirname(spec.source), "empty_data.sql");
+        winston.info("Populating starter data for database " + databaseName);
+        exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
+          creds.port + " -d " + databaseName + " -f " + emptyDataPath,
+          {maxBuffer: 40000 * 1024 /* 200x default */}, done);
+      },
+      populateData = function (done) {
+        console.log(path.basename(spec.source));
+        if (path.basename(spec.source) === 'empty_data.sql') {
+          // data has already been populated
+          done();
           return;
         }
-        if (spec.source) {
-          // build from source.
-          // XXX first draft
-          var schemaPath = path.join(path.dirname(spec.source), "440_schema.sql");
-          winston.info("Building schema for database " + databaseName);
-
-          exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
-              creds.port + " -d " + databaseName + " -f " + schemaPath,
-              {maxBuffer: 40000 * 1024 /* 200x default */},
-              function (err, res) {
-            if (err) {
-              winston.info("Foundation schema error", err);
-              callback("Foundation schema error");
-              return;
-            }
-            winston.info("Populating data for database " + databaseName + " from " + spec.source);
-            exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
-                creds.port + " -d " + databaseName + " -f " + spec.source,
-                {maxBuffer: 40000 * 1024 /* 200x default */},
-                function (err, stdout, stderr) {
-              if (err) {
-                winston.info("Foundation data error");
-                callback("Foundation data error");
-                return;
-              }
-              winston.info("Foundation database has been built");
-              callback(null, res);
-            });
-          });
-
-          return;
-        }
-
-        // use exec to restore the backup. The alternative, reading the backup file into a string to query
-        // doesn't work because the backup file is binary.
+        winston.info("Populating data for database " + databaseName + " from " + spec.source);
+        exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
+          creds.port + " -d " + databaseName + " -f " + spec.source,
+          {maxBuffer: 40000 * 1024 /* 200x default */}, done);
+      },
+      // use exec to restore the backup. The alternative, reading the backup file into a string to query
+      // doesn't work because the backup file is binary.
+      restoreBackup = function (done) {
         winston.info("Restoring database " + databaseName);
         exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
-            creds.port + " -d " + databaseName + " -j " + os.cpus().length + " " + spec.backup, function (err, res) {
+          creds.port + " -d " + databaseName + " -j " + os.cpus().length + " " + spec.backup, function (err, res) {
           if (err) {
             console.log("ignoring restore db error", err);
           }
           callback(null, res);
         });
-      });
-    });
+      },
+      finish = function (err, results) {
+        if (err) {
+          winston.error("init database error", err.message, err.stack, err);
+        }
+        callback(err, results);
+      };
+
+    if (spec.source) {
+      async.series([
+        dropDatabase,
+        createDatabase,
+        buildSchema,
+        populateEmpty,
+        populateData
+      ], finish);
+    } else {
+      async.series([
+        dropDatabase,
+        createDatabase,
+        restoreBackup
+      ], finish);
+    }
   };
 
 
