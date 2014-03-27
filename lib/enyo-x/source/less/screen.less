@@ -5,37 +5,29 @@
 
 */
 
-/*
-  These variables will show in css as their hex values
-*/
-
-// Variables for LESS Project
-// --------------------------
-
 // Colors
-// ------
 @highlight: #d6f1ff;
 @orange: #f60;
-@bright-orange: #f49200;
-@sky-blue: #9cf;
+@bright-orange: #ff6529;
+@sky-blue: #9Cf;
 @light-blue: #35a8ee;
 @blue: #0000ff;
 @slate-blue: #357ec7;
 @dark-slate-blue: #1a4f77;
-@lightest-gray: #eee;
+@lightest-gray: #efefef;
 @earl-grey: #f3f3f3;
 @silver: #aaa;
-@smoke: #ddd;
-@gray: #8d8d8d;
-@med-gray: #999;
-@charcoal: #555;
-@header-gray: #4c4c4c;
-@dim-gray: #696969;
-@dark-gray: #333;
+@smoke: #d7d7d7;
+@gray: #d8d8d8;
+@med-gray: #939393;
+@charcoal: #666;
+@header-gray: #505050;
+@dim-gray: #777;
+@dark-gray: #373737;
 @blue-gray: #93a1a1;
 @near-black: #0e0e0e;
 @black: #070707;
-@white: #fff;
+@white: #fdfdfd;
 @ghost: #f8f8f8;
 @red: #c51616;
 @bright-red: #ff0000;
@@ -43,108 +35,55 @@
 @light-orange: #ff9c00;
 @item-hilite-background: #226b9a;
 
+@text-shadow: fade(#222, 45%);
+
+// For calendar popup
+@control-bg: @header-gray;
+
 // Fonts
 // ------
-@baseFont: "arial", "arial black";
+@baseFont: 'Helvetica Neue', Helvetica, 'Nimbus Sans L', Arial, sans-serif;
 @groupboxFont: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
 @startupFont: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
 @baseFontSize: 100%;
 @panelsFontSize: 5em;
+@iconFontSize: 60%;
 
-// Sizing
+// sizing
 @defaultPanelWidth: 320px;
 @toolbarHeight: 55px;
 @searchLength: 185px;
 
-// Imports
-// ------
-
-/**
-  Import for Font-Awesome icons
-*/
 // libs
 @import "../../lib/font-awesome/less/font-awesome.less";
 @import "../../lib/font-onyx/lib/Icon.less";
 
-/**
-  Helper classes for css3
-*/
-@import "mixins.less";
-
-/**
-  Model decorator
-*/
-@import "model-decorator.less";
-
-/**
-  Less styles for the picker widget
-*/
-@import "picker.less";
-
-/**
-  Styles relating to grid-entry
-*/
-@import "grid.less";
-
-/**
-  Styles relating to the dashboard
-*/
-@import "dashboard.less";
-
-/**
-  Styles relating to Lists
-*/
-@import "list.less";
-
-/**
-  Styles relating to the parameter widget
-*/
-@import "pullout.less";
-
-/**
-  Misc styles for widgets
-*/
-@import "widgets.less";
-
-/**
-  Styles for characteristic pickers and buttons
-*/
-@import "characteristics.less";
-
-/**
-  Styles relations to relation widgets
-*/
-@import "relations.less";
-
-/**
-  Styles for startup panel
-*/
-@import "startup.less";
-
-@import "address.less";
-
-/**
-  Styles relating to the groupbox and widgets contained
-    by a groupbox
-*/
-@import "groupbox.less";
-
 body {
   font-family: @baseFont;
   font-size: @baseFontSize;
+  background-color: @white;
 }
 
-.bggrad {
-  /* Radial Gradient */
-  #gradient > .radial(@dim-gray, @dark-gray);
-  background-color: @med-gray;
+.enyo-fit {
+  bottom: 4px !important;
 }
 
-.app > * {
-  width: 320px;
-  height: 100%;
-  .box-shadow(-1px 0 1px 0 rgba(0,0,0,0.3));
-  background: @dim-gray;
+.disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.xv-invisible-wrapper {
+  padding: 0;
+  border: none;
+}
+
+.xv-app-panel {
+  /* Setting this as min-width overrides enyo-narrow 100% */
+  width: @defaultPanelWidth;
+  // TODO: replace with textured background?
+  background-color: @white;
+  .box-shadow(-2px -2px 6px rgba(0,0,0,0.20));
 }
 
 /*
@@ -156,15 +95,13 @@ body {
     display: block;
     margin: 0;
   }
-  .app > * {
+  .xv-app-panel > * {
     min-width: 100%;
     max-width: 100%;
   }
-}
-
-.panels > * {
-  border: 2px solid @dark-gray;
-  font-size: @panelsFontSize;
+  .enyo-fit {
+    margin-bottom: -4px !important;
+  }
 }
 
 .wide > * {
@@ -176,13 +113,19 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-// /**
-//   Sets a fixed height on all of the toolbars
-//   so that they're not dependent on the icon height
-// */
-// .onyx-menu-toolbar {
-//   height: 57px;
+// .panels > * {
+//   border: 2px solid @dark-gray;
+//   font-size: @panelsFontSize;
 // }
+
+.wide > * {
+  min-width: 50%;
+}
+
+.scroll-ios {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
 .item {
   position: relative;
@@ -200,22 +143,6 @@ body {
   }
 }
 
-// TODO: this is a bad name for this harkening back to the
-// dark ages when there was a white label on the "left" of the toolbar
-.left {
-  color: @white;
-}
-
-// XXX hack here (and in other places that reference issue 18397)
-// can be removed once enyo fixes ENYO-1104
-.text-shadow-none {
-   text-shadow: none;
-}
-.text-shadow-0 {
-  text-shadow: 0 0 @black;
-}
-// end hack
-
 .xv-my-account-popup {
   background-color: @white;
   color: #000;
@@ -229,19 +156,6 @@ body {
   .onyx-input {
     padding-left: 10px;
     float: right;
-  }
-}
-
-.xv-action-icon {
-  .onyx-icon-button {
-    margin-top: 0;
-  }
-}
-
-.xv-sort-icon {
-  .onyx-icon-button {
-    margin-top: 7px;
-    margin-bottom: -3px;
   }
 }
 
@@ -268,23 +182,6 @@ body {
   padding: 10px;
 }
 
-.xv-navigator-header {
-  font-size: small;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: @orange;
-  padding-left: 20px;
-  border-bottom: 1px solid @near-black;
-}
-
-.xv-workspace-header {
-  color: @white;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 8px 0 0 8px;
-}
-
 .xv-popup-button {
   margin: 4px;
 }
@@ -293,12 +190,8 @@ body {
   background: @white;
 }
 
-.xv-error {
+.xv-error, .xv-negative {
   color: @bright-red;
-}
-
-.xv-negative {
-  color: @red;
 }
 
 .xv-assignment-box {
@@ -481,3 +374,25 @@ body {
     width: 110px;
   }
 }
+
+// local imports
+@import "mixins.less";
+
+@import "navigator.less";
+@import "startup.less";
+@import "workspace.less";
+@import "model-decorator.less";
+@import "picker.less";
+
+@import "grid.less";
+@import "dashboard.less";
+@import "list.less";
+@import "pullout.less";
+@import "widgets.less";
+@import "characteristics.less";
+@import "relations.less";
+@import "address.less";
+// @import "calendar.less";
+//@import "search.less";
+// TODO: get rid of!
+@import "groupbox.less";

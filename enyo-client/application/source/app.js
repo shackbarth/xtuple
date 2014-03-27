@@ -12,7 +12,7 @@ white:true*/
       {method: "captureMagstripe", start: [16, 53, 16, 66], end: [191, 13], falsePositives: 1}
     ],
     components: [
-      { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
+      { name: "postbooks", kind: "XV.Postbooks", onTransitionStart: "handlePullout" },
       { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" },
       { name: "signals", kind: enyo.Signals, onkeydown: "handleKeyDown" }
     ],

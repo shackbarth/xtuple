@@ -4,12 +4,6 @@
   Use -compress for a compressed .css with no comments
 
 */
-/*
-  These variables will show in css as their hex values
-*/
-/**
-  Import for Font-Awesome icons
-*/
 /*!
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
@@ -1518,9 +1512,274 @@ a .icon-flip-vertical:before {
   color: white;
   text-shadow: 2px 2px 5px #0099ff, -2px -2px 5px #0099ff, 2px -2px 5px #0099ff, -2px 2px 5px #0099ff;
 }
-/**
-  Helper classes for css3
+body {
+  font-family: 'Helvetica Neue', Helvetica, 'Nimbus Sans L', Arial, sans-serif;
+  font-size: 100%;
+  background-color: #fdfdfd;
+}
+.enyo-fit {
+  bottom: 4px !important;
+}
+.disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.xv-invisible-wrapper {
+  padding: 0;
+  border: none;
+}
+.xv-app-panel {
+  /* Setting this as min-width overrides enyo-narrow 100% */
+  width: 320px;
+  background-color: #fdfdfd;
+  -webkit-box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.2);
+}
+/*
+  Media query for responsive design. This adapts to smaller
+  displays.
 */
+@media (max-width: 480px) {
+  .pullout-menu {
+    display: block;
+    margin: 0;
+  }
+  .xv-app-panel > * {
+    min-width: 100%;
+    max-width: 100%;
+  }
+  .enyo-fit {
+    margin-bottom: -4px !important;
+  }
+}
+.wide > * {
+  min-width: 50%;
+}
+.scroll-ios {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.wide > * {
+  min-width: 50%;
+}
+.scroll-ios {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.item {
+  position: relative;
+  padding: 16px 12px;
+  background-color: #373737;
+  border-bottom: 1px solid #0e0e0e;
+}
+.item.onyx-selected {
+  background-color: #357ec7;
+}
+.onyx-button.save {
+  background-color: #35a8ee;
+}
+.xv-my-account-popup {
+  background-color: #fdfdfd;
+  color: #000;
+}
+.xv-my-account-popup .xv-message {
+  color: red;
+  padding: 5px;
+}
+.xv-my-account-popup .onyx-button {
+  margin: 0 auto 0 auto;
+}
+.xv-my-account-popup .onyx-input {
+  padding-left: 10px;
+  float: right;
+}
+.xv-sort-popup {
+  background-color: #fdfdfd;
+  color: #070707;
+}
+.xv-sort-popup .xv-groupbox > *:last-child {
+  text-align: center;
+  padding: 5px;
+}
+.xv-sort-popup .xv-groupbox > *:last-child .onyx-button {
+  margin: 3px;
+}
+.xv-button-bar {
+  text-align: center;
+}
+.xv-button-bar .onyx-button {
+  margin: 5px 5px 0 0;
+}
+.xv-version-label {
+  padding: 10px;
+}
+.xv-popup-button {
+  margin: 4px;
+}
+.xv-scroller {
+  background: #fdfdfd;
+}
+.xv-error,
+.xv-negative {
+  color: #ff0000;
+}
+.xv-assignment-box .xv-flexible-label {
+  width: 85%;
+}
+.xv-assignment-box .xv-label {
+  width: 250px;
+}
+.xv-parameter-title {
+  padding-top: 8px;
+  font-size: large;
+  text-align: center;
+}
+.xv-comment-box {
+  /* Resets the margin/padding value for blockquote tag in comments */
+}
+.xv-comment-box .onxy-groupbox-header {
+  max-width: 320px;
+}
+.xv-comment-box .xv-comment-box-repeater {
+  background: #fdfdfd;
+  width: 320px;
+}
+.xv-comment-box .xv-comment-box-label {
+  padding: 5px;
+  font-size: small;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-comment-box .xv-comment-box-textblock {
+  font-size: small;
+  overflow: hidden;
+}
+.xv-comment-box .xv-comment-box-textblock.disabled {
+  color: #777777;
+}
+.xv-comment-box blockquote {
+  margin: 0 15px 10px 15px;
+  padding: 0;
+}
+.icon-folder-open-alt,
+.icon-calendar,
+.icon-sort {
+  color: #357ec7;
+  vertical-align: middle;
+}
+.xv-label,
+.xv-flexible-label {
+  padding: 8px;
+  text-align: right;
+}
+.xv-label.disabled,
+.xv-flexible-label.disabled {
+  color: #777777;
+}
+/**
+  This label style has a fixed width, while
+  the flexible label depends on a fit: true
+*/
+.xv-label {
+  width: 130px;
+}
+.xv-short-textarea .xv-textarea-input {
+  min-height: 0;
+}
+.xv-textarea-input {
+  width: 90%;
+  height: 100%;
+  min-height: 100px;
+  margin: 6px;
+  border: #ddd 2px solid;
+  color: #070707;
+}
+.xv-documents-picker-label {
+  width: 85px;
+  padding: 16px 8px 8px 8px;
+  text-align: right;
+}
+.xv-documents-picker {
+  width: 120px;
+  margin: 6px;
+}
+.xv-half-check {
+  background: transparent url(../../../../../../assets/checkbox.png) no-repeat 0 -96px scroll;
+}
+.xv-textarea {
+  background-color: #fdfdfd;
+}
+.xv-textarea.max-height {
+  height: 100%;
+}
+.xv-menuitem.disabled {
+  color: #777777;
+}
+/* This is for styling the moved items in the more toolbar */
+.xv-toolbar-moved {
+  width: 220px;
+}
+.onyx-toolbar {
+  height: 55px;
+  padding: 4px;
+  background: #505050;
+  border: none;
+}
+.onyx-toolbar .onyx-icon-button,
+.onyx-toolbar .onyx-popup-decorator {
+  margin: 0 10px 0 10px;
+}
+.onyx-toolbar .onyx-icon-button div,
+.onyx-toolbar .onyx-popup-decorator div {
+  text-shadow: none;
+  color: #fdfdfd;
+}
+.onyx-toolbar .onyx-icon-button.lock div,
+.onyx-toolbar .onyx-popup-decorator.lock div {
+  color: #ff9c00;
+}
+.onyx-toolbar .onyx-popup-decorator {
+  height: 40px;
+  width: 40px;
+}
+.onyx-toolbar .onyx-popup-decorator .onyx-icon-button {
+  margin: 0;
+}
+.onyx-toolbar .onyx-menu {
+  margin-top: 10px;
+}
+.onyx-toolbar .spacer {
+  margin: 0;
+}
+.onyx-toolbar .xv-toolbar-label,
+.onyx-toolbar .xv-search {
+  width: 185px;
+  margin: 0;
+  margin-left: 6px;
+}
+.xv-totals-panel {
+  padding: 0;
+  background-color: #fdfdfd;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-totals-panel .onyx-input,
+.xv-totals-panel .onyx-button {
+  font-size: 13px;
+}
+.xv-totals-panel .xv-label,
+.xv-totals-panel .onyx-input-decorator {
+  padding: 3px;
+}
+.xv-totals-panel .xv-label,
+.xv-totals-panel .xv-picker-label {
+  width: 110px;
+}
 .clearfix {
   *zoom: 1;
 }
@@ -1548,9 +1807,170 @@ a .icon-flip-vertical:before {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.xv-navigator .xv-header {
+  background-color: #fdfdfd;
+  padding: 6px 12px;
+  border-bottom: 1px solid #d7d7d7;
+  height: 28px;
+  color: #ff6529;
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-navigator > .xv-content-panel {
+  /**
+     * The enyo List height calculations really like to override this and make
+     * the list shorter and not consume all the space available.
+     */
+  height: 100%;
+}
+.xv-navigator .xv-menu-container .xv-panels {
+  height: 100%;
+}
+.xv-navigator .xv-menu-container .xv-navigator-menu .xv-list-item {
+  padding: 12px 10px;
+  color: #0e0e0e;
+  background-color: #fdfdfd;
+  border-bottom: 1px solid #d7d7d7;
+}
+.xv-navigator .xv-menu-container .xv-navigator-menu .xv-list-item.onyx-selected {
+  background-color: #357ec7;
+  color: #fdfdfd;
+  border-bottom: 2px solid #d8d8d8;
+}
 /**
-  Model decorator
+  Styles for the application startup
 */
+.xv-startup-panel {
+  background: #373737;
+}
+.xv-startup-panel .xv-startup-divider {
+  width: 70%;
+  margin: 0 auto 8px auto;
+  top: 200px;
+  position: relative;
+  color: #ff6529;
+  text-transform: uppercase;
+  font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+}
+.xv-startup-panel .xv-startup-progress {
+  width: 70%;
+  margin: 0 auto 0 auto;
+  top: 200px;
+  position: relative;
+}
+.xv-workspace-container {
+  background: #fdfdfd;
+  -webkit-box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px -2px 6px rgba(0, 0, 0, 0.2);
+}
+.xv-workspace-container .xv-content-panel .xv-header {
+  background-color: #fdfdfd;
+  border-bottom: 1px solid #d7d7d7;
+  height: 28px;
+  color: #ff6529;
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 6px 12px;
+  border: none;
+}
+.xv-workspace-container > .xv-menu-container .xv-panels {
+  height: 100%;
+}
+.xv-workspace-container > .xv-menu-container .xv-navigator-menu .xv-list-item {
+  padding: 12px 10px;
+  color: #0e0e0e;
+  background-color: #fdfdfd;
+  border-bottom: 1px solid #d7d7d7;
+}
+.xv-workspace-container > .xv-menu-container .xv-navigator-menu .xv-list-item.onyx-selected {
+  background-color: #357ec7;
+  color: #fdfdfd;
+  border-bottom: 2px solid #d8d8d8;
+}
+.xv-workspace-container > .xv-menu-container .xv-header {
+  background-color: #fdfdfd;
+  padding: 6px 12px;
+  border-bottom: 1px solid #d7d7d7;
+  height: 28px;
+  color: #ff6529;
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-workspace-container .xv-workspace {
+  background-color: #fdfdfd;
+}
+.xv-workspace-container .xv-workspace .enyo-panels {
+  width: 100% !important;
+  height: 100% !important;
+}
+.xv-workspace-container .xv-workspace .panel .xv-buttons {
+  background-color: #efefef;
+  margin: 0;
+}
+.xv-workspace-container .xv-workspace .panel .xv-buttons .onyx-button {
+  border: 1px solid #d7d7d7;
+  border-radius: 0;
+  margin: 0;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel {
+  width: 320px;
+  margin: 0 4px 0 2px;
+  padding: 0;
+  background: #f8f8f8;
+  text-overflow: ellipsis;
+  border: 1px solid #d7d7d7;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .onyx-groupbox-header {
+  padding: 6px 10px;
+  border-bottom: 1px solid #d7d7d7;
+  background: #efefef;
+  color: #0e0e0e;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .onyx-groupbox-header i {
+  margin-right: 10px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel.small-panel {
+  width: 600px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel.medium-panel {
+  width: 700px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel.large-panel {
+  width: 800px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-label,
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-decorated-label,
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-flexible-label {
+  width: 120px !important;
+  max-width: 100%;
+  padding: 0 8px 0 6px;
+  text-align: right;
+  vertical-align: middle;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input {
+  border-bottom: 1px solid #d7d7d7;
+  padding: 2px 0;
+  margin: 0px;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
 /**
  * Default ListItem styles when using a ModelDecorator.
  */
@@ -1588,16 +2008,13 @@ a .icon-flip-vertical:before {
   color: white;
 }
 .xv-list .xv-model-decorator > .xv-list-item.item-selected .xv-list-attr.xm-attribute-id {
-  color: #f49200;
+  color: #ff6529;
 }
-/**
-  Less styles for the picker widget
-*/
 /**
   Styles related to pickers, combo boxes, and relation widgets
 */
 .xv-pickerwidget {
-  background-color: #ffffff;
+  background-color: #fdfdfd;
 }
 .onyx-picker-decorator .onyx-button {
   padding: 12px 8px 12px 8px;
@@ -1621,7 +2038,7 @@ a .icon-flip-vertical:before {
   overflow: hidden;
 }
 .xv-picker-button.disabled {
-  color: #696969;
+  color: #777777;
 }
 .xv-picker-label {
   color: #070707;
@@ -1630,7 +2047,7 @@ a .icon-flip-vertical:before {
   width: 130px;
 }
 .xv-picker-label.disabled {
-  color: #696969;
+  color: #777777;
 }
 .xv-combobox .onyx-input-decorator input {
   width: 145px;
@@ -1643,9 +2060,6 @@ a .icon-flip-vertical:before {
   padding: 14px 3px 8px 3px;
   text-align: left;
 }
-/**
-  Styles relating to grid-entry
-*/
 /*
   Styles relating to the grid box
 */
@@ -1704,7 +2118,7 @@ a .icon-flip-vertical:before {
 }
 .xv-grid-box .xv-grid-row {
   font-size: 12px;
-  background-color: #8d8d8d;
+  background-color: #d8d8d8;
   border-bottom: 1px solid #aaaaaa;
   vertical-align: top;
   /**
@@ -1715,8 +2129,8 @@ a .icon-flip-vertical:before {
   display: inline-block;
 }
 .xv-grid-box .xv-grid-row .xv-grid-header {
-  background-color: #8d8d8d;
-  color: #ffffff;
+  background-color: #d8d8d8;
+  color: #fdfdfd;
   font-size: .8em;
   font-weight: bold;
   text-transform: uppercase;
@@ -1778,8 +2192,8 @@ a .icon-flip-vertical:before {
   min-height: 56px;
 }
 .xv-grid-box .xv-grid-row.selected {
-  background-color: #ffffff;
-  border: 1px solid #f49200;
+  background-color: #fdfdfd;
+  border: 1px solid #ff6529;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .onyx-input-decorator {
   padding: 0;
@@ -1912,9 +2326,6 @@ a .icon-flip-vertical:before {
 .xv-grid-list .xv-list-column {
   vertical-align: top !important;
 }
-/**
-  Styles relating to the dashboard
-*/
 /*
   Styles relating to the dashboard
 */
@@ -1922,7 +2333,7 @@ a .icon-flip-vertical:before {
   Variables for widths/colors
 */
 .dashboard {
-  background-color: #8d8d8d;
+  background-color: #d8d8d8;
   /*
     These styles will only be used
     if the chart is in a dashboard
@@ -1943,12 +2354,12 @@ a .icon-flip-vertical:before {
 }
 .selectable-chart {
   margin: 10px;
-  color: #ffffff;
+  color: #fdfdfd;
   overflow: hidden;
 }
 .selectable-chart .chart-title-bar {
   height: 32px;
-  background-color: #333333;
+  background-color: #373737;
   -webkit-border-top-right-radius: 10px;
   -moz-border-radius-topright: 10px;
   border-top-right-radius: 10px;
@@ -1966,7 +2377,7 @@ a .icon-flip-vertical:before {
   right: 0;
 }
 .selectable-chart .chart-bottom {
-  background-color: #555555;
+  background-color: #666666;
   border: 1px solid #444444;
   border-top: none;
   -webkit-border-bottom-right-radius: 10px;
@@ -1978,7 +2389,7 @@ a .icon-flip-vertical:before {
 }
 .selectable-chart .chart-bottom .xv-picker-label {
   width: 100px;
-  color: #ffffff;
+  color: #fdfdfd;
 }
 .selectable-chart .chart-bottom .onyx-button {
   width: 130px;
@@ -1987,12 +2398,9 @@ a .icon-flip-vertical:before {
 /**
   Styles relating to Lists
 */
-/**
-  Styles relating to Lists
-*/
 .xv-list-header {
-  background-color: #8d8d8d;
-  color: #ffffff;
+  background-color: #d8d8d8;
+  color: #fdfdfd;
   font-size: .6em;
   font-weight: bold;
   text-transform: uppercase;
@@ -2072,35 +2480,35 @@ a .icon-flip-vertical:before {
   width: 10px;
 }
 .xv-list {
-  background-color: #ffffff;
+  background-color: #fdfdfd;
 }
 .xv-list .xv-list-item > * {
   display: inline-block;
   vertical-align: middle;
 }
 .xv-list .xv-list-item {
-  background-color: #ffffff;
-  border-bottom: 1px solid #dddddd;
+  background-color: #fdfdfd;
+  border-bottom: 1px solid #d7d7d7;
   min-height: 32px;
 }
 .xv-list .xv-list-item.header {
   padding-top: 0;
 }
 .xv-list .xv-list-item.inactive {
-  background-color: #8d8d8d;
+  background-color: #d8d8d8;
   color: #070707;
 }
 .xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
   background: transparent;
 }
 .xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
-  color: #8d8d8d;
+  color: #d8d8d8;
 }
 .xv-list .xv-list-item .xv-list-column .list-icon {
   padding: 2px;
-  color: #555555;
+  color: #666666;
   vertical-align: sub;
-  border: 1px solid #eeeeee;
+  border: 1px solid #efefef;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
@@ -2117,14 +2525,14 @@ a .icon-flip-vertical:before {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr {
-  color: #ffffff;
+  color: #fdfdfd;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
   font-style: italic;
   color: #99ccff;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
-  color: #f49200;
+  color: #ff6529;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.header {
   background: #99ccff;
@@ -2158,14 +2566,14 @@ a .icon-flip-vertical:before {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff226b9a', endColorstr='#ff1a4f77', GradientType=0);
 }
 .xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr {
-  color: #ffffff;
+  color: #fdfdfd;
 }
 .xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.placeholder {
   font-style: italic;
   color: #99ccff;
 }
 .xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
-  color: #f49200;
+  color: #ff6529;
 }
 .xv-list.xv-grid-list .xv-list-item.item-selected .xv-list-attr.header {
   background: #99ccff;
@@ -2216,15 +2624,15 @@ a .icon-flip-vertical:before {
 }
 .xv-list-attr.header {
   padding: 4px;
-  background: #8d8d8d;
+  background: #d8d8d8;
   font-size: .7em;
   font-weight: bold;
   text-transform: uppercase;
-  color: #ffffff;
+  color: #fdfdfd;
 }
 .xv-list-attr.footer {
   padding: 4px;
-  background: #8d8d8d;
+  background: #d8d8d8;
   font-size: .7em;
   font-weight: bold;
   text-transform: uppercase;
@@ -2254,13 +2662,13 @@ a .icon-flip-vertical:before {
 }
 .xv-list-attr.placeholder {
   font-style: italic;
-  color: #696969;
+  color: #777777;
 }
 .xv-list-attr.hyperlink {
   color: blue;
 }
 .xv-list-attr.disabled {
-  color: #696969;
+  color: #777777;
 }
 /* Navigator */
 .xv-navigator-header {
@@ -2272,15 +2680,12 @@ a .icon-flip-vertical:before {
   border-bottom: 1px solid #0e0e0e;
 }
 .xv-workspace-header {
-  color: #ffffff;
+  color: #fdfdfd;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 8px 0 0 8px;
 }
-/**
-  Styles relating to the parameter widget
-*/
 /**
   Styles relating to widgets in the pullout
 */
@@ -2295,7 +2700,7 @@ a .icon-flip-vertical:before {
   left: 0px;
   bottom: 0;
   width: 320px;
-  background: #dddddd;
+  background: #d7d7d7;
 }
 .pullout .pullout-scroller {
   position: relative;
@@ -2325,15 +2730,15 @@ a .icon-flip-vertical:before {
 }
 .xv-groupbox.xv-parameter .top-drawer {
   border-top: #aaaaaa 1px solid;
-  background-color: #dddddd;
-  color: #4c4c4c;
+  background-color: #d7d7d7;
+  color: #505050;
   padding: 7px 0 7px 5px;
 }
 .xv-groupbox.xv-parameter .top-drawer > * {
   margin-right: 10px;
 }
 .xv-groupbox.xv-parameter .xv-filter-form .button-row {
-  background-color: #ffffff;
+  background-color: #fdfdfd;
   padding: 7px;
   text-align: center;
 }
@@ -2355,7 +2760,7 @@ a .icon-flip-vertical:before {
 }
 /* Parameter Widget */
 .xv-parameter-item {
-  background-color: #ffffff;
+  background-color: #fdfdfd;
 }
 .xv-parameter-item .xv-label {
   color: #070707;
@@ -2372,7 +2777,7 @@ a .icon-flip-vertical:before {
 }
 /* Layout Widget */
 .xv-tree {
-  background-color: #ffffff;
+  background-color: #fdfdfd;
 }
 .xv-tree .xv-tree-node {
   /* These picker styles are for the ListAttr node */
@@ -2385,9 +2790,6 @@ a .icon-flip-vertical:before {
   width: 50px;
 }
 /**
-  Misc styles for widgets
-*/
-/**
   Styles relating to misc widgets
 */
 .onyx-input-decorator {
@@ -2397,7 +2799,7 @@ a .icon-flip-vertical:before {
   width: 150px;
 }
 .xv-inputwidget {
-  background-color: #ffffff;
+  background-color: #fdfdfd;
 }
 .xv-relationwidget input,
 .xv-datewidget input {
@@ -2408,7 +2810,7 @@ a .icon-flip-vertical:before {
   width: 150px;
 }
 .xv-moneywidget {
-  background-color: #ffffff;
+  background-color: #fdfdfd;
   padding-top: 6px;
   padding-bottom: 2px;
 }
@@ -2459,9 +2861,6 @@ a .icon-flip-vertical:before {
   background: transparent;
 }
 /**
-  Styles for characteristic pickers and buttons
-*/
-/**
   Characteristics
 */
 .xv-characteristic-picker .onyx-picker-decorator .onyx-button {
@@ -2483,9 +2882,6 @@ a .icon-flip-vertical:before {
   color: #357ec7;
   font-size: 24px;
 }
-/**
-  Styles relations to relation widgets
-*/
 /**
   Styles relating to RelationWidgets
 */
@@ -2518,7 +2914,7 @@ a .icon-flip-vertical:before {
   color: black;
 }
 .xv-relationwidget-description.disabled {
-  color: #696969;
+  color: #777777;
 }
 .xv-relationwidget-description.label {
   text-indent: 0;
@@ -2551,35 +2947,8 @@ a .icon-flip-vertical:before {
 .xv-short-relations-box.panel {
   width: 500px;
 }
-/**
-  Styles for startup panel
-*/
-/**
-  Styles for the application startup
-*/
-.xv-startup-panel {
-  background: #333333;
-}
-.xv-startup-panel .xv-startup-divider {
-  width: 70%;
-  margin: 0 auto 8px auto;
-  top: 200px;
-  position: relative;
-  color: #f49200;
-  text-transform: uppercase;
-  font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  border: none;
-}
-.xv-startup-panel .xv-startup-progress {
-  width: 70%;
-  margin: 0 auto 0 auto;
-  top: 200px;
-  position: relative;
-}
 .xv-addresswidget {
-  background-color: #ffffff;
+  background-color: #fdfdfd;
   padding: 4px;
 }
 .xv-addresswidget .xv-addresswidget-viewer {
@@ -2595,7 +2964,7 @@ a .icon-flip-vertical:before {
   color: #0000ff;
 }
 .xv-addresswidget .xv-addresswidget-viewer.disabled {
-  color: #696969;
+  color: #777777;
 }
 .xv-addresswidget .xv-addresswidget-buttons {
   margin-top: 4px;
@@ -2605,7 +2974,7 @@ a .icon-flip-vertical:before {
 }
 .xv-addresswidget-input-decorator,
 .xv-addresswidget-combobox-decorator {
-  background: #ffffff;
+  background: #fdfdfd;
   display: block;
   margin: 4px;
 }
@@ -2626,7 +2995,7 @@ a .icon-flip-vertical:before {
 }
 .xv-button-section .xv-addresswidget-buttons {
   margin: 0;
-  background-color: #555555;
+  background-color: #666666;
 }
 .xv-addresswidget-editor-header {
   padding: 4px;
@@ -2642,12 +3011,8 @@ a .icon-flip-vertical:before {
   white-space: normal;
   overflow: auto;
   color: #070707;
-  background-color: #ffffff;
+  background-color: #fdfdfd;
 }
-/**
-  Styles relating to the groupbox and widgets contained
-    by a groupbox
-*/
 /*
   Styles relating to the groupbox
 */
@@ -2744,14 +3109,14 @@ a .icon-flip-vertical:before {
 }
 .xv-groupbox-header {
   padding: 5px 10px;
-  color: #ffffff;
+  color: #fdfdfd;
   font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
   font-size: 14px;
   font-weight: bold;
   text-transform: uppercase;
-  background-color: #333333;
+  background-color: #373737;
   border: none;
-  background: #555555;
+  background: #666666;
 }
 .xv-groupbox-buttons {
   border: none;
@@ -2802,297 +3167,4 @@ a .icon-flip-vertical:before {
   -webkit-border-bottom-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   border-bottom-right-radius: 4px;
-}
-body {
-  font-family: "arial", "arial black";
-  font-size: 100%;
-}
-.bggrad {
-  /* Radial Gradient */
-  background-color: #333333;
-  background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(#696969), to(#333333));
-  background-image: -webkit-radial-gradient(circle, #696969, #333333);
-  background-image: -moz-radial-gradient(circle, #696969, #333333);
-  background-image: -o-radial-gradient(circle, #696969, #333333);
-  background-repeat: no-repeat;
-  background-color: #999999;
-}
-.app > * {
-  width: 320px;
-  height: 100%;
-  -webkit-box-shadow: -1px 0 1px 0 rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: -1px 0 1px 0 rgba(0, 0, 0, 0.3);
-  box-shadow: -1px 0 1px 0 rgba(0, 0, 0, 0.3);
-  background: #696969;
-}
-/*
-  Media query for responsive design. This adapts to smaller
-  displays.
-*/
-@media (max-width: 480px) {
-  .pullout-menu {
-    display: block;
-    margin: 0;
-  }
-  .app > * {
-    min-width: 100%;
-    max-width: 100%;
-  }
-}
-.panels > * {
-  border: 2px solid #333333;
-  font-size: 5em;
-}
-.wide > * {
-  min-width: 50%;
-}
-.scroll-ios {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.item {
-  position: relative;
-  padding: 16px 12px;
-  background-color: #333333;
-  border-bottom: 1px solid #0e0e0e;
-}
-.item.onyx-selected {
-  background-color: #357ec7;
-}
-.onyx-button.save {
-  background-color: #35a8ee;
-}
-.left {
-  color: #ffffff;
-}
-.text-shadow-none {
-  text-shadow: none;
-}
-.text-shadow-0 {
-  text-shadow: 0 0 #070707;
-}
-.xv-my-account-popup {
-  background-color: #ffffff;
-  color: #000;
-}
-.xv-my-account-popup .xv-message {
-  color: red;
-  padding: 5px;
-}
-.xv-my-account-popup .onyx-button {
-  margin: 0 auto 0 auto;
-}
-.xv-my-account-popup .onyx-input {
-  padding-left: 10px;
-  float: right;
-}
-.xv-action-icon .onyx-icon-button {
-  margin-top: 0;
-}
-.xv-sort-icon .onyx-icon-button {
-  margin-top: 7px;
-  margin-bottom: -3px;
-}
-.xv-sort-popup {
-  background-color: #ffffff;
-  color: #070707;
-}
-.xv-sort-popup .xv-groupbox > *:last-child {
-  text-align: center;
-  padding: 5px;
-}
-.xv-sort-popup .xv-groupbox > *:last-child .onyx-button {
-  margin: 3px;
-}
-.xv-button-bar {
-  text-align: center;
-}
-.xv-button-bar .onyx-button {
-  margin: 5px 5px 0 0;
-}
-.xv-version-label {
-  padding: 10px;
-}
-.xv-navigator-header {
-  font-size: small;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #ff6600;
-  padding-left: 20px;
-  border-bottom: 1px solid #0e0e0e;
-}
-.xv-workspace-header {
-  color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 8px 0 0 8px;
-}
-.xv-popup-button {
-  margin: 4px;
-}
-.xv-scroller {
-  background: #ffffff;
-}
-.xv-error {
-  color: #ff0000;
-}
-.xv-negative {
-  color: #c51616;
-}
-.xv-assignment-box .xv-flexible-label {
-  width: 85%;
-}
-.xv-assignment-box .xv-label {
-  width: 250px;
-}
-.xv-parameter-title {
-  padding-top: 8px;
-  font-size: large;
-  text-align: center;
-}
-.xv-comment-box {
-  /* Resets the margin/padding value for blockquote tag in comments */
-}
-.xv-comment-box .onxy-groupbox-header {
-  max-width: 320px;
-}
-.xv-comment-box .xv-comment-box-repeater {
-  background: #ffffff;
-  width: 320px;
-}
-.xv-comment-box .xv-comment-box-label {
-  padding: 5px;
-  font-size: small;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.xv-comment-box .xv-comment-box-textblock {
-  font-size: small;
-  overflow: hidden;
-}
-.xv-comment-box .xv-comment-box-textblock.disabled {
-  color: #696969;
-}
-.xv-comment-box blockquote {
-  margin: 0 15px 10px 15px;
-  padding: 0;
-}
-.icon-folder-open-alt,
-.icon-calendar,
-.icon-sort {
-  color: #357ec7;
-  vertical-align: middle;
-}
-.xv-label,
-.xv-flexible-label {
-  padding: 8px;
-  text-align: right;
-}
-.xv-label.disabled,
-.xv-flexible-label.disabled {
-  color: #696969;
-}
-/**
-  This label style has a fixed width, while
-  the flexible label depends on a fit: true
-*/
-.xv-label {
-  width: 130px;
-}
-.xv-short-textarea .xv-textarea-input {
-  min-height: 0;
-}
-.xv-textarea-input {
-  width: 90%;
-  height: 100%;
-  min-height: 100px;
-  margin: 6px;
-  border: #ddd 2px solid;
-  color: #070707;
-}
-.xv-documents-picker-label {
-  width: 85px;
-  padding: 16px 8px 8px 8px;
-  text-align: right;
-}
-.xv-documents-picker {
-  width: 120px;
-  margin: 6px;
-}
-.xv-half-check {
-  background: transparent url(../../../../../../assets/checkbox.png) no-repeat 0 -96px scroll;
-}
-.xv-textarea {
-  background-color: #ffffff;
-}
-.xv-textarea.max-height {
-  height: 100%;
-}
-.xv-menuitem.disabled {
-  color: #696969;
-}
-/* This is for styling the moved items in the more toolbar */
-.xv-toolbar-moved {
-  width: 220px;
-}
-.onyx-toolbar {
-  height: 55px;
-  padding: 4px;
-  background: #4c4c4c;
-  border: none;
-}
-.onyx-toolbar .onyx-icon-button,
-.onyx-toolbar .onyx-popup-decorator {
-  margin: 0 10px 0 10px;
-}
-.onyx-toolbar .onyx-icon-button div,
-.onyx-toolbar .onyx-popup-decorator div {
-  text-shadow: none;
-  color: #ffffff;
-}
-.onyx-toolbar .onyx-icon-button.lock div,
-.onyx-toolbar .onyx-popup-decorator.lock div {
-  color: #ff9c00;
-}
-.onyx-toolbar .onyx-popup-decorator {
-  height: 40px;
-  width: 40px;
-}
-.onyx-toolbar .onyx-popup-decorator .onyx-icon-button {
-  margin: 0;
-}
-.onyx-toolbar .onyx-menu {
-  margin-top: 10px;
-}
-.onyx-toolbar .spacer {
-  margin: 0;
-}
-.onyx-toolbar .xv-toolbar-label,
-.onyx-toolbar .xv-search {
-  width: 185px;
-  margin: 0;
-  margin-left: 6px;
-}
-.xv-totals-panel {
-  padding: 0;
-  background-color: #ffffff;
-  font-size: 13px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.xv-totals-panel .onyx-input,
-.xv-totals-panel .onyx-button {
-  font-size: 13px;
-}
-.xv-totals-panel .xv-label,
-.xv-totals-panel .onyx-input-decorator {
-  padding: 3px;
-}
-.xv-totals-panel .xv-label,
-.xv-totals-panel .xv-picker-label {
-  width: 110px;
 }
