@@ -133,7 +133,7 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.CustomerShipToBox",
     kind: "XV.ListRelationsEditorBox",
-    classes: "xv-short-relations-box",
+    classes: "small-panel",
     title: "_shipTo".loc(),
     editor: "XV.CustomerShipToEditor",
     parentKey: "customer",

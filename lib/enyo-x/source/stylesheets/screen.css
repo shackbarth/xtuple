@@ -1524,10 +1524,6 @@ body {
   opacity: 0.6;
   cursor: default;
 }
-.xv-invisible-wrapper {
-  padding: 0;
-  border: none;
-}
 .xv-app-panel {
   /* Setting this as min-width overrides enyo-narrow 100% */
   width: 320px;
@@ -1563,10 +1559,6 @@ body {
 .wide > * {
   min-width: 50%;
 }
-.scroll-ios {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
 .item {
   position: relative;
   padding: 16px 12px;
@@ -1575,9 +1567,6 @@ body {
 }
 .item.onyx-selected {
   background-color: #357ec7;
-}
-.onyx-button.save {
-  background-color: #35a8ee;
 }
 .xv-my-account-popup {
   background-color: #fdfdfd;
@@ -1651,15 +1640,68 @@ body {
 /**
   Default popup style
 */
+.xv-popup {
+  background: #505050;
+  margin: 0;
+  max-height: 400px;
+  width: 400px;
+  min-width: 320px;
+  padding: 7px;
+  text-align: center;
+}
+.xv-popup.xv-groupbox-popup {
+  width: 320px;
+  margin: 0 4px 0 2px;
+  padding: 0;
+  background: #f8f8f8;
+  text-overflow: ellipsis;
+  border: 1px solid #d7d7d7;
+  color: #070707;
+  padding: 7px;
+}
+.xv-popup.xv-groupbox-popup .onyx-groupbox-header {
+  padding: 6px 10px;
+  border-bottom: 1px solid #d7d7d7;
+  background: #efefef;
+  color: #0e0e0e;
+}
+.xv-popup.xv-groupbox-popup .onyx-groupbox-header i {
+  margin-right: 10px;
+}
+.xv-popup.xv-groupbox-popup.small-panel {
+  width: 600px;
+}
+.xv-popup.xv-groupbox-popup.medium-panel {
+  width: 700px;
+}
+.xv-popup.xv-groupbox-popup.large-panel {
+  width: 800px;
+}
+.xv-popup.xv-groupbox-popup .xv-label,
+.xv-popup.xv-groupbox-popup .xv-decorated-label,
+.xv-popup.xv-groupbox-popup .xv-flexible-label {
+  width: 120px !important;
+  max-width: 100%;
+  padding: 0 8px 0 6px;
+  text-align: right;
+  vertical-align: middle;
+}
+.xv-popup.xv-groupbox-popup .xv-input {
+  border-bottom: 1px solid #d7d7d7;
+  margin: 0px;
+}
+.xv-popup.xv-groupbox-popup .enyo-fittable-columns-layout > * {
+  vertical-align: middle;
+}
+.xv-popup.xv-groupbox-popup .xv-message {
+  color: #c51616;
+  padding: 5px;
+}
 .xv-comment-box {
   /* Resets the margin/padding value for blockquote tag in comments */
 }
-.xv-comment-box .onxy-groupbox-header {
-  max-width: 320px;
-}
 .xv-comment-box .xv-comment-box-repeater {
   background: #fdfdfd;
-  width: 320px;
 }
 .xv-comment-box .xv-comment-box-label {
   padding: 5px;
@@ -1671,7 +1713,6 @@ body {
 }
 .xv-comment-box .xv-comment-box-textblock {
   font-size: small;
-  overflow: hidden;
 }
 .xv-comment-box .xv-comment-box-textblock.disabled {
   color: #777777;
@@ -1707,11 +1748,9 @@ body {
 }
 .xv-textarea-input {
   width: 90%;
-  height: 100%;
   min-height: 100px;
   margin: 6px;
-  border: #ddd 2px solid;
-  color: #070707;
+  border: #eee 2px solid;
 }
 .xv-documents-picker-label {
   width: 85px;
@@ -1724,12 +1763,6 @@ body {
 }
 .xv-half-check {
   background: transparent url(../../../../../../assets/checkbox.png) no-repeat 0 -96px scroll;
-}
-.xv-textarea {
-  background-color: #fdfdfd;
-}
-.xv-textarea.max-height {
-  height: 100%;
 }
 .xv-menuitem.disabled {
   color: #777777;
@@ -1786,24 +1819,7 @@ body {
   margin-left: 6px;
 }
 .xv-totals-panel {
-  padding: 0;
-  background-color: #fdfdfd;
-  font-size: 13px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.xv-totals-panel .onyx-input,
-.xv-totals-panel .onyx-button {
-  font-size: 13px;
-}
-.xv-totals-panel .xv-label,
-.xv-totals-panel .onyx-input-decorator {
-  padding: 3px;
-}
-.xv-totals-panel .xv-label,
-.xv-totals-panel .xv-picker-label {
-  width: 110px;
+  font-size: 12px;
 }
 .xv-navigator .xv-header {
   background-color: #fdfdfd;
@@ -1921,7 +1937,7 @@ body {
 .xv-workspace-container .xv-workspace {
   background-color: #fdfdfd;
 }
-.xv-workspace-container .xv-workspace .enyo-panels {
+.xv-workspace-container .xv-workspace > .enyo-panels {
   width: 100% !important;
   height: 100% !important;
 }
@@ -1971,7 +1987,6 @@ body {
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input {
   border-bottom: 1px solid #d7d7d7;
-  padding: 2px 0;
   margin: 0px;
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .enyo-fittable-columns-layout > * {
@@ -2019,9 +2034,6 @@ body {
 /**
   Styles related to pickers, combo boxes, and relation widgets
 */
-.xv-pickerwidget {
-  background-color: #fdfdfd;
-}
 .onyx-picker-decorator .onyx-button {
   padding: 12px 8px 12px 8px;
   width: 150px;
@@ -2417,27 +2429,13 @@ body {
 .xv-list-header .xv-list-column.last {
   border-right: none;
 }
-.xv-list-header .xv-list-column.name-column {
-  padding-left: 7px;
-}
-.xv-list-header .xv-list-column.first {
-  padding-left: 7px;
-}
-.xv-list-header .xv-list-column.second {
-  padding-left: 7px;
-}
-.xv-list-header .xv-list-column.third {
-  padding-left: 7px;
-}
-.xv-list-header .xv-list-column.short {
-  padding-left: 7px;
-}
-.xv-list-header .xv-list-column.small {
-  padding-left: 7px;
-}
-.xv-list-header .xv-list-column.medium {
-  padding-left: 7px;
-}
+.xv-list-header .xv-list-column.name-column,
+.xv-list-header .xv-list-column.first,
+.xv-list-header .xv-list-column.second,
+.xv-list-header .xv-list-column.third,
+.xv-list-header .xv-list-column.short,
+.xv-list-header .xv-list-column.small,
+.xv-list-header .xv-list-column.medium,
 .xv-list-header .xv-list-column.descr {
   padding-left: 7px;
 }
@@ -2486,7 +2484,7 @@ body {
   width: 10px;
 }
 .xv-list {
-  background-color: #fdfdfd;
+  background: #f8f8f8;
 }
 .xv-list .xv-list-item > * {
   display: inline-block;
@@ -2780,7 +2778,6 @@ body {
 }
 .xv-pullout .xv-parameter-panel .xv-input {
   border-bottom: 1px solid #d7d7d7;
-  padding: 2px 0;
   margin: 0px;
 }
 .xv-pullout .xv-parameter-panel .enyo-fittable-columns-layout > * {
@@ -2810,9 +2807,6 @@ body {
 .onyx-input-decorator input {
   width: 150px;
 }
-.xv-inputwidget {
-  background-color: #fdfdfd;
-}
 .xv-relationwidget input,
 .xv-datewidget input {
   width: 135px;
@@ -2822,7 +2816,6 @@ body {
   width: 150px;
 }
 .xv-moneywidget {
-  background-color: #fdfdfd;
   padding-top: 6px;
   padding-bottom: 2px;
 }
@@ -2875,11 +2868,14 @@ body {
 /**
   Characteristics
 */
+.xv-characteristic-picker {
+  border: none;
+}
 .xv-characteristic-picker .onyx-picker-decorator .onyx-button {
   width: 130px;
 }
 .xv-characteristic-item {
-  border-bottom: 1px solid #aaaaaa;
+  border-bottom: 1px solid #d7d7d7;
 }
 .xv-characteristic-item .onyx-input-decorator > input {
   width: 115px;
@@ -3078,7 +3074,6 @@ body {
 }
 .xv-search .xv-search-container .xv-input {
   border-bottom: 1px solid #d7d7d7;
-  padding: 2px 0;
   margin: 0px;
 }
 .xv-search .xv-search-container .enyo-fittable-columns-layout > * {

@@ -1277,12 +1277,12 @@ strict: false*/
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", attr: "lineItems", fit: true}
+          {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", classes: "large-panel", attr: "lineItems", fit: true}
         ], {owner: this});
       } else {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.InvoiceLineItemGridBox", name: "invoiceLineItemBox",
+          {kind: "XV.InvoiceLineItemGridBox", classes: "large-panel", name: "invoiceLineItemBox",
             attr: "lineItems", fit: true}
         ], {owner: this});
       }
@@ -2102,12 +2102,12 @@ strict: false*/
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true}
+          {kind: "XV.QuoteLineItemBox", classes: "large-panel", attr: "lineItems", fit: true}
         ], {owner: this});
       } else {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.QuoteLineItemGridBox", attr: "lineItems", fit: true}
+          {kind: "XV.QuoteLineItemGridBox", classes: "large-panel", attr: "lineItems", fit: true}
         ], {owner: this});
       }
     }
@@ -2395,7 +2395,7 @@ strict: false*/
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.SalesOrderLineItemBox", name: "salesOrderLineItemBox", attr: "lineItems", fit: true},
+          {kind: "XV.SalesOrderLineItemBox", classes: "large-panel", name: "salesOrderLineItemBox", attr: "lineItems", fit: true},
         ], {owner: this});
         this.$.workflowPanel.createComponents([
           {kind: "XV.SalesOrderWorkflowBox", attr: "workflow", fit: true}
@@ -2403,7 +2403,7 @@ strict: false*/
       } else {
         this.$.lineItemsPanel.createComponents([
           // Line Item Box
-          {kind: "XV.SalesOrderLineItemGridBox", name: "salesOrderLineItemBox", attr: "lineItems", fit: true},
+          {kind: "XV.SalesOrderLineItemGridBox", classes: "large-panel", name: "salesOrderLineItemBox", attr: "lineItems", fit: true},
         ], {owner: this});
         this.$.workflowPanel.createComponents([
           {kind: "XV.SalesOrderWorkflowGridBox", attr: "workflow", fit: true}

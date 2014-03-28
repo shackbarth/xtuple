@@ -48,6 +48,7 @@
 @baseFontSize: 100%;
 @panelsFontSize: 5em;
 @iconFontSize: 60%;
+@totalsFontSize: 12px;
 
 // sizing
 @defaultPanelWidth: 320px;
@@ -71,11 +72,6 @@ body {
 .disabled {
   opacity: 0.6;
   cursor: default;
-}
-
-.xv-invisible-wrapper {
-  padding: 0;
-  border: none;
 }
 
 .xv-app-panel {
@@ -117,11 +113,6 @@ body {
   min-width: 50%;
 }
 
-.scroll-ios {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
 .item {
   position: relative;
   padding: 16px 12px;
@@ -129,12 +120,6 @@ body {
   border-bottom: 1px solid @near-black;
   &.onyx-selected {
     background-color: @slate-blue;
-  }
-}
-
-.onyx-button {
-  &.save {
-    background-color: @light-blue;
   }
 }
 
@@ -224,34 +209,30 @@ body {
 /**
   Default popup style
 */
-// .xv-popup {
-//   background: @header-gray;
-//   margin: 0;
-//   max-height: 400px;
-//   width: 400px;
-//   min-width: @defaultPanelWidth;
-//   padding: 7px;
-//   text-align: center;
-//
-//   &.xv-groupbox-popup {
-//     .xv-workspace-container > .xv-workspace > .xv-workspace-panel;
-//     color: @black;
-//     padding: 7px;
-//
-//     .xv-message {
-//       color: @red;
-//       padding: 5px;
-//     }
-//   }
-// }
+.xv-popup {
+  background: @header-gray;
+  margin: 0;
+  max-height: 400px;
+  width: 400px;
+  min-width: @defaultPanelWidth;
+  padding: 7px;
+  text-align: center;
+
+  &.xv-groupbox-popup {
+    .xv-workspace-container > .xv-workspace > .xv-workspace-panel;
+    color: @black;
+    padding: 7px;
+
+    .xv-message {
+      color: @red;
+      padding: 5px;
+    }
+  }
+}
 
 .xv-comment-box {
-  .onxy-groupbox-header {
-    max-width: 320px;
-  }
   .xv-comment-box-repeater {
     background: @white;
-    width: 320px;
   }
   .xv-comment-box-label {
     padding: 5px;
@@ -263,7 +244,6 @@ body {
   }
   .xv-comment-box-textblock {
     font-size: small;
-    overflow: hidden;
     &.disabled {
       color: @dim-gray;
     }
@@ -303,11 +283,9 @@ body {
 }
 .xv-textarea-input {
   width: 90%;
-  height: 100%;
   min-height: 100px;
   margin: 6px;
-  border: #ddd 2px solid;
-  color: @black;
+  border: #eee 2px solid;
 }
 
 .xv-documents-picker-label {
@@ -329,13 +307,6 @@ body {
     no-repeat
     0 -96px
     scroll;
-}
-
-.xv-textarea {
-  background-color: @white;
-  &.max-height {
-    height: 100%;
-  }
 }
 
 .xv-menuitem {
@@ -399,21 +370,7 @@ body {
 }
 
 .xv-totals-panel {
-  padding: 0;
-  background-color: @white;
-  font-size: 13px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  .onyx-input, .onyx-button {
-    font-size: 13px;
-  }
-  .xv-label, .onyx-input-decorator {
-    padding: 3px;
-  }
-  .xv-label, .xv-picker-label {
-    width: 110px;
-  }
+  font-size: @totalsFontSize;
 }
 
 // local imports
