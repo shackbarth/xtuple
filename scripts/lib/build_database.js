@@ -261,7 +261,8 @@ var  async = require('async'),
             databaseScripts = _.flatten(databaseScripts);
           }
           // XXX speculative code FIXME
-          if (extensionName === 'inventory') {
+          // These files are not idempotent and should only be run upon first registration
+          if (extensionName === 'inventory' && extensions.length === 1) {
             safeToolkit = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js"));
             var foundationScripts = JSON.parse(safeToolkit).databaseScripts;
             foundationScripts = _.map(foundationScripts, function (path) {
