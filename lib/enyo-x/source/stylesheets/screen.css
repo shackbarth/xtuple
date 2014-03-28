@@ -1502,7 +1502,7 @@ a .icon-flip-vertical:before {
   font-size: 12px;
 }
 .font-onyx.text-icon {
-  width: 40px;
+  width: 50px;
   height: 40px;
 }
 .font-onyx.icon.button:not(.disabled) {
@@ -1755,7 +1755,7 @@ body {
 }
 .onyx-toolbar .onyx-icon-button,
 .onyx-toolbar .onyx-popup-decorator {
-  margin: 0 10px 0 10px;
+  margin: 0 6px 0 3px;
 }
 .onyx-toolbar .onyx-icon-button div,
 .onyx-toolbar .onyx-popup-decorator div {
