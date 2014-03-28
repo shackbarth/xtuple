@@ -260,6 +260,16 @@ var  async = require('async'),
             databaseScripts.unshift(JSON.parse(safeToolkit).databaseScripts);
             databaseScripts = _.flatten(databaseScripts);
           }
+          // XXX speculative code FIXME
+          if (extensionName === 'inventory') {
+            safeToolkit = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js"));
+            var foundationScripts = JSON.parse(safeToolkit).databaseScripts;
+            foundationScripts = _.map(foundationScripts, function (path) {
+              return "../../foundation-database/" + path;
+            });
+            databaseScripts.unshift(foundationScripts);
+            databaseScripts = _.flatten(databaseScripts);
+          }
 
           //
           // Step 3:

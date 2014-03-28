@@ -38,7 +38,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     keepSql: program.keepsql,
     source: program.source,
     unregister: program.unregister,
-    wipeViews: !program.quick,
+    wipeViews: !program.quick && !program.extension,
     clientOnly: program.clientonly,
     databaseOnly: program.databaseonly
   }, function (err, res) {
