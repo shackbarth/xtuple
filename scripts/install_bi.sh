@@ -26,13 +26,14 @@ DATABASEHOST=localhost
 DATABASEUSER=admin
 DATABASEPASSWORD=admin
 DATABASEPORT=5432
+DATABASESSL=
 TENANT=default
 CITIES=democities.txt
 COMMONNAME=$(hostname)
 CREATE=Y
 INCREMENTAL=N
 
-while getopts ":ieblpuxd:s:g:w:t:n:j:z:h:o:f:" opt; do
+while getopts ":ieblpuxyd:s:g:w:t:n:j:z:h:o:f:" opt; do
   case $opt in
     e)
       # Install ErpBI and configure
@@ -74,9 +75,9 @@ while getopts ":ieblpuxd:s:g:w:t:n:j:z:h:o:f:" opt; do
       # Set database user password (for extract)
       DATABASEPASSWORD=$OPTARG
       ;;	  
-    i)
-      # Incemental update of erpbi database
-      DATABASEHOST=$OPTARG
+    y)
+      # Set database ssl connect option (for extract)
+      DATABASESSL="?ssl=true\&sslfactory=org.postgresql.ssl.NonValidatingFactory"
       ;;	  
     t)
       # Set tenant name
@@ -293,7 +294,7 @@ load_pentaho() {
 	
 	mv $KETTLE_HOME/.kettle/kettle.properties $KETTLE_HOME/.kettle/kettle.properties.sample  2>&1 | tee -a $LOG_FILE
 	cat $KETTLE_HOME/.kettle/kettle.properties.sample | \
-	sed s'#erpi.source.url=.*#erpi.source.url=jdbc\:postgresql\://'$DATABASEHOST'\:'$DATABASEPORT'/'$DATABASE'#' | \
+	sed s'#erpi.source.url=.*#erpi.source.url=jdbc\:postgresql\://'$DATABASEHOST'\:'$DATABASEPORT'/'$DATABASE$DATABASESSL'#' | \
 	sed s'#erpi.source.user=.*#erpi.source.user='$DATABASEUSER'#' | \
 	sed s'#erpi.source.password.*#erpi.source.password='$DATABASEPASSWORD'#' | \
 	sed s'#erpi.cities.file.*#erpi.cities.file='$CITIES'#' | \
