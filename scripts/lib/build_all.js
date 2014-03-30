@@ -1,17 +1,17 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, Backbone:true, _:true, XM:true, XT:true*/
+/*global Backbone:true, _:true, XM:true, XT:true*/
 
 var _ = require('underscore'),
   async = require('async'),
-  build_database = require("./build_database"),
-  buildDatabase = build_database.buildDatabase,
+  buildDatabase = require("./build_database"),
+  buildDatabaseUtil = require("./build_database_util"),
   buildClient = require("./build_client").buildClient,
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
   path = require('path'),
-  unregister = build_database.unregister,
+  unregister = buildDatabaseUtil.unregister,
   winston = require('winston');
 
 /*
@@ -106,7 +106,7 @@ var _ = require('underscore'),
             buildAllCallback(err);
             return;
           }
-          buildDatabase(specs, creds, function (databaseErr, databaseRes) {
+          buildDatabase.buildDatabase(specs, creds, function (databaseErr, databaseRes) {
             var returnMessage;
             if (databaseErr && (specs[0].wipeViews || specs[0].initialize)) {
               buildAllCallback(databaseErr);
