@@ -102,12 +102,12 @@ var  async = require('async'),
               extensions.length === 1,
             registerExtension: !isFoundation && !isLibOrm && !isApplicationCore,
             runJsInit: !isFoundation && !isLibOrm,
-            wipeViews: isApplicationCore && spec.wipeViews
+            wipeViews: isApplicationCore && spec.wipeViews,
+            extensionLocation: isCoreExtension ? "/core-extensions" :
+              isPublicExtension ? "/xtuple-extensions" :
+              isPrivateExtension ? "/private-extensions" : "not-applicable"
           };
 
-        manifestOptions.extensionLocation = isCoreExtension ? "/core-extensions" :
-          isPublicExtension ? "/xtuple-extensions" :
-          isPrivateExtension ? "/private-extensions" : "not-applicable";
 
         buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),
           manifestOptions, extensionCallback);
