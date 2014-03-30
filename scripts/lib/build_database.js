@@ -105,9 +105,9 @@ var  async = require('async'),
             wipeViews: isApplicationCore && spec.wipeViews
           };
 
-        manifestOptions.extensionType = isCoreExtension ? "core" :
-          isPublicExtension ? "public" :
-          isPrivateExtension ? "private" : "none";
+        manifestOptions.extensionLocation = isCoreExtension ? "/core-extensions" :
+          isPublicExtension ? "/xtuple-extensions" :
+          isPrivateExtension ? "/private-extensions" : "not-applicable";
 
         buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),
           manifestOptions, extensionCallback);

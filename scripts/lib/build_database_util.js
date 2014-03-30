@@ -31,8 +31,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         safeToolkit,
         extensionName,
         loadOrder,
-        extensionComment,
-        extensionLocation;
+        extensionComment;
 
       try {
         manifest = JSON.parse(manifestString);
@@ -40,13 +39,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         extensionComment = manifest.comment;
         databaseScripts = manifest.databaseScripts;
         loadOrder = manifest.loadOrder || 999;
-        if (options.extensionType === "core") {
-          extensionLocation = "/core-extensions";
-        } else if (options.extensionType === "public") {
-          extensionLocation = "/xtuple-extensions";
-        } else if (options.extensionType === "private") {
-          extensionLocation = "/private-extensions";
-        }
 
       } catch (error) {
         // error condition: manifest file is not properly formatted
@@ -140,7 +132,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           extensionSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
             extensionName + '"); $$ language plv8;\n' + extensionSql;
           registerSql = "select xt.register_extension('%@', '%@', '%@', '', %@);\n"
-            .f(extensionName, extensionComment, extensionLocation, loadOrder);
+            .f(extensionName, extensionComment, options.extensionLocation, loadOrder);
 
           dependencies = manifest.dependencies || [];
           _.each(dependencies, function (dependency) {
