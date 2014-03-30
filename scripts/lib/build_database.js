@@ -84,7 +84,8 @@ var  async = require('async'),
         }
         //winston.info("Installing extension", databaseName, extension);
         // deal with directory structure quirks
-        var isFoundation = extension.indexOf("foundation-database") >= 0,
+        var baseName = path.basename(extension),
+          isFoundation = extension.indexOf("foundation-database") >= 0,
           isLibOrm = extension.indexOf("lib/orm") >= 0,
           isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
             extension.indexOf("extension") < 0,
@@ -95,175 +96,21 @@ var  async = require('async'),
           dbSourceRoot = isFoundation ? extension :
             isLibOrm ? path.join(extension, "source") :
             path.join(extension, "database/source"),
-          manifestFilename = path.join(dbSourceRoot, "manifest.js");
-
-        //
-        // Step 2:
-        // Read the manifest files.
-        //
-        if (!fs.existsSync(manifestFilename)) {
-          // error condition: no manifest file
-          winston.log("Cannot find manifest " + manifestFilename);
-          extensionCallback("Cannot find manifest " + manifestFilename);
-          return;
-        }
-        fs.readFile(manifestFilename, "utf8", function (err, manifestString) {
-          var manifest,
-            databaseScripts,
-            safeToolkit,
-            extensionName,
-            loadOrder,
-            extensionComment,
-            extensionLocation;
-
-          try {
-            manifest = JSON.parse(manifestString);
-            extensionName = manifest.name;
-            extensionComment = manifest.comment;
-            databaseScripts = manifest.databaseScripts;
-            loadOrder = manifest.loadOrder || 999;
-            if (isCoreExtension) {
-              extensionLocation = "/core-extensions";
-            } else if (isPublicExtension) {
-              extensionLocation = "/xtuple-extensions";
-            } else if (isPrivateExtension) {
-              extensionLocation = "/private-extensions";
-            }
-
-          } catch (error) {
-            // error condition: manifest file is not properly formatted
-            winston.log("Manifest is not valid JSON" + manifestFilename);
-            extensionCallback("Manifest is not valid JSON" + manifestFilename);
-            return;
-          }
-
-          //
-          // Step 2b:
-          //
-          // Legacy build methodology: if we're making the Qt database build, add the safe
-          // toolkit. I can live with the sync in here because it's not a process that's
-          // run in production.
-          if (isFoundation && extensions.length === 1) {
-            safeToolkit = fs.readFileSync(path.join(dbSourceRoot, "safe_toolkit_manifest.js"));
-            databaseScripts.unshift(JSON.parse(safeToolkit).databaseScripts);
-            databaseScripts = _.flatten(databaseScripts);
-          }
-          // XXX speculative code FIXME
-          // These files are not idempotent and should only be run upon first registration
-          if ((extensionName === 'inventory' || extensionName === 'manufacturing') && extensions.length === 1) {
-            safeToolkit = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js"));
-            var foundationScripts = JSON.parse(safeToolkit).databaseScripts;
-            foundationScripts = _.map(foundationScripts, function (path) {
-              return "../../foundation-database/" + path;
-            });
-            databaseScripts.unshift(foundationScripts);
-            databaseScripts = _.flatten(databaseScripts);
-          }
-
-          //
-          // Step 3:
-          // Concatenate together all the files referenced in the manifest.
-          //
-          var getScriptSql = function (filename, scriptCallback) {
-            var fullFilename = path.join(dbSourceRoot, filename);
-            if (!fs.existsSync(fullFilename)) {
-              // error condition: script referenced in manifest.js isn't there
-              scriptCallback(path.join(dbSourceRoot, filename) + " does not exist");
-              return;
-            }
-            fs.readFile(fullFilename, "utf8", function (err, scriptContents) {
-              // error condition: can't read script
-              if (err) {
-                scriptCallback(err);
-                return;
-              }
-              var beforeNoticeSql = "do $$ BEGIN RAISE NOTICE 'Loading file " + fullFilename + "'; END $$ language plpgsql;\n",
-                formattingError,
-                lastChar;
-
-              //
-              // Allow inclusion of js files in manifest. If it is a js file,
-              // use plv8 to execute it.
-              //
-              //if (fullFilename.substring(fullFilename.length - 2) === 'js') {
-                // this isn't quite working yet
-                // http://adpgtech.blogspot.com/2013/03/loading-useful-modules-in-plv8.html
-                // put in lib/orm's manifest.js: "../../tools/lib/underscore/underscore-min.js",
-              //  scriptContents = "do $$ " + scriptContents + " $$ language plv8;";
-              //}
-
-              //
-              // Incorrectly-ended sql files (i.e. no semicolon) make for unhelpful error messages
-              // when we concatenate 100's of them together. Guard against these.
-              //
-              scriptContents = scriptContents.trim();
-              lastChar = scriptContents.charAt(scriptContents.length - 1);
-              if (lastChar !== ';') {
-                // error condition: script is improperly formatted
-                formattingError = "Error: " + fullFilename + " contents do not end in a semicolon.";
-                winston.warn(formattingError);
-                scriptCallback(formattingError);
-              }
-
-              scriptCallback(null, beforeNoticeSql + scriptContents);
-            });
+          manifestOptions = {
+            useSafeFoundationToolkit: isFoundation && extensions.length === 1,
+            useFoundationScripts: (baseName === 'inventory' || baseName === 'manufacturing') &&
+              extensions.length === 1,
+            registerExtension: !isFoundation && !isLibOrm && !isApplicationCore,
+            runJsInit: !isFoundation && !isLibOrm,
+            wipeViews: isApplicationCore && spec.wipeViews
           };
-          async.mapSeries(databaseScripts || [], getScriptSql, function (err, scriptSql) {
-            var registerSql,
-              dependencies;
 
-            if (err) {
-              extensionCallback(err);
-              return;
-            }
-            // each String of the scriptContents is the concatenated SQL for the script.
-            // join these all together into a single string for the whole extension.
-            var extensionSql = _.reduce(scriptSql, function (memo, script) {
-              return memo + script;
-            }, "");
+        manifestOptions.extensionType = isCoreExtension ? "core" :
+          isPublicExtension ? "public" :
+          isPrivateExtension ? "private" : "none";
 
-            if (!isFoundation && !isLibOrm && !isApplicationCore) {
-              // register extension and dependencies
-              extensionSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
-                extensionName + '"); $$ language plv8;\n' + extensionSql;
-              registerSql = "select xt.register_extension('%@', '%@', '%@', '', %@);\n"
-                .f(extensionName, extensionComment, extensionLocation, loadOrder);
-
-              dependencies = manifest.dependencies || [];
-              _.each(dependencies, function (dependency) {
-                var dependencySql = "select xt.register_extension_dependency('%@', '%@');\n"
-                  .f(extensionName, dependency);
-                extensionSql = dependencySql + extensionSql;
-              });
-              extensionSql = registerSql + extensionSql;
-            }
-            if (!isFoundation && !isLibOrm) {
-              // unless it it hasn't yet been defined (ie. lib/orm),
-              // running xt.js_init() is probably a good idea.
-              extensionSql = "select xt.js_init();" + extensionSql;
-            }
-
-            if (isApplicationCore && spec.wipeViews) {
-              // If we want to pre-emptively wipe out the views, the best place to do it
-              // is at the start of the core application code
-              fs.readFile(path.join(__dirname, "../../enyo-client/database/source/delete_system_orms.sql"),
-                  function (err, wipeSql) {
-                if (err) {
-                  extensionCallback(err);
-                  return;
-                }
-                extensionSql = wipeSql + extensionSql;
-                extensionCallback(null, extensionSql);
-              });
-            } else {
-              extensionCallback(null, extensionSql);
-            }
-
-          });
-          //
-          // End script installation code
-          //
-        });
+        buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),
+          manifestOptions, extensionCallback);
       };
 
       // We also need to get the sql that represents the queries to generate
