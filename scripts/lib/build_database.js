@@ -6,6 +6,7 @@ _ = require('underscore');
 
 var  async = require('async'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
+  buildDatabaseUtil = require('./build_database_util'),
   exec = require('child_process').exec,
   fs = require('fs'),
   ormInstaller = require('./orm'),
@@ -18,118 +19,6 @@ var  async = require('async'),
 
 (function () {
   "use strict";
-
-  var jsInit = "select xt.js_init();";
-  var sendToDatabasePsql = function (query, credsClone, options, callback) {
-    var filename = path.join(__dirname, "temp_query_" + credsClone.database + ".sql");
-    fs.writeFile(filename, query, function (err) {
-      if (err) {
-        winston.error("Cannot write query to file");
-        callback(err);
-        return;
-      }
-      var psqlCommand = 'psql -d ' + credsClone.database +
-        ' -U ' + credsClone.username +
-        ' -h ' + credsClone.hostname +
-        ' -p ' + credsClone.port +
-        ' -f ' + filename +
-        ' --single-transaction';
-
-
-      /**
-       * http://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
-       * "maxBuffer specifies the largest amount of data allowed on stdout or
-       * stderr - if this value is exceeded then the child process is killed."
-       */
-      exec(psqlCommand, {maxBuffer: 40000 * 1024 /* 200x default */}, function (err, stdout, stderr) {
-        if (err) {
-          winston.error("Cannot install file ", filename);
-          callback(err);
-          return;
-        }
-        if (options.keepSql) {
-          // do not delete the temp query file
-          winston.info("SQL file kept as ", filename);
-          callback();
-        } else {
-          fs.unlink(filename, function (err) {
-            if (err) {
-              winston.error("Cannot delete written query file");
-              callback(err);
-            }
-            callback();
-          });
-        }
-      });
-    });
-  };
-
-  //
-  // Step 0 (optional, triggered by flags), wipe out the database
-  // and load it from scratch using pg_restore something.backup unless
-  // we're building from source.
-  //
-  var initDatabase = function (spec, creds, callback) {
-    var databaseName = spec.database,
-      credsClone = JSON.parse(JSON.stringify(creds)),
-      dropDatabase = function (done) {
-        winston.info("Dropping database " + databaseName);
-        // the calls to drop and create the database need to be run against the database "postgres"
-        credsClone.database = "postgres";
-        dataSource.query("drop database if exists " + databaseName + ";", credsClone, done);
-      },
-      createDatabase = function (done) {
-        winston.info("Creating database " + databaseName);
-        dataSource.query("create database " + databaseName + " template template1;", credsClone, done);
-      },
-      buildSchema = function (done) {
-        var schemaPath = path.join(path.dirname(spec.source), "440_schema.sql");
-        winston.info("Building schema for database " + databaseName);
-
-        exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
-          creds.port + " -d " + databaseName + " -f " + schemaPath,
-          {maxBuffer: 40000 * 1024 /* 200x default */}, done);
-      },
-      populateData = function (done) {
-        winston.info("Populating data for database " + databaseName + " from " + spec.source);
-        exec("psql -U " + creds.username + " -h " + creds.hostname + " --single-transaction -p " +
-          creds.port + " -d " + databaseName + " -f " + spec.source,
-          {maxBuffer: 40000 * 1024 /* 200x default */}, done);
-      },
-      // use exec to restore the backup. The alternative, reading the backup file into a string to query
-      // doesn't work because the backup file is binary.
-      restoreBackup = function (done) {
-        exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
-          creds.port + " -d " + databaseName + " -j " + os.cpus().length + " " + spec.backup, function (err, res) {
-          if (err) {
-            console.log("ignoring restore db error", err);
-          }
-          callback(null, res);
-        });
-      },
-      finish = function (err, results) {
-        if (err) {
-          winston.error("init database error", err.message, err.stack, err);
-        }
-        callback(err, results);
-      };
-
-    if (spec.source) {
-      async.series([
-        dropDatabase,
-        createDatabase,
-        buildSchema,
-        populateData
-      ], finish);
-    } else {
-      async.series([
-        dropDatabase,
-        createDatabase,
-        restoreBackup
-      ], finish);
-    }
-  };
-
 
   /**
     @param {Object} specs Specification for the build process, in the form:
@@ -161,7 +50,7 @@ var  async = require('async'),
 
       // The user wants to initialize the database first (i.e. Step 0)
       // Do that, then call this function again
-      initDatabase(specs[0], creds, function (err, res) {
+      buildDatabaseUtil.initDatabase(specs[0], creds, function (err, res) {
         if (err) {
           winston.error("Init database error: ", err);
           masterCallback(err);
@@ -351,7 +240,7 @@ var  async = require('async'),
             if (!isFoundation && !isLibOrm) {
               // unless it it hasn't yet been defined (ie. lib/orm),
               // running xt.js_init() is probably a good idea.
-              extensionSql = jsInit + extensionSql;
+              extensionSql = "select xt.js_init();" + extensionSql;
             }
 
             if (isApplicationCore && spec.wipeViews) {
@@ -455,8 +344,7 @@ var  async = require('async'),
       // in series, and execute the query when they all have come back.
       //
       async.mapSeries(extensions, getAllSql, function (err, extensionSql) {
-        var sendToDatabase,
-          allSql,
+        var allSql,
           credsClone = JSON.parse(JSON.stringify(creds));
 
         if (err) {
@@ -468,9 +356,6 @@ var  async = require('async'),
         allSql = _.reduce(extensionSql, function (memo, script) {
           return memo + script;
         }, "");
-
-        // we delegate to psql
-        sendToDatabase = sendToDatabasePsql;
 
         // Without this, when we delegate to exec psql the err var will not be set even
         // on the case of error.
@@ -485,7 +370,7 @@ var  async = require('async'),
 
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
-        sendToDatabase(allSql, credsClone, spec, function (err, res) {
+        buildDatabaseUtil.sendToDatabase(allSql, credsClone, spec, function (err, res) {
           databaseCallback(err, res);
         });
       });
@@ -546,44 +431,6 @@ var  async = require('async'),
         }
       });
     });
-  };
-
-
-  //
-  // Another option: unregister the extension
-  //
-  exports.unregister = function (specs, creds, masterCallback) {
-    var extension = path.basename(specs[0].extensions[0]),
-      unregisterSql = ["delete from xt.usrext where usrext_id in " +
-        "(select usrext_id from xt.usrext inner join xt.ext on usrext_ext_id = ext_id where ext_name = $1);",
-
-        "delete from xt.clientcode where clientcode_id in " +
-        "(select clientcode_id from xt.clientcode inner join xt.ext on clientcode_ext_id = ext_id where ext_name = $1);",
-
-        "delete from xt.dict where dict_id in " +
-        "(select dict_id from xt.dict inner join xt.ext on dict_ext_id = ext_id where ext_name = $1);",
-
-        "delete from xt.extdep where extdep_id in " +
-        "(select extdep_id from xt.extdep inner join xt.ext " +
-        "on extdep_from_ext_id = ext_id or extdep_to_ext_id = ext_id where ext_name = $1);",
-
-        "delete from xt.ext where ext_name = $1;"];
-
-    if (extension.charAt(extension.length - 1) === "/") {
-      // remove trailing slash if present
-      extension = extension.substring(0, extension.length - 1);
-    }
-    winston.info("Unregistering extension:", extension);
-    var unregisterEach = function (spec, callback) {
-      var options = JSON.parse(JSON.stringify(creds));
-      options.database = spec.database;
-      options.parameters = [extension];
-      var queryEach = function (sql, sqlCallback) {
-        dataSource.query(sql, options, sqlCallback);
-      };
-      async.eachSeries(unregisterSql, queryEach, callback);
-    };
-    async.each(specs, unregisterEach, masterCallback);
   };
 
 }());
