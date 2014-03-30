@@ -225,8 +225,7 @@ var  async = require('async'),
             extensionName,
             loadOrder,
             extensionComment,
-            extensionLocation,
-            isFirstScript = true;
+            extensionLocation;
 
           try {
             manifest = JSON.parse(manifestString);
@@ -289,8 +288,7 @@ var  async = require('async'),
                 scriptCallback(err);
                 return;
               }
-              var beforeNoticeSql = 'do $$ plv8.elog(NOTICE, "About to run file ' + fullFilename + '"); $$ language plv8;\n',
-                afterNoticeSql = 'do $$ plv8.elog(NOTICE, "Just ran file ' + fullFilename + '"); $$ language plv8;\n',
+              var beforeNoticeSql = "do $$ BEGIN RAISE NOTICE 'Loading file " + fullFilename + "'; END $$ language plpgsql;\n",
                 formattingError,
                 lastChar;
 
@@ -318,20 +316,7 @@ var  async = require('async'),
                 scriptCallback(formattingError);
               }
 
-              if (!isFoundation && (!isLibOrm || !isFirstScript)) {
-                // to put a noticeSql *before* scriptContents we have to account for the very first
-                // script, which is create_plv8, and which must not have any plv8 functions before it,
-                // such as a noticeSql.
-                scriptContents = beforeNoticeSql + scriptContents;
-              }
-
-              isFirstScript = false;
-
-              if (!isFoundation) {
-                scriptContents = scriptContents + afterNoticeSql;
-              }
-
-              scriptCallback(null, scriptContents);
+              scriptCallback(null, beforeNoticeSql + scriptContents);
             });
           };
           async.mapSeries(databaseScripts || [], getScriptSql, function (err, scriptSql) {
