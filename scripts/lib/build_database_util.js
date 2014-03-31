@@ -50,22 +50,33 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // Step 2b:
       //
       // Legacy build methodology: if we're making the Qt database build, add the safe
-      // toolkit. I can live with the sync in here because it's not a process that's
-      // run in production.
+      // toolkit.
       if (options.useSafeFoundationToolkit) {
         safeToolkit = fs.readFileSync(path.join(dbSourceRoot, "safe_toolkit_manifest.js"));
         databaseScripts.unshift(JSON.parse(safeToolkit).databaseScripts);
         databaseScripts = _.flatten(databaseScripts);
       }
-      // XXX speculative code FIXME
-      // These files are not idempotent and should only be run upon first registration
+      // XXX speculative and evilly-synchronous code
+      // If the user requests the inventory/mfg extension, add the frozen and foundation manifests
       if (options.useFoundationScripts) {
-        safeToolkit = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js"));
-        var foundationScripts = JSON.parse(safeToolkit).databaseScripts;
-        foundationScripts = _.map(foundationScripts, function (path) {
-          return "../../foundation-database/" + path;
+        ["frozen_manifest.js", "manifest.js"].each(function (manifestFilename) {
+          if (!fs.existsSync(path.join(dbSourceRoot, "../../foundation-database", manifestFilename))) {
+            return;
+          }
+          var newManifest = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database", manifestFilename));
+          var foundationScripts = JSON.parse(safeToolkit).databaseScripts;
+          foundationScripts = _.map(foundationScripts, function (path) {
+            return "../../foundation-database/" + path;
+          });
+          databaseScripts.unshift(foundationScripts);
         });
-        databaseScripts.unshift(foundationScripts);
+        databaseScripts = _.flatten(databaseScripts);
+      }
+      // If the user requests the inventory/mfg foundation, add the frozen manifest
+      if (options.useFrozenScripts) {
+        // Frozen files are not idempotent and should only be run upon first registration
+        safeToolkit = fs.readFileSync(path.join(dbSourceRoot, "frozen_manifest.js"));
+        databaseScripts.unshift(JSON.parse(safeToolkit).databaseScripts);
         databaseScripts = _.flatten(databaseScripts);
       }
 

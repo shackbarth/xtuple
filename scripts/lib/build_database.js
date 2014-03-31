@@ -86,6 +86,8 @@ var  async = require('async'),
         // deal with directory structure quirks
         var baseName = path.basename(extension),
           isFoundation = extension.indexOf("foundation-database") >= 0,
+          isFoundationExtension = extension.indexOf("inventory/foundation-database") >= 0 ||
+            extension.indexOf("manufacturing/foundation-database") >= 0,
           isLibOrm = extension.indexOf("lib/orm") >= 0,
           isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
             extension.indexOf("extension") < 0,
@@ -93,13 +95,14 @@ var  async = require('async'),
             extension.indexOf("extension") >= 0,
           isPublicExtension = extension.indexOf("xtuple-extensions") >= 0,
           isPrivateExtension = extension.indexOf("private-extensions") >= 0,
-          dbSourceRoot = isFoundation ? extension :
+          dbSourceRoot = (isFoundation || isFoundationExtension) ? extension :
             isLibOrm ? path.join(extension, "source") :
             path.join(extension, "database/source"),
           manifestOptions = {
-            useSafeFoundationToolkit: isFoundation && extensions.length === 1,
+            useSafeFoundationToolkit: isFoundation && !isFoundationExtension && extensions.length === 1,
             useFoundationScripts: (baseName === 'inventory' || baseName === 'manufacturing') &&
               extensions.length === 1,
+            useFrozenScripts: extensions.length === 1 && isFoundationExtension,
             registerExtension: !isFoundation && !isLibOrm && !isApplicationCore,
             runJsInit: !isFoundation && !isLibOrm,
             wipeViews: isApplicationCore && spec.wipeViews,
