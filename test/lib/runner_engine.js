@@ -186,6 +186,7 @@ require:true, __dirname:true, console:true */
         //
         _.each(spec.privileges, function (priv, key) {
           var methodMap = {
+              createReadUpdateDelete: ["canCreate", "canRead", "canUpdate", "canDelete"],
               createUpdateDelete: ["canCreate", "canUpdate", "canDelete"],
               createUpdate: ["canCreate", "canUpdate"],
               create: ["canCreate"],

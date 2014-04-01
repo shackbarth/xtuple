@@ -43,13 +43,16 @@ var _ = require('underscore'),
         var result,
           credsClone = JSON.parse(JSON.stringify(creds)),
           existsSql = "select relname from pg_class where relname = 'ext'",
-          extSql = "SELECT * FROM xt.ext ORDER BY ext_load_order",
+          preInstallSql = "select xt.js_init();update xt.ext set ext_location = '/core-extensions' " +
+            "where ext_name = 'oauth2' and ext_location = '/xtuple-extensions';",
+          extSql = preInstallSql + "SELECT * FROM xt.ext ORDER BY ext_load_order",
           defaultExtensions = [
             { ext_location: '/core-extensions', ext_name: 'crm' },
             { ext_location: '/core-extensions', ext_name: 'project' },
             { ext_location: '/core-extensions', ext_name: 'sales' },
             { ext_location: '/core-extensions', ext_name: 'billing' },
-            { ext_location: '/core-extensions', ext_name: 'purchasing' }
+            { ext_location: '/core-extensions', ext_name: 'purchasing' },
+            { ext_location: '/core-extensions', ext_name: 'oauth2' }
           ],
           adaptExtensions = function (err, res) {
             if (err) {
@@ -57,7 +60,7 @@ var _ = require('underscore'),
               return;
             }
 
-            var paths = _.map(res.rows, function (row) {
+            var paths = _.map(_.compact(res.rows), function (row) {
               var location = row.ext_location,
                 name = row.ext_name,
                 extPath;
@@ -75,7 +78,7 @@ var _ = require('underscore'),
             paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
             paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
             callback(null, {
-              extensions: paths,
+              extensions: _.compact(paths),
               database: database,
               keepSql: options.keepSql,
               wipeViews: options.wipeViews,
@@ -180,6 +183,7 @@ var _ = require('underscore'),
         path.join(__dirname, '../../enyo-client/extensions/source/sales'),
         path.join(__dirname, '../../enyo-client/extensions/source/billing'),
         path.join(__dirname, '../../enyo-client/extensions/source/purchasing'),
+        path.join(__dirname, '../../enyo-client/extensions/source/oauth2')
       ];
       buildAll([buildSpecs], creds, callback);
 

@@ -1,0 +1,321 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Oauth2client",
+    "table": "xt.oa2client",
+    "idSequenceName": "xt.oa2client_oa2client_id_seq",
+    "comment": "Defines global OAuth 2.0 server registered client storage.",
+    "privileges": {
+      "all": {
+        "create": "MaintainOauth2clients",
+        "read": "MaintainOauth2clients",
+        "update": "MaintainOauth2clients",
+        "delete": "MaintainOauth2clients"
+      }
+    },
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "oa2client_id",
+         "isPrimaryKey": true,
+         "required": true
+       }
+     },
+     {
+       "name": "clientID",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_client_id",
+         "required": true
+       }
+     },
+     {
+       "name": "clientSecret",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_client_secret",
+         "required": true
+       }
+     },
+     {
+       "name": "clientName",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_client_name",
+         "required": true
+       }
+     },
+     {
+       "name": "clientEmail",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_client_email",
+         "required": true
+       }
+     },
+     {
+       "name": "clientWebSite",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_client_web_site"
+       }
+     },
+     {
+       "name": "clientLogo",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_client_logo"
+       }
+     },
+     {
+       "name": "clientType",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_client_type",
+         "required": true
+       }
+     },
+     {
+       "name": "isActive",
+       "attr": {
+         "type": "Boolean",
+         "column": "oa2client_active"
+       }
+     },
+     {
+       "name": "issued",
+       "attr": {
+         "type": "Date",
+         "column": "oa2client_issued"
+       }
+     },
+     {
+       "name": "authURI",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_auth_uri"
+       }
+     },
+     {
+       "name": "tokenURI",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_token_uri"
+       }
+     },
+     {
+       "name": "redirectURIs",
+       "toMany": {
+         "isNested": true,
+         "type": "Oauth2clientRedirs",
+         "column": "oa2client_id",
+         "inverse": "clientID"
+       }
+     },
+     {
+       "name": "delegatedAccess",
+       "attr": {
+         "type": "Boolean",
+         "column": "oa2client_delegated_access"
+       }
+     },
+     {
+       "name": "clientX509PubCert",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_client_x509_pub_cert"
+       }
+     },
+     {
+       "name": "organization",
+       "attr": {
+         "type": "String",
+         "column": "oa2client_org"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Oauth2clientRedirs",
+    "table": "xt.oa2clientredirs",
+    "idSequenceName": "xt.oa2clientredirs_oa2clientredirs_id_seq",
+    "comment": "Maps redirect URIs to OAuth 2.0 clients.",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "oa2clientredirs_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "clientID",
+       "attr": {
+         "type": "Number",
+         "column": "oa2clientredirs_oa2client_id"
+       }
+     },
+     {
+       "name": "redirectURI",
+       "attr": {
+         "type": "String",
+         "column": "oa2clientredirs_redirect_uri"
+       }
+     }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Oauth2token",
+    "table": "xt.oa2token",
+    "idSequenceName": "xt.oa2token_oa2token_id_seq",
+    "comment": "Defines global OAuth 2.0 server token storage.",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "oa2token_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "user",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_username"
+       }
+     },
+     {
+       "name": "clientID",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_client_id"
+       }
+     },
+     {
+       "name": "redirectURI",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_redirect_uri"
+       }
+     },
+     {
+       "name": "scope",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_scope"
+       }
+     },
+     {
+       "name": "state",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_state"
+       }
+     },
+     {
+       "name": "approvalPrompt",
+       "attr": {
+         "type": "Boolean",
+         "column": "oa2token_approval_prompt"
+       }
+     },
+     {
+       "name": "authCode",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_auth_code"
+       }
+     },
+     {
+       "name": "authCodeIssued",
+       "attr": {
+         "type": "Date",
+         "column": "oa2token_auth_code_issued"
+       }
+     },
+     {
+       "name": "authCodeExpires",
+       "attr": {
+         "type": "Date",
+         "column": "oa2token_auth_code_expires"
+       }
+     },
+     {
+       "name": "refreshToken",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_refresh_token"
+       }
+     },
+     {
+       "name": "refreshIssued",
+       "attr": {
+         "type": "Date",
+         "column": "oa2token_refresh_issued"
+       }
+     },
+     {
+       "name": "refreshExpires",
+       "attr": {
+         "type": "Date",
+         "column": "oa2token_refresh_expires"
+       }
+     },
+     {
+       "name": "accessToken",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_access_token"
+       }
+     },
+     {
+       "name": "accessIssued",
+       "attr": {
+         "type": "Date",
+         "column": "oa2token_access_issued"
+       }
+     },
+     {
+       "name": "accessExpires",
+       "attr": {
+         "type": "Date",
+         "column": "oa2token_access_expires"
+       }
+     },
+     {
+       "name": "tokenType",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_token_type"
+       }
+     },
+     {
+       "name": "accessType",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_access_type"
+       }
+     },
+     {
+       "name": "delegate",
+       "attr": {
+         "type": "String",
+         "column": "oa2token_delegate"
+       }
+     }
+    ],
+    "isSystem": true
+  }
+]
