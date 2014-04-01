@@ -1197,10 +1197,10 @@ TODO deferred to later sprint:
 
         enyo.platform.touch = true;
         workspace = new XV.InvoiceWorkspace();
-        assert.equal(workspace.$.returnLineItemBox.kind, "XV.InvoiceLineItemBox");
+        assert.equal(workspace.$.invoiceLineItemBox.kind, "XV.InvoiceLineItemBox");
         enyo.platform.touch = false;
         workspace = new XV.InvoiceWorkspace();
-        assert.equal(workspace.$.returnLineItemBox.kind, "XV.InvoiceLineItemGridBox");
+        assert.equal(workspace.$.invoiceLineItemBox.kind, "XV.InvoiceLineItemGridBox");
       });
       /**
         @member Navigation

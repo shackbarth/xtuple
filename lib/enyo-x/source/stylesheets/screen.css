@@ -1580,11 +1580,9 @@ body {
   color: #666666;
   font-size: 20px;
 }
-.xv-buttons .onyx-button.save {
-  color: #357ec7;
-}
 .xv-buttons .onyx-button.text {
   font-size: 17px;
+  font-family: 'Helvetica Neue', Helvetica, 'Nimbus Sans L', Arial, sans-serif;
 }
 .xv-buttons .onyx-button.selected {
   background: #357ec7;

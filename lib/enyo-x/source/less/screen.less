@@ -48,6 +48,7 @@
 @panelsFontSize: 5em;
 @iconFontSize: 60%;
 @totalsFontSize: 14px;
+@buttonFontSize: 17px;
 
 // sizing
 @defaultPanelWidth: 320px;
@@ -135,11 +136,9 @@ body {
     min-width: 60px;
     color: @charcoal;
     font-size: 20px;
-    &.save {
-      color: @slate-blue;
-    }
     &.text {
-      font-size: 17px;
+      font-size: @buttonFontSize;
+      font-family: @baseFont;
     }
     &.selected {
       background: @slate-blue;
