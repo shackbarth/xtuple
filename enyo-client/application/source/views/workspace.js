@@ -1276,14 +1276,12 @@ strict: false*/
       this.inherited(arguments);
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
-          // Line Item Box
-          {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", classes: "large-panel", attr: "lineItems", fit: true}
+          {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", attr: "lineItems"}
         ], {owner: this});
       } else {
         this.$.lineItemsPanel.createComponents([
-          // Line Item Box
-          {kind: "XV.InvoiceLineItemGridBox", classes: "large-panel", name: "invoiceLineItemBox",
-            attr: "lineItems", fit: true}
+          {kind: "XV.InvoiceLineItemGridBox", name: "invoiceLineItemBox",
+            attr: "lineItems"}
         ], {owner: this});
       }
       this.processExtensions(true);
@@ -1824,14 +1822,12 @@ strict: false*/
       this.inherited(arguments);
       if (enyo.platform.touch) {
         this.$.lineItemsPanel.createComponents([
-          // Line Item Box
-          {kind: "XV.ReturnLineItemBox", name: "returnLineItemBox", attr: "lineItems", fit: true}
+          {kind: "XV.ReturnLineItemBox", name: "returnLineItemBox", attr: "lineItems"}
         ], {owner: this});
       } else {
         this.$.lineItemsPanel.createComponents([
-          // Line Item Box
           {kind: "XV.ReturnLineItemGridBox", name: "returnLineItemBox",
-            attr: "lineItems", fit: true}
+            attr: "lineItems"}
         ], {owner: this});
       }
       this.processExtensions(true);

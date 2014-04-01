@@ -1818,9 +1818,6 @@ body {
   margin: 0;
   margin-left: 6px;
 }
-.xv-totals-panel {
-  font-size: 12px;
-}
 .xv-navigator .xv-header {
   background-color: #fdfdfd;
   padding: 6px 12px;
@@ -1991,6 +1988,13 @@ body {
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .enyo-fittable-columns-layout > * {
   vertical-align: middle;
+}
+.xv-workspace-container .xv-workspace .xv-totals-panel .onyx-input-decorator > input,
+.xv-workspace-container .xv-workspace .xv-totals-panel * {
+  font-size: 14px;
+}
+.xv-workspace-container .xv-workspace .xv-totals-panel .xv-input {
+  border: none;
 }
 /**
  * Default ListItem styles when using a ModelDecorator.

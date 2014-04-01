@@ -527,12 +527,10 @@ trailing:true, white:true*/
 
   enyo.kind({
     name: "XV.SalesSummaryPanel",
-    classes: "xv-sales-summary-panel",
     kind: "XV.RelationsEditor",
     style: "margin-top: 10px;",
     components: [
-      {kind: "XV.Groupbox", name: "totalGroup", classes: "xv-sales-summary-total-group",
-          components: [
+      {kind: "XV.Groupbox", name: "totalGroup", components: [
         {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
         {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
           {kind: "FittableRows", name: "summaryColumnOne", components: [
