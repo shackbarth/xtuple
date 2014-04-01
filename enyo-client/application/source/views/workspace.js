@@ -1820,12 +1820,12 @@ strict: false*/
     create: function () {
       this.inherited(arguments);
       if (enyo.platform.touch) {
-        this.$.createComponents([
+        this.$.panels.createComponents([
           {kind: "XV.ReturnLineItemBox", name: "returnLineItemBox",
             attr: "lineItems", title: "_lineItems".loc(), addBefore: this.$.settingsPanel}
         ], {owner: this});
       } else {
-        this.$.createComponents([
+        this.$.panels.createComponents([
           {kind: "XV.ReturnLineItemGridBox", name: "returnLineItemBox",
             title: "_lineItems".loc(), attr: "lineItems", addBefore: this.$.settingsPanel}
         ], {owner: this});
