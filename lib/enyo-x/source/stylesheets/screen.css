@@ -1559,15 +1559,6 @@ body {
 .wide > * {
   min-width: 50%;
 }
-.item {
-  position: relative;
-  padding: 16px 12px;
-  background-color: #373737;
-  border-bottom: 1px solid #0e0e0e;
-}
-.item.onyx-selected {
-  background-color: #357ec7;
-}
 .xv-my-account-popup {
   background-color: #fdfdfd;
   color: #000;
@@ -2798,9 +2789,16 @@ body {
   height: 100%;
   width: 100%;
 }
-.xv-pullout .history-panel .history-item {
+.xv-pullout .history-panel .xv-list-item {
+  padding: 12px 10px;
   color: #0e0e0e;
-  margin: 8px;
+  background-color: #fdfdfd;
+  border-bottom: 1px solid #d7d7d7;
+}
+.xv-pullout .history-panel .xv-list-item.onyx-selected {
+  background-color: #357ec7;
+  color: #fdfdfd;
+  border-bottom: 2px solid #d8d8d8;
 }
 /**
   Styles relating to misc widgets
