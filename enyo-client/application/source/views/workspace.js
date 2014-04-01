@@ -1249,7 +1249,6 @@ strict: false*/
             ]}
           ]}
         ]},
-        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
         {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
@@ -1275,13 +1274,14 @@ strict: false*/
     create: function () {
       this.inherited(arguments);
       if (enyo.platform.touch) {
-        this.$.lineItemsPanel.createComponents([
-          {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", attr: "lineItems"}
+        this.$.panels.createComponents([
+          {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", attr: "lineItems",
+            title: "_lineItems".loc(), addBefore: this.$.settingsPanel}
         ], {owner: this});
       } else {
-        this.$.lineItemsPanel.createComponents([
-          {kind: "XV.InvoiceLineItemGridBox", name: "invoiceLineItemBox",
-            attr: "lineItems"}
+        this.$.panels.createComponents([
+          {kind: "XV.InvoiceLineItemGridBox", name: "invoiceLineItemBox", title: "_lineItems".loc(),
+            attr: "lineItems", addBefore: this.$.settingsPanel}
         ], {owner: this});
       }
       this.processExtensions(true);
