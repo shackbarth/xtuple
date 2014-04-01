@@ -1037,10 +1037,10 @@ it:true, describe:true, beforeEach:true, before:true, enyo:true */
 
         enyo.platform.touch = true;
         workspace = new XV.ReturnWorkspace();
-        assert.equal(workspace.$.lineItemsPanel.children[0].kind, "XV.ReturnLineItemBox");
+        assert.equal(workspace.$.children[0].kind, "XV.ReturnLineItemBox");
         enyo.platform.touch = false;
         workspace = new XV.ReturnWorkspace();
-        assert.equal(workspace.$.lineItemsPanel.children[0].kind, "XV.ReturnLineItemGridBox");
+        assert.equal(workspace.$.children[0].kind, "XV.ReturnLineItemGridBox");
       });
       /**
         @member -

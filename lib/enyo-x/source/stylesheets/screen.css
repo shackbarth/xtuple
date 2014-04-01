@@ -2227,6 +2227,9 @@ body {
   width: 100%;
   font-size: 13px;
 }
+.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
+  border: none;
+}
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-picker-label {
   display: none;
 }
@@ -2241,9 +2244,6 @@ body {
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .onyx-input-decorator input {
   width: 85%;
   font-size: 13px;
-}
-.xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-datewidget .xv-input {
-  padding-top: 0;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-numberwidget {
   padding-top: 6px;
@@ -2295,6 +2295,7 @@ body {
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-input {
   padding-top: 6px;
   width: 100%;
+  border: none;
 }
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-label,
 .xv-grid-box .xv-grid-row.selected .xv-grid-column .xv-flexible-label,
@@ -2883,6 +2884,9 @@ body {
   width: 115px;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+.xv-characteristic-item > .xv-input {
+  border: none;
 }
 .xv-characteristic-buttons {
   margin: 8px;
