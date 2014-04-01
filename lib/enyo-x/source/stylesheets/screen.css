@@ -2,7 +2,6 @@
   To compile this .less file to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
-
 */
 /*!
  *  Font Awesome 3.2.1
@@ -1559,32 +1558,6 @@ body {
 .wide > * {
   min-width: 50%;
 }
-.xv-my-account-popup {
-  background-color: #fdfdfd;
-  color: #000;
-}
-.xv-my-account-popup .xv-message {
-  color: red;
-  padding: 5px;
-}
-.xv-my-account-popup .onyx-button {
-  margin: 0 auto 0 auto;
-}
-.xv-my-account-popup .onyx-input {
-  padding-left: 10px;
-  float: right;
-}
-.xv-sort-popup {
-  background-color: #fdfdfd;
-  color: #070707;
-}
-.xv-sort-popup .xv-groupbox > *:last-child {
-  text-align: center;
-  padding: 5px;
-}
-.xv-sort-popup .xv-groupbox > *:last-child .onyx-button {
-  margin: 3px;
-}
 .xv-version-label {
   padding: 10px;
 }
@@ -1687,6 +1660,32 @@ body {
 .xv-popup.xv-groupbox-popup .xv-message {
   color: #c51616;
   padding: 5px;
+}
+.xv-my-account-popup {
+  background-color: #fdfdfd;
+  color: #000;
+}
+.xv-my-account-popup .xv-message {
+  color: red;
+  padding: 5px;
+}
+.xv-my-account-popup .onyx-button {
+  margin: 0 auto 0 auto;
+}
+.xv-my-account-popup .onyx-input {
+  padding-left: 10px;
+  float: right;
+}
+.xv-sort-popup {
+  background-color: #fdfdfd;
+  color: #070707;
+}
+.xv-sort-popup .xv-groupbox > *:last-child {
+  text-align: center;
+  padding: 5px;
+}
+.xv-sort-popup .xv-groupbox > *:last-child .onyx-button {
+  margin: 3px;
 }
 .xv-comment-box {
   /* Resets the margin/padding value for blockquote tag in comments */

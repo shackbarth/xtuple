@@ -2,7 +2,6 @@
   To compile this .less file to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
-
 */
 
 // Colors
@@ -113,34 +112,6 @@ body {
   min-width: 50%;
 }
 
-.xv-my-account-popup {
-  background-color: @white;
-  color: #000;
-  .xv-message {
-    color:red;
-    padding: 5px;
-  }
-  .onyx-button {
-    margin: 0 auto 0 auto;
-  }
-  .onyx-input {
-    padding-left: 10px;
-    float: right;
-  }
-}
-
-.xv-sort-popup {
-  background-color: @white;
-  color: @black;
-  .xv-groupbox > *:last-child {
-    text-align: center;
-    padding: 5px;
-    .onyx-button {
-      margin: 3px;
-    }
-  }
-}
-
 .xv-version-label {
   padding: 10px;
 }
@@ -212,6 +183,34 @@ body {
     .xv-message {
       color: @red;
       padding: 5px;
+    }
+  }
+}
+
+.xv-my-account-popup {
+  background-color: @white;
+  color: #000;
+  .xv-message {
+    color:red;
+    padding: 5px;
+  }
+  .onyx-button {
+    margin: 0 auto 0 auto;
+  }
+  .onyx-input {
+    padding-left: 10px;
+    float: right;
+  }
+}
+
+.xv-sort-popup {
+  background-color: @white;
+  color: @black;
+  .xv-groupbox > *:last-child {
+    text-align: center;
+    padding: 5px;
+    .onyx-button {
+      margin: 3px;
     }
   }
 }
