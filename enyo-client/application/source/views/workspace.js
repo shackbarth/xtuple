@@ -1946,21 +1946,21 @@ strict: false*/
     },
     create: function () {
       this.inherited(arguments);
+
       var effectiveKey = this.getEffectiveKey(),
         settings = this.$.settingsGroup.children[0].children,
         last = settings[settings.length - 1];
-      this.build();
+
       this.getComponents().forEach(function (ctl) {
         if (ctl.kind === "XV.MoneyWidget") {
           // XXX #refactor -- what does this do?
           ctl.getAttr().effective = effectiveKey; // append this property onto the object
         }
       });
-      this.titleChanged();
 
       this.$.billtoAddress.$.buttonColumns.createComponent({
         kind: "onyx.Button",
-        content: "_copyToShipTo".loc(),
+        classes: "icon-copy",
         name: "copyAddressButton",
         ontap: "copyBilltoToShipto"
       });
@@ -2022,7 +2022,7 @@ strict: false*/
     model: "XM.Quote",
     effectiveKey: "quoteDate",
     components: [
-      {kind: "Panels", name: "salesPanels", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -2068,7 +2068,6 @@ strict: false*/
             {kind: "XV.TextArea", attr: "shipNotes", fit: true}
           ]}
         ]},
-        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
         {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
@@ -2094,20 +2093,18 @@ strict: false*/
         {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}
     ],
-    /**
-      Loops through the components array of the parent kind and inserts the addtional
-      components where they should be rendered.
-    */
-    build: function () {
+    create: function () {
+      this.inherited(arguments);
+
       if (enyo.platform.touch) {
-        this.$.lineItemsPanel.createComponents([
-          // Line Item Box
-          {kind: "XV.QuoteLineItemBox", classes: "large-panel", attr: "lineItems", fit: true}
+        this.$.panels.createComponents([
+          {kind: "XV.QuoteLineItemBox", attr: "lineItems", title: "_lineItems".loc(),
+            addBefore: this.$.settingsPanel}
         ], {owner: this});
       } else {
-        this.$.lineItemsPanel.createComponents([
-          // Line Item Box
-          {kind: "XV.QuoteLineItemGridBox", classes: "large-panel", attr: "lineItems", fit: true}
+        this.$.panels.createComponents([
+          {kind: "XV.QuoteLineItemGridBox", attr: "lineItems", title: "_lineItems".loc(),
+            addBefore: this.$.settingsPanel}
         ], {owner: this});
       }
     }
@@ -2273,7 +2270,7 @@ strict: false*/
     },
     model: "XM.SalesOrder",
     components: [
-      {kind: "Panels", name: "salesPanels", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -2321,7 +2318,6 @@ strict: false*/
             {kind: "XV.TextArea", attr: "shipNotes", fit: true}
           ]}
         ]},
-        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
         {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
@@ -2345,14 +2341,11 @@ strict: false*/
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()}
           ]}
         ]},
-        {kind: "FittableRows", title: "_payment".loc(), name: "paymentPanel"},
-        {kind: "FittableRows", title: "_workflow".loc(), name: "workflowPanel"},
         {kind: "XV.SalesOrderCommentBox", name: "salesOrderCommentBox",
           attr: "comments"},
         {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
     ],
-
     /**
      * @listens onPaymentPosted
      */
@@ -2366,14 +2359,12 @@ strict: false*/
         this.$.salesOrderPaymentBox.setSalesOrder(this.value);
       }
     },
-
-    /**
-      Inserts additional components where they should be rendered.
-    */
-    build: function () {
+    create: function () {
+      this.inherited(arguments);
 
       if (XV.SalesOrderPaymentBox && XT.session.privileges.get('PostCashReceipts')) {
-        this.$.paymentPanel.createComponent({kind: "XV.SalesOrderPaymentBox"}, {owner: this});
+        this.$.panels.createComponent({kind: "XV.SalesOrderPaymentBox", title: "_payment".loc(), addBefore: this.$.salesOrderCommentBox},
+          {owner: this});
         if (this.value) {
           this.$.salesOrderPaymentBox.setSalesOrder(this.value);
         }
@@ -2381,8 +2372,9 @@ strict: false*/
 
       if (XT.session.privileges.get("ProcessCreditCards") &&
           XT.session.settings.get("CCCompany") === "Authorize.Net") {
-        this.$.paymentPanel.createComponent(
-          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards", fit: true},
+        this.$.panels.createComponent(
+          {kind: "XV.CreditCardBox", name: "creditCardBox", attr: "customer.creditCards",
+            addBefore: this.$.salesOrderCommentBox},
           {owner: this}
         );
 
@@ -2393,20 +2385,23 @@ strict: false*/
       }
 
       if (enyo.platform.touch) {
-        this.$.lineItemsPanel.createComponents([
-          // Line Item Box
-          {kind: "XV.SalesOrderLineItemBox", classes: "large-panel", name: "salesOrderLineItemBox", attr: "lineItems", fit: true},
+        this.$.panels.createComponents([
+          {kind: "XV.SalesOrderLineItemBox", name: "salesOrderLineItemBox",
+            attr: "lineItems", addBefore: this.$.settingsPanel},
         ], {owner: this});
-        this.$.workflowPanel.createComponents([
-          {kind: "XV.SalesOrderWorkflowBox", attr: "workflow", fit: true}
+
+        this.$.panels.createComponents([
+          {kind: "XV.SalesOrderWorkflowBox", attr: "workflow", title: "_workflow".loc(),
+            addBefore: this.$.salesOrderCommentBox}
         ], {owner: this});
       } else {
-        this.$.lineItemsPanel.createComponents([
-          // Line Item Box
-          {kind: "XV.SalesOrderLineItemGridBox", classes: "large-panel", name: "salesOrderLineItemBox", attr: "lineItems", fit: true},
+        this.$.panels.createComponents([
+          {kind: "XV.SalesOrderLineItemGridBox", name: "salesOrderLineItemBox",
+            attr: "lineItems", addBefore: this.$.settingsPanel},
         ], {owner: this});
-        this.$.workflowPanel.createComponents([
-          {kind: "XV.SalesOrderWorkflowGridBox", attr: "workflow", fit: true}
+        this.$.panels.createComponents([
+          {kind: "XV.SalesOrderWorkflowGridBox", attr: "workflow", title: "_workflow".loc(),
+            addBefore: this.$.salesOrderCommentBox}
         ], {owner: this});
       }
     },
