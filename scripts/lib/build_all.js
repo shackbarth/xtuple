@@ -1,17 +1,17 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, Backbone:true, _:true, XM:true, XT:true*/
+/*global Backbone:true, _:true, XM:true, XT:true*/
 
 var _ = require('underscore'),
   async = require('async'),
-  build_database = require("./build_database"),
-  buildDatabase = build_database.buildDatabase,
+  buildDatabase = require("./build_database"),
+  buildDatabaseUtil = require("./build_database_util"),
   buildClient = require("./build_client").buildClient,
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
   exec = require('child_process').exec,
   fs = require('fs'),
   path = require('path'),
-  unregister = build_database.unregister,
+  unregister = buildDatabaseUtil.unregister,
   winston = require('winston');
 
 /*
@@ -74,14 +74,14 @@ var _ = require('underscore'),
 
             paths.unshift(path.join(__dirname, "../../enyo-client")); // core path
             paths.unshift(path.join(__dirname, "../../lib/orm")); // lib path
+            paths.unshift(path.join(__dirname, "../../foundation-database")); // foundation path
             callback(null, {
               extensions: paths,
               database: database,
               keepSql: options.keepSql,
               wipeViews: options.wipeViews,
               clientOnly: options.clientOnly,
-              databaseOnly: options.databaseOnly,
-              queryDirect: options.queryDirect
+              databaseOnly: options.databaseOnly
             });
           };
 
@@ -106,14 +106,14 @@ var _ = require('underscore'),
             buildAllCallback(err);
             return;
           }
-          buildDatabase(specs, creds, function (databaseErr, databaseRes) {
+          buildDatabase.buildDatabase(specs, creds, function (databaseErr, databaseRes) {
             var returnMessage;
-            if (databaseErr && specs[0].wipeViews) {
+            if (databaseErr && (specs[0].wipeViews || specs[0].initialize)) {
               buildAllCallback(databaseErr);
               return;
 
             } else if (databaseErr) {
-              buildAllCallback("Build failed. Try wiping the views next time by running me with the -w flag.");
+              buildAllCallback("Build failed. Try wiping the views next time by running me without the -q flag.");
               return;
             }
             returnMessage = "\n";
@@ -129,7 +129,7 @@ var _ = require('underscore'),
       },
       config;
 
-    // the backup path is not relative if it starts with a slash
+    // the config path is not relative if it starts with a slash
     if (options.config && options.config.substring(0, 1) === '/') {
       config = require(options.config);
     } else if (options.config) {
@@ -153,26 +153,39 @@ var _ = require('underscore'),
       // This request doesn't make any sense.
       callback("Make up your mind.");
 
+    } else if (options.backup && options.source) {
+      callback("You can build from backup or from source but not both.");
+
     } else if (options.initialize &&
-        options.backup &&
+        (options.backup || options.source) &&
         options.database &&
-        !options.extension) {
+        (!options.extension || options.extension === 'foundation-database')) {
       // Initialize the database. This is serious business, and we only do it if
       // the user does all the arguments correctly. It must be on one database only,
       // with no extensions, with the initialize flag, and with a backup file.
 
       buildSpecs.database = options.database;
-      // the backup path is not relative if it starts with a slash
-      buildSpecs.backup = options.backup.substring(0, 1) === '/' ?
-        options.backup :
-        path.join(process.cwd(), options.backup);
+      if (options.backup) {
+        // the backup path is not relative if it starts with a slash
+        buildSpecs.backup = options.backup.substring(0, 1) === '/' ?
+          options.backup :
+          path.join(process.cwd(), options.backup);
+      }
+      if (options.source) {
+        // the source path is not relative if it starts with a slash
+        buildSpecs.source = options.source.substring(0, 1) === '/' ?
+          options.source :
+          path.join(process.cwd(), options.source);
+      }
       buildSpecs.initialize = true;
       buildSpecs.keepSql = options.keepSql;
       buildSpecs.wipeViews = options.wipeViews;
       buildSpecs.clientOnly = options.clientOnly;
       buildSpecs.databaseOnly = options.databaseOnly;
-      buildSpecs.queryDirect = options.queryDirect;
-      buildSpecs.extensions = [
+      // if we initialize with the foundation, that means we want
+      // an unmobilized build
+      buildSpecs.extensions = options.extension ? [options.extension] : [
+        path.join(__dirname, '../../foundation-database'),
         path.join(__dirname, '../../lib/orm'),
         path.join(__dirname, '../../enyo-client'),
         path.join(__dirname, '../../enyo-client/extensions/source/crm'),
@@ -183,10 +196,10 @@ var _ = require('underscore'),
       ];
       buildAll([buildSpecs], creds, callback);
 
-    } else if (options.initialize || options.backup) {
+    } else if (options.initialize || options.backup || options.source) {
       // The user has not been sufficiently serious.
       callback("If you want to initialize the database, you must specifify " +
-        " a database, and use no extensions, and use both the init and the backup flags");
+        " a database, and use no extensions, and use both the init and either the backup or source flags");
 
     } else if (options.extension) {
       // the user has specified an extension to build or unregister
@@ -202,7 +215,6 @@ var _ = require('underscore'),
           wipeViews: options.wipeViews,
           clientOnly: options.clientOnly,
           databaseOnly: options.databaseOnly,
-          queryDirect: options.queryDirect,
           extensions: [extension]
         };
       });

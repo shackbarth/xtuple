@@ -6,6 +6,7 @@ _ = require('underscore');
 
 var  async = require('async'),
   dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
+  buildDatabaseUtil = require('./build_database_util'),
   exec = require('child_process').exec,
   fs = require('fs'),
   ormInstaller = require('./orm'),
@@ -18,95 +19,6 @@ var  async = require('async'),
 
 (function () {
   "use strict";
-
-  var jsInit = "select xt.js_init();";
-  //
-  // There are a few ways we could actually send our query to the database
-  //
-  var sendToDatabaseDatasource = function (query, credsClone, options, callback) {
-    dataSource.query(query, credsClone, callback);
-  };
-
-  var sendToDatabasePsql = function (query, credsClone, options, callback) {
-    var filename = path.join(__dirname, "temp_query_" + credsClone.database + ".sql");
-    fs.writeFile(filename, query, function (err) {
-      if (err) {
-        winston.error("Cannot write query to file");
-        callback(err);
-        return;
-      }
-      var psqlCommand = 'psql -d ' + credsClone.database +
-        ' -U ' + credsClone.username +
-        ' -h ' + credsClone.hostname +
-        ' -p ' + credsClone.port +
-        ' -f ' + filename +
-        ' --single-transaction';
-
-
-      /**
-       * http://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
-       * "maxBuffer specifies the largest amount of data allowed on stdout or
-       * stderr - if this value is exceeded then the child process is killed."
-       */
-      exec(psqlCommand, {maxBuffer: 40000 * 1024 /* 20x default */}, function (err, stdout, stderr) {
-        if (err) {
-          winston.error("Cannot install file ", filename);
-          callback(err);
-          return;
-        }
-        if (options.keepSql) {
-          // do not delete the temp query file
-          winston.info("SQL file kept as ", filename);
-          callback();
-        } else {
-          fs.unlink(filename, function (err) {
-            if (err) {
-              winston.error("Cannot delete written query file");
-              callback(err);
-            }
-            callback();
-          });
-        }
-      });
-    });
-  };
-
-  //
-  // Step 0 (optional, triggered by flags), wipe out the database
-  // and load it from scratch using pg_restore something.backup
-  //
-  var initDatabase = function (spec, creds, callback) {
-    var databaseName = spec.database,
-      credsClone = JSON.parse(JSON.stringify(creds));
-    // the calls to drop and create the database need to be run against the database "postgres"
-    credsClone.database = "postgres";
-    winston.info("Dropping database " + databaseName);
-    dataSource.query("drop database if exists " + databaseName + ";", credsClone, function (err, res) {
-      if (err) {
-        winston.error("drop db error", err.message, err.stack, err);
-        callback(err);
-        return;
-      }
-      winston.info("Creating and restoring database " + databaseName);
-      dataSource.query("create database " + databaseName + " template template1", credsClone, function (err, res) {
-        if (err) {
-          winston.error("create db error", err.message, err.stack, err);
-          callback(err);
-          return;
-        }
-        // use exec to restore the backup. The alternative, reading the backup file into a string to query
-        // doesn't work because the backup file is binary.
-        exec("pg_restore -U " + creds.username + " -h " + creds.hostname + " -p " +
-            creds.port + " -d " + databaseName + " -j " + os.cpus().length + " " + spec.backup, function (err, res) {
-          if (err) {
-            console.log("ignoring restore db error", err);
-          }
-          callback(null, res);
-        });
-      });
-    });
-  };
-
 
   /**
     @param {Object} specs Specification for the build process, in the form:
@@ -134,13 +46,13 @@ var  async = require('async'),
   var buildDatabase = exports.buildDatabase = function (specs, creds, masterCallback) {
     if (specs.length === 1 &&
         specs[0].initialize &&
-        specs[0].backup) {
+        (specs[0].backup || specs[0].source)) {
 
       // The user wants to initialize the database first (i.e. Step 0)
       // Do that, then call this function again
-      initDatabase(specs[0], creds, function (err, res) {
+      buildDatabaseUtil.initDatabase(specs[0], creds, function (err, res) {
         if (err) {
-          winston.error("init database error", err);
+          winston.error("Init database error: ", err);
           masterCallback(err);
           return;
         }
@@ -149,11 +61,11 @@ var  async = require('async'),
         specs[0].initialize = false;
         specs[0].wasInitialized = true;
         specs[0].backup = undefined;
+        specs[0].source = undefined;
         buildDatabase(specs, creds, masterCallback);
       });
       return;
     }
-
 
     //
     // The function to generate all the scripts for a database
@@ -172,169 +84,36 @@ var  async = require('async'),
         }
         //winston.info("Installing extension", databaseName, extension);
         // deal with directory structure quirks
-        var isLibOrm = extension.indexOf("lib/orm") >= 0,
+        var baseName = path.basename(extension),
+          isFoundation = extension.indexOf("foundation-database") >= 0,
+          isFoundationExtension = extension.indexOf("inventory/foundation-database") >= 0 ||
+            extension.indexOf("manufacturing/foundation-database") >= 0,
+          isLibOrm = extension.indexOf("lib/orm") >= 0,
           isApplicationCore = extension.indexOf("enyo-client") >= 0 &&
             extension.indexOf("extension") < 0,
           isCoreExtension = extension.indexOf("enyo-client") >= 0 &&
             extension.indexOf("extension") >= 0,
           isPublicExtension = extension.indexOf("xtuple-extensions") >= 0,
           isPrivateExtension = extension.indexOf("private-extensions") >= 0,
-          dbSourceRoot = isLibOrm ?
-            path.join(extension, "source") :
+          dbSourceRoot = (isFoundation || isFoundationExtension) ? extension :
+            isLibOrm ? path.join(extension, "source") :
             path.join(extension, "database/source"),
-          manifestFilename = path.join(dbSourceRoot, "manifest.js");
-
-        //
-        // Step 2:
-        // Read the manifest files.
-        //
-        if (!fs.existsSync(manifestFilename)) {
-          // error condition: no manifest file
-          winston.log("Cannot find manifest " + manifestFilename);
-          extensionCallback("Cannot find manifest " + manifestFilename);
-          return;
-        }
-        fs.readFile(manifestFilename, "utf8", function (err, manifestString) {
-          var manifest,
-            extensionName,
-            loadOrder,
-            extensionComment,
-            extensionLocation,
-            isFirstScript = true;
-          try {
-            manifest = JSON.parse(manifestString);
-            extensionName = manifest.name;
-            extensionComment = manifest.comment;
-            loadOrder = manifest.loadOrder || 999;
-            if (isCoreExtension) {
-              extensionLocation = "/core-extensions";
-            } else if (isPublicExtension) {
-              extensionLocation = "/xtuple-extensions";
-            } else if (isPrivateExtension) {
-              extensionLocation = "/private-extensions";
-            }
-
-          } catch (error) {
-            // error condition: manifest file is not properly formatted
-            winston.log("Manifest is not valid JSON" + manifestFilename);
-            extensionCallback("Manifest is not valid JSON" + manifestFilename);
-            return;
-          }
-
-          //
-          // Step 3:
-          // Concatenate together all the files referenced in the manifest.
-          //
-          var getScriptSql = function (filename, scriptCallback) {
-            var fullFilename = path.join(dbSourceRoot, filename);
-            if (!fs.existsSync(fullFilename)) {
-              // error condition: script referenced in manifest.js isn't there
-              scriptCallback(path.join(dbSourceRoot, filename) + " does not exist");
-              return;
-            }
-            fs.readFile(fullFilename, "utf8", function (err, scriptContents) {
-              // error condition: can't read script
-              if (err) {
-                scriptCallback(err);
-                return;
-              }
-              var beforeNoticeSql = 'do $$ plv8.elog(NOTICE, "About to run file ' + fullFilename + '"); $$ language plv8;\n',
-                afterNoticeSql = 'do $$ plv8.elog(NOTICE, "Just ran file ' + fullFilename + '"); $$ language plv8;\n',
-                formattingError,
-                lastChar;
-
-              //
-              // Allow inclusion of js files in manifest. If it is a js file,
-              // use plv8 to execute it.
-              //
-              //if (fullFilename.substring(fullFilename.length - 2) === 'js') {
-                // this isn't quite working yet
-                // http://adpgtech.blogspot.com/2013/03/loading-useful-modules-in-plv8.html
-                // put in lib/orm's manifest.js: "../../tools/lib/underscore/underscore-min.js",
-              //  scriptContents = "do $$ " + scriptContents + " $$ language plv8;";
-              //}
-
-              //
-              // Incorrectly-ended sql files (i.e. no semicolon) make for unhelpful error messages
-              // when we concatenate 100's of them together. Guard against these.
-              //
-              scriptContents = scriptContents.trim();
-              lastChar = scriptContents.charAt(scriptContents.length - 1);
-              if (lastChar !== ';') {
-                // error condition: script is improperly formatted
-                formattingError = "Error: " + fullFilename + " contents do not end in a semicolon.";
-                winston.warn(formattingError);
-                scriptCallback(formattingError);
-              }
-
-              if (!isLibOrm || !isFirstScript) {
-                // to put a noticeSql *before* scriptContents we have to account for the very first
-                // script, which is create_plv8, and which must not have any plv8 functions before it,
-                // such as a noticeSql.
-                scriptContents = beforeNoticeSql + scriptContents;
-              }
-
-              isFirstScript = false;
-
-              scriptCallback(null, scriptContents += afterNoticeSql);
-            });
+          manifestOptions = {
+            useSafeFoundationToolkit: isFoundation && !isFoundationExtension && extensions.length === 1,
+            useFoundationScripts: (baseName === 'inventory' || baseName === 'manufacturing') &&
+              extensions.length === 1,
+            useFrozenScripts: extensions.length === 1 && isFoundationExtension,
+            registerExtension: !isFoundation && !isLibOrm && !isApplicationCore,
+            runJsInit: !isFoundation && !isLibOrm,
+            wipeViews: isApplicationCore && spec.wipeViews,
+            extensionLocation: isCoreExtension ? "/core-extensions" :
+              isPublicExtension ? "/xtuple-extensions" :
+              isPrivateExtension ? "/private-extensions" : "not-applicable"
           };
-          async.mapSeries(manifest.databaseScripts || [], getScriptSql, function (err, scriptSql) {
-            var registerSql,
-              dependencies;
 
-            if (err) {
-              extensionCallback(err);
-              return;
-            }
-            // each String of the scriptContents is the concatenated SQL for the script.
-            // join these all together into a single string for the whole extension.
-            var extensionSql = _.reduce(scriptSql, function (memo, script) {
-              return memo + script;
-            }, "");
 
-            if (!isLibOrm && !isApplicationCore) {
-              // register extension and dependencies
-              extensionSql = 'do $$ plv8.elog(NOTICE, "About to register extension ' +
-                extensionName + '"); $$ language plv8;\n' + extensionSql;
-              registerSql = "select xt.register_extension('%@', '%@', '%@', '', %@);\n"
-                .f(extensionName, extensionComment, extensionLocation, loadOrder);
-
-              dependencies = manifest.dependencies || [];
-              _.each(dependencies, function (dependency) {
-                var dependencySql = "select xt.register_extension_dependency('%@', '%@');\n"
-                  .f(extensionName, dependency);
-                extensionSql = dependencySql + extensionSql;
-              });
-              extensionSql = registerSql + extensionSql;
-            }
-            if (!isLibOrm) {
-              // unless it it hasn't yet been defined (ie. lib/orm),
-              // running xt.js_init() is probably a good idea.
-              extensionSql = jsInit + extensionSql;
-            }
-
-            if (isApplicationCore && spec.wipeViews) {
-              // If we want to pre-emptively wipe out the views, the best place to do it
-              // is at the start of the core application code
-              fs.readFile(path.join(__dirname, "../../enyo-client/database/source/delete_system_orms.sql"),
-                  function (err, wipeSql) {
-                if (err) {
-                  extensionCallback(err);
-                  return;
-                }
-                extensionSql = wipeSql + extensionSql;
-                extensionCallback(null, extensionSql);
-              });
-            } else {
-              extensionCallback(null, extensionSql);
-            }
-
-          });
-          //
-          // End script installation code
-          //
-        });
+        buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),
+          manifestOptions, extensionCallback);
       };
 
       // We also need to get the sql that represents the queries to generate
@@ -400,10 +179,6 @@ var  async = require('async'),
             getOrmSql(extension, callback);
           },
           function (callback) {
-            // the client needs jsInit and might not have it by now
-            callback(null, jsInit);
-          },
-          function (callback) {
             getClientSql(extension, callback);
           }
         ], function (err, results) {
@@ -419,8 +194,7 @@ var  async = require('async'),
       // in series, and execute the query when they all have come back.
       //
       async.mapSeries(extensions, getAllSql, function (err, extensionSql) {
-        var sendToDatabase,
-          allSql,
+        var allSql,
           credsClone = JSON.parse(JSON.stringify(creds));
 
         if (err) {
@@ -433,19 +207,11 @@ var  async = require('async'),
           return memo + script;
         }, "");
 
-        if (spec.queryDirect) {
-          // but we can query the database directly if we want
-          sendToDatabase = sendToDatabaseDatasource;
-        } else {
-          // by default we delegate to psql
-          sendToDatabase = sendToDatabasePsql;
+        // Without this, when we delegate to exec psql the err var will not be set even
+        // on the case of error.
+        allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
 
-          // Without this, when we delegate to exec psql the err var will not be set even
-          // on the case of error.
-          allSql = "\\set ON_ERROR_STOP TRUE;\n" + allSql;
-        }
-
-        if (spec.wasInitialized) {
+        if (spec.wasInitialized && !_.isEqual(extensions, ["foundation-database"])) {
           // give the admin user every extension by default
           allSql = allSql + "insert into xt.usrext (usrext_usr_username, usrext_ext_id) " +
             "select '" + creds.username +
@@ -454,7 +220,7 @@ var  async = require('async'),
 
         winston.info("Applying build to database " + spec.database);
         credsClone.database = spec.database;
-        sendToDatabase(allSql, credsClone, spec, function (err, res) {
+        buildDatabaseUtil.sendToDatabase(allSql, credsClone, spec, function (err, res) {
           databaseCallback(err, res);
         });
       });
@@ -515,44 +281,6 @@ var  async = require('async'),
         }
       });
     });
-  };
-
-
-  //
-  // Another option: unregister the extension
-  //
-  exports.unregister = function (specs, creds, masterCallback) {
-    var extension = path.basename(specs[0].extensions[0]),
-      unregisterSql = ["delete from xt.usrext where usrext_id in " +
-        "(select usrext_id from xt.usrext inner join xt.ext on usrext_ext_id = ext_id where ext_name = $1);",
-
-        "delete from xt.clientcode where clientcode_id in " +
-        "(select clientcode_id from xt.clientcode inner join xt.ext on clientcode_ext_id = ext_id where ext_name = $1);",
-
-        "delete from xt.dict where dict_id in " +
-        "(select dict_id from xt.dict inner join xt.ext on dict_ext_id = ext_id where ext_name = $1);",
-
-        "delete from xt.extdep where extdep_id in " +
-        "(select extdep_id from xt.extdep inner join xt.ext " +
-        "on extdep_from_ext_id = ext_id or extdep_to_ext_id = ext_id where ext_name = $1);",
-
-        "delete from xt.ext where ext_name = $1;"];
-
-    if (extension.charAt(extension.length - 1) === "/") {
-      // remove trailing slash if present
-      extension = extension.substring(0, extension.length - 1);
-    }
-    winston.info("Unregistering extension:", extension);
-    var unregisterEach = function (spec, callback) {
-      var options = JSON.parse(JSON.stringify(creds));
-      options.database = spec.database;
-      options.parameters = [extension];
-      var queryEach = function (sql, sqlCallback) {
-        dataSource.query(sql, options, sqlCallback);
-      };
-      async.eachSeries(unregisterSql, queryEach, callback);
-    };
-    async.each(specs, unregisterEach, masterCallback);
   };
 
 }());

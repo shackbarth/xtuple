@@ -1,10 +1,24 @@
 do $$
+declare
+  count integer;
+  query text;
+begin
   /* Only create the schema if it hasn't been created already */
-  var res, sql = "select schema_name from information_schema.schemata where schema_name = 'xt'",
-  res = plv8.execute(sql);
-  if (!res.length) {
-    sql = "create schema xt; grant all on schema xt to group xtrole;"
-    plv8.execute(sql);
-  }
-$$ language plv8;
+  perform *
+  from information_schema.schemata 
+  where schema_name = 'xt';
 
+  get diagnostics count = row_count;
+
+  if (count > 0) then
+    return;
+  end if;
+
+  query = 'create schema xt;';
+  execute query;
+
+  query = 'grant all on schema xt to group xtrole;';
+  execute query;
+
+end;
+$$ language 'plpgsql';

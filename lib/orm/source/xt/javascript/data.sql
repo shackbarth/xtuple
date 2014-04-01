@@ -1762,7 +1762,7 @@ select xt.install_js('XT','Data','xtuple', $$
       } else if (safe) {
         return value;
       } else {
-        throw new handleError("Natural Key Not Found", 400);
+        throw new handleError("Natural Key Not Found: " + orm.nameSpace + "." + orm.type, 400);
       }
     },
 

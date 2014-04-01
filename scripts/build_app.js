@@ -2,7 +2,7 @@
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, Backbone:true, _:true, XM:true, XT:true*/
+/*global _:true */
 
 //
 // This file really just parses the arguments, and sends the real work
@@ -20,11 +20,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-c, --config [/path/to/alternate_config.js]', 'Location of datasource config file. [config.js]')
     .option('-d, --database [database name]', 'Use specific database. [All databases in config file.]')
     .option('-e, --extension [/path/to/extension]', 'Extension to build. [Core plus all extensions registered for the database.]')
-    .option('-i, --initialize', 'Initialize database. Must be used with the -b flag.')
+    .option('-i, --initialize', 'Initialize database. Must be used with the -b or -s flag.')
     .option('-k, --keepsql', 'Do not delete the temporary sql files that represent the payload of the build.')
-    .option('-q, --querydirect', 'Query the database directly, without delegating to psql.')
+    .option('-q, --quick', 'Quicken install by not dropping the views pre-emptively.')
+    .option('-s, --source [/path/to/source_data.sql]', 'Location of source data. Must be used with the -i flag.')
     .option('-u, --unregister', 'Unregister an extension.')
-    .option('-w, --wipeviews', 'Drop the views and the orm registrations pre-emptively.')
     .option('-y, --clientonly', 'Only rebuild the client.')
     .option('-z, --databaseonly', 'Only rebuild the database.')
     .parse(process.argv);
@@ -36,9 +36,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     extension: program.extension,
     initialize: program.initialize,
     keepSql: program.keepsql,
-    queryDirect: program.querydirect,
+    source: program.source,
     unregister: program.unregister,
-    wipeViews: program.wipeviews,
+    wipeViews: !program.quick && !program.extension,
     clientOnly: program.clientonly,
     databaseOnly: program.databaseonly
   }, function (err, res) {
