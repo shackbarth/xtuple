@@ -14,6 +14,38 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
     winston = require('winston');
 
+  var convertToMetasql = function (content) {
+    var lines = content.split("\n"),
+      group,
+      i = 2,
+      name,
+      notes = "",
+      sql;
+
+    if (lines[0].indexOf("-- Group: ") !== 0 ||
+        lines[1].indexOf("-- Name: ") !== 0 ||
+        lines[2].indexOf("-- Notes: ") !== 0) {
+      throw new Error("Improperly formatted metasql");
+    }
+    group = lines[0].substring("-- Group: ".length).trim();
+    name = lines[1].substring("-- Name: ".length).trim();
+    while (lines[i].indexOf("--") === 0) {
+      notes = notes + lines[i].substring(2) + "\n";
+      i++;
+    }
+    notes = notes.substring("-- Notes: ".length);
+
+    sql = "insert into metasql (metasql_group, metasql_name, metasql_notes, " +
+      "metasql_query, metasql_lastuser, metasql_lastupdate, metasql_grade) VALUES (" +
+      "$$" + group + "$$," +
+      "$$" + name + "$$," +
+      "$$" + notes + "$$," +
+      "$$" + content + "$$," +
+      "'admin', now(), 0);";
+
+    return sql;
+  };
+
   var explodeManifest = function (manifestFilename, options, manifestCallback) {
     var dbSourceRoot = path.dirname(manifestFilename);
     //
@@ -132,6 +164,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // Allow inclusion of js files in manifest. If it is a js file,
           // use plv8 to execute it.
           //
+          if (fullFilename.substring(fullFilename.length - 3) === 'mql') {
+            scriptContents = convertToMetasql(scriptContents);
+          }
           //if (fullFilename.substring(fullFilename.length - 2) === 'js') {
             // this isn't quite working yet
             // http://adpgtech.blogspot.com/2013/03/loading-useful-modules-in-plv8.html
