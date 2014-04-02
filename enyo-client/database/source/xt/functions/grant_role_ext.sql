@@ -6,15 +6,19 @@ create or replace function xt.grant_role_ext(role_name text, ext_name text) retu
     sqlInsert = "insert into xt.grpext (grpext_grp_id, grpext_ext_id) values ($1, $2);",
     sqlRoleId = "select grp_id from public.grp where grp_name = $1;",
     sqlExtId = "select ext_id from xt.ext where ext_name = $1;",
-    roleId = plv8.execute(sqlRoleId, [role_name.toUpperCase()])[0].grp_id,
-    extId = plv8.execute(sqlExtId, [ext_name])[0].ext_id,
+    role = plv8.execute(sqlRoleId, [role_name.toUpperCase()]),
+    ext = plv8.execute(sqlExtId, [ext_name]),
+    roleId,
+    extId,
     count;
 
-  if (!roleId || !extId) {
-    plv8.elog(WARNING, "Cannot grant Role: ", role_name, " Extension: ", priv_name, ". The Role or Extension has not been created yet.");
+  if (!role.length || !ext.length) {
+    plv8.elog(WARNING, "Cannot grant Role: ", role_name, " Extension: ", ext_name, ". The Role or Extension has not been created yet.");
 
     return false;
   } else {
+    roleId = role[0].grp_id;
+    extId = ext[0].grp_id;
     count = plv8.execute(sqlCount, [roleId, extId])[0].count;
   }
 
