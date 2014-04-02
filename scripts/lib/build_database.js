@@ -100,9 +100,9 @@ var  async = require('async'),
             path.join(extension, "database/source"),
           manifestOptions = {
             useSafeFoundationToolkit: isFoundation && !isFoundationExtension && extensions.length === 1,
-            useFoundationScripts: (baseName === 'inventory' || baseName === 'manufacturing') &&
+            useFrozenScripts: spec.frozen,
+            useFoundationScripts: (baseName.indexOf('inventory') >= 0 || baseName.indexOf('manufacturing') >= 0) &&
               extensions.length === 1,
-            useFrozenScripts: extensions.length === 1 && isFoundationExtension,
             registerExtension: !isFoundation && !isLibOrm && !isApplicationCore,
             runJsInit: !isFoundation && !isLibOrm,
             wipeViews: isApplicationCore && spec.wipeViews,
@@ -110,7 +110,6 @@ var  async = require('async'),
               isPublicExtension ? "/xtuple-extensions" :
               isPrivateExtension ? "/private-extensions" : "not-applicable"
           };
-
 
         buildDatabaseUtil.explodeManifest(path.join(dbSourceRoot, "manifest.js"),
           manifestOptions, extensionCallback);

@@ -20,6 +20,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     .option('-c, --config [/path/to/alternate_config.js]', 'Location of datasource config file. [config.js]')
     .option('-d, --database [database name]', 'Use specific database. [All databases in config file.]')
     .option('-e, --extension [/path/to/extension]', 'Extension to build. [Core plus all extensions registered for the database.]')
+    .option('-f, --frozen', 'Apply frozen scripts for first-time foundation extension installs.')
     .option('-i, --initialize', 'Initialize database. Must be used with the -b or -s flag.')
     .option('-k, --keepsql', 'Do not delete the temporary sql files that represent the payload of the build.')
     .option('-q, --quick', 'Quicken install by not dropping the views pre-emptively.')
@@ -34,6 +35,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     config: program.config,
     database: program.database,
     extension: program.extension,
+    frozen: program.frozen,
     initialize: program.initialize,
     keepSql: program.keepsql,
     source: program.source,

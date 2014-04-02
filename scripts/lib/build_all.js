@@ -215,6 +215,7 @@ var _ = require('underscore'),
           path.join(process.cwd(), options.extension);
         return {
           database: database,
+          frozen: options.frozen,
           keepSql: options.keepSql,
           wipeViews: options.wipeViews,
           clientOnly: options.clientOnly,
