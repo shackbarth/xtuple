@@ -23,9 +23,20 @@ var buildAll = require('../../scripts/lib/build_all'),
       buildAll.build({
         database: databaseName,
         initialize: true,
-        backup: path.join(__dirname, "../lib/demo-test.backup")
+        source: path.join(__dirname, "../../foundation-database/postbooks_demo_data.sql")
       }, function (err, res) {
         assert.isNull(err);
+        done();
+      });
+    });
+
+    it('should have the POC metric', function (done) {
+      var sql = "select c.metric_id from metric c where c.metric_name = 'UnifiedBuild';";
+
+      creds.database = databaseName;
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNull(err);
+        assert.equal(res.rowCount, 1);
         done();
       });
     });
@@ -36,6 +47,21 @@ var buildAll = require('../../scripts/lib/build_all'),
         "from priv " +
         "left join usrpriv on priv_id = usrpriv_priv_id and usrpriv_username = $1 " +
         "where usrpriv_id is null";
+
+      creds.database = databaseName;
+      creds.parameters = [loginData.username];
+      datasource.query(sql, creds, function (err, res) {
+        assert.isNull(err);
+        done();
+      });
+    });
+
+    it('should grant all extensions to the user', function (done) {
+      var sql = "insert into xt.usrext (usrext_usr_username, usrext_ext_id) " +
+        "select $1, ext_id " +
+        "from xt.ext " +
+        "left join xt.usrext on ext_id = usrext_ext_id and usrext_usr_username = $1 " +
+        "where usrext_id is null";
 
       creds.database = databaseName;
       creds.parameters = [loginData.username];

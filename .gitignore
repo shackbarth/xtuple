@@ -7,6 +7,7 @@ node_modules
 npm-debug.log
 scripts/private
 scripts/lib/temp_query*
+scripts/output
 scripts/1
 scripts/lib/build
 scripts/lib/deploy

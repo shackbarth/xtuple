@@ -24,14 +24,14 @@ var _ = require('underscore'),
   exports.getClientSql = function (extPath, callback) {
     var extName,
       constructQuery = function (contents, extension, version, language) {
-        return "select xt.insert_client($$" + contents +
+        return "select xt.js_init();select xt.insert_client($$" + contents +
           "$$, '" + extension +
           "', '" + version +
           "', '" + language + "');";
       };
 
-    if (extPath.indexOf("/lib/orm") >= 0) {
-      // this is lib/orm. There is nothing here to install on the client.
+    if (extPath.indexOf("/lib/orm") >= 0 || extPath.indexOf("foundation-database") >= 0) {
+      // There is nothing here to install on the client.
       callback(null, "");
       return;
 
@@ -212,8 +212,8 @@ var _ = require('underscore'),
   };
 
   var build = function (extPath, callback) {
-    if (extPath.indexOf("/lib/orm") >= 0) {
-      // this is lib/orm. There is nothing here to install on the client.
+    if (extPath.indexOf("/lib/orm") >= 0 || extPath.indexOf("foundation-database") >= 0) {
+      // There is nothing here to install on the client.
       callback();
       return;
     }
