@@ -28,7 +28,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     fs.readFile(manifestFilename, "utf8", function (err, manifestString) {
       var manifest,
         databaseScripts,
-        safeToolkit,
+        extraManifestPath,
+        extraManifest,
+        extraManifestScripts,
+        alterPaths = dbSourceRoot.indexOf("foundation-database") < 0,
         extensionName,
         loadOrder,
         extensionComment;
@@ -49,34 +52,59 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //
       // Step 2b:
       //
+      // XXX evilly-synchronous code
       // Legacy build methodology: if we're making the Qt database build, add the safe
       // toolkit.
       if (options.useSafeFoundationToolkit) {
-        safeToolkit = fs.readFileSync(path.join(dbSourceRoot, "safe_toolkit_manifest.js"));
-        databaseScripts.unshift(JSON.parse(safeToolkit).databaseScripts);
+        extraManifest = fs.readFileSync(path.join(dbSourceRoot, "safe_toolkit_manifest.js"));
+        databaseScripts.unshift(JSON.parse(extraManifest).databaseScripts);
         databaseScripts = _.flatten(databaseScripts);
       }
-      // XXX speculative and evilly-synchronous code
-      // If the user requests the inventory/mfg extension, add the frozen and foundation manifests
-      if (options.useFoundationScripts) {
-        ["frozen_manifest.js", "manifest.js"].each(function (manifestFilename) {
-          if (!fs.existsSync(path.join(dbSourceRoot, "../../foundation-database", manifestFilename))) {
-            return;
-          }
-          var newManifest = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database", manifestFilename));
-          var foundationScripts = JSON.parse(safeToolkit).databaseScripts;
-          foundationScripts = _.map(foundationScripts, function (path) {
-            return "../../foundation-database/" + path;
-          });
-          databaseScripts.unshift(foundationScripts);
-        });
-        databaseScripts = _.flatten(databaseScripts);
-      }
-      // If the user requests the inventory/mfg foundation, add the frozen manifest
+
+      // supported use cases:
+
+      // 1. add mobilized inventory to quickbooks
+      // need the frozen_manifest, the foundation/manifest, and the mobile manifest
+      // -e ../private-extensions/source/inventory -f
+      // useFrozenScripts, useFoundationScripts
+
+      // 2. add mobilized inventory to masterref (foundation inventory is already there)
+      // need the the foundation/manifest and the mobile manifest
+      // -e ../private-extensions/source/inventory
+      // useFoundationScripts
+
+      // 3. add unmobilized inventory to quickbooks
+      // need the frozen_manifest and the foundation/manifest
+      // -e ../private-extensions/source/inventory/foundation-database -f
+      // useFrozenScripts (useFoundationScripts already taken care of by -e path)
+
+      // 4. upgrade unmobilized inventory
+      // not sure if this is necessary, but it would look like
+      // -e ../private-extensions/source/inventory/foundation-database
+
       if (options.useFrozenScripts) {
         // Frozen files are not idempotent and should only be run upon first registration
-        safeToolkit = fs.readFileSync(path.join(dbSourceRoot, "frozen_manifest.js"));
-        databaseScripts.unshift(JSON.parse(safeToolkit).databaseScripts);
+        extraManifestPath = alterPaths ?
+         path.join(dbSourceRoot, "../../foundation-database/frozen_manifest.js") :
+         path.join(dbSourceRoot, "frozen_manifest.js");
+
+        extraManifest = fs.readFileSync(extraManifestPath);
+        extraManifestScripts = JSON.parse(extraManifest).databaseScripts;
+        if (alterPaths) {
+          extraManifestScripts = _.map(extraManifestScripts, function (path) {
+            return "../../foundation-database/" + path;
+          });
+        }
+        databaseScripts.unshift(extraManifestScripts);
+        databaseScripts = _.flatten(databaseScripts);
+      }
+      if (options.useFoundationScripts) {
+        extraManifest = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js"));
+        extraManifestScripts = JSON.parse(extraManifest).databaseScripts;
+        extraManifestScripts = _.map(extraManifestScripts, function (path) {
+          return "../../foundation-database/" + path;
+        });
+        databaseScripts.unshift(extraManifestScripts);
         databaseScripts = _.flatten(databaseScripts);
       }
 
