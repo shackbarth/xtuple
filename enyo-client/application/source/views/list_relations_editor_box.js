@@ -511,8 +511,6 @@ trailing:true, white:true*/
       this.inherited(arguments);
       var model = this.value.quote || this.value.salesOrder;
       this.$.summaryPanel.setValue(model);
-      // change the styling of the last button to make room for the new button
-      this.$.doneButton.setClasses("xv-groupbox-button-center");
     }
   });
 

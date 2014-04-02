@@ -139,9 +139,9 @@ trailing:true, white:true, strict:false*/
         if (enyo.platform.touch) {
           panels.createComponents([
             {kind: "XV.ProjectTasksBox", attr: "tasks",
-              addBefore: this.$.projectCommentBox},
+              addBefore: this.$.projectCommentBox, classes: "medium-panel"},
             {kind: "XV.ProjectWorkflowBox", attr: "workflow",
-              addBefore: this.$.projectCommentBox}
+              addBefore: this.$.projectCommentBox, classes: "medium-panel"}
           ], {owner: this});
         } else {
           panels.createComponents([

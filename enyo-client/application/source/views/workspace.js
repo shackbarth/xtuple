@@ -1276,7 +1276,7 @@ strict: false*/
       if (enyo.platform.touch) {
         this.$.panels.createComponents([
           {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", attr: "lineItems",
-            title: "_lineItems".loc(), addBefore: this.$.settingsPanel}
+            title: "_lineItems".loc(), addBefore: this.$.settingsPanel, classes: "medium-panel"}
         ], {owner: this});
       } else {
         this.$.panels.createComponents([
@@ -1302,7 +1302,7 @@ strict: false*/
       effectiveKey: "invoice.invoiceDate"
     },
     components: [
-      {kind: "Panels", name: "salesLinePanels", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -1822,7 +1822,8 @@ strict: false*/
       if (enyo.platform.touch) {
         this.$.panels.createComponents([
           {kind: "XV.ReturnLineItemBox", name: "returnLineItemBox",
-            attr: "lineItems", title: "_lineItems".loc(), addBefore: this.$.settingsPanel}
+            attr: "lineItems", title: "_lineItems".loc(),
+              addBefore: this.$.settingsPanel, classes: "medium-panel"}
         ], {owner: this});
       } else {
         this.$.panels.createComponents([
@@ -1848,7 +1849,7 @@ strict: false*/
       effectiveKey: "return.returnDate"
     },
     components: [
-      {kind: "Panels", name: "salesLinePanels", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -2095,7 +2096,7 @@ strict: false*/
       if (enyo.platform.touch) {
         this.$.panels.createComponents([
           {kind: "XV.QuoteLineItemBox", attr: "lineItems", title: "_lineItems".loc(),
-            addBefore: this.$.settingsPanel}
+            addBefore: this.$.settingsPanel, classes: "medium-panel"}
         ], {owner: this});
       } else {
         this.$.panels.createComponents([
@@ -2119,7 +2120,7 @@ strict: false*/
       onBarcodeCapture: "handleBarcodeCapture"
     },
     components: [
-      {kind: "Panels", name: "salesLinePanels", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -2204,7 +2205,7 @@ strict: false*/
       });
 
       // Add the Comment Box to Panels
-      this.$.salesLinePanels.createComponents([comments], {owner: this});
+      this.$.panels.createComponents([comments], {owner: this});
     },
     handleBarcodeCapture: function (inSender, inEvent) {
       this.$.itemSiteWidget.$.privateItemSiteWidget.$.input.setValue(inEvent.data);
@@ -2383,12 +2384,12 @@ strict: false*/
       if (enyo.platform.touch) {
         this.$.panels.createComponents([
           {kind: "XV.SalesOrderLineItemBox", name: "salesOrderLineItemBox",
-            attr: "lineItems", addBefore: this.$.settingsPanel},
+            attr: "lineItems", addBefore: this.$.settingsPanel, classes: "medium-panel"},
         ], {owner: this});
 
         this.$.panels.createComponents([
           {kind: "XV.SalesOrderWorkflowBox", attr: "workflow", title: "_workflow".loc(),
-            addBefore: this.$.salesOrderCommentBox}
+            addBefore: this.$.salesOrderCommentBox, classes: "medium-panel"}
         ], {owner: this});
       } else {
         this.$.panels.createComponents([
