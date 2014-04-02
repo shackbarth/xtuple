@@ -11,8 +11,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     fs = require('fs'),
     os = require('os'),
     path = require('path'),
-    winston = require('winston'),
-    dataSource = require('../../node-datasource/lib/ext/datasource').dataSource;
+    dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
+    winston = require('winston');
 
   var explodeManifest = function (manifestFilename, options, manifestCallback) {
     var dbSourceRoot = path.dirname(manifestFilename);
