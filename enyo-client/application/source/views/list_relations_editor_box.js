@@ -133,7 +133,7 @@ trailing:true, white:true*/
   enyo.kind({
     name: "XV.CustomerShipToBox",
     kind: "XV.ListRelationsEditorBox",
-    classes: "xv-short-relations-box",
+    classes: "small-panel",
     title: "_shipTo".loc(),
     editor: "XV.CustomerShipToEditor",
     parentKey: "customer",
@@ -511,8 +511,6 @@ trailing:true, white:true*/
       this.inherited(arguments);
       var model = this.value.quote || this.value.salesOrder;
       this.$.summaryPanel.setValue(model);
-      // change the styling of the last button to make room for the new button
-      this.$.doneButton.setClasses("xv-groupbox-button-center");
     }
   });
 
@@ -527,12 +525,10 @@ trailing:true, white:true*/
 
   enyo.kind({
     name: "XV.SalesSummaryPanel",
-    classes: "xv-sales-summary-panel",
     kind: "XV.RelationsEditor",
     style: "margin-top: 10px;",
     components: [
-      {kind: "XV.Groupbox", name: "totalGroup", classes: "xv-sales-summary-total-group",
-          components: [
+      {kind: "XV.Groupbox", name: "totalGroup", components: [
         {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
         {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
           {kind: "FittableRows", name: "summaryColumnOne", components: [

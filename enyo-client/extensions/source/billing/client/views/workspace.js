@@ -178,6 +178,7 @@
   enyo.kind({
     name: 'XV.SalesCategoryWorkspace',
     kind: 'XV.Workspace',
+    model: 'XM.SalesCategory',
     view: 'XM.SalesCategoryView',
     title: '_salesCategory'.loc(),
 

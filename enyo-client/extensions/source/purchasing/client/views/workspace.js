@@ -253,7 +253,6 @@ trailing:true, white:true, strict: false*/
               {kind: "XV.TextArea", attr: "notes", fit: true}
             ]}
           ]},
-          {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"},
           {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(),
             components: [
             {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
@@ -271,8 +270,7 @@ trailing:true, white:true, strict: false*/
               ]}
             ]}
           ]},
-          {kind: "FittableRows", title: "_workflow".loc(), name: "workflowPanel"},
-          {kind: "XV.PurchaseOrderCommentBox", attr: "comments"}
+          {kind: "XV.PurchaseOrderCommentBox", name: "commentsPanel", attr: "comments"}
         ]}
       ],
       attributesChanged: function (inSender, inEvent) {
@@ -288,20 +286,22 @@ trailing:true, white:true, strict: false*/
       create: function () {
         this.inherited(arguments);
         if (enyo.platform.touch) {
-          this.$.lineItemsPanel.createComponents([
+          this.$.panels.createComponents([
             {kind: "XV.PurchaseOrderLineBox", name: "purchaseOrderLineItemBox",
-              attr: "lineItems", fit: true}
+              attr: "lineItems", addBefore: this.$.settingsPanel}
           ], {owner: this});
-          this.$.workflowPanel.createComponents([
-            {kind: "XV.PurchaseOrderWorkflowBox", attr: "workflow", fit: true}
+          this.$.panels.createComponents([
+            {kind: "XV.PurchaseOrderWorkflowBox", attr: "workflow",
+              addBefore: this.$.commentsPanel}
           ], {owner: this});
         } else {
-          this.$.lineItemsPanel.createComponents([
+          this.$.panels.createComponents([
             {kind: "XV.PurchaseOrderLineGridBox", name: "purchaseOrderLineItemBox",
-              attr: "lineItems", fit: true}
+              attr: "lineItems", addBefore: this.$.settingsPanel}
           ], {owner: this});
-          this.$.workflowPanel.createComponents([
-            {kind: "XV.PurchaseOrderWorkflowGridBox", attr: "workflow", fit: true}
+          this.$.panels.createComponents([
+            {kind: "XV.PurchaseOrderWorkflowGridBox", attr: "workflow",
+              addBefore: this.$.commentsPanel}
           ], {owner: this});
         }
         this.processExtensions(true);

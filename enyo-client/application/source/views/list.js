@@ -918,10 +918,10 @@ trailing:true, white:true, strict: false*/
           {kind: "XV.ListColumn", classes: "third", components: [
             {kind: "XV.ListAttr", attr: "shared", formatter: "formatShared"}
           ]},
-          {kind: "XV.ListColumn", classes: "icon", components: [
+          {kind: "XV.ListColumn",  components: [
             {tag: "i", classes: "icon-remove list-icon", ontap: "removeRow"}
           ]},
-          {kind: "XV.ListColumn", classes: "icon", components: [
+          {kind: "XV.ListColumn", components: [
             {tag: "i", classes: "icon-signout list-icon", ontap: "shareRow"}
           ]}
         ]}
