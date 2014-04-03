@@ -493,7 +493,13 @@ select xt.install_js('XT','Data','xtuple', $$
             }
             orderByIdentifiers.push(orderBy[i].attribute);
             orderByColumnIdentifiers.push("t1");
-            orderByColumnIdentifiers.push(prop.attr.column);
+            /*
+              We might need to look at toOne if the client is asking for a toOne without specifying
+              the path. Unfortunately, if they do specify the path, then sql2 will fail. So this does
+              work, although we're really sorting by the primary key of the toOne, whereas the 
+              user probably wants us to sort by the natural key TODO
+            */
+            orderByColumnIdentifiers.push(prop.attr ? prop.attr.column : prop.toOne.column);
             orderByParams.push("%" + orderByIdentifiers.length + "$I");
             orderByColumnParams.push("%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I");
             groupByColumnParams.push("%" + (orderByColumnIdentifiers.length - 1) + "$I.%" + orderByColumnIdentifiers.length + "$I");
