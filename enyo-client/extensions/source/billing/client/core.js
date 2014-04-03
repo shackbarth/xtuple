@@ -9,7 +9,7 @@ white:true*/
   XT.extensions.billing = {
     name: "billing",
     setVersion: function () {
-      XT.setVersion("1.4.6", XT.extensions.billing.name);
+      XT.setVersion("", XT.extensions.billing.name);
     }
   };
 
