@@ -2386,7 +2386,6 @@ strict: false*/
           {kind: "XV.SalesOrderLineItemBox", name: "salesOrderLineItemBox",
             attr: "lineItems", addBefore: this.$.settingsPanel, classes: "medium-panel"},
         ], {owner: this});
-
         this.$.panels.createComponents([
           {kind: "XV.SalesOrderWorkflowBox", attr: "workflow", title: "_workflow".loc(),
             addBefore: this.$.salesOrderCommentBox, classes: "medium-panel"}

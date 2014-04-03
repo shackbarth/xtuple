@@ -91,7 +91,7 @@ trailing:true, white:true, strict: false*/
 
     extensions = [
       {kind: "XV.Groupbox", name: "supplyPanel", title: "_supply".loc(),
-        fit: true, components: [
+        components: [
         {kind: "onyx.GroupboxHeader", content: "_supply".loc()},
         {kind: "XV.CheckboxWidget", attr: "isPurchased", name: "isPurchased"}
       ], container: "panels"}
