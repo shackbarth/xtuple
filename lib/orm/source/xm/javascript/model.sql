@@ -155,6 +155,353 @@ select xt.install_js('XM','Model','xtuple', $$
   };
 
   /**
+   Returns a complex query's results.
+   Sample usage:
+    select xt.post('{
+      "username": "admin",
+      "nameSpace": "XM",
+      "type": "Model",
+      "dispatch":{
+        "functionName":"query",
+        "parameters":[
+          "Address", {"query": {"parameters": [{"attribute": "city","operator": "=","value": "Norfolk"}]}}
+        ]
+      }
+    }');
+
+   @param {String} recordType to query
+   @param {Object} options: query
+   @returns Object
+  */
+  XM.Model.query = function (recordType, options) {
+    options = options || {};
+    var query = {};
+
+    if (recordType && options && options.query) {
+      query.username = XT.username;
+      query.nameSpace = 'XM';
+      query.type = recordType;
+      query.query = options.query;
+    }
+
+    result = XT.Rest.get(query);
+
+    return result;
+  };
+  XM.Model.query.scope = "Model";
+  XM.Model.query.description = "Perform an complex query on a resource. This allows you to use a POST body for the query vs. a long URL.";
+  XM.Model.query.request = {
+    "$ref": "Query"
+  };
+  XM.Model.query.parameterOrder = ["recordType", "options"];
+  // For JSON-Schema deff, see:
+  // https://github.com/fge/json-schema-validator/issues/46#issuecomment-14681103
+  XM.Model.query.schema = {
+    Query: {
+      properties: {
+        attributes: {
+          title: "Service request attributes",
+          description: "An array of attributes needed to perform a complex query.",
+          type: "array",
+          items: [
+            {
+              title: "Resource",
+              description: "The resource to query.",
+              type: "string",
+              required: true
+            },
+            {
+              title: "Options",
+              type: "object",
+              "$ref": "QueryOptions"
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2,
+          required: true
+        }
+      }
+    },
+    QueryOptions: {
+      properties: {
+        query: {
+          title: "query",
+          description: "The query to perform.",
+          type: "object",
+          "$ref": "QueryOptionsQuery"
+        }
+      }
+    },
+    QueryOptionsQuery: {
+      properties: {
+        parameters: {
+          title: "Parameters",
+          description: "The query parameters.",
+          type: "array",
+          items: [
+            {
+              title: "Attribute",
+              type: "object",
+              "$ref": "QueryOptionsParameters"
+            }
+          ],
+          "minItems": 1
+        },
+        orderBy: {
+          title: "Order By",
+          description: "The query order by.",
+          type: "array",
+          items: [
+            {
+              title: "Attribute",
+              type: "object",
+              "$ref": "QueryOptionsOrderBy"
+            }
+          ]
+        },
+        rowlimit: {
+          title: "Row Limit",
+          description: "The query for paged results.",
+          type: "integer"
+        },
+        maxresults: {
+          title: "Max Results",
+          description: "The query limit for total results.",
+          type: "integer"
+        },
+        pagetoken: {
+          title: "Page Token",
+          description: "The query offset page token.",
+          type: "integer"
+        },
+        count: {
+          title: "Count",
+          description: "Set to true to return only the count of results for this query.",
+          type: "boolean"
+        }
+      }
+    },
+    QueryOptionsParameters: {
+      properties: {
+        attribute: {
+          title: "Attribute",
+          description: "The column name used to construct the query's WHERE clasues.",
+          type: "string",
+          required: true
+        },
+        operator: {
+          title: "Operator",
+          description: "The operator used to construct the query's WHERE clasues.",
+          type: "string"
+        },
+        value: {
+          title: "Value",
+          description: "The value used to construct the query's WHERE clasues.",
+          required: true
+        }
+      }
+    },
+    QueryOptionsOrderBy: {
+      properties: {
+        attribute: {
+          title: "Attribute",
+          description: "The column name used to construct the query's ORDER BY.",
+          type: "string",
+          required: true
+        },
+        descending: {
+          title: "Direction",
+          description: "Set to true so the query's ORDER BY will be DESC.",
+          type: "boolean"
+        }
+      }
+    }
+  };
+
+  /**
+   Returns a complex query's results using the REST query structure. This is a
+   wrapper for XM.Model.query that reformats the query structure from a
+   rest_query to our XT.Rest structure. This dispatch function can be used by
+   a REST API client to query a resource when the query would be too long to
+   pass to the API as a GET URL query.
+
+   Sample usage:
+    select xt.post('{
+      "username": "admin",
+      "nameSpace": "XM",
+      "type": "Model",
+      "dispatch":{
+        "functionName":"restQuery",
+        "parameters":["Address", {"query": [{"city":{"EQUALS":"Norfolk"}}], "orderby": [{"ASC": "line1"}, {"DESC": "line2"}]}]
+      }
+    }');
+
+   @param {String} recordType to query
+   @param {Object} options: query
+   @returns Object
+  */
+  XM.Model.restQuery = function (recordType, options) {
+    options = options || {};
+    var order = {},
+        param = {},
+        query = {},
+        mapOperator = function (op) {
+          var operators = {
+                value: {
+                  ANY:          'ANY',
+                  NOT_ANY:      'NOT ANY',
+                  EQUALS:       '=',
+                  NOT_EQUALS:   '!=',
+                  LESS_THAN:    '<',
+                  AT_MOST:      '<=',
+                  GREATER_THAN: '>',
+                  AT_LEAST:     '>=',
+                  MATCHES:      'MATCHES',
+                  BEGINS_WITH:  'BEGINS_WITH'
+                }
+              };
+
+          return operators.value[op];
+        };
+
+    /* Convert from rest_query to XM.Model.query structure. */
+    if (recordType && options) {
+      if (options.query) {
+        query.parameters = [];
+        for (var i = 0; i < options.query.length; i++) {
+          for (var column in options.query[i]) {
+            for (var op in options.query[i][column]) {
+              param = {};
+              param.attribute = column;
+              param.operator = mapOperator(op);
+              param.value = options.query[i][column][op];
+              query.parameters.push(param);
+            }
+          }
+        }
+      }
+      if (options.orderby || options.orderBy) {
+        options.orderBy = options.orderby || options.orderBy;
+        query.orderBy = [];
+        for (var o = 0; o < options.orderBy.length; o++) {
+          for (var column in options.orderBy[o]) {
+            order = {};
+            order.attribute = options.orderBy[o][column];
+            if (column === 'DESC') {
+              order.descending = true;
+            }
+            query.orderBy.push(order);
+          }
+        }
+      }
+      if (options.rowlimit || options.rowLimit) {
+        options.rowLimit = options.rowlimit || options.rowLimit;
+        query.rowLimit = options.rowLimit;
+      }
+      if (options.maxresults || options.maxResults) {
+        options.maxResults = options.maxresults || options.maxResults;
+        query.rowLimit = options.maxResults;
+      }
+      if (options.pagetoken || options.pageToken) {
+        options.pageToken = options.pagetoken || options.pageToken;
+        if (query.rowLimit) {
+          query.rowOffset = (options.pageToken || 0) * (query.rowLimit);
+        } else {
+          query.rowOffset = (options.pageToken || 0);
+        }
+      }
+      if (options.count) {
+        query.count = options.count;
+      }
+    }
+
+    result = XM.Model.query(recordType, {"query": query});
+
+    return result;
+  };
+  XM.Model.restQuery.description = "Perform an complex query on a resource using the REST query structure. This allows you to use a POST body for the query vs. a long URL.";
+  XM.Model.restQuery.request = {
+    "$ref": "RestQuery"
+  };
+  XM.Model.restQuery.parameterOrder = ["recordType", "options"];
+  // For JSON-Schema deff, see:
+  // https://github.com/fge/json-schema-validator/issues/46#issuecomment-14681103
+  XM.Model.restQuery.schema = {
+    RestQuery: {
+      properties: {
+        attributes: {
+          title: "Service request attributes",
+          description: "An array of attributes needed to perform a complex query.",
+          type: "array",
+          items: [
+            {
+              title: "Resource",
+              description: "The resource to query.",
+              type: "string",
+              required: true
+            },
+            {
+              title: "Options",
+              type: "object",
+              "$ref": "RestQueryOptions"
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2,
+          required: true
+        }
+      }
+    },
+    RestQueryOptions: {
+      properties: {
+        query: {
+          title: "query",
+          description: "The query to perform.",
+          type: "array",
+          items: [
+            {
+              title: "column",
+              type: "object"
+            }
+          ],
+          "minItems": 1
+        },
+        orderby: {
+          title: "Order By",
+          description: "The query order by.",
+          type: "array",
+          items: [
+            {
+              title: "column",
+              type: "object"
+            }
+          ]
+        },
+        rowlimit: {
+          title: "Row Limit",
+          description: "The query for paged results.",
+          type: "integer"
+        },
+        maxresults: {
+          title: "Max Results",
+          description: "The query limit for total results.",
+          type: "integer"
+        },
+        pagetoken: {
+          title: "Page Token",
+          description: "The query offset page token.",
+          type: "integer"
+        },
+        count: {
+          title: "Count",
+          description: "Set to true to return only the count of results for this query.",
+          type: "boolean"
+        }
+      }
+    }
+  };
+
+  /**
     Used to determine whether a model is used or not.
 
     @param {String} Record Type
@@ -178,9 +525,9 @@ select xt.install_js('XM','Model','xtuple', $$
       attr,
       seq,
       tableName,
-      fkIndex, 
-      fkey, 
-      propIndex, 
+      fkIndex,
+      fkey,
+      propIndex,
       probObj;
 
     if (nkey) {
@@ -237,7 +584,7 @@ select xt.install_js('XM','Model','xtuple', $$
 
     if (DEBUG) { XT.debug('XM.Model.used keys length:', fkeys.length) }
     if (DEBUG) { XT.debug('XM.Model.used keys:', JSON.stringify(fkeys)) }
-    
+
     for (i = 0; i < fkeys.length; i++) {
       /* Validate */
 
@@ -268,5 +615,5 @@ select xt.install_js('XM','Model','xtuple', $$
   XM.Model.used = function(recordType, id) {
     return XM.PrivateModel.used(recordType, id);
   };
-  
+
 $$ );
