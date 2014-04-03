@@ -1648,6 +1648,10 @@ body {
   text-align: right;
   vertical-align: middle;
 }
+.xv-popup.xv-groupbox-popup.xv-assignment-box .xv-flexible-label,
+.xv-popup.xv-groupbox-popup.xv-assignment-box .xv-label {
+  width: 200px !important;
+}
 .xv-popup.xv-groupbox-popup .xv-input {
   border-bottom: 1px solid #d7d7d7;
   margin: 0px;
@@ -1714,22 +1718,6 @@ body {
 .icon-sort {
   color: #357ec7;
   vertical-align: middle;
-}
-.xv-label,
-.xv-flexible-label {
-  padding: 8px;
-  text-align: right;
-}
-.xv-label.disabled,
-.xv-flexible-label.disabled {
-  color: #777777;
-}
-/**
-  This label style has a fixed width, while
-  the flexible label depends on a fit: true
-*/
-.xv-label {
-  width: 130px;
 }
 .xv-short-textarea .xv-textarea-input {
   min-height: 0;
@@ -1969,6 +1957,10 @@ body {
   padding: 0 8px 0 6px;
   text-align: right;
   vertical-align: middle;
+}
+.xv-workspace-container .xv-workspace .xv-workspace-panel.xv-assignment-box .xv-flexible-label,
+.xv-workspace-container .xv-workspace .xv-workspace-panel.xv-assignment-box .xv-label {
+  width: 200px !important;
 }
 .xv-workspace-container .xv-workspace .xv-workspace-panel .xv-input {
   border-bottom: 1px solid #d7d7d7;
@@ -2769,6 +2761,10 @@ body {
   text-align: right;
   vertical-align: middle;
 }
+.xv-pullout .xv-parameter-panel.xv-assignment-box .xv-flexible-label,
+.xv-pullout .xv-parameter-panel.xv-assignment-box .xv-label {
+  width: 200px !important;
+}
 .xv-pullout .xv-parameter-panel .xv-input {
   border-bottom: 1px solid #d7d7d7;
   margin: 0px;
@@ -3074,6 +3070,10 @@ body {
   padding: 0 8px 0 6px;
   text-align: right;
   vertical-align: middle;
+}
+.xv-search .xv-search-container.xv-assignment-box .xv-flexible-label,
+.xv-search .xv-search-container.xv-assignment-box .xv-label {
+  width: 200px !important;
 }
 .xv-search .xv-search-container .xv-input {
   border-bottom: 1px solid #d7d7d7;
