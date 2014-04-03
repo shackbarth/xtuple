@@ -245,7 +245,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   params[pcount] += ' ' + op + ' ARRAY[' + param.value.join(',') + ']' + pgType;
                 } else {
                   childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
-                  sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                  sourceTableAlias = n === 0 ? "t1" : "jt" + (joins.length - 1);
                   joinIdentifiers.push(
                     this.getNamespaceFromNamespacedTable(childOrm.table),
                     this.getTableFromNamespacedTable(childOrm.table),
@@ -341,7 +341,7 @@ select xt.install_js('XT','Data','xtuple', $$
                         params[pcount] = "lower(" + params[pcount] + ")";
                       }
                     } else {
-                      sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                      sourceTableAlias = n === 0 ? "t1" : "jt" + (joins.length - 1);
                       if (prop.toOne && prop.toOne.type) {
                         childOrm = this.fetchOrm(nameSpace, prop.toOne.type);
                         joinIdentifiers.push(
@@ -472,7 +472,7 @@ select xt.install_js('XT','Data','xtuple', $$
               } else {
                 orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
                 orm = this.fetchOrm(nameSpace, prop.toOne.type);
-                sourceTableAlias = n === 0 ? "t1" : "jt" + joins.length - 1;
+                sourceTableAlias = n === 0 ? "t1" : "jt" + (joins.length - 1);
                 joinIdentifiers.push(
                   this.getNamespaceFromNamespacedTable(orm.table),
                   this.getTableFromNamespacedTable(orm.table),
