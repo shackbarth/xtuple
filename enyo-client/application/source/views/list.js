@@ -1885,7 +1885,7 @@ trailing:true, white:true, strict: false*/
 
         afterSalesOrderCreated = function () {
           var value = this.getValue(),
-            gridBox = this.$.salesOrderLineItemGridBox;
+            gridBox = this.$.salesOrderLineItemBox;
 
           value.setStatus(XM.Model.BUSY_FETCHING);
           value.set(attrs);
