@@ -3136,7 +3136,7 @@ strict: false*/
     },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, classes: "xv-top-panel", components: [
+        fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
@@ -3153,10 +3153,6 @@ strict: false*/
             {kind: "XV.CheckboxWidget", attr: "useEnhancedAuth"},
             {kind: "XV.CheckboxWidget", attr: "disableExport"},
             {kind: "XV.CheckboxWidget", attr: "isAgent"},
-            // normally I'd put classes: "xv-assignment-box" into the container of the
-            // assignmentbox, but there is no such container here. Maybe some CSS work
-            // to be done now that assignmentbox is the thing inside the thing instead
-            // of the thing and the container all together.
             {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
             {kind: "XV.UserAccountExtensionAssignmentBox", attr: "grantedExtensions",
               name: "grantedExtensions" },
@@ -3165,11 +3161,14 @@ strict: false*/
               name: "grantedRoles" },
           ]}
         ]},
-        {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
-            title: "_privileges".loc(), components: [
+        {kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(),
+          classes: "xv-assignment-box", components: [
           {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
-          {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges",
-            name: "grantedPrivileges" }
+          {kind: "XV.ScrollableGroupbox", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges",
+              name: "grantedPrivileges"}
+          ]}
         ]}
       ]}
     ],
