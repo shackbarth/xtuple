@@ -24,8 +24,7 @@ XT.extensions.billing.initCashReceipt = function () {
         documentDate: new Date(),
         amount: 0,
         appliedAmount: 0,
-        balance: 0,
-        lineItems: new XM.CashReceiptLineCollection()
+        balance: 0
       };
     },
 
@@ -512,14 +511,6 @@ XT.extensions.billing.initCashReceipt = function () {
    */
   XM.CashReceiptRelationCollection = XM.Collection.extend({
     model: XM.CashReceiptRelation
-  });
-
-  /**
-   * @class XM.CashReceiptCollection
-   * @extends XM.Collection
-   */
-  XM.CashReceiptLineCollection = XM.Collection.extend({
-    model: XM.CashReceiptLine
   });
 
   /**

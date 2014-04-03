@@ -1273,7 +1273,7 @@ strict: false*/
     ],
     create: function () {
       this.inherited(arguments);
-      if (enyo.platform.touch) {
+      if (true || enyo.platform.touch) {
         this.$.panels.createComponents([
           {kind: "XV.InvoiceLineItemBox", name: "invoiceLineItemBox", attr: "lineItems",
             title: "_lineItems".loc(), addBefore: this.$.settingsPanel, classes: "medium-panel"}
