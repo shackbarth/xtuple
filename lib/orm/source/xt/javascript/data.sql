@@ -259,10 +259,28 @@ select xt.install_js('XT','Data','xtuple', $$
               }
             } else {
               prop = XT.Orm.getProperty(orm, param.attribute);
-              if (!prop) {
-                plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
+              pertinentExtension = XT.Orm.getProperty(orm, param.attribute, true);
+              plv8.elog(NOTICE, "HELLO");
+              plv8.elog(NOTICE, "HELLO", JSON.stringify(pertinentExtension));
+              if(pertinentExtension.isChild || pertinentExtension.isExtension) {
+                /* We'll need to join this orm extension */
+                fromKeyProp = XT.Orm.getProperty(orm, pertinentExtension.relations[0].inverse);
+                joinIdentifiers.push(
+                  this.getNamespaceFromNamespacedTable(pertinentExtension.table),
+                  this.getTableFromNamespacedTable(pertinentExtension.table),
+                  fromKeyProp.attr.column,
+                  pertinentExtension.relations[0].column);
+                joins.push("left join %" + (joinIdentifiers.length - 3) + "$I.%" + (joinIdentifiers.length - 2)
+                  + "$I jt" + joins.length + " on t1.%"
+                  + (joinIdentifiers.length - 1) + "$I = jt" + joins.length + ".%" + joinIdentifiers.length + "$I");
               }
-              identifiers.push("t1");
+              if (!prop) {
+                plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute);
+              }
+
+              identifiers.push(pertinentExtension.isChild || pertinentExtension.isExtension ? 
+                "jt" + (joins.length - 1) : 
+                "t1");
               identifiers.push(prop.attr.column);
               pgType = this.getPgTypeFromOrmType(
                 this.getNamespaceFromNamespacedTable(orm.table),
