@@ -260,8 +260,6 @@ select xt.install_js('XT','Data','xtuple', $$
             } else {
               prop = XT.Orm.getProperty(orm, param.attribute);
               pertinentExtension = XT.Orm.getProperty(orm, param.attribute, true);
-              plv8.elog(NOTICE, "HELLO");
-              plv8.elog(NOTICE, "HELLO", JSON.stringify(pertinentExtension));
               if(pertinentExtension.isChild || pertinentExtension.isExtension) {
                 /* We'll need to join this orm extension */
                 fromKeyProp = XT.Orm.getProperty(orm, pertinentExtension.relations[0].inverse);
