@@ -80,7 +80,7 @@ var _ = require("underscore"),
         assert.isNull(err);
         assert.equal(1, res.rowCount, JSON.stringify(res.rows));
         results = JSON.parse(res.rows[1].get);
-        assert.equal(results.data.length, 29);
+        assert.isNumber(results.data.length);
         done();
       });
     });
@@ -296,6 +296,11 @@ var _ = require("underscore"),
         done();
       });
     });
+
+
+    // T&E
+//select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ItemRelation","query":{"parameters":[{"attribute":"projectExpenseMethod","operator":"=","value":"E"},{"attribute":"isActive","value":true},{"attribute":"number","operator":"BEGINS_WITH","value":"pro","keySearch":false}],"orderBy":[{"attribute":"number"}],"rowLimit":1},"username":"admin","encryptionKey":"this is any content"}$$)
+//select xt.js_init(true);select xt.get($${"nameSpace":"XM","type":"ItemRelation","query":{"parameters":[{"attribute":"projectExpenseMethod","operator":"ANY","value":["E","A"]},{"attribute":"isActive","value":true},{"attribute":"number","operator":"BEGINS_WITH","value":"pro","keySearch":false}],"orderBy":[{"attribute":"number"}],"rowLimit":1},"username":"admin","encryptionKey":"this is any content"}$$)
 
   });
 }());
