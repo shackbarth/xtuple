@@ -18,13 +18,15 @@ Backbone:true, _:true, X:true, __dirname:true, exports:true, module: true */
       callbacks: { },
 
       getAdminCredentials: function (organization) {
-        return {
+        var creds = {
           user: X.options.databaseServer.user,
           host: X.options.databaseServer.hostname,
           port: X.options.databaseServer.port,
           database: organization,
           password: X.options.databaseServer.password
         };
+        console.log(creds);
+        return creds;
       },
 
       /**

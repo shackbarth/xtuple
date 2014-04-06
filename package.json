@@ -50,7 +50,7 @@
     "mocha": "1.9.x",
     "require-uncache": "0.0.x",
     "html5": "0.3.13",
-    "zombie": "1.4.x",
+    "zombie": "2.x",
     "csslint": "~0.10.0",
     "nodemon": "~1.0.15"
   },
