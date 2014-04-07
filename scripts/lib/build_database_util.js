@@ -52,6 +52,45 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return deleteSql + insertSql;
   };
 
+  var convertToReport = function (content) {
+    var lines = content.split("\n"),
+      name,
+      description,
+      deleteSql,
+      insertSql;
+
+    if (lines[3].indexOf(" <name>") !== 0 ||
+        lines[4].indexOf(" <description>") !== 0) {
+      throw new Error("Improperly formatted report");
+    }
+    name = lines[3].substring(" <name>".length).trim();
+    name = name.substring(0, name.indexOf("<"));
+    description = lines[4].substring(" <description>".length).trim();
+    description = description.substring(0, name.indexOf("<"));
+
+    deleteSql = "delete from report " +
+      "where report_name = '" + name +
+      "' and report_grade = 0;";
+
+    insertSql = "insert into report (report_name, report_descrip, " +
+      "report_source, report_loaddate, report_grade) VALUES (" +
+      "'" + name + "'," +
+      "'" + description + "'," +
+      "$$" + content + "$$," +
+      "now(), 0);";
+
+    return deleteSql + insertSql;
+  };
+
+  var conversionMap = {
+    mql: convertToMetasql,
+    xml: convertToReport,
+    sql: function (content) {
+      // no op
+      return content;
+    }
+  };
+
   var explodeManifest = function (manifestFilename, options, manifestCallback) {
     var dbSourceRoot = path.dirname(manifestFilename);
     //
@@ -164,15 +203,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             return;
           }
           var beforeNoticeSql = "do $$ BEGIN RAISE NOTICE 'Loading file " + fullFilename +
-            "'; END $$ language plpgsql;\n";
+              "'; END $$ language plpgsql;\n",
+            extname = path.extname(fullFilename).substring(1);
 
+          // convert special files: metasql, uiforms, reports, uijs
+          scriptContents = conversionMap[extname](scriptContents);
           //
           // Allow inclusion of js files in manifest. If it is a js file,
           // use plv8 to execute it.
           //
-          if (fullFilename.substring(fullFilename.length - 3) === 'mql') {
-            scriptContents = convertToMetasql(scriptContents);
-          }
           //if (fullFilename.substring(fullFilename.length - 2) === 'js') {
             // this isn't quite working yet
             // http://adpgtech.blogspot.com/2013/03/loading-useful-modules-in-plv8.html
