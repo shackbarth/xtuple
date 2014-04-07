@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "RemitTo",
     "table": "xt.remittoinfo",
+    "isRest": true,
     "comment": "Remit To Map",
     "privileges": {
       "all": {
