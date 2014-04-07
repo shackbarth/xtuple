@@ -20,7 +20,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       i = 2,
       name,
       notes = "",
-      sql;
+      deleteSql,
+      insertSql;
 
     if (lines[0].indexOf("-- Group: ") !== 0 ||
         lines[1].indexOf("-- Name: ") !== 0 ||
@@ -35,15 +36,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
     notes = notes.substring("-- Notes: ".length);
 
-    sql = "insert into metasql (metasql_group, metasql_name, metasql_notes, " +
+    deleteSql = "delete from metasql " +
+      "where metasql_group = '" + group +
+      "' and metasql_name = '" + name +
+      "' and metasql_grade = 0;";
+
+    insertSql = "insert into metasql (metasql_group, metasql_name, metasql_notes, " +
       "metasql_query, metasql_lastuser, metasql_lastupdate, metasql_grade) VALUES (" +
-      "$$" + group + "$$," +
-      "$$" + name + "$$," +
+      "'" + group + "'," +
+      "'" + name + "'," +
       "$$" + notes + "$$," +
       "$$" + content + "$$," +
       "'admin', now(), 0);";
 
-    return sql;
+    return deleteSql + insertSql;
   };
 
   var explodeManifest = function (manifestFilename, options, manifestCallback) {
