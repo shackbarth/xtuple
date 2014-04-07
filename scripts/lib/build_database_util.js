@@ -25,7 +25,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     if (lines[0].indexOf("-- Group: ") !== 0 ||
         lines[1].indexOf("-- Name: ") !== 0 ||
-        lines[2].indexOf("-- Notes: ") !== 0) {
+        lines[2].indexOf("-- Notes:") !== 0) {
       throw new Error("Improperly formatted metasql");
     }
     group = lines[0].substring("-- Group: ".length).trim();
@@ -34,7 +34,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       notes = notes + lines[i].substring(2) + "\n";
       i++;
     }
-    notes = notes.substring("-- Notes: ".length);
+    notes = notes.substring("-- Notes:".length);
 
     deleteSql = "delete from metasql " +
       "where metasql_group = '" + group +
