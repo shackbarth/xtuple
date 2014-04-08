@@ -1,0 +1,30 @@
+-- Group: packingListBatchByShipVia
+-- Name: shipVia
+-- Notes: used by printPackingListBatchByShipVia
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+
+SELECT max(id), shipvia
+FROM (
+SELECT max(cohead_id) AS id, cohead_shipvia AS shipvia
+FROM pack, cohead, coitem
+WHERE ( (NOT pack_printed)
+  AND   (cohead_id=pack_head_id)
+  AND   (pack_head_type='SO')
+  AND   (coitem_cohead_id=cohead_id)
+  AND   (coitem_status='O') )
+GROUP BY cohead_shipvia
+<? if exists("MultiWhs") ?>
+UNION
+SELECT max(tohead_id) AS id, tohead_shipvia AS shipvia
+FROM pack, tohead
+WHERE ( (NOT pack_printed)
+  AND   (tohead_status = 'O')
+  AND   (tohead_id=pack_head_id)
+  AND   (pack_head_type='TO') )
+GROUP BY tohead_shipvia
+<? endif ?>
+) data
+GROUP BY shipvia
+ORDER BY shipvia

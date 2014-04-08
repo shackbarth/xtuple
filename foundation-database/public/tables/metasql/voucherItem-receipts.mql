@@ -1,0 +1,33 @@
+-- Group: voucherItem
+-- Name: receipts
+-- Notes: used by voucherItem
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT recv_id AS item_id, 1 AS item_type, 'REC' AS action,
+       recv_date AS item_date,
+       recv_qty AS qty, 'qty' AS qty_xtnumericrole,
+       recv_purchcost AS unitprice, 'curr' AS unitprice_xtnumericrole,
+       formatBoolYN(recv_vohead_id=<? value("vohead_id") ?>) AS f_tagged,
+       <? value("receiving") ?> AS action_qtdisplayrole,
+       0 AS qty_xttotalrole
+FROM recv
+WHERE ( (NOT recv_invoiced)
+  AND   (recv_posted)
+  AND   ((recv_vohead_id IS NULL) OR (recv_vohead_id=<? value("vohead_id") ?>))
+  AND   (recv_orderitem_id=<? value("poitem_id") ?>) )
+
+UNION
+SELECT poreject_id AS item_id, 2 AS item_type, 'REJ' AS action,
+       poreject_date AS item_date,
+       poreject_qty * -1 AS qty, 'qty',
+       COALESCE(recv_purchcost, poitem_unitprice) AS unitprice, 'curr' AS unitprice_xtnumericrole,
+       formatBoolYN(poreject_vohead_id=<? value("vohead_id") ?>) AS f_tagged,
+       <? value("reject") ?> AS action_qtdisplayrole,
+       0 AS qty_xttotalrole
+FROM poreject LEFT OUTER JOIN recv ON (recv_id=poreject_recv_id)
+              LEFT OUTER JOIN poitem ON (poitem_id=poreject_poitem_id)
+WHERE ( (poreject_posted)
+  AND   (NOT poreject_invoiced)
+  AND   ((poreject_vohead_id IS NULL) OR (poreject_vohead_id=<? value("vohead_id") ?>))
+  AND   (poreject_poitem_id=<? value("poitem_id") ?>) );

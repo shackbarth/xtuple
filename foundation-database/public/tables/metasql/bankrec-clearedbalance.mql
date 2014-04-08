@@ -1,0 +1,41 @@
+-- Group: bankrec
+-- Name: clearedbalance
+-- Notes: used by reconcileBankaccount
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT (COALESCE(SUM(amount),0.0) + <? value("begBal") ?>) AS cleared_amount,
+       <? value("endBal") ?> AS end_amount,
+       (<? value("endBal") ?> - (<? value("begBal") ?> + (COALESCE(SUM(amount),0.0)))) AS diff_amount,
+       round(<? value("endBal") ?> - (<? value("begBal") ?> + COALESCE(SUM(amount),0.0)), 2) AS diff_value
+  FROM ( SELECT CASE WHEN (gltrans_amount > 0) THEN bankrecitem_amount * -1.0
+                     ELSE bankrecitem_amount END AS amount
+           FROM bankaccnt, gltrans, bankrecitem
+          WHERE ((gltrans_accnt_id=bankaccnt_accnt_id)
+            AND (bankrecitem_source='GL')
+            AND (bankrecitem_source_id=gltrans_id)
+            AND (bankrecitem_bankrec_id=<? value("bankrecid") ?>)
+            AND (bankrecitem_cleared)
+            AND (NOT gltrans_rec)
+            AND (bankaccnt_id=<? value("bankaccntid") ?>) ) 
+          UNION ALL
+         SELECT CASE WHEN (sltrans_amount > 0) THEN bankrecitem_amount * -1.0
+                     ELSE bankrecitem_amount END AS amount
+           FROM bankaccnt, sltrans, bankrecitem
+          WHERE ((sltrans_accnt_id=bankaccnt_accnt_id)
+            AND (bankrecitem_source='SL')
+            AND (bankrecitem_source_id=sltrans_id)
+            AND (bankrecitem_bankrec_id=<? value("bankrecid") ?>)
+            AND (bankrecitem_cleared)
+            AND (NOT sltrans_rec)
+            AND (bankaccnt_id=<? value("bankaccntid") ?>) )
+          UNION ALL
+         SELECT CASE WHEN(bankadjtype_iscredit=true) THEN (bankadj_amount * -1) ELSE bankadj_amount END AS amount
+           FROM bankadj, bankadjtype, bankrecitem
+          WHERE ( (bankrecitem_source='AD')
+            AND (bankrecitem_source_id=bankadj_id)
+            AND (bankrecitem_bankrec_id=<? value("bankrecid") ?>)
+            AND (bankrecitem_cleared)
+            AND (bankadj_bankadjtype_id=bankadjtype_id)
+            AND (NOT bankadj_posted)
+            AND (bankadj_bankaccnt_id=<? value("bankaccntid") ?>) ) ) AS data;

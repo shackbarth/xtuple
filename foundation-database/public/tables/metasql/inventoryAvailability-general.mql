@@ -1,0 +1,135 @@
+-- Group: inventoryAvailability
+-- Name:  general
+-- Notes: 
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT itemsite_id, altId,
+       item_number, (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+       uom_name,
+       warehous_id, warehous_code, itemsite_leadtime,
+       qoh, allocated, noNeg(qoh - allocated) AS unallocated, 
+       ordered, requests, reorderlevel, outlevel,
+       (qoh - allocated + ordered) AS available,
+       vend_number,
+       'qty' AS qoh_xtnumericrole,
+       'qty' AS allocated_xtnumericrole,
+       'qty' AS unallocated_xtnumericrole,       
+       'qty' AS ordered_xtnumericrole,
+       'qty' AS requests_xtnumericrole,
+       'qty' AS reorderlevel_xtnumericrole,
+       'qty' AS outlevel_xtnumericrole,
+       'qty' AS available_xtnumericrole,
+       <? if exists("byDates") ?>
+         'grey' AS qoh_qtforegroundrole,
+       <? endif ?>
+       CASE WHEN ((qoh - allocated + ordered) < 0) THEN 'error'
+            WHEN ((qoh - allocated + ordered) <= reorderlevel) THEN 'warning'
+       END AS available_qtforegroundrole
+FROM (SELECT 
+           <? if reExists("[vV]end") ?>
+             DISTINCT
+           <? endif ?>
+             itemsite_id,
+             CASE WHEN (item_type IN ('P', 'O')) THEN 1
+                  WHEN (item_type IN ('M')) THEN 2
+                  ELSE 0
+             END AS altId,
+             item_number, item_descrip1, item_descrip2, item_inv_uom_id,
+             warehous_id, warehous_code, itemsite_leadtime,
+             itemsite_qtyonhand AS qoh,
+             CASE WHEN itemsite_useparams THEN itemsite_reorderlevel
+                  ELSE 0.0
+             END AS reorderlevel,
+             CASE WHEN itemsite_useparams THEN itemsite_ordertoqty
+                  ELSE 0.0
+             END AS outlevel,
+             <? if exists("byVend") ?>
+               vend_number,
+             <? else ?>
+               NULL AS vend_number,
+             <? endif ?>
+             <? if exists("byLeadTime") ?>
+               qtyAllocated(itemsite_id, itemsite_leadtime) AS allocated,
+               qtyOrdered(itemsite_id,   itemsite_leadtime) AS ordered, 
+               qtypr(itemsite_id,   itemsite_leadtime) AS requests
+             <? elseif exists("byDays") ?>
+               qtyAllocated(itemsite_id, CAST(<? value("byDays") ?> AS INTEGER)) AS allocated,
+               qtyOrdered(itemsite_id,   CAST(<? value("byDays") ?> AS INTEGER)) AS ordered,
+               qtypr(itemsite_id,   CAST(<? value("byDays") ?> AS INTEGER)) AS requests  
+             <? elseif exists("byDate") ?>
+               qtyAllocated(itemsite_id, (<? value("byDate") ?> - CURRENT_DATE)) AS allocated,
+               qtyOrdered(itemsite_id,   (<? value("byDate") ?> - CURRENT_DATE)) AS ordered,
+               qtypr(itemsite_id,   (<? value("byDate") ?> - CURRENT_DATE)) AS requests 
+             <? elseif exists("byDates") ?>
+               qtyAllocated(itemsite_id, <? value("startDate") ?>, <? value("endDate") ?>) AS allocated,
+               qtyOrdered(itemsite_id,   <? value("startDate") ?>, <? value("endDate") ?>) AS ordered,
+               qtypr(itemsite_id,   <? value("startDate") ?>, <? value("endDate") ?>) AS requests
+             <? endif ?>
+      FROM item, itemsite, whsinfo
+           <? if reExists("[vV]end") ?>
+             , vendinfo JOIN itemsrc ON (itemsrc_vend_id=vend_id)
+           <? endif ?>
+      WHERE ( (itemsite_active)
+          AND (itemsite_item_id=item_id)
+          AND (itemsite_warehous_id=warehous_id)
+          <? if exists("warehous_id") ?>
+            AND (warehous_id=<? value("warehous_id") ?>)
+          <? endif ?>
+          <? if exists("item_id") ?>
+            AND (item_id=<? value("item_id") ?>)
+          <? elseif exists("classcode_id") ?>
+            AND (item_classcode_id=<? value("classcode_id") ?>)
+          <? elseif exists("classcode_pattern") ?>
+            AND (item_classcode_id IN (SELECT classcode_id
+                                       FROM classcode
+                                       WHERE (classcode_code ~ <? value("classcode_pattern") ?>)))
+          <? elseif exists("plancode_id") ?>
+            AND (itemsite_plancode_id=<? value("plancode_id") ?>)
+          <? elseif exists("plancode_pattern") ?>
+            AND (itemsite_plancode_id IN (SELECT plancode_id
+                                          FROM plancode
+                                          WHERE (plancode_code ~ <? value("plancode_pattern") ?>)))
+          <? elseif exists("itemgrp_id") ?>
+            AND (item_id IN (SELECT itemgrpitem_item_id
+                             FROM itemgrpitem
+                             WHERE (itemgrpitem_itemgrp_id=<? value("itemgrp_id") ?>)))
+          <? elseif exists("itemgrp_pattern") ?>
+            AND (item_id IN (SELECT itemgrpitem_item_id
+                             FROM itemgrpitem, itemgrp
+                             WHERE ( (itemgrpitem_itemgrp_id=itemgrp_id)
+                                    AND (itemgrp_name ~ <? value("itemgrp_pattern") ?>) ) ))
+          <? elseif exists("itemgrp") ?>
+            AND (item_id IN (SELECT DISTINCT itemgrpitem_item_id FROM itemgrpitem))
+          <? endif ?>
+          <? if reExists("[vV]end") ?>
+            AND (itemsrc_item_id=item_id)
+          <? endif ?>
+          <? if exists("vend_id") ?>
+            AND (vend_id=<? value("vend_id") ?>)
+          <? elseif exists("vendtype_id") ?>
+            AND (vend_vendtype_id=<? value("vendtype_id") ?>)
+          <? elseif exists("vendtype_pattern") ?>
+            AND (vend_vendtype_id IN (SELECT vendtype_id
+                                      FROM vendtype
+                                      WHERE (vendtype_code ~ <? value("vendtype_pattern") ?>)))
+          <? endif ?>
+      ) ) AS data, uom
+WHERE ((item_inv_uom_id=uom_id)
+<? if exists("showReorder") ?>
+  AND ((qoh - allocated + ordered) <= reorderlevel) 
+  <? if exists("ignoreReorderAtZero") ?>
+    AND NOT ( ((qoh - allocated + ordered) = 0) AND (reorderlevel = 0))
+  <? endif ?>
+<? elseif exists("showShortages") ?>
+  AND ((qoh - allocated + ordered) < 0) 
+<? endif ?>
+)
+
+ORDER BY
+<? if exists("ListNumericItemNumbersFirst") ?>
+  toNumeric(item_number, 999999999999999),
+<? elseif exists("byVend") ?>
+  vend_number,
+<? endif ?>
+  item_number, warehous_code DESC;

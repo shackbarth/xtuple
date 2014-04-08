@@ -1,0 +1,85 @@
+-- Group: projects
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT prj_id AS id, prj_number, prj_name, prj_descrip,
+  prj_start_date, prj_due_date, prj_assigned_date, prj_completed_date, 
+  CASE WHEN(prj_status='P') THEN <? value("planning") ?>
+       WHEN(prj_status='O') THEN <? value("open") ?>
+       WHEN(prj_status='C') THEN <? value("complete") ?>
+       ELSE <? value("undefined") ?>
+  END AS prj_status, 
+  prj_username, prj_owner_username,
+  crmacct_number, formatCntctName(prj_cntct_id) AS contact_name,
+  COALESCE(SUM(prjtask_hours_budget), 0.0) AS budget_hrs,
+  COALESCE(SUM(prjtask_hours_actual), 0.0) AS actual_hrs,
+  COALESCE(SUM(prjtask_hours_budget - prjtask_hours_actual), 0.0) AS balance_hrs, 
+  CASE WHEN COALESCE(SUM(prjtask_hours_budget - prjtask_hours_actual), 0.0) < 0 THEN 
+  'error' END AS balance_hrs_qtforegroundrole, 
+  'qty' AS budget_hrs_xtnumericrole, 
+  'qty' AS actual_hrs_xtnumericrole, 
+  'qty' AS balance_hrs_xtnumericrole 
+FROM prj()
+  LEFT OUTER JOIN prjtask ON (prj_id=prjtask_prj_id)
+  LEFT OUTER JOIN crmacct ON (crmacct_id=prj_crmacct_id)
+WHERE (true)
+<? if exists("search_pattern") ?>
+   AND ( (prj_number ~* <? value("search_pattern") ?>)
+     OR  (prj_name ~* <? value("search_pattern") ?>)
+     OR  (prj_descrip ~* <? value("search_pattern") ?>) )
+<? endif ?>
+<? if exists("username") ?>
+  AND (prj_username=<? value("username") ?> OR prj_owner_username=<? value("username") ?>)
+<? endif ?>
+<? if exists("assigned_username") ?> 
+  AND (prj_username=<? value("assigned_username") ?>) 
+<? elseif exists("assigned_usr_pattern") ?>
+  AND (prj_username ~ <? value("assigned_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("owner_username") ?> 
+  AND (prj_owner_username=<? value("owner_username") ?>) 
+<? elseif exists("owner_usr_pattern") ?>
+  AND (prj_owner_username ~ <? value("owner_usr_pattern") ?>) 
+<? endif ?>
+<? if exists("crmacct_id") ?>
+  AND (prj_crmacct_id=<? value("crmacct_id") ?>)
+<? endif ?>
+<? if exists("cntct_id") ?>
+  AND (prj_cntct_id=<? value("cntct_id") ?>)
+<? endif ?>
+<? if exists("startStartDate") ?>
+  AND (prj_start_date >= <? value("startStartDate") ?>)
+<? endif ?>
+<? if exists("startEndDate") ?>
+  AND (prj_start_date <= <? value("startEndDate") ?>)
+<? endif ?>
+<? if exists("dueStartDate") ?>
+  AND (prj_due_date >= <? value("dueStartDate") ?>)
+<? endif ?>
+<? if exists("dueEndDate") ?>
+  AND (prj_due_date <= <? value("dueEndDate") ?>)
+<? endif ?>
+<? if exists("assignedStartDate") ?>
+  AND (prj_assigned_date >= <? value("assignedStartDate") ?>)
+<? endif ?>
+<? if exists("assignedEndDate") ?>
+  AND (prj_assigned_date <= <? value("assignedEndDate") ?>)
+<? endif ?>
+<? if exists("completedStartDate") ?>
+  AND (prj_completed_date >= <? value("completedStartDate") ?>)
+<? endif ?>
+<? if exists("completedEndDate") ?>
+  AND (prj_completed_date <= <? value("completedEndDate") ?>)
+<? endif ?>
+<? if not exists("showComplete") ?>
+  AND (prj_status <> 'C')
+<? endif ?>
+<? if exists("id") ?>
+  AND (prj_id=<? value("id") ?>)
+<? endif ?>
+GROUP BY prj_id, prj_number, prj_name, prj_descrip, prj_status, prj_username, prj_owner_username,
+  crmacct_number, prj_cntct_id,
+  prj_start_date, prj_due_date, prj_assigned_date, prj_completed_date
+ORDER BY prj_number;

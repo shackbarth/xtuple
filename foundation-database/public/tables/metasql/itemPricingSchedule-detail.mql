@@ -1,0 +1,64 @@
+-- Group: itemPricingSchedule
+-- Name: detail
+-- Notes: used by itemPricingSchedule
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+
+SELECT ipsitem_id AS id, 1 AS altid,
+       CASE WHEN (ipsitem_item_id IS NOT NULL) THEN <? value("item") ?>
+            ELSE <? value("prodcat") ?>
+       END AS target,
+       COALESCE(item_number, prodcat_code) AS number,
+       COALESCE(item_descrip1 || ' ' || item_descrip2, prodcat_descrip) AS descrip,
+       qty.uom_name AS qtyuom, ipsitem_qtybreak AS qtybreak,
+       price.uom_name AS priceuom,
+       ((COALESCE(ipsitem_discntprcnt, 0.0) * 100) + ipsitem_price) AS price,
+       (COALESCE(ipsitem_fixedamtdiscount, 0.0) + 0.00) AS fixedAmt,
+       noNeg(CASE WHEN (ipsitem_type='N') THEN ipsitem_price
+                  WHEN (ipsitem_type='D') THEN (item_listprice - (item_listprice * COALESCE(ipsitem_discntprcnt, 0.0)) - COALESCE(ipsitem_fixedamtdiscount, 0.0))
+                  WHEN (ipsitem_type='M') THEN (item_listcost + (item_listcost * COALESCE(ipsitem_discntprcnt, 0.0)) + COALESCE(ipsitem_fixedamtdiscount, 0.0))
+                  ELSE 0.0
+             END) AS netPrice,
+       CASE WHEN (ipsitem_type='N') THEN <? value("nominal") ?>
+            WHEN (ipsitem_type='D') THEN <? value("discount") ?>
+            WHEN (ipsitem_type='M') THEN <? value("markup") ?>
+            ELSE 'error'
+       END AS type,
+       CASE WHEN (ipsitem_type='N') THEN <? value("price") ?>
+            WHEN ((ipsitem_type IN ('D', 'M')) AND (COALESCE(ipsitem_discntprcnt, 0.0)=0.0) AND (COALESCE(ipsitem_fixedamtdiscount, 0.0)<>0.0)) THEN <? value("fixed") ?>
+            WHEN ((ipsitem_type IN ('D', 'M')) AND (COALESCE(ipsitem_discntprcnt, 0.0)<>0.0) AND (COALESCE(ipsitem_fixedamtdiscount, 0.0)=0.0)) THEN <? value("percent") ?>
+            WHEN (ipsitem_type IN ('D', 'M')) THEN <? value("mixed") ?>
+            ELSE 'error'
+       END AS method,
+       'qty' AS qtybreak_xtnumericrole,
+       'salesprice' AS netPrice_xtnumericrole,
+       'salesprice' AS price_xtnumericrole
+FROM ipsiteminfo LEFT OUTER JOIN item ON (item_id=ipsitem_item_id)
+                 LEFT OUTER JOIN prodcat ON (prodcat_id=ipsitem_prodcat_id)
+                 LEFT OUTER JOIN uom AS qty ON (qty.uom_id=ipsitem_qty_uom_id)
+                 LEFT OUTER JOIN uom AS price ON (price.uom_id=ipsitem_price_uom_id)
+WHERE (ipsitem_ipshead_id=<? value("ipshead_id") ?>)
+
+UNION
+
+SELECT ipsfreight_id AS id, 2 AS altid, <? value("freight") ?> AS type,
+       CASE WHEN (ipsfreight_type='F') THEN <? value("flatrate") ?>
+            ELSE <? value("peruom") ?>
+       END AS number,
+       ('From ' || COALESCE(warehous_code, <? value("allsites") ?>) || ' To ' || COALESCE(shipzone_name, <? value("allzones") ?>)) AS descrip,
+       CASE WHEN (ipsfreight_type='P') THEN uom_name END AS qtyuom,
+       CASE WHEN (ipsfreight_type='P') THEN ipsfreight_qtybreak END AS qtybreak,
+       uom_name AS priceuom, ipsfreight_price AS price,
+       0.00 AS fixedAmt,
+       NULL AS netPrice,
+       NULL AS type,
+       NULL AS method,
+       'weight' AS qtybreak_xtnumericrole,
+       'salesprice' AS netPrice_xtnumericrole,
+       'salesprice' AS price_xtnumericrole
+FROM ipsfreight LEFT OUTER JOIN uom ON (uom_item_weight)
+                LEFT OUTER JOIN whsinfo ON (warehous_id=ipsfreight_warehous_id)
+                LEFT OUTER JOIN shipzone ON (shipzone_id=ipsfreight_shipzone_id)
+WHERE ( (ipsfreight_ipshead_id=<? value("ipshead_id") ?>) )
+ORDER BY altid, number, qtybreak;

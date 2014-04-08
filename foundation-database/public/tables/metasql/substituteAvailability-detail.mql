@@ -1,0 +1,83 @@
+-- Group: substituteAvailability
+-- Name: detail
+-- Notes: used by dspSubstituteAvailabilityByItem
+--        Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT s_itemsite_id, warehous_code, item_number, itemdescrip,
+       qtyonhand, reorderlevel, leadtime, itemsub_rank,
+       allocated, ordered, available,
+       'qty' AS qtyonhand_xtnumericrole,
+       'qty' AS allocated_xtnumericrole,
+       'qty' AS ordered_xtnumericrole,
+       'qty' AS reorderlevel_xtnumericrole,
+       'qty' AS available_xtnumericrole,
+       CASE WHEN (reorderlevel >= available) THEN 'error' END AS available_qtforegroundrole
+FROM (SELECT sub.itemsite_id AS s_itemsite_id,
+             warehous_code, item_number,
+             (item_descrip1 || ' ' || item_descrip2) AS itemdescrip,
+<? if exists("normalize") ?>
+             (sub.itemsite_qtyonhand * itemsub_uomratio) AS qtyonhand,
+             (CASE WHEN(sub.itemsite_useparams)
+                   THEN sub.itemsite_reorderlevel
+                ELSE 0.0
+             END * itemsub_uomratio) AS reorderlevel,
+             sub.itemsite_leadtime AS leadtime, itemsub_rank,
+<? else ?>
+             (sub.itemsite_qtyonhand) AS qtyonhand,
+             CASE WHEN(sub.itemsite_useparams) THEN sub.itemsite_reorderlevel
+               ELSE 0.0
+             END AS reorderlevel,
+             sub.itemsite_leadtime AS leadtime, itemsub_rank,
+<? endif ?>
+<? if exists("leadTime") ?>
+  <? if exists("normalize") ?>
+             (qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime) * itemsub_uomratio) AS allocated,
+             (qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime) * itemsub_uomratio) AS ordered,
+             ((sub.itemsite_qtyonhand * itemsub_uomratio)
+              + (qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime) * itemsub_uomratio)
+              - (qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime) * itemsub_uomratio)) AS available
+  <? else ?>
+             (qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime)) AS allocated,
+             (qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime)) AS ordered,
+             (sub.itemsite_qtyonhand + qtyOrdered(sub.itemsite_id, sub.itemsite_leadtime)
+              - qtyAllocated(sub.itemsite_id, sub.itemsite_leadtime)) AS available
+  <? endif ?>
+<? elseif exists("byDays") ?>
+  <? if exists("normalize") ?>
+             (qtyAllocated(sub.itemsite_id, <? value("days") ?>) * itemsub_uomratio) AS allocated,
+             (qtyOrdered(sub.itemsite_id, <? value("days") ?>) * itemsub_uomratio) AS ordered,
+             ((sub.itemsite_qtyonhand * itemsub_uomratio) + (qtyOrdered(sub.itemsite_id, <? value("days") ?>) * itemsub_uomratio)
+              - (qtyAllocated(sub.itemsite_id, <? value("days") ?>) * itemsub_uomratio)) AS available
+  <? else ?>
+             (qtyAllocated(sub.itemsite_id, <? value("days") ?>)) AS allocated,
+             (qtyOrdered(sub.itemsite_id, <? value("days") ?>)) AS ordered,
+             (sub.itemsite_qtyonhand + qtyOrdered(sub.itemsite_id, <? value("days") ?>)
+              - qtyAllocated(sub.itemsite_id, <? value("days") ?>)) AS available
+  <? endif ?>
+<? elseif exists("byDate") ?>
+  <? if exists("normalize") ?>
+             (qtyAllocated(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE)) * itemsub_uomratio) AS allocated,
+             (qtyOrdered(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE)) * itemsub_uomratio) AS ordered,
+             ((sub.itemsite_qtyonhand * itemsub_uomratio) + (qtyOrdered(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE)) * itemsub_uomratio)
+              - (qtyAllocated(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE)) * itemsub_uomratio)) AS available
+  <? else ?>
+             (qtyAllocated(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE))) AS allocated,
+             (qtyOrdered(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE))) AS ordered,
+             (sub.itemsite_qtyonhand + qtyOrdered(sub.itemsite_id,
+             (<? value("date") ?> - CURRENT_DATE)) - qtyAllocated(sub.itemsite_id, (<? value("date") ?> - CURRENT_DATE))) AS available
+  <? endif ?>
+<? endif ?>
+      FROM item, itemsite AS sub, itemsite AS root, whsinfo, itemsub
+      WHERE ((sub.itemsite_item_id=item_id)
+         AND (root.itemsite_item_id=itemsub_parent_item_id)
+         AND (sub.itemsite_item_id=itemsub_sub_item_id)
+         AND (root.itemsite_warehous_id=sub.itemsite_warehous_id)
+         AND (sub.itemsite_warehous_id=warehous_id)
+         AND (root.itemsite_item_id=<? value("item_id") ?>)
+<? if exists("warehous_id") ?>
+         AND (root.itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+            )
+     ) AS data
+ORDER BY itemsub_rank;

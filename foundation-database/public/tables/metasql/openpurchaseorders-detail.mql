@@ -1,0 +1,83 @@
+-- Group: openpurchaseorders
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT pohead_id, COALESCE(pohead_cohead_id, -1) AS pohead_cohead_id,
+                      pohead_number, vend_name,
+                      MIN(poitem_duedate) AS min_duedate, 
+                      pohead_status, pohead_printed,
+                      vend_number, vendtype_code, pohead_agent_username
+               FROM pohead 
+                 JOIN vendinfo ON (pohead_vend_id=vend_id)
+                 JOIN vendtype ON (vend_vendtype_id=vendtype_id)
+               <? if exists("pohead_agent_usr_id") ?>
+                 JOIN usr ON (pohead_agent_username=usr_username)
+               <? endif ?> 
+               <? if exists("warehous_id") ?>
+                 JOIN poitem ON (poitem_pohead_id=pohead_id) 
+                 JOIN itemsite ON (poitem_itemsite_id=itemsite_id)
+               <? else ?>
+                 LEFT OUTER JOIN poitem ON (poitem_pohead_id=pohead_id) 
+               <? endif ?> 
+               WHERE ( true
+               <? if exists("search_pattern") ?> 
+                 AND ((pohead_number::text ~* <? value("search_pattern") ?>) 
+                   OR (vend_number ~* <? value("search_pattern") ?>)
+                   OR (vend_name ~* <? value("search_pattern") ?>)
+
+                   OR (pohead_agent_username ~* <? value("search_pattern") ?>)
+                   OR (vendtype_code ~* <? value("search_pattern") ?>)
+
+                   OR (COALESCE(pohead_vend_cntct_first_name,'') || ' ' || COALESCE(pohead_vend_cntct_last_name,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_vend_cntct_phone,'') ||' ' || COALESCE(pohead_vend_cntct_fax,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_vend_cntct_email,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_vendaddress1,'') || ' ' || COALESCE(pohead_vendaddress2,'') || ' ' || COALESCE(pohead_vendaddress3,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_vendcity,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_vendstate,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_vendzipcode,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_vendcountry,'') ~* <? value("search_pattern") ?>)
+
+                   OR (COALESCE(pohead_shipto_cntct_first_name,'') || ' ' || COALESCE(pohead_shipto_cntct_last_name,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_shipto_cntct_phone,'') || ' ' || COALESCE(pohead_shipto_cntct_fax,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_shipto_cntct_email,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_shiptoaddress1,'') || ' ' || COALESCE(pohead_vendaddress2,'') || ' ' || COALESCE(pohead_vendaddress3,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_shiptocity,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_shiptostate,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_shiptozipcode,'') ~* <? value("search_pattern") ?>)
+                   OR (COALESCE(pohead_shiptocountry,'') ~* <? value("search_pattern") ?>)
+               )
+               <? endif ?> 
+               <? if exists("showUnreleased") ?> 
+                 AND (pohead_status ='U') 
+               <? endif ?> 
+               <? if exists("showOpen") ?>
+                 AND (pohead_status='O' )
+               <? endif ?> 
+               <? if exists("showBoth") ?> 
+                 AND (pohead_status IN ('U', 'O') ) 
+               <? endif ?> 
+               <? if exists("shownothing") ?> 
+                 AND (pohead_status NOT IN ('U', 'O', 'C')) 
+               <? endif ?> 
+               <? if exists("vend_id") ?>
+                 AND (vend_id=<? value("vend_id") ?>)
+               <? endif ?> 
+               <? if exists("vendtype_id") ?>
+                 AND (vend_vendtype_id=<? value("vendtype_id") ?>)
+               <? endif ?> 
+               <? if exists("vendtype_pattern") ?>
+                 AND (vendtype_code ~* <? value("vendtype_pattern") ?>)
+               <? endif ?> 
+               <? if exists("pohead_agent_usr_id") ?>
+                 AND (usr_id  = <? value("pohead_agent_usr_id") ?>)
+               <? endif ?> 
+               <? if exists("warehous_id") ?>
+                 AND (itemsite_warehous_id = <? value("warehous_id") ?>)
+               <? endif ?> 
+               ) 
+               GROUP BY pohead_number, pohead_id, pohead_cohead_id,
+		 vend_name, pohead_status, pohead_printed,
+                        vendtype_code, pohead_agent_username, vend_number
+               ORDER BY pohead_number;

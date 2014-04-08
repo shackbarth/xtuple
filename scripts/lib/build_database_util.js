@@ -30,7 +30,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (lines[0].indexOf("-- Group: ") !== 0 ||
         lines[1].indexOf("-- Name: ") !== 0 ||
         lines[2].indexOf("-- Notes:") !== 0) {
-      throw new Error("Improperly formatted metasql");
+      throw new Error("Improperly formatted metasql: " + filename);
     }
     group = lines[0].substring("-- Group: ".length).trim();
     name = lines[1].substring("-- Name: ".length).trim();

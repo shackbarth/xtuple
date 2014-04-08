@@ -1,0 +1,216 @@
+-- Group: maintainShipping
+-- Name: detail
+-- Notes: used by maintainShipping
+-- order header info
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT shiphead_id AS parent_id, cohead_id AS child_id,
+       shiphead_number, cohead_number AS linenumber,
+       'SO' AS ordertype,
+       CASE WHEN (shiphead_sfstatus='N') THEN <? value("notPrinted") ?>
+            WHEN (shiphead_sfstatus='D') THEN <? value("dirty") ?>
+            WHEN (shiphead_sfstatus='P') THEN <? value("printed") ?>
+            ELSE <? value("error") ?>
+       END AS sfstatus,
+       cust_number AS dest, cust_name AS description,
+       shiphead_shipvia, NULL AS uom_name,
+       NULL AS shipqty, NULL AS shipvalue,
+<? if exists("includeFormatted") ?>
+       NULL AS f_shipqty, NULL AS f_shipvalue,
+<? endif ?>
+       cohead_holdtype AS holdtype,
+       shiphead_number AS shiphead_number_qtdisplayrole,
+       'SO' AS ordertype_qtdisplayrole,
+       'qty' AS shipqty_xtnumericrole,
+       'cost' AS shipvalue_xtnumericrole,
+       0 AS shipvalue_xttotalrole,
+       0 AS xtindentrole,
+       CAST(shiphead_id AS TEXT) AS sort
+FROM shiphead, custinfo, cohead
+ <? if exists("warehous_id") ?>
+      JOIN coitem ON (coitem_cohead_id=cohead_id)
+      JOIN itemsite ON ((coitem_itemsite_id=itemsite_id)
+                    AND (itemsite_warehous_id=<? value("warehous_id") ?>))
+ <? endif ?>
+WHERE ((NOT shiphead_shipped)
+ AND (shiphead_order_type='SO')
+ AND (shiphead_order_id=cohead_id)
+ AND (cohead_cust_id=cust_id)
+) 
+-- order line info
+UNION ALL
+SELECT cohead_id AS parent_id, coitem_id AS child_id,
+       '' AS shiphead_number, CAST(coitem_linenumber AS TEXT) AS linenumber,
+       'SO' AS ordertype,
+       NULL AS sfstatus,
+       item_number AS dest, (item_descrip1 || ' ' || item_descrip2) AS description,
+       NULL AS shiphead_shipvia, uom_name,
+       qtyAtShipping('SO', coitem_id) AS shipqty,
+       valueAtShipping('SO', coitem_id) AS shipvalue,
+<? if exists("includeFormatted") ?>
+       formatQty(qtyAtShipping('SO', coitem_id)) AS f_shipqty,
+       formatCost(valueAtShipping('SO', coitem_id)) AS f_shipvalue,
+<? endif ?>
+       cohead_holdtype AS holdtype,
+       NULL AS shiphead_number_qtdisplayrole,
+       NULL AS ordertype_qtdisplayrole,
+       'qty' AS shipqty_xtnumericrole,
+       'cost' AS shipvalue_xtnumericrole,
+       0 AS shipvalue_xttotalrole,
+       1 AS xtindentrole,
+       CAST(shiphead_id AS TEXT) || CAST(shiphead_order_id AS TEXT) || 
+         TO_CHAR(coitem_id, '0000000') || '1' AS sort
+FROM shiphead, cohead, coitem, uom, itemsite, item
+WHERE ((NOT shiphead_shipped)
+ AND (shiphead_order_type='SO')
+ AND (shiphead_order_id=cohead_id)
+ AND (cohead_id=coitem_cohead_id)
+ AND (coitem_qty_uom_id=uom_id)
+ AND (coitem_itemsite_id=itemsite_id)
+ AND (itemsite_item_id=item_id)
+ <? if exists("warehous_id") ?>
+ AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+ <? endif ?>
+) 
+-- shipitem info
+UNION ALL
+SELECT shiphead_id AS parent_id, shipitem_id AS child_id,
+       '' AS shiphead_number, '' AS linenumber,
+       'SO' AS ordertype,
+       NULL AS sfstatus,
+       '' AS dest,
+       formatDate(shipitem_transdate) || ' by ' || shipitem_trans_username AS description,
+       '' AS shiphead_shipvia, '' AS uom_name,
+       shipitem_qty AS shipqty,
+       NULL AS shipvalue,
+<? if exists("includeFormatted") ?>
+       formatQty(shipitem_qty) AS f_shipqty,
+       NULL AS f_shipvalue,
+<? endif ?>
+       '' AS holdtype,
+       NULL AS shiphead_number_qtdisplayrole,
+       NULL AS ordertype_qtdisplayrole,
+       'qty' AS shipqty_xtnumericrole,
+       'cost' AS shipvalue_xtnumericrole,
+       0 AS shipvalue_xttotalrole,
+       2 AS xtindentrole,
+       CAST(shiphead_id AS TEXT) || CAST(shiphead_order_id AS TEXT) ||
+         TO_CHAR(shipitem_orderitem_id, '0000000') || '2' AS sort
+FROM shiphead JOIN shipitem ON (shipitem_shiphead_id=shiphead_id)
+ <? if exists("warehous_id") ?>
+      JOIN coitem ON ((shipitem_orderitem_id=coitem_id)
+                  AND (shiphead_order_type='SO'))
+      JOIN itemsite ON ((coitem_itemsite_id=itemsite_id)
+                    AND (itemsite_warehous_id=<? value("warehous_id") ?>))
+ <? endif ?>
+WHERE ((NOT shiphead_shipped)
+ AND (shiphead_order_type='SO')
+) 
+
+<? if exists("MultiWhs") ?>
+UNION ALL
+-- order header info
+SELECT shiphead_id AS parent_id, tohead_id AS child_id,
+       shiphead_number, tohead_number AS linenumber,
+       'TO' AS ordertype,
+       CASE WHEN (shiphead_sfstatus='N') THEN <? value("notPrinted") ?>
+            WHEN (shiphead_sfstatus='D') THEN <? value("dirty") ?>
+            WHEN (shiphead_sfstatus='P') THEN <? value("printed") ?>
+            ELSE <? value("error") ?>
+       END AS sfstatus,
+       tohead_destname AS dest, tohead_destcntct_name AS description,
+       shiphead_shipvia, NULL AS uom_name,
+       NULL AS shipqty, NULL AS shipvalue,
+<? if exists("includeFormatted") ?>
+       NULL AS f_shipqty, NULL AS f_shipvalue,
+<? endif ?>
+       'TO' AS holdtype,
+       shiphead_number AS shiphead_number_qtdisplayrole,
+       'TO' AS ordertype_qtdisplayrole,
+       'qty' AS shipqty_xtnumericrole,
+       'cost' AS shipvalue_xtnumericrole,
+       0 AS shipvalue_xttotalrole,
+       0 AS xtindentrole,
+       CAST(shiphead_id AS TEXT) AS sort
+FROM shiphead, tohead
+ <? if exists("warehous_id") ?>
+      JOIN toitem ON (toitem_tohead_id=tohead_id)
+      JOIN itemsite ON ((toitem_item_id=itemsite_item_id)
+                    AND (itemsite_warehous_id=<? value("warehous_id") ?>))
+ <? endif ?>
+WHERE ((NOT shiphead_shipped)
+ AND (shiphead_order_type='TO')
+ AND (shiphead_order_id=tohead_id)
+) 
+-- order line info
+UNION ALL
+SELECT tohead_id AS parent_id, toitem_id AS child_id,
+       '' AS shiphead_number, CAST(toitem_linenumber AS TEXT) AS linenumber,
+       'TO' AS ordertype,
+       NULL AS sfstatus,
+       item_number AS dest, (item_descrip1 || ' ' || item_descrip2) AS description,
+       NULL AS shiphead_shipvia, toitem_uom AS uom_name,
+       qtyAtShipping('TO', toitem_id) AS shipqty,
+       valueAtShipping('TO', toitem_id) AS shipvalue,
+<? if exists("includeFormatted") ?>
+       formatQty(qtyAtShipping('TO', toitem_id)) AS f_shipqty,
+       formatCost(valueAtShipping('TO', toitem_id)) AS f_shipvalue,
+<? endif ?>
+       'TO' AS holdtype,
+       NULL AS shiphead_number_qtdisplayrole,
+       NULL AS ordertype_qtdisplayrole,
+       'qty' AS shipqty_xtnumericrole,
+       'cost' AS shipvalue_xtnumericrole,
+       0 AS shipvalue_xttotalrole,
+       1 AS xtindentrole,
+       CAST(shiphead_id AS TEXT) || CAST(shiphead_order_id AS TEXT) ||
+         TO_CHAR(toitem_id, '0000000') || '1' AS sort
+FROM shiphead, tohead, item, toitem
+ <? if exists("warehous_id") ?>
+      JOIN itemsite ON ((toitem_item_id=itemsite_item_id)
+                    AND (itemsite_warehous_id=<? value("warehous_id") ?>))
+ <? endif ?>
+WHERE ((NOT shiphead_shipped)
+ AND (shiphead_order_type='TO')
+ AND (shiphead_order_id=tohead_id)
+ AND (tohead_id=toitem_tohead_id)
+ AND (toitem_item_id=item_id)
+) 
+-- shipitem info
+UNION
+SELECT shiphead_id AS parent_id, shipitem_id AS child_id,
+       '' AS shiphead_number, '' AS linenumber,
+       'TO' AS ordertype,
+       NULL AS sfstatus,
+       '' AS dest,
+       formatDate(shipitem_transdate) || ' by ' || shipitem_trans_username AS description,
+       '' AS shiphead_shipvia, '' AS uom_name,
+       shipitem_qty AS shipqty,
+       NULL AS shipvalue,
+<? if exists("includeFormatted") ?>
+       formatQty(shipitem_qty) AS f_shipqty,
+       NULL AS f_shipvalue,
+<? endif ?>
+       '' AS holdtype,
+       NULL AS shiphead_number_qtdisplayrole,
+       NULL AS ordertype_qtdisplayrole,
+       'qty' AS shipqty_xtnumericrole,
+       'cost' AS shipvalue_xtnumericrole,
+       0 AS shipvalue_xttotalrole,
+       2 AS xtindentrole,
+       CAST(shiphead_id AS TEXT) || CAST(shiphead_order_id AS TEXT) ||
+         TO_CHAR(shipitem_orderitem_id, '0000000') || '2' AS sort
+FROM shiphead JOIN shipitem ON (shipitem_shiphead_id=shiphead_id)
+ <? if exists("warehous_id") ?>
+      JOIN toitem ON ((shipitem_orderitem_id=toitem_id)
+                  AND (shiphead_order_type='TO'))
+      JOIN itemsite ON ((toitem_item_id=itemsite_item_id)
+                    AND (itemsite_warehous_id=<? value("warehous_id") ?>))
+ <? endif ?>
+WHERE ((NOT shiphead_shipped)
+ AND (shiphead_order_type='TO')
+) 
+
+<? endif ?>
+ORDER BY sort;

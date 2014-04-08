@@ -1,0 +1,140 @@
+-- Group: salesHistory
+-- Name: detail
+-- Notes: 
+--        Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cohist.*,
+       CASE WHEN (cohist_invcnumber='-1') THEN  <? value("credit") ?>
+            ELSE cohist_invcnumber
+       END AS invoicenumber,
+       cust_number, cust_name, salesrep_name,
+       saletype_code, shipzone_name,
+       item_id, COALESCE(item_number, cohist_misc_descrip) AS item_number,
+       item_descrip1, (item_descrip1 || ' ' || item_descrip2) AS itemdescription,
+       warehous_code,
+       currtobase(cohist_curr_id, cohist_unitprice, cohist_invcdate) AS baseunitprice,
+       round((cohist_qtyshipped * cohist_unitprice), 2) AS extprice,
+       round((cohist_qtyshipped * currtobase(cohist_curr_id, cohist_unitprice, cohist_invcdate)), 2) AS baseextprice,
+       round((cohist_qtyshipped * cohist_unitcost), 4) AS extcost,
+       currtobase(cohist_curr_id, cohist_commission, cohist_invcdate) AS basecommission,
+<? if exists("isReport") ?>
+       formatDate(cohist_invcdate) AS f_invcdate,
+       formatQty(cohist_qtyshipped) AS f_qtyshipped,
+       formatBoolYN(cohist_commissionpaid) AS f_commissionpaid,
+       formatSalesPrice(currtobase(cohist_curr_id, cohist_unitprice, cohist_invcdate)) AS f_baseunitprice,
+       formatMoney(round((cohist_qtyshipped * cohist_unitprice), 2)) AS f_extprice,
+       formatMoney(round((cohist_qtyshipped * currtobase(cohist_curr_id, cohist_unitprice, cohist_invcdate)), 2)) AS f_baseextprice,
+       formatMoney(round((cohist_qtyshipped * cohist_unitcost), 4)) AS f_extcost,
+       formatMoney(currtobase(cohist_curr_id, cohist_commission, cohist_invcdate)) AS f_basecommission,
+<? endif ?>
+       currConcat(cohist_curr_id) AS currAbbr,
+       <? value("return") ?> AS cohist_invcdate_xtnullrole,
+       'qty' AS cohist_qtyshipped_xtnumericrole,
+       'salesprice' AS cohist_unitprice_xtnumericrole,
+       'salesprice' AS baseunitprice_xtnumericrole,
+       'curr' AS extprice_xtnumericrole,
+       'curr' AS baseextprice_xtnumericrole,
+       'cost' AS cohist_unitcost_xtnumericrole,
+       'curr' AS extcost_xtnumericrole,
+       'curr' AS cohist_commission_xtnumericrole,
+       'curr' AS basecommission_xtnumericrole,
+       0 AS cohist_qtyshipped_xttotalrole,
+       0 AS baseextprice_xttotalrole,
+       0 AS extcost_xttotalrole,
+       0 AS basecommission_xttotalrole
+  FROM cohist JOIN custinfo ON (cust_id=cohist_cust_id)
+              JOIN salesrep ON (salesrep_id=cohist_salesrep_id)
+              LEFT OUTER JOIN saletype ON (saletype_id=cohist_saletype_id)
+              LEFT OUTER JOIN shipzone ON (shipzone_id=cohist_shipzone_id)
+<? if exists("includeMisc") ?>
+              LEFT OUTER JOIN itemsite ON (itemsite_id=cohist_itemsite_id)
+              LEFT OUTER JOIN site() ON (warehous_id=itemsite_warehous_id)
+              LEFT OUTER JOIN item ON (item_id=itemsite_item_id)
+<? else ?>
+              JOIN itemsite ON (itemsite_id=cohist_itemsite_id)
+              JOIN site() ON (warehous_id=itemsite_warehous_id)
+              JOIN item ON (item_id=itemsite_item_id)
+<? endif ?>
+<? if exists("cohead_id") ?>
+              JOIN cohead ON (cohead_number=cohist_ordernumber)
+<? endif ?>
+WHERE ( (true)
+<? if exists("includeMisc") ?>
+  AND  (COALESCE(cohist_misc_type, '') <> 'F')
+  AND  (COALESCE(cohist_misc_type, '') <> 'T')
+<? endif ?>
+<? if exists("startDate") ?>
+  AND  (cohist_invcdate >= <? value("startDate") ?>)
+<? endif ?>
+<? if exists("endDate") ?>
+  AND  (cohist_invcdate <= <? value("endDate") ?>)
+<? endif ?>
+<? if exists("shipStartDate") ?>
+  AND  (cohist_shipdate >= <? value("shipStartDate") ?>)
+<? endif ?>
+<? if exists("shipEndDate") ?>
+  AND  (cohist_shipdate <= <? value("shipEndDate") ?>)
+<? endif ?>
+<? if exists("salesrep_id") ?>
+  AND  (cohist_salesrep_id=<? value("salesrep_id") ?>)
+<? endif ?>
+<? if exists("shipto_id") ?>
+  AND  (cohist_shipto_id=<? value("shipto_id") ?>)
+<? endif ?>
+<? if exists("billToName") ?>
+  AND  (UPPER(cohist_billtoname) ~ UPPER(<? value("billToName") ?>))
+<? endif ?>
+<? if exists("cust_id") ?>
+  AND  (cohist_cust_id=<? value("cust_id") ?>)
+<? endif ?>
+<? if exists("custtype_id") ?>
+  AND  (cust_custtype_id=<? value("custtype_id") ?>)
+<? elseif exists("custtype_pattern") ?>
+  AND  (cust_custtype_id IN (SELECT DISTINCT custtype_id
+                             FROM custtype
+                             WHERE (custtype_code ~ <? value("custtype_pattern") ?>)))
+<? endif ?>
+<? if exists("by_custgrp") ?>
+  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                   FROM custgrpitem))
+<? endif ?>
+<? if exists("custgrp_id") ?>
+  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                   FROM custgrpitem
+                   WHERE (custgrpitem_custgrp_id=<? value("custgrp_id") ?>)))
+<? endif ?>
+<? if exists("custgrp_pattern") ?>
+  AND (cust_id IN (SELECT DISTINCT custgrpitem_cust_id
+                   FROM custgrp, custgrpitem
+                   WHERE ( (custgrpitem_custgrp_id=custgrp_id)
+                     AND   (custgrp_name ~ <? value("custgrp_pattern") ?>) )) )
+<? endif ?>
+
+<? if exists("item_id") ?>
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("prodcat_id") ?>
+  AND (item_prodcat_id=<? value("prodcat_id") ?>)
+<? endif ?>
+<? if exists("prodcat_pattern") ?>
+  AND (item_prodcat_id IN (SELECT DISTINCT prodcat_id
+                           FROM prodcat
+                           WHERE (prodcat_code ~ <? value("prodcat_pattern") ?>)))
+<? endif ?>
+
+<? if exists("warehous_id") ?>
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("shipzone_id") ?>
+  AND (cohist_shipzone_id=<? value("shipzone_id") ?>)
+<? endif ?>
+<? if exists("saletype_id") ?>
+  AND (cohist_saletype_id=<? value("saletype_id") ?>)
+<? endif ?>
+<? if exists("cohead_id") ?>
+  AND (cohead_id=<? value("cohead_id") ?>)
+<? endif ?>
+      )
+ORDER BY cohist_invcdate, item_number;
+

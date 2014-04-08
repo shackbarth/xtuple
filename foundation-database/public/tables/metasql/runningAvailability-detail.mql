@@ -1,0 +1,387 @@
+-- Group: runningAvailability
+-- Name: detail
+-- Notes: used by dspRunningAvailability, itemAvailabilityWorkbench
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT orderid, altorderid, ordertype, ordernumber, sequence, item_number,
+       duedate, qtyordered,  qtyreceived, balance,
+       balance AS runningavail,
+<? if exists("isReport") ?>
+       CASE WHEN duedate = startOfTime() THEN ''
+            ELSE formatDate(duedate) END AS f_duedate,
+       formatQty(qtyordered) AS f_qtyordered,
+       formatQty(qtyreceived) AS f_qtyreceived,
+       formatQty(balance) AS f_balance,
+<? endif ?>
+       1 AS runningavail_xtrunningrole,
+       <? value("qoh") ?> AS runningavail_xtrunninginit,
+       CASE WHEN late THEN 'error' END AS duedate_qtforegroundrole,
+       CASE WHEN duedate = startOfTime() THEN '' END AS duedate_qtdisplayrole,
+       CASE WHEN ordertype ~ <? value("plannedPo") ?> OR
+                 ordertype ~ <? value("plannedWo") ?> OR
+                 ordertype ~ <? value("plannedTo") ?> THEN
+          'emphasis' END AS qtforegroundrole,
+      'qty' AS qtyordered_xtnumericrole,
+      'qty' AS qtyreceived_xtnumericrole,
+      'qty' AS balance_xtnumericrole
+FROM (
+<? if exists("isReport") ?>
+SELECT -1 AS orderid, -1 AS altorderid, 'QOH' AS ordertype,
+       NULL AS ordernumber,
+       0 AS sequence,
+       '' AS item_number,
+       startOfTime() AS duedate,
+       FALSE AS late,
+       0 AS qtyordered,
+       0 AS qtyreceived,
+       <? value("qoh") ?> AS balance
+UNION
+<? endif ?>
+<? if exists("MultiWhs") ?>
+SELECT tohead_id AS orderid, toitem_id AS altorderid, 'T/O' AS ordertype,
+       TEXT(tohead_number) AS ordernumber,
+       1 AS sequence,
+       tohead_srcname || '/' || tohead_destname AS item_number,
+       toitem_duedate AS duedate,
+       (toitem_duedate < CURRENT_DATE) AS late,
+       toitem_qty_ordered AS qtyordered,
+       toitem_qty_received AS qtyreceived,
+       noNeg(toitem_qty_ordered - toitem_qty_received) AS balance
+FROM tohead, toitem
+WHERE ((toitem_tohead_id=tohead_id)
+  AND  (toitem_status NOT IN ('C', 'X'))
+  AND  (toitem_item_id=<? value("item_id") ?>)
+  AND  (tohead_dest_warehous_id=<? value("warehous_id") ?>)
+  AND  (toitem_qty_ordered > toitem_qty_received) )
+
+UNION
+SELECT tohead_id AS orderid, toitem_id AS altorderid, 'T/O' AS ordertype,
+       TEXT(tohead_number) AS ordernumber,
+       1 AS sequence,
+       tohead_srcname || '/' || tohead_destname AS item_number,
+       toitem_duedate AS duedate,
+       (toitem_duedate < CURRENT_DATE) AS late,
+       toitem_qty_ordered AS qtyordered,
+       toitem_qty_received AS qtyreceived,
+       -1 * noNeg(toitem_qty_ordered - toitem_qty_shipped - qtyAtShipping('TO', toitem_id)) AS balance
+       -- TODO: old code had ^^^^ for formatted balance and vvvv used to calc running avail! which is right?
+       -- -1 * noNeg(toitem_qty_ordered - toitem_qty_received) AS balance
+FROM tohead, toitem
+WHERE ((toitem_tohead_id=tohead_id)
+  AND  (toitem_status NOT IN ('C', 'X'))
+  AND  (toitem_item_id=<? value("item_id") ?>)
+  AND  (tohead_src_warehous_id=<? value("warehous_id") ?>)
+  AND  (toitem_qty_ordered - toitem_qty_shipped - qtyAtShipping('TO', toitem_id)) > 0 )
+
+UNION
+<? endif ?>
+SELECT wo_id AS orderid, -1 AS altorderid,
+       'W/O' AS ordertype,
+       formatWoNumber(wo_id) AS ordernumber,
+       1 AS sequence,
+       item_number,
+       wo_duedate AS duedate,
+       (wo_duedate < CURRENT_DATE) AS late,
+       wo_qtyord AS qtyordered,
+       wo_qtyrcv AS qtyreceived,
+       noNeg(wo_qtyord - wo_qtyrcv) AS balance
+FROM wo, itemsite, item
+WHERE ((wo_status<>'C')
+  AND  (wo_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=item_id)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+  AND  (item_type NOT IN ('C', 'Y')))
+
+UNION
+
+-- Tools on work orders to be returned
+SELECT wo_id AS orderid, -1 AS altorderid,
+       'W/O' AS ordertype,
+       formatWoNumber(wo_id) AS ordernumber,
+       1 AS sequence,
+       item_number,
+       wo_duedate AS duedate,
+       (wo_duedate < CURRENT_DATE) AS late,
+       womatl_qtyreq AS qtyordered,
+       COALESCE(SUM(abs(invhist_invqty)),0) AS qtyreceived,
+       noNeg(womatl_qtyreq - COALESCE(SUM(abs(invhist_invqty)),0)) AS balance
+FROM womatl
+  JOIN wo ON (wo_id=womatl_wo_id)
+  JOIN itemsite ON (womatl_itemsite_id=itemsite_id)
+  JOIN item ON (itemsite_item_id=item_id)
+  LEFT OUTER JOIN womatlpost ON (womatl_id=womatlpost_womatl_id)
+  LEFT OUTER JOIN invhist ON ((womatlpost_invhist_id=invhist_id)
+                          AND (invhist_invqty < 0))
+WHERE ((wo_status<>'C')
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+  AND  (item_type = 'T'))
+GROUP BY wo_id, wo_duedate, item_number, womatl_qtyreq
+
+<? if exists("Manufacturing") ?>
+UNION
+SELECT wo_id AS orderid, -1 AS altorderid,
+       'W/O' AS ordertype,
+       formatWoNumber(wo_id) AS ordernumber,
+       1 AS sequence,
+       item_number,
+       wo_duedate AS duedate,
+       (wo_duedate < CURRENT_DATE) AS late,
+       (wo_qtyord * brddist_stdqtyper) AS qtyordered,
+       (wo_qtyrcv * brddist_stdqtyper) AS qtyreceived,
+       noNeg((wo_qtyord - wo_qtyrcv) * brddist_stdqtyper) AS balance
+FROM xtmfg.brddist, wo, itemsite, item
+WHERE ((wo_status<>'C')
+  AND  (brddist_wo_id=wo_id)
+  AND  (wo_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=item_id)
+  AND  (brddist_itemsite_id=itemsite_id)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+  AND  (item_type IN ('C', 'Y')) )
+<? endif ?>
+
+UNION
+SELECT wo_id AS orderid, womatl_id AS altorderid,
+      'W/O' AS ordertype,
+      formatWoNumber(wo_id) AS ordernumber,
+      2 AS sequence,
+      woi.item_number,
+      womatl_duedate AS duedate,
+      FALSE AS late,
+      itemuomtouom(womatlis.itemsite_item_id, womatl_uom_id, NULL, womatl_qtyreq) AS qtyordered,
+      itemuomtouom(womatlis.itemsite_item_id, womatl_uom_id, NULL, womatl_qtyiss) AS qtyreceived,
+      itemuomtouom(womatlis.itemsite_item_id, womatl_uom_id, NULL, (noNeg(womatl_qtyreq - womatl_qtyiss) * -1)) AS balance
+FROM womatl, wo, itemsite AS wois, item AS woi, itemsite AS womatlis, item AS womatli
+WHERE ((wo_status<>'C')
+  AND  (wo_itemsite_id=wois.itemsite_id)
+  AND  (wois.itemsite_item_id=woi.item_id)
+  AND  (womatlis.itemsite_item_id=womatli.item_id)
+  AND  (womatli.item_type != 'T')
+  AND  (womatl_wo_id=wo_id)
+  AND  (womatlis.itemsite_item_id=<? value("item_id") ?>)
+  AND  (womatlis.itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (womatl_itemsite_id=womatlis.itemsite_id) )
+
+UNION
+-- Special handling for tools
+SELECT wo_id AS orderid, womatl_id AS altorderid,
+      'W/O' AS ordertype,
+      formatWoNumber(wo_id) AS ordernumber,
+      2 AS sequence,
+      woi.item_number,
+      womatl_duedate AS duedate,
+      FALSE AS late,
+      itemuomtouom(womatlis.itemsite_item_id, womatl_uom_id, NULL, womatl_qtyreq) AS qtyordered,
+      COALESCE(SUM(invhist_invqty),0) AS qtyreceived,
+      (itemuomtouom(womatlis.itemsite_item_id, womatl_uom_id, NULL, (noNeg(womatl_qtyreq))) - COALESCE(SUM(invhist_invqty),0)) * -1 AS balance
+FROM itemsite AS wois, item AS woi, itemsite AS womatlis, item AS womatli, wo, womatl
+  LEFT OUTER JOIN womatlpost ON (womatl_id=womatlpost_womatl_id)
+  LEFT OUTER JOIN invhist ON ((womatlpost_invhist_id=invhist_id)
+                          AND (invhist_invqty > 0))
+WHERE ((wo_status<>'C')
+  AND  (wo_itemsite_id=wois.itemsite_id)
+  AND  (wois.itemsite_item_id=woi.item_id)
+  AND  (womatlis.itemsite_item_id=womatli.item_id)
+  AND  (womatli.item_type = 'T')
+  AND  (womatl_wo_id=wo_id)
+  AND  (womatlis.itemsite_item_id=<? value("item_id") ?>)
+  AND  (womatlis.itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (womatl_itemsite_id=womatlis.itemsite_id) )
+GROUP BY wo_id, woi.item_number, womatl_id, womatl_duedate, womatlis.itemsite_item_id, womatl_uom_id, womatl_qtyreq
+
+UNION
+SELECT pohead_id AS orderid, poitem_id AS altorderid,
+      'P/O' AS ordertype,
+      TEXT(pohead_number) AS ordernumber,
+      1 AS sequence,
+      '' AS item_number,
+      poitem_duedate AS duedate,
+      (poitem_duedate < CURRENT_DATE) AS late,
+      (poitem_qty_ordered * poitem_invvenduomratio) AS qtyordered,
+      (NoNeg(poitem_qty_received - poitem_qty_returned) * poitem_invvenduomratio) AS qtyreceived,
+      (noNeg(poitem_qty_ordered - poitem_qty_received) * poitem_invvenduomratio) AS balance
+FROM pohead, poitem, itemsite, item
+WHERE ((poitem_pohead_id=pohead_id)
+  AND  (poitem_status <> 'C')
+  AND  (poitem_itemsite_id=itemsite_id)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=item_id)
+  AND  (item_id=<? value("item_id") ?>) )
+
+UNION
+SELECT cohead_id AS orderid, coitem_id AS altorderid,
+       'S/O' AS ordertype,
+       TEXT(cohead_number) AS ordernumber,
+       2 AS sequence,
+       cust_name AS item_number,
+       coitem_scheddate AS duedate,
+       (coitem_scheddate < CURRENT_DATE) AS late,
+       (coitem_qtyord * coitem_qty_invuomratio) AS qtyordered,
+       (coitem_qty_invuomratio * (coitem_qtyshipped - coitem_qtyreturned + qtyAtShipping(coitem_id))) AS qtyreceived,
+       (coitem_qty_invuomratio * noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned - qtyAtShipping(coitem_id)) * -1) AS balance
+FROM coitem, cohead, custinfo, itemsite, item
+WHERE ((coitem_status='O')
+  AND  (cohead_cust_id=cust_id)
+  AND  (coitem_cohead_id=cohead_id)
+  AND  (coitem_itemsite_id=itemsite_id)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=item_id)
+  AND  (item_id=<? value("item_id") ?>))
+
+<? if exists("showPlanned") ?>
+<? if exists("showMRPplan") ?>
+UNION
+SELECT planord_id AS orderid, -1 AS altorderid,
+       CASE WHEN (planord_firm) THEN <? value("firmPo") ?> 
+ 	   ELSE <? value("plannedPo") ?> 
+       END AS ordertype,
+       CAST(planord_number AS text) AS ordernumber,
+       1 AS sequence,
+       '' AS item_number,
+       planord_duedate AS duedate,
+       FALSE AS late,
+       planord_qty AS qtyordered,
+       NULL AS qtyreceived,
+       planord_qty AS balance
+FROM planord, itemsite
+WHERE ((planord_type='P')
+  AND  (planord_itemsite_id=itemsite_id)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=<? value("item_id") ?>) )
+
+UNION
+SELECT planord_id AS orderid, -1 AS altorderid,
+       CASE WHEN (planord_firm) THEN <? value("firmWo") ?> 
+	    ELSE <? value("plannedWo") ?> 
+       END AS ordertype,
+       CAST(planord_number AS text) AS ordernumber,
+       1 AS sequence,
+       '' AS item_number,
+       planord_duedate AS duedate,
+       FALSE AS late,
+       planord_qty AS qtyordered,
+       NULL AS qtyreceived,
+       planord_qty AS balance
+FROM planord, itemsite
+WHERE ((planord_type='W')
+  AND  (planord_itemsite_id=itemsite_id)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=<? value("item_id") ?>) )
+
+UNION
+-- Tools on Planned Work Orders
+SELECT planord_id AS orderid, -1 AS altorderid,
+       CASE WHEN (planord_firm) THEN <? value("firmWo") ?> 
+	    ELSE <? value("plannedWo") ?> 
+       END AS ordertype,
+       CAST(planord_number AS text) AS ordernumber,
+       1 AS sequence,
+       item_number,
+       planord_duedate AS duedate,
+       FALSE AS late,
+       planreq_qty AS qtyordered,
+       NULL AS qtyreceived,
+       planreq_qty AS balance
+FROM planreq
+  JOIN itemsite ON (itemsite_id=planreq_itemsite_id)
+  JOIN item ON (item_id=itemsite_item_id)
+  JOIN planord ON ((planreq_source_id=planord_id)
+              AND (planreq_source='P'))
+WHERE ((itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+  AND  (item_type='T') )
+
+UNION
+SELECT planord_id AS orderid, -1 AS altorderid,
+       CASE WHEN (planord_firm) THEN <? value("firmTo") ?> 
+	    ELSE <? value("plannedTo") ?> 
+       END AS ordertype,
+       CAST(planord_number AS text) AS ordernumber,
+       1 AS sequence,
+       srcwhsinfo.warehous_code || '/' || whsinfo.warehous_code AS item_number,
+       planord_duedate AS duedate,
+       FALSE AS late,
+       planord_qty AS qtyordered,
+       NULL AS qtyreceived,
+       planord_qty AS balance
+FROM planord JOIN itemsite ON (itemsite.itemsite_id=planord_itemsite_id)
+             JOIN whsinfo ON (whsinfo.warehous_id=itemsite.itemsite_warehous_id)
+             JOIN itemsite srcitemsite ON (srcitemsite.itemsite_id=planord_supply_itemsite_id)
+             JOIN whsinfo srcwhsinfo ON (srcwhsinfo.warehous_id=srcitemsite.itemsite_warehous_id)
+WHERE ((planord_type='T')
+  AND  (itemsite.itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite.itemsite_item_id=<? value("item_id") ?>) )
+
+UNION
+SELECT planord_id AS orderid, -1 AS altorderid,
+       CASE WHEN (planord_firm) THEN <? value("firmTo") ?> 
+	    ELSE <? value("plannedTo") ?> 
+       END AS ordertype,
+       CAST(planord_number AS text) AS ordernumber,
+       1 AS sequence,
+       srcwhsinfo.warehous_code || '/' || whsinfo.warehous_code AS item_number,
+       planord_duedate AS duedate,
+       FALSE AS late,
+       planord_qty AS qtyordered,
+       NULL AS qtyreceived,
+       (planord_qty * -1) AS balance
+FROM planord JOIN itemsite ON (itemsite.itemsite_id=planord_itemsite_id)
+             JOIN whsinfo ON (whsinfo.warehous_id=itemsite.itemsite_warehous_id)
+             JOIN itemsite srcitemsite ON (srcitemsite.itemsite_id=planord_supply_itemsite_id)
+             JOIN whsinfo srcwhsinfo ON (srcwhsinfo.warehous_id=srcitemsite.itemsite_warehous_id)
+WHERE ((planord_type='T')
+  AND  (srcitemsite.itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (srcitemsite.itemsite_item_id=<? value("item_id") ?>) )
+
+UNION
+SELECT planreq_id AS orderid, -1 AS altorderid,
+       CASE WHEN (planord_firm) THEN <? value("firmWoReq") ?> 
+	    ELSE <? value("plannedWoReq") ?> 
+       END AS ordertype,
+       CAST(planord_number AS text) AS ordernumber,
+       1 AS sequence,
+--get the planned order number for the higher level demand
+             (SELECT item_number
+                FROM item, itemsite
+               WHERE((itemsite_item_id=item_id)
+                 AND (itemsite_id=planord_itemsite_id))
+             ) AS item_number,
+       planord_startdate AS duedate,
+       FALSE AS late,
+       planreq_qty AS f_qtyordered,
+       NULL AS qtyreceived,
+       (planreq_qty * -1) AS balance
+FROM planreq, planord, itemsite, item
+WHERE ((planreq_source='P')
+  AND  (planreq_source_id=planord_id)
+  AND  (planreq_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=item_id)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=<? value("item_id") ?>) )
+<? endif ?>
+
+UNION
+SELECT pr_id AS orderid, -1 AS altorderid,
+       <? value("pr") ?> AS ordertype,
+       CAST(pr_number AS text) AS ordernumber,       
+       1 AS sequence,
+       '' AS item_number,
+       pr_duedate AS duedate,
+       FALSE AS late,
+       pr_qtyreq AS qtyordered,
+       NULL AS qtyreceived,
+       pr_qtyreq AS balance
+FROM pr, itemsite, item
+WHERE ((pr_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=item_id)
+  AND  (pr_itemsite_id=itemsite_id)
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=<? value("item_id") ?>) )
+<? endif ?>
+) AS dummy
+
+ORDER BY duedate, sequence;
+

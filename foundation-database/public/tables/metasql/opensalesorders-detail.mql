@@ -1,0 +1,50 @@
+-- Group: opensalesorders
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT cohead.*,
+                      COALESCE(cust_number, :error) AS cust_number,
+                      getSoSchedDate(cohead_id) AS scheddate, 
+                      getSoStatus(cohead_id) AS status,
+                      firstline(cohead_ordercomments) AS notes 
+                 FROM cohead 
+                   JOIN custinfo ON (cohead_cust_id=cust_id) 
+                   JOIN custtype ON (cust_custtype_id=custtype_id)
+               <? if exists("selectedSites") ?> 
+                   JOIN coitem ON (coitem_cohead_id=cohead_id) 
+                   JOIN itemsite ON (coitem_itemsite_id=itemsite_id) 
+                   JOIN site() ON (itemsite_warehous_id=warehous_id) 
+               <? elseif  exists("warehous_id") ?> 
+                   LEFT OUTER JOIN coitem ON (coitem_cohead_id=cohead_id) 
+                   LEFT OUTER JOIN itemsite ON (coitem_itemsite_id=itemsite_id) 
+                   LEFT OUTER JOIN whsinfo ON (itemsite_warehous_id=warehous_id) 
+                <? endif ?> 
+                WHERE((true) 
+               <? if exists("cust_id") ?>
+                 AND (cust_id=<? value("cust_id") ?> )
+               <? endif ?>
+               <? if exists("custtype_id") ?>
+                 AND (cust_custtype_id=<? value("custtype_id") ?>)
+              <? endif ?>
+              <? if exists("custtype_pattern") ?>
+                 AND (custtype_code ~* <? value("custtype_pattern") ?>)
+              <? endif ?>
+              <? if exists("poNumber") ?>
+                 AND  (cohead_custponumber~*<? value("poNumber") ?>)
+               <? endif ?>
+               <? if exists("startDate") ?>
+                 AND (cohead_orderdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+               <? endif ?>
+               <? if not exists("showClosed") ?> 
+                 AND (cohead_status='O')
+               <? endif ?>
+               <? if  exists("warehous_id") ?>
+                 AND (warehous_id=<? value("warehous_id") ?>)
+               <? endif ?>
+               <? if  exists("salesrep_id") ?>
+                 AND (cohead_salesrep_id=<? value("salesrep_id") ?>)
+               <? endif ?>
+                ) 
+               ORDER BY cohead_number;

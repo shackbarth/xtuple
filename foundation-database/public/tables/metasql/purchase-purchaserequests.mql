@@ -1,0 +1,38 @@
+-- Group: purchase
+-- Name:  purchaserequests
+-- Notes:
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT pr_id, itemsite_id, item_number,
+       (item_descrip1 || ' ' || item_descrip2) AS description,
+       pr.*,
+       CASE WHEN (pr_order_type='W') THEN ('W/O ' || ( SELECT formatWoNumber(womatl_wo_id)
+                                                       FROM womatl
+                                                       WHERE (womatl_id=pr_order_id) ) )
+            WHEN (pr_order_type='S') THEN ('S/O ' || (SELECT formatSoNumber(pr_order_id)))
+            WHEN (pr_order_type='F') THEN ('Planned Order')
+            WHEN (pr_order_type='M') THEN <? value("manual") ?>
+            ELSE <? value("other") ?>
+       END AS parent,
+       'qty' AS pr_qtyreq_xtnumericrole 
+FROM pr, itemsite, item 
+WHERE ((pr_itemsite_id=itemsite_id)
+   AND (itemsite_item_id=item_id)
+<? if exists("startDate") ?>
+   AND (pr_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("item_id") ?>
+   AND (itemsite_item_id=<? value("item_id") ?>)
+<? elseif exists("plancode_id") ?>
+   AND (itemsite_plancode_id=<? value("plancode_id") ?>)
+<? elseif exists("plancode_pattern") ?>
+   AND (itemsite_plancode_id IN (SELECT plancode_id FROM
+                                 plancode
+                                 WHERE (plancode_code ~ <? value("plancode_pattern") ?>) ) )
+<? endif ?>
+) 
+ORDER BY pr_duedate;

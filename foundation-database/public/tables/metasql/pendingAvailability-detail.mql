@@ -1,0 +1,100 @@
+-- Group: pendingAvailability
+-- Name: detail
+-- Notes: used by dspPendingAvailability
+-- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("showIndented") ?>
+
+-- Indented BOM
+SELECT itemsite_id, reorderlevel,
+       bomdata_bomwork_level,
+       bomdata_bomwork_id,
+       bomdata_bomwork_parent_id,
+       bomdata_bomwork_seqnumber AS bomitem_seqnumber,
+       bomdata_item_number AS item_number,
+       bomdata_itemdescription AS item_descrip,
+       bomdata_uom_name AS uom_name,
+       pendalloc,
+       ordered,
+       qoh,
+       (totalalloc + pendalloc) AS totalalloc,
+       (qoh + ordered - (totalalloc + pendalloc)) AS totalavail,
+       'qty' AS pendalloc_xtnumericrole,
+       'qty' AS ordered_xtnumericrole,
+       'qty' AS qoh_xtnumericrole,
+       'qty' AS totalalloc_xtnumericrole,
+       'qty' AS totalavail_xtnumericrole,
+       CASE WHEN (qoh < pendalloc) THEN 'error' END AS qoh_qtforegroundrole,
+       CASE WHEN ((qoh + ordered - (totalalloc + pendalloc)) < reorderlevel)  THEN 'error'
+            WHEN ((qoh + ordered - (totalalloc + pendalloc)) = reorderlevel) THEN 'warning'
+       END AS totalavail_qtforegroundrole,
+       bomdata_bomwork_level - 1 AS xtindentrole
+  FROM ( SELECT itemsite_id,
+                CASE WHEN(itemsite_useparams)
+                     THEN itemsite_reorderlevel
+                     ELSE 0.0
+                     END AS reorderlevel,
+                ib.*,
+                ((bomdata_qtyreq::NUMERIC * <? value("buildQty") ?>) * (1 + bomdata_scrap::NUMERIC)) AS pendalloc,
+                qtyAllocated(itemsite_id, DATE(<? value("buildDate") ?>)) AS totalalloc,
+                noNeg(itemsite_qtyonhand) AS qoh,
+                qtyOrdered(itemsite_id, DATE(<? value("buildDate") ?>)) AS ordered
+           FROM indentedBOM(<? value("item_id") ?>,
+                            getActiveRevId('BOM', <? value("item_id") ?>),
+                            0,0) ib LEFT OUTER JOIN
+                itemsite ON ((itemsite_item_id=bomdata_item_id)
+                         AND (itemsite_warehous_id=<? value("warehous_id") ?>))
+          WHERE (bomdata_item_id > 0)
+       <? if not exists("effective") ?>
+           AND (CURRENT_DATE BETWEEN bomdata_effective AND (bomdata_expires-1))
+       <? else ?>
+           AND (<? value("effective") ?> BETWEEN bomdata_effective AND (bomdata_expires-1))
+       <? endif ?>
+       ) AS data
+<? if exists("showShortages") ?>
+  WHERE ((qoh + ordered - (totalalloc + pendalloc)) < 0)
+<? endif ?>   
+ORDER BY bomworkSequence(bomdata_bomwork_id);
+
+<? else ?>
+
+-- Single Level BOM
+SELECT itemsite_id, bomitem_seqnumber, item_number, item_descrip, uom_name,
+       pendalloc, (totalalloc + pendalloc) AS totalalloc,
+       qoh, (qoh + ordered - (totalalloc + pendalloc)) AS totalavail,
+       reorderlevel,
+       'qty' AS pendalloc_xtnumericrole,
+       'qty' AS totalalloc_xtnumericrole,
+       'qty' AS qoh_xtnumericrole,
+       'qty' AS totalavail_xtnumericrole,
+       CASE WHEN (qoh < pendalloc) THEN 'error' END AS qoh_qtforegroundrole,
+       CASE WHEN ((qoh + ordered - (totalalloc + pendalloc)) < reorderlevel) THEN 'error'
+            WHEN ((qoh + ordered - (totalalloc + pendalloc)) = reorderlevel) THEN 'warning'
+       END AS totalavail_qtforegroundrole
+FROM ( SELECT itemsite_id, bomitem_seqnumber, item_number,
+              (item_descrip1 || ' ' || item_descrip2) AS item_descrip, uom_name,
+              ((itemuomtouom(bomitem_item_id, bomitem_uom_id, NULL,
+                            (bomitem_qtyfxd + bomitem_qtyper * <? value("buildQty") ?>) * (1 + bomitem_scrap)))) AS pendalloc,
+              qtyAllocated(itemsite_id, DATE(<? value("buildDate") ?>)) AS totalalloc,
+              noNeg(itemsite_qtyonhand) AS qoh,
+              qtyOrdered(itemsite_id, DATE(<? value("buildDate") ?>)) AS ordered,
+              CASE WHEN(itemsite_useparams) THEN itemsite_reorderlevel ELSE 0.0 END AS reorderlevel
+       FROM itemsite, item, bomitem(<? value("item_id") ?>), uom
+       WHERE ( (bomitem_item_id=itemsite_item_id)
+           AND (itemsite_item_id=item_id)
+           AND (item_inv_uom_id=uom_id)
+           AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+       <? if not exists("effective") ?>
+           AND (CURRENT_DATE BETWEEN bomitem_effective AND (bomitem_expires-1))
+       <? else ?>
+           AND (<? value("effective") ?> BETWEEN bomitem_effective AND (bomitem_expires-1))
+       <? endif ?>
+             )
+     ) AS data
+<? if exists("showShortages") ?>
+  WHERE ((qoh + ordered - (totalalloc + pendalloc)) < 0)
+<? endif ?>   
+ORDER BY bomitem_seqnumber;
+
+<? endif ?>   

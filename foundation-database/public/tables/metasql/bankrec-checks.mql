@@ -1,0 +1,140 @@
+-- Group: bankrec
+-- Name: checks
+-- Notes: used by reconcileBankaccount
+--        Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists("summary") ?>
+SELECT COALESCE(SUM(amount),0.0) AS cleared_amount
+  FROM ( SELECT COALESCE( bankrecitem_amount,
+                          currToLocal(bankaccnt_curr_id, gltrans_amount, gltrans_date) ) AS amount
+           FROM (bankaccnt CROSS JOIN gltrans)
+                       JOIN bankrecitem ON ((bankrecitem_source='GL')
+                                        AND (bankrecitem_source_id=gltrans_id)
+                                        AND (bankrecitem_bankrec_id=<? value("bankrecid") ?>)
+                                        AND (bankrecitem_cleared))
+          WHERE ((gltrans_accnt_id=bankaccnt_accnt_id)
+            AND (NOT gltrans_deleted)
+            AND (NOT gltrans_rec)
+            AND (gltrans_amount > 0)
+            AND (gltrans_doctype != 'JP')
+            AND (bankaccnt_id=<? value("bankaccntid") ?>) )
+          UNION ALL
+         SELECT COALESCE( bankrecitem_amount,
+                          currToLocal(bankaccnt_curr_id, sltrans_amount, sltrans_date) ) AS amount
+           FROM (bankaccnt CROSS JOIN sltrans)
+                       JOIN bankrecitem ON ((bankrecitem_source='SL')
+                                        AND (bankrecitem_source_id=sltrans_id)
+                                        AND (bankrecitem_bankrec_id=<? value("bankrecid") ?>)
+                                        AND (bankrecitem_cleared))
+          WHERE ((sltrans_accnt_id=bankaccnt_accnt_id)
+            AND (NOT sltrans_rec)
+            AND (sltrans_amount > 0)
+            AND (bankaccnt_id=<? value("bankaccntid") ?>) )
+          UNION ALL
+         SELECT CASE WHEN(bankadjtype_iscredit=false) THEN (bankadj_amount * -1) ELSE bankadj_amount END AS amount
+           FROM bankadj, bankadjtype, bankrecitem
+          WHERE ( (bankrecitem_source='AD')
+            AND (bankrecitem_source_id=bankadj_id)
+            AND (bankrecitem_bankrec_id=<? value("bankrecid") ?>)
+            AND (bankrecitem_cleared)
+            AND (bankadj_bankadjtype_id=bankadjtype_id)
+            AND (NOT bankadj_posted)
+            AND (((bankadjtype_iscredit=true) AND (bankadj_amount > 0)) OR ((bankadjtype_iscredit=false) AND (bankadj_amount < 0)))
+            AND (bankadj_bankaccnt_id=<? value("bankaccntid") ?>) ) ) AS data;
+<? else ?>
+SELECT gltrans_id AS id, 1 AS altid,
+       COALESCE(bankrecitem_cleared, FALSE) AS cleared,
+       gltrans_date AS transdate,
+       gltrans_doctype AS doc_type,
+       gltrans_docnumber AS doc_number,
+       gltrans_notes AS notes,
+       (SELECT currConcat(COALESCE(checkhead_curr_id, baseCurrId()))) AS doc_curr,
+       COALESCE(bankrecitem_curr_rate, checkhead_curr_rate, currRate(bankaccnt_curr_id, gltrans_date)) AS doc_exchrate,
+       gltrans_amount AS base_amount,
+       CASE WHEN (bankaccnt_curr_id=checkhead_curr_id) THEN
+         COALESCE( bankrecitem_amount,
+                   checkhead_amount,
+                   currToLocal(bankaccnt_curr_id, gltrans_amount, gltrans_date) )
+            ELSE
+         COALESCE( bankrecitem_amount,
+                   currToLocal(bankaccnt_curr_id, gltrans_amount, gltrans_date) )
+       END AS amount,
+       gltrans_date AS sortdate,
+       'uomratio' AS doc_exchrate_xtnumericrole,
+       'curr' AS base_amount_xtnumericrole,
+       'curr' AS amount_xtnumericrole
+  FROM (bankaccnt CROSS JOIN gltrans)
+              LEFT OUTER JOIN bankrecitem ON ((bankrecitem_source='GL')
+                                          AND (bankrecitem_source_id=gltrans_id)
+                                          AND (bankrecitem_bankrec_id=<? value("bankrecid") ?>)
+                                          AND (bankrecitem_cleared))
+              LEFT OUTER JOIN checkhead ON ((gltrans_doctype='CK')
+                                        AND (gltrans_misc_id=checkhead_id))
+ WHERE ((gltrans_accnt_id=bankaccnt_accnt_id)
+   AND (NOT gltrans_deleted)
+   AND (NOT gltrans_rec)
+   AND (NOT COALESCE(checkhead_void, false))
+   AND (gltrans_amount > 0)
+   AND (gltrans_doctype != 'JP')
+   AND (bankaccnt_id=<? value("bankaccntid") ?>) )
+ UNION ALL
+SELECT sltrans_id AS id, 2 AS altid,
+       COALESCE(bankrecitem_cleared, FALSE) AS cleared,
+       sltrans_date AS transdate,
+       sltrans_doctype AS doc_type,
+       sltrans_docnumber AS doc_number,
+       sltrans_notes AS notes,
+       (SELECT currConcat(COALESCE(checkhead_curr_id, baseCurrId()))) AS doc_curr,
+       COALESCE(bankrecitem_curr_rate, checkhead_curr_rate, currRate(bankaccnt_curr_id, sltrans_date)) AS doc_exchrate,
+       sltrans_amount AS base_amount,
+       CASE WHEN (bankaccnt_curr_id=checkhead_curr_id) THEN
+         COALESCE( bankrecitem_amount,
+                   checkhead_amount,
+                   currToLocal(bankaccnt_curr_id, sltrans_amount, sltrans_date) )
+            ELSE
+         COALESCE( bankrecitem_amount,
+                   currToLocal(bankaccnt_curr_id, sltrans_amount, sltrans_date) )
+       END AS amount,
+       sltrans_date AS sortdate,
+       'uomratio' AS doc_exchrate_xtnumericrole,
+       'curr' AS base_amount_xtnumericrole,
+       'curr' AS amount_xtnumericrole
+  FROM (bankaccnt CROSS JOIN sltrans)
+              LEFT OUTER JOIN bankrecitem ON ((bankrecitem_source='SL')
+                                          AND (bankrecitem_source_id=sltrans_id)
+                                          AND (bankrecitem_bankrec_id=<? value("bankrecid") ?>)
+                                          AND (bankrecitem_cleared))
+              LEFT OUTER JOIN checkhead ON ((sltrans_doctype='CK')
+                                        AND (sltrans_misc_id=checkhead_id))
+ WHERE ((sltrans_accnt_id=bankaccnt_accnt_id)
+   AND (NOT sltrans_rec)
+   AND (NOT COALESCE(checkhead_void, false))
+   AND (sltrans_amount > 0)
+   AND (bankaccnt_id=<? value("bankaccntid") ?>) )
+ UNION ALL
+SELECT bankadj_id AS id, 3 AS altid,
+       COALESCE(bankrecitem_cleared, FALSE) AS cleared,
+       bankadj_date AS transdate,
+       'ADJ' AS doc_type,
+       bankadj_docnumber AS doc_number,
+       bankadjtype_name AS notes,
+       (SELECT currConcat(bankadj_curr_id)) AS doc_curr,
+       1.0 AS doc_exchrate,
+       CASE WHEN(bankadjtype_iscredit=false) THEN (bankadj_amount * -1.0) ELSE bankadj_amount END AS base_amount,
+       CASE WHEN(bankadjtype_iscredit=false) THEN (bankadj_amount * -1.0) ELSE bankadj_amount END AS amount,
+       bankadj_date AS sortdate,
+       'uomratio' AS doc_exchrate_xtnumericrole,
+       'curr' AS base_amount_xtnumericrole,
+       'curr' AS amount_xtnumericrole
+  FROM (bankadjtype CROSS JOIN bankadj)
+               LEFT OUTER JOIN bankrecitem ON ((bankrecitem_source='AD')
+                                           AND (bankrecitem_source_id=bankadj_id)
+                                           AND (bankrecitem_bankrec_id=<? value("bankrecid") ?>)
+                                           AND (bankrecitem_cleared))
+ WHERE ( (((bankadjtype_iscredit=true) AND (bankadj_amount > 0)) OR ((bankadjtype_iscredit=false) AND (bankadj_amount < 0)))
+   AND (bankadj_bankadjtype_id=bankadjtype_id)
+   AND (NOT bankadj_posted)
+   AND (bankadj_bankaccnt_id=<? value("bankaccntid") ?>) )
+ORDER BY sortdate;
+<? endif ?>
