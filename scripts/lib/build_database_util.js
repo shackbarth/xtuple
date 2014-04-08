@@ -43,11 +43,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       grade = 10;
     }
 
-    //deleteSql = "delete from " + metasqlTable + " " +
-    //  "where metasql_group = '" + group +
-    //  "' and metasql_name = '" + name +
-    //  "' and metasql_grade = 0;";
-
     insertSql = "select saveMetasql (" +
       "'" + group + "'," +
       "'" + name + "'," +
@@ -58,12 +53,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return insertSql;
   };
 
-  var convertFromReport = function (content) {
+  var convertFromReport = function (content, extensionName) {
     var lines = content.split("\n"),
       name,
+      tableName = extensionName.indexOf('manufacturing') >= 0 ?
+        "xtmfg.pkgreport" :
+        "report",
       description,
+      disableSql,
       deleteSql,
-      insertSql;
+      insertSql,
+      enableSql;
 
     if (lines[3].indexOf(" <name>") !== 0 ||
         lines[4].indexOf(" <description>") !== 0) {
@@ -74,21 +74,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     description = lines[4].substring(" <description>".length).trim();
     description = description.substring(0, name.indexOf("<"));
 
-    deleteSql = "delete from report " +
+    disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
+
+    deleteSql = "delete from " + tableName + " " +
       "where report_name = '" + name +
       "' and report_grade = 0;";
 
-    insertSql = "insert into report (report_name, report_descrip, " +
+    insertSql = "insert into " + tableName + " (report_name, report_descrip, " +
       "report_source, report_loaddate, report_grade) VALUES (" +
       "'" + name + "'," +
       "'" + description + "'," +
       "$$" + content + "$$," +
       "now(), 0);";
 
-    return deleteSql + insertSql;
+    enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
+
+    return disableSql + deleteSql + insertSql + enableSql;
   };
 
-  // TODO: xtmfg.pkgmetasql ?
   var convertFromScript; // TODO
   var convertFromUiform; // TODO
 
