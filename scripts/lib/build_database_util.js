@@ -14,9 +14,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
     winston = require('winston');
 
-  var convertFromMetasql = function (content, extensionName) {
+  var convertFromMetasql = function (content, filename) {
     var lines = content.split("\n"),
-      schema = extensionName.indexOf('manufacturing') >= 0 ?
+      schema = filename.indexOf('manufacturing') >= 0 ?
         "'xtmfg'" :
         "NULL",
       group,
@@ -53,10 +53,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return insertSql;
   };
 
-  var convertFromReport = function (content, extensionName) {
+  var convertFromReport = function (content, filename) {
     var lines = content.split("\n"),
       name,
-      tableName = extensionName.indexOf('manufacturing') >= 0 ?
+      tableName = filename.indexOf('manufacturing') >= 0 ?
         "xtmfg.pkgreport" :
         "report",
       description,
@@ -92,13 +92,60 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return disableSql + deleteSql + insertSql + enableSql;
   };
 
-  var convertFromScript = function (content, extensionName) {
-    console.log(content);
-    return ";";
+  var convertFromScript = function (content, filename) {
+    var name = path.basename(filename, '.js'),
+      tableName = filename.indexOf('manufacturing') >= 0 ?
+        "xtmfg.pkgscript" :
+        "unknown",
+      notes = "xtMfg package",
+      disableSql,
+      deleteSql,
+      insertSql,
+      enableSql;
+
+    disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
+
+    deleteSql = "delete from " + tableName + " " +
+      "where script_name = '" + name +
+      "';";
+
+    insertSql = "insert into " + tableName + " (script_name, script_order, script_enabled, " +
+      "script_source, script_notes) VALUES (" +
+      "'" + name + "', 0, TRUE, " +
+      "$$" + content + "$$," +
+      "'" + notes + "');";
+
+    enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
+
+    return disableSql + deleteSql + insertSql + enableSql;
   };
-  var convertFromUiform = function (content, extensionName) {
-    console.log(content);
-    return ";";
+
+  var convertFromUiform = function (content, filename) {
+    var name = path.basename(filename, '.ui'),
+      tableName = filename.indexOf('manufacturing') >= 0 ?
+        "xtmfg.pkguiform" :
+        "unknown",
+      notes = "xtMfg package",
+      disableSql,
+      deleteSql,
+      insertSql,
+      enableSql;
+
+    disableSql = "ALTER TABLE " + tableName + " DISABLE TRIGGER ALL;";
+
+    deleteSql = "delete from " + tableName + " " +
+      "where uiform_name = '" + name +
+      "';";
+
+    insertSql = "insert into " + tableName + " (uiform_name, uiform_order, uiform_enabled, " +
+      "uiform_source, uiform_notes) VALUES (" +
+      "'" + name + "', 0, TRUE, " +
+      "$$" + content + "$$," +
+      "'" + notes + "');";
+
+    enableSql = "ALTER TABLE " + tableName + " ENABLE TRIGGER ALL;";
+
+    return disableSql + deleteSql + insertSql + enableSql;
   };
 
   var conversionMap = {
@@ -228,7 +275,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             extname = path.extname(fullFilename).substring(1);
 
           // convert special files: metasql, uiforms, reports, uijs
-          scriptContents = conversionMap[extname](scriptContents, extensionName);
+          scriptContents = conversionMap[extname](scriptContents, fullFilename);
           //
           // Allow inclusion of js files in manifest. If it is a js file,
           // use plv8 to execute it.
