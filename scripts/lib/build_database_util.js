@@ -14,12 +14,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataSource = require('../../node-datasource/lib/ext/datasource').dataSource,
     winston = require('winston');
 
-  var convertToMetasql = function (content) {
+  var convertFromMetasql = function (content, extensionName) {
     var lines = content.split("\n"),
+      schema = extensionName.indexOf('manufacturing') >= 0 ?
+        "'xtmfg'" :
+        "NULL",
       group,
       i = 2,
       name,
       notes = "",
+      grade = 0,
       deleteSql,
       insertSql;
 
@@ -34,25 +38,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       notes = notes + lines[i].substring(2) + "\n";
       i++;
     }
-    notes = notes.substring("-- Notes:".length);
+    notes = notes.substring(" Notes:".length);
+    if (notes.indexOf("must be grade 10") >= 0) {
+      grade = 10;
+    }
 
-    deleteSql = "delete from metasql " +
-      "where metasql_group = '" + group +
-      "' and metasql_name = '" + name +
-      "' and metasql_grade = 0;";
+    //deleteSql = "delete from " + metasqlTable + " " +
+    //  "where metasql_group = '" + group +
+    //  "' and metasql_name = '" + name +
+    //  "' and metasql_grade = 0;";
 
-    insertSql = "insert into metasql (metasql_group, metasql_name, metasql_notes, " +
-      "metasql_query, metasql_lastuser, metasql_lastupdate, metasql_grade) VALUES (" +
+    insertSql = "select saveMetasql (" +
       "'" + group + "'," +
       "'" + name + "'," +
       "$$" + notes + "$$," +
       "$$" + content + "$$," +
-      "'admin', now(), 0);";
+      "true, " + schema + ", " + grade + ");";
 
-    return deleteSql + insertSql;
+    return insertSql;
   };
 
-  var convertToReport = function (content) {
+  var convertFromReport = function (content) {
     var lines = content.split("\n"),
       name,
       description,
@@ -82,9 +88,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return deleteSql + insertSql;
   };
 
+  // TODO: xtmfg.pkgmetasql ?
+  var convertFromScript; // TODO
+  var convertFromUiform; // TODO
+
   var conversionMap = {
-    mql: convertToMetasql,
-    xml: convertToReport,
+    mql: convertFromMetasql,
+    xml: convertFromReport,
+    js: convertFromScript,
+    ui: convertFromUiform,
     sql: function (content) {
       // no op
       return content;
@@ -207,7 +219,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             extname = path.extname(fullFilename).substring(1);
 
           // convert special files: metasql, uiforms, reports, uijs
-          scriptContents = conversionMap[extname](scriptContents);
+          scriptContents = conversionMap[extname](scriptContents, extensionName);
           //
           // Allow inclusion of js files in manifest. If it is a js file,
           // use plv8 to execute it.
