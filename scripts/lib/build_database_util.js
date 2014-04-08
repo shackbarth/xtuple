@@ -92,8 +92,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return disableSql + deleteSql + insertSql + enableSql;
   };
 
-  var convertFromScript; // TODO
-  var convertFromUiform; // TODO
+  var convertFromScript = function (content, extensionName) {
+    console.log(content);
+    return ";";
+  };
+  var convertFromUiform = function (content, extensionName) {
+    console.log(content);
+    return ";";
+  };
 
   var conversionMap = {
     mql: convertFromMetasql,
