@@ -1,0 +1,81 @@
+-- Group: itemSources
+-- Name: search
+-- Notes: 
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+  SELECT itemsrc_id AS id,
+         1 AS altid,
+         item_number,
+         (item_descrip1 || ' ' || item_descrip2) AS item_descrip,
+         vend_name,
+         itemsrc_vend_item_number,
+         itemsrc_vend_item_descrip,
+         itemsrc_manuf_name,
+         itemsrc_manuf_item_number,
+         itemsrc_manuf_item_descrip,
+         contrct_number
+    FROM vendinfo JOIN itemsrc ON (itemsrc_vend_id=vend_id)
+                  JOIN item ON (item_id=itemsrc_item_id)
+       LEFT OUTER JOIN contrct ON (itemsrc_contrct_id = contrct_id)
+   WHERE (vend_id=<? value("vend_id") ?>)
+     AND ( (FALSE)
+<? if exists("searchNumber") ?>
+        OR (item_number ~* <? value("searchNumber") ?>)
+<? endif ?>
+<? if exists("searchVendNumber") ?>
+        OR (itemsrc_vend_item_number ~* <? value("searchVendNumber") ?>)
+<? endif ?>
+<? if exists("searchDescrip1") ?>
+        OR (item_descrip1 ~* <? value("searchDescrip1") ?>)
+<? endif ?>
+<? if exists("searchDescrip2") ?>
+        OR (item_descrip2 ~* <? value("searchDescrip2") ?>)
+<? endif ?>
+<? if exists("searchVendDescrip") ?>
+        OR (itemsrc_vend_item_descrip ~* <? value("searchVendDescrip") ?>)
+<? endif ?>
+<? if exists("searchManufName") ?>
+        OR (itemsrc_manuf_name ~* <? value("searchManufName") ?>)
+<? endif ?>
+<? if exists("searchManufNumber") ?>
+        OR (itemsrc_manuf_item_number ~* <? value("searchManufNumber") ?>)
+<? endif ?>
+       )
+  UNION
+  SELECT DISTINCT poitem_expcat_id AS id,
+                  2 AS altid,
+                  <? value("non") ?> AS item_number,
+                  (expcat_code || ' ' || expcat_descrip) AS item_descrip,
+                  vend_name,
+                  poitem_vend_item_number,
+                  poitem_vend_item_descrip,
+                  poitem_manuf_name,
+                  poitem_manuf_item_number,
+                  poitem_manuf_item_descrip,
+                  null AS contrct_id 
+    FROM vendinfo JOIN pohead ON (pohead_vend_id=vend_id)
+                  JOIN poitem ON (poitem_pohead_id=pohead_id)
+                  LEFT OUTER JOIN expcat ON (poitem_expcat_id=expcat_id)
+   WHERE (vend_id=<? value("vend_id") ?>)
+     AND (COALESCE(poitem_vend_item_number, '')!='')
+     AND (poitem_itemsite_id IS NULL)
+     AND ( (FALSE)
+<? if exists("searchVendNumber") ?>
+        OR (poitem_vend_item_number ~* <? value("searchVendNumber") ?>)
+<? endif ?>
+<? if exists("searchDescrip1") ?>
+        OR (expcat_code ~* <? value("searchDescrip1") ?>)
+        OR (expcat_descrip ~* <? value("searchDescrip1") ?>)
+<? endif ?>
+<? if exists("searchVendDescrip") ?>
+        OR (poitem_vend_item_descrip ~* <? value("searchVendDescrip") ?>)
+<? endif ?>
+<? if exists("searchManufName") ?>
+        OR (poitem_manuf_name ~* <? value("searchManufName") ?>)
+<? endif ?>
+<? if exists("searchManufNumber") ?>
+        OR (poitem_manuf_item_number ~* <? value("searchManufNumber") ?>)
+<? endif ?>
+       )
+  ORDER BY item_number, vend_name;

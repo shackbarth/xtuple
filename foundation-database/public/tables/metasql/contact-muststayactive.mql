@@ -1,0 +1,42 @@
+-- Group: contact
+-- Name:  muststayactive
+-- Notes: This query determines whether a given contact should be kept
+--        active because other active records depend on it.
+--        Todo - should this be moved to the cntctAfterTrigger?
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT EXISTS(
+ SELECT 1
+   FROM crmacct
+  WHERE(crmacct_active
+    AND (<? value("id") ?> IN (crmacct_cntct_id_1, crmacct_cntct_id_2)))
+ UNION SELECT 3
+   FROM custinfo
+  WHERE (cust_active
+    AND (<? value("id") ?> IN (cust_cntct_id, cust_corrcntct_id)))
+ UNION SELECT 5
+   FROM vendinfo
+  WHERE (vend_active
+    AND (<? value("id") ?> IN (vend_cntct1_id, vend_cntct2_id)))
+ UNION SELECT 7
+   FROM prospect
+  WHERE (prospect_active AND (prospect_cntct_id=<? value("id") ?>))
+ UNION SELECT 8
+   FROM shiptoinfo
+  WHERE (shipto_active AND (shipto_cntct_id=<? value("id") ?>))
+ UNION SELECT 9
+   FROM vendaddrinfo
+   JOIN vendinfo ON (vendaddr_vend_id=vend_id)
+  WHERE (vend_active AND (vendaddr_cntct_id=<? value("id") ?>))
+ UNION SELECT 10
+   FROM whsinfo
+  WHERE (warehous_active AND (warehous_cntct_id=<? value("id") ?>))
+ UNION SELECT 11
+   FROM emp
+  WHERE (emp_active AND (emp_cntct_id=<? value("id") ?>))
+ UNION SELECT 21
+   FROM todoitem
+  WHERE (todoitem_completed_date IS NOT NULL
+    AND (todoitem_cntct_id=<? value("id") ?>))
+) AS inuse;

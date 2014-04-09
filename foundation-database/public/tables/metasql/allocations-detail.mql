@@ -1,0 +1,140 @@
+-- Group: allocations
+-- Name: detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT source_id, type, order_number, item_number, totalqty, relievedqty, balanceqty, duedate,
+       balanceqty AS runningbal,
+       'qty' AS totalqty_xtnumericrole,
+       'qty' AS relievedqty_xtnumericrole,
+       'qty' AS balanceqty_xtnumericrole,
+       0 AS runningbal_xtrunningrole,
+       'qty' AS runningbal_xtnumericrole,
+       CASE WHEN (duedate < CURRENT_DATE) THEN 'error'
+       END AS duedate_qtforegroundrole
+FROM
+(
+SELECT womatl_id AS source_id, TEXT('W/O') AS type,
+       formatWoNumber(wo_id) AS order_number,
+       paritem.item_number,
+       itemuomtouom(component.itemsite_item_id, womatl_uom_id, NULL, womatl_qtyreq)  AS totalqty,
+       itemuomtouom(component.itemsite_item_id, womatl_uom_id, NULL, womatl_qtyiss) AS relievedqty,
+       itemuomtouom(component.itemsite_item_id, womatl_uom_id, NULL, noNeg(womatl_qtyreq - womatl_qtyiss)) AS balanceqty,
+       womatl_duedate AS duedate
+
+FROM womatl, wo, itemsite AS parent, itemsite AS component, item AS paritem, item AS compitem
+WHERE ((womatl_wo_id=wo_id)
+  AND (wo_status<>'C')
+  AND (wo_itemsite_id=parent.itemsite_id)
+  AND (womatl_itemsite_id=component.itemsite_id)
+  AND (parent.itemsite_item_id=paritem.item_id)
+  AND (component.itemsite_item_id=compitem.item_id)
+  AND (compitem.item_type != 'T')
+  AND (component.itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND (component.itemsite_item_id=<? value("item_id") ?>)
+<? if exists("leadTime") ?>
+  AND (womatl_duedate <= (CURRENT_DATE + component.itemsite_leadtime))
+<? elseif exists("days") ?>
+  AND (womatl_duedate <= (CURRENT_DATE + <? value("days") ?>))
+<? elseif exists("date") ?>
+  AND (womatl_duedate <= <? value("date") ?>)
+<? elseif exists("startDate") ?>
+  AND (womatl_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+)
+
+UNION 
+
+-- Special handling for tools
+SELECT womatl_id AS source_id, TEXT('W/O') AS type,
+       formatWoNumber(wo_id) AS order_number,
+       paritem.item_number,
+       itemuomtouom(component.itemsite_item_id, womatl_uom_id, NULL, womatl_qtyreq)  AS totalqty,
+       COALESCE(sum(invhist_invqty),0) AS relievedqty,
+       noNeg(itemuomtouom(component.itemsite_item_id, womatl_uom_id, NULL, womatl_qtyreq) - COALESCE(sum(invhist_invqty),0)) AS balanceqty,
+       womatl_duedate AS duedate
+
+FROM itemsite AS parent, itemsite AS component, item paritem, item AS compitem, wo, womatl
+  LEFT OUTER JOIN womatlpost ON (womatl_id=womatlpost_womatl_id)
+  LEFT OUTER JOIN invhist ON ((womatlpost_invhist_id=invhist_id)
+                          AND (invhist_invqty > 0))
+WHERE ((womatl_wo_id=wo_id)
+  AND (wo_status<>'C')
+  AND (wo_itemsite_id=parent.itemsite_id)
+  AND (womatl_itemsite_id=component.itemsite_id)
+  AND (parent.itemsite_item_id=paritem.item_id)
+  AND (component.itemsite_item_id=compitem.item_id)
+  AND (compitem.item_type='T')
+  AND (component.itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND (component.itemsite_item_id=<? value("item_id") ?>)
+<? if exists("leadTime") ?>
+  AND (womatl_duedate <= (CURRENT_DATE + component.itemsite_leadtime))
+<? elseif exists("days") ?>
+  AND (womatl_duedate <= (CURRENT_DATE + <? value("days") ?>))
+<? elseif exists("date") ?>
+  AND (womatl_duedate <= <? value("date") ?>)
+<? elseif exists("startDate") ?>
+  AND (womatl_duedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+)
+GROUP BY womatl_id, wo_id, paritem.item_number, womatl_uom_id, womatl_qtyreq, womatl_duedate, component.itemsite_item_id
+
+UNION 
+SELECT coitem_id AS source_id, TEXT('S/O') AS type,
+       formatSoNumber(coitem_id) AS order_number,
+       item_number,
+       itemuomtouom(itemsite_item_id, coitem_qty_uom_id, NULL, coitem_qtyord) AS totalqty,
+       itemuomtouom(itemsite_item_id, coitem_qty_uom_id, NULL, (coitem_qtyshipped + qtyAtShipping(coitem_id)) - coitem_qtyreturned) as relievedqty,
+       itemuomtouom(itemsite_item_id, coitem_qty_uom_id, NULL, noNeg(coitem_qtyord - (coitem_qtyshipped + qtyAtShipping(coitem_id)) + coitem_qtyreturned)) AS balanceqty,
+       coitem_scheddate as duedate
+FROM cohead, coitem, itemsite, item 
+WHERE ( (coitem_cohead_id=cohead_id)
+  AND  (coitem_itemsite_id=itemsite_id)
+  AND  (itemsite_item_id=item_id)
+  AND  (item_sold)
+  AND  (coitem_status NOT IN ('C','X'))
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+<? if exists("leadTime") ?>
+  AND  (coitem_scheddate <= (CURRENT_DATE + itemsite_leadtime))
+<? elseif exists("days") ?>
+  AND  (coitem_scheddate <= (CURRENT_DATE + <? value("days") ?>))
+<? elseif exists("date") ?>
+  AND  (coitem_scheddate <= <? value("date") ?>)
+<? elseif exists("startDate") ?>
+  AND  (coitem_scheddate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+)
+
+<? if exists("MultiWhs") ?>
+UNION 
+SELECT toitem_id AS source_id, TEXT('T/O') AS type,
+       TEXT(tohead_number) AS order_number,
+       item_number,
+       toitem_qty_ordered AS totalqty,
+       (toitem_qty_shipped + qtyAtShipping(toitem_id)) as relievedqty,
+       noNeg(toitem_qty_ordered - (toitem_qty_shipped + qtyAtShipping(toitem_id))) AS balanceqty,
+       toitem_schedshipdate as duedate
+FROM tohead, toitem, itemsite, item 
+WHERE ((toitem_tohead_id=tohead_id)
+  AND  (toitem_item_id=itemsite_item_id)
+  AND  (tohead_src_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=item_id)
+  AND  (toitem_status NOT IN ('C','X'))
+  AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+<? if exists("leadTime") ?>
+  AND  (toitem_schedshipdate <= (CURRENT_DATE + itemsite_leadtime))
+<? elseif exists("days") ?>
+  AND  (toitem_schedshipdate <= (CURRENT_DATE + <? value("days") ?>))
+<? elseif exists("date") ?>
+  AND  (toitem_schedshipdate <= <? value("date") ?>)
+<? elseif exists("startDate") ?>
+  AND  (toitem_schedshipdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+)
+<? endif ?>
+) AS dummy
+
+ORDER BY duedate;

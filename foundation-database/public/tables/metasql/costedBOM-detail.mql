@@ -1,0 +1,61 @@
+-- Group: costedBOM
+-- Name: detail
+-- Notes: used by dspCostedIndentedBOM, dspCostedSingleLevelBOM, dspCostedSummarizedBOM
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT
+<? if exists("indentedBOM") ?>
+       bomdata_bomwork_id AS id,
+<? elseif exists("singleLevelBOM") ?>
+       bomdata_bomitem_id AS id,
+<? elseif exists("summarizedBOM") ?>
+       -1,
+<? endif ?>
+       
+<? if exists("indentedBOM") ?>
+       CASE WHEN bomdata_bomwork_parent_id = -1 AND bomdata_bomwork_id = -1 THEN -1
+         ELSE bomdata_item_id
+       END AS altid,
+<? elseif exists("singleLevelBOM") ?>
+       CASE WHEN (bomdata_bomitem_id = -1) THEN -1
+         ELSE bomdata_item_id
+       END AS altid,
+<? endif ?>
+       *,
+
+<? if exists("useStandardCosts") ?>
+       bomdata_stdunitcost AS unitcost,
+       bomdata_stdextendedcost AS extendedcost,
+<? elseif exists("useActualCosts") ?>
+       bomdata_actunitcost AS unitcost,
+       bomdata_actextendedcost AS extendedcost,
+<? endif ?>
+
+       'qty' AS bomdata_batchsize_xtnumericrole,
+       'qty' AS bomdata_qtyfxd_xtnumericrole,
+       'qtyper' AS bomdata_qtyper_xtnumericrole,
+       'percent' AS bomdata_scrap_xtnumericrole,
+       'qtyper' AS bomdata_qtyreq_xtnumericrole,
+       'cost' AS unitcost_xtnumericrole,
+       'cost' AS extendedcost_xtnumericrole,
+       CASE WHEN COALESCE(bomdata_effective, startOfTime()) <= startOfTime() THEN <? value("always") ?>
+         END AS bomdata_effective_qtdisplayrole,
+       CASE WHEN COALESCE(bomdata_expires, endOfTime()) <= endOfTime() THEN <? value("never") ?>
+         END AS bomdata_expires_qtdisplayrole,
+       CASE WHEN bomdata_expired THEN 'expired'
+            WHEN bomdata_future  THEN 'future'
+       END AS qtforegroundrole
+<? if exists("indentedBOM") ?>
+       , bomdata_bomwork_level - 1 AS xtindentrole
+<? elseif exists("singleLevelBOM") ?>
+       , 0 AS extendedcost_xttotalrole
+<? endif ?>
+FROM
+<? if exists("indentedBOM") ?>
+     indentedbom(<? value("item_id") ?>, <? value("revision_id") ?>, 0, 0);
+<? elseif exists("singleLevelBOM") ?>
+     singlelevelbom(<? value("item_id") ?>, <? value("revision_id") ?>, 0, 0);
+<? elseif exists("summarizedBOM") ?>
+     summarizedBOM(<? value("item_id") ?>, <? value("revision_id") ?>, <? value("expiredDays") ?>, <? value("futureDays") ?>);
+<? endif ?>

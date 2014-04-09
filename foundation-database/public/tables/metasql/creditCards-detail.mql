@@ -1,0 +1,34 @@
+-- Group: creditCards
+-- Name: detail
+-- Notes: used by cashReceipt, customer, salesOrder
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT ccard_id, ccard_seq,
+       CASE WHEN (ccard_type='M') THEN <? value("masterCard") ?>
+            WHEN (ccard_type='V') THEN <? value("visa") ?>
+            WHEN (ccard_type='A') THEN <? value("americanExpress") ?>
+            WHEN (ccard_type='D') THEN <? value("discover") ?>
+            ELSE <? value("other") ?>
+       END AS type,
+       formatccnumber(decrypt(setbytea(ccard_number),
+                              setbytea(<? value("key") ?>), 'bf')) AS f_number,
+       ccard_active,
+       formatbytea(decrypt(setbytea(ccard_name),
+                           setbytea(<? value("key") ?>), 'bf')) AS ccard_name,
+       formatbytea(decrypt(setbytea(ccard_month_expired),
+                           setbytea(<? value("key") ?>), 'bf')) ||
+                   '-' ||
+                   formatbytea(decrypt(setbytea(ccard_year_expired),
+                                       setbytea(<? value("key") ?>),
+                                       'bf')) AS expiration 
+FROM ccard 
+WHERE ((ccard_cust_id=<? value("cust_id") ?>) 
+<? if exists("ccard_type") ?>
+ AND   (ccard_type=<? value("ccard_type") ?>)
+<? endif ?>
+<? if exists("activeonly") ?>
+ AND   (ccard_active)
+<? endif ?>
+)
+ORDER BY ccard_seq;

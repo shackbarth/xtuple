@@ -1,0 +1,30 @@
+-- Group: postCountTags
+-- Name:  post
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT MIN(postCountTag(invcnt_id, <? value('thaw') ?>)) AS result
+  FROM invcnt, itemsite, item
+ WHERE ((invcnt_itemsite_id=itemsite_id)
+    AND (invcnt_qoh_after IS NOT NULL)
+    AND (NOT invcnt_posted)
+    AND (itemsite_item_id=item_id)
+<? if exists('warehous_id') ?>
+    AND (itemsite_warehous_id=<? value('warehous_id') ?>)
+<? endif ?>
+
+<? if exists('classcode_id') ?>
+    AND (item_classcode_id=<? value('classcode_id') ?>)
+<? elseif exists('classcode_pattern') ?>
+    AND (item_classcode_id IN (SELECT classcode_id
+                                 FROM classcode
+                                WHERE (classcode_code ~ <? value('classcode_pattern') ?>)))
+<? elseif exists('plancode_id') ?>
+    AND (itemsite_plancode_id=<? value('plancode_id') ?>)
+<? elseif exists('plancode_pattern') ?>
+    AND (itemsite_plancode_id IN (SELECT plancode_id
+                                    FROM plancode
+                                   WHERE (plancode_code ~ <? value('plancode_pattern') ?>)))
+<? endif ?>
+);

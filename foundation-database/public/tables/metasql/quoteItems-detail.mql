@@ -1,0 +1,31 @@
+-- Group: quoteItems
+-- Name: detail
+-- Notes: used by dspQuotesByItem
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT quitem_id, quhead_id,
+       quitem.*, quhead.*,
+       COALESCE(cust_number, prospect_number) AS cust_number,
+       COALESCE(cust_name, prospect_name) AS cust_name,
+       'qty' AS quitem_qtyord_xtnumericrole
+FROM quitem JOIN quhead ON (quhead_id=quitem_quhead_id)
+            LEFT OUTER JOIN custinfo ON (cust_id=quhead_cust_id)
+            LEFT OUTER JOIN prospect ON (prospect_id=quhead_cust_id)
+            JOIN itemsite ON (itemsite_id=quitem_itemsite_id)
+            JOIN site() ON (warehous_id=itemsite_warehous_id)
+WHERE ( (1=1)
+<? if exists("item_id") ?>
+  AND  (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("showConverted") ?>
+  AND (quhead_status IN ('C','O'))
+<? else ?>
+  AND (quhead_status NOT IN ('C','X'))
+<? endif ?>
+<? if exists("startDate") ?>
+  AND  (quhead_quotedate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? endif ?>
+      )
+ORDER BY quhead_number;
+

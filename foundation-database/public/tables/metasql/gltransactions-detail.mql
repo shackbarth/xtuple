@@ -1,0 +1,103 @@
+-- Group: gltransactions
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT gltrans_id, gltrans_accnt_id,gltrans_date,gltrans_created,gltrans_source,
+       gltrans_doctype,gltrans_journalnumber,gltrans_posted,gltrans_username,
+       CASE WHEN(gltrans_docnumber='Misc.' AND
+              invhist_docnumber IS NOT NULL) THEN
+              (gltrans_docnumber || ' - ' || invhist_docnumber)
+            ELSE gltrans_docnumber
+       END AS docnumber,
+       firstLine(gltrans_notes) AS notes,
+       (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS account,
+       CASE WHEN (gltrans_amount < 0) THEN ABS(gltrans_amount)
+            ELSE NULL
+       END AS debit,
+       CASE WHEN (gltrans_amount > 0) THEN gltrans_amount
+            ELSE NULL
+       END AS credit,
+       CASE WHEN accnt_type IN ('A','E') THEN 
+         gltrans_amount * -1 
+       ELSE gltrans_amount END AS running,
+       'curr' AS debit_xtnumericrole,
+       'curr' AS credit_xtnumericrole,
+       'curr' AS running_xtnumericrole,
+       0 AS running_xtrunningrole,
+       gltrans_deleted AS xtdeletedrole,
+<? value("beginningBalance") ?> AS running_xtrunninginit 
+FROM gltrans JOIN accnt ON (gltrans_accnt_id=accnt_id) 
+     LEFT OUTER JOIN invhist ON (gltrans_misc_id=invhist_id
+                            AND gltrans_docnumber='Misc.') 
+<? if exists("company_id") ?>
+     JOIN company ON (accnt_company=company_number) 
+<? endif ?>
+<? if exists("prfcntr_id") ?>
+     JOIN prftcntr ON (accnt_profit=prftcntr_number) 
+<? endif ?>
+<? if exists("subaccnt_id") ?>
+     JOIN subaccnt ON (accnt_sub=subaccnt_number) 
+<? endif ?>
+<? if exists("subType") ?>
+     JOIN subaccnttype ON (subaccnttype_code=accnt_subaccnttype_code) 
+<? endif ?>
+WHERE (
+<? if exists("startDate") ?>
+  <? if exists("endDate") ?>
+       (gltrans_date BETWEEN <? value("startDate") ?>
+                         AND <? value("endDate") ?>)
+  <? else ?>
+       (gltrans_date BETWEEN <? value("startDate") ?>
+                         AND endoftime())
+  <? endif ?>
+<? else ?>
+  <? if exists("endDate") ?>
+       (gltrans_date BETWEEN startoftime()
+                         AND <? value("endDate") ?>)
+  <? else ?>
+       (gltrans_date BETWEEN startoftime()
+                         AND endoftime())
+  <? endif ?>
+<? endif ?>
+<? if not exists("showDeleted") ?>
+   AND (NOT gltrans_deleted)
+<? endif ?>
+<? if exists("company_id") ?>
+   AND (company_id=<? value("company_id") ?>)
+<? endif ?>
+<? if exists("prfcntr_id") ?>
+   AND (prftcntr_id=<? value("prfcntr_id") ?>)
+<? endif ?>
+<? if exists("accnt_number") ?>
+   AND (accnt_number=<? value("accnt_number") ?>)
+<? endif ?>
+<? if exists("subaccnt_id") ?>
+   AND (subaccnt_id=<? value("subaccnt_id") ?>)
+<? endif ?>
+<? if exists("subType") ?>
+   AND (subaccnttype_id=<? value("subType") ?>)
+<? endif ?>
+<? if exists("accntType") ?>
+   AND (accnt_type= <? value("accntType") ?>)
+<? endif ?>
+<? if exists("accnt_id") ?>
+   AND (gltrans_accnt_id=<? value("accnt_id") ?>)
+<? endif ?>
+<? if exists("docnum") ?>
+   AND (gltrans_docnumber = case when <? value("docnum") ?> = '' then 
+ gltrans_docnumber else 
+<? value("docnum") ?> end ) 
+<? endif ?>
+<? if exists("source") ?>
+   AND (gltrans_source=<? value("source") ?>)
+<? endif ?>
+) 
+ORDER BY
+<? if exists("beginningBalance") ?>
+   gltrans_date,
+<? else ?>
+   gltrans_created DESC,
+<? endif ?>
+   gltrans_sequence, gltrans_amount;

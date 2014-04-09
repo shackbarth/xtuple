@@ -1,0 +1,34 @@
+-- Group: checks
+-- Name: detail
+-- Notes: used by printChecks
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT checkhead.*, form_report_name AS report_name
+FROM checkhead
+LEFT OUTER JOIN vendinfo ON((checkhead_recip_id = vend_id)
+                        AND (checkhead_recip_type = 'V'))
+LEFT OUTER JOIN custinfo ON((checkhead_recip_id = cust_id)
+                        AND (checkhead_recip_type = 'C'))
+LEFT OUTER JOIN taxauth ON((checkhead_recip_id = taxauth_id)
+                       AND (checkhead_recip_type = 'T')),
+     bankaccnt, form
+WHERE ( (checkhead_bankaccnt_id=bankaccnt_id)
+  AND   (bankaccnt_check_form_id=form_id)
+<? if exists("toPrintOnly") ?>
+  AND   (NOT checkhead_printed)
+  AND   (NOT checkhead_void)
+<? endif ?>
+<? if exists("bankaccnt_id") ?>
+  AND   (bankaccnt_id=<? value("bankaccnt_id" ?>)
+<? endif ?>
+      )
+<? if exists("orderByName") ?>
+ORDER BY checkhead_recip_type DESC, COALESCE(vend_name, cust_name, taxauth_name)
+<? else ?>
+ORDER BY checkhead_recip_type DESC, COALESCE(vend_number, cust_number, taxauth_code)
+<? endif ?>
+<? if exists("numtoprint") ?>
+LIMIT <? value("numtoprint") ?>
+<? endif ?>
+;

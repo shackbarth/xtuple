@@ -1,0 +1,48 @@
+-- Group: packingListBatch
+-- Name: detail
+-- Notes: used by packingListBatch
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT
+       cohead_id, pack_shiphead_id, 
+       cohead_number AS order_number, pack_head_type,
+       cohead_shipvia AS shipvia,
+       formatShipmentNumber(pack_shiphead_id) AS shipment_number, 
+       cust_number AS number, cohead_billtoname AS name,
+       CASE WHEN (cohead_holdtype='N') THEN <? value("none") ?>
+            WHEN (cohead_holdtype='C') THEN <? value("credit") ?>
+            WHEN (cohead_holdtype='S') THEN <? value("ship") ?>
+            WHEN (cohead_holdtype='P') THEN <? value("pack") ?>
+            WHEN (cohead_holdtype='R') THEN <? value("return") ?>
+            ELSE <? value("other") ?>
+       END AS f_holdtype,
+       pack_printed
+FROM pack JOIN cohead ON (cohead_id=pack_head_id)
+          JOIN custinfo ON (cust_id=cohead_cust_id)
+          JOIN coitem ON (coitem_cohead_id=cohead_id)
+          JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
+WHERE ( (pack_head_type='SO')
+  AND   (checkSOSitePrivs(cohead_id))
+<? if exists("warehous_id") ?>
+  AND   (itemsite_warehous_id = <? value("warehous_id") ?>)
+<? endif ?>
+      )
+
+<? if exists("MultiWhs") ?>
+UNION ALL 
+SELECT tohead_id, pack_shiphead_id, 
+       tohead_number AS order_number, pack_head_type,
+       tohead_shipvia AS shipvia,
+       formatShipmentNumber(pack_shiphead_id) AS shipment_number, 
+       tohead_destname AS number, tohead_destcntct_name AS name,
+       '' AS f_holdtype,
+       pack_printed
+FROM pack JOIN tohead ON (tohead_id=pack_head_id) 
+WHERE ( (pack_head_type='TO') 
+<? if exists("warehous_id") ?>
+  AND   (tohead_src_warehous_id = <? value("warehous_id") ?>)
+<? endif ?>
+      )
+<? endif ?>
+ORDER BY 3;

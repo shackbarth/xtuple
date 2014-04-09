@@ -1,0 +1,156 @@
+-- Group: salesOrderItems
+-- Name: list
+-- Notes: used by salesOrder
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT coitem_id, coitem_altid, groupby,
+       coitem_linenumber, coitem_subnumber, f_linenumber,
+       warehous_code, item_number, item_type, description,
+       item_number_cust, item_descrip1_cust, item_descrip2_cust, item_barcode,
+       prodweight, packweight,
+       enhanced_status, coitem_firm,
+       qty_uom, price_uom, ship_uom,
+       coitem_memo,
+-- always create formatted columns for scheduled reports
+       formatDate(coitem_scheddate) AS f_scheddate,
+       formatSalesPrice(coitem_price) AS f_price,
+       formatSalesPrice(coitem_custprice) AS f_custprice,
+       formatPrcnt(discountfromcust / 100) AS f_discountfromcust,
+       formatQty(coitem_qtyord) AS f_qtyord, 
+       CASE WHEN (qtyshipped > 0.0) THEN formatQty(qtyshipped) ELSE NULL END AS f_qtyshipped,
+       CASE WHEN (qtyshipped > 0.0) THEN formatQty(balance) ELSE NULL END AS f_balance,
+       CASE WHEN (qtyatshipping > 0.0) THEN formatQty(qtyatshipping) ELSE NULL END AS f_qtyatshipping,
+       formatMoney(extprice) AS f_extprice,
+       CASE WHEN (extprice_shipped > 0.0) THEN formatMoney(extprice_shipped) ELSE NULL END AS f_extprice_shipped,
+-- end formatted columns
+       coitem_scheddate, coitem_price, coitem_custprice, discountfromcust,
+       coitem_unitcost, margin, marginpercent,
+       coitem_qtyord, qtyshipped, balance, qtyatshipping,
+       extprice, extprice_shipped,
+       CASE WHEN (discountfromcust=100.0) THEN 'N/A' END AS discountfromcust_qtdisplayrole,
+       'qty' AS coitem_qtyord_xtnumericrole,
+       'qty' AS qtyshipped_xtnumericrole,
+       'qty' AS balance_xtnumericrole,
+       'qty' AS qtyatshipping_xtnumericrole,
+       'qty' AS prodweight_xtnumericrole,
+       'qty' AS packweight_xtnumericrole,
+       'salesprice' AS coitem_price_xtnumericrole,
+       'salesprice' AS coitem_custprice_xtnumericrole,
+       'cost' AS coitem_unitcost_xtnumericrole,
+       'curr' AS extprice_xtnumericrole,
+       'curr' AS extprice_shipped_xtnumericrole,
+       'curr' AS margin_xtnumericrole,
+       'percent' AS marginpercent_xtnumericrole,
+       CASE WHEN fetchMetricBool('EnableSOShipping') AND
+                 coitem_scheddate > CURRENT_DATE AND
+                 (noNeg(coitem_qtyord) <> qtyAtShipping('SO', coitem_id)) THEN 'future'
+            WHEN fetchMetricBool('EnableSOShipping') AND
+                 (noNeg(coitem_qtyord) <> qtyAtShipping('SO', coitem_id)) THEN 'expired'
+            WHEN (coitem_status NOT IN ('C', 'X') AND
+                  EXISTS(SELECT coitem_id
+                         FROM coitem
+                         WHERE ((coitem_status='C')
+                           AND  (coitem_cohead_id=<? value("cohead_id") ?>)))) THEN 'error'
+       END AS coitem_scheddate_qtforegroundrole,
+       CASE WHEN coitem_subnumber = 0 THEN 0
+            ELSE 1
+       END AS xtindentrole,
+       spplytype, ordrnumbr,
+       itemsite_qtyonhand,
+       'qty' AS itemsite_qtyonhand_xtnumericrole
+<? if exists("includeReservations") ?>
+       ,
+       reserved,
+       reservable,
+       'qty' AS reserved_xtnumericrole,
+       'qty' AS reservable_xtnumericrole
+<? endif?>
+FROM (
+SELECT coitem_id,
+       CASE WHEN (coitem_status='C') THEN 1
+            WHEN (coitem_status='X') THEN 4
+            WHEN ( (coitem_status='O') AND ( (qtyAtShipping('SO', coitem_id) > 0) OR (coitem_qtyshipped > 0) ) ) THEN 2
+            ELSE 3
+       END AS coitem_altid, 1 AS groupby,
+       coitem_linenumber, coitem_subnumber, formatSoLineNumber(coitem_id) AS f_linenumber,
+       warehous_code, item_number, item_type,
+       (item_descrip1 || ' ' || item_descrip2) AS description,
+       CASE WHEN (coitem_custpn != '') THEN coitem_custpn
+            ELSE item_number
+       END AS item_number_cust,
+       CASE WHEN (coitem_custpn != '' AND itemalias_usedescrip=TRUE) THEN itemalias_descrip1
+            ELSE item_descrip1
+       END AS item_descrip1_cust,
+       CASE WHEN (coitem_custpn != '' AND itemalias_usedescrip=TRUE) THEN itemalias_descrip2
+            ELSE item_descrip2
+       END AS item_descrip2_cust,
+       formatitemsitebarcode(itemsite_id) AS item_barcode,
+       (coitem_qtyord / coitem_qty_invuomratio * item_prodweight) AS prodweight,
+       (coitem_qtyord / coitem_qty_invuomratio * item_packweight) AS packweight,
+       coitem_status, coitem_firm,
+       getSoitemStatus(coitem_id) AS enhanced_status,
+       quom.uom_name AS qty_uom, puom.uom_name AS price_uom,
+       itemSellingUOM(item_id) AS ship_uom,
+       coitem_memo,
+       coitem_scheddate, coitem_price, coitem_custprice, coitem_qtyord,
+       CASE WHEN (coitem_custprice = 0.0) THEN 100.0
+            ELSE ((1.0 - (coitem_price / coitem_custprice)) * 100.0)
+       END AS discountfromcust,
+       coitem_unitcost,
+       ROUND((coitem_qtyord * coitem_qty_invuomratio) *
+             ((coitem_price / coitem_price_invuomratio) - coitem_unitcost),2) AS margin,
+       CASE WHEN (coitem_price = 0.0) THEN 100.0
+            ELSE ((coitem_price - coitem_unitcost) / coitem_price)
+       END AS marginpercent,
+       noNeg(coitem_qtyshipped - coitem_qtyreturned) AS qtyshipped,
+       noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) AS balance,
+       qtyAtShipping('SO', coitem_id) AS qtyatshipping,
+       ROUND((coitem_qtyord * coitem_qty_invuomratio) *
+             (coitem_price / coitem_price_invuomratio),2) AS extprice,
+       ROUND(((coitem_qtyshipped - coitem_qtyreturned) * coitem_qty_invuomratio) *
+              (coitem_price / coitem_price_invuomratio),2) AS extprice_shipped,
+       CASE WHEN coitem_order_type='W' THEN TEXT( 'WO')
+            WHEN coitem_order_type='P' THEN TEXT('PO' )
+            WHEN coitem_order_type='R' THEN TEXT('PR')
+            ELSE TEXT (' ')
+       END AS spplytype,
+       CASE WHEN coitem_order_type='W' THEN (wo_number || '-' || wo_subnumber)
+            WHEN coitem_order_type='P' THEN (pohead_number || '-' || poitem_linenumber)
+            WHEN coitem_order_type='R' THEN (pr_number || '-' || pr_subnumber)
+            ELSE TEXT (' ')
+       END AS ordrnumbr,
+       itemsite_qtyonhand
+<? if exists("includeReservations") ?>
+       ,
+       coitem_qtyreserved AS reserved,
+       itemsite_qtyonhand - qtyreserved(itemsite_id) AS reservable
+<? endif?>
+  FROM cohead
+       JOIN coitem ON (coitem_cohead_id=cohead_id)
+       JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
+       JOIN item ON (item_id=itemsite_item_id)
+       JOIN whsinfo ON (warehous_id=itemsite_warehous_id)
+       JOIN uom AS quom ON (quom.uom_id=coitem_qty_uom_id)
+       JOIN uom AS puom ON (puom.uom_id=coitem_price_uom_id)
+       LEFT OUTER JOIN itemalias ON ((itemalias_item_id=item_id) AND (itemalias_number=coitem_custpn))
+       LEFT OUTER JOIN wo ON (coitem_order_id = wo_id)
+       LEFT OUTER JOIN pr ON (coitem_order_id = pr_id)
+       LEFT OUTER JOIN (pohead JOIN poitem ON (pohead_id = poitem_pohead_id))
+         ON (coitem_order_id = poitem_id)
+ WHERE (cohead_id=<? value("sohead_id") ?>)
+
+<? if exists("excludeCancelled") ?>
+ AND (coitem_status != 'X')
+<? endif?>
+
+<? if exists("excludeClosed") ?>
+ AND (coitem_status != 'C')
+<? endif?>
+
+<? if exists("excludeKits") ?>
+ AND (item_type != 'K')
+<? endif?>
+
+) AS data
+ORDER BY coitem_linenumber, coitem_subnumber;

@@ -1,0 +1,15 @@
+-- Group: packingList
+-- Name:  getreport
+-- Notes: get the reportname should be used for a packing list or pick list
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
+
+<? if exists('sohead_id') ?>
+SELECT findCustomerForm(cohead_cust_id,
+                       <? value('form') ?>) AS reportname
+  FROM cohead 
+ WHERE (cohead_id=<? value('sohead_id' ?>);
+<? elseif exists('tohead_id') ?>
+SELECT findTOForm(<? value('tohead_id') ?>,
+                  <? value('form') ?>) AS reportname;
+<? endif ?>

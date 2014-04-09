@@ -1,0 +1,130 @@
+-- Group: receivings
+-- Name: detail
+-- Notes: used by dspPoItemReceivingsByDate, dspPoItemReceivingsByItem, dspPoItemReceivingsByVendor
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT recv_id, 1 AS altid, recv_order_number AS ponumber,
+       vend_name,
+       recv_duedate           AS duedate,
+       recv_date              AS recvdate,
+       recv_vend_item_number  AS itemnumber,
+       recv_vend_item_descrip AS itemdescrip,
+       COALESCE(item_number,
+                (<? value("nonInv") ?> || recv_vend_item_number)) AS venditemnumber,
+       COALESCE(item_descrip1, recv_vend_item_descrip) AS venditemdescrip,
+       CASE WHEN (recv_vohead_id IS NOT NULL) THEN
+         <? value("received") ?>  
+       ELSE <? value("unvouchered") ?>
+       END AS sense,
+       recv_qty               AS qty,
+       currToBase(recv_purchcost_curr_id, recv_purchcost, CAST(recv_date AS DATE)) AS purchcost,
+       CASE WHEN (recv_qty > 0) THEN
+         COALESCE(recv_value,0) / recv_qty
+       ELSE 0 END  AS recvcost,
+       recv_value             AS value,
+       recv_invoiced          AS invoiced,
+       recv_date              AS sortdate,
+<? if exists("isReport") ?>
+       formatDate(recv_duedate)       AS f_duedate,
+       formatDate(recv_date)          AS f_recvdate,
+       formatQty(recv_qty)            AS f_qty,
+  <? if exists("showVariances") ?>
+       formatCost(currToBase(recv_purchcost_curr_id, recv_purchcost, CAST(recv_date AS DATE))) AS f_purchcost,
+       formatCost(CASE WHEN (recv_qty > 0) THEN COALESCE(recv_value,0) / recv_qty
+                       ELSE 0
+                  END)                AS f_recvcost,
+       formatMoney(recv_value)        AS f_value,
+  <? else ?>
+       NULL                           AS f_purchcost,
+       NULL                           AS f_recvcost,
+       NULL                           AS f_value,
+  <? endif ?>
+<? endif ?>
+       'qty'                  AS qty_xtnumericrole,
+       'cost'                 AS purchcost_xtnumericrole,
+       'cost'                 AS recvcost_xtnumericrole,
+       'curr'                 AS value_xtnumericrole,
+        <? value("na") ?>     AS duedate_xtnullrole,
+        <? value("na") ?>     AS purchcost_xtnullrole,
+        <? value("na") ?>     AS recvcost_xtnullrole
+FROM vendinfo, recv LEFT OUTER JOIN
+    (itemsite JOIN
+     item ON (itemsite_item_id=item_id)) ON (recv_itemsite_id=itemsite_id)
+WHERE ( (recv_vend_id=vend_id)
+ AND (recv_order_type='PO')
+ AND (recv_posted)
+ AND (DATE(recv_date) BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("vend_id") ?>
+ AND (vend_id=<? value ("vend_id") ?>)
+<? endif ?>
+<? if exists("item_id") ?>
+ AND (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+ AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("agentUsername") ?>
+ AND (recv_agent_username=<? value("agentUsername") ?>)
+<? endif ?>
+<? if not exists("showUnvouchered") ?>
+ AND (recv_vohead_id IS NOT NULL)
+ AND (recv_invoiced)
+<? endif ?>
+)
+UNION
+SELECT poreject_id, 2, poreject_ponumber,
+       vend_name,
+       NULL,
+       poreject_date,
+       poreject_vend_item_number,
+       poreject_vend_item_descrip,
+       COALESCE(item_number,
+                (<? value("nonInv") ?> || poreject_vend_item_number)),
+       COALESCE(item_descrip1, poreject_vend_item_descrip),
+       <? value("returned") ?>,
+       poreject_qty,
+       NULL,
+       NULL,
+       poreject_value,
+       poreject_invoiced,
+       poreject_date,
+<? if exists("isReport") ?>
+       NULL                           AS f_duedate,
+       formatDate(poreject_date)      AS f_recvdate,
+       formatQty(poreject_qty)        AS f_qty,
+       NULL                           AS f_purchcost,
+       NULL                           AS f_recvcost,
+       formatMoney(poreject_value)    AS f_value,
+<? endif ?>
+       'qty',
+       'cost',
+       'cost',
+       'curr',
+        <? value("na") ?>     AS duedate_xtnullrole,
+        <? value("na") ?>     AS purchcost_xtnullrole,
+        <? value("na") ?>     AS recvcost_xtnullrole
+FROM vendinfo, poreject LEFT OUTER JOIN
+    (itemsite JOIN
+     item ON (itemsite_item_id=item_id)) ON (poreject_itemsite_id=itemsite_id)
+WHERE ( (poreject_vend_id=vend_id)
+ AND (poreject_posted)
+ AND (DATE(poreject_date) BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+<? if exists("vend_id") ?>
+ AND (vend_id=<? value ("vend_id") ?>)
+<? endif ?>
+<? if exists("item_id") ?>
+ AND (itemsite_item_id=<? value("item_id") ?>)
+<? endif ?>
+<? if exists("warehous_id") ?>
+ AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+<? endif ?>
+<? if exists("agentUsername") ?>
+ AND (poreject_agent_username=<? value("agentUsername") ?>)
+<? endif ?>
+<? if not exists("showUnvouchered") ?>
+ AND (poreject_vohead_id IS NOT NULL)
+ AND (poreject_invoiced)
+<? endif ?>
+)
+ORDER BY sortdate DESC;

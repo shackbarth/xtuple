@@ -1,0 +1,60 @@
+-- Group: standardJournalHistory
+-- Name: detail
+-- Notes: used by dspStandardJournalHistory
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT gltrans_sequence, gltrans_id,
+       sortdate, sortdoc, level, gltrans_amount,
+       gltrans_date, gltrans_journalnumber, gltrans_posted,
+       gltrans_docnumber, account,
+       debit, credit,
+       'curr' AS debit_xtnumericrole,
+       'curr' AS credit_xtnumericrole,
+       CASE WHEN (debit = 0) THEN '' END AS debit_qtdisplayrole,
+       CASE WHEN (credit = 0) THEN '' END AS credit_qtdisplayrole,
+       level AS xtindentrole 
+FROM (SELECT DISTINCT gltrans_sequence, -1 AS gltrans_id,
+             gltrans_date AS sortdate, gltrans_docnumber AS sortdoc, 0 AS level, 0 AS gltrans_amount,
+             gltrans_date, gltrans_journalnumber, gltrans_posted,
+             NULL AS gltrans_docnumber,
+             NULL AS account,
+             0 AS debit, 0 AS credit
+      FROM gltrans, accnt 
+      WHERE ( (gltrans_accnt_id=accnt_id)
+          AND (NOT gltrans_deleted) 
+          AND (gltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+          AND (gltrans_doctype='ST') ) 
+      UNION 
+      SELECT DISTINCT gltrans_sequence, -1 AS gltrans_id,
+             gltrans_date AS sortdate, gltrans_docnumber AS sortdoc, 1 AS level, 0 AS gltrans_amount,
+             CAST(NULL AS DATE) AS gltrans_date, CAST(NULL AS INTEGER) AS gltrans_journalnumber, 
+             CAST(NULL AS BOOLEAN) AS gltrans_posted,
+             CASE WHEN (COALESCE(gltrans_docnumber, '') = '') THEN 'Unnamed'
+               ELSE gltrans_docnumber
+             END AS gltrans_docnumber,
+             NULL AS account,
+             0 AS debit, 0 AS credit 
+      FROM gltrans, accnt 
+      WHERE ( (gltrans_accnt_id=accnt_id)
+          AND (NOT gltrans_deleted)
+          AND (gltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+          AND (gltrans_doctype='ST') ) 
+      UNION 
+      SELECT gltrans_sequence, gltrans_id,
+             gltrans_date AS sortdate, gltrans_docnumber AS sortdoc, 2 AS level, gltrans_amount,
+             CAST(NULL AS DATE) AS gltrans_date, CAST(NULL AS INTEGER) AS gltrans_journalnumber,
+             CAST(NULL AS BOOLEAN) AS gltrans_posted,
+             NULL AS gltrans_docnumber,
+             (formatGLAccount(accnt_id) || ' - ' || accnt_descrip) AS account,
+             CASE WHEN (gltrans_amount < 0) THEN (gltrans_amount * -1)
+             END AS debit,
+             CASE WHEN (gltrans_amount > 0) THEN gltrans_amount
+             END AS credit 
+      FROM gltrans, accnt 
+      WHERE ( (gltrans_accnt_id=accnt_id)
+          AND (NOT gltrans_deleted) 
+          AND (gltrans_date BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
+          AND (gltrans_doctype='ST') ) 
+      ) AS data 
+ORDER BY sortdate, gltrans_sequence, sortdoc, level, gltrans_amount;

@@ -1,0 +1,100 @@
+-- Group: distributeInventory
+-- Name: locations
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT id, type, locationname, defaultlocation,
+		        location_netable, lotserial, f_expiration, expired,
+                        qty, qtytagged, (qty + qtytagged) AS balance,
+                        'qty' AS qty_xtnumericrole,
+                        'qty' AS qtytagged_xtnumericrole,
+                        'qty' AS balance_xtnumericrole,
+                        CASE WHEN expired THEN 'error' END AS qtforegroundrole, 
+                        CASE WHEN expired THEN 'error' 
+                             WHEN defaultlocation AND expired = false THEN 'altemphasis' 
+                        ELSE null END AS defaultlocation_qtforegroundrole, 
+                        CASE WHEN expired THEN 'error' 
+                             WHEN qty > 0 AND expired = false THEN 'altemphasis' 
+                        ELSE null END AS qty_qtforegroundrole 
+                 FROM ( 
+		 <? if exists("cNoIncludeLotSerial") ?>
+		 SELECT location_id AS id, <? value("locationType") ?> AS type,
+		        formatLocationName(location_id) AS locationname,
+		        CASE WHEN (<? value("transtype") ?> = 'R' AND location_id=itemsite_recvlocation_id) THEN TRUE
+		             WHEN (<? value("transtype") ?> = 'I' AND location_id=itemsite_issuelocation_id) THEN TRUE
+		             WHEN (<? value("transtype") ?> = 'O' AND location_id=itemsite_location_id) THEN TRUE
+                             ELSE FALSE
+                        END AS defaultlocation,
+		        location_netable,
+		        TEXT('') AS lotserial,
+		        TEXT(<? value("na") ?>) AS f_expiration, FALSE AS expired,
+		        qtyLocation(location_id, NULL, NULL, NULL, itemsite_id, itemlocdist_order_type, itemlocdist_order_id, itemlocdist_id) AS qty,
+		        itemlocdistQty(location_id, itemlocdist_id) AS qtytagged 
+		 FROM itemlocdist, location, itemsite 
+		 WHERE ( (itemlocdist_itemsite_id=itemsite_id)
+		  AND (itemsite_loccntrl)
+		  AND (itemsite_warehous_id=location_warehous_id)
+		  AND (validLocation(location_id, itemsite_id))
+		  AND (itemlocdist_id=<? value("itemlocdist_id") ?>) ) 
+		 <? elseif exists("cIncludeLotSerial") ?>
+		 SELECT itemloc_id AS id, <? value("itemlocType") ?> AS type,
+		        COALESCE(formatLocationName(location_id),
+		                 <? value("undefined") ?>) AS locationname,
+		        (location_id IS NOT NULL AND
+		         CASE WHEN (<? value("transtype") ?> = 'R' AND location_id=itemsite_recvlocation_id) THEN TRUE
+		              WHEN (<? value("transtype") ?> = 'I' AND location_id=itemsite_issuelocation_id) THEN TRUE
+   		              WHEN (<? value("transtype") ?> = 'O' AND location_id=itemsite_location_id) THEN TRUE
+                              ELSE FALSE
+                         END) AS defaultlocation,
+		        COALESCE(location_netable, false) AS location_netable,
+		        ls_number AS lotserial,
+		        CASE WHEN (itemsite_perishable) THEN formatDate(itemloc_expiration)
+		             ELSE <? value("na") ?>
+		        END AS f_expiration,
+		        CASE WHEN (itemsite_perishable) THEN (itemloc_expiration < CURRENT_DATE)
+		             ELSE FALSE 
+		        END AS expired,
+		        qtyLocation(itemloc_location_id, itemloc_ls_id, itemloc_expiration, itemloc_warrpurc, itemsite_id, itemlocdist_order_type, itemlocdist_order_id, itemlocdist_id) AS qty,
+		        ( SELECT COALESCE(SUM(target.itemlocdist_qty), 0)
+		          FROM itemlocdist AS target
+		          WHERE ( (target.itemlocdist_source_type='I')
+		           AND (target.itemlocdist_source_id=itemloc_id)
+		           AND (target.itemlocdist_itemlocdist_id=source.itemlocdist_id)) ) AS qtytagged 
+		 FROM itemlocdist AS source, itemsite, itemloc 
+                   LEFT OUTER JOIN location ON (itemloc_location_id=location_id) 
+                   LEFT OUTER JOIN ls ON (itemloc_ls_id=ls_id) 
+		 WHERE ( (source.itemlocdist_itemsite_id=itemsite_id)
+		  AND (itemloc_itemsite_id=itemsite_id)
+		  AND (source.itemlocdist_id=<? value("itemlocdist_id") ?>) ) 
+		  UNION 
+		 SELECT location_id AS id, <? value("locationType") ?> AS type,
+		        formatLocationName(location_id) AS locationname,
+		        CASE WHEN (<? value("transtype") ?> = 'R' AND location_id=itemsite_recvlocation_id) THEN TRUE
+		             WHEN (<? value("transtype") ?> = 'I' AND location_id=itemsite_issuelocation_id) THEN TRUE
+		             WHEN (<? value("transtype") ?> = 'O' AND location_id=itemsite_location_id) THEN TRUE
+                             ELSE FALSE
+                        END AS defaultlocation,
+		        location_netable,
+		        TEXT('') AS lotserial,
+		        TEXT(<? value("na") ?>) AS f_expiration, FALSE AS expired,
+		        qtyLocation(location_id, NULL, NULL, NULL, itemsite_id, itemlocdist_order_type, itemlocdist_order_id, itemlocdist_id) AS qty,
+		        itemlocdistQty(location_id, itemlocdist_id) AS qtytagged 
+		 FROM itemlocdist, location, itemsite 
+		 WHERE ( (itemlocdist_itemsite_id=itemsite_id)
+		  AND (itemsite_loccntrl)
+		  AND (itemsite_warehous_id=location_warehous_id)
+		  AND (validLocation(location_id, itemsite_id))
+                  AND (itemsite_id=<? value("itemsite_id") ?> ) 
+		  AND (location_id NOT IN (SELECT DISTINCT itemloc_location_id FROM itemloc WHERE (itemloc_itemsite_id=itemsite_id)))
+		  AND (itemlocdist_id=<? value("itemlocdist_id") ?>) ) 
+		 <? endif ?>
+		 ) AS data 
+                 WHERE ((TRUE) 
+		 <? if exists("showOnlyTagged") ?>
+		 AND (qtytagged != 0) 
+		 <? endif ?>
+                 <? if exists("showQtyOnly") ?>
+                 AND (qty > 0) 
+                 <? endif ?>
+		 ) ORDER BY locationname;

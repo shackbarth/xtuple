@@ -1,0 +1,43 @@
+-- Group: addresses
+-- Name:  detail
+-- Notes: 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT DISTINCT ON (addr_country, addr_state, addr_city, addr_line1, addr_number) 
+  addr_id, addr_line1, addr_line2, addr_line3, 
+  addr_city, addr_state, addr_country, addr_postalcode 
+<? foreach("char_id_text_list") ?>
+  , charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  , charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>
+<? endforeach ?>
+FROM addr 
+<? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='ADDR') 
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=addr_id)
+                                                                    AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='ADDR') 
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=addr_id)
+                                                                    AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='ADDR') 
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=addr_id)
+                                                                    AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+WHERE true
+<? if not exists("showInactive") ?> 
+ AND addr_active 
+<? endif ?>
+<? literal("charClause") ?>
+ORDER BY addr_country, addr_state, addr_city, addr_line1, addr_number;

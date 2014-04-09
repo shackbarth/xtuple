@@ -1,0 +1,50 @@
+-- Group: countSlip
+-- Name: detail
+-- Notes: used by dspCountSlipEditList, dspCountSlipsByWarehouse
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+SELECT cntslip_id,
+       CASE WHEN (cntslip_posted) THEN 1
+         ELSE 0
+       END,
+       cntslip_username AS user,
+<? if exists("numericSlips") ?>
+       toNumeric(cntslip_number, 0) AS cntslip_number,
+       cntslip_number AS cntslip_number_qtdisplayrole,
+<? else ?>
+       cntslip_number,
+<? endif ?>
+       CASE WHEN (cntslip_location_id=-1) THEN ''
+         ELSE formatLocationName(cntslip_location_id)
+       END AS locname,
+       invcnt_tagnumber,
+<? if exists("byWarehouse") ?>
+       warehous_code,
+       item_number, (item_descrip1 || ' ' || item_descrip2) AS descrip,
+<? endif ?>
+       cntslip_lotserial, cntslip_posted,
+       cntslip_entered, cntslip_qty,
+       'qty' AS cntslip_qty_xtnumericrole,
+       cntslip_posted AS posted
+FROM cntslip, invcnt
+<? if exists("byWarehouse") ?>
+     JOIN itemsite ON (invcnt_itemsite_id=itemsite_id)
+     JOIN item ON (itemsite_item_id=item_id)
+     JOIN whsinfo ON (itemsite_warehous_id=warehous_id)
+<? endif ?>
+WHERE ((cntslip_cnttag_id=invcnt_id)
+<? if exists("byWarehouse") ?>
+   AND (cntslip_entered BETWEEN <? value("startDate") ?> AND  (<? value("endDate") ?>::DATE + 1))
+  <? if not exists("showUnposted") ?>
+    AND (cntslip_posted)
+  <? endif ?>
+  <? if exists("warehous_id") ?>
+    AND (itemsite_warehous_id=<? value("warehous_id") ?>)
+  <? endif ?>
+<? else ?>
+    AND (NOT invcnt_posted)
+    AND (invcnt_id=<? value("cnttag_id") ?>)
+<? endif ?>
+      )
+ORDER BY cntslip_number;
