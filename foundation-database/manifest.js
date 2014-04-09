@@ -1,11 +1,7 @@
 {
   "name": "_foundation_database_",
   "todo": [
-    "api functions and views",
-    "indices",
-    "tables",
-    "triggers",
-    "types",
+    "reports",
     "remove from 440_schema.sql everything that's defined here. it's now redundant"
   ],
   "databaseScripts": [
@@ -33,6 +29,25 @@
     "public/indexes/evntlog.sql",
     "public/indexes/invcitemtax.sql",
     "public/indexes/shipitem.sql",
+
+    "public/types/achline.sql",
+    "public/types/apaging.sql",
+    "public/types/araging.sql",
+    "public/types/bomdata.sql",
+    "public/types/cntctdup.sql",
+    "public/types/flcoldata.sql",
+    "public/types/flstmtitem.sql",
+    "public/types/freightdata.sql",
+    "public/types/itemprice.sql",
+    "public/types/ordhead.sql",
+    "public/types/orditem.sql",
+    "public/types/reordlvl.sql",
+    "public/types/seqiss.sql",
+    "public/types/subtax.sql",
+    "public/types/taxassign.sql",
+    "public/types/taxdetail.sql",
+    "public/types/wodata.sql",
+    "public/types/woinvav.sql",
 
     "public/functions/acknowledgemessage.sql",
     "public/functions/actcost.sql",
