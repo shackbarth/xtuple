@@ -227,6 +227,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // not sure if this is necessary, but it would look like
       // -e ../private-extensions/source/inventory/foundation-database
 
+      if (options.useFoundationScripts) {
+        extraManifest = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js"));
+        extraManifestScripts = JSON.parse(extraManifest).databaseScripts;
+        extraManifestScripts = _.map(extraManifestScripts, function (path) {
+          return "../../foundation-database/" + path;
+        });
+        databaseScripts.unshift(extraManifestScripts);
+        databaseScripts = _.flatten(databaseScripts);
+      }
       if (options.useFrozenScripts) {
         // Frozen files are not idempotent and should only be run upon first registration
         extraManifestPath = alterPaths ?
@@ -240,15 +249,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             return "../../foundation-database/" + path;
           });
         }
-        databaseScripts.unshift(extraManifestScripts);
-        databaseScripts = _.flatten(databaseScripts);
-      }
-      if (options.useFoundationScripts) {
-        extraManifest = fs.readFileSync(path.join(dbSourceRoot, "../../foundation-database/manifest.js"));
-        extraManifestScripts = JSON.parse(extraManifest).databaseScripts;
-        extraManifestScripts = _.map(extraManifestScripts, function (path) {
-          return "../../foundation-database/" + path;
-        });
         databaseScripts.unshift(extraManifestScripts);
         databaseScripts = _.flatten(databaseScripts);
       }
