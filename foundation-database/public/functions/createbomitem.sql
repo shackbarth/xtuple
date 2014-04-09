@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION createBOMItem( INTEGER, INTEGER, INTEGER, INTEGER, CH
                                           BOOL, INTEGER, BOOL, TEXT, CHAR, INTEGER,
                                           INTEGER, TEXT, TEXT, TEXT )
                            RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pBomitemid ALIAS FOR $1;
@@ -39,19 +39,15 @@ BEGIN
   END IF;
 
 --  Make sure that the parent is not used in the component at some level
-  IF ( SELECT (item_type IN ('M', 'F'))
-       FROM item
-       WHERE (item_id=pComponentItemid) ) THEN
-    SELECT indentedWhereUsed(pParentItemid) INTO _bomworksetid;
-    SELECT bomwork_id INTO _temp
-    FROM bomwork
-    WHERE ( (bomwork_set_id=_bomworksetid)
-     AND (bomwork_item_id=pComponentItemid) )
-    LIMIT 1;
-    IF (FOUND) THEN
-      PERFORM deleteBOMWorkset(_bomworksetid);
-      RETURN -2;
-    END IF;
+  SELECT indentedWhereUsed(pParentItemid) INTO _bomworksetid;
+  SELECT bomwork_id INTO _temp
+  FROM bomwork
+  WHERE ( (bomwork_set_id=_bomworksetid)
+   AND (bomwork_item_id=pComponentItemid) )
+  LIMIT 1;
+  IF (FOUND) THEN
+    PERFORM deleteBOMWorkset(_bomworksetid);
+    RETURN -2;
   END IF;
 
   PERFORM deleteBOMWorkset(_bomworksetid);
@@ -88,7 +84,7 @@ CREATE OR REPLACE FUNCTION createBOMItem( INTEGER, INTEGER, INTEGER, INTEGER, CH
                                           BOOL, INTEGER, BOOL, TEXT, CHAR, INTEGER,
                                           INTEGER, TEXT )
                            RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pBomitemid ALIAS FOR $1;
@@ -135,7 +131,7 @@ CREATE OR REPLACE FUNCTION createBOMItem( INTEGER, INTEGER, INTEGER, CHAR,
                                           BOOL, INTEGER, BOOL, TEXT, CHAR(1), INTEGER,
                                           INTEGER, TEXT, TEXT, TEXT )
                            RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pBomitemid ALIAS FOR $1;

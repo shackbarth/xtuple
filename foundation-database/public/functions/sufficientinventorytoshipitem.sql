@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION sufficientInventoryToShipItem(TEXT, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pordertype    ALIAS FOR $1;
@@ -11,14 +11,14 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION sufficientInventoryToShipItem(TEXT, INTEGER, NUMERIC) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pordertype		ALIAS FOR $1;
-  porderitemid		ALIAS FOR $2;
-  pqty                  ALIAS FOR $3;
-  _returnVal		INTEGER;
-  _isqtyavail		BOOLEAN;
+  pordertype           ALIAS FOR $1;
+  porderitemid         ALIAS FOR $2;
+  pqty                 ALIAS FOR $3;
+  _returnVal           INTEGER;
+  _isqtyavail          BOOLEAN;
 
 BEGIN
   IF (porderitemid IS NULL) THEN
@@ -32,6 +32,7 @@ BEGIN
           WHERE (coitem_id=porderitemid)) THEN
         RETURN 0;
       END IF;
+
       SELECT (((COALESCE(pqty, roundQty(item_fractional,
 		      noNeg(coitem_qtyord - coitem_qtyshipped +
 			    coitem_qtyreturned - qtyAtShipping(pordertype, coitem_id)
@@ -123,6 +124,23 @@ BEGIN
   
   IF (NOT _isqtyavail) THEN
     RETURN -3;
+  END IF;
+
+  IF (pordertype = 'SO') THEN
+    IF ( SELECT fetchMetricBool('RequireSOReservations') ) THEN
+      SELECT (COALESCE(pqty, coitem_qtyreserved) <= coitem_qtyreserved)
+        INTO _isqtyavail
+        FROM coitem, itemsite, item
+       WHERE ((coitem_itemsite_id=itemsite_id) 
+         AND (coitem_status <> 'X')
+         AND  (NOT ((item_type IN ('R','J')) OR (itemsite_controlmethod = 'N'))) 
+         AND (itemsite_item_id=item_id) 
+         AND (coitem_id=porderitemid));
+    END IF;
+  END IF;
+
+  IF (NOT _isqtyavail) THEN
+    RETURN -4;
   END IF;
 
   RETURN 0;

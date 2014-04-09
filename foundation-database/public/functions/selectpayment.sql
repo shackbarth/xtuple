@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION selectPayment(INTEGER, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pApopenid ALIAS FOR $1;
@@ -14,17 +14,7 @@ BEGIN
   SELECT apopen_amount, apopen_paid,
          apopen_doctype, apopen_docdate,
          apopen_curr_id,
-         apopen_amount - apopen_paid
-           - COALESCE((SELECT SUM(currToCurr(checkitem_curr_id,
-                                             apopen_curr_id,
-                                             checkitem_amount + checkitem_discount,
-                                             checkhead_checkdate))
-                         FROM checkitem, checkhead
-                        WHERE((checkitem_checkhead_id=checkhead_id)
-                          AND (checkitem_apopen_id=apopen_id)
-                          AND (NOT checkhead_deleted)
-                          AND (NOT checkhead_replaced)
-                          AND (NOT checkhead_posted)) ),0) AS balance,
+         apopen_amount - apopen_paid - apCheckPending(apopen_id) AS balance,
          noNeg(COALESCE(apopen_discountable_amount, 0) *
                CASE WHEN (CURRENT_DATE <= determineDiscountDate(apopen_terms_id, apopen_docdate)) THEN terms_discprcnt
                     ELSE 0.0 END - discount_applied) AS discount_available
@@ -36,7 +26,7 @@ BEGIN
              AND (apapply_source_apopen_id=apopen_id)
              AND (apopen_discount)) ) AS data
    WHERE(apopen_id=pApopenid);
-  IF(NOT FOUND OR (NOT _p.apopen_doctype IN ('V','D'))) THEN
+  IF(NOT FOUND OR (NOT _p.apopen_doctype IN ('V','D','C'))) THEN
     RETURN -1;
   END IF;
 

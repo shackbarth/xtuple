@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION postCCcashReceipt(pCCpay   INTEGER,
                                              pdoctype TEXT    DEFAULT NULL,
                                              pamount  NUMERIC DEFAULT NULL) RETURNS INTEGER AS
 $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _aropenid     INTEGER;

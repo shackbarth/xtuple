@@ -5,7 +5,7 @@
 --        check number(optional), and recipient(optional), optionally restricted
 --        to 'new' (un-posted/replaced/deleted) checks for viewing check runs.
 --        fills in the check item detail if showDetail is passed.
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT checkhead_id AS checkid,
@@ -84,7 +84,11 @@ UNION
 SELECT checkitem_checkhead_id AS checkid, 0 AS extra, checkitem_id,
        checkhead_void, checkhead_misc,
        checkhead_printed, checkhead_posted,
-       CAST(COALESCE(checkitem_ranumber, checkitem_vouchernumber) AS TEXT) AS number,
+       (CASE apopen_doctype WHEN 'V' THEN <? value("voucher") ?>
+                            WHEN 'D' THEN <? value("debitMemo") ?>
+                            WHEN 'C' THEN <? value("creditMemo") ?>
+                            ELSE ''
+        END || '-' || CAST(COALESCE(checkitem_ranumber, checkitem_vouchernumber) AS TEXT)) AS number,
        CAST(COALESCE(checkitem_invcnumber, checkitem_cmnumber) AS TEXT) AS description,
        CAST(NULL AS DATE) AS checkdate,
        checkitem_amount AS amount,
@@ -98,9 +102,9 @@ SELECT checkitem_checkhead_id AS checkid, 0 AS extra, checkitem_id,
        '' AS checkhead_void_qtdisplayrole,    '' AS checkhead_misc_qtdisplayrole,
        '' AS checkhead_printed_qtdisplayrole, '' AS checkhead_posted_qtdisplayrole,
        1 AS xtindentrole
-  FROM checkitem, checkhead 
- WHERE ((checkitem_checkhead_id=checkhead_id)
-   AND   (checkhead_bankaccnt_id=<? value("bankaccnt_id") ?>)
+  FROM checkhead JOIN checkitem ON (checkitem_checkhead_id=checkhead_id)
+                 LEFT OUTER JOIN apopen ON (apopen_id=checkitem_apopen_id)
+ WHERE ((checkhead_bankaccnt_id=<? value("bankaccnt_id") ?>)
    <? if exists("startDate") ?>
      AND   (checkhead_checkdate BETWEEN <? value("startDate") ?> AND <? value("endDate") ?>)
    <? elseif exists("newOnly") ?>

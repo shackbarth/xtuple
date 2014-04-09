@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION postInvoice(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pInvcheadid ALIAS FOR $1;
@@ -15,7 +15,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION postInvoice(INTEGER, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pInvcheadid ALIAS FOR $1;
@@ -34,7 +34,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION postInvoice(INTEGER, INTEGER, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pInvcheadid ALIAS FOR $1;
@@ -673,6 +673,12 @@ BEGIN
           _totalAmount := _totalAmount - currToCurr(_tmpCurrId, _p.invchead_curr_id,
 						    _appliedAmount, _firstExchDate);
         END IF;
+
+        -- delete the allocation
+        DELETE FROM aropenalloc
+        WHERE (aropenalloc_doctype='I')
+          AND (aropenalloc_doc_id=_p.invchead_id);
+
       END IF;
     END LOOP;
   END IF;

@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION createInvoice(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pCobmiscid ALIAS FOR $1;
@@ -67,6 +67,15 @@ BEGIN
         FROM cobmisctax 
 	WHERE taxhist_parent_id = pCobmiscid 
 	AND taxhist_taxtype_id = getadjustmenttaxtypeid();
+
+--  Create the Invoice Characteristic Assignments
+    INSERT INTO charass
+          (charass_target_type, charass_target_id, charass_char_id, charass_value, charass_default, charass_price)
+    SELECT 'INV', _invcheadid, charass_char_id, charass_value, charass_default, charass_price
+      FROM cobmisc JOIN cohead ON (cohead_id=cobmisc_cohead_id)
+                   JOIN charass ON ((charass_target_type='SO') AND (charass_target_id=cohead_id))
+                   JOIN char ON (char_id=charass_char_id AND char_invoices)
+    WHERE (cobmisc_id=pCobmiscid);
 
 --  Create the Invoice items
   FOR _r IN SELECT coitem_id, coitem_linenumber, coitem_subnumber, coitem_custpn,

@@ -1,7 +1,7 @@
 -- Group: uninvoicedShipments
 -- Name: detail
 -- Notes: used by uninvoicedShipments
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT cohead_id, shipitem_id, cohead_number, coitem_linenumber,

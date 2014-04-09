@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION saveCntct( pCntctId         INTEGER,
                                       pTitle           TEXT,
                                       pFlag            TEXT,
                                       pOwnerUsername   TEXT ) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _cntctId INTEGER;
@@ -162,7 +162,7 @@ CREATE OR REPLACE FUNCTION saveCntct( pCntctId         INTEGER,
                                       pNotes           TEXT,
                                       pTitle           TEXT,
                                       pFlag            TEXT ) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _returnVal INTEGER;
@@ -191,7 +191,7 @@ CREATE OR REPLACE FUNCTION saveCntct( pCntctId         INTEGER,
                                       pWebAddr         TEXT,
                                       pTitle           TEXT,
                                       pFlag            TEXT ) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _returnVal INTEGER;

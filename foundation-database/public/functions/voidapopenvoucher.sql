@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION voidApopenVoucher(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pApopenid ALIAS FOR $1;
@@ -9,7 +9,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION voidApopenVoucher(INTEGER, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pApopenid ALIAS FOR $1;
@@ -298,7 +298,7 @@ BEGIN
     apopen_amount, apopen_paid, apopen_open, apopen_notes, apopen_discount, apopen_curr_rate )
   SELECT _apopenid, getEffectiveXtUser(), pJournalnumber,
          apopen_vend_id, apopen_docnumber, 'C', apopen_ponumber,
-         CURRENT_DATE, CURRENT_DATE, CURRENT_DATE, -1, apopen_curr_id,
+         _glDate, _glDate, _glDate, -1, apopen_curr_id,
          apopen_amount - apopen_paid, 0, TRUE, _reference, TRUE, apopen_curr_rate
     FROM apopen
    WHERE (apopen_id=_n.apopen_id);

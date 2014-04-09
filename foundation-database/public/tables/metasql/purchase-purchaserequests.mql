@@ -1,11 +1,11 @@
 -- Group: purchase
 -- Name:  purchaserequests
 -- Notes:
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
-SELECT pr_id, itemsite_id, item_number,
-       (item_descrip1 || ' ' || item_descrip2) AS description,
+SELECT pr_id, itemsite_id, itemsite_qtyonhand, itemsite_reorderlevel,
+       item_number, (item_descrip1 || ' ' || item_descrip2) AS description,
        pr.*,
        CASE WHEN (pr_order_type='W') THEN ('W/O ' || ( SELECT formatWoNumber(womatl_wo_id)
                                                        FROM womatl
@@ -15,6 +15,8 @@ SELECT pr_id, itemsite_id, item_number,
             WHEN (pr_order_type='M') THEN <? value("manual") ?>
             ELSE <? value("other") ?>
        END AS parent,
+       'qty' AS itemsite_qtyonhand_xtnumericrole, 
+       'qty' AS itemsite_reorderlevel_xtnumericrole,
        'qty' AS pr_qtyreq_xtnumericrole 
 FROM pr, itemsite, item 
 WHERE ((pr_itemsite_id=itemsite_id)

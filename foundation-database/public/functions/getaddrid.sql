@@ -1,11 +1,10 @@
-CREATE OR REPLACE FUNCTION getAddrId(text) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION getAddrId(pAddressNumber text) RETURNS INTEGER STABLE AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pAddressNumber ALIAS FOR $1;
   _returnVal INTEGER;
 BEGIN
-  IF (pAddressNumber IS NULL OR pAddressNumber = '''') THEN
+  IF (pAddressNumber IS NULL OR pAddressNumber = '') THEN
     RETURN NULL;
   END IF;
 
@@ -14,9 +13,9 @@ BEGIN
   WHERE (addr_number=pAddressNumber);
 
   IF (_returnVal IS NULL) THEN
-	RAISE EXCEPTION ''Address Number % not found.'', pAddressNumber;
+	RAISE EXCEPTION 'Address Number % not found.', pAddressNumber;
   END IF;
 
   RETURN _returnVal;
 END;
-' LANGUAGE 'plpgsql';
+$$ LANGUAGE 'plpgsql';

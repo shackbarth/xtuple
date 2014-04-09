@@ -2,7 +2,7 @@
 -- Name: detail
 -- Notes:
 -- Notes:
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT
@@ -81,6 +81,30 @@ FROM (
               JOIN site() ON (warehous_id=itemsite_warehous_id)
               JOIN item ON (item_id=itemsite_item_id)
               JOIN uom ON (uom_id=coitem_qty_uom_id)
+<? foreach("char_id_text_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> 
+          ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> 
+          ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> 
+          ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> 
+          ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> 
+          ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> 
+          ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
   WHERE (coitem_id IN (SELECT coitem_id
                      FROM coitem
                     WHERE coitem_status = 'O'
@@ -150,6 +174,7 @@ FROM (
   <? if exists("warehous_id") ?>
     AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
   <? endif ?>
+  <? literal("charClause") ?>
         )
 
   UNION
@@ -202,6 +227,30 @@ FROM (
               JOIN site() ON (warehous_id=itemsite_warehous_id)
               JOIN item ON (item_id=itemsite_item_id)
               JOIN uom ON (uom_id=coitem_qty_uom_id)
+<? foreach("char_id_text_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> 
+          ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> 
+          ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> 
+          ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> 
+          ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+     LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> 
+          ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='SO') 
+         AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=cohead_id)
+         AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+     LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> 
+          ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
   WHERE ( (coitem_status='O')
   <? if exists("cohead_id") ?>
     AND  (coitem_cohead_id=<? value("cohead_id") ?>)
@@ -266,6 +315,7 @@ FROM (
   <? if exists("warehous_id") ?>
     AND  (itemsite_warehous_id=<? value("warehous_id") ?>)
   <? endif ?>
+  <? literal("charClause") ?>
         )
 
 ) AS dummy

@@ -1,7 +1,7 @@
 -- Group: prices
 -- Name: detail
 -- Notes: used by dspPricesByCustomerType, dspPricesByCustomer, dspPricesByItem
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT itemid, sourcetype, schedulename, type,
@@ -68,6 +68,9 @@ FROM (
   <? if exists("byCustomer") ?>
          AND (item_price_uom_id=uom_id)
          AND (ipsass_cust_id=<? value("cust_id") ?>)
+         <? if exists("item_id") ?>
+         AND (item_id=<? value("item_id") ?>)
+         <? endif ?>
   <? else ?>
          AND (ipsass_cust_id=cust_id)
          AND (item_id=<? value("item_id") ?>)
@@ -143,6 +146,9 @@ FROM (
 <? elseif exists("byCustomer") ?>
          AND (ipsass_custtype_id=cust_custtype_id)
          AND (cust_id=<? value("cust_id") ?>)
+         <? if exists("item_id") ?>
+         AND (item_id=<? value("item_id") ?>)
+         <? endif ?>
 <? else ?>
          AND (ipsass_custtype_id=custtype_id)
          AND (item_id=<? value("item_id") ?>)
@@ -215,6 +221,9 @@ FROM (
          AND (custtype_id=<? value("custtype_id") ?>)
 <? elseif exists("byCustomer") ?>
          AND (cust_id=<? value("cust_id") ?>)
+         <? if exists("item_id") ?>
+         AND (item_id=<? value("item_id") ?>)
+         <? endif ?>
 <? else ?>
          AND (item_id=<? value("item_id") ?>)
 <? endif ?>
@@ -386,6 +395,9 @@ FROM (
          AND (NOT item_exclusive)
 <? if exists("byCustomer") ?>
          AND (cust_id=<? value("cust_id") ?>)
+         <? if exists("item_id") ?>
+         AND (item_id=<? value("item_id") ?>)
+         <? endif ?>
 <? endif ?>
             )
      ) AS data

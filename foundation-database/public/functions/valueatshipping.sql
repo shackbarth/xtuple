@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION valueAtShipping(plineitemid INTEGER) RETURNS NUMERIC AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RETURN valueAtShipping('SO', plineitemid);
@@ -8,7 +8,7 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION valueAtShipping(pordertype TEXT,
                                            plineitemid INTEGER) RETURNS NUMERIC AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _value NUMERIC := 0.0;

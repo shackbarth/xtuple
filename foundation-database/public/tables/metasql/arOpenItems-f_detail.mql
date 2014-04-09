@@ -5,7 +5,7 @@
 --        display class.  Used to be printed version got an extra parameter. Formatted
 --        values slow things down considerably on screen version otherwise. This
 --        should go away if/when we get OpenRPT to do its own formatting.
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 <? if exists("totalOnly") ?>
@@ -123,7 +123,7 @@ SELECT -1 AS id,
        NULL::date AS aropen_duedate,
        NULL::text AS ordernumber,
        -1 AS ordernumber_xtidrole,
-       <? value("creditMemo") ?>  AS doctype,
+       <? value("return") ?>  AS doctype,
        CASE WHEN (NOT cmhead_posted) THEN 'emphasis'
        END AS doctype_qtforegroundrole,
        creditmemototal(cmhead_id) AS amount,

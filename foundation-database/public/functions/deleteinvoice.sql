@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION deleteInvoice(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pInvcheadid ALIAS FOR $1;
@@ -35,6 +35,10 @@ BEGIN
   DELETE FROM aropenalloc
   WHERE (aropenalloc_doctype='I')
     AND (aropenalloc_doc_id=pInvcheadid);
+
+  DELETE FROM charass
+  WHERE (charass_target_type='INV')
+    AND (charass_target_id=pInvcheadid);
 
   DELETE FROM invcitem
   WHERE (invcitem_invchead_id=pInvcheadid);

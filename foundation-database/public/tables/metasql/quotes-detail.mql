@@ -1,13 +1,25 @@
 -- Group: quotes
 -- Name: detail
 -- Notes: 
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT quhead.*, firstline(quhead_ordercomments) AS notes, quhead_id AS id,
-  CASE WHEN quhead_status = 'O' THEN <? value("open") ?>
-       WHEN quhead_status = 'C' THEN <? value("converted") ?>
-  ELSE <? value("undefined") ?> END AS quhead_status_qtdisplayrole,
+       calcQuoteAmt(quhead_id) AS ordertotal,
+       'extprice' AS ordertotal_xtnumericrole,
+       <? foreach("char_id_text_list") ?>
+         charass_alias<? literal("char_id_text_list") ?>.charass_value AS char<? literal("char_id_text_list") ?>,
+       <? endforeach ?>
+       <? foreach("char_id_list_list") ?>
+         charass_alias<? literal("char_id_list_list") ?>.charass_value AS char<? literal("char_id_list_list") ?>,
+       <? endforeach ?>
+       <? foreach("char_id_date_list") ?>
+         charass_alias<? literal("char_id_date_list") ?>.charass_value::date AS char<? literal("char_id_date_list") ?>,
+       <? endforeach ?>
+       CASE WHEN quhead_status = 'O' THEN <? value("open") ?>
+            WHEN quhead_status = 'C' THEN <? value("converted") ?>
+            ELSE <? value("undefined") ?>
+       END AS quhead_status_qtdisplayrole,
 <? if exists("customersOnly") ?>
        cust_id, cust_number, cust_name,
 <? endif ?>
@@ -22,6 +34,30 @@ FROM quhead
   LEFT OUTER 
 <? endif ?>
   JOIN custinfo ON (quhead_cust_id=cust_id)
+<? foreach("char_id_text_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_text_list") ?> 
+             ON ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='QU') 
+            AND  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=quhead_id)
+            AND  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_text_list") ?> 
+             ON (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_list_list") ?> 
+             ON ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='QU') 
+            AND  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=quhead_id)
+            AND  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_list_list") ?> 
+             ON (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  LEFT OUTER JOIN charass charass_alias<? literal("char_id_date_list") ?> 
+             ON ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='QU') 
+            AND  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=quhead_id)
+            AND  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  LEFT OUTER JOIN char char_alias<? literal("char_id_date_list") ?> 
+             ON (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
 WHERE (checkQuoteSitePrivs(quhead_id, <? value("warehous_id") ?>))
 <? if exists("owner_username") ?> 
   AND (quhead_owner_username=<? value("owner_username") ?>) 
@@ -60,6 +96,7 @@ WHERE (checkQuoteSitePrivs(quhead_id, <? value("warehous_id") ?>))
 <? if exists("id") ?>
   AND  (quhead_id = <? value("id") ?>)
 <? endif ?>
+<? literal("charClause") ?>
 <? if exists("orderByCust") ?>
 ORDER BY cust_number, quhead_number;
 <? else ?>

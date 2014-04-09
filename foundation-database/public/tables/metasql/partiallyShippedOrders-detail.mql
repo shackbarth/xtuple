@@ -1,7 +1,7 @@
 -- Group: partiallyShippedOrders
 -- Name: detail
 -- Notes: used by dspPartiallyShippedOrders
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT CASE WHEN (cohead_holdtype IN ('P', 'C', 'R')) THEN -1

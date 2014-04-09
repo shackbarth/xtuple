@@ -1,9 +1,8 @@
-CREATE OR REPLACE FUNCTION getCharId(text, text) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION getCharId(pChar text,
+                                     pType text) RETURNS INTEGER STABLE AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pChar ALIAS FOR $1;
-  pType ALIAS FOR $2;
   _returnVal INTEGER;
 BEGIN
   IF (COALESCE(pChar, '') = '') THEN

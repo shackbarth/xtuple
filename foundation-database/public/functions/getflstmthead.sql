@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION getflstmthead(int4, int4)
   RETURNS SETOF flstmthead AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pFlcolid ALIAS FOR $1;

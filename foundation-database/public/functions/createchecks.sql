@@ -1,10 +1,8 @@
-DROP FUNCTION IF EXISTS createchecks(integer, date);
-CREATE OR REPLACE FUNCTION createChecks(INTEGER, DATE) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION createChecks(pBankaccntid INTEGER,
+                                        pCheckDate DATE) RETURNS INTEGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pBankaccntid ALIAS FOR $1;
-  pCheckDate ALIAS FOR $2;
   _v RECORD;
   _r RECORD;
   _c RECORD;
@@ -27,12 +25,12 @@ BEGIN
                AND (apselect_date <= pCheckDate)) LOOP
 
     -- if we owe this vendor anything (we might not) then create a check
-    IF ((SELECT 
-                SUM(apselect_amount * _check_curr_rate / apopen_curr_rate)          
-	 FROM apselect, apopen
-	 WHERE ((apselect_apopen_id=apopen_id)
-	   AND  (apopen_vend_id=_v.vend_id)
-	   AND  (apselect_bankaccnt_id=pBankaccntid)) ) > 0) THEN
+    -- allow $0 checks
+    IF ((SELECT SUM(CASE apopen_doctype WHEN 'C' THEN (apselect_amount * -1.0)
+                                        ELSE apselect_amount END * _check_curr_rate / apopen_curr_rate)          
+	 FROM apselect JOIN apopen ON (apopen_id=apselect_apopen_id)
+	 WHERE ((apopen_vend_id=_v.vend_id)
+	   AND  (apselect_bankaccnt_id=pBankaccntid)) ) >= 0) THEN
       -- 0.01 is a temporary amount; we''ll update the check amount later
       _checkid := createCheck(pBankaccntid,	'V',	_v.vend_id,
 			      pCheckDate,		0.01,	_check_curr_id,
@@ -65,8 +63,9 @@ BEGIN
 
       -- one check can pay for purchases on multiple dates in multiple currencies
       UPDATE checkhead
-      SET checkhead_amount = (SELECT SUM(checkitem_amount / checkitem_curr_rate)
-			      FROM checkitem
+      SET checkhead_amount = (SELECT SUM(CASE WHEN (apopen_doctype='C') THEN checkitem_amount / checkitem_curr_rate * -1.0
+                                              ELSE checkitem_amount / checkitem_curr_rate END)
+			      FROM checkitem LEFT OUTER JOIN apopen ON (apopen_id=checkitem_apopen_id)
 			      WHERE (checkitem_checkhead_id=checkhead_id))
       WHERE (checkhead_id=_checkid);
 

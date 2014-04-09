@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION getIpsProdcatId(pIpsName TEXT,
                                            pProdCat TEXT,
                                            pQtyBreak NUMERIC) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _returnVal INTEGER;

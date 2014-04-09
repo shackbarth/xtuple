@@ -1,8 +1,8 @@
 -- Group: purchaseOrderItems
 -- Name: detail
 -- Notes: used by purchaseOrderItem
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
--- See www.xtuple.com/CPAL for the full text of the software license.
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT pohead_number, pohead_taxzone_id,
        pohead_curr_id, pohead_orderdate,
@@ -31,11 +31,13 @@ SELECT pohead_number, pohead_taxzone_id,
        END AS order_number,
        poitem_unitprice * poitem_qty_ordered AS extended_price,
        COALESCE(coitem_prcost, 0.0) AS override_cost,
+       contrct_number,
        itemsrc.*
   FROM poitem JOIN pohead ON (pohead_id=poitem_pohead_id)
               LEFT OUTER JOIN itemsrc ON (itemsrc_id=poitem_itemsrc_id)
               LEFT OUTER JOIN coitem  ON (poitem_order_type='S' AND coitem_id=poitem_order_id)
               LEFT OUTER JOIN womatl  ON (poitem_order_type='W' AND womatl_id=poitem_order_id)
+              LEFT OUTER JOIN contrct ON (itemsrc_contrct_id=contrct_id)
  WHERE ( (TRUE)
 <? if exists("poitem_id") ?>
    AND (poitem_id=<? value("poitem_id") ?>)

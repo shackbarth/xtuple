@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION distributeToLocations(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pItemlocdistid ALIAS FOR $1;
@@ -120,28 +120,30 @@ BEGIN
           SELECT nextval('shipitemlocrsrv_shipitemlocrsrv_id_seq'),
             shipitem_id, itemloc_itemsite_id, itemloc_location_id,
             itemloc_ls_id, itemloc_expiration, itemloc_warrpurc,
-            least(_itemlocdist.qty, itemlocrsrv_qty)
+            least((_itemlocdist.qty * -1.0), reserve_qty)
           FROM shipitem, itemloc
-            JOIN itemlocrsrv ON (itemloc_id=itemlocrsrv_itemloc_id)
+            JOIN reserve ON (itemloc_id=reserve_supply_id AND reserve_supply_type='I')
           WHERE ( (shipitem_invhist_id=_itemlocdist.invhistid)
             AND   (itemloc_id=_itemlocid)
-            AND   (itemlocrsrv_source=_itemlocdist.ordertype)
-            AND   (itemlocrsrv_source_id=_itemlocdist.orderid) );
+            AND   (reserve_demand_type=_itemlocdist.ordertype)
+            AND   (reserve_demand_id=_itemlocdist.orderid) );
         END IF;
 
---  Update the itemloc reservation
-        UPDATE itemlocrsrv
-        SET itemlocrsrv_qty = (itemlocrsrv_qty + _itemlocdist.qty)
-        WHERE ( (itemlocrsrv_itemloc_id=_itemlocid)
-          AND   (itemlocrsrv_source=_itemlocdist.ordertype)
-          AND   (itemlocrsrv_source_id=_itemlocdist.orderid) );
+--  Update the reservation
+        UPDATE reserve
+        SET reserve_qty = (reserve_qty + _itemlocdist.qty)
+        WHERE ( (reserve_supply_id=_itemlocid)
+          AND   (reserve_supply_type='I')
+          AND   (reserve_demand_type=_itemlocdist.ordertype)
+          AND   (reserve_demand_id=_itemlocdist.orderid) );
           
 --  Delete reservation if fully distributed
-        DELETE FROM itemlocrsrv
-        WHERE ( (itemlocrsrv_itemloc_id=_itemlocid)
-          AND   (itemlocrsrv_source=_itemlocdist.ordertype)
-          AND   (itemlocrsrv_source_id=_itemlocdist.orderid)
-          AND   (itemlocrsrv_qty=0) );
+        DELETE FROM reserve
+        WHERE ( (reserve_supply_id=_itemlocid)
+          AND   (reserve_supply_type='I')
+          AND   (reserve_demand_type=_itemlocdist.ordertype)
+          AND   (reserve_demand_id=_itemlocdist.orderid)
+          AND   (reserve_qty=0) );
       END IF;
     END IF;
 

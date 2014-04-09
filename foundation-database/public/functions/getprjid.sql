@@ -1,8 +1,7 @@
-CREATE OR REPLACE FUNCTION getPrjId(text) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION getPrjId(pPrjNumber text) RETURNS INTEGER STABLE AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pPrjNumber ALIAS FOR $1;
   _returnVal INTEGER;
 BEGIN
   IF (pPrjNumber IS NULL) THEN
@@ -19,4 +18,4 @@ BEGIN
 
   RETURN _returnVal;
 END;
-$$ LANGUAGE 'plpgsql' STABLE;
+$$ LANGUAGE 'plpgsql';

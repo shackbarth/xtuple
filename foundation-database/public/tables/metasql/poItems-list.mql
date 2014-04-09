@@ -1,8 +1,8 @@
 -- Group: poItems
 -- Name: list
 -- Notes: used by purchaseOrder
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
--- See www.xtuple.com/CPAL for the full text of the software license.
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT poitem.*,
        CASE WHEN(poitem_status='C') THEN <? value("closed") ?>
@@ -26,6 +26,7 @@ SELECT poitem.*,
        CASE WHEN (itemsite_id IS NULL) THEN firstLine(poitem_vend_item_descrip)
             ELSE (item_descrip1 || ' ' || item_descrip2)
        END AS item_descrip,
+       contrct_number, 
        poitem_rlsd_duedate AS orgl_duedate,
        (poitem_unitprice * poitem_qty_ordered) AS extprice,
        CASE WHEN(poitem_status='C') THEN <? value("closed") ?>
@@ -50,5 +51,7 @@ FROM pohead JOIN poitem  ON (poitem_pohead_id=pohead_id)
             LEFT OUTER JOIN item     ON (itemsite_item_id=item_id)
             LEFT OUTER JOIN coitem   ON (poitem_order_type='S' AND poitem_order_id = coitem_id)
             LEFT OUTER JOIN womatl   ON (poitem_order_type='W' AND poitem_order_id = womatl_id)
+            LEFT OUTER JOIN itemsrc  ON (poitem_itemsrc_id=itemsrc_id)
+            LEFT OUTER JOIN contrct  ON (itemsrc_contrct_id=contrct_id)
 WHERE (poitem_pohead_id=<? value("pohead_id") ?>)
 ORDER BY poitem_linenumber;

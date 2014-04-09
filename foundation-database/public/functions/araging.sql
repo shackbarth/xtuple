@@ -1,6 +1,6 @@
 SELECT dropIfExists('FUNCTION', 'araging(date)', 'public');
 CREATE OR REPLACE FUNCTION araging(date, boolean) RETURNS SETOF araging AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pAsOfDate ALIAS FOR $1;
@@ -20,7 +20,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION araging(date, boolean, boolean) RETURNS SETOF araging AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pAsOfDate ALIAS FOR $1;

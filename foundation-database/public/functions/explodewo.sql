@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION explodeWo(INTEGER, BOOLEAN) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pWoid ALIAS FOR $1;
@@ -84,48 +84,61 @@ BEGIN
 --  Create the W/O Material Requirements
   INSERT INTO womatl
   ( womatl_wo_id, womatl_bomitem_id, womatl_wooper_id, womatl_schedatwooper,
-    womatl_itemsite_id,
-    womatl_duedate,
+    womatl_itemsite_id, womatl_duedate,
     womatl_uom_id, womatl_qtyfxd, womatl_qtyper, womatl_scrap,
     womatl_qtyreq,
     womatl_qtyiss, womatl_qtywipscrap,
     womatl_lastissue, womatl_lastreturn, womatl_cost,
     womatl_picklist, womatl_createwo, womatl_issuewo,
-    womatl_issuemethod, womatl_notes, womatl_ref )
+    womatl_issuemethod, womatl_notes, womatl_ref,
+    womatl_price )
   SELECT wo_id, bomitem_id, bomitem_booitem_seq_id, bomitem_schedatwooper,
-         cs.itemsite_id,
-         CASE WHEN bomitem_schedatwooper THEN COALESCE(calcWooperStartStub(wo_id,bomitem_booitem_seq_id), wo_startdate)
-              ELSE wo_startdate
-         END,
+         matl_itemsite, duedate,
          bomitem_uom_id, bomitem_qtyfxd, bomitem_qtyper, bomitem_scrap,
-         roundQty(itemuomfractionalbyuom(bomitem_item_id, bomitem_uom_id), (bomitem_qtyfxd + bomitem_qtyper * wo_qtyord) * (1 + bomitem_scrap)),
-         0, 0,
+         qtyreq, 0, 0,
          startOfTime(), startOfTime(), 0,
-         item_picklist, ( (item_type='M') AND (bomitem_createwo) ),
-         CASE WHEN ( (item_type='M') AND (bomitem_issuewo) ) THEN TRUE
-              WHEN (cs.itemsite_costmethod='J') THEN TRUE
-              ELSE FALSE
-         END,
-         bomitem_issuemethod, bomitem_notes, bomitem_ref 
-  FROM bomitem, wo, itemsite AS ps, itemsite AS cs, item
-  WHERE ( (wo_itemsite_id=ps.itemsite_id)
-   AND (bomitem_parent_item_id=ps.itemsite_item_id)
-   AND (bomitem_item_id=cs.itemsite_item_id)
-   AND (bomitem_rev_id=wo_bom_rev_id)
-   AND (ps.itemsite_warehous_id=cs.itemsite_warehous_id)
-   AND (cs.itemsite_item_id=item_id)
-   AND (woEffectiveDate(wo_startdate) BETWEEN bomitem_effective AND (bomitem_expires - 1))
-   AND (wo_id=pWoid)
-       AND ((bomitem_char_id IS NULL)
-       OR  EXISTS (
-         SELECT charass_id
-         FROM coitem,charass
-         WHERE ((charass_target_type='SI')
-          AND  (charass_target_id=coitem_id)
-          AND  (charass_char_id=bomitem_char_id)
-          AND  (charass_value=bomitem_value)
-          AND  (wo_ordtype='S')
-          AND  (coitem_id=wo_ordid)))) );
+         item_picklist, ( (item_type='M') AND (bomitem_createwo) ), issuewo,
+         bomitem_issuemethod, bomitem_notes, bomitem_ref,
+         CASE WHEN (price=-9999.0) THEN 0.0
+              ELSE price
+         END
+  FROM (SELECT *, cs.itemsite_id AS matl_itemsite,
+               CASE WHEN bomitem_schedatwooper THEN COALESCE(calcWooperStartStub(wo_id,bomitem_booitem_seq_id), wo_startdate)
+                    ELSE wo_startdate
+               END AS duedate,
+               roundQty(itemuomfractionalbyuom(bomitem_item_id, bomitem_uom_id), (bomitem_qtyfxd + bomitem_qtyper * wo_qtyord) * (1 + bomitem_scrap)) AS qtyreq,
+               CASE WHEN ( (item_type='M') AND (bomitem_issuewo) ) THEN TRUE
+                    WHEN (cs.itemsite_costmethod='J') THEN TRUE
+                    ELSE FALSE
+               END AS issuewo,
+               CASE WHEN (cohead_id IS NULL) THEN item_listprice
+                    ELSE (SELECT itemprice_price
+                          FROM itemIpsPrice(item_id, cohead_cust_id, cohead_shipto_id, 
+                                      roundQty(itemuomfractionalbyuom(bomitem_item_id, bomitem_uom_id), (bomitem_qtyfxd + bomitem_qtyper * wo_qtyord) * (1 + bomitem_scrap)),
+                                      bomitem_uom_id, bomitem_uom_id, cohead_curr_id, CURRENT_DATE, CURRENT_DATE, cohead_warehous_id) LIMIT 1)
+               END AS price
+        FROM wo JOIN itemsite ps ON (ps.itemsite_id=wo_itemsite_id)
+                JOIN bomitem ON (bomitem_parent_item_id=ps.itemsite_item_id AND
+                                 bomitem_rev_id=wo_bom_rev_id AND
+                                 woEffectiveDate(wo_startdate) BETWEEN bomitem_effective and (bomitem_expires - 1))
+                JOIN itemsite cs ON (cs.itemsite_item_id=bomitem_item_id AND
+                                     cs.itemsite_warehous_id=ps.itemsite_warehous_id)
+                JOIN item ON (item_id=cs.itemsite_item_id)
+                LEFT OUTER JOIN coitem ON (wo_ordtype='S' AND
+                                           wo_ordid=coitem_id)
+                LEFT OUTER JOIN cohead ON (cohead_id=coitem_cohead_id)
+        WHERE ( (wo_id=pWoid)
+          AND   ((bomitem_char_id IS NULL)
+             OR  EXISTS (
+                 SELECT charass_id
+                 FROM coitem,charass
+                 WHERE ((charass_target_type='SI')
+                   AND  (charass_target_id=coitem_id)
+                   AND  (charass_char_id=bomitem_char_id)
+                   AND  (charass_value=bomitem_value)
+                   AND  (wo_ordtype='S')
+                   AND  (coitem_id=wo_ordid)))) )
+        ) AS data;
 
 --  Update any created P/R's the have the project id as the parent WO.
   UPDATE pr SET pr_prj_id=wo_prj_id
@@ -173,7 +186,7 @@ BEGIN
       wooper_suconsumed, wooper_sucomplete,
       wooper_rnconsumed, wooper_rncomplete,
       wooper_qtyrcv, wooper_instruc, wooper_scheduled,
-      wooper_wip_location_id )
+      wooper_wip_location_id, wooper_price )
     SELECT wo_id, booitem_id, booitem_seqnumber,
            booitem_wrkcnt_id, booitem_stdopn_id,
            booitem_descrip1, booitem_descrip2, booitem_toolref,
@@ -196,7 +209,8 @@ BEGIN
            0::NUMERIC, FALSE,
            0::NUMERIC, booitem_instruc,
            calculatenextworkingdate(itemsite_warehous_id,wo_startdate,booitem_execday-1),
-           booitem_wip_location_id
+           booitem_wip_location_id,
+           (xtmfg.directlaborcostoper(booitem_id) + xtmfg.overheadcostoper(booitem_id) + xtmfg.machineoverheadcostoper(booitem_id))
     FROM xtmfg.booitem, wo, itemsite
     WHERE ((wo_itemsite_id=itemsite_id)
      AND (itemsite_item_id=booitem_item_id)

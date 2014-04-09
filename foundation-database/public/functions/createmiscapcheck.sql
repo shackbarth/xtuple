@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION createMiscAPCheck(INTEGER, INTEGER, DATE, NUMERIC, INTEGER, TEXT, TEXT) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RAISE NOTICE ''createMiscAPCheck() is deprecated - use createCheck() instead'';
@@ -9,7 +9,7 @@ END;
 
 
 CREATE OR REPLACE FUNCTION createMiscAPCheck(INTEGER, INTEGER, DATE, NUMERIC, INTEGER, INTEGER, TEXT, TEXT) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RAISE NOTICE ''createMiscAPCheck() is deprecated - use createCheck() instead'';

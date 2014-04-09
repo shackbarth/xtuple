@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION voidPostedCheck(INTEGER, INTEGER, DATE) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pCheckid		ALIAS FOR $1;
@@ -45,15 +45,18 @@ BEGIN
   SELECT trans_id INTO _result
   FROM ( SELECT gltrans_id AS trans_id
          FROM gltrans
-         WHERE ((gltrans_doctype='CK')
-           AND  (gltrans_misc_id=_p.checkhead_id)
-           AND  (gltrans_rec))
+              LEFT OUTER JOIN bankrecitem ON (bankrecitem_source='GL' AND bankrecitem_source_id=gltrans_id)
+         WHERE ( (gltrans_doctype='CK')
+           AND   (gltrans_misc_id=_p.checkhead_id)
+           AND   ((gltrans_rec) OR (bankrecitem_id IS NOT NULL)) )
          UNION ALL
          SELECT sltrans_id AS trans_id
          FROM sltrans
-         WHERE ((sltrans_doctype='CK')
-           AND  (sltrans_misc_id=_p.checkhead_id)
-           AND  (sltrans_rec)) ) AS data;
+              LEFT OUTER JOIN bankrecitem ON (bankrecitem_source='GL' AND bankrecitem_source_id=sltrans_id)
+         WHERE ( (sltrans_doctype='CK')
+           AND   (sltrans_misc_id=_p.checkhead_id)
+           AND   ((sltrans_rec) OR (bankrecitem_id IS NOT NULL)) )
+       ) AS data;
   IF (FOUND) THEN
     RETURN -14;
   END IF;
@@ -109,14 +112,20 @@ BEGIN
 
   ELSE
     FOR _r IN SELECT checkitem_amount, checkitem_discount,
-                     CASE WHEN (checkitem_apopen_id IS NOT NULL) THEN
-                       checkitem_amount / apopen_curr_rate
-                     ELSE
-                       currToBase(checkitem_curr_id,
-                                  checkitem_amount,
-                                  COALESCE(checkitem_docdate, _p.checkhead_checkdate)) 
+                     CASE WHEN (checkitem_apopen_id IS NOT NULL AND apopen_doctype='C') THEN
+                            checkitem_amount / apopen_curr_rate * -1.0
+                          WHEN (checkitem_apopen_id IS NOT NULL) THEN
+                            checkitem_amount / apopen_curr_rate
+                          ELSE
+                            currToBase(checkitem_curr_id,
+                                       checkitem_amount,
+                                       COALESCE(checkitem_docdate, _p.checkhead_checkdate)) 
                      END AS checkitem_amount_base,
-                       checkitem_amount / checkitem_curr_rate	 AS amount_check,
+                     currTocurr(checkitem_curr_id, _p.checkhead_curr_id,
+                                CASE WHEN (checkitem_apopen_id IS NOT NULL AND apopen_doctype='C') THEN
+                                          checkitem_amount * -1.0
+                                     ELSE checkitem_amount END,
+                                  _p.checkhead_checkdate) AS amount_check,
                      apopen_id, apopen_doctype, apopen_docnumber, apopen_curr_rate, apopen_docdate,
                      aropen_id, aropen_doctype, aropen_docnumber,
                      checkitem_curr_id, checkitem_curr_rate,
@@ -152,13 +161,13 @@ BEGIN
 
 
           PERFORM insertIntoGLSeries( _sequence, _p.checkrecip_gltrans_source,
-				      'DS', _r.apopen_docnumber,
+                                      'DS', _r.apopen_docnumber,
                                       findAPDiscountAccount(_p.checkhead_recip_id),
                                       round(_r.checkitem_discount / _r.apopen_curr_rate, 2) * -1,
                                       pVoidDate, _gltransNote, pCheckid);
 
           PERFORM insertIntoGLSeries( _sequence, _p.checkrecip_gltrans_source,
-				      'DS', _r.apopen_docnumber,
+                                      'DS', _r.apopen_docnumber,
                                       findAPAccount(_p.checkhead_recip_id),
                                       round(_r.checkitem_discount / _r.apopen_curr_rate, 2),
                                       pVoidDate, _gltransNote, pCheckid);
@@ -231,11 +240,13 @@ BEGIN
           END IF;
         ELSE
           -- unusual condition where bank overridden and different currency from voucher
-          IF (_r.apopen_docdate > _p.checkhead_checkdate) THEN
-            _exchGainTmp := ((_r.checkitem_amount/_r.checkitem_curr_rate) - (_r.checkitem_amount / _r.apopen_curr_rate)) * -1;
-          ELSE
-            _exchGainTmp := ((_r.checkitem_amount / _r.apopen_curr_rate) - (_r.checkitem_amount/_r.checkitem_curr_rate));
-          END IF;
+          -- this does not work for all situations
+          --IF (_r.apopen_docdate > _p.checkhead_checkdate) THEN
+          --  _exchGainTmp := ((_r.checkitem_amount/_r.checkitem_curr_rate) - (_r.checkitem_amount / _r.apopen_curr_rate)) * -1;
+          --ELSE
+          --  _exchGainTmp := ((_r.checkitem_amount / _r.apopen_curr_rate) - (_r.checkitem_amount/_r.checkitem_curr_rate));
+          --END IF;
+          _exchGainTmp := 0.0;
         END IF;
       ELSE
         SELECT arCurrGain(_r.aropen_id,_r.checkitem_curr_id, _r.checkitem_amount,

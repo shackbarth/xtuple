@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION fetchNextNumber(TEXT) RETURNS TEXT AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   psequence	ALIAS FOR $1;
@@ -56,9 +56,14 @@ BEGIN
   END LOOP;
 
   UPDATE orderseq SET 
-    orderseq_number = _nextnum,
-    orderseq_seqiss = orderseq_seqiss || _seqiss
+    orderseq_number = _nextnum
   WHERE (orderseq_name=psequence);
+
+  IF (fetchMetricBool('EnableGaplessNumbering')) THEN
+    UPDATE orderseq SET 
+      orderseq_seqiss = orderseq_seqiss || _seqiss
+    WHERE (orderseq_name=psequence);
+  END IF;
 
   RETURN _number;
 

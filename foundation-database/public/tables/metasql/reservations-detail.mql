@@ -1,7 +1,7 @@
 -- Group: reservations
 -- Name: detail
 -- Notes: used by dspReservations
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT source_id, order_number, scheddate,
@@ -32,11 +32,13 @@ UNION
 SELECT coitem_scheddate AS sortkey, 1 AS level, coitem_id AS source_id,
       (formatLocationName(itemloc_location_id) || ' ' || formatLotSerialNumber(itemloc_ls_id)) AS order_number,
        NULL AS totalqty, NULL AS relievedqty,
-       (itemlocrsrv_qty * coitem_qty_invuomratio) AS reservedqty,
+       (reserve_qty * coitem_qty_invuomratio) AS reservedqty,
        NULL AS balanceqty, NULL AS scheddate
-FROM itemlocrsrv, itemloc, coitem, itemsite
-WHERE ( (itemloc_id=itemlocrsrv_itemloc_id)
-  AND (coitem_id=itemlocrsrv_source_id)
+FROM reserve, itemloc, coitem, itemsite
+WHERE ( (itemloc_id=reserve_supply_id)
+  AND (reserve_supply_type='I')
+  AND (coitem_id=reserve_demand_id)
+  AND (reserve_demand_type='SO')
   AND (itemsite_id=coitem_itemsite_id)
   AND (itemsite_warehous_id=<? value("warehous_id") ?>)
   AND (itemsite_item_id=<? value("item_id") ?>) )

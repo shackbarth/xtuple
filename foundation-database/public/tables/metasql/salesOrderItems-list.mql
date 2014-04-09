@@ -1,13 +1,14 @@
 -- Group: salesOrderItems
 -- Name: list
 -- Notes: used by salesOrder
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
--- See www.xtuple.com/CPAL for the full text of the software license.
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT coitem_id, coitem_altid, groupby,
        coitem_linenumber, coitem_subnumber, f_linenumber,
        warehous_code, item_number, item_type, description,
        item_number_cust, item_descrip1_cust, item_descrip2_cust, item_barcode,
+       prodweight, packweight,
        enhanced_status, coitem_firm,
        qty_uom, price_uom, ship_uom,
        coitem_memo,
@@ -24,6 +25,7 @@ SELECT coitem_id, coitem_altid, groupby,
        CASE WHEN (extprice_shipped > 0.0) THEN formatMoney(extprice_shipped) ELSE NULL END AS f_extprice_shipped,
 -- end formatted columns
        coitem_scheddate, coitem_price, coitem_custprice, discountfromcust,
+       coitem_unitcost, margin, marginpercent,
        coitem_qtyord, qtyshipped, balance, qtyatshipping,
        extprice, extprice_shipped,
        CASE WHEN (discountfromcust=100.0) THEN 'N/A' END AS discountfromcust_qtdisplayrole,
@@ -31,10 +33,15 @@ SELECT coitem_id, coitem_altid, groupby,
        'qty' AS qtyshipped_xtnumericrole,
        'qty' AS balance_xtnumericrole,
        'qty' AS qtyatshipping_xtnumericrole,
+       'qty' AS prodweight_xtnumericrole,
+       'qty' AS packweight_xtnumericrole,
        'salesprice' AS coitem_price_xtnumericrole,
        'salesprice' AS coitem_custprice_xtnumericrole,
+       'cost' AS coitem_unitcost_xtnumericrole,
        'curr' AS extprice_xtnumericrole,
        'curr' AS extprice_shipped_xtnumericrole,
+       'curr' AS margin_xtnumericrole,
+       'percent' AS marginpercent_xtnumericrole,
        CASE WHEN fetchMetricBool('EnableSOShipping') AND
                  coitem_scheddate > CURRENT_DATE AND
                  (noNeg(coitem_qtyord) <> qtyAtShipping('SO', coitem_id)) THEN 'future'
@@ -49,7 +56,16 @@ SELECT coitem_id, coitem_altid, groupby,
        CASE WHEN coitem_subnumber = 0 THEN 0
             ELSE 1
        END AS xtindentrole,
-       spplytype, ordrnumbr
+       spplytype, ordrnumbr,
+       itemsite_qtyonhand,
+       'qty' AS itemsite_qtyonhand_xtnumericrole
+<? if exists("includeReservations") ?>
+       ,
+       reserved,
+       reservable,
+       'qty' AS reserved_xtnumericrole,
+       'qty' AS reservable_xtnumericrole
+<? endif?>
 FROM (
 SELECT coitem_id,
        CASE WHEN (coitem_status='C') THEN 1
@@ -70,30 +86,10 @@ SELECT coitem_id,
             ELSE item_descrip2
        END AS item_descrip2_cust,
        formatitemsitebarcode(itemsite_id) AS item_barcode,
+       (coitem_qtyord / coitem_qty_invuomratio * item_prodweight) AS prodweight,
+       (coitem_qtyord / coitem_qty_invuomratio * item_packweight) AS packweight,
        coitem_status, coitem_firm,
-      (CASE WHEN (coitem_status='O' AND (SELECT cust_creditstatus FROM custinfo WHERE cust_id=cohead_cust_id)='H') THEN 'H'
-            WHEN (coitem_status='O' AND ((SELECT SUM(invcitem_billed)
-                                            FROM cohead, invchead, invcitem
-                                           WHERE ((CAST(invchead_ordernumber AS text)=cohead_number)
-                                             AND  (invcitem_invchead_id=invchead_id)
-                                             AND  (invcitem_item_id=item_id)
-                                             AND  (invcitem_warehous_id=warehous_id)
-                                             AND  (invcitem_linenumber=coitem_linenumber)
-                                             AND  (cohead_id=coitem_cohead_id))) >= coitem_qtyord)) THEN 'I'
-            WHEN (coitem_status='O' AND ((SELECT SUM(invcitem_billed)
-                                            FROM cohead, invchead, invcitem
-                                           WHERE ((CAST(invchead_ordernumber AS text)=cohead_number)
-                                             AND  (invcitem_invchead_id=invchead_id)
-                                             AND  (invcitem_item_id=item_id)
-                                             AND  (invcitem_warehous_id=warehous_id)
-                                             AND  (invcitem_linenumber=coitem_linenumber)
-                                             AND  (cohead_id=coitem_cohead_id))) > 0)) THEN 'P'
-            WHEN (coitem_status='O' AND (itemsite_qtyonhand - qtyAllocated(itemsite_id, CURRENT_DATE)
-                                         + qtyOrdered(itemsite_id, CURRENT_DATE))
-                                          >= ((coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) * coitem_qty_invuomratio)) THEN 'R'
-            ELSE coitem_status END
-       || CASE WHEN (coitem_firm) THEN 'F' ELSE '' END
-       ) AS enhanced_status,
+       getSoitemStatus(coitem_id) AS enhanced_status,
        quom.uom_name AS qty_uom, puom.uom_name AS price_uom,
        itemSellingUOM(item_id) AS ship_uom,
        coitem_memo,
@@ -101,6 +97,12 @@ SELECT coitem_id,
        CASE WHEN (coitem_custprice = 0.0) THEN 100.0
             ELSE ((1.0 - (coitem_price / coitem_custprice)) * 100.0)
        END AS discountfromcust,
+       coitem_unitcost,
+       ROUND((coitem_qtyord * coitem_qty_invuomratio) *
+             ((coitem_price / coitem_price_invuomratio) - coitem_unitcost),2) AS margin,
+       CASE WHEN (coitem_price = 0.0) THEN 100.0
+            ELSE ((coitem_price - coitem_unitcost) / coitem_price)
+       END AS marginpercent,
        noNeg(coitem_qtyshipped - coitem_qtyreturned) AS qtyshipped,
        noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned) AS balance,
        qtyAtShipping('SO', coitem_id) AS qtyatshipping,
@@ -117,7 +119,13 @@ SELECT coitem_id,
             WHEN coitem_order_type='P' THEN (pohead_number || '-' || poitem_linenumber)
             WHEN coitem_order_type='R' THEN (pr_number || '-' || pr_subnumber)
             ELSE TEXT (' ')
-       END AS ordrnumbr
+       END AS ordrnumbr,
+       itemsite_qtyonhand
+<? if exists("includeReservations") ?>
+       ,
+       coitem_qtyreserved AS reserved,
+       itemsite_qtyonhand - qtyreserved(itemsite_id) AS reservable
+<? endif?>
   FROM cohead
        JOIN coitem ON (coitem_cohead_id=cohead_id)
        JOIN itemsite ON (itemsite_id=coitem_itemsite_id)

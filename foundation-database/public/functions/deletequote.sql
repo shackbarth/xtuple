@@ -1,8 +1,8 @@
-SELECT dropIfExists('FUNCTION', 'deleteQuote(integer)', 'public');
-SELECT dropIfExists('FUNCTION', 'deleteQuote(integer, integer)', 'public');
+--SELECT dropIfExists('FUNCTION', 'deleteQuote(integer)', 'public');
+--SELECT dropIfExists('FUNCTION', 'deleteQuote(integer, integer)', 'public');
 
 CREATE OR REPLACE FUNCTION deleteQuote(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pQuheadid ALIAS FOR $1;
@@ -12,7 +12,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION deleteQuote(INTEGER, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pQuheadid ALIAS FOR $1;
@@ -23,7 +23,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION deleteQuote(INTEGER, TEXT) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pQuheadid	ALIAS FOR $1;
@@ -46,8 +46,13 @@ BEGIN
     _quoteNumber := pQuoteNumber;
   END IF;
 
-  DELETE FROM quitem
+  PERFORM deleteQuoteItem(quitem_id)
+  FROM quitem
   WHERE (quitem_quhead_id=pQuheadid);
+
+  DELETE FROM charass
+  WHERE (charass_target_type='QU')
+    AND (charass_target_id=pQuheadid);
 
   DELETE FROM quhead
   WHERE (quhead_id=pQuheadid);

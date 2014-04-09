@@ -1,8 +1,7 @@
-CREATE OR REPLACE FUNCTION getCntctId(text) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION getCntctId(pContactNumber text) RETURNS INTEGER STABLE AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pContactNumber ALIAS FOR $1;
   _returnVal INTEGER;
 BEGIN
   SELECT getCntctId(pContactNumber,true) INTO _returnVal;
@@ -11,12 +10,11 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION getCntctId(text,boolean) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION getCntctId(pContactNumber text,
+                                      pNotFoundErr boolean) RETURNS INTEGER STABLE AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pContactNumber ALIAS FOR $1;
-  pNotFoundErr ALIAS FOR $2;
   _returnVal INTEGER;
 BEGIN
   IF (COALESCE(TRIM(pContactNumber), '') = '') THEN

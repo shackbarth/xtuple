@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION itemsrcPrice(pItemsrcid INTEGER,
                                         pQty NUMERIC,
                                         pCurrid INTEGER,
                                         pEffective DATE) RETURNS NUMERIC AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _price NUMERIC := 0.0;
@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION itemsrcPrice(pItemsrcid INTEGER,
                                         pQty NUMERIC,
                                         pCurrid INTEGER,
                                         pEffective DATE) RETURNS NUMERIC AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _price NUMERIC := 0.0;

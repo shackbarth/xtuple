@@ -1,8 +1,8 @@
 -- Group: itemSources
 -- Name: search
 -- Notes: 
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
--- See www.xtuple.com/CPAL for the full text of the software license.
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
+--        See www.xtuple.com/CPAL for the full text of the software license.
 
   SELECT itemsrc_id AS id,
          1 AS altid,
@@ -13,9 +13,11 @@
          itemsrc_vend_item_descrip,
          itemsrc_manuf_name,
          itemsrc_manuf_item_number,
-         itemsrc_manuf_item_descrip
+         itemsrc_manuf_item_descrip,
+         contrct_number
     FROM vendinfo JOIN itemsrc ON (itemsrc_vend_id=vend_id)
                   JOIN item ON (item_id=itemsrc_item_id)
+       LEFT OUTER JOIN contrct ON (itemsrc_contrct_id = contrct_id)
    WHERE (vend_id=<? value("vend_id") ?>)
      AND ( (FALSE)
 <? if exists("searchNumber") ?>
@@ -50,7 +52,8 @@
                   poitem_vend_item_descrip,
                   poitem_manuf_name,
                   poitem_manuf_item_number,
-                  poitem_manuf_item_descrip
+                  poitem_manuf_item_descrip,
+                  null AS contrct_id 
     FROM vendinfo JOIN pohead ON (pohead_vend_id=vend_id)
                   JOIN poitem ON (poitem_pohead_id=pohead_id)
                   LEFT OUTER JOIN expcat ON (poitem_expcat_id=expcat_id)

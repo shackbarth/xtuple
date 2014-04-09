@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION postCheck(INTEGER, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pcheckid		ALIAS FOR $1;
@@ -135,15 +135,19 @@ BEGIN
 
   ELSE
     FOR _r IN SELECT checkitem_amount, checkitem_discount,
-                     CASE WHEN (checkitem_apopen_id IS NOT NULL) THEN
-                       checkitem_amount / apopen_curr_rate
-                     ELSE
-                       currToBase(checkitem_curr_id,
-                                  checkitem_amount,
-                                  COALESCE(checkitem_docdate, _p.checkhead_checkdate)) 
+                     CASE WHEN (checkitem_apopen_id IS NOT NULL AND apopen_doctype='C') THEN
+                            checkitem_amount / apopen_curr_rate * -1.0
+                          WHEN (checkitem_apopen_id IS NOT NULL) THEN
+                            checkitem_amount / apopen_curr_rate
+                          ELSE
+                            currToBase(checkitem_curr_id,
+                                       checkitem_amount,
+                                       COALESCE(checkitem_docdate, _p.checkhead_checkdate)) 
                      END AS checkitem_amount_base,
                      currTocurr(checkitem_curr_id, _p.checkhead_curr_id,
-                                  checkitem_amount,
+                                CASE WHEN (checkitem_apopen_id IS NOT NULL AND apopen_doctype='C') THEN
+                                          checkitem_amount * -1.0
+                                     ELSE checkitem_amount END,
                                   _p.checkhead_checkdate) AS amount_check,
                      apopen_id, apopen_doctype, apopen_docnumber,
                      aropen_id, aropen_doctype, aropen_docnumber,
@@ -219,15 +223,16 @@ BEGIN
       _exchGain := _exchGain + _exchGainTmp;
 
       PERFORM insertIntoGLSeries( _sequence, _t.checkrecip_gltrans_source,
-				  'CK', CAST(_p.checkhead_number AS TEXT),
+                                  'CK', CAST(_p.checkhead_number AS TEXT),
                                   _t.checkrecip_accnt_id,
-                                  round(_r.checkitem_amount_base, 2) * -1,
+                                  round(_r.checkitem_amount_base, 2) * -1.0,
                                   _p.checkhead_checkdate, _gltransNote, pcheckid );
       IF (_exchGainTmp <> 0) THEN
 	PERFORM insertIntoGLSeries( _sequence, _t.checkrecip_gltrans_source,
-				    'CK', CAST(_p.checkhead_number AS TEXT),
-				    getGainLossAccntId(_t.checkrecip_accnt_id), round(_exchGainTmp,2),
-				    _p.checkhead_checkdate, _gltransNote, pcheckid );
+                                   'CK', CAST(_p.checkhead_number AS TEXT),
+                                   getGainLossAccntId(_t.checkrecip_accnt_id),
+                                   round(_exchGainTmp,2),
+                                   _p.checkhead_checkdate, _gltransNote, pcheckid );
       END IF;
 
       _amount_check := (_amount_check + _r.amount_check);

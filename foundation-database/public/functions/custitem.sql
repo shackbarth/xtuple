@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION custitem(cust_id INTEGER, shipto_id INTEGER DEFAULT -1, asof DATE DEFAULT CURRENT_DATE) RETURNS SETOF integer AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
   -- Non Exclusive

@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION issueAllBalanceToShipping(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RETURN issueAllBalanceToShipping('SO', $1, 0, NULL);
@@ -7,7 +7,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION issueAllBalanceToShipping(TEXT, INTEGER, INTEGER, TIMESTAMP WITH TIME ZONE) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pordertype		ALIAS FOR $1;
@@ -19,13 +19,10 @@ DECLARE
 BEGIN
   IF (pordertype = 'SO') THEN
     FOR _s IN SELECT coitem_id,
-		     noNeg(coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned -
-			   ( SELECT COALESCE(SUM(shipitem_qty), 0)
-			     FROM shipitem, shiphead
-			     WHERE ( (shipitem_orderitem_id=coitem_id)
-			      AND (shipitem_shiphead_id=shiphead_id)
-			      AND (NOT shiphead_shipped)
-			      AND (shiphead_order_type=pordertype) ) ) ) AS balance
+                     CASE WHEN (fetchMetricBool('RequireSOReservations'))
+                          THEN coitem_qtyreserved
+                          ELSE noNeg( coitem_qtyord - coitem_qtyshipped + coitem_qtyreturned - qtyAtShipping('SO', coitem_id) )
+                     END AS _balance
 	      FROM coitem LEFT OUTER JOIN (itemsite JOIN item ON (itemsite_item_id=item_id)) ON (coitem_itemsite_id=itemsite_id)
 	      WHERE ( (coitem_status NOT IN ('C','X'))
                 AND (item_type != 'K')
@@ -41,13 +38,8 @@ BEGIN
 
   ELSEIF (pordertype = 'TO') THEN
     FOR _s IN SELECT toitem_id,
-		     noNeg( toitem_qty_ordered - toitem_qty_shipped -
-			   ( SELECT COALESCE(SUM(shipitem_qty), 0)
-			     FROM shipitem, shiphead
-			     WHERE ( (shipitem_orderitem_id=toitem_id)
-			      AND (shipitem_shiphead_id=shiphead_id)
-			      AND (NOT shiphead_shipped)
-			      AND (shiphead_order_type=pordertype) ) ) ) AS balance
+                     noNeg( toitem_qty_ordered - toitem_qty_shipped - qtyAtShipping('TO', toitem_id) )
+                      AS balance
 	      FROM toitem
 	      WHERE ( (toitem_status NOT IN ('C','X'))
 	       AND (toitem_tohead_id=pheadid) ) LOOP

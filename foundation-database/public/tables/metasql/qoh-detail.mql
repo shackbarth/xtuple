@@ -2,18 +2,18 @@
 -- Name: detail
 -- Notes: 
 -- Quantity on Hand By Location
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 <? if exists("byLocation") ?>
-SELECT itemloc_id, warehous_code, item_number,
+SELECT itemloc_id, alt_id, warehous_code, item_number,
        f_descrip, f_lotserial, uom_name,
        qoh, reservedqty,
        'qty' AS qoh_xtnumericrole,
        'qty' AS reservedqty_xtnumericrole,
        level AS xtindentrole
 FROM (
-      SELECT itemloc_id, 0 AS level, item_number AS sortkey, warehous_code, item_number,
+      SELECT itemloc_id, 0 AS alt_id, 0 AS level, item_number AS sortkey, warehous_code, item_number,
              (item_descrip1 || ' ' || item_descrip2) AS f_descrip,
              formatlotserialnumber(itemloc_ls_id) AS f_lotserial, uom_name,
              itemloc_qty AS qoh,
@@ -29,7 +29,7 @@ FROM (
          AND (itemsite_warehous_id=warehous_id)
          AND (itemloc_location_id=<? value("location_id") ?>))
       UNION
-      SELECT -1 AS itemloc_id, 0 AS level, item_number AS sortkey, warehous_code, item_number,
+      SELECT -1 AS itemloc_id, 0 AS alt_id, 0 AS level, item_number AS sortkey, warehous_code, item_number,
              (item_descrip1 || ' ' || item_descrip2) AS f_descrip,
              <? value("na") ?> AS f_lotserial, uom_name,
              itemsite_qtyonhand AS qoh,
@@ -42,15 +42,52 @@ FROM (
          AND (itemsite_location_id=<? value("location_id") ?>))
   <? if exists("EnableSOReservationsByLocation") ?>
       UNION
-      SELECT itemloc_id, 1 AS level, item_number AS sortkey, '' AS warehous_code, '' AS item_number,
-             (itemlocrsrv_source || '-' || formatSOItemNumber(itemlocrsrv_source_id)) AS f_descrip,
+      SELECT itemloc_id, -1 AS alt_id, 1 AS level, item_number AS sortkey, '' AS warehous_code, '' AS item_number,
+             (reserve_demand_type || '-' || formatSOItemNumber(reserve_demand_id)) AS f_descrip,
              '' AS f_lotserial, '' AS uom_name,
              NULL AS qoh,
-             itemlocrsrv_qty AS reservedqty
-      FROM itemlocrsrv, itemloc, itemsite, item
-      WHERE ((itemlocrsrv_itemloc_id=itemloc_id)
+             reserve_qty AS reservedqty
+      FROM reserve, itemloc, itemsite, item
+      WHERE ((reserve_supply_id=itemloc_id)
+         AND (reserve_supply_type='I')
          AND (itemsite_id=itemloc_itemsite_id)
          AND(item_id=itemsite_item_id)
+         AND(itemloc_location_id=<? value("location_id") ?>))
+  <? endif ?>
+  <? if exists("ShowDemand") ?>
+      UNION
+      SELECT itemloc_id, coitem_cohead_id AS alt_id, 1 AS level, item_number AS sortkey, '' AS warehous_code, '' AS item_number,
+             (<? value("so") ?>|| '-' || formatSOItemNumber(coitem_id)) AS f_descrip,
+             '' AS f_lotserial, '' AS uom_name,
+             itemUOMtoUOM(item_id, coitem_qty_uom_id, NULL, (coitem_qtyord - coitem_qtyshipped - qtyAtShipping(coitem_id))) AS qoh,
+             0 AS reservedqty
+      FROM itemloc JOIN itemsite ON (itemsite_id=itemloc_itemsite_id)
+                   JOIN item ON (item_id=itemsite_item_id)
+                   JOIN coitem ON (coitem_itemsite_id=itemloc_itemsite_id AND coitem_status='O')
+      WHERE ((coitem_qtyord > (coitem_qtyshipped + qtyAtShipping(coitem_id)))
+         AND(itemloc_location_id=<? value("location_id") ?>))
+      UNION
+      SELECT itemloc_id, -1 AS alt_id, 1 AS level, item_number AS sortkey, '' AS warehous_code, '' AS item_number,
+             (<? value("wo") ?>|| '-' || formatWONumber(womatl_wo_id)) AS f_descrip,
+             '' AS f_lotserial, '' AS uom_name,
+             (womatl_qtyreq - womatl_qtyiss) AS qoh,
+             0 AS reservedqty
+      FROM itemloc JOIN itemsite ON (itemsite_id=itemloc_itemsite_id)
+                   JOIN item ON (item_id=itemsite_item_id)
+                   JOIN womatl ON (womatl_itemsite_id=itemloc_itemsite_id)
+      WHERE ((womatl_qtyreq > womatl_qtyiss)
+         AND(itemloc_location_id=<? value("location_id") ?>))
+      UNION
+      SELECT itemloc_id, -1 AS alt_id, 1 AS level, item_number AS sortkey, '' AS warehous_code, '' AS item_number,
+             (<? value("to") ?>|| '-' || formatTONumber(toitem_id)) AS f_descrip,
+             '' AS f_lotserial, '' AS uom_name,
+             (toitem_qty_ordered - toitem_qty_shipped - qtyAtShipping('TO', toitem_id)) AS qoh,
+             0 AS reservedqty
+      FROM itemloc JOIN itemsite ON (itemsite_id=itemloc_itemsite_id)
+                   JOIN item ON (item_id=itemsite_item_id)
+                   JOIN toitem ON (toitem_item_id=item_id AND toitem_status='O')
+                   JOIN tohead ON (tohead_id=toitem_tohead_id AND tohead_src_warehous_id=itemsite_warehous_id)
+      WHERE ((toitem_qty_ordered > (toitem_qty_shipped + qtyAtShipping('TO', toitem_id)))
          AND(itemloc_location_id=<? value("location_id") ?>))
   <? endif ?>
      ) AS data

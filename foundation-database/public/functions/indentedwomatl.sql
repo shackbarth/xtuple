@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION indentedwomatl(integer, integer) RETURNS SETOF wodata AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
    pwoid ALIAS FOR $1;   
@@ -19,7 +19,7 @@ $$ LANGUAGE 'plpgsql';
 
 
 CREATE OR REPLACE FUNCTION indentedwomatl(integer, integer, integer) RETURNS SETOF wodata AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
    pwoid ALIAS FOR $1;  
@@ -42,8 +42,9 @@ BEGIN
       wo_startdate, womatl_duedate, womatl_itemsite_id,
       itemsite_qtyonhand, womatl_qtyreq, womatl_qtyiss,
       womatl_qtyper, womatl_qtyreq, womatl_scrap,
-      womatl_ref, womatl_notes, item_number,
-      item_descrip1, item_descrip2, uom_name
+      womatl_ref, womatl_notes, womatl_price, item_listprice,
+      item_number, item_descrip1, item_descrip2,
+      uom_name
     FROM womatl, wo, itemsite, item, uom
     WHERE ((wo_id = womatl_wo_id)
      AND (wo_id = ' || pwoid || ')
@@ -75,6 +76,8 @@ BEGIN
     _subrow.wodata_startdate := _subx.wo_startdate;
     _subrow.wodata_duedate := _subx.womatl_duedate;
     _subrow.wodata_itemsite_id := _subx.womatl_itemsite_id;    
+    _subrow.wodata_custprice := _subx.womatl_price;
+    _subrow.wodata_listprice := _subx.item_listprice;
     _subrow.wodata_qoh := _subx.itemsite_qtyonhand;
     IF((_subx.itemsite_qtyonhand > (_subx.womatl_qtyreq - _subx.womatl_qtyiss))) THEN
       _subrow.wodata_short := 0;

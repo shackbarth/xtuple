@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION relocateInventory(INTEGER, INTEGER, INTEGER, NUMERIC, TEXT) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RETURN relocateInventory($1, $2, $3, $4, $5, CURRENT_TIMESTAMP);
@@ -7,7 +7,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION relocateInventory(INTEGER, INTEGER, INTEGER, NUMERIC, TEXT, TIMESTAMP WITH TIME ZONE) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pSourceItemlocid      ALIAS FOR $1;
@@ -18,9 +18,13 @@ DECLARE
   _GlDistTS             TIMESTAMP WITH TIME ZONE := $6;
   _targetItemlocid      INTEGER;
   _invhistid            INTEGER;
-  _p RECORD;
-  _qty NUMERIC;
-  _itemlocSeries INTEGER := NEXTVAL('itemloc_series_seq');
+  _p                    RECORD;
+  _rsrv                 RECORD;
+  _qty                  NUMERIC;
+  _qtyunreserved        NUMERIC := 0.0;
+  _qtytomove            NUMERIC := 0.0;
+  _result               INTEGER := -1;
+  _itemlocSeries        INTEGER := NEXTVAL('itemloc_series_seq');
 
 BEGIN
 
@@ -94,11 +98,6 @@ BEGIN
   FROM itemsite
   WHERE ( (itemloc_itemsite_id=itemsite_id)
    AND (NOT itemsite_freeze)
-   AND (itemloc_id=pSourceItemlocid) );
-
---  Check to see if there is anything left at the source Itemloc and delete if not
-  DELETE FROM itemloc
-  WHERE ( (itemloc_qty=0)
    AND (itemloc_id=pSourceItemlocid) );
 
 --  Check to see if any of the current Lot/Serial #/Expiration exists at the target location
@@ -183,6 +182,56 @@ BEGIN
   DELETE FROM itemloc
   WHERE ( (itemloc_qty=0)
    AND (itemloc_id=_targetItemlocid) );
+
+--  Handle Reservations
+  IF (fetchMetricBool('EnableSOReservationsByLocation')) THEN
+    SELECT CASE WHEN (qtyReservedLocation(itemloc_id) > itemloc_qty)
+                THEN (qtyReservedLocation(itemloc_id) - itemloc_qty)
+                ELSE 0.0
+                END INTO _qtyunreserved
+    FROM itemloc
+    WHERE (itemloc_id=pSourceItemlocid);
+    -- Move reservations as necessary
+    WHILE (_qtyunreserved > 0.0) LOOP
+      SELECT * INTO _rsrv
+      FROM reserve
+      WHERE ((reserve_supply_type='I')
+        AND  (reserve_supply_id=pSourceItemlocid))
+      ORDER BY reserve_qty;
+      IF (NOT FOUND) THEN
+        RAISE EXCEPTION 'Cannot find reservation to unreserve.';
+      END IF;
+      IF (_rsrv.reserve_qty > _qtyunreserved) THEN
+        _qtytomove := _qtyunreserved;
+      ELSE
+        _qtytomove := _rsrv.reserve_qty;
+      END IF;
+      -- Unreserve Source Location
+      SELECT unreserveSOLineQty(_rsrv.reserve_demand_id,
+                                _qtytomove,
+                                pSourceItemlocid) INTO _result;
+      IF (_result < 0) THEN
+        RAISE EXCEPTION 'unreserveSOLineQty failed with result=%, reserve_id=%, qty=%',
+                        _result, _rsrv.reserve_id, _qtytomove;
+      END IF;
+      -- Reserve to new Location
+      SELECT reserveSOLineQty(_rsrv.reserve_demand_id,
+                              TRUE,
+                              _qtytomove,
+                              _targetItemlocid) INTO _result;
+      IF (_result < 0) THEN
+        RAISE EXCEPTION 'reserveSOLineQty failed with result=%, reserve_id=%, qty=%',
+                        _result, _rsrv.reserve_id, _qtytomove;
+      END IF;
+      -- Calculate running total
+      _qtyunreserved := _qtyunreserved - _qtytomove;
+    END LOOP;
+  END IF;
+
+--  Check to see if there is anything left at the source Itemloc and delete if not
+  DELETE FROM itemloc
+  WHERE ( (itemloc_qty=0)
+   AND (itemloc_id=pSourceItemlocid) );
 
 --  Return the invhist_id
   RETURN _invhistid;

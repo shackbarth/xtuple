@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION changeWoDates(INTEGER, DATE, DATE, BOOLEAN) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE 
   pWoid ALIAS FOR $1;
@@ -23,19 +23,12 @@ BEGIN
     returnCode := 0;
 
   ELSIF (_p.wo_status IN ('R','I')) THEN
-    INSERT INTO evntlog (evntlog_evnttime, evntlog_username, evntlog_evnttype_id,
-                         evntlog_ordtype, evntlog_ord_id, evntlog_warehous_id, evntlog_number,
-                         evntlog_olddate, evntlog_newdate)
-    SELECT CURRENT_TIMESTAMP, evntnot_username, evnttype_id,
-           'W', wo_id, itemsite_warehous_id, formatWoNumber(wo_id),
-           wo_duedate, pDueDate
-    FROM evntnot, evnttype, itemsite, item, wo
-    WHERE ( (evntnot_evnttype_id=evnttype_id)
-     AND (evntnot_warehous_id=itemsite_warehous_id)
-     AND (wo_itemsite_id=itemsite_id)
-     AND (itemsite_item_id=item_id)
-     AND (evnttype_name='RWoDueDateRequestChange')
-     AND (wo_id=pWoid) );
+    PERFORM postEvent('RWoDueDateRequestChange', 'W', wo_id,
+                      itemsite_warehous_id, formatWoNumber(wo_id),
+                      NULL, NULL, pDueDate, wo_duedate)
+    FROM wo JOIN itemsite ON (itemsite_id=wo_itemsite_id)
+            JOIN item ON (item_id=itemsite_item_id)
+    WHERE (wo_id=pWoid);
 
      returnCode := 0;
 

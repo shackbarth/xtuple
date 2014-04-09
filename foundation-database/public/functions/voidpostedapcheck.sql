@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION voidPostedAPCheck(INTEGER) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RAISE NOTICE ''voidPostedAPCheck() is deprecated - use voidPostedCheck() instead'';
@@ -9,7 +9,7 @@ END;
 
 
 CREATE OR REPLACE FUNCTION voidPostedAPCheck(INTEGER, INTEGER) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RAISE NOTICE ''voidPostedAPCheck() is deprecated - use voidPostedCheck() instead'';
@@ -18,7 +18,7 @@ END;
 ' LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION voidPostedAPCheck(INTEGER, INTEGER, DATE) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RAISE NOTICE ''voidPostedAPCheck() is deprecated - use voidPostedCheck() instead'';

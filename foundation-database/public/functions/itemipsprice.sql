@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION itemIpsPrice(pItemid INTEGER,
                                         pEffective DATE,
                                         pAsOf DATE,
                                         pSiteid INTEGER) RETURNS SETOF itemprice AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _row  itemprice%ROWTYPE;
@@ -22,8 +22,15 @@ DECLARE
   _listprice NUMERIC := 0.0;
   _qty NUMERIC;
   _asof DATE;
+  _wholesalepricecosting BOOLEAN := false;
+  _long30markups BOOLEAN := false;
+  _itempricingprecedence BOOLEAN := false;
 
 BEGIN
+  _wholesalepricecosting := fetchMetricBool('WholesalePriceCosting');
+  _long30markups := fetchMetricBool('Long30Markups');
+  _itempricingprecedence := fetchMetricBool('ItemPricingPrecedence');
+
 -- Return the itemPrice in the currency passed in as pCurrid
   _qty := itemuomtouom(pItemid, pQtyUOM, NULL, pQty);
 
@@ -31,8 +38,8 @@ BEGIN
   _asof := COALESCE(pAsOf, CURRENT_DATE);
 
 --  Cache Item, Customer and Shipto
-  SELECT * INTO _item
-  FROM item
+  SELECT item.*, itemCost(itemsite_id) AS invcost INTO _item
+  FROM item LEFT OUTER JOIN itemsite ON (itemsite_item_id=item_id AND itemsite_warehous_id=pSiteid)
   WHERE (item_id=pItemid);
 
   SELECT * INTO _cust
@@ -54,15 +61,26 @@ BEGIN
     currToCurr(ipshead_curr_id, pCurrid, ipsprice_price, pEffective) AS rightprice, ipsitem_type AS righttype
   FROM (
   SELECT ipsitem_ipshead_id AS ipsprice_ipshead_id, ipsitem_type,
-         CASE WHEN ipsitem_type = 'N' THEN (ipsitem_price * itemuomtouomratio(_item.item_id, pPriceUOM, ipsitem_price_uom_id))
-              WHEN ipsitem_type = 'D' THEN noNeg(_item.item_listprice - (_item.item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount) * _iteminvpricerat
-              WHEN ipsitem_type = 'M' THEN (_item.item_listcost + (_item.item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+         CASE WHEN (ipsitem_type = 'N') THEN
+               (ipsitem_price * itemuomtouomratio(_item.item_id, pPriceUOM, ipsitem_price_uom_id))
+              WHEN (ipsitem_type = 'D') THEN
+               noNeg(_item.item_listprice - (_item.item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount) * _iteminvpricerat
+              WHEN ((ipsitem_type = 'M') AND _long30markups AND _wholesalepricecosting) THEN
+               (_item.item_listcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+              WHEN ((ipsitem_type = 'M') AND _long30markups) THEN
+               (_item.invcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+              WHEN (ipsitem_type = 'M' AND _wholesalepricecosting) THEN
+               (_item.item_listcost + (_item.item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+              WHEN (ipsitem_type = 'M') THEN
+               (_item.invcost + (_item.invcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
               ELSE 0.00
          END AS ipsprice_price,
          CASE WHEN (ipsitem_item_id=_item.item_id) THEN itemuomtouom(ipsitem_item_id, ipsitem_qty_uom_id, NULL, ipsitem_qtybreak)
               ELSE ipsitem_qtybreak
          END AS ipsprice_qtybreak,
-         (ipsitem_price_uom_id=COALESCE(pPriceUOM,-1)) AS uommatched
+         (COALESCE(ipsitem_price_uom_id, -1)=COALESCE(pPriceUOM,-1)) AS uommatched,
+         CASE WHEN (_itempricingprecedence) THEN (COALESCE(ipsitem_item_id, -1)=_item.item_id)
+              ELSE true END AS itemmatched
     FROM ipsiteminfo
    WHERE(ipsitem_item_id=_item.item_id) OR (ipsitem_prodcat_id=_item.item_prodcat_id) ) AS
         ipsprice, ipshead, ipsass, sale
@@ -77,7 +95,7 @@ BEGIN
      OR   (ipsass_custtype_id=_cust.cust_custtype_id)
      OR   ((COALESCE(LENGTH(ipsass_custtype_pattern), 0) > 0) AND (_cust.custtype_code ~ ipsass_custtype_pattern)) )
         )
-  ORDER BY uommatched DESC, ipsprice_qtybreak DESC, ipsprice_price ASC
+  ORDER BY itemmatched DESC, uommatched DESC, ipsprice_qtybreak DESC, ipsprice_price ASC
   LIMIT 1;
 
 -- Find the best Price Schedule Price
@@ -94,15 +112,26 @@ BEGIN
              WHEN (COALESCE(LENGTH(ipsass_custtype_pattern), 0) > 0) THEN 5
              ELSE 99
            END AS assignseq,
-           CASE WHEN ipsitem_type = 'N' THEN (ipsitem_price * itemuomtouomratio(_item.item_id, pPriceUOM, ipsitem_price_uom_id))
-                WHEN ipsitem_type = 'D' THEN noNeg(_item.item_listprice - (_item.item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount) * _iteminvpricerat
-                WHEN ipsitem_type = 'M' THEN (_item.item_listcost + (_item.item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+           CASE WHEN (ipsitem_type = 'N') THEN
+                 (ipsitem_price * itemuomtouomratio(_item.item_id, pPriceUOM, ipsitem_price_uom_id))
+                WHEN (ipsitem_type = 'D') THEN
+                 noNeg(_item.item_listprice - (_item.item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount) * _iteminvpricerat
+                WHEN ((ipsitem_type = 'M') AND _long30markups AND _wholesalepricecosting) THEN
+                 (_item.item_listcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+                WHEN ((ipsitem_type = 'M') AND _long30markups) THEN
+                 (_item.invcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+                WHEN (ipsitem_type = 'M' AND _wholesalepricecosting) THEN
+                 (_item.item_listcost + (_item.item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
+                WHEN (ipsitem_type = 'M') THEN
+                 (_item.invcost + (_item.invcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount) * _iteminvpricerat
                 ELSE 0.00
            END AS protoprice,
            CASE WHEN (ipsitem_item_id=_item.item_id) THEN itemuomtouom(ipsitem_item_id, ipsitem_qty_uom_id, NULL, ipsitem_qtybreak)
                 ELSE ipsitem_qtybreak
            END AS protoqtybreak,
-           (COALESCE(ipsitem_price_uom_id, -1)=COALESCE(pPriceUOM, -1)) AS uommatched
+           (COALESCE(ipsitem_price_uom_id, -1)=COALESCE(pPriceUOM,-1)) AS uommatched,
+           CASE WHEN (_itempricingprecedence) THEN (COALESCE(ipsitem_item_id, -1)=_item.item_id)
+                ELSE true END AS itemmatched
     FROM ipsass JOIN ipshead ON (ipshead_id=ipsass_ipshead_id)
                 JOIN ipsiteminfo ON (ipsitem_ipshead_id=ipshead_id)
     WHERE ((ipsitem_item_id=_item.item_id) OR (ipsitem_prodcat_id=_item.item_prodcat_id))
@@ -116,7 +145,7 @@ BEGIN
           )
   ) AS proto
   WHERE (protoqtybreak <= pQty)
-  ORDER BY assignseq, protoqtybreak DESC, rightprice
+  ORDER BY assignseq, itemmatched DESC, protoqtybreak DESC, rightprice
   LIMIT 1;
  
   IF (_ips.rightprice IS NOT NULL) THEN

@@ -1,16 +1,23 @@
-
-CREATE OR REPLACE FUNCTION copyProject(INTEGER, TEXT, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION copyproject(integer, text, text, date)
+  RETURNS integer AS
+$BODY$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pPrjId ALIAS FOR $1;
   pPrjNumber ALIAS FOR $2;
-  pDueDateOffset ALIAS FOR $3;
+  pPrjName ALIAS FOR $3;
+  pDueDate ALIAS FOR $4;
   _prjid INTEGER;
+  _offset INTEGER;
 
 BEGIN
 
   IF (COALESCE(pPrjNumber, '') = '') THEN
+    RETURN -1;
+  END IF;
+
+  IF (COALESCE(pPrjName, '') = '') THEN
     RETURN -1;
   END IF;
 
@@ -22,6 +29,14 @@ BEGIN
     RETURN -3;
   END IF;
 
+  IF (pDueDate IS NULL) THEN
+    RETURN -4;
+  END IF;
+
+  SELECT (pDueDate - prj_due_date) INTO _offset
+   FROM prj
+   WHERE (prj_id=pPrjId);
+
   SELECT NEXTVAL('prj_prj_id_seq') INTO _prjid;
 
   INSERT INTO prj
@@ -32,11 +47,11 @@ BEGIN
     prj_due_date, prj_assigned_date, prj_completed_date,
     prj_username, prj_recurring_prj_id,
     prj_crmacct_id, prj_cntct_id )
-  SELECT _prjid, UPPER(pPrjNumber), prj_name,
+  SELECT _prjid, UPPER(pPrjNumber), pPrjName,
          prj_descrip, 'P',
          prj_so, prj_wo, prj_po,
          prj_owner_username, NULL,
-         (prj_due_date + COALESCE(pDueDateOffset, 0)),
+         (prj_due_date + COALESCE(_offset, 0)),
          CASE WHEN (prj_username IS NULL) THEN NULL ELSE CURRENT_DATE END, NULL,
          prj_username, prj_recurring_prj_id,
          prj_crmacct_id, prj_cntct_id
@@ -56,7 +71,7 @@ BEGIN
          prjtask_hours_budget, 0.0,
          prjtask_exp_budget, 0.0,
          prjtask_owner_username, NULL,
-         (prjtask_due_date + COALESCE(pDueDateOffset, 0)),
+         (prjtask_due_date + COALESCE(_offset, 0)),
          CASE WHEN (prjtask_username IS NULL) THEN NULL ELSE CURRENT_DATE END,
          NULL, prjtask_username
   FROM prjtask
@@ -76,5 +91,8 @@ BEGIN
   RETURN _prjid;
 
 END;
-$$ LANGUAGE 'plpgsql';
-
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION copyproject(integer, text, text, date)
+  OWNER TO admin;

@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION issueToShipping(INTEGER, NUMERIC) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RETURN issueToShipping('SO', $1, $2, 0, CURRENT_TIMESTAMP);
@@ -7,7 +7,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION issueToShipping(INTEGER, NUMERIC, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RETURN issueToShipping('SO', $1, $2, $3, CURRENT_TIMESTAMP);
@@ -15,7 +15,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION issueToShipping(TEXT, INTEGER, NUMERIC, INTEGER, TIMESTAMP WITH TIME ZONE) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RETURN issueToShipping($1, $2, $3, $4, $5, NULL);
@@ -23,7 +23,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION issueToShipping(TEXT, INTEGER, NUMERIC, INTEGER, TIMESTAMP WITH TIME ZONE, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pordertype		ALIAS FOR $1;
@@ -89,11 +89,9 @@ BEGIN
     END IF; 
   
     SELECT shiphead_id INTO _shipheadid
-    FROM shiphead, coitem
-    WHERE ((shiphead_order_id=coitem_cohead_id)
-      AND  (NOT shiphead_shipped)
-      AND  (coitem_id=pitemid)
-      AND  (shiphead_order_type=pordertype));
+    FROM shiphead, coitem JOIN itemsite ON (itemsite_id=coitem_itemsite_id)
+    WHERE ( (coitem_id=pitemid)
+      AND   (shiphead_number=getOpenShipment(pordertype, coitem_cohead_id, itemsite_warehous_id)) );
     IF (NOT FOUND) THEN
       SELECT NEXTVAL('shiphead_shiphead_id_seq') INTO _shipheadid;
 
@@ -236,12 +234,14 @@ BEGIN
       AND  (itemsite_costcat_id=costcat_id)
       AND  (toitem_id=pitemid) );
 
+    SELECT (invhist_unitcost * invhist_invqty) INTO _value
+    FROM invhist
+    WHERE (invhist_id=_invhistid);
+
     SELECT shiphead_id INTO _shipheadid
-    FROM shiphead, toitem
-    WHERE ((shiphead_order_id=toitem_tohead_id)
-      AND  (NOT shiphead_shipped)
-      AND  (toitem_id=pitemid)
-      AND  (shiphead_order_type=pordertype));
+    FROM shiphead, toitem JOIN tohead ON (tohead_id=toitem_tohead_id)
+    WHERE ( (toitem_id=pitemid)
+      AND   (shiphead_number=getOpenShipment(pordertype, tohead_id, tohead_src_warehous_id)) );
 
     IF (NOT FOUND) THEN
       _shipheadid := NEXTVAL('shiphead_shiphead_id_seq');
@@ -273,16 +273,16 @@ BEGIN
 
     INSERT INTO shipitem
     ( shipitem_shiphead_id, shipitem_orderitem_id, shipitem_qty,
-      shipitem_transdate, shipitem_trans_username, shipitem_value,
-      shipitem_invhist_id )
-    SELECT
-      _shipheadid, pitemid, pQty,
-      _timestamp, getEffectiveXtUser(), invhist_invqty * invhist_unitcost,
-      _invhistid
-    FROM toitem, item, invhist
-    WHERE ((toitem_id=pitemid)
-    AND (item_id=toitem_item_id)
-    AND (invhist_id=_invhistid));
+      shipitem_transdate, shipitem_trans_username, shipitem_invoiced,
+      shipitem_value, shipitem_invhist_id )
+    VALUES
+    ( _shipheadid, pitemid, pQty,
+      _timestamp, getEffectiveXtUser(), FALSE,
+      _value, 
+      CASE WHEN _invhistid = -1 THEN NULL
+           ELSE _invhistid
+      END
+    );
 
   ELSE
     RETURN -11;

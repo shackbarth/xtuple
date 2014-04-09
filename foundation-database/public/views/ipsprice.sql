@@ -9,12 +9,16 @@ CREATE OR REPLACE VIEW ipsprice AS
          CASE WHEN (ipsitem_type='N') THEN (ipsitem_price * itemuomtouomratio(ipsitem_item_id, NULL, ipsitem_price_uom_id)) *
                                             iteminvpricerat(ipsitem_item_id)
               WHEN (ipsitem_type='D') THEN (item_listprice - (item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount)
+              WHEN ((ipsitem_type='M') AND fetchMetricBool('Long30Markups')) THEN
+               (stdCost(item_id) / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
               WHEN (ipsitem_type='M') THEN (item_listcost + (item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
          END AS ipsprice_price,
          ipsitem_qtybreak AS ipsprice_uomqtybreak,
          ipsitem_qty_uom_id AS ipsprice_uomqtybreak_uom_id,
          CASE WHEN (ipsitem_type='N') THEN ipsitem_price
               WHEN (ipsitem_type='D') THEN (item_listprice - (item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount)
+              WHEN ((ipsitem_type='M') AND fetchMetricBool('Long30Markups')) THEN
+               (stdCost(item_id) / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
               WHEN (ipsitem_type='M') THEN (item_listcost + (item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
          END AS ipsprice_uomprice,
          ipsitem_price_uom_id AS ipsprice_uomprice_uom_id,
@@ -29,11 +33,15 @@ CREATE OR REPLACE VIEW ipsprice AS
          item_id AS ipsprice_item_id,
          ipsitem_qtybreak AS ipsprice_qtybreak,
          CASE WHEN (ipsitem_type='D') THEN (item_listprice - (item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount)
+              WHEN ((ipsitem_type='M') AND fetchMetricBool('Long30Markups')) THEN
+               (stdCost(item_id) / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
               WHEN (ipsitem_type='M') THEN (item_listcost + (item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
          END AS ipsprice_price,
          ipsitem_qtybreak AS ipsprice_uomqtybreak,
          item_inv_uom_id AS ipsprice_uomqtybreak_uom_id,
          CASE WHEN (ipsitem_type='D') THEN (item_listprice - (item_listprice * ipsitem_discntprcnt) - ipsitem_fixedamtdiscount)
+              WHEN ((ipsitem_type='M') AND fetchMetricBool('Long30Markups')) THEN
+               (stdCost(item_id) / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
               WHEN (ipsitem_type='M') THEN (item_listcost + (item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
          END AS ipsprice_uomprice,
          item_price_uom_id AS ipsprice_uomprice_uom_id,

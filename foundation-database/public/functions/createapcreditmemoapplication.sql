@@ -2,13 +2,13 @@ CREATE OR REPLACE FUNCTION createAPCreditMemoApplication(pSourceApopenId INTEGER
                                                          pTargetApopenId INTEGER,
                                                          pAmount NUMERIC,
                                                          pCurrId INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _apCreditApplyId	INTEGER;
 
 BEGIN
-  IF (pAmount > (SELECT currToCurr(apopen_curr_id, pCurrId, ROUND(apopen_amount - apopen_paid, 2), apopen_docdate)
+  IF (pAmount > (SELECT ROUND(currToCurr(apopen_curr_id, pCurrId, (apopen_amount - apopen_paid), apopen_docdate), 2)
                  FROM apopen
                  WHERE (apopen_id=pTargetApopenId))) THEN
     RETURN -1;

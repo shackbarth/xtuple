@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION selectforbilling(integer, numeric, boolean)
   RETURNS integer AS
 $BODY$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pSoitemid	ALIAS FOR $1;
@@ -32,7 +32,7 @@ $BODY$ LANGUAGE 'plpgsql' VOLATILE;
 CREATE OR REPLACE FUNCTION selectforbilling(integer, numeric, boolean, integer)
   RETURNS integer AS
 $BODY$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pSoitemid	ALIAS FOR $1;

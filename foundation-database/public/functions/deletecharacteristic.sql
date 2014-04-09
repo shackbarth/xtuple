@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION deleteCharacteristic(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pCharid ALIAS FOR $1;
@@ -37,6 +37,18 @@ BEGIN
       RETURN -6;
     ELSIF (_r.charass_target_type = 'EMP') THEN
       RETURN -7;
+    ELSIF (_r.charass_target_type = 'QU') THEN
+      RETURN -8;
+    ELSIF (_r.charass_target_type = 'SO') THEN
+      RETURN -9;
+    ELSIF (_r.charass_target_type = 'INV') THEN
+      RETURN -10;
+    ELSIF (_r.charass_target_type = 'V') THEN
+      RETURN -11;
+    ELSIF (_r.charass_target_type = 'PO') THEN
+      RETURN -12;
+    ELSIF (_r.charass_target_type = 'VO') THEN
+      RETURN -13;
     ELSE
       RETURN -99;
     END IF;

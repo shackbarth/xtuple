@@ -1,7 +1,7 @@
 -- Group: arOpenApplications
 -- Name: detail
 -- Notes: used by applyARCreditMemo, cashReceipt
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT *,
@@ -40,16 +40,18 @@ FROM (SELECT
        (CASE WHEN aropen_doctype IN ('C','R') THEN -1 ELSE 1 END ) AS balance,
        aropen_curr_id AS balance_curr,
 <? if exists("cashrcpt_id") ?>
-       (SELECT COALESCE(SUM(p.cashrcptitem_amount), 0)
-                      FROM cashrcptitem p
-                     WHERE (p.cashrcptitem_aropen_id=aropen_id)
-                     AND (p.cashrcptitem_cashrcpt_id=<? value("cashrcpt_id") ?>))
-                   AS applied,
-       (SELECT COALESCE(SUM(p.cashrcptitem_discount), 0)
-                      FROM cashrcptitem p
-                     WHERE (p.cashrcptitem_aropen_id=aropen_id)
-                     AND (p.cashrcptitem_cashrcpt_id=<? value("cashrcpt_id") ?>))
-                   AS discount,
+       COALESCE(s.cashrcptitem_amount, 0.0) AS applied,
+       COALESCE(s.cashrcptitem_discount, 0.0) AS discount,
+--       (SELECT COALESCE(SUM(p.cashrcptitem_amount), 0)
+--                      FROM cashrcptitem p
+--                     WHERE (p.cashrcptitem_aropen_id=aropen_id)
+--                     AND (p.cashrcptitem_cashrcpt_id=<? value("cashrcpt_id") ?>))
+--                   AS applied,
+--       (SELECT COALESCE(SUM(p.cashrcptitem_discount), 0)
+--                      FROM cashrcptitem p
+--                     WHERE (p.cashrcptitem_aropen_id=aropen_id)
+--                     AND (p.cashrcptitem_cashrcpt_id=<? value("cashrcpt_id") ?>))
+--                   AS discount,
        currConcat(cashrcpt_curr_id) AS applied_curr,
 <? elseif exists("source_aropen_id") ?>
        COALESCE(arcreditapply_amount, 0) AS applied,

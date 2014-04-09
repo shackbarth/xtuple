@@ -1,12 +1,11 @@
 -- Group: updateReorderLevels
 -- Name:  query
 -- Notes: Calculates reorder point levels and returns a proposed result set
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT *,
   'qty' AS reordlvl_curr_level_xtnumericrole,
-  'qty' AS reordlvl_calc_level_xtnumericrole,
   'qty' AS reordlvl_total_usage_xtnumericrole
 FROM updateReorderLevel((
   SELECT array(

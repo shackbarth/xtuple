@@ -184,7 +184,7 @@ BEGIN
     WHERE (poitem_id=_o.orderitem_id);
 
   ELSEIF ( (_r.recv_order_type = 'RA') AND
-           (_r.itemsite_id = -1 OR _r.itemsite_id IS NULL OR _r.itemsite_controlmethod = 'N') ) THEN
+           (_r.itemsite_id = -1 OR _r.itemsite_id IS NULL) ) THEN
     RAISE NOTICE 'itemsite controlmethod is %, cannot post receipt.', _r.itemsite_controlmethod;
     RETURN -14;	-- otherwise how do we get the accounts?
 
@@ -285,32 +285,51 @@ BEGIN
 	    FROM rahead, raitem
         WHERE ((rahead_id=raitem_rahead_id)
         AND  (raitem_id=_r.recv_orderitem_id));
-      SELECT postInvTrans(_r.itemsite_id, 'RR',
-			  _recvinvqty,
-			  'S/R',
-			  _r.recv_order_type, _ra.rahead_number::TEXT || '-' || _ra.raitem_linenumber::TEXT,
-			  '',
-			  'Receive Inventory from ' || _ordertypeabbr,
-			  costcat_asset_accnt_id,
-                          CASE WHEN(COALESCE(_ra.raitem_cos_accnt_id, -1) != -1) THEN 
-				 getPrjAccntId(_o.prj_id, _ra.raitem_cos_accnt_id)
-				WHEN (_ra.raitem_warranty) THEN 
-			         getPrjAccntId(_o.prj_id, resolveCOWAccount(_r.itemsite_id, _ra.rahead_cust_id, _ra.rahead_saletype_id, _ra.rahead_shipzone_id))
-			       ELSE getPrjAccntId(_o.prj_id, resolveCORAccount(_r.itemsite_id, _ra.rahead_cust_id, _ra.rahead_saletype_id, _ra.rahead_shipzone_id))
-			  END,
-			  _itemlocSeries, _glDate, COALESCE(_o.unitcost,stdcost(itemsite_item_id)) * _recvinvqty) INTO _tmp
-      FROM itemsite, costcat
-      WHERE ( (itemsite_costcat_id=costcat_id)
-       AND (itemsite_id=_r.itemsite_id) );
 
-      IF (NOT FOUND) THEN
-	    RAISE EXCEPTION 'Could not post inventory transaction: no cost category found for itemsite_id %', _r.itemsite_id;
-      ELSIF (_tmp < -1) THEN -- less than -1 because -1 means it is a none controlled item
-	    IF(_tmp = -3) THEN
-	    RAISE NOTICE 'The GL trans value was 0 which means we likely do not have a std cost';
-	    RETURN -12; -- The GL trans value was 0 which means we likely do not have a std cost
-	    END IF;
-      RETURN _tmp;
+      IF (_r.itemsite_controlmethod = 'N') THEN
+        SELECT insertGLTransaction( fetchJournalNumber('GL-MISC'), 
+                                    'S/R', _r.recv_order_type, _o.orderhead_number,
+                                    'Receive Non-Controlled Inventory from ' || _ordertypeabbr,
+                                    costcat_liability_accnt_id,
+                                    getPrjAccntId(_o.prj_id, costcat_exp_accnt_id), -1,
+                                    round((_o.item_unitprice_base * _r.recv_qty),2),
+                                    _glDate::DATE, false ) INTO _tmp
+        FROM itemsite JOIN costcat ON (costcat_id=itemsite_costcat_id)
+        WHERE(itemsite_id=_r.itemsite_id);
+        IF (NOT FOUND) THEN
+          RAISE EXCEPTION 'Could not post inventory transaction: no cost category found for itemsite_id %', _r.itemsite_id;
+--        ELSIF (_tmp < -1) THEN
+--          RETURN _tmp;
+        END IF;
+      ELSE
+        SELECT postInvTrans(_r.itemsite_id, 'RR',
+                            _recvinvqty,
+                            'S/R',
+                            _r.recv_order_type, _ra.rahead_number::TEXT || '-' || _ra.raitem_linenumber::TEXT,
+                            '',
+                            'Receive Inventory from ' || _ordertypeabbr,
+                            costcat_asset_accnt_id,
+                            CASE WHEN(COALESCE(_ra.raitem_cos_accnt_id, -1) != -1) THEN 
+                                  getPrjAccntId(_o.prj_id, _ra.raitem_cos_accnt_id)
+                                 WHEN (_ra.raitem_warranty) THEN 
+                                  getPrjAccntId(_o.prj_id, resolveCOWAccount(_r.itemsite_id, _ra.rahead_cust_id, _ra.rahead_saletype_id, _ra.rahead_shipzone_id))
+                                 ELSE
+                                  getPrjAccntId(_o.prj_id, resolveCORAccount(_r.itemsite_id, _ra.rahead_cust_id, _ra.rahead_saletype_id, _ra.rahead_shipzone_id))
+                            END,
+                            _itemlocSeries, _glDate, COALESCE(_o.unitcost,stdcost(itemsite_item_id)) * _recvinvqty) INTO _tmp
+        FROM itemsite, costcat
+        WHERE ( (itemsite_costcat_id=costcat_id)
+         AND (itemsite_id=_r.itemsite_id) );
+
+        IF (NOT FOUND) THEN
+          RAISE EXCEPTION 'Could not post inventory transaction: no cost category found for itemsite_id %', _r.itemsite_id;
+        ELSIF (_tmp < -1) THEN -- less than -1 because -1 means it is a none controlled item
+          IF(_tmp = -3) THEN
+            RAISE NOTICE 'The GL trans value was 0 which means we likely do not have a std cost';
+            RETURN -12; -- The GL trans value was 0 which means we likely do not have a std cost
+          END IF;
+          RETURN _tmp;
+        END IF;
       END IF;
 
       INSERT INTO rahist (rahist_itemsite_id, rahist_date,
@@ -564,22 +583,15 @@ BEGIN
     IF (_o.pohead_dropship = TRUE) THEN
 
       -- Generate the PoItemDropShipped event
-      INSERT INTO evntlog
-      ( evntlog_evnttime, evntlog_username, evntlog_evnttype_id,
-        evntlog_ordtype, evntlog_ord_id, evntlog_warehous_id, 
-        evntlog_number )
-      SELECT
-        CURRENT_TIMESTAMP, evntnot_username, evnttype_id,
-        'P', _o.orderitem_id, evntnot_warehous_id,
-        (pohead_number || '-' || poitem_linenumber || ': ' || item_number)
-      FROM evntnot JOIN evnttype ON (evntnot_evnttype_id = evnttype_id)
-           JOIN itemsite ON (evntnot_warehous_id = itemsite_warehous_id) 
-           JOIN item ON (itemsite_item_id = item_id)
-           JOIN poitem ON (poitem_itemsite_id = itemsite_id)
-           JOIN pohead ON (poitem_pohead_id = pohead_id)
-      WHERE( (poitem_id = _o.orderitem_id)
-      AND (poitem_duedate <= (CURRENT_DATE + itemsite_eventfence))
-      AND (evnttype_name = 'PoItemDropShipped') );
+      PERFORM postEvent('PoItemDropShipped', 'P', poitem_id,
+                        itemsite_warehous_id,
+                        (pohead_number || '-' || poitem_linenumber || ': ' || item_number),
+                        NULL, NULL, NULL, NULL)
+      FROM poitem JOIN itemsite ON (itemsite_id=poitem_itemsite_id)
+                  JOIN item ON (item_id=itemsite_item_id)
+                  JOIN pohead ON (pohead_id=poitem_pohead_id)
+      WHERE (poitem_id=_o.orderitem_id)
+        AND (poitem_duedate <= (CURRENT_DATE + itemsite_eventfence));
 
     END IF;
   END IF;

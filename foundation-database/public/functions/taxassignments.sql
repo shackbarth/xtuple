@@ -2,7 +2,7 @@
 CREATE OR REPLACE FUNCTION taxassignments(integer, integer)
   RETURNS SETOF taxassign AS
 $BODY$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pTaxZoneId ALIAS FOR $1;

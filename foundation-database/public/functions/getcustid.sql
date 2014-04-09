@@ -1,8 +1,7 @@
-CREATE OR REPLACE FUNCTION getCustId(text) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION getCustId(pCustNumber text) RETURNS INTEGER STABLE AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pCustNumber ALIAS FOR $1;
   _returnVal INTEGER;
 BEGIN
   
@@ -10,14 +9,13 @@ BEGIN
 
   RETURN _returnVal;
 END;
-' LANGUAGE 'plpgsql';
+$$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION getCustId(text,boolean) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION getCustId(pCustNumber text,
+                                     pInclProspects boolean) RETURNS INTEGER STABLE AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pCustNumber ALIAS FOR $1;
-  pInclProspects ALIAS FOR $2;
   _returnVal INTEGER;
 BEGIN
   IF (pCustNumber IS NULL) THEN
@@ -34,13 +32,13 @@ BEGIN
       FROM prospect
       WHERE (UPPER(prospect_number)=UPPER(pCustNumber));
       IF (_returnVal IS NULL) THEN
-        RAISE EXCEPTION ''Neither Customer nor Prospect Number % found.'', pCustNumber;
+        RAISE EXCEPTION 'Neither Customer nor Prospect Number % found.', pCustNumber;
       END IF;
     ELSE
-      RAISE EXCEPTION ''Customer Number % not found.'', pCustNumber;
+      RAISE EXCEPTION 'Customer Number % not found.', pCustNumber;
     END IF;
   END IF;
 
   RETURN _returnVal;
 END;
-' LANGUAGE 'plpgsql';
+$$ LANGUAGE 'plpgsql';

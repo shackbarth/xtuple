@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION currRate(INTEGER, DATE) RETURNS NUMERIC STABLE AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RETURN currRate($1, NULL, $2);
@@ -10,7 +10,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION currRate(pFromCurr INTEGER,
                                     pToCurr INTEGER,
                                     pDate DATE) RETURNS NUMERIC STABLE AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _fromRate NUMERIC := 1.0;

@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION closeWo(INTEGER, BOOLEAN) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pWoid ALIAS FOR $1;
@@ -13,7 +13,7 @@ $$ LANGUAGE 'plpgsql';
 
 
 CREATE OR REPLACE FUNCTION closeWo(INTEGER, BOOLEAN, DATE) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pWoid ALIAS FOR $1;
@@ -25,15 +25,20 @@ DECLARE
 
 BEGIN
 
+  --Comment this out
+  --In addition to IssueToShipping driving PostProduction,
+  --not PostProduction can drive IssueToShipping.
+  --Must allow closing of Job items
+
   --If this is item type Job then we cannot close here
-  SELECT itemsite_costmethod INTO _check
-  FROM wo,itemsite
-  WHERE ((wo_id=pWoid)
-  AND (wo_itemsite_id=itemsite_id)
-  AND (itemsite_costmethod = 'J'));
-  IF (FOUND) THEN
-    RAISE EXCEPTION 'Work orders for Job items are closed when all quantities are shipped';
-  END IF;
+  --SELECT itemsite_costmethod INTO _check
+  --FROM wo,itemsite
+  --WHERE ((wo_id=pWoid)
+  --AND (wo_itemsite_id=itemsite_id)
+  --AND (itemsite_costmethod = 'J'));
+  --IF (FOUND) THEN
+  --  RAISE EXCEPTION 'Work orders for Job items are closed when all quantities are shipped';
+  --END IF;
 
   SELECT formatWoNumber(pWoid) INTO _woNumber;
 

@@ -1,6 +1,5 @@
-
 CREATE OR REPLACE FUNCTION public.login() RETURNS integer AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE 
   _p RECORD;
@@ -12,21 +11,31 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION public.login(boolean) RETURNS integer AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+
+CREATE OR REPLACE FUNCTION login(boolean)
+  RETURNS integer AS
+$BODY$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE 
   _setSearchPath ALIAS FOR $1;
   _p RECORD;
 
 BEGIN
-
-  PERFORM pg_try_advisory_lock(datid::integer, procpid)
+  -- added support for PostgreSQL 9.2.0, Incident 21852
+  IF (compareversion('9.2.0') <= 0)
+  THEN
+    PERFORM pg_try_advisory_lock(datid::integer, pid)
+     FROM pg_stat_activity
+    WHERE(pid = pg_backend_pid());
+  ELSE
+    PERFORM pg_try_advisory_lock(datid::integer, procpid)
      FROM pg_stat_activity
     WHERE(procpid = pg_backend_pid());
+  END IF;
 
   -- This is new to version 9.0 and higher and will error on older versions
-  IF (select CAST(split_part(split_part(version(), ' ', 2),'.',1) AS integer) >= 9) THEN
+  IF (compareversion('9.0.0') <= 0) THEN
     SET bytea_output TO escape;
   END IF;
 
@@ -63,5 +72,8 @@ BEGIN
   RETURN 1;
 
 END;
-$$ LANGUAGE 'plpgsql';
-
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION login(boolean)
+  OWNER TO admin;

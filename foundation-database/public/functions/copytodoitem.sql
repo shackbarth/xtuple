@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION copyTodoitem(INTEGER, DATE, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pparentid   ALIAS FOR $1;
@@ -40,9 +40,9 @@ BEGIN
                    CAST(alarm_time - DATE_TRUNC('day',alarm_time) AS TIME),
                    alarm_time_offset,
                    alarm_time_qualifier,
-                   alarm_event, alarm_event_recipient,
-                   alarm_email, alarm_email_recipient,
-                   alarm_sysmsg, alarm_sysmsg_recipient,
+                   (alarm_event_recipient IS NOT NULL), alarm_event_recipient,
+                   (alarm_email_recipient IS NOT NULL AND fetchMetricBool('EnableBatchManager')), alarm_email_recipient,
+                   (alarm_sysmsg_recipient IS NOT NULL), alarm_sysmsg_recipient,
                    'TODO', _todoitemid, 'CHANGEONE')
     INTO _alarmid
     FROM alarm

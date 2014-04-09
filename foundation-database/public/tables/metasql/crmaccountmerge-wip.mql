@@ -4,7 +4,7 @@
 --        data to purge. this includes those that have been started
 --        but not completed as well as those that have been completed
 --        but neither purged nor undone.
---        Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+--        Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 --        See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT DISTINCT

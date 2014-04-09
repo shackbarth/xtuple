@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION updateReorderLevel(INTEGER, INTEGER, INTEGER[]) RETURNS boolean AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pItemsiteid ALIAS FOR $1;
@@ -11,7 +11,7 @@ DECLARE
   _usage NUMERIC;
   _totalUsage NUMERIC;
   _totalDays INTEGER;
-  _reorderLevel NUMERIC;
+  _reorderLevel INTEGER;
   _averageUsage NUMERIC;
   _result	TEXT;
 
@@ -66,7 +66,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION updateReorderLevel(INTEGER[], INTEGER, BOOLEAN, INTEGER[]) RETURNS SETOF reordlvl AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pItemsiteids 		ALIAS FOR $1;
@@ -77,7 +77,7 @@ DECLARE
   _pcursor 		INTEGER := 1;
   _totalUsage 		NUMERIC := 0;
   _totalDays 		INTEGER := 0;
-  _reorderLevel 	NUMERIC := 0;
+  _reorderLevel 	INTEGER := 0;
   _result		TEXT;
   _usage		NUMERIC;
   _averageUsage 	NUMERIC;

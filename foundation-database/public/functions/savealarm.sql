@@ -1,7 +1,7 @@
 SELECT dropIfExists('FUNCTION', 'saveAlarm(int,text,text,timestamp,int,text,text,text,int,text)', 'public');
 
 CREATE OR REPLACE FUNCTION saveAlarm(int,text,date,time,int,text,boolean,text,boolean,text,boolean,text,text,int,text) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pAlarmId ALIAS FOR $1;

@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION checkDetailFormatted(INTEGER, INTEGER) RETURNS SETOF checkdata
 AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pCheckheadid ALIAS FOR $1;
@@ -116,12 +116,31 @@ BEGIN
     formatMoney(checkitem_discount) AS disc_cred
   FROM checkitem, apopen
   WHERE ((checkitem_checkhead_id=pCheckheadid)
-    AND  (checkitem_vouchernumber = apopen_docnumber)
+    AND  (checkitem_apopen_id = apopen_id)
     AND  (apopen_doctype = 'D'))
   
   UNION
   
-  SELECT --CREDITs--------------------------
+  SELECT --CREDIT MEMO -------------------------
+    2 AS ord,
+    1 AS sequence_value,
+    checkitem_invcnumber,
+    checkitem_ponumber,
+    formatMoney(checkitem_amount * -1.0) AS f_amount,
+    'Credit Memo PO#: ' || checkitem_ponumber AS doc_number,
+    ''  AS f_docdate,
+    'Credit Memo: ' || checkitem_vouchernumber AS doc_reference,
+    checkitem_vouchernumber AS vouchernumber,
+    '' AS amount,
+    formatMoney(checkitem_amount) AS disc_cred
+  FROM checkitem, apopen
+  WHERE ((checkitem_checkhead_id=pCheckheadid)
+    AND  (checkitem_apopen_id = apopen_id)
+    AND  (apopen_doctype = 'C'))
+  
+  UNION
+  
+  SELECT --CREDITs FOR VOUCHERS-----------------
     3 AS ord,
     1 AS sequence_value,
     checkitem_invcnumber,
@@ -131,13 +150,38 @@ BEGIN
     formatDate(vohead_docdate) AS f_docdate,
     'Credit Applied: ' || apapply_source_doctype || ' ' ||
                           apapply_source_docnumber AS doc_reference,
-    'Voucher ' || checkitem_vouchernumber AS vouchernumber,
+    'Voucher: ' || checkitem_vouchernumber AS vouchernumber,
     '' AS amount,
     formatMoney((apapply_amount)) AS disc_cred
   FROM checkitem, vohead, apapply
   WHERE ((checkitem_checkhead_id=pCheckheadid)
     AND  (checkitem_vouchernumber = vohead_number)
-    AND  (apapply_target_docnumber = checkitem_vouchernumber ))
+    AND  (apapply_target_docnumber = checkitem_vouchernumber)
+    AND  (apapply_target_doctype = 'V')
+    AND  (apapply_source_doctype = 'C'))
+  
+  UNION 
+  
+  SELECT --CREDITs FOR DEBIT MEMOS-----------
+    3 AS ord,
+    1 AS sequence_value,
+    checkitem_invcnumber,
+    checkitem_ponumber,
+    formatMoney(checkitem_amount) AS f_amount,
+    'Debit Memo PO#: ' || checkitem_ponumber AS doc_number,
+    '' AS f_docdate,
+    'Credit Applied: ' || apapply_source_doctype || ' ' ||
+                          apapply_source_docnumber AS doc_reference,
+    'Debit Memo: ' || checkitem_vouchernumber AS vouchernumber,
+    '' AS amount,
+    formatMoney((apapply_amount)) AS disc_cred
+  FROM checkitem, apopen, apapply
+  WHERE ((checkitem_checkhead_id=pCheckheadid)
+    AND  (checkitem_vouchernumber = apopen_docnumber)
+    AND  (apopen_doctype = 'D')
+    AND  (apapply_target_docnumber = checkitem_vouchernumber)
+    AND  (apapply_target_doctype = 'D')
+    AND  (apapply_source_doctype = 'C'))
   
   UNION 
   

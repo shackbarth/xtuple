@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION findSalesAccnt(INTEGER, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RETURN findSalesAccnt($1, 'IS', $2, NULL, NULL);
@@ -7,7 +7,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION findSalesAccnt(INTEGER, TEXT, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 BEGIN
   RETURN findSalesAccnt($1, $2, $3, NULL, NULL);
@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION findSalesAccnt(pid INTEGER,
                                           pCustid INTEGER,
                                           pSaletypeid INTEGER,
                                           pShipzoneid INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _s RECORD;

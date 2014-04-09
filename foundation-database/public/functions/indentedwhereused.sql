@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION indentedWhereUsed(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pItemid ALIAS FOR $1;
@@ -38,8 +38,7 @@ BEGIN
 
   WHILE ( ( SELECT count(*)
             FROM bomwork
-            WHERE ((bomwork_item_type IN ('M', 'F'))
-              AND (bomwork_status='U')
+            WHERE ((bomwork_status='U')
               AND (bomwork_set_id=_indexid)) ) > 0) LOOP
 
     _level := _level + 1;
@@ -70,8 +69,7 @@ BEGIN
                                AND (CURRENT_DATE BETWEEN bomitem_effective AND (bomitem_expires - 1))
                                AND (bomitem_rev_id=getActiveRevId('BOM',bomitem_parent_item_id)) )
                  JOIN item ON (item_id=bomitem_parent_item_id)
-    WHERE ((bomwork_status='U')
-      AND  (bomwork_item_type IN ('M', 'F')));
+    WHERE (bomwork_status='U');
 
     UPDATE bomwork
     SET bomwork_status='C'

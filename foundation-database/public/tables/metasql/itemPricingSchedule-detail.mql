@@ -1,7 +1,7 @@
 -- Group: itemPricingSchedule
 -- Name: detail
 -- Notes: used by itemPricingSchedule
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 
@@ -15,9 +15,18 @@ SELECT ipsitem_id AS id, 1 AS altid,
        price.uom_name AS priceuom,
        ((COALESCE(ipsitem_discntprcnt, 0.0) * 100) + ipsitem_price) AS price,
        (COALESCE(ipsitem_fixedamtdiscount, 0.0) + 0.00) AS fixedAmt,
-       noNeg(CASE WHEN (ipsitem_type='N') THEN ipsitem_price
-                  WHEN (ipsitem_type='D') THEN (item_listprice - (item_listprice * COALESCE(ipsitem_discntprcnt, 0.0)) - COALESCE(ipsitem_fixedamtdiscount, 0.0))
-                  WHEN (ipsitem_type='M') THEN (item_listcost + (item_listcost * COALESCE(ipsitem_discntprcnt, 0.0)) + COALESCE(ipsitem_fixedamtdiscount, 0.0))
+       noNeg(CASE WHEN (ipsitem_type='N') THEN
+                   ipsitem_price
+                  WHEN (ipsitem_type='D') THEN
+                   (item_listprice - (item_listprice * COALESCE(ipsitem_discntprcnt, 0.0)) - COALESCE(ipsitem_fixedamtdiscount, 0.0))
+                  WHEN ((ipsitem_type = 'M') AND fetchMetricBool('Long30Markups') AND fetchMetricBool('WholesalePriceCosting')) THEN
+                   (item_listcost / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
+                  WHEN ((ipsitem_type = 'M') AND fetchMetricBool('Long30Markups')) THEN
+                   (itemCost(itemsite_id) / (1.0 - ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
+                  WHEN (ipsitem_type = 'M' AND fetchMetricBool('WholesalePriceCosting')) THEN
+                   (item_listcost + (item_listcost * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
+                  WHEN (ipsitem_type = 'M') THEN
+                   (itemCost(itemsite_id) + (itemCost(itemsite_id) * ipsitem_discntprcnt) + ipsitem_fixedamtdiscount)
                   ELSE 0.0
              END) AS netPrice,
        CASE WHEN (ipsitem_type='N') THEN <? value("nominal") ?>
@@ -38,6 +47,7 @@ FROM ipsiteminfo LEFT OUTER JOIN item ON (item_id=ipsitem_item_id)
                  LEFT OUTER JOIN prodcat ON (prodcat_id=ipsitem_prodcat_id)
                  LEFT OUTER JOIN uom AS qty ON (qty.uom_id=ipsitem_qty_uom_id)
                  LEFT OUTER JOIN uom AS price ON (price.uom_id=ipsitem_price_uom_id)
+                 LEFT OUTER JOIN itemsite ON (itemsite_item_id=item_id AND itemsite_warehous_id=<? value("warehous_id") ?>)
 WHERE (ipsitem_ipshead_id=<? value("ipshead_id") ?>)
 
 UNION

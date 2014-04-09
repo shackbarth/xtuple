@@ -1,7 +1,7 @@
 
 CREATE OR REPLACE FUNCTION woinvavail(integer, boolean, boolean, boolean, boolean)
   RETURNS SETOF woinvav AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
    pwoid ALIAS FOR $1;   
@@ -162,7 +162,7 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION woinvavail(integer, integer, boolean, boolean)
   RETURNS SETOF woinvav AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
    pwoid ALIAS FOR $1; 

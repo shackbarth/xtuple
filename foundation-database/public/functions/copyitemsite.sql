@@ -1,6 +1,20 @@
-DROP FUNCTION IF EXISTS copyitemsite(integer, integer);
-CREATE OR REPLACE FUNCTION copyItemSite(INTEGER, INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION copyItemSite(pitemsiteid INTEGER,
+                                        pdestwhsid INTEGER) RETURNS INTEGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
+-- See www.xtuple.com/CPAL for the full text of the software license.
+
+BEGIN
+
+  RETURN copyItemSite(pitemsiteid, pdestwhsid, NULL);
+
+END;
+$$ LANGUAGE 'plpgsql';
+
+
+CREATE OR REPLACE FUNCTION copyItemSite(pitemsiteid INTEGER,
+                                        pdestwhsid INTEGER,
+                                        pdestitemid INTEGER) RETURNS INTEGER AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pitemsiteid	ALIAS FOR $1;
@@ -33,7 +47,7 @@ BEGIN
 
   SELECT itemsite_id INTO _new.itemsite_id
   FROM itemsite
-  WHERE ((itemsite_item_id=_new.itemsite_item_id)
+  WHERE ((itemsite_item_id=COALESCE(pdestitemid, _new.itemsite_item_id))
     AND  (itemsite_warehous_id=pdestwhsid OR
 	  (itemsite_warehous_id IS NULL AND pdestwhsid IS NULL)));
   IF (FOUND) THEN
@@ -111,7 +125,7 @@ BEGIN
     itemsite_autoreg,
     itemsite_planning_type,             itemsite_supply_itemsite_id
   ) VALUES (
-    _new.itemsite_id,			_new.itemsite_item_id,
+    _new.itemsite_id,			COALESCE(pdestitemid, _new.itemsite_item_id),
     _new.itemsite_warehous_id,		_new.itemsite_qtyonhand,
     _new.itemsite_costmethod,           _new.itemsite_value,
     _new.itemsite_reorderlevel,	        _new.itemsite_ordertoqty,

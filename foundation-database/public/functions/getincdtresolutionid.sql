@@ -1,8 +1,7 @@
-CREATE OR REPLACE FUNCTION getIncdtResolutionId(text) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION getIncdtResolutionId(pIncdtResolutionName text) RETURNS INTEGER STABLE AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pIncdtResolutionName ALIAS FOR $1;
   _returnVal INTEGER;
 BEGIN
   IF (pIncdtResolutionName IS NULL) THEN
@@ -14,9 +13,9 @@ BEGIN
   WHERE (incdtresolution_name=pIncdtResolutionName);
 
   IF (_returnVal IS NULL) THEN
-	RAISE EXCEPTION ''Incident Resolution Name % not found.'', pIncdtResolutionName;
+	RAISE EXCEPTION 'Incident Resolution Name % not found.', pIncdtResolutionName;
   END IF;
 
   RETURN _returnVal;
 END;
-' LANGUAGE 'plpgsql';
+$$ LANGUAGE 'plpgsql';

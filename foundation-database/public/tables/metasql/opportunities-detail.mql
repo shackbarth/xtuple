@@ -1,7 +1,7 @@
 -- Group: opportunities
 -- Name: detail
 -- Notes: used by opportunityList
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT DISTINCT ON (incdtpriority_order, ophead_target_date, ophead_name, ophead_id) 
@@ -23,6 +23,7 @@ SELECT DISTINCT ON (incdtpriority_order, ophead_target_date, ophead_name, ophead
        ophead_target_date,
        ophead_actual_date,
        formatMoney(ophead_amount) AS f_amount,
+       formatMoney(COALESCE(ophead_amount,0) * COALESCE(ophead_probability_prcnt * 0.01)) AS f_value,	
        formatDate(ophead_target_date) AS f_targetdate,
        formatDate(ophead_actual_date) AS f_actualdate,
        'extprice' AS ophead_amount_xtnumericrole,

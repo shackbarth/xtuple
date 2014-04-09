@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION explodePhantomOrder(INTEGER, INTEGER, NUMERIC) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pPlanordid ALIAS FOR $1;

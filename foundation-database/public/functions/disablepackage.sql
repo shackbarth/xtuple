@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION disablePackage(TEXT) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   ppkgname ALIAS FOR $1;
@@ -23,7 +23,7 @@ $$
 LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION disablePackage(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   ppkgheadid    ALIAS FOR $1;

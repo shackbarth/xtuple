@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION convertQuote(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pQuheadid ALIAS FOR $1;
@@ -31,15 +31,11 @@ BEGIN
    WHERE ((itemsite_id IS NULL)
      AND  (quitem_quhead_id=pQuheadid));
   IF (FOUND) THEN
-    INSERT INTO evntlog (evntlog_evnttime, evntlog_username, evntlog_evnttype_id,
-                         evntlog_ordtype, evntlog_ord_id, evntlog_warehous_id, evntlog_number)
-    SELECT CURRENT_TIMESTAMP, evntnot_username, evnttype_id,
-           'Q', quhead_id, quhead_warehous_id, quhead_number
-    FROM evntnot, evnttype, quhead
-    WHERE ( (evntnot_evnttype_id=evnttype_id)
-     AND (evntnot_warehous_id=quhead_warehous_id)
-     AND (evnttype_name='CannotConvertQuote')
-     AND (quhead_id=pQuheadid) );
+    PERFORM postEvent('CannotConvertQuote', 'Q', quhead_id,
+                      quhead_warehous_id, quhead_number,
+                      NULL, NULL, NULL, NULL)
+    FROM quhead
+    WHERE (quhead_id=pQuheadid);
 
     RETURN -1;
   END IF;

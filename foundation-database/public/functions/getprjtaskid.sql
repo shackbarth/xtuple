@@ -1,9 +1,8 @@
-CREATE OR REPLACE FUNCTION getPrjTaskId(text, text) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION getPrjTaskId(pPrjNumber text,
+                                        pTaskNumber text) RETURNS INTEGER STABLE AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pPrjNumber ALIAS FOR $1;
-  pTaskNumber ALIAS FOR $2;
   _returnVal INTEGER;
 BEGIN
   IF (pPrjNumber IS NULL OR pTaskNumber IS NULL) THEN
@@ -22,4 +21,4 @@ BEGIN
 
   RETURN _returnVal;
 END;
-$$ LANGUAGE 'plpgsql' STABLE;
+$$ LANGUAGE 'plpgsql';

@@ -4,7 +4,7 @@ SELECT dropIfExists('FUNCTION','financialreport(INTEGER, INTEGER, bool, bool)');
 SELECT dropIfExists('FUNCTION','financialreport(INTEGER,_int4,bpchar,bool)');
 
 CREATE OR REPLACE FUNCTION financialreport(INTEGER, INTEGER, INTEGER) RETURNS bool AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pFlheadid ALIAS FOR $1;
@@ -22,7 +22,7 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION financialreport(INTEGER, INTEGER, bpchar, INTEGER)
   RETURNS bool AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pFlheadid ALIAS FOR $1;
@@ -241,7 +241,7 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION financialreport(INTEGER, INTEGER, bool, bool, INTEGER)
   RETURNS SETOF flstmtitem AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pFlcolid ALIAS FOR $1;
@@ -1263,7 +1263,7 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION financialreport(INTEGER,_int4,bpchar,bool,INTEGER)
   RETURNS SETOF fltrenditem AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pFlheadId ALIAS FOR $1;

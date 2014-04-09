@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION voidInvoice(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pInvcheadid ALIAS FOR $1;
@@ -31,7 +31,7 @@ BEGIN
   SELECT invchead.*,
          findFreightAccount(invchead_cust_id) AS freightaccntid,
          findARAccount(invchead_cust_id) AS araccntid,
-         aropen_id,
+         aropen_id, cohist_unitcost,
          ( SELECT COALESCE(SUM(taxhist_tax), 0)
            FROM invcheadtax
            WHERE ( (taxhist_parent_id = invchead_id)
@@ -42,6 +42,7 @@ BEGIN
              AND   (taxhist_taxtype_id = getAdjustmentTaxtypeId()) ) ) AS adjtax
        INTO _p 
   FROM invchead JOIN aropen ON (aropen_doctype='I' AND aropen_docnumber=invchead_invcnumber)
+                JOIN cohist ON (cohist_doctype='I' AND cohist_invcnumber=invchead_invcnumber)
   WHERE (invchead_id=pInvcheadid);
   IF (NOT FOUND) THEN
     RAISE EXCEPTION 'Cannot Void Invoice as invchead not found';
@@ -326,7 +327,7 @@ BEGIN
                           JOIN item ON (item_id=invcitem_item_id)
             WHERE (invchead_id=_p.invchead_id) LOOP
 
---  Issue billed stock from inventory
+--  Return billed stock to inventory
     IF (_itemlocSeries = 0) THEN
       SELECT NEXTVAL('itemloc_series_seq') INTO _itemlocSeries;
     END IF;
@@ -334,10 +335,10 @@ BEGIN
                          'S/O', 'IN', _r.invchead_invcnumber, '',
                          ('Invoice Voided ' || _r.item_number),
                          getPrjAccntId(_r.prj_id, resolveCOSAccount(itemsite_id, _r.cust_id, _r.saletype_id, _r.shipzone_id)),
-                         costcat_asset_accnt_id, _itemlocSeries, _glDate) INTO _invhistid
-    FROM itemsite, costcat
-    WHERE ( (itemsite_costcat_id=costcat_id)
-     AND (itemsite_id=_r.itemsite_id) );
+                         costcat_asset_accnt_id, _itemlocSeries, _glDate,
+                         (_p.cohist_unitcost * _r.qty)) INTO _invhistid
+    FROM itemsite JOIN costcat ON (itemsite_costcat_id=costcat_id)
+    WHERE (itemsite_id=_r.itemsite_id);
 
   END LOOP;
 

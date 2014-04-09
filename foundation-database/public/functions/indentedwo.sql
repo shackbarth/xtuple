@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION indentedwo(integer, boolean, boolean, boolean) RETURNS SETOF wodata AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
    pwoid ALIAS FOR $1;
@@ -26,7 +26,7 @@ BEGIN
        SELECT wo_id,wo_number,wo_subnumber,wo_status,wo_startdate,
          wo_duedate,wo_adhoc,wo_itemsite_id,itemsite_qtyonhand,
          wo_qtyord,wo_qtyrcv,wo_prodnotes, item_number,
-         item_descrip1, item_descrip2, uom_name
+         item_descrip1, item_descrip2, item_listprice, uom_name
        FROM wo, itemsite, item, uom     
        WHERE ((wo_id = pwoid)
          AND (itemsite_id = wo_itemsite_id)
@@ -44,7 +44,9 @@ BEGIN
         _row.wodata_startdate := _x.wo_startdate;
         _row.wodata_duedate := _x.wo_duedate;
         _row.wodata_adhoc := _x.wo_adhoc;     
-        _row.wodata_itemsite_id := _x.wo_itemsite_id;         
+        _row.wodata_itemsite_id := _x.wo_itemsite_id;
+        _row.wodata_custprice := _x.item_listprice;
+        _row.wodata_listprice := _x.item_listprice;
         _row.wodata_qoh := _x.itemsite_qtyonhand;
         _row.wodata_short := noneg(_x.wo_qtyord - _x.wo_qtyrcv);
         _row.wodata_qtyrcv := _x.wo_qtyrcv;   
@@ -122,7 +124,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION indentedwo(integer, integer, integer, boolean, boolean) RETURNS SETOF wodata AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
    pwoid ALIAS FOR $1;   
@@ -148,7 +150,7 @@ BEGIN
     --find all WO with the ordid of the next level up
     _qry := 'SELECT wo_id,wo_number,wo_subnumber,wo_status,wo_startdate,wo_duedate,
          wo_adhoc,wo_itemsite_id,itemsite_qtyonhand,wo_qtyord,wo_qtyrcv, wo_prodnotes,
-         item_number,item_descrip1, item_descrip2, uom_name,
+         item_number,item_descrip1, item_descrip2, item_listprice, uom_name,
          womatl_qtyiss, womatl_scrap, womatl_wooper_id
        FROM itemsite,  wo, item, uom, womatl 
        WHERE ((wo_ordid = ' || pwoid || ')
@@ -180,6 +182,8 @@ BEGIN
         _row.wodata_duedate := _x.wo_duedate;
         _row.wodata_adhoc := _x.wo_adhoc;      
         _row.wodata_itemsite_id := _x.wo_itemsite_id;        
+        _row.wodata_custprice := _x.item_listprice;
+        _row.wodata_listprice := _x.item_listprice;
         _row.wodata_qoh := _x.itemsite_qtyonhand;
         _row.wodata_short := noneg(_x.wo_qtyord - _x.wo_qtyrcv);
         _row.wodata_qtyiss := _x.womatl_qtyiss;  

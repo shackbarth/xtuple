@@ -1,16 +1,222 @@
 -- Group: orderActivityByProject
 -- Name:  detail
--- Notes: 
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
--- See www.xtuple.com/CPAL for the full text of the software license.
+-- Notes: All projects
 
 SELECT *, 
   formatQty(qty) AS f_qty,
   formatMoney(value) AS f_value,
   'curr' AS qty_xtnumericrole,
-  'curr' AS value_xtnumericrole
+  'curr' AS value_xtnumericrole,
+  CASE WHEN COALESCE(hrs_balance,0) < 0 THEN 'red' END AS hrs_balance_qtforegroundrole,
+  CASE WHEN COALESCE(exp_balance,0) < 0 THEN 'red' END AS exp_balance_qtforegroundrole
 FROM (
+SELECT prj_id AS id,
+       1 AS type,
+       '0' AS subtype,
+       0 AS section,
+       NULL  AS section_qtdisplayrole,
+       prj_number AS name,
+       CASE                         
+           WHEN prj_status = 'C' THEN <? value('complete') ?>
+           WHEN prj_status = 'O' THEN <? value('inprocess') ?>
+           WHEN prj_status = 'P' THEN <? value('planning') ?>
+       END AS status,
+       prjtype_code AS project_type,
+       prj_name AS item,
+       firstline(prj_descrip) AS descrip,
+       crmacct_name AS customer, 
+       cntct_name AS contact,
+       addr_city AS city,
+       addr_state AS state,
+       NULL::numeric AS qty,
+       NULL::text AS uom,
+       NULL::numeric AS value,
+       prj_due_date AS due,
+       prj_assigned_date AS assigned,
+       prj_start_date AS started,
+       prj_completed_date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+       CASE WHEN (prj_status = 'O' AND prj_due_date < current_date) THEN 'red' 
+         WHEN (prj_status = 'O' AND prj_due_date BETWEEN current_date AND current_date + (fetchmetricvalue('ProjectDueDateWarning')||' days')::interval) THEN 'orange' 
+         END AS due_qtforegroundrole,
+       0 AS xtindentrole
+  FROM prj
+  LEFT OUTER JOIN prjtype ON (prj_prjtype_id=prjtype_id)
+  LEFT OUTER JOIN crmacct ON (prj_crmacct_id=crmacct_id)
+  LEFT OUTER JOIN cntct ON (crmacct_cntct_id_1=cntct_id)
+  LEFT OUTER JOIN addr ON (cntct_addr_id=addr_id)
+
+ WHERE (prj_id = <? value("prj_id") ?> )
+ 
+UNION ALL
+----- TASKS -----
+SELECT DISTINCT -1 AS id, 
+       3 AS type,
+       '0' AS subtype,
+       1 AS section,
+       'Tasks' AS section_qtdisplayrole,
+       'Tasks' AS name,
+       NULL::text AS status,
+       NULL::text AS project_type,
+       NULL::text AS item,
+       NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,
+       NULL::numeric AS qty,
+       NULL::text AS uom,
+       NULL::numeric AS value,
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+       NULL::text AS due_qtforegroundrole,
+       1 AS xtindentrole
+
+UNION ALL
+
+SELECT prjtask_id AS id,
+       5 AS type,
+       '0' AS subtype,
+       1 AS section,
+       NULL AS section_qtdisplayrole,
+       prjtask_number AS name,
+       CASE                         
+           WHEN prjtask_status = 'C' THEN <? value('complete') ?>
+           WHEN prjtask_status = 'O' THEN <? value('inprocess') ?>
+           WHEN prjtask_status = 'P' THEN <? value('planning') ?>
+       END AS status,
+       NULL::text AS project_type,
+       prjtask_name AS item,
+       prjtask_descrip AS descrip,
+       cust_name as customer,
+       cntct_name AS contact,
+       addr_city AS city,
+       addr_state AS state,
+       NULL::numeric AS qty,
+       NULL::text AS uom,
+       NULL::numeric AS value,
+       prjtask_due_date AS due,
+       prjtask_assigned_date AS assigned,
+       prjtask_start_date AS started,
+       prjtask_completed_date AS completed,
+       prjtask_hours_budget AS hrs_budget,
+       prjtask_hours_actual AS hrs_actual,
+       (prjtask_hours_budget-prjtask_hours_actual) AS hrs_balance,
+       prjtask_exp_budget AS exp_budget,
+       prjtask_exp_actual AS exp_actual,
+       (prjtask_exp_budget-prjtask_exp_actual) AS exp_balance,
+       CASE WHEN (prjtask_status = 'O' AND prjtask_due_date < current_date) THEN 'red' 
+         WHEN (prjtask_status = 'O' AND prjtask_due_date BETWEEN current_date AND current_date + (fetchmetricvalue('ProjectDueDateWarning')||' days')::interval) THEN 'orange' 
+         END AS due_qtforegroundrole,
+       2 AS xtindentrole
+  FROM prjtask
+  LEFT OUTER JOIN te.teprjtask ON (prjtask_id = teprjtask_prjtask_id)
+  LEFT OUTER JOIN custinfo ON (teprjtask_cust_id=cust_id)
+  LEFT OUTER JOIN cntct ON (cust_corrcntct_id=cntct_id)
+  LEFT OUTER JOIN addr ON (cntct_addr_id=addr_id)
+
+ WHERE (prjtask_prj_id = <? value("prj_id") ?> )
+ GROUP BY custinfo.cust_name, prjtask.prjtask_id, addr.addr_city, addr.addr_state, cntct_name
+
+<? if exists("showIn") ?>
+UNION ALL
+----- INCIDENTS -----
+
+SELECT DISTINCT -1 AS id, 
+       100 AS type,
+       '0' AS subtype,
+       1 AS section,
+       'Incidents' AS section_qtdisplayrole,
+       'Incidents' AS name,
+       NULL::text AS status,
+       NULL::text AS project_type,
+       NULL::text AS item,
+       NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,
+       NULL::numeric AS qty,
+       NULL::text AS uom,
+       NULL::numeric AS value,
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+       NULL::text AS due_qtforegroundrole,
+       1 AS xtindentrole
+    FROM incdt
+UNION ALL
+
+SELECT incdt_id AS id,
+       105 AS type,
+       '0' AS subtype,
+       1 AS section,
+       NULL AS section_qtdisplayrole,
+       incdt_number::text AS name,
+       CASE                         
+           WHEN incdt_status = 'L' THEN <? value('closed') ?>
+           WHEN incdt_status = 'N' THEN <? value('new') ?>
+           WHEN incdt_status = 'F' THEN <? value('feedback') ?>
+           WHEN incdt_status = 'A' THEN <? value('assigned') ?>	
+           WHEN incdt_status = 'R' THEN <? value('resolved') ?>
+           WHEN incdt_status = 'C' THEN <? value('confirmed') ?>
+       END AS status,
+       NULL::text AS project_type,
+       incdt_number::text AS item,
+       incdt_summary AS descrip,
+       crmacct_number AS customer,
+       crmacct_name AS contact,
+       addr_city AS city,
+       addr_state AS state,
+       NULL::numeric AS qty,
+       NULL::text AS uom,
+       NULL::numeric AS value,
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+       NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
+  FROM incdt
+  LEFT OUTER JOIN crmacct ON (incdt_crmacct_id=crmacct_id)
+  LEFT OUTER JOIN cntct ON (incdt_cntct_id=cntct_id)
+  LEFT OUTER JOIN addr ON (cntct_addr_id=addr_id)
+
+ WHERE (incdt_prj_id = <? value("prj_id") ?> )
+ GROUP BY incdt_id, incdt_prj_id, incdt_number, crmacct_number, crmacct_name, addr.addr_city, addr.addr_state, cntct_name, incdt_number, incdt_status, incdt_assigned_username, incdt_owner_username, incdt_number, incdt_summary 
+<? endif ?>
+   
 <? if exists("showSo") ?>
+UNION ALL
+
 ----- QUOTES -----
 SELECT DISTINCT -1 AS id, 
        10 AS type,
@@ -19,12 +225,29 @@ SELECT DISTINCT -1 AS id,
        <? value("quotes") ?> AS section_qtdisplayrole,
        <? value("quotes") ?> AS name,
        NULL::text AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,
        NULL::numeric AS qty,
        NULL::text AS uom,
-       NULL::numeric AS value,
-       0 AS xtindentrole
+       NULL::numeric AS value, 
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+       NULL::text AS due_qtforegroundrole,
+       1 AS xtindentrole
   FROM quhead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=quhead_prj_id
@@ -52,13 +275,31 @@ SELECT quhead_id AS id,
             ELSE
          <? value("expired") ?>
        END AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       cust_name AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        NULL AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+       NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM quhead
+  JOIN custinfo ON (quhead_cust_id=cust_id)
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=quhead_prj_id
             AND ((prj_owner_username=<? value("owner_username") ?>) OR (prj_username=<? value("owner_username") ?>)))
@@ -68,7 +309,7 @@ SELECT quhead_id AS id,
 <? if exists("owner_username") ?>
    AND (quhead_owner_username=<? value("owner_username") ?>)
 <? endif ?>
-GROUP BY quhead_id, quhead_number, quhead_status, quhead_expire, quhead_freight, quhead_misc
+GROUP BY quhead_id, quhead_number, quhead_status, quhead_expire, quhead_freight, quhead_misc, custinfo.cust_name
 
 UNION ALL
 
@@ -87,12 +328,29 @@ SELECT quitem_id AS id,
             ELSE
          <? value("Expired") ?>
        END AS status,
+       NULL::text AS project_type,
        item_number AS item,
        item_descrip1 || ' ' || item_descrip2 AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        quitem_qtyord,
        uom_name AS uom,
        (quitem_qtyord * quitem_qty_invuomratio) * (quitem_price / quitem_price_invuomratio) AS value,
-       2 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+       NULL::text AS due_qtforegroundrole,
+       3 AS xtindentrole
   FROM quhead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=quhead_prj_id
@@ -116,12 +374,29 @@ SELECT quhead_id AS id,
        <? value("quotes") ?> AS section_qtdisplayrole,
        <? value("total") ?> AS name,
        NULL AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        SUM((quitem_qtyord * quitem_qty_invuomratio) * (quitem_price / quitem_price_invuomratio)) AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM quhead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=quhead_prj_id
@@ -143,12 +418,29 @@ SELECT -1 AS id,
        <? value("quotes") ?> AS section_qtdisplayrole,
        <? value("total") ?> || ' ' || <? value("quotes") ?> AS name,
        NULL AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        SUM((quitem_qtyord * quitem_qty_invuomratio) * (quitem_price / quitem_price_invuomratio)) AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM quhead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=quhead_prj_id
@@ -170,12 +462,29 @@ SELECT DISTINCT -1 AS id,
        <? value("sos") ?> AS section_qtdisplayrole,
        <? value("sos") ?> AS name,
        NULL::text AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL::numeric AS qty,
        NULL::text AS uom,
        NULL::numeric AS value,
-       0 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       1 AS xtindentrole
   FROM cohead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=cohead_prj_id
@@ -211,20 +520,39 @@ SELECT cohead_id AS id,
                  ORDER BY type
                  LIMIT 1) AS sts) ,'O')
         AS status,
-       NULL::text AS item,
-       NULL::text AS descrip,
+       NULL::text AS project_type,
+       shipto_num AS item,
+       shipto_name AS descrip,
+       cust_name AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        NULL AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM cohead
+    JOIN custinfo ON (cust_id = cohead_cust_id)
+    LEFT OUTER JOIN shiptoinfo ON (cohead_shipto_id = shipto_id)
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=cohead_prj_id
             AND ((prj_owner_username=<? value("owner_username") ?>) OR (prj_username=<? value("owner_username") ?>)))
 <? endif ?>
     JOIN coitem ON (coitem_cohead_id = cohead_id)
  WHERE (cohead_prj_id = <? value("prj_id") ?>)
-GROUP BY cohead_id, cohead_number
+GROUP BY cohead_id, cohead_number, shipto_num, shipto_name, cust_name
 
 UNION ALL
 
@@ -241,12 +569,29 @@ SELECT coitem_id AS id,
             WHEN (coitem_status = 'X') THEN
          <? value("canceled") ?>
        END AS status,
+       NULL::text AS project_type,
        item_number AS item,
        item_descrip1 || ' ' || item_descrip2 AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        coitem_qtyord,
        uom_name AS uom,
        (coitem_qtyord * coitem_qty_invuomratio) * (coitem_price / coitem_price_invuomratio) AS value,
-       2 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       3 AS xtindentrole
   FROM cohead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=cohead_prj_id
@@ -267,12 +612,29 @@ SELECT cohead_id AS id,
        <? value("sos") ?> AS section_qtdisplayrole,
        <? value("total") ?> AS name,
        NULL AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        SUM((coitem_qtyord * coitem_qty_invuomratio) * (coitem_price / coitem_price_invuomratio)) AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM cohead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=cohead_prj_id
@@ -291,12 +653,29 @@ SELECT -1 AS id,
        <? value("sos") ?> AS section_qtdisplayrole,
        <? value("total") ?> || ' ' || <? value("sos") ?> AS name,
        NULL AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        SUM((coitem_qtyord * coitem_qty_invuomratio) * (coitem_price / coitem_price_invuomratio)) AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        	
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM cohead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=cohead_prj_id
@@ -315,12 +694,29 @@ SELECT DISTINCT -1 AS id,
        <? value("invoices") ?> AS section_qtdisplayrole,
        <? value("invoices") ?> AS name,
        NULL::text AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL::numeric AS qty,
        NULL::text AS uom,
        NULL::numeric AS value,
-       0 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       1 AS xtindentrole
   FROM invchead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=invchead_prj_id
@@ -340,20 +736,39 @@ SELECT invchead_id AS id,
          <? value("posted") ?>
        ELSE <? value("unposted") ?>
        END AS status,
-       NULL::text AS item,
-       NULL::text AS descrip,
+       NULL::text AS project_type,
+       shipto_num AS item,
+       shipto_name AS descrip,
+       cust_name AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        NULL AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM invchead
+    JOIN custinfo ON (cust_id=invchead_cust_id)
+    LEFT OUTER JOIN shiptoinfo ON (invchead_shipto_id = shipto_id)
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=invchead_prj_id
             AND ((prj_owner_username=<? value("owner_username") ?>) OR (prj_username=<? value("owner_username") ?>)))
 <? endif ?>
     JOIN invcitem ON (invcitem_invchead_id = invchead_id)
  WHERE (invchead_prj_id = <? value("prj_id") ?>)
-GROUP BY invchead_id, invchead_invcnumber, invchead_freight, invchead_misc_amount, invchead_posted
+GROUP BY invchead_id, invchead_invcnumber, shipto_num, shipto_name, invchead_freight, invchead_misc_amount, invchead_posted, cust_name
 
 UNION ALL
 
@@ -367,12 +782,29 @@ SELECT invcitem_id AS id,
          <? value("posted") ?>
        ELSE <? value("unposted") ?>
        END AS status,
+       NULL::text AS project_type,
        COALESCE(item_number,invcitem_number) AS item,
        COALESCE(item_descrip1 || ' ' || item_descrip2,invcitem_descrip) AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        invcitem_billed AS qty,
        uom_name AS uom,
        (invcitem_billed * invcitem_qty_invuomratio) * (invcitem_price / invcitem_price_invuomratio) AS value,
-       2 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       3 AS xtindentrole
   FROM invchead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=invchead_prj_id
@@ -392,12 +824,29 @@ SELECT invchead_id AS id,
        <? value("invoices") ?> AS section_qtdisplayrole,
        <? value("total") ?> AS name,
        NULL AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        SUM((invcitem_billed * invcitem_qty_invuomratio) * (invcitem_price / invcitem_price_invuomratio)) AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+       
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM invchead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=invchead_prj_id
@@ -416,12 +865,29 @@ SELECT -1 AS id,
        <? value("invoices") ?> AS section_qtdisplayrole,
        <? value("total") ?> || ' ' || <? value("invoices") ?> AS name,
        NULL AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        SUM((invcitem_billed * invcitem_qty_invuomratio) * (invcitem_price / invcitem_price_invuomratio)) AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM invchead
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=invchead_prj_id
@@ -434,12 +900,7 @@ SELECT -1 AS id,
 
 
 <? if exists("showWo") ?>
-
-<?   if exists("showSo") ?>
-
 UNION ALL
-
-<?   endif ?>
 
 ------ WORK ORDERS -------
 SELECT DISTINCT -1 AS id, 
@@ -449,12 +910,29 @@ SELECT DISTINCT -1 AS id,
        <? value("wos") ?> AS section_qtdisplayrole,
        <? value("wos") ?> AS name,
        NULL::text AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL::numeric AS qty,
        NULL::text AS uom,
        NULL::numeric AS value,
-       0 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       1 AS xtindentrole
   FROM wo
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=wo_prj_id
@@ -481,12 +959,29 @@ SELECT wo_id AS id,
             WHEN (wo_status = 'C') THEN
          <? value("closed") ?>
        END AS status,
+       NULL::text AS project_type,
        item_number AS item,
        item_descrip1 || ' ' || item_descrip2 AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        wo_qtyord AS qty,
        uom_name AS uom,
        wo_postedvalue AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+       
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM wo
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=wo_prj_id
@@ -506,12 +1001,29 @@ SELECT -1 AS id,
        <? value("wos") ?> AS section_qtdisplayrole,
        <? value("total") ?> || ' ' || <? value("wos") ?> AS name,
        NULL AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        SUM(wo_postedvalue) AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM wo
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=wo_prj_id
@@ -523,12 +1035,8 @@ SELECT -1 AS id,
 
 
 <? if exists("showPo") ?>
-<?   if exists("showSo") ?>
- UNION ALL
-<? elseif exists("showWo") ?>
  UNION ALL
 
-<? endif ?>
 ------ PURCHASE REQUESTS ------
 SELECT DISTINCT -1 AS id, 
        50 AS type,
@@ -537,12 +1045,29 @@ SELECT DISTINCT -1 AS id,
        <? value("prs") ?> AS section_qtdisplayrole,
        <? value("prs") ?> AS name,
        NULL::text AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL::numeric AS qty,
        NULL::text AS uom,
        NULL::numeric AS value,
-       0 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       1 AS xtindentrole
   FROM pr
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=pr_prj_id
@@ -559,12 +1084,29 @@ SELECT pr_id AS id,
        <? value("prs") ?> AS section_qtdisplayrole,
        pr_number::text || '-' || pr_subnumber::text AS name,
        <? value("open") ?> AS status, 
+       NULL::text AS project_type,
        item_number AS item,
        (item_descrip1 || ' ' || item_descrip2) AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        pr_qtyreq AS qty,
        uom_name AS uom,
        stdcost(item_id) * pr_qtyreq AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM pr
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=pr_prj_id
@@ -584,12 +1126,29 @@ SELECT -1 AS id,
        <? value("prs") ?> AS section_qtdisplayrole,
        <? value("total") ?> || ' ' || <? value("prs") ?> AS name,
        NULL AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,       
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        SUM(stdcost(item_id) * pr_qtyreq) AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM pr
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=pr_prj_id
@@ -609,12 +1168,29 @@ SELECT DISTINCT -1 AS id,
        <? value("pos") ?> AS section_qtdisplayrole,
        <? value("pos") ?> AS name,
        NULL::text AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL::numeric AS qty,
        NULL::text AS uom,
        NULL::numeric AS value,
-       0 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       1 AS xtindentrole
   FROM poitem
 <? if exists("owner_username") ?>
     JOIN prj ON (prj_id=poitem_prj_id
@@ -637,12 +1213,29 @@ SELECT pohead_id AS id,
             WHEN (pohead_status = 'C') THEN
          <? value("closed") ?>
        END AS status,
-       NULL::text AS item,
+       NULL::text AS project_type,
+       NULL AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL AS uom,
        NULL AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM pohead
     JOIN poitem ON (poitem_pohead_id = pohead_id)
 <? if exists("owner_username") ?>
@@ -667,12 +1260,29 @@ SELECT poitem_id AS id,
             WHEN (poitem_status = 'C') THEN
          <? value("closed") ?>
        END AS status,
+       NULL::text AS project_type,
        COALESCE(item_number,poitem_vend_item_number) AS item,
        COALESCE((item_descrip1 || ' ' || item_descrip2),poitem_vend_item_descrip) AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        poitem_qty_ordered,
        poitem_vend_uom AS uom,
        (poitem_qty_ordered * poitem_unitprice) AS value,
-       2 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       3 AS xtindentrole
   FROM pohead
     JOIN poitem ON (poitem_pohead_id = pohead_id)
 <? if exists("owner_username") ?>
@@ -692,12 +1302,29 @@ SELECT pohead_id AS id,
        <? value("pos") ?> AS section_qtdisplayrole,
        <? value("total") ?> AS name,
        NULL AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        SUM(poitem_qty_ordered * poitem_unitprice) AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM pohead
     JOIN poitem ON (poitem_pohead_id = pohead_id)
 <? if exists("owner_username") ?>
@@ -716,12 +1343,29 @@ SELECT -1 AS id,
        <? value("sos") ?> AS section_qtdisplayrole,
        <? value("total") ?> || ' ' || <? value("pos") ?> AS name,
        NULL AS status,
+       NULL::text AS project_type,
        NULL::text AS item,
        NULL::text AS descrip,
+       NULL::text AS customer,
+       NULL::text AS contact,
+       NULL::text AS city,
+       NULL::text AS state,       
        NULL AS qty,
        NULL::text AS uom,
        SUM(poitem_qty_ordered * poitem_unitprice) AS value,
-       1 AS xtindentrole
+       NULL::date AS due,
+       NULL::date AS assigned,
+       NULL::date AS started,
+       NULL::date AS completed,
+       NULL::numeric AS hrs_budget,
+       NULL::numeric AS hrs_actual,
+       NULL::numeric AS hrs_balance,
+       NULL::numeric AS exp_budget,
+       NULL::numeric AS exp_actual,
+       NULL::numeric AS exp_balance,
+        
+	NULL::text AS due_qtforegroundrole,
+       2 AS xtindentrole
   FROM pohead
     JOIN poitem ON (poitem_pohead_id = pohead_id)
 <? if exists("owner_username") ?>

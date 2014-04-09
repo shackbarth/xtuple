@@ -1,7 +1,7 @@
 SELECT dropIfExists('FUNCTION','qtyLocation(INTEGER, INTEGER, DATE, DATE, INTEGER, TEXT, INTEGER)');
 
 CREATE OR REPLACE FUNCTION qtyLocation(INTEGER, INTEGER, DATE, DATE, INTEGER, TEXT, INTEGER, INTEGER) RETURNS NUMERIC AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pLocationId  ALIAS FOR $1;
@@ -39,13 +39,13 @@ BEGIN
      AND (COALESCE(ls.itemlocdist_warranty, endoftime())=COALESCE(pWarranty, ls.itemlocdist_warranty, endoftime()))
      AND (ls.itemlocdist_id != pItemlocdistId ) );
 
--- Summarize itemlocrsrv qty for this location/itemsite
+-- Summarize reserved qty for this location/itemsite
 -- that is reserved for a different order
   IF (fetchMetricBool('EnableSOReservationsByLocation')) THEN
-    SELECT COALESCE(SUM(itemlocrsrv_qty), 0) INTO _qtyReserved
-      FROM itemloc JOIN itemlocrsrv ON ( (itemlocrsrv_itemloc_id=itemloc_id)
-                                    AND  ((itemlocrsrv_source <> COALESCE(pOrderType, '')) OR
-                                          (itemlocrsrv_source_id <> COALESCE(pOrderId, -1))) )
+    SELECT COALESCE(SUM(reserve_qty), 0) INTO _qtyReserved
+      FROM itemloc JOIN reserve ON ( (reserve_supply_id=itemloc_id AND reserve_supply_type='I')
+                                    AND  ((reserve_demand_type <> COALESCE(pOrderType, '')) OR
+                                          (reserve_demand_id <> COALESCE(pOrderId, -1))) )
      WHERE ( (itemloc_itemsite_id=pItemsiteId)
        AND (itemloc_location_id=pLocationId)
        AND (COALESCE(itemloc_ls_id, -1)=COALESCE(pLsId, itemloc_ls_id, -1))

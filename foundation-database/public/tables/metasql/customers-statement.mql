@@ -27,7 +27,7 @@
 --             CASE WHEN (aropen_doctype IN ('C', 'R')) THEN -1
 --                  ELSE 1 END) > 0)
 --ORDER BY cust_number;
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT araging_cust_id AS cust_id,

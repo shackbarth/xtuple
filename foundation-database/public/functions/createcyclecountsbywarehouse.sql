@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION createCycleCountsByWarehouse(INTEGER, INTEGER, TEXT, BOOLEAN, BOOLEAN) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pWarehousid ALIAS FOR $1;
@@ -16,7 +16,7 @@ END;
 
 CREATE OR REPLACE FUNCTION createcyclecountsbywarehouse(integer, integer, text, boolean, boolean, integer, boolean)
   RETURNS integer AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pWarehousid ALIAS FOR $1;
@@ -87,7 +87,7 @@ END;
 ' LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION createCycleCountsByWarehouse(INTEGER, INTEGER, INTEGER, TEXT, BOOLEAN, BOOLEAN) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pWarehousid ALIAS FOR $1;
@@ -102,7 +102,7 @@ END;
 ' LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION createCycleCountsByWarehouse(INTEGER, TEXT, INTEGER, TEXT, BOOLEAN, BOOLEAN) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pWarehousid ALIAS FOR $1;

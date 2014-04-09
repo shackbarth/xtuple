@@ -1,11 +1,10 @@
-CREATE OR REPLACE FUNCTION getImageId(text) RETURNS INTEGER AS '
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+CREATE OR REPLACE FUNCTION getImageId(pImageName text) RETURNS INTEGER STABLE AS $$
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
-  pImageName ALIAS FOR $1;
   _returnVal INTEGER;
 BEGIN
-  IF (COALESCE(TRIM(pImageName), '''') = '''') THEN
+  IF (COALESCE(TRIM(pImageName), '') = '') THEN
     RETURN NULL;
   END IF;
 
@@ -14,9 +13,9 @@ BEGIN
   WHERE (image_name=pImageName);
 
   IF (_returnVal IS NULL) THEN
-    RAISE EXCEPTION ''Image % not found.'', pImageName;
+    RAISE EXCEPTION 'Image % not found.', pImageName;
   END IF;
 
   RETURN _returnVal;
 END;
-' LANGUAGE 'plpgsql';
+$$ LANGUAGE 'plpgsql';

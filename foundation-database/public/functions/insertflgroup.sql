@@ -1,7 +1,7 @@
 
 
 CREATE OR REPLACE FUNCTION insertFlGroup(INTEGER, INTEGER, INTEGER, INTEGER, BOOLEAN) RETURNS BOOLEAN AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pFlheadid  ALIAS FOR $1;
@@ -16,7 +16,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION insertFlGroup(INTEGER, INTEGER, INTEGER, INTEGER, BOOLEAN, CHAR) RETURNS BOOLEAN AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pFlheadid  ALIAS FOR $1;
@@ -32,7 +32,7 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION insertflgroup(INTEGER, INTEGER, INTEGER, INTEGER, BOOLEAN, CHAR, INTEGER) RETURNS BOOLEAN AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pFlheadid  ALIAS FOR $1;

@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION postAPCreditMemoApplication(INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   pApopenid ALIAS FOR $1;
@@ -109,11 +109,12 @@ BEGIN
     END IF;
   END IF;
 
-  IF (_src.apopen_accnt_id > -1) THEN
-    _apaccntid := _src.apopen_accnt_id;
-  ELSE 
+-- do not post gain/loss to alternate prepaid
+--  IF (_src.apopen_accnt_id > -1) THEN
+--    _apaccntid := _src.apopen_accnt_id;
+--  ELSE 
     _apaccntid := findAPAccount(_src.apopen_vend_id);
-  END IF;
+--  END IF;
 
   PERFORM insertGLTransaction(fetchJournalNumber('AP-MISC'), 'A/P', 'CM',
                             _src.apopen_docnumber, 'CM Application',

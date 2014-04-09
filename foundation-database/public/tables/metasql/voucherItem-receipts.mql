@@ -1,7 +1,7 @@
 -- Group: voucherItem
 -- Name: receipts
 -- Notes: used by voucherItem
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 SELECT recv_id AS item_id, 1 AS item_type, 'REC' AS action,
@@ -15,6 +15,7 @@ FROM recv
 WHERE ( (NOT recv_invoiced)
   AND   (recv_posted)
   AND   ((recv_vohead_id IS NULL) OR (recv_vohead_id=<? value("vohead_id") ?>))
+  AND   (recv_order_type='PO')
   AND   (recv_orderitem_id=<? value("poitem_id") ?>) )
 
 UNION

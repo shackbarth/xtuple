@@ -4,7 +4,7 @@
 -- There are 2 display modes for this query:
 -- 1) Legacy mode which uses A/R Application information
 -- 2) Version 3.3.0 upgrade mode which uses Cash Receipt information
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple.
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple.
 -- See www.xtuple.com/CPAL for the full text of the software license.
 
 <? if exists("LegacyDisplayMode") ?>

@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION copyBOM(pSItemid       INTEGER,
                                    pTItemid       INTEGER) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _result INTEGER;
@@ -17,11 +17,12 @@ $$ LANGUAGE 'plpgsql';
 CREATE OR REPLACE FUNCTION copyBOM(pSItemid       INTEGER,
                                    pTItemid       INTEGER,
                                    pCopyUsedAt    BOOLEAN) RETURNS INTEGER AS $$
--- Copyright (c) 1999-2012 by OpenMFG LLC, d/b/a xTuple. 
+-- Copyright (c) 1999-2014 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xtuple.com/CPAL for the full text of the software license.
 DECLARE
   _bh RECORD;
   _bi RECORD;
+  _bomheadfound BOOLEAN := FALSE;
   _bomheadid INTEGER;
   _bomitemid INTEGER;
   _bomworksetid INTEGER;
@@ -37,15 +38,19 @@ BEGIN
   WHERE ((bomhead_item_id=pSItemid)
     AND  (bomhead_rev_id=getActiveRevID('BOM', pSItemid)));
 
-  IF (NOT FOUND) THEN
-    RETURN -1;
-  END IF;
+--  bomhead may not exist
+--  IF (NOT FOUND) THEN
+--    RETURN -1;
+--  END IF;
+    IF (FOUND) THEN
+      _bomheadfound := TRUE;
+    END IF;
 
 --  Make sure that source bomitems exist
   SELECT bomitem_id INTO _bomitemid
   FROM bomitem
-  WHERE ((bomitem_parent_item_id=_bh.bomhead_item_id)
-    AND  (bomitem_rev_id=_bh.bomhead_rev_id))
+  WHERE ((bomitem_parent_item_id=pSItemid)
+    AND  (bomitem_rev_id=getActiveRevID('BOM', pSItemid)))
   LIMIT 1;
 
   IF (NOT FOUND) THEN
@@ -87,12 +92,14 @@ BEGIN
     AND  (bomhead_rev_id= -1));
 
   IF (NOT FOUND) THEN
-    INSERT INTO bomhead
-    ( bomhead_item_id, bomhead_serial, bomhead_docnum,
-      bomhead_batchsize, bomhead_requiredqtyper )
-    VALUES
-    ( pTItemid, _bh.bomhead_serial, _bh.bomhead_docnum,
-      _bh.bomhead_batchsize, _bh.bomhead_requiredqtyper );
+    IF (_bomheadfound) THEN
+      INSERT INTO bomhead
+      ( bomhead_item_id, bomhead_serial, bomhead_docnum,
+        bomhead_batchsize, bomhead_requiredqtyper )
+      VALUES
+      ( pTItemid, _bh.bomhead_serial, _bh.bomhead_docnum,
+        _bh.bomhead_batchsize, _bh.bomhead_requiredqtyper );
+    END IF;
   END IF;
 
   FOR _bi IN SELECT bomitem.*
