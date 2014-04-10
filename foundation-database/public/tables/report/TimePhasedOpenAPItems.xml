@@ -1,0 +1,510 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Time Phased Open A/P Items</title>
+ <name>TimePhasedOpenAPItems</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT &lt;? if exists(&quot;vend_id&quot;) ?>
+         ( SELECT vend_name
+             FROM vendinfo
+            WHERE (vend_id=&lt;? value(&quot;vend_id&quot;) ?>) )
+       &lt;? elseif exists(&quot;vendtype_id&quot;) ?>
+         ( SELECT (vendtype_code || '-' || vendtype_descrip)
+             FROM vendtype
+            WHERE (vendtype_id=&lt;? value(&quot;vendtype_id&quot;) ?>) )
+       &lt;? elseif exists(&quot;vendtype_pattern&quot;) ?>
+         text(&lt;? value(&quot;vendtype_pattern&quot;) ?>)
+       &lt;? else ?>
+         text('All Vendors')
+       &lt;? endif ?>
+       AS f_value,
+       &lt;? if reExists(&quot;vendtype_.*&quot;) ?>
+         text('Vendor Type:')
+       &lt;? else ?>
+         text('Vendor:')
+       &lt;? endif ?>
+       AS f_label;
+       </sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT pstart, pend,
+       period,
+       vend_number, vend_name,
+       value,
+       formatMoney(value) AS f_value
+  FROM (
+  SELECT calitem_start AS pstart,
+         calitem_end AS pend,
+         (formatDate(calitem_start) || '-' || formatDate(calitem_end)) AS period,
+         vend_number,
+         vend_name,
+         openAPItemsValue(vend_id, calitem_id) AS value
+    FROM vendinfo,
+         ( SELECT rcalitem_id AS calitem_id,
+                  findPeriodStart(rcalitem_id) AS calitem_start,
+                  findPeriodEnd(rcalitem_id) AS calitem_end
+             FROM rcalitem
+            WHERE (rcalitem_id IN (
+  &lt;? foreach(&quot;period_id_list&quot;) ?>
+    &lt;? if not isfirst(&quot;period_id_list&quot;) ?>
+      ,
+    &lt;? endif ?>
+    &lt;? value(&quot;period_id_list&quot;) ?>
+  &lt;? endforeach ?>
+                                  )
+                  )
+            UNION
+           SELECT acalitem_id AS calitem_id,
+                  findPeriodStart(acalitem_id) AS calitem_start,
+                  findPeriodEnd(acalitem_id) AS calitem_end
+             FROM acalitem
+            WHERE (acalitem_id IN (
+  &lt;? foreach(&quot;period_id_list&quot;) ?>
+    &lt;? if not isfirst(&quot;period_id_list&quot;) ?>
+      ,
+    &lt;? endif ?>
+    &lt;? value(&quot;period_id_list&quot;) ?>
+  &lt;? endforeach ?>
+                                  )
+                  )
+         ) AS calitem
+  &lt;? if exists(&quot;vend_id&quot;) ?>
+   WHERE (vend_id=&lt;? value(&quot;vend_id&quot;) ?>)
+  &lt;? elseif exists(&quot;vendtype_id&quot;) ?>
+   WHERE (vend_vendtype_id=&lt;? value(&quot;vendtype_id&quot;) ?>)
+  &lt;? elseif exists(&quot;vendtype_pattern&quot;) ?>
+   WHERE (vend_vendtype_id IN (SELECT vendtype_id
+                                 FROM vendtype
+                                WHERE (vendtype_code ~ &lt;? value(&quot;vendtype_pattern&quot;) ?>) ))
+  &lt;? endif ?>
+  ) AS data
+ WHERE (value != 0)
+ORDER BY pstart, pend, vend_number
+</sql>
+ </querysource>
+ <rpthead>
+  <height>221</height>
+  <label>
+   <rect>
+    <x>320</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Vend #</string>
+  </label>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>200</y>
+    <width>250</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Period</string>
+  </label>
+  <field>
+   <rect>
+    <x>10</x>
+    <y>100</y>
+    <width>125</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_label</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>430</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Vend Name</string>
+  </label>
+  <label>
+   <rect>
+    <x>645</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>145</x>
+    <y>10</y>
+    <width>580</width>
+    <height>38</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Time Phased Open A/P Items</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>215</ystart>
+   <xend>745</xend>
+   <yend>215</yend>
+   <weight>2</weight>
+  </line>
+  <field>
+   <rect>
+    <x>140</x>
+    <y>100</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_value</column>
+   </data>
+  </field>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>21</height>
+  <label>
+   <rect>
+    <x>10</x>
+    <y>0</y>
+    <width>250</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Period</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>15</ystart>
+   <xend>745</xend>
+   <yend>15</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>645</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>320</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Vend #</string>
+  </label>
+  <label>
+   <rect>
+    <x>430</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Vend Name</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <group>
+   <name>detail</name>
+   <column>pstart</column>
+   <head>
+    <height>6</height>
+    <field>
+     <rect>
+      <x>10</x>
+      <y>5</y>
+      <width>250</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <hcenter/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>period</column>
+     </data>
+    </field>
+   </head>
+   <foot>
+    <height>31</height>
+    <field>
+     <rect>
+      <x>645</x>
+      <y>10</y>
+      <width>100</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>bold</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <data>
+      <query>detail</query>
+      <column>value</column>
+     </data>
+     <tracktotal subtotal="true" builtin="true" >money</tracktotal>
+    </field>
+    <line>
+     <xstart>635</xstart>
+     <ystart>5</ystart>
+     <xend>745</xend>
+     <yend>5</yend>
+     <weight>0</weight>
+    </line>
+    <label>
+     <rect>
+      <x>520</x>
+      <y>10</y>
+      <width>100</width>
+      <height>15</height>
+     </rect>
+     <font>
+      <face>Arial</face>
+      <size>8</size>
+      <weight>normal</weight>
+     </font>
+     <right/>
+     <vcenter/>
+     <string>Total:</string>
+    </label>
+   </foot>
+  </group>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>16</height>
+   <field>
+    <rect>
+     <x>320</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>vend_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>430</x>
+     <y>0</y>
+     <width>210</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>vend_name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>645</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_value</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>16</height>
+  <field>
+   <rect>
+    <x>690</x>
+    <y>0</y>
+    <width>51</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>95</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>600</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+ </pgfoot>
+</report>

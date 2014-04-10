@@ -1,0 +1,545 @@
+<!DOCTYPE openRPTDef>
+<report>
+ <title>Return Authorization Workbench Due Credit</title>
+ <name>ReturnAuthorizationWorkbenchDueCredit</name>
+ <description></description>
+ <size>Letter</size>
+ <portrait/>
+ <topmargin>50</topmargin>
+ <bottommargin>50</bottommargin>
+ <rightmargin>50</rightmargin>
+ <leftmargin>50</leftmargin>
+ <querysource>
+  <name>head</name>
+  <sql>SELECT 
+&lt;? if exists("cust_id") ?>
+       cust_number AS f_custtype
+  FROM custinfo
+ WHERE(cust_id=&lt;? value("cust_id") ?>);
+&lt;? elseif exists("custtype_id") ?>
+       custtype_name AS f_custtype
+  FROM custtype
+ WHERE(custtype_id=&lt;? value("custtype_id") ?>);
+&lt;? elseif exists("custgrp_id") ?>
+       custgrp_name AS f_custtype
+  FROM custgrp
+ WHERE(custgrp_id=&lt;? value("custgrp_id") ?>);
+&lt;? else ?>
+       text('All Customer Types') AS f_custtype
+&lt;? endif ?></sql>
+ </querysource>
+ <querysource>
+  <name>detail</name>
+  <sql>SELECT DISTINCT rahead_id,
+CASE
+  WHEN rahead_creditmethod = 'M' THEN
+    1
+  WHEN rahead_creditmethod = 'K' THEN
+    2
+  WHEN rahead_creditmethod = 'C' THEN
+    3
+END,
+rahead_number, cust_name,
+formatDate(rahead_authdate) AS f_authdate, formatDate(NULL) AS f_eligibledate,
+formatMoney(currtobase(rahead_curr_id,
+                       calcradueamt(rahead_id), current_date)) AS f_amount,
+CASE
+  WHEN rahead_creditmethod = 'M' THEN
+    &lt;? value("creditmemo") ?>
+  WHEN rahead_creditmethod = 'K' THEN
+    &lt;? value("check") ?>
+  WHEN rahead_creditmethod = 'C' THEN
+    &lt;? value("creditcard") ?>
+END AS creditmethod, rahead_authdate
+FROM rahead, raitem, custtype, custinfo LEFT OUTER JOIN custgrpitem ON (cust_id=custgrpitem_cust_id)
+WHERE ( (rahead_id=raitem_rahead_id)
+ AND (rahead_cust_id=cust_id)
+ AND (cust_custtype_id=custtype_id)
+ AND ((raitem_disposition = 'R' AND rahead_timing = 'R' AND raitem_qtyreceived > raitem_qtycredited)
+ OR (raitem_disposition = 'R' AND rahead_timing = 'I' AND raitem_qtyauthorized > raitem_qtycredited)
+ OR (raitem_disposition = 'C' AND raitem_qtyauthorized > raitem_qtycredited))
+ AND (raitem_status = 'O')
+ AND (rahead_creditmethod != 'N')
+ AND (calcradueamt(rahead_id) > 0)
+ AND (raitem_disposition IN ('C','R'))
+ &lt;? if exists("cust_id") ?>
+ AND (cust_id=&lt;? value("cust_id") ?>)
+ &lt;? elseif exists("custtype_id") ?>
+ AND (custtype_id=&lt;? value("custtype_id") ?>)
+ &lt;? elseif exists("custtype_pattern") ?>
+ AND (custtype_pattern=&lt;? value("custtype_pattern") ?>)
+ &lt;? elseif exists("custgrp_id") ?>
+ AND (custgrpitem_custgrp_id=&lt;? value("custgrp_id") ?>)
+ &lt;? endif ?>
+ AND (rahead_creditmethod IN ('$'
+ &lt;? if exists("doM") ?>, 'M'&lt;? endif ?>
+ &lt;? if exists("doK") ?>, 'K'&lt;? endif ?>
+ &lt;? if exists("doC") ?>, 'C'&lt;? endif ?>
+ ))
+ ) 
+ORDER BY rahead_authdate,rahead_number;</sql>
+ </querysource>
+ <rpthead>
+  <height>223</height>
+  <label>
+   <rect>
+    <x>325</x>
+    <y>200</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>200</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Auth. #</string>
+  </label>
+  <line>
+   <xstart>5</xstart>
+   <ystart>215</ystart>
+   <xend>745</xend>
+   <yend>215</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>15</x>
+    <y>80</y>
+    <width>165</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Customer/Cust Type:</string>
+  </label>
+  <label>
+   <rect>
+    <x>165</x>
+    <y>200</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Authorized</string>
+  </label>
+  <label>
+   <rect>
+    <x>90</x>
+    <y>200</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Customer</string>
+  </label>
+  <label>
+   <rect>
+    <x>30</x>
+    <y>10</y>
+    <width>695</width>
+    <height>37</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>18</size>
+    <weight>bold</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Return Authorization Workbench Due Credit</string>
+  </label>
+  <field>
+   <rect>
+    <x>185</x>
+    <y>80</y>
+    <width>200</width>
+    <height>20</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>10</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>head</query>
+    <column>f_custtype</column>
+   </data>
+  </field>
+  <label>
+   <rect>
+    <x>245</x>
+    <y>200</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Eligible</string>
+  </label>
+  <label>
+   <rect>
+    <x>410</x>
+    <y>200</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Credited By</string>
+  </label>
+ </rpthead>
+ <pghead>
+  <firstpage/>
+  <height>6</height>
+ </pghead>
+ <pghead>
+  <height>28</height>
+  <line>
+   <xstart>5</xstart>
+   <ystart>20</ystart>
+   <xend>745</xend>
+   <yend>20</yend>
+   <weight>2</weight>
+  </line>
+  <label>
+   <rect>
+    <x>165</x>
+    <y>5</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Authorized</string>
+  </label>
+  <label>
+   <rect>
+    <x>5</x>
+    <y>5</y>
+    <width>80</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Auth. #</string>
+  </label>
+  <label>
+   <rect>
+    <x>325</x>
+    <y>5</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Amount</string>
+  </label>
+  <label>
+   <rect>
+    <x>90</x>
+    <y>5</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <string>Customer</string>
+  </label>
+  <label>
+   <rect>
+    <x>245</x>
+    <y>5</y>
+    <width>75</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Eligible</string>
+  </label>
+  <label>
+   <rect>
+    <x>410</x>
+    <y>5</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <hcenter/>
+   <vcenter/>
+   <string>Credited By</string>
+  </label>
+ </pghead>
+ <section>
+  <name>detail</name>
+  <detail>
+   <key>
+    <query>detail</query>
+   </key>
+   <height>18</height>
+   <field>
+    <rect>
+     <x>245</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_eligibledate</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>325</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <right/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_amount</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>410</x>
+     <y>0</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>creditmethod</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>5</x>
+     <y>0</y>
+     <width>80</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <left/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>rahead_number</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>90</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>cust_name</column>
+    </data>
+   </field>
+   <field>
+    <rect>
+     <x>170</x>
+     <y>0</y>
+     <width>75</width>
+     <height>15</height>
+    </rect>
+    <font>
+     <face>Arial</face>
+     <size>8</size>
+     <weight>bold</weight>
+    </font>
+    <hcenter/>
+    <vcenter/>
+    <data>
+     <query>detail</query>
+     <column>f_authdate</column>
+    </data>
+   </field>
+  </detail>
+ </section>
+ <pgfoot>
+  <height>18</height>
+  <label>
+   <rect>
+    <x>615</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Page:</string>
+  </label>
+  <label>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>85</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>normal</weight>
+   </font>
+   <right/>
+   <vcenter/>
+   <string>Report Date:</string>
+  </label>
+  <field>
+   <rect>
+    <x>90</x>
+    <y>0</y>
+    <width>100</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>report_date</column>
+   </data>
+  </field>
+  <field>
+   <rect>
+    <x>705</x>
+    <y>0</y>
+    <width>40</width>
+    <height>15</height>
+   </rect>
+   <font>
+    <face>Arial</face>
+    <size>8</size>
+    <weight>bold</weight>
+   </font>
+   <left/>
+   <vcenter/>
+   <data>
+    <query>Context Query</query>
+    <column>page_number</column>
+   </data>
+  </field>
+ </pgfoot>
+</report>
